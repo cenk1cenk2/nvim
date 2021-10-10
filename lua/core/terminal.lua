@@ -3,12 +3,12 @@ local Log = require 'core.log'
 
 M.config = function()
   lvim.builtin['terminal'] = {
-    active=true,
+    active = true,
     on_config_done = nil,
     -- size can be a number or function which is passed the current terminal
     size = 20,
     -- open_mapping = [[<c-\>]],
-    open_mapping = [[<c-t>]],
+    open_mapping = [[<F1>]],
     hide_numbers = true, -- hide the number column in toggleterm buffers
     shade_filetypes = {},
     shade_terminals = true,
@@ -37,12 +37,12 @@ M.config = function()
     -- { exec, keymap, name}
     -- lvim.builtin.terminal.execs = {{}} to overwrite
     -- lvim.builtin.terminal.execs[#lvim.builtin.terminal.execs+1] = {"gdb", "tg", "GNU Debugger"}
-    execs = {{'lazygit', 'gg', 'LazyGit'}}
+    execs = {{'lazygit', 'tg', 'LazyGit'}, {'lazydocker', 'td', 'LazyDocker'}, {'htop', 'th', 'htop'}, {'ncdu', 'tn', 'ncdu'}}
   }
 end
 
 M.setup = function()
-  local terminal = require 'toggleterm'
+  local terminal = require('toggleterm')
   for _, exec in pairs(lvim.builtin.terminal.execs) do require('core.terminal').add_exec(exec[1], exec[2], exec[3]) end
   terminal.setup(lvim.builtin.terminal)
 

@@ -6,7 +6,7 @@ lvim.autocommands = {
     {'Filetype', '*', 'lua require(\'utils.ft\').do_filetype(vim.fn.expand("<amatch>"))'},
     {'FileType', 'qf', 'nnoremap <silent> <buffer> q :q<CR>'},
     {'FileType', 'lsp-installer', 'nnoremap <silent> <buffer> q :q<CR>'},
-    {'TextYankPost', '*', 'lua require(\'vim.highlight\').on_yank({higroup = \'Search\', timeout = 200})'},
+    {'TextYankPost', '*', 'lua require(\'vim.highlight\').on_yank({higroup = \'Search\', timeout = 500})'},
     {'BufWinEnter', '*', 'setlocal formatoptions-=c formatoptions-=r formatoptions-=o'},
     {'BufWinEnter', 'dashboard', 'setlocal cursorline signcolumn=yes cursorcolumn number'},
     {'BufRead', '*', 'setlocal formatoptions-=c formatoptions-=r formatoptions-=o'},

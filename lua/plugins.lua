@@ -9,6 +9,7 @@ return {
 
   {'nvim-lua/popup.nvim'},
   {'nvim-lua/plenary.nvim'},
+
   -- Telescope
   {
     'nvim-telescope/telescope.nvim',
@@ -17,6 +18,15 @@ return {
     end,
     disable = not lvim.builtin.telescope.active
   },
+
+  {
+    'folke/todo-comments.nvim',
+    config = function()
+      require('extensions.todo-comments').setup()
+    end,
+    disable = not lvim.extensions.todo_comments.active
+  },
+
   -- Install nvim-cmp, and buffer source as a dependency
   {
     'hrsh7th/nvim-cmp',

@@ -4,27 +4,28 @@ local opts = {
       hover = true,
       completion = true,
       validate = true,
-      schemaStore = {
-        enable = true,
-        url = "https://www.schemastore.org/api/json/catalog.json",
-      },
+      schemaStore = {enable = true, url = 'https://www.schemastore.org/api/json/catalog.json'},
       schemas = {
         kubernetes = {
-          "daemon.{yml,yaml}",
-          "manager.{yml,yaml}",
-          "restapi.{yml,yaml}",
-          "role.{yml,yaml}",
-          "role_binding.{yml,yaml}",
-          "*onfigma*.{yml,yaml}",
-          "*ngres*.{yml,yaml}",
-          "*ecre*.{yml,yaml}",
-          "*eployment*.{yml,yaml}",
-          "*ervic*.{yml,yaml}",
-          "kubectl-edit*.yaml",
+          'daemon.{yml,yaml}',
+          'manager.{yml,yaml}',
+          'restapi.{yml,yaml}',
+          'role.{yml,yaml}',
+          'role_binding.{yml,yaml}',
+          '*onfigma*.{yml,yaml}',
+          '*ngres*.{yml,yaml}',
+          '*ecre*.{yml,yaml}',
+          '*eployment*.{yml,yaml}',
+          '*ervic*.{yml,yaml}',
+          'kubectl-edit*.yaml'
         },
-      },
-    },
-  },
+        ['gitlab-ci'] = {'.gitlab-ci.yml'},
+        ['drone'] = {'.drone.yml'},
+        ['ansible-playbook'] = {'deploy.yml', 'provision.yml'},
+        ['pipelines-schema'] = {'bitbucket-pipelines.yml'}
+      }
+    }
+  }
 }
 
 return opts

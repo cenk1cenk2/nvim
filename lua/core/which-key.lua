@@ -7,20 +7,17 @@ M.config = function()
     on_config_done = nil,
     setup = {
       plugins = {
-        marks = true, -- shows a list of your marks on ' and `
+        marks = false, -- shows a list of your marks on ' and `
         registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
-        -- the presets plugin, adds help for a bunch of default keybindings in Neovim
-        -- No actual key bindings are created
         presets = {
-          operators = false, -- adds help for operators like d, y, ...
-          motions = false, -- adds help for motions
-          text_objects = false, -- help for text objects triggered after entering an operator
+          operators = true, -- adds help for operators like d, y, ... and registers them for motion / text object completion
+          motions = true, -- adds help for motions
+          text_objects = true, -- help for text objects triggered after entering an operator
           windows = true, -- default bindings on <c-w>
           nav = true, -- misc bindings to work with windows
           z = true, -- bindings for folds, spelling and others prefixed with z
-          g = true -- bindings for prefixed with g
-        },
-        spelling = {enabled = true, suggestions = 20} -- use which-key for spelling hints
+          g = true -- bindings for prefixed with g,
+        }
       },
       icons = {
         breadcrumb = '»', -- symbol used in the command line area that shows your active key combo
@@ -30,16 +27,15 @@ M.config = function()
       window = {
         border = 'single', -- none, single, double, shadow
         position = 'bottom', -- bottom, top
-        margin = {1, 0, 1, 0}, -- extra window margin [top, right, bottom, left]
-        padding = {2, 2, 2, 2} -- extra window padding [top, right, bottom, left]
+        margin = {0, 0, 1, 0}, -- extra window margin [top, right, bottom, left]
+        padding = {1, 1, 1, 1} -- extra window padding [top, right, bottom, left]
       },
       layout = {
         height = {min = 4, max = 25}, -- min and max height of the columns
         width = {min = 20, max = 50}, -- min and max width of the columns
         spacing = 3 -- spacing between columns
       },
-      hidden = {'<silent>', '<cmd>', '<Cmd>', '<CR>', 'call', 'lua', '^:', '^ '}, -- hide mapping boilerplate
-      show_help = true -- show help message on the command line when the popup is visible
+      triggers = {'<leader>', 'g', 'z', '"', '<C-r>'}
     },
 
     opts = {
@@ -62,83 +58,166 @@ M.config = function()
     -- see https://neovim.io/doc/user/map.html#:map-cmd
     vmappings = {['/'] = {':CommentToggle<CR>', 'Comment'}},
     mappings = {
-      ['w'] = {'<cmd>w!<CR>', 'Save'},
-      ['q'] = {'<cmd>q!<CR>', 'Quit'},
-      ['/'] = {'<cmd>CommentToggle<CR>', 'Comment'},
-      ['c'] = {'<cmd>BufferClose!<CR>', 'Close Buffer'},
-      ['f'] = {'<cmd>Telescope find_files<CR>', 'Find File'},
-      ['h'] = {'<cmd>nohlsearch<CR>', 'No Highlight'},
+      ['='] = {'<C-W>=<CR>', 'balance windows'},
+      ['E'] = {':Telescope file_browser<CR>', 'file-browser'},
+      ['h'] = {'<C-W>s', 'split below'},
+      ['v'] = {'<C-W>v', 'split right'},
+      ['n'] = {'<cmd>nohlsearch<CR>', 'no highlight'},
+      ['p'] = {':Telescope find_files theme=get_dropdown<CR>', 'find file'},
+      ['r'] = {':RnvimrToggle<CR>', 'ranger'},
+      ['q'] = {':LspFixCurrent<CR>', 'quick fix'},
 
-      a = {},
+      -- actions
+      a = {
+        name = '+actions',
+        c = {':set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20<CR>', 'bring back cursor'},
+        d = {':! ansible-vault decrypt %:p<CR>', 'ansible-vault decrypt'},
+        D = {':! ansible-vault encrypt %:p<CR>', 'ansible-vault encrypt'},
+        e = {':set ff=unix<CR>', 'set lf'},
+        E = {':set ff=dos<CR>', 'set crlf'},
+        f = {':Telescope filetypes<CR>', 'select from filetypes'},
+        l = {':set nonumber!<CR>', 'line-numbers'},
+        r = {':set norelativenumber!<CR>', 'relative line nums'},
+        s = {':setlocal spell!<CR>', 'toggle spell check'},
+        t = {':!markdown-toc %:p --bullets="-" -i<CR>', 'markdown-toc'},
+        R = {':! cd ~/.config/nvim/utils && bash install-latest-neovim.sh && bash install-lsp.sh clean<CR>', 'rebuild neovim'}
+      },
 
+      -- buffer
       b = {
-        name = 'Buffers',
-        j = {'<cmd>BufferPick<cr>', 'Jump'},
-        f = {'<cmd>Telescope buffers<cr>', 'Find'},
-        b = {'<cmd>b#<cr>', 'Previous'},
-        w = {'<cmd>BufferWipeout<cr>', 'Wipeout'},
-        e = {'<cmd>BufferCloseAllButCurrent<cr>', 'Close all but current'},
-        h = {'<cmd>BufferCloseBuffersLeft<cr>', 'Close all to the left'},
-        l = {'<cmd>BufferCloseBuffersRight<cr>', 'Close all to the right'},
-        D = {'<cmd>BufferOrderByDirectory<cr>', 'Sort by directory'},
-        L = {'<cmd>BufferOrderByLanguage<cr>', 'Sort by language'}
+        name = '+buffer',
+        b = {':BufferPick<CR>', 'pick buffer'},
+        d = {':Bdelete<CR>', 'delete-buffer'},
+        C = {':BufferWipeout<CR>', 'close-all'},
+        e = {':e<CR>', 're-open current buffer'},
+        f = {':Telescope buffers<CR>', 'find buffer'},
+        E = {':e!<CR>', 're-open current buffer force'},
+        x = {':BufferClose!<CR>', 'force-close buffer'},
+        X = {':BufferCloseAllButCurrent<CR>', 'close-all but current'},
+        p = {':BufferPin<CR>', 'pin buffer'},
+        P = {':BufferCloseAllButPinned<CR>', 'close-all but pinned'},
+        s = {':edit #', 'switch to last buffer'},
+        y = {':BufferCloseBuffersLeft<CR>', 'close-all to left'},
+        Y = {':BufferCloseBuffersRight<CR>', 'close-all to right'}
       },
 
-      p = {
-        name = 'Packer',
-        c = {'<cmd>PackerCompile<cr>', 'Compile'},
-        i = {'<cmd>PackerInstall<cr>', 'Install'},
-        r = {'<cmd>lua require(\'utils\').reload_lv_config()<cr>', 'Reload'},
-        s = {'<cmd>PackerSync<cr>', 'Sync'},
-        S = {'<cmd>PackerStatus<cr>', 'Status'},
-        u = {'<cmd>PackerUpdate<cr>', 'Update'}
+      -- find
+      f = {
+        name = '+search',
+        A = {':Telescope builtin<CR>', 'telescope list all command'},
+        b = {':Telescope current_buffer_fuzzy_find<CR>', 'current buffer'},
+        f = {':Telescope oldfiles<CR>', 'file history'},
+        ['.'] = {':Telescope commands<CR>', 'commands'},
+        [':'] = {':Telescope command_history<CR>', 'command history'},
+        g = {':Telescope grep_string<CR>', 'grep string under cursor'},
+        m = {':CocCommand fzf-preview.Bookmarks<CR>', 'list bookmarks'},
+        j = {':Telescope jumplist<CR>', 'jumps'},
+        k = {':Telescope keymaps<CR>', 'keymaps'},
+        s = {':Telescope spell_suggest<CR>', 'spell suggest'},
+        r = {':TelescopeRipgrepInteractive<CR>', 'rg interactive'},
+        p = {':Telescope find_files theme=get_dropdown<CR>', 'find file'},
+        R = {':Telescope registers<CR>', 'registers'},
+        t = {':Telescope live_grep<CR>', 'text-telescope'},
+        O = {':Telescope vim_options<CR>', 'vim options'}
       },
-      -- " Available Debug Adapters:
-      -- "   https://microsoft.github.io/debug-adapter-protocol/implementors/adapters/
-      -- " Adapter configuration and installation instructions:
-      -- "   https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation
-      -- " Debug Adapter protocol:
-      -- "   https://microsoft.github.io/debug-adapter-protocol/
-      -- " Debugging
+
+      -- find and replace
+      s = {
+        name = '+find & replace',
+        f = {':FindAndReplace<CR>', 'find and replace'},
+        s = {':FindAndReplaceVisual<CR>', 'find this visual'},
+        b = {':FindAndReplaceInBuffer<CR>', 'search in current buffer'}
+      },
+
+      -- git
       g = {
-        name = 'Git',
-        j = {'<cmd>lua require \'gitsigns\'.next_hunk()<cr>', 'Next Hunk'},
-        k = {'<cmd>lua require \'gitsigns\'.prev_hunk()<cr>', 'Prev Hunk'},
-        l = {'<cmd>lua require \'gitsigns\'.blame_line()<cr>', 'Blame'},
-        p = {'<cmd>lua require \'gitsigns\'.preview_hunk()<cr>', 'Preview Hunk'},
-        r = {'<cmd>lua require \'gitsigns\'.reset_hunk()<cr>', 'Reset Hunk'},
-        R = {'<cmd>lua require \'gitsigns\'.reset_buffer()<cr>', 'Reset Buffer'},
-        s = {'<cmd>lua require \'gitsigns\'.stage_hunk()<cr>', 'Stage Hunk'},
-        u = {'<cmd>lua require \'gitsigns\'.undo_stage_hunk()<cr>', 'Undo Stage Hunk'},
-        o = {'<cmd>Telescope git_status<cr>', 'Open changed file'},
-        b = {'<cmd>Telescope git_branches<cr>', 'Checkout branch'},
-        c = {'<cmd>Telescope git_commits<cr>', 'Checkout commit'},
-        C = {'<cmd>Telescope git_bcommits<cr>', 'Checkout commit(for current file)'},
-        d = {'<cmd>Gitsigns diffthis HEAD<cr>', 'Git Diff'}
+        name = '+git',
+        a = {':DiffViewFileHistory<CR>', 'buffer commits'},
+        A = {':0Gclog<CR>', 'buffer commits'},
+        b = {':Git blame<CR>', 'blame'},
+        c = {':GDiffCompare<CR>', 'compare with branch'},
+        C = {':Gdiffsplit<CR>', 'diff split'},
+        d = {':DiffViewOpen<CR>', 'diff-view open'},
+        D = {':DiffViewClose<CR>', 'diff-view open'},
+        e = {':Gedit<CR>', 'edit-version'},
+        f = {':Telescope git_files<CR>', 'git_files'},
+        k = {':GitSignsPreviewHunk<CR>', 'preview hunk'},
+        n = {':GitSignsNextHunk<CR>', 'next hunk'},
+        p = {':GitSignsPrevHunk<CR>', 'prev hunk'},
+        m = {':Gdiffsplit<CR>', 'merge view'},
+        M = {':Gvdiffsplit!<CR>', 'merge view, 3-way-split'},
+        t = {':GitSignsToggle<CR>', 'toggle hunks'},
+        U = {':GitSignsResetHunk<CR>', 'undo hunk'},
+        v = {':Telescope git_bcommits<CR>', 'view buffer commits'},
+        V = {':Telescope git_commits<CR>', 'view commits'}
       },
 
+      -- gist
+      G = {
+        name = '+gist',
+        f = {':CocList gist<CR>', 'list'},
+        p = {':CocCommand gist.create<CR>', 'post gist'},
+        I = {':Telescope gh issues<CR>', 'github issues'},
+        P = {':Telescope gh pull_request<CR>', 'github pull requests'},
+        U = {':CocCommand gist.update<CR>', 'github gists'}
+      },
+
+      -- lsp
       l = {
         name = 'LSP',
         a = {'<cmd>lua require(\'core.telescope\').code_actions()<cr>', 'Code Action'},
-        d = {'<cmd>Telescope lsp_document_diagnostics<cr>', 'Document Diagnostics'},
-        w = {'<cmd>Telescope lsp_workspace_diagnostics<cr>', 'Workspace Diagnostics'},
+        w = {'<cmd>Telescope lsp_document_diagnostics<cr>', 'Document Diagnostics'},
+        W = {'<cmd>Telescope lsp_workspace_diagnostics<cr>', 'Workspace Diagnostics'},
         f = {'<cmd>lua vim.lsp.buf.formatting()<cr>', 'Format'},
+        g = {':LspOrganizeImports<CR>', 'organize imports'},
         i = {'<cmd>LspInfo<cr>', 'Info'},
         I = {'<cmd>LspInstallInfo<cr>', 'Installer Info'},
-        j = {'<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = lvim.lsp.popup_border}})<cr>', 'Next Diagnostic'},
-        k = {'<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = lvim.lsp.popup_border}})<cr>', 'Prev Diagnostic'},
+        m = {':LspRenameFile<CR>', 'rename'},
+        n = {'<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = lvim.lsp.popup_border}})<cr>', 'Next Diagnostic'},
+        p = {'<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = lvim.lsp.popup_border}})<cr>', 'Prev Diagnostic'},
         l = {'<cmd>lua vim.lsp.codelens.run()<cr>', 'CodeLens Action'},
-        p = {
+        P = {
           name = 'Peek',
           d = {'<cmd>lua require(\'lsp.peek\').Peek(\'definition\')<cr>', 'Definition'},
           t = {'<cmd>lua require(\'lsp.peek\').Peek(\'typeDefinition\')<cr>', 'Type Definition'},
           i = {'<cmd>lua require(\'lsp.peek\').Peek(\'implementation\')<cr>', 'Implementation'}
         },
+        R = {':LspRename<CR>', 'rename item'},
         q = {'<cmd>lua vim.lsp.diagnostic.set_loclist()<cr>', 'Quickfix'},
         r = {'<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename'},
         s = {'<cmd>Telescope lsp_document_symbols<cr>', 'Document Symbols'},
-        S = {'<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', 'Workspace Symbols'}
+        S = {'<cmd>Telescope lsp_dynamic_workspace_symbols<cr>', 'Workspace Symbols'},
+        Q = {':LspRestart<CR>', 'restart currently active lsps'}
       },
+
+      -- node modules
+      m = {
+        name = 'node',
+        s = {':lua require("package-info").show()<CR>', 'show package-info'},
+        S = {':lua require("package-info").hide()<CR>', 'hide package-info'},
+        u = {':lua require("package-info").update()<CR>', 'update current package'},
+        d = {':lua require("package-info").delete()<CR>', 'delete current package'},
+        i = {':lua require("package-info").install()<CR>', 'install packages'},
+        r = {':lua require("package-info").reinstall()<CR>', 'reinstall packages'},
+        c = {':lua require("package-info").change_version()<CR>', 'change version of the package'},
+        m = {':Telescope node_modules list<CR>', 'node modules'}
+      },
+
+      -- terminal
+      t = {name = '+terminal'},
+
+      -- workspace/session
+      w = {
+        name = '+Session',
+        c = {':Dashboard<CR>', 'Dashboard'},
+        q = {':qa<CR>', 'Quit while saved'},
+        Q = {':qa!<CR>', 'Quit'},
+        l = {':SessionLoad<CR>', 'Load Session'},
+        s = {':SessionSave<CR>', 'Save Session'},
+        f = {':CocList sessions<CR>', 'List Session'},
+        p = {'<cmd>Telescope projects<CR>', 'Projects'}
+      },
+
       L = {
         name = '+LunarVim',
         c = {'<cmd>edit' .. get_config_dir() .. '/config.lua<cr>', 'Edit config.lua'},
@@ -161,21 +240,18 @@ M.config = function()
         r = {'<cmd>lua require(\'utils\').reload_lv_config()<cr>', 'Reload configurations'},
         u = {'<cmd>LvimUpdate<cr>', 'Update LunarVim'}
       },
-      s = {
-        name = 'Search',
-        b = {'<cmd>Telescope git_branches<cr>', 'Checkout branch'},
-        c = {'<cmd>Telescope colorscheme<cr>', 'Colorscheme'},
-        f = {'<cmd>Telescope find_files<cr>', 'Find File'},
-        h = {'<cmd>Telescope help_tags<cr>', 'Find Help'},
-        M = {'<cmd>Telescope man_pages<cr>', 'Man Pages'},
-        r = {'<cmd>Telescope oldfiles<cr>', 'Open Recent File'},
-        R = {'<cmd>Telescope registers<cr>', 'Registers'},
-        t = {'<cmd>Telescope live_grep<cr>', 'Text'},
-        k = {'<cmd>Telescope keymaps<cr>', 'Keymaps'},
-        C = {'<cmd>Telescope commands<cr>', 'Commands'},
-        p = {'<cmd>lua require(\'telescope.builtin.internal\').colorscheme({enable_preview = true})<cr>', 'Colorscheme with Preview'}
+
+      P = {
+        name = 'Packer',
+        c = {'<cmd>PackerCompile<cr>', 'Compile'},
+        i = {'<cmd>PackerInstall<cr>', 'Install'},
+        r = {'<cmd>lua require(\'utils\').reload_lv_config()<cr>', 'Reload'},
+        s = {'<cmd>PackerSync<cr>', 'Sync'},
+        S = {'<cmd>PackerStatus<cr>', 'Status'},
+        u = {'<cmd>PackerUpdate<cr>', 'Update'}
       },
-      T = {name = 'Treesitter', i = {':TSConfigInfo<cr>', 'Info'}}
+
+      T = {name = 'Treesitter', i = {':TSConfigInfo<cr>', 'Info'}, k = {':TSHighlightCapturesUnderCursor<CR>', 'show treesitter theme color'}}
     }
   }
 end

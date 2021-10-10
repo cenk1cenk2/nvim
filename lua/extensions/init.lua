@@ -14,7 +14,8 @@ local extensions = {
   'extensions.nvim-bqf',
   'extensions.lsp-trouble',
   'extensions.symbols-outline',
-  'extensions.colorizer'
+  'extensions.colorizer',
+  'extensions.todo-comments'
 }
 
 function M.config(config)

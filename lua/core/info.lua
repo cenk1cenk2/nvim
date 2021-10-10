@@ -10,16 +10,16 @@ local M = {
 }
 
 local fmt = string.format
-local text = require 'interface.text'
-local lsp_utils = require 'lsp.utils'
+local text = require('interface.text')
+local lsp_utils = require('lsp.utils')
 
 local function str_list(list)
   return fmt('[ %s ]', table.concat(list, ', '))
 end
 
 local function get_formatter_suggestion_msg(ft)
-  local config = require 'config'
-  local null_formatters = require 'lsp.null-ls.formatters'
+  local config = require('config')
+  local null_formatters = require('lsp.null-ls.formatters')
   local supported_formatters = null_formatters.list_available(ft)
   local section = {' HINT ', '', fmt('* List of supported formatters: %s', str_list(supported_formatters))}
 
@@ -36,8 +36,8 @@ local function get_formatter_suggestion_msg(ft)
 end
 
 local function get_linter_suggestion_msg(ft)
-  local config = require 'config'
-  local null_linters = require 'lsp.null-ls.linters'
+  local config = require('config')
+  local null_linters = require('lsp.null-ls.linters')
   local supported_linters = null_linters.list_available(ft)
   local section = {' HINT ', '', fmt('* List of supported linters: %s', str_list(supported_linters))}
 
@@ -88,8 +88,8 @@ function M.toggle_popup(ft)
     table.insert(client_names, client.name)
   end
 
-  local null_formatters = require 'lsp.null-ls.formatters'
-  local null_linters = require 'lsp.null-ls.linters'
+  local null_formatters = require('lsp.null-ls.formatters')
+  local null_linters = require('lsp.null-ls.linters')
   local registered_formatters = null_formatters.list_supported_names(ft)
   local registered_linters = null_linters.list_supported_names(ft)
   local registered_providers = {}

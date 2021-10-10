@@ -28,7 +28,7 @@ M.config = function()
 end
 
 M.setup = function()
-  local gitsigns = require 'gitsigns'
+  local gitsigns = require('gitsigns')
 
   gitsigns.setup(lvim.builtin.gitsigns.opts)
   if lvim.builtin.gitsigns.on_config_done then lvim.builtin.gitsigns.on_config_done(gitsigns) end

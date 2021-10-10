@@ -1,5 +1,5 @@
 local M = {}
-local utils = require 'utils'
+local utils = require('utils')
 
 M.config = function(config)
   lvim.builtin.dashboard = {
@@ -44,7 +44,7 @@ M.setup = function()
     table.insert(footer, 3, 'v' .. lvim_version)
   end
 
-  local text = require 'interface.text'
+  local text = require('interface.text')
   vim.g.dashboard_custom_footer = text.align_center({width = 0}, footer, 0.49) -- Use 0.49 as  counts for 2 characters
 
   require('core.autocmds').define_augroups {
