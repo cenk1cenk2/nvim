@@ -5,7 +5,7 @@ local services = require 'lsp.null-ls.services'
 local Log = require 'core.log'
 
 function M.list_supported_names(filetype)
-  local null_ls_methods = require 'null-ls.methods'
+  local null_ls_methods = null_ls.methods
   local formatter_method = null_ls_methods.internal['FORMATTING']
   local registered_providers = services.list_registered_providers_names(filetype)
   return registered_providers[formatter_method] or {}

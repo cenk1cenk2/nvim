@@ -1,7 +1,18 @@
 local M = {}
 
 M.config = function()
-  lvim.builtin.bufferline = {active = true, on_config_done = nil, keymap = {normal_mode = {['<Leader-Left>'] = ':BufferNext<CR>',['<Leader-Up>'] = ':BufferMoveNext<CR>', ['<Leader-Right>'] = ':BufferPrevious<CR>' , ['<Leader-Left>'] = ':BufferMovePrevious<CR>'}}}
+  lvim.builtin.bufferline = {
+    active = true,
+    on_config_done = nil,
+    keymap = {
+      normal_mode = {
+        ['<Leader><Left>'] = ':BufferNext<CR>',
+        ['<Leader><Up>'] = ':BufferMoveNext<CR>',
+        ['<Leader><Right>'] = ':BufferPrevious<CR>',
+        ['<Leader><Down>'] = ':BufferMovePrevious<CR>'
+      }
+    }
+  }
 end
 
 M.setup = function()

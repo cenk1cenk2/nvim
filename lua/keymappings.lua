@@ -51,12 +51,7 @@ function M.config()
   lvim.keys = {
     ---@usage change or add keymappings for insert mode
     insert_mode = {
-      -- 'jk' for quitting insert mode
-      ['jk'] = '<ESC>',
-      -- 'kj' for quitting insert mode
-      ['kj'] = '<ESC>',
-      -- 'jj' for quitting insert mode
-      ['jj'] = '<ESC>',
+      ['Q'] = '<Nop>',
       -- Move current line / block with Alt-j/k ala vscode.
       ['<A-j>'] = '<Esc>:m .+1<CR>==gi',
       -- Move current line / block with Alt-j/k ala vscode.
@@ -78,6 +73,8 @@ function M.config()
       ['<C-s>'] = ':w<CR>',
       -- disable help
       ['<F1>'] = '<Nop>',
+      -- disable Ex mode
+      ['Q'] = '<Nop>',
 
       -- Better window movement
       ['<C-h>'] = '<C-w>h',
@@ -86,23 +83,25 @@ function M.config()
       ['<C-l>'] = '<C-w>l',
 
       -- Resize with arrows
-      ['<C-Up>'] = ':resize -2<CR>',
-      ['<C-Down>'] = ':resize +2<CR>',
-      ['<C-Left>'] = ':vertical resize -2<CR>',
-      ['<C-Right>'] = ':vertical resize +2<CR>',
+      ['<M-i>'] = ':resize +2<CR>',
+      ['<M-u>'] = ':resize -2<CR>',
+      ['<M-z>'] = ':vertical resize -2<CR>',
+      ['<M-o>'] = ':vertical resize +2<CR>',
 
       -- Tab switch buffer
-      ['<S-l>'] = ':BufferNext<CR>',
-      ['<S-h>'] = ':BufferPrevious<CR>',
+      ['<Leader><Right>'] = ':BufferNext<CR>',
+      ['<Leader><Left>'] = ':BufferPrevious<CR>',
+      ['<Leader><Up>'] = ':BufferMoveNext<CR>',
+      ['<Leader><Down>'] = ':BufferMovePrevious<CR>',
 
       -- Move current line / block with Alt-j/k a la vscode.
       ['<A-j>'] = ':m .+1<CR>==',
       ['<A-k>'] = ':m .-2<CR>==',
 
       -- QuickFix
-      [']q'] = ':cnext<CR>',
-      ['[q'] = ':cprev<CR>',
-      ['<C-a>'] = ':call QuickFixToggle()<CR>'
+      ['qn'] = ':cnext<CR>',
+      ['qp'] = ':cprev<CR>',
+      ['<C-y>'] = ':call QuickFixToggle()<CR>'
     },
 
     ---@usage change or add keymappings for terminal mode
