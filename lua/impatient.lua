@@ -1,36 +1,29 @@
 -- modified version from https://github.com/lewis6991/impatient.nvim
-
 local vim = vim
 local uv = vim.loop
 local impatient_load_start = uv.hrtime()
 local api = vim.api
-local ffi = require "ffi"
+local ffi = require 'ffi'
 
 local get_option, set_option = api.nvim_get_option, api.nvim_set_option
 local get_runtime_file = api.nvim_get_runtime_file
 
 local impatient_dur
 
-local M = {
-  cache = {},
-  profile = nil,
-  dirty = false,
-  path = nil,
-  log = {},
-}
+local M = {cache = {}, profile = nil, dirty = false, path = nil, log = {}}
 
 _G.__luacache = M
 
---{{{
+-- {{{
 local cachepack = {}
 
 -- using double for packing/unpacking numbers has no conversion overhead
 -- 32-bit ARM causes a bus error when casting to double, so use int there
-local number_t = jit.arch ~= "arm" and "double" or "int"
-ffi.cdef("typedef " .. number_t .. " number_t;")
+local number_t = jit.arch ~= 'arm' and 'double' or 'int'
+ffi.cdef('typedef ' .. number_t .. ' number_t;')
 
-local c_number_t = ffi.typeof "number_t[1]"
-local c_sizeof_number_t = ffi.sizeof "number_t"
+local c_number_t = ffi.typeof 'number_t[1]'
+local c_sizeof_number_t = ffi.sizeof 'number_t'
 
 local out_buf = {}
 
@@ -50,10 +43,8 @@ end
 local in_buf = {}
 
 function in_buf.read_number(buf)
-  if buf.size < buf.pos then
-    error "buffer access violation"
-  end
-  local res = ffi.cast("number_t*", buf.ptr + buf.pos)[0]
+  if buf.size < buf.pos then error 'buffer access violation' end
+  local res = ffi.cast('number_t*', buf.ptr + buf.pos)[0]
   buf.pos = buf.pos + c_sizeof_number_t
   return res
 end
@@ -73,60 +64,44 @@ function cachepack.pack(cache)
   out_buf.write_number(buf, total_keys)
   for k, v in pairs(cache) do
     out_buf.write_string(buf, k)
-    out_buf.write_string(buf, v[1] or "")
+    out_buf.write_string(buf, v[1] or '')
     out_buf.write_number(buf, v[2] or 0)
-    out_buf.write_string(buf, v[3] or "")
+    out_buf.write_string(buf, v[3] or '')
   end
 
   return out_buf.to_string(buf)
 end
 
 function cachepack.unpack(str, raw_buf_size)
-  if raw_buf_size == 0 or str == nil or (raw_buf_size == nil and #str == 0) then
-    return {}
-  end
+  if raw_buf_size == 0 or str == nil or (raw_buf_size == nil and #str == 0) then return {} end
 
-  local buf = {
-    ptr = raw_buf_size and str or ffi.new("const char[?]", #str, str),
-    pos = 0,
-    size = raw_buf_size or #str,
-  }
+  local buf = {ptr = raw_buf_size and str or ffi.new('const char[?]', #str, str), pos = 0, size = raw_buf_size or #str}
   local cache = {}
 
   local total_keys = in_buf.read_number(buf)
   for _ = 1, total_keys do
     local k = in_buf.read_string(buf)
-    local v = {
-      in_buf.read_string(buf),
-      in_buf.read_number(buf),
-      in_buf.read_string(buf),
-    }
+    local v = {in_buf.read_string(buf), in_buf.read_number(buf), in_buf.read_string(buf)}
     cache[k] = v
   end
 
   return cache
 end
---}}}
+-- }}}
 
 local function log(...)
-  M.log[#M.log + 1] = table.concat({ string.format(...) }, " ")
+  M.log[#M.log + 1] = table.concat({string.format(...)}, ' ')
 end
 
 function M.print_log()
-  for _, l in ipairs(M.log) do
-    print(l)
-  end
+  for _, l in ipairs(M.log) do print(l) end
 end
 
 function M.enable_profile()
   M.profile = {}
   M.print_profile = function()
-    M.profile["impatient"] = {
-      resolve = 0,
-      load = impatient_dur,
-      loader = "standard",
-    }
-    require("impatient.profile").print_profile(M.profile)
+    M.profile['impatient'] = {resolve = 0, load = impatient_dur, loader = 'standard'}
+    require('impatient.profile').print_profile(M.profile)
   end
   vim.cmd [[command! LuaCacheProfile lua _G.__luacache.print_profile()]]
 end
@@ -135,27 +110,23 @@ local function is_cacheable(path)
   -- Don't cache files in /tmp since they are not likely to persist.
   -- Note: Appimage versions of Neovim mount $VIMRUNTIME in /tmp in a unique
   -- directory on each launch.
-  return not vim.startswith(path, "/tmp/")
+  return not vim.startswith(path, '/tmp/')
 end
 
 local function hash(modpath)
   local stat = uv.fs_stat(modpath)
-  if stat then
-    return stat.mtime.sec
-  end
+  if stat then return stat.mtime.sec end
 end
 
 local function hrtime()
-  if M.profile then
-    return uv.hrtime()
-  end
+  if M.profile then return uv.hrtime() end
 end
 
 local function load_package_with_cache(name, loader)
   local resolve_start = hrtime()
 
-  local basename = name:gsub("%.", "/")
-  local paths = { "lua/" .. basename .. ".lua", "lua/" .. basename .. "/init.lua" }
+  local basename = name:gsub('%.', '/')
+  local paths = {'lua/' .. basename .. '.lua', 'lua/' .. basename .. '/init.lua'}
 
   for _, path in ipairs(paths) do
     local modpath = get_runtime_file(path, false)[1]
@@ -163,24 +134,16 @@ local function load_package_with_cache(name, loader)
       local load_start = hrtime()
       local chunk, err = loadfile(modpath)
 
-      if M.profile then
-        M.profile[name] = {
-          resolve = load_start - resolve_start,
-          load = hrtime() - load_start,
-          loader = loader or "standard",
-        }
-      end
+      if M.profile then M.profile[name] = {resolve = load_start - resolve_start, load = hrtime() - load_start, loader = loader or 'standard'} end
 
-      if chunk == nil then
-        return err
-      end
+      if chunk == nil then return err end
 
       if is_cacheable(modpath) then
-        log("Creating cache for module %s", name)
-        M.cache[name] = { modpath, hash(modpath), string.dump(chunk) }
+        log('Creating cache for module %s', name)
+        M.cache[name] = {modpath, hash(modpath), string.dump(chunk)}
         M.dirty = true
       else
-        log("Unable to cache module %s", name)
+        log('Unable to cache module %s', name)
       end
 
       return chunk
@@ -193,30 +156,26 @@ local reduced_rtp
 
 -- Speed up non-cached loads by reducing the rtp path during requires
 function M.update_reduced_rtp()
-  local luadirs = get_runtime_file("lua/", true)
+  local luadirs = get_runtime_file('lua/', true)
 
-  for i = 1, #luadirs do
-    luadirs[i] = luadirs[i]:sub(1, -6)
-  end
+  for i = 1, #luadirs do luadirs[i] = luadirs[i]:sub(1, -6) end
 
-  reduced_rtp = table.concat(luadirs, ",")
+  reduced_rtp = table.concat(luadirs, ',')
 end
 
 local function load_package_with_cache_reduced_rtp(name)
-  local orig_rtp = get_option "runtimepath"
-  local orig_ei = get_option "eventignore"
+  local orig_rtp = get_option 'runtimepath'
+  local orig_ei = get_option 'eventignore'
 
-  if not reduced_rtp then
-    M.update_reduced_rtp()
-  end
+  if not reduced_rtp then M.update_reduced_rtp() end
 
-  set_option("eventignore", "all")
-  set_option("rtp", reduced_rtp)
+  set_option('eventignore', 'all')
+  set_option('rtp', reduced_rtp)
 
-  local found = load_package_with_cache(name, "reduced")
+  local found = load_package_with_cache(name, 'reduced')
 
-  set_option("rtp", orig_rtp)
-  set_option("eventignore", orig_ei)
+  set_option('rtp', orig_rtp)
+  set_option('eventignore', orig_ei)
 
   return found
 end
@@ -224,35 +183,29 @@ end
 local function load_from_cache(name)
   local resolve_start = hrtime()
   if M.cache[name] == nil then
-    log("No cache for module %s", name)
-    return "No cache entry"
+    log('No cache for module %s', name)
+    return 'No cache entry'
   end
 
   local modpath, mhash, codes = unpack(M.cache[name])
 
   if mhash ~= hash(modpath) then
-    log("Stale cache for module %s", name)
+    log('Stale cache for module %s', name)
     M.cache[name] = nil
     M.dirty = true
-    return "Stale cache"
+    return 'Stale cache'
   end
 
   local load_start = hrtime()
   local chunk = loadstring(codes)
 
-  if M.profile then
-    M.profile[name] = {
-      resolve = load_start - resolve_start,
-      load = hrtime() - load_start,
-      loader = "cache",
-    }
-  end
+  if M.profile then M.profile[name] = {resolve = load_start - resolve_start, load = hrtime() - load_start, loader = 'cache'} end
 
   if not chunk then
     M.cache[name] = nil
     M.dirty = true
-    log("Error loading cache for module. Invalidating", name)
-    return "Cache error"
+    log('Error loading cache for module. Invalidating', name)
+    return 'Cache error'
   end
 
   return chunk
@@ -260,8 +213,8 @@ end
 
 function M.save_cache()
   if M.dirty then
-    log("Updating cache file: %s", M.path)
-    local f = io.open(M.path, "w+b")
+    log('Updating cache file: %s', M.path)
+    local f = io.open(M.path, 'w+b')
     f:write(cachepack.pack(M.cache))
     f:flush()
     M.dirty = false
@@ -277,19 +230,17 @@ impatient_dur = uv.hrtime() - impatient_load_start
 
 function M.setup(opts)
   opts = opts or {}
-  M.path = opts.path or vim.fn.stdpath "cache" .. "/lvim_cache"
+  M.path = opts.path or vim.fn.stdpath 'cache' .. '/lvim_cache'
 
-  if opts.enable_profiling then
-    M.enable_profile()
-  end
+  if opts.enable_profiling then M.enable_profile() end
 
   local impatient_setup_start = uv.hrtime()
   local stat = uv.fs_stat(M.path)
   if stat then
-    log("Loading cache file %s", M.path)
+    log('Loading cache file %s', M.path)
     local ok
     -- Linux/macOS lets us easily mmap the cache file for faster reads without passing to Lua
-    if jit.os == "Linux" or jit.os == "OSX" then
+    if jit.os == 'Linux' or jit.os == 'OSX' then
       local size = stat.size
 
       local C = ffi.C
@@ -306,23 +257,23 @@ function M.setup(opts)
       local f = C.open(M.path, O_RDONLY)
 
       local addr = C.mmap(nil, size, PROT_READ, MAP_PRIVATE, f, 0)
-      ok = ffi.cast("intptr_t", addr) ~= -1
+      ok = ffi.cast('intptr_t', addr) ~= -1
 
       if ok then
-        M.cache = cachepack.unpack(ffi.cast("char *", addr), size)
+        M.cache = cachepack.unpack(ffi.cast('char *', addr), size)
         C.munmap(addr, size)
       end
 
       C.close(f)
     else
-      local f = io.open(M.path, "rb")
+      local f = io.open(M.path, 'rb')
       ok, M.cache = pcall(function()
-        return cachepack.unpack(f:read "*a")
+        return cachepack.unpack(f:read '*a')
       end)
     end
 
     if not ok then
-      log("Corrupted cache file, %s. Invalidating...", M.path)
+      log('Corrupted cache file, %s. Invalidating...', M.path)
       os.remove(M.path)
       M.cache = {}
     end
