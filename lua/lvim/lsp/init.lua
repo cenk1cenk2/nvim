@@ -108,6 +108,8 @@ function M.setup()
   local lsp_status_ok, _ = pcall(require, 'lspconfig')
   if not lsp_status_ok then return end
 
+  require('lsp.installers').setup()
+
   if lvim.lsp.ensure_installed then
     for _, server_name in pairs(lvim.lsp.ensure_installed) do
       local server_available, requested_server = require('nvim-lsp-installer.servers').get_server(server_name)

@@ -54,12 +54,6 @@ return {
     ['<M-z>'] = ':vertical resize -2<CR>',
     ['<M-o>'] = ':vertical resize +2<CR>',
 
-    -- Tab switch buffer
-    ['<Leader><Right>'] = ':BufferNext<CR>',
-    ['<Leader><Left>'] = ':BufferPrevious<CR>',
-    ['<Leader><Up>'] = ':BufferMoveNext<CR>',
-    ['<Leader><Down>'] = ':BufferMovePrevious<CR>',
-
     -- Move current line / block with Alt-j/k a la vscode.
     ['<A-j>'] = ':m .+1<CR>==',
     ['<A-k>'] = ':m .-2<CR>==',

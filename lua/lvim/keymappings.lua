@@ -18,7 +18,7 @@ local mode_adapters = {insert_mode = 'i', normal_mode = 'n', term_mode = 't', vi
 -- Append key mappings to lunarvim's defaults for a given mode
 -- @param keymaps The table of key mappings containing a list per mode (normal_mode, insert_mode, ..)
 function M.append_to_defaults(keymaps)
-  for mode, mappings in pairs(keymaps) do for k, v in ipairs(mappings) do lvim.keys[mode][k] = v end end
+  for mode, mappings in pairs(keymaps) do for k, v in pairs(mappings) do lvim.keys[mode][k] = v end end
 end
 
 -- Set key mappings individually
@@ -63,6 +63,7 @@ end
 
 function M.setup()
   vim.g.mapleader = (lvim.leader == 'space' and ' ') or lvim.leader
+  Log:debug('Initialized keybindings.')
   M.load(lvim.keys)
 end
 

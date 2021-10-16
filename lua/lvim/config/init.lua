@@ -20,6 +20,9 @@ function M:init()
     lvim.database = {save_location = utils.join_paths(home_dir, '.config', 'lunarvim_db'), auto_execute = 1}
   end
 
+  local keymappings = require('lvim.keymappings')
+  keymappings.config()
+
   local builtins = require 'lvim.core.builtins'
   builtins.config(self)
 
@@ -156,7 +159,7 @@ function M:reload()
   vim.cmd ':PackerCompile'
   -- vim.cmd ":PackerClean"
   require('lvim.lsp').setup()
-  Log:info 'Reloaded configuration'
+  Log:info 'Reloaded configuration!'
 end
 
 return M

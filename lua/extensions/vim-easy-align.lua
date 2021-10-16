@@ -11,7 +11,7 @@ function M.config()
 end
 
 function M.setup()
-  require('lvim.keymappings').append_to_defaults(lvim.extensions[extension_name].keymaps)
+  require('lvim.keymappings').load(lvim.extensions[extension_name].keymaps)
 
   if lvim.extensions[extension_name].on_config_done then lvim.extensions[extension_name].on_config_done() end
 end

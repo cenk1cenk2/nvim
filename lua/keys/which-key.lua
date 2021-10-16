@@ -179,7 +179,7 @@ M.mappings = {
       p = {'<cmd>lua require(\'lvim.core.terminal\').toggle_log_view(\'packer.nvim\')<cr>', 'view packer log'},
       P = {'<cmd>exe \'edit \'.stdpath(\'cache\').\'/packer.nvim.log\'<cr>', 'Open the Packer logfile'}
     },
-    r = {'<cmd>lua require(\'lvim.utils\').reload_lv_config()<cr>', 'Reload configurations'},
+    r = {'<cmd>lua require(\'lvim.config\'):reload()<cr>', 'Reload configurations'},
     u = {'<cmd>LvimUpdate<cr>', 'Update LunarVim'}
   },
 
