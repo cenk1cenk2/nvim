@@ -15,7 +15,8 @@ local extensions = {
   'extensions.lsp-trouble',
   'extensions.symbols-outline',
   'extensions.colorizer',
-  'extensions.todo-comments'
+  'extensions.todo-comments',
+  'extensions.indent-blankline'
 }
 
 function M.config(config)

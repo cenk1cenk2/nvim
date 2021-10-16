@@ -1,0 +1,106 @@
+return {
+  ---@usage change or add keymappings for insert mode
+  insert_mode = {
+    ['Q'] = '<Nop>',
+    -- Move current line / block with Alt-j/k ala vscode.
+    ['<A-j>'] = '<Esc>:m .+1<CR>==gi',
+    -- Move current line / block with Alt-j/k ala vscode.
+    ['<A-k>'] = '<Esc>:m .-2<CR>==gi',
+
+    -- navigation
+    ['<A-Up>'] = '<C-\\><C-N><C-w>k',
+    ['<A-Down>'] = '<C-\\><C-N><C-w>j',
+    ['<A-Left>'] = '<C-\\><C-N><C-w>h',
+    ['<A-Right>'] = '<C-\\><C-N><C-w>l',
+
+    -- navigate tab completion with <c-j> and <c-k>
+    -- runs conditionally
+    ['<C-j>'] = {'pumvisible() ? "\\<down>" : "\\<C-j>"', {expr = true, noremap = true}},
+    ['<C-k>'] = {'pumvisible() ? "\\<up>" : "\\<C-k>"', {expr = true, noremap = true}}
+  },
+
+  ---@usage change or add keymappings for normal mode
+  normal_mode = {
+    -- save
+    ['<C-s>'] = ':w<CR>',
+    ['<C-x>'] = ':noa w<CR>:lua require("lvim.core.log"):warn("No autocommands had been run while saving!!!")<CR>',
+
+    -- close buffer
+    ['<C-q>'] = ':BufferClose<CR>',
+
+    -- disable help
+    ['<F1>'] = '<Nop>',
+    -- disable Ex mode
+    ['Q'] = '<Nop>',
+
+    -- Better window movement
+    ['<C-h>'] = '<C-w>h',
+    ['<C-j>'] = '<C-w>j',
+    ['<C-k>'] = '<C-w>k',
+    ['<C-l>'] = '<C-w>l',
+
+    -- Resize with arrows
+    ['<M-i>'] = ':resize +2<CR>',
+    ['<M-u>'] = ':resize -2<CR>',
+    ['<M-z>'] = ':vertical resize -2<CR>',
+    ['<M-o>'] = ':vertical resize +2<CR>',
+
+    -- Tab switch buffer
+    ['<Leader><Right>'] = ':BufferNext<CR>',
+    ['<Leader><Left>'] = ':BufferPrevious<CR>',
+    ['<Leader><Up>'] = ':BufferMoveNext<CR>',
+    ['<Leader><Down>'] = ':BufferMovePrevious<CR>',
+
+    -- Move current line / block with Alt-j/k a la vscode.
+    ['<A-j>'] = ':m .+1<CR>==',
+    ['<A-k>'] = ':m .-2<CR>==',
+
+    -- QuickFix
+    ['qn'] = ':cnext<CR>',
+    ['qp'] = ':cprev<CR>',
+    ['<C-y>'] = ':call QuickFixToggle()<CR>',
+
+    -- create space on top and bottom
+    ['Ü'] = 'o<ESC>k',
+    ['ü'] = 'O<ESC>j'
+
+  },
+
+  ---@usage change or add keymappings for terminal mode
+  term_mode = {
+    -- Terminal window navigation
+    ['<C-h>'] = '<C-\\><C-N><C-w>h',
+    ['<C-j>'] = '<C-\\><C-N><C-w>j',
+    ['<C-k>'] = '<C-\\><C-N><C-w>k',
+    ['<C-l>'] = '<C-\\><C-N><C-w>l'
+  },
+
+  ---@usage change or add keymappings for visual mode
+  visual_mode = {
+    -- Better indenting
+    ['<'] = '<gv',
+    ['>'] = '>gv'
+
+    -- ["p"] = '"0p',
+    -- ["P"] = '"0P',
+  },
+
+  ---@usage change or add keymappings for visual block mode
+  visual_block_mode = {
+    -- Move selected line / block of text in visual mode
+    ['K'] = ':move \'<-2<CR>gv-gv',
+    ['J'] = ':move \'>+1<CR>gv-gv',
+
+    -- Move current line / block with Alt-j/k ala vscode.
+    ['<A-j>'] = ':m \'>+1<CR>gv-gv',
+    ['<A-k>'] = ':m \'<-2<CR>gv-gv'
+  },
+
+  ---@usage change or add keymappings for command mode
+  command_mode = {
+    -- navigate tab completion with <c-j> and <c-k>
+    -- runs conditionally
+    ['<C-j>'] = {'pumvisible() ? "\\<C-n>" : "\\<C-j>"', {expr = true, noremap = true}},
+    ['<C-k>'] = {'pumvisible() ? "\\<C-p>" : "\\<C-k>"', {expr = true, noremap = true}}
+  }
+}

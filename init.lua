@@ -1,20 +1,19 @@
-require('bootstrap'):init()
+require('lvim.bootstrap'):init()
 
-local config = require('config')
-config:load()
+require('lvim.config'):load()
 
-local plugins = require 'plugins'
-require('plugin-loader'):load{plugins, lvim.plugins}
+local plugins = require 'lvim.plugins'
+require('lvim.plugin-loader'):load{plugins, lvim.plugins}
 
-local Log = require 'core.log'
-Log:debug 'Starting LunarVim'
+local Log = require 'lvim.core.log'
+Log:debug 'neovim'
 
-vim.g.colors_name = lvim.colorscheme 
+vim.g.colors_name = lvim.colorscheme
 vim.cmd('colorscheme ' .. lvim.colorscheme)
 
-local commands = require 'core.commands'
+local commands = require 'lvim.core.commands'
 commands.load(commands.defaults)
 
-require('keymappings').setup()
+require('lvim.keymappings').setup()
 
-require('lsp').setup()
+require('lvim.lsp').setup()

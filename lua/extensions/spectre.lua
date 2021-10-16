@@ -68,7 +68,7 @@ function M.setup()
     {'FindAndReplaceInBuffer', [[lua require('spectre').open_file_search()]]}
   })
 
-  require('keymappings').append_to_defaults(lvim.extensions[extension_name].keymaps)
+  require('lvim.keymappings').append_to_defaults(lvim.extensions[extension_name].keymaps)
 
   if lvim.extensions[extension_name].on_config_done then lvim.extensions[extension_name].on_config_done(extension) end
 end
