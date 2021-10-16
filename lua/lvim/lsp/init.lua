@@ -108,6 +108,18 @@ function M.setup()
   local lsp_status_ok, _ = pcall(require, 'lspconfig')
   if not lsp_status_ok then return end
 
+  if lvim.lsp.ensure_installed then
+    for _, server_name in pairs(lvim.lsp.ensure_installed) do
+      local server_available, requested_server = require('nvim-lsp-installer.servers').get_server(server_name)
+
+      if server_available then
+        require('lvim.lsp.manager').ensure_installed(requested_server)
+      else
+        Log:warn('Requested LSP is not avaiable: ' .. server_name)
+      end
+    end
+  end
+
   for _, sign in ipairs(lvim.lsp.diagnostics.signs.values) do vim.fn.sign_define(sign.name, {texthl = sign.name, text = sign.text, numhl = sign.name}) end
 
   require('lvim.lsp.handlers').setup()

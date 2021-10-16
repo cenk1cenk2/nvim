@@ -15,11 +15,10 @@ function M.config()
 
   lvim.builtin.telescope = vim.tbl_extend('force', lvim.builtin.telescope, {
     defaults = {
-
       find_command = M.rg_arguments,
       vimgrep_arguments = M.rg_arguments,
-      layout_config = {prompt_position = 'bottom', horizontal = {mirror = false, width = 0.9}, vertical = {mirror = false, width = 0.8}},
-      file_ignore_patterns = {'**/yarn.lock', '**/node_modules/**', '**/package-lock.json', '**/.git'},
+      layout_config = {prompt_position = 'bottom', horizontal = {mirror = false, width = 0.95}, vertical = {mirror = false, width = 0.85}},
+      file_ignore_patterns = {'**/yarn.lock', '**/node_modules/**', '**/package-lock.json', '**/.git', '**/LICENSE', '**/license'},
       mappings = {i = {['<C-e>'] = actions.cycle_previewers_next, ['<C-r>'] = actions.cycle_previewers_prev}},
       initial_mode = 'insert',
       selection_strategy = 'reset',
@@ -27,7 +26,6 @@ function M.config()
       layout_strategy = 'horizontal',
       file_sorter = require('telescope.sorters').get_fzy_sorter,
       generic_sorter = require('telescope.sorters').get_generic_fuzzy_sorter,
-      path_display = {shorten = 5},
       winblend = 0,
       border = {},
       borderchars = {'─', '│', '─', '│', '╭', '╮', '╯', '╰'},
@@ -39,9 +37,9 @@ function M.config()
       qflist_previewer = require('telescope.previewers').vim_buffer_qflist.new,
       prompt_prefix = ' ',
       selection_caret = ' ',
-      entry_prefix = '  ',
+      entry_prefix = ' ',
       pickers = {
-        find_files = {find_command = {'fd', '--type=file', '--hidden', '--smart-case'}},
+        find_files = {find_command = {'fd', '--type=file', '--hidden', '--smart-case'}, shorten_path = false},
         live_grep = {
           -- @usage don't include the filename in the search results
           only_sort_text = true
@@ -61,7 +59,7 @@ function M.config()
     extensions = {
       fzf = {
         fuzzy = true, -- false will only do exact matching
-        override_generic_sorter = true, -- override the generic sorter
+        override_generic_sorter = false, -- override the generic sorter
         override_file_sorter = true, -- override the file sorter
         case_mode = 'smart_case' -- or "ignore_case" or "respect_case"
       }

@@ -160,18 +160,7 @@ M.config = function()
       end
     },
     documentation = {border = {'╭', '─', '╮', '│', '╯', '─', '╰', '│'}},
-    sources = {
-      {name = 'nvim_lsp'},
-      {name = 'path'},
-      {name = 'luasnip'},
-      {name = 'cmp_tabnine'},
-      {name = 'nvim_lua'},
-      {name = 'buffer'},
-      {name = 'calc'},
-      {name = 'emoji'},
-      {name = 'treesitter'},
-      {name = 'crates'}
-    },
+    sources = {{name = 'nvim_lsp'}, {name = 'path'}, {name = 'luasnip'}, {name = 'cmp_tabnine'}, {name = 'nvim_lua'}, {name = 'buffer'}, {name = 'treesitter'}, {name = 'crates'}},
     mapping = {
       ['<C-d>'] = cmp.mapping.scroll_docs(-4),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -200,9 +189,13 @@ M.config = function()
           fallback()
         end
       end, {'i', 's'}),
-
       ['<C-Space>'] = cmp.mapping.complete(),
       ['<C-e>'] = cmp.mapping.close(),
+      ['<C-c>'] = function()
+        vim.api.nvim_feedkeys(vim.api.nvim_eval('"\\<esc>"'), 'm', true)
+
+        cmp.mapping.close()
+      end,
       ['<CR>'] = cmp.mapping(function(fallback)
         if cmp.visible() and cmp.confirm(lvim.builtin.cmp.confirm_opts) then return end
 

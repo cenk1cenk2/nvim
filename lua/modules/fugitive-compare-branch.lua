@@ -16,9 +16,7 @@ M.GDiffCompare = function()
 end
 
 M.setup = function()
-  require('utils.command').wrap_to_command({{'GDiffCompare', 'lua require("plugin-configurations.fugitive").GDiffCompare()'}})
-  vim.api.nvim_set_keymap('n', [[gy]], [[:diffget //3<CR>]], {silent = true, noremap = true})
-  vim.api.nvim_set_keymap('n', [[gx]], [[:diffget //2<CR>]], {silent = true, noremap = true})
+  require('utils.command').wrap_to_command({{'GDiffCompare', 'lua require("modules.fugitive-compare-branch").GDiffCompare()'}})
 end
 
 return M

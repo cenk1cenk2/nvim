@@ -49,7 +49,7 @@ function M.load(keymaps)
 end
 
 function M.config()
-  lvim.keys = require('keymappings.keymappings')
+  lvim.keys = require('keys.keymappings')
 end
 
 function M.print(mode)

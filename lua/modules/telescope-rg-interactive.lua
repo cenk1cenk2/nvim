@@ -1,6 +1,7 @@
 M = {}
 
 local TELESCOPE_RG_INTERACTIVE_LAST_ARGS = ''
+local telescope = require('lvim.core.telescope')
 
 function M.TelescopeRipgrepInteractive()
   vim.call('inputsave')
@@ -17,7 +18,7 @@ function M.TelescopeRipgrepInteractive()
 
   for substring in args:gmatch('%S+') do table.insert(chunks, substring) end
 
-  local command = ':Telescope live_grep vimgrep_arguments=' .. table.concat(require('lvim.core.telescope').rg_arguments, ',') .. ',' .. table.concat(chunks, ',')
+  local command = ':Telescope live_grep vimgrep_arguments=' .. table.concat(telescope.rg_arguments, ',') .. ',' .. table.concat(chunks, ',')
 
   vim.api.nvim_command(command)
 

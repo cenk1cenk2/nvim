@@ -16,4 +16,5 @@ commands.load(commands.defaults)
 
 require('lvim.keymappings').setup()
 
+require('lsp.installers').setup()
 require('lvim.lsp').setup()

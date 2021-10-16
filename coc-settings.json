@@ -1,0 +1,14 @@
+{
+  "list.indicator": ">",
+  "list.selectedSignText": " ",
+  "list.source.words.defaultOptions": [
+    "--interactive",
+    "--ignore-case"
+  ],
+  "list.source.mru.ignoreGitIgnore": true,
+  "session.directory": "~/.cache/nvim/session",
+  "session.saveOnVimLeave": false,
+  "session.restartOnSessionLoad": false,
+  "git.enableGutters": false,
+  "suggest.autoTrigger": false
+}

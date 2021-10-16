@@ -46,6 +46,8 @@ function M.setup()
 
   extension.setup(lvim.extensions[extension_name].setup)
 
+  lvim.builtin.which_key.mappings['a']['i'] = {':IndentBlanklineToggle<CR>', 'indentation guides'}
+
   if lvim.extensions[extension_name].on_config_done then lvim.extensions[extension_name].on_config_done(extension) end
 end
 

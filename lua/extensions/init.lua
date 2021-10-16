@@ -1,6 +1,7 @@
 local M = {}
 
 local extensions = {
+  'extensions.hop',
   'extensions.vim-repeat',
   'extensions.vim-surround',
   'extensions.neoscroll',
@@ -16,7 +17,17 @@ local extensions = {
   'extensions.symbols-outline',
   'extensions.colorizer',
   'extensions.todo-comments',
-  'extensions.indent-blankline'
+  'extensions.indent-blankline',
+  'extensions.vim-fugitive',
+  'extensions.octo',
+  'extensions.diffview',
+  'extensions.vim-easy-align',
+  'extensions.markdown-preview',
+  'extensions.nvim-neoclip',
+  'extensions.vim-bookmarks',
+  'extensions.package-info',
+  'extensions.neogen',
+  'extensions.coc'
 }
 
 function M.config(config)

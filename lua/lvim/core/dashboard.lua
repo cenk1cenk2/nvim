@@ -12,7 +12,7 @@ M.config = function(config)
     custom_header = {'@cenk1cenk2/nvim'},
     custom_section = {
       a = {description = {'  Load Last Session'}, command = 'SessionLoad'},
-      b = {description = {'ﭯ  Sessions'}, command = 'CocList sessions'},
+      b = {description = {'⧗  Sessions'}, command = 'CocList sessions'},
       c = {description = {'  Find File'}, command = 'Telescope find_files'},
       d = {description = {'  File Browser'}, command = 'Telescope file_browser'},
       e = {description = {'  Recently Used Files'}, command = 'Telescope oldfiles'},
@@ -56,7 +56,7 @@ M.setup = function()
         'dashboard',
         'setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs= '
       },
-      {'FileType', 'dashboard', 'set showtabline=0 | autocmd BufLeave <buffer> set showtabline=' .. vim.opt.showtabline._value},
+      -- {'FileType', 'dashboard', 'set showtabline=0 | autocmd BufLeave <buffer> set showtabline=1'},
       {'FileType', 'dashboard', 'nnoremap <silent> <buffer> q :q<CR>'}
     }
   }

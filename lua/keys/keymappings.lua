@@ -16,7 +16,11 @@ return {
     -- navigate tab completion with <c-j> and <c-k>
     -- runs conditionally
     ['<C-j>'] = {'pumvisible() ? "\\<down>" : "\\<C-j>"', {expr = true, noremap = true}},
-    ['<C-k>'] = {'pumvisible() ? "\\<up>" : "\\<C-k>"', {expr = true, noremap = true}}
+    ['<C-k>'] = {'pumvisible() ? "\\<up>" : "\\<C-k>"', {expr = true, noremap = true}},
+
+    -- escape with c-c
+    ['<C-c>'] = '<ESC>'
+
   },
 
   ---@usage change or add keymappings for normal mode
@@ -30,8 +34,13 @@ return {
 
     -- disable help
     ['<F1>'] = '<Nop>',
+
     -- disable Ex mode
     ['Q'] = '<Nop>',
+
+    -- split to tab
+    ['<C-t>'] = '<C-w>T',
+    ['<C-E>'] = '<C-w><C-o>',
 
     -- Better window movement
     ['<C-h>'] = '<C-w>h',
@@ -58,11 +67,29 @@ return {
     -- QuickFix
     ['qn'] = ':cnext<CR>',
     ['qp'] = ':cprev<CR>',
+    ['<C-a>'] = ':call QuickFixToggle()<CR>',
     ['<C-y>'] = ':call QuickFixToggle()<CR>',
 
     -- create space on top and bottom
     ['Ü'] = 'o<ESC>k',
-    ['ü'] = 'O<ESC>j'
+    ['ü'] = 'O<ESC>j',
+
+    -- jump between paragraphs
+    ['ö'] = '{zz',
+    ['ä'] = '}zz',
+
+    -- paste last clipboard register
+    ['op'] = '"_diw"*P',
+
+    -- paste last yank register
+    ['üp'] = '"_diw"0P',
+
+    -- visual select last word
+    ['üü'] = 'viw',
+
+    -- to blachole
+    ['c'] = '"_c',
+    ['x'] = '"_x'
 
   },
 
@@ -79,7 +106,18 @@ return {
   visual_mode = {
     -- Better indenting
     ['<'] = '<gv',
-    ['>'] = '>gv'
+    ['>'] = '>gv',
+
+    -- jump between paragraphs
+    ['ö'] = '{zz',
+    ['ä'] = '}zz',
+
+    -- to blachole
+    ['c'] = '"_c',
+    ['x'] = '"_x',
+
+    -- dont overwrite while pasting
+    ['p'] = '"_dP'
 
     -- ["p"] = '"0p',
     -- ["P"] = '"0P',
@@ -94,6 +132,7 @@ return {
     -- Move current line / block with Alt-j/k ala vscode.
     ['<A-j>'] = ':m \'>+1<CR>gv-gv',
     ['<A-k>'] = ':m \'<-2<CR>gv-gv'
+
   },
 
   ---@usage change or add keymappings for command mode

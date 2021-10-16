@@ -2,6 +2,7 @@ local M = {}
 local Log = require 'lvim.core.log'
 
 function M.config()
+
   lvim.builtin.nvimtree = {
     active = true,
     on_config_done = nil,
@@ -57,7 +58,6 @@ function M.config()
           -- list of mappings to set on the tree manually
         }
       },
-
       show_icons = {git = 1, folders = 1, files = 1, folder_arrows = 1, tree_width = 40},
       quit_on_open = 0,
       hide_dotfiles = 1,
@@ -72,6 +72,7 @@ function M.config()
         folder = {default = '', open = '', empty = '', empty_open = '', symlink = ''}
       }
     }
+
   }
 end
 

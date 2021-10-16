@@ -4,7 +4,7 @@ return {
   {'neovim/nvim-lspconfig'},
   {'tamago324/nlsp-settings.nvim'},
   {'jose-elias-alvarez/null-ls.nvim'},
-  {'antoinemadec/FixCursorHold.nvim'}, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
+  -- {'antoinemadec/FixCursorHold.nvim'}, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
   {'williamboman/nvim-lsp-installer'},
 
   {'nvim-lua/popup.nvim'},
@@ -16,7 +16,6 @@ return {
     config = function()
       require('lvim.core.telescope').setup()
     end,
-    requires = {{'nvim-telescope/telescope-fzf-native.nvim', run = 'make'}},
     disable = not lvim.builtin.telescope.active
   },
 
@@ -66,10 +65,19 @@ return {
     end
   },
 
+  {'nvim-telescope/telescope-fzf-native.nvim', run = 'make', requires = 'nvim-telescope/telescope.nvim'},
   {'nvim-treesitter/playground', requires = {'nvim-treesitter/nvim-treesitter'}},
   {'p00f/nvim-ts-rainbow', run = ':TSUpdate', requires = {'nvim-treesitter/nvim-treesitter'}},
   {'windwp/nvim-ts-autotag', requires = {'nvim-treesitter/nvim-treesitter'}},
   {'JoosepAlviste/nvim-ts-context-commentstring', requires = {'nvim-treesitter/nvim-treesitter'}},
+  {
+    'AckslD/nvim-neoclip.lua',
+    requires = {'nvim-treesitter/nvim-treesitter'},
+    config = function()
+      require('extensions.nvim-neoclip').setup()
+    end
+
+  },
 
   -- NvimTree
   {
@@ -183,6 +191,15 @@ return {
       require('lvim.core.terminal').setup()
     end,
     disable = not lvim.builtin.terminal.active
+  },
+
+  -- hop
+  {
+    'phaazon/hop.nvim',
+    config = function()
+      require('extensions.hop').setup()
+    end,
+    disable = not lvim.extensions.hop.active
   },
 
   -- Repeat last commands
@@ -319,6 +336,85 @@ return {
       require('extensions.indent-blankline').setup()
     end,
     disable = not lvim.extensions.indent_blankline.active
-  }
+  },
 
+  -- git related
+  {
+    'tpope/vim-fugitive',
+    config = function()
+      require('extensions.vim-fugitive').setup()
+    end,
+    disable = not lvim.extensions.vim_fugitive.active
+  },
+
+  {
+    'pwntester/octo.nvim',
+    config = function()
+      require('extensions.octo').setup()
+    end,
+    disable = not lvim.extensions.octo.active
+  },
+
+  {
+    'sindrets/diffview.nvim',
+    config = function()
+      require('extensions.diffview').setup()
+    end,
+    disable = not lvim.extensions.diffview.active
+  },
+
+  -- coc
+  {
+    'neoclide/coc.nvim',
+    branch = 'release',
+    config = function()
+      require('extensions.coc').setup()
+    end,
+    disable = not lvim.extensions.coc.active
+  },
+
+  -- easy align
+  {
+    'junegunn/vim-easy-align',
+    config = function()
+      require('extensions.vim-easy-align').setup()
+    end,
+    disable = not lvim.extensions.vim_easy_align.active
+  },
+
+  -- markdown preview
+  {
+    'iamcco/markdown-preview.nvim',
+    run = {'cd app & yarn & yarn add -D tslib', ':call mkdp#util#install()'},
+    config = function()
+      require('extensions.markdown-preview').setup()
+    end,
+    disable = not lvim.extensions.markdown_preview.active
+  },
+
+  {
+    'MattesGroeger/vim-bookmarks',
+    config = function()
+      require('extensions.vim-bookmarks').setup()
+    end,
+    disable = not lvim.extensions.vim_bookmarks.active
+  },
+
+  {
+    'vuki656/package-info.nvim',
+    requires = 'MunifTanjim/nui.nvim',
+    config = function()
+      require('extensions.package-info').setup()
+    end,
+    disable = not lvim.extensions.package_info.active
+  },
+
+  {
+    'danymat/neogen',
+    config = function()
+      require('extensions.neogen').setup()
+    end,
+    requires = {'nvim-treesitter/nvim-treesitter'},
+    disable = not lvim.extensions.neogen.active
+  }
 }

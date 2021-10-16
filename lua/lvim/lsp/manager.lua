@@ -30,6 +30,24 @@ local function resolve_config(name, user_config)
   return config
 end
 
+function M.ensure_installed(server)
+  if server:is_installed() then return true end
+
+  if not lvim.lsp.automatic_servers_installation then
+    Log:warn(server.name .. ' is not managed by the automatic installer')
+    return false
+  end
+
+  Log:info(string.format('Installing [%s]', server.name))
+
+  server:install()
+
+  vim.schedule(function()
+    vim.cmd [[LspStop]]
+    vim.cmd [[LspStart]]
+  end)
+end
+
 ---Setup a language server by providing a name
 ---@param server_name string name of the language server
 ---@param user_config table [optional] when available it will take predence over any default configurations
@@ -41,21 +59,7 @@ function M.setup(server_name, user_config)
   local config = resolve_config(server_name, user_config)
   local server_available, requested_server = require('nvim-lsp-installer.servers').get_server(server_name)
 
-  local function ensure_installed(server)
-    if server:is_installed() then return true end
-    if not lvim.lsp.automatic_servers_installation then
-      Log:debug(server.name .. ' is not managed by the automatic installer')
-      return false
-    end
-    Log:debug(string.format('Installing [%s]', server.name))
-    server:install()
-    vim.schedule(function()
-      vim.cmd [[LspStop]]
-      vim.cmd [[LspStart]]
-    end)
-  end
-
-  if server_available and ensure_installed(requested_server) then
+  if server_available and M.ensure_installed(requested_server) then
     requested_server:setup(config)
   else
     require('lspconfig')[server_name].setup(config)

@@ -2,7 +2,7 @@ local M = {}
 
 M.config = function()
 
-  local keymaps = require('keymappings.which-key')
+  local keymaps = require('keys.which-key')
 
   lvim.builtin.which_key = {
     ---@usage disable which-key completely [not recommeded]
@@ -38,7 +38,7 @@ M.config = function()
         width = {min = 20, max = 50}, -- min and max width of the columns
         spacing = 3 -- spacing between columns
       },
-      triggers = {'<leader>', 'g', 'z', '"', '<C-r>'}
+      triggers = {'<leader>', 'g', 'z', '"', '<C-r>', 'm'}
     },
 
     opts = {

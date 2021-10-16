@@ -19,6 +19,8 @@ M.setup = function()
 
   dap.defaults.fallback.terminal_win_cmd = '50vsplit new'
 
+  require('dap.ext.vscode').load_launchjs()
+
   lvim.builtin.which_key.mappings['d'] = {
     name = 'Debug',
     t = {'<cmd>lua require\'dap\'.toggle_breakpoint()<cr>', 'Toggle Breakpoint'},

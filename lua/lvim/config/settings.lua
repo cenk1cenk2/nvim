@@ -11,7 +11,8 @@ M.load_options = function()
     conceallevel = 0, -- so that `` is visible in markdown files
     fileencoding = 'utf-8', -- the encoding written to a file
     foldmethod = 'expr', -- folding, set to "expr" for treesitter based folding
-    foldexpr = '', -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
+    foldexpr = 'nvim_treesitter#foldexpr()', -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
+    foldlevel = 99,
     guifont = 'monospace:h17', -- the font used in graphical neovim applications
     hidden = true, -- required to keep multiple buffers and open multiple buffers
     hlsearch = true, -- highlight all matches on previous search pattern
@@ -45,7 +46,8 @@ M.load_options = function()
     spell = false,
     spelllang = 'en',
     scrolloff = 8, -- is one of my fav
-    sidescrolloff = 8
+    sidescrolloff = 8,
+    sessionoptions = 'buffers,curdir,folds,tabpages,winsize'
   }
 
   ---  SETTINGS  ---

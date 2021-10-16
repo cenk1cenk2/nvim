@@ -35,7 +35,7 @@ return {
     color = {fg = colors.bg},
     cond = nil
   },
-  branch = {'b:gitsigns_head', icon = ' ', color = {fg = colors.bg, bg = colors.yellow}, cond = conditions.hide_in_width},
+  branch = {'b:gitsigns_head', icon = '', color = {fg = colors.bg, bg = colors.yellow}, cond = conditions.hide_in_width},
   filetype = {'filetype', cond = conditions.hide_in_width, color = {}},
   filename = {'filename', color = {}, cond = nil},
   diff = {
@@ -73,11 +73,11 @@ return {
   },
   lsp = {
     function(msg)
-      msg = msg or 'LS Inactive'
+      msg = msg or '!LS'
       local buf_clients = vim.lsp.buf_get_clients()
       if next(buf_clients) == nil then
         -- TODO: clean up this if statement
-        if type(msg) == 'boolean' or #msg == 0 then return 'LS Inactive' end
+        if type(msg) == 'boolean' or #msg == 0 then return '!LS' end
         return msg
       end
       local buf_ft = vim.bo.filetype
