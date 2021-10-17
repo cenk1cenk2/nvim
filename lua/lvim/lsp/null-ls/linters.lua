@@ -6,7 +6,7 @@ local Log = require "lvim.core.log"
 
 function M.list_supported_names(filetype)
   local null_ls_methods = null_ls.methods
-  local linter_method = null_ls_methods.internal["DIAGNOSTICS"]
+  local linter_method = null_ls_methods["DIAGNOSTICS"]
   local registered_providers = services.list_registered_providers_names(filetype)
   return registered_providers[linter_method] or {}
 end
@@ -54,7 +54,7 @@ function M.list_configured(linter_configs)
         Log:warn("Not found: " .. linter._opts.command)
         errors[lnt_config.exe] = {} -- Add data here when necessary
       else
-        Log:debug("Using linter: " .. linter_cmd)
+        Log:debug("Using linter: " .. linter_cmd .. " for " .. vim.inspect(lnt_config.filetypes))
         linters[lnt_config.exe] = linter.with {
           command = linter_cmd,
           extra_args = lnt_config.args,

@@ -113,7 +113,7 @@ M.mappings = {
   -- lsp
   l = {
     name = "LSP",
-    a = { "<cmd>lua require('core.telescope').code_actions()<cr>", "Code Action" },
+    a = { "<cmd>lua require('lvim.core.telescope').code_actions()<cr>", "Code Action" },
     w = { "<cmd>Telescope lsp_document_diagnostics<cr>", "Document Diagnostics" },
     W = { "<cmd>Telescope lsp_workspace_diagnostics<cr>", "Workspace Diagnostics" },
     f = { "<cmd>lua vim.lsp.buf.formatting()<cr>", "Format" },
@@ -208,7 +208,7 @@ M.mappings = {
     name = "Packer",
     c = { "<cmd>PackerCompile<cr>", "Compile" },
     i = { "<cmd>PackerInstall<cr>", "Install" },
-    r = { "<cmd>lua require('lvim.utils').reload_lv_config()<cr>", "Reload" },
+    r = { "<cmd>lua require('lvim.config'):reload()<cr>", "Reload configurations" },
     s = { "<cmd>PackerSync<cr>", "Sync" },
     S = { "<cmd>PackerStatus<cr>", "Status" },
     u = { "<cmd>PackerUpdate<cr>", "Update" },

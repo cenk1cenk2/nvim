@@ -47,7 +47,14 @@ function M.setup()
         if not vim.api.nvim_buf_is_loaded(bufnr) then
           return
         end
-        vim.lsp.diagnostic.display(diagnostics, bufnr, ctx.client_id, config)
+
+        local prefixed_diagnostics = vim.deepcopy(diagnostics)
+
+        for i, v in pairs(diagnostics) do
+          prefixed_diagnostics[i].message = string.format("%s: %s", v.source, v.message)
+        end
+
+        vim.lsp.diagnostic.display(prefixed_diagnostics, bufnr, ctx.client_id, config)
       end
     end
   else
@@ -63,7 +70,14 @@ function M.setup()
       if not vim.api.nvim_buf_is_loaded(bufnr) then
         return
       end
-      vim.lsp.diagnostic.display(diagnostics, bufnr, client_id, config)
+
+      local prefixed_diagnostics = vim.deepcopy(diagnostics)
+
+      for i, v in pairs(diagnostics) do
+        prefixed_diagnostics[i].message = string.format("%s: %s", v.source, v.message)
+      end
+
+      vim.lsp.diagnostic.display(prefixed_diagnostics, bufnr, client_id, config)
     end
   end
 

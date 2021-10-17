@@ -8,6 +8,7 @@ return {
     ["gs"] = { "<cmd>lua vim.lsp.buf.signature_help()<CR>", "show signature help" },
     ["gp"] = { "<cmd>lua require'lvim.lsp.peek'.Peek('definition')<CR>", "Peek definition" },
     ["gl"] = { "<cmd>lua require'lvim.lsp.handlers'.show_line_diagnostics()<CR>", "Show line diagnostics" },
+    ["ca"] = { "<cmd>lua require('lvim.core.telescope').code_actions()<cr>", "Code action" },
   },
   insert_mode = {},
   visual_mode = {},

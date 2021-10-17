@@ -6,7 +6,7 @@ local Log = require "lvim.core.log"
 
 function M.list_supported_names(filetype)
   local null_ls_methods = null_ls.methods
-  local formatter_method = null_ls_methods.internal["FORMATTING"]
+  local formatter_method = null_ls_methods["FORMATTING"]
   local registered_providers = services.list_registered_providers_names(filetype)
   return registered_providers[formatter_method] or {}
 end
@@ -54,7 +54,7 @@ function M.list_configured(formatter_configs)
         Log:warn("Not found: " .. formatter._opts.command)
         errors[fmt_config.exe] = {} -- Add data here when necessary
       else
-        Log:debug("Using formatter: " .. formatter_cmd)
+        Log:debug("Using formatter: " .. formatter_cmd .. " for " .. vim.inspect(fmt_config.filetypes))
         formatters[fmt_config.exe] = formatter.with {
           command = formatter_cmd,
           extra_args = fmt_config.args,

@@ -13,6 +13,6 @@ local root_dir = server.get_server_root_path(server_name)
 servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
-  installer = installers.pipe { npm.packages { "eslint_d" } },
+  installer = installers.pipe { npm.packages { server_name } },
   default_options = { cmd = { npm.executable(root_dir, server_name) } },
 })
