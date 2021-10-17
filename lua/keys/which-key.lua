@@ -9,7 +9,6 @@ M.mappings = {
   ["v"] = { "<C-W>v", "split right" },
   ["n"] = { "<cmd>nohlsearch<CR>", "no highlight" },
   ["p"] = { ":Telescope find_files theme=get_dropdown<CR>", "find file" },
-  ["r"] = { ":RnvimrToggle<CR>", "ranger" },
   ["q"] = { ":LspFixCurrent<CR>", "quick fix" },
 
   -- actions

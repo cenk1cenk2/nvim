@@ -56,6 +56,19 @@ M.setup = function()
   if lvim.builtin.terminal.on_config_done then
     lvim.builtin.terminal.on_config_done(terminal)
   end
+
+  require("lvim.keymappings").load {
+    normal_mode = {
+      ["<F2>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
+      ["<F3>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
+      ["<F4>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
+    },
+    term_mode = {
+      ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
+      ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
+      ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').bottom_terminal()<CR>",
+    },
+  }
 end
 
 M.add_exec = function(exec, keymap, name)
@@ -79,15 +92,35 @@ M._split = function(inputstr, sep)
   return t
 end
 
+local terminals = {}
+local Terminal = require("toggleterm.terminal").Terminal
+
 M._exec_toggle = function(exec)
-  local binary = M._split(exec)[1]
-  if vim.fn.executable(binary) ~= 1 then
-    Log:error("Unable to run executable " .. binary .. ". Please make sure it is installed properly.")
-    return
+  if not terminals[exec] then
+    local binary = M._split(exec)[1]
+    if vim.fn.executable(binary) ~= 1 then
+      Log:error("Unable to run executable " .. binary .. ". Please make sure it is installed properly.")
+      return
+    end
+    terminals[exec] = Terminal:new {
+      cmd = exec,
+      hidden = true,
+    }
   end
-  local Terminal = require("toggleterm.terminal").Terminal
-  local exec_term = Terminal:new { cmd = exec, hidden = true }
-  exec_term:toggle()
+
+  terminals[exec]:toggle()
+end
+
+M.bottom_terminal = function()
+  if not terminals["bottom"] then
+    terminals["bottom"] = Terminal:new {
+      cmd = vim.o.shell,
+      direction = "horizontal",
+      hidden = true,
+    }
+  end
+
+  terminals["bottom"]:toggle()
 end
 
 ---Toggles a log viewer according to log.viewer.layout_config
