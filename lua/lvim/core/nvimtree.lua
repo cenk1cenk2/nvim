@@ -57,6 +57,8 @@ function M.config()
           -- list of mappings to set on the tree manually
         },
       },
+      indent_markers = 1,
+      special_files = { ["package.json"] = 1, ["README.md"] = 1 },
       show_icons = { git = 1, folders = 1, files = 1, folder_arrows = 1, tree_width = 40 },
       quit_on_open = 0,
       hide_dotfiles = 0,
@@ -89,10 +91,18 @@ function M.setup()
     return
   end
 
-  local g = vim.g
-
-  for opt, val in pairs(lvim.builtin.nvimtree) do
-    g["nvim_tree_" .. opt] = val
+  local table_utils = require "lvim.utils.table"
+  for opt, val in pairs(lvim.builtin.nvimtree.setup) do
+    if
+      not table_utils.contains(
+        { "disable_netrw", "hijack_netrw", "auto_close", "update_cwd", "hijack_cursor", "lsp_diagnostics" },
+        function(entry)
+          return opt == entry
+        end
+      )
+    then
+      vim.g["nvim_tree_" .. opt] = val
+    end
   end
 
   -- Implicitly update nvim-tree when project module is active
