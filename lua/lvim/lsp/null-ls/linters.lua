@@ -28,7 +28,7 @@ end
 function M.list_configured(linter_configs)
   local linters, errors = {}, {}
 
-  for _, lnt_config in pairs(linter_configs) do
+  for _, lnt_config in ipairs(linter_configs) do
     local linter_name = lnt_config.exe:gsub("-", "_")
     local linter = null_ls.builtins.diagnostics[linter_name]
 
@@ -54,12 +54,17 @@ function M.list_configured(linter_configs)
         Log:warn("Not found: " .. linter._opts.command)
         errors[lnt_config.exe] = {} -- Add data here when necessary
       else
+        require("lvim.lsp.null-ls.services").join_environment_to_command(lnt_config.environment)
+
         Log:debug("Using linter: " .. linter_cmd .. " for " .. vim.inspect(lnt_config.filetypes))
-        linters[lnt_config.exe] = linter.with {
-          command = linter_cmd,
-          extra_args = lnt_config.args,
-          filetypes = lnt_config.filetypes,
-        }
+        table.insert(
+          linters,
+          linter.with {
+            command = linter_cmd,
+            extra_args = lnt_config.args,
+            filetypes = lnt_config.filetypes,
+          }
+        )
       end
     end
   end

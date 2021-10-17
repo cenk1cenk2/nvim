@@ -54,12 +54,17 @@ function M.list_configured(formatter_configs)
         Log:warn("Not found: " .. formatter._opts.command)
         errors[fmt_config.exe] = {} -- Add data here when necessary
       else
+        require("lvim.lsp.null-ls.services").join_environment_to_command(fmt_config.environment)
+
         Log:debug("Using formatter: " .. formatter_cmd .. " for " .. vim.inspect(fmt_config.filetypes))
-        formatters[fmt_config.exe] = formatter.with {
-          command = formatter_cmd,
-          extra_args = fmt_config.args,
-          filetypes = fmt_config.filetypes,
-        }
+        table.insert(
+          formatters,
+          formatter.with {
+            command = formatter_cmd,
+            extra_args = fmt_config.args,
+            filetypes = fmt_config.filetypes,
+          }
+        )
       end
     end
   end

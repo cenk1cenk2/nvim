@@ -50,7 +50,7 @@ function M.setup()
 
         local prefixed_diagnostics = vim.deepcopy(diagnostics)
 
-        for i, v in pairs(diagnostics) do
+        for i, v in ipairs(diagnostics) do
           prefixed_diagnostics[i].message = string.format("%s: %s", v.source, v.message)
         end
 
@@ -73,7 +73,7 @@ function M.setup()
 
       local prefixed_diagnostics = vim.deepcopy(diagnostics)
 
-      for i, v in pairs(diagnostics) do
+      for i, v in ipairs(diagnostics) do
         prefixed_diagnostics[i].message = string.format("%s: %s", v.source, v.message)
       end
 

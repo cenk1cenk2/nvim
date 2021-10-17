@@ -19,7 +19,7 @@ function M:setup()
   end
 
   require("lspconfig")["null-ls"].setup(lvim.lsp.null_ls.setup)
-  for filetype, config in pairs(lvim.lang) do
+  for filetype, config in ipairs(lvim.lang) do
     if not vim.tbl_isempty(config.formatters) then
       vim.tbl_map(function(c)
         c.filetypes = { filetype }

@@ -4,6 +4,8 @@ local installers = {
   "lsp-extensions.installers.prettier-d",
   "lsp-extensions.installers.eslint-d",
   "lsp-extensions.installers.stylua",
+  "lsp-extensions.installers.misspell",
+  "lsp-extensions.installers.markdownlint",
 }
 
 function M.setup()

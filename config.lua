@@ -3,13 +3,23 @@ lvim.log.level = "debug"
 lvim.lsp.ensure_installed = {
   "jsonls",
   "sumneko_lua",
-  "stylua",
   "vimls",
   "yamlls",
   "tsserver",
-  "eslint_d",
-  "prettierd",
   "bashls",
+  "pyright",
+  "graphql",
+  "dockerls",
+  "vuels",
+  "stylelint_lsp",
+  "gopls",
+  "tailwindcss",
+  "svelte",
+  "angularls",
+  -- managed by extensions
+  "stylua",
+  "eslint_d",
+  "markdownlint",
+  "prettierd",
+  "misspell",
 }
-
-lvim.lang.lua.formatters = { { exe = "stylua", managed = true } }

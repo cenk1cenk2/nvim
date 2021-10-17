@@ -122,7 +122,7 @@ M.config = function()
   end
 
   lvim.builtin.cmp = {
-    confirm_opts = { behavior = cmp.ConfirmBehavior.Replace, select = false },
+    confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false },
     experimental = { ghost_text = true, native_menu = false },
     formatting = {
       kind_icons = {

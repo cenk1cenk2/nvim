@@ -84,10 +84,12 @@ local function select_default_formater(client)
   if client.name == "null-ls" or not client_formatting then
     return
   end
+
   Log:debug("Checking for formatter overriding for " .. client.name)
+
   local client_filetypes = client.config.filetypes or {}
   for _, filetype in ipairs(client_filetypes) do
-    local supported_formatters = null_formatters.list_available(filetype)
+    local supported_formatters = null_formatters.list_supported_names(filetype)
 
     if
       (lvim.lang[filetype] and #vim.tbl_keys(lvim.lang[filetype].formatters) > 0)
@@ -142,13 +144,13 @@ function M.setup()
   require("lsp-extensions").setup()
 
   if lvim.lsp.ensure_installed then
-    for _, server_name in pairs(lvim.lsp.ensure_installed) do
+    for _, server_name in ipairs(lvim.lsp.ensure_installed) do
       local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(server_name)
 
       if server_available then
         require("lvim.lsp.manager").ensure_installed(requested_server)
       else
-        Log:warn("Requested LSP is not avaiable: " .. server_name)
+        Log:warn("Requested LSP is not available: " .. server_name)
       end
     end
   end

@@ -164,7 +164,7 @@ function M:reload()
   vim.cmd ":PackerCompile"
   -- vim.cmd ":PackerClean"
   require("lvim.keymappings").setup()
-  require("lsp").setup()
+  require("lsp-extensions").setup()
   require("lvim.lsp").setup()
   Log:info "Reloaded configuration!"
 end

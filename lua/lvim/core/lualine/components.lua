@@ -105,7 +105,7 @@ return {
       local buf_client_names = {}
 
       -- add client
-      for _, client in pairs(buf_clients) do
+      for _, client in ipairs(buf_clients) do
         if client.name ~= "null-ls" then
           table.insert(buf_client_names, client.name)
         end
@@ -114,14 +114,22 @@ return {
       -- add formatter
       local formatters = require "lvim.lsp.null-ls.formatters"
       local supported_formatters = formatters.list_supported_names(buf_ft)
-      vim.list_extend(buf_client_names, supported_formatters)
 
       -- add linter
       local linters = require "lvim.lsp.null-ls.linters"
       local supported_linters = linters.list_supported_names(buf_ft)
-      vim.list_extend(buf_client_names, supported_linters)
 
-      return table.concat(buf_client_names, ", ")
+      local lsps = table.concat(buf_client_names, ", ")
+
+      if supported_linters and not vim.tbl_isempty(supported_linters) then
+        lsps = lsps .. " | lint: " .. table.concat(supported_linters, ", ")
+      end
+
+      if supported_formatters and not vim.tbl_isempty(supported_formatters) then
+        lsps = lsps .. " | format: " .. table.concat(supported_formatters, ", ")
+      end
+
+      return lsps
     end,
     icon = " ",
     color = { gui = "bold" },

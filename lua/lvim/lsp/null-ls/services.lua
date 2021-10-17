@@ -19,7 +19,17 @@ function M.list_registered_providers_names(filetype)
       end
     end
   end
+
   return registered
+end
+
+function M.join_environment_to_command(environment)
+  if environment and not vim.tbl_isempty(environment) then
+    for key, value in pairs(environment) do
+      local command = key .. "=" .. value
+      vim.api.nvim_exec("let", "$" .. command)
+    end
+  end
 end
 
 return M
