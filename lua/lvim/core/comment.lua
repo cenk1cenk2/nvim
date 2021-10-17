@@ -4,7 +4,7 @@ function M.config()
   local pre_hook = nil
   if lvim.builtin.treesitter.context_commentstring.enable then
     pre_hook = function(_ctx)
-      return require('ts_context_commentstring.internal').calculate_commentstring()
+      return require("ts_context_commentstring.internal").calculate_commentstring()
     end
   end
   lvim.builtin.comment = {
@@ -18,7 +18,7 @@ function M.config()
     ---Could be a regex string or a function that returns a regex string.
     ---Example: Use '^$' to ignore empty lines
     ---@type string|function
-    ignore = '^$',
+    ignore = "^$",
 
     ---Whether to create basic (operator-pending) and extra mappings for NORMAL/VISUAL mode
     ---@type table
@@ -28,25 +28,25 @@ function M.config()
       basic = true,
       ---extended mapping
       ---Includes `g>`, `g<`, `g>[count]{motion}` and `g<[count]{motion}`
-      extra = false
+      extra = false,
     },
 
     ---LHS of line and block comment toggle mapping in NORMAL/VISUAL mode
     ---@type table
     toggler = {
       ---line-comment toggle
-      line = 'gcc',
+      line = "gcc",
       ---block-comment toggle
-      block = 'gbc'
+      block = "gbc",
     },
 
     ---LHS of line and block comment operator-mode mapping in NORMAL/VISUAL mode
     ---@type table
     opleader = {
       ---line-comment opfunc mapping
-      line = 'gc',
+      line = "gc",
       ---block-comment opfunc mapping
-      block = 'gb'
+      block = "gb",
     },
 
     ---Pre-hook, called before commenting the line
@@ -55,15 +55,17 @@ function M.config()
 
     ---Post-hook, called after commenting is done
     ---@type function|nil
-    post_hook = nil
+    post_hook = nil,
   }
 end
 
 function M.setup()
-  local nvim_comment = require 'Comment'
+  local nvim_comment = require "Comment"
 
   nvim_comment.setup(lvim.builtin.comment)
-  if lvim.builtin.comment.on_config_done then lvim.builtin.comment.on_config_done(nvim_comment) end
+  if lvim.builtin.comment.on_config_done then
+    lvim.builtin.comment.on_config_done(nvim_comment)
+  end
 end
 
 return M

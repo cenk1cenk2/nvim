@@ -4,15 +4,15 @@ local Log = {}
 ---@param msg any
 ---@param level string [same as vim.log.log_levels]
 function Log:add_entry(msg, level)
-  assert(type(level) == 'string')
+  assert(type(level) == "string")
   if self.__handle then
     -- plenary uses lower-case log levels
     self.__handle[level:lower()](msg)
     return
   end
-  local status_ok, plenary = pcall(require, 'plenary')
+  local status_ok, plenary = pcall(require, "plenary")
   if status_ok then
-    local default_opts = {plugin = 'neovim', level = lvim.log.level, info_level = 4}
+    local default_opts = { plugin = "neovim", level = lvim.log.level, info_level = 4 }
     local handle = plenary.log.new(default_opts)
     handle[level:lower()](msg)
     self.__handle = handle
@@ -23,37 +23,37 @@ end
 ---Retrieves the path of the logfile
 ---@return string path of the logfile
 function Log:get_path()
-  return string.format('%s/%s.log', vim.fn.stdpath 'cache', 'neovim')
+  return string.format("%s/%s.log", vim.fn.stdpath "cache", "neovim")
 end
 
 ---Add a log entry at TRACE level
 ---@param msg any
 function Log:trace(msg)
-  self:add_entry(msg, 'TRACE')
+  self:add_entry(msg, "TRACE")
 end
 
 ---Add a log entry at DEBUG level
 ---@param msg any
 function Log:debug(msg)
-  self:add_entry(msg, 'DEBUG')
+  self:add_entry(msg, "DEBUG")
 end
 
 ---Add a log entry at INFO level
 ---@param msg any
 function Log:info(msg)
-  self:add_entry(msg, 'INFO')
+  self:add_entry(msg, "INFO")
 end
 
 ---Add a log entry at WARN level
 ---@param msg any
 function Log:warn(msg)
-  self:add_entry(msg, 'WARN')
+  self:add_entry(msg, "WARN")
 end
 
 ---Add a log entry at ERROR level
 ---@param msg any
 function Log:error(msg)
-  self:add_entry(msg, 'ERROR')
+  self:add_entry(msg, "ERROR")
 end
 
 setmetatable({}, Log)

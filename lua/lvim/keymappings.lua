@@ -1,8 +1,8 @@
 local M = {}
 
-local Log = require 'lvim.core.log'
+local Log = require "lvim.core.log"
 
-local generic_opts_any = {noremap = true, silent = true}
+local generic_opts_any = { noremap = true, silent = true }
 
 local generic_opts = {
   insert_mode = generic_opts_any,
@@ -10,15 +10,26 @@ local generic_opts = {
   visual_mode = generic_opts_any,
   visual_block_mode = generic_opts_any,
   command_mode = generic_opts_any,
-  term_mode = {silent = true}
+  term_mode = { silent = true },
 }
 
-local mode_adapters = {insert_mode = 'i', normal_mode = 'n', term_mode = 't', visual_mode = 'v', visual_block_mode = 'x', command_mode = 'c'}
+local mode_adapters = {
+  insert_mode = "i",
+  normal_mode = "n",
+  term_mode = "t",
+  visual_mode = "v",
+  visual_block_mode = "x",
+  command_mode = "c",
+}
 
 -- Append key mappings to lunarvim's defaults for a given mode
 -- @param keymaps The table of key mappings containing a list per mode (normal_mode, insert_mode, ..)
 function M.append_to_defaults(keymaps)
-  for mode, mappings in pairs(keymaps) do for k, v in pairs(mappings) do lvim.keys[mode][k] = v end end
+  for mode, mappings in pairs(keymaps) do
+    for k, v in pairs(mappings) do
+      lvim.keys[mode][k] = v
+    end
+  end
 end
 
 -- Set key mappings individually
@@ -27,7 +38,7 @@ end
 -- @param val Can be form as a mapping or tuple of mapping and user defined opt
 function M.set_keymaps(mode, key, val)
   local opt = generic_opts[mode] and generic_opts[mode] or generic_opts_any
-  if type(val) == 'table' then
+  if type(val) == "table" then
     opt = val[2]
     val = val[1]
   end
@@ -39,21 +50,25 @@ end
 -- @param keymaps The list of key mappings
 function M.load_mode(mode, keymaps)
   mode = mode_adapters[mode] and mode_adapters[mode] or mode
-  for k, v in pairs(keymaps) do M.set_keymaps(mode, k, v) end
+  for k, v in pairs(keymaps) do
+    M.set_keymaps(mode, k, v)
+  end
 end
 
 -- Load key mappings for all provided modes
 -- @param keymaps A list of key mappings for each mode
 function M.load(keymaps)
-  for mode, mapping in pairs(keymaps) do M.load_mode(mode, mapping) end
+  for mode, mapping in pairs(keymaps) do
+    M.load_mode(mode, mapping)
+  end
 end
 
 function M.config()
-  lvim.keys = require('keys.keymappings')
+  lvim.keys = require "keys.keymappings"
 end
 
 function M.print(mode)
-  print 'List of LunarVim\'s default keymappings (not including which-key)'
+  print "List of LunarVim's default keymappings (not including which-key)"
   if mode then
     print(vim.inspect(lvim.keys[mode]))
   else
@@ -62,8 +77,8 @@ function M.print(mode)
 end
 
 function M.setup()
-  vim.g.mapleader = (lvim.leader == 'space' and ' ') or lvim.leader
-  Log:debug('Initialized keybindings.')
+  vim.g.mapleader = (lvim.leader == "space" and " ") or lvim.leader
+  Log:debug "Initialized keybindings."
   M.load(lvim.keys)
 end
 

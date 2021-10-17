@@ -1,6 +1,6 @@
 local M = {}
 
-local extension_name = 'neoclip'
+local extension_name = "neoclip"
 
 function M.config()
   lvim.extensions[extension_name] = {
@@ -10,11 +10,14 @@ function M.config()
       history = 1000,
       filter = nil,
       preview = true,
-      default_register = 'r',
+      default_register = "r",
       content_spec_column = false,
-      on_paste = {set_reg = false},
-      keys = {i = {select = '<cr>', paste = '<c-p>', paste_behind = '<c-k>'}, n = {select = '<cr>', paste = 'p', paste_behind = 'P'}}
-    }
+      on_paste = { set_reg = false },
+      keys = {
+        i = { select = "<cr>", paste = "<c-p>", paste_behind = "<c-k>" },
+        n = { select = "<cr>", paste = "p", paste_behind = "P" },
+      },
+    },
   }
 end
 
@@ -23,12 +26,13 @@ function M.setup()
 
   extension.setup(lvim.extensions[extension_name].setup)
 
-  lvim.builtin.which_key.mappings['y'] = {':Telescope neoclip<CR>', 'yank registers'}
+  lvim.builtin.which_key.mappings["y"] = { ":Telescope neoclip<CR>", "yank registers" }
 
-  require('telescope').load_extension('neoclip')
+  require("telescope").load_extension "neoclip"
 
-  if lvim.extensions[extension_name].on_config_done then lvim.extensions[extension_name].on_config_done(extension) end
-
+  if lvim.extensions[extension_name].on_config_done then
+    lvim.extensions[extension_name].on_config_done(extension)
+  end
 end
 
 return M

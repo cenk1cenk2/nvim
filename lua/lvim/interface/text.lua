@@ -5,7 +5,9 @@ local function max_len_line(lines)
 
   for _, line in ipairs(lines) do
     local line_len = line:len()
-    if line_len > max_len then max_len = line_len end
+    if line_len > max_len then
+      max_len = line_len
+    end
   end
 
   return max_len
@@ -30,7 +32,7 @@ function M.align_center(container, lines, alignment)
   local max_len = max_len_line(lines)
 
   for _, line in ipairs(lines) do
-    local padding = string.rep(' ', (math.max(container.width, max_len) - line:len()) * alignment)
+    local padding = string.rep(" ", (math.max(container.width, max_len) - line:len()) * alignment)
     table.insert(output, padding .. line)
   end
 
@@ -42,9 +44,11 @@ end
 -- @param amount The amount of spaces to add
 function M.shift_right(lines, amount)
   local output = {}
-  local padding = string.rep(' ', amount)
+  local padding = string.rep(" ", amount)
 
-  for _, line in ipairs(lines) do table.insert(output, padding .. line) end
+  for _, line in ipairs(lines) do
+    table.insert(output, padding .. line)
+  end
 
   return output
 end
@@ -54,7 +58,7 @@ end
 -- @param col_count The number of column to span the table on
 -- @param col_sep The separator between each colummn, default: " "
 function M.format_table(entries, col_count, col_sep)
-  col_sep = col_sep or ' '
+  col_sep = col_sep or " "
 
   local col_rows = math.ceil(vim.tbl_count(entries) / col_count)
   local cols = {}
@@ -69,7 +73,9 @@ function M.format_table(entries, col_count, col_sep)
   end
 
   local col_max_len = {}
-  for _, col in ipairs(cols) do table.insert(col_max_len, max_len_line(col)) end
+  for _, col in ipairs(cols) do
+    table.insert(col_max_len, max_len_line(col))
+  end
 
   local output = {}
   for i, col in ipairs(cols) do
@@ -77,7 +83,7 @@ function M.format_table(entries, col_count, col_sep)
       if not output[j] then
         output[j] = entry
       else
-        local padding = string.rep(' ', col_max_len[i - 1] - cols[i - 1][j]:len())
+        local padding = string.rep(" ", col_max_len[i - 1] - cols[i - 1][j]:len())
         output[j] = output[j] .. padding .. col_sep .. entry
       end
     end

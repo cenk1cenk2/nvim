@@ -1,117 +1,115 @@
 return {
   ---@usage change or add keymappings for insert mode
   insert_mode = {
-    ['Q'] = '<Nop>',
+    ["Q"] = "<Nop>",
     -- Move current line / block with Alt-j/k ala vscode.
-    ['<A-j>'] = '<Esc>:m .+1<CR>==gi',
+    ["<A-j>"] = "<Esc>:m .+1<CR>==gi",
     -- Move current line / block with Alt-j/k ala vscode.
-    ['<A-k>'] = '<Esc>:m .-2<CR>==gi',
+    ["<A-k>"] = "<Esc>:m .-2<CR>==gi",
 
     -- navigation
-    ['<A-Up>'] = '<C-\\><C-N><C-w>k',
-    ['<A-Down>'] = '<C-\\><C-N><C-w>j',
-    ['<A-Left>'] = '<C-\\><C-N><C-w>h',
-    ['<A-Right>'] = '<C-\\><C-N><C-w>l',
+    ["<A-Up>"] = "<C-\\><C-N><C-w>k",
+    ["<A-Down>"] = "<C-\\><C-N><C-w>j",
+    ["<A-Left>"] = "<C-\\><C-N><C-w>h",
+    ["<A-Right>"] = "<C-\\><C-N><C-w>l",
 
     -- navigate tab completion with <c-j> and <c-k>
     -- runs conditionally
-    ['<C-j>'] = {'pumvisible() ? "\\<down>" : "\\<C-j>"', {expr = true, noremap = true}},
-    ['<C-k>'] = {'pumvisible() ? "\\<up>" : "\\<C-k>"', {expr = true, noremap = true}},
+    ["<C-j>"] = { 'pumvisible() ? "\\<down>" : "\\<C-j>"', { expr = true, noremap = true } },
+    ["<C-k>"] = { 'pumvisible() ? "\\<up>" : "\\<C-k>"', { expr = true, noremap = true } },
 
     -- escape with c-c
-    ['<C-c>'] = '<ESC>'
-
+    ["<C-c>"] = "<ESC>",
   },
 
   ---@usage change or add keymappings for normal mode
   normal_mode = {
     -- save
-    ['<C-s>'] = ':w<CR>',
-    ['<C-x>'] = ':noa w<CR>:lua require("lvim.core.log"):warn("No autocommands had been run while saving!!!")<CR>',
+    ["<C-s>"] = ":w<CR>",
+    ["<C-x>"] = ':noa w<CR>:lua require("lvim.core.log"):warn("No autocommands had been run while saving!!!")<CR>',
 
     -- close buffer
-    ['<C-q>'] = ':BufferClose<CR>',
+    ["<C-q>"] = ":BufferClose<CR>",
 
     -- disable help
-    ['<F1>'] = '<Nop>',
+    ["<F1>"] = "<Nop>",
 
     -- disable Ex mode
-    ['Q'] = '<Nop>',
+    ["Q"] = "<Nop>",
 
     -- split to tab
-    ['<C-t>'] = '<C-w>T',
-    ['<C-E>'] = '<C-w><C-o>',
+    ["<C-t>"] = "<C-w>T",
+    ["<C-E>"] = "<C-w><C-o>",
 
     -- Better window movement
-    ['<C-h>'] = '<C-w>h',
-    ['<C-j>'] = '<C-w>j',
-    ['<C-k>'] = '<C-w>k',
-    ['<C-l>'] = '<C-w>l',
+    ["<C-h>"] = "<C-w>h",
+    ["<C-j>"] = "<C-w>j",
+    ["<C-k>"] = "<C-w>k",
+    ["<C-l>"] = "<C-w>l",
 
     -- Resize with arrows
-    ['<M-i>'] = ':resize +2<CR>',
-    ['<M-u>'] = ':resize -2<CR>',
-    ['<M-z>'] = ':vertical resize -2<CR>',
-    ['<M-o>'] = ':vertical resize +2<CR>',
+    ["<M-i>"] = ":resize +2<CR>",
+    ["<M-u>"] = ":resize -2<CR>",
+    ["<M-z>"] = ":vertical resize -2<CR>",
+    ["<M-o>"] = ":vertical resize +2<CR>",
 
     -- Move current line / block with Alt-j/k a la vscode.
-    ['<A-j>'] = ':m .+1<CR>==',
-    ['<A-k>'] = ':m .-2<CR>==',
+    ["<A-j>"] = ":m .+1<CR>==",
+    ["<A-k>"] = ":m .-2<CR>==",
 
     -- QuickFix
-    ['qn'] = ':cnext<CR>',
-    ['qp'] = ':cprev<CR>',
-    ['<C-a>'] = ':call QuickFixToggle()<CR>',
-    ['<C-y>'] = ':call QuickFixToggle()<CR>',
+    ["qn"] = ":cnext<CR>",
+    ["qp"] = ":cprev<CR>",
+    ["<C-a>"] = ":call QuickFixToggle()<CR>",
+    ["<C-y>"] = ":call QuickFixToggle()<CR>",
 
     -- create space on top and bottom
-    ['Ü'] = 'o<ESC>k',
-    ['ü'] = 'O<ESC>j',
+    ["Ü"] = "o<ESC>k",
+    ["ü"] = "O<ESC>j",
 
     -- jump between paragraphs
-    ['ö'] = '{zz',
-    ['ä'] = '}zz',
+    ["ö"] = "{zz",
+    ["ä"] = "}zz",
 
     -- paste last clipboard register
-    ['op'] = '"_diw"*P',
+    ["op"] = '"_diw"*P',
 
     -- paste last yank register
-    ['üp'] = '"_diw"0P',
+    ["üp"] = '"_diw"0P',
 
     -- visual select last word
-    ['üü'] = 'viw',
+    ["üü"] = "viw",
 
     -- to blachole
-    ['c'] = '"_c',
-    ['x'] = '"_x'
-
+    ["c"] = '"_c',
+    ["x"] = '"_x',
   },
 
   ---@usage change or add keymappings for terminal mode
   term_mode = {
     -- Terminal window navigation
-    ['<C-h>'] = '<C-\\><C-N><C-w>h',
-    ['<C-j>'] = '<C-\\><C-N><C-w>j',
-    ['<C-k>'] = '<C-\\><C-N><C-w>k',
-    ['<C-l>'] = '<C-\\><C-N><C-w>l'
+    ["<C-h>"] = "<C-\\><C-N><C-w>h",
+    ["<C-j>"] = "<C-\\><C-N><C-w>j",
+    ["<C-k>"] = "<C-\\><C-N><C-w>k",
+    ["<C-l>"] = "<C-\\><C-N><C-w>l",
   },
 
   ---@usage change or add keymappings for visual mode
   visual_mode = {
     -- Better indenting
-    ['<'] = '<gv',
-    ['>'] = '>gv',
+    ["<"] = "<gv",
+    [">"] = ">gv",
 
     -- jump between paragraphs
-    ['ö'] = '{zz',
-    ['ä'] = '}zz',
+    ["ö"] = "{zz",
+    ["ä"] = "}zz",
 
     -- to blachole
-    ['c'] = '"_c',
-    ['x'] = '"_x',
+    ["c"] = '"_c',
+    ["x"] = '"_x',
 
     -- dont overwrite while pasting
-    ['p'] = '"_dP'
+    ["p"] = '"_dP',
 
     -- ["p"] = '"0p',
     -- ["P"] = '"0P',
@@ -120,20 +118,19 @@ return {
   ---@usage change or add keymappings for visual block mode
   visual_block_mode = {
     -- Move selected line / block of text in visual mode
-    ['K'] = ':move \'<-2<CR>gv-gv',
-    ['J'] = ':move \'>+1<CR>gv-gv',
+    ["K"] = ":move '<-2<CR>gv-gv",
+    ["J"] = ":move '>+1<CR>gv-gv",
 
     -- Move current line / block with Alt-j/k ala vscode.
-    ['<A-j>'] = ':m \'>+1<CR>gv-gv',
-    ['<A-k>'] = ':m \'<-2<CR>gv-gv'
-
+    ["<A-j>"] = ":m '>+1<CR>gv-gv",
+    ["<A-k>"] = ":m '<-2<CR>gv-gv",
   },
 
   ---@usage change or add keymappings for command mode
   command_mode = {
     -- navigate tab completion with <c-j> and <c-k>
     -- runs conditionally
-    ['<C-j>'] = {'pumvisible() ? "\\<C-n>" : "\\<C-j>"', {expr = true, noremap = true}},
-    ['<C-k>'] = {'pumvisible() ? "\\<C-p>" : "\\<C-k>"', {expr = true, noremap = true}}
-  }
+    ["<C-j>"] = { 'pumvisible() ? "\\<C-n>" : "\\<C-j>"', { expr = true, noremap = true } },
+    ["<C-k>"] = { 'pumvisible() ? "\\<C-p>" : "\\<C-k>"', { expr = true, noremap = true } },
+  },
 }

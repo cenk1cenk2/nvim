@@ -1,6 +1,6 @@
 local M = {}
 
-local c = require('onedarker.colors')
+local c = require "onedarker.colors"
 
 function M.setup()
   vim.g.terminal_color_0 = c.grey

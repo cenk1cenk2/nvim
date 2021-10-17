@@ -1,6 +1,6 @@
 local M = {}
 
-local modules = {'modules.telescope-rg-interactive'}
+local modules = { "modules.telescope-rg-interactive" }
 
 function M.config(config)
   for _, module_path in ipairs(modules) do

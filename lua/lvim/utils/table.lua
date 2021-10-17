@@ -5,7 +5,11 @@ local Table = {}
 -- @param predicate The function called for each entry of t
 -- @return The entry for which the predicate returned True or nil
 function Table.find_first(t, predicate)
-  for _, entry in pairs(t) do if predicate(entry) then return entry end end
+  for _, entry in pairs(t) do
+    if predicate(entry) then
+      return entry
+    end
+  end
   return nil
 end
 

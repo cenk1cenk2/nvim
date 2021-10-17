@@ -1,23 +1,23 @@
 local M = {}
-local utils = require 'lvim.utils'
+local utils = require "lvim.utils"
 
 M.load_options = function()
   local default_options = {
     backup = false, -- creates a backup file
-    clipboard = 'unnamedplus', -- allows neovim to access the system clipboard
+    clipboard = "unnamedplus", -- allows neovim to access the system clipboard
     cmdheight = 1, -- more space in the neovim command line for displaying messages
-    colorcolumn = '99999', -- fixes indentline for now
-    completeopt = {'menuone', 'noselect'},
+    colorcolumn = "99999", -- fixes indentline for now
+    completeopt = { "menuone", "noselect" },
     conceallevel = 0, -- so that `` is visible in markdown files
-    fileencoding = 'utf-8', -- the encoding written to a file
-    foldmethod = 'expr', -- folding, set to "expr" for treesitter based folding
-    foldexpr = 'nvim_treesitter#foldexpr()', -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
+    fileencoding = "utf-8", -- the encoding written to a file
+    foldmethod = "expr", -- folding, set to "expr" for treesitter based folding
+    foldexpr = "nvim_treesitter#foldexpr()", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
     foldlevel = 99,
-    guifont = 'monospace:h17', -- the font used in graphical neovim applications
+    guifont = "monospace:h17", -- the font used in graphical neovim applications
     hidden = true, -- required to keep multiple buffers and open multiple buffers
     hlsearch = true, -- highlight all matches on previous search pattern
     ignorecase = true, -- ignore case in search patterns
-    mouse = 'a', -- allow the mouse to be used in neovim
+    mouse = "a", -- allow the mouse to be used in neovim
     pumheight = 10, -- pop up menu height
     showmode = false, -- we don't need to see things like -- INSERT -- anymore
     showtabline = 2, -- always show tabs
@@ -30,7 +30,7 @@ M.load_options = function()
     timeoutlen = 100, -- time to wait for a mapped sequence to complete (in milliseconds)
     title = true, -- set the title of window to the value of the titlestring
     -- opt.titlestring = "%<%F%=%l/%L - nvim" -- what the title of the window will be set to
-    undodir = utils.join_paths(get_cache_dir(), 'undo'), -- set an undo directory
+    undodir = utils.join_paths(get_cache_dir(), "undo"), -- set an undo directory
     undofile = true, -- enable persistent undo
     updatetime = 300, -- faster completion
     writebackup = false, -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
@@ -41,25 +41,29 @@ M.load_options = function()
     number = true, -- set numbered lines
     relativenumber = false, -- set relative numbered lines
     numberwidth = 2, -- set number column width to 2 {default 4}
-    signcolumn = 'yes', -- always show the sign column, otherwise it would shift the text each time
+    signcolumn = "yes", -- always show the sign column, otherwise it would shift the text each time
     wrap = true, -- display lines as one long line
     spell = false,
-    spelllang = 'en',
+    spelllang = "en",
     scrolloff = 8, -- is one of my fav
     sidescrolloff = 8,
-    sessionoptions = 'buffers,curdir,folds,tabpages,winsize'
+    sessionoptions = "buffers,curdir,folds,tabpages,winsize",
   }
 
   ---  SETTINGS  ---
 
-  vim.opt.shortmess:append 'c'
+  vim.opt.shortmess:append "c"
 
-  for k, v in pairs(default_options) do vim.opt[k] = v end
+  for k, v in pairs(default_options) do
+    vim.opt[k] = v
+  end
 end
 
 M.load_commands = function()
   local cmd = vim.cmd
-  if lvim.line_wrap_cursor_movement then cmd 'set whichwrap+=<,>,[,],h,l' end
+  if lvim.line_wrap_cursor_movement then
+    cmd "set whichwrap+=<,>,[,],h,l"
+  end
 end
 
 return M
