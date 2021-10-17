@@ -22,4 +22,10 @@ lvim.lsp.ensure_installed = {
   "markdownlint",
   "prettierd",
   "misspell",
+  "markdown_toc",
+  "shfmt",
+  "black",
+  "isort",
+  "flake8",
+  "mypy",
 }

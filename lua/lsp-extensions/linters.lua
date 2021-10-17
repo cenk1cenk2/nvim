@@ -19,6 +19,7 @@ function M.setup()
       exe = "markdownlint",
       managed = true,
     },
+
   }
 end
 

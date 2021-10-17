@@ -33,6 +33,33 @@ function M.setup()
     },
 
     { exe = "stylua", managed = true, filetypes = { "lua" } },
+
+    {
+      exe = "shfmt",
+      managed = true,
+      filetypes = { "sh", "bash", "dockerfile" },
+    },
+
+    {
+      exe = "black",
+      managed = true,
+      filetypes = { "python" },
+    },
+    {
+      exe = "isort",
+      managed = true,
+      filetypes = { "python" },
+    },
+    {
+      exe = "flake8",
+      managed = true,
+      filetypes = { "python" },
+    },
+    {
+      exe = "mypy",
+      managed = true,
+      filetypes = { "python" },
+    },
   }
 end
 

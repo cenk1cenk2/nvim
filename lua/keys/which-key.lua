@@ -1,4 +1,6 @@
 local M = {}
+local server = require "nvim-lsp-installer.server"
+local npm = require "nvim-lsp-installer.installers.npm"
 
 M.vmappings = {}
 
@@ -23,10 +25,13 @@ M.mappings = {
     l = { ":set nonumber!<CR>", "line-numbers" },
     r = { ":set norelativenumber!<CR>", "relative line nums" },
     s = { ":setlocal spell!<CR>", "toggle spell check" },
-    t = { ':!markdown-toc %:p --bullets="-" -i<CR>', "markdown-toc" },
+    t = {
+      ":!" .. npm.executable(server.get_server_root_path "markdown_toc", "markdown-toc") .. ' %:p --bullets="-" -i<CR>',
+      "markdown-toc",
+    },
     R = {
-      ":! cd ~/.config/nvim/utils && bash install-latest-neovim.sh && bash install-lsp.sh clean<CR>",
-      "rebuild neovim",
+      ":! cd ~/.config/nvim/utils && bash install-latest-neovim.sh<CR>",
+      "install latest neovim",
     },
   },
 

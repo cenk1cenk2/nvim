@@ -6,6 +6,12 @@ local installers = {
   "lsp-extensions.installers.stylua",
   "lsp-extensions.installers.misspell",
   "lsp-extensions.installers.markdownlint",
+  "lsp-extensions.installers.markdown-toc",
+  "lsp-extensions.installers.shfmt",
+  "lsp-extensions.installers.black",
+  "lsp-extensions.installers.isort",
+  "lsp-extensions.installers.flake8",
+  "lsp-extensions.installers.mypy",
 }
 
 function M.setup()
