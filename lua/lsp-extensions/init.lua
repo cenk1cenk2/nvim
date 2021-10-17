@@ -1,6 +1,11 @@
 local M = {}
 
-local lsp_stuff = { "lsp-extensions.installers", "lsp-extensions.formatters", "lsp-extensions.linters" }
+local lsp_stuff = {
+  "lsp-extensions.installers",
+  "lsp-extensions.formatters",
+  "lsp-extensions.linters",
+  "lsp-extensions.wrapper",
+}
 
 function M.setup()
   for _, lsp_item in ipairs(lsp_stuff) do

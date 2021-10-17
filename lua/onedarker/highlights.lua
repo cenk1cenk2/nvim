@@ -234,9 +234,13 @@ hl.plugins.lsp = {
   LspDiagnosticsVirtualTextWarning = { fg = c.yellow },
   LspDiagnosticsVirtualTextInformation = { fg = c.grey },
   LspDiagnosticsVirtualTextHint = { fg = c.grey },
-  LspReferenceText = { bg = c.bg1 },
-  LspReferenceWrite = { bg = c.bg1 },
-  LspReferenceRead = { bg = c.bg1 },
+  DiagnosticsVirtualTextError = { fg = c.red },
+  DiagnosticsVirtualTextWarning = { fg = c.yellow },
+  DiagnosticsVirtualTextInformation = { fg = c.grey },
+  DiagnosticsVirtualTextHint = { fg = c.grey },
+  LspReferenceText = { bg = c.bg1, style = "bold" },
+  LspReferenceWrite = { bg = c.bg1, style = "bold" },
+  LspReferenceRead = { bg = c.bg1, style = "bold" },
   LspDiagnosticsFloatingError = { fg = c.red },
   LspDiagnosticsFloatingWarning = { fg = c.orange },
   LspDiagnosticsFloatingInformation = { fg = c.yellow },
@@ -261,17 +265,10 @@ hl.plugins.lsp = {
   DiagnosticsWarning = { fg = c.orange },
   DiagnosticsInformation = { fg = c.yellow },
   DiagnosticsHint = { fg = c.grey },
-  -- LspDiagnosticsUnderlineError = {style = 'underline'},
-  -- LspDiagnosticsUnderlineWarning = {style = 'underline'},
-  -- LspDiagnosticsUnderlineInformation = {style = 'underline'},
-  -- LspDiagnosticsUnderlineHint = {style = 'underline'},
-  -- DiagnosticUnderlineError = {style = 'underline'},
-  -- DiagnosticUnderlineWarn = {style = 'underline'},
-  -- DiagnosticUnderlineInfo = {style = 'underline'},
-  -- DiagnosticUnderlineHint = {style = 'underline'},
-  -- LspReferenceRead = {bg = c.grey, style = 'bold'},
-  -- LspReferenceText = {bg = c.grey, style = 'bold'},
-  -- LspReferenceWrite = {bg = c.grey, style = 'bold'},
+  DiagnosticUnderlineError = { style = "underline" },
+  DiagnosticUnderlineWarn = { style = "underline" },
+  DiagnosticUnderlineInfo = { style = "underline" },
+  DiagnosticUnderlineHint = { style = "underline" },
 }
 
 hl.plugins.whichkey = {
@@ -360,7 +357,7 @@ hl.plugins.telescope = {
 
 hl.plugins.dashboard = {
   DashboardShortcut = { fg = c.fg },
-  DashboardHeader = colors.Green,
+  DashboardHeader = colors.Orange,
   DashboardCenter = { fg = c.yellow },
   DashboardFooter = { fg = c.grey, bold = true },
 }
