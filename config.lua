@@ -16,6 +16,7 @@ lvim.lsp.ensure_installed = {
   "tailwindcss",
   "svelte",
   "angularls",
+  "rust_analyzer",
   -- managed by extensions
   "stylua",
   "eslint_d",

@@ -24,11 +24,11 @@ servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
   installer = installers.pipe {
-    context.github_release_file("JohnnyMorganz/StyLua", function(version)
+    context.use_github_release("JohnnyMorganz/StyLua", function(version)
       return ("stylua-%s-%s.zip"):format(version:gsub("^v", ""), bin_type)
     end),
     context.capture(function(ctx)
-      return std.unzip_remote(ctx.github_release_file)
+      return std.unzip_remote(ctx.use_github_release)
     end),
     std.chmod("+x", { "stylua" }),
   },

@@ -93,7 +93,6 @@ M._split = function(inputstr, sep)
 end
 
 local terminals = {}
-local Terminal = require("toggleterm.terminal").Terminal
 
 M._exec_toggle = function(exec)
   if not terminals[exec] then
@@ -102,6 +101,8 @@ M._exec_toggle = function(exec)
       Log:error("Unable to run executable " .. binary .. ". Please make sure it is installed properly.")
       return
     end
+
+    local Terminal = require("toggleterm.terminal").Terminal
     terminals[exec] = Terminal:new {
       cmd = exec,
       hidden = true,

@@ -6,10 +6,10 @@ M.config = function()
     on_config_done = nil,
     keymap = {
       normal_mode = {
-        ["<Leader><Left>"] = ":BufferNext<CR>",
-        ["<Leader><Up>"] = ":BufferMoveNext<CR>",
-        ["<Leader><Right>"] = ":BufferPrevious<CR>",
-        ["<Leader><Down>"] = ":BufferMovePrevious<CR>",
+        ["<Leader><Right>"] = ":BufferNext<CR>",
+        ["<Leader><Down>"] = ":BufferMoveNext<CR>",
+        ["<Leader><Left>"] = ":BufferPrevious<CR>",
+        ["<Leader><Up>"] = ":BufferMovePrevious<CR>",
       },
     },
   }

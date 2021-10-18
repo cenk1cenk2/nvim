@@ -5,7 +5,10 @@ return {
   { "tamago324/nlsp-settings.nvim" },
   { "jose-elias-alvarez/null-ls.nvim" },
   -- {'antoinemadec/FixCursorHold.nvim'}, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
-  { "williamboman/nvim-lsp-installer" },
+  {
+    "williamboman/nvim-lsp-installer",
+    -- commit = '5f54148'
+  },
 
   { "nvim-lua/popup.nvim" },
   { "nvim-lua/plenary.nvim" },
