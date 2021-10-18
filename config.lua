@@ -29,3 +29,7 @@ lvim.lsp.ensure_installed = {
   "flake8",
   "mypy",
 }
+
+lvim.autocommands.custom_groups = {
+  TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
+}
