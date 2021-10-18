@@ -18,7 +18,7 @@ function M.config()
     ---Could be a regex string or a function that returns a regex string.
     ---Example: Use '^$' to ignore empty lines
     ---@type string|function
-    ignore = "^$",
+    -- ignore = "^$",
 
     ---Whether to create basic (operator-pending) and extra mappings for NORMAL/VISUAL mode
     ---@type table
