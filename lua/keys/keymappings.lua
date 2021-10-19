@@ -1,7 +1,6 @@
 return {
   ---@usage change or add keymappings for insert mode
   insert_mode = {
-    ["Q"] = "<Nop>",
     -- Move current line / block with Alt-j/k ala vscode.
     ["<A-j>"] = "<Esc>:m .+1<CR>==gi",
     -- Move current line / block with Alt-j/k ala vscode.
