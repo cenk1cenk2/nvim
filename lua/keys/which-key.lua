@@ -30,7 +30,7 @@ M.mappings = {
       "markdown-toc",
     },
     R = {
-      ":RebuildLatestNeovim",
+      ":RebuildLatestNeovim<CR>",
       "install latest neovim",
     },
     T = {
