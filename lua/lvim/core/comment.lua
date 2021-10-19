@@ -1,10 +1,17 @@
 local M = {}
 
 function M.config()
+  local utils_table = require "lvim.utils.table"
   local pre_hook = nil
   if lvim.builtin.treesitter.context_commentstring.enable then
-    pre_hook = function(_ctx)
-      return require("ts_context_commentstring.internal").calculate_commentstring()
+    pre_hook = function()
+      if
+        utils_table.contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
+          return type == vim.bo.filetype
+        end)
+      then
+        require("ts_context_commentstring.internal").update_commentstring()
+      end
     end
   end
   lvim.builtin.comment = {
@@ -61,6 +68,20 @@ end
 
 function M.setup()
   local nvim_comment = require "Comment"
+
+  require("lvim.keymappings").load {
+    normal_mode = {
+      ["<C-\\>"] = ":lua require('Comment').toggle()<CR>",
+      ["<C-#>"] = ":lua require('Comment').toggle()<CR>",
+      ["<M-#>"] = ":lua ___comment_call('gbc')<CR>g@$",
+    },
+
+    visual_mode = {
+      ["<C-\\>"] = ":lua require('Comment').toggle()<CR>",
+      ["<C-#>"] = ":lua require('Comment').toggle()<CR>",
+      ["<M-#>"] = ":lua ___comment_call('gb')<CR>g@$",
+    },
+  }
 
   nvim_comment.setup(lvim.builtin.comment)
   if lvim.builtin.comment.on_config_done then

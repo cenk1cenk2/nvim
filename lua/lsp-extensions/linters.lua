@@ -18,8 +18,14 @@ function M.setup()
     {
       exe = "markdownlint",
       managed = true,
+      filetypes = { "markdown" },
     },
 
+    {
+      exe = "hadolint",
+      managed = true,
+      filetypes = { "dockerfile" },
+    },
   }
 end
 

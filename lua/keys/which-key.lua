@@ -26,12 +26,20 @@ M.mappings = {
     r = { ":set norelativenumber!<CR>", "relative line nums" },
     s = { ":setlocal spell!<CR>", "toggle spell check" },
     t = {
-  --    ":!" .. npm.executable(server.get_server_root_path "markdown_toc", "markdown-toc") .. ' %:p --bullets="-" -i<CR>',
+      --    ":!" .. npm.executable(server.get_server_root_path "markdown_toc", "markdown-toc") .. ' %:p --bullets="-" -i<CR>',
       "markdown-toc",
     },
     R = {
-      ":! cd ~/.config/nvim/utils && bash install-latest-neovim.sh<CR>",
+      ":RebuildLatestNeovim",
       "install latest neovim",
+    },
+    T = {
+      ":LspInstallerReinstallAll<CR>",
+      "reinstall all language servers",
+    },
+    Z = {
+      ":PackerSync<CR>",
+      "update all the plugins",
     },
   },
 
@@ -212,15 +220,18 @@ M.mappings = {
     name = "Packer",
     c = { "<cmd>PackerCompile<cr>", "Compile" },
     i = { "<cmd>PackerInstall<cr>", "Install" },
-    r = { "<cmd>lua require('lvim.config'):reload()<cr>", "Reload configurations" },
+    R = { "<cmd>lua require('lvim.config'):reload()<cr>", "Reload configurations" },
     s = { "<cmd>PackerSync<cr>", "Sync" },
     S = { "<cmd>PackerStatus<cr>", "Status" },
-    u = { "<cmd>PackerUpdate<cr>", "Update" },
+    U = { "<cmd>PackerUpdate<cr>", "Update" },
   },
+
   T = {
     name = "Treesitter",
     i = { ":TSConfigInfo<cr>", "Info" },
     k = { ":TSHighlightCapturesUnderCursor<CR>", "show treesitter theme color" },
+    U = { ":TSUninstall all<CR>", "uninstall all treesitter packages" },
+    R = { ":TSInstall all<CR>", "reinstall all treesitter packages" },
   },
 }
 

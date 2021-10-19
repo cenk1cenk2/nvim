@@ -13,6 +13,10 @@ local installers = {
   "lsp-extensions.installers.flake8",
   "lsp-extensions.installers.mypy",
   "lsp-extensions.installers.rustfmt",
+  "lsp-extensions.installers.golines",
+  "lsp-extensions.installers.goimports",
+  "lsp-extensions.installers.rustywind",
+  "lsp-extensions.installers.hadolint",
 }
 
 function M.setup()

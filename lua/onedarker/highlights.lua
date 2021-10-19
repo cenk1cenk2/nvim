@@ -372,6 +372,11 @@ hl.plugins.nvim_cmp = {
   CmpItemAbbrMatchFuzzy = colors.Yellow,
 }
 
+hl.langs.html = {
+  htmlTag = colors.Red,
+  htmlTagName = colors.Red,
+}
+
 hl.langs.markdown = {
   markdownBlockquote = colors.Grey,
   markdownBold = { fg = c.none, bold = true },

@@ -5,6 +5,7 @@ local lsp_stuff = {
   "lsp-extensions.formatters",
   "lsp-extensions.linters",
   "lsp-extensions.wrapper",
+  "lsp-extensions.lsp-installer-wrapper",
 }
 
 function M.setup()

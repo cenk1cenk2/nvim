@@ -32,6 +32,13 @@ function M.setup()
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
+
+    {
+      exe = "rustywind",
+      managed = true,
+      filetypes = { "javascriptreact", "typescriptreact", "vue", "svelte", "html" },
+    },
+
     { exe = "stylua", managed = true, filetypes = { "lua" } },
 
     {
@@ -59,6 +66,27 @@ function M.setup()
       exe = "mypy",
       managed = true,
       filetypes = { "python" },
+    },
+
+    {
+      exe = "rustfmt",
+      managed = true,
+      filetypes = { "rust" },
+    },
+
+    {
+      exe = "goimports",
+      managed = true,
+      filetypes = { "go" },
+    },
+    {
+      exe = "gofmt",
+      filetypes = { "go" },
+    },
+    {
+      exe = "golines",
+      managed = true,
+      filetypes = { "go" },
     },
   }
 end

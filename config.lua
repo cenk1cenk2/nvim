@@ -29,6 +29,10 @@ lvim.lsp.ensure_installed = {
   "isort",
   "flake8",
   "mypy",
+  "goimports",
+  "golines",
+  "rustywind",
+  "hadolint"
 }
 
 lvim.autocommands.custom_groups = {
