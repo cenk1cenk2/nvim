@@ -24,11 +24,11 @@ servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
   installer = installers.pipe {
-    context.use_github_release("client9/misspell", function(version)
+    context.use_github_release_file("client9/misspell", function(version)
       return ("misspell_%s_%s_64bit.tar.gz"):format(version:gsub("^v", ""), bin_type)
     end),
     context.capture(function(ctx)
-      return std.untargz_remote(ctx.use_github_release)
+      return std.untargz_remote(ctx.github_release_file)
     end),
     std.chmod("+x", { "misspell" }),
   },

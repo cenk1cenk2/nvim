@@ -96,13 +96,14 @@ local terminals = {}
 
 M._exec_toggle = function(exec)
   if not terminals[exec] then
+    local Terminal = require("toggleterm.terminal").Terminal
+
     local binary = M._split(exec)[1]
     if vim.fn.executable(binary) ~= 1 then
       Log:error("Unable to run executable " .. binary .. ". Please make sure it is installed properly.")
       return
     end
 
-    local Terminal = require("toggleterm.terminal").Terminal
     terminals[exec] = Terminal:new {
       cmd = exec,
       hidden = true,
@@ -114,6 +115,7 @@ end
 
 M.bottom_terminal = function()
   if not terminals["bottom"] then
+    local Terminal = require("toggleterm.terminal").Terminal
     terminals["bottom"] = Terminal:new {
       cmd = vim.o.shell,
       direction = "horizontal",

@@ -24,11 +24,11 @@ servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
   installer = installers.pipe {
-    context.use_github_release("mvdan/sh", function(version)
+    context.use_github_release_file("mvdan/sh", function(version)
       return ("shfmt_%s_%s_amd64"):format(version:gsub("^v", "v"), bin_type)
     end),
     context.capture(function(ctx)
-      return std.download_file(ctx.use_github_release, "shfmt")
+      return std.download_file(ctx.github_release_file, "shfmt")
     end),
     std.chmod("+x", { "shfmt" }),
   },

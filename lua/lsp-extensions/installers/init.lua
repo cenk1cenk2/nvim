@@ -12,6 +12,7 @@ local installers = {
   "lsp-extensions.installers.isort",
   "lsp-extensions.installers.flake8",
   "lsp-extensions.installers.mypy",
+  "lsp-extensions.installers.rustfmt",
 }
 
 function M.setup()
