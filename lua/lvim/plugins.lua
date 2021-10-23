@@ -431,4 +431,12 @@ return {
     requires = { "nvim-treesitter/nvim-treesitter" },
     disable = not lvim.extensions.neogen.active,
   },
+
+  {
+    "chipsenkbeil/distant.nvim",
+    config = function()
+      require("extensions.distant").setup()
+    end,
+    disable = not lvim.extensions.distant.active,
+  },
 }

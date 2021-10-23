@@ -83,7 +83,6 @@ function M.config()
       find_files = { theme = "dropdown" },
       current_buffer_fuzzy_find = {
         theme = "dropdown",
-        previewer = true,
       },
     },
     extensions = {

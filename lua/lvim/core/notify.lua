@@ -4,12 +4,12 @@ function M.config()
   local pallete = require "onedarker.colors"
 
   lvim.builtin.notify = {
-    active = false,
+    active = true,
     on_config_done = nil,
     -- TODO: update after https://github.com/rcarriga/nvim-notify/pull/24
     opts = {
       ---@usage Animation style one of { "fade", "slide", "fade_in_slide_out", "static" }
-      stages = "slide",
+      stages = "fade",
 
       ---@usage timeout for notifications in ms, default 5000
       timeout = 5000,

@@ -8,7 +8,6 @@ end
 
 function M.setup()
   vim.g.coc_start_at_startup = true
-
   vim.g.coc_global_extensions = {
     "coc-lists",
     "coc-marketplace",

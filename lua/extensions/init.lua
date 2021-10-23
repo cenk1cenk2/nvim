@@ -28,6 +28,7 @@ local extensions = {
   "extensions.package-info",
   "extensions.neogen",
   "extensions.coc",
+  "extensions.distant",
 }
 
 function M.config(config)
