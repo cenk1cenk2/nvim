@@ -42,78 +42,31 @@ function M:init()
 
   lvim.lsp = vim.deepcopy(lvim_lsp_config)
 
-  local supported_languages = {
-    "bash",
-    "c",
-    "c_sharp",
-    "clojure",
-    "cmake",
-    "comment",
-    "cpp",
-    "cs",
-    "css",
-    "dart",
-    "dockerfile",
-    "dot",
-    "emmet",
-    "go",
-    "gomod",
-    "graphql",
-    "html",
-    "java",
-    "javascript",
-    "javascriptreact",
-    "jsdoc",
-    "json",
-    "json5",
-    "jsonc",
-    "julia",
-    "less",
-    "lua",
-    "markdown",
-    "nginx",
-    "perl",
-    "php",
-    "ps1",
-    "python",
-    "regex",
-    "rst",
-    "ruby",
-    "rust",
-    "scss",
-    "sh",
-    "sql",
-    "svelte",
-    "tailwindcss",
-    "terraform",
-    "toml",
-    "tsx",
-    "typescript",
-    "typescriptreact",
-    "vim",
-    "vue",
-    "yaml",
-  }
-
+  local supported_languages = require "lvim.config.supported_languages"
   require("lvim.lsp.manager").init_defaults(supported_languages)
 end
 
-local function deprecation_notice()
-  local in_headless = #vim.api.nvim_list_uis() == 0
-  if in_headless then
-    return
+local function handle_deprecated_settings()
+  local function deprecation_notice(setting)
+    local in_headless = #vim.api.nvim_list_uis() == 0
+    if in_headless then
+      return
+    end
+
+    local msg = string.format(
+      "Deprecation notice: [%s] setting is no longer supported. See https://github.com/LunarVim/LunarVim#breaking-changes",
+      setting
+    )
+    vim.schedule(function()
+      vim.notify(msg, vim.log.levels.WARN)
+    end)
   end
 
+  ---lvim.lang.FOO.lsp
   for lang, entry in pairs(lvim.lang) do
-    local deprecated_config = entry["lvim.lsp"] or {}
+    local deprecated_config = entry["lsp"] or {}
     if not vim.tbl_isempty(deprecated_config) then
-      local msg = string.format(
-        "Deprecation notice: [lvim.lang.%s.lsp] setting is no longer supported. See https://github.com/LunarVim/LunarVim#breaking-changes",
-        lang
-      )
-      vim.schedule(function()
-        vim.notify(msg, vim.log.levels.WARN)
-      end)
+      deprecation_notice(string.format("lvim.lang.%s.lsp", lang))
     end
   end
 end
@@ -132,7 +85,7 @@ function M:load(config_path)
     end
   end
 
-  deprecation_notice()
+  handle_deprecated_settings()
 
   autocmds.define_augroups(lvim.autocommands)
 

@@ -1,4 +1,4 @@
-lvim.log.level = "debug"
+lvim.log.level = "trace"
 
 lvim.lsp.ensure_installed = {
   "jsonls",
@@ -32,7 +32,7 @@ lvim.lsp.ensure_installed = {
   "goimports",
   "golines",
   "rustywind",
-  "hadolint"
+  "hadolint",
 }
 
 lvim.autocommands.custom_groups = {

@@ -9,6 +9,11 @@ return {
     "williamboman/nvim-lsp-installer",
     -- commit = '5f54148'
   },
+  {
+    "rcarriga/nvim-notify",
+    disable = not lvim.builtin.notify.active,
+  },
+  { "Tastyep/structlog.nvim" },
 
   { "nvim-lua/popup.nvim" },
   { "nvim-lua/plenary.nvim" },
@@ -114,10 +119,8 @@ return {
   },
 
   -- Whichkey
-  -- TODO: change back to folke/which-key.nvim after folke got back
   {
-    "abzcoding/which-key.nvim",
-    branch = "fix/neovim-6-position",
+    "folke/which-key.nvim",
     config = function()
       require("lvim.core.which-key").setup()
     end,
@@ -150,7 +153,7 @@ return {
   -- Status Line and Bufferline
   {
     -- "hoob3rt/lualine.nvim",
-    "shadmansaleh/lualine.nvim",
+    "nvim-lualine/lualine.nvim",
     -- "Lunarvim/lualine.nvim",
     config = function()
       require("lvim.core.lualine").setup()

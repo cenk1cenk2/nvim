@@ -14,6 +14,12 @@ lvim = {
   builtin = {},
   extensions = {},
 
+  plugins = {
+    -- use config.lua for this not put here
+  },
+
+  autocommands = {},
+  lang = {},
   log = {
     ---@usage can be { "trace", "debug", "info", "warn", "error", "fatal" },
     level = "warn",
@@ -28,13 +34,9 @@ lvim = {
         float_opts = {},
       },
     },
+    -- currently disabled due to instabilities
+    override_notify = false,
   },
-  plugins = {
-    -- use config.lua for this not put here
-  },
-
-  autocommands = {},
-  lang = {},
 }
 
 return lvim

@@ -37,5 +37,5 @@ servers.register(server.Server:new {
       )
     end),
   },
-  default_options = { cmd = { path.concat { root_dir, server_name } } },
+  default_options = { cmd = { path.concat { root_dir, "server", server_name } } },
 })

@@ -1,21 +1,12 @@
 local M = {}
 
 local Log = require "lvim.core.log"
-local lsp_utils = require "lvim.lsp.utils"
+local lvim_lsp_utils = require "lvim.lsp.utils"
 
 function M.init_defaults(languages)
   for _, entry in ipairs(languages) do
     if not lvim.lang[entry] then
       lvim.lang[entry] = { formatters = {}, linters = {}, lsp = {} }
-    end
-  end
-end
-
-local function is_overridden(server)
-  local overrides = lvim.lsp.override
-  if type(overrides) == "table" then
-    if vim.tbl_contains(overrides, server) then
-      return true
     end
   end
 end
@@ -70,7 +61,7 @@ end
 function M.setup(server_name, user_config)
   vim.validate { name = { server_name, "string" } }
 
-  if lsp_utils.is_client_active(server_name) or is_overridden(server_name) then
+  if lvim_lsp_utils.is_client_active(server_name) then
     return
   end
 

@@ -452,6 +452,29 @@ hl.langs.jinja = {
 
 hl.langs.ansible = { ansible_normal_keywords = colors.Blue }
 
+hl.plugins.notify = {
+  NotifyERRORBorder = { fg = c.red },
+  NotifyWARNBorder = { fg = c.orange },
+  NotifyINFOBorder = { fg = c.green },
+  NotifyDEBUGBorder = { fg = c.cyan },
+  NotifyTRACEBorder = { fg = c.grey },
+  NotifyERRORIcon = { fg = c.red },
+  NotifyWARNIcon = { fg = c.orange },
+  NotifyINFOIcon = { fg = c.green },
+  NotifyDEBUGIcon = { fg = c.cyan },
+  NotifyTRACEIcon = { fg = c.grey },
+  NotifyERRORTitle = { fg = c.red },
+  NotifyWARNTitle = { fg = c.orange },
+  NotifyINFOTitle = { fg = c.green },
+  NotifyDEBUGTitle = { fg = c.cyan },
+  NotifyTRACETitle = { fg = c.grey },
+  NotifyERRORBody = { fg = c.fg },
+  NotifyWARNBody = { fg = c.fg },
+  NotifyINFOBody = { fg = c.fg },
+  NotifyDEBUGBody = { fg = c.fg },
+  NotifyTRACEBody = { fg = c.fg },
+}
+
 function M.setup()
   vim_highlights(hl.common)
   vim_highlights(hl.syntax)

@@ -2,6 +2,7 @@
 stds.nvim = {
   globals = {'lvim', vim = {fields = {'g'}}, 'TERMINAL', 'USER', 'C', 'Config', 'WORKSPACE_PATH', 'JAVA_LS_EXECUTABLE', 'MUtils', 'USER_CONFIG_PATH', os = {fields = {'capture'}}},
   read_globals = {
+<<<<<<< HEAD
     'jit',
     'os',
     'vim',
@@ -10,6 +11,17 @@ stds.nvim = {
     'get_config_dir',
     'get_cache_dir',
     'get_version'
+=======
+    "jit",
+    "os",
+    "vim",
+    "join_paths",
+    "get_runtime_dir",
+    "get_config_dir",
+    "get_cache_dir",
+    "get_lvim_base_dir",
+    "get_version",
+>>>>>>> 3dd60bd3d4165b14844a514d519f3810b8142a02
     -- vim = { fields = { "cmd", "api", "fn", "o" } },
   }
 }
