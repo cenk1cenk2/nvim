@@ -24,8 +24,6 @@ M.setup = function()
 
   dap.defaults.fallback.terminal_win_cmd = "50vsplit new"
 
-  require("dap.ext.vscode").load_launchjs()
-
   lvim.builtin.which_key.mappings["d"] = {
     name = "Debug",
     t = { "<cmd>lua require'dap'.toggle_breakpoint()<cr>", "Toggle Breakpoint" },
@@ -39,30 +37,42 @@ M.setup = function()
     u = { "<cmd>lua require'dap'.step_out()<cr>", "Step Out" },
     p = { "<cmd>lua require'dap'.pause.toggle()<cr>", "Pause" },
     r = { "<cmd>lua require'dap'.repl.toggle()<cr>", "Toggle Repl" },
+    R = { "<cmd>lua require('dap.ext.vscode').load_launchjs()<cr>", "Reload launch.json" },
     s = { "<cmd>lua require'dap'.continue()<cr>", "Start" },
     q = { "<cmd>lua require'dap'.close()<cr>", "Quit" },
   }
+
+  local dap_install = require "dap-install"
+  local dbg_list = require("dap-install.api.debuggers").get_installed_debuggers()
+
+  for _, debugger in ipairs(dbg_list) do
+    dap_install.config(debugger)
+  end
+
+  local dbg_path = require("lvim.utils").join_paths(
+    require("dap-install.config.settings").options["installation_path"],
+    "jsnode/"
+  )
+  local fn = vim.fn
+
+  dap.configurations.typescript = {
+    {
+      type = "node2",
+      request = "launch",
+      name = "run this file ${file}",
+      program = "${file}",
+      cwd = fn.getcwd(),
+      sourceMaps = true,
+      protocol = "inspector",
+      console = "integratedTerminal",
+    },
+  }
+
+  require("dap.ext.vscode").load_launchjs()
 
   if lvim.builtin.dap.on_config_done then
     lvim.builtin.dap.on_config_done(dap)
   end
 end
-
--- TODO put this up there ^^^ call in ftplugin
-
--- M.dap = function()
---   if lvim.plugin.dap.active then
---     local dap_install = require "dap-install"
---     dap_install.config("python_dbg", {})
---   end
--- end
---
--- M.dap = function()
---   -- gem install readapt ruby-debug-ide
---   if lvim.plugin.dap.active then
---     local dap_install = require "dap-install"
---     dap_install.config("ruby_vsc_dbg", {})
---   end
--- end
 
 return M
