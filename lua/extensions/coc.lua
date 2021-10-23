@@ -11,8 +11,6 @@ function M.setup()
 
   vim.g.coc_global_extensions = {
     "coc-lists",
-    "coc-floaterm",
-    "coc-fzf-preview",
     "coc-marketplace",
     "coc-gitignore",
     "coc-gist",

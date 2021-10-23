@@ -116,6 +116,7 @@ M.mappings = {
   G = {
     name = "+gist",
     f = { ":CocList gist<CR>", "list" },
+    i = { ":CocList gitignore<CR>", "gitignore files" },
     p = { ":CocCommand gist.create<CR>", "post gist" },
     I = { ":Telescope gh issues<CR>", "github issues" },
     P = { ":Telescope gh pull_request<CR>", "github pull requests" },
