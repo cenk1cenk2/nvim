@@ -89,6 +89,13 @@ return {
   { "windwp/nvim-ts-autotag", requires = { "nvim-treesitter/nvim-treesitter" } },
   { "JoosepAlviste/nvim-ts-context-commentstring", requires = { "nvim-treesitter/nvim-treesitter" } },
   {
+    "nvim-telescope/telescope-github.nvim",
+    requires = { "nvim-treesitter/nvim-treesitter" },
+    config = function()
+      require("telescope").load_extension "gh"
+    end,
+  },
+  {
     "AckslD/nvim-neoclip.lua",
     requires = { "nvim-treesitter/nvim-treesitter" },
     config = function()
