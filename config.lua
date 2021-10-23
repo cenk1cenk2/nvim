@@ -32,6 +32,7 @@ lvim.lsp.ensure_installed = {
   "goimports",
   "golines",
   "rustywind",
+  "rustfmt",
   "hadolint",
 }
 
