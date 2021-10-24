@@ -7,8 +7,8 @@ function M.config()
     active = true,
     on_config_done = nil,
     keymaps = {
-      normal_mode = { ["<F5>"] = ":RnvimrToggle<CR>" },
-      term_mode = { ["<F5>"] = "<C-\\><C-n>:RnvimrToggle<CR>" },
+      normal_mode = { ["<F6>"] = ":RnvimrToggle<CR>" },
+      term_mode = { ["<F6>"] = "<C-\\><C-n>:RnvimrToggle<CR>" },
     },
   }
 end
