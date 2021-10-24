@@ -26,6 +26,17 @@ function M.setup()
       managed = true,
       filetypes = { "dockerfile" },
     },
+
+    {
+      exe = "flake8",
+      managed = true,
+      filetypes = { "python" },
+    },
+    -- {
+    --   exe = "mypy",
+    --   managed = true,
+    --   filetypes = { "python" },
+    -- },
   }
 end
 

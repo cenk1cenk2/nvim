@@ -56,16 +56,6 @@ function M.setup()
       managed = true,
       filetypes = { "python" },
     },
-    {
-      exe = "flake8",
-      managed = true,
-      filetypes = { "python" },
-    },
-    {
-      exe = "mypy",
-      managed = true,
-      filetypes = { "python" },
-    },
 
     {
       exe = "rustfmt",
