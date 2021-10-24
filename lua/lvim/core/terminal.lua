@@ -59,17 +59,17 @@ M.setup = function()
 
   require("lvim.keymappings").load {
     normal_mode = {
-      ["<F2>"] = ":ToggleTermCloseAll<CR>",
-      ["<F3>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
-      ["<F4>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
-      ["<F5>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
+      ["<F2>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
+      ["<F3>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
+      ["<F4>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
+      ["<F6>"] = ":ToggleTermCloseAll<CR>",
       ["<F7>"] = ":ToggleTermOpenAll<CR>",
     },
     term_mode = {
-      ["<F2>"] = "<C-\\><C-n>:ToggleTermCloseAll<CR>",
-      ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
-      ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
-      ["<F5>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').bottom_terminal()<CR>",
+      ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
+      ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
+      ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').bottom_terminal()<CR>",
+      ["<F6>"] = "<C-\\><C-n>:ToggleTermCloseAll<CR>",
     },
   }
 end
