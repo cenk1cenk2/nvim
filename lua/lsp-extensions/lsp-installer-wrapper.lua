@@ -38,7 +38,7 @@ function M.rebuild_latest_neovim()
     -- TODO: this might not be working as expected
     size = lvim.log.viewer.layout_config.size,
     float_opts = lvim.log.viewer.layout_config.float_opts,
-    autoclose = 0,
+    close_on_exit = false,
   })
 
   local Terminal = require("toggleterm.terminal").Terminal
