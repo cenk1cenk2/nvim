@@ -32,7 +32,6 @@ function M.setup()
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
-
     {
       exe = "rustywind",
       managed = true,
@@ -44,7 +43,7 @@ function M.setup()
     {
       exe = "shfmt",
       managed = true,
-      filetypes = { "sh", "bash", "dockerfile" },
+      filetypes = { "sh", "bash" },
     },
 
     {
