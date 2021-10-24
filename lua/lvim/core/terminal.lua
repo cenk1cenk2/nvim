@@ -62,14 +62,14 @@ M.setup = function()
       ["<F2>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
       ["<F3>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
       ["<F4>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
-      ["<F5>"] = ":ToggleTermCloseAll<CR>",
-      ["<F6>"] = ":ToggleTermOpenAll<CR>",
+      ["<F6>"] = ":ToggleTermCloseAll<CR>",
+      ["<F7>"] = ":ToggleTermOpenAll<CR>",
     },
     term_mode = {
       ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
       ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
       ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').bottom_terminal()<CR>",
-      ["<F5>"] = "<C-\\><C-n>:ToggleTermCloseAll<CR>",
+      ["<F6>"] = "<C-\\><C-n>:ToggleTermCloseAll<CR>",
     },
   }
 end

@@ -107,8 +107,8 @@ function M.setup()
 
   -- Implicitly update nvim-tree when project module is active
   if lvim.builtin.project.active then
-    -- lvim.builtin.nvimtree.respect_buf_cwd = 0 -- this was 1 before, so if anything goes wrong lets switch it back
-    -- lvim.builtin.nvimtree.setup.update_cwd = true
+    lvim.builtin.nvimtree.respect_buf_cwd = 0 -- this was 1 before, so if anything goes wrong lets switch it back
+    lvim.builtin.nvimtree.setup.update_cwd = true
     -- lvim.builtin.nvimtree.setup.disable_netrw = false
     -- lvim.builtin.nvimtree.setup.hijack_netrw = false
     -- vim.g.netrw_banner = false
