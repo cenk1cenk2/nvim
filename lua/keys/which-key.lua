@@ -139,7 +139,7 @@ M.mappings = {
       "Next Diagnostic",
     },
     p = {
-      ":LspGotoPrev",
+      ":LspGotoPrev<CR>",
       "Prev Diagnostic",
     },
     l = { ":LspCodeLens<CR>", "CodeLens Action" },
