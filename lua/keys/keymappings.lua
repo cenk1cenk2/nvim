@@ -19,8 +19,8 @@ return {
   ---@usage change or add keymappings for normal mode
   normal_mode = {
     -- save
-    ["<C-s>"] = ":w<CR>",
-    ["<C-x>"] = ':noa w<CR>:lua require("lvim.core.log"):warn("No autocommands had been run while saving!!!")<CR>',
+    ["<C-s>"] = ':w<CR>:lua require("lvim.core.log"):info("File saved.")<CR>',
+    ["<C-x>"] = ':noa w<CR>:lua require("lvim.core.log"):warn("File saved. No autocommands had run!")<CR>',
 
     -- close buffer
     ["<C-q>"] = ":BufferClose<CR>",
