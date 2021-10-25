@@ -71,15 +71,15 @@ function M.setup()
 
   require("lvim.keymappings").load {
     normal_mode = {
-      ["<C-\\>"] = ":lua ___comment_call('gc')<CR>g@",
-      ["<C-#>"] = ":lua ___comment_call('gc')<CR>g@",
-      ["<M-#>"] = ":lua ___comment_call('gbc')<CR>g@$",
+      ["<C-\\>"] = "<CMD>lua ___comment_call('gcc')<CR>g@$",
+      ["<C-#>"] = "<CMD>lua ___comment_call('gcc')<CR>g@$",
+      ["<M-#>"] = "<CMD>lua ___comment_call('gbc')<CR>g@$",
     },
 
     visual_mode = {
-      ["<C-\\>"] = ":lua ___comment_call('gc')<CR>g@",
-      ["<C-#>"] = ":lua ___comment_call('gc')<CR>g@",
-      ["<M-#>"] = ":lua ___comment_call('gb')<CR>g@$",
+      ["<C-\\>"] = "<ESC><CMD>lua ___comment_gc(vim.fn.visualmode())<CR>",
+      ["<C-#>"] = "<ESC><CMD>lua ___comment_gc(vim.fn.visualmode())<CR>",
+      ["<M-#>"] = "<ESC><CMD>lua ___comment_gb(vim.fn.visualmode())<CR>",
     },
   }
 

@@ -8,11 +8,13 @@ function M.setup()
   vim.o.background = "dark"
   vim.o.termguicolors = true
   vim.g.colors_name = "onedarker"
+
+  require("onedarker.highlights").setup()
+  require("onedarker.terminal").setup()
+
   vim.api.nvim_command [[syntax on]]
   vim.api.nvim_command [[set termguicolors]]
   vim.api.nvim_command [[colorscheme onedarker]]
-  require("onedarker.highlights").setup()
-  require("onedarker.terminal").setup()
 end
 
 return M

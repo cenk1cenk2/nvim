@@ -59,11 +59,11 @@ hl.common = {
   Folded = { fg = c.fg, bg = c.bg2 },
   SignColumn = { fg = c.fg, bg = c.bg0 },
   ToolbarLine = { fg = c.fg },
-  Cursor = { reverse = true },
-  vCursor = { reverse = true },
-  iCursor = { reverse = true },
-  lCursor = { reverse = true },
-  CursorIM = { reverse = true },
+  Cursor = { invert = true },
+  vCursor = { bg = c.cursor },
+  iCursor = { invert = true },
+  lCursor = { bg = c.cursor },
+  CursorIM = { invert = true },
   CursorColumn = { bg = c.bg1 },
   CursorLine = { bg = c.bg1 },
   ColorColumn = { bg = c.bg1 },
@@ -114,6 +114,54 @@ hl.common = {
   debugPC = { fg = c.bg0, bg = c.cyan },
   debugBreakpoint = { fg = c.bg0, bg = c.red },
   ToolbarButton = { fg = c.bg0, bg = c.bg_blue },
+  MsgArea = { fg = c.fg, bg = c.bg },
+  ModeMsg = { fg = c.fg, bg = c.bg },
+  MsgSeparator = { fg = c.fg, bg = c.bg1 },
+  NormalNC = { fg = c.fg, bg = c.bg },
+  FloatBorder = { fg = c.gray, bg = c.bg1 },
+  NormalFloat = { bg = c.bg1 },
+  MatchWord = { style = "underline" },
+  MatchWordCur = { style = "underline" },
+  MatchParenCur = { style = "underline" },
+  TermCursorNC = { bg = c.cursor },
+  Title = { fg = c.blue, style = "bold" },
+  Substitute = { fg = c.bg3, bg = c.orange },
+  Variable = { fg = c.red },
+  String = { fg = c.green },
+  Character = { fg = c.green },
+  Constant = { fg = c.yellow },
+  Number = { fg = c.yellow },
+  Boolean = { fg = c.orange },
+  Float = { fg = c.yellow },
+  Identifier = { fg = c.fg },
+  Function = { fg = c.blue },
+  Operator = { fg = c.purple },
+  Type = { fg = c.yellow },
+  StorageClass = { fg = c.cyan },
+  Structure = { fg = c.purple },
+  Typedef = { fg = c.yellow },
+  Keyword = { fg = c.purple },
+  Statement = { fg = c.purple },
+  Conditional = { fg = c.purple },
+  Repeat = { fg = c.purple },
+  Label = { fg = c.blue },
+  Exception = { fg = c.purple },
+  Include = { fg = c.purple },
+  PreProc = { fg = c.purple },
+  Define = { fg = c.purple },
+  Macro = { fg = c.purple },
+  PreCondit = { fg = c.purple },
+  Special = { fg = c.purple },
+  SpecialChar = { fg = c.fg },
+  Tag = { fg = c.blue },
+  Delimiter = { fg = c.grey },
+  SpecialComment = { fg = c.grey },
+  Underlined = { style = "underline" },
+  Bold = { style = "bold" },
+  Italic = { style = "italic" },
+  Ignore = { fg = c.cyan, bg = c.bg, style = "bold" },
+  Todo = { fg = c.red, bg = c.bg, style = "bold" },
+  Error = { fg = c.dark_red, bg = c.bg, style = "bold" },
 }
 
 hl.syntax = {
@@ -215,35 +263,44 @@ hl.treesitter = {
   TSTypeBuiltin = colors.Yellow,
   TSVariable = colors.Red,
   TSVariableBuiltin = colors.Yellow,
+  TSKeywordReturn = { fg = c.purple },
+  TSTagAttribute = { fg = c.orange },
+  TSQueryLinterError = { fg = c.orange },
+  TSEnvironment = { fg = c.fg },
+  TSEnvironmentName = { fg = c.fg },
 }
 
 hl.plugins.lsp = {
   LspDiagnosticsDefaultError = { fg = c.red },
   LspDiagnosticsDefaultHint = { fg = c.grey },
-  LspDiagnosticsDefaultInformation = { fg = c.grey },
-  LspDiagnosticsDefaultWarning = { fg = c.yellow },
-  LspDiagnosticsUnderlineError = { sp = c.red },
-  LspDiagnosticsUnderlineHint = { sp = c.grey },
-  LspDiagnosticsUnderlineInformation = { sp = c.grey },
-  LspDiagnosticsUnderlineWarning = { sp = c.yellow },
-  DiagnosticsUnderlineError = { sp = c.red },
-  DiagnosticsUnderlineHint = { sp = c.grey },
-  DiagnosticsUnderlineInformation = { sp = c.grey },
-  DiagnosticsUnderlineWarning = { sp = c.yellow },
+  LspDiagnosticsDefaultInformation = { fg = c.blue },
+  LspDiagnosticsDefaultWarning = { fg = c.orange },
+  LspDiagnosticsUnderlineError = { style = "underline" },
+  LspDiagnosticsUnderlineHint = { style = "underline" },
+  LspDiagnosticsUnderlineInformation = { style = "underline" },
+  LspDiagnosticsUnderlineWarning = { style = "underline" },
+  DiagnosticUnderlineError = { style = "underline" },
+  DiagnosticUnderlineWarn = { style = "underline" },
+  DiagnosticUnderlineInfo = { style = "underline" },
+  DiagnosticUnderlineHint = { style = "underline" },
+  DiagnosticsUnderlineError = { style = "underline" },
+  DiagnosticsUnderlineHint = { style = "underline" },
+  DiagnosticsUnderlineInformation = { style = "underline" },
+  DiagnosticsUnderlineWarning = { style = "underline" },
   LspDiagnosticsVirtualTextError = { fg = c.red },
-  LspDiagnosticsVirtualTextWarning = { fg = c.yellow },
-  LspDiagnosticsVirtualTextInformation = { fg = c.grey },
+  LspDiagnosticsVirtualTextWarning = { fg = c.orange },
+  LspDiagnosticsVirtualTextInformation = { fg = c.blue },
   LspDiagnosticsVirtualTextHint = { fg = c.grey },
-  DiagnosticsVirtualTextError = { fg = c.red },
-  DiagnosticsVirtualTextWarning = { fg = c.yellow },
-  DiagnosticsVirtualTextInformation = { fg = c.grey },
-  DiagnosticsVirtualTextHint = { fg = c.grey },
+  DiagnosticVirtualTextError = { fg = c.red },
+  DiagnosticVirtualTextWarning = { fg = c.orange },
+  DiagnosticVirtualTextInformation = { fg = c.blue },
+  DiagnosticVirtualTextHint = { fg = c.grey },
   LspReferenceText = { bg = c.bg1, style = "bold" },
   LspReferenceWrite = { bg = c.bg1, style = "bold" },
   LspReferenceRead = { bg = c.bg1, style = "bold" },
   LspDiagnosticsFloatingError = { fg = c.red },
   LspDiagnosticsFloatingWarning = { fg = c.orange },
-  LspDiagnosticsFloatingInformation = { fg = c.yellow },
+  LspDiagnosticsFloatingInformation = { fg = c.blue },
   LspDiagnosticsFloatingHint = { fg = c.grey },
   DiagnosticFloatingError = { fg = c.red },
   DiagnosticFloatingWarn = { fg = c.orange },
@@ -251,7 +308,7 @@ hl.plugins.lsp = {
   DiagnosticFloatingHint = { fg = c.grey },
   LspDiagnosticsSignError = { fg = c.red },
   LspDiagnosticsSignWarning = { fg = c.orange },
-  LspDiagnosticsSignInformation = { fg = c.yellow },
+  LspDiagnosticsSignInformation = { fg = c.blue },
   LspDiagnosticsSignHint = { fg = c.grey },
   DiagnosticSignError = { fg = c.red },
   DiagnosticSignWarn = { fg = c.orange },
@@ -259,16 +316,12 @@ hl.plugins.lsp = {
   DiagnosticSignHint = { fg = c.grey },
   LspDiagnosticsError = { fg = c.red },
   LspDiagnosticsWarning = { fg = c.orange },
-  LspDiagnosticsInformation = { fg = c.yellow },
+  LspDiagnosticsInformation = { fg = c.blue },
   LspDiagnosticsHint = { fg = c.grey },
   DiagnosticsError = { fg = c.red },
   DiagnosticsWarning = { fg = c.orange },
   DiagnosticsInformation = { fg = c.yellow },
   DiagnosticsHint = { fg = c.grey },
-  DiagnosticUnderlineError = { style = "underline" },
-  DiagnosticUnderlineWarn = { style = "underline" },
-  DiagnosticUnderlineInfo = { style = "underline" },
-  DiagnosticUnderlineHint = { style = "underline" },
 }
 
 hl.plugins.whichkey = {
@@ -277,6 +330,15 @@ hl.plugins.whichkey = {
   WhichKeyGroup = colors.Orange,
   WhichKeySeperator = colors.Green,
   WhichKeyFloat = { bg = c.bg1 },
+}
+
+hl.plugins.git = {
+  SignAdd = colors.Green,
+  SignChange = colors.Blue,
+  SignDelete = colors.Red,
+  GitSignsAdd = colors.Green,
+  GitSignsChange = colors.Blue,
+  GitSignsDelete = colors.Red,
 }
 
 hl.plugins.gitgutter = {
@@ -310,12 +372,12 @@ hl.plugins.diffview = {
   DiffviewFilePanelInsertions = colors.Green,
   DiffviewFilePanelDeletions = colors.Red,
   DiffviewStatusAdded = colors.Green,
-  DiffviewStatusUntracked = colors.Blue,
+  DiffviewStatusUntracked = colors.Grey,
   DiffviewStatusModified = colors.Blue,
-  DiffviewStatusRenamed = colors.Blue,
-  DiffviewStatusCopied = colors.Blue,
-  DiffviewStatusTypeChange = colors.Blue,
-  DiffviewStatusUnmerged = colors.Blue,
+  DiffviewStatusRenamed = colors.Yellow,
+  DiffviewStatusCopied = colors.BrightYellow,
+  DiffviewStatusTypeChange = colors.Cyan,
+  DiffviewStatusUnmerged = colors.Orange,
   DiffviewStatusUnknown = colors.Red,
   DiffviewStatusDeleted = colors.Red,
   DiffviewStatusBroken = colors.Red,
@@ -370,6 +432,11 @@ hl.plugins.nvim_cmp = {
   CmpItemAbbr = colors.Fg,
   CmpItemAbbrMatch = colors.Green,
   CmpItemAbbrMatchFuzzy = colors.Yellow,
+  CmpDocumentation = { fg = c.fg },
+  CmpDocumentationBorder = { fg = c.bg3 },
+  CmpItemAbbrDeprecated = { fg = c.grey },
+  CmpItemKind = { fg = c.orange },
+  CmpItemMenu = { fg = c.grey },
 }
 
 hl.langs.html = {
@@ -478,16 +545,19 @@ hl.plugins.notify = {
 function M.setup()
   vim_highlights(hl.common)
   vim_highlights(hl.syntax)
-  local ns = create_namespace "onedarker"
-  load_highlights(ns, hl.treesitter)
-  set_hl_ns(ns)
-  vim_highlights(hl.treesitter)
+
   for _, group in pairs(hl.langs) do
     vim_highlights(group)
   end
+
   for _, group in pairs(hl.plugins) do
     vim_highlights(group)
   end
+
+  local ns = create_namespace "onedarker"
+  load_highlights(ns, hl.treesitter)
+  set_hl_ns(ns)
+  -- vim_highlights(hl.treesitter)
 end
 
 return M
