@@ -49,12 +49,10 @@ end
 function M.rebuild_and_update()
   M.rebuild_latest_neovim()
   M.reinstall_lsp_servers()
-  vim.schedule(function()
-    vim.cmd [[PackerSync]]
-    vim.cmd [[TSUninstall all]]
-    vim.cmd [[TSInstall all]]
-    vim.cmd [[PackerCompile]]
-  end)
+  vim.cmd [[PackerSync]]
+  vim.cmd [[TSUninstall all]]
+  vim.cmd [[TSInstall all]]
+  vim.cmd [[PackerCompile]]
 end
 
 function M.setup()
