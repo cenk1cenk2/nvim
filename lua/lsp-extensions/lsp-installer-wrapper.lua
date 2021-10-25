@@ -46,8 +46,20 @@ function M.rebuild_latest_neovim()
   log_view:toggle()
 end
 
+function M.rebuild_and_update()
+  M.rebuild_latest_neovim()
+  M.reinstall_lsp_servers()
+  vim.schedule(function()
+    vim.cmd [[PackerSync]]
+    vim.cmd [[TSUninstall all]]
+    vim.cmd [[TSInstall all]]
+    vim.cmd [[PackerCompile]]
+  end)
+end
+
 function M.setup()
   require("utils.command").wrap_to_command {
+    { "RebuildAndUpdate", 'lua require("lsp-extensions.lsp-installer-wrapper").rebuild_and_update()' },
     { "RebuildLatestNeovim", 'lua require("lsp-extensions.lsp-installer-wrapper").rebuild_latest_neovim()' },
     { "LspInstallerReinstallAll", 'lua require("lsp-extensions.lsp-installer-wrapper").reinstall_lsp_servers()' },
   }

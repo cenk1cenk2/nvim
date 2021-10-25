@@ -38,8 +38,8 @@ M.mappings = {
       "reinstall all language servers",
     },
     Z = {
-      ":PackerSync<CR>",
-      "update all the plugins",
+      ":RebuildAndUpdate<CR>",
+      "rebuild and update everything",
     },
   },
 
