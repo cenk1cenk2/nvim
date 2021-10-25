@@ -22,7 +22,6 @@ return {
   on_init_callback = nil,
   automatic_servers_installation = true,
   buffer_mappings = require "keys.lsp-mappings",
-  null_ls = { setup = {} },
   null_ls = {
     setup = {},
   },
@@ -31,6 +30,8 @@ return {
     "ansiblels",
     "denols",
     "ember",
+    "eslint",
+    "eslintls",
     "jedi_language_server",
     "pylsp",
     "rome",
