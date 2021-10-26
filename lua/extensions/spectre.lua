@@ -22,7 +22,7 @@ function M.config()
       mapping = {
         ["delete_line"] = {
           map = "D",
-          cmd = "<cmd>lua require('spectre').delete()<CR>",
+          cmd = "<cmd>lua require('spectre').toggle_line()<CR>",
           desc = "toggle current item",
         },
         ["enter_file"] = {
