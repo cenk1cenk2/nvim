@@ -75,7 +75,7 @@ return {
   diagnostics = {
     "diagnostics",
     sources = { "nvim_lsp" },
-    symbols = { error = " ", warn = " ", info = " ", hint = " " },
+    symbols = { error = " ", warn = " ", info = " ", hint = "" },
     color = {},
     cond = conditions.hide_in_width,
   },

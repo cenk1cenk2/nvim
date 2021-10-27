@@ -6,7 +6,7 @@ return {
       values = {
         { name = "LspDiagnosticsSignError", text = "" },
         { name = "LspDiagnosticsSignWarning", text = "" },
-        { name = "LspDiagnosticsSignHint", text = "" },
+        { name = "LspDiagnosticsSignHint", text = "" },
         { name = "LspDiagnosticsSignInformation", text = "" },
       },
     },

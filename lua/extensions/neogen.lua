@@ -3,7 +3,9 @@ local M = {}
 local extension_name = "neogen"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil, setup = {} }
+  lvim.extensions[extension_name] = { active = true, on_config_done = nil, setup = {
+    enabled = true,
+  } }
 end
 
 function M.setup()
