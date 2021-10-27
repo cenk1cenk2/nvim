@@ -284,6 +284,10 @@ hl.plugins.lsp = {
   DiagnosticFloatingWarn = { fg = c.orange },
   DiagnosticFloatingInfo = { fg = c.dark_cyan },
   DiagnosticFloatingHint = { fg = c.grey },
+  DiagnosticError = { fg = c.red },
+  DiagnosticWarning = { fg = c.orange },
+  DiagnosticInformation = { fg = c.dark_cyan },
+  DiagnosticHint = { fg = c.grey },
   LspDiagnosticsDefaultError = { fg = c.red },
   LspDiagnosticsDefaultHint = { fg = c.grey },
   LspDiagnosticsDefaultInformation = { fg = c.dark_cyan },
@@ -296,10 +300,6 @@ hl.plugins.lsp = {
   DiagnosticUnderlineWarn = { style = "underline" },
   DiagnosticUnderlineInfo = { style = "underline" },
   DiagnosticUnderlineHint = { style = "underline" },
-  DiagnosticsUnderlineError = { style = "underline" },
-  DiagnosticsUnderlineHint = { style = "underline" },
-  DiagnosticsUnderlineInformation = { style = "underline" },
-  DiagnosticsUnderlineWarning = { style = "underline" },
   LspDiagnosticsVirtualTextError = { fg = c.red },
   LspDiagnosticsVirtualTextWarning = { fg = c.orange },
   LspDiagnosticsVirtualTextInformation = { fg = c.dark_cyan },
@@ -319,10 +319,6 @@ hl.plugins.lsp = {
   LspDiagnosticsWarning = { fg = c.orange },
   LspDiagnosticsInformation = { fg = c.dark_cyan },
   LspDiagnosticsHint = { fg = c.grey },
-  DiagnosticsError = { fg = c.red },
-  DiagnosticsWarning = { fg = c.orange },
-  DiagnosticsInformation = { fg = c.dark_cyan },
-  DiagnosticsHint = { fg = c.grey },
 }
 
 hl.plugins.whichkey = {
