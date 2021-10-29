@@ -22,7 +22,7 @@ M.setup = function()
   vim.fn.sign_define("DapBreakpointRejected", lvim.builtin.dap.breakpoint_rejected)
   vim.fn.sign_define("DapStopped", lvim.builtin.dap.stopped)
 
-  dap.defaults.fallback.terminal_win_cmd = "50vsplit new"
+  dap.defaults.fallback.terminal_win_cmd = "30hsplit new"
 
   lvim.builtin.which_key.mappings["d"] = {
     name = "Debug",
