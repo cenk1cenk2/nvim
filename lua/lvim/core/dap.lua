@@ -34,11 +34,16 @@ M.setup = function()
     g = { "<cmd>lua require'dap'.session()<cr>", "Get Session" },
     i = { "<cmd>lua require'dap'.step_into()<cr>", "Step Into" },
     o = { "<cmd>lua require'dap'.step_over()<cr>", "Step Over" },
-    u = { "<cmd>lua require'dap'.step_out()<cr>", "Step Out" },
+    k = { "<cmd>lua require('dap.ui.widgets').hover()<cr>", "inspect element" },
+    K = { ':lua require("dapui").float_element()<CR>', "floating element" },
+    l = { "<cmd>lua require('dap').list_breakpoints()<cr>", "list breakpoints" },
+    O = { "<cmd>lua require'dap'.step_out()<cr>", "Step Out" },
     p = { "<cmd>lua require'dap'.pause.toggle()<cr>", "Pause" },
     r = { "<cmd>lua require'dap'.repl.toggle()<cr>", "Toggle Repl" },
     R = { "<cmd>lua require('dap.ext.vscode').load_launchjs()<cr>", "Reload launch.json" },
     s = { "<cmd>lua require'dap'.continue()<cr>", "Start" },
+    u = { ':lua require("dapui").toggle()<CR>', "toggle ui" },
+
     q = { "<cmd>lua require'dap'.close()<cr>", "Quit" },
   }
 

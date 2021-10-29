@@ -195,6 +195,8 @@ return {
     disable = not lvim.builtin.dap.active,
   },
 
+  { "rcarriga/nvim-dap-ui", disable = not lvim.builtin.dap.active, requires = { "mfussenegger/nvim-dap" } },
+
   -- Dashboard
   {
     "ChristianChiarulli/dashboard-nvim",

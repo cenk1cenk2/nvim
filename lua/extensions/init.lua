@@ -29,6 +29,7 @@ local extensions = {
   "extensions.neogen",
   "extensions.coc",
   "extensions.distant",
+  "extensions.nvim-dap-ui",
 }
 
 function M.config(config)
