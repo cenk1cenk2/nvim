@@ -43,7 +43,6 @@ M.setup = function()
     R = { "<cmd>lua require('dap.ext.vscode').load_launchjs()<cr>", "Reload launch.json" },
     s = { "<cmd>lua require'dap'.continue()<cr>", "Start" },
     u = { ':lua require("dapui").toggle()<CR>', "toggle ui" },
-
     q = { "<cmd>lua require'dap'.close()<cr>", "Quit" },
   }
 
