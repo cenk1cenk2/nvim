@@ -158,8 +158,6 @@ M.config = function()
   lvim.builtin.cmp = {
     confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false },
     completion = {
-      ---@usage vim's `completeopt` setting. Warning: Be careful when changing this value.
-      completeopt = "menu,menuone,noinsert",
       ---@usage The minimum length of a word to complete on.
       keyword_length = 1,
     },

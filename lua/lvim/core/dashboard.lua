@@ -15,8 +15,16 @@ M.config = function(config)
       b = { description = { "⧗  Sessions" }, command = "CocList sessions" },
       c = { description = { "  Find File" }, command = "Telescope find_files" },
       d = { description = { "  File Browser" }, command = "Telescope file_browser" },
-      e = { description = { "  Recently Used Files" }, command = "Telescope oldfiles" },
-      f = { description = { "  Configuration" }, command = ":e " .. config.get_user_config_path() },
+      e = {
+        description = { "  New File           " },
+        command = ":ene!",
+      },
+      f = {
+        description = { "  Recent Projects    " },
+        command = "Telescope projects",
+      },
+      g = { description = { "  Recently Used Files" }, command = "Telescope oldfiles" },
+      h = { description = { "  Configuration" }, command = ":e " .. config.get_user_config_path() },
       q = { description = { "  Quit" }, command = "qa!" },
     },
   }
