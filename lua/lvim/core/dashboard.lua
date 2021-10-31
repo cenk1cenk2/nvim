@@ -16,11 +16,11 @@ M.config = function(config)
       c = { description = { "  Find File" }, command = "Telescope find_files" },
       d = { description = { "  File Browser" }, command = "Telescope file_browser" },
       e = {
-        description = { "  New File           " },
+        description = { "  New File" },
         command = ":ene!",
       },
       f = {
-        description = { "  Recent Projects    " },
+        description = { "  Recent Projects" },
         command = "Telescope projects",
       },
       g = { description = { "  Recently Used Files" }, command = "Telescope oldfiles" },
