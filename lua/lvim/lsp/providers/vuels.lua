@@ -8,10 +8,16 @@ local opts = {
       config = {
         vetur = {
           completion = { autoImport = true, tagCasing = "kebab", useScaffoldSnippets = true },
+          experimental = { templateInterpolationService = true },
           useWorkspaceDependencies = true,
           validation = { script = true, style = true, template = true },
         },
       },
+    },
+    handlers = {
+      ["codeAction/resolve"] = function(_, _, params, _, bufnr, _)
+        vim.lsp.buf_request_sync(bufnr, "codeAction/resolve", params)
+      end,
     },
   },
 }
