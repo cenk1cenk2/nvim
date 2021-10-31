@@ -22,8 +22,6 @@ function M.config()
       hijack_cursor = false,
       -- updates the root directory of the tree on `DirChanged` (when your run `:cd` usually)
       update_cwd = false,
-      -- show lsp diagnostics in the signcolumn
-      lsp_diagnostics = true,
       -- update the focused file on `BufEnter`, un-collapses the folders recursively until it finds the file
       update_focused_file = {
         -- enables the feature
@@ -94,12 +92,17 @@ function M.setup()
   local table_utils = require "lvim.utils.table"
   for opt, val in pairs(lvim.builtin.nvimtree.setup) do
     if
-      not table_utils.contains(
-        { "disable_netrw", "hijack_netrw", "auto_close", "update_cwd", "hijack_cursor", "lsp_diagnostics" },
-        function(entry)
-          return opt == entry
-        end
-      )
+      not table_utils.contains({
+        "disable_netrw",
+        "hijack_netrw",
+        "auto_close",
+        "update_cwd",
+        "hijack_cursor",
+        "lsp_diagnostics",
+        "hide_dotfiles",
+      }, function(entry)
+        return opt == entry
+      end)
     then
       vim.g["nvim_tree_" .. opt] = val
     end
