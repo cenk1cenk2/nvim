@@ -141,18 +141,6 @@ function M.setup()
 
   require("lsp-extensions").setup()
 
-  if lvim.lsp.ensure_installed then
-    for _, server_name in ipairs(lvim.lsp.ensure_installed) do
-      local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(server_name)
-
-      if server_available then
-        require("lvim.lsp.manager").ensure_installed(requested_server)
-      else
-        Log:warn("Requested LSP is not available: " .. server_name)
-      end
-    end
-  end
-
   for _, sign in ipairs(lvim.lsp.diagnostics.signs.values) do
     vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
   end

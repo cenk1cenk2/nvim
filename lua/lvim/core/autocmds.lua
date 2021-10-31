@@ -6,7 +6,6 @@ function M.load_augroups()
 
   return {
     _general_settings = {
-      { "Filetype", "*", "lua require('lvim.utils.ft').do_filetype(vim.fn.expand(\"<amatch>\"))" },
       { "FileType", "qf,help,man", "nnoremap <silent> <buffer> q :close<CR>" },
       { "TextYankPost", "*", "lua require('vim.highlight').on_yank({higroup = 'Search', timeout = 500})" },
       { "BufWinEnter", "dashboard", "setlocal cursorline signcolumn=yes cursorcolumn number" },
