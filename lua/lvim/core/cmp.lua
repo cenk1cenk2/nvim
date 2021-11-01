@@ -269,7 +269,7 @@ M.config = function()
       ["<C-c>"] = function()
         vim.api.nvim_feedkeys(vim.api.nvim_eval '"\\<esc>"', "m", true)
 
-        cmp.mapping.close()
+        cmp.mapping.abort()
       end,
       ["<C-e>"] = cmp.mapping.abort(),
       ["<CR>"] = cmp.mapping(function(fallback)
