@@ -61,11 +61,13 @@ local function make_client_info(client)
   local client_enabled_caps = lsp_utils.get_client_capabilities(client.id)
   local name = client.name
   local id = client.id
+  local filetypes = lsp_utils.get_supported_filetypes(name)
   local document_formatting = client.resolved_capabilities.document_formatting
   local attached_buffers_list = table.concat(vim.lsp.get_buffers_by_client_id(client.id), ", ")
   local client_info = {
     fmt("* Name:                      %s", name),
     fmt("* Id:                        [%s]", tostring(id)),
+    fmt("* filetype(s):               [%s]", table.concat(filetypes, ", ")),
     fmt("* Attached buffers:          [%s]", tostring(attached_buffers_list)),
     fmt("* Supports formatting:       %s", tostring(document_formatting)),
   }
@@ -104,7 +106,10 @@ function M.toggle_popup(ft)
     fmt("* list:                      [%s]", table.concat(ts_active_buffers, ", ")),
   }
 
-  local lsp_info = { "Language Server Protocol (LSP) info", fmt "* Associated server(s):" }
+  local lsp_info = {
+    "Language Server Protocol (LSP) info",
+    fmt "* Active server(s):",
+  }
 
   for _, client in pairs(clients) do
     vim.list_extend(lsp_info, make_client_info(client))
