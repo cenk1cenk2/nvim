@@ -22,7 +22,7 @@ return {
   dark_yellow = "#e5c07b",
   dark_purple = "#8a3fa0",
   dark_green = "#587C0C",
-  dark_blue = "#1c3448",
+  dark_blue = "#2c5372",
   bright_yellow = "#FFD700",
   bright_grey = "#b0b0b0",
   bright_green = "#587C0C",
