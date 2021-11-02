@@ -17,6 +17,7 @@ lvim.lsp.ensure_installed = {
   "svelte",
   "angularls",
   "rust_analyzer",
+  "eslint",
   -- managed by extensions
   "stylua",
   "eslint_d",
