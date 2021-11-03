@@ -15,9 +15,9 @@ lvim.lsp.ensure_installed = {
   "gopls",
   "tailwindcss",
   "svelte",
-  "angularls",
+  -- "angularls",
   "rust_analyzer",
-  "eslint",
+  -- "eslint",
   "ansiblels",
   -- managed by extensions
   "stylua",
@@ -38,14 +38,13 @@ lvim.lsp.ensure_installed = {
   "hadolint",
 }
 
-
 lvim.lsp.override = {
-  -- "angularls",
+  "angularls",
   -- "ansiblels",
   "denols",
   "ember",
   -- "emmet_ls",
-  -- "eslint",
+  "eslint",
   "eslintls",
   -- "graphql",
   "jedi_language_server",
