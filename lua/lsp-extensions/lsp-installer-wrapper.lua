@@ -3,6 +3,8 @@ local M = {}
 local Log = require "lvim.core.log"
 
 function M.reinstall_lsp_servers()
+  vim.cmd [[LspStop]]
+
   for _, server_name in ipairs(lvim.lsp.ensure_installed) do
     local server_available, server = require("nvim-lsp-installer.servers").get_server(server_name)
 
@@ -18,16 +20,14 @@ function M.reinstall_lsp_servers()
       Log:info(string.format("Installing [%s]", server.name))
 
       server:install()
-
-      vim.schedule(function()
-        vim.cmd [[LspInstallInfo]]
-        vim.cmd [[LspStop]]
-        vim.cmd [[LspStart]]
-      end)
     else
       Log:warn("Requested LSP is not available: " .. server_name)
     end
   end
+
+  vim.cmd [[LspInstallInfo]]
+
+  vim.cmd [[LspStart]]
 end
 
 function M.rebuild_latest_neovim()
@@ -50,12 +50,8 @@ function M.rebuild_and_update()
   M.rebuild_latest_neovim()
   M.reinstall_lsp_servers()
 
-  vim.schedule(function()
-    vim.cmd [[PackerSync]]
-    vim.cmd [[TSUninstall all]]
-    vim.cmd [[TSInstall all]]
-    vim.cmd [[PackerCompile]]
-  end)
+  vim.cmd [[PackerSync]]
+  vim.cmd [[PackerCompile]]
 end
 
 function M.setup()

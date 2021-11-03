@@ -19,6 +19,7 @@ function M.config()
         "NvimTree",
         "dashboard",
         "toggleterm",
+        "packer"
       },
       enabled = true,
       show_trailing_blankline_indent = false,

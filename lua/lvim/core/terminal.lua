@@ -8,7 +8,7 @@ M.config = function()
     -- size can be a number or function which is passed the current terminal
     size = 20,
     -- open_mapping = [[<c-\>]],
-    -- open_mapping = [[<F1>]],
+    open_mapping = [[<F9>]],
     hide_numbers = true, -- hide the number column in toggleterm buffers
     shade_filetypes = {},
     shade_terminals = true,
@@ -65,6 +65,7 @@ M.setup = function()
       ["<F4>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
       ["<F6>"] = ":ToggleTermCloseAll<CR>",
       ["<F7>"] = ":ToggleTermOpenAll<CR>",
+      ["<F8>"] = ":LspInstallInfo<CR>",
     },
     term_mode = {
       ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
@@ -117,6 +118,8 @@ M._exec_toggle = function(exec)
   end
 
   terminals[exec]:toggle()
+
+  return terminals["exec"]
 end
 
 M.float_terminal = function()
@@ -130,6 +133,8 @@ M.float_terminal = function()
   end
 
   terminals["float"]:toggle()
+
+  return terminals["float"]
 end
 
 M.bottom_terminal = function()
@@ -143,10 +148,13 @@ M.bottom_terminal = function()
   end
 
   terminals["bottom"]:toggle()
+
+  return terminals["bottom"]
 end
 
 M.close_all = function()
-  for _, terminal in pairs(terminals) do
+  local terms = require "toggleterm.terminal"
+  for _, terminal in pairs(table.extend(terms.getAll(), terminals)) do
     if terminal:is_open() then
       terminal:close()
     end
