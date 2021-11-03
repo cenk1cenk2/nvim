@@ -41,7 +41,7 @@ return {
     "rome",
     "sqlls",
     "sqls",
-    -- "stylelint_lsp",
+    "stylelint_lsp",
     -- "tailwindcss",
     "tflint",
     "volar",

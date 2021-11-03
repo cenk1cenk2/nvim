@@ -38,6 +38,29 @@ lvim.lsp.ensure_installed = {
   "hadolint",
 }
 
+
+lvim.lsp.override = {
+  -- "angularls",
+  -- "ansiblels",
+  "denols",
+  "ember",
+  -- "emmet_ls",
+  -- "eslint",
+  "eslintls",
+  -- "graphql",
+  "jedi_language_server",
+  "ltex",
+  "phpactor",
+  "pylsp",
+  "rome",
+  "sqlls",
+  "sqls",
+  "stylelint_lsp",
+  -- "tailwindcss",
+  "tflint",
+  "volar",
+}
+
 lvim.autocommands.custom_groups = {
   TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
 }
