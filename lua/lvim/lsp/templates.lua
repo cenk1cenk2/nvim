@@ -47,7 +47,7 @@ end
 function M.generate_templates(servers_names)
   servers_names = servers_names or {}
 
-  Log:debug "Templates installation in progress"
+  Log:info "Templates installation in progress"
 
   M.remove_template_files()
 
@@ -67,7 +67,7 @@ function M.generate_templates(servers_names)
   for _, server in ipairs(servers_names) do
     M.generate_ftplugin(server, ftplugin_dir)
   end
-  Log:debug "Templates installation is complete"
+  Log:info "Templates installation is complete"
 end
 
 return M

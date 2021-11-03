@@ -38,6 +38,8 @@ lvim.lsp.ensure_installed = {
   "hadolint",
 }
 
+lvim.lsp.override = {}
+
 lvim.autocommands.custom_groups = {
   TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
 }
