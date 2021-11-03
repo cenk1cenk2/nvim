@@ -221,10 +221,10 @@ M.mappings = {
     name = "Packer",
     c = { "<cmd>PackerCompile<cr>", "Compile" },
     i = { "<cmd>PackerInstall<cr>", "Install" },
-    R = { "<cmd>lua require('lvim.config'):reload()<cr>", "Reload configurations" },
+    r = { "<cmd>lua require('lvim.plugin-loader').recompile()<cr>", "Re-compile" },
     s = { "<cmd>PackerSync<cr>", "Sync" },
     S = { "<cmd>PackerStatus<cr>", "Status" },
-    U = { "<cmd>PackerUpdate<cr>", "Update" },
+    u = { "<cmd>PackerUpdate<cr>", "Update" },
   },
 
   T = {

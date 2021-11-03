@@ -4,6 +4,12 @@ local Log = require "lvim.core.log"
 local M = {}
 local user_config_dir = get_config_dir()
 local user_config_file = utils.join_paths(user_config_dir, "config.lua")
+
+local function apply_defaults(configs, defaults)
+  configs = configs or {}
+  return vim.tbl_deep_extend("keep", configs, defaults)
+end
+
 ---Get the full path to the user configuration file
 ---@return string
 function M:get_user_config_path()
@@ -20,9 +26,6 @@ function M:init()
     lvim.database = { save_location = utils.join_paths(home_dir, ".config", "lunarvim_db"), auto_execute = 1 }
   end
 
-  local keymappings = require "lvim.keymappings"
-  keymappings.config()
-
   local builtins = require "lvim.core.builtins"
   builtins.config(self)
 
@@ -35,12 +38,14 @@ function M:init()
   local settings = require "lvim.config.settings"
   settings.load_options()
 
+  local default_keymaps = require("lvim.keymappings").get_defaults()
+  lvim.keys = apply_defaults(lvim.keys, default_keymaps)
+
   local autocmds = require "lvim.core.autocmds"
-  lvim.autocommands = autocmds.load_augroups()
+  lvim.autocommands = apply_defaults(lvim.autocommands, autocmds.load_augroups())
 
   local lvim_lsp_config = require "lvim.lsp.config"
-
-  lvim.lsp = vim.deepcopy(lvim_lsp_config)
+  lvim.lsp = apply_defaults(lvim.lsp, vim.deepcopy(lvim_lsp_config))
 
   local supported_languages = require "lvim.config.supported_languages"
   require("lvim.lsp.manager").init_defaults(supported_languages)
@@ -89,6 +94,9 @@ function M:load(config_path)
 
   autocmds.define_augroups(lvim.autocommands)
 
+  vim.g.mapleader = (lvim.leader == "space" and " ") or lvim.leader
+  require("lvim.keymappings").load(lvim.keys)
+
   local settings = require "lvim.config.settings"
   settings.load_commands()
 end
@@ -98,7 +106,7 @@ end
 function M:reload()
   local lvim_modules = {}
   for module, _ in pairs(package.loaded) do
-    if module:match "lvim" then
+    if module:match "lvim.core" then
       package.loaded.module = nil
       table.insert(lvim_modules, module)
     end
@@ -107,12 +115,11 @@ function M:reload()
   M:init()
   M:load()
 
-  require("lvim.keymappings").setup() -- this should be done before loading the plugins
   local plugins = require "lvim.plugins"
   utils.toggle_autoformat()
   local plugin_loader = require "lvim.plugin-loader"
-  plugin_loader:cache_reset()
-  plugin_loader:load { plugins, lvim.plugins }
+  plugin_loader.cache_clear()
+  plugin_loader.load { plugins, lvim.plugins }
   vim.cmd ":PackerInstall"
   vim.cmd ":PackerCompile"
   -- vim.cmd ":PackerClean"
