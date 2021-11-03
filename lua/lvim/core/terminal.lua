@@ -154,7 +154,9 @@ end
 
 M.close_all = function()
   local terms = require "toggleterm.terminal"
-  for _, terminal in pairs(table.extend(terms.getAll(), terminals)) do
+  local all_terminals = vim.tbl_extend("force", terms.get_all(), terminals)
+
+  for _, terminal in pairs(all_terminals) do
     if terminal:is_open() then
       terminal:close()
     end
