@@ -63,17 +63,17 @@ M.setup = function()
       ["<F2>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
       ["<F3>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
       ["<F4>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
-      ["<F6>"] = ":ToggleTermCloseAll<CR>",
-      ["<F7>"] = ":ToggleTermOpenAll<CR>",
       ["<F8>"] = ":LspInstallInfo<CR>",
     },
     term_mode = {
-      ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
+      ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all(true)<CR>",
+      ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
+      ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
+      ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
       -- ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').float_terminal()<CR>",
       -- ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
       -- ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
       -- ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').bottom_terminal()<CR>",
-      -- ["<F6>"] = "<C-\\><C-n>:ToggleTermCloseAll<CR>",
     },
   }
 end
@@ -152,14 +152,23 @@ M.bottom_terminal = function()
   return terminals["bottom"]
 end
 
-M.close_all = function()
+M.close_all = function(open_default_after)
   local terms = require "toggleterm.terminal"
   local all_terminals = vim.tbl_extend("force", terms.get_all(), terminals)
+  local is_closing_default = false
 
-  for _, terminal in pairs(all_terminals) do
+  for key, terminal in pairs(all_terminals) do
     if terminal:is_open() then
       terminal:close()
+
+      if key ~= "float" then
+        is_closing_default = true
+      end
     end
+  end
+
+  if open_default_after and is_closing_default then
+    M.float_terminal()
   end
 end
 
