@@ -8,7 +8,7 @@ M.config = function()
     -- size can be a number or function which is passed the current terminal
     size = 20,
     -- open_mapping = [[<c-\>]],
-    open_mapping = [[<F1>]],
+    -- open_mapping = [[<F1>]],
     hide_numbers = true, -- hide the number column in toggleterm buffers
     shade_filetypes = {},
     shade_terminals = true,
@@ -59,6 +59,7 @@ M.setup = function()
 
   require("lvim.keymappings").load {
     normal_mode = {
+      ["<F1>"] = ":lua require('lvim.core.terminal').float_terminal()<CR>",
       ["<F2>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
       ["<F3>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
       ["<F4>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
@@ -66,10 +67,12 @@ M.setup = function()
       ["<F7>"] = ":ToggleTermOpenAll<CR>",
     },
     term_mode = {
-      ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
-      ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
-      ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').bottom_terminal()<CR>",
-      ["<F6>"] = "<C-\\><C-n>:ToggleTermCloseAll<CR>",
+      ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
+      -- ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').float_terminal()<CR>",
+      -- ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
+      -- ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
+      -- ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').bottom_terminal()<CR>",
+      -- ["<F6>"] = "<C-\\><C-n>:ToggleTermCloseAll<CR>",
     },
   }
 end
@@ -116,6 +119,19 @@ M._exec_toggle = function(exec)
   terminals[exec]:toggle()
 end
 
+M.float_terminal = function()
+  if not terminals["float"] then
+    local Terminal = require("toggleterm.terminal").Terminal
+    terminals["float"] = Terminal:new {
+      cmd = vim.o.shell,
+      direction = "float",
+      hidden = true,
+    }
+  end
+
+  terminals["float"]:toggle()
+end
+
 M.bottom_terminal = function()
   if not terminals["bottom"] then
     local Terminal = require("toggleterm.terminal").Terminal
@@ -129,6 +145,14 @@ M.bottom_terminal = function()
   terminals["bottom"]:toggle()
 end
 
+M.close_all = function()
+  for _, terminal in pairs(terminals) do
+    if terminal:is_open() then
+      terminal:close()
+    end
+  end
+end
+
 ---Toggles a log viewer according to log.viewer.layout_config
 ---@param logfile string the fullpath to the logfile
 M.toggle_log_view = function(logfile)
@@ -139,7 +163,7 @@ M.toggle_log_view = function(logfile)
   log_viewer = log_viewer .. " " .. logfile
   local term_opts = vim.tbl_deep_extend("force", lvim.builtin.terminal, {
     cmd = log_viewer,
-    open_mapping = lvim.log.viewer.layout_config.open_mapping,
+    -- open_mapping = lvim.log.viewer.layout_config.open_mapping,
     direction = lvim.log.viewer.layout_config.direction,
     -- TODO: this might not be working as expected
     size = lvim.log.viewer.layout_config.size,
