@@ -17,7 +17,7 @@ lvim.lsp.ensure_installed = {
   "svelte",
   -- "angularls",
   "rust_analyzer",
-  -- "eslint",
+  "eslint",
   "ansiblels",
   -- managed by extensions
   "stylua",
@@ -44,7 +44,7 @@ lvim.lsp.override = {
   "denols",
   "ember",
   -- "emmet_ls",
-  "eslint",
+  -- "eslint",
   "eslintls",
   -- "graphql",
   "jedi_language_server",
