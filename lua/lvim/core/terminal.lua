@@ -63,6 +63,8 @@ M.setup = function()
       ["<F2>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
       ["<F3>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
       ["<F4>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
+      ["<F6>"] = ":lua require('lvim.core.terminal').buffer_terminal()<CR>",
+      ["<F7>"] = ":lua require('lvim.core.terminal').buffer_terminal_kill_all()<CR>",
       ["<F8>"] = ":LspInstallInfo<CR>",
     },
     term_mode = {
@@ -70,6 +72,8 @@ M.setup = function()
       ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
       ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
       ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
+      ["<F6>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
+      ["<F7>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').buffer_terminal_kill_all()<CR>",
       -- ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').float_terminal()<CR>",
       -- ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
       -- ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
@@ -119,7 +123,7 @@ M._exec_toggle = function(exec)
 
   terminals[exec]:toggle()
 
-  return terminals["exec"]
+  return terminals[exec]
 end
 
 M.float_terminal = function()
@@ -150,6 +154,34 @@ M.bottom_terminal = function()
   terminals["bottom"]:toggle()
 
   return terminals["bottom"]
+end
+
+M.buffer_terminal = function()
+  local current = vim.fn.expand "%:p:h"
+
+  if not terminals[current] then
+    local Terminal = require("toggleterm.terminal").Terminal
+    terminals[current] = Terminal:new {
+      cmd = vim.o.shell,
+      dir = current,
+      direction = "float",
+      hidden = true,
+    }
+
+    terminals[current].is_buffer_terminal = true
+  end
+
+  terminals[current]:toggle()
+
+  return terminals[current]
+end
+
+M.buffer_terminal_kill_all = function()
+  for terminal in pairs(terminals) do
+    if terminal.is_buffer_terminal and terminal:is_open() then
+      terminal:shutdown()
+    end
+  end
 end
 
 M.close_all = function(open_default_after)
