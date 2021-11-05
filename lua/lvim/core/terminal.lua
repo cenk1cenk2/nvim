@@ -8,7 +8,7 @@ M.config = function()
     -- size can be a number or function which is passed the current terminal
     size = 20,
     -- open_mapping = [[<c-\>]],
-    open_mapping = [[<F9>]],
+    open_mapping = [[<F12>]],
     hide_numbers = true, -- hide the number column in toggleterm buffers
     shade_filetypes = {},
     shade_terminals = true,
@@ -65,7 +65,7 @@ M.setup = function()
       ["<F4>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
       ["<F6>"] = ":lua require('lvim.core.terminal').buffer_terminal()<CR>",
       ["<F7>"] = ":lua require('lvim.core.terminal').buffer_terminal_kill_all()<CR>",
-      ["<F8>"] = ":LspInstallInfo<CR>",
+      ["<F11>"] = ":LspInstallInfo<CR>",
     },
     term_mode = {
       ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all(true)<CR>",
