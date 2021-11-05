@@ -52,6 +52,7 @@ function M.rebuild_and_update()
 
   vim.cmd [[PackerSync]]
   vim.cmd [[PackerCompile]]
+  vim.cmd [[LvimCacheReset]]
 end
 
 function M.setup()
