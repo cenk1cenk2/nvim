@@ -16,6 +16,8 @@ function M.setup()
         "vue",
         "svelte",
         "yaml",
+        "yaml.ansible",
+        "yaml.docker-compose",
         "json",
         "jsonc",
         "html",
