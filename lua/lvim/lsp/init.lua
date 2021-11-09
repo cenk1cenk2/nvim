@@ -87,7 +87,7 @@ local function select_default_formater(client)
 
   local client_filetypes = client.config.filetypes or {}
   for _, filetype in ipairs(client_filetypes) do
-    local supported_formatters = null_formatters.list_supported_names(filetype)
+    local supported_formatters = null_formatters.list_registered_providers(filetype)
 
     if
       (lvim.lang[filetype] and #vim.tbl_keys(lvim.lang[filetype].formatters) > 0)
