@@ -2,6 +2,7 @@ local M = {}
 
 function M.config()
   -- Define this minimal config so that it's available if telescope is not yet available.
+
   lvim.builtin.telescope = {
     ---@usage disable telescope completely [not recommeded]
     active = true,
@@ -25,11 +26,17 @@ function M.config()
     "--ignore",
   }
 
+  local ok, actions = pcall(require, "telescope.actions")
+  if not ok then
+    return
+  end
+
   lvim.builtin.telescope = vim.tbl_extend("force", lvim.builtin.telescope, {
     defaults = {
       find_command = M.rg_arguments,
       vimgrep_arguments = M.rg_arguments,
       layout_config = {
+        width = 0.9,
         prompt_position = "bottom",
         horizontal = { mirror = false, width = 0.95 },
         vertical = { mirror = false, width = 0.85 },
@@ -42,13 +49,32 @@ function M.config()
         "**/LICENSE",
         "**/license",
       },
-      mappings = { i = { ["<C-e>"] = actions.cycle_previewers_next, ["<C-r>"] = actions.cycle_previewers_prev } },
+      mappings = {
+        i = {
+          ["<C-e>"] = actions.cycle_previewers_next,
+          ["<C-r>"] = actions.cycle_previewers_prev,
+          ["<C-n>"] = actions.move_selection_next,
+          ["<C-p>"] = actions.move_selection_previous,
+          ["<C-c>"] = actions.close,
+          ["<C-j>"] = actions.cycle_history_next,
+          ["<C-k>"] = actions.cycle_history_prev,
+          ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+          ["<CR>"] = actions.select_default + actions.center,
+        },
+
+        n = {
+          ["<C-n>"] = actions.move_selection_next,
+          ["<C-p>"] = actions.move_selection_previous,
+          ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+        },
+      },
       initial_mode = "insert",
       selection_strategy = "reset",
       sorting_strategy = "descending",
       layout_strategy = "horizontal",
       file_sorter = require("telescope.sorters").get_fzy_sorter,
       generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
+      path_display = {},
       winblend = 0,
       border = {},
       borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },

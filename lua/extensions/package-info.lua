@@ -6,7 +6,7 @@ function M.config()
   local c = require "onedarker.colors"
 
   lvim.extensions[extension_name] = {
-    active = true,
+    active = false,
     on_config_done = nil,
     setup = {
       colors = {
