@@ -41,7 +41,7 @@ return {
   { "neovim/nvim-lspconfig", commit = commit.lsp_config },
   { "tamago324/nlsp-settings.nvim", commit = commit.nlsp_settings },
   { "jose-elias-alvarez/null-ls.nvim", commit = commit.null_ls },
-  { "antoinemadec/FixCursorHold.nvim", commit = commit.fix_cursor_hold }, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
+  -- { "antoinemadec/FixCursorHold.nvim", commit = commit.fix_cursor_hold }, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
   {
     "williamboman/nvim-lsp-installer",
     commit = commit.lsp_installer,
