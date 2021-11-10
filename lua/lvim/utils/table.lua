@@ -21,4 +21,14 @@ function Table.contains(t, predicate)
   return Table.find_first(t, predicate) ~= nil
 end
 
+function Table.length(t)
+  local count = 0
+
+  for _ in pairs(t) do
+    count = count + 1
+  end
+
+  return count
+end
+
 return Table

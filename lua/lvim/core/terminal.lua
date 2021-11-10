@@ -1,6 +1,6 @@
 local M = {}
 local Log = require "lvim.core.log"
-local log = require "lvim.core.log"
+local table_utils = require "lvim.utils.table"
 
 M.config = function()
   lvim.builtin["terminal"] = {
@@ -60,21 +60,21 @@ M.setup = function()
 
   require("lvim.keymappings").load {
     normal_mode = {
-      ["<F1>"] = ":lua require('lvim.core.terminal').float_terminal()<CR>",
-      ["<F2>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
-      ["<F3>"] = ":lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
-      ["<F4>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
+      ["<F1>"] = ":lua require('lvim.core.terminal').current_float_terminal():toggle()<CR>",
+      ["<F2>"] = ":lua require('lvim.core.terminal').float_terminal_select('prev')<CR>",
+      ["<F3>"] = ":lua require('lvim.core.terminal').float_terminal_select('next')<CR>",
+      ["<F4>"] = ":lua require('lvim.core.terminal').create_and_open_float_terminal()<CR>",
       ["<F6>"] = ":lua require('lvim.core.terminal').buffer_terminal()<CR>",
-      ["<F7>"] = ":lua require('lvim.core.terminal').buffer_terminal_kill_all()<CR>",
+      ["<F7>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
+      ["<F9>"] = ":lua require('lvim.core.terminal').terminal_kill_all()<CR>",
       ["<F11>"] = ":LspInstallInfo<CR>",
     },
     term_mode = {
-      ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all(true)<CR>",
-      ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
-      ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
-      ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
-      ["<F6>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
-      ["<F7>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').terminal_kill_all()<CR>",
+      ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
+      ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').float_terminal_select('prev')<CR>",
+      ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').float_terminal_select('next')<CR>",
+      ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').create_float_terminal()<CR>",
+      ["<F9>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').terminal_kill_all()<CR>",
       -- ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').float_terminal()<CR>",
       -- ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
       -- ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
@@ -127,19 +127,96 @@ M._exec_toggle = function(exec)
   return terminals[exec]
 end
 
-M.float_terminal = function()
-  if not terminals["float"] then
-    local Terminal = require("toggleterm.terminal").Terminal
-    terminals["float"] = Terminal:new {
+local float_terminals = {}
+local float_terminal_current = 1
+
+M.current_float_terminal = function()
+  if not float_terminals[float_terminal_current] then
+    float_terminal_current = 1
+  end
+
+  if vim.tbl_isempty(float_terminals) then
+    M.create_float_terminal(float_terminal_current)
+  end
+
+  Log:debug("Terminal switched: " .. float_terminal_current)
+
+  return float_terminals[float_terminal_current]
+end
+
+M.create_float_terminal = function(index)
+  local Terminal = require("toggleterm.terminal").Terminal
+
+  if not index then
+    index = table_utils.length(float_terminals) + 1
+  end
+
+  Log:debug("Terminal created: " .. index)
+
+  table.insert(
+    float_terminals,
+    index,
+    Terminal:new {
       cmd = vim.o.shell,
       direction = "float",
       hidden = true,
+      on_exit = function(terminal)
+        for i, t in pairs(float_terminals) do
+          if t.id == terminal.id then
+            table.remove(float_terminals, i)
+          end
+        end
+
+        if float_terminal_current > table_utils.length(float_terminals) then
+          float_terminal_current = table_utils.length(float_terminals)
+        elseif float_terminal_current < index then
+          float_terminal_current = float_terminal_current - 1
+        end
+      end,
     }
+  )
+
+  float_terminal_current = index
+
+  return float_terminals[index]
+end
+
+M.create_and_open_float_terminal = function()
+  if not vim.tbl_isempty(float_terminals) and M.current_float_terminal():is_open() then
+    M.current_float_terminal():close()
   end
 
-  terminals["float"]:toggle()
+  M.create_float_terminal()
 
-  return terminals["float"]
+  M.current_float_terminal():open()
+end
+
+M.float_terminal_select = function(action)
+  if M.current_float_terminal():is_open() then
+    M.current_float_terminal():close()
+  end
+
+  if vim.tbl_isempty(float_terminals) then
+    M.create_float_terminal()
+  elseif action == "next" then
+    local updated = float_terminal_current + 1
+
+    if updated > table_utils.length(float_terminals) then
+      float_terminal_current = 1
+    else
+      float_terminal_current = updated
+    end
+  elseif action == "prev" then
+    local updated = float_terminal_current - 1
+
+    if updated < 1 then
+      float_terminal_current = table_utils.length(float_terminals)
+    else
+      float_terminal_current = updated
+    end
+  end
+
+  M.current_float_terminal():open()
 end
 
 M.bottom_terminal = function()
@@ -178,28 +255,25 @@ M.buffer_terminal = function()
 end
 
 M.terminal_kill_all = function()
-  for _, terminal in pairs(terminals) do
+  local terms = require "toggleterm.terminal"
+  local all_terminals = vim.tbl_extend("force", terms.get_all(), terminals, float_terminals)
+
+  for _, terminal in pairs(all_terminals) do
     terminal:shutdown()
   end
+
+  float_terminals = {}
+  float_terminal_current = 0
 end
 
-M.close_all = function(open_default_after)
+M.close_all = function()
   local terms = require "toggleterm.terminal"
-  local all_terminals = vim.tbl_extend("force", terms.get_all(), terminals)
-  local is_closing_default = false
+  local all_terminals = vim.tbl_extend("force", terms.get_all(), terminals, float_terminals)
 
-  for key, terminal in pairs(all_terminals) do
+  for _, terminal in pairs(all_terminals) do
     if terminal:is_open() then
       terminal:close()
-
-      if key ~= "float" then
-        is_closing_default = true
-      end
     end
-  end
-
-  if open_default_after and is_closing_default then
-    M.float_terminal()
   end
 end
 
