@@ -10,7 +10,7 @@ M.mappings = {
   ["h"] = { "<C-W>s", "split below" },
   ["v"] = { "<C-W>v", "split right" },
   ["n"] = { "<cmd>nohlsearch<CR>", "no highlight" },
-  ["p"] = { ":Telescope find_files theme=get_dropdown<CR>", "find file" },
+  ["p"] = { ":Telescope find_files<CR>", "find file" },
   ["q"] = { ":LspFixCurrent<CR>", "quick fix" },
 
   -- actions
@@ -75,7 +75,7 @@ M.mappings = {
     k = { ":Telescope keymaps<CR>", "keymaps" },
     s = { ":Telescope spell_suggest<CR>", "spell suggest" },
     r = { ":TelescopeRipgrepInteractive<CR>", "rg interactive" },
-    p = { ":Telescope find_files theme=get_dropdown<CR>", "find file" },
+    p = { ":Telescope find_files<CR>", "find file" },
     R = { ":Telescope registers<CR>", "registers" },
     t = { ":Telescope live_grep<CR>", "text-telescope" },
     O = { ":Telescope vim_options<CR>", "vim options" },

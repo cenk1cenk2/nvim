@@ -9,11 +9,6 @@ function M.config()
     on_config_done = nil,
   }
 
-  local status_ok, actions = pcall(require, "telescope.actions")
-  if not status_ok then
-    return
-  end
-
   M.rg_arguments = {
     "rg",
     "--color=never",
@@ -77,7 +72,7 @@ function M.config()
       path_display = {},
       winblend = 0,
       border = {},
-      borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+      -- borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
       color_devicons = true,
       use_less = true,
       set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
@@ -87,13 +82,6 @@ function M.config()
       prompt_prefix = " ",
       selection_caret = " ",
       entry_prefix = " ",
-      pickers = {
-        find_files = { find_command = { "fd", "--type=file", "--hidden", "--smart-case" }, shorten_path = false },
-        live_grep = {
-          -- @usage don't include the filename in the search results
-          only_sort_text = true,
-        },
-      },
     },
     pickers = {
       -- Your special builtin config goes in here
@@ -101,14 +89,37 @@ function M.config()
         sort_lastused = true,
         theme = "dropdown",
         previewer = false,
+        layout_config = {
+          width = 0.75,
+          height = 0.75,
+          prompt_position = "bottom",
+        },
         mappings = {
           i = { ["<c-d>"] = "delete_buffer" },
           n = { ["<c-d>"] = require("telescope.actions").delete_buffer },
         },
       },
-      find_files = { theme = "dropdown" },
+      find_files = {
+        theme = "dropdown",
+        -- find_command = { "fd", "--type=file", "--hidden", "--ignore-case" },
+        shorten_path = false,
+        layout_config = {
+          width = 0.75,
+          height = 0.75,
+          prompt_position = "bottom",
+        },
+      },
+      live_grep = {
+        -- @usage don't include the filename in the search results
+        only_sort_text = true,
+      },
       current_buffer_fuzzy_find = {
         theme = "dropdown",
+        layout_config = {
+          width = 0.75,
+          height = 0.75,
+          prompt_position = "bottom",
+        },
       },
     },
     extensions = {
@@ -125,14 +136,14 @@ end
 function M.code_actions()
   local opts = {
     winblend = 15,
-    layout_config = { prompt_position = "top", width = 80, height = 12 },
-    borderchars = {
-      prompt = { "─", "│", " ", "│", "╭", "╮", "│", "│" },
-      results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
-      preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-    },
+    layout_config = { prompt_position = "bottom", width = 80, height = 12 },
+    -- borderchars = {
+    --   prompt = { "─", "│", " ", "│", "╭", "╮", "│", "│" },
+    --   results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
+    --   preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+    -- },
     border = {},
-    previewer = false,
+    previewer = true,
     shorten_path = false,
   }
   local builtin = require "telescope.builtin"
