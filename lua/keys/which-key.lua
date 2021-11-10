@@ -107,7 +107,6 @@ M.mappings = {
     s = { "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", "Undo Stage Hunk" },
     m = { ":Gdiffsplit<CR>", "merge view" },
     M = { ":Gvdiffsplit!<CR>", "merge view, 3-way-split" },
-    t = { "<cmd>lua require 'gitsigns'.toggle()<cr>", "git signs toggle" },
     v = { ":Telescope git_bcommits<CR>", "view buffer commits" },
     V = { ":Telescope git_commits<CR>", "view commits" },
   },
@@ -154,19 +153,6 @@ M.mappings = {
     s = { ":LspDocumentSymbol<CR>", "Document Symbols" },
     S = { ":LspWorkspaceSymbol<CR>", "Workspace Symbols" },
     Q = { ":LspRestart<CR>", "restart currently active lsps" },
-  },
-
-  -- node modules
-  m = {
-    name = "node",
-    s = { ':lua require("package-info").show()<CR>', "show package-info" },
-    S = { ':lua require("package-info").hide()<CR>', "hide package-info" },
-    u = { ':lua require("package-info").update()<CR>', "update current package" },
-    d = { ':lua require("package-info").delete()<CR>', "delete current package" },
-    i = { ':lua require("package-info").install()<CR>', "install packages" },
-    r = { ':lua require("package-info").reinstall()<CR>', "reinstall packages" },
-    c = { ':lua require("package-info").change_version()<CR>', "change version of the package" },
-    m = { ":Telescope node_modules list<CR>", "node modules" },
   },
 
   -- workspace/session
