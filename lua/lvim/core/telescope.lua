@@ -90,8 +90,8 @@ function M.config()
         theme = "dropdown",
         previewer = false,
         layout_config = {
-          width = 0.75,
-          height = 0.75,
+          width = 0.5,
+          height = 0.25,
           prompt_position = "bottom",
         },
         mappings = {
@@ -104,8 +104,8 @@ function M.config()
         -- find_command = { "fd", "--type=file", "--hidden", "--ignore-case" },
         shorten_path = false,
         layout_config = {
-          width = 0.75,
-          height = 0.75,
+          width = 0.5,
+          height = 0.25,
           prompt_position = "bottom",
         },
       },
@@ -116,8 +116,8 @@ function M.config()
       current_buffer_fuzzy_find = {
         theme = "dropdown",
         layout_config = {
-          width = 0.75,
-          height = 0.75,
+          width = 0.5,
+          height = 0.5,
           prompt_position = "bottom",
         },
       },
