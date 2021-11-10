@@ -56,7 +56,6 @@ function M.config()
           ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
           ["<CR>"] = actions.select_default + actions.center,
         },
-
         n = {
           ["<C-n>"] = actions.move_selection_next,
           ["<C-p>"] = actions.move_selection_previous,
@@ -102,6 +101,7 @@ function M.config()
       find_files = {
         theme = "dropdown",
         -- find_command = { "fd", "--type=file", "--hidden", "--ignore-case" },
+        previewer = false,
         shorten_path = false,
         layout_config = {
           width = 0.5,
