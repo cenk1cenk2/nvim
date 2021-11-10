@@ -277,6 +277,46 @@ M.close_all = function()
   end
 end
 
+local _, finders = pcall(require, "telescope.finders")
+local _, pickers = pcall(require, "telescope.pickers")
+local _, sorters = pcall(require, "telescope.sorters")
+local _, themes = pcall(require, "telescope.themes")
+local _, actions = pcall(require, "telescope.actions")
+
+M.find_terminals = function()
+  local opts = {
+    entry_maker = function(data)
+      print(vim.inspect(data))
+    end,
+  }
+
+  local t = {}
+
+  for _, term in ipairs(float_terminals) do
+    table.insert(t, term.dir)
+  end
+
+  local layout_opts = themes.get_ivy {
+    sorting_strategy = "ascending",
+    layout_strategy = "bottom_pane",
+    prompt_prefix = ">> ",
+    prompt_title = "Open terminals",
+    finder = finders.new_table(t),
+    attach_mappings = function(_, map)
+      map("i", "<enter>", actions._close)
+      map("n", "<enter>", actions._close)
+      map("i", "<esc>", actions._close)
+      map("n", "<esc>", actions._close)
+      map("n", "q", actions._close)
+
+      return true
+    end,
+    sorter = sorters.generic_sorter,
+  }
+
+  pickers.new(opts, layout_opts):find()
+end
+
 ---Toggles a log viewer according to log.viewer.layout_config
 ---@param logfile string the fullpath to the logfile
 M.toggle_log_view = function(logfile)
