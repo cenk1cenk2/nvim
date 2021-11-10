@@ -12,7 +12,7 @@ end
 
 function M.setup()
   require("utils.command").wrap_to_command {
-    { "GDiffCompare", 'lua require("plugin-configurations.fugitive").GDiffCompare()' },
+    { "GDiffCompare", 'lua require("modules.fugitive-compare-branch").GDiffCompare()' },
   }
   require("lvim.keymappings").load(lvim.extensions[extension_name].keymaps)
 
