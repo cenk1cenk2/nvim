@@ -64,9 +64,9 @@ lvim.autocommands.custom_groups = {
   TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
   ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()<cr>" },
   OverrideFileTypes = {
-    { "BufRead", "deploy.yml", "setlocal filetype=yaml.ansible" },
-    { "BufNewFile", "deploy.yml", "setlocal filetype=yaml.ansible" },
-    { "BufRead", "provision.yml", "setlocal filetype=yaml.ansible" },
-    { "BufNewFile", "provision.yml", "setlocal filetype=yaml.ansible" },
+    { "BufRead,BufNewFile", "deploy.yml", "setlocal filetype=yaml.ansible" },
+    { "BufRead,BufNewFile", "provision.yml", "setlocal filetype=yaml.ansible" },
+    { "BufRead,BufNewFile", "*.j2", "setlocal filetype=jinja" },
+    { "BufRead,BufNewFile", "*.yml.j2", "setlocal filetype=yaml.ansible" },
   },
 }

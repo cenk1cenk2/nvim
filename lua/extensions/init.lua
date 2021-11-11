@@ -30,6 +30,7 @@ local extensions = {
   "extensions.coc",
   "extensions.distant",
   "extensions.nvim-dap-ui",
+  "extensions.vim-jinja",
 }
 
 function M.config(config)

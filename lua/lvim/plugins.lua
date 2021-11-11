@@ -69,6 +69,7 @@ return {
     commit = commit.telescope_fzf_native,
     run = "make",
     disable = not lvim.builtin.telescope.active,
+    requires = "nvim-telescope/telescope.nvim",
   },
 
   {
@@ -151,17 +152,17 @@ return {
       require("lvim.core.treesitter").setup()
     end,
   },
+
   {
     "JoosepAlviste/nvim-ts-context-commentstring",
-    commit = commit.context_commentstring,
     event = "BufReadPost",
+    commit = commit.context_commentstring,
+    requires = { "nvim-treesitter/nvim-treesitter" },
   },
 
-  { "nvim-telescope/telescope-fzf-native.nvim", run = "make", requires = "nvim-telescope/telescope.nvim" },
   { "nvim-treesitter/playground", requires = { "nvim-treesitter/nvim-treesitter" } },
   { "p00f/nvim-ts-rainbow", run = ":TSUpdate", requires = { "nvim-treesitter/nvim-treesitter" } },
   { "windwp/nvim-ts-autotag", requires = { "nvim-treesitter/nvim-treesitter" } },
-  { "JoosepAlviste/nvim-ts-context-commentstring", requires = { "nvim-treesitter/nvim-treesitter" } },
   {
     "nvim-telescope/telescope-github.nvim",
     requires = { "nvim-treesitter/nvim-treesitter" },
@@ -530,5 +531,13 @@ return {
       require("extensions.distant").setup()
     end,
     disable = not lvim.extensions.distant.active,
+  },
+
+  {
+    "lepture/vim-jinja",
+    config = function()
+      require("extensions.vim-jinja").setup()
+    end,
+    disable = not lvim.extensions.vim_jinja.active,
   },
 }
