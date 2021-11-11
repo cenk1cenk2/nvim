@@ -19,9 +19,11 @@ local opts = {
           "*ervic*.{yml,yaml}",
           "kubectl-edit*.yaml",
         },
-        ["https://json.schemastore.org/gitlab-ci.json"] = { ".gitlab-ci.yml" },
+        ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = {
+          ".gitlab-ci.yml",
+        },
         ["https://json.schemastore.org/drone.json"] = { ".drone.yml" },
-        ["https://json.schemastore.org/ansible-playbook.json"] = { "deploy.yml", "provision.yml" },
+        -- ["https://json.schemastore.org/ansible-playbook.json"] = { "deploy.yml", "provision.yml" },
         ["https://bitbucket.org/atlassianlabs/atlascode/raw/main/resources/schemas/pipelines-schema.json"] = {
           "bitbucket-pipelines.yml",
         },
