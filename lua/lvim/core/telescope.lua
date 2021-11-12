@@ -143,7 +143,7 @@ function M.code_actions()
     --   preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
     -- },
     border = {},
-    previewer = true,
+    previewer = false,
     shorten_path = false,
   }
   local builtin = require "telescope.builtin"
