@@ -539,6 +539,13 @@ hl.plugins.notify = {
   NotifyTRACEBody = { fg = c.fg },
 }
 
+hl.plugins.vim_visual_multi = {
+  VM_Mono = { fg = c.none, bg = c.diff_text },
+  VM_Insert = { fg = c.none, bg = c.diff_change },
+  VM_Cursor = { bg = c.bg_blue },
+  VM_Extend = { bg = c.dark_blue },
+}
+
 function M.setup()
   vim_highlights(hl.common)
   vim_highlights(hl.syntax)

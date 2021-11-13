@@ -7,6 +7,8 @@ function M.config()
 end
 
 function M.setup()
+  vim.g.VM_theme_set_by_colorscheme = 1
+
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done()
   end
