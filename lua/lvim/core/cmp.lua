@@ -155,8 +155,10 @@ M.config = function()
     return
   end
 
+  local confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false }
+
   lvim.builtin.cmp = {
-    confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false },
+    confirm_opts = confirm_opts,
     completion = {
       ---@usage The minimum length of a word to complete on.
       keyword_length = 1,
@@ -273,22 +275,23 @@ M.config = function()
         cmp.mapping.abort()
       end,
       ["<C-e>"] = cmp.mapping.abort(),
-      ["<CR>"] = cmp.mapping(function(fallback)
-        if cmp.visible() and cmp.confirm(lvim.builtin.cmp.confirm_opts) then
-          if jumpable() then
-            luasnip.jump(1)
-          end
-          return
-        end
-
-        if jumpable() then
-          if not luasnip.jump(1) then
-            fallback()
-          end
-        else
-          fallback()
-        end
-      end),
+      ["<CR>"] = cmp.mapping.confirm(confirm_opts),
+      --   cmp.mapping(function(fallback)
+      --   if cmp.visible() and cmp.confirm(lvim.builtin.cmp.confirm_opts) then
+      --     if jumpable() then
+      --       luasnip.jump(1)
+      --     end
+      --     return
+      --   end
+      --
+      --   if jumpable() then
+      --     if not luasnip.jump(1) then
+      --       fallback()
+      --     end
+      --   else
+      --     fallback()
+      --   end
+      -- end),
     },
   }
 end
