@@ -156,7 +156,7 @@ M.config = function()
   end
 
   lvim.builtin.cmp = {
-    confirm_opts = { behavior = cmp.ConfirmBehavior.Replace, select = false },
+    confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false },
     completion = {
       ---@usage The minimum length of a word to complete on.
       keyword_length = 1,
