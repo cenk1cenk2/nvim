@@ -23,6 +23,10 @@ function M.load_augroups()
       { "BufWinEnter", ".zsh", "setlocal filetype=sh" },
       { "BufRead", "*.zsh", "setlocal filetype=sh" },
       { "BufNewFile", "*.zsh", "setlocal filetype=sh" },
+      { "BufRead", "deploy.yml", "setlocal filetype=yaml.ansible" },
+      { "BufRead", "provision.yml", "setlocal filetype=yaml.ansible" },
+      { "BufRead", "*.j2", "setlocal filetype=jinja" },
+      { "BufRead", "*.yml.j2", "setlocal filetype=yaml.ansible" },
     },
     _git = { { "FileType", "gitcommit", "setlocal wrap" }, { "FileType", "gitcommit", "setlocal spell" } },
     _markdown = { { "FileType", "markdown", "setlocal wrap" }, { "FileType", "markdown", "setlocal spell" } },
@@ -31,7 +35,9 @@ function M.load_augroups()
       -- will cause split windows to be resized evenly if main window is resized
       { "VimResized", "*", "tabdo wincmd =" },
     },
-    _general_lsp = { { "FileType", "lspinfo,lsp-installer,null-ls-info", "nnoremap <silent> <buffer> q :close<CR>" } },
+    _general_lsp = {
+      { "FileType", "lspinfo,lsp-installer,null-ls-info", "nnoremap <silent> <buffer> q :close<CR>" },
+    },
     custom_groups = {},
   }
 end

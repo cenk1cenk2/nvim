@@ -1,4 +1,4 @@
-lvim.log.level = "trace"
+lvim.log.level = "debug"
 
 lvim.lsp.ensure_installed = {
   "jsonls",
@@ -63,10 +63,4 @@ lvim.lsp.override = {
 lvim.autocommands.custom_groups = {
   TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
   ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()<cr>" },
-  OverrideFileTypes = {
-    { "BufRead", "deploy.yml", "setlocal filetype=yaml.ansible" },
-    { "BufRead", "provision.yml", "setlocal filetype=yaml.ansible" },
-    { "BufRead", "*.j2", "setlocal filetype=jinja" },
-    { "BufRead", "*.yml.j2", "setlocal filetype=yaml.ansible" },
-  },
 }
