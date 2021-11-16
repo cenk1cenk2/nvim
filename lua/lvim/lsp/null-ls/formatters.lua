@@ -43,10 +43,10 @@ function M.list_configured(formatter_configs)
     else
       local formatter_cmd
       if fmt_config.managed then
-        local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(formatter_name)
+        local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(name)
 
         if not server_available then
-          Log:warn("Not found managed formatter: " .. formatter_name)
+          Log:warn("Not found managed formatter: " .. name)
           errors[fmt_config.exe] = {} -- Add data here when necessary
         else
           formatter_cmd = services.find_command(table.concat(requested_server._default_options.cmd, " "))
