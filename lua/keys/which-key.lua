@@ -156,6 +156,12 @@ M.mappings = {
     Q = { ":LspRestart<CR>", "restart currently active lsps" },
   },
 
+  -- terminal
+  t = {
+    name = "+terminal",
+    f = { ":Telescope find_terminals list<CR>", "list terminals" },
+  },
+
   -- workspace/session
   w = {
     name = "+Session",
