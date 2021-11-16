@@ -4,6 +4,8 @@ local null_ls = require "null-ls"
 local services = require "lvim.lsp.null-ls.services"
 local Log = require "lvim.core.log"
 
+local is_registered = require("null-ls.sources").is_registered
+
 function M.list_registered_providers(filetype)
   local null_ls_methods = null_ls.methods
   local formatter_method = null_ls_methods["FORMATTING"]
@@ -30,12 +32,14 @@ function M.list_configured(formatter_configs)
   local formatters, errors = {}, {}
 
   for _, fmt_config in ipairs(formatter_configs) do
-    local formatter_name = fmt_config.exe:gsub("-", "_")
-    local formatter = null_ls.builtins.formatting[formatter_name]
+    local name = fmt_config.exe:gsub("-", "_")
+    local formatter = null_ls.builtins.formatting[name]
 
     if not formatter then
       Log:error("Not a valid formatter: " .. fmt_config.exe)
-      errors[fmt_config.exe] = {} -- Add data here when necessary
+      errors[name] = {} -- Add data here when necessary
+    elseif is_registered(fmt_config.exe) then
+      Log:trace "Skipping registering  the source more than once"
     else
       local formatter_cmd
       if fmt_config.managed then
@@ -53,7 +57,7 @@ function M.list_configured(formatter_configs)
 
       if not formatter_cmd then
         Log:warn("Not found: " .. formatter._opts.command)
-        errors[fmt_config.exe] = {} -- Add data here when necessary
+        errors[name] = {} -- Add data here when necessary
       else
         require("lvim.lsp.null-ls.services").join_environment_to_command(fmt_config.environment)
 
@@ -78,8 +82,8 @@ function M.setup(formatter_configs)
     return
   end
 
-  local formatters_by_ft = M.list_configured(formatter_configs)
-  null_ls.register { sources = formatters_by_ft.supported }
+  local formatters = M.list_configured(formatter_configs)
+  null_ls.register { sources = formatters.supported }
 end
 
 return M

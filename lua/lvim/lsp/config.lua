@@ -24,6 +24,7 @@ return {
   buffer_mappings = require "keys.lsp-mappings",
   null_ls = {
     setup = {},
+    config = {},
   },
   override = {
     "angularls",

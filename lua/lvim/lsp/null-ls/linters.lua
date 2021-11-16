@@ -4,6 +4,8 @@ local null_ls = require "null-ls"
 local services = require "lvim.lsp.null-ls.services"
 local Log = require "lvim.core.log"
 
+local is_registered = require("null-ls.sources").is_registered
+
 function M.list_registered_providers(filetype)
   local null_ls_methods = null_ls.methods
   local linter_method = null_ls_methods["DIAGNOSTICS"]
@@ -21,6 +23,7 @@ function M.list_available(filetype)
       table.insert(linters, provider.name)
     end
   end
+
   table.sort(linters)
   return linters
 end
@@ -28,13 +31,15 @@ end
 function M.list_configured(linter_configs)
   local linters, errors = {}, {}
 
-  for _, lnt_config in ipairs(linter_configs) do
-    local linter_name = lnt_config.exe:gsub("-", "_")
-    local linter = null_ls.builtins.diagnostics[linter_name]
+  for _, lnt_config in pairs(linter_configs) do
+    local name = lnt_config.exe:gsub("-", "_")
+    local linter = null_ls.builtins.diagnostics[name]
 
     if not linter then
       Log:error("Not a valid linter: " .. lnt_config.exe)
       errors[lnt_config.exe] = {} -- Add data here when necessary
+    elseif is_registered(lnt_config.exe) then
+      Log:trace "Skipping registering the source more than once"
     else
       local linter_cmd
       if lnt_config.managed then
@@ -52,7 +57,7 @@ function M.list_configured(linter_configs)
 
       if not linter_cmd then
         Log:warn("Not found: " .. linter._opts.command)
-        errors[lnt_config.exe] = {} -- Add data here when necessary
+        errors[name] = {} -- Add data here when necessary
       else
         require("lvim.lsp.null-ls.services").join_environment_to_command(lnt_config.environment)
 
