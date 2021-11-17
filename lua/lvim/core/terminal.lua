@@ -292,6 +292,18 @@ M.close_all = function()
       terminal:close()
     end
   end
+
+  vim.cmd [[
+    let win_hd = rnvimr#context#winid()
+    if rnvimr#context#bufnr() != -1
+        if win_hd != -1 && nvim_win_is_valid(win_hd)
+            if nvim_get_current_win() == win_hd
+                call nvim_win_close(win_hd, 0)
+                call rnvimr#rpc#clear_image()
+            endif
+        endif
+    endif
+  ]]
 end
 
 ---Toggles a log viewer according to log.viewer.layout_config
