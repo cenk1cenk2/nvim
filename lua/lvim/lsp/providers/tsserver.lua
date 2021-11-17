@@ -49,6 +49,17 @@ local opts = {
         vim.call "inputrestore"
       end,
     },
+
+    LspOrganizeImports = {
+      function()
+        local params = {
+          command = "_typescript.organizeImports",
+          arguments = { vim.api.nvim_buf_get_name(0) },
+          title = "",
+        }
+        vim.lsp.buf.execute_command(params)
+      end,
+    },
   },
 }
 return opts
