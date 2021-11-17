@@ -262,7 +262,9 @@ M.buffer_terminal = function()
     }
   end
 
-  terminals["buffer"]:change_dir(current)
+  if terminals["buffer"].dir ~= current then
+    terminals["buffer"]:change_dir(current)
+  end
 
   terminals["buffer"]:toggle()
 
