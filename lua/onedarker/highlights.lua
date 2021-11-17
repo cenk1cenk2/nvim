@@ -421,7 +421,7 @@ hl.plugins.dashboard = {
   DashboardFooter = { fg = c.grey, bold = true },
 }
 
-hl.plugins.spectre = { SpectreChange = { fg = c.yellow }, SpectreDelete = { fg = c.red } }
+hl.plugins.spectre = { SpectreChange = { fg = c.yellow }, SpectreDelete = { fg = c.green } }
 
 hl.plugins.nvim_cmp = {
   CmpItemMenuDefault = colors.Fg,
