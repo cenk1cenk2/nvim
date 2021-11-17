@@ -1,6 +1,9 @@
 local M = {}
-
+local Log = require "lvim.core.log"
+local util = require "vim.lsp.util"
 local lsp_utils = require "utils.lsp"
+local table_utils = require "lvim.utils.table"
+
 -- buf
 
 function M.add_to_workspace_folder()
@@ -162,13 +165,13 @@ function M.fix_current()
   local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
 
   if not responses or vim.tbl_isempty(responses) then
-    print "No quickfix found."
+    Log:warn "No quickfix found."
     return
   end
 
   for i, response in pairs(responses) do
     for _, result in pairs(response.result or {}) do
-      print("Applying quickfix from " .. vim.lsp.buf_get_clients()[i].name .. ": " .. result.title)
+      Log:info("Applying quickfix from " .. vim.lsp.buf_get_clients()[i].name .. ": " .. result.title)
 
       lsp_utils.apply_lsp_edit(result)
 
@@ -180,16 +183,27 @@ end
 
 function M.organize_imports()
   local params = vim.lsp.util.make_range_params()
-  params.context = { diagnostics = {}, only = { "source.organizeImports" } }
+  params.context = {
+    diagnostics = {},
+    only = { "source.organizeImports" },
+  }
 
-  local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
+  local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 2000)
 
   if not responses or vim.tbl_isempty(responses) then
-    print "No response from language servers."
+    Log:warn "No response from language servers."
     return
   end
 
+  if table_utils.length(responses) == 0 then
+    Log:warn "No language server has answered the organize imports call."
+  end
+
   for _, response in pairs(responses) do
+    if response.error then
+      Log:warn(response.error.message)
+    end
+
     for _, result in pairs(response.result or {}) do
       lsp_utils.apply_lsp_edit(result)
     end

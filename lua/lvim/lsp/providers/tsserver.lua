@@ -1,3 +1,5 @@
+local Log = require "lvim.core.log"
+
 local opts = {
   settings = {
     preferences = {
@@ -10,16 +12,16 @@ local opts = {
         vim.call "inputsave"
 
         local current = vim.api.nvim_buf_get_name(0)
-        local rename = vim.fn.input("Set the path to rename to" .. " ➜ ", current)
+        local rename = vim.fn.input("Set the path to rename to" .. " ➜  ", current)
 
         vim.api.nvim_command "normal :esc<CR>"
 
-        vim.api.nvim_out_write(current .. " ➜ " .. rename .. "\n")
+        vim.api.nvim_out_write(current .. " ➜  " .. rename .. "\n")
 
         local stat = vim.loop.fs_stat(rename)
 
         if stat and stat.type then
-          error("File already exists: " .. rename)
+          Log:warn("File already exists: " .. rename)
 
           return
         end

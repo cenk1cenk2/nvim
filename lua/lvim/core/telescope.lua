@@ -201,7 +201,6 @@ function M.setup()
   local custom_extensions = { "find_terminals" }
 
   for _, value in ipairs(custom_extensions) do
-    print(value)
     require("telescope").load_extension(value)
   end
 end
