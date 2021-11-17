@@ -4,14 +4,12 @@ local opts = {
 
     return util.root_pattern "package.json"(fname) or util.root_pattern "vue.config.js"(fname) or vim.fn.getcwd()
   end,
-  init_options = {
-    config = {
-      vetur = {
-        completion = { autoImport = true, tagCasing = "kebab", useScaffoldSnippets = true },
-        experimental = { templateInterpolationService = true },
-        useWorkspaceDependencies = true,
-        validation = { script = true, style = true, template = true },
-      },
+  settings = {
+    vetur = {
+      completion = { autoImport = true, tagCasing = "kebab", useScaffoldSnippets = true },
+      experimental = { templateInterpolationService = true },
+      useWorkspaceDependencies = true,
+      validation = { script = true, style = true, template = true },
     },
   },
   handlers = {
