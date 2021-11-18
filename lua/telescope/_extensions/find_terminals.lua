@@ -43,8 +43,16 @@ function M.handle_select(prompt_bufnr)
   actions.close(prompt_bufnr)
 
   if selection then
-    selection.entry:open()
+    selection.entry:toggle()
   end
+end
+
+function M.handle_delete(prompt_bufnr)
+  local current_picker = action_state.get_current_picker(prompt_bufnr)
+
+  current_picker:delete_selection(function(selection)
+    selection.entry:shutdown()
+  end)
 end
 
 function M.list(opts)
@@ -62,6 +70,10 @@ function M.list(opts)
       map("i", "<esc>", actions._close)
       map("n", "<esc>", actions._close)
       map("n", "q", actions._close)
+      map("n", "q", actions._close)
+
+      map("n", "<C-d>", M.handle_delete)
+      map("i", "<C-d>", M.handle_delete)
 
       actions.select_default:replace(M.handle_select)
 
