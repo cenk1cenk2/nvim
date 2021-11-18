@@ -80,6 +80,7 @@ function M.config()
       },
     },
   }
+  lvim.builtin.which_key.mappings["e"] = { "<cmd>NvimTreeToggle<CR>", "Explorer" }
 end
 
 function M.setup()

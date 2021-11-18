@@ -28,6 +28,7 @@ M.config = function(config)
       q = { description = { "  Quit" }, command = "qa!" },
     },
   }
+  lvim.builtin.which_key.mappings[";"] = { "<cmd>Dashboard<CR>", "Dashboard" }
 end
 
 M.setup = function()
@@ -38,8 +39,6 @@ M.setup = function()
   vim.g.dashboard_default_executive = lvim.builtin.dashboard.search_handler
 
   vim.g.dashboard_custom_section = lvim.builtin.dashboard.custom_section
-
-  lvim.builtin.which_key.mappings[";"] = { "<cmd>Dashboard<CR>", "Dashboard" }
 
   vim.g.dashboard_session_directory = lvim.builtin.dashboard.session_directory
 
