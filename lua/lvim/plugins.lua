@@ -42,7 +42,6 @@ return {
   { "tamago324/nlsp-settings.nvim", commit = commit.nlsp_settings },
   {
     "jose-elias-alvarez/null-ls.nvim",
-    commit = commit.null_ls,
   },
   {
     "jose-elias-alvarez/nvim-lsp-ts-utils",

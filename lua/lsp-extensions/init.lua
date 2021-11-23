@@ -4,6 +4,7 @@ local lsp_stuff = {
   "lsp-extensions.installers",
   "lsp-extensions.formatters",
   "lsp-extensions.linters",
+  "lsp-extensions.code-action-providers",
   "lsp-extensions.wrapper",
   "lsp-extensions.lsp-installer-wrapper",
 }

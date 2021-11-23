@@ -128,7 +128,7 @@ end
 function M.code_actions()
   local opts = {
     winblend = 15,
-    layout_config = { prompt_position = "bottom", width = 80, height = 12 },
+    layout_config = { prompt_position = "bottom", width = 0.5, height = 24 },
     -- borderchars = {
     --   prompt = { "─", "│", " ", "│", "╭", "╮", "│", "│" },
     --   results = { "─", "│", "─", "│", "├", "┤", "╯", "╰" },
