@@ -45,6 +45,9 @@ return {
     commit = commit.null_ls,
   },
   {
+    "jose-elias-alvarez/nvim-lsp-ts-utils",
+  },
+  {
     "williamboman/nvim-lsp-installer",
     commit = commit.lsp_installer,
   },

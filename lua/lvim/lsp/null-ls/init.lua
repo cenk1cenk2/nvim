@@ -14,6 +14,8 @@ function M:setup()
 
   if vim.tbl_isempty(lvim.lsp.null_ls.setup or {}) then
     lvim.lsp.null_ls.setup = default_opts
+  else
+    lvim.lsp.null_ls.setup = vim.tbl_extend("force", default_opts, lvim.lsp.null_ls.setup)
   end
 
   require("lspconfig")["null-ls"].setup(lvim.lsp.null_ls.setup)

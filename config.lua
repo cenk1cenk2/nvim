@@ -40,7 +40,7 @@ lvim.lsp.ensure_installed = {
 
 lvim.lsp.override = {
   "angularls",
-  -- "ansiblels",
+  "ansiblels",
   "denols",
   "ember",
   -- "emmet_ls",
