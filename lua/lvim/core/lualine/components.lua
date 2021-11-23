@@ -131,7 +131,7 @@ return {
 
       return lsps
     end,
-    icon = " ",
+    -- icon = " ",
     color = { gui = "bold" },
     cond = conditions.hide_in_width,
   },
