@@ -25,6 +25,28 @@ function M.setup()
 
     extension.setup(setup)
   end
+
+  local cmp = require "cmp"
+
+  -- command line
+  cmp.setup.cmdline(":", {
+    sources = {
+      { name = "cmdline" },
+    },
+  })
+
+  -- fuzzy buffer
+  cmp.setup.cmdline("/", {
+    sources = cmp.config.sources {
+      { name = "fuzzy_buffer" },
+    },
+  })
+
+  cmp.setup.cmdline("?", {
+    sources = cmp.config.sources {
+      { name = "fuzzy_buffer" },
+    },
+  })
 end
 
 return M

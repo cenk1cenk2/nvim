@@ -7,14 +7,13 @@ local Log = require "lvim.core.log"
 local is_registered = function(name)
   local query = {
     name = name,
-    method = require("null-ls").methods["NULL_LS_CODE_ACTION"],
+    method = null_ls.methods.CODE_ACTION,
   }
   return require("null-ls.sources").is_registered(query)
 end
 
 function M.list_registered_providers(filetype)
-  local null_ls_methods = null_ls.methods
-  local code_action_provider_method = null_ls_methods["NULL_LS_CODE_ACTION"]
+  local code_action_provider_method = null_ls.methods.CODE_ACTION
   local registered_providers = services.list_registered_providers_names(filetype)
   return registered_providers[code_action_provider_method] or {}
 end

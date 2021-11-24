@@ -36,6 +36,7 @@ lvim.lsp.ensure_installed = {
   "rustywind",
   "rustfmt",
   "hadolint",
+  "proselint",
 }
 
 lvim.lsp.override = {

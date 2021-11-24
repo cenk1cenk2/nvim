@@ -76,6 +76,7 @@ return {
     disable = not lvim.builtin.telescope.active,
     requires = "nvim-telescope/telescope.nvim",
   },
+  { "tzachar/fuzzy.nvim", requires = { "nvim-telescope/telescope-fzf-native.nvim" } },
 
   {
     "folke/todo-comments.nvim",
@@ -133,6 +134,12 @@ return {
       "David-Kunz/cmp-npm",
 
       "hrsh7th/cmp-cmdline",
+
+      "davidsierradz/cmp-conventionalcommits",
+
+      "tzachar/cmp-fuzzy-buffer",
+
+      "lukas-reineke/cmp-rg",
     },
     run = function()
       -- cmp's config requires cmp to be installed to run the first time

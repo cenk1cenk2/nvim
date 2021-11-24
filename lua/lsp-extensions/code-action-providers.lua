@@ -9,6 +9,11 @@ function M.setup()
       managed = true,
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
+
+    {
+      exe = "proselint",
+      managed = true,
+    },
   }
 end
 

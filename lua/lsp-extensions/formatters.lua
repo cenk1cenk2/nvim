@@ -6,7 +6,9 @@ function M.setup()
   formatters.setup {
     {
       exe = "prettierd",
-      environment = { PRETTIERD_DEFAULT_CONFIG = "~/.config/nvim/utils/linter-config/.prettierrc.json" },
+      env = {
+        PRETTIERD_DEFAULT_CONFIG = vim.fn.expand "~/.config/nvim/utils/linter-config/.prettierrc.json",
+      },
       managed = true,
       filetypes = {
         "javascript",

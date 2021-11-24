@@ -233,6 +233,8 @@ M.config = function()
       { name = "cmp_git" },
 
       { name = "npm", keyword_length = 3 },
+
+      { name = "rg" },
     },
     mapping = {
       ["<C-k>"] = cmp.mapping.select_prev_item(),

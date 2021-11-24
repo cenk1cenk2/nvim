@@ -19,6 +19,7 @@ function M.setup()
       exe = "markdownlint",
       managed = true,
       filetypes = { "markdown" },
+      args = { "-s", "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.markdownlintrc.json" },
     },
 
     {
@@ -37,6 +38,11 @@ function M.setup()
     --   managed = true,
     --   filetypes = { "python" },
     -- },
+
+    {
+      exe = "proselint",
+      managed = true,
+    },
   }
 end
 

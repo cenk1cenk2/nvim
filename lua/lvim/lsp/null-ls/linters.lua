@@ -13,8 +13,7 @@ local is_registered = function(name)
 end
 
 function M.list_registered_providers(filetype)
-  local null_ls_methods = null_ls.methods
-  local linter_method = null_ls_methods["DIAGNOSTICS"]
+  local linter_method = null_ls.methods.DIAGNOSTICS
   local registered_providers = services.list_registered_providers_names(filetype)
   return registered_providers[linter_method] or {}
 end
@@ -56,6 +55,8 @@ function M.list_configured(linter_configs)
           errors[lnt_config.exe] = {} -- Add data here when necessary
         else
           linter_cmd = services.find_command(table.concat(requested_server._default_options.cmd, " "))
+
+          -- TODO: add environment variable parsing here.
         end
       else
         linter_cmd = services.find_command(linter._opts.command)
@@ -65,8 +66,6 @@ function M.list_configured(linter_configs)
         Log:warn("Not found: " .. linter._opts.command)
         errors[name] = {} -- Add data here when necessary
       else
-        require("lvim.lsp.null-ls.services").join_environment_to_command(lnt_config.environment)
-
         Log:debug("Using linter: " .. linter_cmd .. " for " .. vim.inspect(lnt_config.filetypes))
         table.insert(
           linters,
