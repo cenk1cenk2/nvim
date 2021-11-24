@@ -6,7 +6,7 @@ function M.config()
   local c = require "onedarker.colors"
 
   lvim.extensions[extension_name] = {
-    active = false,
+    active = true,
     on_config_done = nil,
     setup = {
       colors = {
@@ -37,7 +37,7 @@ function M.setup()
 
   extension.setup(lvim.extensions[extension_name].setup)
 
-  lvim.builtin.which_key.mappings["m"] = {
+  lvim.builtin.which_key.mappings["N"] = {
     name = "+node_modules",
     s = { ':lua require("package-info").show()<CR>', "show package-info" },
     S = { ':lua require("package-info").hide()<CR>', "hide package-info" },
