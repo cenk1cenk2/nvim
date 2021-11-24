@@ -59,6 +59,7 @@ return {
 
   { "nvim-lua/popup.nvim", commit = commit.popup },
   { "nvim-lua/plenary.nvim", commit = commit.plenary },
+
   -- Telescope
   {
     "nvim-telescope/telescope.nvim",
@@ -90,6 +91,7 @@ return {
     commit = commit.nvim_cmp,
     config = function()
       require("lvim.core.cmp").setup()
+      require("extensions.cmp-extensions").setup()
     end,
     requires = {
 
@@ -125,6 +127,12 @@ return {
       },
 
       "hrsh7th/cmp-vsnip",
+
+      "petertriho/cmp-git",
+
+      "David-Kunz/cmp-npm",
+
+      "hrsh7th/cmp-cmdline",
     },
     run = function()
       -- cmp's config requires cmp to be installed to run the first time

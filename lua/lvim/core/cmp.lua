@@ -229,6 +229,10 @@ M.config = function()
       { name = "buffer" },
       { name = "treesitter" },
       { name = "crates" },
+
+      { name = "cmp_git" },
+
+      { name = "npm", keyword_length = 3 },
     },
     mapping = {
       ["<C-k>"] = cmp.mapping.select_prev_item(),

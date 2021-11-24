@@ -12,6 +12,7 @@ local extensions = {
   "extensions.vim-maximizer",
   "extensions.vim-windowswap",
   "extensions.undotree",
+  "extensions.cmp-extensions",
   "extensions.nvim-bqf",
   "extensions.lsp-trouble",
   "extensions.symbols-outline",
