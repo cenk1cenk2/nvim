@@ -56,6 +56,7 @@ function M.list_configured(formatter_configs)
           errors[fmt_config.exe] = {} -- Add data here when necessary
         else
           formatter_cmd = services.find_command(table.concat(requested_server._default_options.cmd, " "))
+          -- TODO: add environment variable parsing here.
         end
       else
         formatter_cmd = services.find_command(formatter._opts.command)
@@ -65,8 +66,6 @@ function M.list_configured(formatter_configs)
         Log:warn("Not found: " .. formatter._opts.command)
         errors[name] = {} -- Add data here when necessary
       else
-        require("lvim.lsp.null-ls.services").join_environment_to_command(fmt_config.environment)
-
         Log:debug("Using formatter: " .. formatter_cmd .. " for " .. vim.inspect(fmt_config.filetypes))
         table.insert(
           formatters,

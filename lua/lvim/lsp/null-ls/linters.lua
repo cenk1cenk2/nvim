@@ -55,8 +55,6 @@ function M.list_configured(linter_configs)
           errors[lnt_config.exe] = {} -- Add data here when necessary
         else
           linter_cmd = services.find_command(table.concat(requested_server._default_options.cmd, " "))
-
-          -- TODO: add environment variable parsing here.
         end
       else
         linter_cmd = services.find_command(linter._opts.command)

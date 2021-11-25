@@ -203,6 +203,9 @@ M.config = function()
         vsnip = "(Snippet)",
         luasnip = "(Snippet)",
         buffer = "(Buffer)",
+        cmp_git = "(GIT)",
+        npm = "(NPM)",
+        rg = "(RG)",
       },
       duplicates = { buffer = 1, path = 1, nvim_lsp = 0, luasnip = 1 },
       duplicates_default = 0,
@@ -227,7 +230,6 @@ M.config = function()
       { name = "cmp_tabnine" },
       { name = "nvim_lua" },
       { name = "buffer" },
-      { name = "treesitter" },
       { name = "crates" },
 
       { name = "cmp_git" },
@@ -235,6 +237,8 @@ M.config = function()
       { name = "npm", keyword_length = 3 },
 
       { name = "rg" },
+
+      { name = "treesitter" },
     },
     mapping = {
       ["<C-k>"] = cmp.mapping.select_prev_item(),

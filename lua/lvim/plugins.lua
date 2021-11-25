@@ -140,6 +140,8 @@ return {
       "tzachar/cmp-fuzzy-buffer",
 
       "lukas-reineke/cmp-rg",
+
+      { "tzachar/cmp-tabnine", run = "./install.sh" },
     },
     run = function()
       -- cmp's config requires cmp to be installed to run the first time

@@ -55,6 +55,7 @@ function M.list_configured(code_action_provider_configs)
           errors[ca_config.exe] = {} -- Add data here when necessary
         else
           code_action_provider_cmd = services.find_command(table.concat(requested_server._default_options.cmd, " "))
+          -- TODO: add environment variable parsing here.
         end
       else
         code_action_provider_cmd = services.find_command(code_action_provider._opts.command)
@@ -64,8 +65,6 @@ function M.list_configured(code_action_provider_configs)
         Log:warn("Not found: " .. code_action_provider._opts.command)
         errors[name] = {} -- Add data here when necessary
       else
-        require("lvim.lsp.null-ls.services").join_environment_to_command(ca_config.environment)
-
         Log:debug(
           "Using code action provider: " .. code_action_provider_cmd .. " for " .. vim.inspect(ca_config.filetypes)
         )
