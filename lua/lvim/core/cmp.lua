@@ -236,7 +236,7 @@ M.config = function()
 
       { name = "npm", keyword_length = 3 },
 
-      { name = "rg" },
+      { name = "rg", option = { additional_arguments = "--ignore-case" } },
 
       { name = "treesitter" },
     },
