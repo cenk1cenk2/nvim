@@ -2,8 +2,10 @@ local Log = require "lvim.core.log"
 
 local opts = {
   settings = {
-    preferences = {
-      importModuleSpecifier = "relative",
+    typescript = {
+      preferences = {
+        importModuleSpecifier = "relative",
+      },
     },
   },
   on_attach = function(client, bufnr)
