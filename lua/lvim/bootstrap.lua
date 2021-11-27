@@ -188,7 +188,7 @@ end
 function M:get_version(type)
   type = type or ""
   local opts = { cwd = get_lvim_base_dir() }
-  local status_ok, results = git_cmd({ "describe", "--tags" }, opts)
+  local status_ok, results = git_cmd({ "rev-parse", "--short", "HEAD" }, opts)
   local lvim_full_ver = results[1] or ""
 
   if not status_ok or string.match(lvim_full_ver, "%d") == nil then
