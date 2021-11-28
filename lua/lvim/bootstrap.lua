@@ -36,23 +36,6 @@ local function get_install_path()
   return vim.fn.stdpath "config"
 end
 
----Get currently installed version of LunarVim
----@param type string can be "short"
----@return string
-function _G.get_version(type)
-  type = type or ""
-  local lvim_full_ver = vim.fn.system("git -C " .. get_install_path() .. " describe --tags")
-
-  if string.match(lvim_full_ver, "%d") == nil then
-    return nil
-  end
-  if type == "short" then
-    return vim.fn.split(lvim_full_ver, "-")[1]
-  else
-    return string.sub(lvim_full_ver, 1, #lvim_full_ver - 1)
-  end
-end
-
 ---Initialize the `&runtimepath` variables and prepare for startup
 ---@return table
 function M:init(base_dir)
@@ -199,6 +182,38 @@ function M:get_version(type)
   else
     return string.sub(lvim_full_ver, 1, #lvim_full_ver - 1)
   end
+end
+
+---Get currently installed version of LunarVim
+---@return string
+function M:get_nvim_version()
+  local Job = require "plenary.job"
+  local Log = require "lvim.core.log"
+
+  local stderr = {}
+  local stdout, status_ok = Job
+    :new({
+      command = "nvim",
+      args = { "--version" },
+      on_stderr = function(_, data)
+        table.insert(stderr, data)
+      end,
+    })
+    :sync()
+
+  if not vim.tbl_isempty(stderr) then
+    Log:debug(stderr)
+  end
+
+  if not vim.tbl_isempty(stdout) then
+    Log:debug(stdout)
+  end
+
+  if not status_ok then
+    return nil
+  end
+
+  return stdout[1]
 end
 
 return M

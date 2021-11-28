@@ -43,6 +43,7 @@ M.setup = function()
   vim.g.dashboard_session_directory = lvim.builtin.dashboard.session_directory
 
   local lvim_version = require("lvim.bootstrap"):get_version "short"
+  local nvim_version = require("lvim.bootstrap"):get_nvim_version()
   local num_plugins_loaded = #vim.fn.globpath(get_runtime_dir() .. "/site/pack/packer/start", "*", 0, 1)
 
   local footer = { "Neovim loaded: " .. num_plugins_loaded .. " plugins " }
@@ -50,6 +51,11 @@ M.setup = function()
   if lvim_version then
     table.insert(footer, 2, "")
     table.insert(footer, 3, "v" .. lvim_version)
+  end
+
+  if nvim_version then
+    table.insert(footer, 4, "")
+    table.insert(footer, 5, nvim_version)
   end
 
   local text = require "lvim.interface.text"
@@ -63,7 +69,7 @@ M.setup = function()
         "dashboard",
         "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs= ",
       },
-      -- {'FileType', 'dashboard', 'set showtabline=0 | autocmd BufLeave <buffer> set showtabline=1'},
+      -- { "FileType", "dashboard", "set showtabline=0 | autocmd BufLeave <buffer> set showtabline=1" },
       { "FileType", "dashboard", "nnoremap <silent> <buffer> q :q<CR>" },
     },
   }
