@@ -56,7 +56,8 @@ function M.list_configured(formatter_configs)
           errors[fmt_config.exe] = {} -- Add data here when necessary
         else
           formatter_cmd = services.find_command(table.concat(requested_server._default_options.cmd, " "))
-          -- TODO: add environment variable parsing here.
+
+          -- formatter_cmd = services.append_environment_vars_to_command(formatter_cmd, fmt_config.environment)
         end
       else
         formatter_cmd = services.find_command(formatter._opts.command)
