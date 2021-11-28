@@ -13,6 +13,7 @@ function M.setup()
     {
       exe = "proselint",
       managed = true,
+      filetypes = { "markdown", "tex" },
     },
   }
 end
