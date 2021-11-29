@@ -26,8 +26,9 @@ M.mappings = {
     r = { ":set norelativenumber!<CR>", "relative line nums" },
     s = { ":setlocal spell!<CR>", "toggle spell check" },
     t = {
-      ":!" .. nvim_lsp_installer_ok and npm.executable(server.get_server_root_path "markdown_toc", "markdown-toc")
-        or "" .. ' %:p --bullets="-" -i<CR>',
+      ":!"
+        .. (nvim_lsp_installer_ok and npm.executable(server.get_server_root_path "markdown_toc", "markdown-toc") or "")
+        .. ' %:p --bullets="-" -i<CR>',
       "markdown-toc",
     },
     R = {
