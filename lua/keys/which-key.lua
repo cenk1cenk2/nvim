@@ -1,6 +1,6 @@
 local M = {}
-local server = require "nvim-lsp-installer.server"
-local npm = require "nvim-lsp-installer.installers.npm"
+local _, server = pcall(require, "nvim-lsp-installer.server")
+local _, npm = pcall(require, "nvim-lsp-installer.installers.npm")
 
 M.vmappings = {}
 
