@@ -1,5 +1,5 @@
 local M = {}
-local _, server = pcall(require, "nvim-lsp-installer.server")
+local nvim_lsp_installer_ok, server = pcall(require, "nvim-lsp-installer.server")
 local _, npm = pcall(require, "nvim-lsp-installer.installers.npm")
 
 M.vmappings = {}
@@ -26,7 +26,8 @@ M.mappings = {
     r = { ":set norelativenumber!<CR>", "relative line nums" },
     s = { ":setlocal spell!<CR>", "toggle spell check" },
     t = {
-      ":!" .. npm.executable(server.get_server_root_path "markdown_toc", "markdown-toc") .. ' %:p --bullets="-" -i<CR>',
+      ":!" .. nvim_lsp_installer_ok and npm.executable(server.get_server_root_path "markdown_toc", "markdown-toc")
+        or "" .. ' %:p --bullets="-" -i<CR>',
       "markdown-toc",
     },
     R = {
