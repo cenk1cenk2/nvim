@@ -1,8 +1,8 @@
-local configs = require "lspconfig/configs"
-local servers = require "nvim-lsp-installer.servers"
-local server = require "nvim-lsp-installer.server"
-local installers = require "nvim-lsp-installer.installers"
-local npm = require "nvim-lsp-installer.installers.npm"
+local _, configs = pcall(require, "lspconfig/configs")
+local _, servers = pcall(require, "nvim-lsp-installer.servers")
+local _, server = pcall(require, "nvim-lsp-installer.server")
+local _, installers = pcall(require, "nvim-lsp-installer.installers")
+local _, npm = pcall(require, "nvim-lsp-installer.installers.npm")
 
 local server_name = "rustywind"
 

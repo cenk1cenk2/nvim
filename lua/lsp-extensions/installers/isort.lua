@@ -1,8 +1,8 @@
-local configs = require "lspconfig/configs"
-local servers = require "nvim-lsp-installer.servers"
-local server = require "nvim-lsp-installer.server"
-local installers = require "nvim-lsp-installer.installers"
-local pip3 = require "nvim-lsp-installer.installers.pip3"
+local _, configs = pcall(require, "lspconfig/configs")
+local _, servers = pcall(require, "nvim-lsp-installer.servers")
+local _, server = pcall(require, "nvim-lsp-installer.server")
+local _, installers = pcall(require, "nvim-lsp-installer.installers")
+local _, pip3 = pcall(require, "nvim-lsp-installer.installers.pip3")
 
 local server_name = "isort"
 local package_name = server_name

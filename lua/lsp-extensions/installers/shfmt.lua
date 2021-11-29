@@ -1,12 +1,12 @@
-local configs = require "lspconfig/configs"
-local servers = require "nvim-lsp-installer.servers"
-local server = require "nvim-lsp-installer.server"
-local installers = require "nvim-lsp-installer.installers"
-local path = require "nvim-lsp-installer.path"
-local platform = require "nvim-lsp-installer.platform"
-local Data = require "nvim-lsp-installer.data"
-local std = require "nvim-lsp-installer.installers.std"
-local context = require "nvim-lsp-installer.installers.context"
+local _, configs = pcall(require, "lspconfig/configs")
+local _, servers = pcall(require, "nvim-lsp-installer.servers")
+local _, server = pcall(require, "nvim-lsp-installer.server")
+local _, installers = pcall(require, "nvim-lsp-installer.installers")
+local _, path = pcall(require, "nvim-lsp-installer.path")
+local _, platform = pcall(require, "nvim-lsp-installer.platform")
+local _, Data = pcall(require, "nvim-lsp-installer.data")
+local _, std = pcall(require, "nvim-lsp-installer.installers.std")
+local _, context = pcall(require, "nvim-lsp-installer.installers.context")
 
 local server_name = "shfmt"
 
