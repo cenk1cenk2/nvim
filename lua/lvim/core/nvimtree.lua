@@ -22,6 +22,10 @@ function M.config()
       hijack_cursor = false,
       -- updates the root directory of the tree on `DirChanged` (when your run `:cd` usually)
       update_cwd = false,
+      update_to_buf_dir = {
+        enable = true,
+        auto_open = true,
+      },
       -- update the focused file on `BufEnter`, un-collapses the folders recursively until it finds the file
       update_focused_file = {
         -- enables the feature
@@ -41,6 +45,15 @@ function M.config()
         args = {},
       },
       diagnostics = { enable = true, icons = { hint = "", info = "", warning = "", error = "" } },
+      filters = {
+        dotfiles = false,
+        custom = { ".git" },
+      },
+      git = {
+        enable = true,
+        ignore = true,
+        timeout = 500,
+      },
       view = {
         -- width of the window, can be either a number (columns) or a string in `%`
         width = 40,
@@ -58,14 +71,9 @@ function M.config()
         },
       },
       indent_markers = 1,
-      filters = {
-        dotfiles = false,
-        custom = { ".git" },
-      },
       special_files = { ["package.json"] = 1, ["README.md"] = 1, ["node_modules"] = 1 },
       show_icons = { git = 1, folders = 1, files = 1, folder_arrows = 1, tree_width = 40 },
       quit_on_open = 0,
-      hide_dotfiles = 0,
       git_hl = 1,
       disable_window_picker = 0,
       root_folder_modifier = ":t",
@@ -109,11 +117,20 @@ function M.setup()
       not table_utils.contains({
         "disable_netrw",
         "hijack_netrw",
+        "open_on_setup",
+        "ignore_ft_on_setup",
         "auto_close",
-        "update_cwd",
+        "open_on_tab",
         "hijack_cursor",
-        "lsp_diagnostics",
-        "hide_dotfiles",
+        "update_cwd",
+        "update_to_buf_dir",
+        "diagnostics",
+        "update_focused_file",
+        "system_open",
+        "filters",
+        "git",
+        "view",
+        "trash",
       }, function(entry)
         return opt == entry
       end)
