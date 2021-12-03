@@ -32,7 +32,7 @@ M.mappings = {
       "markdown-toc",
     },
     P = {
-      ":! md-printer %:p",
+      ":! md-printer %<CR>",
       "md-printer",
     },
     R = {
