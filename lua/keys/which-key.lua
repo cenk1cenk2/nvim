@@ -31,6 +31,10 @@ M.mappings = {
         .. ' %:p --bullets="-" -i<CR>',
       "markdown-toc",
     },
+    P = {
+      ":! md-printer %:p",
+      "md-printer",
+    },
     R = {
       ":RebuildLatestNeovim<CR>",
       "install latest neovim",
