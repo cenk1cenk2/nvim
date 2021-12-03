@@ -206,6 +206,7 @@ M.config = function()
         cmp_git = "(GIT)",
         npm = "(NPM)",
         rg = "(RG)",
+        orgmode = "(ORG)",
       },
       duplicates = { buffer = 1, path = 1, nvim_lsp = 0, luasnip = 1 },
       duplicates_default = 0,
@@ -224,6 +225,8 @@ M.config = function()
     },
     documentation = { border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" } },
     sources = {
+      { name = "orgmode" },
+
       { name = "nvim_lsp" },
       { name = "path" },
       { name = "luasnip" },
@@ -236,7 +239,7 @@ M.config = function()
 
       { name = "npm", keyword_length = 3 },
 
-      { name = "rg", option = { additional_arguments = "--ignore-case" } },
+      -- { name = "rg", option = { additional_arguments = "--ignore-case" } },
 
       { name = "treesitter" },
     },

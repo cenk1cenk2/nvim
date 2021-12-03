@@ -535,4 +535,12 @@ return {
     end,
     disable = not lvim.extensions.vim_jinja.active,
   },
+
+  {
+    "nvim-orgmode/orgmode",
+    config = function()
+      require("extensions.nvim-orgmode").setup()
+    end,
+    disable = not lvim.extensions.orgmode.active,
+  },
 }
