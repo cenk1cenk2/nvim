@@ -33,31 +33,42 @@ function M.list_configured(actions_configs)
 
   for _, config in ipairs(actions_configs) do
     vim.validate {
-      ["config.name"] = { config.name, "string" },
+      ["config.exe"] = { config.exe, "string" },
     }
 
-    local name = config.name:gsub("-", "_")
+    local name = config.exe:gsub("-", "_")
     local actor = null_ls.builtins.code_actions[name]
 
     if not actor then
-      Log:error("Not a valid code_actions: " .. config.name)
-      errors[name] = {} -- Add data here when necessary
-    elseif is_registered(config.name) then
-      Log:trace "Skipping registering  the source more than once"
+      Log:error("Not a valid code action provider: " .. config.exe)
+      errors[config.exe] = {} -- Add data here when necessary
+    elseif is_registered(config.exe) then
+      Log:trace "Skipping registering the source more than once"
     else
-      local command
-      if actor._opts.command then
-        command = services.find_command(actor._opts.command)
+      local actor_cmd
+      if config.managed then
+        local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(name)
+
+        if not server_available then
+          Log:warn("Not found managed code action provider: " .. name)
+          errors[config.exe] = {} -- Add data here when necessary
+        else
+          actor_cmd = services.find_command(table.concat(requested_server._default_options.cmd, " "))
+          -- TODO: add environment variable parsing here.
+        end
+      else
+        actor_cmd = services.find_command(actor._opts.command)
       end
-      if not command and actor._opts.command ~= nil then
+
+      if not actor_cmd then
         Log:warn("Not found: " .. actor._opts.command)
         errors[name] = {} -- Add data here when necessary
       else
-        Log:debug("Using code_actions: " .. (command or config.name))
+        Log:debug("Using code action provider: " .. actor_cmd .. " for " .. vim.inspect(config.filetypes))
         table.insert(
           actors,
           actor.with {
-            command = command, -- could be nil
+            command = actor_cmd,
             extra_args = config.args,
             filetypes = config.filetypes,
           }

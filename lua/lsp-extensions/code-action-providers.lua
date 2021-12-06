@@ -1,4 +1,4 @@
-local code_action_providers = require "lvim.lsp.null-ls.code-action-providers"
+local code_action_providers = require "lvim.lsp.null-ls.code_actions"
 
 local M = {}
 
