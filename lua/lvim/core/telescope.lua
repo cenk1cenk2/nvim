@@ -8,6 +8,7 @@ M.rg_arguments = {
   "--column",
   "--smart-case",
   "--hidden",
+  "--glob=!.git/",
 }
 
 function M.config()

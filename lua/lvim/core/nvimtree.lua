@@ -148,9 +148,9 @@ function M.setup()
     -- vim.g.netrw_banner = false
   end
 
+  -- Add useful keymaps
   local tree_cb = nvim_tree_config.nvim_tree_callback
-
-  if not lvim.builtin.nvimtree.setup.view.mappings.list then
+  if not lvim.builtin.nvimtree.setup.view.mappings.list or #lvim.builtin.nvimtree.setup.view.mappings.list == 0 then
     lvim.builtin.nvimtree.setup.view.mappings.list = {
       -- mappings
       { key = "<CR>", cb = tree_cb "edit" },
@@ -180,6 +180,8 @@ function M.setup()
       { key = "]c", cb = tree_cb "next_git_item" },
       { key = "-", cb = tree_cb "dir_up" },
       { key = "q", cb = tree_cb "close" },
+      { key = "gtf", cb = "<cmd>lua require'lvim.core.nvimtree'.start_telescope('find_files')<cr>" },
+      { key = "gtg", cb = "<cmd>lua require'lvim.core.nvimtree'.start_telescope('live_grep')<cr>" },
     }
   end
 
@@ -189,6 +191,7 @@ function M.setup()
   local tree_view = require "nvim-tree.view"
 
   -- Add nvim_tree open callback
+  local tree_view = require "nvim-tree.view"
   local open = tree_view.open
   tree_view.open = function()
     M.on_open()
@@ -221,6 +224,16 @@ function M.change_tree_dir(dir)
   if lib_status_ok then
     lib.change_dir(dir)
   end
+end
+
+function M.start_telescope(telescope_mode)
+  local node = require("nvim-tree.lib").get_node_at_cursor()
+  local abspath = node.link_to or node.absolute_path
+  local is_folder = node.open ~= nil
+  local basedir = is_folder and abspath or vim.fn.fnamemodify(abspath, ":h")
+  require("telescope.builtin")[telescope_mode] {
+    cwd = basedir,
+  }
 end
 
 return M
