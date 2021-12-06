@@ -149,7 +149,6 @@ end
 local terminals = {}
 
 M._exec_toggle = function(exec)
-  print(vim.inspect(exec))
   if not terminals[exec.cmd] then
     local Terminal = require("toggleterm.terminal").Terminal
 
