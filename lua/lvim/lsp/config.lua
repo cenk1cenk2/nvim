@@ -4,10 +4,10 @@ return {
     signs = {
       active = true,
       values = {
-        { name = "LspDiagnosticsSignError", text = "" },
-        { name = "LspDiagnosticsSignWarning", text = "" },
-        { name = "LspDiagnosticsSignHint", text = "" },
-        { name = "LspDiagnosticsSignInformation", text = "" },
+        { name = "DiagnosticSignError", text = "" },
+        { name = "DiagnosticSignWarning", text = "" },
+        { name = "DiagnosticSignHint", text = "" },
+        { name = "DiagnosticSignInformation", text = "" },
       },
     },
     virtual_text = true,
