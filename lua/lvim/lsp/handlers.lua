@@ -58,7 +58,7 @@ function M.show_line_diagnostics()
     end
     return s
   end
-  local diagnostics = vim.lsp.diagnostic.get_line_diagnostics()
+  local diagnostics = vim.diagnostic.get_line_diagnostics()
   local severity_highlight = {
     "LspDiagnosticsFloatingError",
     "LspDiagnosticsFloatingWarning",

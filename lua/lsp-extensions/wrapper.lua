@@ -107,23 +107,23 @@ end
 -- diagnostic
 
 function M.get_all()
-  vim.lsp.diagnostic.get_all()
+  vim.diagnostic.get_all()
 end
 
 function M.get_next()
-  vim.lsp.diagnostic.get_next()
+  vim.diagnostic.get_next()
 end
 
 function M.get_prev()
-  vim.lsp.diagnostic.get_prev()
+  vim.diagnostic.get_prev()
 end
 
 function M.goto_next()
-  vim.lsp.diagnostic.goto_next { popup_opts = { border = lvim.lsp.popup_border } }
+  vim.diagnostic.goto_next { popup_opts = { border = lvim.lsp.popup_border } }
 end
 
 function M.goto_prev()
-  vim.lsp.diagnostic.goto_prev { popup_opts = { border = lvim.lsp.popup_border } }
+  vim.diagnostic.goto_prev { popup_opts = { border = lvim.lsp.popup_border } }
 end
 
 function M.show_line_diagnostics()
@@ -160,7 +160,7 @@ end
 
 function M.fix_current()
   local params = vim.lsp.util.make_range_params()
-  params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
+  params.context = { diagnostics = vim.diagnostic.get_line_diagnostics() }
 
   local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
 
