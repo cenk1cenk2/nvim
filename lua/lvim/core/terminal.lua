@@ -138,12 +138,7 @@ M.add_exec = function(opts)
     term_mode = { [opts.keymap] = exec_func },
   }
 
-  local wk_status_ok, wk = pcall(require, "whichkey")
-  if not wk_status_ok then
-    return
-  end
-  wk.register({ [opts.keymap] = { opts.label } }, { mode = "n" })
-  wk.register({ [opts.keymap] = { opts.label } }, { mode = "t" })
+  lvim.builtin.which_key.mappings[opts.keymap] = opts.label
 end
 
 local terminals = {}

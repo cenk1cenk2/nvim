@@ -5,7 +5,7 @@ return {
       active = true,
       values = {
         { name = "DiagnosticSignError", text = "" },
-        { name = "DiagnosticSignWarning", text = "" },
+        { name = "DiagnosticSignWarn", text = "" },
         { name = "DiagnosticSignHint", text = "" },
         { name = "DiagnosticSignInformation", text = "" },
       },
