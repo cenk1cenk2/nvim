@@ -26,6 +26,8 @@ end
 
 function M.run_post_reload()
   Log:debug "Starting post-reload hook"
+  require("lsp-extensions").setup()
+
   if package.loaded["lspconfig"] then
     vim.cmd [[ LspRestart ]]
   end
