@@ -45,6 +45,7 @@ M.load_options = function()
     wrap = true, -- display lines as one long line
     spell = false,
     spelllang = "en",
+    spellfile = utils.join_paths(get_config_dir(), "spell", "en.utf-8.add"),
     scrolloff = 8, -- is one of my fav
     sidescrolloff = 8,
     sessionoptions = "buffers,curdir,folds,tabpages,winsize",
