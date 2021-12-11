@@ -539,6 +539,14 @@ return {
   },
 
   {
+    "stevearc/dressing.nvim",
+    config = function()
+      require("extensions.dressing").setup()
+    end,
+    disable = not lvim.extensions.dressing.active,
+  },
+
+  {
     "nvim-orgmode/orgmode",
     config = function()
       require("extensions.nvim-orgmode").setup()

@@ -33,6 +33,7 @@ local extensions = {
   "extensions.nvim-dap-ui",
   "extensions.vim-jinja",
   "extensions.nvim-orgmode",
+  "extensions.dressing",
 }
 
 function M.config(config)
