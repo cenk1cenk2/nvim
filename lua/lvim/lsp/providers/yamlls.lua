@@ -1,4 +1,8 @@
 local opts = {
+  filetypes = {
+    "yaml",
+    "yaml.ansible",
+  },
   settings = {
     yaml = {
       hover = true,
