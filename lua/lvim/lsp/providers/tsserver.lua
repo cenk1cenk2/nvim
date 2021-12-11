@@ -6,8 +6,32 @@ local opts = {
       preferences = {
         importModuleSpecifier = "relative",
       },
+      inlayHints = {
+        parameterNames = "all",
+        variableTypes = {
+          enabled = true,
+        },
+        propertyDeclarationTypes = {
+          enabled = true,
+        },
+        parameterTypes = {
+          enabled = true,
+        },
+        functionLikeReturnTypes = {
+          enabled = true,
+        },
+      },
+    },
+    referencesCodeLens = {
+      enabled = true,
+    },
+    implementationsCodeLens = {
+      enabled = true,
     },
   },
+  -- Needed for inlayHints. Merge this table with your settings or copy
+  -- it from the source if you want to add your own init_options.
+  init_options = require("nvim-lsp-ts-utils").init_options,
   on_attach = function(client, bufnr)
     local ts_utils = require "nvim-lsp-ts-utils"
 
@@ -38,7 +62,7 @@ local opts = {
 
       -- inlay hints
       auto_inlay_hints = true,
-      inlay_hints_highlight = "Comment",
+      inlay_hints_highlight = "TSInlayHint",
 
       -- update imports on file move
       update_imports_on_move = true,
@@ -48,54 +72,48 @@ local opts = {
 
     -- required to fix code action ranges and filter diagnostics
     ts_utils.setup_client(client)
-
-    -- no default maps, so you may want to define some here
-    -- local opts = { silent = true }
-    -- vim.api.nvim_buf_set_keymap(bufnr, "n", "gs", ":TSLspOrganize<CR>", opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, "n", "gr", ":TSLspRenameFile<CR>", opts)
-    -- vim.api.nvim_buf_set_keymap(bufnr, "n", "gi", ":TSLspImportAll<CR>", opts)
   end,
   commands = {
     LspRenameFile = {
       function()
-        vim.call "inputsave"
-
         local current = vim.api.nvim_buf_get_name(0)
-        local rename = vim.fn.input("Set the path to rename to" .. " ➜  ", current)
+        vim.ui.input({ prompt = "Set the path to rename to" .. " ➜  ", default = current }, function(rename)
+          if not rename then
+            Log:warn "File name can not be empty."
 
-        vim.api.nvim_command "normal :esc<CR>"
+            return
+          end
 
-        vim.api.nvim_out_write(current .. " ➜  " .. rename .. "\n")
+          Log:info(current .. " ➜  " .. rename)
 
-        local stat = vim.loop.fs_stat(rename)
+          local stat = vim.loop.fs_stat(rename)
 
-        if stat and stat.type then
-          Log:warn("File already exists: " .. rename)
+          if stat and stat.type then
+            Log:warn("File already exists: " .. rename)
 
-          return
-        end
+            return
+          end
 
-        vim.lsp.buf.execute_command {
-          command = "_typescript.applyRenameFile",
-          arguments = { { sourceUri = "file://" .. current, targetUri = "file://" .. rename } },
-          title = "",
-        }
+          vim.lsp.buf.execute_command {
+            command = "_typescript.applyRenameFile",
+            arguments = { { sourceUri = "file://" .. current, targetUri = "file://" .. rename } },
+            title = "",
+          }
 
-        vim.loop.fs_rename(current, rename)
+          vim.loop.fs_rename(current, rename)
 
-        for _, buf in pairs(vim.api.nvim_list_bufs()) do
-          if vim.api.nvim_buf_is_loaded(buf) then
-            if vim.api.nvim_buf_get_name(buf) == current then
-              vim.api.nvim_buf_set_name(buf, rename)
-              -- to avoid the 'overwrite existing file' error message on write
-              vim.api.nvim_buf_call(buf, function()
-                vim.cmd "silent! w!"
-              end)
+          for _, buf in pairs(vim.api.nvim_list_bufs()) do
+            if vim.api.nvim_buf_is_loaded(buf) then
+              if vim.api.nvim_buf_get_name(buf) == current then
+                vim.api.nvim_buf_set_name(buf, rename)
+                -- to avoid the 'overwrite existing file' error message on write
+                vim.api.nvim_buf_call(buf, function()
+                  vim.cmd "silent! w!"
+                end)
+              end
             end
           end
-        end
-
-        vim.call "inputrestore"
+        end)
       end,
     },
 

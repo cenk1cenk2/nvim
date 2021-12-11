@@ -140,6 +140,8 @@ M.mappings = {
     i = { ":LspInfo<cr>", "Info" },
     I = { ":LspInstallInfo<cr>", "Installer Info" },
     m = { ":LspRenameFile<CR>", "rename" },
+    h = { ":TSLspImportAll<CR>", "import all missing" },
+    H = { ":TSLspImportCurrent<CR>", "import current" },
     n = {
       ":LspGotoNext<CR>",
       "Next Diagnostic",

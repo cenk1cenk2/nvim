@@ -268,6 +268,7 @@ hl.treesitter = {
   TSQueryLinterError = { fg = c.orange },
   TSEnvironment = { fg = c.fg },
   TSEnvironmentName = { fg = c.fg },
+  TSInlayHint = { italic = true, bg = c.bg1, fg = c.bg_d },
 }
 
 hl.plugins.lsp = {
