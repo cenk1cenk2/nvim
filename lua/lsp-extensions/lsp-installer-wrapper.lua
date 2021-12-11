@@ -48,7 +48,7 @@ end
 
 function M.rebuild_and_update()
   M.rebuild_latest_neovim()
-  M.reinstall_lsp_servers()
+  -- M.reinstall_lsp_servers()
 
   vim.cmd [[PackerSync]]
   vim.cmd [[PackerCompile]]
