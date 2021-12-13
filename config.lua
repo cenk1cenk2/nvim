@@ -3,7 +3,7 @@ lvim.log.level = "debug"
 lvim.lsp.ensure_installed = {
   "jsonls",
   "sumneko_lua",
-  "vimls",
+  -- "vimls",
   "yamlls",
   "tsserver",
   "bashls",
@@ -53,6 +53,7 @@ lvim.lsp.override = {
   "phpactor",
   "pylsp",
   "rome",
+  "spectral",
   "sqlls",
   "sqls",
   "stylelint_lsp",
