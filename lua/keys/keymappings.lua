@@ -119,6 +119,7 @@ return {
     -- Move current line / block with Alt-j/k ala vscode.
     ["<A-j>"] = ":m '>+1<CR>gv-gv",
     ["<A-k>"] = ":m '<-2<CR>gv-gv",
+    ["p"] = '"_dP',
   },
 
   ---@usage change or add keymappings for command mode
