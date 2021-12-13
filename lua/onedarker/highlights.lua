@@ -234,6 +234,7 @@ hl.treesitter = {
   TSParameter = colors.Red,
   TSParameterReference = colors.Fg,
   TSProperty = colors.Red,
+  typescriptDecorator = colors.Fg,
   TSPunctDelimiter = colors.Fg,
   TSPunctBracket = colors.BrightYellow,
   TSPunctSpecial = colors.Purple,
