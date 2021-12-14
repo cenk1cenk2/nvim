@@ -61,6 +61,7 @@ return {
     "sorbet",
     "sqlls",
     "sqls",
+    "solang",
     "spectral",
     "stylelint_lsp",
     "tailwindcss",
