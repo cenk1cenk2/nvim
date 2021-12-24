@@ -171,12 +171,11 @@ function print_missing_dep_msg() {
 }
 
 function check_neovim_min_version() {
-  # TODO: consider locking the requirement to 0.6+
-  local verify_version_cmd='if !has("nvim-0.5.1") | cquit | else | quit | endif'
+  local verify_version_cmd='if !has("nvim-0.6.0") | cquit | else | quit | endif'
 
   # exit with an error if min_version not found
   if ! nvim --headless -u NONE -c "$verify_version_cmd"; then
-    echo "[ERROR]: LunarVim requires at least Neovim v0.5.1 or higher"
+    echo "[ERROR]: LunarVim requires at least Neovim v0.6.0 or higher"
     exit 1
   fi
 }
@@ -226,7 +225,7 @@ function __validate_node_installation() {
   manager_home="$($pkg_manager config get prefix 2>/dev/null)"
 
   if [ ! -d "$manager_home" ] || [ ! -w "$manager_home" ]; then
-    echo "[ERROR] Unable to install without administrative privilages. Please set you NPM_HOME correctly and try again."
+    echo "[ERROR] Unable to install without administrative privileges. Please set your NPM_HOME correctly and try again."
     exit 1
   fi
 }
