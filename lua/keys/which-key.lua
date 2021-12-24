@@ -10,7 +10,7 @@ M.mappings = {
   ["h"] = { "<C-W>s", "split below" },
   ["v"] = { "<C-W>v", "split right" },
   ["n"] = { "<cmd>nohlsearch<CR>", "no highlight" },
-  ["p"] = { ":Telescope find_files<CR>", "find file" },
+  ["p"] = { require("lvim.core.telescope.custom-finders").find_project_files, "Find File" },
   ["q"] = { ":LspFixCurrent<CR>", "quick fix" },
 
   -- actions
@@ -110,12 +110,18 @@ M.mappings = {
     b = { "<cmd>lua require 'gitsigns'.blame_line()<cr>", "Blame" },
     k = { "<cmd>lua require 'gitsigns'.preview_hunk()<cr>", "Preview Hunk" },
     U = { "<cmd>lua require 'gitsigns'.reset_hunk()<cr>", "Reset Hunk" },
+    R = { "<cmd>lua require 'gitsigns'.reset_buffer()<cr>", "Reset Buffer" },
     S = { "<cmd>lua require 'gitsigns'.stage_hunk()<cr>", "Stage Hunk" },
     s = { "<cmd>lua require 'gitsigns'.undo_stage_hunk()<cr>", "Undo Stage Hunk" },
     m = { ":Gdiffsplit<CR>", "merge view" },
     M = { ":Gvdiffsplit!<CR>", "merge view, 3-way-split" },
     v = { ":Telescope git_bcommits<CR>", "view buffer commits" },
     V = { ":Telescope git_commits<CR>", "view commits" },
+    o = { "<cmd>Telescope git_status<cr>", "Open changed file" },
+    d = {
+      "<cmd>Gitsigns diffthis HEAD<cr>",
+      "Git Diff",
+    },
   },
 
   -- gist
@@ -184,11 +190,23 @@ M.mappings = {
 
   L = {
     name = "+LunarVim",
-    c = { "<cmd>edit" .. get_config_dir() .. "/config.lua<cr>", "Edit config.lua" },
-    f = { "<cmd>lua require('lvim.core.telescope.custom-finders').find_lunarvim_files()<cr>", "Find LunarVim files" },
-    g = { "<cmd>lua require('lvim.core.telescope.custom-finders').grep_lunarvim_files()<cr>", "Grep LunarVim files" },
-    k = { "<cmd>lua require('lvim.keymappings').print()<cr>", "View LunarVim's default keymappings" },
-    i = { "<cmd>lua require('lvim.core.info').toggle_popup(vim.bo.filetype)<cr>", "Toggle LunarVim Info" },
+    c = {
+      "<cmd>edit " .. get_config_dir() .. "/config.lua<cr>",
+      "Edit config.lua",
+    },
+    f = {
+      "<cmd>lua require('lvim.core.telescope.custom-finders').find_lunarvim_files()<cr>",
+      "Find LunarVim files",
+    },
+    g = {
+      "<cmd>lua require('lvim.core.telescope.custom-finders').grep_lunarvim_files()<cr>",
+      "Grep LunarVim files",
+    },
+    k = { "<cmd>Telescope keymaps<cr>", "View LunarVim's keymappings" },
+    i = {
+      "<cmd>lua require('lvim.core.info').toggle_popup(vim.bo.filetype)<cr>",
+      "Toggle LunarVim Info",
+    },
     I = {
       "<cmd>lua require('lvim.core.telescope.custom-finders').view_lunarvim_changelog()<cr>",
       "View LunarVim's changelog",
@@ -203,18 +221,23 @@ M.mappings = {
         "<cmd>lua vim.fn.execute('edit ' .. require('lvim.core.log').get_path())<cr>",
         "Open the default logfile",
       },
-      l = { "<cmd>lua require('lvim.core.terminal').toggle_log_view(vim.lsp.get_log_path())<cr>", "view lsp log" },
+      l = {
+        "<cmd>lua require('lvim.core.terminal').toggle_log_view(vim.lsp.get_log_path())<cr>",
+        "view lsp log",
+      },
       L = { "<cmd>lua vim.fn.execute('edit ' .. vim.lsp.get_log_path())<cr>", "Open the LSP logfile" },
       n = {
         "<cmd>lua require('lvim.core.terminal').toggle_log_view(os.getenv('NVIM_LOG_FILE'))<cr>",
         "view neovim log",
       },
       N = { "<cmd>edit $NVIM_LOG_FILE<cr>", "Open the Neovim logfile" },
-      p = { "<cmd>lua require('lvim.core.terminal').toggle_log_view('packer.nvim')<cr>", "view packer log" },
+      p = {
+        "<cmd>lua require('lvim.core.terminal').toggle_log_view('packer.nvim')<cr>",
+        "view packer log",
+      },
       P = { "<cmd>exe 'edit '.stdpath('cache').'/packer.nvim.log'<cr>", "Open the Packer logfile" },
     },
-    r = { "<cmd>lua require('lvim.config'):reload()<cr>", "Reload configurations" },
-    R = { ":LvimCacheReset<CR>", "rebuild lvim cache" },
+    r = { "<cmd>LvimReload<cr>", "Reload LunarVim's configuration" },
     u = { "<cmd>LvimUpdate<cr>", "Update LunarVim" },
   },
 
