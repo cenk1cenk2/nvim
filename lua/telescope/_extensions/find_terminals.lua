@@ -56,12 +56,10 @@ function M.handle_delete(prompt_bufnr)
 end
 
 function M.list(opts)
-  local layout_opts = themes.get_ivy {
+  local layout_opts = themes.get_dropdown {
     sorting_strategy = "ascending",
     prompt_title = "Open terminals",
-    layout_config = {
-      height = 10,
-    },
+    layout_config = { prompt_position = "bottom", width = 0.5, height = 24 },
     finder = finders.new_table {
       results = M.entries(),
       entry_maker = M.entry_maker,
