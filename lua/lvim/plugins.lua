@@ -528,6 +528,7 @@ return {
 
   {
     "MattesGroeger/vim-bookmarks",
+    branch = "fix/118",
     config = function()
       require("extensions.vim-bookmarks").setup()
     end,
