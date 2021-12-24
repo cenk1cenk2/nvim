@@ -11,6 +11,7 @@ function M.config()
       show_guides = true,
       auto_preview = true,
       position = "right",
+      width = 50,
       keymaps = {
         close = "q",
         goto_location = "<Cr>",
