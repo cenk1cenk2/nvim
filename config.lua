@@ -58,6 +58,7 @@ lvim.lsp.override = {
   "sqls",
   "stylelint_lsp",
   -- "tailwindcss",
+  "quick_lint_js",
   "tflint",
   "volar",
 }
