@@ -81,6 +81,30 @@ return {
     end,
     disable = not lvim.extensions.todo_comments.active,
   },
+  {
+    "nvim-telescope/telescope-github.nvim",
+    requires = { "nvim-telescope/telescope.nvim" },
+    config = function()
+      require("telescope").load_extension "gh"
+    end,
+    disable = not lvim.builtin.telescope.active,
+  },
+  {
+    "tom-anders/telescope-vim-bookmarks.nvim",
+    requires = { "nvim-telescope/telescope.nvim" },
+    config = function()
+      require("telescope").load_extension "vim_bookmarks"
+    end,
+    disable = not lvim.builtin.telescope.active,
+  },
+  {
+    "AckslD/nvim-neoclip.lua",
+    requires = { "nvim-telescope/telescope.nvim" },
+    config = function()
+      require("extensions.nvim-neoclip").setup()
+    end,
+    disable = not lvim.builtin.telescope.active,
+  },
 
   -- Install nvim-cmp, and buffer source as a dependency
   {
@@ -170,20 +194,6 @@ return {
   { "nvim-treesitter/playground", requires = { "nvim-treesitter/nvim-treesitter" } },
   { "p00f/nvim-ts-rainbow", run = ":TSUpdate", requires = { "nvim-treesitter/nvim-treesitter" } },
   { "windwp/nvim-ts-autotag", requires = { "nvim-treesitter/nvim-treesitter" } },
-  {
-    "nvim-telescope/telescope-github.nvim",
-    requires = { "nvim-treesitter/nvim-treesitter" },
-    config = function()
-      require("telescope").load_extension "gh"
-    end,
-  },
-  {
-    "AckslD/nvim-neoclip.lua",
-    requires = { "nvim-treesitter/nvim-treesitter" },
-    config = function()
-      require("extensions.nvim-neoclip").setup()
-    end,
-  },
 
   -- NvimTree
   {
