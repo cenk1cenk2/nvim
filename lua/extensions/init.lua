@@ -36,6 +36,9 @@ local extensions = {
   "extensions.vim-jinja",
   "extensions.nvim-orgmode",
   "extensions.dressing",
+  "extensions.vim-caser",
+  "extensions.venn-nvim",
+  "extensions.aerojump-nvim",
 }
 
 function M.config(config)

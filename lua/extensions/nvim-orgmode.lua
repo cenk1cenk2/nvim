@@ -4,7 +4,7 @@ local extension_name = "orgmode"
 
 function M.config()
   lvim.extensions[extension_name] = {
-    active = true,
+    active = false,
     on_config_done = nil,
     setup = {
       org_agenda_files = { "~/org/*" },

@@ -225,7 +225,7 @@ M.config = function()
     },
     documentation = { border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" } },
     sources = {
-      { name = "orgmode" },
+      -- { name = "orgmode" },
 
       { name = "nvim_lsp" },
       { name = "path" },

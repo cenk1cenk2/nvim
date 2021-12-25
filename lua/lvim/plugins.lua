@@ -595,10 +595,35 @@ return {
   },
 
   {
+    "arthurxavierx/vim-caser",
+    config = function()
+      require("extensions.vim-caser").setup()
+    end,
+    disable = not lvim.extensions.vim_caser.active,
+  },
+
+  {
     "nvim-orgmode/orgmode",
     config = function()
       require("extensions.nvim-orgmode").setup()
     end,
     disable = not lvim.extensions.orgmode.active,
+  },
+
+  {
+    "jbyuki/venn.nvim",
+    config = function()
+      require("extensions.venn-nvim").setup()
+    end,
+    disable = not lvim.extensions.venn_nvim.active,
+  },
+
+  {
+    "ripxorip/aerojump.nvim",
+    config = function()
+      require("extensions.aerojump-nvim").setup()
+    end,
+    disable = not lvim.extensions.aerojump_nvim.active,
+    run = ":UpdateRemotePlugins",
   },
 }
