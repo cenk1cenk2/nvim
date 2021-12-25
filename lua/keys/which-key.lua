@@ -180,12 +180,13 @@ M.mappings = {
   -- workspace/session
   w = {
     name = "+Session",
-    c = { ":Dashboard<CR>", "Dashboard" },
+    c = { ":Alpha<CR>", "Dashboard" },
     q = { ":qa<CR>", "Quit while saved" },
     Q = { ":qa!<CR>", "Quit" },
-    l = { ":SessionLoad<CR>", "Load Session" },
-    s = { ":SessionSave<CR>", "Save Session" },
-    f = { ":CocList sessions<CR>", "List Session" },
+    l = { ":LoadCurrentDirSession<CR>", "Load CWD Last Session" },
+    L = { ":LoadLastSession<CR>", "Load Last Session" },
+    s = { ":SaveSession<CR>", "Save Session" },
+    f = { ":Telescope sessions<CR>", "List Sessions" },
     p = { "<cmd>Telescope projects<CR>", "Projects" },
   },
 

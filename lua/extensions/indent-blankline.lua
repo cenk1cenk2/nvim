@@ -18,8 +18,9 @@ function M.config()
         "floaterm",
         "NvimTree",
         "dashboard",
+        "alpha",
         "toggleterm",
-        "packer"
+        "packer",
       },
       enabled = true,
       show_trailing_blankline_indent = false,

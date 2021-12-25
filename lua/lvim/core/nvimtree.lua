@@ -70,6 +70,10 @@ function M.config()
           -- list of mappings to set on the tree manually
         },
       },
+      window_picker_exclude = {
+        filetype = { "notify", "spectre_panel", "Outline", "packer", "qf", "lsp_floating_window" },
+        buftype = { "terminal" },
+      },
       indent_markers = 1,
       special_files = { ["package.json"] = 1, ["README.md"] = 1, ["node_modules"] = 1 },
       show_icons = { git = 1, folders = 1, files = 1, folder_arrows = 1, tree_width = 40 },

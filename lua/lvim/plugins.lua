@@ -317,6 +317,23 @@ return {
     end,
     disable = not lvim.builtin.dashboard.active,
   },
+  {
+    "goolord/alpha-nvim",
+    event = "BufWinEnter",
+    config = function()
+      require("extensions.alpha-nvim").setup()
+    end,
+    disable = not lvim.extensions.alpha.active,
+  },
+
+  -- Session Manager
+  {
+    "Shatur/neovim-session-manager",
+    config = function()
+      require("extensions.neovim-session-manager").setup()
+    end,
+    disable = not lvim.extensions.session_manager.active,
+  },
 
   -- Terminal
   {

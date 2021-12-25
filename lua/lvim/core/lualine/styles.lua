@@ -58,7 +58,7 @@ styles.lvim = {
     icons_enabled = true,
     component_separators = { left = "", right = "" },
     section_separators = { left = "", right = "" },
-    disabled_filetypes = { "dashboard", "NvimTree", "Outline" },
+    disabled_filetypes = { "dashboard", "NvimTree", "Outline", "alpha" },
   },
   sections = {
     lualine_a = { components.mode },

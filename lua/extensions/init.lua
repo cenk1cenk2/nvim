@@ -1,6 +1,8 @@
 local M = {}
 
 local extensions = {
+  "extensions.alpha-nvim",
+  "extensions.neovim-session-manager",
   "extensions.hop",
   "extensions.vim-repeat",
   "extensions.vim-surround",

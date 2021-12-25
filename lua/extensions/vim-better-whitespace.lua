@@ -14,6 +14,7 @@ function M.setup()
     "gitcommit",
     "help",
     "dashboard",
+    "alpha",
     "spectre_panel",
     "LspTrouble",
     "TelescopePrompt",

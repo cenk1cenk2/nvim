@@ -1,10 +1,7 @@
 {
   "list.indicator": ">",
   "list.selectedSignText": " ",
-  "list.source.words.defaultOptions": [
-    "--interactive",
-    "--ignore-case"
-  ],
+  "list.source.words.defaultOptions": ["--interactive", "--ignore-case"],
   "list.source.mru.ignoreGitIgnore": true,
   "session.directory": "~/.cache/nvim/session",
   "session.saveOnVimLeave": false,
