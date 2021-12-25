@@ -143,6 +143,7 @@ M.mappings = {
     w = { ":LspDocumentDiagonistics<CR>", "Document Diagnostics" },
     W = { ":LspWorkspaceDiagonistics<CR>", "Workspace Diagnostics" },
     f = { ":LspFormattingSeqSync<CR>", "Format" },
+    F = { ":LvimToggleFormatOnSave<CR>", "Toggle autoformat" },
     g = { ":LspOrganizeImports<CR>", "organize imports" },
     i = { ":LspInfo<cr>", "Info" },
     I = { ":LspInstallInfo<cr>", "Installer Info" },
