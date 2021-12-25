@@ -67,12 +67,12 @@ function M.enable_format_on_save(opts)
   M.define_augroups {
     format_on_save = { { "BufWritePre", opts.pattern, fmd_cmd } },
   }
-  Log:info "enabled format-on-save"
+  Log:debug "enabled format-on-save"
 end
 
 function M.disable_format_on_save()
   M.remove_augroup "format_on_save"
-  Log:info "disabled format-on-save"
+  Log:warn "disabled format-on-save"
 end
 
 function M.configure_format_on_save()
