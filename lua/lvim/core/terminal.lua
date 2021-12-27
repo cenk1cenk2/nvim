@@ -270,23 +270,15 @@ end
 M.buffer_terminal = function()
   local current = vim.fn.expand "%:p:h"
 
-  if not terminals["buffer"] then
-    local Terminal = require("toggleterm.terminal").Terminal
-    terminals["buffer"] = Terminal:new {
-      cmd = vim.o.shell,
-      dir = current,
-      direction = "float",
-      hidden = true,
-    }
+  local t = M.create_float_terminal()
+
+  t:toggle()
+
+  if t.dir ~= current then
+    t:change_dir(current)
   end
 
-  if terminals["buffer"].dir ~= current then
-    terminals["buffer"]:change_dir(current)
-  end
-
-  terminals["buffer"]:toggle()
-
-  return terminals["buffer"]
+  return t
 end
 
 M.terminal_kill_all = function()
