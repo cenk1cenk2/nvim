@@ -39,11 +39,11 @@ function M.setup()
     --   filetypes = { "python" },
     -- },
 
-    {
-      exe = "proselint",
-      managed = true,
-      filetypes = { "markdown", "tex" },
-    },
+    -- {
+    --   exe = "proselint",
+    --   managed = true,
+    --   filetypes = { "markdown", "tex" },
+    -- },
   }
 end
 

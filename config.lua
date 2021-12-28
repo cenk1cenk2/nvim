@@ -19,6 +19,7 @@ lvim.lsp.ensure_installed = {
   "rust_analyzer",
   -- "eslint",
   -- "ansiblels",
+  "grammarly",
   -- managed by extensions
   "stylua",
   "eslint_d",
@@ -36,7 +37,7 @@ lvim.lsp.ensure_installed = {
   "rustywind",
   "rustfmt",
   "hadolint",
-  "proselint",
+  -- "proselint",
 }
 
 lvim.lsp.override = {
@@ -44,6 +45,7 @@ lvim.lsp.override = {
   "ansiblels",
   "denols",
   "ember",
+  "csharp_ls",
   -- "emmet_ls",
   "eslint",
   "eslintls",

@@ -10,11 +10,11 @@ function M.setup()
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
-    {
-      exe = "proselint",
-      managed = true,
-      filetypes = { "markdown", "tex" },
-    },
+    -- {
+    --   exe = "proselint",
+    --   managed = true,
+    --   filetypes = { "markdown", "tex" },
+    -- },
   }
 end
 
