@@ -74,10 +74,10 @@ function M:init(base_dir)
   -- FIXME: currently unreliable in unit-tests
   if not in_headless then
     _G.PLENARY_DEBUG = false
-    require("lvim.impatient").setup {
-      path = join_paths(self.cache_dir, "lvim_cache"),
-      enable_profiling = true,
-    }
+ --   require("lvim.impatient").setup {
+ --     path = join_paths(self.cache_dir, "lvim_cache"),
+ --     enable_profiling = true,
+ --   }
   end
 
   require("lvim.config"):init()
