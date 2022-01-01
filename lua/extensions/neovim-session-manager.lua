@@ -2,6 +2,11 @@ local M = {}
 
 local extension_name = "session_manager"
 local utils = require "lvim.utils"
+local session_manager_config_ok, session_manager_config = pcall(require, "session_manager.config")
+
+if not session_manager_config_ok then
+  return
+end
 
 function M.config()
   lvim.extensions[extension_name] = {
@@ -14,7 +19,7 @@ function M.config()
       sessions_dir = utils.join_paths(get_runtime_dir(), "sessions"), -- The directory where the session files will be saved.
       path_replacer = "__", -- The character to which the path separator will be replaced for session files.
       colon_replacer = "++", -- The character to which the colon symbol will be replaced for session files.
-      autoload_mode = require("session_manager.config").AutoloadMode.Disabled, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
+      autoload_mode = session_manager_config.AutoloadMode.Disabled, -- Define what to do when Neovim is started without arguments. Possible values: Disabled, CurrentDir, LastSession
       autosave_last_session = true, -- Automatically save last session on exit.
       autosave_ignore_not_normal = false, -- Plugin will not save a session when no writable and listed buffers are opened.
       autosave_only_in_session = true, -- Always autosaves session. If true, only autosaves after a session is active.
