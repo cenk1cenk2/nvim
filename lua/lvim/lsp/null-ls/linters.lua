@@ -61,6 +61,7 @@ function M.list_configured(linter_configs)
         table.insert(
           linters,
           linter.with {
+            name = name,
             command = linter_cmd,
             extra_args = lnt_config.args,
             filetypes = lnt_config.filetypes,

@@ -59,6 +59,7 @@ function M.list_configured(actions_configs)
         table.insert(
           actors,
           actor.with {
+            name = name,
             command = actor_cmd,
             extra_args = config.args,
             filetypes = config.filetypes,
