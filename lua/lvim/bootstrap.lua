@@ -1,5 +1,13 @@
 local M = {}
 
+if vim.fn.has "nvim-0.6" ~= 1 then
+  vim.notify("Please upgrade your Neovim base installation. Lunarvim requires v0.6+", vim.log.levels.WARN)
+  vim.wait(5000, function()
+    return false
+  end)
+  vim.cmd "cquit"
+end
+
 local uv = vim.loop
 local path_sep = uv.os_uname().version:match "Windows" and "\\" or "/"
 local in_headless = #vim.api.nvim_list_uis() == 0
@@ -9,6 +17,16 @@ local in_headless = #vim.api.nvim_list_uis() == 0
 function _G.join_paths(...)
   local result = table.concat({ ... }, path_sep)
   return result
+end
+
+---Require a module in protected mode without relying on its cached value
+---@param module string
+---@return any
+function _G.require_clean(module)
+  package.loaded[module] = nil
+  _G[module] = nil
+  local _, requested = pcall(require, module)
+  return requested
 end
 
 ---Get the full path to `$LUNARVIM_RUNTIME_DIR`
@@ -93,11 +111,9 @@ end
 ---Update LunarVim
 ---pulls the latest changes from github and, resets the startup cache
 function M:update()
-  package.loaded["lvim.utils.hooks"] = nil
-  local _, hooks = pcall(require, "lvim.utils.hooks")
-  hooks.run_pre_update()
-  M:update_repo()
-  hooks.run_post_update()
+  require_clean("lvim.utils.hooks").run_pre_update()
+  require_clean("lvim.utils.git").update_base_lvim()
+  require_clean("lvim.utils.hooks").run_post_update()
 end
 
 local function git_cmd(subcmd, opts)
