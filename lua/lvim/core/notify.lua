@@ -29,11 +29,11 @@ local defaults = {
 
     ---@usage Icons for the different levels
     icons = {
-      ERROR = "",
-      WARN = "",
-      INFO = "",
-      DEBUG = "",
-      TRACE = "✎",
+      ERROR = " ",
+      WARN = " ",
+      INFO = " ",
+      DEBUG = " ",
+      TRACE = "✎ ",
     },
   },
 }
