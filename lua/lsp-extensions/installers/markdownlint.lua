@@ -3,6 +3,7 @@ local _, servers = pcall(require, "nvim-lsp-installer.servers")
 local _, server = pcall(require, "nvim-lsp-installer.server")
 local _, installers = pcall(require, "nvim-lsp-installer.installers")
 local _, npm = pcall(require, "nvim-lsp-installer.installers.npm")
+local helpers = require "lsp-extensions.lsp-installer-helpers"
 
 local server_name = "markdownlint"
 
@@ -15,9 +16,8 @@ servers.register(server.Server:new {
   root_dir = root_dir,
   installer = installers.pipe { npm.packages { "markdownlint-cli" } },
   default_options = {
-    cmd = { "markdownlint" },
-    cmd_env = npm.env(root_dir),
-
-      extra_args = { "-s", "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.markdownlintrc.json" },
+    cmd = { helpers.npm_executable(root_dir, server_name) },
+    cmd_env = {},
+    extra_args = { "-s", "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.markdownlintrc.json" },
   },
 })

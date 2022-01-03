@@ -105,3 +105,7 @@ lvim.autocommands.custom_groups = {
   TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
   ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()" },
 }
+
+lvim.lsp.null_ls.setup = {
+  debug = true,
+}

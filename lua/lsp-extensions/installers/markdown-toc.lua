@@ -3,6 +3,7 @@ local _, servers = pcall(require, "nvim-lsp-installer.servers")
 local _, server = pcall(require, "nvim-lsp-installer.server")
 local _, installers = pcall(require, "nvim-lsp-installer.installers")
 local _, npm = pcall(require, "nvim-lsp-installer.installers.npm")
+local helpers = require "lsp-extensions.lsp-installer-helpers"
 
 local server_name = "markdown_toc"
 
@@ -14,5 +15,5 @@ servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
   installer = installers.pipe { npm.packages { "markdown-toc" } },
-  default_options = { cmd = { "markdown-toc" }, cmd_env = npm.env(root_dir) },
+  default_options = { cmd = { helpers.npm_executable(root_dir, "markdown-toc") }, cmd_env = {} },
 })

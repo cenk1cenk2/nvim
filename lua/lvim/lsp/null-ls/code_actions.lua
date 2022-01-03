@@ -31,18 +31,29 @@ function M.list_configured(actions_configs)
     local actor = null_ls.builtins.code_actions[name]
 
     if not actor then
-      Log:error("Not a valid code action provider: " .. config.exe)
-      errors[config.exe] = {} -- Add data here when necessary
+      Log:error("Not a valid actor: " .. config.exe)
+      errors[name] = {} -- Add data here when necessary
     elseif is_registered(config.exe) then
-      Log:trace "Skipping registering the source more than once"
+      Log:trace("Skipping registering the source " .. name .. " more than once.")
     else
-        Log:debug("Using code action provider: " .. name .. " for " .. vim.inspect(config.filetypes))
+      local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(name)
+
+      if not server_available then
+        Log:warn("Not found actor: " .. name)
+        errors[config.exe] = {} -- Add data here when necessary
+      else
+        Log:debug("Using actor: " .. name .. " for " .. vim.inspect(config.filetypes))
+
         table.insert(
           actors,
           actor.with {
+            name = name,
+            command = table.concat(requested_server._default_options.cmd, " "),
+            env = requested_server._default_options.cmd_env,
             filetypes = config.filetypes,
           }
         )
+      end
     end
   end
 

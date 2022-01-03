@@ -3,6 +3,7 @@ local _, servers = pcall(require, "nvim-lsp-installer.servers")
 local _, server = pcall(require, "nvim-lsp-installer.server")
 local _, installers = pcall(require, "nvim-lsp-installer.installers")
 local _, pip3 = pcall(require, "nvim-lsp-installer.installers.pip3")
+local helpers = require "lsp-extensions.lsp-installer-helpers"
 
 local server_name = "black"
 local package_name = server_name
@@ -17,5 +18,5 @@ servers.register(server.Server:new {
   installer = installers.pipe {
     pip3.packages { package_name },
   },
-  default_options = { cmd = { package_name }, cmd_env = pip3.env(root_dir) },
+  default_options = { cmd = { helpers.pip3_executable(root_dir, package_name) }, cmd_env = {} },
 })

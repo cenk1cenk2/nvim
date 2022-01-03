@@ -34,10 +34,7 @@ servers.register(server.Server:new {
     std.chmod("+x", { "stylua" }),
   },
   default_options = {
-    cmd = {  root_dir,server_name  },
-    cmd_env = {
-      PATH = process.extend_path {   root_dir  },
-    },
+    cmd = { path.concat { root_dir, server_name } },
+    cmd_env = {},
   },
 })
-

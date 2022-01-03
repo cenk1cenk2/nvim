@@ -39,9 +39,7 @@ servers.register(server.Server:new {
     end),
   },
   default_options = {
-    cmd = { path.concat {root_dir, "server", server_name}  },
-    cmd_env = {
-      PATH = process.extend_path { path.concat { root_dir, "server"} },
-    },
+    cmd = { path.concat { root_dir, "server", server_name } },
+    cmd_env = {},
   },
 })

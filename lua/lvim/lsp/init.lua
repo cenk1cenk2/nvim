@@ -8,6 +8,7 @@ local function lsp_highlight_document(client)
   if lvim.lsp.document_highlight == false then
     return -- we don't need further
   end
+
   autocmds.enable_lsp_document_highlight(client.id)
 end
 
@@ -64,15 +65,20 @@ local function select_default_formater(client)
   end
 
   Log:debug("Checking for formatter overriding for " .. client.name)
+  -- @FIXME: problem with overwriting the formatter, it does not loop more than once
+  client.resolved_capabilities.document_formatting = false
+  client.resolved_capabilities.document_range_formatting = false
 
   local client_filetypes = client.config.filetypes or {}
   for _, filetype in ipairs(client_filetypes) do
     local supported_formatters = null_formatters.list_registered_providers(filetype)
 
-    if #vim.tbl_keys(supported_formatters) > 0 then
+    if not vim.tbl_isempty(supported_formatters) then
       Log:debug("Formatter overriding detected. Disabling formatting capabilities for " .. client.name)
       client.resolved_capabilities.document_formatting = false
       client.resolved_capabilities.document_range_formatting = false
+
+      break
     end
   end
 end
@@ -81,28 +87,31 @@ function M.common_on_exit(_, _)
   if lvim.lsp.document_highlight then
     autocmds.disable_lsp_document_highlight()
   end
+
   if lvim.lsp.code_lens_refresh then
     autocmds.disable_code_lens_refresh()
   end
 end
 
 function M.common_on_init(client, bufnr)
+  select_default_formater(client)
+
   if lvim.lsp.on_init_callback then
     lvim.lsp.on_init_callback(client, bufnr)
     Log:debug "Called lsp.on_init_callback"
     return
   end
-  select_default_formater(client)
 end
 
 function M.common_on_attach(client, bufnr)
+  lsp_highlight_document(client)
+  lsp_code_lens_refresh(client)
+  add_lsp_buffer_keybindings(bufnr)
+
   if lvim.lsp.on_attach_callback then
     lvim.lsp.on_attach_callback(client, bufnr)
     Log:debug "Called lsp.on_attach_callback"
   end
-  lsp_highlight_document(client)
-  lsp_code_lens_refresh(client)
-  add_lsp_buffer_keybindings(bufnr)
 end
 
 local function bootstrap_nlsp(opts)
