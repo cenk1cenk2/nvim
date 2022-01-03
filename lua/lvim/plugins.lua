@@ -41,14 +41,14 @@ return {
   { "neovim/nvim-lspconfig" },
   { "tamago324/nlsp-settings.nvim" },
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "cenk1cenk2/null-ls.nvim",
   },
   {
     "jose-elias-alvarez/nvim-lsp-ts-utils",
   },
   {
     "williamboman/nvim-lsp-installer",
-    commit = "5d4195df48b7639aa1dbcf3e7d67fa9306ad0655"
+    commit = "5d4195df48b7639aa1dbcf3e7d67fa9306ad0655",
   },
   {
     "rcarriga/nvim-notify",
