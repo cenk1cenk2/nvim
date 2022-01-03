@@ -15,6 +15,9 @@ servers.register(server.Server:new {
   root_dir = root_dir,
   installer = installers.pipe { npm.packages { "markdownlint-cli" } },
   default_options = {
-    cmd = { npm.executable(root_dir, "markdownlint") },
+    cmd = { "markdownlint" },
+    cmd_env = npm.env(root_dir),
+
+      extra_args = { "-s", "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.markdownlintrc.json" },
   },
 })

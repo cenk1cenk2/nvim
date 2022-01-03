@@ -13,8 +13,7 @@ local is_registered = function(name)
 end
 
 function M.list_registered(filetype)
-  local null_ls_methods = require "null-ls.methods"
-  local linter_method = null_ls_methods.internal["DIAGNOSTICS"]
+  local linter_method = null_ls.methods.DIAGNOSTICS
   local registered_providers = services.list_registered_providers_names(filetype)
   return registered_providers[linter_method] or {}
 end
@@ -39,35 +38,14 @@ function M.list_configured(linter_configs)
     elseif is_registered(lnt_config.exe) then
       Log:trace "Skipping registering the source more than once"
     else
-      local linter_cmd
-      if lnt_config.managed then
-        local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(name)
-
-        if not server_available then
-          Log:warn("Not found managed linter: " .. name)
-          errors[lnt_config.exe] = {} -- Add data here when necessary
-        else
-          linter_cmd = services.find_command(table.concat(requested_server._default_options.cmd, " "))
-        end
-      else
-        linter_cmd = services.find_command(linter._opts.command)
-      end
-
-      if not linter_cmd then
-        Log:warn("Not found: " .. linter._opts.command)
-        errors[name] = {} -- Add data here when necessary
-      else
-        Log:debug("Using linter: " .. linter_cmd .. " for " .. vim.inspect(lnt_config.filetypes))
+        Log:debug("Using linter: " .. name .. " for " .. vim.inspect(lnt_config.filetypes))
         table.insert(
           linters,
           linter.with {
-            name = name,
-            command = linter_cmd,
             extra_args = lnt_config.args,
             filetypes = lnt_config.filetypes,
           }
         )
-      end
     end
   end
 

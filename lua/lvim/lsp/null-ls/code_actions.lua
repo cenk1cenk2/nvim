@@ -36,36 +36,14 @@ function M.list_configured(actions_configs)
     elseif is_registered(config.exe) then
       Log:trace "Skipping registering the source more than once"
     else
-      local actor_cmd
-      if config.managed then
-        local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(name)
-
-        if not server_available then
-          Log:warn("Not found managed code action provider: " .. name)
-          errors[config.exe] = {} -- Add data here when necessary
-        else
-          actor_cmd = services.find_command(table.concat(requested_server._default_options.cmd, " "))
-          -- TODO: add environment variable parsing here.
-        end
-      else
-        actor_cmd = services.find_command(actor._opts.command)
-      end
-
-      if not actor_cmd then
-        Log:warn("Not found: " .. actor._opts.command)
-        errors[name] = {} -- Add data here when necessary
-      else
-        Log:debug("Using code action provider: " .. actor_cmd .. " for " .. vim.inspect(config.filetypes))
+        Log:debug("Using code action provider: " .. name .. " for " .. vim.inspect(config.filetypes))
         table.insert(
           actors,
           actor.with {
-            name = name,
-            command = actor_cmd,
             extra_args = config.args,
             filetypes = config.filetypes,
           }
         )
-      end
     end
   end
 

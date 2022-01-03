@@ -17,5 +17,5 @@ servers.register(server.Server:new {
   installer = installers.pipe {
     pip3.packages { package_name },
   },
-  default_options = { cmd = { pip3.executable(root_dir, package_name) } },
+  default_options = { cmd = { package_name }, cmd_env = pip3.env(root_dir) },
 })

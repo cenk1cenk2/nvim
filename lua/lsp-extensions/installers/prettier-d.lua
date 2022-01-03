@@ -14,5 +14,8 @@ servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
   installer = installers.pipe { npm.packages { "@fsouza/prettierd" } },
-  default_options = { cmd = { npm.executable(root_dir, server_name) } },
+  default_options = { cmd = { server_name }, cmd_env = vim.tbl_extend('force', npm.env(root_dir),  {
+
+        PRETTIERD_DEFAULT_CONFIG = vim.fn.expand "~/.config/nvim/utils/linter-config/.prettierrc.json",
+  })  },
 })

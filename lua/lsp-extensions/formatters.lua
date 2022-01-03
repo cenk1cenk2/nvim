@@ -6,10 +6,6 @@ function M.setup()
   formatters.setup {
     {
       exe = "prettierd",
-      environment = {
-        PRETTIERD_DEFAULT_CONFIG = vim.fn.expand "~/.config/nvim/utils/linter-config/.prettierrc.json",
-      },
-      managed = true,
       filetypes = {
         "javascript",
         "typescript",
@@ -32,44 +28,37 @@ function M.setup()
 
     {
       exe = "eslint_d",
-      managed = true,
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
     {
       exe = "rustywind",
-      managed = true,
       filetypes = { "javascriptreact", "typescriptreact", "vue", "svelte", "html" },
     },
 
-    { exe = "stylua", managed = true, filetypes = { "lua" } },
+    { exe = "stylua", filetypes = { "lua" } },
 
     {
       exe = "shfmt",
-      managed = true,
       filetypes = { "sh", "bash" },
     },
 
     {
       exe = "black",
-      managed = true,
       filetypes = { "python" },
     },
     {
       exe = "isort",
-      managed = true,
       filetypes = { "python" },
     },
 
     {
       exe = "rustfmt",
-      managed = true,
       filetypes = { "rust" },
     },
 
     {
       exe = "goimports",
-      managed = true,
       filetypes = { "go" },
     },
     {
@@ -78,7 +67,6 @@ function M.setup()
     },
     {
       exe = "golines",
-      managed = true,
       filetypes = { "go" },
     },
   }

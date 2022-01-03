@@ -190,7 +190,7 @@ function M.setup()
   end
 
   lvim.builtin.which_key.mappings["e"] = { "<cmd>NvimTreeToggle<CR>", "Explorer" }
-  lvim.builtin.which_key.mappings["."] = { ":NvimTreeFindFile<CR>", "find file in explorer" }
+  lvim.builtin.which_key.mappings[","] = { ":NvimTreeFindFile<CR>", "find file in explorer" }
 
   local tree_view = require "nvim-tree.view"
 

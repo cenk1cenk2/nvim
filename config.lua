@@ -46,6 +46,7 @@ lvim.lsp.override = {
   "denols",
   "ember",
   "csharp_ls",
+  "cssmodules_ls",
   -- "emmet_ls",
   "eslint",
   "eslintls",

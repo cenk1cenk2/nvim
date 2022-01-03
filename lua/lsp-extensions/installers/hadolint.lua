@@ -7,6 +7,7 @@ local _, platform = pcall(require, "nvim-lsp-installer.platform")
 local _, Data = pcall(require, "nvim-lsp-installer.data")
 local _, std = pcall(require, "nvim-lsp-installer.installers.std")
 local _, context = pcall(require, "nvim-lsp-installer.installers.context")
+local _, process = pcall(require, "nvim-lsp-installer.process")
 
 local server_name = "hadolint"
 
@@ -28,5 +29,10 @@ servers.register(server.Server:new {
     end),
     std.chmod("+x", { "hadolint" }),
   },
-  default_options = { cmd = { path.concat { root_dir, server_name } } },
+  default_options = {
+    cmd = { path.concat {root_dir,server_name} },
+    cmd_env = {
+      PATH = process.extend_path {  root_dir  },
+    },
+  },
 })

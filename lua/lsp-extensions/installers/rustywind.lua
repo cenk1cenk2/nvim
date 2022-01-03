@@ -14,5 +14,5 @@ servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
   installer = installers.pipe { npm.packages { "rustywind" } },
-  default_options = { cmd = { npm.executable(root_dir, server_name) } },
+  default_options = { cmd = { server_name }, cmd_env = npm.env(root_dir) },
 })

@@ -14,5 +14,5 @@ servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
   installer = installers.pipe { go.packages { "github.com/segmentio/golines" } },
-  default_options = { cmd = { go.executable(root_dir, server_name) } },
+  default_options = { cmd = { server_name }, cmd_env = go.env(root_dir) },
 })

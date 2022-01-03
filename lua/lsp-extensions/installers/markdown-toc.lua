@@ -14,5 +14,5 @@ servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
   installer = installers.pipe { npm.packages { "markdown-toc" } },
-  default_options = { cmd = { npm.executable(root_dir, "markdown-toc") } },
+  default_options = { cmd = { "markdown-toc" }, cmd_env = npm.env(root_dir) },
 })
