@@ -41,7 +41,7 @@ return {
   { "neovim/nvim-lspconfig" },
   { "tamago324/nlsp-settings.nvim" },
   {
-    "~/development/null-ls.nvim",
+    "cenk1cenk2/null-ls.nvim",
   },
   {
     "jose-elias-alvarez/nvim-lsp-ts-utils",
