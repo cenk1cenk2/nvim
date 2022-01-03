@@ -43,7 +43,6 @@ function M.list_configured(formatter_configs)
         table.insert(
           formatters,
           formatter.with {
-            extra_args = fmt_config.args,
             filetypes = fmt_config.filetypes,
           }
         )

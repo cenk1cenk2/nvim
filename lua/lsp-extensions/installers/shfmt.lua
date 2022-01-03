@@ -34,7 +34,7 @@ servers.register(server.Server:new {
     std.chmod("+x", { "shfmt" }),
   },
   default_options = {
-    cmd = { path.concat {root_dir, server_name} },
+    cmd = { server_name },
     cmd_env = {
       PATH = process.extend_path {  root_dir  },
     },

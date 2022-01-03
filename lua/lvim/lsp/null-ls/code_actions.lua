@@ -40,7 +40,6 @@ function M.list_configured(actions_configs)
         table.insert(
           actors,
           actor.with {
-            extra_args = config.args,
             filetypes = config.filetypes,
           }
         )
