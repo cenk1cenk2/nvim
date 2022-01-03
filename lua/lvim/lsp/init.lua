@@ -69,6 +69,7 @@ local function select_default_formater(client)
   -- can there be race condition or something?
   client.resolved_capabilities.document_formatting = false
   client.resolved_capabilities.document_range_formatting = false
+  Log:debug("Monkey patching: Disabling formatting capabilities for " .. client.name)
 
   local client_filetypes = client.config.filetypes or {}
   for _, filetype in ipairs(client_filetypes) do
