@@ -22,16 +22,4 @@ function M.list_registered_providers_names(filetype)
   return registered
 end
 
-function M.append_environment_vars_to_command(command, environment)
-  if not environment or vim.tbl_isempty(environment) then
-    return command
-  end
-
-  for key, value in pairs(environment) do
-    command = key .. "=" .. value .. " " .. command
-  end
-
-  return command
-end
-
 return M
