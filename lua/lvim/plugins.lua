@@ -48,6 +48,7 @@ return {
   },
   {
     "williamboman/nvim-lsp-installer",
+    commit = "5d4195df48b7639aa1dbcf3e7d67fa9306ad0655"
   },
   {
     "rcarriga/nvim-notify",
