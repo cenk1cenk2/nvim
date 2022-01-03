@@ -64,6 +64,7 @@ lvim.lsp.override = {
   "quick_lint_js",
   "tflint",
   "volar",
+  "zk",
 }
 
 lvim.builtin.treesitter.ensure_installed = {
