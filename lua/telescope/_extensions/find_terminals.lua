@@ -2,11 +2,9 @@ local _, finders = pcall(require, "telescope.finders")
 local _, pickers = pcall(require, "telescope.pickers")
 local _, sorters = pcall(require, "telescope.sorters")
 local _, themes = pcall(require, "telescope.themes")
-local _, previewers = pcall(require, "telescope.previewers")
 local _, actions = pcall(require, "telescope.actions")
 local _, entry_display = pcall(require, "telescope.pickers.entry_display")
 local _, action_state = pcall(require, "telescope.actions.state")
-local _, terminal = pcall(require, "toggleterm.terminal")
 
 local M = {}
 
@@ -19,7 +17,7 @@ M.displayer = entry_display.create {
 }
 
 function M.entries()
-  return terminal.get_all(true)
+  return require("toggleterm.terminal").get_all(true)
 end
 
 function M.entry_maker(entry)
