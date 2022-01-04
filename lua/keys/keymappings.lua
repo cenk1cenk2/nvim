@@ -29,7 +29,7 @@ return {
     ["<F1>"] = "<Nop>",
 
     -- disable Ex mode
-    ["Q"] = "<Nop>",
+    -- ["Q"] = "<Nop>",
 
     -- split to tab
     ["<C-t>"] = "<C-w>T",
@@ -58,8 +58,8 @@ return {
     ["<C-y>"] = ":call QuickFixToggle()<CR>",
 
     -- create space on top and bottom
-    ["Ü"] = "o<ESC>k",
-    ["ü"] = "O<ESC>j",
+    ["Ü"] = "O<ESC>k",
+    ["ü"] = "o<ESC>j",
 
     -- jump between paragraphs
     ["ö"] = "{zz",
