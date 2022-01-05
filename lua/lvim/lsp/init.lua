@@ -1,7 +1,7 @@
 local M = {}
 local Log = require "lvim.core.log"
 local utils = require "lvim.utils"
-local null_formatters = require "lvim.lsp.null-ls.formatters"
+local formatters = require "lvim.lsp.null-ls.formatters"
 local autocmds = require "lvim.core.autocmds"
 
 local function lsp_highlight_document(client)
@@ -73,9 +73,7 @@ local function select_default_formater(client)
 
   local client_filetypes = client.config.filetypes or {}
   for _, filetype in ipairs(client_filetypes) do
-    local supported_formatters = null_formatters.list_registered_providers(filetype)
-
-    if not vim.tbl_isempty(supported_formatters) then
+    if #vim.tbl_keys(formatters.list_registered(filetype)) > 0 then
       Log:debug("Formatter overriding detected. Disabling formatting capabilities for " .. client.name)
       client.resolved_capabilities.document_formatting = false
       client.resolved_capabilities.document_range_formatting = false
