@@ -65,11 +65,6 @@ local function select_default_formater(client)
   end
 
   Log:debug("Checking for formatter overriding for " .. client.name)
-  -- @FIXME: problem with overwriting the formatter, it does not loop more than once
-  -- can there be race condition or something?
-  client.resolved_capabilities.document_formatting = false
-  client.resolved_capabilities.document_range_formatting = false
-  Log:debug("Monkey patching: Disabling formatting capabilities for " .. client.name)
 
   local client_filetypes = client.config.filetypes or {}
   for _, filetype in ipairs(client_filetypes) do
