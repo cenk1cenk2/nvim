@@ -24,6 +24,7 @@ return {
 
     -- close buffer
     ["<C-q>"] = ":BufferClose<CR>",
+    ["<C-Q>"] = ":BufferClose!<CR>",
 
     -- disable help
     ["<F1>"] = "<Nop>",
