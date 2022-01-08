@@ -92,10 +92,10 @@ function M:init(base_dir)
   -- FIXME: currently unreliable in unit-tests
   if not in_headless then
     _G.PLENARY_DEBUG = false
- --   require("lvim.impatient").setup {
- --     path = join_paths(self.cache_dir, "lvim_cache"),
- --     enable_profiling = true,
- --   }
+    --   require("lvim.impatient").setup {
+    --     path = join_paths(self.cache_dir, "lvim_cache"),
+    --     enable_profiling = true,
+    --   }
   end
 
   require("lvim.config"):init()
@@ -114,133 +114,6 @@ function M:update()
   require_clean("lvim.utils.hooks").run_pre_update()
   require_clean("lvim.utils.git").update_base_lvim()
   require_clean("lvim.utils.hooks").run_post_update()
-end
-
-local function git_cmd(subcmd, opts)
-  local Job = require "plenary.job"
-  local Log = require "lvim.core.log"
-  local args = { "-C", opts.cwd }
-  vim.list_extend(args, subcmd)
-
-  local stderr = {}
-  local stdout, ret = Job
-    :new({
-      command = "git",
-      args = args,
-      cwd = opts.cwd,
-      on_stderr = function(_, data)
-        table.insert(stderr, data)
-      end,
-    })
-    :sync()
-
-  if not vim.tbl_isempty(stderr) then
-    Log:debug(stderr)
-  end
-
-  if not vim.tbl_isempty(stdout) then
-    Log:debug(stdout)
-  end
-
-  return ret, stdout
-end
-
----pulls the latest changes from github
-function M:update_repo()
-  local Log = require "lvim.core.log"
-  local sub_commands = {
-    fetch = { "fetch" },
-    diff = { "diff", "--quiet", "@{upstream}" },
-    merge = { "merge", "--ff-only", "--progress" },
-  }
-  local opts = {
-    cwd = get_lvim_base_dir(),
-  }
-  Log:info "Checking for updates"
-
-  local ret = git_cmd(sub_commands.fetch, opts)
-  if ret ~= 0 then
-    Log:error "Update failed! Check the log for further information"
-    return
-  end
-
-  ret = git_cmd(sub_commands.diff, opts)
-
-  if ret == 0 then
-    Log:info "Configuration is already up-to-date"
-    return
-  end
-
-  ret = git_cmd(sub_commands.merge, opts)
-
-  if ret ~= 0 then
-    Log:error "Update failed! Please pull the changes manually instead."
-    return
-  end
-end
-
----Get currently installed version of LunarVim
----@param type string can be "short"
----@return string
-function M:get_version(type)
-  type = type or ""
-  local opts = { cwd = get_lvim_base_dir() }
-
-  local _, branch = git_cmd({ "branch", "--show-current" }, opts)
-
-  local is_on_master = branch == "rolling"
-  if not is_on_master then
-    local log_status_ok, log_results = git_cmd({ "log", "--pretty=format:%h", "-1" }, opts)
-    local abbrev_version = log_results[1] or ""
-    if not log_status_ok or string.match(abbrev_version, "%d") == nil then
-      return nil
-    end
-    return "dev-" .. abbrev_version
-  end
-
-  local tag_status_ok, results = git_cmd({ "describe", "--tags" }, opts)
-  local lvim_full_ver = results[1] or ""
-
-  if not tag_status_ok or string.match(lvim_full_ver, "%d") == nil then
-    return nil
-  end
-  if type == "short" then
-    return vim.fn.split(lvim_full_ver, "-")[1]
-  else
-    return string.sub(lvim_full_ver, 1, #lvim_full_ver - 1)
-  end
-end
-
----Get currently installed version of LunarVim
----@return string
-function M:get_nvim_version()
-  local Job = require "plenary.job"
-  local Log = require "lvim.core.log"
-
-  local stderr = {}
-  local stdout, status_ok = Job
-    :new({
-      command = "nvim",
-      args = { "--version" },
-      on_stderr = function(_, data)
-        table.insert(stderr, data)
-      end,
-    })
-    :sync()
-
-  if not vim.tbl_isempty(stderr) then
-    Log:debug(stderr)
-  end
-
-  if not vim.tbl_isempty(stdout) then
-    Log:debug(stdout)
-  end
-
-  if not status_ok then
-    return nil
-  end
-
-  return stdout[1]
 end
 
 return M

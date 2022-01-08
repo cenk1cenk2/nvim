@@ -13,7 +13,7 @@ M.defaults = {
   -- :LvimInfo
   [[ command! LvimInfo lua require('lvim.core.info').toggle_popup(vim.bo.filetype) ]],
   [[ command! LvimCacheReset lua require('lvim.utils.hooks').reset_cache() ]],
-  [[ command! LvimUpdate lua require('lvim.bootstrap').update() ]],
+  [[ command! LvimUpdate lua require('lvim.git').update_base_lvim() ]],
   [[ command! LvimSyncCorePlugins lua require('lvim.plugin-loader'):sync_core_plugins() ]],
   [[ command! LvimReload lua require('lvim.config'):reload() ]],
   [[ command! LvimToggleFormatOnSave lua require('lvim.core.autocmds').toggle_format_on_save() ]],

@@ -55,8 +55,8 @@ end
 M.setup = function()
   local extension = require(extension_name)
 
-  local lvim_version = require("lvim.bootstrap"):get_version "short"
-  local nvim_version = require("lvim.bootstrap"):get_nvim_version()
+  local lvim_version = require("lvim.utils.git").get_lvim_version "short"
+  local nvim_version = require("lvim.utils.git").get_nvim_version()
   local num_plugins_loaded = #vim.fn.globpath(get_runtime_dir() .. "/site/pack/packer/start", "*", 0, 1)
   local button = require("alpha.themes.dashboard").button
 

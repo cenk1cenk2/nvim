@@ -81,25 +81,23 @@ function M.register_sources(configs, method)
     elseif is_registered { name = source.name or name, method = method } then
       Log:trace(string.format("Skipping registering [%s] more than once", name))
     else
-      local command = M.find_command(source._opts.command) or source._opts.command
+      local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(name)
 
-      -- treat `args` as `extra_args` for backwards compatibility. Can otherwise use `generator_opts.args`
-      local compat_opts = vim.deepcopy(config)
-      if config.args then
-        compat_opts.extra_args = config.args or config.extra_args
-        compat_opts.args = nil
+      if not server_available then
+        Log:warn("Not found source: " .. name)
+
+        return registered_names
       end
 
-      local opts = vim.tbl_deep_extend("keep", {
+      local opts = {
         name = name,
-        command = table.concat(source._default_options.cmd, " "),
-        env = source._default_options.cmd_env or {},
+        command = table.concat(requested_server._default_options.cmd, " "),
+        env = requested_server._default_options.cmd_env,
         filetypes = config.filetypes,
-      }, compat_opts)
-
+      }
       Log:debug("Registering source " .. name)
       Log:trace(vim.inspect(opts))
-      table.insert(sources, source.with(opts))
+      table.insert(sources, source.with(source))
       vim.list_extend(registered_names, { source.name })
     end
   end
@@ -107,6 +105,7 @@ function M.register_sources(configs, method)
   if #sources > 0 then
     null_ls.register { sources = sources }
   end
+
   return registered_names
 end
 

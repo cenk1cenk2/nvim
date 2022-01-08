@@ -154,4 +154,36 @@ function M.generate_plugins_sha(output)
   end
   require("lvim.utils").write_file(output, "local commit = " .. vim.inspect(list), "w")
 end
+
+---Get currently installed version of LunarVim
+---@return string
+function M.get_nvim_version()
+  local Job = require "plenary.job"
+
+  local stderr = {}
+  local stdout, status_ok = Job
+    :new({
+      command = "nvim",
+      args = { "--version" },
+      on_stderr = function(_, data)
+        table.insert(stderr, data)
+      end,
+    })
+    :sync()
+
+  if not vim.tbl_isempty(stderr) then
+    Log:debug(stderr)
+  end
+
+  if not vim.tbl_isempty(stdout) then
+    Log:debug(stdout)
+  end
+
+  if not status_ok then
+    return nil
+  end
+
+  return stdout[1]
+end
+
 return M
