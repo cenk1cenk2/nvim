@@ -6,11 +6,7 @@ function M.config()
   lvim.extensions[extension_name] = {
     active = true,
     on_config_done = nil,
-    setup = {
-      calm_down = true,
-      nearest_only = true,
-      nearest_float_when = "always",
-    },
+    setup = {},
   }
 end
 
