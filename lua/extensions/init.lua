@@ -39,6 +39,8 @@ local extensions = {
   "extensions.vim-caser",
   "extensions.venn-nvim",
   "extensions.aerojump-nvim",
+  "extensions.nvim-hlslens",
+  "extensions.nvim-scrollbar",
 }
 
 function M.config(config)

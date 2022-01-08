@@ -380,6 +380,24 @@ return {
     disable = not lvim.extensions.vim_surround.active,
   },
 
+  -- search highlighting
+  {
+    "kevinhwang91/nvim-hlslens",
+    config = function()
+      require("extensions.nvim-hlslens").setup()
+    end,
+    disable = not lvim.extensions.nvim_hlslens.active,
+  },
+
+  -- scrollbar
+  {
+    "petertriho/nvim-scrollbar",
+    config = function()
+      require("extensions.nvim-scrollbar").setup()
+    end,
+    disable = not lvim.extensions.nvim_scrollbar.active,
+  },
+
   -- smooth scroll
   {
     "karb94/neoscroll.nvim",
