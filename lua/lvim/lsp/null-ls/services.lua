@@ -84,21 +84,38 @@ function M.register_sources(configs, method)
       local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(name)
 
       if not server_available then
-        Log:warn("Not found source: " .. name)
+        local command = M.find_command(source._opts.command)
 
-        return registered_names
+        if command then
+          local opts = {
+            name = name,
+            command = command,
+          }
+
+          Log:debug("Registering source from globally source " .. name)
+          Log:trace(vim.inspect(opts))
+
+          table.insert(sources, source.with(opts))
+
+          vim.list_extend(registered_names, { name })
+        else
+          Log:warn("Not found source: " .. name)
+        end
+      else
+        local opts = {
+          name = name,
+          command = table.concat(requested_server._default_options.cmd, " "),
+          env = requested_server._default_options.cmd_env,
+          filetypes = config.filetypes,
+        }
+
+        Log:debug("Registering source " .. name)
+        Log:trace(vim.inspect(opts))
+
+        table.insert(sources, source.with(opts))
+
+        vim.list_extend(registered_names, { name })
       end
-
-      local opts = {
-        name = name,
-        command = table.concat(requested_server._default_options.cmd, " "),
-        env = requested_server._default_options.cmd_env,
-        filetypes = config.filetypes,
-      }
-      Log:debug("Registering source " .. name)
-      Log:trace(vim.inspect(opts))
-      table.insert(sources, source.with(source))
-      vim.list_extend(registered_names, { source.name })
     end
   end
 
