@@ -7,7 +7,7 @@ return {
         { name = "DiagnosticSignError", text = "" },
         { name = "DiagnosticSignWarn", text = "" },
         { name = "DiagnosticSignHint", text = "" },
-        { name = "DiagnosticSignInformation", text = "" },
+        { name = "DiagnosticSignInfo", text = "" },
       },
     },
     virtual_text = true,

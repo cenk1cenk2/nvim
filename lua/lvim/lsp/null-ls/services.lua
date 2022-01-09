@@ -105,8 +105,13 @@ function M.register_sources(configs, method)
         local opts = {
           name = name,
           command = table.concat(requested_server._default_options.cmd, " "),
+          extra_args = config.extra_args,
           env = requested_server._default_options.cmd_env,
           filetypes = config.filetypes,
+          extra_filetypes = config.extra_filetypes,
+          disabled_filetypes = config.disabled_filetypes,
+          condition = config.condition,
+          runtime_condition = config.runtime_condition,
         }
 
         Log:debug("Registering source " .. name)

@@ -16,6 +16,7 @@ function M.setup()
     {
       exe = "markdownlint",
       filetypes = { "markdown" },
+      extra_args = { "-s", "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.markdownlintrc.json" },
     },
 
     {
