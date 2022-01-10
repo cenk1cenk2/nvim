@@ -160,7 +160,7 @@ end
 
 function M.fix_current()
   local params = vim.lsp.util.make_range_params()
-  params.context = { diagnostics = vim.diagnostic.get_line_diagnostics() }
+  params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
 
   local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
 
