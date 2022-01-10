@@ -5,25 +5,15 @@ local in_headless = #vim.api.nvim_list_uis() == 0
 
 function M.run_pre_update()
   Log:debug "Starting pre-update hook"
-  if package.loaded["lspconfig"] then
-    vim.cmd [[ LspStop ]]
-  end
 end
 
 function M.run_pre_reload()
   Log:debug "Starting pre-reload hook"
-  if package.loaded["lspconfig"] then
-    vim.cmd [[ LspStop ]]
-  end
 end
 
 function M.run_on_packer_complete()
-  require("lvim.plugin-loader").recompile()
-  -- forcefully activate nvim-web-devicons
-  require("nvim-web-devicons").set_up_highlights()
-  if package.loaded["lspconfig"] then
-    vim.cmd [[ LspStart ]]
-  end
+  -- manually trigger event to fix colors
+  vim.cmd [[ doautocmd ColorScheme ]]
   Log:info "Reloaded configuration"
 end
 
@@ -32,9 +22,8 @@ function M.run_post_reload()
 
   require("lsp-extensions").setup()
 
-
-  M.reset_cache()
   require("lvim.plugin-loader").ensure_installed()
+  M.reset_cache()
 end
 
 ---Reset any startup cache files used by Packer and Impatient
@@ -70,9 +59,6 @@ function M.run_post_update()
       end
       -- TODO: add a changelog
       vim.notify("Update complete", vim.log.levels.INFO)
-      if package.loaded["lspconfig"] then
-        vim.cmd [[ LspStart ]]
-      end
     end)
   end
 end
