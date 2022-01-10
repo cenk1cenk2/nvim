@@ -59,6 +59,7 @@ lvim.lsp.override = {
   "spectral",
   "sqlls",
   "sqls",
+  "remark_ls",
   "stylelint_lsp",
   -- "tailwindcss",
   "quick_lint_js",
