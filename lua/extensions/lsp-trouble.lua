@@ -29,8 +29,14 @@ function M.setup()
 
   extension.setup(lvim.extensions[extension_name].setup)
 
-  lvim.builtin.which_key.mappings["l"]["d"] = { ":LspTroubleDocumentToggle<CR>", "show all document diagnostics" }
-  lvim.builtin.which_key.mappings["l"]["D"] = { ":LspTroubleWorkspaceToggle<CR>", "show all workspace diagnostics" }
+  lvim.builtin.which_key.mappings["l"]["d"] = {
+    ":TroubleToggle document_diagonistics<CR>",
+    "show all document diagnostics",
+  }
+  lvim.builtin.which_key.mappings["l"]["D"] = {
+    ":TroubleToggle workspace_diagonistics<CR>",
+    "show all workspace diagnostics",
+  }
 
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done(extension)
