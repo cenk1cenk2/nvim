@@ -30,11 +30,11 @@ function M.setup()
   extension.setup(lvim.extensions[extension_name].setup)
 
   lvim.builtin.which_key.mappings["l"]["d"] = {
-    ":TroubleToggle document_diagonistics<CR>",
+    ":TroubleToggle document_diagnostics<CR>",
     "show all document diagnostics",
   }
   lvim.builtin.which_key.mappings["l"]["D"] = {
-    ":TroubleToggle workspace_diagonistics<CR>",
+    ":TroubleToggle workspace_diagnostics<CR>",
     "show all workspace diagnostics",
   }
 
