@@ -24,9 +24,6 @@ function M.config()
       autosave_ignore_not_normal = false, -- Plugin will not save a session when no writable and listed buffers are opened.
       autosave_only_in_session = true, -- Always autosaves session. If true, only autosaves after a session is active.
     },
-    on_config_done = function()
-      require("telescope").load_extension "sessions"
-    end,
   })
 end
 
