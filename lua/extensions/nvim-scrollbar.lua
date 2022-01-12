@@ -18,8 +18,8 @@ function M.config()
         Search = { text = { "▅", "█" }, priority = 0, color = colors.bright_cyan },
         Error = { text = { "▅", "█" }, priority = 1, color = colors.bright_red },
         Warn = { text = { "▅", "█" }, priority = 2, color = colors.bright_yellow },
-        Info = { text = { "▅", "█" }, priority = 3, color = colors.grey },
-        Hint = { text = { "▅", "█" }, priority = 4, color = colors.grey },
+        Info = { text = { "▅", "█" }, priority = 3, color = colors.dark_cyan },
+        Hint = { text = { "▅", "█" }, priority = 4, color = colors.dark_cyan },
         Misc = { text = { "▅", "█" }, priority = 5, color = colors.purple },
       },
       excluded_filetypes = {
@@ -31,6 +31,7 @@ function M.config()
         "packer",
         "qf",
         "lsp_floating_window",
+        "NvimTree",
       },
       autocmd = {
         render = {
