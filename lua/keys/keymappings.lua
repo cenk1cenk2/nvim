@@ -59,8 +59,8 @@ return {
     ["<C-y>"] = ":call QuickFixToggle()<CR>",
 
     -- create space on top and bottom
-    ["Ü"] = "O<ESC>k",
-    ["ü"] = "o<ESC>j",
+    ["Ü"] = "O<ESC>j",
+    ["ü"] = "o<ESC>k",
 
     -- jump between paragraphs
     ["ö"] = "{zz",
