@@ -21,12 +21,12 @@ local opts = {
           enabled = true,
         },
       },
-    },
-    referencesCodeLens = {
-      enabled = true,
-    },
-    implementationsCodeLens = {
-      enabled = true,
+      referencesCodeLens = {
+        enabled = true,
+      },
+      implementationsCodeLens = {
+        enabled = true,
+      },
     },
   },
   -- Needed for inlayHints. Merge this table with your settings or copy
