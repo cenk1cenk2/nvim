@@ -497,6 +497,15 @@ return {
     disable = not lvim.extensions.symbols_outline.active,
   },
 
+  -- language specific extension: rust
+  {
+    "simrat39/rust-tools.nvim",
+    config = function()
+      require("extensions.rust-tools-nvim").setup()
+    end,
+    disable = not lvim.extensions.rust_tools_nvim.active,
+  },
+
   -- Colorized
   {
     "norcalli/nvim-colorizer.lua",
