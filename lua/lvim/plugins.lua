@@ -498,9 +498,7 @@ return {
   -- language specific extension: rust
   {
     "simrat39/rust-tools.nvim",
-    config = function()
-      require("extensions.rust-tools-nvim").setup()
-    end,
+    config = function() end,
     disable = not lvim.extensions.rust_tools_nvim.active,
   },
 

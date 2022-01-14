@@ -65,6 +65,7 @@ function M.setup(server_name, user_config)
 
   if lvim_lsp_utils.is_client_active(server_name) or client_is_configured(server_name) then
     Log:debug(string.format("[%q] is already configured. Ignoring repeated setup call.", server_name))
+
     return
   end
 
