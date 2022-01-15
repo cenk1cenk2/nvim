@@ -6,11 +6,11 @@ local opts = {
       dialect = "american",
       domain = "general",
       style = "neutral",
-      -- diagnostics = {
-      --   ["[markdown]"] = {
-      --     ignore = { "inlineCode", "code" },
-      --   },
-      -- },
+      diagnostics = {
+        ["[markdown]"] = {
+          ignore = { "inlineCode", "code" },
+        },
+      },
     },
   },
 }
