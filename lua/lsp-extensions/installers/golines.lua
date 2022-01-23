@@ -14,6 +14,6 @@ local root_dir = server.get_server_root_path(server_name)
 servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
-  installer = installers.pipe { go.package { "github.com/segmentio/golines" } },
+  installer = installers.pipe { go.package "github.com/segmentio/golines" },
   default_options = { cmd = { helpers.go_executable(root_dir, server_name) }, cmd_env = {} },
 })
