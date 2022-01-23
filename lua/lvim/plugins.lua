@@ -488,7 +488,8 @@ return {
   },
 
   {
-    "simrat39/symbols-outline.nvim",
+    "zeertzjq/symbols-outline.nvim",
+    branch = "patch-1",
     config = function()
       require("extensions.symbols-outline").setup()
     end,
