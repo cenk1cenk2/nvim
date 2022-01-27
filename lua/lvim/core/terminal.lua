@@ -123,12 +123,10 @@ M.add_exec = function(opts)
     opts.direction
   )
 
-  require("lvim.keymappings").load {
-    normal_mode = { [opts.keymap] = exec_func },
-    term_mode = { [opts.keymap] = exec_func },
+  lvim.builtin.which_key.mappings[opts.keymap] = {
+    exec_func,
+    opts.label,
   }
-
-  lvim.builtin.which_key.mappings[opts.keymap] = opts.label
 end
 
 local terminals = {}
