@@ -106,6 +106,7 @@ return {
 
     -- dont overwrite while pasting
     ["p"] = '"_dP',
+    ["P"] = '"_dp',
 
     -- ["p"] = '"0p',
     -- ["P"] = '"0P',
