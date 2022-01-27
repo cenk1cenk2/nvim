@@ -120,6 +120,10 @@ return {
     -- Move current line / block with Alt-j/k ala vscode.
     ["<A-j>"] = ":m '>+1<CR>gv-gv",
     ["<A-k>"] = ":m '<-2<CR>gv-gv",
+
+    -- to blachole
+    ["c"] = '"_c',
+    ["x"] = '"_x',
     ["p"] = '"_dP',
   },
 
