@@ -125,6 +125,7 @@ return {
     ["c"] = '"_c',
     ["x"] = '"_x',
     ["p"] = '"_dP',
+    ["P"] = '"_dp',
   },
 
   ---@usage change or add keymappings for command mode
