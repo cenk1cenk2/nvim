@@ -65,6 +65,11 @@ function M.config()
           cmd = "<cmd>lua require('spectre').change_options('hidden')<CR>",
           desc = "toggle search hidden",
         },
+        ["toggle_live_update"] = {
+          map = "zu",
+          cmd = "<cmd>lua require('spectre').toggle_live_update()<CR>",
+          desc = "update change when vim write file.",
+        },
         -- you can put your mapping here it only have normal
       },
       find_engine = {
@@ -121,7 +126,7 @@ function M.setup()
       {
         "FileType",
         "spectre_panel",
-        "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs= ",
+        "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0",
       },
     },
   }
