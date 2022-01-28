@@ -176,7 +176,7 @@ function M.get_nvim_version()
   end
 
   if not vim.tbl_isempty(stdout) then
-    Log:debug(stdout)
+    Log:debug(stdout[1])
   end
 
   if not status_ok then
