@@ -3,8 +3,9 @@ local Log = require "lvim.core.log"
 local opts = {
   settings = {
     typescript = {
+      importModuleSpecifier = "non-relative",
       preferences = {
-        importModuleSpecifier = "relative",
+        importModuleSpecifier = "non-relative",
       },
       inlayHints = {
         parameterNames = "all",
