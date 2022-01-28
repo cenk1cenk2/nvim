@@ -115,6 +115,17 @@ function M.setup()
 
   require("lvim.keymappings").load(lvim.extensions[extension_name].keymaps)
 
+  require("lvim.core.autocmds").define_augroups {
+    _spectre_panel = {
+      -- seems to be nobuflisted that makes my stuff disappear will do more testing
+      {
+        "FileType",
+        "spectre_panel",
+        "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs= ",
+      },
+    },
+  }
+
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done(extension)
   end
