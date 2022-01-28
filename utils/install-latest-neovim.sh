@@ -38,5 +38,7 @@ if [ -f "/bin/nvim" ]; then
 	sudo rm /bin/nvim
 fi
 
+pip3 install pynvim
+
 ## goodbye
 log_finish "Built neovim in $((SECONDS / 60)) minutes and $((SECONDS % 60)) seconds." "top"
