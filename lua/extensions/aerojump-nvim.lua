@@ -28,6 +28,8 @@ end
 
 function M.setup()
   vim.g.aerojump_keymaps = lvim.extensions[extension_name].keymaps
+  vim.g.aerojump_bolt_lines_before = 3
+  vim.g.aerojump_bolt_lines_after = 3
 
   lvim.builtin.which_key.mappings["f"]["a"] = {
     ":Aerojump kbd bolt<CR>",
