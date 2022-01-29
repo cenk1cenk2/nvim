@@ -71,7 +71,7 @@ function M.config()
       color_devicons = true,
       use_less = true,
       set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-      prompt_prefix = " ",
+      prompt_prefix = " ",
       selection_caret = " ",
       entry_prefix = "  ",
     },

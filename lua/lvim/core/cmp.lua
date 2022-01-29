@@ -308,6 +308,18 @@ end
 
 function M.setup()
   require("cmp").setup(lvim.builtin.cmp)
+
+  local filetype_options = { AerojumpFilter = { sources = {} } }
+
+  for key, value in pairs(filetype_options) do
+    vim.cmd(
+      string.format(
+        "autocmd FileType %s lua require('cmp').setup.buffer(%s)",
+        key,
+        vim.inspect(value, { newline = "\n\\" })
+      )
+    )
+  end
 end
 
 return M

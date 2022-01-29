@@ -30,7 +30,7 @@ function M.setup()
   vim.g.aerojump_keymaps = lvim.extensions[extension_name].keymaps
 
   lvim.builtin.which_key.mappings["f"]["a"] = {
-    "<Plug>(AerojumpFromCursorBolt)",
+    ":Aerojump kbd bolt<CR>",
     "aerojump",
   }
 
