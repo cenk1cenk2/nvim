@@ -38,7 +38,7 @@ if [ -f "/bin/nvim" ]; then
 	sudo rm /bin/nvim
 fi
 
-pip3 install pynvim
+pip3 install neovim-remote
 
 ## goodbye
 log_finish "Built neovim in $((SECONDS / 60)) minutes and $((SECONDS % 60)) seconds." "top"

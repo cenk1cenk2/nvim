@@ -658,4 +658,13 @@ return {
     disable = not lvim.extensions.aerojump_nvim.active,
     run = ":UpdateRemotePlugins",
   },
+
+  -- lsp loader information
+  {
+    "j-hui/fidget.nvim",
+    config = function()
+      require("extensions.fidget-nvim").setup()
+    end,
+    disable = not lvim.extensions.fidget_nvim.active,
+  },
 }
