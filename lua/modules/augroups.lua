@@ -2,13 +2,19 @@ local M = {}
 
 M.setup = function()
   require("lvim.core.autocmds").define_augroups {
-    CUSTOM = {
+    __TERMINAL = {
       TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
+    },
+
+    __DEBUG = {
       ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()" },
+    },
+
+    __LAZYGIT = {
       OpenLgAfterGitCommit = {
         "BufWritePost",
         "gitcommit",
-        ":lua print('imdat')",
+        "lua require('lvim.core.terminal')._exec_toggle({ cmd = 'lazygit' })",
       },
     },
   }
