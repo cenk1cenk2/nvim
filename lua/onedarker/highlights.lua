@@ -438,6 +438,11 @@ hl.plugins.nvim_cmp = {
   CmpItemMenu = { fg = c.grey },
 }
 
+hl.plugins.fidget = {
+  FidgetTitle = { fg = c.yellow },
+  FidgetTask = { fg = c.cursor },
+}
+
 hl.langs.html = {
   htmlTag = colors.Red,
   htmlTagName = colors.Red,
