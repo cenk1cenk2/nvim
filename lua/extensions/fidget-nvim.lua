@@ -40,14 +40,14 @@ function M.config()
         end,
       },
       debug = {
-        logging = false, -- whether to enable logging, for debugging
+        logging = true, -- whether to enable logging, for debugging
       },
     },
   }
 end
 
 function M.setup()
-  local extension = require("fidget")
+  local extension = require "fidget"
 
   extension.setup(lvim.extensions[extension_name].setup)
 
