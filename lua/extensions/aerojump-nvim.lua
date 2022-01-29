@@ -4,7 +4,7 @@ local extension_name = "aerojump_nvim"
 
 function M.config()
   lvim.extensions[extension_name] = {
-    active = false,
+    active = true,
     on_config_done = nil,
     setup = {},
     keymaps = {

@@ -21,6 +21,8 @@ function M.config()
         "alpha",
         "toggleterm",
         "packer",
+        "lspinfo",
+        "lsp-installer",
       },
       enabled = true,
       show_trailing_blankline_indent = false,

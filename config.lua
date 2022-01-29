@@ -43,7 +43,7 @@ lvim.lsp.ensure_installed = {
 
 lvim.lsp.override = {
   "angularls",
-  "ansiblels",
+  -- "ansiblels",
   "denols",
   "ember",
   "csharp_ls",
@@ -103,7 +103,15 @@ lvim.builtin.treesitter.ensure_installed = {
   "yaml",
 }
 
-lvim.autocommands.custom_groups = {}
+lvim.autocommands.custom_groups = {
+  TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
+  ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()" },
+  OpenLgAfterGitCommit = {
+    "BufWritePost",
+    "gitcommit",
+    ":lua print('imdat')",
+  },
+}
 
 lvim.lsp.null_ls.setup = {
   debug = true,
