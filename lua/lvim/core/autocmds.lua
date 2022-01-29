@@ -53,7 +53,15 @@ function M.load_augroups()
     _general_lsp = {
       { "FileType", "lspinfo,lsp-installer,null-ls-info", "nnoremap <silent> <buffer> q :close<CR>" },
     },
-    custom_groups = {},
+    custom_groups = {
+      TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
+      ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()" },
+      OpenLgAfterGitCommit = {
+        "BufWritePost",
+        "gitcommit",
+        "lua print('imdat')",
+      },
+    },
   }
 end
 
