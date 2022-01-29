@@ -109,7 +109,7 @@ lvim.autocommands.custom_groups = {
   OpenLgAfterGitCommit = {
     "BufWritePost",
     "gitcommit",
-    "lua require('lvim.core.terminal')._exec_toggle({ cmd = 'lazygit' })",
+    "lua print('imdat')",
   },
 }
 
