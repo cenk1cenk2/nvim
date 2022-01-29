@@ -3,7 +3,7 @@ local M = {}
 local extension_name = "distant"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil }
+  lvim.extensions[extension_name] = { active = false, on_config_done = nil }
 end
 
 function M.setup()
