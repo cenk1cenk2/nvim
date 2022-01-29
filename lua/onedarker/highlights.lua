@@ -440,8 +440,8 @@ hl.plugins.nvim_cmp = {
 }
 
 hl.plugins.fidget = {
-  FidgetTitle = { fg = c.yellow },
-  FidgetTask = { fg = c.cursor },
+  FidgetTitle = { fg = c.green },
+  FidgetTask = { fg = c.orange },
 }
 
 hl.langs.html = {
