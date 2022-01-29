@@ -106,6 +106,11 @@ lvim.builtin.treesitter.ensure_installed = {
 lvim.autocommands.custom_groups = {
   TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
   ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()" },
+  OpenLgAfterGitCommit = {
+    "BufWritePost",
+    "gitcommit",
+    "lua require('lvim.core.terminal')._exec_toggle({ cmd = 'lazygit' })",
+  },
 }
 
 lvim.lsp.null_ls.setup = {
