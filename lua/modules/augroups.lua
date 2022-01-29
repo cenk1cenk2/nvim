@@ -8,7 +8,7 @@ M.setup = function()
       OpenLgAfterGitCommit = {
         "BufWritePost",
         "gitcommit",
-        "lua print('imdat')",
+        ":lua print('imdat')",
       },
     },
   }
