@@ -53,7 +53,7 @@ function M.load_augroups()
     _general_lsp = {
       { "FileType", "lspinfo,lsp-installer,null-ls-info", "nnoremap <silent> <buffer> q :close<CR>" },
     },
-    custom_groups = lvim.autocommands.custom_groups,
+custom_groups = {}
   }
 end
 
