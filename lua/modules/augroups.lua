@@ -2,7 +2,7 @@ local M = {}
 
 M.setup = function()
   require("lvim.core.autocmds").define_augroups {
-    custom_groups = {
+    CUSTOM = {
       TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
       ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()" },
       OpenLgAfterGitCommit = {
