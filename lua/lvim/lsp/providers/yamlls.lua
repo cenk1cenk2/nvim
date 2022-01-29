@@ -1,7 +1,7 @@
 local opts = {
   filetypes = {
     "yaml",
-    "yaml.ansible",
+    -- "yaml.ansible",
   },
   settings = {
     yaml = {

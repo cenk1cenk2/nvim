@@ -28,6 +28,12 @@ function M.setup()
       exe = "flake8",
       filetypes = { "python" },
     },
+
+    {
+      exe = "ansiblelint",
+      filetypes = { "yaml.ansible" },
+    },
+
     -- {
     --   exe = "mypy",
     --   managed = true,
