@@ -44,6 +44,7 @@ local extensions = {
   "extensions.rust-tools-nvim",
   "extensions.fidget-nvim",
   "extensions.nvim-lightbulb",
+  "extensions.vim-unconditionalpaste",
 }
 
 function M.config(config)

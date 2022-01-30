@@ -6,7 +6,10 @@ function M.config()
   lvim.extensions[extension_name] = {
     active = true,
     on_config_done = nil,
-    keymaps = { normal_mode = { ["ga"] = [[<Plug>(EasyAlign)]] }, visual_mode = { ["ga"] = [[<Plug>(EasyAlign)]] } },
+    keymaps = {
+      normal_mode = { ["ga"] = { [[<Plug>(EasyAlign)]], { noremap = false, silent = true } } },
+      visual_mode = { ["ga"] = { [[<Plug>(EasyAlign)]], { noremap = false, silent = true } } },
+    },
   }
 end
 

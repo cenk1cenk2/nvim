@@ -675,4 +675,16 @@ return {
     disable = not lvim.extensions.aerojump_nvim.active,
     run = ":UpdateRemotePlugins",
   },
+
+  {
+    "inkarkat/vim-UnconditionalPaste",
+    config = function()
+      require("extensions.vim-unconditionalpaste").setup()
+    end,
+    disable = not lvim.extensions.vim_unconditionalpaste.active,
+  },
+
+  {
+    "tpope/vim-unimpaired",
+  },
 }
