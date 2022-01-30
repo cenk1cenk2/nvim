@@ -3,7 +3,7 @@ local M = {}
 M.setup = function()
   require("lvim.core.autocmds").define_augroups {
     __TERMINAL = {
-      TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
+      TerminalOpen = { "TermOpen,TermEnter", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
     },
 
     __DEBUG = {
@@ -14,7 +14,7 @@ M.setup = function()
       OpenLgAfterGitCommit = {
         "BufWritePost",
         "COMMIT_EDITMSG",
-        "lua require('lvim.core.terminal')._exec_toggle({ cmd = 'lazygit' }) <bar> nnoremap <buffer><LeftRelease> <LeftRelease>i",
+        "lua require('lvim.core.terminal')._exec_toggle({ cmd = 'lazygit' }) | nnoremap <buffer><LeftRelease> <LeftRelease>i",
       },
     },
   }
