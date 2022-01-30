@@ -14,7 +14,7 @@ M.setup = function()
       OpenLgAfterGitCommit = {
         "BufWritePost",
         "COMMIT_EDITMSG",
-        "lua require('lvim.core.terminal')._exec_toggle({ cmd = 'lazygit' }) | nnoremap <buffer><LeftRelease> <LeftRelease>i",
+        "lua require('lvim.core.terminal')._exec_toggle({ cmd = 'lazygit' })",
       },
     },
   }
