@@ -3,7 +3,8 @@ local M = {}
 M.setup = function()
   require("lvim.core.autocmds").define_augroups {
     __TERMINAL = {
-      TerminalOpen = { "TermOpen,TermEnter", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
+      TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
+      AutoInsertTerminal = { "BufEnter", "*", "if &buftype == 'terminal' | :startinsert | endif" },
     },
 
     __DEBUG = {
