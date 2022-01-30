@@ -144,7 +144,8 @@ M._exec_toggle = function(exec)
     terminals[exec.cmd] = Terminal:new {
       cmd = exec.cmd,
       hidden = true,
-      on_open = function()
+      on_open = function(term)
+        vim.api.nvim_set_current_win(term.window)
         vim.cmd "startinsert!"
       end,
     }
@@ -188,7 +189,8 @@ M.create_float_terminal = function(index)
       cmd = vim.o.shell,
       direction = "float",
       hidden = true,
-      on_open = function()
+      on_open = function(term)
+        vim.api.nvim_set_current_win(term.window)
         vim.cmd "startinsert!"
       end,
       on_exit = function(terminal)
