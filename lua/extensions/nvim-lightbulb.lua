@@ -36,7 +36,7 @@ function M.config()
         win_opts = {},
       },
       virtual_text = {
-        enabled = true,
+        enabled = false,
         -- Text to show at virtual text
         text = "💡",
         -- highlight mode to use for virtual text (replace, combine, blend), see :help nvim_buf_set_extmark() for reference
@@ -59,7 +59,7 @@ function M.setup()
   extension.update_lightbulb(lvim.extensions[extension_name].setup)
 
   vim.cmd [[autocmd CursorHold,CursorHoldI * lua require'modules.lightbulb'.update_lightbulb()]]
-  vim.fn.sign_define("LightBulbSign", { text = "", texthl = "", linehl = "", numhl = "" })
+  vim.fn.sign_define("LightBulbSign", { text = "💡", texthl = "", linehl = "", numhl = "" })
 
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done(extension)
