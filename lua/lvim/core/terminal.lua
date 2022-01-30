@@ -139,8 +139,6 @@ local terminals = {}
 
 M._on_open = function(term)
   vim.api.nvim_set_current_win(term.window)
-  vim.api.nvim_set_current_buf(term.bufnr)
-
   vim.cmd "startinsert!"
 end
 
