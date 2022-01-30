@@ -77,6 +77,12 @@ M.setup = function()
   which_key.register(mappings, opts)
   which_key.register(vmappings, vopts)
 
+  require("lvim.core.autocmds").define_augroups {
+    __which_key = {
+      { "FileType", "which_key", "nnoremap <silent> <buffer> <esc> <C-c><CR>" },
+    },
+  }
+
   if lvim.builtin.which_key.on_config_done then
     lvim.builtin.which_key.on_config_done(which_key)
   end
