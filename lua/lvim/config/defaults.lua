@@ -9,7 +9,7 @@ lvim = {
     ---@usage pattern string pattern used for the autocommand (Default: '*')
     pattern = "*",
     ---@usage timeout number timeout in ms for the format request (Default: 1000)
-    timeout = 1000,
+    timeout = 5000,
   },
   keys = {},
 
