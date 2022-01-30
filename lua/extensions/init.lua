@@ -45,6 +45,7 @@ local extensions = {
   "extensions.fidget-nvim",
   "extensions.nvim-lightbulb",
   "extensions.vim-unconditionalpaste",
+  "extensions.vim-unimpaired",
 }
 
 function M.config(config)
