@@ -144,6 +144,9 @@ M._exec_toggle = function(exec)
     terminals[exec.cmd] = Terminal:new {
       cmd = exec.cmd,
       hidden = true,
+      on_open = function()
+        vim.cmd "startinsert!"
+      end,
     }
   end
 
@@ -185,6 +188,9 @@ M.create_float_terminal = function(index)
       cmd = vim.o.shell,
       direction = "float",
       hidden = true,
+      on_open = function()
+        vim.cmd "startinsert!"
+      end,
       on_exit = function(terminal)
         for i, t in pairs(float_terminals) do
           if t.id == terminal.id then
@@ -318,7 +324,7 @@ M.toggle_log_view = function(logfile)
   log_viewer = log_viewer .. " " .. logfile
   local term_opts = vim.tbl_deep_extend("force", lvim.builtin.terminal, {
     cmd = log_viewer,
-    -- open_mapping = lvim.log.viewer.layout_config.open_mapping,
+    -- Open_mapping = lvim.log.viewer.layout_config.open_mapping,
     direction = lvim.log.viewer.layout_config.direction,
     -- TODO: this might not be working as expected
     size = lvim.log.viewer.layout_config.size,
