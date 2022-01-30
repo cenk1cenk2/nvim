@@ -137,6 +137,13 @@ end
 
 local terminals = {}
 
+M._on_open = function(term)
+  vim.api.nvim_set_current_win(term.window)
+  vim.api.nvim_set_current_buf(term.bufnr)
+
+  vim.cmd "startinsert!"
+end
+
 M._exec_toggle = function(exec)
   if not terminals[exec.cmd] then
     local Terminal = require("toggleterm.terminal").Terminal
@@ -144,10 +151,7 @@ M._exec_toggle = function(exec)
     terminals[exec.cmd] = Terminal:new {
       cmd = exec.cmd,
       hidden = true,
-      on_open = function(term)
-        vim.api.nvim_set_current_win(term.window)
-        vim.cmd "startinsert!"
-      end,
+      on_open = M._on_open,
     }
   end
 
@@ -189,10 +193,7 @@ M.create_float_terminal = function(index)
       cmd = vim.o.shell,
       direction = "float",
       hidden = true,
-      on_open = function(term)
-        vim.api.nvim_set_current_win(term.window)
-        vim.cmd "startinsert!"
-      end,
+      on_open = M._on_open,
       on_exit = function(terminal)
         for i, t in pairs(float_terminals) do
           if t.id == terminal.id then
@@ -259,6 +260,7 @@ M.bottom_terminal = function()
       cmd = vim.o.shell,
       direction = "horizontal",
       hidden = true,
+      on_open = M._on_open,
     }
   end
 
