@@ -43,6 +43,7 @@ local extensions = {
   "extensions.nvim-scrollbar",
   "extensions.rust-tools-nvim",
   "extensions.fidget-nvim",
+  "extensions.nvim-lightbulb",
 }
 
 function M.config(config)

@@ -496,6 +496,23 @@ return {
     disable = not lvim.extensions.symbols_outline.active,
   },
 
+  -- lsp loader information
+  {
+    "j-hui/fidget.nvim",
+    config = function()
+      require("extensions.fidget-nvim").setup()
+    end,
+    disable = not lvim.extensions.fidget_nvim.active,
+  },
+
+  {
+    "kosayoda/nvim-lightbulb",
+    config = function()
+      require("extensions.nvim-lightbulb").setup()
+    end,
+    disable = not lvim.extensions.nvim_lightbulb.active,
+  },
+
   -- language specific extension: rust
   {
     "simrat39/rust-tools.nvim",
@@ -657,14 +674,5 @@ return {
     end,
     disable = not lvim.extensions.aerojump_nvim.active,
     run = ":UpdateRemotePlugins",
-  },
-
-  -- lsp loader information
-  {
-    "j-hui/fidget.nvim",
-    config = function()
-      require("extensions.fidget-nvim").setup()
-    end,
-    disable = not lvim.extensions.fidget_nvim.active,
   },
 }

@@ -1,6 +1,11 @@
 local M = {}
 
-local modules = { "modules.augroups", "modules.telescope-rg-interactive", "modules.fugitive-compare-branch" }
+local modules = {
+  "modules.augroups",
+  "modules.telescope-rg-interactive",
+  "modules.fugitive-compare-branch",
+  "modules.lightbulb",
+}
 
 function M.config(config)
   for _, module_path in ipairs(modules) do
