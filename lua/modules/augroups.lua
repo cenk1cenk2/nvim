@@ -12,8 +12,8 @@ M.setup = function()
 
     __LAZYGIT = {
       OpenLgAfterGitCommit = {
-        "BufWritePre",
-        "gitcommit",
+        "BufWritePost",
+        "COMMIT_EDITMSG",
         "lua require('lvim.core.terminal')._exec_toggle({ cmd = 'lazygit' })",
       },
     },
