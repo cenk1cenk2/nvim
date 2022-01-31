@@ -10,13 +10,13 @@ M.setup = function()
       ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()" },
     },
 
-    __LAZYGIT = {
-      OpenLgAfterGitCommit = {
-        "BufWritePost",
-        "COMMIT_EDITMSG",
-        "lua require('lvim.core.terminal')._exec_toggle({ cmd = 'lazygit' })",
-      },
-    },
+    -- __LAZYGIT = {
+    --   OpenLgAfterGitCommit = {
+    --     "BufWritePost",
+    --     "COMMIT_EDITMSG",
+    --     "lua require('lvim.core.terminal')._exec_toggle({ cmd = 'lazygit' })",
+    --   },
+    -- },
   }
 end
 
