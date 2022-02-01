@@ -78,7 +78,7 @@ return {
     "stylelint_lsp",
     "tailwindcss",
     "tflint",
-    "volar",
+    "vuels",
     "zk",
   },
 }
