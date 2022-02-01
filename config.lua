@@ -10,7 +10,8 @@ lvim.lsp.ensure_installed = {
   "pyright",
   "graphql",
   "dockerls",
-  "vuels",
+  -- "vuels",
+  "volar",
   "stylelint_lsp",
   "gopls",
   "tailwindcss",
@@ -65,7 +66,8 @@ lvim.lsp.override = {
   -- "tailwindcss",
   "quick_lint_js",
   "tflint",
-  "volar",
+  "vuels",
+  -- "volar",
   "zk",
 }
 
