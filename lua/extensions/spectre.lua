@@ -65,6 +65,11 @@ function M.config()
           cmd = "<cmd>lua require('spectre').change_options('hidden')<CR>",
           desc = "toggle search hidden",
         },
+        ["toggle_string_search"] = {
+          map = "zs",
+          cmd = "<cmd>lua require('spectre').change_options('fixed-strings')<CR>",
+          desc = "toggle string search mode",
+        },
         ["toggle_live_update"] = {
           map = "zu",
           cmd = "<cmd>lua require('spectre').toggle_live_update()<CR>",
@@ -79,8 +84,9 @@ function M.config()
           -- default args
           args = { "--color=never", "--no-heading", "--with-filename", "--line-number", "--column" },
           options = {
-            ["ignore-case"] = { value = "--ignore-case", icon = "[I]", desc = "ignore case" },
+            ["ignore-case"] = { value = "--ignore-case", desc = "ignore case", icon = "[I]" },
             ["hidden"] = { value = "--hidden", desc = "hidden file", icon = "[H]" },
+            ["fixed-strings"] = { value = "--fixed-strings", desc = "fixed string mode", icon = "[S]" },
             -- you can put any option you want here it can toggle with
             -- show_option function
           },
