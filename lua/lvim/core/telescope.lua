@@ -66,7 +66,7 @@ function M.config()
       layout_strategy = "horizontal",
       path_display = {},
       winblend = 0,
-      border = {},
+      -- border = {},
       -- borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
       color_devicons = true,
       use_less = true,
@@ -103,6 +103,10 @@ function M.config()
         },
       },
       live_grep = {
+        -- @usage don't include the filename in the search results
+        only_sort_text = true,
+      },
+      grep_string = {
         -- @usage don't include the filename in the search results
         only_sort_text = true,
       },

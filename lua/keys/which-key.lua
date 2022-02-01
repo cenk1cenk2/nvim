@@ -84,6 +84,10 @@ M.mappings = {
     k = { ":Telescope keymaps<CR>", "keymaps" },
     s = { ":Telescope spell_suggest<CR>", "spell suggest" },
     r = { ":TelescopeRipgrepInteractive<CR>", "rg interactive" },
+    d = {
+      ":DirtyRg<CR>",
+      "dirty fuzzy grep",
+    },
     p = { ":Telescope find_files<CR>", "find file" },
     R = { ":Telescope registers<CR>", "registers" },
     t = { ":Telescope live_grep<CR>", "text-telescope" },
