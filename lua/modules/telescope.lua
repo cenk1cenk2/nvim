@@ -51,15 +51,15 @@ M.setup = function()
   require("utils.command").wrap_to_command {
     {
       "TelescopeRipgrepInteractive",
-      'lua require("modules.telescope-rg-interactive").TelescopeRipgrepInteractive()',
+      'lua require("modules.telescope").TelescopeRipgrepInteractive()',
     },
     {
       "TelescopeRipgrepDirty",
-      'lua require("modules.telescope-rg-interactive").TelescopeRipgrepDirty()',
+      'lua require("modules.telescope").TelescopeRipgrepDirty()',
     },
     {
       "TelescopeRipgrepString",
-      'lua require("modules.telescope-rg-interactive").TelescopeRipgrepString()',
+      'lua require("modules.telescope").TelescopeRipgrepString()',
     },
   }
 end
