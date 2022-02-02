@@ -19,6 +19,7 @@ function M.config()
     setup = {
       color_devicons = true,
       highlight = { ui = "String", search = "SpectreChange", replace = "SpectreDelete" },
+      live_update = true,
       mapping = {
         ["delete_line"] = {
           map = "D",
