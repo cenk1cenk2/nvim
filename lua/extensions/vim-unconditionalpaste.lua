@@ -9,8 +9,8 @@ function M.config()
     setup = {},
     keymaps = {
       normal_mode = {
-        ["gp"] = { [[<Plug>UnconditionalPasteInlinedBefore]], { noremap = false, silent = true } },
-        ["gP"] = { [[<Plug>UnconditionalPasteInlinedAfter]], { noremap = false, silent = true } },
+        ["gP"] = { [[<Plug>UnconditionalPasteInlinedBefore]], { noremap = false, silent = true } },
+        ["gp"] = { [[<Plug>UnconditionalPasteInlinedAfter]], { noremap = false, silent = true } },
       },
     },
   }

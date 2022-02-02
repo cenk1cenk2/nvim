@@ -408,7 +408,7 @@ return {
 
   -- find and replace
   {
-    "windwp/nvim-spectre",
+    "cenk1cenk2/nvim-spectre",
     config = function()
       require("extensions.spectre").setup()
     end,

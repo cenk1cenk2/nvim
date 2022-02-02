@@ -67,7 +67,7 @@ function M.config()
         },
         ["toggle_string_search"] = {
           map = "zs",
-          cmd = "<cmd>lua require('spectre').change_options('fixed-strings')<CR>",
+          cmd = "<cmd>lua require('spectre').change_options('string')<CR>",
           desc = "toggle string search mode",
         },
         ["toggle_live_update"] = {
@@ -86,7 +86,7 @@ function M.config()
           options = {
             ["ignore-case"] = { value = "--ignore-case", desc = "ignore case", icon = "[I]" },
             ["hidden"] = { value = "--hidden", desc = "hidden file", icon = "[H]" },
-            ["fixed-strings"] = { value = "--fixed-strings", desc = "fixed string mode", icon = "[S]" },
+            ["string"] = { value = "--fixed-strings", desc = "fixed string mode", icon = "[S]" },
             -- you can put any option you want here it can toggle with
             -- show_option function
           },
@@ -96,7 +96,10 @@ function M.config()
         ["sed"] = {
           cmd = "sed",
           args = nil,
-          options = { ["ignore-case"] = { value = "--ignore-case", icon = "[I]", desc = "ignore case" } },
+          options = {
+            ["ignore-case"] = { value = "--ignore-case", icon = "[I]", desc = "ignore case" },
+            ["string"] = { value = "--string-mode", desc = "fixed string mode", icon = "[S]" },
+          },
         },
 
         ["sd"] = {
@@ -104,7 +107,7 @@ function M.config()
           args = nil,
           options = {
             ["ignore-case"] = { value = "-f c", icon = "[I]", desc = "ignore case" },
-            ["fixed-strings"] = { value = "--string-mode", desc = "fixed string mode", icon = "[S]" },
+            ["string"] = { value = "--string-mode", desc = "fixed string mode", icon = "[S]" },
           },
         },
       },
@@ -112,7 +115,7 @@ function M.config()
         find = {
           -- pick one of item that find_engine
           cmd = "rg",
-          options = { "ignore-case", "fixed-strings" },
+          options = { "ignore-case", "string" },
         },
         replace = {
           -- pick one of item that replace_engine
