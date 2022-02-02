@@ -77,6 +77,7 @@ return {
 
     -- to blachole
     ["c"] = '"_c',
+    ["C"] = '"_C',
     ["x"] = '"_x',
   },
 
@@ -102,11 +103,12 @@ return {
 
     -- to blachole
     ["c"] = '"_c',
+    ["C"] = '"_C',
     ["x"] = '"_x',
 
     -- dont overwrite while pasting
-    ["P"] = '"_dP',
-    ["p"] = '"_dp',
+    ["p"] = '"_dP',
+    ["P"] = '"_dp',
 
     -- ["p"] = '"0p',
     -- ["P"] = '"0P',

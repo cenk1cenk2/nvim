@@ -2,7 +2,7 @@ local M = {}
 
 local modules = {
   "modules.augroups",
-  "modules.telescope-rg-interactive",
+  "modules.telescope",
   "modules.fugitive-compare-branch",
   "modules.lightbulb",
 }

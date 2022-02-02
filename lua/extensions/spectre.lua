@@ -93,8 +93,20 @@ function M.config()
         },
       },
       replace_engine = {
-        ["sed"] = { cmd = "sed", args = nil },
-        options = { ["ignore-case"] = { value = "--ignore-case", icon = "[I]", desc = "ignore case" } },
+        ["sed"] = {
+          cmd = "sed",
+          args = nil,
+          options = { ["ignore-case"] = { value = "--ignore-case", icon = "[I]", desc = "ignore case" } },
+        },
+
+        ["sd"] = {
+          cmd = "sd",
+          args = nil,
+          options = {
+            ["ignore-case"] = { value = "-f c", icon = "[I]", desc = "ignore case" },
+            ["fixed-strings"] = { value = "--string-mode", desc = "fixed string mode", icon = "[S]" },
+          },
+        },
       },
       default = {
         find = {

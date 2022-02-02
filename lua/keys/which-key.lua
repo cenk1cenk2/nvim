@@ -85,12 +85,13 @@ M.mappings = {
     s = { ":Telescope spell_suggest<CR>", "spell suggest" },
     r = { ":TelescopeRipgrepInteractive<CR>", "rg interactive" },
     d = {
-      ":DirtyRg<CR>",
+      ":TelescopeRipgrepDirty<CR>",
       "dirty fuzzy grep",
     },
     p = { ":Telescope find_files<CR>", "find file" },
     R = { ":Telescope registers<CR>", "registers" },
-    t = { ":Telescope live_grep<CR>", "text-telescope" },
+    t = { ":TelescopeRipgrepString<CR>", "text-telescope string" },
+    T = { ":Telescope live_grep<CR>", "text-telescope" },
     O = { ":Telescope vim_options<CR>", "vim options" },
   },
 

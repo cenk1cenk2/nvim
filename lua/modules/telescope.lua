@@ -30,7 +30,18 @@ function M.TelescopeRipgrepInteractive()
   vim.call "inputrestore"
 end
 
-function M.DirtyRg()
+function M.TelescopeRipgrepString()
+  local chunks = { "--fixed-strings" }
+
+  local command = ":Telescope live_grep vimgrep_arguments="
+    .. table.concat(telescope.rg_arguments, ",")
+    .. ","
+    .. table.concat(chunks, ",")
+
+  vim.api.nvim_command(command)
+end
+
+function M.TelescopeRipgrepDirty()
   return require("telescope.builtin").grep_string {
     search = "",
   }
@@ -43,8 +54,12 @@ M.setup = function()
       'lua require("modules.telescope-rg-interactive").TelescopeRipgrepInteractive()',
     },
     {
-      "DirtyRg",
-      'lua require("modules.telescope-rg-interactive").DirtyRg()',
+      "TelescopeRipgrepDirty",
+      'lua require("modules.telescope-rg-interactive").TelescopeRipgrepDirty()',
+    },
+    {
+      "TelescopeRipgrepString",
+      'lua require("modules.telescope-rg-interactive").TelescopeRipgrepString()',
     },
   }
 end
