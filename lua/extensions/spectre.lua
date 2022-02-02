@@ -100,7 +100,7 @@ function M.config()
         find = {
           -- pick one of item that find_engine
           cmd = "rg",
-          options = { "ignore-case" },
+          options = { "ignore-case", "fixed-strings" },
         },
         replace = {
           -- pick one of item that replace_engine
