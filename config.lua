@@ -69,6 +69,7 @@ lvim.lsp.override = {
   "vuels",
   -- "volar",
   "zk",
+  "zeta_note",
 }
 
 lvim.builtin.treesitter.ensure_installed = {
