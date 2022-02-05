@@ -692,8 +692,9 @@ return {
     end,
     disable = not lvim.extensions.vim_unimpaired.active,
 
-  -- SchemaStore
-  {
-    "b0o/schemastore.nvim",
+    -- SchemaStore
+    {
+      "b0o/schemastore.nvim",
+    },
   },
 }
