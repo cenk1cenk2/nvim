@@ -1,5 +1,14 @@
+local schemas = {
+  {
+    description = "TypeScript compiler configuration file",
+    fileMatch = { "tsconfig.json", "tsconfig.*.json" },
+    url = "https://json.schemastore.org/tsconfig.json",
+  },
+}
+
 local full_schemas = vim.tbl_deep_extend(
   "force",
+  schemas,
   require("schemastore").json.schemas(),
   require("nlspsettings.jsonls").get_default_schemas()
 )
