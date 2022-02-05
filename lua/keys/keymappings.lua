@@ -43,10 +43,10 @@ return {
     ["<C-l>"] = "<C-w>l",
 
     -- Resize with arrows
-    ["<M-i>"] = ":resize +2<CR>",
-    ["<M-u>"] = ":resize -2<CR>",
-    ["<M-z>"] = ":vertical resize -2<CR>",
-    ["<M-o>"] = ":vertical resize +2<CR>",
+    ["<C-M-k>"] = ":resize +2<CR>",
+    ["<C-M-j>"] = ":resize -2<CR>",
+    ["<C-M-h>"] = ":vertical resize -2<CR>",
+    ["<C-M-l>"] = ":vertical resize +2<CR>",
 
     -- Move current line / block with Alt-j/k a la vscode.
     ["<A-j>"] = ":m .+1<CR>==",
@@ -116,10 +116,6 @@ return {
 
   ---@usage change or add keymappings for visual block mode
   visual_block_mode = {
-    -- Move selected line / block of text in visual mode
-    ["K"] = ":move '<-2<CR>gv-gv",
-    ["J"] = ":move '>+1<CR>gv-gv",
-
     -- Move current line / block with Alt-j/k ala vscode.
     ["<A-j>"] = ":m '>+1<CR>gv-gv",
     ["<A-k>"] = ":m '<-2<CR>gv-gv",
