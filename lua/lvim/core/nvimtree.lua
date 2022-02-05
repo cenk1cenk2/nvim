@@ -122,6 +122,7 @@ function M.setup()
   local status_ok, nvim_tree_config = pcall(require, "nvim-tree.config")
   if not status_ok then
     Log:error "Failed to load nvim-tree.config"
+
     return
   end
 
@@ -163,37 +164,36 @@ function M.setup()
   end
 
   -- Add useful keymaps
-  local tree_cb = nvim_tree_config.nvim_tree_callback
   if not lvim.builtin.nvimtree.setup.view.mappings.list or #lvim.builtin.nvimtree.setup.view.mappings.list == 0 then
     lvim.builtin.nvimtree.setup.view.mappings.list = {
       -- mappings
-      { key = "<CR>", cb = tree_cb "edit" },
-      { key = "l", cb = tree_cb "edit" },
-      { key = "o", cb = tree_cb "edit" },
-      { key = "<2-LeftMouse>", cb = tree_cb "edit" },
-      { key = "<2-RightMouse>", cb = tree_cb "cd" },
-      { key = "w", cb = tree_cb "cd" },
-      { key = "v", cb = tree_cb "vsplit" },
-      { key = "V", cb = tree_cb "split" },
-      { key = "<C-t>", cb = tree_cb "tabnew" },
-      { key = "h", cb = tree_cb "close_node" },
-      { key = "<BS>", cb = tree_cb "close_node" },
-      { key = "<S-CR>", cb = tree_cb "close_node" },
-      { key = "<Tab>", cb = tree_cb "preview" },
-      { key = "I", cb = tree_cb "toggle_ignored" },
-      { key = "H", cb = tree_cb "toggle_dotfiles" },
-      { key = "R", cb = tree_cb "refresh" },
-      { key = "a", cb = tree_cb "create" },
-      { key = "d", cb = tree_cb "remove" },
-      { key = "r", cb = tree_cb "rename" },
-      { key = "<C-r>", cb = tree_cb "full_rename" },
-      { key = "x", cb = tree_cb "cut" },
-      { key = "c", cb = tree_cb "copy" },
-      { key = "p", cb = tree_cb "paste" },
-      { key = "[c", cb = tree_cb "prev_git_item" },
-      { key = "]c", cb = tree_cb "next_git_item" },
-      { key = "-", cb = tree_cb "dir_up" },
-      { key = "q", cb = tree_cb "close" },
+      { key = "<CR>", action = "edit" },
+      { key = "l", action = "edit" },
+      { key = "o", action = "edit" },
+      { key = "<2-LeftMouse>", action = "edit" },
+      { key = "<2-RightMouse>", action = "cd" },
+      { key = "w", action = "cd" },
+      { key = "v", action = "vsplit" },
+      { key = "V", action = "split" },
+      { key = "<C-t>", action = "tabnew" },
+      { key = "h", action = "close_node" },
+      { key = "<BS>", action = "close_node" },
+      { key = "<S-CR>", action = "close_node" },
+      { key = "<Tab>", action = "preview" },
+      { key = "I", action = "toggle_ignored" },
+      { key = "H", action = "toggle_dotfiles" },
+      { key = "R", action = "refresh" },
+      { key = "a", action = "create" },
+      { key = "d", action = "remove" },
+      { key = "r", action = "rename" },
+      { key = "<C-r>", action = "full_rename" },
+      { key = "x", action = "cut" },
+      { key = "c", action = "copy" },
+      { key = "p", action = "paste" },
+      { key = "[c", action = "prev_git_item" },
+      { key = "]c", action = "next_git_item" },
+      { key = "-", action = "dir_up" },
+      { key = "q", action = "close" },
       { key = "gtf", cb = "<cmd>lua require'lvim.core.nvimtree'.start_telescope('find_files')<cr>" },
       { key = "gtg", cb = "<cmd>lua require'lvim.core.nvimtree'.start_telescope('live_grep')<cr>" },
     }
@@ -201,6 +201,7 @@ function M.setup()
 
   lvim.builtin.which_key.mappings["e"] = { "<cmd>NvimTreeToggle<CR>", "Explorer" }
   lvim.builtin.which_key.mappings[","] = { ":NvimTreeFindFile<CR>", "find file in explorer" }
+  lvim.builtin.which_key.mappings["."] = { ":NvimTreeFindFile<CR>", "find file in explorer" }
 
   -- local tree_view = require "nvim-tree.view"
   --
