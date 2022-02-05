@@ -99,7 +99,7 @@ function M.config()
           unmerged = "",
           renamed = "➜",
           deleted = "",
-          untracked = "★",
+          untracked = "",
           ignored = "◌",
         },
         folder = {
