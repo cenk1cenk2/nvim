@@ -21,7 +21,6 @@ function M.config()
       ["<C-q>"] = "AerojumpExit",
       ["<ESC>"] = "AerojumpSelect",
       ["<CR>"] = "AerojumpSelect",
-      ["<Space>"] = "AerojumpSelect",
     },
   }
 end
