@@ -48,8 +48,12 @@ return {
   diff = {
     "diff",
     source = diff_source,
-    symbols = { added = "  ", modified = "柳", removed = " " },
-    diff_color = { added = { fg = colors.green }, modified = { fg = colors.yellow }, removed = { fg = colors.red } },
+    symbols = { added = "  ", modified = " ", removed = " " },
+    diff_color = {
+      added = { fg = colors.green },
+      modified = { fg = colors.yellow },
+      removed = { fg = colors.red },
+    },
     color = {},
     cond = nil,
   },
@@ -83,7 +87,7 @@ return {
     function()
       local b = vim.api.nvim_get_current_buf()
       if next(vim.treesitter.highlighter.active[b]) then
-        return "  "
+        return ""
       end
       return ""
     end,
