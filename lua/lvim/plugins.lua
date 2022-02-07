@@ -698,4 +698,16 @@ return {
       "b0o/schemastore.nvim",
     },
   },
+
+  {
+    "ThePrimeagen/refactoring.nvim",
+    requires = {
+      { "nvim-lua/plenary.nvim" },
+      { "nvim-treesitter/nvim-treesitter" },
+    },
+    config = function()
+      require("extensions.refactoring-nvim").setup()
+    end,
+    disable = not lvim.extensions.refactoring_nvim.active,
+  },
 }

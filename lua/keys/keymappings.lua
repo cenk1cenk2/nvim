@@ -123,8 +123,8 @@ return {
     -- to blachole
     ["c"] = '"_c',
     ["x"] = '"_x',
-    ["P"] = '"_dP',
-    ["p"] = '"_dp',
+    ["p"] = '"_dP',
+    ["P"] = '"_dp',
   },
 
   ---@usage change or add keymappings for command mode

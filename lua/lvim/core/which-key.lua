@@ -37,7 +37,7 @@ M.config = function()
         width = { min = 20, max = 50 }, -- min and max width of the columns
         spacing = 3, -- spacing between columns
       },
-      triggers = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[" },
+      triggers = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r" },
     },
 
     opts = {
