@@ -10,6 +10,10 @@ M.setup = function()
       ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()" },
     },
 
+    __FILEOPTIONS = {
+      JinjaIndentDisable = { "FileType", "jinja,jinja2", "setlocal indentexpr=nvim_treesitter#indent()" },
+    },
+
     -- __LAZYGIT = {
     --   OpenLgAfterGitCommit = {
     --     "BufWritePost",
