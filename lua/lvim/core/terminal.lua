@@ -67,9 +67,9 @@ M.setup = function()
 
   vim.cmd [[
   if has('nvim') && executable('nvr')
-    let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
-    let $EDITOR = "nvr -cc +'set bufhidden=wipe'"
-    let $VISUAL = "nvr -cc +'set bufhidden=wipe'"
+    let $GIT_EDITOR = "nvr -cc --remote-wait-silent +'set bufhidden=wipe' -o"
+    let $EDITOR = "nvr -cc --remote-wait-silent +'set bufhidden=wipe' -O"
+    let $VISUAL = "nvr -cc --remote-wait-silent +'set bufhidden=wipe' -O"
   endif
   ]]
 
