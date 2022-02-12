@@ -203,43 +203,6 @@ function M.setup()
   lvim.builtin.which_key.mappings[","] = { ":NvimTreeFindFile<CR>", "find file in explorer" }
   lvim.builtin.which_key.mappings["."] = { ":NvimTreeFindFile<CR>", "find file in explorer" }
 
-  -- local tree_view = require "nvim-tree.view"
-  --
-  -- -- Add nvim_tree open callback
-  -- local open = tree_view.open
-  -- tree_view.open = function()
-  --   M.on_open()
-  --   open()
-  --
-  --   local function on_open()
-  --     -- if package.loaded["bufferline.state"] and lvim.builtin.nvimtree.setup.view.side == "left" then
-  --     -- require("bufferline.state").set_offset(lvim.builtin.nvimtree.setup.view.width + 1, "")
-  --     -- end
-  --   end
-  --
-  --   local function on_close()
-  --     -- local bufnr = vim.api.nvim_get_current_buf()
-  --     -- local ft = vim.api.nvim_buf_get_option(bufnr, "filetype")
-  --     -- if ft == "NvimTree" and package.loaded["bufferline.state"] then
-  --     -- require("bufferline.state").set_offset(0)
-  --     -- end
-  --   end
-  --
-  --   local tree_view = require "nvim-tree.view"
-  --   local default_open = tree_view.open
-  --   local default_close = tree_view.close
-  --
-  --   tree_view.open = function()
-  --     on_open()
-  --     default_open()
-  --   end
-  --
-  --   tree_view.close = function()
-  --     on_close()
-  --     default_close()
-  --   end
-  -- end
-
   require("nvim-tree").setup(lvim.builtin.nvimtree.setup)
 
   if lvim.builtin.nvimtree.on_config_done then
