@@ -14,12 +14,12 @@ local opts = {
     },
   },
   handlers = {
-    ["$/getToken"] = function()
-      return {}
-    end,
-    ["$/getCredentials"] = function()
-      return {}
-    end,
+    -- ["$/getToken"] = function()
+    --   return {}
+    -- end,
+    -- ["$/getCredentials"] = function()
+    --   return {}
+    -- end,
   },
 }
 
