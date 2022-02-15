@@ -32,6 +32,7 @@ function M.config()
         "qf",
         "lsp_floating_window",
         "NvimTree",
+        "neo-tree",
       },
       autocmd = {
         render = {

@@ -127,6 +127,14 @@ local opts = {
         vim.lsp.buf.execute_command(params)
       end,
     },
+
+    LspImportAll = {
+      vim.cmd [[TSLspImportAll]],
+    },
+
+    LspImportCurrent = {
+      vim.cmd [[TSLspImportCurrent]],
+    },
   },
 }
 return opts

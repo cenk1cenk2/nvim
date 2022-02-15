@@ -40,6 +40,9 @@ local commit = {
 return {
   -- Packer can manage itself as an optional plugin
   { "wbthomason/packer.nvim" },
+
+  { "nvim-lua/plenary.nvim" },
+
   { "neovim/nvim-lspconfig" },
   { "tamago324/nlsp-settings.nvim" },
   {
@@ -51,6 +54,7 @@ return {
   {
     "williamboman/nvim-lsp-installer",
   },
+
   {
     "rcarriga/nvim-notify",
     disable = not lvim.builtin.notify.active,
@@ -59,10 +63,9 @@ return {
     end,
     event = "BufRead",
   },
-  { "Tastyep/structlog.nvim" },
-
   { "nvim-lua/popup.nvim" },
-  { "nvim-lua/plenary.nvim" },
+
+  { "Tastyep/structlog.nvim" },
 
   -- Telescope
   {
@@ -234,6 +237,19 @@ return {
   },
 
   {
+    "nvim-neo-tree/neo-tree.nvim",
+    config = function()
+      require("extensions.neotree-nvim").setup()
+    end,
+    disable = not lvim.extensions.neotree_nvim.active,
+    requires = {
+      "nvim-lua/plenary.nvim",
+      "kyazdani42/nvim-web-devicons",
+      "MunifTanjim/nui.nvim",
+    },
+  },
+
+  {
     "lewis6991/gitsigns.nvim",
 
     config = function()
@@ -246,11 +262,9 @@ return {
   -- Whichkey
   {
     "folke/which-key.nvim",
-    commit = commit.which_key,
     config = function()
       require("lvim.core.which-key").setup()
     end,
-    event = "BufWinEnter",
     disable = not lvim.builtin.which_key.active,
   },
 
@@ -317,14 +331,6 @@ return {
   { "rcarriga/nvim-dap-ui", disable = not lvim.builtin.dap.active, requires = { "mfussenegger/nvim-dap" } },
 
   -- Dashboard
-  {
-    "ChristianChiarulli/dashboard-nvim",
-    event = "BufWinEnter",
-    config = function()
-      require("lvim.core.dashboard").setup()
-    end,
-    disable = not lvim.builtin.dashboard.active,
-  },
   {
     "goolord/alpha-nvim",
     event = "BufWinEnter",
@@ -515,13 +521,6 @@ return {
     disable = not lvim.extensions.nvim_lightbulb.active,
   },
 
-  -- language specific extension: rust
-  {
-    "simrat39/rust-tools.nvim",
-    config = function() end,
-    disable = not lvim.extensions.rust_tools_nvim.active,
-  },
-
   -- Colorized
   {
     "norcalli/nvim-colorizer.lua",
@@ -659,14 +658,6 @@ return {
       require("extensions.nvim-orgmode").setup()
     end,
     disable = not lvim.extensions.orgmode.active,
-  },
-
-  {
-    "jbyuki/venn.nvim",
-    config = function()
-      require("extensions.venn-nvim").setup()
-    end,
-    disable = not lvim.extensions.venn_nvim.active,
   },
 
   {

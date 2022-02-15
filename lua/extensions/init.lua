@@ -1,6 +1,7 @@
 local M = {}
 
 local extensions = {
+  "extensions.neotree-nvim",
   "extensions.alpha-nvim",
   "extensions.neovim-session-manager",
   "extensions.hop",
@@ -37,11 +38,9 @@ local extensions = {
   "extensions.nvim-orgmode",
   "extensions.dressing",
   "extensions.vim-caser",
-  "extensions.venn-nvim",
   "extensions.aerojump-nvim",
   "extensions.nvim-hlslens",
   "extensions.nvim-scrollbar",
-  "extensions.rust-tools-nvim",
   "extensions.fidget-nvim",
   "extensions.nvim-lightbulb",
   "extensions.vim-unconditionalpaste",

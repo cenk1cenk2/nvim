@@ -17,6 +17,7 @@ function M.config()
         "terminal",
         "floaterm",
         "NvimTree",
+        "neo-tree",
         "dashboard",
         "alpha",
         "toggleterm",
@@ -26,7 +27,7 @@ function M.config()
       },
       enabled = true,
       show_trailing_blankline_indent = false,
-      char = "┆",
+      char = "│",
       space_char_highlight_list = {},
       context_patterns = {
         "class",
@@ -59,7 +60,7 @@ function M.setup()
 
   extension.setup(lvim.extensions[extension_name].setup)
 
-  lvim.builtin.which_key.mappings["a"]["i"] = { ":IndentBlanklineToggle<CR>", "indentation guides" }
+  lvim.builtin.which_key.mappings["a"]["i"] = { ":IndentBlanklineToggle<CR>", "toggle indentation guides" }
 
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done(extension)

@@ -10,6 +10,7 @@ function M.config()
       highlight_hovered_item = true,
       show_guides = true,
       auto_preview = true,
+      preview_bg_highlight = "NormalFloat",
       position = "right",
       width = 50,
       keymaps = {
@@ -28,7 +29,7 @@ end
 function M.setup()
   vim.g[extension_name] = lvim.extensions[extension_name].setup
 
-  lvim.builtin.which_key.mappings["l"]["o"] = { ":SymbolsOutline<CR>", "symbols-outline" }
+  lvim.builtin.which_key.mappings["l"]["o"] = { ":SymbolsOutline<CR>", "file outline" }
 
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done()

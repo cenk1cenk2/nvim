@@ -24,7 +24,7 @@ function M.setup()
 
   extension.setup(lvim.extensions[extension_name].ft, lvim.extensions[extension_name].setup)
 
-  lvim.builtin.which_key.mappings["a"]["C"] = { ":ColorizerToggle<CR>", "colorizer toggle" }
+  lvim.builtin.which_key.mappings["a"]["C"] = { ":ColorizerToggle<CR>", "toggle colorizer" }
 
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done(extension)

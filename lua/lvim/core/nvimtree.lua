@@ -3,7 +3,7 @@ local Log = require "lvim.core.log"
 
 function M.config()
   lvim.builtin.nvimtree = {
-    active = true,
+    active = false,
     on_config_done = nil,
     setup = {
       -- disables netrw completely

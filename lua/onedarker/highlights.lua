@@ -554,10 +554,14 @@ hl.plugins.vim_visual_multi = {
   VM_Extend = { bg = c.dark_blue },
 }
 
--- hl.plugins.aerojump = {
---   SearchResult = { bg = c.yellow },
---   SearchHighlight = { bg = c.green },
--- }
+hl.plugins.symbols_outline = {
+  FocusedSymbol = { bg = c.bg1 },
+}
+
+hl.plugins.aerojump = {
+  SearchResult = { bg = c.yellow },
+  SearchHighlight = { bg = c.green },
+}
 
 function M.setup()
   vim_highlights(hl.common)
