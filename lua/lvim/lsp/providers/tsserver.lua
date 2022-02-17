@@ -129,11 +129,15 @@ local opts = {
     },
 
     LspImportAll = {
-      vim.cmd [[TSLspImportAll]],
+      function()
+        vim.cmd [[TSLspImportAll]]
+      end,
     },
 
     LspImportCurrent = {
-      vim.cmd [[TSLspImportCurrent]],
+      function()
+        vim.cmd [[TSLspImportCurrent]]
+      end,
     },
   },
 }
