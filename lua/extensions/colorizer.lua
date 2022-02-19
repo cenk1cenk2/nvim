@@ -6,7 +6,7 @@ function M.config()
   lvim.extensions[extension_name] = {
     active = true,
     on_config_done = nil,
-    ft = { "*" },
+    ft = { "markdown", "html", "css", "scss", "vue", "javascriptreact", "typescriptreact" },
     setup = {
       RGB = true, -- #RGB hex codes
       RRGGBB = true, -- #RRGGBB hex codes
