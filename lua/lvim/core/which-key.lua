@@ -4,7 +4,7 @@ M.config = function()
   local keymaps = require "keys.which-key"
 
   lvim.builtin.which_key = {
-    ---@usage disable which-key completely [not recommeded]
+    ---@usage disable which-key completely [not recommended]
     active = true,
     on_config_done = nil,
     setup = {

@@ -1,6 +1,3 @@
-local home_dir = vim.loop.os_homedir()
-local utils = require "lvim.utils"
-
 lvim = {
   leader = "space",
   colorscheme = "onedarker",
