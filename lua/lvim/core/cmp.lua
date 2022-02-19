@@ -237,7 +237,7 @@ M.config = function()
 
       { name = "cmp_git" },
 
-      { name = "npm", keyword_length = 3 },
+      { name = "npm" },
 
       { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
 
