@@ -4,7 +4,6 @@ local modules = {
   "modules.augroups",
   "modules.telescope",
   "modules.fugitive-compare-branch",
-  "modules.lightbulb",
 }
 
 function M.config(config)

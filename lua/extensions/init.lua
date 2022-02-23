@@ -42,7 +42,6 @@ local extensions = {
   "extensions.nvim-hlslens",
   "extensions.nvim-scrollbar",
   "extensions.fidget-nvim",
-  "extensions.nvim-lightbulb",
   "extensions.vim-unconditionalpaste",
   "extensions.vim-unimpaired",
   "extensions.refactoring-nvim",

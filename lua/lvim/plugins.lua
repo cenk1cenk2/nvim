@@ -512,14 +512,6 @@ return {
     disable = not lvim.extensions.fidget_nvim.active,
   },
 
-  {
-    "kosayoda/nvim-lightbulb",
-    config = function()
-      require("extensions.nvim-lightbulb").setup()
-    end,
-    disable = not lvim.extensions.nvim_lightbulb.active,
-  },
-
   -- Colorized
   {
     "norcalli/nvim-colorizer.lua",

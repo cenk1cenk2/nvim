@@ -4,7 +4,7 @@ local extension_name = "nvim_lightbulb"
 
 function M.config()
   lvim.extensions[extension_name] = {
-    active = true,
+    active = false,
     on_config_done = nil,
     setup = {
       -- LSP client names to ignore
