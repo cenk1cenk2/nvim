@@ -111,21 +111,22 @@ function M.config()
           symlink = "",
           symlink_open = "",
         },
-      actions = {
-        change_dir = {
-          global = false,
-        },
-        open_file = {
-          quit_on_open = false,
-        },
-        window_picker = {
-          enable = false,
-          chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
-          exclude = {},
+        actions = {
+          change_dir = {
+            global = false,
+          },
+          open_file = {
+            quit_on_open = false,
+          },
+          window_picker = {
+            enable = false,
+            chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
+            exclude = {},
+          },
         },
       },
-     },
-  } }
+    },
+  }
 
   lvim.builtin.which_key.mappings["e"] = { "<cmd>NvimTreeToggle<CR>", "Explorer" }
 end
@@ -174,8 +175,8 @@ function M.setup()
     -- lvim.builtin.nvimtree.setup.hijack_netrw = false
     -- vim.g.netrw_banner = false
   end
-    
-lvim.builtin.nvimtree.setup.update_focused_file = { enable = true, update_cwd = true }
+
+  lvim.builtin.nvimtree.setup.update_focused_file = { enable = true, update_cwd = true }
 
   -- Add useful keymaps
   if not lvim.builtin.nvimtree.setup.view.mappings.list or #lvim.builtin.nvimtree.setup.view.mappings.list == 0 then
@@ -210,15 +211,8 @@ lvim.builtin.nvimtree.setup.update_focused_file = { enable = true, update_cwd = 
       { key = "q", action = "close" },
       { key = "gtf", cb = "<cmd>lua require'lvim.core.nvimtree'.start_telescope('find_files')<cr>" },
       { key = "gtg", cb = "<cmd>lua require'lvim.core.nvimtree'.start_telescope('live_grep')<cr>" },
+    }
   end
-
-  local function telescope_find_files(_)
-    require("lvim.core.nvimtree").start_telescope "find_files"
-  end
-  local function telescope_live_grep(_)
-    require("lvim.core.nvimtree").start_telescope "live_grep"
-  end
-
 
   lvim.builtin.which_key.mappings["e"] = { "<cmd>NvimTreeToggle<CR>", "Explorer" }
   lvim.builtin.which_key.mappings[","] = { ":NvimTreeFindFile<CR>", "find file in explorer" }

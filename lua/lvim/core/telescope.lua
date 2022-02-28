@@ -135,11 +135,6 @@ function M.code_actions()
     winblend = 15,
     layout_config = { prompt_position = "bottom", width = 0.5, height = 24 },
     borderchars = lvim.builtin.telescope.defaults.borderchars,
-    layout_config = {
-      prompt_position = "top",
-      width = 80,
-      height = 12,
-    },
     border = {},
     previewer = false,
     shorten_path = false,
