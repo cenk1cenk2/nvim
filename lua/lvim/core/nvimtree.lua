@@ -3,7 +3,7 @@ local Log = require "lvim.core.log"
 
 function M.config()
   lvim.builtin.nvimtree = {
-    active = false,
+    active = true,
     on_config_done = nil,
     setup = {
       -- disables netrw completely
@@ -24,7 +24,7 @@ function M.config()
         auto_open = true,
       },
       update_to_buf_dir = {
-        enable = true,
+        enable = false,
         auto_open = true,
       },
       -- update the focused file on `BufEnter`, un-collapses the folders recursively until it finds the file
@@ -175,8 +175,6 @@ function M.setup()
     -- lvim.builtin.nvimtree.setup.hijack_netrw = false
     -- vim.g.netrw_banner = false
   end
-
-  lvim.builtin.nvimtree.setup.update_focused_file = { enable = true, update_cwd = true }
 
   -- Add useful keymaps
   if not lvim.builtin.nvimtree.setup.view.mappings.list or #lvim.builtin.nvimtree.setup.view.mappings.list == 0 then
