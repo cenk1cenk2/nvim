@@ -45,6 +45,7 @@ local extensions = {
   "extensions.vim-unconditionalpaste",
   "extensions.vim-unimpaired",
   "extensions.refactoring-nvim",
+  "extensions.lsp-lines-nvim",
 }
 
 function M.config(config)

@@ -503,6 +503,14 @@ return {
     disable = not lvim.extensions.symbols_outline.active,
   },
 
+  {
+    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+    config = function()
+      require("extensions.lsp-lines-nvim").setup()
+    end,
+    disable = not lvim.extensions.lsp_lines_nvim.active,
+  },
+
   -- lsp loader information
   {
     "j-hui/fidget.nvim",
