@@ -73,6 +73,7 @@ return {
     config = function()
       require("lvim.core.telescope").setup()
     end,
+    commit = commit.telescope,
     disable = not lvim.builtin.telescope.active,
   },
   {
