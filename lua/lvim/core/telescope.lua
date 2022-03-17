@@ -172,7 +172,9 @@ function M.setup()
   end
 
   if lvim.builtin.telescope.extensions and lvim.builtin.telescope.extensions.fzf then
-    require("telescope").load_extension "fzf"
+    pcall(function()
+      require("telescope").load_extension "fzf"
+    end)
   end
 
   local custom_extensions = { "find_terminals" }
