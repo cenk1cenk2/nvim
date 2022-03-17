@@ -160,6 +160,9 @@ function M.setup()
         "git",
         "view",
         "trash",
+        "disable_window_picker",
+        "quit_on_open",
+        "window_picker_exclude",
       }, function(entry)
         return opt == entry
       end)
