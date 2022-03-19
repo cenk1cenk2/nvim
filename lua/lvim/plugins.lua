@@ -35,6 +35,7 @@ local commit = {
   telescope_fzf_native = "8ec164b541327202e5e74f99bcc5fe5845720e18",
   toggleterm = "e97d0c1046512e975a9f3fa95afe98f312752b1c",
   which_key = "28d2bd129575b5e9ebddd88506601290bb2bb221",
+  alpha_nvim = "8a0f62efbd94b00dd517efedeab1eb96fe544bd0",
 }
 
 return {
@@ -334,6 +335,7 @@ return {
   -- Dashboard
   {
     "goolord/alpha-nvim",
+    commit = commit.alpha_nvim,
     event = "BufWinEnter",
     config = function()
       require("extensions.alpha-nvim").setup()
