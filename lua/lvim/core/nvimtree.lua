@@ -112,6 +112,10 @@ function M.config()
           symlink = "",
           symlink_open = "",
         },
+        open_file = {
+          resize_window = true,
+          quit_on_open = false,
+        },
         actions = {
           change_dir = {
             global = false,
