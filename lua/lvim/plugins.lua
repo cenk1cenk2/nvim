@@ -74,12 +74,14 @@ return {
     config = function()
       require("lvim.core.telescope").setup()
     end,
+    commit = commit.telescope,
     disable = not lvim.builtin.telescope.active,
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     requires = { "nvim-telescope/telescope.nvim" },
     run = "make",
+    commit = commit.telescope_fzf_native,
     disable = not lvim.builtin.telescope.active,
   },
   { "tzachar/fuzzy.nvim", requires = { "nvim-telescope/telescope-fzf-native.nvim" } },
