@@ -135,6 +135,12 @@ M.add_exec = function(opts)
     exec_func,
     opts.label,
   }
+
+  local wk_status_ok, wk = pcall(require, "which-key")
+  if not wk_status_ok then
+    return
+  end
+  wk.register({ [opts.keymap] = { opts.label } }, { mode = "n" })
 end
 
 local terminals = {}
