@@ -1,5 +1,5 @@
 local commit = {
-  alpha_nvim = "14be0ac200f44009672046123c6fcb30724018a5",
+  alpha_nvim = "8a0f62efbd94b00dd517efedeab1eb96fe544bd0",
   bufferline = "5e101b1b4e1ea5b868b8865a5f749b0b5b8f3ccd",
   cmp_buffer = "d66c4c2d376e5be99db68d2362cd94d250987525",
   cmp_luasnip = "d6f837f4e8fe48eeae288e638691b91b97d1737f",
@@ -70,11 +70,11 @@ return {
 
   -- Telescope
   {
-    "nvim-telescope/telescope.nvim",
+    "kylo252/telescope.nvim",
     config = function()
       require("lvim.core.telescope").setup()
     end,
-    commit = commit.telescope,
+    branch = "nvim-nightly-compat",
     disable = not lvim.builtin.telescope.active,
   },
   {
