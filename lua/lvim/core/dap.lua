@@ -22,7 +22,7 @@ M.setup = function()
   vim.fn.sign_define("DapBreakpointRejected", lvim.builtin.dap.breakpoint_rejected)
   vim.fn.sign_define("DapStopped", lvim.builtin.dap.stopped)
 
-  dap.defaults.fallback.terminal_win_cmd = "30hsplit new"
+  dap.defaults.fallback.terminal_win_cmd = ":30hsplit new"
 
   lvim.builtin.which_key.mappings["d"] = {
     name = "Debug",
@@ -60,6 +60,19 @@ M.setup = function()
   local fn = vim.fn
 
   dap.configurations.typescript = {
+    {
+      type = "node2",
+      request = "launch",
+      name = "run this file ${file}",
+      program = "${file}",
+      cwd = fn.getcwd(),
+      sourceMaps = true,
+      protocol = "inspector",
+      console = "integratedTerminal",
+    },
+  }
+
+  dap.configurations.javascript = {
     {
       type = "node2",
       request = "launch",
