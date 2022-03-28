@@ -244,6 +244,7 @@ return {
     config = function()
       require("extensions.neotree-nvim").setup()
     end,
+    branch = "v2.x",
     disable = not lvim.extensions.neotree_nvim.active,
     requires = {
       "nvim-lua/plenary.nvim",

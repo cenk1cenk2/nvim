@@ -4,7 +4,7 @@ local extension_name = "neotree_nvim"
 
 function M.config()
   lvim.extensions[extension_name] = {
-    active = false,
+    active = true,
     on_config_done = nil,
     setup = {
       close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
@@ -31,13 +31,35 @@ function M.config()
           use_git_status_colors = true,
         },
         git_status = {
-          highlight = "NeoTreeDimText", -- if you remove this the status will be colorful
+          symbols = {
+            -- Change type
+            added = "✚",
+            deleted = "✖",
+            modified = "",
+            renamed = "",
+            -- Status type
+            untracked = "",
+            ignored = "",
+            unstaged = "",
+            staged = "",
+            conflict = "",
+          },
         },
       },
       filesystem = {
-        filters = { --These filters are applied to both browsing and searching
-          show_hidden = true,
-          respect_gitignore = true,
+        filtered_items = {
+          visible = true, -- when true, they will just be displayed differently than normal items
+          hide_dotfiles = false,
+          hide_gitignored = true,
+          hide_by_name = {
+            ".DS_Store",
+            "thumbs.db",
+            --"node_modules"
+          },
+          never_show = { -- remains hidden even if visible is toggled to true
+            --".DS_Store",
+            --"thumbs.db"
+          },
         },
         follow_current_file = false, -- This will find and focus the file in the active buffer every
         -- time the current file is changed while the tree is open.
