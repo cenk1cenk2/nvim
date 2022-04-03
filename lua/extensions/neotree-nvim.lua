@@ -19,12 +19,21 @@ function M.config()
           indent_marker = "│",
           last_indent_marker = "└",
           highlight = "NeoTreeIndentMarker",
+          -- expander config, needed for nesting files
+          with_expanders = nil, -- if nil and file nesting is enabled, will enable expanders
+          expander_collapsed = "",
+          expander_expanded = "",
+          expander_highlight = "NeoTreeExpander",
         },
         icon = {
           folder_closed = "",
           folder_open = "",
           folder_empty = "",
           default = "",
+        },
+        modified = {
+          symbol = "[+]",
+          highlight = "NeoTreeModified",
         },
         name = {
           trailing_slash = false,
@@ -38,7 +47,7 @@ function M.config()
             modified = "",
             renamed = "",
             -- Status type
-            untracked = "",
+            untracked = "",
             ignored = "",
             unstaged = "",
             staged = "",
