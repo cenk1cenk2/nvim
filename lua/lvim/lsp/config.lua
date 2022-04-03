@@ -62,7 +62,7 @@ return {
     "graphql",
     "jedi_language_server",
     "ltex",
-    "ocamllsp",
+    "ocamlls",
     "phpactor",
     "psalm",
     "pylsp",
