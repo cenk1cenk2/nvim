@@ -98,6 +98,7 @@ function M.config()
             ["p"] = "paste_from_clipboard",
             ["m"] = "move", -- takes text input for destination
             ["q"] = "close_window",
+            ["<space>"] = "none",
           },
         },
       },
@@ -121,6 +122,7 @@ function M.config()
             ["p"] = "paste_from_clipboard",
             ["bd"] = "buffer_delete",
             ["q"] = "close_window",
+            ["<space>"] = "none",
           },
         },
       },
@@ -148,6 +150,7 @@ function M.config()
             ["gp"] = "git_push",
             ["gg"] = "git_commit_and_push",
             ["q"] = "close_window",
+            ["<space>"] = "none",
           },
         },
       },
