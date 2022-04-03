@@ -7,7 +7,7 @@ local join_paths = utils.join_paths
 -- we need to reuse this outside of init()
 local compile_path = join_paths(get_config_dir(), "plugin", "packer_compiled.lua")
 local snapshot_path = join_paths(get_cache_dir(), "snapshots")
-local default_snapshot = join_paths(get_lvim_base_dir(), "snapshots", "default.json")
+-- local default_snapshot = join_paths(get_lvim_base_dir(), "snapshots", "default.json")
 
 function plugin_loader.init(opts)
   opts = opts or {}
@@ -49,7 +49,7 @@ function plugin_loader.init(opts)
     vim.cmd "packadd packer.nvim"
     -- IMPORTANT: we only set this the very first time to avoid constantly triggering the rollback function
     -- https://github.com/wbthomason/packer.nvim/blob/c576ab3f1488ee86d60fd340d01ade08dcabd256/lua/packer.lua#L998-L995
-    init_opts.snapshot = default_snapshot
+    -- init_opts.snapshot = default_snapshot
   end
 
   local status_ok, packer = pcall(require, "packer")
