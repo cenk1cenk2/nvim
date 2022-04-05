@@ -1,7 +1,9 @@
 local opts = {
   settings = {
     Lua = {
-      diagnostics = { globals = { "vim", "lvim" } },
+      diagnostics = {
+        globals = { "vim", "lvim", "packer_plugins" },
+      },
       workspace = {
         library = {
           [require("lvim.utils").join_paths(get_runtime_dir(), "lvim", "lua")] = true,
