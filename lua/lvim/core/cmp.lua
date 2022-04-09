@@ -167,6 +167,7 @@ M.config = function()
     },
     formatting = {
       fields = { "kind", "abbr", "menu" },
+      max_width = 0,
       kind_icons = {
         Class = " ",
         Color = " ",
@@ -211,6 +212,10 @@ M.config = function()
       duplicates = { buffer = 1, path = 1, nvim_lsp = 0, luasnip = 1 },
       duplicates_default = 0,
       format = function(entry, vim_item)
+        local max_width = lvim.builtin.cmp.formatting.max_width
+        if max_width ~= 0 and #vim_item.abbr > max_width then
+          vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. "…"
+        end
         vim_item.kind = lvim.builtin.cmp.formatting.kind_icons[vim_item.kind]
         vim_item.menu = lvim.builtin.cmp.formatting.source_names[entry.source.name]
         vim_item.dup = lvim.builtin.cmp.formatting.duplicates[entry.source.name]
