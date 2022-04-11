@@ -158,6 +158,11 @@ return {
     end,
   },
 
+  {
+    "folke/lua-dev.nvim",
+    module = "lua-dev",
+  },
+
   -- Autopairs
   {
     "windwp/nvim-autopairs",

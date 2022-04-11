@@ -167,6 +167,7 @@ function M.setup()
         "disable_window_picker",
         "quit_on_open",
         "window_picker_exclude",
+        "indent_markers",
       }, function(entry)
         return opt == entry
       end)
