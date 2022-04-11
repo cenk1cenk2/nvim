@@ -81,7 +81,11 @@ function M.config()
         cmd = "trash",
         require_confirm = true,
       },
-      indent_markers = 1,
+      renderer = {
+        indent_markers = {
+          enable = true,
+        },
+      },
       special_files = { ["package.json"] = 1, ["README.md"] = 1, ["node_modules"] = 1 },
       show_icons = { git = 1, folders = 1, files = 1, folder_arrows = 1, tree_width = 40 },
       quit_on_open = 0,
@@ -167,7 +171,7 @@ function M.setup()
         "disable_window_picker",
         "quit_on_open",
         "window_picker_exclude",
-        "indent_markers",
+        "renderer",
       }, function(entry)
         return opt == entry
       end)
