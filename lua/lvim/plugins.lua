@@ -278,7 +278,7 @@ return {
     config = function()
       require("lvim.core.bufferline").setup()
     end,
-    branch = "main",
+    branch = "master",
     event = "BufWinEnter",
     disable = not lvim.builtin.bufferline.active,
   },
