@@ -9,12 +9,7 @@ local schemas = {
 local opts = {
   settings = {
     json = {
-      schemas = vim.tbl_deep_extend(
-        "force",
-        require("schemastore").json.schemas(),
-        require("nlspsettings.jsonls").get_default_schemas(),
-        schemas
-      ),
+      schemas = vim.tbl_deep_extend("force", require("schemastore").json.schemas(), schemas),
     },
   },
   setup = {

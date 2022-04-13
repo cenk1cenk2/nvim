@@ -86,6 +86,10 @@ function M.setup(server_name, user_config)
     return
   end
 
+  if is_overridden then
+    Log:debug("Server is overridden by the configuration: " .. server_name)
+  end
+
   local install_notification = false
 
   if not requested_server:is_installed() then
