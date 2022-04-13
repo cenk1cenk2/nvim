@@ -28,6 +28,8 @@ local function resolve_config(name, user_config)
   if has_custom_provider then
     Log:debug("Using custom configuration for requested server: " .. name)
     config = vim.tbl_deep_extend("force", config, custom_config)
+  else
+    Log:debug("Using default configuration for requested server: " .. name)
   end
 
   if user_config then

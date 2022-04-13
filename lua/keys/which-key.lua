@@ -199,54 +199,54 @@ M.mappings = {
   L = {
     name = "+LunarVim",
     c = {
-      ":edit " .. get_config_dir() .. "/config.lua<cr>",
-      "edit config.lua",
+      "<cmd>edit " .. get_config_dir() .. "/config.lua<cr>",
+      "Edit config.lua",
     },
     f = {
-      ":lua require('lvim.core.telescope.custom-finders').find_lunarvim_files()<cr>",
-      "find lunarvim files",
+      "<cmd>lua require('lvim.core.telescope.custom-finders').find_lunarvim_files()<cr>",
+      "Find LunarVim files",
     },
     g = {
-      ":lua require('lvim.core.telescope.custom-finders').grep_lunarvim_files()<cr>",
-      "grep lunarvim files",
+      "<cmd>lua require('lvim.core.telescope.custom-finders').grep_lunarvim_files()<cr>",
+      "Grep LunarVim files",
     },
-    k = { ":Telescope keymaps<cr>", "View LunarVim's keymappings" },
+    k = { "<cmd>Telescope keymaps<cr>", "View LunarVim's keymappings" },
     i = {
-      ":lua require('lvim.core.info').toggle_popup(vim.bo.filetype)<cr>",
-      "toggle lunarvim info",
+      "<cmd>lua require('lvim.core.info').toggle_popup(vim.bo.filetype)<cr>",
+      "Toggle LunarVim Info",
     },
     I = {
-      ":lua require('lvim.core.telescope.custom-finders').view_lunarvim_changelog()<cr>",
-      "view lunarvim's changelog",
+      "<cmd>lua require('lvim.core.telescope.custom-finders').view_lunarvim_changelog()<cr>",
+      "View LunarVim's changelog",
     },
     l = {
       name = "+logs",
       d = {
-        ":lua require('lvim.core.terminal').toggle_log_view(require('lvim.core.log').get_path())<cr>",
+        "<cmd>lua require('lvim.core.terminal').toggle_log_view(require('lvim.core.log').get_path())<cr>",
         "view default log",
       },
       D = {
-        ":lua vim.fn.execute('edit ' .. require('lvim.core.log').get_path())<cr>",
-        "open the default logfile",
+        "<cmd>lua vim.fn.execute('edit ' .. require('lvim.core.log').get_path())<cr>",
+        "Open the default logfile",
       },
       l = {
-        ":lua require('lvim.core.terminal').toggle_log_view(vim.lsp.get_log_path())<cr>",
+        "<cmd>lua require('lvim.core.terminal').toggle_log_view(vim.lsp.get_log_path())<cr>",
         "view lsp log",
       },
-      L = { ":lua vim.fn.execute('edit ' .. vim.lsp.get_log_path())<cr>", "open the lsp logfile" },
+      L = { "<cmd>lua vim.fn.execute('edit ' .. vim.lsp.get_log_path())<cr>", "Open the LSP logfile" },
       n = {
-        ":lua require('lvim.core.terminal').toggle_log_view(os.getenv('NVIM_LOG_FILE'))<cr>",
+        "<cmd>lua require('lvim.core.terminal').toggle_log_view(os.getenv('NVIM_LOG_FILE'))<cr>",
         "view neovim log",
       },
-      N = { ":edit $NVIM_LOG_FILE<cr>", "open the neovim logfile" },
+      N = { "<cmd>edit $NVIM_LOG_FILE<cr>", "Open the Neovim logfile" },
       p = {
-        ":lua require('lvim.core.terminal').toggle_log_view('packer.nvim')<cr>",
+        "<cmd>lua require('lvim.core.terminal').toggle_log_view('packer.nvim')<cr>",
         "view packer log",
       },
-      P = { ":exe 'edit '.stdpath('cache').'/packer.nvim.log'<cr>", "open the packer logfile" },
+      P = { "<cmd>exe 'edit '.stdpath('cache').'/packer.nvim.log'<cr>", "Open the Packer logfile" },
     },
-    r = { ":LvimReload<cr>", "reload lunarvim's configuration" },
-    u = { ":LvimUpdate<cr>", "update lunarvim" },
+    r = { "<cmd>LvimReload<cr>", "Reload LunarVim's configuration" },
+    u = { "<cmd>LvimUpdate<cr>", "Update LunarVim" },
   },
 
   P = {

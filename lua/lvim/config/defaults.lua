@@ -21,7 +21,7 @@ lvim = {
   lang = {},
   log = {
     ---@usage can be { "trace", "debug", "info", "warn", "error", "fatal" },
-    level = "warn",
+    level = "debug",
     viewer = {
       ---@usage this will fallback on "less +F" if not found
       cmd = "lnav",
@@ -34,7 +34,7 @@ lvim = {
       },
     },
     -- currently disabled due to instabilities
-    override_notify = false,
+    override_notify = true,
   },
 }
 

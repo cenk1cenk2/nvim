@@ -5,15 +5,15 @@ local schemas = {
     url = "https://json.schemastore.org/tsconfig.json",
   },
 }
-print(require("schemastore").json.schemas())
+
 local opts = {
   settings = {
     json = {
       schemas = vim.tbl_deep_extend(
         "force",
-        schemas,
         require("schemastore").json.schemas(),
-        require("nlspsettings.jsonls").get_default_schemas()
+        require("nlspsettings.jsonls").get_default_schemas(),
+        schemas
       ),
     },
   },
