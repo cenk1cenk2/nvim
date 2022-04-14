@@ -229,7 +229,8 @@ M.config = function()
       end,
     },
     window = {
-      documentation = { border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" } },
+      completion = cmp.config.window.bordered(),
+      documentation = cmp.config.window.bordered(),
     },
     sources = {
       -- { name = "orgmode" },
