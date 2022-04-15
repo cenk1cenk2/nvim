@@ -30,6 +30,9 @@ function M.setup()
 
   -- command line
   cmp.setup.cmdline(":", {
+    mapping = cmp.mapping.preset.cmdline {
+      -- Your configuration here.
+    },
     sources = {
       { name = "cmdline" },
     },
@@ -37,12 +40,18 @@ function M.setup()
 
   -- fuzzy buffer
   cmp.setup.cmdline("/", {
+    mapping = cmp.mapping.preset.cmdline {
+      -- Your configuration here.
+    },
     sources = cmp.config.sources {
       { name = "fuzzy_buffer" },
     },
   })
 
   cmp.setup.cmdline("?", {
+    mapping = cmp.mapping.preset.cmdline {
+      -- Your configuration here.
+    },
     sources = cmp.config.sources {
       { name = "fuzzy_buffer" },
     },
