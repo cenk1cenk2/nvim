@@ -13,7 +13,7 @@ function M.load_augroups()
   return {
     _general_settings = {
       { "FileType", "qf,help,man", "nnoremap <silent> <buffer> q :close<CR>" },
-      { "TextYankPost", "*", "lua require('vim.highlight').on_yank({higroup = 'Search', timeout = 500})" },
+      -- { "TextYankPost", "*", "lua require('vim.highlight').on_yank({higroup = 'Search', timeout = 500})" },
       { "BufWinEnter", "dashboard", "setlocal cursorline signcolumn=yes cursorcolumn number" },
       { "BufWinEnter", "alpha", "setlocal cursorline signcolumn=yes cursorcolumn number" },
       { "BufWritePost", user_config_file, "lua require('lvim.config'):reload()" },

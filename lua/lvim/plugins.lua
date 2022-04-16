@@ -651,11 +651,19 @@ return {
       require("extensions.vim-unimpaired").setup()
     end,
     disable = not lvim.extensions.vim_unimpaired.active,
+  },
 
-    -- SchemaStore
-    {
-      "b0o/schemastore.nvim",
-    },
+  -- SchemaStore
+  {
+    "b0o/schemastore.nvim",
+  },
+
+  {
+    "gbprod/yanky.nvim",
+    config = function()
+      require("extensions.yanky-nvim").setup()
+    end,
+    disable = not lvim.extensions.yanky_nvim.active,
   },
 
   {

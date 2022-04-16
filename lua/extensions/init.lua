@@ -46,6 +46,7 @@ local extensions = {
   "extensions.vim-unimpaired",
   "extensions.refactoring-nvim",
   "extensions.lsp-lines-nvim",
+  "extensions.yanky-nvim",
 }
 
 function M.config(config)
