@@ -42,6 +42,8 @@ lvim.lsp.ensure_installed = {
   -- "proselint",
 }
 
+lvim.lsp.automatic_configuration.skipped_filetypes = {}
+
 lvim.lsp.automatic_configuration.skipped_servers = {
   "angularls",
   -- "ansiblels",
