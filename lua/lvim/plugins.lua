@@ -1,7 +1,3 @@
-local commit = {
-  alpha_nvim = "8a0f62efbd94b00dd517efedeab1eb96fe544bd0",
-}
-
 return {
   -- Packer can manage itself as an optional plugin
   { "wbthomason/packer.nvim" },
@@ -34,11 +30,10 @@ return {
 
   -- Telescope
   {
-    "kylo252/telescope.nvim",
+    "nvim-telescope/telescope.nvim",
     config = function()
       require("lvim.core.telescope").setup()
     end,
-    branch = "nvim-nightly-compat",
     disable = not lvim.builtin.telescope.active,
   },
   {
@@ -306,7 +301,6 @@ return {
   -- Dashboard
   {
     "goolord/alpha-nvim",
-    commit = commit.alpha_nvim,
     event = "BufWinEnter",
     config = function()
       require("extensions.alpha-nvim").setup()
