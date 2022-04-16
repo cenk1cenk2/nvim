@@ -53,6 +53,7 @@ local function client_is_configured(server_name, ft)
   local active_autocmds = vim.split(vim.fn.execute("autocmd FileType " .. ft), "\n")
   for _, result in ipairs(active_autocmds) do
     if result:match(server_name) then
+      Log:debug(string.format("[%q] is already configured", server_name))
       return true
     end
   end
@@ -67,7 +68,6 @@ function M.setup(server_name, user_config)
 
   if lvim_lsp_utils.is_client_active(server_name) or client_is_configured(server_name) then
     Log:debug(string.format("[%q] is already configured. Ignoring repeated setup call.", server_name))
-
     return
   end
 
@@ -76,9 +76,7 @@ function M.setup(server_name, user_config)
   local servers = require "nvim-lsp-installer.servers"
   local server_available, requested_server = servers.get_server(server_name)
 
-  local is_overridden = vim.tbl_contains(lvim.lsp.override, server_name)
-
-  if not server_available or is_overridden then
+  if not server_available then
     pcall(function()
       require("lspconfig")[server_name].setup(config)
       buf_try_add(server_name)

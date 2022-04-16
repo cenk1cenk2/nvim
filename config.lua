@@ -42,7 +42,7 @@ lvim.lsp.ensure_installed = {
   -- "proselint",
 }
 
-lvim.lsp.override = {
+lvim.lsp.automatic_configuration.skipped_servers = {
   "angularls",
   -- "ansiblels",
   "denols",
