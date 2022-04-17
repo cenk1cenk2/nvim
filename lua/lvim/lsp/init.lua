@@ -127,6 +127,11 @@ function M.get_common_opts()
 end
 
 function M.setup()
+  if #vim.api.nvim_list_uis() == 0 then
+    Log:debug "headless mode detected, skipping setting lsp support"
+    return
+  end
+
   Log:debug "Setting up LSP support"
 
   local lsp_status_ok, _ = pcall(require, "lspconfig")
