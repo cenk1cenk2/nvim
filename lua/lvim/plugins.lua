@@ -312,7 +312,7 @@ return {
   {
     "Shatur/neovim-session-manager",
     config = function()
-      -- require("extensions.neovim-session-manager").setup()
+      require("extensions.neovim-session-manager").setup()
     end,
     disable = not lvim.extensions.session_manager.active,
   },
