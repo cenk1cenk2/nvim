@@ -62,6 +62,8 @@ function M.config(config)
     if extension == true then
       Log:warn("Extension config can not be loaded since it returns boolean: " .. extension_path)
 
+      print(extension_path)
+
       return
     end
 
