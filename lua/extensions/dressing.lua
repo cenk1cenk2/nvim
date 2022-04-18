@@ -6,6 +6,10 @@ function M.config()
   local telescope_ok, telescope = pcall(require, "telescope.themes")
 
   if not telescope_ok then
+    lvim.extensions[extension_name] = {
+      active = false,
+    }
+
     return
   end
 
