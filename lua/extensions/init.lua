@@ -59,7 +59,11 @@ function M.config(config)
       return
     end
 
-    print(vim.inspect(extension))
+    if extension == true then
+      Log:warn("Extension config can not be loaded since it returns boolean: " .. extension_path)
+
+      return
+    end
 
     extension.config(config)
   end
