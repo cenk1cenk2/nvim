@@ -14,9 +14,6 @@ function M.config()
   lvim.extensions[extension_name] = {
     active = true,
     on_config_done = nil,
-  }
-
-  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
     setup = {
       sessions_dir = utils.join_paths(get_runtime_dir(), "sessions"), -- The directory where the session files will be saved.
       path_replacer = "__", -- The character to which the path separator will be replaced for session files.
@@ -26,7 +23,7 @@ function M.config()
       autosave_ignore_not_normal = false, -- Plugin will not save a session when no writable and listed buffers are opened.
       autosave_only_in_session = true, -- Always autosaves session. If true, only autosaves after a session is active.
     },
-  })
+  }
 end
 
 function M.setup()
