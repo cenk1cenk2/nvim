@@ -2,13 +2,14 @@ local M = {}
 
 local extension_name = "session_manager"
 local utils = require "lvim.utils"
-local session_manager_config_ok, session_manager_config = pcall(require, "session_manager.config")
-
-if not session_manager_config_ok then
-  return
-end
 
 function M.config()
+  local session_manager_config_ok, session_manager_config = pcall(require, "session_manager.config")
+
+  if not session_manager_config_ok then
+    return
+  end
+
   lvim.extensions[extension_name] = {
     active = true,
     on_config_done = nil,
