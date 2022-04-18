@@ -3,6 +3,12 @@ local M = {}
 local extension_name = "dressing"
 
 function M.config()
+  local telescope_ok, telescope = pcall(require, "telescope.themes")
+
+  if not telescope_ok then
+    return
+  end
+
   lvim.extensions[extension_name] = {
     active = true,
     on_config_done = nil,
@@ -38,7 +44,7 @@ function M.config()
         backend = { "telescope", "fzf", "builtin", "nui" },
 
         -- Options for telescope selector
-        telescope = require("telescope.themes").get_dropdown {},
+        telescope = telescope.get_dropdown {},
 
         -- see :help dressing_get_config
         get_config = nil,
