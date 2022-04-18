@@ -55,10 +55,6 @@ function M.config(config)
     local extension_ok, extension = pcall(require, extension_path)
     if not extension_ok then
       Log:warn("Extension config can not be loaded: " .. extension_path)
-    elseif extension == true then
-      Log:warn("Extension config can not be loaded since it returns boolean: " .. extension_path)
-
-      print(extension_path)
     else
       extension.config(config)
     end
