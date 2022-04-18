@@ -30,7 +30,7 @@ function M.config()
 end
 
 function M.setup()
-  if not lvim.extensions[extension_name] then
+  if vim.tbl_isempty(lvim.extensions[extension_name]) then
     Log:warn("Can not setup plugin since config is missing: " .. extension_name)
   end
 
