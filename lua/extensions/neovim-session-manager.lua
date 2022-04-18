@@ -8,7 +8,7 @@ function M.config()
   local session_manager_config_ok, session_manager_config = pcall(require, "session_manager.config")
 
   if not session_manager_config_ok then
-    lvim.extensions[extension_name] = { active = false }
+    lvim.extensions[extension_name] = { active = true }
 
     return
   end

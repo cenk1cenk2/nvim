@@ -7,7 +7,7 @@ function M.config()
 
   if not telescope_ok then
     lvim.extensions[extension_name] = {
-      active = false,
+      active = true,
     }
 
     return
