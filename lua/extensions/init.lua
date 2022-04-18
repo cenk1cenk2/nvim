@@ -3,7 +3,7 @@ local M = {}
 local extensions = {
   "extensions.neotree-nvim",
   "extensions.alpha-nvim",
-  "extensions.neovim-session-manager",
+  "extensions.session-manager",
   "extensions.hop",
   "extensions.vim-repeat",
   "extensions.vim-surround",
