@@ -50,8 +50,15 @@ local extensions = {
 }
 
 function M.config(config)
+  local Log = require "lvim.core.log"
   for _, extension_path in ipairs(extensions) do
-    local extension = require(extension_path)
+    local extension_ok, extension = pcall(require, extension_path)
+    if not extension_ok then
+      Log:warn("Extension config can not be loaded: " .. extension_path)
+
+      return
+    end
+
     extension.config(config)
   end
 end
