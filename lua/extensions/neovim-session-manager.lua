@@ -1,5 +1,6 @@
 local M = {}
 
+local Log = require "lvim.core.log"
 local extension_name = "session_manager"
 local utils = require "lvim.utils"
 
@@ -29,6 +30,10 @@ function M.config()
 end
 
 function M.setup()
+  if not lvim.extensions[extension_name] then
+    Log:warn("Can not setup plugin since config is missing: " .. extension_name)
+  end
+
   local extension = require(extension_name)
   extension.setup(lvim.extensions[extension_name].setup)
 
