@@ -59,6 +59,8 @@ function M.config(config)
       return
     end
 
+    print(vim.inspect(extension))
+
     extension.config(config)
   end
 end
