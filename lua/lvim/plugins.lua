@@ -306,6 +306,7 @@ return {
     -- event = "BufWinEnter",
     -- event = "BufRead",
     run = "make",
+    commit = "24923c3819a450a772bb8f675926d530e829665f",
     module = "dap-install",
     disable = not lvim.builtin.dap.active,
   },
