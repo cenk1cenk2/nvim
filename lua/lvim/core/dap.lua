@@ -46,11 +46,11 @@ M.setup = function()
     q = { ":lua require'dap'.close()<cr>", "quit" },
   }
 
-  local dap_install = require "dap-install"
+  local dap_buddy = require "dap-install"
   local dbg_list = require("dap-install.api.debuggers").get_installed_debuggers()
 
   for _, debugger in ipairs(dbg_list) do
-    dap_install.config(debugger)
+    dap_buddy.config(debugger)
   end
 
   local dbg_path = require("lvim.utils").join_paths(
