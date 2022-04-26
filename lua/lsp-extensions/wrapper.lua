@@ -15,8 +15,7 @@ function M.clear_references()
 end
 
 function M.code_action()
-  -- vim.lsp.buf.code_action()
-  require("lvim.core.telescope").code_actions()
+  vim.lsp.buf.code_action()
 end
 
 function M.declaration()
