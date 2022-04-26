@@ -7,7 +7,6 @@ local _, platform = pcall(require, "nvim-lsp-installer.platform")
 local _, Data = pcall(require, "nvim-lsp-installer.data")
 local _, std = pcall(require, "nvim-lsp-installer.installers.std")
 local _, context = pcall(require, "nvim-lsp-installer.installers.context")
-local _, process = pcall(require, "nvim-lsp-installer.process")
 
 local server_name = "stylua"
 
@@ -25,8 +24,8 @@ servers.register(server.Server:new {
   name = server_name,
   root_dir = root_dir,
   installer = installers.pipe {
-    context.use_github_release_file("JohnnyMorganz/StyLua", function(version)
-      return ("stylua-%s-%s.zip"):format(version:gsub("^v", ""), bin_type)
+    context.use_github_release_file("JohnnyMorganz/StyLua", function()
+      return ("stylua-%s.zip"):format(bin_type)
     end),
     context.capture(function(ctx)
       return std.unzip_remote(ctx.github_release_file)
