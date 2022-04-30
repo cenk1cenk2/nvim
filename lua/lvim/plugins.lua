@@ -166,7 +166,8 @@ return {
   },
 
   {
-    "folke/lua-dev.nvim",
+    -- NOTE: Temporary fix till folke comes back
+    "max397574/lua-dev.nvim",
     module = "lua-dev",
   },
 
@@ -184,8 +185,6 @@ return {
   -- Treesitter
   {
     "nvim-treesitter/nvim-treesitter",
-    run = ":TSUpdate",
-    branch = vim.fn.has "nvim-0.6" == 1 and "master" or "0.5-compat",
     -- run = ":TSUpdate",
     config = function()
       require("lvim.core.treesitter").setup()
@@ -267,7 +266,10 @@ return {
   },
 
   -- Icons
-  { "kyazdani42/nvim-web-devicons" },
+  {
+    "kyazdani42/nvim-web-devicons",
+    disable = not lvim.use_icons,
+  },
 
   -- Status Line and Bufferline
   {

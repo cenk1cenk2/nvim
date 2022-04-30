@@ -10,6 +10,8 @@ lvim = {
   },
   keys = {},
 
+  use_icons = true,
+
   builtin = {},
   extensions = {},
 
