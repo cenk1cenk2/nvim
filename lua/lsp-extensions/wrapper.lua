@@ -1,6 +1,5 @@
 local M = {}
 local Log = require "lvim.core.log"
-local util = require "vim.lsp.util"
 local lsp_utils = require "utils.lsp"
 local table_utils = require "lvim.utils.table"
 
@@ -37,8 +36,8 @@ function M.document_symbol()
   vim.api.nvim_exec("Telescope", { "lsp_document_symbols" })
 end
 
-function M.formatting()
-  vim.lsp.buf.formatting { timeout_ms = 3000, async = false }
+function M.format()
+  vim.lsp.buf.format { timeout_ms = 3000, async = false }
 end
 
 function M.hover()
@@ -211,7 +210,7 @@ function M.setup()
     { "LspDeclaration", 'lua require("lsp-extensions.wrapper").declaration()' },
     { "LspDefinition", 'lua require("lsp-extensions.wrapper").definition()' },
     { "LspDocumentSymbol", 'lua require("lsp-extensions.wrapper").document_symbol()' },
-    { "LspFormatting", 'lua require("lsp-extensions.wrapper").formatting()' },
+    { "LspFormat", 'lua require("lsp-extensions.wrapper").format()' },
     { "LspHover", 'lua require("lsp-extensions.wrapper").hover()' },
     { "LspHoverPreview", 'lua require("lspsaga.provider").preview_definition()' },
     { "LspImplementation", 'lua require("lsp-extensions.wrapper").implementation()' },
