@@ -46,7 +46,7 @@ function M.formatting_sync()
 end
 
 function M.formatting_seq_sync()
-  vim.lsp.buf.formatting_seq_sync(nil, 3000)
+  vim.lsp.buf.format { timeout_ms = 3000 }
 end
 
 function M.hover()

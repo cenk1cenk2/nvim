@@ -27,9 +27,7 @@ local function resolve_config(server_name, ...)
   local has_custom_provider, custom_config = pcall(require, "lvim/lsp/providers/" .. server_name)
   if has_custom_provider then
     Log:debug("Using custom configuration for requested server: " .. server_name)
-    config = vim.tbl_deep_extend("force", config, custom_config)
-  else
-    Log:debug("Using default configuration for requested server: " .. server_name)
+    defaults = vim.tbl_deep_extend("force", defaults, custom_config)
   end
 
   defaults = vim.tbl_deep_extend("force", defaults, ...)
@@ -73,7 +71,6 @@ function M.setup(server_name, user_config)
   user_config = user_config or {}
 
   if lvim_lsp_utils.is_client_active(server_name) or client_is_configured(server_name) then
-    Log:debug(string.format("[%q] is already configured. Ignoring repeated setup call.", server_name))
     return
   end
 
@@ -86,11 +83,7 @@ function M.setup(server_name, user_config)
     return
   end
 
-  if is_overridden then
-    Log:debug("Server is overridden by the configuration: " .. server_name)
-  end
-
-  local install_notification = false
+  local install_in_progress = false
 
   if not server:is_installed() then
     if lvim.lsp.automatic_servers_installation then
