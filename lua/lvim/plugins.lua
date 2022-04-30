@@ -8,7 +8,6 @@ return {
   { "tamago324/nlsp-settings.nvim" },
   {
     "jose-elias-alvarez/null-ls.nvim",
-    branch = "0.8-breaking-changes",
   },
   {
     "jose-elias-alvarez/nvim-lsp-ts-utils",
