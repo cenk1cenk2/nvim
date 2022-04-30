@@ -38,15 +38,7 @@ function M.document_symbol()
 end
 
 function M.formatting()
-  vim.lsp.buf.formatting()
-end
-
-function M.formatting_sync()
-  vim.lsp.buf.formatting_sync(nil, 3000)
-end
-
-function M.formatting_seq_sync()
-  vim.lsp.buf.format { timeout_ms = 3000 }
+  vim.lsp.buf.formatting { timeout_ms = 3000, async = false }
 end
 
 function M.hover()
@@ -220,11 +212,6 @@ function M.setup()
     { "LspDefinition", 'lua require("lsp-extensions.wrapper").definition()' },
     { "LspDocumentSymbol", 'lua require("lsp-extensions.wrapper").document_symbol()' },
     { "LspFormatting", 'lua require("lsp-extensions.wrapper").formatting()' },
-    { "LspFormattingSync", 'lua require("lsp-extensions.wrapper").formatting_sync()' },
-    { "LspFormattingSeqSync", 'lua require("lsp-extensions.wrapper").formatting_seq_sync()' },
-    -- send sync formatting to this
-    { "LspFormattingSync", 'lua require("lsp-extensions.wrapper").formatting_seq_sync()' },
-    { "LspFormattingSeqSync", 'lua require("lsp-extensions.wrapper").formatting_seq_sync()' },
     { "LspHover", 'lua require("lsp-extensions.wrapper").hover()' },
     { "LspHoverPreview", 'lua require("lspsaga.provider").preview_definition()' },
     { "LspImplementation", 'lua require("lsp-extensions.wrapper").implementation()' },
