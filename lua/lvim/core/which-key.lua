@@ -26,6 +26,10 @@ M.config = function()
         separator = "➜", -- symbol used between a key and it's label
         group = "+", -- symbol prepended to a group
       },
+      popup_mappings = {
+        scroll_down = "<c-d>", -- binding to scroll down inside the popup
+        scroll_up = "<c-u>", -- binding to scroll up inside the popup
+      },
       window = {
         border = "single", -- none, single, double, shadow
         position = "bottom", -- bottom, top
@@ -36,6 +40,7 @@ M.config = function()
         height = { min = 4, max = 25 }, -- min and max height of the columns
         width = { min = 20, max = 50 }, -- min and max width of the columns
         spacing = 3, -- spacing between columns
+        align = "left", -- align columns left, center or right
       },
       triggers = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r" },
     },

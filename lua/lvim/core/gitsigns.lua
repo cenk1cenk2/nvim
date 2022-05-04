@@ -53,6 +53,7 @@ M.config = function()
       sign_priority = 6,
       update_debounce = 200,
       status_formatter = nil, -- Use default
+      yadm = { enable = false },
     },
   }
 end

@@ -208,6 +208,7 @@ M.config = function()
         npm = "(NPM)",
         rg = "(RG)",
         orgmode = "(ORG)",
+        tmux = "(TMUX)",
       },
       duplicates = { buffer = 1, path = 1, nvim_lsp = 0, luasnip = 1 },
       duplicates_default = 0,
@@ -252,6 +253,8 @@ M.config = function()
       { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
 
       { name = "treesitter" },
+
+      { name = "tmux" },
     },
     mapping = cmp.mapping.preset.insert {
       ["<C-k>"] = cmp.mapping.select_prev_item(),
