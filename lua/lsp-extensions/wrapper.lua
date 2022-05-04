@@ -37,7 +37,7 @@ function M.document_symbol()
 end
 
 function M.format()
-  vim.lsp.buf.format { timeout_ms = 3000, async = false }
+  require("lvim.lsp.utils").format()
 end
 
 function M.hover()
