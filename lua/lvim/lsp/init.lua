@@ -45,15 +45,12 @@ function M.common_on_exit(_, _)
   if lvim.lsp.document_highlight then
     pcall(vim.api.nvim_del_augroup_by_name, "lsp_document_highlight")
   end
-
   if lvim.lsp.code_lens_refresh then
     pcall(vim.api.nvim_del_augroup_by_name, "lsp_code_lens_refresh")
   end
 end
 
 function M.common_on_init(client, bufnr)
-  select_default_formater(client)
-
   if lvim.lsp.on_init_callback then
     lvim.lsp.on_init_callback(client, bufnr)
     Log:debug "Called lsp.on_init_callback"
@@ -62,10 +59,6 @@ function M.common_on_init(client, bufnr)
 end
 
 function M.common_on_attach(client, bufnr)
-  lsp_highlight_document(client)
-  lsp_code_lens_refresh(client)
-  add_lsp_buffer_keybindings(bufnr)
-
   if lvim.lsp.on_attach_callback then
     lvim.lsp.on_attach_callback(client, bufnr)
     Log:debug "Called lsp.on_attach_callback"
