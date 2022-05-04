@@ -145,7 +145,7 @@ function M.code_lens()
 end
 
 function M.diagonistics_set_list()
-  vim.lsp.diagnostic.set_loclist()
+  vim.diagnostic.set_loclist()
 end
 
 function M.fix_current()
@@ -226,7 +226,7 @@ function M.setup()
     { "LspLogLevelDebug", 'lua require("lsp-extensions.wrapper").lsp_logging_level("debug")' },
     { "LspLogLevelInfo", 'lua require("lsp-extensions.wrapper").lsp_logging_level("info")' },
     { "LspFixCurrent", 'lua require("lsp-extensions.wrapper").fix_current()' },
-    -- { "LspOrganizeImports", 'lua require("lsp-extensions.wrapper").organize_imports()' },
+    { "LspOrganizeImports", 'lua require("lsp-extensions.wrapper").organize_imports()' },
     { "LspPeekDefinitition", 'lua require("lsp-extensions.wrapper").peek_definition()' },
     { "LspPeekType", 'lua require("lsp-extensions.wrapper").peek_type()' },
     { "LspPeekImplementation", 'lua require("lsp-extensions.wrapper").implementation()' },
