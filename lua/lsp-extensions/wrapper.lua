@@ -117,7 +117,9 @@ function M.goto_prev()
 end
 
 function M.show_line_diagnostics()
-  require("lvim.lsp.handlers").show_line_diagnostics()
+  local config = lvim.lsp.diagnostics.float
+  config.scope = "line"
+  vim.diagnostic.open_float(0, config)
 end
 
 function M.peek_definition()

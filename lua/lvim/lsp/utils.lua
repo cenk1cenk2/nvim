@@ -140,7 +140,7 @@ function M.format_filter(clients)
     end)
     -- give higher prio to null-ls
     if status_ok and formatting_supported and client.name == "null-ls" then
-      return "null-ls"
+      return client.name
     else
       return status_ok and formatting_supported and client.name
     end
@@ -150,7 +150,7 @@ end
 ---Provide vim.lsp.buf.format for nvim <0.8
 ---@param opts table
 function M.format(opts)
-  opts = opts or { filter = M.format_filter }
+  opts = vim.tbl_extend("force", { filter = M.format_filter }, opts or {})
 
   if vim.lsp.buf.format then
     vim.lsp.buf.format(opts)
