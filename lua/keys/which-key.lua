@@ -163,12 +163,6 @@ M.mappings = {
       "prev diagnostic",
     },
     l = { ":LspCodeLens<CR>", "codelens action" },
-    P = {
-      name = "Peek",
-      d = { ":LspPeekDefinitition<CR>", "peek definition" },
-      t = { ":LspPeekType<CR>", "peek type definition" },
-      i = { ":LspPeekImplementation<CR>", "peek implementation" },
-    },
     R = { ":LspRename<CR>", "rename item under cursor" },
     q = { ":LspDiagonisticsSetList<CR>", "set quickfix list" },
     s = { ":LspDocumentSymbol<CR>", "document symbols" },

@@ -4,7 +4,7 @@ local extension_name = "neoclip"
 
 function M.config()
   lvim.extensions[extension_name] = {
-    active = true,
+    active = false,
     on_config_done = nil,
     setup = {
       history = 1000,

@@ -94,7 +94,7 @@ return {
     config = function()
       require("extensions.nvim-neoclip").setup()
     end,
-    disable = not lvim.builtin.telescope.active,
+    disable = not lvim.builtin.telescope.active or not lvim.extensions.neoclip.active,
   },
 
   -- Install nvim-cmp, and buffer source as a dependency
