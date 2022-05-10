@@ -32,9 +32,9 @@ local defaults = {
     -- 'jj' for quitting insert mode
     ["jj"] = "<ESC>",
     -- Move current line / block with Alt-j/k ala vscode.
-    ["<A-j>"] = "<Esc>:m .+1<CR>==gi",
+    -- ["<A-j>"] = "<Esc>:m .+1<CR>==gi",
     -- Move current line / block with Alt-j/k ala vscode.
-    ["<A-k>"] = "<Esc>:m .-2<CR>==gi",
+    -- ["<A-k>"] = "<Esc>:m .-2<CR>==gi",
     -- navigation
     ["<A-Up>"] = "<C-\\><C-N><C-w>k",
     ["<A-Down>"] = "<C-\\><C-N><C-w>j",
@@ -57,12 +57,12 @@ local defaults = {
     ["<C-Right>"] = ":vertical resize +2<CR>",
 
     -- Tab switch buffer
-    ["<S-l>"] = ":BufferNext<CR>",
-    ["<S-h>"] = ":BufferPrevious<CR>",
+    -- ["<S-l>"] = ":BufferNext<CR>",
+    -- ["<S-h>"] = ":BufferPrevious<CR>",
 
     -- Move current line / block with Alt-j/k a la vscode.
-    ["<A-j>"] = ":m .+1<CR>==",
-    ["<A-k>"] = ":m .-2<CR>==",
+    -- ["<A-j>"] = ":m .+1<CR>==",
+    -- ["<A-k>"] = ":m .-2<CR>==",
 
     -- QuickFix
     ["]q"] = ":cnext<CR>",
@@ -92,8 +92,8 @@ local defaults = {
   ---@usage change or add keymappings for visual block mode
   visual_block_mode = {
     -- Move selected line / block of text in visual mode
-    ["K"] = ":move '<-2<CR>gv-gv",
-    ["J"] = ":move '>+1<CR>gv-gv",
+    -- ["K"] = ":move '<-2<CR>gv-gv",
+    -- ["J"] = ":move '>+1<CR>gv-gv",
 
     -- Move current line / block with Alt-j/k ala vscode.
     ["<A-j>"] = ":m '>+1<CR>gv-gv",
