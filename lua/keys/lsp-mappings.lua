@@ -5,7 +5,7 @@ return {
     ["gt"] = { ":LspDeclaration<CR>", "Goto declaration" },
     ["gr"] = { ":LspReferences<CR>", "Goto references" },
     ["gz"] = { ":LspImplementation<CR>", "Goto Implementation" },
-    ["gS"] = { ":LspSignatureHelp<CR>", "show signature help" },
+    ["gK"] = { ":LspSignatureHelp<CR>", "show signature help" },
     ["go"] = { ":LspPeekDefinitition<CR>", "Peek definition" },
     ["gl"] = { ":LspShowLineDiagnostics<CR>", "Show line diagnostics" },
     ["ca"] = { ":LspCodeAction<CR>", "Code action" },
