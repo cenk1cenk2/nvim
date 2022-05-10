@@ -18,6 +18,7 @@ local installers = {
   "lsp-extensions.installers.rustywind",
   "lsp-extensions.installers.hadolint",
   "lsp-extensions.installers.proselint",
+  "lsp-extensions.installers.djlint",
 }
 
 function M.setup()

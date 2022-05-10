@@ -98,6 +98,17 @@ function M.register_sources(configs, method)
           table.insert(sources, source.with(opts))
 
           vim.list_extend(registered_names, { name })
+        elseif name then
+          local opts = {
+            name = name,
+          }
+
+          Log:debug("Registering source from the default source " .. name)
+          Log:trace(vim.inspect(opts))
+
+          table.insert(sources, source.with(opts))
+
+          vim.list_extend(registered_names, { name })
         else
           Log:warn("Not found source: " .. name)
         end

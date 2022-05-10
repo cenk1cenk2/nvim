@@ -34,6 +34,11 @@ function M.setup()
       filetypes = { "yaml.ansible" },
     },
 
+    {
+      exe = "djlint",
+      filetypes = { "jinja", "django", "jinja.html", "htmldjango" },
+    },
+
     -- {
     --   exe = "mypy",
     --   managed = true,

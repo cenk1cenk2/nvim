@@ -69,6 +69,11 @@ function M.setup()
       exe = "golines",
       filetypes = { "go" },
     },
+
+    {
+      exe = "djlint",
+      filetypes = { "jinja", "django", "jinja.html", "htmldjango" },
+    },
   }
 end
 
