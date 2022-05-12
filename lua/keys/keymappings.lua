@@ -20,6 +20,7 @@ return {
   normal_mode = {
     -- save
     ["<C-s>"] = ":w<CR>",
+    ["<C-S>"] = ":w!<CR>",
     ["<C-x>"] = ':noa w<CR>:lua require("lvim.core.log"):warn("File saved. No autocommands had run!")<CR>',
 
     -- close buffer
