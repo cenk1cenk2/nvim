@@ -45,7 +45,11 @@ end
 ---Get the full path to `$LUNARVIM_CACHE_DIR`
 ---@return string
 function _G.get_cache_dir()
-  return vim.fn.stdpath "cache"
+  local lvim_cache_dir = os.getenv "LUNARVIM_CACHE_DIR"
+  if not lvim_cache_dir then
+    return vim.call("stdpath", "cache")
+  end
+  return lvim_cache_dir
 end
 
 ---Initialize the `&runtimepath` variables and prepare for startup

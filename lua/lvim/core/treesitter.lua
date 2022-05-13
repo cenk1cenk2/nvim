@@ -16,9 +16,22 @@ M.config = function()
       additional_vim_regex_highlighting = false,
       disable = { "latex" },
     },
-    -- indent = {enable = true, disable = {"python", "html", "javascript"}},
-    -- TODO seems to be broken
-    indent = { enable = true, disable = { "yaml" } },
+    context_commentstring = {
+      enable = true,
+      enable_autocmd = false,
+      -- config = {
+      --   -- Languages that have a single comment style
+      --   typescript = "// %s",
+      --   css = "/* %s */",
+      --   scss = "/* %s */",
+      --   html = "<!-- %s -->",
+      --   svelte = "<!-- %s -->",
+      --   vue = "<!-- %s -->",
+      --   json = "",
+      -- },
+    },
+    indent = { enable = true, disable = { "yaml", "python" } },
+    autotag = { enable = true },
     textobjects = {
       swap = {
         enable = false,
@@ -56,8 +69,6 @@ M.config = function()
       colors = { "#ffd700", "#8bb9dd" },
     },
     refactor = { highlight_current_scope = { enable = false } },
-    autotag = { enable = true },
-    context_commentstring = { enable = true },
     incremental_selection = {
       enable = true,
       keymaps = {
