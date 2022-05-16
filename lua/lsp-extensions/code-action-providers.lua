@@ -9,9 +9,9 @@ function M.setup()
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
-    {
-      name = "refactoring",
-    },
+    -- {
+    --   name = "refactoring",
+    -- },
 
     -- {
     --   exe = "proselint",
