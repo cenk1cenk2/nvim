@@ -1,7 +1,6 @@
 local _, configs = pcall(require, "lspconfig/configs")
 local _, servers = pcall(require, "nvim-lsp-installer.servers")
 local _, server = pcall(require, "nvim-lsp-installer.server")
-local helpers = require "lsp-extensions.lsp-installer-helpers"
 local _, npm = pcall(require, "nvim-lsp-installer.core.managers.npm")
 
 local server_name = "rustywind"
@@ -15,5 +14,5 @@ servers.register(server.Server:new {
   root_dir = root_dir,
   async = true,
   installer = npm.packages { "rustywind" },
-  default_options = { cmd = { helpers.npm_executable(root_dir, server_name) }, cmd_env = {} },
+  default_options = { cmd = { server_name }, cmd_env = npm.env(root_dir) },
 })

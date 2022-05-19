@@ -57,9 +57,9 @@ end
 
 function M.setup()
   require("utils.command").wrap_to_command {
-    { "RebuildAndUpdate", 'lua require("lsp-extensions.lsp-installer-wrapper").rebuild_and_update()' },
-    { "RebuildLatestNeovim", 'lua require("lsp-extensions.lsp-installer-wrapper").rebuild_latest_neovim()' },
-    { "LspInstallerReinstallAll", 'lua require("lsp-extensions.lsp-installer-wrapper").reinstall_lsp_servers()' },
+    { "RebuildAndUpdate", 'lua require("modules.nvim").rebuild_and_update()' },
+    { "RebuildLatestNeovim", 'lua require("modules.nvim").rebuild_latest_neovim()' },
+    { "LspInstallerReinstallAll", 'lua require("modules.nvim").reinstall_lsp_servers()' },
   }
 end
 

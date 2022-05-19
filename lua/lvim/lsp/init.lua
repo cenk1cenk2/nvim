@@ -103,7 +103,7 @@ function M.setup()
     return
   end
 
-  require("lsp-extensions").setup()
+  require("modules-lsp").setup()
 
   if lvim.use_icons then
     for _, sign in ipairs(lvim.lsp.diagnostics.signs.values) do
