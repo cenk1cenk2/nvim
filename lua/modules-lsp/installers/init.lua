@@ -23,7 +23,7 @@ local installers = {
 
 function M.setup()
   for _, lsp_installer_path in ipairs(installers) do
-    require(lsp_installer_path)
+    require(lsp_installer_path).setup()
   end
 end
 

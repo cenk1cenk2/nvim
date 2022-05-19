@@ -1,45 +1,51 @@
-local _, configs = pcall(require, "lspconfig/configs")
-local _, servers = pcall(require, "nvim-lsp-installer.servers")
-local _, server = pcall(require, "nvim-lsp-installer.server")
-local _, path = pcall(require, "nvim-lsp-installer.core.path")
-local _, platform = pcall(require, "nvim-lsp-installer.core.platform")
-local _, functional = pcall(require, "nvim-lsp-installer.core.functional")
-local _, std = pcall(require, "nvim-lsp-installer.core.managers.std")
-local _, github = pcall(require, "nvim-lsp-installer.core.managers.github")
+local M = {}
 
-local server_name = "misspell"
+function M.setup()
+  local _, configs = pcall(require, "lspconfig/configs")
+  local _, servers = pcall(require, "nvim-lsp-installer.servers")
+  local _, server = pcall(require, "nvim-lsp-installer.server")
+  local _, path = pcall(require, "nvim-lsp-installer.core.path")
+  local _, platform = pcall(require, "nvim-lsp-installer.core.platform")
+  local _, functional = pcall(require, "nvim-lsp-installer.core.functional")
+  local _, std = pcall(require, "nvim-lsp-installer.core.managers.std")
+  local _, github = pcall(require, "nvim-lsp-installer.core.managers.github")
 
-configs[server_name] = { default_config = {} }
+  local server_name = "misspell"
 
-local root_dir = server.get_server_root_path(server_name)
+  configs[server_name] = { default_config = {} }
 
-servers.register(server.Server:new {
-  name = server_name,
-  root_dir = root_dir,
-  installer = function()
-    local bin_type = functional.coalesce(
-      functional.when(platform.is_mac, "macos"),
-      functional.when(platform.is_linux, "linux"),
-      functional.when(platform.is_win, "win64")
-    )
+  local root_dir = server.get_server_root_path(server_name)
 
-    local source = github.release_file {
-      repo = "client9/misspell",
-      asset_file = function(version)
-        return ("misspell_%s_%s_64bit.tar.gz"):format(version:gsub("^v", ""), bin_type)
-      end,
-    }
+  servers.register(server.Server:new {
+    name = server_name,
+    root_dir = root_dir,
+    installer = function()
+      local bin_type = functional.coalesce(
+        functional.when(platform.is_mac, "macos"),
+        functional.when(platform.is_linux, "linux"),
+        functional.when(platform.is_win, "win64")
+      )
 
-    source.with_receipt()
+      local source = github.release_file {
+        repo = "client9/misspell",
+        asset_file = function(version)
+          return ("misspell_%s_%s_64bit.tar.gz"):format(version:gsub("^v", ""), bin_type)
+        end,
+      }
 
-    std.download_file(source.download_url, source.asset_file)
+      source.with_receipt()
 
-    std.untar(source.asset_file)
+      std.download_file(source.download_url, source.asset_file)
 
-    std.chmod("+x", { "misspell" })
-  end,
-  default_options = {
-    cmd = { path.concat { root_dir, server_name } },
-    cmd_env = {},
-  },
-})
+      std.untar(source.asset_file)
+
+      std.chmod("+x", { "misspell" })
+    end,
+    default_options = {
+      cmd = { path.concat { root_dir, server_name } },
+      cmd_env = {},
+    },
+  })
+end
+
+return M

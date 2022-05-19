@@ -3,7 +3,7 @@ M = {}
 local TELESCOPE_RG_INTERACTIVE_LAST_ARGS = ""
 local telescope = require "lvim.core.telescope"
 
-function M.TelescopeRipgrepInteractive()
+function M.rg_interactive()
   vim.call "inputsave"
 
   local args = vim.fn.input("Pass in ripgrep arguments" .. " ➜  ", TELESCOPE_RG_INTERACTIVE_LAST_ARGS)
@@ -30,7 +30,7 @@ function M.TelescopeRipgrepInteractive()
   vim.call "inputrestore"
 end
 
-function M.TelescopeRipgrepString()
+function M.rg_string()
   local chunks = { "--fixed-strings" }
 
   local command = ":Telescope live_grep vimgrep_arguments="
@@ -41,7 +41,7 @@ function M.TelescopeRipgrepString()
   vim.api.nvim_command(command)
 end
 
-function M.TelescopeRipgrepDirty()
+function M.rg_dirty()
   return require("telescope.builtin").grep_string {
     search = "",
   }
@@ -51,15 +51,15 @@ M.setup = function()
   require("utils.command").wrap_to_command {
     {
       "TelescopeRipgrepInteractive",
-      'lua require("modules.telescope").TelescopeRipgrepInteractive()',
+      'lua require("modules.telescope").rg_interactive()',
     },
     {
       "TelescopeRipgrepDirty",
-      'lua require("modules.telescope").TelescopeRipgrepDirty()',
+      'lua require("modules.telescope").rg_dirty()',
     },
     {
       "TelescopeRipgrepString",
-      'lua require("modules.telescope").TelescopeRipgrepString()',
+      'lua require("modules.telescope").rg_string()',
     },
   }
 end

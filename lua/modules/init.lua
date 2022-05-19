@@ -2,7 +2,6 @@ local M = {}
 
 local modules = {
   "modules.nvim",
-  "modules.spawn",
   "modules.lsp-commands",
   "modules.augroups",
   "modules.telescope",
