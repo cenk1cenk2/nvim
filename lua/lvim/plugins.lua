@@ -14,7 +14,6 @@ return {
   },
   {
     "williamboman/nvim-lsp-installer",
-    commit = "48abdc9d32f56e038f4aca478cf6d5a1628b8286",
   },
 
   {

@@ -1,5 +1,5 @@
-local _, path = pcall(require, "nvim-lsp-installer.path")
-local _, platform = pcall(require, "nvim-lsp-installer.platform")
+local _, path = pcall(require, "nvim-lsp-installer.core.path")
+local _, platform = pcall(require, "nvim-lsp-installer.core.platform")
 
 local M = {}
 

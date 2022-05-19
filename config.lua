@@ -3,24 +3,24 @@ lvim.log.level = "debug"
 lvim.lsp.ensure_installed = {
   "jsonls",
   "sumneko_lua",
-  -- "vimls",
   "yamlls",
   "tsserver",
   "bashls",
   "pyright",
   "graphql",
   "dockerls",
-  -- "vuels",
   "volar",
   "stylelint_lsp",
   "gopls",
   "tailwindcss",
   "svelte",
-  -- "angularls",
   "rust_analyzer",
-  -- "eslint",
-  -- "ansiblels",
   "grammarly",
+  "ansiblels",
+  "emmet_ls",
+  "golangci_lint_ls ",
+  "prismals",
+  "prosemd_lsp",
   -- managed by extensions
   "stylua",
   "eslint_d",
@@ -39,7 +39,8 @@ lvim.lsp.ensure_installed = {
   "rustywind",
   "rustfmt",
   "hadolint",
-  -- "proselint",
+  "proselint",
+  "djlint"
 }
 
 lvim.lsp.automatic_configuration.skipped_filetypes = {}
