@@ -1,42 +1,6 @@
-local skipped_servers = {
-  "angularls",
-  "ansiblels",
-  "ccls",
-  "csharp_ls",
-  "cssmodules_ls",
-  "denols",
-  "ember",
-  "emmet_ls",
-  "eslint",
-  "eslintls",
-  "golangci_lint_ls",
-  "graphql",
-  "jedi_language_server",
-  "ltex",
-  "ocamlls",
-  "phpactor",
-  "psalm",
-  "pylsp",
-  "quick_lint_js",
-  "rome",
-  "reason_ls",
-  "scry",
-  "solang",
-  "solidity_ls",
-  "sorbet",
-  "sourcekit",
-  "sourcery",
-  "spectral",
-  "sqlls",
-  "sqls",
-  "stylelint_lsp",
-  "tailwindcss",
-  "tflint",
-  "verible",
-  "vuels",
-}
+local skipped_servers = {}
 
-local skipped_filetypes = { "markdown", "rst", "plaintext" }
+local skipped_filetypes = {}
 
 return {
   templates_dir = join_paths(get_runtime_dir(), "site", "after", "ftplugin"),
