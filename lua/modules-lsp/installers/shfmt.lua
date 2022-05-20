@@ -1,4 +1,5 @@
 local M = {}
+local helper = require "modules.lsp-installer"
 
 function M.setup()
   local _, configs = pcall(require, "lspconfig/configs")
@@ -40,7 +41,7 @@ function M.setup()
       std.chmod("+x", { "shfmt" })
     end,
     default_options = {
-      cmd = { path.concat { root_dir, server_name } },
+      cmd = { helper.executable(root_dir, server_name) },
       cmd_env = {},
     },
   })

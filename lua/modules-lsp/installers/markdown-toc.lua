@@ -1,4 +1,5 @@
 local M = {}
+local helper = require "modules.lsp-installer"
 
 function M.setup()
   local _, configs = pcall(require, "lspconfig/configs")
@@ -18,7 +19,7 @@ function M.setup()
     async = true,
     installer = npm.packages { "markdown-toc" },
     default_options = {
-      cmd = { "markdown-toc" },
+      cmd = { helper.npm_executable(root_dir, "markdown-toc") },
       cmd_env = npm.env(root_dir),
       extra_args = { "--bullets=-", "-i" },
     },

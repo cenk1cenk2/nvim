@@ -1,4 +1,5 @@
 local M = {}
+local helper = require "modules.lsp-installer"
 
 function M.setup()
   local _, configs = pcall(require, "lspconfig/configs")
@@ -9,6 +10,7 @@ function M.setup()
   local _, functional = pcall(require, "nvim-lsp-installer.core.functional")
   local _, std = pcall(require, "nvim-lsp-installer.core.managers.std")
   local _, github = pcall(require, "nvim-lsp-installer.core.managers.github")
+  local _, process = pcall(require, "nvim-lsp-installer.core.process")
 
   local server_name = "misspell"
 
@@ -42,8 +44,8 @@ function M.setup()
       std.chmod("+x", { "misspell" })
     end,
     default_options = {
-      cmd = { path.concat { root_dir, server_name } },
-      cmd_env = {},
+      cmd = { helper.executable(root_dir, server_name) },
+      cmd_env = { PATH = process.extend_path { root_dir } },
     },
   })
 end

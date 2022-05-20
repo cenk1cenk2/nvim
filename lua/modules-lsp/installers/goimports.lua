@@ -1,4 +1,5 @@
 local M = {}
+local helper = require "modules.lsp-installer"
 
 function M.setup()
   local _, configs = pcall(require, "lspconfig/configs")
@@ -17,7 +18,7 @@ function M.setup()
     root_dir = root_dir,
     async = true,
     installer = go.packages { "golang.org/x/tools/cmd/goimports" },
-    default_options = { cmd = { server_name }, cmd_env = go.env(root_dir) },
+    default_options = { cmd = { helper.go_executable(root_dir, server_name) }, cmd_env = go.env(root_dir) },
   })
 end
 

@@ -72,7 +72,8 @@ function M.setup()
 
     {
       exe = "djlint",
-      filetypes = { "jinja", "django", "jinja.html", "htmldjango" },
+      filetypes = { "jinja" },
+      extra_args = { "--profile", "jinja" },
     },
   }
 end

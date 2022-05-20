@@ -1,4 +1,5 @@
 local M = {}
+local helper = require "modules.lsp-installer"
 
 function M.setup()
   local _, configs = pcall(require, "lspconfig/configs")
@@ -39,15 +40,10 @@ function M.setup()
 
       std.untar(source.asset_file)
 
-      local out_dir = ("rustfmt_%s-x86_64_%s/"):format(bin_type, source.release:gsub("^v", "v"))
-
-      ctx.fs:rename(("%s/rustfmt"):format(out_dir), "rustfmt")
-      ctx.fs:rmrf(out_dir)
-
       std.chmod("+x", { "rustfmt" })
     end,
     default_options = {
-      cmd = { path.concat { root_dir, server_name } },
+      cmd = { helper.executable(root_dir, server_name) },
       cmd_env = {},
     },
   })

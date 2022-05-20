@@ -1,4 +1,5 @@
 local M = {}
+local helper = require "modules.lsp-installer"
 
 function M.setup()
   local _, configs = pcall(require, "lspconfig/configs")
@@ -16,8 +17,8 @@ function M.setup()
     name = server_name,
     root_dir = root_dir,
     async = true,
-    installer = npm.packages { "rustywind" },
-    default_options = { cmd = { server_name }, cmd_env = npm.env(root_dir) },
+    installer = npm.packages { server_name },
+    default_options = { cmd = { helper.npm_executable(root_dir, server_name) }, cmd_env = npm.env(root_dir) },
   })
 end
 

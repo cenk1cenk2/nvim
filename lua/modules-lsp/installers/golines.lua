@@ -1,4 +1,5 @@
 local M = {}
+local helper = require "modules.lsp-installer"
 
 function M.setup()
   local _, configs = pcall(require, "lspconfig/configs")
@@ -16,7 +17,7 @@ function M.setup()
     name = server_name,
     root_dir = root_dir,
     installer = go.packages { "github.com/segmentio/golines" },
-    default_options = { cmd = { server_name }, cmd_env = go.env(root_dir) },
+    default_options = { cmd = { helper.go_executable(root_dir, server_name) }, cmd_env = go.env(root_dir) },
   })
 end
 

@@ -1,4 +1,5 @@
 local M = {}
+local helper = require "modules.lsp-installer"
 
 function M.setup()
   local _, npm = pcall(require, "nvim-lsp-installer.core.managers.npm")
@@ -17,7 +18,7 @@ function M.setup()
     root_dir = root_dir,
     async = true,
     installer = npm.packages { server_name },
-    default_options = { cmd = { server_name }, cmd_env = npm.env(root_dir) },
+    default_options = { cmd = { helper.npm_executable(root_dir, server_name) }, cmd_env = npm.env(root_dir) },
   })
 end
 

@@ -1,4 +1,5 @@
 local M = {}
+local helper = require "modules.lsp-installer"
 
 function M.setup()
   local _, configs = pcall(require, "lspconfig/configs")
@@ -18,7 +19,7 @@ function M.setup()
     root_dir = root_dir,
     async = true,
     installer = pip3.packages { package_name },
-    default_options = { cmd = { package_name }, cmd_env = pip3.env(root_dir) },
+    default_options = { cmd = { helper.pip3_executable(root_dir, server_name) }, cmd_env = pip3.env(root_dir) },
   })
 end
 

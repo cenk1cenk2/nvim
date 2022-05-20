@@ -1,4 +1,5 @@
 local M = {}
+local helper = require "modules.lsp-installer"
 
 function M.setup()
   local _, configs = pcall(require, "lspconfig/configs")
@@ -18,8 +19,7 @@ function M.setup()
     async = true,
     installer = npm.packages { "markdownlint-cli" },
     default_options = {
-      cmd = { server_name },
-      cmd_env = npm.env(root_dir),
+      cmd = { helper.npm_executable(root_dir, server_name) },
       extra_args = { "-s", "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.markdownlintrc.json" },
     },
   })
