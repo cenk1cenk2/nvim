@@ -39,6 +39,11 @@ function M.setup()
       filetypes = { "jinja", "django", "jinja.html", "htmldjango" },
     },
 
+    {
+      exe = "shellcheck",
+      filetypes = { "sh", "bash", "zsh" },
+    },
+
     -- {
     --   exe = "mypy",
     --   managed = true,

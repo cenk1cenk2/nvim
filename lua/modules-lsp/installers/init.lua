@@ -19,6 +19,7 @@ local installers = {
   "modules-lsp.installers.hadolint",
   "modules-lsp.installers.proselint",
   "modules-lsp.installers.djlint",
+  "modules-lsp.installers.shellcheck",
 }
 
 function M.setup()

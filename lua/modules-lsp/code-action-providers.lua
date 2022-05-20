@@ -9,6 +9,11 @@ function M.setup()
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
+    {
+      exe = "shellcheck",
+      filetypes = { "sh", "bash", "zsh" },
+    },
+
     -- {
     --   name = "refactoring",
     -- },

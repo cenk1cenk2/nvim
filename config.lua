@@ -1,4 +1,4 @@
-lvim.log.level = "debug"
+lvim.log.level = "info"
 
 lvim.lsp.ensure_installed = {
   "jsonls",
@@ -40,7 +40,7 @@ lvim.lsp.ensure_installed = {
   "rustfmt",
   "hadolint",
   "proselint",
-  "djlint"
+  "djlint",
 }
 
 lvim.lsp.automatic_configuration.skipped_filetypes = {}
@@ -110,5 +110,5 @@ lvim.builtin.treesitter.ensure_installed = {
 }
 
 lvim.lsp.null_ls.setup = {
-  debug = true,
+  debug = false,
 }

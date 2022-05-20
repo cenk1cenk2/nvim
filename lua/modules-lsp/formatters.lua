@@ -40,7 +40,7 @@ function M.setup()
 
     {
       exe = "shfmt",
-      filetypes = { "sh", "bash" },
+      filetypes = { "sh", "bash", "zsh" },
     },
 
     {
