@@ -2,51 +2,8 @@ local M = {}
 
 local Log = require "lvim.core.log"
 
-local function find_root_dir()
-  local util = require "lspconfig/util"
-  local lsp_utils = require "lvim.lsp.utils"
-
-  local ts_client = lsp_utils.is_client_active "typescript"
-  if ts_client then
-    return ts_client.config.root_dir
-  end
-  local dirname = vim.fn.expand "%:p:h"
-  return util.root_pattern "package.json"(dirname)
-end
-
-local function from_node_modules(command)
-  local root_dir = find_root_dir()
-
-  if not root_dir then
-    return nil
-  end
-
-  local join_paths = require("lvim.utils").join_paths
-  return join_paths(root_dir, "node_modules", ".bin", command)
-end
-
-local local_providers = {
-  prettier = { find = from_node_modules },
-  prettierd = { find = from_node_modules },
-  prettier_d_slim = { find = from_node_modules },
-  eslint_d = { find = from_node_modules },
-  eslint = { find = from_node_modules },
-  stylelint = { find = from_node_modules },
-}
-
 function M.find_command(command)
-  if local_providers[command] then
-    local local_command = local_providers[command].find(command)
-    if local_command and vim.fn.executable(local_command) == 1 then
-      return local_command
-    end
-  end
-
-  if command and vim.fn.executable(command) == 1 then
-    return command
-  end
-
-  return nil
+  return command
 end
 
 function M.list_registered_providers_names(filetype)
@@ -116,8 +73,9 @@ function M.register_sources(configs, method)
         local opts = {
           name = name,
           command = table.concat(requested_server._default_options.cmd, " "),
-          extra_args = config.extra_args,
+          dynamic_command = requested_server._default_options.dynamic_command,
           env = requested_server._default_options.cmd_env,
+          extra_args = config.extra_args,
           filetypes = config.filetypes,
           extra_filetypes = config.extra_filetypes,
           disabled_filetypes = config.disabled_filetypes,
@@ -128,7 +86,13 @@ function M.register_sources(configs, method)
         Log:debug("Registering source " .. name)
         Log:trace(vim.inspect(opts))
 
-        table.insert(sources, source.with(opts))
+        local s = source.with(opts)
+
+        if opts.dynamic_command == false then
+          s._opts.dynamic_command = nil
+        end
+
+        table.insert(sources, s)
 
         vim.list_extend(registered_names, { name })
       end

@@ -5,6 +5,7 @@ function M.setup()
   local _, servers = pcall(require, "nvim-lsp-installer.servers")
   local _, server = pcall(require, "nvim-lsp-installer.server")
   local _, npm = pcall(require, "nvim-lsp-installer.core.managers.npm")
+  local _, path = pcall(require, "nvim-lsp-installer.core.path")
 
   local server_name = "prettierd"
 
@@ -18,7 +19,8 @@ function M.setup()
     async = true,
     installer = npm.packages { "@fsouza/prettierd" },
     default_options = {
-      cmd = { server_name },
+      cmd = { path.concat { root_dir, "node_modules/.bin", server_name } },
+      dynamic_command = false,
       cmd_env = vim.tbl_extend("force", npm.env(root_dir), {
         PRETTIERD_DEFAULT_CONFIG = vim.fn.expand "~/.config/nvim/utils/linter-config/.prettierrc.json",
       }),

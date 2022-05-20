@@ -1,7 +1,7 @@
 local M = {}
 
 local installers = {
-  "modules-lsp.installers.prettier-d",
+  "modules-lsp.installers.prettierd",
   "modules-lsp.installers.eslint-d",
   "modules-lsp.installers.stylua",
   "modules-lsp.installers.misspell",
