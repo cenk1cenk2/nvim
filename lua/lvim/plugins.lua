@@ -704,4 +704,13 @@ return {
     end,
     disable = not lvim.extensions.cybu_nvim.active,
   },
+
+  -- line wise substitute
+  {
+    "gbprod/substitute.nvim",
+    config = function()
+      require("extensions.substitute-nvim").setup()
+    end,
+    disable = not lvim.extensions.substitute_nvim.active,
+  },
 }

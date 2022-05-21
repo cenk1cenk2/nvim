@@ -48,6 +48,7 @@ local extensions = {
   "extensions.lsp-lines-nvim",
   "extensions.yanky-nvim",
   "extensions.cybu-nvim",
+  "extensions.substitute-nvim",
 }
 
 function M.config(config)
