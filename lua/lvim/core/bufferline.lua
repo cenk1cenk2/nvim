@@ -42,9 +42,9 @@ M.config = function()
     on_config_done = nil,
     keymap = {
       normal_mode = {
-        ["<M-l>"] = ":BufferNext<CR>",
+        -- ["<M-l>"] = ":BufferNext<CR>",
         ["<M-j>"] = ":BufferMoveNext<CR>",
-        ["<M-h>"] = ":BufferPrevious<CR>",
+        -- ["<M-h>"] = ":BufferPrevious<CR>",
         ["<M-k>"] = ":BufferMovePrevious<CR>",
       },
     },

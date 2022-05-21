@@ -695,4 +695,13 @@ return {
     end,
     disable = not lvim.extensions.refactoring_nvim.active,
   },
+
+  -- buffer switcher
+  {
+    "ghillb/cybu.nvim",
+    config = function()
+      require("extensions.cybu-nvim").setup()
+    end,
+    disable = not lvim.extensions.cybu_nvim.active,
+  },
 }
