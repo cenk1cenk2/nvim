@@ -34,6 +34,7 @@ function M.load_augroups()
       { "BufRead", "provision.yml", "setlocal filetype=yaml.ansible" },
       { "BufRead", "*.j2", "setlocal filetype=jinja" },
       { "BufRead", "*.yml.j2", "setlocal filetype=yaml.ansible" },
+      { "BufRead", "Dockerfile-*", "setlocal filetype=dockerfile" },
     },
     _git = {
       { "FileType", "gitcommit", "setlocal wrap" },
