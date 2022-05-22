@@ -134,7 +134,7 @@ end
 ---@param clients table clients attached to a buffer
 ---@return table chosen clients
 function M.format_filter(clients)
-  clients = vim.tbl_filter(function(client)
+  return vim.tbl_filter(function(client)
     local status_ok, formatting_supported = pcall(function()
       return client.supports_method "textDocument/formatting"
     end)
@@ -145,18 +145,6 @@ function M.format_filter(clients)
       return status_ok and formatting_supported and client.name
     end
   end, clients)
-
-  local nls = vim.tbl_map(function(item)
-    if item.name == "null-ls" then
-      return item
-    end
-  end, clients)
-
-  if nls then
-    return nls
-  end
-
-  return clients
 end
 
 ---Provide vim.lsp.buf.format for nvim <0.8

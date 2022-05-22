@@ -14,8 +14,8 @@ function M.config()
     },
     setup = {
       position = {
-        relative_to = "win", -- win, editor, cursor
-        anchor = "bottomcenter", -- topleft, topcenter, topright,
+        relative_to = "editor", -- win, editor, cursor
+        anchor = "center", -- topleft, topcenter, topright,
         -- centerleft, center, centerright,
         -- bottomleft, bottomcenter, bottomright
         vertical_offset = 10, -- vertical offset from anchor in lines
