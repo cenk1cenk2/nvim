@@ -138,11 +138,14 @@ function M.format_filter(clients)
     local status_ok, formatting_supported = pcall(function()
       return client.supports_method "textDocument/formatting"
     end)
+
     -- give higher prio to null-ls
     if status_ok and formatting_supported and client.name == "null-ls" then
       return client.name
-    else
+    elseif not vim.tbl_contains(lvim.lsp.ignored_formatters, client.name) then
       return status_ok and formatting_supported and client.name
+    else
+      return false
     end
   end, clients)
 end
