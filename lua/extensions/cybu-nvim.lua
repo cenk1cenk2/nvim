@@ -21,7 +21,7 @@ function M.config()
         vertical_offset = 10, -- vertical offset from anchor in lines
         horizontal_offset = 0, -- vertical offset from anchor in columns
         max_win_height = 5, -- height of cybu window in lines
-        max_win_width = 0.75, -- integer for absolute in columns
+        max_win_width = 0.5, -- integer for absolute in columns
         -- float for relative to win/editor width
       },
       style = {
