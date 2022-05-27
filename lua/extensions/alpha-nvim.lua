@@ -65,16 +65,23 @@ M.setup = function()
     table.insert(buttons, button(value[1], value[2]))
   end
 
-  require("lvim.core.autocmds").define_augroups {
-    _dashboard = {
-      -- seems to be nobuflisted that makes my stuff disappear will do more testing
+  require("lvim.core.autocmds").define_autocmds {
+    {
+      "FileType",
       {
-        "FileType",
-        "alpha",
-        "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs= ",
+        group = "__alpha",
+        pattern = "alpha",
+        command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs= ",
       },
-      -- { "FileType", "alpha", "set showtabline=0 | autocmd BufLeave <buffer> set showtabline=1" },
-      { "FileType", "alpha", "nnoremap <silent> <buffer> q :q<CR>" },
+    },
+
+    {
+      "FileType",
+      {
+        group = "__alpha",
+        pattern = "alpha",
+        command = "nnoremap <silent> <buffer> q :q<CR>",
+      },
     },
   }
 

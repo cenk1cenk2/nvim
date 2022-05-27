@@ -1,17 +1,24 @@
 local M = {}
 
 M.setup = function()
-  require("lvim.core.autocmds").define_augroups {
-    __TERMINAL = {
-      TerminalOpen = { "TermOpen", "*", "nnoremap <buffer><LeftRelease> <LeftRelease>i" },
+  require("lvim.core.autocmds").define_autocmds {
+
+    {
+      { "TermOpen" },
+      {
+        group = "__TERMINAL",
+        pattern = "*",
+        command = "nnoremap <buffer><LeftRelease> <LeftRelease>i",
+      },
     },
 
-    __DEBUG = {
-      ReloadLaunchJsonDebug = { "BufWritePost", "launch.json", "lua require('dap.ext.vscode').load_launchjs()" },
-    },
-
-    __FILEOPTIONS = {
-      JinjaIndentDisable = { "FileType", "jinja,jinja2", "setlocal indentexpr=nvim_treesitter#indent()" },
+    {
+      { "BufWritePost" },
+      {
+        group = "__DEBUG_LAUNCHER",
+        pattern = "launch.json",
+        command = "lua require('dap.ext.vscode').load_launchjs()",
+      },
     },
 
     -- __LAZYGIT = {

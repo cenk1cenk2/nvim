@@ -142,13 +142,14 @@ function M.setup()
 
   require("lvim.keymappings").load(lvim.extensions[extension_name].keymaps)
 
-  require("lvim.core.autocmds").define_augroups {
-    _spectre_panel = {
-      -- seems to be nobuflisted that makes my stuff disappear will do more testing
+  require("lvim.core.autocmds").define_autocmds {
+    -- seems to be nobuflisted that makes my stuff disappear will do more testing
+    {
+      "FileType",
       {
-        "FileType",
-        "spectre_panel",
-        "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0",
+        group = "__spectre",
+        pattern = "spectre_panel",
+        command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0",
       },
     },
   }

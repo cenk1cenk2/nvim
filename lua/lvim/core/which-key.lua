@@ -82,9 +82,10 @@ M.setup = function()
   which_key.register(mappings, opts)
   which_key.register(vmappings, vopts)
 
-  require("lvim.core.autocmds").define_augroups {
-    __which_key = {
-      { "FileType", "which_key", "nnoremap <silent> <buffer> <esc> <C-c><CR>" },
+  require("lvim.core.autocmds").define_autocmds {
+    {
+      "FileType",
+      { group = "__which_key", pattern = "which_key", command = "nnoremap <silent> <buffer> <esc> <C-c><CR>" },
     },
   }
 
