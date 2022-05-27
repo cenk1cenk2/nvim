@@ -1,6 +1,7 @@
 local M = {}
 
 local extensions = {
+  "extensions.barbar",
   "extensions.neotree-nvim",
   "extensions.alpha-nvim",
   "extensions.neovim-session-manager",

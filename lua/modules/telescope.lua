@@ -67,6 +67,12 @@ M.setup = function()
         M.rg_string()
       end,
     },
+    {
+      name = "TelescopeProjectFiles",
+      fn = function()
+        require("lvim.core.telescope.custom-finders").find_project_files()
+      end,
+    },
   }
 end
 

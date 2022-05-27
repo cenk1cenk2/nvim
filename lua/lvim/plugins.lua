@@ -296,12 +296,22 @@ return {
     disable = not lvim.builtin.lualine.active,
   },
 
+  -- bufferline
   {
     "romgrk/barbar.nvim",
     config = function()
+      require("lvim.extensions.barbar").setup()
+    end,
+    event = "BufWinEnter",
+    disable = not lvim.extensions.barbar.active,
+  },
+
+  {
+    "akinsho/bufferline.nvim",
+    config = function()
       require("lvim.core.bufferline").setup()
     end,
-    branch = "master",
+    branch = "main",
     event = "BufWinEnter",
     disable = not lvim.builtin.bufferline.active,
   },
