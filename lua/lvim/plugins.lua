@@ -300,7 +300,7 @@ return {
   {
     "romgrk/barbar.nvim",
     config = function()
-      require("lvim.extensions.barbar").setup()
+      require("extensions.barbar").setup()
     end,
     event = "BufWinEnter",
     disable = not lvim.extensions.barbar.active,

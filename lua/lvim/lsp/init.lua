@@ -1,7 +1,6 @@
 local M = {}
 local Log = require "lvim.core.log"
 local utils = require "lvim.utils"
-local formatters = require "lvim.lsp.null-ls.formatters"
 local autocmds = require "lvim.core.autocmds"
 
 local function add_lsp_buffer_keybindings(bufnr)

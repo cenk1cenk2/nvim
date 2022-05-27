@@ -1,3 +1,3 @@
 vim.cmd [[
- au BufRead,BufNewFile *.zsh set filetype=sh
+ au BufRead,BufNewFile *.zsh setlocal filetype=sh
 ]]
