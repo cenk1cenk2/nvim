@@ -16,8 +16,13 @@ M.GDiffCompare = function()
 end
 
 M.setup = function()
-  require("utils.command").wrap_to_command {
-    { "GDiffCompare", 'lua require("modules.fugitive-compare-branch").GDiffCompare()' },
+  require("utils.command").create_commands {
+    {
+      name = "GDiffCompare",
+      fn = function()
+        M.GDiffCompare()
+      end,
+    },
   }
 end
 

@@ -56,10 +56,25 @@ function M.rebuild_and_update()
 end
 
 function M.setup()
-  require("utils.command").wrap_to_command {
-    { "RebuildAndUpdate", 'lua require("modules.nvim").rebuild_and_update()' },
-    { "RebuildLatestNeovim", 'lua require("modules.nvim").rebuild_latest_neovim()' },
-    { "LspInstallerReinstallAll", 'lua require("modules.nvim").reinstall_lsp_servers()' },
+  require("utils.command").create_commands {
+    {
+      name = "RebuildAndUpdate",
+      fn = function()
+        M.rebuild_and_update()
+      end,
+    },
+    {
+      name = "RebuildLatestNeovim",
+      fn = function()
+        M.rebuild_latest_neovim()
+      end,
+    },
+    {
+      name = "LspInstallerReinstallAll",
+      fn = function()
+        M.reinstall_lsp_servers()
+      end,
+    },
   }
 end
 

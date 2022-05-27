@@ -48,18 +48,24 @@ function M.rg_dirty()
 end
 
 M.setup = function()
-  require("utils.command").wrap_to_command {
+  require("utils.command").create_commands {
     {
-      "TelescopeRipgrepInteractive",
-      'lua require("modules.telescope").rg_interactive()',
+      name = "TelescopeRipgrepInteractive",
+      fn = function()
+        M.rg_interactive()
+      end,
     },
     {
-      "TelescopeRipgrepDirty",
-      'lua require("modules.telescope").rg_dirty()',
+      name = "TelescopeRipgrepDirty",
+      fn = function()
+        M.rg_dirty()
+      end,
     },
     {
-      "TelescopeRipgrepString",
-      'lua require("modules.telescope").rg_string()',
+      name = "TelescopeRipgrepString",
+      fn = function()
+        M.rg_string()
+      end,
     },
   }
 end

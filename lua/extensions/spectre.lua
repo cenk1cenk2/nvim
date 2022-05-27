@@ -133,11 +133,27 @@ end
 function M.setup()
   local extension = require(extension_name)
   extension.setup(lvim.extensions[extension_name].setup)
+  local spectre = require "spectre"
 
-  require("utils.command").wrap_to_command {
-    { "FindAndReplace", [[lua require('spectre').open()]] },
-    { "FindAndReplaceVisual", [[lua require('spectre').open_visual()]] },
-    { "FindAndReplaceInBuffer", [[lua require('spectre').open_file_search()]] },
+  require("utils.command").create_commands {
+    {
+      name = "FindAndReplace",
+      fn = function()
+        spectre.open()
+      end,
+    },
+    {
+      name = "FindAndReplaceVisual",
+      fn = function()
+        spectre.open_visual()
+      end,
+    },
+    {
+      name = "FindAndReplaceInBuffer",
+      fn = function()
+        spectre.open_file_search()
+      end,
+    },
   }
 
   require("lvim.keymappings").load(lvim.extensions[extension_name].keymaps)

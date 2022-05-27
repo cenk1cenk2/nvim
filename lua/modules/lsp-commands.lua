@@ -26,9 +26,19 @@ function M.run_md_printer()
 end
 
 M.setup = function()
-  require("utils.command").wrap_to_command {
-    { "RunMarkdownToc", [[lua require('modules.lsp-commands').run_markdown_toc()]] },
-    { "RunMdPrinter", [[lua require('modules.lsp-commands').run_md_printer()]] },
+  require("utils.command").create_commands {
+    {
+      name = "RunMarkdownToc",
+      fn = function()
+        M.run_markdown_toc()
+      end,
+    },
+    {
+      name = "RunMdPrinter",
+      fn = function()
+        M.run_md_printer()
+      end,
+    },
   }
 end
 

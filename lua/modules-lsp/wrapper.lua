@@ -207,36 +207,175 @@ function M.lsp_logging_level(level)
 end
 
 function M.setup()
-  require("utils.command").wrap_to_command {
-    { "LspCodeAction", 'lua require("modules-lsp.wrapper").code_action()' },
-    { "LspDeclaration", 'lua require("modules-lsp.wrapper").declaration()' },
-    { "LspDefinition", 'lua require("modules-lsp.wrapper").definition()' },
-    { "LspDocumentSymbol", 'lua require("modules-lsp.wrapper").document_symbol()' },
-    { "LspFormat", 'lua require("modules-lsp.wrapper").format()' },
-    { "LspHover", 'lua require("modules-lsp.wrapper").hover()' },
-    { "LspHoverPreview", 'lua require("lspsaga.provider").preview_definition()' },
-    { "LspImplementation", 'lua require("modules-lsp.wrapper").implementation()' },
-    { "LspRangeCodeAction", 'lua require("modules-lsp.wrapper").range_code_action()' },
-    { "LspRangeFormatting", 'lua require("modules-lsp.wrapper").range_formatting()' },
-    { "LspReferences", 'lua require("modules-lsp.wrapper").references()' },
-    { "LspRename", 'lua require("modules-lsp.wrapper").rename()' },
-    { "LspTypeDefinition", 'lua require("modules-lsp.wrapper").type_definition()' },
-    { "LspWorkspaceSymbol", 'lua require("modules-lsp.wrapper").workspace_symbol()' },
-    { "LspGotoNext", 'lua require("modules-lsp.wrapper").goto_next()' },
-    { "LspGotoPrev", 'lua require("modules-lsp.wrapper").goto_prev()' },
-    { "LspShowLineDiagnostics", 'lua require("modules-lsp.wrapper").show_line_diagnostics()' },
-    { "LspLogLevelDebug", 'lua require("modules-lsp.wrapper").lsp_logging_level("debug")' },
-    { "LspLogLevelInfo", 'lua require("modules-lsp.wrapper").lsp_logging_level("info")' },
-    { "LspFixCurrent", 'lua require("modules-lsp.wrapper").fix_current()' },
-    { "LspOrganizeImports", 'lua require("modules-lsp.wrapper").organize_imports()' },
-    { "LspPeekDefinitition", 'lua require("modules-lsp.wrapper").peek_definition()' },
-    { "LspPeekType", 'lua require("modules-lsp.wrapper").peek_type()' },
-    { "LspPeekImplementation", 'lua require("modules-lsp.wrapper").implementation()' },
-    { "LspDocumentDiagonistics", 'lua require("modules-lsp.wrapper").document_diagonistics()' },
-    { "LspWorkspaceDiagonistics", 'lua require("modules-lsp.wrapper").workspace_diagonistics()' },
-    { "LspCodeLens", 'lua require("modules-lsp.wrapper").code_lens()' },
-    { "LspDiagonisticsSetList", 'lua require("modules-lsp.wrapper").diagonistics_set_list()' },
-    { "LspSignatureHelp", 'lua require("modules-lsp.wrapper").signature_help()' },
+  require("utils.command").create_commands {
+    {
+      name = "LspCodeAction",
+      fn = function()
+        M.code_action()
+      end,
+    },
+    {
+      name = "LspDeclaration",
+      fn = function()
+        M.declaration()
+      end,
+    },
+    {
+      name = "LspDefinition",
+      fn = function()
+        M.definition()
+      end,
+    },
+    {
+      name = "LspDocumentSymbol",
+      fn = function()
+        M.document_symbol()
+      end,
+    },
+    {
+      name = "LspFormat",
+      fn = function()
+        M.format()
+      end,
+    },
+    {
+      name = "LspHover",
+      fn = function()
+        M.hover()
+      end,
+    },
+    {
+      name = "LspImplementation",
+      fn = function()
+        M.implementation()
+      end,
+    },
+    {
+      name = "LspRangeCodeAction",
+      fn = function()
+        M.range_code_action()
+      end,
+    },
+    {
+      name = "LspRangeFormatting",
+      fn = function()
+        M.range_formatting()
+      end,
+    },
+    {
+      name = "LspReferences",
+      fn = function()
+        M.references()
+      end,
+    },
+    {
+      name = "LspRename",
+      fn = function()
+        M.rename()
+      end,
+    },
+    {
+      name = "LspTypeDefinition",
+      fn = function()
+        M.type_definition()
+      end,
+    },
+    {
+      name = "LspWorkspaceSymbol",
+      fn = function()
+        M.workspace_symbol()
+      end,
+    },
+    {
+      name = "LspGotoNext",
+      fn = function()
+        M.goto_next()
+      end,
+    },
+    {
+      name = "LspGotoPrev",
+      fn = function()
+        M.goto_prev()
+      end,
+    },
+    {
+      name = "LspShowLineDiagnostics",
+      fn = function()
+        M.show_line_diagnostics()
+      end,
+    },
+    {
+      name = "LspLogLevelDebug",
+      fn = function()
+        M.lsp_logging_level "debug"
+      end,
+    },
+    {
+      name = "LspLogLevelInfo",
+      fn = function()
+        M.lsp_logging_level "info"
+      end,
+    },
+    {
+      name = "LspFixCurrent",
+      fn = function()
+        M.fix_current()
+      end,
+    },
+    {
+      name = "LspOrganizeImports",
+      fn = function()
+        M.organize_imports()
+      end,
+    },
+    {
+      name = "LspPeekDefinition",
+      fn = function()
+        M.peek_definition()
+      end,
+    },
+    {
+      name = "LspPeekType",
+      fn = function()
+        M.peek_type()
+      end,
+    },
+    {
+      name = "LspPeekImplementation",
+      fn = function()
+        M.peek_implementation()
+      end,
+    },
+    {
+      name = "LspDocumentDiagonistics",
+      fn = function()
+        M.document_diagonistics()
+      end,
+    },
+    {
+      name = "LspWorkspaceDiagonistics",
+      fn = function()
+        M.workspace_diagonistics()
+      end,
+    },
+    {
+      name = "LspCodeLens",
+      fn = function()
+        M.code_lens()
+      end,
+    },
+    {
+      name = "LspDiagonisticsSetList",
+      fn = function()
+        M.diagonistics_set_list()
+      end,
+    },
+    {
+      name = "LspSignatureHelp",
+      fn = function()
+        M.signature_help()
+      end,
+    },
   }
 end
 
