@@ -135,14 +135,14 @@ end
 M.setup = function()
   require("lvim.keymappings").load(lvim.extensions[extension_name].keymap)
 
-  lvim.builtin.which_key.mappings["bb"] = { ":BufferPick<CR>", "pick buffer" }
-  lvim.builtin.which_key.mappings["bC"] = { ":BufferWipeout<CR>", "close all buffers" }
-  lvim.builtin.which_key.mappings["bx"] = { ":BufferClose!<CR>", "force close buffer" }
-  lvim.builtin.which_key.mappings["bX"] = { ":BufferCloseAllButCurrent<CR>", "close all but current buffer" }
-  lvim.builtin.which_key.mappings["bp"] = { ":BufferPin<CR>", "pin current buffer" }
-  lvim.builtin.which_key.mappings["bP"] = { ":BufferCloseAllButPinned<CR>", "close all but pinned buffers" }
-  lvim.builtin.which_key.mappings["by"] = { ":BufferCloseBuffersLeft<CR>", "close all buffers to the left" }
-  lvim.builtin.which_key.mappings["bY"] = { ":BufferCloseBuffersRight<CR>", "close all buffers to the right" }
+  lvim.builtin.which_key.mappings["b"]["b"] = { ":BufferPick<CR>", "pick buffer" }
+  lvim.builtin.which_key.mappings["b"]["C"] = { ":BufferWipeout<CR>", "close all buffers" }
+  lvim.builtin.which_key.mappings["b"]["x"] = { ":BufferClose!<CR>", "force close buffer" }
+  lvim.builtin.which_key.mappings["b"]["X"] = { ":BufferCloseAllButCurrent<CR>", "close all but current buffer" }
+  lvim.builtin.which_key.mappings["b"]["p"] = { ":BufferPin<CR>", "pin current buffer" }
+  lvim.builtin.which_key.mappings["b"]["P"] = { ":BufferCloseAllButPinned<CR>", "close all but pinned buffers" }
+  lvim.builtin.which_key.mappings["b"]["y"] = { ":BufferCloseBuffersLeft<CR>", "close all buffers to the left" }
+  lvim.builtin.which_key.mappings["b"]["Y"] = { ":BufferCloseBuffersRight<CR>", "close all buffers to the right" }
 
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done()
