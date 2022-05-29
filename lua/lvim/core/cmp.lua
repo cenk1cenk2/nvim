@@ -20,6 +20,7 @@ end
 local function feedkeys(key, mode)
   vim.fn.feedkeys(T(key), mode)
 end
+
 M.methods.feedkeys = feedkeys
 
 ---checks if emmet_ls is available and active in the buffer
@@ -143,6 +144,7 @@ local function jumpable(dir)
     return inside_snippet() and seek_luasnip_cursor_node() and luasnip.jumpable()
   end
 end
+
 M.methods.jumpable = jumpable
 
 M.config = function()
@@ -261,6 +263,13 @@ M.config = function()
       ["<C-j>"] = cmp.mapping.select_next_item(),
       ["<C-d>"] = cmp.mapping.scroll_docs(-4),
       ["<C-f>"] = cmp.mapping.scroll_docs(4),
+      ["<C-Space>"] = cmp.mapping.complete(),
+      ["<C-c>"] = function()
+        vim.api.nvim_feedkeys(vim.api.nvim_eval '"\\<esc>"', "m", true)
+
+        cmp.mapping.abort()
+      end,
+      ["<C-e>"] = cmp.mapping.abort(),
       -- TODO: potentially fix emmet nonsense
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
@@ -292,13 +301,6 @@ M.config = function()
         "i",
         "s",
       }),
-      ["<C-Space>"] = cmp.mapping.complete(),
-      ["<C-c>"] = function()
-        vim.api.nvim_feedkeys(vim.api.nvim_eval '"\\<esc>"', "m", true)
-
-        cmp.mapping.abort()
-      end,
-      ["<C-e>"] = cmp.mapping.abort(),
       ["<CR>"] = cmp.mapping(function(fallback)
         if cmp.visible() and cmp.confirm(lvim.builtin.cmp.confirm_opts) then
           if jumpable() then

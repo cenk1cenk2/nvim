@@ -5,35 +5,10 @@ function M.config()
   lvim.builtin.nvimtree = {
     active = true,
     on_config_done = nil,
-    vars = {
-      special_files = { ["package.json"] = true, ["README.md"] = true, ["node_modules"] = true },
-      show_icons = { git = 1, folders = 1, files = 1, folder_arrows = 1, tree_width = 40 },
-
-      icons = {
-        default = "",
-        symlink = "",
-        git = {
-          unstaged = "",
-          staged = "✓",
-          unmerged = "",
-          renamed = "➜",
-          deleted = "",
-          untracked = "",
-          ignored = "◌",
-        },
-        folder = {
-          arrow_open = "",
-          arrow_closed = "",
-          default = "",
-          open = "",
-          empty = "",
-          empty_open = "",
-          symlink = "",
-          symlink_open = "",
-        },
-      },
-    },
+    vars = {},
     setup = {
+      -- show_icons = { git = 1, folders = 1, files = 1, folder_arrows = 1, tree_width = 40 },
+
       -- disables netrw completely
       disable_netrw = true,
       -- hijack netrw window on startup
@@ -112,6 +87,32 @@ function M.config()
       renderer = {
         indent_markers = {
           enable = true,
+        },
+        special_files = { ["package.json"] = true, ["README.md"] = true, ["node_modules"] = true },
+        icons = {
+          glyphs = {
+            default = "",
+            symlink = "",
+            git = {
+              unstaged = "",
+              staged = "✓",
+              unmerged = "",
+              renamed = "➜",
+              deleted = "",
+              untracked = "",
+              ignored = "◌",
+            },
+            folder = {
+              arrow_open = "",
+              arrow_closed = "",
+              default = "",
+              open = "",
+              empty = "",
+              empty_open = "",
+              symlink = "",
+              symlink_open = "",
+            },
+          },
         },
       },
       actions = {
