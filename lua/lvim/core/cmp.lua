@@ -276,8 +276,8 @@ M.config = function()
           cmp.select_next_item()
         elseif luasnip.expandable() then
           luasnip.expand()
-        elseif jumpable() then
-          luasnip.jump(1)
+          -- elseif jumpable() then
+          --   luasnip.jump(1)
         elseif check_backspace() then
           fallback()
         elseif is_emmet_active() then
@@ -292,8 +292,8 @@ M.config = function()
       ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_prev_item()
-        elseif jumpable(-1) then
-          luasnip.jump(-1)
+          -- elseif jumpable(-1) then
+          --   luasnip.jump(-1)
         else
           fallback()
         end
@@ -303,19 +303,21 @@ M.config = function()
       }),
       ["<CR>"] = cmp.mapping(function(fallback)
         if cmp.visible() and cmp.confirm(lvim.builtin.cmp.confirm_opts) then
-          if jumpable() then
-            luasnip.jump(1)
-          end
+          -- if jumpable() then
+          --   luasnip.jump(1)
+          -- end
           return
         end
 
-        if jumpable() then
-          if not luasnip.jump(1) then
-            fallback()
-          end
-        else
-          fallback()
-        end
+        -- if jumpable() then
+        --   if not luasnip.jump(1) then
+        --     fallback()
+        --   end
+        -- else
+        --   fallback()
+        -- end
+
+        fallback()
       end),
     },
   }
