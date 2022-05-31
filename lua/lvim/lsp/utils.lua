@@ -178,7 +178,7 @@ function M.format(opts)
     vim.notify "[LSP] Format request failed, no matching language servers."
   end
 
-  local timeout_ms = opts.timeout_ms or 1000
+  local timeout_ms = opts.timeout_ms or 3000
   for _, client in pairs(clients) do
     local params = vim.lsp.util.make_formatting_params(opts.formatting_options)
     local result, err = client.request_sync("textDocument/formatting", params, timeout_ms, bufnr)
