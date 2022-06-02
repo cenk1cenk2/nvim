@@ -60,21 +60,21 @@ return {
     ["<C-y>"] = ":call QuickFixToggle()<CR>",
 
     -- create space on top and bottom
-    ["Ü"] = "O<ESC>j",
-    ["ü"] = "o<ESC>k",
+    ["ü"] = "O<ESC>j",
+    ["Ü"] = "o<ESC>k",
 
     -- jump between paragraphs
-    ["ö"] = "{zz",
-    ["ä"] = "}zz",
+    -- ["ö"] = "{zz",
+    -- ["ä"] = "}zz",
 
     -- paste last clipboard register
-    ["op"] = '"_diw"*P',
+    -- ["op"] = '"_diw"*P',
 
     -- paste last yank register
-    ["üp"] = '"_diw"0P',
+    -- ["üp"] = '"_diw"0P',
 
     -- visual select last word
-    ["üü"] = "viw",
+    -- ["üü"] = "viw",
 
     -- to blachole
     ["c"] = '"_c',
@@ -99,8 +99,8 @@ return {
     [">"] = ">gv",
 
     -- jump between paragraphs
-    ["ö"] = "{zz",
-    ["ä"] = "}zz",
+    -- ["ö"] = "{zz",
+    -- ["ä"] = "}zz",
 
     -- to blachole
     ["c"] = '"_c',
@@ -108,8 +108,8 @@ return {
     ["x"] = '"_x',
 
     -- dont overwrite while pasting
-    ["p"] = '"_dP',
-    ["P"] = '"_dp',
+    ["P"] = '"_dP',
+    ["p"] = '"_dp',
 
     -- ["p"] = '"0p',
     -- ["P"] = '"0P',
