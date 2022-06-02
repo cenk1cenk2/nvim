@@ -44,6 +44,7 @@ M.setup = function()
     r = { ":lua require'dap'.repl.toggle()<cr>", "toggle repl" },
     R = { ":lua require('dap.ext.vscode').load_launchjs()<cr>", "reload launch.json" },
     q = { ":lua require'dap'.close()<cr>", "quit" },
+    u = { ':lua require("dapui").toggle()<CR>', "toggle ui" },
   }
 
   local dap_buddy = require "dap-install"

@@ -61,11 +61,6 @@ function M.setup()
 
   extension.setup(lvim.extensions[extension_name].setup)
 
-  lvim.builtin.which_key.mappings["d"]["u"] = {
-    ':lua require("dapui").toggle()<CR>',
-    "toggle ui",
-  }
-
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done(extension)
   end
