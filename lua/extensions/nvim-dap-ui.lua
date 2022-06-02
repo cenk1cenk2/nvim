@@ -1,6 +1,6 @@
 local M = {}
 
-local extension_name = "dapui"
+local extension_name = "nvim_dap_ui"
 
 function M.config()
   lvim.extensions[extension_name] = {
@@ -57,7 +57,7 @@ function M.config()
 end
 
 function M.setup()
-  local extension = require(extension_name)
+  local extension = require "dapui"
 
   extension.setup(lvim.extensions[extension_name].setup)
 

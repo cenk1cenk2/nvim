@@ -337,7 +337,14 @@ return {
     disable = not lvim.builtin.dap.active,
   },
 
-  { "rcarriga/nvim-dap-ui", disable = not lvim.builtin.dap.active, requires = { "mfussenegger/nvim-dap" } },
+  {
+    "rcarriga/nvim-dap-ui",
+    config = function()
+      require("extensions.nvim-dap-ui").setup()
+    end,
+    disable = not lvim.extensions.nvim_dap_ui.active,
+    requires = { "mfussenegger/nvim-dap" },
+  },
 
   -- Dashboard
   {
