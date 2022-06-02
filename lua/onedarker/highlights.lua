@@ -547,12 +547,13 @@ hl.langs.dockerCompose = { dockercomposeKeywords = colors.Red }
 hl.langs.bash = { bashTSParameter = { fg = c.fg } }
 
 hl.langs.jinja = {
-  jinjaTagBlock = colors.Red,
-  jinjaVarBlock = colors.Yellow,
-  jinjaVariable = colors.Yellow,
+  jinjaTagBlock = colors.Yellow,
+  jinjaStatement = colors.Purple,
+  jinjaVarBlock = colors.Red,
+  jinjaVariable = colors.Red,
+  jinjaOperator = colors.Yellow,
   jinjaVarDelim = colors.BrightYellow,
   jinjaFilter = colors.Blue,
-  jinjaStatement = colors.Red,
 }
 
 hl.langs.ansible = { ansible_normal_keywords = colors.Blue }
