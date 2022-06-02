@@ -161,7 +161,7 @@ M.config = function()
     confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false },
     completion = {
       ---@usage The minimum length of a word to complete on.
-      keyword_length = 1,
+      keyword_length = 0,
     },
     experimental = {
       ghost_text = true,
@@ -252,7 +252,7 @@ M.config = function()
 
       { name = "npm" },
 
-      -- { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
+      { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
 
       { name = "treesitter" },
 

@@ -36,6 +36,7 @@ local extensions = {
   "extensions.distant",
   "extensions.nvim-dap-ui",
   "extensions.vim-jinja",
+  "extensions.vim-jinja2-syntax",
   "extensions.nvim-orgmode",
   "extensions.dressing",
   "extensions.vim-caser",

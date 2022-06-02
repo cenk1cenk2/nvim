@@ -40,13 +40,13 @@ lvim.lsp.ensure_installed = {
   "rustfmt",
   "hadolint",
   "proselint",
-  "djlint",
+  -- "djlint",
 }
 
 lvim.lsp.automatic_configuration.skipped_filetypes = {}
 
 lvim.lsp.ignored_formatters = {
-  "tsserver"
+  "tsserver",
 }
 
 lvim.lsp.automatic_configuration.skipped_servers = {

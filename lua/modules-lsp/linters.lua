@@ -34,11 +34,11 @@ function M.setup()
       filetypes = { "yaml.ansible" },
     },
 
-    {
-      exe = "djlint",
-      filetypes = { "jinja" },
-      extra_args = { "--profile", "jinja" },
-    },
+    -- {
+    --   exe = "djlint",
+    --   filetypes = { "jinja" },
+    --   extra_args = { "--profile", "jinja" },
+    -- },
 
     {
       exe = "shellcheck",

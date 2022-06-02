@@ -646,6 +646,14 @@ return {
   },
 
   {
+    "glench/vim-jinja2-syntax",
+    config = function()
+      require("extensions.vim-jinja2-syntax").setup()
+    end,
+    disable = not lvim.extensions.vim_jinja2_syntax.active,
+  },
+
+  {
     "stevearc/dressing.nvim",
     config = function()
       require("extensions.dressing").setup()

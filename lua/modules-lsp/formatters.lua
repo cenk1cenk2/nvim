@@ -70,11 +70,11 @@ function M.setup()
       filetypes = { "go" },
     },
 
-    {
-      exe = "djlint",
-      filetypes = { "jinja" },
-      extra_args = { "--profile", "jinja" },
-    },
+    -- {
+    --   exe = "djlint",
+    --   filetypes = { "jinja" },
+    --   extra_args = { "--profile", "jinja" },
+    -- },
   }
 end
 
