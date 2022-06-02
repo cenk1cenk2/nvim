@@ -161,7 +161,7 @@ M.config = function()
     confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false },
     completion = {
       ---@usage The minimum length of a word to complete on.
-      keyword_length = 0,
+      keyword_length = 1,
     },
     experimental = {
       ghost_text = true,

@@ -24,20 +24,20 @@ function M.config()
         -- You can change the order of elements in the sidebar
         elements = {
           -- Provide as ID strings or tables with "id" and "size" keys
+          { id = "watches", size = 0.2 },
+          { id = "stacks", size = 0.2 },
+          { id = "breakpoints", size = 0.2 },
           {
-            id = "scopes",
-            size = 0.25, -- Can be float or integer > 1
+            id = "repl",
+            size = 0.40, -- Can be float or integer > 1
           },
-          { id = "breakpoints", size = 0.25 },
-          { id = "stacks", size = 0.25 },
-          { id = "watches", size = 00.25 },
         },
         size = 40,
         position = "left", -- Can be "left", "right", "top", "bottom"
       },
       tray = {
-        elements = { "repl" },
-        size = 10,
+        elements = { "scopes" },
+        size = 15,
         position = "bottom", -- Can be "left", "right", "top", "bottom"
       },
       floating = {
