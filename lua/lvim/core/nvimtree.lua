@@ -76,47 +76,6 @@ function M.config()
         },
         signcolumn = "yes",
       },
-      renderer = {
-        indent_markers = {
-          enable = false,
-          icons = {
-            corner = "└ ",
-            edge = "│ ",
-            none = "  ",
-          },
-        },
-        icons = {
-          webdev_colors = lvim.use_icons,
-          show = {
-            git = lvim.use_icons,
-            folder = lvim.use_icons,
-            file = lvim.use_icons,
-            folder_arrow = lvim.use_icons,
-          },
-          glyphs = {
-            default = "",
-            symlink = "",
-            git = {
-              unstaged = "",
-              staged = "S",
-              unmerged = "",
-              renamed = "➜",
-              deleted = "",
-              untracked = "U",
-              ignored = "◌",
-            },
-            folder = {
-              default = "",
-              open = "",
-              empty = "",
-              empty_open = "",
-              symlink = "",
-            },
-          },
-        },
-        highlight_git = true,
-        root_folder_modifier = ":t",
-      },
       filters = {
         dotfiles = false,
         -- custom = { "node_modules", ".cache" },
