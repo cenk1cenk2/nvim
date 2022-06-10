@@ -751,4 +751,13 @@ return {
     end,
     disable = not lvim.extensions.substitute_nvim.active,
   },
+
+  -- name wise substitute
+  {
+    "johmsalas/text-case.nvim",
+    config = function()
+      require("extensions.text-case-nvim").setup()
+    end,
+    disable = not lvim.extensions.text_case_nvim.active,
+  },
 }

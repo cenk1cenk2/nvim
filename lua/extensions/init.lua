@@ -51,6 +51,7 @@ local extensions = {
   "extensions.yanky-nvim",
   "extensions.cybu-nvim",
   "extensions.substitute-nvim",
+  "extensions.text-case-nvim",
 }
 
 function M.config(config)
