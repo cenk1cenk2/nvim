@@ -1,5 +1,5 @@
 local opts = {
-  filetypes = { "markdown" },
+  filetypes = { "markdown", "plaintext", "text" },
   settings = {
     grammarly = {
       hideUnavailablePremiumAlerts = true,
@@ -13,6 +13,10 @@ local opts = {
         },
       },
     },
+  },
+  init_options = {
+    clientId = "",
+    startTextCheckInPausedState = false,
   },
   -- handlers = {
   --   ["$/getToken"] = function()
