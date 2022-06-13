@@ -84,6 +84,10 @@ function M.config()
         cmd = "trash",
         require_confirm = true,
       },
+      live_filter = {
+        prefix = "[FILTER]: ",
+        always_show_folders = true,
+      },
       renderer = {
         indent_markers = {
           enable = true,
