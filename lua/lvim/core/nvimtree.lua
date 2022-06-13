@@ -86,7 +86,7 @@ function M.config()
       },
       live_filter = {
         prefix = "[FILTER]: ",
-        always_show_folders = true,
+        always_show_folders = false,
       },
       renderer = {
         indent_markers = {
@@ -204,6 +204,13 @@ function M.setup()
       { key = "p", action = "paste" },
       { key = "[c", action = "prev_git_item" },
       { key = "]c", action = "next_git_item" },
+      { key = "f", action = "live_filter" },
+      { key = "F", action = "clear_live_filter" },
+      { key = "W", action = "collapse_all" },
+      { key = "E", action = "expand_all" },
+      { key = "S", action = "search_node" },
+      { key = ".", action = "run_file_command" },
+      { key = "K", action = "toggle_file_info" },
       { key = "-", action = "dir_up" },
       { key = "q", action = "close" },
       { key = "gtf", cb = "<cmd>lua require'lvim.core.nvimtree'.start_telescope('find_files')<cr>" },
