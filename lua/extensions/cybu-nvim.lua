@@ -3,7 +3,7 @@ local M = {}
 local extension_name = "cybu_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil }
+  lvim.extensions[extension_name] = { active = false, on_config_done = nil }
 
   lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
     keymap = {
