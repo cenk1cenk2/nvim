@@ -155,9 +155,8 @@ function M.config()
 end
 
 function M.setup()
-  local status_ok, nvim_tree = pcall(require, "nvim-tree")
-  if not status_ok then
-    Log:error "Failed to load nvim-tree"
+  if lvim.builtin.nvimtree._setup_called then
+    Log:debug "ignoring repeated setup call for nvim-tree, see kyazdani42/nvim-tree.lua#1308"
     return
   end
 
@@ -165,6 +164,8 @@ function M.setup()
   for opt, val in pairs(lvim.builtin.nvimtree.vars) do
     vim.g["nvim_tree_" .. opt] = val
   end
+
+  lvim.builtin.nvimtree._setup_called = true
 
   -- Implicitly update nvim-tree when project module is active
   if lvim.builtin.project.active then
@@ -225,7 +226,7 @@ function M.setup()
   require("nvim-tree").setup(lvim.builtin.nvimtree.setup)
 
   if lvim.builtin.nvimtree.on_config_done then
-    lvim.builtin.nvimtree.on_config_done(nvim_tree_config)
+    lvim.builtin.nvimtree.on_config_done(lvim.builtin.nvimtree)
   end
 end
 
