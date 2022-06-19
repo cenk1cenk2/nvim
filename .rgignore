@@ -1,0 +1,7 @@
+tests/
+README.md
+Makefile
+LICENSE
+.gitignore
+.luacheckrc
+coc-settings.json
