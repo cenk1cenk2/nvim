@@ -124,7 +124,10 @@ M.mappings = {
     f = { ":LspFormat<CR>", "format buffer" },
     F = { ":LvimToggleFormatOnSave<CR>", "toggle autoformat" },
     g = { ":LspOrganizeImports<CR>", "organize imports" },
-    i = { ":LspInfo<CR>", "lsp information" },
+    i = {
+      ":lua require('lvim.core.info').toggle_popup(vim.bo.filetype)<CR>",
+      "Toggle LunarVim Info",
+    },
     I = { ":LspInstallInfo<CR>", "lsp installer info" },
     m = { ":LspRenameFile<CR>", "rename with lsp" },
     h = { ":LspImportAll<CR>", "import all missing" },
