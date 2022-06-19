@@ -20,25 +20,31 @@ function M.config()
       -- Expand lines larger than the window
       -- Requires >= 0.7
       expand_lines = vim.fn.has "nvim-0.7",
-      sidebar = {
-        -- You can change the order of elements in the sidebar
-        elements = {
-          -- Provide as ID strings or tables with "id" and "size" keys
-          { id = "watches", size = 0.2 },
-          { id = "stacks", size = 0.2 },
-          { id = "breakpoints", size = 0.2 },
-          {
-            id = "repl",
-            size = 0.40, -- Can be float or integer > 1
+      -- Layouts define sections of the screen to place windows.
+      -- The position can be "left", "right", "top" or "bottom".
+      -- The size specifies the height/width depending on position.
+      -- Elements are the elements shown in the layout (in order).
+      -- Layouts are opened in order so that earlier layouts take priority in window sizing.
+      layouts = {
+        {
+          elements = {
+            -- Provide as ID strings or tables with "id" and "size" keys
+            { id = "watches", size = 0.2 },
+            { id = "stacks", size = 0.2 },
+            { id = "breakpoints", size = 0.2 },
+            {
+              id = "repl",
+              size = 0.40, -- Can be float or integer > 1
+            },
           },
+          size = 40,
+          position = "left",
         },
-        size = 40,
-        position = "left", -- Can be "left", "right", "top", "bottom"
-      },
-      tray = {
-        elements = { "scopes" },
-        size = 15,
-        position = "bottom", -- Can be "left", "right", "top", "bottom"
+        {
+          elements = { "scopes" },
+          size = 15,
+          position = "bottom",
+        },
       },
       floating = {
         max_height = nil, -- These can be integers or a float between 0 and 1.
