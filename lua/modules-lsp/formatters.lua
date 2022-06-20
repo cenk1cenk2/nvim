@@ -61,12 +61,13 @@ function M.setup()
       exe = "goimports",
       filetypes = { "go" },
     },
-    {
-      exe = "gofmt",
-      filetypes = { "go" },
-    },
+    -- {
+    --   exe = "gofmt",
+    --   filetypes = { "go" },
+    -- },
     {
       exe = "golines",
+      extra_args = { "-m", "180", "-t", "2" },
       filetypes = { "go" },
     },
 
