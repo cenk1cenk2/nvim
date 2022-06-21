@@ -215,6 +215,14 @@ return {
   { "p00f/nvim-ts-rainbow", run = ":TSUpdate", requires = { "nvim-treesitter/nvim-treesitter" } },
   { "windwp/nvim-ts-autotag", requires = { "nvim-treesitter/nvim-treesitter" } },
 
+  {
+    "drybalka/tree-climber.nvim",
+    config = function()
+      require("extensions.tree-climber-nvim").setup()
+    end,
+    disable = not lvim.extensions.tree_climber_nvim.active,
+  },
+
   -- NvimTree
   {
     "kyazdani42/nvim-tree.lua",

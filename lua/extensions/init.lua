@@ -52,6 +52,7 @@ local extensions = {
   "extensions.cybu-nvim",
   "extensions.substitute-nvim",
   "extensions.text-case-nvim",
+  "extensions.tree-climber-nvim",
 }
 
 function M.config(config)
