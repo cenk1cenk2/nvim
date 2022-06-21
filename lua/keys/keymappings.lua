@@ -108,8 +108,8 @@ return {
     ["x"] = '"_x',
 
     -- dont overwrite while pasting
-    ["p"] = '"_dP',
-    ["P"] = '"_dp',
+    ["P"] = '"_dP',
+    ["p"] = '"_dp',
 
     -- ["p"] = '"0p',
     -- ["P"] = '"0P',
