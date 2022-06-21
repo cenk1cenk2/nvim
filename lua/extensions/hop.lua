@@ -6,7 +6,15 @@ function M.config()
   lvim.extensions[extension_name] = {
     active = true,
     on_config_done = nil,
-    keymaps = { normal_mode = { ["s"] = ":HopChar2<cr>", ["S"] = ":HopWord<cr>" } },
+    keymaps = {
+      normal_mode = {
+        ["s"] = ":HopChar2<cr>",
+        ["ss"] = ":HopChar1<cr>",
+        ["sw"] = ":HopPattern<cr>",
+        ["S"] = ":HopWord<cr>",
+        ["SS"] = ":HopLine<cr>",
+      },
+    },
     setup = {},
   }
 end

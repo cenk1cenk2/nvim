@@ -40,7 +40,7 @@ local extension_name = "barbar"
 
 M.config = function()
   lvim.extensions[extension_name] = {
-    active = true,
+    active = false,
     on_config_done = nil,
     keymap = {
       normal_mode = {

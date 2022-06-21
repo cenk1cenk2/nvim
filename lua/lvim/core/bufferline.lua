@@ -38,14 +38,21 @@ end
 
 M.config = function()
   lvim.builtin.bufferline = {
-    active = false,
+    active = true,
     on_config_done = nil,
     keymap = {
-      normal_mode = {},
+      normal_mode = {
+        ["<M-l>"] = ":BufferLineCycleNext<CR>",
+        ["<M-j>"] = ":BufferLineMoveNext<CR>",
+        ["<M-h>"] = ":BufferLineCyclePrev<CR>",
+        ["<M-k>"] = ":BufferLineMovePrev<CR>",
+        ["<C-q>"] = ":BufferClose<CR>",
+        ["<C-Q>"] = ":BufferClose<CR>",
+      },
     },
     highlights = {
       background = {
-        gui = "italic",
+        -- gui = "italic",
       },
       buffer_selected = {
         gui = "bold",
@@ -53,10 +60,10 @@ M.config = function()
     },
     options = {
       numbers = "none", -- can be "none" | "ordinal" | "buffer_id" | "both" | function
-      close_command = "bdelete! %d", -- can be a string | function, see "Mouse actions"
+      close_command = "BufferClose", -- can be a string | function, see "Mouse actions"
       right_mouse_command = "vert sbuffer %d", -- can be a string | function, see "Mouse actions"
       left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
-      middle_mouse_command = nil, -- can be a string | function, see "Mouse actions"
+      middle_mouse_command = "BufferClose", -- can be a string | function, see "Mouse actions"
       -- NOTE: this plugin is designed with this icon in mind,
       -- and so changing this is NOT recommended, this is intended
       -- as an escape hatch for people who cannot bear it for whatever reason
@@ -78,42 +85,42 @@ M.config = function()
       end,
       max_name_length = 18,
       max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
-      tab_size = 18,
+      tab_size = 20,
       diagnostics = "nvim_lsp",
       diagnostics_update_in_insert = false,
       diagnostics_indicator = diagnostics_indicator,
       -- NOTE: this will be called a lot so don't do any heavy processing here
       custom_filter = custom_filter,
       offsets = {
-        {
-          filetype = "undotree",
-          text = "Undotree",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
-        {
-          filetype = "NvimTree",
-          text = "Explorer",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
-        {
-          filetype = "DiffviewFiles",
-          text = "Diff View",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
-        {
-          filetype = "flutterToolsOutline",
-          text = "Flutter Outline",
-          highlight = "PanelHeading",
-        },
-        {
-          filetype = "packer",
-          text = "Packer",
-          highlight = "PanelHeading",
-          padding = 1,
-        },
+        -- {
+        --   filetype = "undotree",
+        --   text = "Undotree",
+        --   highlight = "PanelHeading",
+        --   padding = 1,
+        -- },
+        -- {
+        --   filetype = "NvimTree",
+        --   text = "Explorer",
+        --   highlight = "PanelHeading",
+        --   padding = 1,
+        -- },
+        -- {
+        --   filetype = "DiffviewFiles",
+        --   text = "Diff View",
+        --   highlight = "PanelHeading",
+        --   padding = 1,
+        -- },
+        -- {
+        --   filetype = "flutterToolsOutline",
+        --   text = "Flutter Outline",
+        --   highlight = "PanelHeading",
+        -- },
+        -- {
+        --   filetype = "packer",
+        --   text = "Packer",
+        --   highlight = "PanelHeading",
+        --   padding = 1,
+        -- },
       },
       show_buffer_icons = lvim.use_icons, -- disable filetype icons for buffers
       show_buffer_close_icons = lvim.use_icons,
@@ -124,7 +131,7 @@ M.config = function()
       -- [focused and unfocused]. eg: { '|', '|' }
       separator_style = "thin",
       enforce_regular_tabs = false,
-      always_show_bufferline = false,
+      always_show_bufferline = true,
       sort_by = "id",
     },
   }
@@ -135,6 +142,24 @@ M.setup = function()
   require("bufferline").setup {
     options = lvim.builtin.bufferline.options,
     highlights = lvim.builtin.bufferline.highlights,
+  }
+
+  lvim.builtin.which_key.mappings["b"]["b"] = { ":BufferLinePick<CR>", "pick buffer" }
+  lvim.builtin.which_key.mappings["b"]["x"] = { ":BufferClose<CR>", "force close buffer" }
+  lvim.builtin.which_key.mappings["b"]["X"] = { ":BufferLineGroupClose ungrouped<CR>", "close ungrouped tabs" }
+  lvim.builtin.which_key.mappings["b"]["d"] = { ":BufferLinePickClose<CR>", "close all but current buffer" }
+  lvim.builtin.which_key.mappings["b"]["y"] = { ":BufferLineCloseLeft<CR>", "close all buffers to the left" }
+  lvim.builtin.which_key.mappings["b"]["Y"] = { ":BufferLineCloseRight<CR>", "close all buffers to the right" }
+  lvim.builtin.which_key.mappings["b"]["p"] = { ":BufferLineTogglePin<CR>", "pin current buffer" }
+  lvim.builtin.which_key.mappings["b"]["P"] = { ":BufferLineGroupClose pinned<CR>", "close pinned buffer group" }
+
+  require("utils.command").create_commands {
+    {
+      name = "BufferClose",
+      fn = function()
+        M.buf_kill()
+      end,
+    },
   }
 
   if lvim.builtin.bufferline.on_config_done then
