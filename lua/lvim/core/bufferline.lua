@@ -146,8 +146,9 @@ M.setup = function()
 
   lvim.builtin.which_key.mappings["b"]["b"] = { ":BufferLinePick<CR>", "pick buffer" }
   lvim.builtin.which_key.mappings["b"]["x"] = { ":BufferClose<CR>", "force close buffer" }
-  lvim.builtin.which_key.mappings["b"]["X"] = { ":BufferLineGroupClose ungrouped<CR>", "close ungrouped tabs" }
+  lvim.builtin.which_key.mappings["b"]["X"] = { ":%bd|e#<CR>", "close all buffers but this" }
   lvim.builtin.which_key.mappings["b"]["d"] = { ":BufferLinePickClose<CR>", "close all but current buffer" }
+  lvim.builtin.which_key.mappings["b"]["D"] = { ":BufferLineGroupClose ungrouped<CR>", "close ungrouped tabs" }
   lvim.builtin.which_key.mappings["b"]["y"] = { ":BufferLineCloseLeft<CR>", "close all buffers to the left" }
   lvim.builtin.which_key.mappings["b"]["Y"] = { ":BufferLineCloseRight<CR>", "close all buffers to the right" }
   lvim.builtin.which_key.mappings["b"]["p"] = { ":BufferLineTogglePin<CR>", "pin current buffer" }
