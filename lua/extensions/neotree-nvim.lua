@@ -4,7 +4,7 @@ local extension_name = "neotree_nvim"
 
 function M.config()
   lvim.extensions[extension_name] = {
-    active = false,
+    active = true,
     on_config_done = nil,
     setup = {
       close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
@@ -91,8 +91,7 @@ function M.config()
             ["h"] = "close_node",
             ["<bs>"] = "navigate_up",
             ["."] = "set_root",
-            ["H"] = "toggle_hidden",
-            ["I"] = "toggle_gitignore",
+            ["I"] = "toggle_hidden",
             ["R"] = "refresh",
             ["g"] = "fuzzy_finder",
             --["/"] = "filter_as_you_type", -- this was the default until v1.28

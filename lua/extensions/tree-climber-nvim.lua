@@ -4,7 +4,7 @@ local extension_name = "tree_climber_nvim"
 
 function M.config()
   lvim.extensions[extension_name] = {
-    active = false,
+    active = true,
     on_config_done = nil,
     keymaps = {},
   }
