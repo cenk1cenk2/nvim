@@ -20,8 +20,8 @@ function M.setup()
   vim.keymap.set({ "n", "v", "o" }, "L", extension.goto_child, keyopts)
   vim.keymap.set({ "n", "v", "o" }, "LL", extension.goto_next, keyopts)
   vim.keymap.set({ "n", "v", "o" }, "HH", extension.goto_prev, keyopts)
-  vim.keymap.set("n", "LLL", extension.swap_prev, keyopts)
-  vim.keymap.set("n", "HHH", extension.swap_next, keyopts)
+  vim.keymap.set("n", "HHH", extension.swap_prev, keyopts)
+  vim.keymap.set("n", "LLL", extension.swap_next, keyopts)
 
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done()
