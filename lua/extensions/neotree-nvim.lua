@@ -4,7 +4,7 @@ local extension_name = "neotree_nvim"
 
 function M.config()
   lvim.extensions[extension_name] = {
-    active = true,
+    active = false,
     on_config_done = nil,
     setup = {
       close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab

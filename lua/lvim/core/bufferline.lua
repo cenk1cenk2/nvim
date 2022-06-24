@@ -146,7 +146,7 @@ M.setup = function()
 
   lvim.builtin.which_key.mappings["b"]["b"] = { ":BufferLinePick<CR>", "pick buffer" }
   lvim.builtin.which_key.mappings["b"]["x"] = { ":BufferClose<CR>", "force close buffer" }
-  lvim.builtin.which_key.mappings["b"]["X"] = { ":%bd|e#|bd#<CR>", "close all buffers but this" }
+  lvim.builtin.which_key.mappings["b"]["X"] = { ":BufferCloseAllButCurrent<CR>", "close all buffers but this" }
   lvim.builtin.which_key.mappings["b"]["d"] = { ":BufferLinePickClose<CR>", "close all but current buffer" }
   lvim.builtin.which_key.mappings["b"]["D"] = { ":BufferLineGroupClose ungrouped<CR>", "close ungrouped tabs" }
   lvim.builtin.which_key.mappings["b"]["y"] = { ":BufferLineCloseLeft<CR>", "close all buffers to the left" }
@@ -161,10 +161,27 @@ M.setup = function()
         M.buf_kill()
       end,
     },
+
+    {
+      name = "BufferCloseAllButCurrent",
+      fn = function()
+        M.close_all_but_current()
+      end,
+    },
   }
 
   if lvim.builtin.bufferline.on_config_done then
     lvim.builtin.bufferline.on_config_done()
+  end
+end
+
+function M.close_all_but_current()
+  local current = vim.api.nvim_get_current_buf()
+  local buffers = require("bufferline.utils").get_valid_buffers()
+  for _, bufnr in pairs(buffers) do
+    if bufnr ~= current then
+      pcall(vim.cmd, string.format("bd %d", bufnr))
+    end
   end
 end
 
