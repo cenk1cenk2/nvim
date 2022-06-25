@@ -34,6 +34,7 @@ local extensions = {
   "extensions.neogen",
   "extensions.coc",
   "extensions.distant",
+  "extensions.lspsaga-nvim",
   "extensions.nvim-dap-ui",
   "extensions.vim-jinja",
   "extensions.vim-jinja2-syntax",

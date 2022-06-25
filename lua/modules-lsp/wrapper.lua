@@ -14,7 +14,13 @@ function M.clear_references()
 end
 
 function M.code_action()
-  vim.lsp.buf.code_action()
+  -- vim.lsp.buf.code_action()
+  require("lspsaga.codeaction").code_action()
+end
+
+function M.range_code_action()
+  -- vim.lsp.buf.range_code_action()
+  require("lspsaga.codeaction").range_code_action()
 end
 
 function M.declaration()
@@ -41,7 +47,8 @@ function M.format()
 end
 
 function M.hover()
-  vim.lsp.buf.hover()
+  -- vim.lsp.buf.hover()
+  require("lspsaga.hover").render_hover_doc()
 end
 
 function M.implementation()
@@ -60,10 +67,6 @@ function M.outgoing_calls()
   vim.lsp.buf.outgoing_calls()
 end
 
-function M.range_code_action()
-  vim.lsp.buf.range_code_action()
-end
-
 function M.range_formatting()
   vim.lsp.buf.range_formatting()
 end
@@ -77,11 +80,13 @@ function M.remove_workspace_folder()
 end
 
 function M.rename()
-  vim.lsp.buf.rename()
+  -- vim.lsp.buf.rename()
+  require("lspsaga.rename").lsp_rename()
 end
 
 function M.signature_help()
-  vim.lsp.buf.signature_help()
+  -- vim.lsp.buf.signature_help()
+  require("lspsaga.signaturehelp").signature_help()
 end
 
 function M.type_definition()
@@ -96,24 +101,26 @@ end
 
 -- diagnostic
 
-function M.get_all()
-  vim.diagnostic.get_all()
-end
-
-function M.get_next()
-  vim.diagnostic.get_next()
-end
-
-function M.get_prev()
-  vim.diagnostic.get_prev()
-end
+-- function M.get_all()
+--   vim.diagnostic.get_all()
+-- end
+--
+-- function M.get_next()
+--   vim.diagnostic.get_next()
+-- end
+--
+-- function M.get_prev()
+--   vim.diagnostic.get_prev()
+-- end
 
 function M.goto_next()
-  vim.diagnostic.goto_next { popup_opts = { border = lvim.lsp.popup_border } }
+  -- vim.diagnostic.goto_next { popup_opts = { border = lvim.lsp.popup_border } }
+  require("lspsaga.diagnostic").goto_next()
 end
 
 function M.goto_prev()
-  vim.diagnostic.goto_prev { popup_opts = { border = lvim.lsp.popup_border } }
+  -- vim.diagnostic.goto_prev { popup_opts = { border = lvim.lsp.popup_border } }
+  require("lspsaga.diagnostic").goto_prev()
 end
 
 function M.show_line_diagnostics()

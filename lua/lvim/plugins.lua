@@ -513,6 +513,14 @@ return {
 
   -- lsp extensions
   {
+    "glepnir/lspsaga.nvim",
+    config = function()
+      require("extensions.lspsaga-nvim").setup()
+    end,
+    disable = not lvim.extensions.lspsaga_nvim.active,
+  },
+
+  {
     "folke/lsp-trouble.nvim",
     config = function()
       require("extensions.lsp-trouble").setup()

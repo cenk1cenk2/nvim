@@ -2,6 +2,7 @@ return {
   normal_mode = {
     ["K"] = { ":LspHover<CR>", "Show hover" },
     ["gf"] = { ":LspDefinition<CR>", "Goto Definition" },
+    ["ge"] = { ":lua require('lspsaga.finder').lsp_finder()", "Finder" },
     ["gt"] = { ":LspDeclaration<CR>", "Goto declaration" },
     ["gr"] = { ":LspReferences<CR>", "Goto references" },
     ["gz"] = { ":LspImplementation<CR>", "Goto Implementation" },
