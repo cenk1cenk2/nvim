@@ -8,7 +8,7 @@ function M.config()
     on_config_done = nil,
     setup = {
       -- Error,Warn,Info,Hint
-      diagnostic_header_icon = { " ", " ", " ", "ﴞ " },
+      diagnostic_header = { " ", " ", " ", "ﴞ " },
       -- show diagnostic source
       show_diagnostic_source = true,
       -- add bracket or something with diagnostic source,just have 2 elements
