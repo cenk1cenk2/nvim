@@ -39,7 +39,6 @@ function M.config()
         exec = "<CR>",
       },
       rename_action_quit = "<C-c>",
-      definition_preview_icon = "  ",
       -- "single" "double" "rounded" "bold" "plus"
       border_style = "single",
       -- if you don't use nvim-lspconfig you must pass your server name and

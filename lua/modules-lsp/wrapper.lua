@@ -124,9 +124,11 @@ function M.goto_prev()
 end
 
 function M.show_line_diagnostics()
-  local config = lvim.lsp.diagnostics.float
-  config.scope = "line"
-  vim.diagnostic.open_float(0, config)
+  -- local config = lvim.lsp.diagnostics.float
+  -- config.scope = "line"
+  -- vim.diagnostic.open_float(0, config)
+
+  require("lspsaga.diagnostic").show_line_diagnostics()
 end
 
 function M.peek_definition()
