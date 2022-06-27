@@ -9,6 +9,11 @@ function M.config()
     return
   end
 
+  local utils = require "yanky.utils"
+  local register = utils.get_default_register()
+
+  register = "+"
+
   lvim.extensions[extension_name] = {
     active = true,
     on_config_done = nil,
@@ -32,14 +37,18 @@ function M.config()
       picker = {
         telescope = {
           mappings = {
-            default = mapping.put "p",
+            default = mapping.set_register(register),
             i = {
               ["<c-p>"] = mapping.put "p",
-              ["<c-k>"] = mapping.put "P",
+              ["<c-P>"] = mapping.put "P",
+              ["<c-d>"] = mapping.delete(),
+              ["<c-r>"] = mapping.set_register(register),
             },
             n = {
               ["p"] = mapping.put "p",
               ["P"] = mapping.put "P",
+              ["d"] = mapping.delete(),
+              ["r"] = mapping.set_register(register),
             },
           },
         },
