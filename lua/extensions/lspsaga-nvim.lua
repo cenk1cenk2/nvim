@@ -22,7 +22,7 @@ function M.config()
         enable = true,
         sign = true,
         sign_priority = 20,
-        virtual_text = true,
+        virtual_text = false,
       },
       -- preview lines of lsp_finder and definition preview
       max_preview_lines = 10,
@@ -35,7 +35,7 @@ function M.config()
         scroll_up = "<C-b>", -- quit can be a table
       },
       code_action_keys = {
-        quit = "q",
+        quit = "<C-c>",
         exec = "<CR>",
       },
       rename_action_quit = "<C-c>",
