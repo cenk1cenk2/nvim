@@ -25,7 +25,6 @@ function M.config()
         virtual_text = true,
       },
       finder_definition_icon = "  ",
-      finder_reference_icon = "  ",
       -- preview lines of lsp_finder and definition preview
       max_preview_lines = 10,
       finder_action_keys = {
