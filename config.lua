@@ -40,6 +40,7 @@ lvim.lsp.ensure_installed = {
   "rustfmt",
   "hadolint",
   "proselint",
+  "terraformls",
   -- "djlint",
 }
 
