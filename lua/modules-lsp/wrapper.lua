@@ -47,8 +47,8 @@ function M.format()
 end
 
 function M.hover()
-  -- vim.lsp.buf.hover()
-  require("lspsaga.hover").render_hover_doc()
+  vim.lsp.buf.hover()
+  -- require("lspsaga.hover").render_hover_doc()
 end
 
 function M.implementation()
