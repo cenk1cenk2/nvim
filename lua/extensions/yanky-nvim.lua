@@ -3,6 +3,10 @@ local M = {}
 local extension_name = "yanky_nvim"
 
 function M.config()
+  lvim.extensions[extension_name] = {
+    active = true,
+  }
+
   local yanky_ok, mapping = pcall(require, "yanky.telescope.mapping")
 
   if not yanky_ok then
@@ -14,7 +18,7 @@ function M.config()
 
   register = "+"
 
-  lvim.extensions[extension_name] = {
+  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
     active = true,
     on_config_done = nil,
     setup = {
@@ -54,7 +58,7 @@ function M.config()
         },
       },
     },
-  }
+  })
 end
 
 function M.setup()
