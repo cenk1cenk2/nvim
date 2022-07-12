@@ -2,6 +2,8 @@ local skipped_servers = {}
 
 local skipped_filetypes = {}
 
+local join_paths = require("lvim.utils").join_paths
+
 return {
   templates_dir = join_paths(get_runtime_dir(), "site", "after", "ftplugin"),
   diagnostics = {
@@ -56,6 +58,28 @@ return {
     skipped_servers = skipped_servers,
     ---@usage list of filetypes that the automatic installer will skip
     skipped_filetypes = skipped_filetypes,
+  },
+  ---@usage list of settings of nvim-lsp-installer
+  installer = {
+    setup = {
+      ensure_installed = {},
+      ui = {
+        icons = {
+          server_installed = "✓",
+          server_pending = "",
+          server_uninstalled = "✗",
+        },
+      },
+    },
+  },
+  nlsp_settings = {
+    setup = {
+      config_home = join_paths(get_config_dir(), "lsp-settings"),
+      -- set to false to overwrite schemastore.nvim
+      append_default_schemas = true,
+      ignored_servers = {},
+      loader = "json",
+    },
   },
   null_ls = {
     setup = {},

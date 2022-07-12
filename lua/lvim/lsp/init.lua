@@ -6,21 +6,10 @@ local autocmds = require "lvim.core.autocmds"
 local function add_lsp_buffer_keybindings(bufnr)
   local mappings = { normal_mode = "n", insert_mode = "i", visual_mode = "v" }
 
-  if lvim.builtin.which_key.active then
-    -- Remap using which_key
-    local status_ok, wk = pcall(require, "which-key")
-    if not status_ok then
-      return
-    end
-    for mode_name, mode_char in pairs(mappings) do
-      wk.register(lvim.lsp.buffer_mappings[mode_name], { mode = mode_char, buffer = bufnr })
-    end
-  else
-    -- Remap using nvim api
-    for mode_name, mode_char in pairs(mappings) do
-      for key, remap in pairs(lvim.lsp.buffer_mappings[mode_name]) do
-        vim.api.nvim_buf_set_keymap(bufnr, mode_char, key, remap[1], { noremap = true, silent = true })
-      end
+  for mode_name, mode_char in pairs(mappings) do
+    for key, remap in pairs(lvim.lsp.buffer_mappings[mode_name]) do
+      local opts = { buffer = bufnr, desc = remap[2], noremap = true, silent = true }
+      vim.keymap.set(mode_char, key, remap[1], opts)
     end
   end
 end
@@ -72,14 +61,6 @@ function M.common_on_attach(client, bufnr)
   add_lsp_buffer_keybindings(bufnr)
 end
 
-local function bootstrap_nlsp(opts)
-  opts = opts or {}
-  local lsp_settings_status_ok, lsp_settings = pcall(require, "nlspsettings")
-  if lsp_settings_status_ok then
-    lsp_settings.setup(opts)
-  end
-end
-
 function M.get_common_opts()
   return {
     on_attach = M.common_on_attach,
@@ -116,15 +97,13 @@ function M.setup()
     require("lvim.lsp.templates").generate_templates()
   end
 
-  bootstrap_nlsp {
-    config_home = utils.join_paths(get_config_dir(), "lsp-settings"),
-    append_default_schemas = true,
-  }
+  pcall(function()
+    require("nlspsettings").setup(lvim.lsp.nlsp_settings.setup)
+  end)
 
-  require("nvim-lsp-installer").setup {
-    -- use the default nvim_data_dir, since the server binaries are independent
-    install_root_dir = utils.join_paths(vim.call("stdpath", "data"), "lsp_servers"),
-  }
+  pcall(function()
+    require("nvim-lsp-installer").setup(lvim.lsp.installer.setup)
+  end)
 
   require("lvim.lsp.null-ls").setup()
 

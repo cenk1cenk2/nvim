@@ -130,8 +130,8 @@ function M.setup_codelens_refresh(client, bufnr)
 end
 
 ---filter passed to vim.lsp.buf.format
----gives higher priority to null-ls
----@param clients table clients attached to a buffer
+---always selects null-ls if it's available and caches the value per buffer
+---@param client table client attached to a buffer
 ---@return table chosen clients
 function M.format_filter(clients)
   return vim.tbl_filter(function(client)
@@ -156,18 +156,15 @@ function M.format(opts)
   opts = vim.tbl_extend("force", { filter = M.format_filter }, opts or {})
 
   local bufnr = opts.bufnr or vim.api.nvim_get_current_buf()
-  local clients = vim.lsp.buf_get_clients(bufnr)
+
+  local clients = vim.lsp.get_active_clients {
+    id = opts.id,
+    bufnr = bufnr,
+    name = opts.name,
+  }
 
   if opts.filter then
-    clients = opts.filter(clients)
-  elseif opts.id then
-    clients = vim.tbl_filter(function(client)
-      return client.id == opts.id
-    end, clients)
-  elseif opts.name then
-    clients = vim.tbl_filter(function(client)
-      return client.name == opts.name
-    end, clients)
+    clients = vim.tbl_filter(opts.filter, clients)
   end
 
   clients = vim.tbl_filter(function(client)
@@ -175,7 +172,7 @@ function M.format(opts)
   end, clients)
 
   if #clients == 0 then
-    vim.notify "[LSP] Format request failed, no matching language servers."
+    vim.notify_once "[LSP] Format request failed, no matching language servers."
   end
 
   local timeout_ms = opts.timeout_ms or 3000
