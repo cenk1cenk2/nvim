@@ -54,37 +54,7 @@ M.setup = function()
     dap_buddy.config(debugger)
   end
 
-  local dbg_path = require("lvim.utils").join_paths(
-    require("dap-install.config.settings").options["installation_path"],
-    "jsnode/"
-  )
   local fn = vim.fn
-
-  dap.configurations.typescript = {
-    {
-      type = "node2",
-      request = "launch",
-      name = "run this file ${file}",
-      program = "${file}",
-      cwd = fn.getcwd(),
-      sourceMaps = true,
-      protocol = "inspector",
-      console = "integratedTerminal",
-    },
-  }
-
-  dap.configurations.javascript = {
-    {
-      type = "node2",
-      request = "launch",
-      name = "run this file ${file}",
-      program = "${file}",
-      cwd = fn.getcwd(),
-      sourceMaps = true,
-      protocol = "inspector",
-      console = "integratedTerminal",
-    },
-  }
 
   require("dap.ext.vscode").load_launchjs()
 

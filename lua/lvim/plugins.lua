@@ -337,7 +337,7 @@ return {
   -- Debugger management
   {
     "Pocco81/dap-buddy.nvim",
-    branch = "dev",
+    branch = "main",
     -- event = "BufWinEnter",
     -- event = "BufRead",
     run = "make",
