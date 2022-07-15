@@ -47,14 +47,12 @@ M.setup = function()
     u = { ':lua require("dapui").toggle()<CR>', "toggle ui" },
   }
 
-  -- local dap_buddy = require "dap-install"
-  -- local dbg_list = require("dap-install.api.debuggers").get_installed_debuggers()
-  --
-  -- for _, debugger in ipairs(dbg_list) do
-  --   dap_buddy.config(debugger)
-  -- end
+  local dap_buddy = require "dap-install"
+  local dbg_list = require("dap-install.api.debuggers").get_installed_debuggers()
 
-  -- local fn = vim.fn
+  for _, debugger in ipairs(dbg_list) do
+    dap_buddy.config(debugger)
+  end
 
   require("dap.ext.vscode").load_launchjs()
 

@@ -337,11 +337,10 @@ return {
   -- Debugger management
   {
     "Pocco81/dap-buddy.nvim",
-    branch = "main",
+    branch = "dev",
     -- event = "BufWinEnter",
     -- event = "BufRead",
     run = "make",
-    module = "dap-install",
     disable = not lvim.builtin.dap.active,
   },
 
