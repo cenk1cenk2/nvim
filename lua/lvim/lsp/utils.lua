@@ -133,21 +133,18 @@ end
 ---always selects null-ls if it's available and caches the value per buffer
 ---@param client table client attached to a buffer
 ---@return table chosen clients
-function M.format_filter(clients)
-  return vim.tbl_filter(function(client)
-    local status_ok, formatting_supported = pcall(function()
-      return client.supports_method "textDocument/formatting"
-    end)
+function M.format_filter(client)
+  local filetype = vim.bo.filetype
+  local n = require "null-ls"
+  local s = require "null-ls.sources"
+  local method = n.methods.FORMATTING
+  local available_sources = s.get_available(filetype, method)
 
-    -- give higher prio to null-ls
-    if status_ok and formatting_supported and client.name == "null-ls" then
-      return client.name
-    elseif not vim.tbl_contains(lvim.lsp.ignored_formatters, client.name) then
-      return status_ok and formatting_supported and client.name
-    else
-      return false
-    end
-  end, clients)
+  if #available_sources > 0 then
+    return client.name == "null-ls"
+  else
+    return true
+  end
 end
 
 ---Provide vim.lsp.buf.format for nvim <0.8
