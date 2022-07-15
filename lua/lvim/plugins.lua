@@ -340,6 +340,7 @@ return {
     branch = "dev",
     -- event = "BufWinEnter",
     -- event = "BufRead",
+    module = "dap-install",
     run = "make",
     disable = not lvim.builtin.dap.active,
   },
