@@ -493,6 +493,14 @@ return {
     disable = not lvim.extensions.vim_better_whitespace.active,
   },
 
+  {
+    "zakharykaplan/nvim-retrail",
+    config = function()
+      require("extensions.nvim-retrail").setup()
+    end,
+    disable = not lvim.extensions.nvim_retrail.active,
+  },
+
   -- undo-tree
   {
     "mbbill/undotree",
