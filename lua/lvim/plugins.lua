@@ -15,7 +15,6 @@ return {
   {
     "williamboman/nvim-lsp-installer",
   },
-
   {
     "rcarriga/nvim-notify",
     config = function()
@@ -31,6 +30,7 @@ return {
   -- Telescope
   {
     "nvim-telescope/telescope.nvim",
+    branch = "0.1.x",
     config = function()
       require("lvim.core.telescope").setup()
     end,

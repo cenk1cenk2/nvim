@@ -71,7 +71,7 @@ function M.view_lunarvim_changelog()
       previewers.git_commit_diff_as_was.new(opts),
     },
 
-    -- TODO: consider opening a diff view when pressing enter
+    --TODO: consider opening a diff view when pressing enter
     attach_mappings = function(_, map)
       map("i", "<enter>", copy_to_clipboard_action)
       map("n", "<enter>", copy_to_clipboard_action)
