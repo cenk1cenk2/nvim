@@ -6,7 +6,12 @@ function M.config()
   lvim.extensions[extension_name] = {
     active = true,
     on_config_done = nil,
-    keymaps = { normal_mode = { ["gy"] = [[:diffget //3<CR>]], ["gY"] = [[:diffget //2<CR>]] } },
+    keymaps = {
+      normal_mode = {
+        ["gy"] = { [[:diffget //3<CR>]], { desc = "git ours" } },
+        ["gY"] = { [[:diffget //2<CR>]], { desc = "git theirs" } },
+      },
+    },
   }
 end
 

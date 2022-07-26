@@ -8,10 +8,22 @@ function M.config()
     on_config_done = nil,
     keymaps = {
       visual_mode = {
-        ["re"] = [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]],
-        ["rf"] = [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]],
-        ["rv"] = [[<Esc><Cmd>lua require('refactoring').refactor('Extract Variable')<CR>]],
-        ["ri"] = [[<Esc><Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]],
+        ["re"] = {
+          [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]],
+          { desc = "extract to function" },
+        },
+        ["rf"] = {
+          [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]],
+          { desc = "extract function to file" },
+        },
+        ["rv"] = {
+          [[<Esc><Cmd>lua require('refactoring').refactor('Extract Variable')<CR>]],
+          { desc = "extract variable" },
+        },
+        ["ri"] = {
+          [[<Esc><Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]],
+          { desc = "inline variable" },
+        },
       },
     },
     setup = {},

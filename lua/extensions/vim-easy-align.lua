@@ -7,8 +7,8 @@ function M.config()
     active = true,
     on_config_done = nil,
     keymaps = {
-      normal_mode = { ["ga"] = { [[<Plug>(EasyAlign)]], { noremap = false, silent = true } } },
-      visual_mode = { ["ga"] = { [[<Plug>(EasyAlign)]], { noremap = false, silent = true } } },
+      normal_mode = { ["ga"] = { [[<Plug>(EasyAlign)]], { desc = "easy-align" } } },
+      visual_mode = { ["ga"] = { [[<Plug>(EasyAlign)]], { desc = "easy-align" } } },
     },
   }
 end
