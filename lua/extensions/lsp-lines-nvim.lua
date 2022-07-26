@@ -8,7 +8,7 @@ function M.config()
     on_config_done = nil,
     keymaps = {
       normal_mode = {
-        ["gL"] = { require("lsp_lines").toggle, { noremap = false, silent = true, desc = "Toggle lsp_lines" } },
+        ["gL"] = { require("lsp_lines").toggle, { desc = "Toggle LSP Lines" } },
       },
     },
   }
