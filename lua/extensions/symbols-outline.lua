@@ -4,7 +4,7 @@ local extension_name = "symbols_outline"
 
 function M.config()
   lvim.extensions[extension_name] = {
-    active = true,
+    active = false,
     on_config_done = nil,
     setup = {
       highlight_hovered_item = true,

@@ -6,6 +6,11 @@ function M.config()
   lvim.extensions[extension_name] = {
     active = true,
     on_config_done = nil,
+    keymaps = {
+      normal_mode = {
+        ["ge"] = { require("lspsaga.finder").lsp_finder, { desc = "Finder" } },
+      },
+    },
     setup = {
       -- Error,Warn,Info,Hint
       diagnostic_header = { " ", " ", " ", "ﴞ " },
@@ -27,9 +32,9 @@ function M.config()
       -- preview lines of lsp_finder and definition preview
       max_preview_lines = 10,
       finder_action_keys = {
-        open = "o",
+        open = "<CR>",
         vsplit = "s",
-        split = "i",
+        split = "h",
         quit = "q",
         scroll_down = "<C-f>",
         scroll_up = "<C-b>", -- quit can be a table
@@ -38,13 +43,39 @@ function M.config()
         quit = "<C-c>",
         exec = "<CR>",
       },
+      -- show symbols in winbar must nightly
+      symbol_in_winbar = {
+        in_custom = false,
+        enable = false,
+        separator = " ",
+        show_file = true,
+        click_support = false,
+      },
       rename_action_quit = "<C-c>",
       -- "single" "double" "rounded" "bold" "plus"
       border_style = "single",
+      --the range of 0 for fully opaque window (disabled) to 100 for fully
+      --transparent background. Values between 0-30 are typically most useful.
+      saga_winblend = 0,
+      -- when cursor in saga window you config these to move
+      move_in_saga = { prev = "<C-p>", next = "<C-n>" },
       -- if you don't use nvim-lspconfig you must pass your server name and
       -- the related filetypes into this table
       -- like server_filetype_map = {metals = {'sbt', 'scala'}}
       server_filetype_map = {},
+      -- show outline
+      show_outline = {
+        win_position = "right",
+        -- set the special filetype in there which in left like nvimtree neotree defx
+        left_with = "",
+        win_width = 50,
+        auto_enter = true,
+        auto_preview = true,
+        virt_text = "┃",
+        jump_key = "<CR>",
+        -- auto refresh when change buffer
+        auto_refresh = true,
+      },
     },
   }
 end
@@ -53,6 +84,9 @@ function M.setup()
   local extension = require "lspsaga"
 
   extension.init_lsp_saga(lvim.extensions[extension_name].setup)
+
+  require("lvim.keymappings").load(lvim.extensions[extension_name].keymaps)
+  lvim.builtin.which_key.mappings["l"]["o"] = { ":LSoutlineToggle<CR>", "file outline" }
 
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done(extension)

@@ -8,9 +8,9 @@ function M.config()
   lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
     keymap = {
       normal_mode = {
-        ["sd"] = { [[:lua require('substitute').operator()<cr>]], { desc = "substitute operator" } },
-        ["sds"] = { [[:lua require('substitute').line()<cr>]], { desc = "substitute line" } },
-        ["sdd"] = { [[:lua require('substitute').eol()<cr>]], { desc = "substitute eol" } },
+        ["sd"] = { require("substitute").operator, { desc = "substitute operator" } },
+        ["sds"] = { require("substitute").line, { desc = "substitute line" } },
+        ["sdd"] = { require("substitute").eol, { desc = "substitute eol" } },
       },
       visual_mode = { ["sd"] = { [[:lua require('substitute').visual()<cr>]] }, { desc = "substitute visual" } },
     },

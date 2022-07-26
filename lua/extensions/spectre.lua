@@ -8,12 +8,12 @@ function M.config()
     on_config_done = nil,
     keymaps = {
       normal_mode = {
-        ["sa"] = [[:lua require('spectre').open_file_search()<cr>]],
-        ["as"] = [[:lua require('spectre').open()<cr>]],
+        ["sa"] = { require("spectre").open_file_search, { desc = "search and replace in current file" } },
+        ["as"] = { require("spectre").open, { desc = "search and replace" } },
       },
       visual_mode = {
-        ["sa"] = [[:lua require('spectre').open_file_search()<cr>]],
-        ["as"] = [[:lua require('spectre').open()<cr>]],
+        ["sa"] = { require("spectre").open_file_search, { desc = "search and replace in current file" } },
+        ["as"] = { require("spectre").open, { desc = "search and replace" } },
       },
     },
     setup = {
