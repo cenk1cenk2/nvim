@@ -3,17 +3,22 @@ local M = {}
 local extension_name = "spectre"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  lvim.extensions[extension_name] = { active = true, on_config_done = nil }
+
+  local status_ok, spectre = pcall(require, "spectre")
+  if not status_ok then
+    return
+  end
+
+  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
     keymaps = {
       normal_mode = {
-        ["sa"] = { require("spectre").open_file_search, { desc = "search and replace in current file" } },
-        ["as"] = { require("spectre").open, { desc = "search and replace" } },
+        ["sa"] = { spectre.open_file_search, { desc = "search and replace in current file" } },
+        ["as"] = { spectre.open, { desc = "search and replace" } },
       },
       visual_mode = {
-        ["sa"] = { require("spectre").open_file_search, { desc = "search and replace in current file" } },
-        ["as"] = { require("spectre").open, { desc = "search and replace" } },
+        ["sa"] = { spectre.open_file_search, { desc = "search and replace in current file" } },
+        ["as"] = { spectre.open, { desc = "search and replace" } },
       },
     },
     setup = {
@@ -127,7 +132,7 @@ function M.config()
       is_open_target_win = true, -- open file on opener window
       is_insert_mode = false, -- start open panel on is_insert_mode
     },
-  }
+  })
 end
 
 function M.setup()
