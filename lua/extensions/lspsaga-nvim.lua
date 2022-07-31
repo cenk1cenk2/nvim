@@ -3,7 +3,14 @@ local M = {}
 local extension_name = "lspsaga_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = {
+  lvim.extensions[extension_name] = { active = true, on_config_done = nil }
+
+  local status_ok, _ = pcall(require, "lspsaga")
+  if not status_ok then
+    return
+  end
+
+  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
     active = true,
     on_config_done = nil,
     keymaps = {
@@ -77,7 +84,7 @@ function M.config()
         auto_refresh = true,
       },
     },
-  }
+  })
 end
 
 function M.setup()
