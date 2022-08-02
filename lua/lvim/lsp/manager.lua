@@ -19,6 +19,8 @@ local function resolve_config(server_name, ...)
   if has_custom_provider then
     Log:debug("Using custom configuration for requested server: " .. server_name)
     defaults = vim.tbl_deep_extend("force", defaults, custom_config)
+  else
+    Log:debug("Using default configuration for requested server: " .. server_name)
   end
 
   defaults = vim.tbl_deep_extend("force", defaults, ...)
@@ -36,6 +38,10 @@ end
 -- this helps guarding against a data-race condition where a server can get configured twice
 -- which seems to occur only when attaching to single-files
 local function client_is_configured(server_name, ft)
+  -- hack to make ansiblels work
+  if vim.tbl_contains({ "ansiblels" }, server_name) then
+    return false
+  end
   ft = ft or vim.bo.filetype
   local active_autocmds = vim.split(vim.fn.execute("autocmd FileType " .. ft), "\n")
   for _, result in ipairs(active_autocmds) do

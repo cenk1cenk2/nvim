@@ -27,10 +27,10 @@ local opts = {
           ".gitlab-ci.yml",
         },
         ["https://json.schemastore.org/drone.json"] = { ".drone.yml" },
-        -- ["https://raw.githubusercontent.com/ansible-community/schemas/main/f/ansible-playbook.json"] = {
-        --   "deploy.yml",
-        --   "provision.yml",
-        -- },
+        ["https://raw.githubusercontent.com/ansible-community/schemas/main/f/ansible-playbook.json"] = {
+          "deploy.yml",
+          "provision.yml",
+        },
         ["https://bitbucket.org/atlassianlabs/atlascode/raw/main/resources/schemas/pipelines-schema.json"] = {
           "bitbucket-pipelines.yml",
         },
