@@ -43,9 +43,9 @@ local function client_is_configured(server_name, ft)
     return false
   end
   ft = ft or vim.bo.filetype
-  local active_autocmds = vim.split(vim.fn.execute("autocmd FileType " .. ft), "\n")
+  local active_autocmds = vim.api.nvim_get_autocmds { event = "FileType", pattern = ft }
   for _, result in ipairs(active_autocmds) do
-    if result:match(server_name) then
+    if result.command:match(server_name) then
       Log:debug(string.format("[%q] is already configured", server_name))
       return true
     end

@@ -1,5 +1,4 @@
 local M = {}
-
 M.config = function()
   local keymaps = require "keys.which-key"
 

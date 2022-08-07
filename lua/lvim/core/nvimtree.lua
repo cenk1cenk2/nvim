@@ -90,7 +90,13 @@ function M.config()
       },
       renderer = {
         indent_markers = {
-          enable = true,
+          enable = false,
+          icons = {
+            corner = "└",
+            edge = "│",
+            item = "│",
+            none = " ",
+          },
         },
         special_files = { ["package.json"] = true, ["README.md"] = true, ["node_modules"] = true },
         icons = {

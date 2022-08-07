@@ -59,6 +59,12 @@ return {
     ---@usage list of filetypes that the automatic installer will skip
     skipped_filetypes = skipped_filetypes,
   },
+  buffer_options = {
+    --- enable completion triggered by <c-x><c-o>
+    omnifunc = "v:lua.vim.lsp.omnifunc",
+    --- use gq for formatting
+    formatexpr = "v:lua.vim.lsp.formatexpr(#{timeout_ms:500})",
+  },
   ---@usage list of settings of nvim-lsp-installer
   installer = {
     setup = {
