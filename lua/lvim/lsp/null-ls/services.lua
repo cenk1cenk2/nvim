@@ -44,7 +44,6 @@ function M.register_sources(configs, method)
     end
 
     local requested_server = require("mason-registry").get_package(name)
-    print(vim.inspect(requested_server))
 
     if not requested_server then
       local command = M.find_command(source._opts.command)
@@ -78,9 +77,9 @@ function M.register_sources(configs, method)
     else
       local opts = {
         name = name,
-        command = name,
-        -- dynamic_command = requested_server._default_options.dynamic_command,
-        -- env = requested_server._default_options.cmd_env,
+        command = cmd,
+        dynamic_command = config.dynamic_command,
+        env = config.env,
         extra_args = config.extra_args,
         filetypes = config.filetypes,
         extra_filetypes = config.extra_filetypes,

@@ -85,6 +85,34 @@ function M.setup()
 
   Log:debug "Setting up LSP support"
 
+  Log:debug "Installing LSP servers."
+
+  local installer_ok, installer = pcall(require, "mason-tool-installer")
+
+  if installer_ok then
+    installer.setup {
+      -- a list of all tools you want to ensure are installed upon
+      -- start; they should be the names Mason uses for each tool
+      ensure_installed = lvim.lsp.ensure_installed,
+
+      -- if set to true this will check each tool for updates. If updates
+      -- are available the tool will be updated. This setting does not
+      -- affect :MasonToolsUpdate or :MasonToolsInstall.
+      -- Default: false
+      auto_update = false,
+
+      -- automatically install / update on startup. If set to false nothing
+      -- will happen on startup. You can use :MasonToolsInstall or
+      -- :MasonToolsUpdate to install tools and check for updates.
+      -- Default: true
+      run_on_start = true,
+
+      start_delay = 1000, -- 3 second delay
+    }
+  else
+    Log:warn "LSP installer not available."
+  end
+
   local lsp_status_ok, _ = pcall(require, "lspconfig")
   if not lsp_status_ok then
     return

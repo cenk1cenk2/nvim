@@ -1,6 +1,7 @@
 local M = {}
 
 local lsp_stuff = {
+  "modules-lsp.mason",
   "modules-lsp.formatters",
   "modules-lsp.linters",
   "modules-lsp.code-action-providers",

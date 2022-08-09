@@ -20,6 +20,7 @@ return {
       require("lvim.core.mason").setup()
     end,
   },
+  { "WhoIsSethDaniel/mason-tool-installer.nvim" },
   {
     "rcarriga/nvim-notify",
     config = function()

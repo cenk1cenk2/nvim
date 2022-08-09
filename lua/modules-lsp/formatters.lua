@@ -24,6 +24,9 @@ function M.setup()
         "markdown",
         "graphql",
       },
+      env = {
+        PRETTIERD_DEFAULT_CONFIG = vim.fn.expand "~/.config/nvim/utils/linter-config/.prettierrc.json",
+      },
     },
 
     {
@@ -31,10 +34,10 @@ function M.setup()
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
-    -- {
-    --   exe = "rustywind",
-    --   filetypes = { "javascriptreact", "typescriptreact", "vue", "svelte", "html" },
-    -- },
+    {
+      exe = "rustywind",
+      filetypes = { "javascriptreact", "typescriptreact", "vue", "svelte", "html" },
+    },
 
     { exe = "stylua", filetypes = { "lua" } },
 
