@@ -29,10 +29,10 @@ function M.setup()
       filetypes = { "python" },
     },
 
-    {
-      exe = "ansiblelint",
-      filetypes = { "yaml.ansible" },
-    },
+    -- {
+    --   exe = "ansiblelint",
+    --   filetypes = { "yaml.ansible" },
+    -- },
 
     -- {
     --   exe = "djlint",

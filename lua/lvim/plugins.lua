@@ -12,8 +12,13 @@ return {
   {
     "jose-elias-alvarez/nvim-lsp-ts-utils",
   },
+  { "antoinemadec/FixCursorHold.nvim" }, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
+  { "williamboman/mason-lspconfig.nvim" },
   {
-    "williamboman/nvim-lsp-installer",
+    "williamboman/mason.nvim",
+    config = function()
+      require("lvim.core.mason").setup()
+    end,
   },
   {
     "rcarriga/nvim-notify",

@@ -31,10 +31,10 @@ function M.setup()
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
-    {
-      exe = "rustywind",
-      filetypes = { "javascriptreact", "typescriptreact", "vue", "svelte", "html" },
-    },
+    -- {
+    --   exe = "rustywind",
+    --   filetypes = { "javascriptreact", "typescriptreact", "vue", "svelte", "html" },
+    -- },
 
     { exe = "stylua", filetypes = { "lua" } },
 
@@ -52,10 +52,10 @@ function M.setup()
       filetypes = { "python" },
     },
 
-    {
-      exe = "rustfmt",
-      filetypes = { "rust" },
-    },
+    -- {
+    --   exe = "rustfmt",
+    --   filetypes = { "rust" },
+    -- },
 
     {
       exe = "goimports",
