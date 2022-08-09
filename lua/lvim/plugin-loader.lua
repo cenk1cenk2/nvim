@@ -132,13 +132,13 @@ function plugin_loader.get_core_plugins()
 end
 
 function plugin_loader.load_snapshot(snapshot_file)
-  snapshot_file = snapshot_file or default_snapshot
-  if not in_headless then
-    vim.notify("Syncing core plugins is in progress..", vim.log.levels.INFO, { title = "lvim" })
-  end
-  Log:debug(string.format("Using snapshot file [%s]", snapshot_file))
-  local core_plugins = plugin_loader.get_core_plugins()
-  require("packer").rollback(snapshot_file, unpack(core_plugins))
+  -- snapshot_file = snapshot_file or default_snapshot
+  -- if not in_headless then
+  --   vim.notify("Syncing core plugins is in progress..", vim.log.levels.INFO, { title = "lvim" })
+  -- end
+  -- Log:debug(string.format("Using snapshot file [%s]", snapshot_file))
+  -- local core_plugins = plugin_loader.get_core_plugins()
+  -- require("packer").rollback(snapshot_file, unpack(core_plugins))
 end
 
 function plugin_loader.sync_core_plugins()
