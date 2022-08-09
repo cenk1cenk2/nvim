@@ -147,7 +147,7 @@ M.setup = function()
   lvim.builtin.which_key.mappings["b"]["b"] = { ":BufferLinePick<CR>", "pick buffer" }
   lvim.builtin.which_key.mappings["b"]["x"] = { ":BufferClose<CR>", "force close buffer" }
   lvim.builtin.which_key.mappings["b"]["X"] = { ":BufferCloseAllButCurrent<CR>", "close all buffers but this" }
-  lvim.builtin.which_key.mappings["b"]["d"] = { ":BufferLinePickClose<CR>", "close all but current buffer" }
+  lvim.builtin.which_key.mappings["b"]["d"] = { ":BufferLinePickClose<CR>", "pick buffer to close" }
   lvim.builtin.which_key.mappings["b"]["D"] = { ":BufferLineGroupClose ungrouped<CR>", "close ungrouped tabs" }
   lvim.builtin.which_key.mappings["b"]["y"] = { ":BufferLineCloseLeft<CR>", "close all buffers to the left" }
   lvim.builtin.which_key.mappings["b"]["Y"] = { ":BufferLineCloseRight<CR>", "close all buffers to the right" }
@@ -253,19 +253,24 @@ function M.buf_kill(kill_command, bufnr, force)
     elseif api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
       warning = fmt([[Terminal %s will be killed]], bufname)
     end
+
     if warning then
       vim.ui.input({
         prompt = string.format([[%s. Close it anyway? [y]es or [n]o (default: no): ]], warning),
       }, function(choice)
-        if choice:match "ye?s?" then
+        if not choice then
+          return
+        elseif choice:match "ye?s?" then
           force = true
           callback()
         end
       end)
+
+      return
     end
-  else
-    callback()
   end
+
+  callback()
 end
 
 return M
