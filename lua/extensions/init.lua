@@ -55,6 +55,7 @@ local extensions = {
   "extensions.text-case-nvim",
   "extensions.tree-climber-nvim",
   "extensions.nvim-retrail",
+  "extensions.nvim-surround",
 }
 
 function M.config(config)

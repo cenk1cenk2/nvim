@@ -407,6 +407,14 @@ return {
     disable = not lvim.extensions.vim_surround.active,
   },
 
+  {
+    "kylechui/nvim-surround",
+    config = function()
+      require("extensions.nvim-surround").setup()
+    end,
+    disable = not lvim.extensions.nvim_surround.active,
+  },
+
   -- search highlighting
   {
     "kevinhwang91/nvim-hlslens",
