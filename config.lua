@@ -1,6 +1,7 @@
 lvim.log.level = "info"
 
 lvim.lsp.ensure_installed = {
+  ---- language servers
   "json-lsp",
   "lua-language-server",
   "yaml-language-server",
@@ -20,8 +21,8 @@ lvim.lsp.ensure_installed = {
   "golangci-lint-langserver",
   "prisma-language-server",
   "prosemd-lsp",
-  -- "taplo",
-  -- formatters/linters
+  "taplo",
+  ---- formatters/linters
   "stylua",
   "eslint_d",
   "markdownlint",
@@ -40,7 +41,7 @@ lvim.lsp.ensure_installed = {
   -- "proselint",
   "terraform-ls",
   -- "djlint",
-  -- debugers
+  ---- debugers
   "delve",
   "node-debug2-adapter",
   "chrome-debug-adapter",
