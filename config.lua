@@ -33,6 +33,7 @@ lvim.lsp.ensure_installed = {
   "black",
   "isort",
   "flake8",
+  "shellcheck",
   -- "mypy",
   -- "goimports",
   "golines",
