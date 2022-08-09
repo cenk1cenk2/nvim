@@ -179,7 +179,7 @@ function M.close_all_but_current()
   local current = vim.api.nvim_get_current_buf()
   local buffers = require("bufferline.utils").get_valid_buffers()
   for _, bufnr in pairs(buffers) do
-    if bufnr ~= current then
+    if bufnr ~= current and not require("bufferline.groups").is_pinned { id = bufnr } then
       -- require("bufferline.commands").handle_close(bufnr)
       pcall(vim.cmd, string.format("bd %d", bufnr))
     end
