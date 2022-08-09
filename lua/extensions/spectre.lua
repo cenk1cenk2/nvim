@@ -51,6 +51,11 @@ function M.config()
           cmd = "<cmd>lua require('spectre').show_options()<CR>",
           desc = "show option",
         },
+        ["run_current_replace"] = {
+          map = "S",
+          cmd = "<cmd>lua require('spectre.actions').run_current_replace()<CR>",
+          desc = "replace current line",
+        },
         ["run_replace"] = {
           map = "R",
           cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
@@ -60,6 +65,16 @@ function M.config()
           map = "v",
           cmd = "<cmd>lua require('spectre').change_view()<CR>",
           desc = "change result view mode",
+        },
+        ["change_replace_sed"] = {
+          map = "zh",
+          cmd = "<cmd>lua require('spectre').change_engine_replace('sed')<CR>",
+          desc = "use sed to replace",
+        },
+        ["change_replace_oxi"] = {
+          map = "zh",
+          cmd = "<cmd>lua require('spectre').change_engine_replace('oxi')<CR>",
+          desc = "use oxi to replace",
         },
         ["toggle_ignore_case"] = {
           map = "zi",
@@ -116,16 +131,29 @@ function M.config()
             ["string"] = { value = "--string-mode", desc = "fixed string mode", icon = "[S]" },
           },
         },
+
+        -- call rust code by nvim-oxi to replace
+        ["oxi"] = {
+          cmd = "oxi",
+          args = {},
+          options = {
+            ["ignore-case"] = {
+              value = "i",
+              icon = "[I]",
+              desc = "ignore case",
+            },
+          },
+        },
       },
       default = {
         find = {
           -- pick one of item that find_engine
           cmd = "rg",
-          options = { "ignore-case", "string" },
+          options = { "ignore-case" },
         },
         replace = {
           -- pick one of item that replace_engine
-          cmd = "sed",
+          cmd = "oxi",
         },
       },
       replace_vim_cmd = "cfdo",

@@ -437,7 +437,7 @@ return {
 
   -- find and replace
   {
-    "cenk1cenk2/nvim-spectre",
+    "nvim-pack/nvim-spectre",
     config = function()
       require("extensions.spectre").setup()
     end,
