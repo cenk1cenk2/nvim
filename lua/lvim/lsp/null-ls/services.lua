@@ -35,67 +35,71 @@ function M.register_sources(configs, method)
     Log:debug(string.format("Received request to register [%s] as a %s source", name, type))
     if not source then
       Log:error("Not a valid source: " .. name)
+
+      return registered_names
     elseif is_registered { name = source.name or name, method = method } then
       Log:trace(string.format("Skipping registering [%s] more than once", name))
-    else
-      local server_available, requested_server = require("nvim-lsp-installer.servers").get_server(name)
 
-      if not server_available then
-        local command = M.find_command(source._opts.command)
+      return registered_names
+    end
 
-        if command then
-          local opts = {
-            name = name,
-            command = command,
-          }
+    local requested_server = require("mason-registry").get_package(name)
 
-          Log:debug("Registering source from globally source " .. name)
-          Log:trace(vim.inspect(opts))
+    if not requested_server then
+      local command = M.find_command(source._opts.command)
 
-          table.insert(sources, source.with(opts))
-
-          vim.list_extend(registered_names, { name })
-        elseif name then
-          local opts = {
-            name = name,
-          }
-
-          Log:debug("Registering source from the default source " .. name)
-          Log:trace(vim.inspect(opts))
-
-          table.insert(sources, source.with(opts))
-
-          vim.list_extend(registered_names, { name })
-        else
-          Log:warn("Not found source: " .. name)
-        end
-      else
+      if command then
         local opts = {
           name = name,
-          command = table.concat(requested_server._default_options.cmd, " "),
-          dynamic_command = requested_server._default_options.dynamic_command,
-          env = requested_server._default_options.cmd_env,
-          extra_args = config.extra_args,
-          filetypes = config.filetypes,
-          extra_filetypes = config.extra_filetypes,
-          disabled_filetypes = config.disabled_filetypes,
-          condition = config.condition,
-          runtime_condition = config.runtime_condition,
+          command = command,
         }
 
-        Log:debug("Registering source " .. name)
+        Log:debug("Registering source from globally source " .. name)
         Log:trace(vim.inspect(opts))
 
-        local s = source.with(opts)
-
-        if opts.dynamic_command == false then
-          s._opts.dynamic_command = nil
-        end
-
-        table.insert(sources, s)
+        table.insert(sources, source.with(opts))
 
         vim.list_extend(registered_names, { name })
+      elseif name then
+        local opts = {
+          name = name,
+        }
+
+        Log:debug("Registering source from the default source " .. name)
+        Log:trace(vim.inspect(opts))
+
+        table.insert(sources, source.with(opts))
+
+        vim.list_extend(registered_names, { name })
+      else
+        Log:warn("Not found source: " .. name)
       end
+    else
+      local opts = {
+        name = name,
+        command = cmd,
+        dynamic_command = config.dynamic_command,
+        env = config.env,
+        extra_args = config.extra_args,
+        filetypes = config.filetypes,
+        extra_filetypes = config.extra_filetypes,
+        disabled_filetypes = config.disabled_filetypes,
+        condition = config.condition,
+        runtime_condition = config.runtime_condition,
+      }
+
+      Log:debug("Registering source " .. name)
+      Log:trace(vim.inspect(opts))
+
+      local s = source.with(opts)
+
+      if opts.dynamic_command == false then
+        s._opts.dynamic_command = nil
+      end
+
+      table.insert(sources, s)
+
+      vim.list_extend(registered_names, { name })
     end
   end
 

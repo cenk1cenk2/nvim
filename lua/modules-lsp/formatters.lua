@@ -24,6 +24,9 @@ function M.setup()
         "markdown",
         "graphql",
       },
+      env = {
+        PRETTIERD_DEFAULT_CONFIG = vim.fn.expand "~/.config/nvim/utils/linter-config/.prettierrc.json",
+      },
     },
 
     {
@@ -52,10 +55,10 @@ function M.setup()
       filetypes = { "python" },
     },
 
-    {
-      exe = "rustfmt",
-      filetypes = { "rust" },
-    },
+    -- {
+    --   exe = "rustfmt",
+    --   filetypes = { "rust" },
+    -- },
 
     {
       exe = "goimports",

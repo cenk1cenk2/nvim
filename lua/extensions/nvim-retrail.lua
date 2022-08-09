@@ -31,6 +31,7 @@ function M.config()
           "TelescopePrompt",
           "floaterm",
           "toggleterm",
+          "mason.nvim",
         },
       },
       -- Trim on write behaviour.

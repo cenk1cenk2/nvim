@@ -5,19 +5,22 @@ local table_utils = require "lvim.utils.table"
 local M = {}
 
 function M.run_markdown_toc()
-  local servers = require "nvim-lsp-installer.servers"
-  local server_available, server = servers.get_server "markdown_toc"
+  local server_name = "markdown-toc"
+  local server = require("mason-registry").get_package(server_name)
 
-  if not server_available then
-    Log:error(("Server %s is not available."):format "markdown-toc")
+  if not server:is_installed() then
+    Log:error(("Server %s is not available."):format(server_name))
 
     return
   end
 
+  local config = require("modules.lsp-config").get_lsp_default_config(server_name)
+
+  print(vim.inspect(config))
+
   job.spawn {
-    command = table.concat(server._default_options.cmd),
-    args = table_utils.merge(server._default_options.extra_args, { vim.fn.expand "%" }),
-    env = server._default_options.cmd_env,
+    command = table.concat(config.command),
+    args = table_utils.merge(config.args, { vim.fn.expand "%" }),
   }
 end
 

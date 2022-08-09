@@ -12,9 +12,15 @@ return {
   {
     "jose-elias-alvarez/nvim-lsp-ts-utils",
   },
+  { "antoinemadec/FixCursorHold.nvim" }, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
+  { "williamboman/mason-lspconfig.nvim" },
   {
-    "williamboman/nvim-lsp-installer",
+    "williamboman/mason.nvim",
+    config = function()
+      require("lvim.core.mason").setup()
+    end,
   },
+  { "WhoIsSethDaniel/mason-tool-installer.nvim" },
   {
     "rcarriga/nvim-notify",
     config = function()
@@ -335,16 +341,6 @@ return {
   },
 
   -- Debugger management
-  {
-    "Pocco81/dap-buddy.nvim",
-    branch = "dev",
-    -- event = "BufWinEnter",
-    -- event = "BufRead",
-    module = "dap-install",
-    run = "make",
-    disable = not lvim.builtin.dap.active,
-  },
-
   {
     "rcarriga/nvim-dap-ui",
     config = function()

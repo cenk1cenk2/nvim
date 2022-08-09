@@ -86,7 +86,7 @@ M.setup = function()
       ["<F6>"] = ":lua require('lvim.core.terminal').buffer_terminal()<CR>",
       ["<F7>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
       ["<F9>"] = ":lua require('lvim.core.terminal').terminal_kill_all()<CR>",
-      ["<F11>"] = ":LspInstallInfo<CR>",
+      ["<F11>"] = ":Mason<CR>",
     },
     term_mode = {
       ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
