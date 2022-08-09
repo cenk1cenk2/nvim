@@ -627,6 +627,14 @@ return {
     disable = not lvim.extensions.vim_easy_align.active,
   },
 
+  {
+    "Vonr/align.nvim",
+    config = function()
+      require("extensions.align-nvim").setup()
+    end,
+    disable = not lvim.extensions.align_nvim.active,
+  },
+
   -- markdown preview
   {
     "iamcco/markdown-preview.nvim",

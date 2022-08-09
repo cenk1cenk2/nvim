@@ -4,7 +4,7 @@ local extension_name = "vim_easy_align"
 
 function M.config()
   lvim.extensions[extension_name] = {
-    active = true,
+    active = false,
     on_config_done = nil,
     keymaps = {
       normal_mode = { ["ga"] = { [[<Plug>(EasyAlign)]], { desc = "easy-align" } } },
