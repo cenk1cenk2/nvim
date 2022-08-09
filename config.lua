@@ -20,6 +20,7 @@ lvim.lsp.ensure_installed = {
   "golangci-lint-langserver",
   "prisma-language-server",
   "prosemd-lsp",
+  -- "taplo",
   -- formatters/linters
   "stylua",
   "eslint_d",
