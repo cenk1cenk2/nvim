@@ -342,16 +342,6 @@ return {
 
   -- Debugger management
   {
-    "Pocco81/dap-buddy.nvim",
-    branch = "dev",
-    -- event = "BufWinEnter",
-    -- event = "BufRead",
-    module = "dap-install",
-    run = "make",
-    disable = not lvim.builtin.dap.active,
-  },
-
-  {
     "rcarriga/nvim-dap-ui",
     config = function()
       require("extensions.nvim-dap-ui").setup()
