@@ -56,6 +56,7 @@ local extensions = {
   "extensions.tree-climber-nvim",
   "extensions.nvim-retrail",
   "extensions.nvim-surround",
+  "extensions.cool-substitute-nvim",
   "extensions.align-nvim",
 }
 

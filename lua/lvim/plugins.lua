@@ -460,6 +460,14 @@ return {
     disable = not lvim.extensions.vim_visual_multi.active,
   },
 
+  {
+    "otavioschwanck/cool-substitute.nvim",
+    config = function()
+      require("extensions.cool-substitute-nvim").setup()
+    end,
+    disable = not lvim.extensions.cool_substitute_nvim.active,
+  },
+
   -- ranger
   {
     "kevinhwang91/rnvimr",

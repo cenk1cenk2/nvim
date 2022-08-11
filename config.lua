@@ -37,6 +37,7 @@ lvim.lsp.ensure_installed = {
   -- "mypy",
   -- "goimports",
   "golines",
+  "revive",
   -- "rustfmt",
   "hadolint",
   -- "proselint",
