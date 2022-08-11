@@ -462,6 +462,7 @@ return {
 
   {
     "otavioschwanck/cool-substitute.nvim",
+    branch = "main",
     config = function()
       require("extensions.cool-substitute-nvim").setup()
     end,
