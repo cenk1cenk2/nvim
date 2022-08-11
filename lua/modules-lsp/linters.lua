@@ -29,6 +29,17 @@ function M.setup()
       filetypes = { "python" },
     },
 
+    {
+      exe = "jsonlint",
+    },
+
+    -- {
+    --   exe = "checkmake",
+    -- },
+
+    {
+      exe = "codespell",
+    },
     -- {
     --   exe = "ansiblelint",
     --   filetypes = { "yaml.ansible" },

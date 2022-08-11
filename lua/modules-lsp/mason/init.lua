@@ -4,6 +4,9 @@ local Log = require "lvim.core.log"
 local installers = {
   "modules-lsp.mason.markdown-toc",
   "modules-lsp.mason.rustywind",
+  "modules-lsp.mason.jsonlint",
+  "modules-lsp.mason.codespell",
+  "modules-lsp.mason.checkmake",
 }
 
 function M.setup()
