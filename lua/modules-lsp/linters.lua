@@ -29,9 +29,9 @@ function M.setup()
       filetypes = { "python" },
     },
 
-    {
-      exe = "jsonlint",
-    },
+    -- {
+    --   exe = "jsonlint",
+    -- },
 
     -- {
     --   exe = "checkmake",

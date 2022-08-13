@@ -38,7 +38,7 @@ lvim.lsp.ensure_installed = {
   -- "goimports",
   "golines",
   "golangci-lint",
-  "jsonlint",
+  -- "jsonlint",
   "codespell",
   -- "checkmake",
   -- "revive",
