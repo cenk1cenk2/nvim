@@ -190,6 +190,17 @@ return {
     module = "lua-dev",
   },
 
+  -- Folding
+
+  {
+    "kevinhwang91/nvim-ufo",
+    requires = "kevinhwang91/promise-async",
+    config = function()
+      require("extensions.nvim-ufo").setup()
+    end,
+    disable = not lvim.extensions.nvim_ufo.active,
+  },
+
   -- Autopairs
   {
     "windwp/nvim-autopairs",

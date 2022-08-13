@@ -74,6 +74,14 @@ function M.setup()
       filetypes = { "go" },
     },
 
+    {
+      exe = "shellharden",
+    },
+
+    {
+      exe = "beautysh",
+    },
+
     -- {
     --   exe = "djlint",
     --   filetypes = { "jinja" },

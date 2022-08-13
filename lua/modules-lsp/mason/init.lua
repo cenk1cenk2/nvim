@@ -6,6 +6,7 @@ local installers = {
   "modules-lsp.mason.rustywind",
   "modules-lsp.mason.jsonlint",
   "modules-lsp.mason.codespell",
+  "modules-lsp.mason.beautysh",
   "modules-lsp.mason.checkmake",
 }
 
