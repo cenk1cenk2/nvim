@@ -55,7 +55,7 @@ M.config = function()
         -- gui = "italic",
       },
       buffer_selected = {
-        gui = "bold",
+        italic = false,
       },
     },
     options = {
