@@ -456,6 +456,7 @@ return {
   -- find and replace
   {
     "nvim-pack/nvim-spectre",
+    run = "./build.sh",
     config = function()
       require("extensions.spectre").setup()
     end,
