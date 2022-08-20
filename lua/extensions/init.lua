@@ -59,6 +59,7 @@ local extensions = {
   "extensions.nvim-surround",
   "extensions.cool-substitute-nvim",
   "extensions.align-nvim",
+  "extensions.document-color-nvim",
 }
 
 function M.config(config)
