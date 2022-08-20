@@ -1,5 +1,4 @@
 local skipped_servers = {}
-
 local skipped_filetypes = {}
 
 local join_paths = require("lvim.utils").join_paths
