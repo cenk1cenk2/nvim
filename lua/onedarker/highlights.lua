@@ -169,7 +169,7 @@ hl.syntax = {
   Character = colors.Orange,
   confComment = colors.Grey,
   NormalFloat = { bg = c.bg1 },
-  FloatBorder = { fg = c.grey },
+  FloatBorder = { fg = c.orange },
   Number = colors.Orange,
   Float = colors.Orange,
   Boolean = colors.Orange,

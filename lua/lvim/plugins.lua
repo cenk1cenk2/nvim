@@ -399,6 +399,17 @@ return {
     disable = not lvim.extensions.hop.active,
   },
 
+  {
+    "ggandor/flit.nvim",
+    config = function()
+      require("extensions.flit-nvim").setup()
+    end,
+    requires = {
+      "ggandor/leap.nvim",
+    },
+    disable = not lvim.extensions.flit_nvim.active,
+  },
+
   -- Repeat last commands
   {
     "tpope/vim-repeat",
