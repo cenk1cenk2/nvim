@@ -353,6 +353,12 @@ hl.plugins.hop = {
   HopUnmatched = {},
 }
 
+hl.plugins.vim_illuminate = {
+  IlluminatedWordText = { bg = c.bg1 },
+  IlluminatedWordWrite = { bg = c.bg1 },
+  IlluminatedWordRead = { bg = c.bg1 },
+}
+
 hl.plugins.indentblankline = { IndentBlankLineChar = { fg = c.bg3 }, IndentBlanklineContextChar = { fg = c.cursor } }
 
 hl.plugins.diffview = {

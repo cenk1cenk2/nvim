@@ -576,6 +576,14 @@ return {
     disable = not lvim.extensions.lsp_lines_nvim.active,
   },
 
+  {
+    "RRethy/vim-illuminate",
+    config = function()
+      require("extensions.vim-illuminate").setup()
+    end,
+    disable = not lvim.extensions.vim_illuminate.active,
+  },
+
   -- lsp loader information
   {
     "j-hui/fidget.nvim",
