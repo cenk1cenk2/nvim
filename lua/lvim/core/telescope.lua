@@ -94,7 +94,7 @@ function M.config()
       find_files = {
         theme = "dropdown",
         hidden = true,
-        -- find_command = { "fd", "--type=file", "--hidden", "--ignore-case" },
+        find_command = { "fd", "--type=file", "--hidden", "--ignore-case", "--exclude", ".git/" },
         previewer = false,
         shorten_path = false,
         layout_config = {
