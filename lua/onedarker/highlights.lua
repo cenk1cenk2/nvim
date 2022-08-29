@@ -4,34 +4,12 @@ local M = {}
 local hl = { langs = {}, plugins = {} }
 
 local highlight = vim.api.nvim_set_hl
-local set_hl_ns = vim.api.nvim__set_hl_ns or vim.api.nvim_set_hl_ns
+local set_hl_ns = vim.api.nvim_set_hl_ns
 local create_namespace = vim.api.nvim_create_namespace
 
 local function load_highlights(ns, highlights)
   for group_name, group_settings in pairs(highlights) do
     highlight(ns, group_name, group_settings)
-  end
-end
-
-local function gui(group_settings)
-  if group_settings.bold then
-    return "bold"
-  elseif group_settings.underline then
-    return "underline"
-  elseif group_settings.italic then
-    return "italic"
-  elseif group_settings.reverse then
-    return "reverse"
-  else
-    return "NONE"
-  end
-end
-
-local function vim_highlights(highlights)
-  for group_name, group_settings in pairs(highlights) do
-    local fg = group_settings.fg and "guifg=" .. group_settings.fg or "guifg=NONE"
-    local bg = group_settings.bg and "guibg=" .. group_settings.bg or "guibg=NONE"
-    vim.api.nvim_command("highlight " .. group_name .. " " .. "gui=" .. gui(group_settings) .. " " .. fg .. " " .. bg)
   end
 end
 
@@ -59,11 +37,11 @@ hl.common = {
   Folded = { fg = c.fg, bg = c.bg2 },
   SignColumn = { fg = c.fg, bg = c.bg0 },
   ToolbarLine = { fg = c.fg },
-  Cursor = { invert = true },
+  Cursor = { reverse = true },
   vCursor = { bg = c.cursor },
-  iCursor = { invert = true },
+  iCursor = { reverse = true },
   lCursor = { bg = c.cursor },
-  CursorIM = { invert = true },
+  CursorIM = { reverse = true },
   CursorColumn = { bg = c.bg1 },
   CursorLine = { bg = c.bg1 },
   ColorColumn = { bg = c.bg1 },
@@ -120,11 +98,11 @@ hl.common = {
   NormalNC = { fg = c.fg, bg = c.bg },
   FloatBorder = { fg = c.gray, bg = c.bg1 },
   NormalFloat = { bg = c.bg1 },
-  MatchWord = { style = "underline" },
-  MatchWordCur = { style = "underline" },
-  MatchParenCur = { style = "underline" },
+  MatchWord = { underline = true },
+  MatchWordCur = { underline = true },
+  MatchParenCur = { underline = true },
   TermCursorNC = { bg = c.cursor },
-  Title = { fg = c.blue, style = "bold" },
+  Title = { fg = c.blue, bold = true },
   Substitute = { fg = c.bg3, bg = c.orange },
   Variable = { fg = c.red },
   String = { fg = c.green },
@@ -156,12 +134,12 @@ hl.common = {
   Tag = { fg = c.blue },
   Delimiter = { fg = c.grey },
   SpecialComment = { fg = c.grey },
-  Underlined = { style = "underline" },
-  Bold = { style = "bold" },
-  Italic = { style = "italic" },
-  Ignore = { fg = c.cyan, bg = c.bg, style = "bold" },
-  Todo = { fg = c.red, bg = c.bg, style = "bold" },
-  Error = { fg = c.dark_red, bg = c.bg, style = "bold" },
+  Underlined = { underline = true },
+  Bold = { bold = true },
+  Italic = { italic = true },
+  Ignore = { fg = c.cyan, bg = c.bg, bold = true },
+  Todo = { fg = c.red, bg = c.bg, bold = true },
+  Error = { fg = c.dark_red, bg = c.bg, bold = true },
 }
 
 hl.syntax = {
@@ -272,7 +250,7 @@ hl.treesitter = {
   TSInlayHint = { italic = true, bg = c.bg1, fg = c.bg_d },
 }
 
-hl.plugins.lsp = {
+hl.lsp = {
   DiagnosticVirtualTextError = { fg = c.red },
   DiagnosticVirtualTextWarning = { fg = c.orange },
   DiagnosticVirtualTextInformation = { fg = c.dark_cyan },
@@ -294,21 +272,21 @@ hl.plugins.lsp = {
   LspDiagnosticsDefaultHint = { fg = c.grey },
   LspDiagnosticsDefaultInformation = { fg = c.dark_cyan },
   LspDiagnosticsDefaultWarning = { fg = c.orange },
-  LspDiagnosticsUnderlineError = { style = "underline" },
-  LspDiagnosticsUnderlineHint = { style = "underline" },
-  LspDiagnosticsUnderlineInformation = { style = "underline" },
-  LspDiagnosticsUnderlineWarning = { style = "underline" },
-  DiagnosticUnderlineError = { style = "underline" },
-  DiagnosticUnderlineWarn = { style = "underline" },
-  DiagnosticUnderlineInfo = { style = "underline" },
-  DiagnosticUnderlineHint = { style = "underline" },
+  LspDiagnosticsUnderlineError = { underline = true },
+  LspDiagnosticsUnderlineHint = { underline = true },
+  LspDiagnosticsUnderlineInformation = { underline = true },
+  LspDiagnosticsUnderlineWarning = { underline = true },
+  DiagnosticUnderlineError = { underline = true },
+  DiagnosticUnderlineWarn = { underline = true },
+  DiagnosticUnderlineInfo = { underline = true },
+  DiagnosticUnderlineHint = { underline = true },
   LspDiagnosticsVirtualTextError = { fg = c.red },
   LspDiagnosticsVirtualTextWarning = { fg = c.orange },
   LspDiagnosticsVirtualTextInformation = { fg = c.dark_cyan },
   LspDiagnosticsVirtualTextHint = { fg = c.grey },
-  LspReferenceText = { bg = c.bg1, style = "bold" },
-  LspReferenceWrite = { bg = c.bg1, style = "bold" },
-  LspReferenceRead = { bg = c.bg1, style = "bold" },
+  LspReferenceText = { bg = c.bg1, bold = true },
+  LspReferenceWrite = { bg = c.bg1, bold = true },
+  LspReferenceRead = { bg = c.bg1, bold = true },
   LspDiagnosticsFloatingError = { fg = c.red },
   LspDiagnosticsFloatingWarning = { fg = c.orange },
   LspDiagnosticsFloatingInformation = { fg = c.dark_cyan },
@@ -414,38 +392,38 @@ hl.plugins.nvim_tree = {
   NvimTreeFolderName = colors.Blue,
 }
 
-hl.plugins.neo_tree_nvim = {
-  NeoTreeIndentMarker = { fg = c.bg2 },
-  NeoTreeExpander = { fg = c.bg3 },
-  NeoTreeBufferNumber = {},
-  NeoTreeCursorLine = {},
-  NeoTreeDimText = { fg = c.bg3 },
-  NeoTreeDirectoryIcon = {},
-  NeoTreeDirectoryName = {},
-  NeoTreeDotfile = { fg = c.bg4 },
-  NeoTreeFadeText1 = {},
-  NeoTreeFadeText2 = {},
-  NeoTreeFileIcon = {},
-  NeoTreeFileName = {},
-  NeoTreeFileNameOpened = {},
-  NeoTreeFilterTerm = {},
-  NeoTreeFloatBorder = {},
-  NeoTreeFloatTitle = {},
-  NeoTreeModified = { fg = c.bright_blue },
-  NeoTreeGitAdded = { fg = c.bright_green },
-  NeoTreeGitConflict = { fg = c.orange },
-  NeoTreeGitDeleted = { fg = c.bright_red },
-  NeoTreeGitIgnored = { fg = c.grey },
-  NeoTreeGitModified = { fg = c.bright_yellow },
-  NeoTreeGitRenamed = { fg = c.bright_magenta },
-  NeoTreeGitUntracked = { fg = c.bright_green },
-  NeoTreeHiddenByName = {},
-  NeoTreeNormal = {},
-  NeoTreeNormalNC = {},
-  NeoTreeRootName = {},
-  NeoTreeSymbolicLinkTarget = { c.cyan },
-  NeoTreeTitleBar = {},
-}
+-- hl.plugins.neo_tree_nvim = {
+--   NeoTreeIndentMarker = { fg = c.bg2 },
+--   NeoTreeExpander = { fg = c.bg3 },
+--   NeoTreeBufferNumber = {},
+--   NeoTreeCursorLine = {},
+--   NeoTreeDimText = { fg = c.bg3 },
+--   NeoTreeDirectoryIcon = {},
+--   NeoTreeDirectoryName = {},
+--   NeoTreeDotfile = { fg = c.bg4 },
+--   NeoTreeFadeText1 = {},
+--   NeoTreeFadeText2 = {},
+--   NeoTreeFileIcon = {},
+--   NeoTreeFileName = {},
+--   NeoTreeFileNameOpened = {},
+--   NeoTreeFilterTerm = {},
+--   NeoTreeFloatBorder = {},
+--   NeoTreeFloatTitle = {},
+--   NeoTreeModified = { fg = c.bright_blue },
+--   NeoTreeGitAdded = { fg = c.bright_green },
+--   NeoTreeGitConflict = { fg = c.orange },
+--   NeoTreeGitDeleted = { fg = c.bright_red },
+--   NeoTreeGitIgnored = { fg = c.grey },
+--   NeoTreeGitModified = { fg = c.bright_yellow },
+--   NeoTreeGitRenamed = { fg = c.bright_magenta },
+--   NeoTreeGitUntracked = { fg = c.bright_green },
+--   NeoTreeHiddenByName = {},
+--   NeoTreeNormal = {},
+--   NeoTreeNormalNC = {},
+--   NeoTreeRootName = {},
+--   NeoTreeSymbolicLinkTarget = { c.cyan },
+--   NeoTreeTitleBar = {},
+-- }
 
 hl.plugins.telescope = {
   TelescopeBorder = colors.Grey,
@@ -604,19 +582,21 @@ hl.plugins.aerojump = {
 }
 
 function M.setup()
-  vim_highlights(hl.common)
-  vim_highlights(hl.syntax)
+  local ns = create_namespace "onedarker"
+  load_highlights(0, hl.common)
+  load_highlights(0, hl.syntax)
+  load_highlights(0, hl.lsp)
 
   for _, group in pairs(hl.langs) do
-    vim_highlights(group)
+    load_highlights(0, group)
   end
 
   for _, group in pairs(hl.plugins) do
-    vim_highlights(group)
+    load_highlights(0, group)
   end
 
-  local ns = create_namespace "onedarker"
-  load_highlights(ns, hl.treesitter)
+  load_highlights(0, hl.treesitter)
+  -- load_highlights(ns, hl.treesitter)
   set_hl_ns(ns)
   -- vim_highlights(hl.treesitter)
 end
