@@ -14,8 +14,8 @@ function M.clear_references()
 end
 
 function M.code_action()
-  vim.lsp.buf.code_action()
-  -- require("lspsaga.codeaction").code_action()
+  -- vim.lsp.buf.code_action()
+  vim.cmd "Lspsaga code_action"
 end
 
 function M.range_code_action()
@@ -81,7 +81,7 @@ end
 
 function M.rename()
   -- vim.lsp.buf.rename()
-  require("lspsaga.rename").lsp_rename()
+  vim.cmd "Lspsaga rename"
 end
 
 function M.signature_help()
