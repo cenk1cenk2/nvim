@@ -15,12 +15,12 @@ end
 
 function M.code_action()
   -- vim.lsp.buf.code_action()
-  vim.cmd "Lspsaga code_action"
+  vim.api.nvim_command "Lspsaga code_action"
 end
 
 function M.range_code_action()
   -- vim.lsp.buf.range_code_action()
-  vim.cmd "Lspsaga range_code_action"
+  vim.api.nvim_command "Lspsaga range_code_action"
 end
 
 function M.declaration()
@@ -39,7 +39,7 @@ end
 
 function M.document_symbol()
   -- vim.lsp.buf.document_symbol()
-  vim.api.nvim_exec("Telescope", { "lsp_document_symbols" })
+  vim.api.nvim_command "Telescope lsp_document_symbols"
 end
 
 function M.format()
@@ -81,7 +81,7 @@ end
 
 function M.rename()
   -- vim.lsp.buf.rename()
-  vim.cmd "Lspsaga rename"
+  vim.api.nvim_command "Lspsaga rename"
 end
 
 function M.signature_help()
@@ -96,7 +96,7 @@ end
 function M.workspace_symbol()
   -- vim.lsp.buf.workspace_symbol()
 
-  vim.api.nvim_exec("Telescope", { "lsp_dynamic_workspace_symbols" })
+  vim.api.nvim_command "Telescope lsp_dynamic_workspace_symbols"
 end
 
 -- diagnostic
@@ -144,11 +144,11 @@ function M.peek_implementation()
 end
 
 function M.document_diagonistics()
-  vim.api.nvim_exec("Telescope", { "lsp_document_diagnostics" })
+  vim.api.nvim_command "Telescope lsp_document_diagnostics"
 end
 
 function M.workspace_diagonistics()
-  vim.api.nvim_exec("Telescope", { "lsp_workspace_diagnostics" })
+  vim.api.nvim_command "Telescope lsp_workspace_diagnostics"
 end
 
 function M.code_lens()
