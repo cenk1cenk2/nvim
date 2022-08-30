@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SECONDS=0
-#COMMIT_SHA="f6e19e7334b216e1ff6c09bc12fdcee2ec6be648"
+COMMIT_SHA="691f4715c0cf4bc11ea2280db8777e6dd174a8ac"
 
 ## inject logger
 LOG_LEVEL=${LOG_LEVEL-"INFO"}
@@ -21,9 +21,9 @@ log_finish "Neovim cloned."
 
 cd "$TMP_DOWNLOAD_PATH" || exit 127
 
-if [ -n "${COMMIT_SHA}" ]; then
-	log_warn "Certain commit sha is set: ${COMMIT_SHA}"
-	git checkout "${COMMIT_SHA}"
+if [ "$COMMIT_SHA" != "" ]; then
+    log_warn "Certain commit sha is set: ${COMMIT_SHA}"
+    git checkout "$COMMIT_SHA"
 fi
 
 log_start "Building neovim..."
@@ -34,8 +34,8 @@ log_debug "Clean up temporary path."
 sudo rm -r "$TMP_DOWNLOAD_PATH"
 
 if [ -f "/bin/nvim" ]; then
-	log_warn "Neovim installed with fuse appimage deleting it first."
-	sudo rm /bin/nvim
+    log_warn "Neovim installed with fuse appimage deleting it first."
+    sudo rm /bin/nvim
 fi
 
 pip3 install neovim-remote
