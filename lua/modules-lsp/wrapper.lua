@@ -20,7 +20,7 @@ end
 
 function M.range_code_action()
   -- vim.lsp.buf.range_code_action()
-  require("lspsaga.codeaction").range_code_action()
+  vim.cmd "Lspsaga range_code_action"
 end
 
 function M.declaration()
@@ -85,8 +85,8 @@ function M.rename()
 end
 
 function M.signature_help()
-  -- vim.lsp.buf.signature_help()
-  require("lspsaga.signaturehelp").signature_help()
+  vim.lsp.buf.signature_help()
+  -- require("lspsaga.signaturehelp").signature_help()
 end
 
 function M.type_definition()
