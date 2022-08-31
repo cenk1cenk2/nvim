@@ -4,14 +4,32 @@ function M.config()
   local utils_table = require "lvim.utils.table"
   local pre_hook = nil
   if lvim.builtin.treesitter.context_commentstring.enable then
-    pre_hook = function()
+    pre_hook = function(ctx)
       if
         utils_table.contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
-          return type == vim.bo.filetype
+          return type ~= vim.bo.filetype
         end)
       then
-        require("ts_context_commentstring.internal").update_commentstring()
+        return
       end
+
+      local U = require "Comment.utils"
+
+      -- Determine whether to use linewise or blockwise commentstring
+      local type = ctx.ctype == U.ctype.linewise and "__default" or "__multiline"
+
+      -- Determine the location where to calculate commentstring from
+      local location = nil
+      if ctx.ctype == U.ctype.blockwise then
+        location = require("ts_context_commentstring.utils").get_cursor_location()
+      elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+        location = require("ts_context_commentstring.utils").get_visual_start_location()
+      end
+
+      return require("ts_context_commentstring.internal").calculate_commentstring {
+        key = type,
+        location = location,
+      }
     end
   end
   lvim.builtin.comment = {
