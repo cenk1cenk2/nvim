@@ -144,11 +144,13 @@ function M.peek_implementation()
 end
 
 function M.document_diagonistics()
-  vim.api.nvim_command "Telescope lsp_document_diagnostics"
+  -- vim.api.nvim_command "Telescope lsp_document_diagnostics"
+  vim.api.nvim_command "TroubleToggle document_diagnostics"
 end
 
 function M.workspace_diagonistics()
-  vim.api.nvim_command "Telescope lsp_workspace_diagnostics"
+  -- vim.api.nvim_command "Telescope lsp_workspace_diagnostics"
+  vim.api.nvim_command "TroubleToggle workspace_diagnostics"
 end
 
 function M.code_lens()

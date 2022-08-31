@@ -640,6 +640,14 @@ return {
   },
 
   {
+    "tanvirtin/vgit.nvim",
+    config = function()
+      require("extensions.vgit-nvim").setup()
+    end,
+    disable = not lvim.extensions.vgit_nvim.active,
+  },
+
+  {
     "pwntester/octo.nvim",
     config = function()
       require("extensions.octo").setup()

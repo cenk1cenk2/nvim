@@ -13,7 +13,7 @@ function M.config()
   lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
     keymaps = {
       normal_mode = {
-        ["ge"] = { require("lspsaga.finder").lsp_finder, { desc = "Finder" } },
+        ["ge"] = { ":Lspsaga lsp_finder<CR>", { desc = "Finder" } },
       },
     },
     setup = {

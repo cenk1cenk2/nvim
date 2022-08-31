@@ -48,9 +48,10 @@ function M.setup()
 
   extension.setup(lvim.extensions[extension_name].setup)
 
-  lvim.builtin.which_key.mappings["g"]["a"] = { ":DiffviewFileHistory<CR>", "buffer commits" }
+  lvim.builtin.which_key.mappings["g"]["a"] = { ":DiffviewFileHistory %<CR>", "buffer commits" }
   lvim.builtin.which_key.mappings["g"]["d"] = { ":DiffviewOpen<CR>", "diff view open" }
   lvim.builtin.which_key.mappings["g"]["D"] = { ":DiffviewClose<CR>", "diff view close" }
+  lvim.builtin.which_key.mappings["g"]["v"] = { ":DiffviewFileHistory<CR>", "workspace commits" }
 
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done(extension)

@@ -92,16 +92,10 @@ M.mappings = {
     k = { ":Gitsigns preview_hunk<CR>", "preview hunk" },
     U = { ":Gitsigns reset_hunk<CR>", "reset hunk" },
     R = { ":Gitsigns reset_buffer<CR>", "reset buffer" },
-    S = { ":Gitsigns stage_hunk<CR>", "stage hunk" },
-    s = { ":Gitsigns undo_stage_hunk<CR>", "undo stage hunk" },
+    s = { ":Gitsigns stage_hunk<CR>", "stage hunk" },
+    S = { ":Gitsigns undo_stage_hunk<CR>", "undo stage hunk" },
     m = { ":Gvdiffsplit!<CR>", "merge view, 3-way-split" },
-    v = { ":Telescope git_bcommits<CR>", "list buffer commits" },
-    V = { ":Telescope git_commits<CR>", "list workspace commits" },
     o = { ":Telescope git_status<CR>", "open git status" },
-    d = {
-      ":Gitsigns diffthis HEAD<CR>",
-      "Git Diff",
-    },
   },
 
   -- gist
@@ -119,8 +113,8 @@ M.mappings = {
   l = {
     name = "LSP",
     a = { ":LspCodeAction<CR>", "code action" },
-    w = { ":LspDocumentDiagonistics<CR>", "document diagnostics" },
-    W = { ":LspWorkspaceDiagonistics<CR>", "workspace diagnostics" },
+    d = { ":LspDocumentDiagonistics<CR>", "document diagnostics" },
+    D = { ":LspWorkspaceDiagonistics<CR>", "workspace diagnostics" },
     f = { ":LspFormat<CR>", "format buffer" },
     F = { ":LvimToggleFormatOnSave<CR>", "toggle autoformat" },
     g = { ":LspOrganizeImports<CR>", "organize imports" },

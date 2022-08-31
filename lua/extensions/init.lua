@@ -62,6 +62,7 @@ local extensions = {
   "extensions.document-color-nvim",
   "extensions.vim-illuminate",
   "extensions.flit-nvim",
+  "extensions.vgit-nvim",
 }
 
 function M.config(config)
