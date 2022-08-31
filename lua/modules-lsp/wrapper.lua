@@ -48,7 +48,7 @@ end
 
 function M.hover()
   -- vim.lsp.buf.hover()
-  require("lspsaga.hover").render_hover_doc()
+  vim.api.nvim_command "Lspsaga hover_doc"
 end
 
 function M.implementation()
