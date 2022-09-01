@@ -17,6 +17,8 @@ function M.setup()
 
   extension.setup(lvim.extensions[extension_name].setup)
 
+  -- subs command comes from here!
+
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done(extension)
   end
