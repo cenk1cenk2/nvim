@@ -42,11 +42,6 @@ function M.setup()
     { exe = "stylua", filetypes = { "lua" } },
 
     {
-      exe = "shfmt",
-      filetypes = { "sh", "bash", "zsh" },
-    },
-
-    {
       exe = "black",
       filetypes = { "python" },
     },
@@ -75,11 +70,17 @@ function M.setup()
     },
 
     {
-      exe = "shellharden",
+      exe = "shfmt",
+      filetypes = { "sh", "bash", "zsh" },
     },
+
+    -- {
+    --   exe = "shellharden",
+    -- },
 
     {
       exe = "beautysh",
+      extra_args = { "--indent-size", "2", "-t" },
     },
 
     -- {

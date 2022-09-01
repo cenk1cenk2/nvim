@@ -99,7 +99,7 @@ function M.config()
         shorten_path = false,
         layout_config = {
           width = 0.5,
-          height = 0.2,
+          height = 0.25,
           prompt_position = "bottom",
         },
       },

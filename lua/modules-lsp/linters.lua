@@ -29,10 +29,6 @@ function M.setup()
       filetypes = { "python" },
     },
 
-    {
-      exe = "shellharden",
-    },
-
     -- {
     --   exe = "jsonlint",
     -- },

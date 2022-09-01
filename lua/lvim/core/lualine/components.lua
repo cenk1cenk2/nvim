@@ -94,7 +94,7 @@ return {
       if next(buf_clients) == nil then
         -- TODO: clean up this if statement
         if type(msg) == "boolean" or #msg == 0 then
-          return "!LS"
+          return "❌"
         end
         return msg
       end
@@ -102,8 +102,7 @@ return {
       local buf_client_names = {}
 
       -- add client
-      for _, client in ipairs(buf_clients) do
-        -- print(vim.inspect(client.name))
+      for _, client in pairs(buf_clients) do
         if client.name ~= "null-ls" then
           table.insert(buf_client_names, client.name)
         end
@@ -120,11 +119,11 @@ return {
       local lsps = table.concat(buf_client_names, ", ")
 
       if supported_linters and not vim.tbl_isempty(supported_linters) then
-        lsps = lsps .. " | lint: " .. table.concat(supported_linters, ", ")
+        lsps = lsps .. " | 📋 " .. table.concat(supported_linters, ", ")
       end
 
       if supported_formatters and not vim.tbl_isempty(supported_formatters) then
-        lsps = lsps .. " | format: " .. table.concat(supported_formatters, ", ")
+        lsps = lsps .. " | ✍ " .. table.concat(supported_formatters, ", ")
       end
 
       return lsps

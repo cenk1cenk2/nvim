@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SECONDS=0
-COMMIT_SHA="691f4715c0cf4bc11ea2280db8777e6dd174a8ac"
+# COMMIT_SHA="691f4715c0cf4bc11ea2280db8777e6dd174a8ac"
 
 ## inject logger
 LOG_LEVEL=${LOG_LEVEL-"INFO"}

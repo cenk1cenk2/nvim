@@ -6,6 +6,7 @@ local server_name = "beautysh"
 
 helper.set_lsp_default_config(server_name, {
   command = { "beautysh" },
+  args = { "--indent-size", "2" },
 })
 
 helper.set_mason_registry(server_name, "modules-lsp.mason.beautysh")
