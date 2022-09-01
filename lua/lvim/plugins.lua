@@ -652,7 +652,7 @@ return {
     config = function()
       require("extensions.git-conflict-nvim").setup()
     end,
-    disable = not lvim.extensions.vgit_nvim.active,
+    disable = not lvim.extensions.git_conflict_nvim.active,
   },
 
   {
