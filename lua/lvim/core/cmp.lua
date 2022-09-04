@@ -251,8 +251,8 @@ M.config = function()
           cmp.select_next_item()
         elseif luasnip.expand_or_locally_jumpable() then
           luasnip.expand_or_jump()
-        elseif jumpable(1) then
-          luasnip.jump(1)
+        -- elseif jumpable(1) then
+        --   luasnip.jump(1)
         elseif has_words_before() then
           cmp.complete()
         else
@@ -262,8 +262,8 @@ M.config = function()
       ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_prev_item()
-        elseif luasnip.jumpable(-1) then
-          luasnip.jump(-1)
+        -- elseif luasnip.jumpable(-1) then
+        --   luasnip.jump(-1)
         else
           fallback()
         end
@@ -281,19 +281,19 @@ M.config = function()
             confirm_opts.behavior = cmp.ConfirmBehavior.Insert
           end
           cmp.confirm(confirm_opts)
-          if jumpable(1) then
-            luasnip.jump(1)
-          end
+          -- if jumpable(1) then
+          --   luasnip.jump(1)
+          -- end
           return
         end
 
-        if jumpable(1) then
-          if not luasnip.jump(1) then
-            fallback()
-          end
-        else
-          fallback()
-        end
+        -- if jumpable(1) then
+        --   if not luasnip.jump(1) then
+        --     fallback()
+        --   end
+        -- else
+        fallback()
+        -- end
       end),
     },
   }
