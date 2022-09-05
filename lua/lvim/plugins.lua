@@ -545,14 +545,6 @@ return {
     disable = not lvim.extensions.fidget_nvim.active,
   },
 
-  {
-    "mrshmllow/document-color.nvim",
-    config = function()
-      require("extensions.document-color-nvim").setup()
-    end,
-    disable = not lvim.extensions.document_color_nvim.active,
-  },
-
   -- tab markers
   {
     "lukas-reineke/indent-blankline.nvim",

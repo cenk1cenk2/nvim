@@ -1,3 +1,4 @@
+-- https://github.com/chipsenkbeil/distant.nvim
 local M = {}
 
 local setup = require "utils.setup"
