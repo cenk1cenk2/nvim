@@ -6,8 +6,8 @@ function M.config()
   lvim.extensions[extension_name] = {
     active = true,
     setup = {
-      cmp_git = {
-        name = "cmp_git",
+      git = {
+        name = "git",
         -- defaults
         filetypes = { "gitcommit" },
         remotes = { "upstream", "origin" }, -- in order of most to least prioritized

@@ -176,7 +176,7 @@ M.config = function()
         vsnip = "(Snippet)",
         luasnip = "(Snippet)",
         buffer = "(Buffer)",
-        cmp_git = "(GIT)",
+        git = "(GIT)",
         npm = "(NPM)",
         rg = "(RG)",
         orgmode = "(ORG)",
@@ -218,7 +218,7 @@ M.config = function()
       { name = "buffer" },
       { name = "crates" },
 
-      { name = "cmp_git" },
+      { name = "git" },
 
       { name = "npm" },
 
