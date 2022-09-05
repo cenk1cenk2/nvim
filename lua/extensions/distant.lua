@@ -26,9 +26,8 @@ function M.config()
       config.set_injected("chip_default", distant_settings.chip_default)
     end,
     setup = function(config)
-      local chip_default = config.get_injected "chip_default"
       return {
-        ["*"] = chip_default,
+        ["*"] = config.inject.chip_default,
       }
     end,
     on_setup = function(config)

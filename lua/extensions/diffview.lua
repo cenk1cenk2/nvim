@@ -26,7 +26,7 @@ function M.config()
       }
     end,
     setup = function(config)
-      local cb = config.get_injected "cb"
+      local cb = config.inject.cb
 
       return {
         on_config_done = nil,

@@ -536,15 +536,6 @@ return {
     disable = not lvim.extensions.vim_illuminate.active,
   },
 
-  -- lsp loader information
-  {
-    "j-hui/fidget.nvim",
-    config = function()
-      require("extensions.fidget-nvim").setup()
-    end,
-    disable = not lvim.extensions.fidget_nvim.active,
-  },
-
   -- tab markers
   {
     "lukas-reineke/indent-blankline.nvim",
@@ -647,14 +638,6 @@ return {
       require("extensions.vim-jinja2-syntax").setup()
     end,
     disable = not lvim.extensions.vim_jinja2_syntax.active,
-  },
-
-  {
-    "stevearc/dressing.nvim",
-    config = function()
-      require("extensions.dressing").setup()
-    end,
-    disable = not lvim.extensions.dressing.active,
   },
 
   {

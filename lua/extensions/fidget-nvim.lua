@@ -1,11 +1,22 @@
+-- https://github.com/j-hui/fidget.nvim
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "fidget_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "j-hui/fidget.nvim",
+        config = function()
+          require("utils.setup").packer_config "fidged_nvim"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       text = {
         spinner = "pipe", -- animation shown when tasks are ongoing
@@ -43,17 +54,10 @@ function M.config()
         logging = false, -- whether to enable logging, for debugging
       },
     },
-  }
-end
-
-function M.setup()
-  local extension = require "fidget"
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+    on_setup = function(config)
+      require("fidget").setup(config.setup)
+    end,
+  })
 end
 
 return M

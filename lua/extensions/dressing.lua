@@ -1,70 +1,75 @@
+-- https://github.com/stevearc/dressing.nvim
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "dressing"
 
 function M.config()
-  local telescope_ok, telescope = pcall(require, "telescope.themes")
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "stevearc/dressing.nvim",
+        config = function()
+          require("utils.setup").packer_config "dressing"
+        end,
+        disable = not config.active,
+      }
+    end,
+    condition = function(config)
+      local telescope_ok, telescope_themes = pcall(require, "telescope.themes")
 
-  if not telescope_ok then
-    lvim.extensions[extension_name] = {
-      active = true,
-    }
+      if not telescope_ok then
+        return
+      end
 
-    return
-  end
+      config.set_injected("telescope_themes", telescope_themes)
+    end,
+    setup = function(config)
+      return {
+        input = {
+          -- Default prompt string
+          default_prompt = "➤ ",
 
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
-    setup = {
-      input = {
-        -- Default prompt string
-        default_prompt = "➤ ",
+          -- When true, <Esc> will close the modal
+          insert_only = true,
 
-        -- When true, <Esc> will close the modal
-        insert_only = true,
+          -- These are passed to nvim_open_win
+          anchor = "SW",
+          relative = "cursor",
+          border = "single",
 
-        -- These are passed to nvim_open_win
-        anchor = "SW",
-        relative = "cursor",
-        border = "single",
+          -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
+          prefer_width = 40,
+          max_width = nil,
+          min_width = 20,
 
-        -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
-        prefer_width = 40,
-        max_width = nil,
-        min_width = 20,
+          -- Window transparency (0-100)
+          winblend = 0,
 
-        -- Window transparency (0-100)
-        winblend = 0,
+          -- see :help dressing-prompt
+          prompt_buffer = false,
 
-        -- see :help dressing-prompt
-        prompt_buffer = false,
+          -- see :help dressing_get_config
+          get_config = nil,
+        },
+        select = {
+          -- Priority list of preferred vim.select implementations
+          backend = { "telescope", "fzf", "builtin", "nui" },
 
-        -- see :help dressing_get_config
-        get_config = nil,
-      },
-      select = {
-        -- Priority list of preferred vim.select implementations
-        backend = { "telescope", "fzf", "builtin", "nui" },
+          -- Options for telescope selector
+          telescope = config.inject.telescope_themes.get_dropdown {},
 
-        -- Options for telescope selector
-        telescope = telescope.get_dropdown {},
-
-        -- see :help dressing_get_config
-        get_config = nil,
-      },
-    },
-  }
-end
-
-function M.setup()
-  local extension = require(extension_name)
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+          -- see :help dressing_get_config
+          get_config = nil,
+        },
+      }
+    end,
+    on_setup = function(config)
+      require("dressing").setup(config.setup)
+    end,
+  })
 end
 
 return M
