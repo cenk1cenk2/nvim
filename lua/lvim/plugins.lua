@@ -360,6 +360,20 @@ return {
     requires = { "mfussenegger/nvim-dap" },
   },
 
+  -- testing
+  {
+    "nvim-neotest/neotest",
+    config = function()
+      require("extensions.neotest").setup()
+    end,
+    disable = not lvim.extensions.neotest.active,
+    requires = {
+      "nvim-neotest/neotest-go",
+      "rouge8/neotest-rust",
+      "haydenmeade/neotest-jest",
+    },
+  },
+
   -- Dashboard
   {
     "goolord/alpha-nvim",

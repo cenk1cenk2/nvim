@@ -64,6 +64,7 @@ local extensions = {
   "extensions.flit-nvim",
   "extensions.vgit-nvim",
   "extensions.git-conflict-nvim",
+  "extensions.neotest",
 }
 
 function M.config(config)
