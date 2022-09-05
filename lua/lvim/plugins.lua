@@ -595,14 +595,6 @@ return {
     disable = not lvim.extensions.octo.active,
   },
 
-  {
-    "sindrets/diffview.nvim",
-    config = function()
-      require("extensions.diffview").setup()
-    end,
-    disable = not lvim.extensions.diffview.active,
-  },
-
   -- easy align
   {
     "junegunn/vim-easy-align",

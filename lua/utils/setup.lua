@@ -45,9 +45,10 @@ function M.define_extension(extension_name, active, config, opts)
 
   lvim.extensions[extension_name] = {
     active = active,
+    inject = {},
   }
 
-  if opts ~= nil and opts.condition ~= nil and not opts.condition() then
+  if opts ~= nil and opts.condition ~= nil and opts.condition(lvim.extensions[extension_name]) == false then
     Log:debug(string.format("Extension config stopped due to failed condition: %s", extension_name))
 
     return
@@ -95,6 +96,10 @@ function M.run(config)
 
   if config ~= nil and config.legacy_setup ~= nil then
     M.legacy_setup(config.legacy_setup)
+  end
+
+  if config ~= nil and config.setup ~= nil and type(config.setup) == "function" then
+    config.setup = config.setup(config)
   end
 
   if config ~= nil and config.on_setup ~= nil then
