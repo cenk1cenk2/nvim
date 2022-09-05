@@ -7,72 +7,27 @@ local opts = {
         importModuleSpecifier = "relative",
       },
       inlayHints = {
-        parameterNames = "all",
-        variableTypes = {
-          enabled = true,
-        },
-        propertyDeclarationTypes = {
-          enabled = true,
-        },
-        parameterTypes = {
-          enabled = true,
-        },
-        functionLikeReturnTypes = {
-          enabled = true,
-        },
+        includeInlayParameterNameHints = "all",
+        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
       },
-      referencesCodeLens = {
-        enabled = true,
-      },
-      implementationsCodeLens = {
-        enabled = true,
+    },
+    javascript = {
+      inlayHints = {
+        includeInlayParameterNameHints = "all",
+        includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+        includeInlayFunctionParameterTypeHints = true,
+        includeInlayVariableTypeHints = true,
+        includeInlayPropertyDeclarationTypeHints = true,
+        includeInlayFunctionLikeReturnTypeHints = true,
+        includeInlayEnumMemberValueHints = true,
       },
     },
   },
-  -- Needed for inlayHints. Merge this table with your settings or copy
-  -- it from the source if you want to add your own init_options.
-  init_options = require("nvim-lsp-ts-utils").init_options,
-  on_attach = function(client, bufnr)
-    local ts_utils = require "nvim-lsp-ts-utils"
-
-    require("lvim.lsp").common_on_attach(client, bufnr)
-
-    -- defaults
-    ts_utils.setup {
-      debug = false,
-      disable_commands = false,
-      enable_import_on_completion = false,
-
-      -- import all
-      import_all_timeout = 10000, -- ms
-      -- lower numbers = higher priority
-
-      import_all_priorities = {
-        same_file = 1, -- add to existing import statement
-        local_files = 2, -- git files or files with relative path markers
-        buffer_content = 3, -- loaded buffer content
-        buffers = 4, -- loaded buffer names
-      },
-      import_all_scan_buffers = 100,
-      import_all_select_source = true,
-
-      -- filter diagnostics
-      filter_out_diagnostics_by_severity = {},
-      filter_out_diagnostics_by_code = {},
-
-      -- inlay hints
-      auto_inlay_hints = true,
-      inlay_hints_highlight = "TSInlayHint",
-
-      -- update imports on file move
-      update_imports_on_move = true,
-      require_confirmation_on_move = true,
-      watch_dir = nil,
-    }
-
-    -- required to fix code action ranges and filter diagnostics
-    ts_utils.setup_client(client)
-  end,
   commands = {
     LspRenameFile = {
       function()

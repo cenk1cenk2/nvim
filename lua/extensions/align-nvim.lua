@@ -42,8 +42,4 @@ function M.config()
   })
 end
 
-function M.setup()
-  setup.run(setup.get_config(extension_name))
-end
-
 return M

@@ -71,6 +71,10 @@ function M.define_extension(extension_name, active, config)
   }
 
   if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[extension_name]) == false then
+    if config ~= nil and config.packer ~= nil then
+      lvim.extensions[extension_name].packer = config.packer(lvim.extensions[extension_name])
+    end
+
     Log:debug(string.format("Extension config stopped due to failed condition: %s", extension_name))
 
     return

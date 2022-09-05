@@ -26,28 +26,37 @@ function M.config()
       }
     end,
     condition = function(config)
-      local status_ok, neotest = pcall(require, extension_name)
+      for key, value in ipairs {
+        neotest = "neotest",
+        neotest_go = "neotest-go",
+        neotest_rust = "neotest-rust",
+        neotest_jest = "neotest-jest",
+      } do
+        local status_ok, inject = pcall(require, value)
 
-      if not status_ok then
-        return false
+        if not status_ok then
+          return false
+        end
+
+        config.set_injected(key, inject)
       end
-
-      config.set_injected("neotest", neotest)
     end,
-    setup = {
-      adapters = {
-        require "neotest-go",
-        require "neotest-rust",
-        require "neotest-jest" {
-          jestCommand = "yarn run test",
-          jestConfigFile = "jest.config.js",
-          env = { CI = true },
-          cwd = function()
-            return vim.fn.getcwd()
-          end,
+    setup = function(config)
+      return {
+        adapters = {
+          config.inject.neotest_go,
+          config.inject.neotest_rust,
+          config.inject.neotest_jest {
+            jestCommand = "yarn run test",
+            jestConfigFile = "jest.config.js",
+            env = { CI = true },
+            cwd = function()
+              return vim.fn.getcwd()
+            end,
+          },
         },
-      },
-    },
+      }
+    end,
     on_setup = function(config)
       require("neotest").setup(config.setup)
     end,

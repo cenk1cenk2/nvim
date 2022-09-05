@@ -80,7 +80,7 @@ function M.config()
       },
     },
     on_setup = function(config)
-      local extension = require(extension_name)
+      local extension = require "alpha"
 
       local lvim_version = require("lvim.utils.git").get_lvim_current_sha()
       local nvim_version = require("lvim.utils.git").get_nvim_version()
@@ -148,10 +148,6 @@ function M.config()
       }
     end,
   })
-end
-
-function M.setup()
-  setup.run(setup.get_config(extension_name))
 end
 
 return M

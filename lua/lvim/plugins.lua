@@ -114,6 +114,21 @@ return {
         require("lvim.core.cmp").setup()
       end
     end,
+    requires = {
+      "saadparwaiz1/cmp_luasnip",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-path",
+      "hrsh7th/cmp-nvim-lua",
+      "hrsh7th/cmp-vsnip",
+      "petertriho/cmp-git",
+      "David-Kunz/cmp-npm",
+      "hrsh7th/cmp-cmdline",
+      "davidsierradz/cmp-conventionalcommits",
+      "tzachar/cmp-fuzzy-buffer",
+      "lukas-reineke/cmp-rg",
+      -- { "tzachar/cmp-tabnine", run = "./install.sh" },
+    },
   },
   {
     "rafamadriz/friendly-snippets",

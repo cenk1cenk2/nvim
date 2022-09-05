@@ -63,6 +63,7 @@ local extensions = {
   "vgit-nvim",
   "git-conflict-nvim",
   "neotest",
+  "lsp-inlay-hints-nvim",
 }
 
 function M.config(config)
