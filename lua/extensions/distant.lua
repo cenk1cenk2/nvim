@@ -1,25 +1,39 @@
 local M = {}
 
+local setup = require "utils.setup"
+
 local extension_name = "distant"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = false, on_config_done = nil }
-end
+  setup.define_extension(extension_name, false, {
+    packer = function(config)
+      return {
+        "chipsenkbeil/distant.nvim",
+        config = function()
+          require("utils.setup").packer_config "distant"
+        end,
+        disable = not config.active,
+      }
+    end,
+    condition = function(config)
+      local status_ok, distant_settings = pcall(require, "distant.settings")
 
-function M.setup()
-  local extension = require(extension_name)
+      if not status_ok then
+        return false
+      end
 
-  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
-    setup = {
-      ["*"] = require("distant.settings").chip_default(),
-    },
+      config.set_injected("chip_default", distant_settings.chip_default)
+    end,
+    setup = function(config)
+      local chip_default = config.get_injected "chip_default"
+      return {
+        ["*"] = chip_default,
+      }
+    end,
+    on_setup = function(config)
+      require("distant").setup(config.setup)
+    end,
   })
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
 end
 
 return M

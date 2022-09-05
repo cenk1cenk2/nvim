@@ -31,24 +31,43 @@ function M.legacy_setup(opts)
   end
 end
 
+---@alias parsed_config { active: boolean, extension_name: string, inject: table<string, string>, condition: (fun(config: table): boolean), packer: table, to_inject: (fun(config: table): table<string, string>), autocmds: table, keymaps: table, wk: table, legacy_setup: table, setup: any | (fun(config: table): any), on_setup: (fun(config: table): nil), on_config_done: (fun(config: table): nil), set_injected: (fun(key: string, value: any): any), get_injected: (fun(key: string): any) }
+---@alias config { condition: (fun(config: parsed_config): boolean | nil), packer: (fun(config: parsed_config): table), to_inject: (fun(config: parsed_config): table<string, string>), autocmds: table, keymaps: table, wk: table, legacy_setup: table, setup: table | (fun(config: parsed_config): any), on_setup: (fun(config: parsed_config): nil), on_config_done: (fun(config: parsed_config): nil) }
+
 ---
 ---@param extension_name string
 ---@param active boolean
----@param config table
----@param opts table?
-function M.define_extension(extension_name, active, config, opts)
+---@param config config
+function M.define_extension(extension_name, active, config)
   vim.validate {
     active = { active, "b" },
     extension_name = { extension_name, "s" },
     config = { config, "t" },
+    condition = { config.condition, "f", true },
+    packer = { config.packer, "f", true },
+    to_inject = { config.to_inject, "f", true },
+    autocmds = { config.autocmds, "t", true },
+    keymaps = { config.keymaps, "t", true },
+    wk = { config.wk, "t", true },
+    legacy_setup = { config.legacy_setup, "t", true },
+    setup = { config.legacy_setup, { "t", "f" }, true },
   }
 
   lvim.extensions[extension_name] = {
+    name = extension_name,
     active = active,
     inject = {},
+    set_injected = function(key, value)
+      lvim.extensions[extension_name].inject[key] = value
+
+      return value
+    end,
+    get_injected = function(key)
+      return lvim.extensions[extension_name].inject[key]
+    end,
   }
 
-  if opts ~= nil and opts.condition ~= nil and opts.condition(lvim.extensions[extension_name]) == false then
+  if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[extension_name]) == false then
     Log:debug(string.format("Extension config stopped due to failed condition: %s", extension_name))
 
     return
@@ -80,8 +99,13 @@ function M.packer_config(extension_name)
 end
 
 ---
----@param config table
+---@param config parsed_config
 function M.run(config)
+  if config ~= nil and config.to_inject ~= nil then
+    ---@diagnostic disable-next-line: assign-type-mismatch
+    config.inject = vim.tbl_extend("force", config.inject, config.to_inject(config))
+  end
+
   if config ~= nil and config.autocmds ~= nil then
     M.define_autocmds(config.autocmds)
   end

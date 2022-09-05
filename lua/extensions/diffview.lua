@@ -7,6 +7,15 @@ local extension_name = "diffview"
 
 function M.config()
   setup.define_extension(extension_name, true, {
+    condition = function(config)
+      local status_ok, diffview_config = pcall(require, "diffview.config")
+
+      if not status_ok then
+        return false
+      end
+
+      config.set_injected("cb", diffview_config.diffview_callback)
+    end,
     packer = function(config)
       return {
         "sindrets/diffview.nvim",
@@ -17,7 +26,7 @@ function M.config()
       }
     end,
     setup = function(config)
-      local cb = config.inject.cb
+      local cb = config.get_injected "cb"
 
       return {
         on_config_done = nil,
@@ -60,16 +69,6 @@ function M.config()
         ["v"] = { ":DiffviewFileHistory<CR>", "workspace commits" },
       },
     },
-  }, {
-    condition = function(config)
-      local status_ok, diffview_config = pcall(require, "diffview.config")
-
-      if not status_ok then
-        return false
-      end
-
-      config.inject.cb = diffview_config.diffview_callback
-    end,
   })
 end
 

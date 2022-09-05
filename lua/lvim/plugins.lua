@@ -642,14 +642,6 @@ return {
   },
 
   {
-    "chipsenkbeil/distant.nvim",
-    config = function()
-      require("extensions.distant").setup()
-    end,
-    disable = not lvim.extensions.distant.active,
-  },
-
-  {
     "lepture/vim-jinja",
     config = function()
       require("extensions.vim-jinja").setup()
