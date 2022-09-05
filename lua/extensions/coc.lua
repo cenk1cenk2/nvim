@@ -1,25 +1,30 @@
 local M = {}
 
+local setup = require "utils.setup"
+
 local extension_name = "coc"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil }
+  setup.define_extension(extension_name, true, {
+    legacy_setup = {
+      coc_start_at_startup = true,
+      coc_suggest_disable = 1,
+      coc_global_extensions = {
+        "coc-lists",
+        "coc-marketplace",
+        "coc-gitignore",
+        "coc-gist",
+      },
+    },
+  })
 end
 
 function M.setup()
-  vim.g.coc_start_at_startup = true
-  vim.g.coc_global_extensions = {
-    "coc-lists",
-    "coc-marketplace",
-    "coc-gitignore",
-    "coc-gist",
-  }
+  local config = setup.get_config(extension_name)
 
-  vim.g.coc_suggest_disable = 1
+  setup.legacy_setup(config.legacy_setup)
 
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+  setup.on_setup_done(config)
 end
 
 return M

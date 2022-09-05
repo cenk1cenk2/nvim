@@ -3,7 +3,7 @@ local M = {}
 local extension_name = "diffview"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil }
+  lvim.extensions[extension_name] = { active = true }
 
   local status_ok, plugin_config = pcall(require, "diffview.config")
   if not status_ok then
@@ -13,6 +13,7 @@ function M.config()
 
   lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
     setup = {
+      on_config_done = nil,
       diff_binaries = false, -- Show diffs for binaries
       use_icons = true, -- Requires nvim-web-devicons
       file_panel = { win_config = { width = 35 } },

@@ -48,6 +48,15 @@ M.config = function()
 end
 
 M.setup = function()
+  local editor = "nvr --servername " .. vim.v.servername .. " -cc split --remote-wait +'set bufhidden=wipe'"
+
+  if vim.fn.has "nvim" and vim.fn.executable "nvr" then
+    vim.env.GIT_EDITOR = editor
+    vim.env.VISUAL = editor
+    vim.env.EDITOR = editor
+    vim.env.NVIM_LISTEN_ADDRESS = vim.v.servername
+  end
+
   local terminal = require "toggleterm"
   terminal.setup(lvim.builtin.terminal)
 
@@ -64,14 +73,6 @@ M.setup = function()
 
     M.add_exec(opts)
   end
-
-  vim.cmd [[
-  if has('nvim') && executable('nvr')
-    let $GIT_EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
-    " let $EDITOR = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
-    " let $VISUAL = "nvr -cc split --remote-wait +'set bufhidden=wipe'"
-  endif
-  ]]
 
   if lvim.builtin.terminal.on_config_done then
     lvim.builtin.terminal.on_config_done(terminal)
@@ -187,7 +188,7 @@ M.create_float_terminal = function(index)
   local Terminal = require("toggleterm.terminal").Terminal
 
   if not index then
-    index = table_utils.length(float_terminals) + 1
+    index = vim.tbl_count(float_terminals) + 1
   end
 
   Log:debug("Terminal created: " .. index)
@@ -207,8 +208,8 @@ M.create_float_terminal = function(index)
           end
         end
 
-        if float_terminal_current > table_utils.length(float_terminals) then
-          float_terminal_current = table_utils.length(float_terminals)
+        if float_terminal_current > vim.tbl_count(float_terminals) then
+          float_terminal_current = vim.tbl_count(float_terminals)
         elseif float_terminal_current < index then
           float_terminal_current = float_terminal_current - 1
         end
@@ -241,7 +242,7 @@ M.float_terminal_select = function(action)
   elseif action == "next" then
     local updated = float_terminal_current + 1
 
-    if updated > table_utils.length(float_terminals) then
+    if updated > vim.tbl_count(float_terminals) then
       float_terminal_current = 1
     else
       float_terminal_current = updated
@@ -250,7 +251,7 @@ M.float_terminal_select = function(action)
     local updated = float_terminal_current - 1
 
     if updated < 1 then
-      float_terminal_current = table_utils.length(float_terminals)
+      float_terminal_current = vim.tbl_count(float_terminals)
     else
       float_terminal_current = updated
     end

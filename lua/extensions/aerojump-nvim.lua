@@ -1,43 +1,50 @@
 local M = {}
 
+local setup = require "utils.setup"
+
 local extension_name = "aerojump_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
+  setup.define_extension(extension_name, true, {
     on_config_done = nil,
-    setup = {},
-    keymaps = {
-      ["<C-p>"] = "AerojumpUp",
-      ["<Left>"] = "AerojumpSelPrev",
-      ["<C-g>"] = "AerojumpSelPrev",
-      ["<C-j>"] = "AerojumpSelect",
-      ["<Down>"] = "AerojumpDown",
-      ["<C-k>"] = "AerojumpUp",
-      ["<Up>"] = "AerojumpUp",
-      ["<C-n>"] = "AerojumpDown",
-      ["<Right>"] = "AerojumpSelNext",
-      ["<C-l>"] = "AerojumpSelNext",
-      ["<C-q>"] = "AerojumpExit",
-      ["<ESC>"] = "AerojumpSelect",
-      ["<CR>"] = "AerojumpSelect",
+    legacy_setup = {
+      aerojump_bolt_lines_before = 3,
+      aerojump_bolt_lines_after = 3,
+      aerojump_keymaps = {
+        ["<C-p>"] = "AerojumpUp",
+        ["<Left>"] = "AerojumpSelPrev",
+        ["<C-g>"] = "AerojumpSelPrev",
+        ["<C-j>"] = "AerojumpSelect",
+        ["<Down>"] = "AerojumpDown",
+        ["<C-k>"] = "AerojumpUp",
+        ["<Up>"] = "AerojumpUp",
+        ["<C-n>"] = "AerojumpDown",
+        ["<Right>"] = "AerojumpSelNext",
+        ["<C-l>"] = "AerojumpSelNext",
+        ["<C-q>"] = "AerojumpExit",
+        ["<ESC>"] = "AerojumpSelect",
+        ["<CR>"] = "AerojumpSelect",
+      },
     },
-  }
+    wk = {
+      ["f"] = {
+        ["a"] = {
+          ":Aerojump kbd bolt<CR>",
+          "aerojump",
+        },
+      },
+    },
+  })
 end
 
 function M.setup()
-  vim.g.aerojump_keymaps = lvim.extensions[extension_name].keymaps
-  vim.g.aerojump_bolt_lines_before = 3
-  vim.g.aerojump_bolt_lines_after = 3
+  local config = setup.get_config(extension_name)
 
-  lvim.builtin.which_key.mappings["f"]["a"] = {
-    ":Aerojump kbd bolt<CR>",
-    "aerojump",
-  }
+  setup.legacy_setup(config.legacy_setup)
 
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+  setup.load_wk_mappings(config.wk)
+
+  setup.on_setup_done(config)
 end
 
 return M

@@ -1,12 +1,11 @@
 local M = {}
 
 function M.config()
-  local utils_table = require "lvim.utils.table"
   local pre_hook = nil
   if lvim.builtin.treesitter.context_commentstring.enable then
     pre_hook = function(ctx)
       if
-        utils_table.contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
+        vim.tbl_contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
           return type ~= vim.bo.filetype
         end)
       then

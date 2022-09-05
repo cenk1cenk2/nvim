@@ -322,15 +322,6 @@ return {
 
   -- bufferline
   {
-    "romgrk/barbar.nvim",
-    config = function()
-      require("extensions.barbar").setup()
-    end,
-    event = "BufWinEnter",
-    disable = not lvim.extensions.barbar.active,
-  },
-
-  {
     "akinsho/bufferline.nvim",
     config = function()
       require("lvim.core.bufferline").setup()

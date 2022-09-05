@@ -1,10 +1,11 @@
 local M = {}
 
+local setup = require "utils.setup"
+
 local extension_name = "alpha"
 
-M.config = function(config)
-  lvim.extensions[extension_name] = {
-    active = true,
+function M.config()
+  setup.define_extension(extension_name, true, {
     on_config_done = nil,
     setup = {
       header = {
@@ -49,11 +50,12 @@ M.config = function(config)
         { "q", "  Quit" },
       },
     },
-  }
+  })
 end
 
-M.setup = function()
+function M.setup()
   local extension = require(extension_name)
+  local config = setup.get_config(extension_name)
 
   local lvim_version = require("lvim.utils.git").get_lvim_current_sha()
   local nvim_version = require("lvim.utils.git").get_nvim_version()
@@ -61,11 +63,11 @@ M.setup = function()
   local button = require("alpha.themes.dashboard").button
 
   local buttons = {}
-  for _, value in ipairs(lvim.extensions[extension_name].setup.buttons) do
+  for _, value in ipairs(config.setup.buttons) do
     table.insert(buttons, button(value[1], value[2]))
   end
 
-  require("lvim.core.autocmds").define_autocmds {
+  setup.define_autocmds {
     {
       "FileType",
       {
@@ -90,7 +92,7 @@ M.setup = function()
       { type = "padding", val = 1 },
       {
         type = "text",
-        val = lvim.extensions[extension_name].setup.header,
+        val = config.setup.header,
         opts = {
           position = "center",
           hl = "DashboardHeader",
@@ -140,9 +142,7 @@ M.setup = function()
     },
   }
 
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+  setup.on_setup_done(config)
 end
 
 return M

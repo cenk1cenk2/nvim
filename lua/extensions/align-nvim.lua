@@ -1,43 +1,45 @@
 local M = {}
 
+local setup = require "utils.setup"
+
 local extension_name = "align_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
+  setup.define_extension(extension_name, true, {
     on_config_done = nil,
     setup = {},
     keymaps = {
-      visual_mode = {
-        ["gas"] = {
-          function()
-            require("align").align_to_string(false, true, true)
-          end,
-          { desc = "align to string" },
-        },
-        ["gar"] = {
-          function()
-            require("align").align_to_string(true, true, true)
-          end,
-          { desc = "align to regex" },
-        },
-        ["gac"] = {
-          function()
-            require("align").align_to_char(1, true)
-          end,
-          { desc = "align to char" },
-        },
+      ["gas"] = {
+        { "visual_mode" },
+        function()
+          require("align").align_to_string(false, true, true)
+        end,
+        { desc = "align to string" },
+      },
+      ["gar"] = {
+        { "visual_mode" },
+        function()
+          require("align").align_to_string(true, true, true)
+        end,
+        { desc = "align to regex" },
+      },
+      ["gac"] = {
+        { "visual_mode" },
+        function()
+          require("align").align_to_char(1, true)
+        end,
+        { desc = "align to char" },
       },
     },
-  }
+  })
 end
 
 function M.setup()
-  require("lvim.keymappings").load(lvim.extensions[extension_name].keymaps)
+  local config = setup.get_config(extension_name)
 
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+  setup.load_mappings(config.keymaps)
+
+  setup.on_setup_done(config)
 end
 
 return M

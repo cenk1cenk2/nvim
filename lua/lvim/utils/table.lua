@@ -13,24 +13,6 @@ function M.find_first(t, predicate)
   return nil
 end
 
---- Check if the predicate returns True for at least one entry of the table.
--- @param t The table
--- @param predicate The function called for each entry of t
--- @return True if predicate returned True at least once, false otherwise
-function M.contains(t, predicate)
-  return M.find_first(t, predicate) ~= nil
-end
-
-function M.length(t)
-  local count = 0
-
-  for _ in pairs(t) do
-    count = count + 1
-  end
-
-  return count
-end
-
 function M.merge(a, b)
   local result = { unpack(a) }
 
