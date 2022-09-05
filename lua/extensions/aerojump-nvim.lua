@@ -1,3 +1,4 @@
+-- https://github.com/ripxorip/aerojump.nvim
 local M = {}
 
 local setup = require "utils.setup"
@@ -6,7 +7,16 @@ local extension_name = "aerojump_nvim"
 
 function M.config()
   setup.define_extension(extension_name, true, {
-    on_config_done = nil,
+    packer = function(config)
+      return {
+        "ripxorip/aerojump.nvim",
+        config = function()
+          require("utils.setup").packer_config "aerojump_nvim"
+        end,
+        disable = not config.active,
+        run = ":UpdateRemotePlugins",
+      }
+    end,
     legacy_setup = {
       aerojump_bolt_lines_before = 3,
       aerojump_bolt_lines_after = 3,
@@ -35,16 +45,6 @@ function M.config()
       },
     },
   })
-end
-
-function M.setup()
-  local config = setup.get_config(extension_name)
-
-  setup.legacy_setup(config.legacy_setup)
-
-  setup.load_wk_mappings(config.wk)
-
-  setup.on_setup_done(config)
 end
 
 return M

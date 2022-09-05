@@ -106,41 +106,8 @@ return {
     "hrsh7th/nvim-cmp",
     config = function()
       require("lvim.core.cmp").setup()
-      require("extensions.cmp-extensions").setup()
+      require("utils.setup").packer_config "cmp_extensions"
     end,
-    requires = {
-      {
-        "saadparwaiz1/cmp_luasnip",
-      },
-      {
-        "hrsh7th/cmp-buffer",
-      },
-      {
-        "hrsh7th/cmp-nvim-lsp",
-      },
-      {
-        "hrsh7th/cmp-path",
-      },
-      {
-        "hrsh7th/cmp-nvim-lua",
-      },
-
-      "hrsh7th/cmp-vsnip",
-
-      "petertriho/cmp-git",
-
-      "David-Kunz/cmp-npm",
-
-      "hrsh7th/cmp-cmdline",
-
-      "davidsierradz/cmp-conventionalcommits",
-
-      "tzachar/cmp-fuzzy-buffer",
-
-      "lukas-reineke/cmp-rg",
-
-      -- { "tzachar/cmp-tabnine", run = "./install.sh" },
-    },
     run = function()
       -- cmp's config requires cmp to be installed to run the first time
       if lvim.builtin.cmp then
@@ -170,18 +137,6 @@ return {
       }
       require("luasnip.loaders.from_snipmate").lazy_load()
     end,
-  },
-  {
-    "hrsh7th/cmp-nvim-lsp",
-  },
-  {
-    "saadparwaiz1/cmp_luasnip",
-  },
-  {
-    "hrsh7th/cmp-buffer",
-  },
-  {
-    "hrsh7th/cmp-path",
   },
 
   {
@@ -365,16 +320,6 @@ return {
     },
   },
 
-  -- Dashboard
-  {
-    "goolord/alpha-nvim",
-    event = "BufWinEnter",
-    config = function()
-      require("extensions.alpha-nvim").setup()
-    end,
-    disable = not lvim.extensions.alpha.active,
-  },
-
   -- Session Manager
   {
     "Shatur/neovim-session-manager",
@@ -486,15 +431,6 @@ return {
       require("extensions.vim-visual-multi").setup()
     end,
     disable = not lvim.extensions.vim_visual_multi.active,
-  },
-
-  {
-    "otavioschwanck/cool-substitute.nvim",
-    branch = "main",
-    config = function()
-      require("extensions.cool-substitute-nvim").setup()
-    end,
-    disable = not lvim.extensions.cool_substitute_nvim.active,
   },
 
   -- ranger
@@ -609,15 +545,6 @@ return {
     disable = not lvim.extensions.fidget_nvim.active,
   },
 
-  -- Colorized
-  {
-    "nvchad/nvim-colorizer.lua",
-    config = function()
-      require("extensions.colorizer").setup()
-    end,
-    disable = not lvim.extensions.colorizer.active,
-  },
-
   {
     "mrshmllow/document-color.nvim",
     config = function()
@@ -676,16 +603,6 @@ return {
     disable = not lvim.extensions.diffview.active,
   },
 
-  -- coc
-  {
-    "neoclide/coc.nvim",
-    branch = "release",
-    config = function()
-      require("extensions.coc").setup()
-    end,
-    disable = not lvim.extensions.coc.active,
-  },
-
   -- easy align
   {
     "junegunn/vim-easy-align",
@@ -693,14 +610,6 @@ return {
       require("extensions.vim-easy-align").setup()
     end,
     disable = not lvim.extensions.vim_easy_align.active,
-  },
-
-  {
-    "Vonr/align.nvim",
-    config = function()
-      require("extensions.align-nvim").setup()
-    end,
-    disable = not lvim.extensions.align_nvim.active,
   },
 
   -- markdown preview
@@ -789,15 +698,6 @@ return {
   },
 
   {
-    "ripxorip/aerojump.nvim",
-    config = function()
-      require("extensions.aerojump-nvim").setup()
-    end,
-    disable = not lvim.extensions.aerojump_nvim.active,
-    run = ":UpdateRemotePlugins",
-  },
-
-  {
     "inkarkat/vim-UnconditionalPaste",
     config = function()
       require("extensions.vim-unconditionalpaste").setup()
@@ -836,15 +736,6 @@ return {
       require("extensions.refactoring-nvim").setup()
     end,
     disable = not lvim.extensions.refactoring_nvim.active,
-  },
-
-  -- buffer switcher
-  {
-    "ghillb/cybu.nvim",
-    config = function()
-      require("extensions.cybu-nvim").setup()
-    end,
-    disable = not lvim.extensions.cybu_nvim.active,
   },
 
   -- line wise substitute

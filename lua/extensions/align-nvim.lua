@@ -1,3 +1,4 @@
+-- https://github.com/Vonr/align.nvim
 local M = {}
 
 local setup = require "utils.setup"
@@ -6,25 +7,32 @@ local extension_name = "align_nvim"
 
 function M.config()
   setup.define_extension(extension_name, true, {
-    on_config_done = nil,
-    setup = {},
+    packer = function(config)
+      return {
+        "Vonr/align.nvim",
+        config = function()
+          require("utils.setup").packer_config "align_nvim"
+        end,
+        disable = not config.active,
+      }
+    end,
     keymaps = {
       ["gas"] = {
-        { "visual_mode" },
+        { "v" },
         function()
           require("align").align_to_string(false, true, true)
         end,
         { desc = "align to string" },
       },
       ["gar"] = {
-        { "visual_mode" },
+        { "v" },
         function()
           require("align").align_to_string(true, true, true)
         end,
         { desc = "align to regex" },
       },
       ["gac"] = {
-        { "visual_mode" },
+        { "v" },
         function()
           require("align").align_to_char(1, true)
         end,
@@ -35,11 +43,7 @@ function M.config()
 end
 
 function M.setup()
-  local config = setup.get_config(extension_name)
-
-  setup.load_mappings(config.keymaps)
-
-  setup.on_setup_done(config)
+  setup.run(setup.get_config(extension_name))
 end
 
 return M

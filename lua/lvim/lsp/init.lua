@@ -10,7 +10,11 @@ local function add_lsp_buffer_options(bufnr)
 end
 
 local function add_lsp_buffer_keybindings(bufnr)
-  local mappings = { normal_mode = "n", insert_mode = "i", visual_mode = "v" }
+  local mappings = {
+    normal_mode = "n",
+    insert_mode = "i",
+    visual_mode = "v",
+  }
 
   for mode_name, mode_char in pairs(mappings) do
     for key, remap in pairs(lvim.lsp.buffer_mappings[mode_name]) do

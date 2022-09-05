@@ -1,17 +1,25 @@
+-- https://github.com/ghillb/cybu.nvim
+
 local M = {}
+
+local setup = require "utils.setup"
 
 local extension_name = "cybu_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = false }
-
-  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
-    on_config_done = nil,
-    keymap = {
-      normal_mode = {
-        ["<M-h>"] = [[:CybuPrev<CR>]],
-        ["<M-l>"] = [[:CybuNext<CR>]],
-      },
+  setup.define_extension(extension_name, false, {
+    packer = function(config)
+      return {
+        "ghillb/cybu.nvim",
+        config = function()
+          require("utils.setup").packer_config "cybu_nvim"
+        end,
+        disable = not config.active,
+      }
+    end,
+    keymaps = {
+      ["<M-h>"] = { { "n" }, [[:CybuPrev<CR>]] },
+      ["<M-l>"] = { { "n" }, [[:CybuNext<CR>]] },
     },
     setup = {
       position = {
@@ -49,19 +57,10 @@ function M.config()
       },
       fallback = function() end, -- arbitrary fallback function
     },
+    on_setup = function(config)
+      require("cybu").setup(config.setup)
+    end,
   })
-end
-
-function M.setup()
-  local extension = require "cybu"
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  require("lvim.keymappings").load(lvim.extensions[extension_name].keymap)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
 end
 
 return M

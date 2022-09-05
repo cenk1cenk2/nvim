@@ -35,6 +35,7 @@ require("lvim.bootstrap"):init(base_dir)
 require("lvim.config"):load()
 
 local plugins = require "lvim.plugins"
+require("utils.setup").set_packer_extensions()
 require("lvim.plugin-loader").load { plugins, lvim.plugins }
 
 local Log = require "lvim.core.log"

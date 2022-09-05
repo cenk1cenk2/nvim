@@ -20,6 +20,18 @@ local mode_adapters = {
   visual_mode = "v",
   visual_block_mode = "x",
   command_mode = "c",
+  normal = "n",
+  insert = "i",
+  visual = "v",
+  term = "t",
+  visual_block = "x",
+  command = "c",
+  n = "n",
+  i = "i",
+  v = "v",
+  t = "t",
+  vb = "x",
+  c = "c",
 }
 
 ---@class Keys

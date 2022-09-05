@@ -1,11 +1,23 @@
+-- https://github.com/otavioschwanck/cool-substitute.nvim
+
 local M = {}
+
+local setup = require "utils.setup"
 
 local extension_name = "cool_substitute_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "otavioschwanck/cool-substitute.nvim",
+        branch = "main",
+        config = function()
+          require("utils.setup").packer_config "cool_substitute_nvim"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       setup_keybindings = true,
       mappings = {
@@ -20,17 +32,10 @@ function M.config()
       reg_char = "o", -- letter to save macro (Dont use number or uppercase here)
       mark_char = "t", -- mark the position at start of macro
     },
-  }
-end
-
-function M.setup()
-  local extension = require "cool-substitute"
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+    on_setup = function(config)
+      require("cool-substitute").setup(config.setup)
+    end,
+  })
 end
 
 return M

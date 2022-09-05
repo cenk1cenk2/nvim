@@ -1,3 +1,5 @@
+-- https://github.com/neoclide/coc.nvim
+
 local M = {}
 
 local setup = require "utils.setup"
@@ -6,6 +8,16 @@ local extension_name = "coc"
 
 function M.config()
   setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "neoclide/coc.nvim",
+        branch = "release",
+        config = function()
+          require("utils.setup").packer_config "coc"
+        end,
+        disable = not config.active,
+      }
+    end,
     legacy_setup = {
       coc_start_at_startup = true,
       coc_suggest_disable = 1,
@@ -17,14 +29,6 @@ function M.config()
       },
     },
   })
-end
-
-function M.setup()
-  local config = setup.get_config(extension_name)
-
-  setup.legacy_setup(config.legacy_setup)
-
-  setup.on_setup_done(config)
 end
 
 return M

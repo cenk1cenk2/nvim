@@ -1,11 +1,22 @@
+-- https://github.com/NvChad/nvim-colorizer.lua
+
 local M = {}
+
+local setup = require "utils.setup"
 
 local extension_name = "colorizer"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "nvchad/nvim-colorizer.lua",
+        config = function()
+          require("utils.setup").packer_config "colorizer"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       filetypes = { "markdown", "html", "css", "scss", "vue", "javascriptreact", "typescriptreact" },
       user_default_options = {
@@ -25,19 +36,15 @@ function M.config()
       -- all the sub-options of filetypes apply to buftypes
       buftypes = {},
     },
-  }
-end
-
-function M.setup()
-  local extension = require(extension_name)
-
-  extension.setup(lvim.extensions[extension_name].ft, lvim.extensions[extension_name].setup)
-
-  lvim.builtin.which_key.mappings["a"]["C"] = { ":ColorizerToggle<CR>", "toggle colorizer" }
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+    on_setup = function(config)
+      require("colorizer").setup(config.setup)
+    end,
+    wk = {
+      ["a"] = {
+        ["C"] = { ":ColorizerToggle<CR>", "toggle colorizer" },
+      },
+    },
+  })
 end
 
 return M
