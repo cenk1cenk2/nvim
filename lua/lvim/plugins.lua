@@ -340,26 +340,6 @@ return {
     disable = not lvim.builtin.terminal.active,
   },
 
-  -- hop
-  {
-    "phaazon/hop.nvim",
-    config = function()
-      require("extensions.hop").setup()
-    end,
-    disable = not lvim.extensions.hop.active,
-  },
-
-  {
-    "ggandor/flit.nvim",
-    config = function()
-      require("extensions.flit-nvim").setup()
-    end,
-    requires = {
-      "ggandor/leap.nvim",
-    },
-    disable = not lvim.extensions.flit_nvim.active,
-  },
-
   -- Repeat last commands
   {
     "tpope/vim-repeat",
@@ -560,14 +540,6 @@ return {
       require("extensions.vgit-nvim").setup()
     end,
     disable = not lvim.extensions.vgit_nvim.active,
-  },
-
-  {
-    "akinsho/git-conflict.nvim",
-    config = function()
-      require("extensions.git-conflict-nvim").setup()
-    end,
-    disable = not lvim.extensions.git_conflict_nvim.active,
   },
 
   {
