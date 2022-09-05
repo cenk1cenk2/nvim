@@ -1,11 +1,21 @@
+-- https://github.com/lukas-reineke/indent-blankline.nvim
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "indent_blankline"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "lukas-reineke/indent-blankline.nvim",
+        config = function()
+          require("utils.setup").packer_config "indent_blankline"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       use_treesitter = true,
       show_current_context = true,
@@ -52,19 +62,15 @@ function M.config()
         "operation_type",
       },
     },
-  }
-end
-
-function M.setup()
-  local extension = require(extension_name)
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  lvim.builtin.which_key.mappings["a"]["i"] = { ":IndentBlanklineToggle<CR>", "toggle indentation guides" }
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+    on_setup = function(config)
+      require("indent_blankline").setup(config.setup)
+    end,
+    wk = {
+      ["a"] = {
+        ["i"] = { ":IndentBlanklineToggle<CR>", "toggle indentation guides" },
+      },
+    },
+  })
 end
 
 return M

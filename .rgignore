@@ -1,8 +1,8 @@
-tests/
-utils/
-README.md
-Makefile
-LICENSE
+/tests/
+/utils/
+/README.md
+/Makefile
+/LICENSE
 .gitignore
-.luacheckrc
-coc-settings.json
+/.luacheckrc
+/coc-settings.json

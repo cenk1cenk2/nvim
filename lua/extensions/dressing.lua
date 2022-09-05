@@ -21,7 +21,7 @@ function M.config()
       local telescope_ok, telescope_themes = pcall(require, "telescope.themes")
 
       if not telescope_ok then
-        return
+        return false
       end
 
       config.set_injected("telescope_themes", telescope_themes)

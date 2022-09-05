@@ -501,28 +501,11 @@ return {
   },
 
   {
-    "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-    config = function()
-      require("extensions.lsp-lines-nvim").setup()
-    end,
-    disable = not lvim.extensions.lsp_lines_nvim.active,
-  },
-
-  {
     "RRethy/vim-illuminate",
     config = function()
       require("extensions.vim-illuminate").setup()
     end,
     disable = not lvim.extensions.vim_illuminate.active,
-  },
-
-  -- tab markers
-  {
-    "lukas-reineke/indent-blankline.nvim",
-    config = function()
-      require("extensions.indent-blankline").setup()
-    end,
-    disable = not lvim.extensions.indent_blankline.active,
   },
 
   -- git related

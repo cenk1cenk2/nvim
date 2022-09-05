@@ -31,17 +31,18 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias config { active: boolean, extension_name: string, inject: table<string, string>, condition: (fun(config: table): boolean), packer: table, to_inject: (fun(config: table): table<string, string>), autocmds: table, keymaps: table, wk: table, legacy_setup: table, setup: any | (fun(config: table): any), on_setup: (fun(config: table): nil), on_config_done: (fun(config: table): nil), set_injected: (fun(key: string, value: any): any), get_injected: (fun(key: string): any) }
+---@alias config { active: boolean, store: table<string, any>, extension_name: string, inject: table<string, string>, condition: (fun(config: table): boolean), packer: table, to_inject: (fun(config: table): table<string, string>), autocmds: table, keymaps: table, wk: table, legacy_setup: table, setup: any | (fun(config: table): any), on_setup: (fun(config: table): nil), on_config_done: (fun(config: table): nil), set_injected: (fun(key: string, value: any): any), set_store: (fun(key: string, value: any): any) }
 
 ---
 ---@param extension_name string
 ---@param active boolean
----@param config { condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table, wk: table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_config_done: (fun(config: config): nil) }
+---@param config { on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table, wk: table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_config_done: (fun(config: config): nil) }
 function M.define_extension(extension_name, active, config)
   vim.validate {
     active = { active, "b" },
     extension_name = { extension_name, "s" },
     config = { config, "t" },
+    on_init = { config.on_init, "f", true },
     condition = { config.condition, "f", true },
     packer = { config.packer, "f", true },
     to_inject = { config.to_inject, "f", true },
@@ -56,13 +57,16 @@ function M.define_extension(extension_name, active, config)
     name = extension_name,
     active = active,
     inject = {},
+    store = {},
     set_injected = function(key, value)
       lvim.extensions[extension_name].inject[key] = value
 
       return value
     end,
-    get_injected = function(key)
-      return lvim.extensions[extension_name].inject[key]
+    set_store = function(key, value)
+      lvim.extensions[extension_name].store[key] = value
+
+      return value
     end,
   }
 
@@ -70,6 +74,10 @@ function M.define_extension(extension_name, active, config)
     Log:debug(string.format("Extension config stopped due to failed condition: %s", extension_name))
 
     return
+  end
+
+  if config ~= nil and config.on_init ~= nil then
+    config.on_init(lvim.extensions[extension_name])
   end
 
   lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config)
