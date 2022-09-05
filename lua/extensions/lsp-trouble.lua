@@ -1,11 +1,22 @@
+-- https://github.com/folke/trouble.nvim
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "lsp_trouble"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "folke/lsp-trouble.nvim",
+        config = function()
+          require("utils.setup").packer_config "lsp_trouble"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       action_keys = { -- key mappings for actions in the trouble list
         close = "q", -- close the list
@@ -21,26 +32,22 @@ function M.config()
         next = "j", -- next item
       },
     },
-  }
-end
-
-function M.setup()
-  local extension = require "trouble"
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  lvim.builtin.which_key.mappings["l"]["d"] = {
-    ":TroubleToggle document_diagnostics<CR>",
-    "show all document diagnostics",
-  }
-  lvim.builtin.which_key.mappings["l"]["D"] = {
-    ":TroubleToggle workspace_diagnostics<CR>",
-    "show all workspace diagnostics",
-  }
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+    on_setup = function(config)
+      require("trouble").setup(config.setup)
+    end,
+    wk = {
+      ["l"] = {
+        ["d"] = {
+          ":TroubleToggle document_diagnostics<CR>",
+          "show all document diagnostics",
+        },
+        ["D"] = {
+          ":TroubleToggle workspace_diagnostics<CR>",
+          "show all workspace diagnostics",
+        },
+      },
+    },
+  })
 end
 
 return M

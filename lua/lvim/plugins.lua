@@ -476,21 +476,6 @@ return {
   },
 
   -- lsp extensions
-  {
-    "glepnir/lspsaga.nvim",
-    config = function()
-      require("extensions.lspsaga-nvim").setup()
-    end,
-    disable = not lvim.extensions.lspsaga_nvim.active,
-  },
-
-  {
-    "folke/lsp-trouble.nvim",
-    config = function()
-      require("extensions.lsp-trouble").setup()
-    end,
-    disable = not lvim.extensions.lsp_trouble.active,
-  },
 
   {
     "simrat39/symbols-outline.nvim",
@@ -540,16 +525,6 @@ return {
       require("extensions.vim-easy-align").setup()
     end,
     disable = not lvim.extensions.vim_easy_align.active,
-  },
-
-  -- markdown preview
-  {
-    "iamcco/markdown-preview.nvim",
-    run = { "cd app & yarn & yarn add -D tslib", ":call mkdp#util#install()" },
-    config = function()
-      require("extensions.markdown-preview").setup()
-    end,
-    disable = not lvim.extensions.markdown_preview.active,
   },
 
   {

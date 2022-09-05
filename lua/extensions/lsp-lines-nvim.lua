@@ -29,7 +29,7 @@ function M.config()
       vim.diagnostic.config { virtual_lines = false, virtual_text = true }
     end,
     keymaps = {
-      ["gL"] = { { "n" }, require("extensions.lsp-lines-nvim").toggle, { desc = "Toggle LSP Lines" } },
+      ["gL"] = { { "n" }, require("extensions.lsp-lines-nvim").toggle, { desc = "toggle lsp lines" } },
     },
   })
 end

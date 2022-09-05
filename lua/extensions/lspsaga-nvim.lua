@@ -1,21 +1,22 @@
+-- https://github.com/glepnir/lspsaga.nvim
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "lspsaga_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil }
-
-  local status_ok, _ = pcall(require, "lspsaga")
-  if not status_ok then
-    return
-  end
-
-  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
-    keymaps = {
-      normal_mode = {
-        ["ge"] = { ":Lspsaga lsp_finder<CR>", { desc = "Finder" } },
-      },
-    },
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "glepnir/lspsaga.nvim",
+        config = function()
+          require("utils.setup").packer_config "lspsaga_nvim"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       -- Error,Warn,Info,Hint
       diagnostic_header = { " ", " ", " ", "ﴞ " },
@@ -85,20 +86,18 @@ function M.config()
         auto_refresh = true,
       },
     },
+    on_setup = function(config)
+      require("lspsaga").init_lsp_saga(config.setup)
+    end,
+    keymaps = {
+      ["ge"] = { { "n" }, ":Lspsaga lsp_finder<CR>", { desc = "Finder" } },
+    },
+    wk = {
+      ["l"] = {
+        ["o"] = { ":LSoutlineToggle<CR>", "file outline" },
+      },
+    },
   })
-end
-
-function M.setup()
-  local extension = require "lspsaga"
-
-  extension.init_lsp_saga(lvim.extensions[extension_name].setup)
-
-  require("lvim.keymappings").load(lvim.extensions[extension_name].keymaps)
-  lvim.builtin.which_key.mappings["l"]["o"] = { ":LSoutlineToggle<CR>", "file outline" }
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
 end
 
 return M
