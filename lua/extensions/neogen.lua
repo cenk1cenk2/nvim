@@ -1,23 +1,33 @@
+-- https://github.com/danymat/neogen
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "neogen"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil, setup = {
-    enabled = true,
-  } }
-end
-
-function M.setup()
-  local extension = require(extension_name)
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  lvim.builtin.which_key.mappings["l"]["j"] = { ':lua require("neogen").generate()<CR>', "generate documentation" }
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "danymat/neogen",
+        requires = { "nvim-treesitter/nvim-treesitter" },
+        config = function()
+          require("utils.setup").packer_config "neogen"
+        end,
+        disable = not config.active,
+      }
+    end,
+    setup = {},
+    on_setup = function(config)
+      require("neogen").setup(config.setup)
+    end,
+    wk = {
+      ["l"] = {
+        ["j"] = { ':lua require("neogen").generate()<CR>', "generate documentation" },
+      },
+    },
+  })
 end
 
 return M

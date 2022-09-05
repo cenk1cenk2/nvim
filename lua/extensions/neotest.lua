@@ -1,61 +1,39 @@
+-- https://github.com/nvim-neotest/neotest
+-- https://github.com/nvim-neotest/neotest-go
+-- https://github.com/rouge8/neotest-rust
+-- https://github.com/haydenmeade/neotest-jest
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "neotest"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-  }
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "nvim-neotest/neotest",
+        requires = {
+          "nvim-neotest/neotest-go",
+          "rouge8/neotest-rust",
+          "haydenmeade/neotest-jest",
+        },
+        config = function()
+          require("utils.setup").packer_config "neotest"
+        end,
+        disable = not config.active,
+      }
+    end,
+    condition = function(config)
+      local status_ok, neotest = pcall(require, extension_name)
 
-  local status_ok, neotest = pcall(require, extension_name)
+      if not status_ok then
+        return false
+      end
 
-  if not status_ok then
-    return
-  end
-
-  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], {
-    on_config_done = nil,
-    which_key = {
-      ["J"] = {
-        name = "+neotest",
-        ["r"] = {
-          function()
-            neotest.run.run()
-          end,
-          "run nearest test",
-        },
-        ["f"] = {
-          function()
-            neotest.run.run(vim.fn.expand "%")
-          end,
-          "run current file",
-        },
-        ["d"] = {
-          function()
-            neotest.run.run { strategy = "dap" }
-          end,
-          "debug nearest test",
-        },
-        ["D"] = {
-          function()
-            neotest.run.run { vim.fn.expand "%", strategy = "dap" }
-          end,
-          "debug file",
-        },
-        ["s"] = {
-          function()
-            neotest.run.stop()
-          end,
-          "debug nearest test",
-        },
-        ["a"] = {
-          function()
-            neotest.run.attach()
-          end,
-          "attach nearest test",
-        },
-      },
-    },
+      config.set_injected("neotest", neotest)
+    end,
     setup = {
       adapters = {
         require "neotest-go",
@@ -64,25 +42,61 @@ function M.config()
           jestCommand = "yarn run test",
           jestConfigFile = "jest.config.js",
           env = { CI = true },
-          cwd = function(path)
+          cwd = function()
             return vim.fn.getcwd()
           end,
         },
       },
     },
+    on_setup = function(config)
+      require("neotest").setup(config.setup)
+    end,
+    wk = function(config)
+      local neotest = config.inject.neotest
+
+      return {
+        ["J"] = {
+          name = "+neotest",
+          ["r"] = {
+            function()
+              neotest.run.run()
+            end,
+            "run nearest test",
+          },
+          ["f"] = {
+            function()
+              neotest.run.run(vim.fn.expand "%")
+            end,
+            "run current file",
+          },
+          ["d"] = {
+            function()
+              neotest.run.run { strategy = "dap" }
+            end,
+            "debug nearest test",
+          },
+          ["D"] = {
+            function()
+              neotest.run.run { vim.fn.expand "%", strategy = "dap" }
+            end,
+            "debug file",
+          },
+          ["s"] = {
+            function()
+              neotest.run.stop()
+            end,
+            "debug nearest test",
+          },
+          ["a"] = {
+            function()
+              neotest.run.attach()
+            end,
+            "attach nearest test",
+          },
+        },
+      }
+    end,
   })
-end
-
-function M.setup()
-  local extension = require(extension_name)
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  lvim.builtin.which_key.mappings["J"] = lvim.extensions[extension_name].which_key
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
 end
 
 return M

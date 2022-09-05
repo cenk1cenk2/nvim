@@ -306,20 +306,6 @@ return {
     requires = { "mfussenegger/nvim-dap" },
   },
 
-  -- testing
-  {
-    "nvim-neotest/neotest",
-    config = function()
-      require("extensions.neotest").setup()
-    end,
-    disable = not lvim.extensions.neotest.active,
-    requires = {
-      "nvim-neotest/neotest-go",
-      "rouge8/neotest-rust",
-      "haydenmeade/neotest-jest",
-    },
-  },
-
   -- Session Manager
   {
     "Shatur/neovim-session-manager",
@@ -382,16 +368,6 @@ return {
       require("extensions.nvim-scrollbar").setup()
     end,
     disable = not lvim.extensions.nvim_scrollbar.active,
-  },
-
-  -- smooth scroll
-  {
-    "karb94/neoscroll.nvim",
-    event = "BufWinEnter",
-    config = function()
-      require("extensions.neoscroll").setup()
-    end,
-    disable = not lvim.extensions.neoscroll.active,
   },
 
   -- find and replace
@@ -543,15 +519,6 @@ return {
       require("extensions.package-info").setup()
     end,
     disable = not lvim.extensions.package_info.active,
-  },
-
-  {
-    "danymat/neogen",
-    config = function()
-      require("extensions.neogen").setup()
-    end,
-    requires = { "nvim-treesitter/nvim-treesitter" },
-    disable = not lvim.extensions.neogen.active,
   },
 
   {

@@ -1,11 +1,23 @@
+-- https://github.com/karb94/neoscroll.nvim
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "neoscroll"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "karb94/neoscroll.nvim",
+        event = "BufWinEnter",
+        config = function()
+          require("utils.setup").packer_config "neoscroll"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       -- All these keys will be mapped. Pass an empty table ({}) for no mappings
       mappings = { "<C-u>", "<C-d>", "<C-b>", "<C-f>", "zt", "zz", "zb" },
@@ -14,16 +26,10 @@ function M.config()
       respect_scrolloff = false, -- Stop scrolling when the cursor reaches the scrolloff margin of the file
       cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
     },
-  }
-end
-
-function M.setup()
-  local extension = require(extension_name)
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+    on_setup = function(config)
+      require("neoscroll").setup(config.setup)
+    end,
+  })
 end
 
 return M

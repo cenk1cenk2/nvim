@@ -36,7 +36,7 @@ end
 ---
 ---@param extension_name string
 ---@param active boolean
----@param config { on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table, wk: table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_config_done: (fun(config: config): nil) }
+---@param config { on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table, wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_config_done: (fun(config: config): nil) }
 function M.define_extension(extension_name, active, config)
   vim.validate {
     active = { active, "b" },
@@ -47,8 +47,8 @@ function M.define_extension(extension_name, active, config)
     packer = { config.packer, "f", true },
     to_inject = { config.to_inject, "f", true },
     autocmds = { config.autocmds, "t", true },
-    keymaps = { config.keymaps, "t", true },
-    wk = { config.wk, "t", true },
+    keymaps = { config.keymaps, { "t", "f" }, true },
+    wk = { config.wk, { "t", "f" }, true },
     legacy_setup = { config.legacy_setup, "t", true },
     setup = { config.legacy_setup, { "t", "f" }, true },
   }
@@ -118,11 +118,19 @@ function M.run(config)
   end
 
   if config ~= nil and config.keymaps ~= nil then
-    M.load_mappings(config.keymaps)
+    if type(config.keymaps) == "function" then
+      M.load_mappings(config.keymaps(config))
+    else
+      M.load_mappings(config.keymaps)
+    end
   end
 
   if config ~= nil and config.wk ~= nil then
-    M.load_wk_mappings(config.wk)
+    if type(config.wk) == "function" then
+      M.load_wk_mappings(config.wk(config))
+    else
+      M.load_wk_mappings(config.wk)
+    end
   end
 
   if config ~= nil and config.legacy_setup ~= nil then
