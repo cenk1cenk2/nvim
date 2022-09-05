@@ -606,7 +606,7 @@ return {
 
   -- Colorized
   {
-    "norcalli/nvim-colorizer.lua",
+    "nvchad/nvim-colorizer.lua",
     config = function()
       require("extensions.colorizer").setup()
     end,
