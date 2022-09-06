@@ -1,19 +1,24 @@
+-- https://github.com/pwntester/octo.nvim
 local M = {}
 
 local extension_name = "octo"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil, setup = {} }
-end
-
-function M.setup()
-  local extension = require(extension_name)
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "pwntester/octo.nvim",
+        config = function()
+          require("utils.setup").packer_config "octo"
+        end,
+        disable = not config.active,
+      }
+    end,
+    setup = {},
+    on_setup = function(config)
+      require("octo").setup(config.setup)
+    end,
+  })
 end
 
 return M

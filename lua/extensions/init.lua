@@ -28,7 +28,6 @@ local extensions = {
   "vim-easy-align",
   "markdown-preview",
   "vim-bookmarks",
-  "package-info",
   "neogen",
   "coc",
   "lspsaga-nvim",

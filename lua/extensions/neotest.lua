@@ -2,15 +2,12 @@
 -- https://github.com/nvim-neotest/neotest-go
 -- https://github.com/rouge8/neotest-rust
 -- https://github.com/haydenmeade/neotest-jest
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "neotest"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "nvim-neotest/neotest",

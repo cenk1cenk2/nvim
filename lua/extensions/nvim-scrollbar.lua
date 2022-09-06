@@ -1,14 +1,11 @@
 -- https://github.com/petertriho/nvim-scrollbar
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "nvim_scrollbar"
 local colors = require "onedarker.colors"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "petertriho/nvim-scrollbar",

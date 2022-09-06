@@ -1,13 +1,10 @@
 -- https://github.com/NvChad/nvim-colorizer.lua
-
 local M = {}
-
-local setup = require "utils.setup"
 
 local extension_name = "colorizer"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "nvchad/nvim-colorizer.lua",

@@ -1,12 +1,10 @@
 -- https://github.com/ripxorip/aerojump.nvim
 local M = {}
 
-local setup = require "utils.setup"
-
 local extension_name = "aerojump_nvim"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "ripxorip/aerojump.nvim",

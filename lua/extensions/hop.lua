@@ -1,13 +1,10 @@
 -- https://github.com/phaazon/hop.nvim
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "hop"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "phaazon/hop.nvim",
@@ -22,11 +19,13 @@ function M.config()
       require("hop").setup(config.setup)
     end,
     keymaps = {
-      ["s"] = { { "n" }, ":HopChar2<cr>" },
-      ["ss"] = { { "n" }, ":HopChar1<cr>" },
-      ["sw"] = { { "n" }, ":HopPattern<cr>" },
-      ["S"] = { { "n" }, ":HopWord<cr>" },
-      ["SS"] = { { "n" }, ":HopLine<cr>" },
+      n = {
+        ["s"] = { ":HopChar2<cr>" },
+        ["ss"] = { ":HopChar1<cr>" },
+        ["sw"] = { ":HopPattern<cr>" },
+        ["S"] = { ":HopWord<cr>" },
+        ["SS"] = { ":HopLine<cr>" },
+      },
     },
   })
 end

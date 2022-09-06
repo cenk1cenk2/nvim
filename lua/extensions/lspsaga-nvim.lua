@@ -1,13 +1,10 @@
 -- https://github.com/glepnir/lspsaga.nvim
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "lspsaga_nvim"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "glepnir/lspsaga.nvim",
@@ -90,7 +87,9 @@ function M.config()
       require("lspsaga").init_lsp_saga(config.setup)
     end,
     keymaps = {
-      ["ge"] = { { "n" }, ":Lspsaga lsp_finder<CR>", { desc = "Finder" } },
+      n = {
+        ["ge"] = { ":Lspsaga lsp_finder<CR>", { desc = "Finder" } },
+      },
     },
     wk = {
       ["l"] = {

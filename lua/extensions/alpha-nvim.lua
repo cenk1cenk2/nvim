@@ -1,12 +1,10 @@
 -- https://github.com/goolord/alpha-nvim
 local M = {}
 
-local setup = require "utils.setup"
-
 local extension_name = "alpha"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "goolord/alpha-nvim",

@@ -14,14 +14,7 @@ end
 ---
 ---@param mappings table
 function M.load_mappings(mappings)
-  for key, mapping in pairs(mappings) do
-    local clone = vim.deepcopy(mapping)
-    local modes = table.remove(clone, 1)
-
-    for _, mode in pairs(modes) do
-      keymappings.load_mode(mode, { [key] = clone })
-    end
-  end
+  keymappings.load(mappings)
 end
 
 ---

@@ -4,12 +4,10 @@
 -- https://github.com/tzachar/cmp-fuzzy-buffer
 local M = {}
 
-local setup = require "utils.setup"
-
 local extension_name = "cmp_extensions"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     setup = {
       cmp_git = {
         name = "git",

@@ -1,43 +1,65 @@
+-- https://github.com/ThePrimeagen/refactoring.nvim
 local M = {}
 
 local extension_name = "refactoring_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
-    keymaps = {
-      visual_mode = {
-        ["re"] = {
-          [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]],
-          { desc = "extract to function" },
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "ThePrimeagen/refactoring.nvim",
+        requires = {
+          { "nvim-lua/plenary.nvim" },
+          { "nvim-treesitter/nvim-treesitter" },
         },
-        ["rf"] = {
-          [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]],
-          { desc = "extract function to file" },
-        },
-        ["rv"] = {
-          [[<Esc><Cmd>lua require('refactoring').refactor('Extract Variable')<CR>]],
-          { desc = "extract variable" },
-        },
-        ["ri"] = {
-          [[<Esc><Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]],
-          { desc = "inline variable" },
-        },
-      },
-    },
+        config = function()
+          require("utils.setup").packer_config "refactoring_nvim"
+        end,
+        disable = not config.active,
+      }
+    end,
+    to_inject = function()
+      return {
+        refactoring = require "refactoring",
+      }
+    end,
     setup = {},
-  }
-end
+    on_setup = function(config)
+      require("refactoring").setup(config.setup)
+    end,
+    keymaps = function(config)
+      local refactoring = config.inject.refactoring
 
-function M.setup()
-  require("refactoring").setup(lvim.extensions[extension_name].setup)
-
-  require("lvim.keymappings").load(lvim.extensions[extension_name].keymaps)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+      return {
+        v = {
+          ["re"] = {
+            function()
+              refactoring.refactor "Extract Function"
+            end,
+            { desc = "extract to function" },
+          },
+          ["rf"] = {
+            function()
+              refactoring.refactor "Extract Function To File"
+            end,
+            { desc = "extract function to file" },
+          },
+          ["rv"] = {
+            function()
+              refactoring.refactor "Extract Variable"
+            end,
+            { desc = "extract variable" },
+          },
+          ["ri"] = {
+            function()
+              refactoring.refactor "Inline Variable"
+            end,
+            { desc = "extract inline variable" },
+          },
+        },
+      }
+    end,
+  })
 end
 
 return M

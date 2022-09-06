@@ -1,13 +1,10 @@
 -- mrshmllow/document-color.nvim
-
 local M = {}
-
-local setup = require "utils.setup"
 
 local extension_name = "document_color_nvim"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "mrshmllow/document-color.nvim",

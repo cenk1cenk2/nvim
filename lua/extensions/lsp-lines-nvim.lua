@@ -1,12 +1,10 @@
 -- https://git.sr.ht/~whynothugo/lsp_lines.nvim
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "lsp_lines_nvim"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
@@ -23,7 +21,9 @@ function M.config()
       vim.diagnostic.config { virtual_lines = false, virtual_text = true }
     end,
     keymaps = {
-      ["gL"] = { { "n" }, M.toggle, { desc = "toggle lsp lines" } },
+      n = {
+        ["gL"] = { M.toggle, { desc = "toggle lsp lines" } },
+      },
     },
   })
 end

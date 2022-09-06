@@ -1,6 +1,4 @@
 -- https://github.com/Shatur/neovim-session-manager
-
-local setup = require "utils.setup"
 local utils = require "lvim.utils"
 
 local M = {}
@@ -8,7 +6,7 @@ local M = {}
 local extension_name = "session_manager"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "Shatur/neovim-session-manager",

@@ -1,13 +1,10 @@
 -- https://github.com/kevinhwang91/nvim-hlslens
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "nvim_hlslens"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "kevinhwang91/nvim-hlslens",

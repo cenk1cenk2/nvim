@@ -1,13 +1,10 @@
 -- https://github.com/danymat/neogen
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "neogen"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "danymat/neogen",

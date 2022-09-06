@@ -1,13 +1,10 @@
 -- https://github.com/stevearc/dressing.nvim
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "dressing"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "stevearc/dressing.nvim",

@@ -1,12 +1,10 @@
 -- https://github.com/sindrets/diffview.nvim
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "diffview"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "sindrets/diffview.nvim",

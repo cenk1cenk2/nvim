@@ -1,13 +1,10 @@
 -- https://github.com/iamcco/markdown-preview.nvim
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "markdown_preview"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "iamcco/markdown-preview.nvim",

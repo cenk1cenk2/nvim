@@ -1,13 +1,10 @@
 -- https://github.com/otavioschwanck/cool-substitute.nvim
-
 local M = {}
-
-local setup = require "utils.setup"
 
 local extension_name = "cool_substitute_nvim"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "otavioschwanck/cool-substitute.nvim",

@@ -1,13 +1,10 @@
 -- https://github.com/zakharykaplan/nvim-retrail
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "nvim_retrail"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "zakharykaplan/nvim-retrail",

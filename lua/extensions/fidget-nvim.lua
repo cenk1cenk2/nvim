@@ -1,13 +1,10 @@
 -- https://github.com/j-hui/fidget.nvim
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "fidget_nvim"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "j-hui/fidget.nvim",

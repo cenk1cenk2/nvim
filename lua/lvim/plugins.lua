@@ -307,16 +307,6 @@ return {
     disable = not lvim.extensions.vim_surround.active,
   },
 
-  -- find and replace
-  {
-    "nvim-pack/nvim-spectre",
-    run = "./build.sh",
-    config = function()
-      require("extensions.spectre").setup()
-    end,
-    disable = not lvim.extensions.spectre.active,
-  },
-
   -- multiple cursors
   {
     "mg979/vim-visual-multi",
@@ -324,15 +314,6 @@ return {
       require("extensions.vim-visual-multi").setup()
     end,
     disable = not lvim.extensions.vim_visual_multi.active,
-  },
-
-  -- ranger
-  {
-    "kevinhwang91/rnvimr",
-    config = function()
-      require("extensions.rnvimr").setup()
-    end,
-    disable = not lvim.extensions.rnvimr.active,
   },
 
   -- maximize windows temporararily
@@ -406,14 +387,6 @@ return {
     disable = not lvim.extensions.vgit_nvim.active,
   },
 
-  {
-    "pwntester/octo.nvim",
-    config = function()
-      require("extensions.octo").setup()
-    end,
-    disable = not lvim.extensions.octo.active,
-  },
-
   -- easy align
   {
     "junegunn/vim-easy-align",
@@ -430,15 +403,6 @@ return {
       require("extensions.vim-bookmarks").setup()
     end,
     disable = not lvim.extensions.vim_bookmarks.active,
-  },
-
-  {
-    "vuki656/package-info.nvim",
-    requires = "MunifTanjim/nui.nvim",
-    config = function()
-      require("extensions.package-info").setup()
-    end,
-    disable = not lvim.extensions.package_info.active,
   },
 
   {
@@ -492,18 +456,6 @@ return {
       require("extensions.yanky-nvim").setup()
     end,
     disable = not lvim.extensions.yanky_nvim.active,
-  },
-
-  {
-    "ThePrimeagen/refactoring.nvim",
-    requires = {
-      { "nvim-lua/plenary.nvim" },
-      { "nvim-treesitter/nvim-treesitter" },
-    },
-    config = function()
-      require("extensions.refactoring-nvim").setup()
-    end,
-    disable = not lvim.extensions.refactoring_nvim.active,
   },
 
   -- line wise substitute

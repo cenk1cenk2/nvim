@@ -1,13 +1,10 @@
 -- https://github.com/kevinhwang91/nvim-ufo
-
-local setup = require "utils.setup"
-
 local M = {}
 
 local extension_name = "nvim_ufo"
 
 function M.config()
-  setup.define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "kevinhwang91/nvim-ufo",
@@ -42,8 +39,14 @@ function M.config()
       local ufo = config.inject.ufo
 
       return {
-        ["zR"] = { { "n", "v", "vb" }, ufo.openAllFolds, { desc = "open all folds - ufo" } },
-        ["zM"] = { { "n", "v", "vb" }, ufo.closeAllFolds, { desc = "close all folds - ufo" } },
+        n = {
+          ["zR"] = { ufo.openAllFolds, { desc = "open all folds - ufo" } },
+          ["zM"] = { ufo.closeAllFolds, { desc = "close all folds - ufo" } },
+        },
+        v = {
+          ["zR"] = { ufo.openAllFolds, { desc = "open all folds - ufo" } },
+          ["zM"] = { ufo.closeAllFolds, { desc = "close all folds - ufo" } },
+        },
       }
     end,
   })
