@@ -20,16 +20,40 @@ function M.run_markdown_toc()
     command = table.concat(config.command),
     args = table_utils.merge(config.args, { vim.fn.expand "%" }),
   }
+  vim.cmd "e!"
 end
 
 function M.run_md_printer()
   job.spawn { command = "md-printer", args = { vim.fn.expand "%" } }
 end
 
+function M.run_ansible_vault_decrypt()
+  job.spawn { command = "ansible-vault", args = { "decrypt", vim.fn.expand "%" } }
+  vim.cmd "e!"
+end
+
+function M.run_ansible_vault_encrypt()
+  job.spawn { command = "ansible-vault", args = { "encrypt", vim.fn.expand "%" } }
+  vim.cmd "e!"
+end
+
 function M.setup()
   require("utils.setup").run {
     wk = {
-      a = {
+      r = {
+        name = "+executables",
+        d = {
+          function()
+            M.run_ansible_vault_decrypt()
+          end,
+          "ansible-vault decrypt",
+        },
+        D = {
+          function()
+            M.run_ansible_vault_encrypt()
+          end,
+          "ansible-vault encrypt",
+        },
         t = {
           function()
             M.run_markdown_toc()

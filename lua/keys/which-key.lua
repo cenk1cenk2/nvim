@@ -22,22 +22,12 @@ M.mappings = {
   a = {
     name = "+actions",
     c = { ":set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20<CR>", "bring back cursor" },
-    d = { ":! ansible-vault decrypt %:p<CR>", "ansible-vault decrypt" },
-    D = { ":! ansible-vault encrypt %:p<CR>", "ansible-vault encrypt" },
     e = { ":set ff=unix<CR>", "set lf" },
     E = { ":set ff=dos<CR>", "set crlf" },
     f = { ":Telescope filetypes<CR>", "select from filetypes" },
     l = { ":set nonumber!<CR>", "toggle line numbers" },
     r = { ":set norelativenumber!<CR>", "toggle relative line numbers" },
     s = { ":setlocal spell!<CR>", "toggle spell check" },
-    t = {
-      ":RunMarkdownToc<CR>",
-      "markdown-toc",
-    },
-    P = {
-      ":RunMdPrinter<CR>",
-      "md-printer",
-    },
   },
 
   -- buffer
@@ -48,22 +38,27 @@ M.mappings = {
     E = { ":e!<CR>", "force reopen current buffer" },
     f = { ":Telescope buffers<CR>", "find buffer" },
     s = { ":edit #<CR>", "switch to last buffer" },
-    S = { ":w!<CR>:lua require('lvim.core.log'):warn('File overwritten.')<CR>", "overwrite - force save" },
+    S = {
+      function()
+        vim.cmd "w!"
+        require("lvim.core.log"):warn "File overwritten."
+      end,
+      "overwrite - force save",
+    },
   },
 
   -- find
   f = {
     name = "+search",
+    ["."] = { ":Telescope commands<CR>", "search available commands" },
+    [":"] = { ":Telescope command_history<CR>", "search command history" },
     A = { ":Telescope builtin<CR>", "telescope list builtin finders" },
     b = { ":Telescope current_buffer_fuzzy_find<CR>", "search current buffer" },
     f = { ":Telescope oldfiles<CR>", "search file history" },
-    ["."] = { ":Telescope commands<CR>", "search available commands" },
-    [":"] = { ":Telescope command_history<CR>", "search command history" },
     g = { ":Telescope grep_string<CR>", "grep string under cursor" },
     m = { ":Telescope vim_bookmarks all<CR>", "list all bookmarks" },
     M = { ":Telescope vim_bookmarks current_file<CR>", "list document bookmarks" },
     j = { ":Telescope jumplist<CR>", "list jumps" },
-    k = { ":Telescope keymaps<CR>", "list keymaps" },
     s = { ":Telescope spell_suggest<CR>", "spell suggest" },
     r = {
       function()
@@ -77,8 +72,6 @@ M.mappings = {
       end,
       "dirty fuzzy grep",
     },
-    p = { ":Telescope find_files<CR>", "find file" },
-    R = { ":Telescope registers<CR>", "list registers" },
     t = {
       function()
         require("modules.telescope").rg_string()
@@ -86,7 +79,6 @@ M.mappings = {
       "grep string",
     },
     T = { ":Telescope live_grep<CR>", "grep with regexp" },
-    O = { ":Telescope vim_options<CR>", "list vim options" },
   },
 
   -- find and replace
@@ -104,17 +96,17 @@ M.mappings = {
     B = { ":Git blame<CR>", "git blame" },
     C = { ":Gdiffsplit<CR>", "diff split" },
     e = { ":Gedit<CR>", "edit version" },
-    f = { ":Telescope git_files<CR>", "list git tracked files" },
+    f = { ":Telescope git_status<CR>", "git status" },
+    F = { ":Telescope git_files<CR>", "list git tracked files" },
     n = { ":Gitsigns next_hunk<CR>", "next hunk" },
     p = { ":Gitsigns prev_hunk<CR>", "prev hunk" },
     b = { ":Gitsigns blame_line<CR>", "git hover blame" },
     k = { ":Gitsigns preview_hunk<CR>", "preview hunk" },
     U = { ":Gitsigns reset_hunk<CR>", "reset hunk" },
-    R = { ":Gitsigns reset_buffer<CR>", "reset buffer" },
+    RR = { ":Gitsigns reset_buffer<CR>", "reset buffer" },
     s = { ":Gitsigns stage_hunk<CR>", "stage hunk" },
     S = { ":Gitsigns undo_stage_hunk<CR>", "undo stage hunk" },
-    m = { ":Gvdiffsplit!<CR>", "merge view, 3-way-split" },
-    o = { ":Telescope git_status<CR>", "open git status" },
+    m = { ":Gvdiffsplit!<CR>", "merge view" },
   },
 
   -- gist
@@ -152,11 +144,13 @@ M.mappings = {
     F = { ":LvimToggleFormatOnSave<CR>", "toggle autoformat" },
     g = { ":LspOrganizeImports<CR>", "organize imports" },
     i = {
-      ":lua require('lvim.core.info').toggle_popup(vim.bo.filetype)<CR>",
-      "Toggle LunarVim Info",
+      function()
+        require("lvim.core.info").toggle_popup(vim.bo.filetype)
+      end,
+      "lsp info",
     },
-    I = { ":LspInstallInfo<CR>", "lsp installer info" },
-    m = { ":LspRenameFile<CR>", "rename with lsp" },
+    I = { ":LspInfo<CR>", "legacy lsp info" },
+    m = { ":LspRenameFile<CR>", "rename file with lsp" },
     h = { ":LspImportAll<CR>", "import all missing" },
     H = { ":LspImportCurrent<CR>", "import current" },
     n = {
@@ -214,7 +208,12 @@ M.mappings = {
   w = {
     name = "+Session",
     c = { ":Alpha<CR>", "dashboard" },
-    q = { ":lua require('lvim.utils.functions').smart_quit()<CR>", "quit" },
+    q = {
+      function()
+        require("lvim.utils.functions").smart_quit()
+      end,
+      "quit",
+    },
     d = { ":SessionManager delete_session<CR>", "delete sessions" },
     l = { ":SessionManager load_current_dir_session<CR>", "load cwd last session" },
     L = { ":SessionManager load_last_session<CR>", "load last session" },
@@ -224,63 +223,69 @@ M.mappings = {
   },
 
   L = {
-    name = "+LunarVim",
-    c = {
-      ":edit " .. get_config_dir() .. "/config.lua<CR>",
-      "Edit config.lua",
-    },
+    name = "+neovim",
     f = {
-      ":lua require('lvim.core.telescope.custom-finders').find_lunarvim_files()<CR>",
-      "Find LunarVim files",
+      function()
+        require("lvim.core.telescope.custom-finders").find_lunarvim_files()
+      end,
+      "find configuration files",
     },
-    g = {
-      ":lua require('lvim.core.telescope.custom-finders').grep_lunarvim_files()<CR>",
-      "Grep LunarVim files",
-    },
-    k = { ":Telescope keymaps<CR>", "View LunarVim's keymappings" },
-    i = {
-      ":lua require('lvim.core.info').toggle_popup(vim.bo.filetype)<CR>",
-      "Toggle LunarVim Info",
-    },
-    I = {
-      ":lua require('lvim.core.telescope.custom-finders').view_lunarvim_changelog()<CR>",
-      "View LunarVim's changelog",
-    },
+    k = { ":Telescope keymaps<CR>", "list keymaps" },
     l = {
       name = "+logs",
       d = {
-        ":lua require('lvim.core.terminal').toggle_log_view(require('lvim.core.log').get_path())<CR>",
+        function()
+          require("lvim.core.terminal").toggle_log_view(require("lvim.core.log").get_path())
+        end,
         "view default log",
       },
       D = {
-        ":lua vim.fn.execute('edit ' .. require('lvim.core.log').get_path())<CR>",
-        "Open the default logfile",
+        function()
+          vim.fn.execute("edit " .. require("lvim.core.log").get_path())
+        end,
+        "open the default logfile",
       },
       l = {
-        ":lua require('lvim.core.terminal').toggle_log_view(vim.lsp.get_log_path())<CR>",
+        function()
+          require("lvim.core.terminal").toggle_log_view(vim.lsp.get_log_path())
+        end,
         "view lsp log",
       },
-      L = { ":lua vim.fn.execute('edit ' .. vim.lsp.get_log_path())<CR>", "Open the LSP logfile" },
+      L = {
+        function()
+          vim.fn.execute("edit " .. vim.lsp.get_log_path())
+        end,
+        "open the lsp logfile",
+      },
       n = {
-        ":lua require('lvim.core.terminal').toggle_log_view(os.getenv('NVIM_LOG_FILE'))<CR>",
+        function()
+          require("lvim.core.terminal").toggle_log_view(os.getenv "NVIM_LOG_FILE")
+        end,
         "view neovim log",
       },
-      N = { ":edit $NVIM_LOG_FILE<CR>", "Open the Neovim logfile" },
+      N = { ":edit $NVIM_LOG_FILE<CR>", "open the neovim logfile" },
       p = {
-        ":lua require('lvim.core.terminal').toggle_log_view('packer.nvim')<CR>",
+        function()
+          require("lvim.core.terminal").toggle_log_view "packer.nvim"
+        end,
         "view packer log",
       },
-      P = { ":exe 'edit '.stdpath('cache').'/packer.nvim.log'<CR>", "Open the Packer logfile" },
+      P = { ":exe 'edit '.stdpath('cache').'/packer.nvim.log'<CR>", "open the packer logfile" },
     },
-    r = { ":LvimReload<CR>", "Reload LunarVim's configuration" },
-    u = { ":LvimUpdate<CR>", "Update LunarVim" },
+    r = { ":LvimReload<CR>", "reload configuration" },
+    u = { ":LvimUpdate<CR>", "git update config repository" },
   },
 
   P = {
     name = "Packer",
     c = { ":PackerCompile<CR>", "packer compile" },
     i = { ":PackerInstall<CR>", "packer install" },
-    r = { ":lua require('lvim.plugin-loader').recompile()<CR>", "packer re-compile" },
+    r = {
+      function()
+        require("lvim.plugin-loader").recompile()
+      end,
+      "recompile",
+    },
     s = { ":PackerSync<CR>", "packer sync" },
     S = { ":PackerStatus<CR>", "packer status" },
     u = { ":PackerUpdate<CR>", "packer update" },
