@@ -18,7 +18,6 @@ local extensions = {
   "cmp-extensions",
   "nvim-bqf",
   "lsp-trouble",
-  "symbols-outline",
   "colorizer",
   "todo-comments",
   "indent-blankline",

@@ -1,4 +1,11 @@
 local M = {}
+-- {
+--   "simrat39/symbols-outline.nvim",
+--   config = function()
+--     require("extensions.symbols-outline").setup()
+--   end,
+--   disable = not lvim.extensions.symbols_outline.active,
+-- },
 
 local extension_name = "symbols_outline"
 

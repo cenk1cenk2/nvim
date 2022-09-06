@@ -355,14 +355,6 @@ return {
   -- lsp extensions
 
   {
-    "simrat39/symbols-outline.nvim",
-    config = function()
-      require("extensions.symbols-outline").setup()
-    end,
-    disable = not lvim.extensions.symbols_outline.active,
-  },
-
-  {
     "RRethy/vim-illuminate",
     config = function()
       require("extensions.vim-illuminate").setup()
@@ -456,23 +448,5 @@ return {
       require("extensions.yanky-nvim").setup()
     end,
     disable = not lvim.extensions.yanky_nvim.active,
-  },
-
-  -- line wise substitute
-  {
-    "gbprod/substitute.nvim",
-    config = function()
-      require("extensions.substitute-nvim").setup()
-    end,
-    disable = not lvim.extensions.substitute_nvim.active,
-  },
-
-  -- name wise substitute
-  {
-    "johmsalas/text-case.nvim",
-    config = function()
-      require("extensions.text-case-nvim").setup()
-    end,
-    disable = not lvim.extensions.text_case_nvim.active,
   },
 }

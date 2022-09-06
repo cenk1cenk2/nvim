@@ -1,27 +1,27 @@
+-- https://github.com/johmsalas/text-case.nvim
 local M = {}
 
 local extension_name = "text_case_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "johmsalas/text-case.nvim",
+        config = function()
+          require("utils.setup").packer_config "text_case_nvim"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       prefix = "gs",
     },
-  }
-end
-
-function M.setup()
-  local extension = require "textcase"
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  -- subs command comes from here!
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+    on_setup = function(config)
+      -- subs command comes from here!
+      require("textcase").setup(config.setup)
+    end,
+  })
 end
 
 return M
