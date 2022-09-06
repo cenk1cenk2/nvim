@@ -1,11 +1,19 @@
+-- https://github.com/RRethy/vim-illuminate
 local M = {}
 
 local extension_name = "vim_illuminate"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "RRethy/vim-illuminate",
+        config = function()
+          require("utils.setup").packer_config "vim_illuminate"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       -- providers: provider used to get references in the buffer, ordered by priority
       providers = {
@@ -24,34 +32,27 @@ function M.config()
         "dirvish",
         "fugitive",
       },
-      -- filetypes_allowlist: filetypes to illuminate, this is overriden by filetypes_denylist
+      -- filetypes_allowlist: filetypes to illuminate, this is overridden by filetypes_denylist
       filetypes_allowlist = {},
       -- modes_denylist: modes to not illuminate, this overrides modes_allowlist
       modes_denylist = {},
-      -- modes_allowlist: modes to illuminate, this is overriden by modes_denylist
+      -- modes_allowlist: modes to illuminate, this is overridden by modes_denylist
       modes_allowlist = {},
       -- providers_regex_syntax_denylist: syntax to not illuminate, this overrides providers_regex_syntax_allowlist
       -- Only applies to the 'regex' provider
       -- Use :echom synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
       providers_regex_syntax_denylist = {},
-      -- providers_regex_syntax_allowlist: syntax to illuminate, this is overriden by providers_regex_syntax_denylist
+      -- providers_regex_syntax_allowlist: syntax to illuminate, this is overridden by providers_regex_syntax_denylist
       -- Only applies to the 'regex' provider
       -- Use :echom synIDattr(synIDtrans(synID(line('.'), col('.'), 1)), 'name')
       providers_regex_syntax_allowlist = {},
       -- under_cursor: whether or not to illuminate under the cursor
       under_cursor = true,
     },
-  }
-end
-
-function M.setup()
-  local extension = require "illuminate"
-
-  extension.configure(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+    on_setup = function(config)
+      require("illuminate").configure(config.setup)
+    end,
+  })
 end
 
 return M

@@ -1,31 +1,42 @@
+-- https://github.com/drybalka/tree-climber.nvim
 local M = {}
 
 local extension_name = "tree_climber_nvim"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
-    keymaps = {},
-  }
-end
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "drybalka/tree-clidrybalka/tree-climber.nvimmber.nvim",
+        config = function()
+          require("utils.setup").packer_config "tree_climber_nvim"
+        end,
+        disable = not config.active,
+      }
+    end,
+    to_inject = function()
+      return {
+        tree_climber = require "tree-climber",
+      }
+    end,
+    keymaps = function(config)
+      local tree_climber = config.inject.tree_climber
+      local common = {
+        ["H"] = { tree_climber.goto_parent },
+        ["L"] = { tree_climber.goto_child },
+        ["LL"] = { tree_climber.goto_next },
+        ["HH"] = { tree_climber.goto_prev },
+      }
 
-function M.setup()
-  require("lvim.keymappings").load(lvim.extensions[extension_name].keymaps)
-  local extension = require "tree-climber"
-
-  local keyopts = { noremap = true, silent = true }
-
-  vim.keymap.set({ "n", "v", "o" }, "H", extension.goto_parent)
-  vim.keymap.set({ "n", "v", "o" }, "L", extension.goto_child, keyopts)
-  vim.keymap.set({ "n", "v", "o" }, "LL", extension.goto_next, keyopts)
-  vim.keymap.set({ "n", "v", "o" }, "HH", extension.goto_prev, keyopts)
-  vim.keymap.set("n", "HHH", extension.swap_prev, keyopts)
-  vim.keymap.set("n", "LLL", extension.swap_next, keyopts)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+      return {
+        n = vim.tbl_extend("force", {
+          ["HHH"] = { tree_climber.swap_prev },
+          ["LLL"] = { tree_climber.swap_next },
+        }, common),
+        v = common,
+      }
+    end,
+  })
 end
 
 return M

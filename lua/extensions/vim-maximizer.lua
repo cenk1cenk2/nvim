@@ -3,19 +3,26 @@ local M = {}
 local extension_name = "vim_maximizer"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil }
-end
-
-function M.setup()
-  vim.g.maximizer_set_default_mapping = 0
-
-  require("utils.command").set_option { winminheight = 0, winminwidth = 0 }
-
-  lvim.builtin.which_key.mappings["M"] = { ":MaximizerToggle<CR>", "maximize current window" }
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "szw/vim-maximizer",
+        config = function()
+          require("utils.setup").packer_config "vim_maximizer"
+        end,
+        disable = not config.active,
+      }
+    end,
+    legacy_setup = {
+      maximizer_set_default_mapping = 0,
+    },
+    on_done = function()
+      require("utils.command").set_option { winminheight = 0, winminwidth = 0 }
+    end,
+    wk = {
+      ["M"] = { ":MaximizerToggle<CR>", "maximize current window" },
+    },
+  })
 end
 
 return M

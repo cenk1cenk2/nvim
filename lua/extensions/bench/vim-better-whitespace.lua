@@ -1,4 +1,11 @@
 local M = {}
+-- {
+--   "ntpeters/vim-better-whitespace",
+--   config = function()
+--     require("extensions.vim-better-whitespace").setup()
+--   end,
+--   disable = not lvim.extensions.vim_better_whitespace.active,
+-- },
 
 local extension_name = "vim_better_whitespace"
 

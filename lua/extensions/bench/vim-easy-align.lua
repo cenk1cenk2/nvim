@@ -1,3 +1,10 @@
+-- {
+--   "junegunn/vim-easy-align",
+--   config = function()
+--     require("extensions.vim-easy-align").setup()
+--   end,
+--   disable = not lvim.extensions.vim_easy_align.active,
+-- },
 local M = {}
 
 local extension_name = "vim_easy_align"

@@ -1,11 +1,19 @@
+-- https://github.com/folke/todo-comments.nvim
 local M = {}
 
 local extension_name = "todo_comments"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "folke/todo-comments.nvim",
+        config = function()
+          require("utils.setup").packer_config "todo_comments"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       {
         signs = true, -- show icons in the signs column
@@ -33,7 +41,7 @@ function M.config()
           after = "fg", -- "fg" or "bg" or empty
         },
         -- list of named colors where we try to extract the guifg from the
-        -- list of hilight groups or use the hex color if hl not found as a fallback
+        -- list of highlight groups or use the hex color if hl not found as a fallback
         colors = {
           error = { "LspDiagnosticsDefaultError", "ErrorMsg" },
           warning = { "LspDiagnosticsDefaultWarning", "WarningMsg" },
@@ -48,19 +56,15 @@ function M.config()
         -- pattern = "-- (KEYWORDS):", -- only match in lua comments
       },
     },
-  }
-end
-
-function M.setup()
-  local extension = require "todo-comments"
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  lvim.builtin.which_key.mappings["f"]["c"] = { ":TodoTelescope<CR>", "todo comments" }
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+    on_setup = function(config)
+      require("todo-comments").setup(config.setup)
+    end,
+    wk = {
+      ["f"] = {
+        ["c"] = { ":TodoTelescope<CR>", "todo comments" },
+      },
+    },
+  })
 end
 
 return M

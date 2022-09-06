@@ -1,3 +1,10 @@
+-- {
+--   "tanvirtin/vgit.nvim",
+--   config = function()
+--     require("extensions.vgit-nvim").setup()
+--   end,
+--   disable = not lvim.extensions.vgit_nvim.active,
+-- },
 local M = {}
 
 local extension_name = "vgit_nvim"

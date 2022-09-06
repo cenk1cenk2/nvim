@@ -1,3 +1,10 @@
+-- {
+--   "arthurxavierx/vim-caser",
+--   config = function()
+--     require("extensions.vim-caser").setup()
+--   end,
+--   disable = not lvim.extensions.vim_caser.active,
+-- },
 local M = {}
 
 local extension_name = "vim_caser"

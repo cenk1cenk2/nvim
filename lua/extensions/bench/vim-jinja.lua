@@ -1,3 +1,10 @@
+-- {
+--   "lepture/vim-jinja",
+--   config = function()
+--     require("extensions.vim-jinja").setup()
+--   end,
+--   disable = not lvim.extensions.vim_jinja.active,
+-- },
 local M = {}
 
 local extension_name = "vim_jinja"

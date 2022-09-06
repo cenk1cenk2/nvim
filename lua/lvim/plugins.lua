@@ -50,13 +50,6 @@ return {
   { "tzachar/fuzzy.nvim", requires = { "nvim-telescope/telescope-fzf-native.nvim" } },
 
   {
-    "folke/todo-comments.nvim",
-    config = function()
-      require("extensions.todo-comments").setup()
-    end,
-    disable = not lvim.extensions.todo_comments.active,
-  },
-  {
     "nvim-telescope/telescope-github.nvim",
     requires = { "nvim-telescope/telescope.nvim" },
     config = function()
@@ -181,14 +174,6 @@ return {
   { "nvim-treesitter/playground", requires = { "nvim-treesitter/nvim-treesitter" } },
   { "p00f/nvim-ts-rainbow", run = ":TSUpdate", requires = { "nvim-treesitter/nvim-treesitter" } },
   { "windwp/nvim-ts-autotag", requires = { "nvim-treesitter/nvim-treesitter" } },
-
-  {
-    "drybalka/tree-climber.nvim",
-    config = function()
-      require("extensions.tree-climber-nvim").setup()
-    end,
-    disable = not lvim.extensions.tree_climber_nvim.active,
-  },
 
   -- NvimTree
   {
@@ -316,15 +301,6 @@ return {
     disable = not lvim.extensions.vim_visual_multi.active,
   },
 
-  -- maximize windows temporararily
-  {
-    "szw/vim-maximizer",
-    config = function()
-      require("extensions.vim-maximizer").setup()
-    end,
-    disable = not lvim.extensions.vim_maximizer.active,
-  },
-
   -- move windows with keybinds
   {
     "wesQ3/vim-windowswap",
@@ -334,92 +310,7 @@ return {
     disable = not lvim.extensions.vim_windowswap.active,
   },
 
-  -- whitespace control
-  {
-    "ntpeters/vim-better-whitespace",
-    config = function()
-      require("extensions.vim-better-whitespace").setup()
-    end,
-    disable = not lvim.extensions.vim_better_whitespace.active,
-  },
-
-  -- undo-tree
-  {
-    "mbbill/undotree",
-    config = function()
-      require("extensions.undotree").setup()
-    end,
-    disable = not lvim.extensions.undotree.active,
-  },
-
   -- lsp extensions
-
-  {
-    "RRethy/vim-illuminate",
-    config = function()
-      require("extensions.vim-illuminate").setup()
-    end,
-    disable = not lvim.extensions.vim_illuminate.active,
-  },
-
-  -- git related
-  {
-    "tpope/vim-fugitive",
-    config = function()
-      require("extensions.vim-fugitive").setup()
-    end,
-    disable = not lvim.extensions.vim_fugitive.active,
-  },
-
-  {
-    "tanvirtin/vgit.nvim",
-    config = function()
-      require("extensions.vgit-nvim").setup()
-    end,
-    disable = not lvim.extensions.vgit_nvim.active,
-  },
-
-  -- easy align
-  {
-    "junegunn/vim-easy-align",
-    config = function()
-      require("extensions.vim-easy-align").setup()
-    end,
-    disable = not lvim.extensions.vim_easy_align.active,
-  },
-
-  {
-    "MattesGroeger/vim-bookmarks",
-    branch = "fix/118",
-    config = function()
-      require("extensions.vim-bookmarks").setup()
-    end,
-    disable = not lvim.extensions.vim_bookmarks.active,
-  },
-
-  {
-    "lepture/vim-jinja",
-    config = function()
-      require("extensions.vim-jinja").setup()
-    end,
-    disable = not lvim.extensions.vim_jinja.active,
-  },
-
-  {
-    "glench/vim-jinja2-syntax",
-    config = function()
-      require("extensions.vim-jinja2-syntax").setup()
-    end,
-    disable = not lvim.extensions.vim_jinja2_syntax.active,
-  },
-
-  {
-    "arthurxavierx/vim-caser",
-    config = function()
-      require("extensions.vim-caser").setup()
-    end,
-    disable = not lvim.extensions.vim_caser.active,
-  },
 
   {
     "inkarkat/vim-UnconditionalPaste",
