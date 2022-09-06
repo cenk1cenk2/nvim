@@ -63,7 +63,7 @@ function M.config()
           },
           ["f"] = {
             function()
-              require("neotest").run.run(vim.fn.expand "%")
+              neotest.run.run(vim.fn.expand "%")
             end,
             "run current file",
           },
