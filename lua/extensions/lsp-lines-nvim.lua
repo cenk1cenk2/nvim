@@ -19,7 +19,7 @@ function M.config()
     on_init = function(config)
       config.set_store("loaded", false)
     end,
-    on_config_done = function()
+    on_done = function()
       vim.diagnostic.config { virtual_lines = false, virtual_text = true }
     end,
     keymaps = {

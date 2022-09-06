@@ -1,11 +1,22 @@
+-- https://github.com/kylechui/nvim-surround
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "nvim_surround"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "kylechui/nvim-surround",
+        config = function()
+          require("utils.setup").packer_config "nvim_surround"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       keymaps = {
         insert = "<C-g>s",
@@ -28,16 +39,10 @@ function M.config()
         ["s"] = { "}", "]", ")", ">", '"', "'", "`" },
       },
     },
-  }
-end
-
-function M.setup()
-  local extension = require "nvim-surround"
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+    on_setup = function(config)
+      require("nvim-surround").setup(config.setup)
+    end,
+  })
 end
 
 return M

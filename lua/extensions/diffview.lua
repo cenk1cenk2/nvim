@@ -25,7 +25,6 @@ function M.config()
       local cb = config.inject.cb
 
       return {
-        on_config_done = nil,
         diff_binaries = false, -- Show diffs for binaries
         use_icons = true, -- Requires nvim-web-devicons
         file_panel = { win_config = { width = 35 } },

@@ -1,3 +1,12 @@
+-- {
+--   "AckslD/nvim-neoclip.lua",
+--   requires = { "nvim-telescope/telescope.nvim" },
+--   config = function()
+--     require("extensions.nvim-neoclip").setup()
+--   end,
+--   disable = not lvim.builtin.telescope.active or not lvim.extensions.neoclip.active,
+-- },
+
 local M = {}
 
 local extension_name = "neoclip"

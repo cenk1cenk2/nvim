@@ -92,14 +92,6 @@ return {
     end,
     disable = not lvim.builtin.telescope.active,
   },
-  {
-    "AckslD/nvim-neoclip.lua",
-    requires = { "nvim-telescope/telescope.nvim" },
-    config = function()
-      require("extensions.nvim-neoclip").setup()
-    end,
-    disable = not lvim.builtin.telescope.active or not lvim.extensions.neoclip.active,
-  },
 
   -- Install nvim-cmp, and buffer source as a dependency
   {
@@ -158,17 +150,6 @@ return {
     -- NOTE: Temporary fix till folke comes back
     "max397574/lua-dev.nvim",
     module = "lua-dev",
-  },
-
-  -- Folding
-
-  {
-    "kevinhwang91/nvim-ufo",
-    requires = "kevinhwang91/promise-async",
-    config = function()
-      require("extensions.nvim-ufo").setup()
-    end,
-    disable = not lvim.extensions.nvim_ufo.active,
   },
 
   -- Autopairs
@@ -297,25 +278,6 @@ return {
     disable = not lvim.builtin.dap.active,
   },
 
-  -- Debugger management
-  {
-    "rcarriga/nvim-dap-ui",
-    config = function()
-      require("extensions.nvim-dap-ui").setup()
-    end,
-    disable = not lvim.extensions.nvim_dap_ui.active,
-    requires = { "mfussenegger/nvim-dap" },
-  },
-
-  -- Session Manager
-  {
-    "Shatur/neovim-session-manager",
-    config = function()
-      require("extensions.neovim-session-manager").setup()
-    end,
-    disable = not lvim.extensions.session_manager.active,
-  },
-
   -- Terminal
   {
     "akinsho/toggleterm.nvim",
@@ -343,32 +305,6 @@ return {
       require("extensions.vim-surround").setup()
     end,
     disable = not lvim.extensions.vim_surround.active,
-  },
-
-  {
-    "kylechui/nvim-surround",
-    config = function()
-      require("extensions.nvim-surround").setup()
-    end,
-    disable = not lvim.extensions.nvim_surround.active,
-  },
-
-  -- search highlighting
-  {
-    "kevinhwang91/nvim-hlslens",
-    config = function()
-      require("extensions.nvim-hlslens").setup()
-    end,
-    disable = not lvim.extensions.nvim_hlslens.active,
-  },
-
-  -- scrollbar
-  {
-    "petertriho/nvim-scrollbar",
-    config = function()
-      require("extensions.nvim-scrollbar").setup()
-    end,
-    disable = not lvim.extensions.nvim_scrollbar.active,
   },
 
   -- find and replace
@@ -426,14 +362,6 @@ return {
     disable = not lvim.extensions.vim_better_whitespace.active,
   },
 
-  {
-    "zakharykaplan/nvim-retrail",
-    config = function()
-      require("extensions.nvim-retrail").setup()
-    end,
-    disable = not lvim.extensions.nvim_retrail.active,
-  },
-
   -- undo-tree
   {
     "mbbill/undotree",
@@ -441,15 +369,6 @@ return {
       require("extensions.undotree").setup()
     end,
     disable = not lvim.extensions.undotree.active,
-  },
-
-  -- better quick fix window
-  {
-    "kevinhwang91/nvim-bqf",
-    config = function()
-      require("extensions.nvim-bqf").setup()
-    end,
-    disable = not lvim.extensions.nvim_bqf.active,
   },
 
   -- lsp extensions
@@ -544,14 +463,6 @@ return {
       require("extensions.vim-caser").setup()
     end,
     disable = not lvim.extensions.vim_caser.active,
-  },
-
-  {
-    "nvim-orgmode/orgmode",
-    config = function()
-      require("extensions.nvim-orgmode").setup()
-    end,
-    disable = not lvim.extensions.orgmode.active,
   },
 
   {

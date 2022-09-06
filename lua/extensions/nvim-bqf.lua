@@ -1,11 +1,22 @@
+-- https://github.com/kevinhwang91/nvim-bqf
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "nvim_bqf"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "kevinhwang91/nvim-bqf",
+        config = function()
+          require("utils.setup").packer_config "nvim_bqf"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       auto_enable = true,
       preview = {
@@ -22,16 +33,10 @@ function M.config()
         },
       },
     },
-  }
-end
-
-function M.setup()
-  local extension = require "bqf"
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+    on_setup = function(config)
+      require("bqf").setup(config.setup)
+    end,
+  })
 end
 
 return M

@@ -1,3 +1,11 @@
+-- {
+--   "nvim-orgmode/orgmode",
+--   config = function()
+--     require("extensions.nvim-orgmode").setup()
+--   end,
+--   disable = not lvim.extensions.orgmode.active,
+-- },
+
 local M = {}
 
 local extension_name = "orgmode"

@@ -1,38 +1,46 @@
+-- https://github.com/kevinhwang91/nvim-hlslens
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "nvim_hlslens"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
-    setup = {},
-  }
-end
-
-function M.setup()
-  local extension = require "hlslens"
-
-  if lvim.extensions.nvim_scrollbar and lvim.extensions.nvim_scrollbar.active then
-    lvim.extensions[extension_name].setup = vim.tbl_extend("force", lvim.extensions[extension_name].setup, {
-      build_position_cb = function(plist)
-        require("scrollbar.handlers.search").handler.show(plist.start_pos)
-      end,
-    })
-
-    vim.cmd [[
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "kevinhwang91/nvim-hlslens",
+        config = function()
+          require("utils.setup").packer_config "nvim_hlslens"
+        end,
+        disable = not config.active,
+      }
+    end,
+    to_inject = function()
+      return {
+        scrollbar_handlers_search = require "scrollbar.handlers.search",
+      }
+    end,
+    setup = function(config)
+      return {
+        build_position_cb = function(plist)
+          config.inject.scrollbar_handlers_search.handler.show(plist.start_pos)
+        end,
+      }
+    end,
+    on_setup = function(config)
+      require("hlslens").setup(config.setup)
+    end,
+    on_done = function()
+      vim.cmd [[
       augroup scrollbar_search_hide
         autocmd!
         autocmd CmdlineLeave : lua require('scrollbar.handlers.search').handler.hide()
       augroup END
-    ]]
-  end
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+      ]]
+    end,
+  })
 end
 
 return M

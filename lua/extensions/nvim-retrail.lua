@@ -1,11 +1,22 @@
+-- https://github.com/zakharykaplan/nvim-retrail
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "nvim_retrail"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "zakharykaplan/nvim-retrail",
+        config = function()
+          require("utils.setup").packer_config "nvim_retrail"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       -- Highlight group to use for trailing whitespace.
       hlgroup = "ExtraWhitespace",
@@ -42,17 +53,10 @@ function M.config()
         blanklines = false,
       },
     },
-  }
-end
-
-function M.setup()
-  local extension = require "retrail"
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+    on_setup = function(config)
+      require("retrail").setup(config.setup)
+    end,
+  })
 end
 
 return M

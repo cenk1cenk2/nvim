@@ -1,11 +1,23 @@
+-- https://github.com/rcarriga/nvim-dap-ui
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "nvim_dap_ui"
 
 function M.config()
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "rcarriga/nvim-dap-ui",
+        requires = { "mfussenegger/nvim-dap" },
+        config = function()
+          require("utils.setup").packer_config "nvim_dap_ui"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       icons = { expanded = "▾", collapsed = "▸" },
       mappings = {
@@ -59,17 +71,10 @@ function M.config()
         max_type_length = nil, -- Can be integer or nil.
       },
     },
-  }
-end
-
-function M.setup()
-  local extension = require "dapui"
-
-  extension.setup(lvim.extensions[extension_name].setup)
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+    on_setup = function(config)
+      require("dapui").setup(config.setup)
+    end,
+  })
 end
 
 return M

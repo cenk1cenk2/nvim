@@ -32,12 +32,12 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias config { name: string, active: boolean, store: table<string, any>, extension_name: string, inject: table<string, string>, condition: (fun(config: table): boolean), packer: table, to_inject: (fun(config: table): table<string, string>), autocmds: table, keymaps: table | (fun(config:table):any), wk: table, legacy_setup: table, setup: any | (fun(config: table): any), on_setup: (fun(config: table): nil), on_config_done: (fun(config: table): nil), set_injected: (fun(key: string, value: any): any), set_store: (fun(key: string, value: any): any) }
+---@alias config { name: string, active: boolean, store: table<string, any>, extension_name: string, inject: table<string, string>, condition: (fun(config: table): boolean), packer: table, to_inject: (fun(config: table): table<string, string>), autocmds: table, keymaps: table | (fun(config:table):any), wk: table, legacy_setup: table, setup: any | (fun(config: table): any), on_setup: (fun(config: table): nil), on_done: (fun(config: table): nil), set_injected: (fun(key: string, value: any): any), set_store: (fun(key: string, value: any): any) }
 
 ---
 ---@param extension_name string
 ---@param active boolean
----@param config { on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table | (fun(config:config):any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_config_done: (fun(config: config): nil) }
+---@param config { on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table | (fun(config:config):any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil) }
 function M.define_extension(extension_name, active, config)
   vim.validate {
     active = { active, "b" },
@@ -160,8 +160,8 @@ function M.run(config)
     config.on_setup(config)
   end
 
-  if config ~= nil and config.on_config_done ~= nil then
-    config.on_config_done(config)
+  if config ~= nil and config.on_done ~= nil then
+    config.on_done(config)
   end
 end
 

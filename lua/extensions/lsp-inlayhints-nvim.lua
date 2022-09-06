@@ -3,7 +3,7 @@ local setup = require "utils.setup"
 
 local M = {}
 
-local extension_name = "lsp_inlay_hints_nvim"
+local extension_name = "lsp_inlayhits_nvim"
 
 function M.config()
   setup.define_extension(extension_name, true, {
@@ -11,7 +11,7 @@ function M.config()
       return {
         "lvimuser/lsp-inlayhints.nvim",
         config = function()
-          require("utils.setup").packer_config "lsp_inlay_hints_nvim"
+          require("utils.setup").packer_config "lsp_inlayhits_nvim"
         end,
         disable = not config.active,
       }
@@ -55,7 +55,7 @@ function M.config()
     on_setup = function(config)
       require("lsp-inlayhints").setup(config.setup)
     end,
-    on_config_done = function()
+    on_done = function()
       vim.api.nvim_create_augroup("LspAttach_inlayhints", {})
       vim.api.nvim_create_autocmd("LspAttach", {
         group = "LspAttach_inlayhints",

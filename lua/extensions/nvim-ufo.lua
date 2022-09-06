@@ -1,49 +1,52 @@
+-- https://github.com/kevinhwang91/nvim-ufo
+
+local setup = require "utils.setup"
+
 local M = {}
 
 local extension_name = "nvim_ufo"
 
 function M.config()
-  local ufo_ok, ufo = pcall(require, "ufo")
-
-  if not ufo_ok then
-    lvim.extensions[extension_name] = {
-      active = true,
-    }
-
-    return
-  end
-
-  lvim.extensions[extension_name] = {
-    active = true,
-    on_config_done = nil,
-    keymaps = {
-      normal_mode = {
-        ["zR"] = { ufo.openAllFolds, { desc = "open all folds - ufo" } },
-        ["zM"] = { ufo.closeAllFolds, { desc = "close all folds - ufo" } },
-      },
-    },
+  setup.define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "kevinhwang91/nvim-ufo",
+        requires = { "kevinhwang91/promise-async" },
+        config = function()
+          require("utils.setup").packer_config "nvim_ufo"
+        end,
+        disable = not config.active,
+      }
+    end,
+    to_inject = function()
+      return {
+        ufo = require "ufo",
+      }
+    end,
     setup = {
-      provider_selector = function(bufnr, filetype, _)
+      provider_selector = function()
         return { "treesitter", "indent" }
       end,
     },
-  }
-end
+    on_setup = function(config)
+      require("ufo").setup(config.setup)
+    end,
+    on_done = function()
+      -- vim.o.foldcolumn = "1"
+      vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+      vim.o.foldlevelstart = 99
+      vim.o.foldenable = true
+      vim.o.foldexpr = "manual"
+    end,
+    keymaps = function(config)
+      local ufo = config.inject.ufo
 
-function M.setup()
-  local extension = require "ufo"
-  extension.setup(lvim.extensions[extension_name].setup)
-  require("lvim.keymappings").load(lvim.extensions[extension_name].keymaps)
-
-  -- vim.o.foldcolumn = "1"
-  vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
-  vim.o.foldlevelstart = 99
-  vim.o.foldenable = true
-  vim.o.foldexpr = "manual"
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done(extension)
-  end
+      return {
+        ["zR"] = { { "n", "v", "vb" }, ufo.openAllFolds, { desc = "open all folds - ufo" } },
+        ["zM"] = { { "n", "v", "vb" }, ufo.closeAllFolds, { desc = "close all folds - ufo" } },
+      }
+    end,
+  })
 end
 
 return M

@@ -33,7 +33,7 @@ function M.config()
         cmp = require "cmp",
       }
     end,
-    on_config_done = function(config)
+    on_done = function(config)
       local cmp = config.inject.cmp
 
       -- command line

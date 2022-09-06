@@ -27,7 +27,6 @@ local extensions = {
   "diffview",
   "vim-easy-align",
   "markdown-preview",
-  "nvim-neoclip",
   "vim-bookmarks",
   "package-info",
   "neogen",
@@ -36,7 +35,6 @@ local extensions = {
   "nvim-dap-ui",
   "vim-jinja",
   "vim-jinja2-syntax",
-  "nvim-orgmode",
   "dressing",
   "vim-caser",
   "aerojump-nvim",
@@ -60,7 +58,7 @@ local extensions = {
   "vgit-nvim",
   "git-conflict-nvim",
   "neotest",
-  "lsp-inlay-hints-nvim",
+  "lsp-inlayhints-nvim",
 }
 
 function M.config(config)
