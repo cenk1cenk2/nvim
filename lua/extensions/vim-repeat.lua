@@ -1,15 +1,20 @@
+-- https://github.com/tpope/vim-repeat
 local M = {}
 
 local extension_name = "vim_repeat"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil }
-end
-
-function M.setup()
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "tpope/vim-repeat",
+        config = function()
+          require("utils.setup").packer_config "vim_repeat"
+        end,
+        disable = not config.active,
+      }
+    end,
+  })
 end
 
 return M

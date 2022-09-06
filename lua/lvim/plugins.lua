@@ -9,9 +9,6 @@ return {
   {
     "jose-elias-alvarez/null-ls.nvim",
   },
-  {
-    "jose-elias-alvarez/nvim-lsp-ts-utils",
-  },
   { "antoinemadec/FixCursorHold.nvim" }, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
   { "williamboman/mason-lspconfig.nvim" },
   {
@@ -274,70 +271,10 @@ return {
     disable = not lvim.builtin.terminal.active,
   },
 
-  -- Repeat last commands
-  {
-    "tpope/vim-repeat",
-    config = function()
-      require("extensions.vim-repeat").setup()
-    end,
-    disable = not lvim.extensions.vim_repeat.active,
-  },
-
-  -- surround, change surround
-  {
-    "tpope/vim-surround",
-    config = function()
-      require("extensions.vim-surround").setup()
-    end,
-    disable = not lvim.extensions.vim_surround.active,
-  },
-
-  -- multiple cursors
-  {
-    "mg979/vim-visual-multi",
-    config = function()
-      require("extensions.vim-visual-multi").setup()
-    end,
-    disable = not lvim.extensions.vim_visual_multi.active,
-  },
-
-  -- move windows with keybinds
-  {
-    "wesQ3/vim-windowswap",
-    config = function()
-      require("extensions.vim-windowswap").setup()
-    end,
-    disable = not lvim.extensions.vim_windowswap.active,
-  },
-
   -- lsp extensions
-
-  {
-    "inkarkat/vim-UnconditionalPaste",
-    config = function()
-      require("extensions.vim-unconditionalpaste").setup()
-    end,
-    disable = not lvim.extensions.vim_unconditionalpaste.active,
-  },
-
-  {
-    "tpope/vim-unimpaired",
-    config = function()
-      require("extensions.vim-unimpaired").setup()
-    end,
-    disable = not lvim.extensions.vim_unimpaired.active,
-  },
 
   -- SchemaStore
   {
     "b0o/schemastore.nvim",
-  },
-
-  {
-    "gbprod/yanky.nvim",
-    config = function()
-      require("extensions.yanky-nvim").setup()
-    end,
-    disable = not lvim.extensions.yanky_nvim.active,
   },
 }

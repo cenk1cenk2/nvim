@@ -1,19 +1,26 @@
+-- https://github.com/wesQ3/vim-windowswap
 local M = {}
 
 local extension_name = "vim_windowswap"
 
 function M.config()
-  lvim.extensions[extension_name] = { active = true, on_config_done = nil }
-end
-
-function M.setup()
-  vim.g.windowswap_map_keys = 0
-
-  lvim.builtin.which_key.mappings["W"] = { ":call WindowSwap#EasyWindowSwap()<CR>", "move window" }
-
-  if lvim.extensions[extension_name].on_config_done then
-    lvim.extensions[extension_name].on_config_done()
-  end
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "wesQ3/vim-windowswap",
+        config = function()
+          require("utils.setup").packer_config "vim_windowswap"
+        end,
+        disable = not config.active,
+      }
+    end,
+    legacy_setup = {
+      windowswap_map_keys = 0,
+    },
+    wk = {
+      ["W"] = { ":call WindowSwap#EasyWindowSwap()<CR>", "move window" },
+    },
+  })
 end
 
 return M

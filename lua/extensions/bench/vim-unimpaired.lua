@@ -1,3 +1,10 @@
+-- {
+--   "tpope/vim-unimpaired",
+--   config = function()
+--     require("extensions.vim-unimpaired").setup()
+--   end,
+--   disable = not lvim.extensions.vim_unimpaired.active,
+-- },
 local M = {}
 
 local extension_name = "vim_unimpaired"

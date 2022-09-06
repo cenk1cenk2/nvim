@@ -7,7 +7,7 @@ function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
-        "drybalka/tree-clidrybalka/tree-climber.nvimmber.nvim",
+        "drybalka/tree-climber.nvim",
         config = function()
           require("utils.setup").packer_config "tree_climber_nvim"
         end,

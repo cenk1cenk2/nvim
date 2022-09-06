@@ -1,3 +1,11 @@
+---
+-- {
+--   "tpope/vim-surround",
+--   config = function()
+--     require("extensions.vim-surround").setup()
+--   end,
+--   disable = not lvim.extensions.vim_surround.active,
+-- },
 local M = {}
 
 local extension_name = "vim_surround"
