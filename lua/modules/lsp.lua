@@ -1,6 +1,6 @@
 local M = {}
 
-M.LspSetup = function()
+function M.LspSetup()
   vim.call "inputsave"
 
   local server = vim.fn.input("Server to start" .. " ➜ ")
@@ -12,7 +12,7 @@ M.LspSetup = function()
   vim.call "inputrestore"
 end
 
-M.setup = function()
+function M.setup()
   require("utils.command").create_commands {
     {
       name = "LspSetup",

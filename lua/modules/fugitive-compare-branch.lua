@@ -1,6 +1,6 @@
 local M = {}
 
-M.GDiffCompare = function()
+function M.GDiffCompare()
   vim.call "inputsave"
 
   local branch = vim.fn.input("Compare file with branch" .. " ➜ ")
@@ -15,7 +15,7 @@ M.GDiffCompare = function()
   vim.call "inputrestore"
 end
 
-M.setup = function()
+function M.setup()
   require("utils.command").create_commands {
     {
       name = "GDiffCompare",

@@ -28,7 +28,7 @@ function M.run_md_printer()
   job.spawn { command = "md-printer", args = { vim.fn.expand "%" } }
 end
 
-M.setup = function()
+function M.setup()
   require("utils.command").create_commands {
     {
       name = "RunMarkdownToc",

@@ -17,9 +17,7 @@ lvim = {
   builtin = {},
   extensions = {},
 
-  plugins = {
-    -- use config.lua for this not put here
-  },
+  plugins = {},
 
   autocommands = {},
   lang = {},
@@ -37,9 +35,10 @@ lvim = {
         float_opts = {},
       },
     },
-    -- currently disabled due to instabilities
     override_notify = true,
   },
+
+  lsp_wrapper = {},
 }
 
 return lvim

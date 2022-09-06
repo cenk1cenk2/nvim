@@ -21,7 +21,10 @@ return {
     -- save
     ["<C-s>"] = ":w<CR>",
     ["<C-S>"] = ":w!<CR>",
-    ["<C-x>"] = ':noa w<CR>:lua require("lvim.core.log"):warn("File saved. No autocommands had run!")<CR>',
+    ["<C-x>"] = function()
+      vim.cmd ":noa w<CR>"
+      require("lvim.core.log"):warn "File saved. No autocommands had run!"
+    end,
 
     -- close buffer
     ["<C-q>"] = ":BufferClose<CR>",
@@ -108,8 +111,8 @@ return {
     ["x"] = '"_x',
 
     -- dont overwrite while pasting
-    ["p"] = '"_dP',
-    ["P"] = '"_dp',
+    ["p"] = '"_dp',
+    ["P"] = '"_dP',
 
     -- ["p"] = '"0p',
     -- ["P"] = '"0P',
@@ -124,8 +127,8 @@ return {
     -- to blachole
     ["c"] = '"_c',
     ["x"] = '"_x',
-    ["P"] = '"_dP',
     ["p"] = '"_dp',
+    ["P"] = '"_dP',
   },
 
   ---@usage change or add keymappings for command mode

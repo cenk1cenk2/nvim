@@ -32,18 +32,15 @@ function M.config()
     on_setup = function(config)
       require("trouble").setup(config.setup)
     end,
-    wk = {
-      ["l"] = {
-        ["d"] = {
-          ":TroubleToggle document_diagnostics<CR>",
-          "show all document diagnostics",
-        },
-        ["D"] = {
-          ":TroubleToggle workspace_diagnostics<CR>",
-          "show all workspace diagnostics",
-        },
-      },
-    },
+    on_done = function()
+      lvim.lsp_wrapper.document_diagnostics = function()
+        vim.api.nvim_command "TroubleToggle document_diagnostics"
+      end
+
+      lvim.lsp_wrapper.workspace_diagnostics = function()
+        vim.api.nvim_command "TroubleToggle workspace_diagnostics"
+      end
+    end,
   })
 end
 

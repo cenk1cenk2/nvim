@@ -1,6 +1,5 @@
 local M = {}
 local Log = require "lvim.core.log"
-local table_utils = require "lvim.utils.table"
 
 M.config = function()
   lvim.builtin["terminal"] = {

@@ -2,6 +2,7 @@ local M = {}
 
 local extensions = {
   "alpha-nvim",
+  "treesitter-extensions",
   "neovim-session-manager",
   "hop",
   "vim-repeat",
@@ -52,6 +53,8 @@ local extensions = {
   "git-conflict-nvim",
   "neotest",
   "lsp-inlayhints-nvim",
+  "telescope-github",
+  "telescope-vim-bookmarks",
 }
 
 function M.config(config)

@@ -34,9 +34,6 @@ function M.config()
         ["<F5>"] = "<C-\\><C-n>:RnvimrToggle<CR>",
       },
     },
-    wk = {
-      ["r"] = { ":RnvimrToggle<CR>", "ranger" },
-    },
   })
 end
 

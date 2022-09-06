@@ -22,7 +22,7 @@ return {
     float = {
       focusable = false,
       style = "minimal",
-      border = "rounded",
+      border = "sinle",
       source = "always",
       header = "",
       prefix = "",
@@ -40,12 +40,12 @@ return {
   float = {
     focusable = true,
     style = "minimal",
-    border = "rounded",
+    border = "single",
   },
   peek = {
-    max_height = 15,
-    max_width = 30,
-    context = 10,
+    max_height = 36,
+    max_width = 180,
+    context = 48,
   },
   on_attach_callback = nil,
   on_init_callback = nil,

@@ -208,12 +208,9 @@ M.config = function()
       documentation = cmp.config.window.bordered(),
     },
     sources = {
-      -- { name = "orgmode" },
-
       { name = "nvim_lsp" },
       { name = "path" },
       { name = "luasnip" },
-      -- { name = "cmp_tabnine" },
       { name = "nvim_lua" },
       { name = "buffer" },
       { name = "crates" },
@@ -227,6 +224,8 @@ M.config = function()
       { name = "treesitter" },
 
       { name = "tmux" },
+
+      -- { name = "cmp_tabnine" },
     },
     mapping = cmp.mapping.preset.insert {
       ["<C-k>"] = cmp.mapping.select_prev_item(),
@@ -249,8 +248,8 @@ M.config = function()
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
-        elseif luasnip.expand_or_locally_jumpable() then
-          luasnip.expand_or_jump()
+        -- elseif luasnip.expand_or_locally_jumpable() then
+        --   luasnip.expand_or_jump()
         -- elseif jumpable(1) then
         --   luasnip.jump(1)
         elseif has_words_before() then
@@ -302,12 +301,6 @@ end
 function M.setup()
   local cmp = require "cmp"
   cmp.setup(lvim.builtin.cmp)
-
-  cmp.setup.cmdline {
-    mapping = cmp.mapping.preset.cmdline {
-      -- Your configuration here.
-    },
-  }
 
   local filetype_options = { AerojumpFilter = { sources = {} } }
 

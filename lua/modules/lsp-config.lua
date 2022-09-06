@@ -24,6 +24,6 @@ function M.set_mason_registry(server_name, path)
   registry[server_name] = path
 end
 
-M.setup = function() end
+function M.setup() end
 
 return M

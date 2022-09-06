@@ -32,13 +32,7 @@ local function create_floating_file(location, opts)
     vim.notify("peek: Unable to get contents of the file!", vim.log.levels.WARN)
     return
   end
-  local width, height = vim.lsp.util._make_floating_popup_size(contents, opts)
-  local if_nil = vim.F.if_nil
-  opts = vim.lsp.util.make_floating_popup_options(
-    if_nil(width, lvim.lsp.peek.max_width),
-    if_nil(height, lvim.lsp.peek.max_height),
-    opts
-  )
+  opts = vim.lsp.util.make_floating_popup_options(lvim.lsp.peek.max_width, lvim.lsp.peek.max_height, opts)
   -- Don't make it minimal as it is meant to be fully featured
   opts["style"] = nil
 
@@ -64,7 +58,7 @@ local function preview_location_callback(result)
   end
 
   local opts = {
-    border = "rounded",
+    border = "single",
     context = lvim.lsp.peek.context,
   }
 

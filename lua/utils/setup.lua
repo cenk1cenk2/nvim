@@ -25,12 +25,12 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias config { name: string, active: boolean, store: table<string, any>, extension_name: string, inject: table<string, string>, condition: (fun(config: table): boolean), packer: table, to_inject: (fun(config: table): table<string, string>), autocmds: table, keymaps: table | (fun(config:table):any), wk: table, legacy_setup: table, setup: any | (fun(config: table): any), on_setup: (fun(config: table): nil), on_done: (fun(config: table): nil), set_injected: (fun(key: string, value: any): any), set_store: (fun(key: string, value: any): any) }
+---@alias config { name: string, opts: { multiple_packages: boolean }, active: boolean, store: table<string, any>, extension_name: string, inject: table<string, string>, condition: (fun(config: table): boolean), packer: table, to_inject: (fun(config: table): table<string, string>), autocmds: table, keymaps: table | (fun(config:table):any), wk: table, legacy_setup: table, setup: any | (fun(config: table): any), on_setup: (fun(config: table): nil), on_done: (fun(config: table): nil), set_injected: (fun(key: string, value: any): any), set_store: (fun(key: string, value: any): any) }
 
 ---
 ---@param extension_name string
 ---@param active boolean
----@param config { on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table | (fun(config:config):any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil) }
+---@param config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table | (fun(config:config):any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil) }
 function M.define_extension(extension_name, active, config)
   vim.validate {
     active = { active, "b" },
@@ -170,7 +170,13 @@ function M.set_packer_extensions()
   local packer = {}
   for _, extension in pairs(lvim.extensions) do
     if extension.packer ~= nil and type(extension.packer) == "table" then
-      table.insert(packer, extension.packer)
+      if extension.opts ~= nil and extension.opts.multiple_packages then
+        for _, e in pairs(extension.packer) do
+          table.insert(packer, e)
+        end
+      else
+        table.insert(packer, extension.packer)
+      end
     end
   end
 

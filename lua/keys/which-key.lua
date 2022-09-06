@@ -1,6 +1,18 @@
 local M = {}
 
-M.vmappings = {}
+M.vmappings = {
+  ["="] = { "<C-W>=<CR>", "balance open windows" },
+  ["x"] = { "<C-W>s", "split below" },
+  ["v"] = { "<C-W>v", "split right" },
+  ["n"] = { ":nohlsearch<CR>", "no highlight" },
+  ["p"] = { ":TelescopeProjectFiles<CR>", "find file" },
+  ["q"] = {
+    function()
+      lvim.lsp_wrapper.fix_current()
+    end,
+    "fix current",
+  },
+}
 
 M.mappings = {
   ["="] = { "<C-W>=<CR>", "balance open windows" },
@@ -8,7 +20,12 @@ M.mappings = {
   ["v"] = { "<C-W>v", "split right" },
   ["n"] = { ":nohlsearch<CR>", "no highlight" },
   ["p"] = { ":TelescopeProjectFiles<CR>", "find file" },
-  ["q"] = { ":LspFixCurrent<CR>", "fix current" },
+  ["q"] = {
+    function()
+      lvim.lsp_wrapper.fix_current()
+    end,
+    "fix current",
+  },
 
   -- actions
   a = {
@@ -112,10 +129,24 @@ M.mappings = {
   -- lsp
   l = {
     name = "LSP",
-    a = { ":LspCodeAction<CR>", "code action" },
-    d = { ":LspDocumentDiagonistics<CR>", "document diagnostics" },
-    D = { ":LspWorkspaceDiagonistics<CR>", "workspace diagnostics" },
-    f = { ":LspFormat<CR>", "format buffer" },
+    d = {
+      function()
+        lvim.lsp_wrapper.document_diagnostics()
+      end,
+      "document diagnostics",
+    },
+    D = {
+      function()
+        lvim.lsp_wrapper.workspace_diagnostics()
+      end,
+      "workspace diagnostics",
+    },
+    f = {
+      function()
+        lvim.lsp_wrapper.format()
+      end,
+      "format buffer",
+    },
     F = { ":LvimToggleFormatOnSave<CR>", "toggle autoformat" },
     g = { ":LspOrganizeImports<CR>", "organize imports" },
     i = {
@@ -127,18 +158,47 @@ M.mappings = {
     h = { ":LspImportAll<CR>", "import all missing" },
     H = { ":LspImportCurrent<CR>", "import current" },
     n = {
-      ":LspGotoNext<CR>",
+      function()
+        lvim.lsp_wrapper.goto_next()
+      end,
       "next diagnostic",
     },
     p = {
-      ":LspGotoPrev<CR>",
+      function()
+        lvim.lsp_wrapper.goto_prev()
+      end,
       "prev diagnostic",
     },
-    l = { ":LspCodeLens<CR>", "codelens action" },
-    R = { ":LspRename<CR>", "rename item under cursor" },
-    q = { ":LspDiagonisticsSetList<CR>", "set quickfix list" },
-    s = { ":LspDocumentSymbol<CR>", "document symbols" },
-    S = { ":LspWorkspaceSymbol<CR>", "workspace symbols" },
+    l = {
+      function()
+        lvim.lsp_wrapper.code_lens()
+      end,
+      "codelens",
+    },
+    R = {
+      function()
+        lvim.lsp_wrapper.rename()
+      end,
+      "rename item under cursor",
+    },
+    q = {
+      function()
+        lvim.lsp_wrapper.diagonistics_set_list()
+      end,
+      "set quickfix list",
+    },
+    s = {
+      function()
+        lvim.lsp_wrapper.document_symbols()
+      end,
+      "document symbols",
+    },
+    S = {
+      function()
+        lvim.lsp_wrapper.workspace_symbols()
+      end,
+      "workspace symbols",
+    },
     Q = { ":LspRestart<CR>", "restart currently active lsps" },
   },
 

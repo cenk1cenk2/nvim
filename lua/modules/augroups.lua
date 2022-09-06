@@ -1,6 +1,6 @@
 local M = {}
 
-M.setup = function()
+function M.setup()
   require("utils.setup").define_autocmds {
     {
       { "TermOpen" },

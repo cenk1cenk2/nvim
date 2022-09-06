@@ -14,6 +14,11 @@ function M.config()
         disable = not config.active,
       }
     end,
+    to_inject = function()
+      return {
+        lspsaga_diagnostic = require "lspsaga.diagnostic",
+      }
+    end,
     setup = {
       -- Error,Warn,Info,Hint
       diagnostic_header = { " ", " ", " ", "ﴞ " },
@@ -86,9 +91,34 @@ function M.config()
     on_setup = function(config)
       require("lspsaga").init_lsp_saga(config.setup)
     end,
+    on_done = function(config)
+      local lspsaga_diagnostic = config.inject.lspsaga_diagnostic
+
+      lvim.lsp_wrapper.code_action = function()
+        vim.api.nvim_command "Lspsaga code_action"
+      end
+      lvim.lsp_wrapper.range_code_action = function()
+        vim.api.nvim_command "Lspsaga code_action"
+      end
+      lvim.lsp_wrapper.hover = function()
+        vim.api.nvim_command "Lspsaga hover_doc"
+      end
+      lvim.lsp_wrapper.rename = function()
+        vim.api.nvim_command "Lspsaga rename"
+      end
+      lvim.lsp_wrapper.goto_next = function()
+        lspsaga_diagnostic.goto_next()
+      end
+      lvim.lsp_wrapper.goto_prev = function()
+        lspsaga_diagnostic.goto_prev()
+      end
+      lvim.lsp_wrapper.show_line_diagnostics = function()
+        lspsaga_diagnostic.show_line_diagnostics()
+      end
+    end,
     keymaps = {
       n = {
-        ["ge"] = { ":Lspsaga lsp_finder<CR>", { desc = "Finder" } },
+        ["ge"] = { ":Lspsaga lsp_finder<CR>", { desc = "finder" } },
       },
     },
     wk = {

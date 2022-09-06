@@ -42,42 +42,6 @@ return {
   },
   { "tzachar/fuzzy.nvim", requires = { "nvim-telescope/telescope-fzf-native.nvim" } },
 
-  {
-    "nvim-telescope/telescope-github.nvim",
-    requires = { "nvim-telescope/telescope.nvim" },
-    config = function()
-      require("telescope").load_extension "gh"
-    end,
-  },
-  {
-    "tom-anders/telescope-vim-bookmarks.nvim",
-    requires = { "nvim-telescope/telescope.nvim" },
-    config = function()
-      local telescope = require "telescope"
-      telescope.load_extension "vim_bookmarks"
-
-      local bookmark_actions = telescope.extensions.vim_bookmarks.actions
-      telescope.extensions.vim_bookmarks.all {
-        attach_mappings = function(_, map)
-          map("n", "dd", bookmark_actions.delete_selected_or_at_cursor)
-          map("n", "D", bookmark_actions.delete_all)
-
-          return true
-        end,
-      }
-
-      telescope.extensions.vim_bookmarks.current_file {
-        attach_mappings = function(_, map)
-          map("n", "dd", bookmark_actions.delete_selected_or_at_cursor)
-          map("n", "D", bookmark_actions.delete_all)
-
-          return true
-        end,
-      }
-    end,
-    disable = not lvim.builtin.telescope.active,
-  },
-
   -- Install nvim-cmp, and buffer source as a dependency
   {
     "hrsh7th/nvim-cmp",
@@ -124,9 +88,7 @@ return {
         paths[#paths + 1] = user_snippets
       end
       require("luasnip.loaders.from_lua").lazy_load()
-      require("luasnip.loaders.from_vscode").lazy_load {
-        paths = paths,
-      }
+      require("luasnip.loaders.from_vscode").lazy_load { paths = paths }
       require("luasnip.loaders.from_snipmate").lazy_load()
     end,
   },
@@ -154,16 +116,6 @@ return {
       require("lvim.core.treesitter").setup()
     end,
   },
-
-  {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-    event = "BufReadPost",
-    requires = { "nvim-treesitter/nvim-treesitter" },
-  },
-
-  { "nvim-treesitter/playground", requires = { "nvim-treesitter/nvim-treesitter" } },
-  { "p00f/nvim-ts-rainbow", run = ":TSUpdate", requires = { "nvim-treesitter/nvim-treesitter" } },
-  { "windwp/nvim-ts-autotag", requires = { "nvim-treesitter/nvim-treesitter" } },
 
   -- NvimTree
   {
