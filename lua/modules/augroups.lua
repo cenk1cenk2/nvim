@@ -1,8 +1,7 @@
 local M = {}
 
 M.setup = function()
-  require("lvim.core.autocmds").define_autocmds {
-
+  require("utils.setup").define_autocmds {
     {
       { "TermOpen" },
       {

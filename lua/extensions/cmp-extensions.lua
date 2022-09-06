@@ -10,7 +10,7 @@ local extension_name = "cmp_extensions"
 
 function M.config()
   setup.define_extension(extension_name, true, {
-    extensions = {
+    setup = {
       cmp_git = {
         name = "git",
         -- defaults
@@ -22,14 +22,19 @@ function M.config()
       },
     },
     on_setup = function(config)
-      for key, e in pairs(config.extensions) do
+      for key, e in pairs(config.setup) do
         local extension = require(key)
 
         extension.setup(e)
       end
     end,
-    on_config_done = function()
-      local cmp = require "cmp"
+    to_inject = function()
+      return {
+        cmp = require "cmp",
+      }
+    end,
+    on_config_done = function(config)
+      local cmp = config.inject.cmp
 
       -- command line
       cmp.setup.cmdline(":", {

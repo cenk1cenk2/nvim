@@ -16,14 +16,10 @@ function M.config()
         disable = not config.active,
       }
     end,
-    condition = function(config)
-      local inlay_hints_ok, inlay_hints = pcall(require, "lsp-inlayhints")
-
-      if not inlay_hints_ok then
-        return false
-      end
-
-      config.set_injected("inlay_hints", inlay_hints)
+    to_inject = function()
+      return {
+        inlay_hints = require "lsp-inlayhints",
+      }
     end,
     setup = {
       inlay_hints = {

@@ -6,7 +6,8 @@ local keymappings = require "lvim.keymappings"
 ---@param mappings table
 function M.load_wk_mappings(mappings)
   for key, value in pairs(mappings) do
-    lvim.builtin.which_key.mappings[key] = vim.tbl_deep_extend("force", lvim.builtin.which_key.mappings[key], value)
+    lvim.builtin.which_key.mappings[key] =
+      vim.tbl_deep_extend("force", lvim.builtin.which_key.mappings[key] or {}, value)
   end
 end
 
@@ -31,12 +32,12 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias config { active: boolean, store: table<string, any>, extension_name: string, inject: table<string, string>, condition: (fun(config: table): boolean), packer: table, to_inject: (fun(config: table): table<string, string>), autocmds: table, keymaps: table, wk: table, legacy_setup: table, setup: any | (fun(config: table): any), on_setup: (fun(config: table): nil), on_config_done: (fun(config: table): nil), set_injected: (fun(key: string, value: any): any), set_store: (fun(key: string, value: any): any) }
+---@alias config { name: string, active: boolean, store: table<string, any>, extension_name: string, inject: table<string, string>, condition: (fun(config: table): boolean), packer: table, to_inject: (fun(config: table): table<string, string>), autocmds: table, keymaps: table | (fun(config:table):any), wk: table, legacy_setup: table, setup: any | (fun(config: table): any), on_setup: (fun(config: table): nil), on_config_done: (fun(config: table): nil), set_injected: (fun(key: string, value: any): any), set_store: (fun(key: string, value: any): any) }
 
 ---
 ---@param extension_name string
 ---@param active boolean
----@param config { on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table, wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_config_done: (fun(config: config): nil) }
+---@param config { on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table | (fun(config:config):any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_config_done: (fun(config: config): nil) }
 function M.define_extension(extension_name, active, config)
   vim.validate {
     active = { active, "b" },
@@ -51,6 +52,7 @@ function M.define_extension(extension_name, active, config)
     wk = { config.wk, { "t", "f" }, true },
     legacy_setup = { config.legacy_setup, "t", true },
     setup = { config.legacy_setup, { "t", "f" }, true },
+    on_setup = { config.on_setup, "f", true },
   }
 
   lvim.extensions[extension_name] = {
@@ -84,7 +86,7 @@ function M.define_extension(extension_name, active, config)
     config.on_init(lvim.extensions[extension_name])
   end
 
-  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config)
+  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config or {})
 
   if config ~= nil and config.packer ~= nil then
     lvim.extensions[extension_name].packer = config.packer(lvim.extensions[extension_name])
@@ -113,8 +115,16 @@ end
 ---@param config config
 function M.run(config)
   if config ~= nil and config.to_inject ~= nil then
-    ---@diagnostic disable-next-line: assign-type-mismatch
-    config.inject = vim.tbl_extend("force", config.inject, config.to_inject(config))
+    local ok = pcall(function()
+      ---@diagnostic disable-next-line: assign-type-mismatch
+      config.inject = vim.tbl_extend("force", config.inject, config.to_inject(config))
+    end)
+
+    if not ok then
+      Log:debug(string.format("Can not inject in extension: %s", config.name))
+
+      return
+    end
   end
 
   if config ~= nil and config.autocmds ~= nil then
@@ -125,6 +135,7 @@ function M.run(config)
     if type(config.keymaps) == "function" then
       M.load_mappings(config.keymaps(config))
     else
+      ---@diagnostic disable-next-line: param-type-mismatch
       M.load_mappings(config.keymaps)
     end
   end

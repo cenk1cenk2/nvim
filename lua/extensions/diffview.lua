@@ -7,15 +7,6 @@ local extension_name = "diffview"
 
 function M.config()
   setup.define_extension(extension_name, true, {
-    condition = function(config)
-      local status_ok, diffview_config = pcall(require, "diffview.config")
-
-      if not status_ok then
-        return false
-      end
-
-      config.set_injected("cb", diffview_config.diffview_callback)
-    end,
     packer = function(config)
       return {
         "sindrets/diffview.nvim",
@@ -23,6 +14,11 @@ function M.config()
           require("utils.setup").packer_config "diffview"
         end,
         disable = not config.active,
+      }
+    end,
+    to_inject = function()
+      return {
+        cb = require("diffview.config").diffview_callback,
       }
     end,
     setup = function(config)

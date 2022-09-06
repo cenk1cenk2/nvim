@@ -1,6 +1,19 @@
 local M = {}
 
 local extension_name = "neotree_nvim"
+-- {
+--   "nvim-neo-tree/neo-tree.nvim",
+--   config = function()
+--     require("extensions.neotree-nvim").setup()
+--   end,
+--   branch = "v2.x",
+--   disable = not lvim.extensions.neotree_nvim.active,
+--   requires = {
+--     "nvim-lua/plenary.nvim",
+--     "kyazdani42/nvim-web-devicons",
+--     "MunifTanjim/nui.nvim",
+--   },
+-- },
 
 function M.config()
   lvim.extensions[extension_name] = {

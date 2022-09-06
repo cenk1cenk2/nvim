@@ -1,17 +1,17 @@
 local M = {}
 
 local modules = {
-  "modules.nvim",
-  "modules.lsp",
-  "modules.lsp-commands",
-  "modules.augroups",
-  "modules.telescope",
-  "modules.fugitive-compare-branch",
+  "nvim",
+  "lsp",
+  "lsp-commands",
+  "augroups",
+  "telescope",
+  "fugitive-compare-branch",
 }
 
 function M.config(config)
   for _, module_path in ipairs(modules) do
-    local module = require(module_path)
+    local module = require("modules." .. module_path)
     module.setup(config)
   end
 end

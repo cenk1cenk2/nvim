@@ -16,12 +16,6 @@ function M.config()
         disable = not config.active,
       }
     end,
-    condition = function()
-      local status_ok, _ = pcall(require, "lsp_lines")
-      if not status_ok then
-        return false
-      end
-    end,
     on_init = function(config)
       config.set_store("loaded", false)
     end,
@@ -29,7 +23,7 @@ function M.config()
       vim.diagnostic.config { virtual_lines = false, virtual_text = true }
     end,
     keymaps = {
-      ["gL"] = { { "n" }, require("extensions.lsp-lines-nvim").toggle, { desc = "toggle lsp lines" } },
+      ["gL"] = { { "n" }, M.toggle, { desc = "toggle lsp lines" } },
     },
   })
 end

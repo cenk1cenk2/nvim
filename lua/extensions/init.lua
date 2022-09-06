@@ -1,7 +1,6 @@
 local M = {}
 
 local extensions = {
-  "neotree-nvim",
   "alpha-nvim",
   "neovim-session-manager",
   "hop",
@@ -33,7 +32,6 @@ local extensions = {
   "package-info",
   "neogen",
   "coc",
-  "distant",
   "lspsaga-nvim",
   "nvim-dap-ui",
   "vim-jinja",
@@ -50,7 +48,6 @@ local extensions = {
   "refactoring-nvim",
   "lsp-lines-nvim",
   "yanky-nvim",
-  "cybu-nvim",
   "substitute-nvim",
   "text-case-nvim",
   "tree-climber-nvim",
@@ -68,6 +65,7 @@ local extensions = {
 
 function M.config(config)
   local Log = require "lvim.core.log"
+
   for _, extension_path in ipairs(extensions) do
     local extension_ok, extension = pcall(require, "extensions." .. extension_path)
     if not extension_ok then

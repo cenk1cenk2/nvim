@@ -1,7 +1,5 @@
 local M = {}
 
-local Log = require "lvim.core.log"
-
 function M.rebuild_latest_neovim()
   local term_opts = vim.tbl_deep_extend("force", lvim.builtin.terminal, {
     cmd = join_paths(get_config_dir(), "/utils/install-latest-neovim.sh"),

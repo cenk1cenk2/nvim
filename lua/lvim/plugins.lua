@@ -222,20 +222,6 @@ return {
   },
 
   {
-    "nvim-neo-tree/neo-tree.nvim",
-    config = function()
-      require("extensions.neotree-nvim").setup()
-    end,
-    branch = "v2.x",
-    disable = not lvim.extensions.neotree_nvim.active,
-    requires = {
-      "nvim-lua/plenary.nvim",
-      "kyazdani42/nvim-web-devicons",
-      "MunifTanjim/nui.nvim",
-    },
-  },
-
-  {
     "lewis6991/gitsigns.nvim",
 
     config = function()

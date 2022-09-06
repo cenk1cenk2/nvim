@@ -17,14 +17,10 @@ function M.config()
         disable = not config.active,
       }
     end,
-    condition = function(config)
-      local telescope_ok, telescope_themes = pcall(require, "telescope.themes")
-
-      if not telescope_ok then
-        return false
-      end
-
-      config.set_injected("telescope_themes", telescope_themes)
+    to_inject = function()
+      return {
+        telescope_themes = require "telescope.themes",
+      }
     end,
     setup = function(config)
       return {

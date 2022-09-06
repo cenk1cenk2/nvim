@@ -16,29 +16,38 @@ function M.config()
         disable = not config.active,
       }
     end,
-    keymaps = {
-      ["gas"] = {
-        { "v" },
-        function()
-          require("align").align_to_string(false, true, true)
-        end,
-        { desc = "align to string" },
-      },
-      ["gar"] = {
-        { "v" },
-        function()
-          require("align").align_to_string(true, true, true)
-        end,
-        { desc = "align to regex" },
-      },
-      ["gac"] = {
-        { "v" },
-        function()
-          require("align").align_to_char(1, true)
-        end,
-        { desc = "align to char" },
-      },
-    },
+    to_inject = function()
+      return {
+        align = require "align",
+      }
+    end,
+    keymaps = function(config)
+      local align = config.inject.align
+
+      return {
+        ["gas"] = {
+          { "v" },
+          function()
+            align.align_to_string(false, true, true)
+          end,
+          { desc = "align to string" },
+        },
+        ["gar"] = {
+          { "v" },
+          function()
+            align.align_to_string(true, true, true)
+          end,
+          { desc = "align to regex" },
+        },
+        ["gac"] = {
+          { "v" },
+          function()
+            align.align_to_char(1, true)
+          end,
+          { desc = "align to char" },
+        },
+      }
+    end,
   })
 end
 
