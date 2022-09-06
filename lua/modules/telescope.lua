@@ -1,33 +1,37 @@
 M = {}
 
-local TELESCOPE_RG_INTERACTIVE_LAST_ARGS = ""
 local telescope = require "lvim.core.telescope"
+local Log = require "lvim.core.log"
 
 function M.rg_interactive()
-  vim.call "inputsave"
+  local store_key = "TELESCOPE_RG_INTERACTIVE_LAST_ARGS"
+  local stored_value = lvim.store.get_store(store_key)
 
-  local args = vim.fn.input("Pass in ripgrep arguments" .. " ➜  ", TELESCOPE_RG_INTERACTIVE_LAST_ARGS)
+  vim.ui.input({
+    prompt = "Pass in rg args:",
+    default = stored_value,
+  }, function(args)
+    if args == nil then
+      Log:warn "Nothing to do."
 
-  vim.api.nvim_command "normal :esc<CR>"
+      return
+    end
 
-  vim.api.nvim_out_write("rg ➜  " .. args .. "\n")
+    lvim.store.set_store(store_key, args)
 
-  TELESCOPE_RG_INTERACTIVE_LAST_ARGS = args
+    local chunks = {}
 
-  local chunks = {}
+    for substring in args:gmatch "%S+" do
+      table.insert(chunks, substring)
+    end
 
-  for substring in args:gmatch "%S+" do
-    table.insert(chunks, substring)
-  end
+    local command = ":Telescope live_grep vimgrep_arguments="
+      .. table.concat(telescope.rg_arguments, ",")
+      .. ","
+      .. table.concat(chunks, ",")
 
-  local command = ":Telescope live_grep vimgrep_arguments="
-    .. table.concat(telescope.rg_arguments, ",")
-    .. ","
-    .. table.concat(chunks, ",")
-
-  vim.api.nvim_command(command)
-
-  vim.call "inputrestore"
+    vim.api.nvim_command(command)
+  end)
 end
 
 function M.rg_string()
@@ -44,35 +48,6 @@ end
 function M.rg_dirty()
   return require("telescope.builtin").grep_string {
     search = "",
-  }
-end
-
-M.setup = function()
-  require("utils.command").create_commands {
-    {
-      name = "TelescopeRipgrepInteractive",
-      fn = function()
-        M.rg_interactive()
-      end,
-    },
-    {
-      name = "TelescopeRipgrepDirty",
-      fn = function()
-        M.rg_dirty()
-      end,
-    },
-    {
-      name = "TelescopeRipgrepString",
-      fn = function()
-        M.rg_string()
-      end,
-    },
-    {
-      name = "TelescopeProjectFiles",
-      fn = function()
-        require("lvim.core.telescope.custom-finders").find_project_files()
-      end,
-    },
   }
 end
 

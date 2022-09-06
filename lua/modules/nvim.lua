@@ -24,21 +24,4 @@ function M.rebuild_and_update()
   vim.cmd [[LvimCacheReset]]
 end
 
-function M.setup()
-  require("utils.command").create_commands {
-    {
-      name = "RebuildAndUpdate",
-      fn = function()
-        M.rebuild_and_update()
-      end,
-    },
-    {
-      name = "RebuildLatestNeovim",
-      fn = function()
-        M.rebuild_latest_neovim()
-      end,
-    },
-  }
-end
-
 return M

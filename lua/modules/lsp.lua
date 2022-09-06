@@ -1,24 +1,33 @@
 local M = {}
 
+local Log = require "lvim.core.log"
+
 function M.LspSetup()
-  vim.call "inputsave"
+  local servers = require("lspconfig.util").available_servers()
 
-  local server = vim.fn.input("Server to start" .. " ➜ ")
+  vim.ui.select(servers, {
+    prompt = "LSP server to start:",
+  }, function(server)
+    if server == nil then
+      Log:warn "Nothing to compare."
 
-  vim.api.nvim_command "normal :esc<CR>"
+      return
+    end
 
-  require("lvim.lsp.manager").setup(server)
-
-  vim.call "inputrestore"
+    require("lvim.lsp.manager").setup(server)
+    Log:info(string.format("Started LSP server: %s", server))
+  end)
 end
 
 function M.setup()
-  require("utils.command").create_commands {
-    {
-      name = "LspSetup",
-      fn = function()
-        M.LspSetup()
-      end,
+  require("utils.setup").run {
+    commands = {
+      {
+        name = "LspSetup",
+        fn = function()
+          M.LspSetup()
+        end,
+      },
     },
   }
 end

@@ -3,32 +3,6 @@ local c = require "onedarker.colors"
 local M = {}
 local hl = { langs = {}, plugins = {} }
 
-local highlight = vim.api.nvim_set_hl
-local set_hl_ns = vim.api.nvim_set_hl_ns
-local create_namespace = vim.api.nvim_create_namespace
-
-local function load_highlights(ns, highlights)
-  for group_name, group_settings in pairs(highlights) do
-    highlight(ns, group_name, group_settings)
-  end
-end
-
-local colors = {
-  Fg = { fg = c.fg },
-  Grey = { fg = c.grey },
-  BrightGrey = { fg = c.bright_grey },
-  Red = { fg = c.red },
-  Cyan = { fg = c.cyan },
-  Yellow = { fg = c.yellow },
-  Orange = { fg = c.orange },
-  Green = { fg = c.green },
-  DarkGreen = { fg = c.dark_green },
-  Blue = { fg = c.blue },
-  Purple = { fg = c.purple },
-  BrightYellow = { fg = c.bright_yellow },
-  DarkCyan = { fg = c.dark_cyan },
-}
-
 hl.common = {
   Normal = { fg = c.fg, bg = c.bg0 },
   Terminal = { fg = c.fg, bg = c.bg0 },
@@ -52,10 +26,10 @@ hl.common = {
   DiffChange = { fg = c.none, bg = c.diff_change },
   DiffDelete = { fg = c.none, bg = c.diff_delete },
   DiffText = { fg = c.none, bg = c.diff_text },
-  DiffAdded = colors.Green,
-  DiffRemoved = colors.Red,
-  DiffFile = colors.Cyan,
-  DiffIndexLine = colors.Grey,
+  DiffAdded = { fg = c.green },
+  DiffRemoved = { fg = c.red },
+  DiffFile = { fg = c.cyan },
+  DiffIndexLine = { fg = c.grey },
   Directory = { fg = c.blue },
   ErrorMsg = { fg = c.red, bold = true, bg = c.bg0 },
   WarningMsg = { fg = c.orange, bold = true, bg = c.bg0 },
@@ -96,7 +70,7 @@ hl.common = {
   ModeMsg = { fg = c.fg, bg = c.bg },
   MsgSeparator = { fg = c.fg, bg = c.bg1 },
   NormalNC = { fg = c.fg, bg = c.bg },
-  FloatBorder = { fg = c.gray, bg = c.bg1 },
+  FloatBorder = { fg = c.grey, bg = c.bg1 },
   NormalFloat = { bg = c.bg1 },
   MatchWord = { underline = true },
   MatchWordCur = { underline = true },
@@ -143,105 +117,105 @@ hl.common = {
 }
 
 hl.syntax = {
-  String = colors.Green,
-  Character = colors.Orange,
-  confComment = colors.Grey,
+  String = { fg = c.green },
+  Character = { fg = c.orange },
+  confComment = { fg = c.grey },
   NormalFloat = { bg = c.bg1 },
   FloatBorder = { fg = c.orange },
-  Number = colors.Orange,
-  Float = colors.Orange,
-  Boolean = colors.Orange,
-  Type = colors.Yellow,
-  Structure = colors.Yellow,
-  StorageClass = colors.Yellow,
-  Identifier = colors.Red,
-  Constant = colors.Yellow,
-  PreProc = colors.Purple,
-  PreCondit = colors.Purple,
-  Include = colors.Purple,
-  Keyword = colors.Purple,
-  Define = colors.Purple,
-  Typedef = colors.Purple,
-  Exception = colors.Purple,
-  Conditional = colors.Purple,
-  Repeat = colors.Purple,
-  Statement = colors.Purple,
-  Macro = colors.Red,
-  Error = colors.Purple,
-  Label = colors.Red,
-  Special = colors.Red,
-  SpecialChar = colors.Red,
-  Function = colors.Blue,
-  Operator = colors.Cyan,
-  Title = colors.Cyan,
-  Tag = colors.Green,
-  Delimiter = colors.BrightGrey,
+  Number = { fg = c.orange },
+  Float = { fg = c.orange },
+  Boolean = { fg = c.orange },
+  Type = { fg = c.yellow },
+  Structure = { fg = c.yellow },
+  StorageClass = { fg = c.yellow },
+  Identifier = { fg = c.red },
+  Constant = { fg = c.yellow },
+  PreProc = { fg = c.purple },
+  PreCondit = { fg = c.purple },
+  Include = { fg = c.purple },
+  Keyword = { fg = c.purple },
+  Define = { fg = c.purple },
+  Typedef = { fg = c.purple },
+  Exception = { fg = c.purple },
+  Conditional = { fg = c.purple },
+  Repeat = { fg = c.purple },
+  Statement = { fg = c.purple },
+  Macro = { fg = c.red },
+  Error = { fg = c.purple },
+  Label = { fg = c.red },
+  Special = { fg = c.red },
+  SpecialChar = { fg = c.red },
+  Function = { fg = c.blue },
+  Operator = { fg = c.cyan },
+  Title = { fg = c.cyan },
+  Tag = { fg = c.green },
+  Delimiter = { fg = c.bright_grey },
   Comment = { italic = true, fg = c.grey },
   SpecialComment = { italic = true, fg = c.grey },
-  Todo = colors.Red,
+  Todo = { fg = c.red },
 }
 
 hl.treesitter = {
-  TSAnnotation = colors.Fg,
-  TSAttribute = colors.Cyan,
-  TSBoolean = colors.Orange,
-  TSCharacter = colors.Fg,
+  TSAnnotation = { fg = c.fg },
+  TSAttribute = { fg = c.cyan },
+  TSBoolean = { fg = c.orange },
+  TSCharacter = { fg = c.fg },
   TSComment = { fg = c.grey, italic = true },
-  TSConditional = colors.Purple,
-  TSConstant = colors.Yellow,
-  TSConstBuiltin = colors.Orange,
-  TSConstMacro = colors.Orange,
-  TSConstructor = colors.Yellow,
-  TSError = colors.Fg,
-  TSException = colors.Purple,
-  TSField = colors.Red,
-  TSFloat = colors.Green,
-  TSFunction = colors.Blue,
-  TSFuncBuiltin = colors.Cyan,
-  TSFuncMacro = colors.Fg,
-  TSInclude = colors.Purple,
-  TSKeyword = colors.Purple,
-  TSKeywordFunction = colors.yellow,
-  TSKeywordOperator = colors.Purple,
-  TSLabel = colors.Red,
-  TSMethod = colors.Blue,
-  TSNamespace = colors.Red,
-  TSNone = colors.Fg,
-  TSNumber = colors.Orange,
-  TSOperator = colors.Cyan,
-  TSParameter = colors.Red,
-  TSParameterReference = colors.Fg,
-  TSProperty = colors.Red,
-  typescriptDecorator = colors.Fg,
-  TSPunctDelimiter = colors.Fg,
-  TSPunctBracket = colors.BrightYellow,
-  TSPunctSpecial = colors.Purple,
-  TSRepeat = colors.Purple,
-  TSString = colors.Green,
-  TSStringRegex = colors.Orange,
-  TSStringEscape = colors.Red,
-  TSSymbol = colors.Cyan,
-  TSTag = colors.Red,
-  TSTagDelimiter = colors.BrightGrey,
-  TSText = colors.Fg,
-  TSStrong = colors.Fg,
-  TSEmphasis = colors.Fg,
-  TSUnderline = colors.Fg,
-  TSStrike = colors.Fg,
-  TSTitle = colors.Fg,
-  TSLiteral = colors.Green,
-  TSURI = colors.Fg,
-  TSMath = colors.Fg,
-  TSTextReference = colors.Fg,
-  TSEnviroment = colors.Fg,
-  TSEnviromentName = colors.Fg,
-  TSNote = colors.Fg,
-  TSWarning = colors.Fg,
-  TSDanger = colors.Fg,
-  TSType = colors.Yellow,
-  TSTypeBuiltin = colors.Yellow,
-  TSVariable = colors.Red,
-  TSVariableBuiltin = colors.Yellow,
+  TSConditional = { fg = c.purple },
+  TSConstant = { fg = c.yellow },
+  TSConstBuiltin = { fg = c.orange },
+  TSConstMacro = { fg = c.orange },
+  TSConstructor = { fg = c.yellow },
+  TSError = { fg = c.fg },
+  TSException = { fg = c.purple },
+  TSField = { fg = c.red },
+  TSFloat = { fg = c.green },
+  TSFunction = { fg = c.blue },
+  TSFuncBuiltin = { fg = c.cyan },
+  TSFuncMacro = { fg = c.fg },
+  TSInclude = { fg = c.purple },
+  TSKeyword = { fg = c.purple },
+  TSKeywordFunction = { fg = c.yellow },
+  TSKeywordOperator = { fg = c.purple },
+  TSLabel = { fg = c.red },
+  TSMethod = { fg = c.blue },
+  TSNamespace = { fg = c.red },
+  TSNone = { fg = c.fg },
+  TSNumber = { fg = c.orange },
+  TSOperator = { fg = c.cyan },
+  TSParameter = { fg = c.red },
+  TSParameterReference = { fg = c.fg },
+  TSProperty = { fg = c.red },
+  typescriptDecorator = { fg = c.fg },
+  TSPunctDelimiter = { fg = c.fg },
+  TSPunctBracket = { fg = c.bright_yellow },
+  TSPunctSpecial = { fg = c.purple },
+  TSRepeat = { fg = c.purple },
+  TSString = { fg = c.green },
+  TSStringRegex = { fg = c.orange },
+  TSStringEscape = { fg = c.red },
+  TSSymbol = { fg = c.cyan },
+  TSTag = { fg = c.red },
+  TSTagDelimiter = { fg = c.bright_grey },
+  TSText = { fg = c.fg },
+  TSStrong = { fg = c.fg },
+  TSEmphasis = { fg = c.fg },
+  TSUnderline = { fg = c.fg },
+  TSStrike = { fg = c.fg },
+  TSTitle = { fg = c.fg },
+  TSLiteral = { fg = c.green },
+  TSURI = { fg = c.fg },
+  TSMath = { fg = c.fg },
+  TSTextReference = { fg = c.fg },
+  TSEnviroment = { fg = c.fg },
+  TSEnviromentName = { fg = c.fg },
+  TSNote = { fg = c.fg },
+  TSWarning = { fg = c.fg },
+  TSDanger = { fg = c.fg },
+  TSType = { fg = c.yellow },
+  TSTypeBuiltin = { fg = c.yellow },
+  TSVariable = { fg = c.red },
+  TSVariableBuiltin = { fg = c.yellow },
   TSKeywordReturn = { fg = c.purple },
   TSTagAttribute = { fg = c.orange },
   TSQueryLinterError = { fg = c.orange },
@@ -301,21 +275,106 @@ hl.lsp = {
   LspDiagnosticsHint = { fg = c.grey },
 }
 
+-- langs
+
+hl.langs.html = {
+  htmlTag = { fg = c.red },
+  htmlTagName = { fg = c.red },
+}
+
+hl.langs.markdown = {
+  markdownBlockquote = { fg = c.grey },
+  markdownBold = { fg = c.none, bold = true },
+  markdownBoldDelimiter = { fg = c.grey },
+  markdownCode = { fg = c.yellow },
+  markdownCodeBlock = { fg = c.yellow },
+  markdownCodeDelimiter = { fg = c.green },
+  htmlH1 = { fg = c.red, bold = true },
+  htmlH2 = { fg = c.red, bold = true },
+  htmlH3 = { fg = c.red, bold = true },
+  htmlH4 = { fg = c.red, bold = true },
+  htmlH5 = { fg = c.red, bold = true },
+  htmlH6 = { fg = c.red, bold = true },
+  markdownHeadingDelimiter = { fg = c.grey },
+  markdownHeadingRule = { fg = c.grey },
+  markdownId = { fg = c.yellow },
+  markdownIdDeclaration = { fg = c.red },
+  markdownItalic = { fg = c.none, italic = true },
+  markdownItalicDelimiter = { fg = c.grey, italic = true },
+  markdownLinkDelimiter = { fg = c.grey },
+  markdownLinkText = { fg = c.red },
+  markdownLinkTextDelimiter = { fg = c.grey },
+  markdownListMarker = { fg = c.red },
+  markdownOrderedListMarker = { fg = c.red },
+  markdownRule = { fg = c.purple },
+  markdownUrl = { fg = c.blue, underline = true },
+  markdownUrlDelimiter = { fg = c.grey },
+  markdownUrlTitleDelimiter = { fg = c.green },
+}
+
+hl.langs.gitcommit = {
+  gitcommitComment = { fg = c.grey },
+  gitcommitUnmerged = { fg = c.green },
+  gitcommitOnBranch = {},
+  gitcommitBranch = { fg = c.yellow },
+  gitcommitDiscardedType = { fg = c.red },
+  gitcommitSelectedType = { fg = c.green },
+  gitcommitHeader = {},
+  gitcommitUntrackedFile = { fg = c.cyan },
+  gitcommitDiscardedFile = { fg = c.red },
+  gitcommitSelectedFile = { fg = c.green },
+  gitcommitUnmergedFile = { fg = c.yellow },
+  gitcommitFile = {},
+  gitcommitSummary = { fg = c.fg },
+  gitcommitOverflow = { fg = c.red },
+  gitcommitNoBranch = { fg = c.yellow },
+  gitcommitUntracked = { fg = c.cyan },
+  gitcommitDiscarded = { fg = c.red },
+  gitcommitSelected = { fg = c.green },
+  gitcommitDiscardedArrow = { fg = c.red },
+  gitcommitSelectedArrow = { fg = c.green },
+  gitcommitUnmergedArrow = { fg = c.yellow },
+}
+
+hl.langs.yaml = {
+  yamlBlockCollectionItemStart = { fg = c.fg },
+  yamlKeyValueDelimiter = { fg = c.fg },
+  yamlBlockMappingKey = { fg = c.red },
+}
+
+hl.langs.docker_compose = { dockercomposeKeywords = { fg = c.red } }
+
+hl.langs.bash = { bashTSParameter = { fg = c.fg } }
+
+hl.langs.jinja = {
+  jinjaTagBlock = { fg = c.yellow },
+  jinjaStatement = { fg = c.purple },
+  jinjaVarBlock = { fg = c.red },
+  jinjaVariable = { fg = c.red },
+  jinjaOperator = { fg = c.yellow },
+  jinjaVarDelim = { fg = c.bright_yellow },
+  jinjaFilter = { fg = c.blue },
+}
+
+hl.langs.ansible = { ansible_normal_keywords = { fg = c.blue } }
+
+-- plugins
+
 hl.plugins.whichkey = {
-  WhichKey = colors.Red,
-  WhichKeyDesc = colors.Blue,
-  WhichKeyGroup = colors.Orange,
-  WhichKeySeperator = colors.Green,
+  WhichKey = { fg = c.red },
+  WhichKeyDesc = { fg = c.blue },
+  WhichKeyGroup = { fg = c.orange },
+  WhichKeySeperator = { fg = c.green },
   WhichKeyFloat = { bg = c.bg1 },
 }
 
 hl.plugins.git = {
-  SignAdd = colors.Green,
-  SignChange = colors.Blue,
-  SignDelete = colors.Red,
-  GitSignsAdd = colors.Green,
-  GitSignsChange = colors.Blue,
-  GitSignsDelete = colors.Red,
+  SignAdd = { fg = c.green },
+  SignChange = { fg = c.blue },
+  SignDelete = { fg = c.red },
+  GitSignsAdd = { fg = c.green },
+  GitSignsChange = { fg = c.blue },
+  GitSignsDelete = { fg = c.red },
 }
 
 hl.plugins.gitgutter = {
@@ -337,12 +396,15 @@ hl.plugins.vim_illuminate = {
   IlluminatedWordRead = { bg = c.bg1 },
 }
 
-hl.plugins.indentblankline = { IndentBlankLineChar = { fg = c.bg3 }, IndentBlanklineContextChar = { fg = c.cursor } }
+hl.plugins.indentblankline = {
+  IndentBlankLineChar = { fg = c.bg3 },
+  IndentBlanklineContextChar = { fg = c.cursor },
+}
 
 hl.plugins.diffview = {
   DiffviewFilePanelTitle = { fg = c.blue, bold = true },
   DiffviewFilePanelCounter = { fg = c.purple, bold = true },
-  DiffviewFilePanelFileName = colors.Fg,
+  DiffviewFilePanelFileName = { fg = c.fg },
   DiffviewNormal = hl.common.Normal,
   DiffviewCursorLine = hl.common.CursorLine,
   DiffviewVertSplit = hl.common.VertSplit,
@@ -350,49 +412,49 @@ hl.plugins.diffview = {
   DiffviewStatusLine = hl.common.StatusLine,
   DiffviewStatusLineNC = hl.common.StatusLineNC,
   DiffviewEndOfBuffer = hl.common.EndOfBuffer,
-  DiffviewFilePanelRootPath = colors.Grey,
-  DiffviewFilePanelPath = colors.Grey,
-  DiffviewFilePanelInsertions = colors.Green,
-  DiffviewFilePanelDeletions = colors.Red,
-  DiffviewStatusAdded = colors.Green,
-  DiffviewStatusUntracked = colors.Grey,
-  DiffviewStatusModified = colors.Blue,
-  DiffviewStatusRenamed = colors.Yellow,
-  DiffviewStatusCopied = colors.BrightYellow,
-  DiffviewStatusTypeChange = colors.Cyan,
-  DiffviewStatusUnmerged = colors.Orange,
-  DiffviewStatusUnknown = colors.Red,
-  DiffviewStatusDeleted = colors.Red,
-  DiffviewStatusBroken = colors.Red,
+  DiffviewFilePanelRootPath = { fg = c.grey },
+  DiffviewFilePanelPath = { fg = c.grey },
+  DiffviewFilePanelInsertions = { fg = c.green },
+  DiffviewFilePanelDeletions = { fg = c.red },
+  DiffviewStatusAdded = { fg = c.green },
+  DiffviewStatusUntracked = { fg = c.grey },
+  DiffviewStatusModified = { fg = c.blue },
+  DiffviewStatusRenamed = { fg = c.yellow },
+  DiffviewStatusCopied = { fg = c.bright_yellow },
+  DiffviewStatusTypeChange = { fg = c.cyan },
+  DiffviewStatusUnmerged = { fg = c.orange },
+  DiffviewStatusUnknown = { fg = c.red },
+  DiffviewStatusDeleted = { fg = c.red },
+  DiffviewStatusBroken = { fg = c.red },
 }
 
 hl.plugins.gitsigns = {
-  GitSignsAdd = colors.Green,
-  GitSignsAddLn = colors.Green,
-  GitSignsAddNr = colors.Green,
-  GitSignsChange = colors.Blue,
-  GitSignsChangeLn = colors.Blue,
-  GitSignsChangeNr = colors.Blue,
-  GitSignsDelete = colors.Red,
-  GitSignsDeleteLn = colors.Red,
-  GitSignsDeleteNr = colors.Red,
+  GitSignsAdd = { fg = c.green },
+  GitSignsAddLn = { fg = c.green },
+  GitSignsAddNr = { fg = c.green },
+  GitSignsChange = { fg = c.blue },
+  GitSignsChangeLn = { fg = c.blue },
+  GitSignsChangeNr = { fg = c.blue },
+  GitSignsDelete = { fg = c.red },
+  GitSignsDeleteLn = { fg = c.red },
+  GitSignsDeleteNr = { fg = c.red },
 }
 
 hl.plugins.nvim_tree = {
   NvimTreeNormal = { fg = c.fg, bg = c.bg0 },
   NvimTreeEndOfBuffer = { fg = c.bg0, bg = c.bg0 },
   NvimTreeRootFolder = { fg = c.purple, bold = true },
-  NvimTreeGitDirty = colors.Orange,
-  NvimTreeGitNew = colors.Green,
-  NvimTreeGitDeleted = colors.Red,
+  NvimTreeGitDirty = { fg = c.orange },
+  NvimTreeGitNew = { fg = c.green },
+  NvimTreeGitDeleted = { fg = c.red },
   NvimTreeSpecialFile = { fg = c.yellow },
-  NvimTreeIndentMarker = colors.Fg,
+  NvimTreeIndentMarker = { fg = c.fg },
   NvimTreeImageFile = { fg = c.dark_purple },
-  NvimTreeSymlink = colors.Purple,
-  NvimTreeFolderName = colors.Blue,
+  NvimTreeSymlink = { fg = c.purple },
+  NvimTreeFolderName = { fg = c.blue },
 }
 
--- hl.plugins.neo_tree_nvim = {
+-- hl.plugins.neotree_nvim = {
 --   NeoTreeIndentMarker = { fg = c.bg2 },
 --   NeoTreeExpander = { fg = c.bg3 },
 --   NeoTreeBufferNumber = {},
@@ -426,29 +488,32 @@ hl.plugins.nvim_tree = {
 -- }
 
 hl.plugins.telescope = {
-  TelescopeBorder = colors.Grey,
-  TelescopeMatching = colors.Green,
+  TelescopeBorder = { fg = c.grey },
+  TelescopeMatching = { fg = c.green },
   TelescopeNormal = { bg = c.bg, fg = c.fg },
-  TelescopePromptPrefix = colors.Yellow,
+  TelescopePromptPrefix = { fg = c.yellow },
   TelescopeSelection = { bg = c.bg2 },
-  TelescopeSelectionCaret = colors.Yellow,
+  TelescopeSelectionCaret = { fg = c.yellow },
 }
 
 hl.plugins.dashboard = {
   DashboardShortcut = { fg = c.fg },
-  DashboardHeader = colors.Orange,
+  DashboardHeader = { fg = c.orange },
   DashboardCenter = { fg = c.yellow },
   DashboardFooter = { fg = c.grey, bold = true },
 }
 
-hl.plugins.spectre = { SpectreChange = { fg = c.yellow }, SpectreDelete = { fg = c.green } }
+hl.plugins.spectre = {
+  SpectreChange = { fg = c.yellow },
+  SpectreDelete = { fg = c.green },
+}
 
 hl.plugins.nvim_cmp = {
-  CmpItemMenuDefault = colors.Fg,
-  CmpItemKindDefault = colors.Orange,
-  CmpItemAbbr = colors.Fg,
-  CmpItemAbbrMatch = colors.Green,
-  CmpItemAbbrMatchFuzzy = colors.Yellow,
+  CmpItemMenuDefault = { fg = c.fg },
+  CmpItemKindDefault = { fg = c.orange },
+  CmpItemAbbr = { fg = c.fg },
+  CmpItemAbbrMatch = { fg = c.green },
+  CmpItemAbbrMatchFuzzy = { fg = c.yellow },
   CmpDocumentation = { fg = c.fg },
   CmpDocumentationBorder = { fg = c.bg3 },
   CmpItemAbbrDeprecated = { fg = c.grey },
@@ -460,87 +525,6 @@ hl.plugins.fidget = {
   FidgetTitle = { fg = c.green },
   FidgetTask = { fg = c.orange },
 }
-
-hl.langs.html = {
-  htmlTag = colors.Red,
-  htmlTagName = colors.Red,
-}
-
-hl.langs.markdown = {
-  markdownBlockquote = colors.Grey,
-  markdownBold = { fg = c.none, bold = true },
-  markdownBoldDelimiter = colors.Grey,
-  markdownCode = colors.Yellow,
-  markdownCodeBlock = colors.Yellow,
-  markdownCodeDelimiter = colors.Green,
-  htmlH1 = { fg = c.red, bold = true },
-  htmlH2 = { fg = c.red, bold = true },
-  htmlH3 = { fg = c.red, bold = true },
-  htmlH4 = { fg = c.red, bold = true },
-  htmlH5 = { fg = c.red, bold = true },
-  htmlH6 = { fg = c.red, bold = true },
-  markdownHeadingDelimiter = colors.Grey,
-  markdownHeadingRule = colors.Grey,
-  markdownId = colors.Yellow,
-  markdownIdDeclaration = colors.Red,
-  markdownItalic = { fg = c.none, italic = true },
-  markdownItalicDelimiter = { fg = c.grey, italic = true },
-  markdownLinkDelimiter = colors.Grey,
-  markdownLinkText = colors.Red,
-  markdownLinkTextDelimiter = colors.Grey,
-  markdownListMarker = colors.Red,
-  markdownOrderedListMarker = colors.Red,
-  markdownRule = colors.Purple,
-  markdownUrl = { fg = c.blue, underline = true },
-  markdownUrlDelimiter = colors.Grey,
-  markdownUrlTitleDelimiter = colors.Green,
-}
-
-hl.langs.gitcommit = {
-  gitcommitComment = { fg = c.grey },
-  gitcommitUnmerged = { fg = c.green },
-  gitcommitOnBranch = {},
-  gitcommitBranch = { fg = c.yellow },
-  gitcommitDiscardedType = { fg = c.red },
-  gitcommitSelectedType = { fg = c.green },
-  gitcommitHeader = {},
-  gitcommitUntrackedFile = { fg = c.cyan },
-  gitcommitDiscardedFile = { fg = c.red },
-  gitcommitSelectedFile = { fg = c.green },
-  gitcommitUnmergedFile = { fg = c.yellow },
-  gitcommitFile = {},
-  gitcommitSummary = { fg = c.fg },
-  gitcommitOverflow = { fg = c.red },
-  gitcommitNoBranch = { fg = c.yellow },
-  gitcommitUntracked = { fg = c.cyan },
-  gitcommitDiscarded = { fg = c.red },
-  gitcommitSelected = { fg = c.green },
-  gitcommitDiscardedArrow = { fg = c.red },
-  gitcommitSelectedArrow = { fg = c.green },
-  gitcommitUnmergedArrow = { fg = c.yellow },
-}
-
-hl.langs.yaml = {
-  yamlBlockCollectionItemStart = colors.Fg,
-  yamlKeyValueDelimiter = colors.Fg,
-  yamlBlockMappingKey = colors.Red,
-}
-
-hl.langs.dockerCompose = { dockercomposeKeywords = colors.Red }
-
-hl.langs.bash = { bashTSParameter = { fg = c.fg } }
-
-hl.langs.jinja = {
-  jinjaTagBlock = colors.Yellow,
-  jinjaStatement = colors.Purple,
-  jinjaVarBlock = colors.Red,
-  jinjaVariable = colors.Red,
-  jinjaOperator = colors.Yellow,
-  jinjaVarDelim = colors.BrightYellow,
-  jinjaFilter = colors.Blue,
-}
-
-hl.langs.ansible = { ansible_normal_keywords = colors.Blue }
 
 hl.plugins.notify = {
   NotifyERRORBorder = { fg = c.red },
@@ -581,24 +565,31 @@ hl.plugins.aerojump = {
   SearchHighlight = { bg = c.green },
 }
 
+-- setup
+function M.load_highlights(ns, highlights)
+  for group_name, group_settings in pairs(highlights) do
+    vim.api.nvim_set_hl(ns, group_name, group_settings)
+  end
+end
+
 function M.setup()
-  local ns = create_namespace "onedarker"
-  load_highlights(0, hl.common)
-  load_highlights(0, hl.syntax)
-  load_highlights(0, hl.lsp)
+  local ns = vim.api.nvim_create_namespace "onedarker"
+
+  M.load_highlights(0, hl.common)
+  M.load_highlights(0, hl.syntax)
+  M.load_highlights(0, hl.lsp)
 
   for _, group in pairs(hl.langs) do
-    load_highlights(0, group)
+    M.load_highlights(0, group)
   end
 
   for _, group in pairs(hl.plugins) do
-    load_highlights(0, group)
+    M.load_highlights(0, group)
   end
 
-  load_highlights(0, hl.treesitter)
-  -- load_highlights(ns, hl.treesitter)
-  set_hl_ns(ns)
-  -- vim_highlights(hl.treesitter)
+  -- M.load_highlights(0, hl.treesitter)
+  M.load_highlights(ns, hl.treesitter)
+  vim.api.nvim_set_hl_ns(ns)
 end
 
 return M

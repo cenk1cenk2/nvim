@@ -1,4 +1,5 @@
 return {
+  none = nil,
   black = "#17191e",
   bg0 = "#1e2127",
   bg1 = "#22282f",

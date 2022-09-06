@@ -10,7 +10,7 @@ end
 
 function M.set_option(arr)
   for k, v in pairs(arr) do
-    vim.api.nvim_exec("set" .. " " .. k .. "=" .. v, true)
+    vim.o[k] = v
   end
 end
 

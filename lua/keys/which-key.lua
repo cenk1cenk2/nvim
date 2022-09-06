@@ -1,25 +1,16 @@
 local M = {}
 
-M.vmappings = {
-  ["="] = { "<C-W>=<CR>", "balance open windows" },
-  ["x"] = { "<C-W>s", "split below" },
-  ["v"] = { "<C-W>v", "split right" },
-  ["n"] = { ":nohlsearch<CR>", "no highlight" },
-  ["p"] = { ":TelescopeProjectFiles<CR>", "find file" },
-  ["q"] = {
-    function()
-      lvim.lsp_wrapper.fix_current()
-    end,
-    "fix current",
-  },
-}
-
 M.mappings = {
   ["="] = { "<C-W>=<CR>", "balance open windows" },
   ["x"] = { "<C-W>s", "split below" },
   ["v"] = { "<C-W>v", "split right" },
   ["n"] = { ":nohlsearch<CR>", "no highlight" },
-  ["p"] = { ":TelescopeProjectFiles<CR>", "find file" },
+  ["p"] = {
+    function()
+      require("lvim.core.telescope.custom-finders").find_project_files()
+    end,
+    "find file",
+  },
   ["q"] = {
     function()
       lvim.lsp_wrapper.fix_current()
@@ -74,14 +65,26 @@ M.mappings = {
     j = { ":Telescope jumplist<CR>", "list jumps" },
     k = { ":Telescope keymaps<CR>", "list keymaps" },
     s = { ":Telescope spell_suggest<CR>", "spell suggest" },
-    r = { ":TelescopeRipgrepInteractive<CR>", "ripgrep interactive" },
+    r = {
+      function()
+        require("modules.telescope").rg_interactive()
+      end,
+      "ripgrep interactive",
+    },
     d = {
-      ":TelescopeRipgrepDirty<CR>",
+      function()
+        require("modules.telescope").rg_dirty()
+      end,
       "dirty fuzzy grep",
     },
     p = { ":Telescope find_files<CR>", "find file" },
     R = { ":Telescope registers<CR>", "list registers" },
-    t = { ":TelescopeRipgrepString<CR>", "grep string" },
+    t = {
+      function()
+        require("modules.telescope").rg_string()
+      end,
+      "grep string",
+    },
     T = { ":Telescope live_grep<CR>", "grep with regexp" },
     O = { ":Telescope vim_options<CR>", "list vim options" },
   },
@@ -99,7 +102,6 @@ M.mappings = {
     name = "+git",
     A = { ":0Gclog<CR>", "buffer commits" },
     B = { ":Git blame<CR>", "git blame" },
-    c = { ":GDiffCompare<CR>", "compare with branch" },
     C = { ":Gdiffsplit<CR>", "diff split" },
     e = { ":Gedit<CR>", "edit version" },
     f = { ":Telescope git_files<CR>", "list git tracked files" },
@@ -296,18 +298,26 @@ M.mappings = {
   R = {
     name = "Tasks",
     r = {
-      ":RebuildLatestNeovim<CR>",
+      function()
+        require("modules.nvim").rebuild_latest_neovim()
+      end,
       "install latest neovim",
     },
-    l = {
-      ":LspInstallerReinstallAll<CR>",
-      "reinstall all language servers",
-    },
     u = {
-      ":RebuildAndUpdate<CR>",
+      function()
+        require("modules.nvim").rebuild_and_update()
+      end,
       "rebuild and update everything",
     },
   },
+}
+
+M.vmappings = {
+  ["="] = M.mappings["="],
+  ["x"] = M.mappings["x"],
+  ["v"] = M.mappings["v"],
+  ["n"] = M.mappings["n"],
+  ["p"] = M.mappings["p"],
 }
 
 return M

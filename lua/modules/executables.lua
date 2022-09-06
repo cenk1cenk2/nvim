@@ -16,8 +16,6 @@ function M.run_markdown_toc()
 
   local config = require("modules.lsp-config").get_lsp_default_config(server_name)
 
-  print(vim.inspect(config))
-
   job.spawn {
     command = table.concat(config.command),
     args = table_utils.merge(config.args, { vim.fn.expand "%" }),
@@ -29,18 +27,22 @@ function M.run_md_printer()
 end
 
 function M.setup()
-  require("utils.command").create_commands {
-    {
-      name = "RunMarkdownToc",
-      fn = function()
-        M.run_markdown_toc()
-      end,
-    },
-    {
-      name = "RunMdPrinter",
-      fn = function()
-        M.run_md_printer()
-      end,
+  require("utils.setup").run {
+    wk = {
+      a = {
+        t = {
+          function()
+            M.run_markdown_toc()
+          end,
+          "run markdown-toc",
+        },
+        P = {
+          function()
+            M.run_md_printer()
+          end,
+          "run md-printer",
+        },
+      },
     },
   }
 end

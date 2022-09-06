@@ -1,4 +1,5 @@
 local M = {}
+
 local configs = require "lspconfig/configs"
 local Log = require "lvim.core.log"
 
@@ -23,7 +24,5 @@ function M.set_mason_registry(server_name, path)
 
   registry[server_name] = path
 end
-
-function M.setup() end
 
 return M

@@ -25,12 +25,12 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias config { name: string, opts: { multiple_packages: boolean }, active: boolean, store: table<string, any>, extension_name: string, inject: table<string, string>, condition: (fun(config: table): boolean), packer: table, to_inject: (fun(config: table): table<string, string>), autocmds: table, keymaps: table | (fun(config:table):any), wk: table, legacy_setup: table, setup: any | (fun(config: table): any), on_setup: (fun(config: table): nil), on_done: (fun(config: table): nil), set_injected: (fun(key: string, value: any): any), set_store: (fun(key: string, value: any): any) }
+---@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table | (fun(config: config): any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil), commands: table, nvim_opts: table }
 
 ---
 ---@param extension_name string
 ---@param active boolean
----@param config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table | (fun(config:config):any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil) }
+---@param config config
 function M.define_extension(extension_name, active, config)
   vim.validate {
     active = { active, "b" },
@@ -75,10 +75,6 @@ function M.define_extension(extension_name, active, config)
     return
   end
 
-  if config ~= nil and config.on_init ~= nil then
-    config.on_init(lvim.extensions[extension_name])
-  end
-
   lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config or {})
 
   if config ~= nil and config.packer ~= nil then
@@ -107,6 +103,10 @@ end
 ---
 ---@param config config
 function M.run(config)
+  if config ~= nil and config.on_init ~= nil then
+    config.on_init(config)
+  end
+
   if config ~= nil and config.to_inject ~= nil then
     local ok = pcall(function()
       ---@diagnostic disable-next-line: assign-type-mismatch
@@ -139,6 +139,14 @@ function M.run(config)
     else
       M.load_wk_mappings(config.wk)
     end
+  end
+
+  if config ~= nil and config.commands ~= nil then
+    require("utils.command").create_commands(config.commands)
+  end
+
+  if config ~= nil and config.nvim_opts ~= nil then
+    require("utils.command").set_option(config.nvim_opts)
   end
 
   if config ~= nil and config.legacy_setup ~= nil then
