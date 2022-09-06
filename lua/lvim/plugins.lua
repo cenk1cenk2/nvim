@@ -1,23 +1,7 @@
 return {
-  -- Packer can manage itself as an optional plugin
   { "wbthomason/packer.nvim" },
-
   { "nvim-lua/plenary.nvim" },
-
   { "neovim/nvim-lspconfig" },
-  { "tamago324/nlsp-settings.nvim" },
-  {
-    "jose-elias-alvarez/null-ls.nvim",
-  },
-  { "antoinemadec/FixCursorHold.nvim" }, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
-  { "williamboman/mason-lspconfig.nvim" },
-  {
-    "williamboman/mason.nvim",
-    config = function()
-      require("lvim.core.mason").setup()
-    end,
-  },
-  { "WhoIsSethDaniel/mason-tool-installer.nvim" },
   {
     "rcarriga/nvim-notify",
     config = function()
@@ -27,8 +11,22 @@ return {
     disable = not lvim.builtin.notify.active or not lvim.builtin.telescope.active,
   },
   { "nvim-lua/popup.nvim" },
-
   { "Tastyep/structlog.nvim" },
+
+  -- lsp
+  { "tamago324/nlsp-settings.nvim" },
+  { "jose-elias-alvarez/null-ls.nvim" },
+  { "antoinemadec/FixCursorHold.nvim" }, -- Needed while issue https://github.com/neovim/neovim/issues/12587 is still open
+  { "williamboman/mason-lspconfig.nvim" },
+  {
+    "williamboman/mason.nvim",
+    config = function()
+      require("lvim.core.mason").setup()
+    end,
+    requires = {
+      "WhoIsSethDaniel/mason-tool-installer.nvim",
+    },
+  },
 
   -- Telescope
   {
@@ -36,13 +34,11 @@ return {
     config = function()
       require("lvim.core.telescope").setup()
     end,
-    disable = not lvim.builtin.telescope.active,
   },
   {
     "nvim-telescope/telescope-fzf-native.nvim",
     requires = { "nvim-telescope/telescope.nvim" },
     run = "make",
-    disable = not lvim.builtin.telescope.active,
   },
   { "tzachar/fuzzy.nvim", requires = { "nvim-telescope/telescope-fzf-native.nvim" } },
 
@@ -52,7 +48,6 @@ return {
     config = function()
       require("telescope").load_extension "gh"
     end,
-    disable = not lvim.builtin.telescope.active,
   },
   {
     "tom-anders/telescope-vim-bookmarks.nvim",
@@ -137,9 +132,7 @@ return {
   },
 
   {
-    -- NOTE: Temporary fix till folke comes back
-    "max397574/lua-dev.nvim",
-    module = "lua-dev",
+    "folke/lua-dev.nvim",
   },
 
   -- Autopairs
@@ -271,9 +264,6 @@ return {
     disable = not lvim.builtin.terminal.active,
   },
 
-  -- lsp extensions
-
-  -- SchemaStore
   {
     "b0o/schemastore.nvim",
   },
