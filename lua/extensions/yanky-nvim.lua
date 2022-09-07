@@ -76,8 +76,8 @@ function M.config()
       n = {
         ["gq"] = { "<Plug>(YankyCycleForward)", desc = "yank cycle forward" },
         ["gQ"] = { "<Plug>(YankyCycleBackward)", desc = "yank cycle backward" },
-        ["p"] = { "<Plug>(YankyPutAfter)", desc = "yanky put after" },
-        ["P"] = { "<Plug>(YankyPutBefore)", desc = "yanky put before" },
+        ["p"] = { "<Plug>(YankyGPutAfter)", desc = "yanky put after" },
+        ["P"] = { "<Plug>(YankyGPutBefore)", desc = "yanky put before" },
         -- ["gp"] = { "<Plug>(YankyPutAfterFilter)", desc = "yanky put after filter" },
         -- ["gP"] = { "<Plug>(YankyPutBeforeFilter)", desc = "yanky put before filter" },
         -- vim.api.nvim_set_keymap("n", "p", "<Plug>(YankyPutAfter)", {})
