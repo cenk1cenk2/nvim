@@ -1,16 +1,16 @@
 local M = {}
 
 local lsp_stuff = {
-  "modules-lsp.mason",
-  "modules-lsp.formatters",
-  "modules-lsp.linters",
-  "modules-lsp.code-action-providers",
-  "modules-lsp.wrapper",
+  "mason",
+  "formatters",
+  "linters",
+  "code-action-providers",
+  "wrapper",
 }
 
 function M.setup()
   for _, lsp_item in ipairs(lsp_stuff) do
-    require(lsp_item).setup()
+    require("modules-lsp." .. lsp_item).setup()
   end
 end
 
