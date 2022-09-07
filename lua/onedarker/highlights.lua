@@ -175,7 +175,7 @@ hl.treesitter = {
   TSFuncMacro = { fg = c.fg },
   TSInclude = { fg = c.purple },
   TSKeyword = { fg = c.purple },
-  TSKeywordFunction = { fg = c.yellow },
+  TSKeywordFunction = { fg = c.purple },
   TSKeywordOperator = { fg = c.purple },
   TSLabel = { fg = c.red },
   TSMethod = { fg = c.blue },
