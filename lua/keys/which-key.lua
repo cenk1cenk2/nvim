@@ -149,7 +149,7 @@ M.mappings = {
       end,
       "lsp info",
     },
-    I = { ":LspInfo<CR>", "legacy lsp info" },
+    I = { ":Mason<CR>", "lsp installer" },
     m = { ":LspRenameFile<CR>", "rename file with lsp" },
     h = { ":LspImportAll<CR>", "import all missing" },
     H = { ":LspImportCurrent<CR>", "import current" },

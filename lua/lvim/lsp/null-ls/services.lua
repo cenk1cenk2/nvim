@@ -28,11 +28,11 @@ function M.register_sources(configs, method)
   local sources, registered_names = {}, {}
 
   for _, config in ipairs(configs) do
-    local cmd = config.exe or config.command
+    local cmd = config.command
     local name = config.name or cmd:gsub("-", "_")
     local type = method == null_ls.methods.CODE_ACTION and "code_actions" or null_ls.methods[method]:lower()
     local source = type and null_ls.builtins[type][name]
-    Log:debug(string.format("Received request to register [%s] as a %s source", name, type))
+    Log:trace(string.format("Received request to register [%s] as a %s source", name, type))
     if not source then
       Log:error("Not a valid source: " .. name)
 
@@ -54,7 +54,7 @@ function M.register_sources(configs, method)
           command = command,
         }
 
-        Log:debug("Registering source from globally source " .. name)
+        Log:trace("Registering source from globally source " .. name)
         Log:trace(vim.inspect(opts))
 
         table.insert(sources, source.with(opts))
@@ -65,7 +65,7 @@ function M.register_sources(configs, method)
           name = name,
         }
 
-        Log:debug("Registering source from the default source " .. name)
+        Log:trace("Registering source from the default source " .. name)
         Log:trace(vim.inspect(opts))
 
         table.insert(sources, source.with(opts))
@@ -88,7 +88,7 @@ function M.register_sources(configs, method)
         runtime_condition = config.runtime_condition,
       }
 
-      Log:debug("Registering source " .. name)
+      Log:trace("Registering source " .. name)
       Log:trace(vim.inspect(opts))
 
       local s = source.with(opts)

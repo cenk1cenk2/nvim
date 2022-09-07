@@ -38,9 +38,6 @@ local plugins = require "lvim.plugins"
 require("utils.setup").set_packer_extensions()
 require("lvim.plugin-loader").load { plugins, lvim.plugins }
 
-local Log = require "lvim.core.log"
-Log:debug "neovim"
-
 local commands = require "lvim.core.commands"
 commands.load(commands.defaults)
 

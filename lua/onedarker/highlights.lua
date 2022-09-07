@@ -587,8 +587,8 @@ function M.setup()
     M.load_highlights(0, group)
   end
 
-  -- M.load_highlights(0, hl.treesitter)
-  M.load_highlights(ns, hl.treesitter)
+  M.load_highlights(0, hl.treesitter)
+  -- M.load_highlights(ns, hl.treesitter)
   vim.api.nvim_set_hl_ns(ns)
 end
 

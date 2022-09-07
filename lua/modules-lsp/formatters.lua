@@ -5,7 +5,7 @@ local M = {}
 function M.setup()
   formatters.setup {
     {
-      exe = "prettierd",
+      name = "prettierd",
       filetypes = {
         "javascript",
         "typescript",
@@ -30,61 +30,61 @@ function M.setup()
     },
 
     {
-      exe = "eslint_d",
+      name = "eslint_d",
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
     {
-      exe = "rustywind",
+      name = "rustywind",
       filetypes = { "javascriptreact", "typescriptreact", "vue", "svelte", "html" },
     },
 
-    { exe = "stylua", filetypes = { "lua" } },
+    { name = "stylua", filetypes = { "lua" } },
 
     {
-      exe = "black",
+      name = "black",
       filetypes = { "python" },
     },
     {
-      exe = "isort",
+      name = "isort",
       filetypes = { "python" },
     },
 
     -- {
-    --   exe = "rustfmt",
+    --   name = "rustfmt",
     --   filetypes = { "rust" },
     -- },
 
     {
-      exe = "goimports",
+      name = "goimports",
       filetypes = { "go" },
     },
     -- {
-    --   exe = "gofmt",
+    --   name = "gofmt",
     --   filetypes = { "go" },
     -- },
     {
-      exe = "golines",
+      name = "golines",
       extra_args = { "-m", "180", "-t", "2" },
       filetypes = { "go" },
     },
 
     {
-      exe = "shfmt",
+      name = "shfmt",
       filetypes = { "sh", "bash", "zsh" },
     },
 
     -- {
-    --   exe = "shellharden",
+    --   name = "shellharden",
     -- },
 
     {
-      exe = "beautysh",
+      name = "beautysh",
       extra_args = { "--indent-size", "2", "-t" },
     },
 
     -- {
-    --   exe = "djlint",
+    --   name = "djlint",
     --   filetypes = { "jinja" },
     --   extra_args = { "--profile", "jinja" },
     -- },

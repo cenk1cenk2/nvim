@@ -5,65 +5,65 @@ local M = {}
 function M.setup()
   linters.setup {
     {
-      exe = "eslint_d",
+      name = "eslint_d",
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
     {
-      exe = "misspell",
+      name = "misspell",
     },
 
     {
-      exe = "markdownlint",
+      name = "markdownlint",
       filetypes = { "markdown" },
       extra_args = { "-s", "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.markdownlintrc.json" },
     },
 
     {
-      exe = "hadolint",
+      name = "hadolint",
       filetypes = { "dockerfile" },
     },
 
     {
-      exe = "flake8",
+      name = "flake8",
       filetypes = { "python" },
     },
 
     -- {
-    --   exe = "jsonlint",
+    --   name = "jsonlint",
     -- },
 
     -- {
-    --   exe = "checkmake",
+    --   name = "checkmake",
     -- },
 
     {
-      exe = "codespell",
+      name = "codespell",
     },
     -- {
-    --   exe = "ansiblelint",
+    --   name = "ansiblelint",
     --   filetypes = { "yaml.ansible" },
     -- },
 
     -- {
-    --   exe = "djlint",
+    --   name = "djlint",
     --   filetypes = { "jinja" },
     --   extra_args = { "--profile", "jinja" },
     -- },
 
     {
-      exe = "shellcheck",
+      name = "shellcheck",
       filetypes = { "sh", "bash", "zsh" },
     },
 
     -- {
-    --   exe = "mypy",
+    --   name = "mypy",
     --   managed = true,
     --   filetypes = { "python" },
     -- },
 
     -- {
-    --   exe = "proselint",
+    --   name = "proselint",
     --   managed = true,
     --   filetypes = { "markdown", "tex" },
     -- },
