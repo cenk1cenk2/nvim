@@ -17,6 +17,7 @@ function M.config()
         },
         { "p00f/nvim-ts-rainbow", run = ":TSUpdate", requires = { "nvim-treesitter/nvim-treesitter" } },
         { "windwp/nvim-ts-autotag", requires = { "nvim-treesitter/nvim-treesitter" } },
+        { "nvim-treesitter/playground", requires = { "nvim-treesitter/nvim-treesitter" } },
       }
     end,
   })

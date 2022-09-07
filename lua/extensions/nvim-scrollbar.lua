@@ -2,7 +2,7 @@
 local M = {}
 
 local extension_name = "nvim_scrollbar"
-local colors = require "onedarker.colors"
+local c = require "onedarker.colors"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
@@ -19,16 +19,16 @@ function M.config()
       show = true,
       handle = {
         text = " ",
-        color = colors.bg2,
+        color = c.bg2,
         hide_if_all_visible = true, -- Hides handle if all lines are visible
       },
       marks = {
-        Search = { text = { "█", "█" }, priority = 0, color = colors.bright_cyan },
-        Error = { text = { "█", "█" }, priority = 1, color = colors.bright_red },
-        Warn = { text = { "█", "█" }, priority = 2, color = colors.bright_yellow },
-        Info = { text = { "█", "█" }, priority = 3, color = colors.dark_cyan },
-        Hint = { text = { "█", "█" }, priority = 4, color = colors.dark_cyan },
-        Misc = { text = { "█", "█" }, priority = 5, color = colors.purple },
+        Search = { text = { "█", "█" }, priority = 0, color = c.bright_cyan },
+        Error = { text = { "█", "█" }, priority = 1, color = c.bright_red },
+        Warn = { text = { "█", "█" }, priority = 2, color = c.bright_yellow },
+        Info = { text = { "█", "█" }, priority = 3, color = c.dark_cyan },
+        Hint = { text = { "█", "█" }, priority = 4, color = c.dark_cyan },
+        Misc = { text = { "█", "█" }, priority = 5, color = c.purple },
       },
       excluded_filetypes = {
         "prompt",

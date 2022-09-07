@@ -1,7 +1,7 @@
 -- https://github.com/vuki656/package-info.nvim
 local M = {}
 
-local colors = require "onedarker.colors"
+local c = require "onedarker.colors"
 
 local extension_name = "package_info"
 
@@ -24,8 +24,8 @@ function M.config()
     end,
     setup = {
       colors = {
-        up_to_date = colors.gray, -- Text color for up to date package virtual text
-        outdated = colors.yellow, -- Text color for outdated package virtual text
+        up_to_date = c.grey, -- Text color for up to date package virtual text
+        outdated = c.yellow, -- Text color for outdated package virtual text
       },
       icons = {
         enable = true, -- Whether to display icons
