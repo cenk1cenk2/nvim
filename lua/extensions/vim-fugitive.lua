@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "vim_fugitive"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     packer = function(config)
       return {
         "tpope/vim-fugitive",
@@ -18,6 +18,14 @@ function M.config()
       normal_mode = {
         ["gy"] = { [[:diffget //3<CR>]], { desc = "git ours" } },
         ["gY"] = { [[:diffget //2<CR>]], { desc = "git theirs" } },
+      },
+    },
+    wk = {
+      ["g"] = {
+        a = { ":0Gclog<CR>", "buffer commits" },
+        C = { ":Gdiffsplit<CR>", "diff split" },
+        e = { ":Gedit<CR>", "edit version" },
+        m = { ":Gvdiffsplit!<CR>", "merge view" },
       },
     },
   })

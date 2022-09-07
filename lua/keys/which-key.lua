@@ -92,10 +92,7 @@ M.mappings = {
   -- git
   g = {
     name = "+git",
-    A = { ":0Gclog<CR>", "buffer commits" },
-    B = { ":Git blame<CR>", "git blame" },
-    C = { ":Gdiffsplit<CR>", "diff split" },
-    e = { ":Gedit<CR>", "edit version" },
+    B = { ":Gitsigns toggle_current_line_blame<CR>", "git blame" },
     f = { ":Telescope git_status<CR>", "git status" },
     F = { ":Telescope git_files<CR>", "list git tracked files" },
     n = { ":Gitsigns next_hunk<CR>", "next hunk" },
@@ -106,7 +103,6 @@ M.mappings = {
     RR = { ":Gitsigns reset_buffer<CR>", "reset buffer" },
     s = { ":Gitsigns stage_hunk<CR>", "stage hunk" },
     S = { ":Gitsigns undo_stage_hunk<CR>", "undo stage hunk" },
-    m = { ":Gvdiffsplit!<CR>", "merge view" },
   },
 
   -- gist
