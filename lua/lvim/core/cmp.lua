@@ -234,7 +234,6 @@ M.config = function()
       ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select }, { "i" }),
       ["<C-d>"] = cmp.mapping.scroll_docs(-4),
       ["<C-f>"] = cmp.mapping.scroll_docs(4),
-      ["<C-Space>"] = cmp.mapping.complete(),
       ["<C-y>"] = cmp.mapping {
         i = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
         c = function(fallback)
@@ -248,10 +247,10 @@ M.config = function()
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
-        -- elseif luasnip.expand_or_locally_jumpable() then
-        --   luasnip.expand_or_jump()
-        -- elseif jumpable(1) then
-        --   luasnip.jump(1)
+        elseif luasnip.expand_or_locally_jumpable() then
+          luasnip.expand_or_jump()
+        elseif jumpable(1) then
+          luasnip.jump(1)
         elseif has_words_before() then
           cmp.complete()
         else
@@ -261,15 +260,14 @@ M.config = function()
       ["<S-Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_prev_item()
-        -- elseif luasnip.jumpable(-1) then
-        --   luasnip.jump(-1)
+        elseif luasnip.jumpable(-1) then
+          luasnip.jump(-1)
         else
           fallback()
         end
-      end, {
-        "i",
-        "s",
-      }),
+      end, { "i", "s" }),
+      ["<C-Space>"] = cmp.mapping.complete(),
+      ["<C-e>"] = cmp.mapping.abort(),
       ["<CR>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           local confirm_opts = vim.deepcopy(lvim.builtin.cmp.confirm_opts) -- avoid mutating the original opts below
@@ -279,20 +277,15 @@ M.config = function()
           if is_insert_mode() then -- prevent overwriting brackets
             confirm_opts.behavior = cmp.ConfirmBehavior.Insert
           end
-          cmp.confirm(confirm_opts)
-          -- if jumpable(1) then
-          --   luasnip.jump(1)
-          -- end
-          return
+          if cmp.confirm(confirm_opts) then
+            return -- success, exit early
+          end
         end
 
-        -- if jumpable(1) then
-        --   if not luasnip.jump(1) then
-        --     fallback()
-        --   end
-        -- else
-        fallback()
-        -- end
+        if jumpable(1) and luasnip.jump(1) then
+          return -- success, exit early
+        end
+        fallback() -- if not exited early, always fallback
       end),
     },
   }

@@ -95,6 +95,7 @@ return {
 
   {
     "folke/lua-dev.nvim",
+    module = "lua-dev",
   },
 
   -- Autopairs
@@ -141,7 +142,7 @@ return {
 
   -- Whichkey
   {
-    "max397574/which-key.nvim",
+    "folke/which-key.nvim",
     config = function()
       require("lvim.core.which-key").setup()
     end,
