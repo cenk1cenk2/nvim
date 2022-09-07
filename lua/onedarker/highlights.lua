@@ -461,12 +461,65 @@ hl.plugins.nvim_tree = {
 -- }
 
 hl.plugins.telescope = {
-  TelescopeBorder = { fg = c.grey[600] },
   TelescopeMatching = { fg = c.green[300] },
-  TelescopeNormal = { bg = c.bg[200], fg = c.fg },
-  TelescopePromptPrefix = { fg = c.yellow[600] },
-  TelescopeSelection = { bg = c.bg[400] },
   TelescopeSelectionCaret = { fg = c.yellow[600] },
+
+  TelescopeBorder = {
+    fg = c.bg[100],
+    bg = c.bg[100],
+  },
+
+  TelescopePromptBorder = {
+    fg = c.bg[100],
+    bg = c.bg[100],
+  },
+
+  TelescopePromptNormal = {
+    fg = c.white,
+    bg = c.bg[200],
+  },
+
+  TelescopePromptPrefix = {
+    fg = c.yellow[600],
+    bg = c.bg[100],
+  },
+
+  TelescopeNormal = { bg = c.bg[200] },
+
+  TelescopePreviewTitle = {
+    fg = c.bg[100],
+    bg = c.green[600],
+  },
+
+  TelescopePromptTitle = {
+    fg = c.bg[100],
+    bg = c.red[600],
+  },
+
+  TelescopeResultsTitle = {
+    fg = c.bg[100],
+    bg = c.bg[100],
+  },
+
+  TelescopeResultsNormal = {
+    bg = c.bg[200],
+  },
+
+  TelescopePreviewBorder = { fg = c.grey[100] },
+
+  TelescopeSelection = { bg = c.bg[300], fg = c.white },
+
+  TelescopeResultsDiffAdd = {
+    fg = c.green[600],
+  },
+
+  TelescopeResultsDiffChange = {
+    fg = c.yellow[600],
+  },
+
+  TelescopeResultsDiffDelete = {
+    fg = c.red[600],
+  },
 }
 
 hl.plugins.dashboard = {

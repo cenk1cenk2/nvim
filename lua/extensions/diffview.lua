@@ -1,6 +1,8 @@
 -- https://github.com/sindrets/diffview.nvim
 local M = {}
 
+local Log = require "lvim.core.log"
+
 local extension_name = "diffview"
 
 function M.config()
@@ -157,10 +159,37 @@ function M.config()
         ["d"] = { ":DiffviewOpen<CR>", "diff view open" },
         ["D"] = { ":DiffviewClose<CR>", "diff view close" },
         ["v"] = { ":DiffviewFileHistory<CR>", "workspace commits" },
-        ["C"] = { ":DiffviewOpen ", "open and compare with version" },
+        ["c"] = {
+          function()
+            M.compare_with_branch()
+          end,
+          "compare with branch",
+        },
       },
     },
   })
+end
+
+function M.compare_with_branch()
+  local store_key = "DIFFVIEW_COMPARE_BRANCH"
+  local stored_value = lvim.store.get_store(store_key)
+
+  vim.ui.input({
+    prompt = "Compare with branch:",
+    default = stored_value,
+  }, function(branch)
+    if branch == nil then
+      Log:warn "Nothing to compare."
+
+      return
+    end
+
+    local file = vim.api.nvim_buf_get_name(0)
+    Log:info("Comparing with branch: " .. file .. " ➜ " .. branch)
+    lvim.store.set_store(store_key, branch)
+
+    vim.api.nvim_command(":DiffviewOpen " .. branch)
+  end)
 end
 
 return M
