@@ -15,25 +15,34 @@ function M.config()
       }
     end,
     to_inject = function()
+      -- local _, yanky = pcall(require, "yanky")
+
       return {
         substitute = require "substitute",
+        -- yanky = yanky,
       }
     end,
-    setup = {
-      on_substitute = nil,
-      yank_substitued_text = false,
-      range = {
-        prefix = "s",
-        prompt_current_text = false,
-        confirm = false,
-        complete_word = false,
-        motion1 = false,
-        motion2 = false,
-      },
-      exchange = {
-        motion = false,
-      },
-    },
+    setup = function(config)
+      return {
+        -- on_substitute = function(event)
+        --   if config.inject.yanky ~= nil then
+        --     config.inject.yanky.init_ring("p", event.register, event.count, event.vmode:match "[vV�]")
+        --   end
+        -- end,
+        yank_substitued_text = false,
+        range = {
+          prefix = "s",
+          prompt_current_text = false,
+          confirm = false,
+          complete_word = false,
+          motion1 = false,
+          motion2 = false,
+        },
+        exchange = {
+          motion = false,
+        },
+      }
+    end,
     on_setup = function(config)
       require("substitute").setup(config.setup)
     end,

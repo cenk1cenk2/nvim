@@ -9,7 +9,7 @@ function M.config()
       return {
         "j-hui/fidget.nvim",
         config = function()
-          require("utils.setup").packer_config "fidged_nvim"
+          require("utils.setup").packer_config "fidget_nvim"
         end,
         disable = not config.active,
       }

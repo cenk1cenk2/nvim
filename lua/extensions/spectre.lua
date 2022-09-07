@@ -22,7 +22,7 @@ function M.config()
     end,
     setup = {
       color_devicons = true,
-      highlight = { ui = "String", search = "SpectreChange", replace = "SpectreDelete" },
+      highlight = { ui = "String", search = "SpectreChange", replace = "Spec.red[600]elete" },
       live_update = true,
       mapping = {
         ["delete_line"] = {

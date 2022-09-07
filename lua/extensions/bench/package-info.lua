@@ -24,8 +24,8 @@ function M.config()
     end,
     setup = {
       colors = {
-        up_to_date = c.grey, -- Text color for up to date package virtual text
-        outdated = c.yellow, -- Text color for outdated package virtual text
+        up_to_date = c.grey[600], -- Text color for up to date package virtual text
+        outdated = c.yellow[600], -- Text color for outdated package virtual text
       },
       icons = {
         enable = true, -- Whether to display icons
