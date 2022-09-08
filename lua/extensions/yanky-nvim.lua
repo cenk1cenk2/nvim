@@ -74,24 +74,23 @@ function M.config()
     end,
     keymaps = function()
       local defaults = {
-        {
-          ["gq"] = { "<Plug>(YankyCycleForward)", desc = "yank cycle forward" },
-          ["gQ"] = { "<Plug>(YankyCycleBackward)", desc = "yank cycle backward" },
-          ["p"] = { "<Plug>(YankyPutAfter)", desc = "yanky put after" },
-          ["P"] = { "<Plug>(YankyPutBefore)", desc = "yanky put before" },
-          ["y"] = { "<Plug>(YankyYank)", desc = "yanky put before" },
-          -- ["gp"] = { "<Plug>(YankyPutAfterFilter)", desc = "yanky put after filter" },
-          -- ["gP"] = { "<Plug>(YankyPutBeforeFilter)", desc = "yanky put before filter" },
-          -- vim.api.nvim_set_keymap("n", "p", "<Plug>(YankyPutAfter)", {})
-          -- vim.api.nvim_set_keymap("n", "P", "<Plug>(YankyPutBefore)", {})
-          -- vim.api.nvim_set_keymap("x", "p", "<Plug>(YankyPutAfter)", {})
-          -- vim.api.nvim_set_keymap("x", "P", "<Plug>(YankyPutBefore)", {})
-          -- vim.api.nvim_set_keymap("n", "gp", "<Plug>(YankyGPutAfter)", {})
-          -- vim.api.nvim_set_keymap("n", "gP", "<Plug>(YankyGPutBefore)", {})
-          -- vim.api.nvim_set_keymap("x", "gp", "<Plug>(YankyGPutAfter)", {})
-          -- vim.api.nvim_set_keymap("x", "gP", "<Plug>(YankyGPutBefore)", {})
-        },
+        ["gq"] = { "<Plug>(YankyCycleForward)", desc = "yank cycle forward" },
+        ["gQ"] = { "<Plug>(YankyCycleBackward)", desc = "yank cycle backward" },
+        ["p"] = { "<Plug>(YankyPutAfter)", desc = "yanky put after" },
+        ["P"] = { "<Plug>(YankyPutBefore)", desc = "yanky put before" },
+        ["y"] = { "<Plug>(YankyYank)", desc = "yanky put before" },
+        -- ["gp"] = { "<Plug>(YankyPutAfterFilter)", desc = "yanky put after filter" },
+        -- ["gP"] = { "<Plug>(YankyPutBeforeFilter)", desc = "yanky put before filter" },
+        -- vim.api.nvim_set_keymap("n", "p", "<Plug>(YankyPutAfter)", {})
+        -- vim.api.nvim_set_keymap("n", "P", "<Plug>(YankyPutBefore)", {})
+        -- vim.api.nvim_set_keymap("x", "p", "<Plug>(YankyPutAfter)", {})
+        -- vim.api.nvim_set_keymap("x", "P", "<Plug>(YankyPutBefore)", {})
+        -- vim.api.nvim_set_keymap("n", "gp", "<Plug>(YankyGPutAfter)", {})
+        -- vim.api.nvim_set_keymap("n", "gP", "<Plug>(YankyGPutBefore)", {})
+        -- vim.api.nvim_set_keymap("x", "gp", "<Plug>(YankyGPutAfter)", {})
+        -- vim.api.nvim_set_keymap("x", "gP", "<Plug>(YankyGPutBefore)", {})
       }
+
       return {
         n = defaults,
         v = defaults,
