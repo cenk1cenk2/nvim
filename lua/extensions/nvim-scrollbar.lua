@@ -23,12 +23,12 @@ function M.config()
         hide_if_all_visible = true, -- Hides handle if all lines are visible
       },
       marks = {
-        Search = { text = { "█", "█" }, priority = 0, color = c.cyan[900] },
-        Error = { text = { "█", "█" }, priority = 1, color = c.red[900] },
-        Warn = { text = { "█", "█" }, priority = 2, color = c.yellow[900] },
-        Info = { text = { "█", "█" }, priority = 3, color = c.cyan[600] },
-        Hint = { text = { "█", "█" }, priority = 4, color = c.cyan[600] },
-        Misc = { text = { "█", "█" }, priority = 5, color = c.purple[600] },
+        Search = { text = { "" }, priority = 0, color = c.magenta[900] },
+        Error = { text = { "" }, priority = 1, color = c.red[900] },
+        Warn = { text = { "" }, priority = 2, color = c.yellow[900] },
+        Info = { text = { "" }, priority = 3, color = c.blue[600] },
+        Hint = { text = { "" }, priority = 4, color = c.cyan[600] },
+        Misc = { text = { " ﴞ" }, priority = 5, color = c.purple[600] },
       },
       excluded_filetypes = {
         "prompt",
