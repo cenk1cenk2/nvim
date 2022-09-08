@@ -476,7 +476,7 @@ hl.plugins.telescope = {
 
   TelescopePromptNormal = {
     fg = c.white,
-    bg = c.bg[200],
+    bg = c.bg[100],
   },
 
   TelescopePromptPrefix = {
@@ -502,7 +502,7 @@ hl.plugins.telescope = {
   },
 
   TelescopeResultsNormal = {
-    bg = c.bg[200],
+    bg = c.bg[100],
   },
 
   TelescopePreviewBorder = { fg = c.grey[100] },

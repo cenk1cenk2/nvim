@@ -29,10 +29,24 @@ function M.config()
     defaults = {
       vimgrep_arguments = M.rg_arguments,
       layout_config = {
-        width = 0.9,
-        prompt_position = "bottom",
-        horizontal = { mirror = false, width = 0.95 },
-        vertical = { mirror = false, width = 0.85 },
+        bottom_pane = {
+          height = 25,
+          preview_cutoff = 120,
+          prompt_position = "top",
+        },
+        center = {
+          height = 0.4,
+          preview_cutoff = 40,
+          prompt_position = "top",
+          width = 0.5,
+        },
+        cursor = {
+          height = 0.9,
+          preview_cutoff = 40,
+          width = 0.8,
+        },
+        horizontal = { mirror = false, height = 0.95, prompt_position = "bottom" },
+        vertical = { mirror = false, width = 0.95, prompt_position = "bottom" },
       },
       file_ignore_patterns = {
         "**/yarn.lock",
@@ -112,9 +126,9 @@ function M.config()
         only_sort_text = true,
       },
       current_buffer_fuzzy_find = {
-        theme = "dropdown",
+        theme = "ivy",
         layout_config = {
-          width = 0.5,
+          width = 0.75,
           height = 0.5,
           prompt_position = "bottom",
         },
