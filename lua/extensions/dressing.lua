@@ -30,16 +30,30 @@ function M.config()
 
           -- These are passed to nvim_open_win
           anchor = "SW",
-          relative = "cursor",
+          -- relative = "cursor",
+          relative = "editor",
           border = "single",
 
           -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
-          prefer_width = 40,
+          prefer_width = 60,
           max_width = nil,
           min_width = 20,
 
           -- Window transparency (0-100)
           winblend = 0,
+
+          mappings = {
+            n = {
+              ["<Esc>"] = "Close",
+              ["<CR>"] = "Confirm",
+            },
+            i = {
+              ["<C-c>"] = "Close",
+              ["<CR>"] = "Confirm",
+              ["<Up>"] = "HistoryPrev",
+              ["<Down>"] = "HistoryNext",
+            },
+          },
 
           -- see :help dressing-prompt
           prompt_buffer = false,

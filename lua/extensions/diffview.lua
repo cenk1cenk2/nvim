@@ -184,8 +184,7 @@ function M.compare_with_branch()
       return
     end
 
-    local file = vim.api.nvim_buf_get_name(0)
-    Log:info("Comparing with branch: " .. file .. " ➜ " .. branch)
+    Log:info("Comparing with branch: " .. branch)
     lvim.store.set_store(store_key, branch)
 
     vim.api.nvim_command(":DiffviewOpen " .. branch)
