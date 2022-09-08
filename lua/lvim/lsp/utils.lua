@@ -1,12 +1,13 @@
 local M = {}
 
-local tbl = require "lvim.utils.table"
-
 function M.is_client_active(name)
   local clients = vim.lsp.get_active_clients()
-  return tbl.find_first(clients, function(client)
-    return client.name == name
-  end)
+
+  for _, client in pairs(clients) do
+    if client.name == name then
+      return client
+    end
+  end
 end
 
 function M.get_active_clients_by_ft(filetype)

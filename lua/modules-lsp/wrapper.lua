@@ -1,7 +1,6 @@
 local M = {}
 local Log = require "lvim.core.log"
 local lsp_utils = require "utils.lsp"
-local table_utils = require "lvim.utils.table"
 
 function M.add_to_workspace_folder()
   vim.lsp.buf.add_workspace_folder()
@@ -172,7 +171,7 @@ function M.organize_imports()
     return
   end
 
-  if table_utils.length(responses) == 0 then
+  if vim.tbl_count(responses) == 0 then
     Log:warn "No language server has answered the organize imports call."
   end
 

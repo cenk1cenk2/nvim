@@ -1,6 +1,5 @@
 local Log = require "lvim.core.log"
 local job = require "utils.job"
-local table_utils = require "lvim.utils.table"
 
 local M = {}
 
@@ -14,13 +13,13 @@ function M.run_markdown_toc()
     return
   end
 
-  local config = require("modules.lsp-config").get_lsp_default_config(server_name)
+  local config = vim.deepcopy(require("modules.lsp-config").get_lsp_default_config(server_name))
 
   job.spawn {
     command = table.concat(config.command),
-    args = table_utils.merge(config.args, { vim.fn.expand "%" }),
+    args = vim.list_extend(vim.deepcopy(config.args), { vim.fn.expand "%" }),
   }
-  vim.cmd "e!"
+  M.reload_file()
 end
 
 function M.run_md_printer()
@@ -29,12 +28,24 @@ end
 
 function M.run_ansible_vault_decrypt()
   job.spawn { command = "ansible-vault", args = { "decrypt", vim.fn.expand "%" } }
-  vim.cmd "e!"
+
+  M.reload_file()
 end
 
 function M.run_ansible_vault_encrypt()
   job.spawn { command = "ansible-vault", args = { "encrypt", vim.fn.expand "%" } }
-  vim.cmd "e!"
+
+  M.reload_file()
+end
+
+function M.reload_file()
+  local ok = pcall(function()
+    vim.cmd "e"
+  end)
+
+  if not ok then
+    Log:warn(string.format("Can not reload file since it is unsaved: %s", vim.fn.expand "%"))
+  end
 end
 
 function M.setup()

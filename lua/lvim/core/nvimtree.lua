@@ -164,7 +164,6 @@ function M.setup()
     return
   end
 
-  local table_utils = require "lvim.utils.table"
   for opt, val in pairs(lvim.builtin.nvimtree.vars) do
     vim.g["nvim_tree_" .. opt] = val
   end
