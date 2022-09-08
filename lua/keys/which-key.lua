@@ -53,7 +53,13 @@ M.mappings = {
     ["."] = { ":Telescope commands<CR>", "search available commands" },
     [":"] = { ":Telescope command_history<CR>", "search command history" },
     A = { ":Telescope builtin<CR>", "telescope list builtin finders" },
-    b = { ":Telescope current_buffer_fuzzy_find<CR>", "search current buffer" },
+    b = { ":Telescope current_buffer_fuzzy_find<CR>", "search current buffer fuzzy" },
+    B = {
+      function()
+        require("modules.telescope").rg_grep_buffer()
+      end,
+      "search current buffer grep",
+    },
     f = { ":Telescope oldfiles<CR>", "search file history" },
     g = { ":Telescope grep_string<CR>", "grep string under cursor" },
     m = { ":Telescope vim_bookmarks all<CR>", "list all bookmarks" },

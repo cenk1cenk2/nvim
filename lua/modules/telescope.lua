@@ -2,6 +2,7 @@ M = {}
 
 local telescope = require "lvim.core.telescope"
 local Log = require "lvim.core.log"
+local table_utils = require "lvim.utils.table"
 
 function M.rg_interactive()
   local store_key = "TELESCOPE_RG_INTERACTIVE_LAST_ARGS"
@@ -25,30 +26,24 @@ function M.rg_interactive()
       table.insert(chunks, substring)
     end
 
-    local command = ":Telescope live_grep vimgrep_arguments="
-      .. table.concat(telescope.rg_arguments, ",")
-      .. ","
-      .. table.concat(chunks, ",")
-
-    vim.api.nvim_command(command)
+    return require("telescope.builtin").live_grep {
+      vimgrep_arguments = { table_utils.merge(telescope.rg_arguments, chunks) },
+    }
   end)
 end
 
 function M.rg_string()
-  local chunks = { "--fixed-strings" }
-
-  local command = ":Telescope live_grep vimgrep_arguments="
-    .. table.concat(telescope.rg_arguments, ",")
-    .. ","
-    .. table.concat(chunks, ",")
-
-  vim.api.nvim_command(command)
+  return require("telescope.builtin").live_grep {
+    vimgrep_arguments = { table_utils.merge(telescope.rg_arguments, { "--fixed-strings" }) },
+  }
 end
 
 function M.rg_dirty()
-  return require("telescope.builtin").grep_string {
-    search = "",
-  }
+  require("telescope.builtin").grep_string { shorten_path = true, word_match = "-w", only_sort_text = true, search = "" }
+end
+
+function M.rg_grep_buffer()
+  return require("telescope.builtin").live_grep { search_dirs = { "%:p" } }
 end
 
 return M
