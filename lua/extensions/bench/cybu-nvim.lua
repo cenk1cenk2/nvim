@@ -35,7 +35,7 @@ function M.config()
       },
       style = {
         path = "relative", -- absolute, relative, tail (filename only)
-        border = "rounded", -- single, double, rounded, none
+        border = "single", -- single, double, rounded, none
         separator = " ", -- string used as separator
         prefix = "…", -- string used as prefix for truncated paths
         padding = 2, -- left & right padding in number of spaces
