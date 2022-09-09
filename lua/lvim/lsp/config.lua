@@ -22,7 +22,7 @@ return {
     float = {
       focusable = false,
       style = "minimal",
-      border = "sinle",
+      border = "single",
       source = "always",
       header = "",
       prefix = "",
