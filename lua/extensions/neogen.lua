@@ -21,7 +21,12 @@ function M.config()
     end,
     wk = {
       ["l"] = {
-        ["j"] = { ':lua require("neogen").generate()<CR>', "generate documentation" },
+        ["j"] = {
+          function()
+            require("neogen").generate()
+          end,
+          "generate documentation",
+        },
       },
     },
   })
