@@ -22,10 +22,6 @@ function M.config()
     setup = {
       -- Error,Warn,Info,Hint
       diagnostic_header = { " ", " ", " ", "ﴞ " },
-      -- show diagnostic source
-      show_diagnostic_source = true,
-      -- add bracket or something with diagnostic source,just have 2 elements
-      diagnostic_source_bracket = { "[", "]" },
       -- use emoji lightbulb in default
       code_action_icon = "💡",
       -- if true can press number to execute the codeaction in codeaction window
@@ -114,6 +110,9 @@ function M.config()
       end
       lvim.lsp_wrapper.show_line_diagnostics = function()
         lspsaga_diagnostic.show_line_diagnostics()
+      end
+      lvim.lsp_wrapper.peek_definition = function()
+        vim.api.nvim_command "Lspsaga peek_definition"
       end
     end,
     keymaps = {

@@ -48,23 +48,11 @@ return {
       end,
       "code action",
     },
-    ["gwf"] = {
+    ["gw"] = {
       function()
         lvim.lsp_wrapper.peek_definition()
       end,
-      "peek definition",
-    },
-    ["gwt"] = {
-      function()
-        lvim.lsp_wrapper.peek_type()
-      end,
-      "peek type definition",
-    },
-    ["gwz"] = {
-      function()
-        lvim.lsp_wrapper.peek_implementation()
-      end,
-      "peek implementation",
+      "lsp peek",
     },
   },
   insert_mode = {},
