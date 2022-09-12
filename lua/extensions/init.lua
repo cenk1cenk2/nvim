@@ -51,6 +51,7 @@ local extensions = {
   "lsp-inlayhints-nvim",
   "telescope-github",
   "telescope-vim-bookmarks",
+  "nvim-trevJ",
 }
 
 function M.config(config)

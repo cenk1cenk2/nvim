@@ -114,7 +114,7 @@ function M.run(config)
     end)
 
     if not ok then
-      Log:debug(string.format("Can not inject in extension: %s", config.name))
+      Log:warn(string.format("Can not inject in extension: %s", config.name))
 
       return
     end
