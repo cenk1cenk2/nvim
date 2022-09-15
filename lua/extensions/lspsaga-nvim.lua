@@ -32,7 +32,7 @@ function M.config()
         enable_in_insert = false,
         cache_code_action = true,
         sign = true,
-        update_time = 150,
+        update_time = 1000,
         sign_priority = 20,
         virtual_text = false,
       },
