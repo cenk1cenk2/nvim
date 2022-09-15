@@ -24,7 +24,7 @@ M.setup = function()
     vim.fn.sign_define("DapStopped", lvim.builtin.dap.stopped)
   end
 
-  dap.defaults.fallback.terminal_win_cmd = ":30hsplit new"
+  -- dap.defaults.fallback.terminal_win_cmd = ":30hsplit new"
 
   lvim.builtin.which_key.mappings["d"] = {
     name = "Debug",
@@ -40,7 +40,7 @@ M.setup = function()
     K = { ':lua require("dapui").float_element()<CR>', "floating element" },
     l = { ":lua require('dap').list_breakpoints()<cr>", "list breakpoints" },
     O = { ":lua require'dap'.step_out()<cr>", "step out" },
-    p = { "<cmd>lua require'dap'.pause()<cr>", "Pause" },
+    p = { ":lua require'dap'.pause()<cr>", "Pause" },
     r = { ":lua require'dap'.repl.toggle()<cr>", "toggle repl" },
     R = { ":lua require('dap.ext.vscode').load_launchjs()<cr>", "reload launch.json" },
     q = { ":lua require'dap'.close()<cr>", "quit" },

@@ -131,3 +131,29 @@ lvim.builtin.treesitter.ensure_installed = {
 lvim.lsp.null_ls.setup = {
   debug = false,
 }
+
+lvim.builtin.dap.on_config_done = function(dap)
+  dap.adapters.node2 = {
+    type = "executable",
+    command = "node",
+    args = { vim.fn.stdpath "data" .. "/mason/packages/node-debug2-adapter/out/src/nodeDebug.js" },
+  }
+
+  -- Chrome
+  dap.adapters.chrome = {
+    type = "executable",
+    command = "node",
+    args = { vim.fn.stdpath "data" .. "/mason/packages/chrome-debug-adapter/out/src/chromeDebug.js" },
+  }
+
+  dap.configurations.javascript = {
+    {
+      type = "node2",
+      request = "launch",
+      program = "${file}",
+      cwd = vim.fn.getcwd(),
+      sourceMaps = true,
+      protocol = "inspector",
+    },
+  }
+end
