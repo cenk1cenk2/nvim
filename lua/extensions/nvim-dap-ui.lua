@@ -9,10 +9,16 @@ function M.config()
       return {
         "rcarriga/nvim-dap-ui",
         requires = { "mfussenegger/nvim-dap" },
+        after = { "nvim-dap" },
         config = function()
           require("utils.setup").packer_config "nvim_dap_ui"
         end,
         disable = not config.active,
+      }
+    end,
+    to_inject = function()
+      return {
+        dap_ui = require "dapui",
       }
     end,
     setup = {
@@ -70,6 +76,26 @@ function M.config()
     },
     on_setup = function(config)
       require("dapui").setup(config.setup)
+    end,
+    wk = function(config)
+      local dap_ui = config.inject.dap_ui
+
+      return {
+        ["d"] = {
+          u = {
+            function()
+              dap_ui.toggle()
+            end,
+            "toggle ui",
+          },
+          k = {
+            function()
+              dap_ui.float_element()
+            end,
+            "floating element",
+          },
+        },
+      }
     end,
   })
 end

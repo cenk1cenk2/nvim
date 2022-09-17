@@ -102,6 +102,11 @@ function M.config()
         },
       }
     end,
+    wk = {
+      w = {
+        c = { ":Alpha<CR>", "dashboard" },
+      },
+    },
     layout = {
       header = {
         [[                                                                                        ]],

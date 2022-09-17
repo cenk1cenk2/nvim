@@ -40,7 +40,6 @@ lvim.lsp.ensure_installed = {
   "golangci-lint",
   "shellharden",
   "beautysh",
-  -- "jsonlint",
   "codespell",
   -- "checkmake",
   -- "revive",
@@ -94,7 +93,7 @@ lvim.lsp.automatic_configuration.skipped_servers = {
   "zeta_note",
 }
 
-lvim.builtin.treesitter.ensure_installed = {
+lvim.extensions.treesitter.to_setup.ensure_installed = {
   "bash",
   "c",
   "c_sharp",
@@ -132,7 +131,9 @@ lvim.lsp.null_ls.setup = {
   debug = false,
 }
 
-lvim.builtin.dap.on_config_done = function(dap)
+lvim.extensions.dap.on_complete = function(config)
+  local dap = config.inject.dap
+
   dap.adapters.node2 = {
     type = "executable",
     command = "node",

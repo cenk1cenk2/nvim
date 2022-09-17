@@ -48,25 +48,23 @@ function Log:init()
         structlog.sinks.Console(log_level, {
           async = true,
           processors = {
-            structlog.processors.Namer(),
             structlog.processors.StackWriter({ "line", "file" }, { max_parents = 0, stack_level = 2 }),
             structlog.processors.Timestamper "%H:%M:%S",
           },
           formatter = structlog.formatters.FormatColorizer( --
-            "%s [%-5s] %s: %-30s",
-            { "timestamp", "level", "logger_name", "msg" },
+            "%s [%-5s] %-30s",
+            { "timestamp", "level", "msg" },
             { level = structlog.formatters.FormatColorizer.color_level() }
           ),
         }),
         structlog.sinks.File(log_level, self:get_path(), {
           processors = {
-            structlog.processors.Namer(),
             structlog.processors.StackWriter({ "line", "file" }, { max_parents = 3, stack_level = 2 }),
             structlog.processors.Timestamper "%F %H:%M:%S",
           },
           formatter = structlog.formatters.Format( --
-            "%s [%-5s] %s: %-30s",
-            { "timestamp", "level", "logger_name", "msg" }
+            "%s [%-5s] %-30s",
+            { "timestamp", "level", "msg" }
           ),
         }),
       },

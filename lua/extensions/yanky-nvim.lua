@@ -14,6 +14,7 @@ function M.config()
         disable = not config.active,
       }
     end,
+    register = "+",
     to_inject = function()
       return {
         mapping = require "yanky.telescope.mapping",
@@ -21,12 +22,9 @@ function M.config()
         telescope = require "telescope",
       }
     end,
-    on_init = function(config)
-      config.set_store("register", "+")
-    end,
     setup = function(config)
       local mapping = config.inject.mapping
-      local register = config.store.register
+      local register = config.register
 
       return {
         ring = {

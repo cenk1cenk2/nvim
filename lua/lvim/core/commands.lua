@@ -12,12 +12,6 @@ vim.cmd [[
 
 M.defaults = {
   {
-    name = "BufferKill",
-    fn = function()
-      require("lvim.core.bufferline").buf_kill "bd"
-    end,
-  },
-  {
     name = "LvimToggleFormatOnSave",
     fn = function()
       require("lvim.core.autocmds").toggle_format_on_save()

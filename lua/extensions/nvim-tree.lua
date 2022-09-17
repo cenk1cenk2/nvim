@@ -1,14 +1,21 @@
+-- https://github.com/kyazdani42/nvim-tree.lua
 local M = {}
-local Log = require "lvim.core.log"
+
+local extension_name = "nvim_tree"
 
 function M.config()
-  lvim.builtin.nvimtree = {
-    active = true,
-    on_config_done = nil,
-    vars = {},
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "kyazdani42/nvim-tree.lua",
+        config = function()
+          require("utils.setup").packer_config "nvim_tree"
+        end,
+        disable = not config.active,
+      }
+    end,
     setup = {
       -- show_icons = { git = 1, folders = 1, files = 1, folder_arrows = 1, tree_width = 40 },
-
       -- disables netrw completely
       disable_netrw = true,
       -- hijack netrw window on startup
@@ -71,6 +78,55 @@ function M.config()
           -- if true, it will only use your list to set the mappings
           custom_only = false,
           -- list of mappings to set on the tree manually
+          list = {
+            -- mappings
+            { key = "<CR>", action = "edit" },
+            { key = "l", action = "edit" },
+            { key = "o", action = "edit" },
+            { key = "<2-LeftMouse>", action = "edit" },
+            { key = "<2-RightMouse>", action = "cd" },
+            { key = "w", action = "cd" },
+            { key = "v", action = "vsplit" },
+            { key = "V", action = "split" },
+            { key = "<C-t>", action = "tabnew" },
+            { key = "h", action = "close_node" },
+            { key = "<BS>", action = "close_node" },
+            { key = "<S-CR>", action = "close_node" },
+            { key = "<Tab>", action = "preview" },
+            { key = "I", action = "toggle_ignored" },
+            { key = "H", action = "toggle_dotfiles" },
+            { key = "R", action = "refresh" },
+            { key = "a", action = "create" },
+            { key = "d", action = "remove" },
+            { key = "r", action = "rename" },
+            { key = "<C-r>", action = "full_rename" },
+            { key = "x", action = "cut" },
+            { key = "c", action = "copy" },
+            { key = "p", action = "paste" },
+            { key = "[c", action = "prev_git_item" },
+            { key = "]c", action = "next_git_item" },
+            { key = "f", action = "live_filter" },
+            { key = "F", action = "clear_live_filter" },
+            { key = "W", action = "collapse_all" },
+            { key = "E", action = "expand_all" },
+            { key = "S", action = "search_node" },
+            { key = ".", action = "run_file_command" },
+            { key = "K", action = "toggle_file_info" },
+            { key = "-", action = "dir_up" },
+            { key = "q", action = "close" },
+            {
+              key = "gp",
+              cb = function()
+                M.start_telescope "find_files"
+              end,
+            },
+            {
+              key = "gt",
+              cb = function()
+                M.start_telescope "live_grep"
+              end,
+            },
+          },
         },
         signcolumn = "yes",
       },
@@ -131,7 +187,7 @@ function M.config()
           quit_on_open = false,
           resize_window = true,
           window_picker = {
-            enable = false,
+            enable = true,
             chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
             exclude = {
               filetype = { "notify", "spectre_panel", "Outline", "packer", "qf", "lsp_floating_window" },
@@ -141,95 +197,27 @@ function M.config()
         },
       },
       log = {
-        enable = false,
+        enable = true,
         truncate = false,
         types = {
           all = false,
           config = false,
-          copy_paste = false,
+          copy_paste = true,
           diagnostics = false,
           git = false,
           profile = false,
         },
       },
     },
-  }
-end
-
-function M.setup()
-  if lvim.builtin.nvimtree._setup_called then
-    Log:debug "ignoring repeated setup call for nvim-tree, see kyazdani42/nvim-tree.lua#1308"
-    return
-  end
-
-  for opt, val in pairs(lvim.builtin.nvimtree.vars) do
-    vim.g["nvim_tree_" .. opt] = val
-  end
-
-  lvim.builtin.which_key.mappings["e"] = { "<cmd>NvimTreeToggle<CR>", "Explorer" }
-  lvim.builtin.nvimtree._setup_called = true
-
-  -- Implicitly update nvim-tree when project module is active
-  if lvim.builtin.project.active then
-    lvim.builtin.nvimtree.respect_buf_cwd = 0 -- this was 1 before, so if anything goes wrong lets switch it back
-    lvim.builtin.nvimtree.setup.update_cwd = true
-    -- lvim.builtin.nvimtree.setup.disable_netrw = false
-    -- lvim.builtin.nvimtree.setup.hijack_netrw = false
-    -- vim.g.netrw_banner = false
-  end
-
-  -- Add useful keymaps
-  if not lvim.builtin.nvimtree.setup.view.mappings.list or #lvim.builtin.nvimtree.setup.view.mappings.list == 0 then
-    lvim.builtin.nvimtree.setup.view.mappings.list = {
-      -- mappings
-      { key = "<CR>", action = "edit" },
-      { key = "l", action = "edit" },
-      { key = "o", action = "edit" },
-      { key = "<2-LeftMouse>", action = "edit" },
-      { key = "<2-RightMouse>", action = "cd" },
-      { key = "w", action = "cd" },
-      { key = "v", action = "vsplit" },
-      { key = "V", action = "split" },
-      { key = "<C-t>", action = "tabnew" },
-      { key = "h", action = "close_node" },
-      { key = "<BS>", action = "close_node" },
-      { key = "<S-CR>", action = "close_node" },
-      { key = "<Tab>", action = "preview" },
-      { key = "I", action = "toggle_ignored" },
-      { key = "H", action = "toggle_dotfiles" },
-      { key = "R", action = "refresh" },
-      { key = "a", action = "create" },
-      { key = "d", action = "remove" },
-      { key = "r", action = "rename" },
-      { key = "<C-r>", action = "full_rename" },
-      { key = "x", action = "cut" },
-      { key = "c", action = "copy" },
-      { key = "p", action = "paste" },
-      { key = "[c", action = "prev_git_item" },
-      { key = "]c", action = "next_git_item" },
-      { key = "f", action = "live_filter" },
-      { key = "F", action = "clear_live_filter" },
-      { key = "W", action = "collapse_all" },
-      { key = "E", action = "expand_all" },
-      { key = "S", action = "search_node" },
-      { key = ".", action = "run_file_command" },
-      { key = "K", action = "toggle_file_info" },
-      { key = "-", action = "dir_up" },
-      { key = "q", action = "close" },
-      { key = "gtf", cb = "<cmd>lua require'lvim.core.nvimtree'.start_telescope('find_files')<cr>" },
-      { key = "gtg", cb = "<cmd>lua require'lvim.core.nvimtree'.start_telescope('live_grep')<cr>" },
-    }
-  end
-
-  lvim.builtin.which_key.mappings["e"] = { "<cmd>NvimTreeToggle<CR>", "Explorer" }
-  lvim.builtin.which_key.mappings[","] = { ":NvimTreeFindFile<CR>", "find file in explorer" }
-  lvim.builtin.which_key.mappings["."] = { ":NvimTreeFindFile<CR>", "find file in explorer" }
-
-  require("nvim-tree").setup(lvim.builtin.nvimtree.setup)
-
-  if lvim.builtin.nvimtree.on_config_done then
-    lvim.builtin.nvimtree.on_config_done(lvim.builtin.nvimtree)
-  end
+    on_setup = function(config)
+      require("nvim-tree").setup(config.setup)
+    end,
+    wk = {
+      ["e"] = { ":NvimTreeToggle<CR>", "Explorer" },
+      [","] = { ":NvimTreeFindFile<CR>", "find file in explorer" },
+      ["."] = { ":NvimTreeFindFile<CR>", "find file in explorer" },
+    },
+  })
 end
 
 function M.start_telescope(telescope_mode)

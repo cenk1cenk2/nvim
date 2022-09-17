@@ -6,8 +6,7 @@ local keymappings = require "lvim.keymappings"
 ---@param mappings table
 function M.load_wk_mappings(mappings)
   for key, value in pairs(mappings) do
-    lvim.builtin.which_key.mappings[key] =
-      vim.tbl_deep_extend("force", lvim.builtin.which_key.mappings[key] or {}, value)
+    lvim.wk.mappings[key] = vim.tbl_deep_extend("force", lvim.wk.mappings[key] or {}, value)
   end
 end
 
@@ -25,7 +24,7 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil), configure: (fun(config: config): nil),condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table | (fun(config: config): any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil), commands: table, nvim_opts: table }
+---@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil), configure: (fun(config: config): nil),condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table| (fun(config: config): nil), keymaps: table | (fun(config: config): any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil), commands: table | (fun(config: config): any), nvim_opts: table, hl: (fun(config: config): table) | table, signs: (fun(config: config): table) | table, on_complete: (fun(config: config): table), to_setup: table, current_setup: table, define_global_fn: (fun(config: config): table<string, string>) }
 
 ---
 ---@param extension_name string
@@ -40,12 +39,15 @@ function M.define_extension(extension_name, active, config)
     condition = { config.condition, "f", true },
     packer = { config.packer, "f", true },
     to_inject = { config.to_inject, "f", true },
-    autocmds = { config.autocmds, "t", true },
+    autocmds = { config.autocmds, { "t", "f" }, true },
     keymaps = { config.keymaps, { "t", "f" }, true },
     wk = { config.wk, { "t", "f" }, true },
     legacy_setup = { config.legacy_setup, "t", true },
     setup = { config.legacy_setup, { "t", "f" }, true },
     on_setup = { config.on_setup, "f", true },
+    hl = { config.hl, { "f", "t" }, true },
+    signs = { config.signs, { "f", "t" }, true },
+    on_complete = { config.on_complete, "f", true },
   }
 
   lvim.extensions[extension_name] = {
@@ -53,6 +55,7 @@ function M.define_extension(extension_name, active, config)
     active = active,
     inject = {},
     store = {},
+    to_setup = {},
     set_injected = function(key, value)
       lvim.extensions[extension_name].inject[key] = value
 
@@ -106,6 +109,18 @@ end
 
 ---
 ---@param config config
+---@param property string
+---@return table
+function M.as_function_or_table(config, property)
+  if type(config[property]) == "function" then
+    return config[property](config)
+  end
+
+  return config[property]
+end
+
+---
+---@param config config
 function M.run(config)
   if config ~= nil and config.to_inject ~= nil then
     local ok = pcall(function()
@@ -125,28 +140,35 @@ function M.run(config)
   end
 
   if config ~= nil and config.autocmds ~= nil then
-    M.define_autocmds(config.autocmds)
+    M.define_autocmds(M.as_function_or_table(config, "autocmds"))
   end
 
   if config ~= nil and config.keymaps ~= nil then
-    if type(config.keymaps) == "function" then
-      M.load_mappings(config.keymaps(config))
-    else
-      ---@diagnostic disable-next-line: param-type-mismatch
-      M.load_mappings(config.keymaps)
-    end
+    M.load_mappings(M.as_function_or_table(config, "keymaps"))
   end
 
   if config ~= nil and config.wk ~= nil then
-    if type(config.wk) == "function" then
-      M.load_wk_mappings(config.wk(config))
-    else
-      M.load_wk_mappings(config.wk)
+    M.load_wk_mappings(M.as_function_or_table(config, "wk"))
+  end
+
+  if config ~= nil and config.hl ~= nil then
+    local highlights = M.as_function_or_table(config, "hl")
+
+    for key, value in pairs(highlights) do
+      vim.api.nvim_set_hl(0, key, value)
+    end
+  end
+
+  if config ~= nil and config.signs ~= nil and lvim.use_icons then
+    local signs = M.as_function_or_table(config, "signs")
+
+    for key, value in pairs(signs) do
+      vim.fn.sign_define(key, value)
     end
   end
 
   if config ~= nil and config.commands ~= nil then
-    require("utils.command").create_commands(config.commands)
+    require("utils.command").create_commands(M.as_function_or_table(config, "commands"))
   end
 
   if config ~= nil and config.nvim_opts ~= nil then
@@ -157,8 +179,14 @@ function M.run(config)
     M.legacy_setup(config.legacy_setup)
   end
 
-  if config ~= nil and config.setup ~= nil and type(config.setup) == "function" then
-    config.setup = config.setup(config)
+  if config ~= nil and config.setup ~= nil then
+    config.setup = M.as_function_or_table(config, "setup")
+
+    if config.to_setup ~= nil then
+      config.setup = vim.tbl_deep_extend("force", config.setup, config.to_setup)
+    end
+
+    lvim.extensions[config.name].current_setup = vim.deepcopy(config.setup)
   end
 
   if config ~= nil and config.on_setup ~= nil then
@@ -167,6 +195,18 @@ function M.run(config)
 
   if config ~= nil and config.on_done ~= nil then
     config.on_done(config)
+  end
+
+  if config ~= nil and config.define_global_fn ~= nil then
+    local functions = config.define_global_fn(config)
+
+    for key, value in pairs(functions) do
+      lvim.fn[key] = value
+    end
+  end
+
+  if config ~= nil and config.on_complete ~= nil then
+    config.on_complete(config)
   end
 end
 
@@ -193,6 +233,12 @@ function M.set_packer_extensions()
   end
 
   lvim.plugins = packer
+end
+
+function M.get_current_setup(extension_name)
+  return function()
+    return lvim.extensions[extension_name].current_setup
+  end
 end
 
 return M

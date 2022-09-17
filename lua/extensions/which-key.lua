@@ -1,11 +1,45 @@
+--
 local M = {}
-M.config = function()
-  local keymaps = require "keys.which-key"
 
-  lvim.builtin.which_key = {
-    ---@usage disable which-key completely [not recommended]
-    active = true,
-    on_config_done = nil,
+local extension_name = "wk"
+
+function M.config()
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "folke/which-key.nvim",
+        config = function()
+          require("utils.setup").packer_config "wk"
+        end,
+        disable = not config.active,
+      }
+    end,
+    opts = {
+      mode = "n", -- NORMAL mode
+      prefix = "<leader>",
+      buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
+      silent = true, -- use `silent` when creating keymaps
+      noremap = true, -- use `noremap` when creating keymaps
+      nowait = true, -- use `nowait` when creating keymaps
+    },
+    vopts = {
+      mode = "v", -- VISUAL mode
+      prefix = "<leader>",
+      buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
+      silent = true, -- use `silent` when creating keymaps
+      noremap = true, -- use `noremap` when creating keymaps
+      nowait = true, -- use `nowait` when creating keymaps
+    },
+    configure = function()
+      local wk = require "keys.which-key"
+      lvim.wk.mappings = vim.deepcopy(wk.mappings)
+      lvim.wk.vmappings = vim.deepcopy(wk.vmappings)
+    end,
+    to_inject = function()
+      return {
+        which_key = require "which-key",
+      }
+    end,
     setup = {
       plugins = {
         marks = false, -- shows a list of your marks on ' and `
@@ -43,54 +77,21 @@ M.config = function()
       },
       triggers = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r" },
     },
+    on_setup = function(config)
+      local which_key = config.inject.which_key
 
-    opts = {
-      mode = "n", -- NORMAL mode
-      prefix = "<leader>",
-      buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-      silent = true, -- use `silent` when creating keymaps
-      noremap = true, -- use `noremap` when creating keymaps
-      nowait = true, -- use `nowait` when creating keymaps
+      which_key.setup(config.setup)
+
+      which_key.register(lvim.wk.mappings, config.opts)
+      which_key.register(lvim.wk.vmappings, config.vopts)
+    end,
+    autocmds = {
+      {
+        "FileType",
+        { group = "__which_key", pattern = "which_key", command = "nnoremap <silent> <buffer> <esc> <C-c><CR>" },
+      },
     },
-    vopts = {
-      mode = "v", -- VISUAL mode
-      prefix = "<leader>",
-      buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-      silent = true, -- use `silent` when creating keymaps
-      noremap = true, -- use `noremap` when creating keymaps
-      nowait = true, -- use `nowait` when creating keymaps
-    },
-    -- NOTE: Prefer using : over <cmd> as the latter avoids going back in normal-mode.
-    -- see https://neovim.io/doc/user/map.html#:map-cmd
-    vmappings = keymaps.vmappings,
-    mappings = keymaps.mappings,
-  }
-end
-
-M.setup = function()
-  local which_key = require "which-key"
-
-  which_key.setup(lvim.builtin.which_key.setup)
-
-  local opts = lvim.builtin.which_key.opts
-  local vopts = lvim.builtin.which_key.vopts
-
-  local mappings = lvim.builtin.which_key.mappings
-  local vmappings = lvim.builtin.which_key.vmappings
-
-  which_key.register(mappings, opts)
-  which_key.register(vmappings, vopts)
-
-  require("lvim.core.autocmds").define_autocmds {
-    {
-      "FileType",
-      { group = "__which_key", pattern = "which_key", command = "nnoremap <silent> <buffer> <esc> <C-c><CR>" },
-    },
-  }
-
-  if lvim.builtin.which_key.on_config_done then
-    lvim.builtin.which_key.on_config_done(which_key)
-  end
+  })
 end
 
 return M

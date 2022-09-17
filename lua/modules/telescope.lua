@@ -1,6 +1,5 @@
 M = {}
 
-local telescope = require "lvim.core.telescope"
 local Log = require "lvim.core.log"
 
 function M.rg_interactive()
@@ -26,14 +25,14 @@ function M.rg_interactive()
     end
 
     return require("telescope.builtin").live_grep {
-      vimgrep_arguments = vim.list_extend(vim.deepcopy(telescope.rg_arguments), chunks),
+      vimgrep_arguments = vim.list_extend(vim.deepcopy(lvim.fn.get_telescope_rg_arguments()), chunks),
     }
   end)
 end
 
 function M.rg_string()
   return require("telescope.builtin").live_grep {
-    vimgrep_arguments = vim.list_extend(vim.deepcopy(telescope.rg_arguments), { "--fixed-strings" }),
+    vimgrep_arguments = vim.list_extend(vim.deepcopy(lvim.fn.get_telescope_rg_arguments()), { "--fixed-strings" }),
   }
 end
 

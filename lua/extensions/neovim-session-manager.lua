@@ -35,6 +35,16 @@ function M.config()
     on_setup = function(config)
       require("session_manager").setup(config.setup)
     end,
+    wk = {
+      w = {
+        d = { ":SessionManager delete_session<CR>", "delete sessions" },
+        l = { ":SessionManager load_current_dir_session<CR>", "load cwd last session" },
+        L = { ":SessionManager load_last_session<CR>", "load last session" },
+        s = { ":SessionManager save_current_session<CR>", "save session" },
+        f = { ":SessionManager load_session<CR>", "list sessions" },
+        p = { ":Telescope projects<CR>", "projects" },
+      },
+    },
   })
 end
 

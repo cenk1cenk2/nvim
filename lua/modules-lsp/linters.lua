@@ -29,14 +29,6 @@ function M.setup()
       filetypes = { "python" },
     },
 
-    -- {
-    --   name = "jsonlint",
-    -- },
-
-    -- {
-    --   name = "checkmake",
-    -- },
-
     {
       name = "codespell",
     },

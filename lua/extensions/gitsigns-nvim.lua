@@ -1,10 +1,21 @@
+-- https://github.com/lewis6991/gitsigns.nvim
 local M = {}
 
-M.config = function()
-  lvim.builtin.gitsigns = {
-    active = true,
-    on_config_done = nil,
-    opts = {
+local extension_name = "gitsigns_nvim"
+
+function M.config()
+  require("utils.setup").define_extension(extension_name, true, {
+    packer = function(config)
+      return {
+        "lewis6991/gitsigns.nvim",
+        event = "BufRead",
+        config = function()
+          require("utils.setup").packer_config "gitsigns_nvim"
+        end,
+        disable = not config.active,
+      }
+    end,
+    setup = {
       signs = {
         add = { hl = "GitSignsAdd", text = "▎", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn" },
         change = { hl = "GitSignsChange", text = "▎", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },
@@ -55,16 +66,23 @@ M.config = function()
       status_formatter = nil, -- Use default
       yadm = { enable = false },
     },
-  }
-end
-
-M.setup = function()
-  local gitsigns = require "gitsigns"
-
-  gitsigns.setup(lvim.builtin.gitsigns.opts)
-  if lvim.builtin.gitsigns.on_config_done then
-    lvim.builtin.gitsigns.on_config_done(gitsigns)
-  end
+    on_setup = function(config)
+      require("gitsigns").setup(config.setup)
+    end,
+    wk = {
+      g = {
+        B = { ":Gitsigns toggle_current_line_blame<CR>", "git blame" },
+        n = { ":Gitsigns next_hunk<CR>", "next hunk" },
+        p = { ":Gitsigns prev_hunk<CR>", "prev hunk" },
+        b = { ":Gitsigns blame_line<CR>", "git hover blame" },
+        k = { ":Gitsigns preview_hunk<CR>", "preview hunk" },
+        U = { ":Gitsigns reset_hunk<CR>", "reset hunk" },
+        RR = { ":Gitsigns reset_buffer<CR>", "reset buffer" },
+        s = { ":Gitsigns stage_hunk<CR>", "stage hunk" },
+        S = { ":Gitsigns undo_stage_hunk<CR>", "undo stage hunk" },
+      },
+    },
+  })
 end
 
 return M

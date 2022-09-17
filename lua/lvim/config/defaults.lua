@@ -48,6 +48,13 @@ lvim = {
       return lvim.store[key]
     end,
   },
+
+  fn = {},
+
+  wk = {
+    mappings = {},
+    vmappings = {},
+  },
 }
 
 return lvim

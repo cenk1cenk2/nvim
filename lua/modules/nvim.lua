@@ -1,7 +1,7 @@
 local M = {}
 
 function M.rebuild_latest_neovim()
-  local term_opts = vim.tbl_deep_extend("force", lvim.builtin.terminal, {
+  local term_opts = vim.tbl_deep_extend("force", require("extensions.toggleterm-nvim").current_setup(), {
     cmd = join_paths(get_config_dir(), "/utils/install-latest-neovim.sh"),
     open_mapping = lvim.log.viewer.layout_config.open_mapping,
     direction = lvim.log.viewer.layout_config.direction,

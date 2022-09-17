@@ -1,9 +1,27 @@
 local M = {}
 
 local extensions = {
+  -- core
+  "which-key",
   "alpha-nvim",
+  "bufferline-nvim",
+  "lualine-nvim",
+  "telescope",
+  "cmp",
+  "cmp-extensions",
+  "treesitter",
   "treesitter-extensions",
+  "lsp",
+  "mason",
+  "toggleterm-nvim",
+  "nvim-tree",
+  "dap",
+  "comment-nvim",
+  "gitsigns-nvim",
+  "nvim-autopairs",
+  "project-nvim",
   "neovim-session-manager",
+  -- extensions
   "hop",
   "vim-repeat",
   "neoscroll",
@@ -14,7 +32,6 @@ local extensions = {
   "vim-windowswap",
   "undotree",
   "nvim-ufo",
-  "cmp-extensions",
   "nvim-bqf",
   "lsp-trouble",
   "colorizer",
@@ -51,6 +68,7 @@ local extensions = {
   "lsp-inlayhints-nvim",
   "telescope-github",
   "telescope-vim-bookmarks",
+  "telescope-dap",
   "nvim-trevJ",
 }
 

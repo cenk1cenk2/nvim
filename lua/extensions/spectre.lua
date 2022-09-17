@@ -162,30 +162,6 @@ function M.config()
     on_setup = function(config)
       require("spectre").setup(config.setup)
     end,
-    on_done = function(config)
-      local spectre = config.inject.spectre
-
-      require("utils.command").create_commands {
-        {
-          name = "FindAndReplace",
-          fn = function()
-            spectre.open()
-          end,
-        },
-        {
-          name = "FindAndReplaceVisual",
-          fn = function()
-            spectre.open_visual()
-          end,
-        },
-        {
-          name = "FindAndReplaceInBuffer",
-          fn = function()
-            spectre.open_file_search()
-          end,
-        },
-      }
-    end,
     keymaps = function(config)
       local spectre = config.inject.spectre
       return {
@@ -196,6 +172,33 @@ function M.config()
         v = {
           ["sa"] = { spectre.open_file_search, { desc = "search and replace in current file" } },
           ["as"] = { spectre.open, { desc = "search and replace" } },
+        },
+      }
+    end,
+    wk = function(config)
+      local spectre = config.inject.spectre
+      return {
+        -- find and replace
+        s = {
+          name = "+find & replace",
+          f = {
+            function()
+              spectre.open()
+            end,
+            "find and replace",
+          },
+          v = {
+            function()
+              spectre.open_visual()
+            end,
+            "find the word under cursor and replace",
+          },
+          b = {
+            function()
+              spectre.open_file_search()
+            end,
+            "find and replace in current buffer",
+          },
         },
       }
     end,

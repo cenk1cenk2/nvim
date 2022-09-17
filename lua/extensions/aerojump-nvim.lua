@@ -15,6 +15,9 @@ function M.config()
         run = ":UpdateRemotePlugins",
       }
     end,
+    on_done = function()
+      lvim.extensions.cmp.per_ft.AerojumpFilter = { sources = {} }
+    end,
     legacy_setup = {
       aerojump_bolt_lines_before = 3,
       aerojump_bolt_lines_after = 3,
