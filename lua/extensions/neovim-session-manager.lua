@@ -42,7 +42,6 @@ function M.config()
         L = { ":SessionManager load_last_session<CR>", "load last session" },
         s = { ":SessionManager save_current_session<CR>", "save session" },
         f = { ":SessionManager load_session<CR>", "list sessions" },
-        p = { ":Telescope projects<CR>", "projects" },
       },
     },
   })

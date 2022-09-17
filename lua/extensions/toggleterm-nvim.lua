@@ -54,10 +54,10 @@ function M.config()
       },
       -- Add executables on the config.lua
       execs = {
-        { "lazygit", "tg", "LazyGit" },
-        { "lazydocker", "td", "LazyDocker" },
-        { "htop", "th", "htop" },
-        { "ncdu", "tn", "ncdu" },
+        { cmd = "lazygit", keymap = "g", label = "LazyGit" },
+        { cmd = "lazydocker", keymap = "d", label = "LazyDocker" },
+        { cmd = "htop", keymap = "h", label = "htop" },
+        { cmd = "ncdu", keymap = "n", label = "ncdu" },
       },
     },
     on_setup = function(config)
@@ -75,12 +75,12 @@ function M.config()
 
       for i, exec in pairs(config.setup.execs) do
         local opts = {
-          cmd = exec[1],
-          keymap = exec[2],
-          label = exec[3],
+          cmd = exec.cmd,
+          keymap = exec.keymap,
+          label = exec.label,
           -- NOTE: unable to consistently bind id/count <= 9, see #2146
           count = i + 100,
-          direction = exec[4] or M.current_setup().direction,
+          direction = exec.direction or M.current_setup().direction,
           size = M.current_setup().size,
         }
 
@@ -160,19 +160,16 @@ function M.add_exec(opts)
     return
   end
 
-  lvim.wk.mappings[opts.keymap] = {
-    function()
-      M._exec_toggle { cmd = opts.cmd, count = opts.count, direction = opts.direction }
-    end,
-    opts.label,
+  require("utils.setup").load_wk_mappings {
+    ["t"] = {
+      [opts.keymap] = {
+        function()
+          M._exec_toggle { cmd = opts.cmd, count = opts.count, direction = opts.direction }
+        end,
+        opts.label,
+      },
+    },
   }
-
-  local wk_status_ok, wk = pcall(require, "which-key")
-  if not wk_status_ok then
-    return
-  end
-
-  wk.register({ [opts.keymap] = { opts.label } }, { mode = "n" })
 end
 
 local terminals = {}
