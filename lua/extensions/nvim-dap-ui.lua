@@ -34,7 +34,7 @@ function M.config()
       },
       -- Expand lines larger than the window
       -- Requires >= 0.7
-      expand_lines = vim.fn.has "nvim-0.7",
+      expand_lines = true,
       -- Layouts define sections of the screen to place windows.
       -- The position can be "left", "right", "top" or "bottom".
       -- The size specifies the height/width depending on position.
@@ -88,7 +88,7 @@ function M.config()
             end,
             "toggle ui",
           },
-          k = {
+          K = {
             function()
               dap_ui.float_element()
             end,

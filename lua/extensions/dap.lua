@@ -22,6 +22,7 @@ function M.config()
         dap = require "dap",
         vscode = require "dap.ext.vscode",
         widgets = require "dap.ui.widgets",
+        get_debugger = M.get_debugger,
       }
     end,
     on_done = function(config)
@@ -49,7 +50,7 @@ function M.config()
     },
     wk = function(config)
       local dap = config.inject.dap
-      local ui = config.inject.ui
+      local widgets = config.inject.widgets
       local vscode = config.inject.vscode
 
       return {
@@ -103,9 +104,9 @@ function M.config()
             end,
             "step over",
           },
-          K = {
+          k = {
             function()
-              ui.hover()
+              widgets.hover()
             end,
             "inspect element",
           },
@@ -168,6 +169,10 @@ function M.config()
       }
     end,
   })
+end
+
+function M.get_debugger(name)
+  return vim.fn.stdpath "data" .. "/mason/bin/" .. name
 end
 
 return M

@@ -45,6 +45,7 @@ local extensions = {
   "coc",
   "lspsaga-nvim",
   "nvim-dap-ui",
+  "nvim-dap-virtual-text",
   "vim-jinja2-syntax",
   "dressing",
   "aerojump-nvim",

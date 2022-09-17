@@ -150,6 +150,16 @@ function M.config()
         },
       },
     },
+    autocmds = {
+      {
+        { "TermOpen" },
+        {
+          group = "__TERMINAL",
+          pattern = "*",
+          command = "nnoremap <buffer><LeftRelease> <LeftRelease>i",
+        },
+      },
+    },
   })
 end
 

@@ -133,28 +133,119 @@ lvim.lsp.null_ls.setup = {
 
 lvim.extensions.dap.on_complete = function(config)
   local dap = config.inject.dap
+  local get_debugger = config.inject.get_debugger
 
+  -- adapters
   dap.adapters.node2 = {
     type = "executable",
-    command = "node",
-    args = { vim.fn.stdpath "data" .. "/mason/packages/node-debug2-adapter/out/src/nodeDebug.js" },
+    command = get_debugger "node-debug2-adapter",
+    args = {},
   }
 
   -- Chrome
   dap.adapters.chrome = {
     type = "executable",
-    command = "node",
-    args = { vim.fn.stdpath "data" .. "/mason/packages/chrome-debug-adapter/out/src/chromeDebug.js" },
+    command = get_debugger "chrome-debug-adapter",
+    args = {},
   }
 
+  dap.adapters.delve = {
+    type = "executable",
+    command = get_debugger "dlv",
+    args = {},
+  }
+
+  -- configurations
   dap.configurations.javascript = {
     {
+      name = "Launch",
       type = "node2",
       request = "launch",
       program = "${file}",
       cwd = vim.fn.getcwd(),
       sourceMaps = true,
       protocol = "inspector",
+      console = "integratedTerminal",
+    },
+    {
+      -- For this to work you need to make sure the node process is started with the `--inspect` flag.
+      name = "Attach to process",
+      type = "node2",
+      request = "attach",
+      processId = require("dap.utils").pick_process,
+    },
+  }
+
+  dap.configurations.typescript = {
+    {
+      name = "Launch",
+      type = "node2",
+      request = "launch",
+      program = "${file}",
+      cwd = vim.fn.getcwd(),
+      sourceMaps = true,
+      protocol = "inspector",
+      console = "integratedTerminal",
+    },
+    {
+      -- For this to work you need to make sure the node process is started with the `--inspect` flag.
+      name = "Attach to process",
+      type = "node2",
+      request = "attach",
+      processId = require("dap.utils").pick_process,
+    },
+  }
+
+  dap.configurations.javascriptreact = { -- change this to javascript if needed
+    {
+      name = "attach with chrome",
+      type = "chrome",
+      request = "attach",
+      program = "${file}",
+      cwd = vim.fn.getcwd(),
+      sourceMaps = true,
+      protocol = "inspector",
+      port = 9222,
+      webRoot = "${workspaceFolder}",
+    },
+  }
+
+  dap.configurations.typescriptreact = { -- change to typescript if needed
+    {
+      name = "attach with chrome",
+      type = "chrome",
+      request = "attach",
+      program = "${file}",
+      cwd = vim.fn.getcwd(),
+      sourceMaps = true,
+      protocol = "inspector",
+      port = 9222,
+      webRoot = "${workspaceFolder}",
+    },
+  }
+
+  -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
+  dap.configurations.go = {
+    {
+      name = "Debug",
+      type = "delve",
+      request = "launch",
+      program = "${file}",
+    },
+    {
+      name = "Debug test", -- configuration for debugging test files
+      type = "delve",
+      request = "launch",
+      mode = "test",
+      program = "${file}",
+    },
+    -- works with go.mod packages and sub packages
+    {
+      name = "Debug test (go.mod)",
+      type = "delve",
+      request = "launch",
+      mode = "test",
+      program = "./${relativeFileDirname}",
     },
   }
 end
