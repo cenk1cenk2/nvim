@@ -59,6 +59,7 @@ M.config = function()
       },
     },
     options = {
+      mode = "buffers", -- set to "tabs" to only show tabpages instead
       numbers = "none", -- can be "none" | "ordinal" | "buffer_id" | "both" | function
       close_command = "BufferClose", -- can be a string | function, see "Mouse actions"
       right_mouse_command = "vert sbuffer %d", -- can be a string | function, see "Mouse actions"
@@ -69,6 +70,7 @@ M.config = function()
       -- as an escape hatch for people who cannot bear it for whatever reason
       indicator = {
         icon = "▎",
+        style = "icon", -- can also be 'underline'|'none',
       },
       buffer_close_icon = "",
       modified_icon = "●",
@@ -88,6 +90,7 @@ M.config = function()
       max_name_length = 18,
       max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
       tab_size = 20,
+      truncate_names = true, -- whether or not tab names should be truncated
       diagnostics = "nvim_lsp",
       diagnostics_update_in_insert = false,
       diagnostics_indicator = diagnostics_indicator,
@@ -124,6 +127,7 @@ M.config = function()
         --   padding = 1,
         -- },
       },
+      color_icons = true, -- whether or not to add the filetype icon highlights
       show_buffer_icons = lvim.use_icons, -- disable filetype icons for buffers
       show_buffer_close_icons = lvim.use_icons,
       show_close_icon = false,
@@ -133,7 +137,6 @@ M.config = function()
       -- [focused and unfocused]. eg: { '|', '|' }
       separator_style = "thin",
       enforce_regular_tabs = false,
-      always_show_bufferline = true,
       sort_by = "id",
     },
   }
@@ -141,7 +144,13 @@ end
 
 M.setup = function()
   require("lvim.keymappings").load(lvim.builtin.bufferline.keymap)
-  require("bufferline").setup {
+
+  local status_ok, bufferline = pcall(require, "bufferline")
+  if not status_ok then
+    return
+  end
+
+  bufferline.setup {
     options = lvim.builtin.bufferline.options,
     highlights = lvim.builtin.bufferline.highlights,
   }

@@ -47,8 +47,11 @@ function M.config()
 end
 
 M.setup = function()
-  local autopairs = require "nvim-autopairs"
-  -- local Rule = require "nvim-autopairs.rule"
+  local status_ok, autopairs = pcall(require, "nvim-autopairs")
+  if not status_ok then
+    return
+  end
+  local Rule = require "nvim-autopairs.rule"
 
   autopairs.setup {
     check_ts = lvim.builtin.autopairs.check_ts,

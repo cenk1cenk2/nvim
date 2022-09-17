@@ -22,10 +22,8 @@ function M.config()
         "alpha",
       },
       auto_reload_on_write = true,
-      hijack_unnamed_buffer_when_opening = false,
       hijack_directories = {
-        enable = true,
-        auto_open = true,
+        enable = false,
       },
       -- update the focused file on `BufEnter`, un-collapses the folders recursively until it finds the file
       update_focused_file = {
