@@ -11,7 +11,6 @@ function M.config()
       return {
         "akinsho/toggleterm.nvim",
         event = "BufWinEnter",
-        branch = "main",
         config = function()
           require("utils.setup").packer_config "toggleterm_nvim"
         end,

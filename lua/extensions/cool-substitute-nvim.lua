@@ -8,7 +8,6 @@ function M.config()
     packer = function(config)
       return {
         "otavioschwanck/cool-substitute.nvim",
-        branch = "main",
         config = function()
           require("utils.setup").packer_config "cool_substitute_nvim"
         end,
