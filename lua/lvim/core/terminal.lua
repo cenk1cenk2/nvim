@@ -79,40 +79,72 @@ M.setup = function()
 
   require("lvim.keymappings").load {
     normal_mode = {
-      ["<F1>"] = ":lua require('lvim.core.terminal').current_float_terminal():toggle()<CR>",
-      ["<F2>"] = ":lua require('lvim.core.terminal').float_terminal_select('prev')<CR>",
-      ["<F3>"] = ":lua require('lvim.core.terminal').float_terminal_select('next')<CR>",
-      ["<F4>"] = ":lua require('lvim.core.terminal').create_and_open_float_terminal()<CR>",
-      ["<F6>"] = ":lua require('lvim.core.terminal').buffer_terminal()<CR>",
-      ["<F7>"] = ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
-      ["<F9>"] = ":lua require('lvim.core.terminal').terminal_kill_all()<CR>",
+      ["<F1>"] = function()
+        M.current_float_terminal():toggle()
+      end,
+      ["<F2>"] = function()
+        M.float_terminal_select "prev"
+      end,
+      ["<F3>"] = function()
+        M.float_terminal_select "next"
+      end,
+      ["<F4>"] = function()
+        M.create_and_open_float_terminal()
+      end,
+      ["<F6>"] = function()
+        M.buffer_terminal()
+      end,
+      ["<F7>"] = function()
+        M.bottom_terminal()
+      end,
+      ["<F9>"] = function()
+        M.terminal_kill_all()
+      end,
       ["<F11>"] = ":Mason<CR>",
     },
     term_mode = {
-      ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').close_all()<CR>",
-      ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').float_terminal_select('prev')<CR>",
-      ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').float_terminal_select('next')<CR>",
-      ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').create_float_terminal()<CR>",
-      ["<F9>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').terminal_kill_all()<CR>",
-      -- ["<F1>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').float_terminal()<CR>",
-      -- ["<F2>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazygit')<CR>",
-      -- ["<F3>"] = "<C-\\><C-n>:lua require('lvim.core.terminal')._exec_toggle('lazydocker')<CR>",
-      -- ["<F4>"] = "<C-\\><C-n>:lua require('lvim.core.terminal').bottom_terminal()<CR>",
+      ["<F1>"] = function()
+        M.current_float_terminal():toggle()
+      end,
+      ["<F2>"] = function()
+        M.float_terminal_select "prev"
+      end,
+      ["<F3>"] = function()
+        M.float_terminal_select "next"
+      end,
+      ["<F4>"] = function()
+        M.create_and_open_float_terminal()
+      end,
+      ["<F6>"] = function()
+        M.buffer_terminal()
+      end,
+      ["<F7>"] = function()
+        M.bottom_terminal()
+      end,
+      ["<F9>"] = function()
+        M.terminal_kill_all()
+      end,
     },
   }
 
   lvim.builtin.which_key.mappings["t"]["b"] = {
-    ":lua require('lvim.core.terminal').buffer_terminal()<CR>",
+    function()
+      M.buffer_terminal()
+    end,
     "buffer cwd terminal",
   }
 
   lvim.builtin.which_key.mappings["t"]["B"] = {
-    ":lua require('lvim.core.terminal').bottom_terminal()<CR>",
+    function()
+      M.bottom_terminal()
+    end,
     "bottom terminal",
   }
 
   lvim.builtin.which_key.mappings["t"]["X"] = {
-    ":lua require('lvim.core.terminal').terminal_kill_all()<CR>",
+    function()
+      M.terminal_kill_all()
+    end,
     "kill all terminals",
   }
 end

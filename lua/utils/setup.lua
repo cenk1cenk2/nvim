@@ -25,7 +25,7 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil) ,condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table | (fun(config: config): any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil), commands: table, nvim_opts: table }
+---@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil), configure: (fun(config: config): nil),condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table, keymaps: table | (fun(config: config): any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil), commands: table, nvim_opts: table }
 
 ---
 ---@param extension_name string
@@ -75,6 +75,10 @@ function M.define_extension(extension_name, active, config)
     return
   end
 
+  if config ~= nil and config.configure ~= nil then
+    config.configure(config)
+  end
+
   lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config or {})
 
   if config ~= nil and config.packer ~= nil then
@@ -103,10 +107,6 @@ end
 ---
 ---@param config config
 function M.run(config)
-  if config ~= nil and config.on_init ~= nil then
-    config.on_init(config)
-  end
-
   if config ~= nil and config.to_inject ~= nil then
     local ok = pcall(function()
       ---@diagnostic disable-next-line: assign-type-mismatch
@@ -118,6 +118,10 @@ function M.run(config)
 
       return
     end
+  end
+
+  if config ~= nil and config.on_init ~= nil then
+    config.on_init(config)
   end
 
   if config ~= nil and config.autocmds ~= nil then

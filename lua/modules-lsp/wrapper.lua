@@ -103,21 +103,6 @@ function M.show_line_diagnostics()
   vim.diagnostic.open_float(0, config)
 end
 
-function M.peek_definition()
-  require("lvim.lsp.peek").Peek "definition"
-  require("lvim.lsp.peek").Peek "definition"
-end
-
-function M.peek_type()
-  require("lvim.lsp.peek").Peek "typeDefinition"
-  require("lvim.lsp.peek").Peek "typeDefinition"
-end
-
-function M.peek_implementation()
-  require("lvim.lsp.peek").Peek "implementation"
-  require("lvim.lsp.peek").Peek "implementation"
-end
-
 function M.document_diagonistics()
   vim.api.nvim_command "Telescope lsp_document_diagnostics"
 end

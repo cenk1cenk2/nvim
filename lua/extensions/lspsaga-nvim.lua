@@ -111,13 +111,11 @@ function M.config()
       lvim.lsp_wrapper.show_line_diagnostics = function()
         lspsaga_diagnostic.show_line_diagnostics()
       end
-      lvim.lsp_wrapper.peek_definition = function()
-        vim.api.nvim_command "Lspsaga peek_definition"
-      end
     end,
     keymaps = {
       n = {
         ["ge"] = { ":Lspsaga lsp_finder<CR>", { desc = "finder" } },
+        ["gw"] = { ":Lspsaga peek_definition<CR>", { desc = "peek" } },
       },
     },
     wk = {

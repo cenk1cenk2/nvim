@@ -10,6 +10,12 @@ local opts = {
   settings = {
     json = {
       schemas = vim.tbl_deep_extend("force", require("schemastore").json.schemas(), schemas),
+      schemaDownload = {
+        enable = true,
+      },
+      validate = {
+        enable = true,
+      },
     },
   },
   setup = {

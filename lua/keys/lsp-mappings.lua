@@ -48,12 +48,6 @@ return {
       end,
       "code action",
     },
-    ["gw"] = {
-      function()
-        lvim.lsp_wrapper.peek_definition()
-      end,
-      "lsp peek",
-    },
   },
   insert_mode = {},
   visual_mode = {

@@ -19,17 +19,55 @@ function M.config()
         name = "npm",
       },
     },
+    configure = function()
+      lvim.builtin.cmp.sources = {
+        { name = "nvim_lsp" },
+        { name = "path" },
+        { name = "luasnip" },
+        { name = "nvim_lua" },
+        { name = "buffer" },
+        { name = "crates" },
+
+        { name = "git" },
+
+        { name = "npm" },
+
+        { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
+
+        { name = "treesitter" },
+
+        { name = "tmux" },
+
+        -- { name = "cmp_tabnine" },
+      }
+
+      lvim.builtin.cmp.formatting.source_names = {
+        nvim_lsp = "(LSP)",
+        emoji = "(Emoji)",
+        path = "(Path)",
+        calc = "(Calc)",
+        cmp_tabnine = "(Tabnine)",
+        vsnip = "(Snippet)",
+        luasnip = "(Snippet)",
+        buffer = "(Buffer)",
+        git = "(GIT)",
+        npm = "(NPM)",
+        rg = "(RG)",
+        orgmode = "(ORG)",
+        tmux = "(TMUX)",
+      }
+    end,
+    to_inject = function()
+      return {
+        cmp = require "cmp",
+      }
+    end,
     on_setup = function(config)
       for key, e in pairs(config.setup) do
         local extension = require(key)
 
         extension.setup(e)
       end
-    end,
-    to_inject = function()
-      return {
-        cmp = require "cmp",
-      }
     end,
     on_done = function(config)
       local cmp = config.inject.cmp

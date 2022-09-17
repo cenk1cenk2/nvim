@@ -213,19 +213,6 @@ M.config = function()
       { name = "luasnip" },
       { name = "nvim_lua" },
       { name = "buffer" },
-      { name = "crates" },
-
-      { name = "git" },
-
-      { name = "npm" },
-
-      { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
-
-      { name = "treesitter" },
-
-      { name = "tmux" },
-
-      -- { name = "cmp_tabnine" },
     },
     mapping = cmp.mapping.preset.insert {
       ["<C-k>"] = cmp.mapping.select_prev_item(),
