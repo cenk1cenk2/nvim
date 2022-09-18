@@ -29,6 +29,8 @@ function M.config()
         { "rafamadriz/friendly-snippets" },
         { "L3MON4D3/LuaSnip" },
         { "folke/lua-dev.nvim", module = "lua-dev" },
+        { "hrsh7th/cmp-nvim-lsp-signature-help" },
+        { "rcarriga/cmp-dap" },
       }
     end,
     setup = {
@@ -40,11 +42,13 @@ function M.config()
       },
       ["cmp-npm"] = {
         name = "npm",
+        filetypes = { "json" },
       },
     },
     configure = function()
       lvim.extensions.cmp.to_setup = {
         sources = {
+          { name = "nvim_lsp_signature_help" },
           { name = "nvim_lsp" },
           { name = "path" },
           { name = "luasnip" },
@@ -71,6 +75,7 @@ function M.config()
             npm = "(NPM)",
             rg = "(RG)",
             tmux = "(TMUX)",
+            nvim_lsp_signature_help = "(SH)",
           },
         },
       }
@@ -128,6 +133,13 @@ function M.config()
         },
         sources = cmp.config.sources {
           { name = "fuzzy_buffer" },
+        },
+      })
+
+      -- dap
+      cmp.setup.filetype({ "dap-repl", "dapui_watches" }, {
+        sources = {
+          { name = "dap" },
         },
       })
     end,
