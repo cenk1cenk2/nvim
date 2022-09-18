@@ -25,7 +25,7 @@ function M.config()
       bookmark_auto_save_file = utils.join_paths(get_cache_dir(), "bookmarks"),
     },
     wk = {
-      ["m"] = { name = "+bookmarks" },
+      ["m"] = { name = "bookmarks" },
     },
   })
 end

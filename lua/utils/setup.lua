@@ -61,10 +61,16 @@ function M.define_extension(extension_name, active, config)
 
       return value
     end,
+    get_injected = function(key)
+      return lvim.extensions[extension_name].inject[key]
+    end,
     set_store = function(key, value)
       lvim.extensions[extension_name].store[key] = value
 
       return value
+    end,
+    get_store = function(key)
+      return lvim.extensions[extension_name].store[key]
     end,
   }
 

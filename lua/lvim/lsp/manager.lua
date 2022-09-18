@@ -38,7 +38,7 @@ local function resolve_config(server_name, ...)
     capabilities = require("lvim.lsp").common_capabilities(),
   }
 
-  local has_custom_provider, custom_config = pcall(require, "lvim/lsp/providers/" .. server_name)
+  local has_custom_provider, custom_config = pcall(require, "modules-lsp/overrides/" .. server_name)
   if has_custom_provider then
     Log:debug("Using custom configuration for requested server: " .. server_name)
     defaults = vim.tbl_deep_extend("force", defaults, custom_config)

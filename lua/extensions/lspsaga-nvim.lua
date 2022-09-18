@@ -53,10 +53,10 @@ function M.config()
       -- show symbols in winbar must nightly
       symbol_in_winbar = {
         in_custom = false,
-        enable = false,
+        enable = true,
         separator = " ",
         show_file = true,
-        click_support = false,
+        click_support = true,
       },
       rename_action_quit = "<C-c>",
       -- "single" "double" "rounded" "bold" "plus"

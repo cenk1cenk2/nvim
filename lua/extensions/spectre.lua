@@ -180,7 +180,7 @@ function M.config()
       return {
         -- find and replace
         s = {
-          name = "+find & replace",
+          name = "find & replace",
           f = {
             function()
               spectre.open()

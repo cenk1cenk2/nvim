@@ -53,7 +53,17 @@ function M.load_defaults()
       "FileType",
       {
         group = "_buffer_mappings",
-        pattern = { "qf", "help", "man", "floaterm", "lspinfo", "lsp-installer", "null-ls-info", "dap-float" },
+        pattern = {
+          "qf",
+          "help",
+          "man",
+          "floaterm",
+          "lspinfo",
+          "lsp-installer",
+          "null-ls-info",
+          "dap-float",
+          "lspsagaoutline",
+        },
         command = "nnoremap <silent> <buffer> q :close<CR>",
       },
     },

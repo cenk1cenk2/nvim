@@ -21,6 +21,9 @@ function M.config()
         dap_ui = require "dapui",
       }
     end,
+    on_init = function(config)
+      config.set_store("setup", false)
+    end,
     setup = {
       icons = { expanded = "▾", collapsed = "▸" },
       mappings = {
@@ -75,7 +78,12 @@ function M.config()
       },
     },
     on_setup = function(config)
+      if config.get_store "setup" then
+        return
+      end
+
       require("dapui").setup(config.setup)
+      config.set_store("setup", true)
     end,
     wk = function(config)
       local dap_ui = config.inject.dap_ui

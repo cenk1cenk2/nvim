@@ -180,12 +180,12 @@ M.mappings = {
 
   -- terminal
   t = {
-    name = "+terminal",
+    name = "terminal",
   },
 
   -- workspace/session
   w = {
-    name = "+session",
+    name = "session",
     q = {
       function()
         require("lvim.utils.functions").smart_quit()
@@ -195,10 +195,10 @@ M.mappings = {
   },
 
   L = {
-    name = "+neovim",
+    name = "neovim",
     k = { ":Telescope keymaps<CR>", "list keymaps" },
     l = {
-      name = "+logs",
+      name = "logs",
       d = {
         function()
           lvim.fn.toggle_log_view(require("lvim.core.log").get_path())

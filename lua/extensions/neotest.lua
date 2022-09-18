@@ -51,7 +51,7 @@ function M.config()
 
       return {
         ["J"] = {
-          name = "+neotest",
+          name = "neotest",
           ["r"] = {
             function()
               neotest.run.run()

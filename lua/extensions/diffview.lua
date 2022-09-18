@@ -45,7 +45,7 @@ function M.config()
           },
           merge_tool = {
             -- Config for conflicted files in diff views during a merge or rebase.
-            layout = "diff3_horizontal",
+            layout = "diff3_mixed",
             disable_diagnostics = true, -- Temporarily disable diagnostics for conflict buffers while in the view.
           },
           file_history = {
@@ -69,8 +69,8 @@ function M.config()
             ["]n"] = actions.next_conflict, -- In the merge_tool: jump to the next conflict
             ["co"] = actions.conflict_choose "ours", -- Choose the OURS version of a conflict
             ["ct"] = actions.conflict_choose "theirs", -- Choose the THEIRS version of a conflict
-            ["cb"] = actions.conflict_choose "base", -- Choose the BASE version of a conflict
-            ["ca"] = actions.conflict_choose "all", -- Choose all the versions of a conflict
+            ["cB"] = actions.conflict_choose "base", -- Choose the BASE version of a conflict
+            ["cb"] = actions.conflict_choose "all", -- Choose all the versions of a conflict
             ["cn"] = actions.conflict_choose "none", -- Delete the conflict region
           },
           diff1 = { --[[ Mappings in single window diff layouts ]]

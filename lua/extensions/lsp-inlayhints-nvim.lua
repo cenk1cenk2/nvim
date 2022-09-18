@@ -1,4 +1,4 @@
--- https://github.com/lukas-reineke/indent-blankline.nvim
+-- https://github.com/lvimuser/lsp-inlayhints.nvim
 local M = {}
 
 local extension_name = "lsp_inlayhits_nvim"

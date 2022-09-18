@@ -72,6 +72,7 @@ local extensions = {
   "telescope-vim-bookmarks",
   "telescope-dap",
   "nvim-trevJ",
+  "symbols-outline",
 }
 
 function M.config(config)

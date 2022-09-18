@@ -50,9 +50,10 @@ end
 
 function M.setup()
   require("utils.setup").run {
+    name = "executables",
     wk = {
       r = {
-        name = "+executables",
+        name = "executables",
         d = {
           function()
             M.run_ansible_vault_decrypt()
