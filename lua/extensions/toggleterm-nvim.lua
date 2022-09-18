@@ -120,7 +120,11 @@ function M.config()
 
       return {
         n = maps,
-        t = maps,
+        t = vim.tbl_extend("force", maps, {
+          ["<F1>"] = function()
+            M.close_all()
+          end,
+        }),
       }
     end,
     wk = {
