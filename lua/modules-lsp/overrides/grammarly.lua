@@ -3,21 +3,23 @@ local opts = {
   single_file_support = true,
   settings = {
     grammarly = {
-      hideUnavailablePremiumAlerts = true,
-      audience = "knowledgeable",
-      dialect = "american",
-      domain = "general",
-      style = "neutral",
-      diagnostics = {
-        ["[markdown]"] = {
-          ignore = { "inlineCode", "code" },
+      startTextCheckInPausedState = false,
+      config = {
+        hideUnavailablePremiumAlerts = true,
+        audience = "knowledgeable",
+        dialect = "american",
+        domain = "general",
+        style = "neutral",
+        diagnostics = {
+          ["[markdown]"] = {
+            ignore = { "inlineCode", "code" },
+          },
         },
       },
     },
   },
   init_options = {
-    clientId = "",
-    startTextCheckInPausedState = false,
+    clientId = "client_BaDkMgx4X19X9UxxYRCXZo",
   },
   -- handlers = {
   --   ["$/getToken"] = function()

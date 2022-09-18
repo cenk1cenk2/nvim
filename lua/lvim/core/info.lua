@@ -91,6 +91,8 @@ local function make_client_info(client)
     vim.list_extend(client_info, enabled_caps)
   end
 
+  vim.list_extend(client_info, { "" })
+
   return client_info
 end
 

@@ -73,6 +73,7 @@ function M.config()
         end,
       },
       rename_action_quit = "<C-c>",
+      rename_in_select = false,
       -- "single" "double" "rounded" "bold" "plus"
       border_style = "single",
       --the range of 0 for fully opaque window (disabled) to 100 for fully
