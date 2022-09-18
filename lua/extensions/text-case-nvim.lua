@@ -8,6 +8,7 @@ function M.config()
     packer = function(config)
       return {
         "johmsalas/text-case.nvim",
+        event = "BufReadPost",
         config = function()
           require("utils.setup").packer_config "text_case_nvim"
         end,
