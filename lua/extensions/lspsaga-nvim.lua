@@ -54,7 +54,7 @@ function M.config()
       symbol_in_winbar = {
         in_custom = false,
         enable = true,
-        separator = " ",
+        separator = "  ",
         show_file = true,
         click_support = function(node, clicks, button, modifiers)
           -- To see all avaiable details: vim.pretty_print(node)

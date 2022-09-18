@@ -28,7 +28,7 @@ local extensions = {
   "spectre",
   "rnvimr",
   "vim-visual-multi",
-  "vim-maximizer",
+  "windows-nvim",
   "vim-windowswap",
   "undotree",
   "nvim-ufo",
