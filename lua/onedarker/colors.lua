@@ -72,9 +72,9 @@ return {
   },
 
   diff = {
-    text = "#1f2442",
-    add = "#21402b",
-    delete = "#360f1b",
-    change = "#1c3448",
+    change = "#0b182d",
+    add = "#1a311c",
+    delete = "#2d0d1a",
+    text = "#0f2845",
   },
 }

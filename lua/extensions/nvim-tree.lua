@@ -190,7 +190,7 @@ function M.config()
             enable = true,
             chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890",
             exclude = {
-              filetype = { "notify", "spectre_panel", "Outline", "packer", "qf", "lsp_floating_window" },
+              filetype = lvim.disabled_filetypes,
               buftype = { "terminal" },
             },
           },

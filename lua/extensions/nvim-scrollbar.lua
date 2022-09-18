@@ -30,18 +30,7 @@ function M.config()
         Hint = { text = { "⯀" }, priority = 4, color = c.cyan[600] },
         Misc = { text = { "⯀" }, priority = 5, color = c.purple[600] },
       },
-      excluded_filetypes = {
-        "prompt",
-        "TelescopePrompt",
-        "notify",
-        "spectre_panel",
-        "Outline",
-        "packer",
-        "qf",
-        "lsp_floating_window",
-        "NvimTree",
-        "neo-tree",
-      },
+      excluded_filetypes = lvim.disabled_filetypes,
       autocmd = {
         render = {
           "BufWinEnter",

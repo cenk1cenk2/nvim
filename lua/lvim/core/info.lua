@@ -161,20 +161,19 @@ function M.toggle_popup(ft)
     local content = {}
 
     for _, section in ipairs {
-      M.banner,
       { "" },
       { "" },
       header,
       { "" },
       lsp_info,
       { "" },
-      auto_lsp_info,
-      { "" },
       formatters_info,
       { "" },
       linters_info,
       { "" },
       code_actions_info,
+      { "" },
+      auto_lsp_info,
     } do
       vim.list_extend(content, section)
     end

@@ -27,20 +27,7 @@ function M.config()
         -- Included filetype list.
         include = {},
         -- Excluded filetype list. Overrides `include` list.
-        exclude = {
-          "far",
-          "diff",
-          "gitcommit",
-          "help",
-          "dashboard",
-          "alpha",
-          "spectre_panel",
-          "LspTrouble",
-          "TelescopePrompt",
-          "floaterm",
-          "toggleterm",
-          "mason.nvim",
-        },
+        exclude = lvim.disabled_filetypes,
       },
       -- Trim on write behaviour.
       trim = {

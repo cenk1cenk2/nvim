@@ -43,64 +43,31 @@ function M.register_sources(configs, method)
       return registered_names
     end
 
-    local requested_server = require("mason-registry").get_package(name)
+    local opts = {
+      name = name,
+      command = cmd,
+      dynamic_command = config.dynamic_command,
+      env = config.env,
+      extra_args = config.extra_args,
+      filetypes = config.filetypes,
+      extra_filetypes = config.extra_filetypes,
+      disabled_filetypes = vim.list_extend(lvim.disabled_filetypes, config.disabled_filetypes or {}),
+      condition = config.condition,
+      runtime_condition = config.runtime_condition,
+    }
 
-    if not requested_server then
-      local command = M.find_command(source._opts.command)
+    Log:trace("Registering source " .. name)
+    Log:trace(vim.inspect(opts))
 
-      if command then
-        local opts = {
-          name = name,
-          command = command,
-        }
+    local s = source.with(opts)
 
-        Log:trace("Registering source from globally source " .. name)
-        Log:trace(vim.inspect(opts))
-
-        table.insert(sources, source.with(opts))
-
-        vim.list_extend(registered_names, { name })
-      elseif name then
-        local opts = {
-          name = name,
-        }
-
-        Log:trace("Registering source from the default source " .. name)
-        Log:trace(vim.inspect(opts))
-
-        table.insert(sources, source.with(opts))
-
-        vim.list_extend(registered_names, { name })
-      else
-        Log:warn("Not found source: " .. name)
-      end
-    else
-      local opts = {
-        name = name,
-        command = cmd,
-        dynamic_command = config.dynamic_command,
-        env = config.env,
-        extra_args = config.extra_args,
-        filetypes = config.filetypes,
-        extra_filetypes = config.extra_filetypes,
-        disabled_filetypes = config.disabled_filetypes,
-        condition = config.condition,
-        runtime_condition = config.runtime_condition,
-      }
-
-      Log:trace("Registering source " .. name)
-      Log:trace(vim.inspect(opts))
-
-      local s = source.with(opts)
-
-      if opts.dynamic_command == false then
-        s._opts.dynamic_command = nil
-      end
-
-      table.insert(sources, s)
-
-      vim.list_extend(registered_names, { name })
+    if opts.dynamic_command == false then
+      s._opts.dynamic_command = nil
     end
+
+    table.insert(sources, s)
+
+    vim.list_extend(registered_names, { name })
   end
 
   if #sources > 0 then
