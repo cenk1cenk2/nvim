@@ -77,7 +77,7 @@ lvim = {
     "diff",
     "help",
     "LspTrouble",
-    "mason.nvim",
+    "mason",
   },
 }
 
