@@ -90,7 +90,7 @@ function M.config()
         win_position = "right",
         -- set the special filetype in there which in left like nvimtree neotree defx
         left_with = "",
-        win_width = 50,
+        win_width = 40,
         auto_enter = true,
         auto_preview = true,
         virt_text = "┃",
