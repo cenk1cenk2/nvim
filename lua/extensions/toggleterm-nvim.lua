@@ -60,14 +60,14 @@ function M.config()
           return term.name
         end,
       },
-      -- on_open = M._on_open,
-      -- Add executables on the config.lua
-      execs = {
-        { cmd = "lazygit", keymap = "g", label = "LazyGit" },
-        { cmd = "lazydocker", keymap = "d", label = "LazyDocker" },
-        { cmd = "htop", keymap = "h", label = "htop" },
-        { cmd = "ncdu", keymap = "n", label = "ncdu" },
-      },
+      on_open = M.on_open,
+      on_exit = M.on_exit,
+    },
+    togglers = {
+      { cmd = "lazygit", keymap = "g", label = "LazyGit" },
+      { cmd = "lazydocker", keymap = "d", label = "LazyDocker" },
+      { cmd = "htop", keymap = "h", label = "htop" },
+      { cmd = "ncdu", keymap = "n", label = "ncdu" },
     },
     on_setup = function(config)
       require("toggleterm").setup(config.setup)
@@ -82,7 +82,7 @@ function M.config()
         vim.env.NVIM_LISTEN_ADDRESS = vim.v.servername
       end
 
-      for i, exec in pairs(config.setup.execs) do
+      for i, exec in pairs(config.togglers) do
         local opts = {
           cmd = exec.cmd,
           keymap = exec.keymap,
@@ -186,7 +186,7 @@ function M.add_exec(opts)
     ["t"] = {
       [opts.keymap] = {
         function()
-          M._exec_toggle { cmd = opts.cmd, count = opts.count, direction = opts.direction }
+          M.toggle { cmd = opts.cmd, count = opts.count, direction = opts.direction }
         end,
         opts.label,
       },
@@ -198,12 +198,17 @@ M.terminals = {}
 M.float_terminals = {}
 M.float_terminal_current = 1
 
-function M._on_open(term)
-  -- vim.api.nvim_set_current_win(term.window)
+function M.on_open(term)
+  vim.cmd "startinsert!"
   term:focus()
 end
 
-function M._exec_toggle(exec)
+function M.on_exit(term)
+  vim.cmd "startinsert!"
+  term:focus()
+end
+
+function M.toggle(exec)
   if not M.terminals[exec.cmd] then
     local Terminal = require("toggleterm.terminal").Terminal
 
@@ -339,7 +344,7 @@ function M.get_all_terminals()
   local terms = require "toggleterm.terminal"
 
   local all_terminals = {}
-  for _, value in pairs { terms.get_all(), M.terminals, M.float_terminals } do
+  for _, value in pairs { terms.get_all(true), M.terminals, M.float_terminals } do
     vim.list_extend(all_terminals, value)
   end
 
@@ -361,7 +366,7 @@ function M.close_all()
   local all_terminals = M.get_all_terminals()
 
   for _, terminal in pairs(all_terminals) do
-    if terminal:is_open() then
+    if terminal:is_open() or terminal:is_focused() then
       terminal:close()
     end
   end
