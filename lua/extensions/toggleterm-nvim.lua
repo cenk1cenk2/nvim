@@ -17,6 +17,9 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function()
+      table.insert(lvim.disabled_filetypes, "toggleterm")
+    end,
     to_inject = function()
       return {
         telescope = require "telescope",
@@ -51,6 +54,13 @@ function M.config()
         winblend = 0,
         highlights = { border = "Normal", background = "Normal" },
       },
+      winbar = {
+        enabled = false,
+        name_formatter = function(term) --  term: Terminal
+          return term.name
+        end,
+      },
+      -- on_open = M._on_open,
       -- Add executables on the config.lua
       execs = {
         { cmd = "lazygit", keymap = "g", label = "LazyGit" },
@@ -89,7 +99,6 @@ function M.config()
       local telescope = config.inject.telescope
       telescope.load_extension "find_terminals"
     end,
-
     define_global_fn = function()
       return { toggle_log_view = M.toggle_log_view }
     end,
@@ -185,86 +194,81 @@ function M.add_exec(opts)
   }
 end
 
-local terminals = {}
+M.terminals = {}
+M.float_terminals = {}
+M.float_terminal_current = 1
 
 function M._on_open(term)
-  vim.api.nvim_set_current_win(term.window)
-  vim.cmd "startinsert!"
+  -- vim.api.nvim_set_current_win(term.window)
+  term:focus()
 end
 
 function M._exec_toggle(exec)
-  if not terminals[exec.cmd] then
+  if not M.terminals[exec.cmd] then
     local Terminal = require("toggleterm.terminal").Terminal
 
-    terminals[exec.cmd] = Terminal:new {
+    M.terminals[exec.cmd] = Terminal:new {
       cmd = exec.cmd,
       hidden = true,
-      on_open = M._on_open,
     }
   end
 
-  terminals[exec.cmd]:toggle()
+  M.terminals[exec.cmd]:toggle()
 
-  return terminals[exec.cmd]
+  return M.terminals[exec.cmd]
 end
-
-local float_terminals = {}
-local float_terminal_current = 1
 
 function M.current_float_terminal()
-  if not float_terminals[float_terminal_current] then
-    float_terminal_current = 1
+  if not M.float_terminals[M.float_terminal_current] then
+    M.float_terminal_current = 1
   end
 
-  if vim.tbl_isempty(float_terminals) then
-    M.create_float_terminal(float_terminal_current)
+  if vim.tbl_isempty(M.float_terminals) then
+    M.create_float_terminal()
   end
 
-  Log:debug("Terminal switched: " .. float_terminal_current)
+  Log:debug("Terminal switched: " .. M.float_terminal_current)
 
-  return float_terminals[float_terminal_current]
+  return M.float_terminals[M.float_terminal_current]
 end
 
-function M.create_float_terminal(index)
+function M.create_float_terminal()
   local Terminal = require("toggleterm.terminal").Terminal
 
-  if not index then
-    index = vim.tbl_count(float_terminals) + 1
-  end
+  local index = vim.tbl_count(M.float_terminals) + 1
 
   Log:debug("Terminal created: " .. index)
 
   table.insert(
-    float_terminals,
+    M.float_terminals,
     index,
     Terminal:new {
       cmd = vim.o.shell,
       direction = "float",
       hidden = true,
-      on_open = M._on_open,
       on_exit = function(terminal)
-        for i, t in pairs(float_terminals) do
+        for i, t in pairs(M.float_terminals) do
           if t.id == terminal.id then
-            table.remove(float_terminals, i)
+            table.remove(M.float_terminals, i)
           end
         end
 
-        if float_terminal_current > vim.tbl_count(float_terminals) then
-          float_terminal_current = vim.tbl_count(float_terminals)
-        elseif float_terminal_current < index then
-          float_terminal_current = float_terminal_current - 1
+        if M.float_terminal_current > vim.tbl_count(M.float_terminals) then
+          M.float_terminal_current = vim.tbl_count(M.float_terminals)
+        elseif M.float_terminal_current < index then
+          M.float_terminal_current = M.float_terminal_current - 1
         end
       end,
     }
   )
 
-  float_terminal_current = index
+  M.float_terminal_current = index
 
-  return float_terminals[index]
+  return M.float_terminals[index]
 end
 
 function M.create_and_open_float_terminal()
-  if not vim.tbl_isempty(float_terminals) and M.current_float_terminal():is_open() then
+  if not vim.tbl_isempty(M.float_terminals) and M.current_float_terminal():is_open() then
     M.current_float_terminal():close()
   end
 
@@ -278,43 +282,43 @@ function M.float_terminal_select(action)
     M.current_float_terminal():close()
   end
 
-  if vim.tbl_isempty(float_terminals) then
+  if vim.tbl_isempty(M.float_terminals) then
     M.create_float_terminal()
   elseif action == "next" then
-    local updated = float_terminal_current + 1
+    local updated = M.float_terminal_current + 1
 
-    if updated > vim.tbl_count(float_terminals) then
-      float_terminal_current = 1
+    if updated > vim.tbl_count(M.float_terminals) then
+      M.float_terminal_current = 1
     else
-      float_terminal_current = updated
+      M.float_terminal_current = updated
     end
   elseif action == "prev" then
-    local updated = float_terminal_current - 1
+    local updated = M.float_terminal_current - 1
 
     if updated < 1 then
-      float_terminal_current = vim.tbl_count(float_terminals)
+      M.float_terminal_current = vim.tbl_count(M.float_terminals)
     else
-      float_terminal_current = updated
+      M.float_terminal_current = updated
     end
   end
 
-  M.current_float_terminal():open()
+  local current = M.current_float_terminal()
+  current:open()
 end
 
 function M.bottom_terminal()
-  if not terminals["bottom"] then
+  if not M.terminals["bottom"] then
     local Terminal = require("toggleterm.terminal").Terminal
-    terminals["bottom"] = Terminal:new {
+    M.terminals["bottom"] = Terminal:new {
       cmd = vim.o.shell,
       direction = "horizontal",
       hidden = true,
-      on_open = M._on_open,
     }
   end
 
-  terminals["bottom"]:toggle()
+  M.terminals["bottom"]:toggle()
 
-  return terminals["bottom"]
+  return M.terminals["bottom"]
 end
 
 function M.buffer_terminal()
@@ -331,21 +335,30 @@ function M.buffer_terminal()
   return t
 end
 
-function M.terminal_kill_all()
+function M.get_all_terminals()
   local terms = require "toggleterm.terminal"
-  local all_terminals = vim.tbl_extend("force", terms.get_all(), terminals, float_terminals)
+
+  local all_terminals = {}
+  for _, value in pairs { terms.get_all(), M.terminals, M.float_terminals } do
+    vim.list_extend(all_terminals, value)
+  end
+
+  return all_terminals
+end
+
+function M.terminal_kill_all()
+  local all_terminals = M.get_all_terminals()
 
   for _, terminal in pairs(all_terminals) do
     terminal:shutdown()
   end
 
-  float_terminals = {}
-  float_terminal_current = 0
+  M.float_terminals = {}
+  M.float_terminal_current = 0
 end
 
 function M.close_all()
-  local terms = require "toggleterm.terminal"
-  local all_terminals = vim.tbl_extend("force", terms.get_all(), terminals, float_terminals)
+  local all_terminals = M.get_all_terminals()
 
   for _, terminal in pairs(all_terminals) do
     if terminal:is_open() then

@@ -14,6 +14,9 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function()
+      table.insert(lvim.disabled_filetypes, "lspsagaoutline")
+    end,
     to_inject = function()
       return {
         lspsaga_diagnostic = require "lspsaga.diagnostic",
@@ -133,11 +136,11 @@ function M.config()
         ["gw"] = { ":Lspsaga peek_definition<CR>", { desc = "peek" } },
       },
     },
-    wk = {
-      ["l"] = {
-        ["o"] = { ":LSoutlineToggle<CR>", "file outline" },
-      },
-    },
+    -- wk = {
+    --   ["l"] = {
+    --     ["o"] = { ":LSoutlineToggle<CR>", "file outline" },
+    --   },
+    -- },
   })
 end
 

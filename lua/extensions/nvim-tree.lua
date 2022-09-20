@@ -14,6 +14,9 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function()
+      table.insert(lvim.disabled_filetypes, "NvimTree")
+    end,
     setup = {
       -- show_icons = { git = 1, folders = 1, files = 1, folder_arrows = 1, tree_width = 40 },
       -- disables netrw completely

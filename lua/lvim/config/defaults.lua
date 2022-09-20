@@ -58,26 +58,15 @@ lvim = {
 
   disabled_filetypes = {
     "terminal",
-    "floaterm",
-    "NvimTree",
     "neo-tree",
-    "alpha",
-    "toggleterm",
     "packer",
     "lspinfo",
-    "lsp-installer",
     "prompt",
-    "TelescopePrompt",
     "notify",
-    "spectre_panel",
-    "Outline",
-    "lspsagaoutline",
     "qf",
     "lsp_floating_window",
     "diff",
     "help",
-    "LspTrouble",
-    "mason",
   },
 }
 

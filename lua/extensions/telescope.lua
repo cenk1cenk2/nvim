@@ -21,6 +21,9 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function()
+      table.insert(lvim.disabled_filetypes, "TelescopePrompt")
+    end,
     to_inject = function()
       return {
         actions = require "telescope.actions",

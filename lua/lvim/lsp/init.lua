@@ -39,7 +39,14 @@ function M.common_capabilities()
   return capabilities
 end
 
-function M.common_on_exit(_, _)
+function M.common_on_exit(client, bufnr)
+  if #lvim.lsp.on_exit > 0 then
+    for _, cb in pairs(lvim.lsp.on_exit) do
+      cb(client, bufnr)
+    end
+    Log:debug "Called lsp.on_exit"
+  end
+
   if lvim.lsp.document_highlight then
     autocmds.clear_augroup "lsp_document_highlight"
   end
@@ -49,18 +56,22 @@ function M.common_on_exit(_, _)
 end
 
 function M.common_on_init(client, bufnr)
-  if lvim.lsp.on_init_callback then
-    lvim.lsp.on_init_callback(client, bufnr)
-    Log:debug "Called lsp.on_init_callback"
-    return
+  if #lvim.lsp.on_init_callbacks > 0 then
+    for _, cb in pairs(lvim.lsp.on_init_callbacks) do
+      cb(client, bufnr)
+    end
+    Log:debug "Called lsp.on_init_callbacks"
   end
 end
 
 function M.common_on_attach(client, bufnr)
-  if lvim.lsp.on_attach_callback then
-    lvim.lsp.on_attach_callback(client, bufnr)
-    Log:debug "Called lsp.on_attach_callback"
+  if #lvim.lsp.on_attach_callbacks > 0 then
+    for _, cb in pairs(lvim.lsp.on_attach_callbacks) do
+      cb(client, bufnr)
+    end
+    Log:debug "Called lsp.on_attach_callbacks"
   end
+
   local lu = require "lvim.lsp.utils"
   if lvim.lsp.document_highlight then
     lu.setup_document_highlight(client, bufnr)

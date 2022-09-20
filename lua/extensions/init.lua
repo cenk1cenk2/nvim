@@ -21,6 +21,7 @@ local extensions = {
   "nvim-autopairs",
   "project-nvim",
   "neovim-session-manager",
+  "stickybuf-nvim",
   -- extensions
   "hop",
   "vim-repeat",
@@ -73,6 +74,8 @@ local extensions = {
   "telescope-dap",
   "nvim-trevJ",
   "symbols-outline",
+  "aerial-nvim",
+  "toggletasks-nvim",
 }
 
 function M.config(config)

@@ -15,6 +15,9 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function()
+      table.insert(lvim.disabled_filetypes, "spectre_panel")
+    end,
     to_inject = function()
       return {
         spectre = require "spectre",

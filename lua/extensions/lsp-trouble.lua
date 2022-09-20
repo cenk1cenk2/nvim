@@ -14,6 +14,9 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function()
+      table.insert(lvim.disabled_filetypes, "LspTrouble")
+    end,
     setup = {
       action_keys = { -- key mappings for actions in the trouble list
         close = "q", -- close the list

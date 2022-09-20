@@ -18,6 +18,9 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function()
+      table.insert(lvim.disabled_filetypes, "mason")
+    end,
     setup = {
       ui = {
         keymaps = {
