@@ -199,12 +199,10 @@ M.float_terminals = {}
 M.float_terminal_current = 1
 
 function M.on_open(term)
-  vim.cmd "startinsert!"
   term:focus()
 end
 
 function M.on_exit(term)
-  vim.cmd "startinsert!"
   term:focus()
 end
 

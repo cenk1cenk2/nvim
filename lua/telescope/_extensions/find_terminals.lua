@@ -63,7 +63,6 @@ function M.handle_select(prompt_bufnr)
   if selection then
     selection.entry:toggle()
     selection.entry:focus()
-    vim.cmd "startinsert!"
   end
 end
 
