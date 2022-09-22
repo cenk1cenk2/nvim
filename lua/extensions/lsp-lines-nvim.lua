@@ -18,7 +18,7 @@ function M.config()
       config.set_store("loaded", false)
     end,
     on_done = function()
-      vim.diagnostic.config { virtual_lines = false, virtual_text = true }
+      vim.diagnostic.config { virtual_lines = false, virtual_text = lvim.lsp.diagnostics.virtual_text }
     end,
     keymaps = {
       n = {
@@ -45,7 +45,7 @@ function M.toggle()
   if not value then
     vim.diagnostic.config { virtual_lines = true, virtual_text = false }
   else
-    vim.diagnostic.config { virtual_lines = false, virtual_text = true }
+    vim.diagnostic.config { virtual_lines = false, virtual_text = lvim.lsp.diagnostics.virtual_text }
   end
 
   return not value

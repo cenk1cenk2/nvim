@@ -15,7 +15,10 @@ return {
         { name = "DiagnosticSignInfo", text = "" },
       },
     },
-    virtual_text = true,
+    virtual_text = {
+      prefix = "",
+      source = "always",
+    },
     update_in_insert = false,
     underline = false,
     severity_sort = true,
