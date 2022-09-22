@@ -123,16 +123,21 @@ function M.fix_current()
   local params = vim.lsp.util.make_range_params()
   params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
 
-  local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params)
+  local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
 
   if not responses or vim.tbl_isempty(responses) then
-    Log:warn "No quickfix found."
+    Log:warn "[QUICKFIX] Not found!"
     return
   end
 
   for i, response in pairs(responses) do
     for _, result in pairs(response.result or {}) do
-      Log:info("Applying quickfix from " .. vim.lsp.buf_get_clients()[i].name .. ": " .. result.title)
+      Log:info(
+        "[QUICKFIX] "
+          .. vim.lsp.get_active_clients({ bufnr = vim.api.nvim_get_current_buf() })[i].name
+          .. ": "
+          .. result.title
+      )
 
       lsp_utils.apply_lsp_edit(result)
 
@@ -149,7 +154,7 @@ function M.organize_imports()
     only = { "source.organizeImports" },
   }
 
-  local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 2000)
+  local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
 
   if not responses or vim.tbl_isempty(responses) then
     Log:warn "No response from language servers."
