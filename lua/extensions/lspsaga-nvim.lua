@@ -24,7 +24,22 @@ function M.config()
     end,
     setup = {
       -- Error,Warn,Info,Hint
-      diagnostic_header = { " ", " ", " ", "ﴞ " },
+      -- diagnostic_header = function(entry)
+      --   print(vim.inspect(entry.source))
+      --
+      --   local icon = "ﴞ"
+      --   if entry.severity == vim.diagnostic.severity.ERROR then
+      --     icon = ""
+      --   elseif entry.severity == vim.diagnostic.severity.WARN then
+      --     icon = ""
+      --   elseif entry.severity == vim.diagnostic.severity.INFO then
+      --     icon = ""
+      --   elseif entry.severity == vim.diagnostic.severity.HINT then
+      --     icon = "ﴞ"
+      --   end
+      --
+      --   return string.format("%s [ %s ]: ", icon, entry.source)
+      -- end,
       -- use emoji lightbulb in default
       code_action_icon = "💡",
       -- if true can press number to execute the codeaction in codeaction window

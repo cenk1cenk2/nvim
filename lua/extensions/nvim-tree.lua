@@ -200,7 +200,7 @@ function M.config()
         },
       },
       log = {
-        enable = true,
+        enable = false,
         truncate = false,
         types = {
           all = false,
