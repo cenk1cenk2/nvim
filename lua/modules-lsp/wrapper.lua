@@ -135,7 +135,6 @@ function M.fix_current()
     for i, response in pairs(responses) do
       for _, result in pairs(response.result or {}) do
         table.insert(available_fixes, { result = result, client = clients[i].name })
-        break
       end
     end
 
