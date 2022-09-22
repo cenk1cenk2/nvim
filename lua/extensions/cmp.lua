@@ -116,10 +116,10 @@ function M.config()
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
-            elseif luasnip.expand_or_locally_jumpable() then
-              luasnip.expand_or_jump()
-            elseif jumpable(1) then
-              luasnip.jump(1)
+            -- elseif luasnip.expand_or_locally_jumpable() then
+            --   luasnip.expand_or_jump()
+            -- elseif jumpable(1) then
+            --   luasnip.jump(1)
             elseif has_words_before() then
               cmp.complete()
             else
@@ -146,14 +146,12 @@ function M.config()
               if is_insert_mode() then -- prevent overwriting brackets
                 confirm_opts.behavior = cmp.ConfirmBehavior.Insert
               end
+
               if cmp.confirm(confirm_opts) then
                 return -- success, exit early
               end
             end
 
-            if jumpable(1) and luasnip.jump(1) then
-              return -- success, exit early
-            end
             fallback() -- if not exited early, always fallback
           end),
         },
