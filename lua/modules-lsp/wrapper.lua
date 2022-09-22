@@ -123,28 +123,32 @@ function M.fix_current()
   local params = vim.lsp.util.make_range_params()
   params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
 
-  local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
-
-  if not responses or vim.tbl_isempty(responses) then
-    Log:warn "[QUICKFIX] Not found!"
-    return
-  end
-
-  for i, response in pairs(responses) do
-    for _, result in pairs(response.result or {}) do
-      Log:info(
-        "[QUICKFIX] "
-          .. vim.lsp.get_active_clients({ bufnr = vim.api.nvim_get_current_buf() })[i].name
-          .. ": "
-          .. result.title
-      )
-
-      lsp_utils.apply_lsp_edit(result)
-
-      break
+  vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
+    if not responses or vim.tbl_isempty(responses) then
+      Log:warn "[QUICKFIX] Not found!"
+      return
     end
-    break
-  end
+
+    local clients = vim.lsp.get_active_clients { bufnr = vim.api.nvim_get_current_buf() }
+    local available_fixes = {}
+
+    for i, response in pairs(responses) do
+      for _, result in pairs(response.result or {}) do
+        table.insert(available_fixes, { result = result, client = clients[i].name })
+        break
+      end
+    end
+
+    if #available_fixes == 0 then
+      Log:warn "[QUICKFIX] Not found!"
+
+      return
+    end
+
+    local fix = available_fixes[1]
+    lsp_utils.apply_lsp_edit(fix.result)
+    Log:info("[QUICKFIX] " .. fix.client .. ": " .. fix.result.title)
+  end)
 end
 
 function M.organize_imports()
@@ -154,26 +158,26 @@ function M.organize_imports()
     only = { "source.organizeImports" },
   }
 
-  local responses = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, 3000)
-
-  if not responses or vim.tbl_isempty(responses) then
-    Log:warn "No response from language servers."
-    return
-  end
-
-  if vim.tbl_count(responses) == 0 then
-    Log:warn "No language server has answered the organize imports call."
-  end
-
-  for _, response in pairs(responses) do
-    if response.error then
-      Log:warn(response.error.message)
+  vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
+    if not responses or vim.tbl_isempty(responses) then
+      Log:warn "No response from language servers."
+      return
     end
 
-    for _, result in pairs(response.result or {}) do
-      lsp_utils.apply_lsp_edit(result)
+    if vim.tbl_count(responses) == 0 then
+      Log:warn "No language server has answered the organize imports call."
     end
-  end
+
+    for _, response in pairs(responses) do
+      if response.error then
+        Log:warn(response.error.message)
+      end
+
+      for _, result in pairs(response.result or {}) do
+        lsp_utils.apply_lsp_edit(result)
+      end
+    end
+  end)
 end
 
 function M.lsp_logging_level(level)
