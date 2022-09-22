@@ -31,9 +31,9 @@ function M.config()
       code_action_num_shortcut = true,
       -- same as nvim-lightbulb but async
       code_action_lightbulb = {
-        enable = true,
+        enable = false,
         enable_in_insert = false,
-        cache_code_action = true,
+        cache_code_action = false,
         sign = true,
         update_time = 1000,
         sign_priority = 20,

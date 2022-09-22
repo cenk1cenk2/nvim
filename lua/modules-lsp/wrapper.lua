@@ -144,6 +144,8 @@ function M.fix_current()
       return
     end
 
+    -- prioritize real language servers?
+
     local fix = available_fixes[1]
     lsp_utils.apply_lsp_edit(fix.result)
     Log:info("[QUICKFIX] " .. fix.client .. ": " .. fix.result.title)
