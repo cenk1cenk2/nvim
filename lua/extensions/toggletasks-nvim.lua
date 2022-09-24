@@ -51,12 +51,12 @@ function M.config()
       -- Default values for task configuration options (available options described later)
       defaults = {
         close_on_exit = false,
-        hidden = true,
+        hidden = false,
       },
       -- Configuration of telescope pickers
       telescope = {
         spawn = {
-          open_single = true, -- auto-open terminal window when spawning a single task
+          open_single = false, -- auto-open terminal window when spawning a single task
           show_running = true, -- include already running tasks in picker candidates
           -- Replaces default select_* actions to spawn task (and change toggleterm
           -- direction for select horiz/vert/tab)
