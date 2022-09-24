@@ -51,7 +51,7 @@ function M.config()
       -- Default values for task configuration options (available options described later)
       defaults = {
         close_on_exit = false,
-        hidden = false,
+        hidden = true,
       },
       -- Configuration of telescope pickers
       telescope = {
