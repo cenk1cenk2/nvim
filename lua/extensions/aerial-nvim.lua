@@ -51,11 +51,11 @@ function M.config()
       show_guides = true,
       on_attach = function(bufnr)
         -- Jump forwards/backwards with '{' and '}'
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "{", ":AerialPrev<CR>", { silent = true })
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "}", ":AerialNext<CR>", { silent = true })
+        vim.keymap.set("n", "{", ":AerialPrev<CR>", { silent = true, buffer = bufnr })
+        vim.keymap.set("n", "}", ":AerialNext<CR>", { silent = true, buffer = bufnr })
         -- Jump up the tree with '[[' or ']]'
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "[[", ":AerialPrevUp<CR>", { silent = true })
-        vim.api.nvim_buf_set_keymap(bufnr, "n", "]]", ":AerialNextUp<CR>", { silent = true })
+        vim.keymap.set("n", "[[", ":AerialPrevUp<CR>", { silent = true, buffer = bufnr })
+        vim.keymap.set("n", "]]", ":AerialNextUp<CR>", { silent = true, buffer = bufnr })
       end,
       -- A list of all symbols to display. Set to false to display all symbols.
       -- This can be a filetype map (see :help aerial-filetype-map)
