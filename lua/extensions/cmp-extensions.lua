@@ -48,9 +48,9 @@ function M.config()
     configure = function()
       lvim.extensions.cmp.to_setup = {
         sources = {
-          { name = "nvim_lsp_signature_help" },
           { name = "nvim_lsp" },
           { name = "path" },
+          { name = "nvim_lsp_signature_help" },
           { name = "luasnip" },
           { name = "nvim_lua" },
           { name = "buffer" },
