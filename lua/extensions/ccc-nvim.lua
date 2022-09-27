@@ -21,6 +21,7 @@ function M.config()
     wk = {
       ["a"] = {
         p = { ":CccPick<CR>", "color picker" },
+        C = { ":CccHighlighterToggle<CR>", "highlight colors" },
       },
     },
   })

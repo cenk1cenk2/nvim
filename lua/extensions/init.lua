@@ -64,7 +64,6 @@ local extensions = {
   "cool-substitute-nvim",
   "align-nvim",
   "document-color-nvim",
-  "colorizer",
   "ccc-nvim",
   "vim-illuminate",
   "neotest",
