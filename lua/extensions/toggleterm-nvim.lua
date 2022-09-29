@@ -239,7 +239,7 @@ function M.get_current_float_terminal()
     terminal = M.float_terminals[M.float_terminal_current]
   end
 
-  Log:debug("Terminal switched: " .. M.float_terminal_current)
+  Log:trace(string.format("Terminal switched: %s -> %s -> %s", M.float_terminal_current, terminal.cmd, terminal.dir))
 
   return terminal
 end
@@ -253,12 +253,12 @@ function M.float_terminal_on_open(terminal)
 
   local index = vim.tbl_count(M.float_terminals) + 1
 
-  Log:debug("Terminal created: " .. index)
-
   table.insert(M.float_terminals, index, terminal)
   M.set_mark(terminal, M.marks.INDEX, index)
 
   M.float_terminal_current = index
+
+  Log:debug(string.format("Terminal created: %s -> %s -> %s", M.float_terminal_current, terminal.cmd, terminal.dir))
 
   M.on_open(terminal)
 end
@@ -324,6 +324,8 @@ function M.create_terminal(opts)
 end
 
 function M.generate_defaults_float_terminal(opts)
+  opts = opts or {}
+
   return vim.tbl_extend("force", opts or {}, {
     direction = "float",
     hidden = true,

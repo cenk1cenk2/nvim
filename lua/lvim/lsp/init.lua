@@ -44,7 +44,7 @@ function M.common_on_exit(client, bufnr)
     for _, cb in pairs(lvim.lsp.on_exit) do
       cb(client, bufnr)
     end
-    Log:debug "Called lsp.on_exit"
+    Log:trace "Called lsp.on_exit"
   end
 
   if lvim.lsp.document_highlight then
@@ -60,7 +60,7 @@ function M.common_on_init(client, bufnr)
     for _, cb in pairs(lvim.lsp.on_init_callbacks) do
       cb(client, bufnr)
     end
-    Log:debug "Called lsp.on_init_callbacks"
+    Log:trace "Called lsp.on_init_callbacks"
   end
 end
 
@@ -69,7 +69,7 @@ function M.common_on_attach(client, bufnr)
     for _, cb in pairs(lvim.lsp.on_attach_callbacks) do
       cb(client, bufnr)
     end
-    Log:debug "Called lsp.on_attach_callbacks"
+    Log:trace "Called lsp.on_attach_callbacks"
   end
 
   local lu = require "lvim.lsp.utils"
