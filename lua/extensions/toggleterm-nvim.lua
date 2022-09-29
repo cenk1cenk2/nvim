@@ -216,9 +216,7 @@ end
 
 function M.toggle_toggle_term(toggler)
   if not M.terminals[toggler.cmd] then
-    local Terminal = require("toggleterm.terminal").Terminal
-
-    M.terminals[toggler.cmd] = Terminal:new {
+    M.terminals[toggler.cmd] = M.create_terminal {
       cmd = toggler.cmd,
       hidden = true,
     }
@@ -317,19 +315,37 @@ function M.get_mark(terminal, key)
   return terminal[M.marks.MARK][key]
 end
 
+function M.create_terminal(opts)
+  local Terminal = require("toggleterm.terminal").Terminal
+
+  local terminal = Terminal:new(opts or {})
+
+  return terminal
+end
+
 function M.generate_defaults_float_terminal(opts)
   return vim.tbl_extend("force", opts or {}, {
     direction = "float",
     hidden = true,
-    on_open = M.float_terminal_on_open,
-    on_exit = M.float_terminal_on_exit,
+    on_open = function(terminal)
+      M.float_terminal_on_open(terminal)
+
+      if opts.on_open then
+        opts.on_open(terminal)
+      end
+    end,
+    on_exit = function(terminal)
+      M.float_terminal_on_exit(terminal)
+
+      if opts.on_exit then
+        opts.on_exit(terminal)
+      end
+    end,
   })
 end
 
 function M.create_float_terminal()
-  local Terminal = require("toggleterm.terminal").Terminal
-
-  local terminal = Terminal:new(M.generate_defaults_float_terminal {
+  local terminal = M.create_terminal(M.generate_defaults_float_terminal {
     cmd = vim.o.shell,
   })
 
@@ -378,8 +394,7 @@ end
 
 function M.create_bottom_terminal()
   if not M.terminals["bottom"] then
-    local Terminal = require("toggleterm.terminal").Terminal
-    M.terminals["bottom"] = Terminal:new {
+    M.terminals["bottom"] = M.create_terminal {
       cmd = vim.o.shell,
       direction = "horizontal",
       hidden = true,
@@ -468,8 +483,7 @@ function M.toggle_log_view(logfile)
     float_opts = lvim.log.viewer.layout_config.float_opts,
   })
 
-  local Terminal = require("toggleterm.terminal").Terminal
-  local log_view = Terminal:new(term_opts)
+  local log_view = M.create_terminal(term_opts)
   log_view:toggle()
 end
 

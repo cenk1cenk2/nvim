@@ -67,6 +67,7 @@ lvim = {
     "lsp_floating_window",
     "diff",
     "help",
+    "prompt",
   },
 }
 

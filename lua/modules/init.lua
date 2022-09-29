@@ -7,6 +7,7 @@ local modules = {
   "augroups",
   "telescope",
   "unimpaired",
+  "scratch",
 }
 
 function M.config(config)
