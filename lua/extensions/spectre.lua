@@ -69,12 +69,12 @@ function M.config()
           desc = "change result view mode",
         },
         ["change_replace_sed"] = {
-          map = "zh",
+          map = "zO",
           cmd = ":lua require('spectre').change_engine_replace('sed')<CR>",
           desc = "use sed to replace",
         },
         ["change_replace_oxi"] = {
-          map = "zh",
+          map = "zo",
           cmd = ":lua require('spectre').change_engine_replace('oxi')<CR>",
           desc = "use oxi to replace",
         },
