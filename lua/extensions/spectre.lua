@@ -98,6 +98,11 @@ function M.config()
           cmd = ":lua require('spectre').toggle_live_update()<CR>",
           desc = "update change when vim write file.",
         },
+        ["resume_last_search"] = {
+          map = "zl",
+          cmd = ":lua require('spectre').resume_last_search()<CR>",
+          desc = "resume last search before close",
+        },
         -- you can put your mapping here it only have normal
       },
       find_engine = {
