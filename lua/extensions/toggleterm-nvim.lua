@@ -73,7 +73,9 @@ function M.config()
       require("toggleterm").setup(config.setup)
     end,
     on_done = function(config)
-      local editor = "nvr --servername " .. vim.v.servername .. " -cc split --remote-wait +'set bufhidden=wipe'"
+      local editor = "nvr --servername "
+        .. vim.v.servername
+        .. " -cc split --remote-wait +'set bufhidden=wipe' +'set number'"
 
       if vim.fn.has "nvim" and vim.fn.executable "nvr" then
         vim.env.GIT_EDITOR = editor
