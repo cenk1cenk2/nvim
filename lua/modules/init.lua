@@ -6,6 +6,7 @@ local modules = {
   "executables",
   "augroups",
   "telescope",
+  "unimpaired",
 }
 
 function M.config(config)
