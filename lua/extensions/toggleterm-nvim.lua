@@ -291,7 +291,7 @@ function M.float_terminal_on_exit(terminal)
     end
 
     vim.keymap.set({ "n", "t", "i" }, "q", keymap_cb, { silent = true, buffer = terminal.bufnr })
-    vim.keymap.set({ "i", "t" }, "<CR>", keymap_cb, { silent = true, buffer = terminal.bufnr })
+    vim.keymap.set({ "n", "i", "t" }, "<CR>", keymap_cb, { silent = true, buffer = terminal.bufnr })
     vim.keymap.set({ "t", "n" }, "i", keymap_cb, { silent = true, buffer = terminal.bufnr })
   end
 end
