@@ -23,6 +23,7 @@ function M.config()
         ["s"] = { ":HopChar2<cr>" },
         ["ss"] = { ":HopChar1<cr>" },
         ["sw"] = { ":HopPattern<cr>" },
+        ["sf"] = { ":HopChar1CurrentLine<cr>" },
         ["S"] = { ":HopWord<cr>" },
         ["SS"] = { ":HopLine<cr>" },
       },
