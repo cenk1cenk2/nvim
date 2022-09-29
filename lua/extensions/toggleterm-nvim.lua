@@ -290,8 +290,8 @@ function M.float_terminal_on_exit(terminal)
       Log:debug("Shutdown current terminal manually: " .. terminal.cmd)
     end
 
-    vim.keymap.set("n", "q", keymap_cb, { silent = true, buffer = terminal.bufnr })
-    vim.keymap.set("i", "<CR>", keymap_cb, { silent = true, buffer = terminal.bufnr })
+    vim.keymap.set({ "n", "t", "i" }, "q", keymap_cb, { silent = true, buffer = terminal.bufnr })
+    vim.keymap.set({ "i", "t" }, "<CR>", keymap_cb, { silent = true, buffer = terminal.bufnr })
   end
 end
 
