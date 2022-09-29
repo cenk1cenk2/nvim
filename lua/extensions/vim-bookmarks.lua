@@ -18,7 +18,8 @@ function M.config()
     end,
     legacy_setup = {
       -- bookmark_no_default_key_mappings = 0
-      -- bookmark_sign = ""
+      bookmark_annotation_sign = "",
+      bookmark_sign = "⚑",
       -- bookmark_save_per_working_dir = 0
       -- bookmark_auto_save = 1
       -- bookmark_manage_per_buffer = 0

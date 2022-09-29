@@ -27,7 +27,7 @@ local function git_cmd(opts)
   end
 
   if not vim.tbl_isempty(stdout) then
-    Log:debug(stdout)
+    Log:trace(stdout)
   end
 
   return ret, stdout, stderr
@@ -160,15 +160,13 @@ function M.get_nvim_version()
   local Job = require "plenary.job"
 
   local stderr = {}
-  local stdout, status_ok = Job
-    :new({
-      command = "nvim",
-      args = { "--version" },
-      on_stderr = function(_, data)
-        table.insert(stderr, data)
-      end,
-    })
-    :sync()
+  local stdout, status_ok = Job:new({
+    command = "nvim",
+    args = { "--version" },
+    on_stderr = function(_, data)
+      table.insert(stderr, data)
+    end,
+  }):sync()
 
   if not vim.tbl_isempty(stderr) then
     Log:debug(stderr)
