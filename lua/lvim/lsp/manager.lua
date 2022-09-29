@@ -8,7 +8,7 @@ local is_windows = vim.loop.os_uname().version:match "Windows"
 local function resolve_mason_config(server_name)
   local found, mason_config = pcall(require, "mason-lspconfig.server_configurations." .. server_name)
   if not found then
-    Log:debug(fmt("mason configuration not found for %s", server_name))
+    Log:trace(fmt("mason configuration not found for %s", server_name))
     return {}
   end
   local server_mapping = require "mason-lspconfig.mappings.server"
@@ -22,7 +22,7 @@ local function resolve_mason_config(server_name)
       conf.cmd[1] = exepath
     end
   end
-  Log:debug(fmt("resolved mason configuration for %s, got %s", server_name, vim.inspect(conf)))
+  Log:trace(fmt("resolved mason configuration for %s, got %s", server_name, vim.inspect(conf)))
   return conf or {}
 end
 
@@ -40,10 +40,10 @@ local function resolve_config(server_name, ...)
 
   local has_custom_provider, custom_config = pcall(require, "modules-lsp/overrides/" .. server_name)
   if has_custom_provider then
-    Log:debug("Using custom configuration for requested server: " .. server_name)
+    Log:trace("Using custom configuration for requested server: " .. server_name)
     defaults = vim.tbl_deep_extend("force", defaults, custom_config)
   else
-    Log:debug("Using default configuration for requested server: " .. server_name)
+    Log:trace("Using default configuration for requested server: " .. server_name)
   end
 
   defaults = vim.tbl_deep_extend("force", defaults, ...)
