@@ -75,7 +75,7 @@ function M.config()
     on_done = function(config)
       local editor = "nvr --servername "
         .. vim.v.servername
-        .. " -cc split --remote-tab-wait +'set bufhidden=wipe' +'set number'"
+        .. " --remote-tab-wait -c split +'set bufhidden=wipe' +'set number'"
 
       if vim.fn.has "nvim" and vim.fn.executable "nvr" then
         vim.env.GIT_EDITOR = editor
