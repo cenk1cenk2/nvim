@@ -140,12 +140,12 @@ function M.config()
           ["<CR>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               local confirm_opts = vim.deepcopy(M.current_setup().confirm_opts) -- avoid mutating the original opts below
-              -- local is_insert_mode = function()
-              --   return vim.api.nvim_get_mode().mode:sub(1, 1) == "i"
-              -- end
-              -- if is_insert_mode() then -- prevent overwriting brackets
-              --   confirm_opts.behavior = cmp.ConfirmBehavior.Insert
-              -- end
+              local is_insert_mode = function()
+                return vim.api.nvim_get_mode().mode:sub(1, 1) == "i"
+              end
+              if is_insert_mode() then -- prevent overwriting brackets
+                confirm_opts.behavior = cmp.ConfirmBehavior.Insert
+              end
 
               if cmp.confirm(confirm_opts) then
                 return -- success, exit early
