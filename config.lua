@@ -150,11 +150,7 @@ lvim.extensions.dap.on_complete = function(config)
     args = {},
   }
 
-  dap.adapters.delve = {
-    type = "executable",
-    command = get_debugger "dlv",
-    args = {},
-  }
+  dap.adapters.go.command = get_debugger "dlv"
 
   -- configurations
   dap.configurations.javascript = {
@@ -225,28 +221,28 @@ lvim.extensions.dap.on_complete = function(config)
     },
   }
 
-  -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
-  dap.configurations.go = {
-    {
-      name = "Debug",
-      type = "delve",
-      request = "launch",
-      program = "${file}",
-    },
-    {
-      name = "Debug test", -- configuration for debugging test files
-      type = "delve",
-      request = "launch",
-      mode = "test",
-      program = "${file}",
-    },
-    -- works with go.mod packages and sub packages
-    {
-      name = "Debug test (go.mod)",
-      type = "delve",
-      request = "launch",
-      mode = "test",
-      program = "./${relativeFileDirname}",
-    },
-  }
+  -- -- https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv_dap.md
+  -- dap.configurations.go = {
+  --   {
+  --     name = "Debug",
+  --     type = "delve",
+  --     request = "launch",
+  --     program = "${file}",
+  --   },
+  --   {
+  --     name = "Debug test", -- configuration for debugging test files
+  --     type = "delve",
+  --     request = "launch",
+  --     mode = "test",
+  --     program = "${file}",
+  --   },
+  --   -- works with go.mod packages and sub packages
+  --   {
+  --     name = "Debug test (go.mod)",
+  --     type = "delve",
+  --     request = "launch",
+  --     mode = "test",
+  --     program = "./${relativeFileDirname}",
+  --   },
+  -- }
 end

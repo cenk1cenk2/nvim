@@ -16,6 +16,14 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function()
+      table.insert(lvim.disabled_filetypes, "dapui_breakpoints")
+      table.insert(lvim.disabled_filetypes, "dapui_stacks")
+      table.insert(lvim.disabled_filetypes, "dapui_watches")
+      table.insert(lvim.disabled_filetypes, "dapui_scopes")
+      table.insert(lvim.disabled_filetypes, "dapui_repl")
+      table.insert(lvim.disabled_filetypes, "dap-repl")
+    end,
     to_inject = function()
       return {
         dap_ui = require "dapui",
@@ -47,20 +55,34 @@ function M.config()
         {
           elements = {
             -- Provide as ID strings or tables with "id" and "size" keys
-            { id = "watches", size = 0.2 },
-            { id = "stacks", size = 0.2 },
-            { id = "breakpoints", size = 0.2 },
             {
-              id = "repl",
-              size = 0.40, -- Can be float or integer > 1
+              id = "watches",
+              size = 0.2,
+            },
+            {
+              id = "stacks",
+              size = 0.6,
+            },
+            {
+              id = "breakpoints",
+              size = 0.2,
             },
           },
           size = 40,
           position = "left",
         },
         {
-          elements = { "scopes" },
-          size = 15,
+          elements = {
+            {
+              id = "scopes",
+              size = 0.6, -- Can be float or integer > 1
+            },
+            {
+              id = "repl",
+              size = 0.4,
+            },
+          },
+          size = 20,
           position = "bottom",
         },
       },

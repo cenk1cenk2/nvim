@@ -11,6 +11,9 @@ function M.config()
       return {
         "mfussenegger/nvim-dap",
         event = "BufWinEnter",
+        requires = {
+          "leoluz/nvim-dap-go",
+        },
         config = function()
           require("utils.setup").packer_config "dap"
         end,
@@ -149,7 +152,10 @@ function M.config()
         },
       }
     end,
-    autocmds = function(config)
+    on_setup = function()
+      require("dap-go").setup()
+    end,
+    autocmds = function()
       -- local vscode = config.inject.vscode
 
       return {
