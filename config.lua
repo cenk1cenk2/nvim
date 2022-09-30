@@ -150,7 +150,7 @@ lvim.extensions.dap.on_complete = function(config)
     args = {},
   }
 
-  dap.adapters.go.command = get_debugger "dlv"
+  -- dap.adapters.go.command = get_debugger "dlv"
 
   -- configurations
   dap.configurations.javascript = {
