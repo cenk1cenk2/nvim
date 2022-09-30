@@ -73,10 +73,11 @@ function M.config()
       require("toggleterm").setup(config.setup)
     end,
     on_done = function(config)
-      local editor = "nvr --servername " .. vim.v.servername .. " --remote-wait -cc split"
+      local editor = "nvr --servername " .. vim.v.servername .. " "
+      local editor_split = "nvr --servername " .. vim.v.servername .. " --remote-wait -cc split"
 
       if vim.fn.has "nvim" and vim.fn.executable "nvr" then
-        vim.env.GIT_EDITOR = editor
+        vim.env.GIT_EDITOR = editor_split
         vim.env.VISUAL = editor
         vim.env.EDITOR = editor
         vim.env.NVIM_LISTEN_ADDRESS = vim.v.servername

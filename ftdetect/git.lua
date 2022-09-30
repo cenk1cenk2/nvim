@@ -1,3 +1,3 @@
 vim.cmd [[
- au FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
+  autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 ]]
