@@ -133,19 +133,21 @@ function M.config()
         ["<C-Q>"] = ":BufferClose<CR>",
       },
     },
-    wk = {
-      ["b"] = {
-        ["b"] = { ":BufferLinePick<CR>", "pick buffer" },
-        ["x"] = { ":BufferClose<CR>", "force close buffer" },
-        ["X"] = { ":BufferCloseAllButCurrent<CR>", "close all buffers but this" },
-        ["d"] = { ":BufferLinePickClose<CR>", "pick buffer to close" },
-        ["D"] = { ":BufferLineGroupClose ungrouped<CR>", "close ungrouped tabs" },
-        ["y"] = { ":BufferLineCloseLeft<CR>", "close all buffers to the left" },
-        ["Y"] = { ":BufferLineCloseRight<CR>", "close all buffers to the right" },
-        ["p"] = { ":BufferLineTogglePin<CR>", "pin current buffer" },
-        ["P"] = { ":BufferLineGroupClose pinned<CR>", "close pinned buffer group" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.BUFFER] = {
+          ["b"] = { ":BufferLinePick<CR>", "pick buffer" },
+          ["x"] = { ":BufferClose<CR>", "force close buffer" },
+          ["X"] = { ":BufferCloseAllButCurrent<CR>", "close all buffers but this" },
+          ["d"] = { ":BufferLinePickClose<CR>", "pick buffer to close" },
+          ["D"] = { ":BufferLineGroupClose ungrouped<CR>", "close ungrouped tabs" },
+          ["y"] = { ":BufferLineCloseLeft<CR>", "close all buffers to the left" },
+          ["Y"] = { ":BufferLineCloseRight<CR>", "close all buffers to the right" },
+          ["p"] = { ":BufferLineTogglePin<CR>", "pin current buffer" },
+          ["P"] = { ":BufferLineGroupClose pinned<CR>", "close pinned buffer group" },
+        },
+      }
+    end,
   })
 end
 

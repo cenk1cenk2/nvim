@@ -19,4 +19,39 @@ function M.rebuild_and_update()
   vim.cmd [[LvimCacheReset]]
 end
 
+function M.update_language_servers()
+  vim.cmd [[MasonToolsUpdate]]
+  vim.cmd [[Mason]]
+end
+
+function M.setup()
+  require("utils.setup").run {
+    name = "rebuild",
+    wk = function(_, categories)
+      return {
+        [categories.BUILD] = {
+          r = {
+            function()
+              M.rebuild_latest_neovim()
+            end,
+            "install latest neovim",
+          },
+          u = {
+            function()
+              M.rebuild_and_update()
+            end,
+            "rebuild and update everything",
+          },
+          U = {
+            function()
+              M.update_language_servers()
+            end,
+            "update language servers",
+          },
+        },
+      }
+    end,
+  }
+end
+
 return M

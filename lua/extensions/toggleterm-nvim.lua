@@ -137,32 +137,34 @@ function M.config()
         }),
       }
     end,
-    wk = {
-      ["t"] = {
-        f = { ":Telescope find_terminals list<CR>", "list terminals" },
+    wk = function(_, categories)
+      return {
+        [categories.TERMINAL] = {
+          f = { ":Telescope find_terminals list<CR>", "list terminals" },
 
-        ["b"] = {
-          function()
-            M.create_buffer_terminal()
-          end,
-          "buffer cwd terminal",
-        },
+          ["b"] = {
+            function()
+              M.create_buffer_terminal()
+            end,
+            "buffer cwd terminal",
+          },
 
-        ["B"] = {
-          function()
-            M.create_bottom_terminal()
-          end,
-          "bottom terminal",
-        },
+          ["B"] = {
+            function()
+              M.create_bottom_terminal()
+            end,
+            "bottom terminal",
+          },
 
-        ["X"] = {
-          function()
-            M.kill_all()
-          end,
-          "kill all terminals",
+          ["X"] = {
+            function()
+              M.kill_all()
+            end,
+            "kill all terminals",
+          },
         },
-      },
-    },
+      }
+    end,
     autocmds = {
       {
         { "TermOpen" },

@@ -14,6 +14,8 @@ local generic_opts = {
 }
 
 local mode_adapters = {
+  all = "",
+  a = "",
   insert_mode = "i",
   normal_mode = "n",
   term_mode = "t",

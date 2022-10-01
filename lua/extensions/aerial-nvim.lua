@@ -93,11 +93,13 @@ function M.config()
         vim.cmd "Telescope aerial"
       end
     end,
-    wk = {
-      ["l"] = {
-        o = { ":AerialToggle!<CR>", "toggle outline" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.LSP] = {
+          o = { ":AerialToggle!<CR>", "toggle outline" },
+        },
+      }
+    end,
   })
 end
 

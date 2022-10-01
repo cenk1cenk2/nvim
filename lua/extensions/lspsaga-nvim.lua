@@ -152,11 +152,13 @@ function M.config()
         ["gw"] = { ":Lspsaga peek_definition<CR>", { desc = "peek" } },
       },
     },
-    -- wk = {
-    --   ["l"] = {
-    --     ["o"] = { ":LSoutlineToggle<CR>", "file outline" },
-    --   },
-    -- },
+    -- wk = function(_, categories)
+    --   return {
+    --     [categories.LSP] = {
+    --       ["o"] = { ":LSoutlineToggle<CR>", "file outline" },
+    --     },
+    --   }
+    -- end,
   })
 end
 

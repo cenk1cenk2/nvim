@@ -59,11 +59,13 @@ function M.config()
     on_setup = function(config)
       require("todo-comments").setup(config.setup)
     end,
-    wk = {
-      ["f"] = {
-        ["c"] = { ":TodoTelescope<CR>", "todo comments" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.FIND] = {
+          ["c"] = { ":TodoTelescope<CR>", "todo comments" },
+        },
+      }
+    end,
   })
 end
 

@@ -83,22 +83,24 @@ end
 function M.setup()
   require("utils.setup").run {
     name = "scratch",
-    wk = {
-      ["r"] = {
-        s = {
-          function()
-            M.create_scratch_buffer()
-          end,
-          "create scratch buffer",
+    wk = function(_, categories)
+      return {
+        [categories.TASKS] = {
+          s = {
+            function()
+              M.create_scratch_buffer()
+            end,
+            "create scratch buffer",
+          },
+          S = {
+            function()
+              M.execute_scratch_buffer()
+            end,
+            "execute current scratch buffer",
+          },
         },
-        S = {
-          function()
-            M.execute_scratch_buffer()
-          end,
-          "execute current scratch buffer",
-        },
-      },
-    },
+      }
+    end,
   }
 end
 

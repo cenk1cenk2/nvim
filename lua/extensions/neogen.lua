@@ -19,16 +19,18 @@ function M.config()
     on_setup = function(config)
       require("neogen").setup(config.setup)
     end,
-    wk = {
-      ["l"] = {
-        ["j"] = {
-          function()
-            require("neogen").generate()
-          end,
-          "generate documentation",
+    wk = function(_, categories)
+      return {
+        [categories.LSP] = {
+          ["j"] = {
+            function()
+              require("neogen").generate()
+            end,
+            "generate documentation",
+          },
         },
-      },
-    },
+      }
+    end,
   })
 end
 

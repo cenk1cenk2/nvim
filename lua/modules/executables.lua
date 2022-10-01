@@ -51,35 +51,36 @@ end
 function M.setup()
   require("utils.setup").run {
     name = "executables",
-    wk = {
-      r = {
-        name = "executables",
-        d = {
-          function()
-            M.run_ansible_vault_decrypt()
-          end,
-          "ansible-vault decrypt",
+    wk = function(_, categories)
+      return {
+        [categories.TASKS] = {
+          d = {
+            function()
+              M.run_ansible_vault_decrypt()
+            end,
+            "ansible-vault decrypt",
+          },
+          D = {
+            function()
+              M.run_ansible_vault_encrypt()
+            end,
+            "ansible-vault encrypt",
+          },
+          t = {
+            function()
+              M.run_markdown_toc()
+            end,
+            "run markdown-toc",
+          },
+          P = {
+            function()
+              M.run_md_printer()
+            end,
+            "run md-printer",
+          },
         },
-        D = {
-          function()
-            M.run_ansible_vault_encrypt()
-          end,
-          "ansible-vault encrypt",
-        },
-        t = {
-          function()
-            M.run_markdown_toc()
-          end,
-          "run markdown-toc",
-        },
-        P = {
-          function()
-            M.run_md_printer()
-          end,
-          "run md-printer",
-        },
-      },
-    },
+      }
+    end,
   }
 end
 

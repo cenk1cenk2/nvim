@@ -190,25 +190,114 @@ function M.setup()
     lvim.lsp_wrapper[key] = value
   end
 
-  require("utils.command").create_commands {
-    {
-      name = "LspLogLevelDebug",
-      fn = function()
-        M.lsp_logging_level "debug"
-      end,
+  require("utils.setup").run {
+    name = "lsp-wrapper",
+    commands = {
+      {
+        name = "LspLogLevelDebug",
+        fn = function()
+          M.lsp_logging_level "debug"
+        end,
+      },
+      {
+        name = "LspLogLevelInfo",
+        fn = function()
+          M.lsp_logging_level "info"
+        end,
+      },
+      {
+        name = "LspOrganizeImports",
+        fn = function()
+          M.organize_imports()
+        end,
+      },
     },
-    {
-      name = "LspLogLevelInfo",
-      fn = function()
-        M.lsp_logging_level "info"
-      end,
-    },
-    {
-      name = "LspOrganizeImports",
-      fn = function()
-        M.organize_imports()
-      end,
-    },
+    wk = function(_, categories)
+      return {
+        ["q"] = {
+          function()
+            lvim.lsp_wrapper.fix_current()
+          end,
+          "fix current",
+        },
+        [categories.LSP] = {
+          name = "lsp",
+          d = {
+            function()
+              lvim.lsp_wrapper.document_diagnostics()
+            end,
+            "document diagnostics",
+          },
+          D = {
+            function()
+              lvim.lsp_wrapper.workspace_diagnostics()
+            end,
+            "workspace diagnostics",
+          },
+          f = {
+            function()
+              lvim.lsp_wrapper.format()
+            end,
+            "format buffer",
+          },
+          F = { ":LvimToggleFormatOnSave<CR>", "toggle autoformat" },
+          g = { ":LspOrganizeImports<CR>", "organize imports" },
+          i = {
+            function()
+              require("lvim.core.info").toggle_popup(vim.bo.filetype)
+            end,
+            "lsp info",
+          },
+          I = { ":Mason<CR>", "lsp installer" },
+          m = { ":LspRenameFile<CR>", "rename file with lsp" },
+          h = { ":LspImportAll<CR>", "import all missing" },
+          H = { ":LspImportCurrent<CR>", "import current" },
+          n = {
+            function()
+              lvim.lsp_wrapper.goto_next()
+            end,
+            "next diagnostic",
+          },
+          p = {
+            function()
+              lvim.lsp_wrapper.goto_prev()
+            end,
+            "prev diagnostic",
+          },
+          l = {
+            function()
+              lvim.lsp_wrapper.code_lens()
+            end,
+            "codelens",
+          },
+          R = {
+            function()
+              lvim.lsp_wrapper.rename()
+            end,
+            "rename item under cursor",
+          },
+          q = {
+            function()
+              lvim.lsp_wrapper.diagonistics_set_list()
+            end,
+            "set quickfix list",
+          },
+          s = {
+            function()
+              lvim.lsp_wrapper.document_symbols()
+            end,
+            "document symbols",
+          },
+          S = {
+            function()
+              lvim.lsp_wrapper.workspace_symbols()
+            end,
+            "workspace symbols",
+          },
+          Q = { ":LspRestart<CR>", "restart currently active lsps" },
+        },
+      }
+    end,
   }
 end
 

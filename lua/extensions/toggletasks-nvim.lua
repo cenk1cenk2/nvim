@@ -95,11 +95,11 @@ function M.config()
     on_done = function(config)
       config.inject.telescope.load_extension "toggletasks"
     end,
-    wk = function(config)
+    wk = function(config, categories)
       local telescope = config.inject.telescope
 
       return {
-        ["r"] = {
+        [categories.TASKS] = {
           i = { ":ToggleTasksInfo<CR>", "toggletasks info" },
           e = {
             function()

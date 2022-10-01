@@ -107,11 +107,11 @@ function M.config()
       require("dapui").setup(config.setup)
       config.set_store("setup", true)
     end,
-    wk = function(config)
+    wk = function(config, categories)
       local dap_ui = config.inject.dap_ui
 
       return {
-        ["d"] = {
+        [categories.DEBUG] = {
           u = {
             function()
               dap_ui.toggle()

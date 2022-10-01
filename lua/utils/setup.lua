@@ -2,6 +2,8 @@ local Log = require "lvim.core.log"
 local M = {}
 
 local keymappings = require "lvim.keymappings"
+local keys_which_key = require "keys.which-key"
+
 ---
 ---@param mappings table
 function M.load_wk_mappings(mappings)
@@ -24,7 +26,7 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil), configure: (fun(config: config): nil),condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table| (fun(config: config): nil), keymaps: table | (fun(config: config): any), wk: (fun(config: config):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil), commands: table | (fun(config: config): any), nvim_opts: table, hl: (fun(config: config): table) | table, signs: (fun(config: config): table) | table, on_complete: (fun(config: config): table), to_setup: table, current_setup: table, define_global_fn: (fun(config: config): table<string, string>) }
+---@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil), configure: (fun(config: config): nil),condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table| (fun(config: config): nil), keymaps: table | (fun(config: config): any), wk: (fun(config: config, categories: table):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil), commands: table | (fun(config: config): any), nvim_opts: table, hl: (fun(config: config): table) | table, signs: (fun(config: config): table) | table, on_complete: (fun(config: config): table), to_setup: table, current_setup: table, define_global_fn: (fun(config: config): table<string, string>) }
 
 ---
 ---@param extension_name string
@@ -114,15 +116,14 @@ function M.packer_config(extension_name)
 end
 
 ---
----@param config config
----@param property string
+---@param property function | table
 ---@return table
-function M.as_function_or_table(config, property)
-  if type(config[property]) == "function" then
-    return config[property](config)
+function M.evaluate_property(property, ...)
+  if type(property) == "function" then
+    return property(...)
   end
 
-  return config[property]
+  return property
 end
 
 ---
@@ -146,19 +147,19 @@ function M.run(config)
   end
 
   if config ~= nil and config.autocmds ~= nil then
-    M.define_autocmds(M.as_function_or_table(config, "autocmds"))
+    M.define_autocmds(M.evaluate_property(config.autocmds, config))
   end
 
   if config ~= nil and config.keymaps ~= nil then
-    M.load_mappings(M.as_function_or_table(config, "keymaps"))
+    M.load_mappings(M.evaluate_property(config.keymaps, config))
   end
 
   if config ~= nil and config.wk ~= nil then
-    M.load_wk_mappings(M.as_function_or_table(config, "wk"))
+    M.load_wk_mappings(M.evaluate_property(config.wk, config, keys_which_key.CATEGORIES))
   end
 
   if config ~= nil and config.hl ~= nil then
-    local highlights = M.as_function_or_table(config, "hl")
+    local highlights = M.evaluate_property(config.hl, config)
 
     for key, value in pairs(highlights) do
       vim.api.nvim_set_hl(0, key, value)
@@ -166,7 +167,7 @@ function M.run(config)
   end
 
   if config ~= nil and config.signs ~= nil and lvim.use_icons then
-    local signs = M.as_function_or_table(config, "signs")
+    local signs = M.evaluate_property(config.signs, config)
 
     for key, value in pairs(signs) do
       vim.fn.sign_define(key, value)
@@ -174,7 +175,7 @@ function M.run(config)
   end
 
   if config ~= nil and config.commands ~= nil then
-    require("utils.command").create_commands(M.as_function_or_table(config, "commands"))
+    require("utils.command").create_commands(M.evaluate_property(config.commands, config))
   end
 
   if config ~= nil and config.nvim_opts ~= nil then
@@ -186,7 +187,7 @@ function M.run(config)
   end
 
   if config ~= nil and config.setup ~= nil then
-    config.setup = M.as_function_or_table(config, "setup")
+    config.setup = M.evaluate_property(config.setup, config)
 
     if config.to_setup ~= nil then
       config.setup = vim.tbl_deep_extend("force", config.setup, config.to_setup)

@@ -35,12 +35,14 @@ function M.config()
       mkdp_port = "15000",
       mkdp_page_title = "${name} - preview",
     },
-    wk = {
-      ["a"] = {
-        ["m"] = { ":MarkdownPreview<CR>", "markdown preview start" },
-        ["M"] = { ":MarkdownPreviewStop<CR>", "markdown preview stop" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.ACTIONS] = {
+          ["m"] = { ":MarkdownPreview<CR>", "markdown preview start" },
+          ["M"] = { ":MarkdownPreviewStop<CR>", "markdown preview stop" },
+        },
+      }
+    end,
   })
 end
 

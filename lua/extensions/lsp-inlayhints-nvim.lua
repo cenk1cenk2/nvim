@@ -68,11 +68,11 @@ function M.config()
         end,
       })
     end,
-    wk = function(config)
+    wk = function(config, categories)
       local inlay_hints = config.inject.inlay_hints
 
       return {
-        ["l"] = {
+        [categories.LSP] = {
           ["t"] = { inlay_hints.toggle, "toggle inlay hints" },
         },
       }

@@ -183,12 +183,12 @@ function M.config()
         },
       }
     end,
-    wk = function(config)
+    wk = function(config, categories)
       local spectre = config.inject.spectre
+
       return {
         -- find and replace
-        s = {
-          name = "find & replace",
+        [categories.SEARCH] = {
           f = {
             function()
               spectre.open()

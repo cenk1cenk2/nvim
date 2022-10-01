@@ -51,11 +51,13 @@ function M.config()
     on_done = function()
       require("telescope").load_extension "projects"
     end,
-    wk = {
-      w = {
-        p = { ":Telescope projects<CR>", "projects" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.SESSION] = {
+          p = { ":Telescope projects<CR>", "projects" },
+        },
+      }
+    end,
   })
 end
 

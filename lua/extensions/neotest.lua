@@ -46,12 +46,11 @@ function M.config()
     on_setup = function(config)
       require("neotest").setup(config.setup)
     end,
-    wk = function(config)
+    wk = function(config, categories)
       local neotest = config.inject.neotest
 
       return {
-        ["J"] = {
-          name = "neotest",
+        [categories.TESTS] = {
           ["r"] = {
             function()
               neotest.run.run()

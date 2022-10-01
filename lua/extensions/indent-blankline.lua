@@ -49,11 +49,13 @@ function M.config()
     on_setup = function(config)
       require("indent_blankline").setup(config.setup)
     end,
-    wk = {
-      ["a"] = {
-        ["i"] = { ":IndentBlanklineToggle<CR>", "toggle indentation guides" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.ACTIONS] = {
+          ["i"] = { ":IndentBlanklineToggle<CR>", "toggle indentation guides" },
+        },
+      }
+    end,
   })
 end
 

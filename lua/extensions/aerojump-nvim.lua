@@ -37,14 +37,16 @@ function M.config()
         ["<CR>"] = "AerojumpSelect",
       },
     },
-    wk = {
-      ["f"] = {
-        ["a"] = {
-          ":Aerojump kbd bolt<CR>",
-          "aerojump",
+    wk = function(_, categories)
+      return {
+        [categories.FIND] = {
+          ["a"] = {
+            ":Aerojump kbd bolt<CR>",
+            "aerojump",
+          },
         },
-      },
-    },
+      }
+    end,
   })
 end
 

@@ -124,16 +124,17 @@ function M.config()
         end
       end
     end,
-    wk = {
-      T = {
-        name = "treesitter",
-        i = { ":TSConfigInfo<CR>", "treesitter info" },
-        k = { ":TSHighlightCapturesUnderCursor<CR>", "show treesitter theme color" },
-        u = { ":TSUpdate<CR>", "update installed treesitter packages" },
-        U = { ":TSUninstall all<CR>", "uninstall all treesitter packages" },
-        R = { ":TSInstall all<CR>", "reinstall all treesitter packages" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.TREESITTER] = {
+          i = { ":TSConfigInfo<CR>", "treesitter info" },
+          k = { ":TSHighlightCapturesUnderCursor<CR>", "show treesitter theme color" },
+          u = { ":TSUpdate<CR>", "update installed treesitter packages" },
+          U = { ":TSUninstall all<CR>", "uninstall all treesitter packages" },
+          R = { ":TSInstall all<CR>", "reinstall all treesitter packages" },
+        },
+      }
+    end,
   })
 end
 

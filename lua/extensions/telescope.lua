@@ -194,6 +194,45 @@ function M.config()
         end,
       }
     end,
+    wk = function(_, categories)
+      return {
+        [categories.FIND] = {
+          ["."] = { ":Telescope commands<CR>", "search available commands" },
+          [":"] = { ":Telescope command_history<CR>", "search command history" },
+          A = { ":Telescope builtin<CR>", "telescope list builtin finders" },
+          b = { ":Telescope current_buffer_fuzzy_find<CR>", "search current buffer fuzzy" },
+          f = { ":Telescope oldfiles<CR>", "search file history" },
+          g = { ":Telescope grep_string<CR>", "grep string under cursor" },
+          m = { ":Telescope vim_bookmarks all<CR>", "list all bookmarks" },
+          M = { ":Telescope vim_bookmarks current_file<CR>", "list document bookmarks" },
+          j = { ":Telescope jumplist<CR>", "list jumps" },
+          s = { ":Telescope spell_suggest<CR>", "spell suggest" },
+          T = { ":Telescope live_grep<CR>", "grep with regexp" },
+        },
+
+        [categories.ACTIONS] = {
+          f = { ":Telescope filetypes<CR>", "select from filetypes" },
+        },
+
+        [categories.BUFFER] = {
+          f = { ":Telescope buffers<CR>", "find buffer" },
+        },
+
+        [categories.GIT] = {
+          f = { ":Telescope git_status<CR>", "git status" },
+          F = { ":Telescope git_files<CR>", "list git tracked files" },
+        },
+
+        [categories.GIST] = {
+          I = { ":Telescope gh issues<CR>", "github issues" },
+          P = { ":Telescope gh pull_request<CR>", "github pull requests" },
+        },
+
+        [categories.NEOVIM] = {
+          k = { ":Telescope keymaps<CR>", "list keymaps" },
+        },
+      }
+    end,
   })
 end
 

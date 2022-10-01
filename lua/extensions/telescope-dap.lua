@@ -24,11 +24,13 @@ function M.config()
     on_setup = function(config)
       config.inject.telescope.load_extension "dap"
     end,
-    wk = {
-      ["d"] = {
-        ["l"] = { ":Telescope dap configurations<CR>", "configurations" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.DEBUG] = {
+          ["l"] = { ":Telescope dap configurations<CR>", "configurations" },
+        },
+      }
+    end,
   })
 end
 

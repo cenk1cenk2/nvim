@@ -35,11 +35,13 @@ function M.config()
     on_setup = function(config)
       require("symbols-outline").setup(config.setup)
     end,
-    wk = {
-      ["l"] = {
-        ["o"] = { ":SymbolsOutline<CR>", "file outline" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.LSP] = {
+          ["o"] = { ":SymbolsOutline<CR>", "file outline" },
+        },
+      }
+    end,
   })
 end
 

@@ -51,14 +51,13 @@ function M.config()
         numhl = "LspDiagnosticsSignInformation",
       },
     },
-    wk = function(config)
+    wk = function(config, categories)
       local dap = config.inject.dap
       local widgets = config.inject.widgets
       local vscode = config.inject.vscode
 
       return {
-        ["d"] = {
-          name = "debug",
+        [categories.DEBUG] = {
           d = {
             function()
               dap.toggle_breakpoint()

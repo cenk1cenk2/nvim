@@ -18,12 +18,14 @@ function M.config()
     on_setup = function(config)
       require("ccc").setup(config.setup)
     end,
-    wk = {
-      ["a"] = {
-        p = { ":CccPick<CR>", "color picker" },
-        C = { ":CccHighlighterToggle<CR>", "highlight colors" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.ACTIONS] = {
+          p = { ":CccPick<CR>", "color picker" },
+          C = { ":CccHighlighterToggle<CR>", "highlight colors" },
+        },
+      }
+    end,
   })
 end
 

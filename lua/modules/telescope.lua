@@ -44,4 +44,46 @@ function M.rg_grep_buffer()
   return require("telescope.builtin").live_grep { search_dirs = { "%:p" } }
 end
 
+function M.setup()
+  require("utils.setup").run {
+    name = "telescope_custom",
+    wk = function(_, categories)
+      return {
+        ["p"] = {
+          function()
+            require("lvim.core.telescope.custom-finders").find_project_files()
+          end,
+          "find file",
+        },
+        [categories.FIND] = {
+          B = {
+            function()
+              M.rg_grep_buffer()
+            end,
+            "search current buffer grep",
+          },
+          r = {
+            function()
+              M.rg_interactive()
+            end,
+            "ripgrep interactive",
+          },
+          d = {
+            function()
+              M.rg_dirty()
+            end,
+            "dirty fuzzy grep",
+          },
+          t = {
+            function()
+              M.rg_string()
+            end,
+            "grep string",
+          },
+        },
+      }
+    end,
+  }
+end
+
 return M

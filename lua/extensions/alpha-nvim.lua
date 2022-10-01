@@ -106,11 +106,13 @@ function M.config()
         },
       }
     end,
-    wk = {
-      w = {
-        c = { ":Alpha<CR>", "dashboard" },
-      },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.SESSION] = {
+          c = { ":Alpha<CR>", "dashboard" },
+        },
+      }
+    end,
     layout = {
       header = {
         [[                                                                                        ]],

@@ -21,8 +21,6 @@ function M.paste_blank_line_below()
   paste_blank_line(vim.fn.line ".")
 end
 
-function M.run_markdown_toc() end
-
 function M.setup()
   require("utils.setup").run {
     name = "unimpaired",
