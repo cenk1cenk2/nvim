@@ -69,6 +69,8 @@ function M.config()
         "Module",
         "Method",
         "Struct",
+        "Constant",
+        "Variable",
       },
     },
     on_setup = function(config)
