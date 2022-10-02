@@ -2,6 +2,7 @@
 
 SECONDS=0
 # COMMIT_SHA="691f4715c0cf4bc11ea2280db8777e6dd174a8ac"
+PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
 
 ## inject logger
 LOG_LEVEL=${LOG_LEVEL-"INFO"}
@@ -22,9 +23,17 @@ log_finish "Neovim cloned."
 cd "$TMP_DOWNLOAD_PATH" || exit 127
 
 if [ "$COMMIT_SHA" != "" ]; then
-    log_warn "Certain commit sha is set: ${COMMIT_SHA}"
-    git checkout "$COMMIT_SHA"
+	log_warn "Certain commit sha is set: ${COMMIT_SHA}"
+	git checkout "$COMMIT_SHA"
 fi
+
+for PATCH in "${PATCHES[@]}"; do
+	log_info "Applying patch: $PATCH"
+
+	rm p.patch
+	wget -O "p.patch" "$PATCH"
+	git apply p.patch
+done
 
 log_start "Building neovim..."
 sudo make CMAKE_BUILD_TYPE=Release install
@@ -34,8 +43,8 @@ log_debug "Clean up temporary path."
 sudo rm -r "$TMP_DOWNLOAD_PATH"
 
 if [ -f "/bin/nvim" ]; then
-    log_warn "Neovim installed with fuse appimage deleting it first."
-    sudo rm /bin/nvim
+	log_warn "Neovim installed with fuse appimage deleting it first."
+	sudo rm /bin/nvim
 fi
 
 pip3 install neovim-remote

@@ -8,6 +8,7 @@ function M.config()
     packer = function(config)
       return {
         "lvimuser/lsp-inlayhints.nvim",
+        branch = "anticonceal",
         config = function()
           require("utils.setup").packer_config "lsp_inlayhits_nvim"
         end,
@@ -73,7 +74,18 @@ function M.config()
 
       return {
         [categories.LSP] = {
-          ["t"] = { inlay_hints.toggle, "toggle inlay hints" },
+          ["t"] = {
+            function()
+              inlay_hints.toggle()
+            end,
+            "toggle inlay hints",
+          },
+          ["T"] = {
+            function()
+              inlay_hints.reset()
+            end,
+            "reset inlay hints",
+          },
         },
       }
     end,
