@@ -41,171 +41,209 @@ function M.config()
         end,
       }
 
-      return {
-        components = {
-          mode = {
-            function()
-              local mode_name = {
-                c = "COMMAND",
-                i = "INSERT",
-                ic = "INSERT COMP",
-                ix = "INSERT COMP",
-                multi = "MULTI",
-                n = "NORMAL",
-                ni = "(INSERT)",
-                no = "OP PENDING",
-                R = "REPLACE",
-                Rv = "V REPLACE",
-                s = "SELECT",
-                S = "S-LINE",
-                [""] = "S-BLOCK",
-                t = "TERMINAL",
-                v = "VISUAL",
-                V = "V-LINE",
-                [""] = "V-BLOCK",
-              }
+      local components = {
+        mode = {
+          function()
+            local mode_name = {
+              c = "COMMAND",
+              i = "INSERT",
+              ic = "INSERT COMP",
+              ix = "INSERT COMP",
+              multi = "MULTI",
+              n = "NORMAL",
+              ni = "(INSERT)",
+              no = "OP PENDING",
+              R = "REPLACE",
+              Rv = "V REPLACE",
+              s = "SELECT",
+              S = "S-LINE",
+              [""] = "S-BLOCK",
+              t = "TERMINAL",
+              v = "VISUAL",
+              V = "V-LINE",
+              [""] = "V-BLOCK",
+            }
 
-              return " " .. mode_name[vim.fn.mode()] .. " "
-            end,
-            padding = { left = 0, right = 0 },
-            color = { fg = colors.bg },
-            cond = nil,
-          },
-          branch = {
-            "b:gitsigns_head",
-            icon = "",
-            color = { fg = colors.bg, bg = colors.yellow },
-            cond = conditions.hide_in_width,
-          },
-          filetype = { "filetype", cond = conditions.hide_in_width, color = {} },
-          filename = { "filename", color = {}, cond = nil },
-          diff = {
-            "diff",
-            source = function()
-              local gitsigns = vim.b.gitsigns_status_dict
-              if gitsigns then
-                return { added = gitsigns.added, modified = gitsigns.changed, removed = gitsigns.removed }
-              end
-            end,
-            symbols = { added = "  ", modified = " ", removed = " " },
-            diff_color = {
-              added = { fg = colors.green },
-              modified = { fg = colors.yellow },
-              removed = { fg = colors.red },
-            },
-            cond = nil,
-          },
-          python_env = {
-            function()
-              local utils = require "lvim.core.lualine.utils"
-              if vim.bo.filetype == "python" then
-                local venv = os.getenv "CONDA_DEFAULT_ENV" or os.getenv "VIRTUAL_ENV"
-                if venv then
-                  return string.format("  (%s)", utils.env_cleanup(venv))
-                end
-              end
-              return ""
-            end,
-            color = { fg = colors.green },
-            cond = conditions.hide_in_width,
-          },
-          diagnostics = {
-            "diagnostics",
-            sources = { "nvim_diagnostic" },
-            symbols = { error = " ", warn = " ", info = " ", hint = " " },
-            cond = conditions.hide_in_width,
-          },
-          treesitter = {
-            function()
-              return ""
-            end,
-            color = function()
-              local buf = vim.api.nvim_get_current_buf()
-              local ts = vim.treesitter.highlighter.active[buf]
-              return { fg = ts and not vim.tbl_isempty(ts) and colors.green or colors.red }
-            end,
-            cond = conditions.hide_in_width,
-          },
-          lsp = {
-            function(msg)
-              msg = msg or "❌"
-              local buf_clients = vim.lsp.get_active_clients { bufnr = vim.api.nvim_get_current_buf() }
-              if next(buf_clients) == nil then
-                -- TODO: clean up this if statement
-                if type(msg) == "boolean" or #msg == 0 then
-                  return "❌"
-                end
-                return msg
-              end
-              local buf_ft = vim.bo.filetype
-              local buf_client_names = {}
-
-              -- add client
-              for _, client in pairs(buf_clients) do
-                if client.name ~= "null-ls" then
-                  table.insert(buf_client_names, client.name)
-                end
-              end
-
-              -- add formatter
-              local formatters = require "lvim.lsp.null-ls.formatters"
-              local supported_formatters = formatters.list_registered(buf_ft)
-
-              -- add linter
-              local linters = require "lvim.lsp.null-ls.linters"
-              local supported_linters = linters.list_registered(buf_ft)
-
-              local lsps = table.concat(buf_client_names, ", ")
-
-              if supported_linters and not vim.tbl_isempty(supported_linters) then
-                lsps = lsps .. " | 📋 " .. table.concat(supported_linters, ", ")
-              end
-
-              if supported_formatters and not vim.tbl_isempty(supported_formatters) then
-                lsps = lsps .. " | ✍ " .. table.concat(supported_formatters, ", ")
-              end
-
-              return lsps
-            end,
-            color = { gui = "bold" },
-            cond = conditions.hide_in_width,
-          },
-          location = { "location", cond = conditions.hide_in_width, color = {} },
-          progress = { "progress", cond = conditions.hide_in_width, color = {} },
-          spaces = {
-            function()
-              if not vim.api.nvim_buf_get_option(0, "expandtab") then
-                return "Tab size: " .. vim.api.nvim_buf_get_option(0, "tabstop") .. " "
-              end
-              local size = vim.api.nvim_buf_get_option(0, "shiftwidth")
-              if size == 0 then
-                size = vim.api.nvim_buf_get_option(0, "tabstop")
-              end
-              return "Spaces: " .. size .. " "
-            end,
-            cond = conditions.hide_in_width,
-            color = {},
-          },
-          encoding = {
-            "o:encoding",
-            fmt = string.upper,
-            color = {},
-            cond = conditions.hide_in_width,
-          },
-          scrollbar = {
-            function()
-              local current_line = vim.fn.line "."
-              local total_lines = vim.fn.line "$"
-              local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
-              local line_ratio = current_line / total_lines
-              local index = math.ceil(line_ratio * #chars)
-              return chars[index]
-            end,
-            padding = { left = 0, right = 0 },
-            color = { fg = colors.yellow, bg = colors.bg },
-            cond = nil,
-          },
+            return " " .. mode_name[vim.fn.mode()] .. " "
+          end,
+          padding = { left = 0, right = 0 },
+          color = { fg = colors.bg },
+          cond = nil,
         },
+        branch = {
+          "b:gitsigns_head",
+          icon = "",
+          color = { fg = colors.bg, bg = colors.yellow },
+          cond = conditions.hide_in_width,
+        },
+        filetype = { "filetype", cond = conditions.hide_in_width, color = {} },
+        filename = { "filename", color = {}, cond = nil },
+        diff = {
+          "diff",
+          source = function()
+            local gitsigns = vim.b.gitsigns_status_dict
+            if gitsigns then
+              return { added = gitsigns.added, modified = gitsigns.changed, removed = gitsigns.removed }
+            end
+          end,
+          symbols = { added = "  ", modified = " ", removed = " " },
+          diff_color = {
+            added = { fg = colors.green },
+            modified = { fg = colors.yellow },
+            removed = { fg = colors.red },
+          },
+          cond = nil,
+        },
+        python_env = {
+          function()
+            local utils = require "lvim.core.lualine.utils"
+            if vim.bo.filetype == "python" then
+              local venv = os.getenv "CONDA_DEFAULT_ENV" or os.getenv "VIRTUAL_ENV"
+              if venv then
+                return string.format("  (%s)", utils.env_cleanup(venv))
+              end
+            end
+            return ""
+          end,
+          color = { fg = colors.green },
+          cond = conditions.hide_in_width,
+        },
+        diagnostics = {
+          "diagnostics",
+          sources = { "nvim_diagnostic" },
+          symbols = { error = " ", warn = " ", info = " ", hint = " " },
+          cond = conditions.hide_in_width,
+        },
+        treesitter = {
+          function()
+            return ""
+          end,
+          color = function()
+            local buf = vim.api.nvim_get_current_buf()
+            local ts = vim.treesitter.highlighter.active[buf]
+            return { fg = ts and not vim.tbl_isempty(ts) and colors.green or colors.red }
+          end,
+          cond = conditions.hide_in_width,
+        },
+        lsp = {
+          function(msg)
+            msg = msg or "❌"
+            local buf_clients = vim.lsp.get_active_clients { bufnr = vim.api.nvim_get_current_buf() }
+            if next(buf_clients) == nil then
+              -- TODO: clean up this if statement
+              if type(msg) == "boolean" or #msg == 0 then
+                return "❌"
+              end
+              return msg
+            end
+            local buf_ft = vim.bo.filetype
+            local buf_client_names = {}
+
+            -- add client
+            for _, client in pairs(buf_clients) do
+              if client.name ~= "null-ls" then
+                table.insert(buf_client_names, client.name)
+              end
+            end
+
+            -- add formatter
+            local formatters = require "lvim.lsp.null-ls.formatters"
+            local supported_formatters = formatters.list_registered(buf_ft)
+
+            -- add linter
+            local linters = require "lvim.lsp.null-ls.linters"
+            local supported_linters = linters.list_registered(buf_ft)
+
+            local lsps = table.concat(buf_client_names, ", ")
+
+            if supported_linters and not vim.tbl_isempty(supported_linters) then
+              lsps = lsps .. " | " .. table.concat(supported_linters, ", ")
+            end
+
+            if supported_formatters and not vim.tbl_isempty(supported_formatters) then
+              lsps = lsps .. " | " .. table.concat(supported_formatters, ", ")
+            end
+
+            return lsps
+          end,
+          color = { gui = "bold" },
+          cond = conditions.hide_in_width,
+        },
+        location = { "location", cond = conditions.hide_in_width, color = {} },
+        progress = { "progress", cond = conditions.hide_in_width, color = {} },
+        spaces = {
+          function()
+            if not vim.api.nvim_buf_get_option(0, "expandtab") then
+              return "Tab size: " .. vim.api.nvim_buf_get_option(0, "tabstop") .. " "
+            end
+            local size = vim.api.nvim_buf_get_option(0, "shiftwidth")
+            if size == 0 then
+              size = vim.api.nvim_buf_get_option(0, "tabstop")
+            end
+            return "Spaces: " .. size .. " "
+          end,
+          cond = conditions.hide_in_width,
+          color = {},
+        },
+        encoding = {
+          "o:encoding",
+          fmt = string.upper,
+          color = {},
+          cond = conditions.hide_in_width,
+        },
+        scrollbar = {
+          function()
+            local current_line = vim.fn.line "."
+            local total_lines = vim.fn.line "$"
+            local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
+            local line_ratio = current_line / total_lines
+            local index = math.ceil(line_ratio * #chars)
+            return chars[index]
+          end,
+          padding = { left = 0, right = 0 },
+          color = { fg = colors.yellow, bg = colors.bg },
+          cond = nil,
+        },
+      }
+
+      local noice_ok, noice = pcall(require, "noice.status")
+
+      if noice_ok then
+        components.noice_left = {
+          {
+            noice.message.get_hl,
+            cond = noice.message.has,
+          },
+          {
+            noice.mode.get,
+            cond = noice.mode.has,
+            color = { fg = colors.yellow, bg = colors.bg },
+          },
+          -- {
+          --   noice.search.get,
+          --   cond = noice.search.has,
+          --   color = { fg = colors.cyan, bg = colors.bg },
+          -- },
+        }
+        components.noice_right = {
+          {
+            noice.command.get,
+            cond = noice.command.has,
+            color = { fg = colors.green, bg = colors.bg },
+          },
+          -- {
+          --   noice.search.get,
+          --   cond = noice.search.has,
+          --   color = { fg = colors.cyan, bg = colors.bg },
+          -- },
+        }
+      else
+        components.noice_left = {}
+        components.noice_right = {}
+      end
+
+      return {
+        components = components,
       }
     end,
     setup = function(config)
@@ -217,26 +255,48 @@ function M.config()
           icons_enabled = lvim.use_icons,
           component_separators = { left = "", right = "" },
           section_separators = { left = "", right = "" },
-          disabled_filetypes = { "alpha", "NvimTree", "Outline" },
+          disabled_filetypes = lvim.disabled_filetypes,
         },
         sections = {
           lualine_a = { components.mode },
-          lualine_b = { components.branch, components.filetype, components.filename },
-          lualine_c = { components.diff, components.python_env },
-          lualine_x = { components.diagnostics, components.treesitter, components.lsp },
-          lualine_y = {},
+          lualine_b = {
+            components.branch,
+            components.filetype,
+            components.filename,
+            components.diff,
+            components.python_env,
+          },
+          lualine_c = components.noice_left,
+          lualine_x = components.noice_right,
+          lualine_y = { components.diagnostics, components.treesitter, components.lsp },
           lualine_z = { components.scrollbar },
         },
         inactive_sections = {
-          lualine_a = { "filename" },
+          lualine_a = { components.mode },
           lualine_b = {},
           lualine_c = {},
           lualine_x = {},
           lualine_y = {},
           lualine_z = {},
         },
+        -- winbar = {
+        --   lualine_a = {},
+        --   lualine_b = {},
+        --   lualine_c = {},
+        --   lualine_x = {},
+        --   lualine_y = {},
+        --   lualine_z = {},
+        -- },
+        -- inactive_winbar = {
+        --   lualine_a = {},
+        --   lualine_b = {},
+        --   lualine_c = {},
+        --   lualine_x = {},
+        --   lualine_y = {},
+        --   lualine_z = {},
+        -- },
         tabline = nil,
-        extensions = { "nvim-tree" },
+        extensions = { "nvim-tree", "aerial", "quickfix", "nvim-dap-ui", "toggleterm" },
       }
     end,
     on_setup = function(config)

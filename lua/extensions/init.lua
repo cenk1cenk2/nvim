@@ -23,6 +23,7 @@ local extensions = {
   "neovim-session-manager",
   "stickybuf-nvim",
   -- extensions
+  "noice-nvim",
   "hop",
   "vim-repeat",
   "neoscroll",
