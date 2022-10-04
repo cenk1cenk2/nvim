@@ -219,11 +219,11 @@ function M.config()
             cond = noice.mode.has,
             color = { fg = colors.yellow, bg = colors.bg },
           },
-          -- {
-          --   noice.search.get,
-          --   cond = noice.search.has,
-          --   color = { fg = colors.cyan, bg = colors.bg },
-          -- },
+          {
+            noice.search.get,
+            cond = noice.search.has,
+            color = { fg = colors.cyan, bg = colors.bg },
+          },
         }
         components.noice_right = {
           {
@@ -274,8 +274,8 @@ function M.config()
         inactive_sections = {
           lualine_a = { components.mode },
           lualine_b = {},
-          lualine_c = {},
-          lualine_x = {},
+          lualine_c = components.noice_left,
+          lualine_x = components.noice_right,
           lualine_y = {},
           lualine_z = {},
         },
