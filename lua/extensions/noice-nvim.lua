@@ -19,7 +19,7 @@ function M.config()
       }
     end,
     configure = function()
-      table.insert(lvim.disabled_filetypes, "cmdline")
+      table.insert(lvim.disabled_filetypes, "cmdline_popup")
     end,
     setup = {
       views = {
@@ -30,7 +30,7 @@ function M.config()
           },
           filter_options = {},
           win_options = {
-            winhighlight = "NormalFloat:NormalFloat,FloatBorder:FloatBorder",
+            winhighlight = { Normal = "NormalFloat", FloatBorder = "FloatBorder" },
           },
         },
       },
@@ -42,6 +42,14 @@ function M.config()
         {
           filter = { event = "split", kind = "search_count" },
           opts = { skip = true },
+        },
+        {
+          view = "notify",
+          filter = {
+            event = "noice",
+            kind = { "stats", "debug" },
+          },
+          opts = { buf_options = { filetype = "lua" }, replace = true },
         },
         -- {
         --   filter = {
