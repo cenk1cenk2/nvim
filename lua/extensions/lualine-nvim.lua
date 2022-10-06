@@ -2,6 +2,7 @@
 local M = {}
 
 local extension_name = "lualine_nvim"
+local colors = require "onedarker.colors"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
@@ -15,21 +16,6 @@ function M.config()
       }
     end,
     to_inject = function()
-      local colors = {
-        bg = "#202328",
-        fg = "#bbc2cf",
-        yellow = "#ECBE7B",
-        cyan = "#008080",
-        darkblue = "#081633",
-        green = "#98be65",
-        orange = "#FF8800",
-        violet = "#a9a1e1",
-        magenta = "#c678dd",
-        purple = "#c678dd",
-        blue = "#51afef",
-        red = "#ec5f67",
-      }
-
       local window_width_limit = 70
 
       local conditions = {
@@ -64,35 +50,51 @@ function M.config()
               [""] = "V-BLOCK",
             }
 
-            return " " .. mode_name[vim.fn.mode()] .. " "
+            return mode_name[vim.fn.mode()]
           end,
-          padding = { left = 0, right = 0 },
-          color = { fg = colors.bg },
-          cond = nil,
+          padding = { left = 1, right = 1 },
+          color = { fg = colors.black },
         },
         branch = {
           "b:gitsigns_head",
           icon = "",
-          color = { fg = colors.bg, bg = colors.yellow },
+          color = { fg = colors.black, bg = colors.yellow[300] },
           cond = conditions.hide_in_width,
         },
-        filetype = { "filetype", cond = conditions.hide_in_width, color = {} },
-        filename = { "filename", color = {}, cond = nil },
+        filetype = {
+          "filetype",
+          cond = conditions.hide_in_width,
+          color = {
+            fg = colors.fg,
+            bg = colors.bg[300],
+          },
+        },
+        filename = {
+          "filename",
+          color = {
+            fg = colors.fg,
+            bg = colors.bg[300],
+          },
+        },
         diff = {
           "diff",
           source = function()
             local gitsigns = vim.b.gitsigns_status_dict
+
             if gitsigns then
               return { added = gitsigns.added, modified = gitsigns.changed, removed = gitsigns.removed }
             end
           end,
           symbols = { added = "  ", modified = " ", removed = " " },
           diff_color = {
-            added = { fg = colors.green },
-            modified = { fg = colors.yellow },
-            removed = { fg = colors.red },
+            added = { fg = colors.green[600] },
+            modified = { fg = colors.blue[600] },
+            removed = { fg = colors.red[600] },
           },
-          cond = nil,
+          color = {
+            bg = colors.bg[300],
+          },
+          cond = conditions.hide_in_width,
         },
         python_env = {
           function()
@@ -105,7 +107,10 @@ function M.config()
             end
             return ""
           end,
-          color = { fg = colors.green },
+          color = {
+            fg = colors.green[300],
+            bg = colors.bg[300],
+          },
           cond = conditions.hide_in_width,
         },
         diagnostics = {
@@ -121,7 +126,11 @@ function M.config()
           color = function()
             local buf = vim.api.nvim_get_current_buf()
             local ts = vim.treesitter.highlighter.active[buf]
-            return { fg = ts and not vim.tbl_isempty(ts) and colors.green or colors.red }
+
+            return {
+              fg = ts and not vim.tbl_isempty(ts) and colors.green[300] or colors.red[300],
+              bg = colors.bg[300],
+            }
           end,
           cond = conditions.hide_in_width,
         },
@@ -157,16 +166,16 @@ function M.config()
             local lsps = table.concat(buf_client_names, ", ")
 
             if supported_linters and not vim.tbl_isempty(supported_linters) then
-              lsps = lsps .. " | " .. table.concat(supported_linters, ", ")
+              lsps = lsps .. " > " .. table.concat(supported_linters, ", ")
             end
 
             if supported_formatters and not vim.tbl_isempty(supported_formatters) then
-              lsps = lsps .. " | " .. table.concat(supported_formatters, ", ")
+              lsps = lsps .. " > " .. table.concat(supported_formatters, ", ")
             end
 
             return lsps
           end,
-          color = { gui = "bold" },
+          color = { fg = colors.fg, bg = colors.bg[300] },
           cond = conditions.hide_in_width,
         },
         location = { "location", cond = conditions.hide_in_width, color = {} },
@@ -201,41 +210,52 @@ function M.config()
             return chars[index]
           end,
           padding = { left = 0, right = 0 },
-          color = { fg = colors.yellow, bg = colors.bg },
+          color = { fg = colors.yellow[300], bg = colors.grey[300] },
           cond = nil,
         },
       }
 
-      local noice_ok, noice = pcall(require, "noice.status")
+      local noice_ok = pcall(require, "noice")
 
       if noice_ok then
         components.noice_left = {
           {
-            noice.message.get_hl,
-            cond = noice.message.has,
+            function()
+              return require("noice").api.statusline.message.get_hl()
+            end,
+            cond = function()
+              return require("noice").api.statusline.message.has()
+            end,
           },
           {
-            noice.mode.get,
-            cond = noice.mode.has,
-            color = { fg = colors.yellow, bg = colors.bg },
+            function()
+              return require("noice").api.statusline.mode.get()
+            end,
+            cond = function()
+              return require("noice").api.statusline.mode.has()
+            end,
+            color = { fg = colors.yellow[600] },
           },
           {
-            noice.search.get,
-            cond = noice.search.has,
-            color = { fg = colors.cyan, bg = colors.bg },
+            function()
+              return require("noice").api.statusline.search.get()
+            end,
+            cond = function()
+              return require("noice").api.statusline.search.has()
+            end,
+            color = { fg = colors.cyan[600] },
           },
         }
         components.noice_right = {
           {
-            noice.command.get,
-            cond = noice.command.has,
-            color = { fg = colors.green, bg = colors.bg },
+            function()
+              return require("noice").api.statusline.command.get()
+            end,
+            cond = function()
+              return require("noice").api.statusline.command.has()
+            end,
+            color = { fg = colors.blue[600] },
           },
-          -- {
-          --   noice.search.get,
-          --   cond = noice.search.has,
-          --   color = { fg = colors.cyan, bg = colors.bg },
-          -- },
         }
       else
         components.noice_left = {}

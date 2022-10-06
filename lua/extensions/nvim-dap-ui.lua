@@ -69,7 +69,7 @@ function M.config()
             },
           },
           size = 40,
-          position = "left",
+          position = "right",
         },
         {
           elements = {

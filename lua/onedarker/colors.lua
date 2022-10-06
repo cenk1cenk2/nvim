@@ -16,6 +16,7 @@ return {
   cursor = "#6c778d",
   fg = "#abb2bf",
   white = "#efefef",
+  black = "#121212",
 
   grey = {
     [300] = "#38404b",
