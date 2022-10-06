@@ -129,12 +129,11 @@ function M.fix_current()
       return
     end
 
-    local clients = vim.lsp.get_active_clients { bufnr = vim.api.nvim_get_current_buf() }
     local available_fixes = {}
 
-    for i, response in pairs(responses) do
+    for _, response in pairs(responses) do
       for _, result in pairs(response.result or {}) do
-        table.insert(available_fixes, { result = result, client = clients[i].name })
+        table.insert(available_fixes, result)
       end
     end
 
@@ -147,8 +146,9 @@ function M.fix_current()
     -- prioritize real language servers?
 
     local fix = available_fixes[1]
-    lsp_utils.apply_lsp_edit(fix.result)
-    Log:info("[QUICKFIX] " .. fix.client .. ": " .. fix.result.title)
+    lsp_utils.apply_lsp_edit(fix)
+    local client = vim.lsp.get_client_by_id(fix.command.client_id)
+    Log:info("[QUICKFIX] " .. client.name .. ": " .. fix.title)
   end)
 end
 
