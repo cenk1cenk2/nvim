@@ -74,12 +74,12 @@ function M.config()
         {
           elements = {
             {
-              id = "scopes",
-              size = 0.5, -- Can be float or integer > 1
-            },
-            {
               id = "repl",
               size = 0.5,
+            },
+            {
+              id = "scopes",
+              size = 0.5, -- Can be float or integer > 1
             },
           },
           size = 20,
