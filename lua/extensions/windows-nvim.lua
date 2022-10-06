@@ -45,7 +45,7 @@ function M.config()
       -- winminwidth = 10,
     },
     wk = {
-      ["M"] = { ":WindowsMaximaze<CR>", "maximize current window" },
+      ["M"] = { ":WindowsMaximize<CR>", "maximize current window" },
     },
   })
 end
