@@ -62,7 +62,8 @@ function M.setup()
 
   notify.setup(opts)
   vim.notify = notify
-  Log:configure_notifications(notify)
+  -- dont configure notifications noice will handle them?
+  -- Log:configure_notifications(notify)
 end
 
 return M

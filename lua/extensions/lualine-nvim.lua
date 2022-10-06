@@ -236,15 +236,15 @@ function M.config()
             end,
             color = { fg = colors.yellow[600] },
           },
-          {
-            function()
-              return require("noice").api.statusline.search.get()
-            end,
-            cond = function()
-              return require("noice").api.statusline.search.has()
-            end,
-            color = { fg = colors.cyan[600] },
-          },
+          -- {
+          --   function()
+          --     return require("noice").api.statusline.search.get()
+          --   end,
+          --   cond = function()
+          --     return require("noice").api.statusline.search.has()
+          --   end,
+          --   color = { fg = colors.cyan[600] },
+          -- },
         }
         components.noice_right = {
           {
@@ -282,7 +282,7 @@ function M.config()
           lualine_b = {
             components.branch,
             components.filetype,
-            components.filename,
+            -- components.filename,
             components.diff,
             components.python_env,
           },
