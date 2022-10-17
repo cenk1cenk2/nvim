@@ -14,6 +14,7 @@ function M.config()
         { "tamago324/nlsp-settings.nvim" },
         { "jose-elias-alvarez/null-ls.nvim" },
         { "b0o/schemastore.nvim" },
+        { "folke/neodev.nvim" },
       }
     end,
   })

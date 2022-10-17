@@ -9,9 +9,9 @@ local dev_opts = {
   override = nil, -- function(root_dir, options) end,
 }
 
-local lua_dev_loaded, lua_dev = pcall(require, "lua-dev")
-if lua_dev_loaded then
-  lua_dev.setup(dev_opts)
+local neodev_loaded, neodev = pcall(require, "neodev")
+if neodev_loaded then
+  neodev.setup(dev_opts)
 end
 
 local opts = {

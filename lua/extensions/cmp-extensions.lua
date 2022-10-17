@@ -28,7 +28,6 @@ function M.config()
         -- { "tzachar/cmp-tabnine", run = "./install.sh" },
         { "rafamadriz/friendly-snippets" },
         { "L3MON4D3/LuaSnip" },
-        { "folke/lua-dev.nvim", module = "lua-dev" },
         { "hrsh7th/cmp-nvim-lsp-signature-help" },
         { "rcarriga/cmp-dap" },
       }
