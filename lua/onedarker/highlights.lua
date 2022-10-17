@@ -93,48 +93,47 @@ hl.common = {
 
   Directory = { fg = c.blue[600] },
   NonText = { fg = c.grey[600] },
-  Debug = { fg = c.yellow[600] },
   debugPC = { fg = c.bg[200], bg = c.cyan[600] },
   debugBreakpoint = { fg = c.bg[200], bg = c.red[600] },
   Ignore = { fg = c.cyan[600], bg = c.bg[200], bold = true },
 }
 
 hl.syntax = {
-  String = { fg = c.green[600] },
-  Character = { fg = c.orange[600] },
-  Variable = { fg = c.red[600] },
-  Float = { fg = c.orange[300] },
-  confComment = { fg = c.grey[600] },
-  Number = { fg = c.orange[600] },
-  Boolean = { fg = c.orange[600] },
-  Type = { fg = c.yellow[600] },
-  Structure = { fg = c.yellow[600] },
-  StorageClass = { fg = c.yellow[600] },
-  Identifier = { fg = c.red[600] },
-  Constant = { fg = c.yellow[600] },
-  PreProc = { fg = c.purple[600] },
-  PreCondit = { fg = c.purple[600] },
-  Include = { fg = c.purple[600] },
-  Keyword = { fg = c.purple[600] },
-  Define = { fg = c.purple[600] },
-  Typedef = { fg = c.purple[600] },
-  Exception = { fg = c.purple[600] },
-  Conditional = { fg = c.purple[600] },
-  Repeat = { fg = c.purple[600] },
-  Statement = { fg = c.purple[600] },
-  Macro = { fg = c.red[600] },
-  Error = { fg = c.purple[600] },
-  Label = { fg = c.red[600] },
-  Special = { fg = c.red[600] },
-  SpecialChar = { fg = c.red[600] },
-  Function = { fg = c.blue[600] },
-  Operator = { fg = c.cyan[600] },
-  Title = { fg = c.cyan[600] },
-  Tag = { fg = c.green[300] },
-  Delimiter = { fg = c.grey[900] },
-  Comment = { italic = true, fg = c.grey[600] },
-  SpecialComment = { italic = true, fg = c.grey[600] },
-  Todo = { fg = c.red[600] },
+  String = { link = "@string" },
+  Character = { link = "@character" },
+  Variable = { link = "@variable" },
+  Float = { link = "@float" },
+  Number = { link = "@number" },
+  Boolean = { link = "@boolean" },
+  Debug = { link = "@debug" },
+  Type = { link = "@type" },
+  Structure = { link = "@constant" },
+  StorageClass = { link = "@storageclass" },
+  Identifier = { link = "@field" },
+  Constant = { link = "@constant" },
+  PreProc = { link = "@preproc" },
+  PreCondit = { link = "@preproc" },
+  Include = { link = "@include" },
+  Keyword = { link = "@keyword" },
+  Define = { link = "@define" },
+  Typedef = { link = "@type.definition" },
+  Exception = { link = "@exception" },
+  Conditional = { link = "@conditional" },
+  Repeat = { link = "@repeat" },
+  Statement = { link = "@define" },
+  Macro = { link = "@constant.macro" },
+  Error = { link = "@error" },
+  Label = { link = "@label" },
+  Special = { link = "@string.special" },
+  SpecialChar = { link = "@character.special" },
+  Function = { link = "@function" },
+  Operator = { link = "@operator" },
+  Title = { link = "@text.title" },
+  Tag = { link = "@tag" },
+  Delimiter = { link = "@punctuation.delimiter" },
+  Comment = { link = "@comment" },
+  SpecialComment = { link = "@comment" },
+  Todo = { link = "@todo" },
 }
 
 hl.treesitter = {
@@ -149,7 +148,9 @@ hl.treesitter = {
   ["@constant.builtin"] = { fg = c.orange[600] },
   ["@constant.macro"] = { fg = c.orange[600] },
   ["@constructor"] = { fg = c.yellow[600] },
-  ["@error"] = { fg = c.fg },
+  ["@debug"] = { fg = c.grey[600] },
+  ["@define"] = { fg = c.purple[600] },
+  ["@error"] = { fg = c.red[600] },
   ["@exception"] = { fg = c.purple[600] },
   ["@field"] = { fg = c.red[600] },
   ["@float"] = { fg = c.green[300] },
@@ -174,8 +175,8 @@ hl.treesitter = {
   ["@preproc"] = { fg = c.purple[600] },
   ["@property"] = { fg = c.red[600] },
   ["@punctuation.delimiter"] = { fg = c.fg },
-  ["@punctiation.bracket"] = { fg = c.yellow[900] },
-  ["@punctiation.special"] = { fg = c.purple[600] },
+  ["@punctuation.bracket"] = { fg = c.yellow[900] },
+  ["@punctuation.special"] = { fg = c.orange[600] },
   ["@repeat"] = { fg = c.purple[600] },
   ["@storageclass"] = { fg = c.yellow[600] },
   ["@string"] = { fg = c.green[600] },
@@ -184,23 +185,23 @@ hl.treesitter = {
   ["@string.special"] = { fg = c.red[600] },
   ["@symbol"] = { fg = c.cyan[600] },
   ["@tag"] = { fg = c.red[600] },
-  ["@tag.attribute"] = { fg = c.grey[900] },
+  ["@tag.attribute"] = { fg = c.orange[600] },
   ["@tag.delimiter"] = { fg = c.grey[900] },
   ["@text"] = { fg = c.fg },
-  ["@text.strong"] = { fg = c.fg },
-  ["@text.emphasis"] = { fg = c.fg },
-  ["@text.underline"] = { fg = c.fg },
-  ["@text.strike"] = { fg = c.fg },
-  ["@text.title"] = { fg = c.fg },
+  ["@text.strong"] = { bold = true },
+  ["@text.emphasis"] = { standout = true },
+  ["@text.underline"] = { underline = true },
+  ["@text.strike"] = { strikethrough = true },
+  ["@text.title"] = { fg = c.yellow[600] },
   ["@text.literal"] = { fg = c.green[300] },
-  ["@text.uri"] = { fg = c.fg },
-  ["@text.math"] = { fg = c.fg },
+  ["@text.uri"] = { fg = c.cyan[600], underline = true },
+  ["@text.math"] = { fg = c.yellow[600] },
   ["@text.reference"] = { fg = c.fg },
   ["@text.environment"] = { fg = c.fg },
   ["@text.environment.name"] = { fg = c.fg },
-  ["@text.note"] = { fg = c.fg },
-  ["@text.warning"] = { fg = c.fg },
-  ["@text.danger"] = { fg = c.fg },
+  ["@text.note"] = { fg = c.grey[600] },
+  ["@text.warning"] = { fg = c.orange[600] },
+  ["@text.danger"] = { fg = c.red[600] },
   ["@todo"] = { fg = c.cyan[600] },
   ["@type"] = { fg = c.yellow[600] },
   ["@type.builtin"] = { fg = c.yellow[600] },
@@ -209,7 +210,6 @@ hl.treesitter = {
   ["@variable"] = { fg = c.red[600] },
   ["@variable.builtin"] = { fg = c.yellow[600] },
   ["@inlayhint"] = { italic = true, bg = c.bg[300], fg = c.bg[600] },
-  ["@typescript.decorator"] = { fg = c.fg },
 }
 
 hl.lsp = {
@@ -264,12 +264,6 @@ hl.lsp = {
 }
 
 -- langs
-
-hl.langs.html = {
-  htmlTag = { fg = c.red[600] },
-  htmlTagName = { fg = c.red[600] },
-}
-
 hl.langs.markdown = {
   markdownBlockquote = { fg = c.grey[600] },
   markdownBold = { fg = c.none, bold = true },
@@ -346,6 +340,10 @@ hl.langs.jinja = {
 
 hl.langs.ansible = { ansible_normal_keywords = { fg = c.blue[600] } }
 
+hl.langs.typescript = {
+  -- ["@decorator.typescript"] = { fg = c.fg },
+}
+
 -- plugins
 
 hl.plugins.whichkey = {
@@ -363,9 +361,9 @@ hl.plugins.gitgutter = {
 }
 
 hl.plugins.hop = {
-  HopNextKey = { fg = c.bg[200], bg = c.orange[600] },
-  HopNextKey1 = { fg = c.bg[200], bg = c.orange[600] },
-  HopNextKey2 = { fg = c.bg[200], bg = c.yellow[300] },
+  HopNextKey = { fg = c.bg[200], bg = c.yellow[600] },
+  HopNextKey1 = { fg = c.bg[200], bg = c.yellow[900] },
+  HopNextKey2 = { fg = c.bg[200], bg = c.yellow[600] },
   HopUnmatched = {},
 }
 
