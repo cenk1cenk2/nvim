@@ -227,15 +227,8 @@ function M.config()
               return require("noice").api.statusline.message.has()
             end,
           },
-          {
-            function()
-              return require("noice").api.statusline.mode.get()
-            end,
-            cond = function()
-              return require("noice").api.statusline.mode.has()
-            end,
-            color = { fg = colors.yellow[600] },
-          },
+        }
+        components.noice_right = {
           -- {
           --   function()
           --     return require("noice").api.statusline.search.get()
@@ -245,8 +238,15 @@ function M.config()
           --   end,
           --   color = { fg = colors.cyan[600] },
           -- },
-        }
-        components.noice_right = {
+          {
+            function()
+              return require("noice").api.statusline.mode.get()
+            end,
+            cond = function()
+              return require("noice").api.statusline.mode.has()
+            end,
+            color = { fg = colors.yellow[600] },
+          },
           {
             function()
               return require("noice").api.statusline.command.get()
