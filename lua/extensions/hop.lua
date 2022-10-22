@@ -14,14 +14,17 @@ function M.config()
         disable = not config.active,
       }
     end,
-    setup = {},
-    on_setup = function(config)
-      require("hop").setup(config.setup)
-    end,
     to_inject = function()
       return {
         hop = require "hop",
       }
+    end,
+    setup = {},
+    on_setup = function(config)
+      require("hop").setup(config.setup)
+    end,
+    on_done = function()
+      vim.api.nvim_command "highlight HopUnmatched guifg=none guibg=none guisp=none ctermfg=none"
     end,
     keymaps = function(config)
       local hop = config.inject.hop

@@ -361,10 +361,10 @@ hl.plugins.gitgutter = {
 }
 
 hl.plugins.hop = {
-  HopNextKey = { fg = c.bg[200], bg = c.yellow[600] },
-  HopNextKey1 = { fg = c.bg[200], bg = c.yellow[900] },
-  HopNextKey2 = { fg = c.bg[200], bg = c.yellow[600] },
-  HopUnmatched = {},
+  HopNextKey = { fg = c.bg[100], bg = c.yellow[600], bold = true },
+  HopNextKey1 = { fg = c.bg[100], bg = c.orange[600], bold = true },
+  HopNextKey2 = { fg = c.bg[100], bg = c.yellow[600], bold = true },
+  HopUnmatched = { fg = c.none, bg = c.none },
 }
 
 hl.plugins.vim_illuminate = {
