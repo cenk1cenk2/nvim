@@ -8,7 +8,6 @@ function M.config()
     packer = function(config)
       return {
         "folke/noice.nvim",
-        event = "BufWinEnter",
         config = function()
           require("utils.setup").packer_config "noice_nvim"
         end,
@@ -36,8 +35,8 @@ function M.config()
       history = {
         -- options for the message history that you get with `:Noice`
         view = "split",
-        opts = { enter = true },
-        filter = { event = "msg_show", ["not"] = { kind = { "search_count" } } },
+        opts = { enter = true, format = "details" },
+        filter = { event = { "msg_show", "notify" }, ["not"] = { kind = { "search_count", "echo" } } },
       },
       views = {
         cmdline_popup = {
@@ -51,6 +50,16 @@ function M.config()
           },
         },
       },
+      lsp_progress = {
+        enabled = true,
+        -- Lsp Progress is formatted using the builtins for lsp_progress. See config.format.builtin
+        -- See the section on formatting for more details on how to customize.
+        format = "lsp_progress",
+        format_done = "lsp_progress_done",
+        throttle = 1000 / 30, -- frequency to update lsp progress message
+        view = "mini",
+      },
+      throttle = 1000 / 30,
       routes = {
         {
           filter = { event = "msg_show", kind = { "search_count", "echo" } },
