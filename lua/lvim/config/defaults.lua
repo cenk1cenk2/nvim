@@ -63,6 +63,7 @@ lvim = {
     "lspinfo",
     "prompt",
     "notify",
+    "noice",
     "qf",
     "lsp_floating_window",
     "diff",
