@@ -74,13 +74,13 @@ function M.config()
     end,
     on_done = function(config)
       local editor = "nvr --servername " .. vim.v.servername .. " "
-      local editor_split = "nvr --servername " .. vim.v.servername .. " --remote-wait -cc split"
+      local editor_split = "nvr --servername " .. vim.v.servername .. " -cc split --remote-wait"
 
       if vim.fn.has "nvim" and vim.fn.executable "nvr" then
+        vim.env.NVIM_LISTEN_ADDRESS = vim.v.servername
         vim.env.GIT_EDITOR = editor_split
         vim.env.VISUAL = editor
         vim.env.EDITOR = editor
-        vim.env.NVIM_LISTEN_ADDRESS = vim.v.servername
       end
 
       for i, exec in pairs(config.togglers) do
