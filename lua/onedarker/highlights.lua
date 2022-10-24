@@ -560,7 +560,7 @@ hl.plugins.noice = {
   NoiceLspProgressTitle = { fg = c.green[300] },
   NoiceLspProgressClient = { fg = c.orange[300] },
   NoiceLspProgressSpinner = { fg = c.yellow[300] },
-  -- NoiceMini = { bg = c.grey[400] },
+  NoiceMini = { link = "NormalFloat" },
 }
 
 hl.plugins.notify = {

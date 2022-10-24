@@ -19,6 +19,7 @@ function M.config()
     end,
     configure = function()
       table.insert(lvim.disabled_filetypes, "cmdline_popup")
+      table.insert(lvim.disabled_filetypes, "noice")
     end,
     to_inject = function()
       return {
@@ -89,6 +90,58 @@ function M.config()
             winhighlight = { Normal = "NormalFloat", FloatBorder = "FloatBorder" },
           },
         },
+        mini = {
+          backend = "mini",
+          relative = "editor",
+          align = "message-left",
+          timeout = 1500,
+          reverse = true,
+          position = {
+            col = "50%",
+            row = "97%",
+            -- col = 0,
+          },
+          size = "auto",
+          border = {
+            style = "single",
+          },
+          zindex = 60,
+          win_options = {
+            winblend = 30,
+            winhighlight = {
+              Normal = "NoiceMini",
+              IncSearch = "",
+              Search = "",
+            },
+          },
+        },
+        confirm = {
+          backend = "popup",
+          relative = "editor",
+          focusable = false,
+          align = "center",
+          enter = false,
+          zindex = 60,
+          format = { "{confirm}" },
+          position = {
+            row = "75%",
+            col = "50%",
+          },
+          size = "auto",
+          border = {
+            style = "single",
+            padding = { 0, 1 },
+            text = {
+              top = " Confirm ",
+            },
+          },
+          win_options = {
+            winhighlight = {
+              Normal = "NoiceConfirm",
+              FloatBorder = "NoiceConfirmBorder",
+            },
+          },
+        },
       },
       lsp_progress = {
         enabled = true,
@@ -99,6 +152,7 @@ function M.config()
         throttle = 1000 / 30, -- frequency to update lsp progress message
         view = "mini",
       },
+
       throttle = 1000 / 30,
       routes = {
         {
