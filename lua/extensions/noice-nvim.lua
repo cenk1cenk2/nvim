@@ -39,7 +39,8 @@ function M.config()
           cmdline = { pattern = "^:", icon = "" },
           search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
           search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
-          filter = { pattern = "^:%s*!", icon = "$", lang = "sh" },
+          shell = { pattern = "^:%s*!", icon = "$", lang = "bash" },
+          read = { pattern = "^:%s*r!", icon = "$", lang = "bash" },
           lua = { pattern = "^:%s*lua%s+", icon = "", lang = "lua" },
           -- lua = false, -- to disable a format, set to `false`
         },
