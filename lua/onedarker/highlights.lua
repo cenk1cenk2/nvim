@@ -556,6 +556,13 @@ hl.plugins.fidget = {
   FidgetTask = { fg = c.orange[300] },
 }
 
+hl.plugins.noice = {
+  NoiceLspProgressTitle = { fg = c.green[300] },
+  NoiceLspProgressClient = { fg = c.orange[300] },
+  NoiceLspProgressSpinner = { fg = c.yellow[300] },
+  -- NoiceMini = { bg = c.grey[400] },
+}
+
 hl.plugins.notify = {
   NotifyERRORBorder = { fg = c.red[600] },
   NotifyWARNBorder = { fg = c.orange[600] },

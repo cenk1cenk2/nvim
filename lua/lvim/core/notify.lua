@@ -19,13 +19,17 @@ local defaults = {
     timeout = 3000,
 
     -- Render function for notifications. See notify-render()
-    render = "default",
+    render = "minimal",
 
     ---@usage highlight behind the window for stages that change opacity
-    background_colour = "Normal",
+    background_colour = "NormalFloat",
 
     ---@usage minimum width for notification windows
     minimum_width = 50,
+
+    fps = 60,
+
+    top_down = false,
 
     ---@usage Icons for the different levels
     icons = {
@@ -63,7 +67,7 @@ function M.setup()
   notify.setup(opts)
   vim.notify = notify
   -- dont configure notifications noice will handle them?
-  -- Log:configure_notifications(notify)
+  Log:configure_notifications(notify)
 end
 
 return M

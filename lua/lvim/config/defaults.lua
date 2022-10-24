@@ -35,7 +35,7 @@ lvim = {
         float_opts = {},
       },
     },
-    override_notify = false,
+    override_notify = true,
   },
 
   lsp_wrapper = {},
