@@ -171,6 +171,13 @@ function M.config()
           },
           opts = { replace = true },
         },
+        {
+          view = "mini",
+          filter = { event = "msg_showmode" },
+          opts = {
+            timeout = 5000,
+          },
+        },
       },
     },
     on_setup = function(config)
