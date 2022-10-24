@@ -176,7 +176,7 @@ hl.treesitter = {
   ["@property"] = { fg = c.red[600] },
   ["@punctuation.delimiter"] = { fg = c.fg },
   ["@punctuation.bracket"] = { fg = c.yellow[900] },
-  ["@punctuation.special"] = { fg = c.orange[600] },
+  ["@punctuation.special"] = { fg = c.cyan[600] },
   ["@repeat"] = { fg = c.purple[600] },
   ["@storageclass"] = { fg = c.yellow[600] },
   ["@string"] = { fg = c.green[600] },
