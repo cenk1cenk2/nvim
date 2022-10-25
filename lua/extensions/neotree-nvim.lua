@@ -21,6 +21,9 @@ function M.config()
         },
       }
     end,
+    configure = function()
+      table.insert(lvim.disabled_filetypes, "neo-tree")
+    end,
     setup = function()
       local Log = require "lvim.core.log"
 
