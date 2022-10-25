@@ -67,14 +67,14 @@ function M.load_defaults()
         command = "nnoremap <silent> <buffer> q :close<CR>",
       },
     },
-    -- {
-    --   { "BufWinEnter", "BufRead", "BufNewFile" },
-    --   {
-    --     group = "_format_options",
-    --     pattern = "*",
-    --     command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
-    --   },
-    -- },
+    {
+      { "BufWinEnter", "BufRead", "BufNewFile" },
+      {
+        group = "_format_options",
+        pattern = "*",
+        command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
+      },
+    },
     {
       "VimResized",
       {
