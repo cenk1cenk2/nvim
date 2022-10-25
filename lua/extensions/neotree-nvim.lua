@@ -71,7 +71,7 @@ function M.config()
           },
           indent = {
             indent_size = 2,
-            padding = 1, -- extra padding on left hand side
+            padding = 0, -- extra padding on left hand side
             -- indent guides
             with_markers = true,
             indent_marker = "│",
@@ -125,19 +125,15 @@ function M.config()
           mappings = {
             ["<space>"] = {
               -- "toggle_node",
-              -- nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use
+              nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use
             },
             ["<2-LeftMouse>"] = "open_with_window_picker",
             ["<cr>"] = "open_with_window_picker",
             ["l"] = "open_with_window_picker",
-            ["s"] = "system_open",
-            ["S"] = "run_command",
             ["<esc>"] = "revert_preview",
             ["P"] = { "toggle_preview", config = { use_float = true } },
             ["v"] = "open_split",
             ["V"] = "open_vsplit",
-            ["gp"] = "telescope_find",
-            ["gt"] = "telescope_grep",
             -- ["S"] = "split_with_window_picker",
             -- ["s"] = "vsplit_with_window_picker",
             ["t"] = "open_tabnew",
@@ -177,8 +173,8 @@ function M.config()
             ["q"] = "close_window",
             ["R"] = "refresh",
             ["?"] = "show_help",
-            ["<"] = "prev_source",
-            [">"] = "next_source",
+            ["H"] = "prev_source",
+            ["L"] = "next_source",
           },
         },
         nesting_rules = {},
@@ -228,6 +224,10 @@ function M.config()
               ["F"] = "clear_filter",
               ["[n"] = "prev_git_modified",
               ["]n"] = "next_git_modified",
+              ["s"] = "system_open",
+              ["S"] = "run_command",
+              ["gp"] = "telescope_find",
+              ["gt"] = "telescope_grep",
             },
           },
           commands = {
