@@ -12,23 +12,27 @@ local dev_opts = {
 local neodev_loaded, neodev = pcall(require, "neodev")
 if neodev_loaded then
   neodev.setup(dev_opts)
-end
 
-local opts = {
-  settings = {
-    Lua = {
-      diagnostics = {
-        globals = { "vim", "lvim", "packer_plugins" },
-      },
-      workspace = {
-        library = {
-          [require("lvim.utils").join_paths(get_runtime_dir(), "lvim", "lua")] = true,
+  local opts = {
+    settings = {
+      Lua = {
+        diagnostics = {
+          globals = { "vim", "lvim", "packer_plugins" },
         },
-        maxPreload = 100000,
-        preloadFileSize = 10000,
+        workspace = {
+          library = {
+            vim.fn.expand "$VIMRUNTIME",
+            get_lvim_base_dir(),
+            neodev.types(),
+          },
+          maxPreload = 5000,
+          preloadFileSize = 10000,
+        },
       },
     },
-  },
-}
+  }
 
-return opts
+  return opts
+end
+
+return {}

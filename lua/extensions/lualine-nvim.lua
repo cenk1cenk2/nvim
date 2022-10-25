@@ -270,6 +270,7 @@ function M.config()
       local components = config.inject.components
 
       return {
+        globalstatus = true,
         options = {
           theme = "auto",
           icons_enabled = lvim.use_icons,
