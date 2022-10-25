@@ -292,6 +292,7 @@ function M.config()
           window = {
             mappings = {
               ["d"] = "buffer_delete",
+              ["D"] = "buffer_delete",
               ["<bs>"] = "navigate_up",
               ["."] = "set_root",
             },
