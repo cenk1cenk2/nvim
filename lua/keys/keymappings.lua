@@ -18,6 +18,8 @@ return {
 
   ---@usage change or add keymappings for normal mode
   normal_mode = {
+    ["qq"] = "",
+
     -- save
     ["<C-s>"] = ":w<CR>",
     ["<C-S>"] = ":w!<CR>",
