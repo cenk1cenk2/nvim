@@ -15,6 +15,7 @@ local extensions = {
   "mason",
   "toggleterm-nvim",
   "nvim-tree",
+  "neotree-nvim",
   "dap",
   "comment-nvim",
   "gitsigns-nvim",

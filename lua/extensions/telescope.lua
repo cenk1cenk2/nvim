@@ -50,6 +50,7 @@ function M.config()
       return {
         defaults = {
           vimgrep_arguments = config.rg_arguments,
+          find_command = "rg",
           layout_config = {
             bottom_pane = {
               height = 25,

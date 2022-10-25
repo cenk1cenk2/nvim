@@ -15,4 +15,5 @@ return {
     "kyazdani42/nvim-web-devicons",
     disable = not lvim.use_icons,
   },
+  { "MunifTanjim/nui.nvim" },
 }

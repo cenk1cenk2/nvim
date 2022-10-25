@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "nvim_tree"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     packer = function(config)
       return {
         "kyazdani42/nvim-tree.lua",
@@ -70,7 +70,7 @@ function M.config()
       },
       view = {
         -- width of the window, can be either a number (columns) or a string in `%`
-        width = 40,
+        width = 50,
         -- side of the tree, can be one of 'left' | 'right' | 'top' | 'bottom'
         side = "left",
         -- if true the tree will resize itself after opening a file
@@ -88,7 +88,7 @@ function M.config()
             { key = "o", action = "edit" },
             { key = "<2-LeftMouse>", action = "edit" },
             { key = "<2-RightMouse>", action = "cd" },
-            { key = "w", action = "cd" },
+            { key = ".", action = "cd" },
             { key = "v", action = "vsplit" },
             { key = "V", action = "split" },
             { key = "<C-t>", action = "tabnew" },
@@ -110,8 +110,8 @@ function M.config()
             { key = "]c", action = "next_git_item" },
             { key = "f", action = "live_filter" },
             { key = "F", action = "clear_live_filter" },
-            { key = "W", action = "collapse_all" },
-            { key = "E", action = "expand_all" },
+            { key = "z", action = "collapse_all" },
+            { key = "Z", action = "expand_all" },
             { key = "S", action = "search_node" },
             { key = ".", action = "run_file_command" },
             { key = "K", action = "toggle_file_info" },
