@@ -126,10 +126,7 @@ function M.config()
             nowait = true,
           },
           mappings = {
-            ["<space>"] = {
-              -- "toggle_node",
-              nowait = false, -- disable `nowait` if you have existing combos starting with this char that you want to use
-            },
+            ["<space>"] = "none",
             ["<2-LeftMouse>"] = "open_with_window_picker",
             ["<cr>"] = "open_with_window_picker",
             ["l"] = "open_with_window_picker",
