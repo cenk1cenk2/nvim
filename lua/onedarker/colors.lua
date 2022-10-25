@@ -1,4 +1,4 @@
-return {
+local colors = {
   none = nil,
 
   bg = {
@@ -71,11 +71,25 @@ return {
     [600] = "#a40778",
     [900] = "#f5169e",
   },
-
-  diff = {
-    change = "#0b182d",
-    add = "#1a311c",
-    delete = "#2d0d1a",
-    text = "#0f2845",
-  },
 }
+
+colors.diff = {
+  add = "#1a311c",
+  delete = "#2d0d1a",
+  change = "#0b182d",
+  text = "#0f2845",
+}
+
+colors.file = {
+  add = colors.green[300],
+  delete = colors.red[300],
+  change = colors.blue[300],
+  conflict = colors.red[600],
+  modified = colors.purple[300],
+  renamed = colors.magenta[300],
+  untracked = colors.green[600],
+  ignored = colors.grey[600],
+  symbolic_link = colors.cyan[300],
+}
+
+return colors
