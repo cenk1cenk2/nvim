@@ -49,8 +49,9 @@ hl.common = {
   Question = { fg = c.yellow[600] },
   MoreMsg = { fg = c.cyan[600], bold = true, bg = c.bg[200] },
 
-  Search = { bg = c.bg[500] },
-  IncSearch = { bg = c.bg[600] },
+  Search = { bg = c.bg[400] },
+  IncSearch = { bg = c.bg[500] },
+  WildMenu = { fg = c.fg, bg = c.blue[300] },
   Substitute = { fg = c.bg[500], bg = c.orange[600] },
   MatchParen = { fg = c.blue[600], underline = true },
   MatchWord = { underline = true },
@@ -83,8 +84,6 @@ hl.common = {
   PmenuSbar = { fg = c.none, bg = c.bg[300] },
   PmenuSel = { fg = c.bg[200], bg = c.blue[900] },
   PmenuThumb = { fg = c.none, bg = c.grey[600] },
-
-  WildMenu = { fg = c.bg[200], bg = c.blue[600] },
 
   QuickFixLine = { fg = c.blue[600] },
 
@@ -600,6 +599,13 @@ hl.plugins.symbols_outline = {
 hl.plugins.aerojump = {
   SearchResult = { bg = c.yellow[600] },
   SearchHighlight = { bg = c.green[300] },
+}
+
+hl.plugins.hlslens = {
+  HlSearchNear = { link = "IncSearch" },
+  HlSearchLens = { link = "WildMenu" },
+  HlSearchLensNear = { link = "IncSearch" },
+  HlSearchFloat = { link = "IncSearch" },
 }
 
 -- setup

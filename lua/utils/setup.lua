@@ -26,7 +26,8 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil), configure: (fun(config: config, fn: { add_disabled_filetypes: (fun(ft: table<string>): nil) }): nil),condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table| (fun(config: config): nil), keymaps: table | (fun(config: config): any), wk: (fun(config: config, categories: table):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil), commands: table | (fun(config: config): any), nvim_opts: table, hl: (fun(config: config): table) | table, signs: (fun(config: config): table) | table, on_complete: (fun(config: config): table), to_setup: table, current_setup: table, define_global_fn: (fun(config: config): table<string, string>) }
+---@alias fn { add_disabled_filetypes: (fun(ft: table<string>): nil), extension_get_active: (fun(extension: string): boolean)  }
+---@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil), configure: (fun(config: config, fn: fn): nil),condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table| (fun(config: config): nil), keymaps: table | (fun(config: config): any), wk: (fun(config: config, categories: table):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config, fn: fn): nil), on_done: (fun(config: config, fn: fn): nil), commands: table | (fun(config: config): any), nvim_opts: table, hl: (fun(config: config): table) | table, signs: (fun(config: config): table) | table, on_complete: (fun(config: config, fn: fn): table), to_setup: table, current_setup: table, define_global_fn: (fun(config: config): table<string, string>) }
 
 ---
 ---@param extension_name string
@@ -133,6 +134,11 @@ function M.fn.add_disabled_filetypes(ft)
   end
 end
 
+---@param extension string
+function M.fn.extension_get_active(extension)
+  return M.get_config(extension).active
+end
+
 ---
 ---@param config config
 function M.run(config)
@@ -204,11 +210,11 @@ function M.run(config)
   end
 
   if config ~= nil and config.on_setup ~= nil then
-    config.on_setup(config)
+    config.on_setup(config, M.fn)
   end
 
   if config ~= nil and config.on_done ~= nil then
-    config.on_done(config)
+    config.on_done(config, M.fn)
   end
 
   if config ~= nil and config.define_global_fn ~= nil then
@@ -220,7 +226,7 @@ function M.run(config)
   end
 
   if config ~= nil and config.on_complete ~= nil then
-    config.on_complete(config)
+    config.on_complete(config, M.fn)
   end
 end
 
