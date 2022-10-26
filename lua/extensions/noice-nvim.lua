@@ -199,7 +199,7 @@ function M.config()
           },
           border = {
             style = "single",
-            padding = { 0, 1 },
+            padding = { 0, 0 },
           },
           position = { row = 1, col = 0 },
           win_options = {
