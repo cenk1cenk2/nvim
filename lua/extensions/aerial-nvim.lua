@@ -77,10 +77,6 @@ function M.config()
       require("aerial").setup(config.setup)
     end,
     on_done = function(config)
-      table.insert(lvim.lsp.on_attach_callbacks, function(client, bufnr)
-        require("aerial").on_attach(client, bufnr)
-      end)
-
       config.inject.telescope.load_extension "aerial"
       config.inject.telescope.setup {
         extensions = {
