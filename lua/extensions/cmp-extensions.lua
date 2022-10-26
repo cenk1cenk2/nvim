@@ -2,6 +2,7 @@
 -- https://github.com/David-Kunz/cmp-npm
 -- https://github.com/hrsh7th/cmp-cmdline
 -- https://github.com/tzachar/cmp-fuzzy-buffer
+-- https://github.com/hrsh7th/cmp-omni
 local M = {}
 
 local extension_name = "cmp_extensions"
@@ -25,6 +26,7 @@ function M.config()
         { "davidsierradz/cmp-conventionalcommits" },
         { "tzachar/cmp-fuzzy-buffer" },
         { "lukas-reineke/cmp-rg" },
+        { "hrsh7th/cmp-omni" },
         -- { "tzachar/cmp-tabnine", run = "./install.sh" },
         { "rafamadriz/friendly-snippets" },
         { "L3MON4D3/LuaSnip" },
@@ -52,6 +54,7 @@ function M.config()
           -- { name = "nvim_lsp_signature_help" },
           { name = "luasnip" },
           { name = "nvim_lua" },
+          { name = "omni" },
           { name = "buffer" },
 
           { name = "git" },
@@ -71,6 +74,7 @@ function M.config()
             luasnip = "(Snippet)",
             buffer = "(Buffer)",
             git = "(GIT)",
+            omni = "(OMNI)",
             npm = "(NPM)",
             rg = "(RG)",
             tmux = "(TMUX)",
@@ -94,8 +98,8 @@ function M.config()
       -- setup lua snip
       local utils = require "lvim.utils"
       local paths = {}
-      paths[#paths + 1] = utils.join_paths(get_runtime_dir(), "site", "pack", "packer", "start", "friendly-snippets")
-      local user_snippets = utils.join_paths(get_config_dir(), "snippets")
+      paths[#paths + 1] = join_paths(get_runtime_dir(), "site", "pack", "packer", "start", "friendly-snippets")
+      local user_snippets = join_paths(get_config_dir(), "snippets")
       if utils.is_directory(user_snippets) then
         paths[#paths + 1] = user_snippets
       end

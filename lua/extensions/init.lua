@@ -78,6 +78,7 @@ local extensions = {
   "symbols-outline",
   "aerial-nvim",
   "toggletasks-nvim",
+  "nvim-docs-view",
 }
 
 function M.config(config)

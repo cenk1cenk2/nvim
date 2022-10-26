@@ -23,7 +23,7 @@ function M.config()
       -- bookmark_save_per_working_dir = 0
       -- bookmark_auto_save = 1
       -- bookmark_manage_per_buffer = 0
-      bookmark_auto_save_file = utils.join_paths(get_cache_dir(), "bookmarks"),
+      bookmark_auto_save_file = join_paths(get_cache_dir(), "bookmarks"),
     },
   })
 end

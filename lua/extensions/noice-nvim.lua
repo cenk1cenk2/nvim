@@ -181,19 +181,94 @@ function M.config()
             winhighlight = { Normal = "NoicePopup", FloatBorder = "NoicePopupBorder" },
           },
         },
+        virtualtext = {
+          backend = "virtualtext",
+          format = { "{message}" },
+          hl_group = "NoiceVirtualText",
+        },
+        hover = {
+          view = "popup",
+          relative = "cursor",
+          enter = false,
+          anchor = "auto",
+          size = {
+            width = "auto",
+            height = "auto",
+            max_height = 20,
+            max_width = 120,
+          },
+          border = {
+            style = "single",
+            padding = { 0, 1 },
+          },
+          position = { row = 1, col = 0 },
+          win_options = {
+            wrap = true,
+            linebreak = true,
+          },
+        },
       },
-      lsp_progress = {
-        enabled = true,
-        -- Lsp Progress is formatted using the builtins for lsp_progress. See config.format.builtin
-        -- See the section on formatting for more details on how to customize.
-        format = "lsp_progress",
-        format_done = "lsp_progress_done",
-        throttle = 1000 / 30, -- frequency to update lsp progress message
-        view = "mini",
+
+      lsp = {
+        progress = {
+          enabled = true,
+          -- Lsp Progress is formatted using the builtins for lsp_progress. See config.format.builtin
+          -- See the section on formatting for more details on how to customize.
+          --- @type NoiceFormat|string
+          format = "lsp_progress",
+          --- @type NoiceFormat|string
+          format_done = "lsp_progress_done",
+          throttle = 1000 / 30, -- frequency to update lsp progress message
+          view = "mini",
+        },
+        hover = {
+          enabled = false,
+          view = nil, -- when nil, use defaults from documentation
+          ---@type NoiceViewOptions
+          opts = {}, -- merged with defaults from documentation
+        },
+        signature = {
+          enabled = false,
+          auto_open = true, -- Automatically show signature help when typing a trigger character from the LSP
+          view = nil, -- when nil, use defaults from documentation
+          ---@type NoiceViewOptions
+          opts = {}, -- merged with defaults from documentation
+        },
+        -- defaults for hover and signature help
+        documentation = {
+          enabled = false,
+          view = "hover",
+          ---@type NoiceViewOptions
+          opts = {
+            lang = "markdown",
+            replace = true,
+            render = "plain",
+            format = { "{message}" },
+            win_options = { concealcursor = "n", conceallevel = 3 },
+          },
+        },
+      },
+      markdown = {
+        hover = {
+          ["|(%S-)|"] = vim.cmd.help, -- vim help links
+          ["%[.-%]%((%S-)%)"] = require("noice.util").open, -- markdown links
+        },
+        highlights = {
+          ["|%S-|"] = "@text.reference",
+          ["@%S+"] = "@parameter",
+          ["^%s*(Parameters:)"] = "@text.title",
+          ["^%s*(Return:)"] = "@text.title",
+          ["^%s*(See also:)"] = "@text.title",
+          ["{%S-}"] = "@parameter",
+        },
       },
 
       throttle = 1000 / 30,
       routes = {
+        {
+          view = "split",
+          filter = { event = "msg_show", min_height = 4 },
+        },
         {
           filter = { event = "msg_show", kind = { "search_count", "echo", "echomsg" } },
           opts = { skip = true },
@@ -201,10 +276,6 @@ function M.config()
         {
           filter = { event = "split", kind = { "search_count" } },
           opts = { skip = true },
-        },
-        {
-          view = "split",
-          filter = { event = "msg_show", max_height = 4, max_width = 120 },
         },
         {
           view = "notify",

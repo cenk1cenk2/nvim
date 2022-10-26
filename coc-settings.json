@@ -7,5 +7,6 @@
   "session.saveOnVimLeave": false,
   "session.restartOnSessionLoad": false,
   "git.enableGutters": false,
-  "suggest.autoTrigger": false
+  "suggest.autoTrigger": false,
+  "signature.enable": false
 }

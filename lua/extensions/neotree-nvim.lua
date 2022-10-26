@@ -41,13 +41,33 @@ function M.config()
               if filename == nil then
                 filename = selection[1]
               end
+
               -- any way to open the file without triggering auto-close event of neo-tree?
+              if opts.cwd then
+                filename = join_paths(opts.cwd, filename)
+              end
+
               require("neo-tree.sources.filesystem").navigate(state, state.path, filename)
             end)
 
             return true
           end,
         })
+      end
+
+      local function get_node_dir(state)
+        local node = state.tree:get_node()
+        local path
+        if node.type == "directory" then
+          path = node:get_id()
+        elseif node.type == "file" then
+          path = node:get_parent_id()
+        else
+          Log:warn "Finding in node only works for files and directories."
+          return
+        end
+
+        return path
       end
 
       return {
@@ -247,36 +267,18 @@ function M.config()
               vim.api.nvim_input(":! " .. path .. "<Home>")
             end,
             telescope_find = function(state)
-              local node = state.tree:get_node()
-              local path
-              if node.type == "directory" then
-                path = node:get_id()
-              elseif node.type == "file" then
-                path = node:get_parent_id()
-              else
-                Log:warn "Finding in node only works for files and directories."
-                return
-              end
+              local path = get_node_dir(state)
 
               require("telescope.builtin").find_files(get_telescope_options(state, {
                 cwd = path,
               }))
             end,
             telescope_grep = function(state)
-              local node = state.tree:get_node()
-              local path
-
-              if node.type == "file" then
-                path = node:get_id()
-              else
-                Log:warn "Greping only works for files."
-
-                return
-              end
+              local path = get_node_dir(state)
 
               require("telescope.builtin").live_grep(get_telescope_options(state, {
-                cwd = path,
-                -- search_dirs = { path },
+                -- cwd = path,
+                search_dirs = { path },
               }))
             end,
           },
