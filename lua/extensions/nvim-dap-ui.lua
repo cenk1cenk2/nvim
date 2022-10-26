@@ -16,13 +16,15 @@ function M.config()
         disable = not config.active,
       }
     end,
-    configure = function()
-      table.insert(lvim.disabled_filetypes, "dapui_breakpoints")
-      table.insert(lvim.disabled_filetypes, "dapui_stacks")
-      table.insert(lvim.disabled_filetypes, "dapui_watches")
-      table.insert(lvim.disabled_filetypes, "dapui_scopes")
-      table.insert(lvim.disabled_filetypes, "dapui_repl")
-      table.insert(lvim.disabled_filetypes, "dap-repl")
+    configure = function(_, fn)
+      fn.add_disabled_filetypes {
+        "dapui_breakpoints",
+        "dapui_stacks",
+        "dapui_watches",
+        "dapui_scopes",
+        "dapui_repl",
+        "dap-repl",
+      }
     end,
     to_inject = function()
       return {

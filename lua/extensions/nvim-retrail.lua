@@ -14,29 +14,31 @@ function M.config()
         disable = not config.active,
       }
     end,
-    setup = {
-      -- Highlight group to use for trailing whitespace.
-      hlgroup = "ExtraWhitespace",
-      -- Pattern to match trailing whitespace against. Edit with caution!
-      pattern = "\\v((.*%#)@!|%#)\\s+$",
-      -- Enabled filetypes.
-      filetype = {
-        -- Strictly enable only on `include`ed filetypes. When false, only disabled
-        -- on an `exclude`ed filetype.
-        strict = false,
-        -- Included filetype list.
-        include = {},
-        -- Excluded filetype list. Overrides `include` list.
-        exclude = lvim.disabled_filetypes,
-      },
-      -- Trim on write behaviour.
-      trim = {
-        -- Trailing whitespace as highlighted.
-        whitespace = true,
-        -- Final blank (i.e. whitespace only) lines.
-        blanklines = false,
-      },
-    },
+    setup = function()
+      return {
+        -- Highlight group to use for trailing whitespace.
+        hlgroup = "ExtraWhitespace",
+        -- Pattern to match trailing whitespace against. Edit with caution!
+        pattern = "\\v((.*%#)@!|%#)\\s+$",
+        -- Enabled filetypes.
+        filetype = {
+          -- Strictly enable only on `include`ed filetypes. When false, only disabled
+          -- on an `exclude`ed filetype.
+          strict = false,
+          -- Included filetype list.
+          include = {},
+          -- Excluded filetype list. Overrides `include` list.
+          exclude = lvim.disabled_filetypes,
+        },
+        -- Trim on write behaviour.
+        trim = {
+          -- Trailing whitespace as highlighted.
+          whitespace = true,
+          -- Final blank (i.e. whitespace only) lines.
+          blanklines = false,
+        },
+      }
+    end,
     on_setup = function(config)
       require("retrail").setup(config.setup)
     end,

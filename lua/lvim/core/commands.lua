@@ -1,16 +1,24 @@
 local M = {}
 
-vim.cmd [[
-  function! QuickFixToggle()
-    if empty(filter(getwininfo(), 'v:val.quickfix'))
-      copen
-    else
-      cclose
-    endif
-  endfunction
-  ]]
-
 M.defaults = {
+  {
+    name = "QuickFixToggle",
+    fn = function()
+      local qf = vim.tbl_filter(function(win)
+        if win.quickfix == 1 then
+          return true
+        end
+
+        return false
+      end, vim.fn.getwininfo())
+
+      if vim.tbl_isempty(qf) then
+        vim.cmd "botright copen"
+      else
+        vim.cmd "cclose"
+      end
+    end,
+  },
   {
     name = "LvimToggleFormatOnSave",
     fn = function()

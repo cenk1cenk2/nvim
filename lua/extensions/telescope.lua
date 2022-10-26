@@ -21,8 +21,8 @@ function M.config()
         disable = not config.active,
       }
     end,
-    configure = function()
-      table.insert(lvim.disabled_filetypes, "TelescopePrompt")
+    configure = function(_, fn)
+      fn.add_disabled_filetypes { "TelescopePrompt", "Telescope" }
     end,
     to_inject = function()
       return {

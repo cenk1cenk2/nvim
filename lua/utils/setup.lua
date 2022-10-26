@@ -1,5 +1,5 @@
 local Log = require "lvim.core.log"
-local M = {}
+local M = { fn = {} }
 
 local keymappings = require "lvim.keymappings"
 local keys_which_key = require "keys.which-key"
@@ -26,7 +26,7 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil), configure: (fun(config: config): nil),condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table| (fun(config: config): nil), keymaps: table | (fun(config: config): any), wk: (fun(config: config, categories: table):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil), commands: table | (fun(config: config): any), nvim_opts: table, hl: (fun(config: config): table) | table, signs: (fun(config: config): table) | table, on_complete: (fun(config: config): table), to_setup: table, current_setup: table, define_global_fn: (fun(config: config): table<string, string>) }
+---@alias config { name: string, opts: { multiple_packages: boolean }, on_init: (fun(config: config): nil), configure: (fun(config: config, fn: { add_disabled_filetypes: (fun(ft: table<string>): nil) }): nil),condition: (fun(config: config): boolean | nil), packer: (fun(config: config): table), to_inject: (fun(config: config): table<string, string>), autocmds: table| (fun(config: config): nil), keymaps: table | (fun(config: config): any), wk: (fun(config: config, categories: table):any) | table, legacy_setup: table, setup: table | (fun(config: config): any), on_setup: (fun(config: config): nil), on_done: (fun(config: config): nil), commands: table | (fun(config: config): any), nvim_opts: table, hl: (fun(config: config): table) | table, signs: (fun(config: config): table) | table, on_complete: (fun(config: config): table), to_setup: table, current_setup: table, define_global_fn: (fun(config: config): table<string, string>) }
 
 ---
 ---@param extension_name string
@@ -87,7 +87,7 @@ function M.define_extension(extension_name, active, config)
   end
 
   if config ~= nil and config.configure ~= nil then
-    config.configure(config)
+    config.configure(config, M.fn)
   end
 
   lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config or {})
@@ -124,6 +124,13 @@ function M.evaluate_property(property, ...)
   end
 
   return property
+end
+
+---@param ft table<string>
+function M.fn.add_disabled_filetypes(ft)
+  for _, value in pairs(ft) do
+    table.insert(lvim.disabled_filetypes, value)
+  end
 end
 
 ---

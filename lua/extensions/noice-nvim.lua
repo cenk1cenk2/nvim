@@ -17,9 +17,8 @@ function M.config()
         disable = not config.active,
       }
     end,
-    configure = function()
-      table.insert(lvim.disabled_filetypes, "cmdline_popup")
-      table.insert(lvim.disabled_filetypes, "noice")
+    configure = function(_, fn)
+      fn.add_disabled_filetypes { "cmdline_popup", "noice" }
     end,
     to_inject = function()
       return {
@@ -80,6 +79,24 @@ function M.config()
         filter = { event = { "msg_show", "notify" }, ["not"] = { kind = { "search_count", "echo" } } },
       },
       views = {
+        split = {
+          backend = "split",
+          enter = true,
+          relative = "editor",
+          position = "bottom",
+          size = "40%",
+          close = {
+            keys = { "q", "<esc>" },
+          },
+          win_options = {
+            winhighlight = { Normal = "NoiceSplit", FloatBorder = "NoiceSplitBorder" },
+            wrap = true,
+          },
+        },
+        vsplit = {
+          view = "split",
+          position = "right",
+        },
         cmdline_popup = {
           border = {
             style = "single",
@@ -142,6 +159,28 @@ function M.config()
             },
           },
         },
+        popup = {
+          backend = "popup",
+          close = {
+            events = { "BufLeave" },
+            keys = { "q" },
+          },
+          enter = true,
+          border = {
+            style = "single",
+          },
+          position = {
+            row = "75%",
+            col = "50%",
+          },
+          size = {
+            width = "80%",
+            height = "60%",
+          },
+          win_options = {
+            winhighlight = { Normal = "NoicePopup", FloatBorder = "NoicePopupBorder" },
+          },
+        },
       },
       lsp_progress = {
         enabled = true,
@@ -164,6 +203,10 @@ function M.config()
           opts = { skip = true },
         },
         {
+          view = "split",
+          filter = { event = "msg_show", max_height = 4, max_width = 120 },
+        },
+        {
           view = "notify",
           filter = {
             event = "noice",
@@ -172,10 +215,10 @@ function M.config()
           opts = { replace = true },
         },
         {
-          view = "mini",
+          view = "notify",
           filter = { event = "msg_showmode" },
           opts = {
-            timeout = 5000,
+            timeout = 10000,
           },
         },
       },

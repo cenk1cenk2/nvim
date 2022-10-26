@@ -17,8 +17,8 @@ function M.config()
         disable = not config.active,
       }
     end,
-    configure = function()
-      table.insert(lvim.disabled_filetypes, "toggleterm")
+    configure = function(_, fn)
+      fn.add_disabled_filetypes { "toggleterm" }
     end,
     to_inject = function()
       return {

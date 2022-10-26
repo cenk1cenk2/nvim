@@ -1,42 +1,22 @@
 SHELL := /usr/bin/env bash
 
-install:
-	@echo starting LunarVim installer
-	bash ./utils/installer/install.sh
+lint-check: lint-check-lua lint-check-sh
 
-install-bin:
-	@echo starting LunarVim bin-installer
-	bash ./utils/installer/install_bin.sh
+lint-check-lua:
+	stylua --config-path .stylua.toml --check .
 
-install-neovim-binary:
-	@echo installing Neovim from github releases
-	bash ./utils/installer/install-neovim-from-release
-
-uninstall:
-	@echo starting LunarVim uninstaller
-	bash ./utils/installer/uninstall.sh
-
-generate_new_lockfile:
-	@echo generating core-plugins latest lockfile
-	bash ./utils/ci/generate_new_lockfile.sh
+lint-check-sh:
+	shfmt -f . | xargs shellcheck
 
 lint: lint-lua lint-sh
 
 lint-lua:
-	luacheck *.lua lua/* tests/*
+	stylua --config-path .stylua.toml .
 
 lint-sh:
-	shfmt -f . | grep -v jdtls | xargs shellcheck
-
-style: style-lua style-sh
-
-style-lua:
-	stylua --config-path .stylua.toml --check .
-
-style-sh:
-	shfmt -f . | grep -v jdtls | xargs shfmt -i 2 -ci -bn -l -d
+	shfmt -f .
 
 test:
 	bash ./utils/ci/run_test.sh "$(TEST)"
 
-.PHONY: install install-neovim-binary uninstall lint style test
+.PHONY: lint

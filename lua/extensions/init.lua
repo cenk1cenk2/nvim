@@ -43,6 +43,7 @@ local extensions = {
   "diffview",
   "markdown-preview",
   "vim-bookmarks",
+  "harpoon",
   "neogen",
   "coc",
   "lspsaga-nvim",

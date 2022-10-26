@@ -14,9 +14,8 @@ function M.config()
         disable = not config.active,
       }
     end,
-    configure = function()
-      table.insert(lvim.disabled_filetypes, "lspsagaoutline")
-      table.insert(lvim.disabled_filetypes, "lspsagarename")
+    configure = function(_, fn)
+      fn.add_disabled_filetypes { "lspsagaoutline", "lspsagarename" }
     end,
     to_inject = function()
       return {

@@ -61,8 +61,8 @@ return {
     -- QuickFix
     ["qn"] = ":cnext<CR>",
     ["qp"] = ":cprev<CR>",
-    ["<C-a>"] = ":call QuickFixToggle()<CR>",
-    ["<C-y>"] = ":call QuickFixToggle()<CR>",
+    ["<C-a>"] = ":QuickFixToggle<CR>",
+    ["<C-y>"] = ":QuickFixToggle<CR>",
 
     -- create space on top and bottom
     ["ü"] = "O<ESC>j",

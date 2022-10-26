@@ -18,25 +18,27 @@ function M.config()
         disable = not config.active,
       }
     end,
-    setup = {
-      autowidth = { --		     |windows.autowidth|
-        enable = true,
-        winwidth = 10, --		      |windows.winwidth|
-        filetype = { --	    |windows.autowidth.filetype|
-          help = 2,
+    setup = function()
+      return {
+        autowidth = { --		     |windows.autowidth|
+          enable = true,
+          winwidth = 10, --		      |windows.winwidth|
+          filetype = { --	    |windows.autowidth.filetype|
+            help = 2,
+          },
         },
-      },
-      ignore = { --			|windows.ignore|
-        buftype = { "quickfix" },
-        filetype = lvim.disabled_filetypes,
-      },
-      animation = {
-        enable = false,
-        duration = 300,
-        fps = 30,
-        easing = "in_out_sine",
-      },
-    },
+        ignore = { --			|windows.ignore|
+          buftype = { "quickfix" },
+          filetype = lvim.disabled_filetypes,
+        },
+        animation = {
+          enable = false,
+          duration = 300,
+          fps = 30,
+          easing = "in_out_sine",
+        },
+      }
+    end,
     on_setup = function(config)
       require("windows").setup(config.setup)
     end,
