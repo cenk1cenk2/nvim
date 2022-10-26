@@ -18,6 +18,7 @@ function M.config()
       filetype = {
         aerial = "filetype",
         nerdtree = "filetype",
+        ["neo-tree"] = "filetype",
         ["neotest-summary"] = "filetype",
       },
     },
