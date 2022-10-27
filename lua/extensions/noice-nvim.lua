@@ -201,7 +201,7 @@ function M.config()
             style = "single",
             padding = { 0, 0 },
           },
-          position = { row = 1, col = 0 },
+          position = { row = 2, col = 0 },
           win_options = {
             wrap = true,
             linebreak = true,

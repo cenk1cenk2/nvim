@@ -317,7 +317,7 @@ function M.config()
       local colors = require "onedarker.colors"
 
       require("window-picker").setup {
-        selection_chars = "asdfgqweryxcvb",
+        selection_chars = "ASDFGQWERYXCVB",
         use_winbar = "always",
         filter_rules = {
           bo = {
