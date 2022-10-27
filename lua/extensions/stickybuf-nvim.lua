@@ -15,6 +15,25 @@ function M.config()
       }
     end,
     setup = {
+      buftype = {
+        [""] = false,
+        acwrite = false,
+        help = "buftype",
+        nofile = false,
+        nowrite = false,
+        quickfix = "buftype",
+        terminal = false,
+        prompt = "bufnr",
+      },
+      wintype = {
+        autocmd = false,
+        popup = "bufnr",
+        preview = false,
+        command = false,
+        [""] = false,
+        unknown = false,
+        floating = false,
+      },
       filetype = {
         aerial = "filetype",
         nerdtree = "filetype",
