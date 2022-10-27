@@ -141,9 +141,9 @@ function M.config()
       lvim.lsp_wrapper.goto_prev = function()
         lspsaga_diagnostic.goto_prev()
       end
-      lvim.lsp_wrapper.show_line_diagnostics = function()
-        lspsaga_diagnostic.show_line_diagnostics()
-      end
+      -- lvim.lsp_wrapper.show_line_diagnostics = function()
+      --   lspsaga_diagnostic.show_line_diagnostics()
+      -- end
     end,
     keymaps = {
       n = {
