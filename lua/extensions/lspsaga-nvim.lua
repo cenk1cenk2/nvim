@@ -129,9 +129,9 @@ function M.config()
       lvim.lsp_wrapper.range_code_action = function()
         vim.api.nvim_command "Lspsaga code_action"
       end
-      lvim.lsp_wrapper.hover = function()
-        vim.api.nvim_command "Lspsaga hover_doc"
-      end
+      -- lvim.lsp_wrapper.hover = function()
+      --   vim.api.nvim_command "Lspsaga hover_doc"
+      -- end
       lvim.lsp_wrapper.rename = function()
         vim.api.nvim_command "Lspsaga rename"
       end

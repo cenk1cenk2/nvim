@@ -77,8 +77,8 @@ hl.common = {
   StatusLineNC = { fg = c.grey[600], bg = c.bg[400] },
   StatusLineTermNC = { fg = c.bg[200], bg = c.bg[400] },
 
-  NormalFloat = { bg = c.bg[300] },
-  FloatBorder = { fg = c.orange[300] },
+  NormalFloat = { bg = c.bg[200] },
+  FloatBorder = { fg = c.orange[300], bg = c.bg[200] },
 
   Pmenu = { fg = c.fg, bg = c.bg[300] },
   PmenuSbar = { fg = c.none, bg = c.bg[300] },

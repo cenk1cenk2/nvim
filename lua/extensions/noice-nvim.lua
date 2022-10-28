@@ -221,22 +221,40 @@ function M.config()
           throttle = 1000 / 30, -- frequency to update lsp progress message
           view = "mini",
         },
+        override = {
+          -- override the default lsp markdown formatter with Noice
+          ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+          -- override the lsp markdown formatter with Noice
+          ["vim.lsp.util.stylize_markdown"] = true,
+          -- override cmp documentation with Noice (needs the other options to work)
+          ["cmp.entry.get_documentation"] = false,
+        },
         hover = {
-          enabled = false,
+          enabled = true,
           view = nil, -- when nil, use defaults from documentation
           ---@type NoiceViewOptions
           opts = {}, -- merged with defaults from documentation
         },
         signature = {
-          enabled = false,
-          auto_open = true, -- Automatically show signature help when typing a trigger character from the LSP
+          enabled = true,
+          auto_open = {
+            enabled = true,
+            trigger = true, -- Automatically show signature help when typing a trigger character from the LSP
+            luasnip = true, -- Will open signature help when jumping to Luasnip insert nodes
+            throttle = 100, -- Debounce lsp signature help request by 50ms
+          },
           view = nil, -- when nil, use defaults from documentation
           ---@type NoiceViewOptions
           opts = {}, -- merged with defaults from documentation
         },
+        message = {
+          -- Messages shown by lsp servers
+          enabled = true,
+          view = "notify",
+          opts = {},
+        },
         -- defaults for hover and signature help
         documentation = {
-          enabled = false,
           view = "hover",
           ---@type NoiceViewOptions
           opts = {
@@ -245,6 +263,10 @@ function M.config()
             render = "plain",
             format = { "{message}" },
             win_options = { concealcursor = "n", conceallevel = 3 },
+            border = {
+              style = "single",
+              padding = { 0, 0 },
+            },
           },
         },
       },
@@ -256,18 +278,23 @@ function M.config()
         highlights = {
           ["|%S-|"] = "@text.reference",
           ["@%S+"] = "@parameter",
-          ["^%s*(Parameters:)"] = "@text.title",
-          ["^%s*(Return:)"] = "@text.title",
-          ["^%s*(See also:)"] = "@text.title",
+          ["^%s(Parameters:)"] = "@text.title",
+          ["^%s(Return:)"] = "@text.title",
+          ["^%s(See also:)"] = "@text.title",
           ["{%S-}"] = "@parameter",
         },
       },
-
+      smart_move = {
+        -- noice tries to move out of the way of existing floating windows.
+        enabled = true, -- you can disable this behaviour here
+        -- add any filetypes here, that shouldn't trigger smart move.
+        excluded_filetypes = { "cmp_menu", "cmp_docs", "notify" },
+      },
       throttle = 1000 / 30,
       routes = {
         {
           view = "split",
-          filter = { event = "msg_show", min_height = 4 },
+          filter = { event = "msg_show", min_height = 5 },
         },
         {
           filter = { event = "msg_show", kind = { "search_count", "echo", "echomsg" } },
@@ -303,6 +330,18 @@ function M.config()
     end,
     wk = {
       ["N"] = { ":Noice<CR>", "messages" },
+    },
+    autocmds = {
+      {
+        "FileType",
+        {
+          group = "_buffer_mappings",
+          pattern = {
+            "noice",
+          },
+          command = "nnoremap <silent> <buffer> q :close<CR>",
+        },
+      },
     },
   })
 end
