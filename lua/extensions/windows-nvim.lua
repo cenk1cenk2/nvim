@@ -34,7 +34,7 @@ function M.config()
         animation = {
           enable = false,
           duration = 300,
-          fps = 30,
+          fps = 60,
           easing = "in_out_sine",
         },
       }
