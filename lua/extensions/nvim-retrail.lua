@@ -28,7 +28,7 @@ function M.config()
           -- Included filetype list.
           include = {},
           -- Excluded filetype list. Overrides `include` list.
-          exclude = lvim.disabled_filetypes,
+          exclude = vim.deep_copy(lvim.disabled_filetypes),
         },
         -- Trim on write behaviour.
         trim = {
