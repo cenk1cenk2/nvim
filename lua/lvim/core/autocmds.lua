@@ -75,14 +75,14 @@ function M.load_defaults()
         command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
       },
     },
-    {
-      "VimResized",
-      {
-        group = "_auto_resize",
-        pattern = "*",
-        command = "tabdo wincmd =",
-      },
-    },
+    -- {
+    --   "VimResized",
+    --   {
+    --     group = "_auto_resize",
+    --     pattern = "*",
+    --     command = "tabdo wincmd =",
+    --   },
+    -- },
   }
 
   M.define_autocmds(definitions)

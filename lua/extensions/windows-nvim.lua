@@ -32,8 +32,8 @@ function M.config()
           filetype = lvim.disabled_filetypes,
         },
         animation = {
-          enable = false,
-          duration = 300,
+          enable = true,
+          duration = 100,
           fps = 60,
           easing = "in_out_sine",
         },
@@ -43,11 +43,22 @@ function M.config()
       require("windows").setup(config.setup)
     end,
     nvim_opts = {
-      winwidth = 10,
-      -- winminwidth = 10,
+      -- winwidth = 10,
+      winminwidth = 0,
     },
     wk = {
       ["M"] = { ":WindowsMaximize<CR>", "maximize current window" },
+      ["="] = { ":WindowsEqualize<CR>", "equalize all windows" },
+    },
+    autocmds = {
+      {
+        "VimResized",
+        {
+          group = "_auto_resize",
+          pattern = "*",
+          command = ":WindowsEqualize",
+        },
+      },
     },
   })
 end

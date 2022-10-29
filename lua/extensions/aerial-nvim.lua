@@ -39,13 +39,16 @@ function M.config()
         -- options will open the window in the other direction *if* there is a
         -- different buffer in the way of the preferred direction
         -- Enum: prefer_right, prefer_left, right, left, float
-        default_direction = "prefer_right",
+        default_direction = "right",
 
         -- Determines where the aerial window will be opened
         --   edge   - open aerial at the far right/left of the editor
         --   window - open aerial to the right/left of the current window
-        placement = "window",
+        placement = "edge",
       },
+
+      attach_mode = "global",
+
       highlight_on_jump = false,
       -- Show box drawing characters for the tree hierarchy
       show_guides = true,
@@ -71,6 +74,45 @@ function M.config()
         "Struct",
         "Constant",
         "Variable",
+      },
+
+      -- Keymaps in aerial window. Can be any value that `vim.keymap.set` accepts.
+      -- Additionally, if it is a string that matches "aerial.<name>",
+      -- it will use the function at require("aerial.action").<name>
+      -- Set to `false` to remove a keymap
+      keymaps = {
+        ["?"] = "actions.show_help",
+        ["g?"] = "actions.show_help",
+        ["<CR>"] = "actions.jump",
+        ["<2-LeftMouse>"] = "actions.jump",
+        ["<C-v>"] = "actions.jump_vsplit",
+        ["<C-s>"] = "actions.jump_split",
+        ["p"] = "actions.scroll",
+        ["<C-j>"] = "actions.down_and_scroll",
+        ["<C-k>"] = "actions.up_and_scroll",
+        ["{"] = "actions.prev",
+        ["}"] = "actions.next",
+        ["[["] = "actions.prev_up",
+        ["]]"] = "actions.next_up",
+        ["q"] = "actions.close",
+        ["o"] = "actions.tree_toggle",
+        ["za"] = "actions.tree_toggle",
+        ["O"] = "actions.tree_toggle_recursive",
+        ["zA"] = "actions.tree_toggle_recursive",
+        ["l"] = "actions.tree_open",
+        ["zo"] = "actions.tree_open",
+        ["L"] = "actions.tree_open_recursive",
+        ["zO"] = "actions.tree_open_recursive",
+        ["h"] = "actions.tree_close",
+        ["zc"] = "actions.tree_close",
+        ["H"] = "actions.tree_close_recursive",
+        ["zC"] = "actions.tree_close_recursive",
+        ["zr"] = "actions.tree_increase_fold_level",
+        ["zR"] = "actions.tree_open_all",
+        ["zm"] = "actions.tree_decrease_fold_level",
+        ["zM"] = "actions.tree_close_all",
+        ["zx"] = "actions.tree_sync_folds",
+        ["zX"] = "actions.tree_sync_folds",
       },
     },
     on_setup = function(config)

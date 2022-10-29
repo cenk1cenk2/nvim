@@ -58,7 +58,6 @@ lvim = {
 
   disabled_filetypes = {
     "terminal",
-    "neo-tree",
     "packer",
     "lspinfo",
     "prompt",
