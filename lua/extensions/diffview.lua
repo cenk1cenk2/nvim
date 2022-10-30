@@ -56,17 +56,18 @@ function M.config()
             layout = "diff2_horizontal",
           },
         },
-        key_bindings = {
-          -- The `view` bindings are active in the diff buffers, only when the current
-          -- tabpage is a Diffview.
+        keymaps = {
+          disable_defaults = false, -- Disable the default keymaps
           view = {
+            -- The `view` bindings are active in the diff buffers, only when the current
+            -- tabpage is a Diffview.
             ["<tab>"] = actions.select_next_entry, -- Open the diff for the next file
             ["<s-tab>"] = actions.select_prev_entry, -- Open the diff for the previous file
             ["gf"] = actions.goto_file, -- Open the file in a new split in the previous tabpage
             ["<C-w><C-f>"] = actions.goto_file_split, -- Open the file in a new split
             ["<C-w>gf"] = actions.goto_file_tab, -- Open the file in a new tabpage
-            ["f"] = actions.focus_files, -- Bring focus to the file panel
-            ["F"] = actions.toggle_files, -- Toggle the file panel.
+            ["e"] = actions.focus_files, -- Bring focus to the file panel
+            ["E"] = actions.toggle_files, -- Toggle the file panel.
             ["g<C-x>"] = actions.cycle_layout, -- Cycle through available layouts.
             ["[n"] = actions.prev_conflict, -- In the merge_tool: jump to the previous conflict
             ["]n"] = actions.next_conflict, -- In the merge_tool: jump to the next conflict
@@ -96,15 +97,14 @@ function M.config()
             ["<down>"] = actions.next_entry,
             ["k"] = actions.prev_entry, -- Bring the cursor to the previous file entry.
             ["<up>"] = actions.prev_entry,
+            ["l"] = actions.select_entry, -- Open the diff for the selected entry.
             ["<cr>"] = actions.select_entry, -- Open the diff for the selected entry.
-            ["l"] = actions.select_entry,
             ["o"] = actions.select_entry,
             ["<2-LeftMouse>"] = actions.select_entry,
-            ["-"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
-            ["S"] = actions.stage_all, -- Stage all entries.
+            ["a"] = actions.toggle_stage_entry, -- Stage / unstage the selected entry.
+            ["A"] = actions.stage_all, -- Stage all entries.
             ["U"] = actions.unstage_all, -- Unstage all entries.
             ["X"] = actions.restore_entry, -- Restore entry to the state on the left side.
-            ["R"] = actions.refresh_files, -- Update stats and entries in the file list.
             ["L"] = actions.open_commit_log, -- Open the commit log panel.
             ["<c-b>"] = actions.scroll_view(-0.25), -- Scroll the view up
             ["<c-f>"] = actions.scroll_view(0.25), -- Scroll the view down
@@ -114,9 +114,10 @@ function M.config()
             ["<C-w><C-f>"] = actions.goto_file_split,
             ["<C-w>gf"] = actions.goto_file_tab,
             ["i"] = actions.listing_style, -- Toggle between 'list' and 'tree' views
-            ["fd"] = actions.toggle_flatten_dirs, -- Flatten empty subdirectories in tree listing style.
-            ["f"] = actions.focus_files,
-            ["F"] = actions.toggle_files,
+            ["f"] = actions.toggle_flatten_dirs, -- Flatten empty subdirectories in tree listing style.
+            ["R"] = actions.refresh_files, -- Update stats and entries in the file list.
+            ["e"] = actions.focus_files,
+            ["E"] = actions.toggle_files,
             ["g<C-x>"] = actions.cycle_layout,
             ["[x"] = actions.prev_conflict,
             ["]x"] = actions.next_conflict,
@@ -143,8 +144,8 @@ function M.config()
             ["gf"] = actions.goto_file,
             ["<C-w><C-f>"] = actions.goto_file_split,
             ["<C-w>gf"] = actions.goto_file_tab,
-            ["f"] = actions.focus_files,
-            ["F"] = actions.toggle_files,
+            ["e"] = actions.focus_files,
+            ["E"] = actions.toggle_files,
             ["g<C-x>"] = actions.cycle_layout,
           },
           option_panel = {
