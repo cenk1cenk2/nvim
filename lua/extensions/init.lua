@@ -79,6 +79,7 @@ local extensions = {
   "aerial-nvim",
   "toggletasks-nvim",
   "nvim-docs-view",
+  "portal-nvim",
 }
 
 function M.config(config)
