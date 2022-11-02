@@ -113,8 +113,8 @@ return {
     ["x"] = '"_x',
 
     -- dont overwrite while pasting
-    ["p"] = '"_dp',
-    ["P"] = '"_dP',
+    ["p"] = '"_dP',
+    ["P"] = '"_dp',
 
     -- ["p"] = '"0p',
     -- ["P"] = '"0P',
@@ -129,8 +129,8 @@ return {
     -- to blachole
     ["c"] = '"_c',
     ["x"] = '"_x',
-    ["p"] = '"_dp',
-    ["P"] = '"_dP',
+    ["p"] = '"_dP',
+    ["P"] = '"_dp',
   },
 
   ---@usage change or add keymappings for command mode
