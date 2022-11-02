@@ -74,8 +74,6 @@ function M.config()
       local defaults = {
         ["gq"] = { "<Plug>(YankyCycleForward)", desc = "yank cycle forward" },
         ["gQ"] = { "<Plug>(YankyCycleBackward)", desc = "yank cycle backward" },
-        ["p"] = { "<Plug>(YankyPutAfter)", desc = "yanky put after" },
-        ["P"] = { "<Plug>(YankyPutBefore)", desc = "yanky put before" },
         ["y"] = { "<Plug>(YankyYank)", desc = "yanky put before" },
         -- ["gp"] = { "<Plug>(YankyPutAfterFilter)", desc = "yanky put after filter" },
         -- ["gP"] = { "<Plug>(YankyPutBeforeFilter)", desc = "yanky put before filter" },
@@ -89,10 +87,15 @@ function M.config()
         -- vim.api.nvim_set_keymap("x", "gP", "<Plug>(YankyGPutBefore)", {})
       }
 
+      local visual = {
+        ["p"] = { "<Plug>(YankyPutAfter)", desc = "yanky put after" },
+        ["P"] = { "<Plug>(YankyPutBefore)", desc = "yanky put before" },
+      }
+
       return {
         n = defaults,
-        v = defaults,
-        vb = defaults,
+        v = vim.tbl_extend("merge", vim.deepcopy(defaults), visual),
+        vb = vim.tbl_extend("merge", vim.deepcopy(defaults), visual),
       }
     end,
     wk = {
