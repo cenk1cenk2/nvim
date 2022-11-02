@@ -23,7 +23,22 @@ function M.run_markdown_toc()
 end
 
 function M.run_md_printer()
-  job.spawn { command = "md-printer", args = { vim.fn.expand "%" } }
+  local server_name = "md-printer"
+  local server = require("mason-registry").get_package(server_name)
+
+  if not server:is_installed() then
+    Log:error(("Server %s is not available."):format(server_name))
+
+    return
+  end
+
+  local config = vim.deepcopy(require("modules.lsp-config").get_lsp_default_config(server_name))
+
+  job.spawn {
+    command = table.concat(config.command),
+    args = vim.list_extend(vim.deepcopy(config.args), { vim.fn.expand "%" }),
+  }
+  M.reload_file()
 end
 
 function M.run_ansible_vault_decrypt()

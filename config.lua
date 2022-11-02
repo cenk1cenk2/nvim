@@ -54,6 +54,7 @@ lvim.lsp.ensure_installed = {
   "chrome-debug-adapter",
   -- external
   "markdown-toc",
+  "md-printer",
   "rustywind",
 }
 

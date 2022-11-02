@@ -94,8 +94,8 @@ function M.config()
 
       return {
         n = defaults,
-        v = vim.tbl_extend("merge", vim.deepcopy(defaults), visual),
-        vb = vim.tbl_extend("merge", vim.deepcopy(defaults), visual),
+        v = vim.tbl_extend("force", vim.deepcopy(defaults), visual),
+        vb = vim.tbl_extend("force", vim.deepcopy(defaults), visual),
       }
     end,
     wk = {
