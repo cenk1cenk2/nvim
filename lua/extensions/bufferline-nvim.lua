@@ -177,7 +177,7 @@ function M.config()
           callback = function(args)
             if vim.api.nvim_buf_get_name(args.buf) == "" and vim.fn.line "$" == 1 and vim.fn.getline(1) == "" then
               vim.bo.buftype = "nofile"
-              vim.bo.bufhidden = "unload"
+              vim.bo.bufhidden = "wipe"
             end
           end,
           group = "__empty_buffer",
