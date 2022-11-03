@@ -44,6 +44,24 @@ function M.config()
         end,
       }
     end,
+    keymaps = {
+      n = {
+        ["mf"] = { ":Telescope vim_bookmarks all<CR>", { desc = "list all bookmarks" } },
+        ["mF"] = { ":Telescope vim_bookmarks current_file<CR>", { desc = "list document bookmarks" } },
+      },
+    },
+    wk = function(_, categories)
+      return {
+        [categories.BOOKMARKS] = {
+          f = { ":Telescope vim_bookmarks all<CR>", "list all bookmarks" },
+          F = { ":Telescope vim_bookmarks current_file<CR>", "list document bookmarks" },
+        },
+        [categories.FIND] = {
+          m = { ":Telescope vim_bookmarks all<CR>", "list all bookmarks" },
+          M = { ":Telescope vim_bookmarks current_file<CR>", "list document bookmarks" },
+        },
+      }
+    end,
   })
 end
 

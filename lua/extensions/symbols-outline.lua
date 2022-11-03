@@ -15,9 +15,6 @@ function M.config()
         disable = not config.active,
       }
     end,
-    configure = function(_, fn)
-      fn.add_disabled_filetypes { "Outline" }
-    end,
     setup = {
       highlight_hovered_item = true,
       show_guides = true,

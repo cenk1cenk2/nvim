@@ -21,9 +21,6 @@ function M.config()
         disable = not config.active,
       }
     end,
-    configure = function(_, fn)
-      fn.add_disabled_filetypes { "TelescopePrompt", "Telescope" }
-    end,
     to_inject = function()
       return {
         actions = require "telescope.actions",
@@ -204,8 +201,6 @@ function M.config()
           b = { ":Telescope current_buffer_fuzzy_find<CR>", "search current buffer fuzzy" },
           f = { ":Telescope oldfiles<CR>", "search file history" },
           g = { ":Telescope grep_string<CR>", "grep string under cursor" },
-          m = { ":Telescope vim_bookmarks all<CR>", "list all bookmarks" },
-          M = { ":Telescope vim_bookmarks current_file<CR>", "list document bookmarks" },
           j = { ":Telescope jumplist<CR>", "list jumps" },
           s = { ":Telescope spell_suggest<CR>", "spell suggest" },
           T = { ":Telescope live_grep<CR>", "grep with regexp" },

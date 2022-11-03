@@ -16,16 +16,6 @@ function M.config()
         disable = not config.active,
       }
     end,
-    configure = function(_, fn)
-      fn.add_disabled_filetypes {
-        "dapui_breakpoints",
-        "dapui_stacks",
-        "dapui_watches",
-        "dapui_scopes",
-        "dapui_repl",
-        "dap-repl",
-      }
-    end,
     to_inject = function()
       return {
         dap_ui = require "dapui",

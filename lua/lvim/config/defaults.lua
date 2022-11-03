@@ -56,7 +56,10 @@ lvim = {
     vmappings = {},
   },
 
+  -- add disabled filetypes function was a bit unreliable due to cached loading of this object
   disabled_filetypes = {
+    "",
+    "neo-tree",
     "terminal",
     "packer",
     "lspinfo",
@@ -67,6 +70,31 @@ lvim = {
     "diff",
     "help",
     "prompt",
+    -- plugins
+    "LspTrouble",
+    "spectre_panel",
+    "lspsagaoutline",
+    "lspsagarename",
+    "alpha",
+    "harpoon",
+    "neo-tree",
+    "aerial",
+    "mason",
+    "cmdline_popup",
+    "noice",
+    "Outline",
+    "rnvimr",
+    "DiffviewFiles",
+    "NvimTree",
+    "TelescopePrompt",
+    "Telescope",
+    "toggleterm",
+    "dapui_breakpoints",
+    "dapui_stacks",
+    "dapui_watches",
+    "dapui_scopes",
+    "dapui_repl",
+    "dap-repl",
   },
 }
 

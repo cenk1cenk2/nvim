@@ -15,9 +15,6 @@ function M.config()
         disable = not config.active,
       }
     end,
-    configure = function(_, fn)
-      fn.add_disabled_filetypes { "rnvimr" }
-    end,
     legacy_setup = {
       rnvimr_draw_border = 1,
       rnvimr_pick_enable = 1,
