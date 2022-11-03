@@ -318,7 +318,14 @@ function M.config()
         use_winbar = "always",
         filter_rules = {
           bo = {
-            filetype = lvim.disabled_filetypes,
+            filetype = vim.tbl_filter(function(ft)
+              local items = { "alpha" }
+              if vim.tbl_contains(items, ft) then
+                return false
+              end
+
+              return true
+            end, lvim.disabled_filetypes),
           },
         },
         fg_color = colors.fg,
