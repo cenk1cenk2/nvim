@@ -9,6 +9,10 @@ function M.config()
       return {
         "akinsho/bufferline.nvim",
         event = "BufWinEnter",
+        requires = {
+          -- https://github.com/ojroques/nvim-bufdel
+          "ojroques/nvim-bufdel",
+        },
         config = function()
           require("utils.setup").packer_config "bufferline_nvim"
         end,
@@ -108,6 +112,11 @@ function M.config()
     },
     on_setup = function(config)
       require("bufferline").setup(config.setup)
+
+      require("bufdel").setup {
+        next = "tabs", -- or 'cycle, 'alternate'
+        quit = false, -- quit Neovim when last buffer is closed
+      }
     end,
     commands = {
       {
@@ -120,6 +129,18 @@ function M.config()
         name = "BufferCloseAllButCurrent",
         fn = function()
           M.close_all_but_current()
+        end,
+      },
+      {
+        name = "BufferClosePinned",
+        fn = function()
+          M.close_pinned()
+        end,
+      },
+      {
+        name = "BufferCloseUnpinned",
+        fn = function()
+          M.close_unpinned()
         end,
       },
     },
@@ -140,14 +161,29 @@ function M.config()
           ["x"] = { ":BufferClose<CR>", "force close buffer" },
           ["X"] = { ":BufferCloseAllButCurrent<CR>", "close all buffers but this" },
           ["d"] = { ":BufferLinePickClose<CR>", "pick buffer to close" },
-          ["D"] = { ":BufferLineGroupClose ungrouped<CR>", "close ungrouped tabs" },
+          ["D"] = { ":BufferCloseUnpinned<CR>", "close unpinned tabs" },
           ["y"] = { ":BufferLineCloseLeft<CR>", "close all buffers to the left" },
           ["Y"] = { ":BufferLineCloseRight<CR>", "close all buffers to the right" },
           ["p"] = { ":BufferLineTogglePin<CR>", "pin current buffer" },
-          ["P"] = { ":BufferLineGroupClose pinned<CR>", "close pinned buffer group" },
+          ["P"] = { ":BufferClosePinned<CR>", "close pinned buffer group" },
         },
       }
     end,
+    autocmds = {
+      {
+        { "BufLeave" },
+        {
+          pattern = "{}",
+          callback = function(args)
+            if vim.api.nvim_buf_get_name(args.buf) == "" and vim.fn.line "$" == 1 and vim.fn.getline(1) == "" then
+              vim.bo.buftype = "nofile"
+              vim.bo.bufhidden = "unload"
+            end
+          end,
+          group = "__empty_buffer",
+        },
+      },
+    },
   })
 end
 
@@ -194,20 +230,34 @@ function M.close_all_but_current()
   local buffers = require("bufferline.utils").get_valid_buffers()
   for _, bufnr in pairs(buffers) do
     if bufnr ~= current and not require("bufferline.groups").is_pinned { id = bufnr } then
-      -- require("bufferline.commands").handle_close(bufnr)
-      pcall(vim.cmd, string.format("bd %d", bufnr))
+      M.buf_kill(bufnr)
+    end
+  end
+end
+
+function M.close_pinned()
+  local buffers = require("bufferline.utils").get_valid_buffers()
+  for _, bufnr in pairs(buffers) do
+    if require("bufferline.groups").is_pinned { id = bufnr } and bufnr then
+      M.buf_kill(bufnr)
+    end
+  end
+end
+
+function M.close_unpinned()
+  local buffers = require("bufferline.utils").get_valid_buffers()
+  for _, bufnr in pairs(buffers) do
+    if not require("bufferline.groups").is_pinned { id = bufnr } and bufnr then
+      M.buf_kill(bufnr)
     end
   end
 end
 
 -- Common kill function for bdelete and bwipeout
 -- credits: based on bbye and nvim-bufdel
----@param kill_command? string defaults to "bd"
 ---@param bufnr? number defaults to the current buffer
 ---@param force? boolean defaults to false
-function M.buf_kill(kill_command, bufnr, force)
-  kill_command = kill_command or "bd"
-
+function M.buf_kill(bufnr, force)
   local bo = vim.bo
   local api = vim.api
   local fmt = string.format
@@ -219,45 +269,8 @@ function M.buf_kill(kill_command, bufnr, force)
 
   local bufname = api.nvim_buf_get_name(bufnr)
 
-  local callback = function()
-    -- Get list of windows IDs with the buffer to close
-    local windows = vim.tbl_filter(function(win)
-      return api.nvim_win_get_buf(win) == bufnr
-    end, api.nvim_list_wins())
-
-    if #windows == 0 then
-      return
-    end
-
-    if force then
-      kill_command = kill_command .. "!"
-    end
-
-    -- Get list of active buffers
-    local buffers = vim.tbl_filter(function(buf)
-      return api.nvim_buf_is_valid(buf) and bo[buf].buflisted
-    end, api.nvim_list_bufs())
-
-    -- If there is only one buffer (which has to be the current one), vim will
-    -- create a new buffer on :bd.
-    -- For more than one buffer, pick the previous buffer (wrapping around if necessary)
-    if #buffers > 1 then
-      for i, v in ipairs(buffers) do
-        if v == bufnr then
-          local prev_buf_idx = i == 1 and (#buffers - 1) or (i - 1)
-          local prev_buffer = buffers[prev_buf_idx]
-          for _, win in ipairs(windows) do
-            api.nvim_win_set_buf(win, prev_buffer)
-          end
-        end
-      end
-    end
-
-    -- Check if buffer still exists, to ensure the target buffer wasn't killed
-    -- due to options like bufhidden=wipe.
-    if api.nvim_buf_is_valid(bufnr) and bo[bufnr].buflisted then
-      vim.cmd(string.format("%s %d", kill_command, bufnr))
-    end
+  local callback = function(b, f)
+    require("bufdel").delete_buffer(b, f)
   end
 
   if not force then
@@ -275,8 +288,7 @@ function M.buf_kill(kill_command, bufnr, force)
         if not choice then
           return
         elseif choice:match "ye?s?" then
-          force = true
-          callback()
+          callback(bufnr, true)
         end
       end)
 
@@ -284,7 +296,7 @@ function M.buf_kill(kill_command, bufnr, force)
     end
   end
 
-  callback()
+  callback(bufnr, false)
 end
 
 return M
