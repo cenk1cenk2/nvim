@@ -80,6 +80,7 @@ local extensions = {
   "toggletasks-nvim",
   "nvim-docs-view",
   "portal-nvim",
+  "indent-o-matic",
 }
 
 function M.config(config)
