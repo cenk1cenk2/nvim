@@ -59,8 +59,8 @@ function M.config()
           { name = "luasnip" },
           { name = "nvim_lua" },
           -- { name = "omni" },
-          -- { name = "buffer" },
-          { name = "fuzzy_buffer" },
+          { name = "buffer" },
+          -- { name = "fuzzy_buffer" },
 
           { name = "calc" },
           { name = "env" },
