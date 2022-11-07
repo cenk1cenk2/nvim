@@ -81,6 +81,7 @@ function M.config()
             vsnip = "(Snippet)",
             luasnip = "(Snippet)",
             buffer = "(Buffer)",
+            fuzzy_buffer = "(Buffer-FZF)",
             git = "(GIT)",
             omni = "(OMNI)",
             npm = "(NPM)",
