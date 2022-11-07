@@ -87,15 +87,15 @@ function M.config()
         -- vim.api.nvim_set_keymap("x", "gP", "<Plug>(YankyGPutBefore)", {})
       }
 
-      local visual = {
+      local normal = {
         ["p"] = { "<Plug>(YankyPutAfter)", desc = "yanky put after" },
         ["P"] = { "<Plug>(YankyPutBefore)", desc = "yanky put before" },
       }
 
       return {
-        n = defaults,
-        v = vim.tbl_extend("force", vim.deepcopy(defaults), visual),
-        vb = vim.tbl_extend("force", vim.deepcopy(defaults), visual),
+        n = vim.tbl_extend("force", vim.deepcopy(defaults), normal),
+        v = defaults,
+        vb = defaults,
       }
     end,
     wk = {
