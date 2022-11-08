@@ -25,8 +25,8 @@ function M.config()
         close_folds = "zc", -- close all folds
         cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
         open_folds = "zo", -- open all folds
-        previous = "k", -- preview item
-        next = "j", -- next item
+        previous = "qp", -- preview item
+        next = "qn", -- next item
       },
     },
     on_setup = function(config)

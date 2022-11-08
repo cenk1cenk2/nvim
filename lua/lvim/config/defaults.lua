@@ -71,6 +71,7 @@ lvim = {
     "prompt",
     -- plugins
     "LspTrouble",
+    "Trouble",
     "spectre_panel",
     "lspsagaoutline",
     "lspsagarename",
