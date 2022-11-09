@@ -74,6 +74,7 @@ lvim.lsp.automatic_configuration.skipped_servers = {
   -- "emmet_ls",
   "eslint",
   "eslintls",
+  "glint",
   -- "grammarly",
   -- "graphql",
   "jedi_language_server",
