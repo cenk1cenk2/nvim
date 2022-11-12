@@ -38,15 +38,15 @@ function M.setup()
           },
           u = {
             function()
-              M.rebuild_and_update()
-            end,
-            "rebuild and update everything",
-          },
-          U = {
-            function()
               M.update_language_servers()
             end,
             "update language servers",
+          },
+          U = {
+            function()
+              M.rebuild_and_update()
+            end,
+            "rebuild and update everything",
           },
         },
       }
