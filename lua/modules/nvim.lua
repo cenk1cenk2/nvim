@@ -48,6 +48,7 @@ function M.setup()
             end,
             "rebuild and update everything",
           },
+          p = { ":LvimUpdate<CR>", "git update config repository" },
         },
       }
     end,
