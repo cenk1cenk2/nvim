@@ -81,6 +81,7 @@ local extensions = {
   "nvim-docs-view",
   "portal-nvim",
   "indent-o-matic",
+  "colorful-winsep-nvim",
 }
 
 function M.config(config)
