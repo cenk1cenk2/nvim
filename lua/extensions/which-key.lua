@@ -77,13 +77,17 @@ function M.config()
       },
       triggers = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r" },
     },
-    on_setup = function(config)
+    on_setup = function(config, fn)
       local which_key = config.inject.which_key
 
       which_key.setup(config.setup)
 
       which_key.register(lvim.wk.mappings, config.opts)
       which_key.register(lvim.wk.vmappings, config.vopts)
+
+      if fn.extension_get_active "legendary_nvim" then
+        require("legendary.integrations.which-key").bind_whichkey(lvim.wk.mappings, config.opts, false)
+      end
     end,
     autocmds = {
       {

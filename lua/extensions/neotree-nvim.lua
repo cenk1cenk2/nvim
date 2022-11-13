@@ -311,28 +311,6 @@ function M.config()
       }
     end,
     on_setup = function(config)
-      local colors = require "onedarker.colors"
-
-      require("window-picker").setup {
-        selection_chars = "ASDFGQWERYXCVB",
-        use_winbar = "always",
-        filter_rules = {
-          bo = {
-            filetype = vim.tbl_filter(function(ft)
-              local items = { "alpha" }
-              if vim.tbl_contains(items, ft) then
-                return false
-              end
-
-              return true
-            end, lvim.disabled_filetypes),
-          },
-        },
-        fg_color = colors.fg,
-        current_win_hl_color = colors.green[600],
-        other_win_hl_color = colors.bg[600],
-      }
-
       require("neo-tree").setup(config.setup)
     end,
     wk = {

@@ -26,8 +26,8 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias fn { add_disabled_filetypes: (fun(ft: table<string>): nil), extension_get_active: (fun(extension: string): boolean)  }
----@alias config { name: string, active: boolean, opts: { multiple_packages: boolean }, on_init: (fun(config?: config): nil), configure: (fun(config?: config, fn?: fn): nil),condition: (fun(config?: config): boolean | nil), packer: (fun(config?: config): table), to_inject: (fun(config?: config): table<string, string>), autocmds: table| (fun(config?: config): nil), keymaps: table | (fun(config?: config): any), wk: (fun(config?: config, categories?: table):any) | table, legacy_setup: table, setup: table | (fun(config?: config): any), on_setup: (fun(config?: config, fn?: fn): nil), on_done: (fun(config?: config, fn?: fn): nil), commands: table | (fun(config?: config): any), nvim_opts: table, hl: (fun(config?: config): table) | table, signs: (fun(config?: config): table) | table, on_complete: (fun(config?: config, fn?: fn): table), to_setup: table, current_setup: table, define_global_fn: (fun(config?: config): table<string, string>) }
+---@alias fn { add_disabled_filetypes: (fun(ft: table<string>): nil), extension_get_active: (fun(extension: string): boolean), get_current_setup: (fun(extension: string): (fun(): table)), fetch_current_setup: (fun(extension:string): table) }
+---@alias config { name: string, active: boolean, opts: { multiple_packages: boolean }, on_init: (fun(config?: config): nil), configure: (fun(config?: config, fn?: fn): nil),condition: (fun(config?: config): boolean | nil), packer: (fun(config?: config): table), to_inject: (fun(config?: config): table<string, string>), autocmds: table| (fun(config?: config): nil), keymaps: table | (fun(config?: config): any), wk: (fun(config?: config, categories?: table):any) | table, legacy_setup: table, setup: table | (fun(config?: config, fn?: fn): any), on_setup: (fun(config?: config, fn?: fn): nil), on_done: (fun(config?: config, fn?: fn): nil), commands: table | (fun(config?: config): any), nvim_opts: table, hl: (fun(config?: config): table) | table, signs: (fun(config?: config): table) | table, on_complete: (fun(config?: config, fn?: fn): table), to_setup: table, current_setup: table, define_global_fn: (fun(config?: config): table<string, string>) }
 
 ---
 ---@param extension_name string
@@ -136,7 +136,17 @@ end
 
 ---@param extension string
 function M.fn.extension_get_active(extension)
-  return M.get_config(extension).active
+  return (M.get_config(extension) or {}).active
+end
+
+function M.fn.get_current_setup(extension_name)
+  return function()
+    return lvim.extensions[extension_name].current_setup
+  end
+end
+
+function M.fn.fetch_current_setup(extension_name)
+  return lvim.extensions[extension_name].current_setup
 end
 
 ---
@@ -200,7 +210,7 @@ function M.run(config)
   end
 
   if config ~= nil and config.setup ~= nil then
-    config.setup = M.evaluate_property(config.setup, config)
+    config.setup = M.evaluate_property(config.setup, config, M.fn)
 
     if config.to_setup ~= nil then
       config.setup = vim.tbl_deep_extend("force", config.setup, config.to_setup)
@@ -253,12 +263,6 @@ function M.set_packer_extensions()
   end
 
   lvim.plugins = packer
-end
-
-function M.get_current_setup(extension_name)
-  return function()
-    return lvim.extensions[extension_name].current_setup
-  end
 end
 
 return M

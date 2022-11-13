@@ -14,6 +14,7 @@ local extensions = {
   "lsp",
   "mason",
   "toggleterm-nvim",
+  "nvim-window-picker",
   "nvim-tree",
   "neotree-nvim",
   "dap",
@@ -28,11 +29,11 @@ local extensions = {
   "hop",
   "vim-repeat",
   "neoscroll",
+  "legendary-nvim",
   "spectre",
   "rnvimr",
   "vim-visual-multi",
   "windows-nvim",
-  "vim-windowswap",
   "undotree",
   "nvim-ufo",
   "nvim-bqf",
@@ -82,6 +83,11 @@ local extensions = {
   "portal-nvim",
   "indent-o-matic",
   "colorful-winsep-nvim",
+  "mini-nvim-ai",
+  "winshift-nvim",
+  "package-info",
+  "clipboard-image-nvim",
+  "exrc-nvim",
 }
 
 function M.config(config)

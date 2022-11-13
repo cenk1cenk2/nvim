@@ -24,7 +24,7 @@ function M.config()
     end,
     setup = {
       colors = {
-        up_to_date = c.grey[600], -- Text color for up to date package virtual text
+        up_to_date = c.grey[500], -- Text color for up to date package virtual text
         outdated = c.yellow[600], -- Text color for outdated package virtual text
       },
       icons = {
@@ -34,7 +34,7 @@ function M.config()
           outdated = " ", -- Icon for outdated packages
         },
       },
-      autostart = true, -- Whether to autostart when `package.json` is opened
+      autostart = false, -- Whether to autostart when `package.json` is opened
       hide_up_to_date = false, -- It hides up to date versions when displaying virtual text
       hide_unstable_versions = false, -- It hides unstable versions from version list e.g next-11.1.3-canary3
       -- Can be `npm` or `yarn`. Used for `delete`, `install` etc...
@@ -46,19 +46,54 @@ function M.config()
     on_setup = function(config)
       require("package-info").setup(config.setup)
     end,
-    wk = function(config)
+    wk = function(config, categories)
       local package_info = config.inject.package_info
 
       return {
-        ["N"] = {
+        [categories.DEPENDENCIES] = {
           name = "+modules",
-          s = { package_info.show, "show package-info" },
-          S = { package_info.hide, "hide package-info" },
-          u = { package_info.update, "update current package" },
-          d = { package_info.delete, "delete current package" },
-          i = { package_info.install, "install packages" },
-          r = { package_info.reinstall, "reinstall packages" },
-          c = { package_info.change_version, "change version of the package" },
+          s = {
+            function()
+              package_info.show()
+            end,
+            "show package-info",
+          },
+          S = {
+            function()
+              package_info.hide()
+            end,
+            "hide package-info",
+          },
+          u = {
+            function()
+              package_info.update()
+            end,
+            "update current package",
+          },
+          d = {
+            function()
+              package_info.delete()
+            end,
+            "delete current package",
+          },
+          i = {
+            function()
+              package_info.install()
+            end,
+            "install packages",
+          },
+          r = {
+            function()
+              package_info.reinstall()
+            end,
+            "reinstall packages",
+          },
+          c = {
+            function()
+              package_info.change_version()
+            end,
+            "change version of the package",
+          },
           m = { ":Telescope node_modules list<CR>", "node modules" },
         },
       }

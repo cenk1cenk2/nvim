@@ -206,7 +206,7 @@ function M.config()
   })
 end
 
-M.current_setup = require("utils.setup").get_current_setup(extension_name)
+M.current_setup = require("utils.setup").fn.get_current_setup(extension_name)
 
 function M.has_words_before()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))

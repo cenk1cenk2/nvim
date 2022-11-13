@@ -4,6 +4,7 @@ M.CATEGORIES = {
   ACTIONS = "a",
   BUFFER = "b",
   DEBUG = "d",
+  DEPENDENCIES = "D",
   FIND = "f",
   SEARCH = "s",
   GIT = "g",
@@ -55,6 +56,10 @@ M.mappings = {
 
   [M.CATEGORIES.DEBUG] = {
     name = "debug",
+  },
+
+  [M.CATEGORIES.DEPENDENCIES] = {
+    name = "dependencies",
   },
 
   -- find
