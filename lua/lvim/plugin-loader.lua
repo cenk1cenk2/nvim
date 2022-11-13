@@ -8,7 +8,7 @@ local in_headless = #vim.api.nvim_list_uis() == 0
 -- we need to reuse this outside of init()
 local compile_path = join_paths(get_config_dir(), "plugin", "packer_compiled.lua")
 local snapshot_path = join_paths(get_cache_dir(), "snapshots")
-local default_snapshot = join_paths(get_lvim_base_dir(), "snapshots", "default.json")
+-- local default_snapshot = join_paths(get_lvim_base_dir(), "snapshots", "default.json")
 
 function plugin_loader.init(opts)
   opts = opts or {}
@@ -20,10 +20,10 @@ function plugin_loader.init(opts)
     package_root = opts.package_root or join_paths(vim.fn.stdpath "data", "site", "pack"),
     compile_path = compile_path,
     snapshot_path = snapshot_path,
-    max_jobs = 0,
+    -- max_jobs = 200,
     log = { level = "warn" },
     git = {
-      clone_timeout = 120,
+      clone_timeout = 300,
     },
     display = {
       open_fn = function()
@@ -67,19 +67,19 @@ function plugin_loader.cache_clear()
   if not utils.is_file(compile_path) then
     return
   end
-  if vim.fn.delete(compile_path) == 0 then
-    Log:debug "deleted packer_compiled.lua"
-  end
+  -- if vim.fn.delete(compile_path) == 0 then
+  --   Log:warn "deleted packer_compiled.lua"
+  -- end
 end
 
 function plugin_loader.compile()
-  Log:debug "calling packer.compile()"
+  Log:info "calling packer.compile()"
   vim.api.nvim_create_autocmd("User", {
     pattern = "PackerCompileDone",
     once = true,
     callback = function()
       if utils.is_file(compile_path) then
-        Log:debug "finished compiling packer_compiled.lua"
+        Log:info "finished compiling packer_compiled.lua"
       end
     end,
   })
@@ -88,7 +88,7 @@ end
 
 function plugin_loader.recompile()
   plugin_loader.cache_clear()
-  plugin_loader.compile()
+  -- plugin_loader.compile()
 end
 
 function plugin_loader.reload(configurations)
@@ -152,7 +152,7 @@ function plugin_loader.load_snapshot(snapshot_file)
 end
 
 function plugin_loader.sync_core_plugins()
-  plugin_loader.cache_clear()
+  -- plugin_loader.cache_clear()
   -- local core_plugins = plugin_loader.get_core_plugins()
   -- Log:trace(string.format("Syncing core plugins: [%q]", table.concat(core_plugins, ", ")))
   -- pcall_packer_command("sync", core_plugins)

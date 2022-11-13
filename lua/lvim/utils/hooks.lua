@@ -18,9 +18,6 @@ function M.run_on_packer_complete()
 
   vim.g.colors_name = lvim.colorscheme
   pcall(vim.cmd, "colorscheme " .. lvim.colorscheme)
-  -- -- FIXME(kylo252): nvim-tree.lua/lua/nvim-tree/view.lua:442: Invalid window id
-  -- vim.g.colors_name = lvim.colorscheme
-  -- pcall(vim.cmd.colorscheme, lvim.colorscheme)
 
   if M._reload_triggered then
     Log:debug "Reloaded configuration"
@@ -52,22 +49,6 @@ end
 
 function M.run_post_update()
   Log:debug "Starting post-update hook"
-
-  if vim.fn.has "nvim-0.8" ~= 1 then
-    local compat_tag = "1.1.4"
-    vim.notify(
-      "Please upgrade your Neovim base installation. Newer version of Lunarvim requires v0.7+",
-      vim.log.levels.WARN
-    )
-    vim.wait(1000, function()
-      return false
-    end)
-    local ret = reload("lvim.utils.git").switch_lvim_branch(compat_tag)
-    if ret then
-      vim.notify("Reverted to the last known compatible version: " .. compat_tag, vim.log.levels.WARN)
-    end
-    return
-  end
 
   M.reset_cache()
 
