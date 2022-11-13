@@ -20,10 +20,10 @@ function plugin_loader.init(opts)
     package_root = opts.package_root or join_paths(vim.fn.stdpath "data", "site", "pack"),
     compile_path = compile_path,
     snapshot_path = snapshot_path,
-    -- max_jobs = 40,
+    max_jobs = 0,
     log = { level = "warn" },
     git = {
-      clone_timeout = 300,
+      clone_timeout = 120,
     },
     display = {
       open_fn = function()
@@ -37,11 +37,10 @@ function plugin_loader.init(opts)
   end
 
   if not utils.is_directory(install_path) then
-    vim.fn.system { "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path }
+    print "Initializing first time setup"
+    print "Installing packer"
+    print(vim.fn.system { "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
     vim.cmd "packadd packer.nvim"
-    -- IMPORTANT: we only set this the very first time to avoid constantly triggering the rollback function
-    -- https://github.com/wbthomason/packer.nvim/blob/c576ab3f1488ee86d60fd340d01ade08dcabd256/lua/packer.lua#L998-L995
-    init_opts.snapshot = default_snapshot
   end
 
   local status_ok, packer = pcall(require, "packer")
@@ -65,17 +64,31 @@ local function pcall_packer_command(cmd, kwargs)
 end
 
 function plugin_loader.cache_clear()
+  if not utils.is_file(compile_path) then
+    return
+  end
   if vim.fn.delete(compile_path) == 0 then
     Log:debug "deleted packer_compiled.lua"
   end
 end
 
+function plugin_loader.compile()
+  Log:debug "calling packer.compile()"
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "PackerCompileDone",
+    once = true,
+    callback = function()
+      if utils.is_file(compile_path) then
+        Log:debug "finished compiling packer_compiled.lua"
+      end
+    end,
+  })
+  pcall_packer_command "compile"
+end
+
 function plugin_loader.recompile()
   plugin_loader.cache_clear()
-  pcall_packer_command "compile"
-  if utils.is_file(compile_path) then
-    Log:debug "generated packer_compiled.lua"
-  end
+  plugin_loader.compile()
 end
 
 function plugin_loader.reload(configurations)
@@ -110,14 +123,11 @@ function plugin_loader.load(configurations)
     vim.g.colors_name = lvim.colorscheme
     vim.cmd("colorscheme " .. lvim.colorscheme)
   end, debug.traceback)
+
   if not status_ok then
     Log:warn "problems detected while loading plugins' configurations"
     Log:trace(debug.traceback())
   end
-
-  -- Colorscheme must get called after plugins are loaded or it will break new installs.
-  vim.g.colors_name = lvim.colorscheme
-  vim.cmd("colorscheme " .. lvim.colorscheme)
 end
 
 function plugin_loader.get_core_plugins()
@@ -142,17 +152,10 @@ function plugin_loader.load_snapshot(snapshot_file)
 end
 
 function plugin_loader.sync_core_plugins()
-  -- problem: rollback() will get stuck if a plugin directory doesn't exist
-  -- solution: call sync() beforehand
-  -- see https://github.com/wbthomason/packer.nvim/issues/862
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "PackerComplete",
-    once = true,
-    callback = function()
-      require("lvim.plugin-loader").load_snapshot(default_snapshot)
-    end,
-  })
-  pcall_packer_command "sync"
+  plugin_loader.cache_clear()
+  -- local core_plugins = plugin_loader.get_core_plugins()
+  -- Log:trace(string.format("Syncing core plugins: [%q]", table.concat(core_plugins, ", ")))
+  -- pcall_packer_command("sync", core_plugins)
 end
 
 function plugin_loader.ensure_plugins()
@@ -160,8 +163,7 @@ function plugin_loader.ensure_plugins()
     pattern = "PackerComplete",
     once = true,
     callback = function()
-      Log:debug "calling packer.clean()"
-      pcall_packer_command "clean"
+      plugin_loader.compile()
     end,
   })
   Log:debug "calling packer.install()"

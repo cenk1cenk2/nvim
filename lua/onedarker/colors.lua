@@ -76,8 +76,8 @@ local colors = {
 colors.diff = {
   add = "#1a311c",
   delete = "#2d0d1a",
-  change = "#0b182d",
-  text = "#0f2845",
+  change = "#080d1b",
+  text = "#0b1f30",
 }
 
 colors.file = {

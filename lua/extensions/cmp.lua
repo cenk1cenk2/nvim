@@ -34,9 +34,11 @@ function M.config()
           keyword_length = 1,
         },
         experimental = {
-          ghost_text = false,
-          native_menu = false,
+          ghost_text = true,
         },
+        -- view = {
+        --   entries = "native",
+        -- },
         formatting = {
           fields = { "kind", "abbr", "menu" },
           max_width = 0,
@@ -68,17 +70,47 @@ function M.config()
             Variable = " ",
           },
           source_names = {},
-          duplicates = { buffer = 1, path = 1, nvim_lsp = 0, luasnip = 1 },
+          duplicates = {
+            buffer = 1,
+            path = 1,
+            nvim_lsp = 0,
+            luasnip = 1,
+          },
           duplicates_default = 0,
           format = function(entry, vim_item)
             local current_setup = M.current_setup()
 
             local max_width = current_setup.formatting.max_width
             if max_width ~= 0 and #vim_item.abbr > max_width then
-              vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. "…"
+              vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. lvim.icons.ui.Ellipsis
             end
             if lvim.use_icons then
               vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind]
+
+              if entry.source.name == "copilot" then
+                vim_item.kind = lvim.icons.git.Octoface
+                vim_item.kind_hl_group = "CmpItemKindCopilot"
+              end
+
+              if entry.source.name == "cmp_tabnine" then
+                vim_item.kind = lvim.icons.misc.Robot
+                vim_item.kind_hl_group = "CmpItemKindTabnine"
+              end
+
+              if entry.source.name == "crates" then
+                vim_item.kind = lvim.icons.misc.Package
+                vim_item.kind_hl_group = "CmpItemKindCrate"
+              end
+
+              if entry.source.name == "lab.quick_data" then
+                vim_item.kind = lvim.icons.misc.CircuitBoard
+                vim_item.kind_hl_group = "CmpItemKindConstant"
+              end
+
+              if entry.source.name == "emoji" then
+                vim_item.kind = lvim.icons.misc.Smiley
+                vim_item.kind_hl_group = "CmpItemKindEmoji"
+              end
             end
             vim_item.menu = current_setup.formatting.source_names[entry.source.name]
             vim_item.dup = current_setup.formatting.duplicates[entry.source.name]
@@ -116,12 +148,13 @@ function M.config()
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
-            -- elseif luasnip.expand_or_locally_jumpable() then
-            --   luasnip.expand_or_jump()
-            -- elseif jumpable(1) then
-            --   luasnip.jump(1)
+            elseif luasnip.expand_or_locally_jumpable() then
+              luasnip.expand_or_jump()
+            elseif jumpable(1) then
+              luasnip.jump(1)
             elseif has_words_before() then
-              cmp.complete()
+              -- cmp.complete()
+              fallback()
             else
               fallback()
             end
@@ -129,8 +162,8 @@ function M.config()
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
-            -- elseif luasnip.jumpable(-1) then
-            --   luasnip.jump(-1)
+            elseif luasnip.jumpable(-1) then
+              luasnip.jump(-1)
             else
               fallback()
             end
@@ -146,12 +179,10 @@ function M.config()
               if is_insert_mode() then -- prevent overwriting brackets
                 confirm_opts.behavior = cmp.ConfirmBehavior.Insert
               end
-
               if cmp.confirm(confirm_opts) then
                 return -- success, exit early
               end
             end
-
             fallback() -- if not exited early, always fallback
           end),
         },
