@@ -22,7 +22,6 @@ M.CATEGORIES = {
 }
 
 M.mappings = {
-  ["="] = { "<C-W>=<CR>", "balance open windows" },
   ["x"] = { "<C-W>s", "split below" },
   ["v"] = { "<C-W>v", "split right" },
   ["n"] = { ":nohlsearch<CR>", "no highlight" },
@@ -30,6 +29,7 @@ M.mappings = {
   -- actions
   [M.CATEGORIES.ACTIONS] = {
     name = "actions",
+    ["="] = { "<C-W>=<CR>", "balance open windows" },
     c = { ":set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20<CR>", "bring back cursor" },
     e = { ":set ff=unix<CR>", "set lf" },
     E = { ":set ff=dos<CR>", "set crlf" },
@@ -186,7 +186,7 @@ M.mappings = {
 }
 
 M.vmappings = {
-  ["="] = M.mappings["="],
+  [M.CATEGORIES.ACTIONS] = M.mappings[M.CATEGORIES.ACTIONS],
   ["x"] = M.mappings["x"],
   ["v"] = M.mappings["v"],
   ["n"] = M.mappings["n"],

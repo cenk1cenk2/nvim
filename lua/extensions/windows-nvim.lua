@@ -46,10 +46,14 @@ function M.config()
       -- winwidth = 10,
       winminwidth = 0,
     },
-    wk = {
-      ["M"] = { ":WindowsMaximize<CR>", "maximize current window" },
-      ["="] = { ":WindowsEqualize<CR>", "equalize all windows" },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.ACTIONS] = {
+          ["M"] = { ":WindowsMaximize<CR>", "maximize current window" },
+          ["="] = { ":WindowsEqualize<CR>", "balance all windows" },
+        },
+      }
+    end,
     autocmds = {
       {
         "VimResized",

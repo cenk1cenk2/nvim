@@ -193,7 +193,16 @@ function M.config()
       }
     end,
     wk = function(_, categories)
+      local custom_finders = require "modules.telescope"
+
       return {
+        ["p"] = {
+          function()
+            require("lvim.core.telescope.custom-finders").find_project_files()
+          end,
+          "find file",
+        },
+
         [categories.FIND] = {
           ["."] = { ":Telescope commands<CR>", "search available commands" },
           [":"] = { ":Telescope command_history<CR>", "search command history" },
@@ -204,6 +213,30 @@ function M.config()
           j = { ":Telescope jumplist<CR>", "list jumps" },
           s = { ":Telescope spell_suggest<CR>", "spell suggest" },
           T = { ":Telescope live_grep<CR>", "grep with regexp" },
+          B = {
+            function()
+              custom_finders.rg_grep_buffer()
+            end,
+            "search current buffer grep",
+          },
+          r = {
+            function()
+              custom_finders.rg_interactive()
+            end,
+            "ripgrep interactive",
+          },
+          d = {
+            function()
+              custom_finders.rg_dirty()
+            end,
+            "dirty fuzzy grep",
+          },
+          t = {
+            function()
+              custom_finders.rg_string()
+            end,
+            "grep string",
+          },
         },
 
         [categories.ACTIONS] = {

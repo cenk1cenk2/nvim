@@ -57,9 +57,13 @@ function M.config()
     on_setup = function(config)
       require("winshift").setup(config.setup)
     end,
-    wk = {
-      ["W"] = { ":WinShift swap<CR>", "move window" },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.ACTIONS] = {
+          ["W"] = { ":WinShift swap<CR>", "move window" },
+        },
+      }
+    end,
   })
 end
 

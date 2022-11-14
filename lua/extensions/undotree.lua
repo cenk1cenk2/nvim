@@ -14,9 +14,13 @@ function M.config()
         disable = not config.active,
       }
     end,
-    wk = {
-      ["u"] = { ":UndotreeToggle<CR>", "toggle undo tree" },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.ACTIONS] = {
+          ["u"] = { ":UndotreeToggle<CR>", "toggle undo tree" },
+        },
+      }
+    end,
   })
 end
 

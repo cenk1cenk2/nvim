@@ -42,7 +42,7 @@ return {
       end,
       "show line diagnostics",
     },
-    ["ca"] = {
+    ["gh"] = {
       function()
         lvim.lsp_wrapper.code_action()
       end,

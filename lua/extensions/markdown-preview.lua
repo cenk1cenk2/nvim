@@ -37,7 +37,7 @@ function M.config()
     },
     wk = function(_, categories)
       return {
-        [categories.ACTIONS] = {
+        [categories.TASKS] = {
           ["m"] = { ":MarkdownPreview<CR>", "markdown preview start" },
           ["M"] = { ":MarkdownPreviewStop<CR>", "markdown preview stop" },
         },

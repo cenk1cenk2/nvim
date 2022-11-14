@@ -167,34 +167,27 @@ function M.config()
     on_setup = function(config)
       require("spectre").setup(config.setup)
     end,
-    keymaps = function(config)
-      local spectre = config.inject.spectre
-      return {
-        n = {
-          ["sa"] = { spectre.open_file_search, { desc = "search and replace in current file" } },
-          ["as"] = { spectre.open, { desc = "search and replace" } },
-        },
-        v = {
-          ["sa"] = { spectre.open_file_search, { desc = "search and replace in current file" } },
-          ["as"] = { spectre.open, { desc = "search and replace" } },
-        },
-      }
-    end,
     wk = function(config, categories)
       local spectre = config.inject.spectre
 
       return {
         -- find and replace
         [categories.SEARCH] = {
-          f = {
+          s = {
             function()
               spectre.open()
             end,
             "find and replace",
           },
+          w = {
+            function()
+              spectre.open { path = string.format("%s/**", vim.fn.expand "%:h") }
+            end,
+            "find and replace in current folder",
+          },
           v = {
             function()
-              spectre.open_visual()
+              spectre.open_visual { select_word = true }
             end,
             "find the word under cursor and replace",
           },

@@ -2,9 +2,9 @@ return {
   ---@usage change or add keymappings for insert mode
   insert_mode = {
     -- Move current line / block with Alt-j/k ala vscode.
-    ["<A-j>"] = "<Esc>:m .+1<CR>==gi",
+    -- ["<A-j>"] = "<Esc>:m .+1<CR>==gi",
     -- Move current line / block with Alt-j/k ala vscode.
-    ["<A-k>"] = "<Esc>:m .-2<CR>==gi",
+    -- ["<A-k>"] = "<Esc>:m .-2<CR>==gi",
 
     -- navigation
     ["<A-Up>"] = "<C-\\><C-N><C-w>k",

@@ -98,9 +98,13 @@ function M.config()
         vb = defaults,
       }
     end,
-    wk = {
-      ["y"] = { ":Telescope yank_history<CR>", "list yanky.nvim registers" },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.ACTIONS] = {
+          ["y"] = { ":Telescope yank_history<CR>", "list yanky.nvim registers" },
+        },
+      }
+    end,
   })
 end
 
