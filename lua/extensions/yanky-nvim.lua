@@ -20,6 +20,8 @@ function M.config()
         mapping = require "yanky.telescope.mapping",
         default_register = require("yanky.utils").get_default_register(),
         telescope = require "telescope",
+        yanky = require "yanky",
+        highlight = require "yanky.highlight",
       }
     end,
     setup = function(config)
@@ -70,32 +72,86 @@ function M.config()
     on_done = function(config)
       config.inject.telescope.load_extension "yank_history"
     end,
-    keymaps = function()
+    keymaps = function(config)
+      local yanky = config.inject.yanky
+      local highlight = config.inject.highlight
+
       local defaults = {
-        ["gq"] = { "<Plug>(YankyCycleForward)", desc = "yank cycle forward" },
-        ["gQ"] = { "<Plug>(YankyCycleBackward)", desc = "yank cycle backward" },
-        ["y"] = { "<Plug>(YankyYank)", desc = "yanky put before" },
-        -- ["gp"] = { "<Plug>(YankyPutAfterFilter)", desc = "yanky put after filter" },
-        -- ["gP"] = { "<Plug>(YankyPutBeforeFilter)", desc = "yanky put before filter" },
-        -- vim.api.nvim_set_keymap("n", "p", "<Plug>(YankyPutAfter)", {})
-        -- vim.api.nvim_set_keymap("n", "P", "<Plug>(YankyPutBefore)", {})
-        -- vim.api.nvim_set_keymap("x", "p", "<Plug>(YankyPutAfter)", {})
-        -- vim.api.nvim_set_keymap("x", "P", "<Plug>(YankyPutBefore)", {})
-        -- vim.api.nvim_set_keymap("n", "gp", "<Plug>(YankyGPutAfter)", {})
-        -- vim.api.nvim_set_keymap("n", "gP", "<Plug>(YankyGPutBefore)", {})
-        -- vim.api.nvim_set_keymap("x", "gp", "<Plug>(YankyGPutAfter)", {})
-        -- vim.api.nvim_set_keymap("x", "gP", "<Plug>(YankyGPutBefore)", {})
+        ["gq"] = {
+          function()
+            yanky.cycle(yanky.direction.forward)
+          end,
+          desc = "yank cycle forward",
+        },
+        ["gQ"] = {
+          function()
+            yanky.cycle(yanky.direction.backward)
+          end,
+          desc = "yank cycle backward",
+        },
+        ["y"] = {
+          "<Plug>(YankyYank)",
+          desc = "yanky put before",
+        },
       }
 
       local normal = {
-        ["p"] = { "<Plug>(YankyPutAfter)", desc = "yanky put after" },
-        ["P"] = { "<Plug>(YankyPutBefore)", desc = "yanky put before" },
+        ["p"] = {
+          function()
+            yanky.put(yanky.type.PUT_AFTER, false)
+          end,
+          desc = "yanky put after",
+        },
+        ["P"] = {
+          function()
+            yanky.put(yanky.type.PUT_BEFORE, false)
+          end,
+          desc = "yanky put before",
+        },
+      }
+
+      local cb = function(state)
+        if state.is_visual then
+          vim.cmd [[execute "normal! \<esc>"]]
+        end
+
+        local command = string.format(
+          'silent normal! %s"%s%s"_d%s',
+          state.is_visual and "gv" or "",
+          state.register,
+          state.count,
+          state.type
+        )
+
+        local ok, val = pcall(vim.cmd, command)
+
+        if not ok then
+          vim.notify(val, vim.log.levels.WARN)
+          return
+        end
+
+        highlight.highlight_put(state)
+      end
+
+      local visual = {
+        ["P"] = {
+          function()
+            yanky.put(yanky.type.PUT_AFTER, true, cb)
+          end,
+          desc = "yanky put after",
+        },
+        ["p"] = {
+          function()
+            yanky.put(yanky.type.PUT_BEFORE, true, cb)
+          end,
+          desc = "yanky put before",
+        },
       }
 
       return {
         n = vim.tbl_extend("force", vim.deepcopy(defaults), normal),
-        v = defaults,
-        vb = defaults,
+        v = vim.tbl_extend("force", vim.deepcopy(defaults), visual),
+        vb = vim.tbl_extend("force", vim.deepcopy(defaults), visual),
       }
     end,
     wk = function(_, categories)
