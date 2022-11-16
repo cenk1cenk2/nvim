@@ -91,7 +91,9 @@ function M.setup_document_highlight(client, bufnr)
   end)
 
   if not status_ok or not highlight_supported then
-    vim.api.nvim_del_augroup_by_name(group)
+    pcall(function()
+      vim.api.nvim_del_augroup_by_name(group)
+    end)
 
     return
   end
