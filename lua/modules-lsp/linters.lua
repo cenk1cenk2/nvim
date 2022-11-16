@@ -48,10 +48,10 @@ function M.setup()
       filetypes = { "sh", "bash", "zsh" },
     },
 
-    {
-      name = "protolint",
-      filetypes = { "proto" },
-    },
+    -- {
+    --   name = "protolint",
+    --   filetypes = { "proto" },
+    -- },
 
     -- {
     --   name = "mypy",
