@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "windows_nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     packer = function(config)
       return {
         "anuvyklack/windows.nvim",
