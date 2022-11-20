@@ -19,9 +19,13 @@ function M.config()
     on_done = function()
       require("utils.command").set_option { winminheight = 0, winminwidth = 0 }
     end,
-    wk = {
-      ["M"] = { ":MaximizerToggle<CR>", "maximize current window" },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.ACTIONS] = {
+          ["M"] = { ":MaximizerToggle<CR>", "maximize current window" },
+        },
+      }
+    end,
   })
 end
 

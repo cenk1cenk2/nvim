@@ -34,6 +34,7 @@ local extensions = {
   "rnvimr",
   "vim-visual-multi",
   "windows-nvim",
+  "vim-maximizer",
   "undotree",
   "nvim-ufo",
   "nvim-bqf",
