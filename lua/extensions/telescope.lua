@@ -55,7 +55,7 @@ function M.config()
               prompt_position = "top",
             },
             center = {
-              height = 0.4,
+              height = 0.5,
               preview_cutoff = 40,
               prompt_position = "top",
               width = 0.5,
@@ -65,8 +65,8 @@ function M.config()
               preview_cutoff = 40,
               width = 0.8,
             },
-            horizontal = { mirror = true, width = 0.9999, height = 0.90, prompt_position = "bottom" },
-            vertical = { mirror = false, width = 0.95, height = 0.95, prompt_position = "bottom" },
+            horizontal = { mirror = true, width = 0.9, height = 0.9, prompt_position = "bottom" },
+            vertical = { mirror = false, width = 0.9, height = 0.9, prompt_position = "bottom" },
           },
           file_ignore_patterns = {
             "**/yarn.lock",
