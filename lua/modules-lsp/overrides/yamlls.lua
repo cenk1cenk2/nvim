@@ -34,6 +34,9 @@ local opts = {
         ["https://bitbucket.org/atlassianlabs/atlascode/raw/main/resources/schemas/pipelines-schema.json"] = {
           "bitbucket-pipelines.yml",
         },
+        ["https://taskfile.dev/schema.json"] = {
+          "Taskfile*.{yml,yaml}",
+        },
       },
     },
   },
