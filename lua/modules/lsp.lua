@@ -2,7 +2,7 @@ local M = {}
 
 local Log = require "lvim.core.log"
 
-function M.LspSetup()
+function M.lsp_setup()
   local servers = require("lspconfig.util").available_servers()
 
   vim.ui.select(servers, {
@@ -25,10 +25,22 @@ function M.setup()
       {
         name = "LspSetup",
         fn = function()
-          M.LspSetup()
+          M.lsp_setup()
         end,
       },
     },
+    wk = function(_, categories)
+      return {
+        [categories.LSP] = {
+          ["r"] = {
+            function()
+              M.lsp_setup()
+            end,
+            "setup lsp for this buffer",
+          },
+        },
+      }
+    end,
   }
 end
 
