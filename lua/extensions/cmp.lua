@@ -34,7 +34,7 @@ function M.config()
           keyword_length = 1,
         },
         experimental = {
-          ghost_text = true,
+          ghost_text = false,
         },
         -- view = {
         --   entries = "native",
@@ -150,8 +150,8 @@ function M.config()
               cmp.select_next_item()
             elseif luasnip.expand_or_locally_jumpable() then
               luasnip.expand_or_jump()
-            elseif jumpable(1) then
-              luasnip.jump(1)
+            -- elseif jumpable(1) then
+            --   luasnip.jump(1)
             elseif has_words_before() then
               -- cmp.complete()
               fallback()
@@ -162,8 +162,8 @@ function M.config()
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-              luasnip.jump(-1)
+            -- elseif luasnip.jumpable(-1) then
+            --   luasnip.jump(-1)
             else
               fallback()
             end
