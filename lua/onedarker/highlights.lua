@@ -204,7 +204,7 @@ hl.treesitter = {
   ["@todo"] = { fg = c.cyan[600] },
   ["@type"] = { fg = c.yellow[600] },
   ["@type.builtin"] = { fg = c.yellow[600] },
-  ["@type.qualifier"] = { fg = c.yellow[600] },
+  ["@type.qualifier"] = { fg = c.purple[900] },
   ["@type.definition"] = { fg = c.yellow[600] },
   ["@variable"] = { fg = c.red[600] },
   ["@variable.builtin"] = { fg = c.yellow[600] },
