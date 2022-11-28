@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "nvim_ufo"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, false, {
+  require("utils.setup").define_extension(extension_name, true, {
     packer = function(config)
       return {
         "kevinhwang91/nvim-ufo",
