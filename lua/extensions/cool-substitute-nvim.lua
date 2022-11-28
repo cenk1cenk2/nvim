@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "cool_substitute_nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     packer = function(config)
       return {
         "otavioschwanck/cool-substitute.nvim",

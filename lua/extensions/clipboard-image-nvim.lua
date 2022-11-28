@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "clipboard_image_nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     packer = function(config)
       return {
         "ekickx/clipboard-image.nvim",

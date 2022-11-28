@@ -89,6 +89,7 @@ local extensions = {
   "package-info",
   "clipboard-image-nvim",
   "exrc-nvim",
+  "sibling-swap",
 }
 
 function M.config(config)

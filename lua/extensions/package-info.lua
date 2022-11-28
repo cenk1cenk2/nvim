@@ -6,7 +6,7 @@ local c = require "onedarker.colors"
 local extension_name = "package_info"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     packer = function(config)
       return {
         "vuki656/package-info.nvim",

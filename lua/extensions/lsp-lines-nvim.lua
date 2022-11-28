@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "lsp_lines_nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     packer = function(config)
       return {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
