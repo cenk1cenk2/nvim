@@ -14,7 +14,7 @@ lvim.lsp.ensure_installed = {
   "vue-language-server",
   "gopls",
   "tailwindcss-language-server",
-  "css-ls",
+  "css-lsp",
   "html-lsp",
   "svelte-language-server",
   "rust-analyzer",
