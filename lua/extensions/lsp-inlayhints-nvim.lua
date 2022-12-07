@@ -8,7 +8,7 @@ function M.config()
     packer = function(config)
       return {
         "lvimuser/lsp-inlayhints.nvim",
-        branch = "anticonceal",
+        -- branch = "anticonceal",
         config = function()
           require("utils.setup").packer_config "lsp_inlayhits_nvim"
         end,

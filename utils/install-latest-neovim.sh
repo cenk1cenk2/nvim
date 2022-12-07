@@ -2,7 +2,7 @@
 
 SECONDS=0
 # COMMIT_SHA="cb7da02701d542d3c1618f44f6217944986f09f9"
-PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
+# PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
 
 ## inject logger
 LOG_LEVEL=${LOG_LEVEL-"INFO"}
