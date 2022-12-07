@@ -39,9 +39,6 @@ function M.config()
           max_width = nil,
           min_width = 20,
 
-          -- Window transparency (0-100)
-          winblend = 0,
-
           mappings = {
             n = {
               ["<Esc>"] = "Close",
