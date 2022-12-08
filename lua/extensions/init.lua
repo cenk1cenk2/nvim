@@ -25,6 +25,7 @@ local extensions = {
   "neovim-session-manager",
   "stickybuf-nvim",
   "noice-nvim",
+  "big-file-nvim",
   -- extensions
   "hop",
   "vim-repeat",
