@@ -88,7 +88,7 @@ end
 
 function plugin_loader.recompile()
   plugin_loader.cache_clear()
-  -- plugin_loader.compile()
+  plugin_loader.compile()
 end
 
 function plugin_loader.reload(configurations)

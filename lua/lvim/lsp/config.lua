@@ -38,7 +38,6 @@ return {
       end,
     },
   },
-  document_highlight = true,
   code_lens_refresh = true,
   float = {
     focusable = true,
