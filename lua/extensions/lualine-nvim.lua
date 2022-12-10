@@ -295,8 +295,8 @@ function M.config()
         inactive_sections = {
           lualine_a = { components.mode },
           lualine_b = {},
-          lualine_c = components.noice_left,
-          lualine_x = components.noice_right,
+          lualine_c = {},
+          lualine_x = {},
           lualine_y = {},
           lualine_z = {},
         },

@@ -37,6 +37,7 @@ M.load_default_options = function()
     termguicolors = true, -- set term gui colors (most terminals support this)
     timeoutlen = 250, -- time to wait for a mapped sequence to complete (in milliseconds)
     title = true, -- set the title of window to the value of the titlestring
+    laststatus = 3,
     -- opt.titlestring = "%<%F%=%l/%L - nvim" -- what the title of the window will be set to
     undodir = undodir, -- set an undo directory
     undofile = true, -- enable persistent undo

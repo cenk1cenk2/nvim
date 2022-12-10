@@ -26,6 +26,7 @@ local extensions = {
   "stickybuf-nvim",
   "noice-nvim",
   "big-file-nvim",
+  "no-neck-pain-nvim",
   -- extensions
   "hop",
   "vim-repeat",
