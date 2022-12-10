@@ -47,9 +47,6 @@ function M.common_on_exit(client, bufnr)
     Log:trace "Called lsp.on_exit"
   end
 
-  if lvim.lsp.document_highlight then
-    autocmds.clear_augroup "lsp_document_highlight"
-  end
   if lvim.lsp.code_lens_refresh then
     autocmds.clear_augroup "lsp_code_lens_refresh"
   end
@@ -73,9 +70,6 @@ function M.common_on_attach(client, bufnr)
   end
 
   local lu = require "lvim.lsp.utils"
-  if lvim.lsp.document_highlight then
-    lu.setup_document_highlight(client, bufnr)
-  end
   if lvim.lsp.code_lens_refresh then
     lu.setup_codelens_refresh(client, bufnr)
   end
