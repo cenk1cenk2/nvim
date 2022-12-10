@@ -33,8 +33,8 @@ function M.config()
           },
         },
         fg_color = colors.fg,
-        current_win_hl_color = colors.green[600],
-        other_win_hl_color = colors.bg[400],
+        current_win_hl_color = colors.green[300],
+        other_win_hl_color = colors.orange[300],
       }
     end,
     on_setup = function(config)
