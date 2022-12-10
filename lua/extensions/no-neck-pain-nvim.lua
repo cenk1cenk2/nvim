@@ -37,9 +37,12 @@ function M.config()
 
       return {
         [categories.ACTIONS] = {
-          ["z"] = function()
-            no_neck_pain.start()
-          end,
+          ["z"] = {
+            function()
+              no_neck_pain.start()
+            end,
+            "no neck pain!",
+          },
         },
       }
     end,
