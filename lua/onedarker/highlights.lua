@@ -209,6 +209,17 @@ hl.treesitter = {
   ["@variable"] = { fg = c.red[600] },
   ["@variable.builtin"] = { fg = c.yellow[600] },
   ["@inlayhint"] = { italic = true, bg = c.bg[300], fg = c.bg[600] },
+  -- Semantic
+  ["@class"] = { fg = c.orange[600] },
+  ["@struct"] = { fg = c.orange[600] },
+  ["@enum"] = { fg = c.yellow[600] },
+  ["@enumMember"] = { fg = c.yellow[600] },
+  ["@event"] = { fg = c.cyan[600] },
+  ["@interface"] = { fg = c.yellow[600] },
+  ["@modifier"] = { fg = c.cyan[600] },
+  ["@regexp"] = { fg = c.orange[600] },
+  ["@typeParameter"] = { fg = c.yellow[600] },
+  ["@decorator"] = { fg = c.cyan[600] },
 }
 
 hl.lsp = {
