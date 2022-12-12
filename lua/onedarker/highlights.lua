@@ -217,7 +217,7 @@ hl.treesitter = {
   ["@event"] = { fg = c.cyan[600] },
   ["@interface"] = { fg = c.yellow[600] },
   ["@modifier"] = { fg = c.cyan[600] },
-  ["@regexp"] = { fg = c.orange[600] },
+  ["@regexp"] = { fg = c.orange[900] },
   ["@typeParameter"] = { fg = c.yellow[600] },
   ["@decorator"] = { fg = c.cyan[600] },
 }
