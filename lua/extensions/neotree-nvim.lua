@@ -23,6 +23,7 @@ function M.config()
     end,
     setup = function()
       local Log = require "lvim.core.log"
+      local system_registry = "+"
 
       local function get_telescope_options(state, opts)
         return vim.tbl_extend("force", opts, {
@@ -174,18 +175,8 @@ function M.config()
             ["x"] = "cut_to_clipboard",
             ["p"] = "paste_from_clipboard",
             ["c"] = "copy", -- takes text input for destination, also accepts the optional config.show_path option like "add":
-            ["C"] = {
-              "copy",
-              config = {
-                show_path = "none", -- "none", "relative", "absolute"
-              },
-            },
-            ["CC"] = {
-              "copy",
-              config = {
-                show_path = "relative", -- "none", "relative", "absolute"
-              },
-            },
+            ["Y"] = "copy_filename",
+            ["C"] = "copy_filepath",
             ["m"] = "move", -- takes text input for destination, also accepts the optional config.show_path option like "add".
             ["q"] = "close_window",
             ["R"] = "refresh",
@@ -257,6 +248,18 @@ function M.config()
               -- Linux: open file in default application
 
               vim.api.nvim_command(string.format("silent !xdg-open '%s'", path))
+            end,
+            copy_filename = function(state)
+              local node = state.tree:get_node()
+
+              vim.fn.setreg(system_registry, node.name, "c")
+            end,
+            copy_filepath = function(state)
+              local node = state.tree:get_node()
+              local full_path = node.path
+              local relative_path = full_path:sub(#state.path + 2)
+
+              vim.fn.setreg(system_registry, relative_path, "c")
             end,
             run_command = function(state)
               local node = state.tree:get_node()
