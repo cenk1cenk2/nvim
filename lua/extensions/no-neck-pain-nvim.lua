@@ -39,7 +39,7 @@ function M.config()
         [categories.ACTIONS] = {
           ["z"] = {
             function()
-              no_neck_pain.start()
+              no_neck_pain.toggle()
             end,
             "no neck pain!",
           },
