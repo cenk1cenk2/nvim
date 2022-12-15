@@ -58,7 +58,6 @@ lvim = {
 
   -- add disabled filetypes function was a bit unreliable due to cached loading of this object
   disabled_filetypes = {
-    "",
     "neo-tree",
     "terminal",
     "packer",
