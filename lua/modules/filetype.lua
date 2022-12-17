@@ -28,7 +28,7 @@ function M.setup()
       [".babelrc"] = "json",
     },
     pattern = {
-      ["Dockerfile%.*$"] = "dockerfile",
+      ["Dockerfile.*"] = "dockerfile",
       [".*%.yml"] = function()
         local ansible_project = vim.fs.find({ "ansible.cfg" }, { path = vim.loop.cwd(), type = "file" })
 

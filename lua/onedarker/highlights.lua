@@ -341,6 +341,8 @@ hl.langs.docker_compose = { dockercomposeKeywords = { fg = c.red[600] } }
 
 hl.langs.bash = { ["@parameter.bash"] = { fg = c.fg } }
 
+hl.langs.dockerfile = { ["@parameter.dockerfile"] = { fg = c.fg } }
+
 hl.langs.jinja = {
   jinjaTagBlock = { fg = c.yellow[600] },
   jinjaStatement = { fg = c.purple[600] },
