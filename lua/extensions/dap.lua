@@ -18,6 +18,11 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes {
+        "dap-repl",
+      }
+    end,
     to_inject = function()
       return {
         dap = require "dap",

@@ -14,6 +14,12 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes {
+        "LspTrouble",
+        "Trouble",
+      }
+    end,
     setup = {
       action_keys = { -- key mappings for actions in the trouble list
         close = "q", -- close the list

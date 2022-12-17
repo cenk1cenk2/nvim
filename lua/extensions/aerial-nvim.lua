@@ -14,6 +14,11 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes {
+        "aerial",
+      }
+    end,
     to_inject = function()
       return {
         telescope = require "telescope",

@@ -14,6 +14,12 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes {
+        "lspsagaoutline",
+        "lspsagarename",
+      }
+    end,
     to_inject = function()
       return {
         lspsaga_diagnostic = require "lspsaga.diagnostic",

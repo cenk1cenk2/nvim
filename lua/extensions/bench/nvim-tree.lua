@@ -14,6 +14,11 @@ function M.config()
         disable = not config.active,
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes {
+        "NvimTree",
+      }
+    end,
     setup = function()
       return {
         -- show_icons = { git = 1, folders = 1, files = 1, folder_arrows = 1, tree_width = 40 },
