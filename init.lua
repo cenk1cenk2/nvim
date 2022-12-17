@@ -25,7 +25,7 @@ local base_dir = init_path:match("(.*[/\\])"):sub(1, -2)
 --   git = { clone_timeout = 300 },
 --   display = {
 --     open_fn = function()
---       return require("packer.util").float { border = "single" }
+--       return require("packer.util").float { border = lvim.ui.border }
 --     end,
 --   },
 -- }

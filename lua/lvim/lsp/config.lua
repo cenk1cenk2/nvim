@@ -21,9 +21,9 @@ return {
     underline = true,
     severity_sort = true,
     float = {
-      focusable = false,
+      focusable = true,
       style = "minimal",
-      border = "single",
+      border = lvim.ui.border,
       source = "always",
       header = "",
       prefix = "",
@@ -40,7 +40,7 @@ return {
   float = {
     focusable = true,
     style = "minimal",
-    border = "single",
+    border = lvim.ui.border,
   },
   peek = {
     max_height = 36,

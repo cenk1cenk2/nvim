@@ -12,7 +12,7 @@ local defaults = {
     ---@usage Function called when a new window is opened, use for changing win settings/config
     on_open = function(win)
       if vim.api.nvim_win_is_valid(win) then
-        vim.api.nvim_win_set_config(win, { border = "single" })
+        vim.api.nvim_win_set_config(win, { border = lvim.ui.border })
       end
     end,
 

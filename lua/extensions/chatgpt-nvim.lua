@@ -28,12 +28,12 @@ function M.config()
       },
       chat_window = {
         border = {
-          style = "single",
+          style = lvim.ui.border,
         },
       },
       chat_input = {
         border = {
-          style = "single",
+          style = lvim.ui.border,
         },
         win_options = {
           winhighlight = "Normal:Normal",

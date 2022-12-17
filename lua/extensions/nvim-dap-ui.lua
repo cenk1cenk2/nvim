@@ -81,7 +81,7 @@ function M.config()
       floating = {
         max_height = nil, -- These can be integers or a float between 0 and 1.
         max_width = nil, -- Floats will be treated as percentage of your screen.
-        border = "single", -- Border style. Can be "single", "double" or "rounded"
+        border = lvim.ui.border, -- Border style. Can be lvim.ui.border, "double" or "rounded"
         mappings = {
           close = { "q", "<Esc>" },
         },

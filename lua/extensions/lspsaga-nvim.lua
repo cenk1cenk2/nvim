@@ -74,8 +74,8 @@ function M.config()
       },
       rename_action_quit = "<C-c>",
       rename_in_select = false,
-      -- "single" "double" "rounded" "bold" "plus"
-      border_style = "single",
+      -- lvim.ui.border "double" "rounded" "bold" "plus"
+      border_style = lvim.ui.border,
       --the range of 0 for fully opaque window (disabled) to 100 for fully
       --transparent background. Values between 0-30 are typically most useful.
       saga_winblend = 0,

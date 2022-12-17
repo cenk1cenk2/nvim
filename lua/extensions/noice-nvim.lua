@@ -100,7 +100,7 @@ function M.config()
           },
           cmdline_popup = {
             border = {
-              style = "single",
+              style = lvim.ui.border,
               padding = { 0, 1 },
             },
             filter_options = {},
@@ -121,7 +121,7 @@ function M.config()
             },
             size = "auto",
             border = {
-              style = "single",
+              style = lvim.ui.border,
             },
             zindex = 60,
             win_options = {
@@ -147,7 +147,7 @@ function M.config()
             },
             size = "auto",
             border = {
-              style = "single",
+              style = lvim.ui.border,
               padding = { 0, 1 },
               text = {
                 top = " Confirm ",
@@ -168,7 +168,7 @@ function M.config()
             },
             enter = true,
             border = {
-              style = "single",
+              style = lvim.ui.border,
             },
             position = {
               row = "75%",
@@ -199,7 +199,7 @@ function M.config()
               max_width = 120,
             },
             border = {
-              style = "single",
+              style = lvim.ui.border,
               padding = { 0, 0 },
             },
             position = { row = 2, col = 0 },
@@ -265,7 +265,7 @@ function M.config()
               format = { "{message}" },
               win_options = { concealcursor = "n", conceallevel = 3 },
               border = {
-                style = "single",
+                style = lvim.ui.border,
                 padding = { 0, 0 },
               },
             },

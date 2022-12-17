@@ -32,7 +32,7 @@ function M.config()
           anchor = "SW",
           -- relative = "cursor",
           relative = "editor",
-          border = "single",
+          border = lvim.ui.border,
 
           -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
           prefer_width = 60,

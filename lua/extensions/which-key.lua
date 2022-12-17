@@ -64,7 +64,7 @@ function M.config()
         scroll_up = "<c-u>", -- binding to scroll up inside the popup
       },
       window = {
-        border = "single", -- none, single, double, shadow
+        border = lvim.ui.border, -- none, single, double, shadow
         position = "bottom", -- bottom, top
         margin = { 0, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
         padding = { 1, 1, 1, 1 }, -- extra window padding [top, right, bottom, left]

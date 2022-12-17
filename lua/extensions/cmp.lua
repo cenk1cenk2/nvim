@@ -124,8 +124,8 @@ function M.config()
           end,
         },
         window = {
-          completion = cmp.config.window.bordered { border = "single" },
-          documentation = cmp.config.window.bordered { border = "single" },
+          completion = cmp.config.window.bordered { border = lvim.ui.border },
+          documentation = cmp.config.window.bordered { border = lvim.ui.border },
         },
         sources = {},
         mapping = cmp.mapping.preset.insert {

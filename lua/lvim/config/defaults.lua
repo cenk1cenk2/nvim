@@ -14,6 +14,10 @@ lvim = {
 
   use_icons = true,
 
+  ui = {
+    border = lvim.ui.border,
+  },
+
   builtin = {},
   extensions = {},
 
