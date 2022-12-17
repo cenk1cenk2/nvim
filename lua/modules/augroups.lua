@@ -6,22 +6,6 @@ function M.setup()
       {
         "FileType",
         {
-          group = "_filetype_settings",
-          pattern = "qf",
-          command = "set nobuflisted",
-        },
-      },
-      {
-        "FileType",
-        {
-          group = "_filetype_settings",
-          pattern = { "gitcommit", "markdown" },
-          command = "setlocal wrap spell",
-        },
-      },
-      {
-        "FileType",
-        {
           group = "_buffer_mappings",
           pattern = {
             "qf",
@@ -46,9 +30,40 @@ function M.setup()
         },
       },
       {
+        "TextYankPost",
+        {
+          group = "_filetype_settings",
+          pattern = "*",
+          desc = "Highlight text on yank",
+          callback = function()
+            require("vim.highlight").on_yank { higroup = "Search", timeout = 500 }
+          end,
+        },
+      },
+      {
         "FileType",
         {
-          group = "__ft_options",
+          group = "_filetype_settings",
+          pattern = "qf",
+          callback = function()
+            vim.bo.buflisted = false
+          end,
+        },
+      },
+      {
+        "FileType",
+        {
+          group = "_filetype_settings",
+          pattern = { "gitcommit", "markdown" },
+          callback = function()
+            vim.bo.spell = true
+          end,
+        },
+      },
+      {
+        "FileType",
+        {
+          group = "_filetype_settings",
           pattern = {
             "gitcommit",
             "gitrebase",
@@ -62,7 +77,7 @@ function M.setup()
       {
         "FileType",
         {
-          group = "__ft_options",
+          group = "_filetype_settings",
           pattern = "gitcommit",
           callback = function()
             vim.bo.wrap = true
@@ -72,21 +87,10 @@ function M.setup()
       {
         "FileType",
         {
-          group = "__ft_options",
+          group = "_filetype_settings",
           pattern = "yaml.ansible",
           callback = function()
             require("lvim.lsp.manager").setup "ansiblels"
-          end,
-        },
-      },
-      {
-        "TextYankPost",
-        {
-          group = "_general_settings",
-          pattern = "*",
-          desc = "Highlight text on yank",
-          callback = function()
-            require("vim.highlight").on_yank { higroup = "Search", timeout = 500 }
           end,
         },
       },
