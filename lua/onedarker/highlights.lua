@@ -483,6 +483,10 @@ hl.plugins.telescope = {
     bg = c.bg[100],
   },
 
+  Prompt = {
+    bg = c.bg[200],
+  },
+
   TelescopePromptBorder = {
     fg = c.bg[100],
     bg = c.bg[100],

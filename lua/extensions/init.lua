@@ -78,6 +78,7 @@ local extensions = {
   "mini-nvim-ai",
   "winshift-nvim",
   "exrc-nvim",
+  "chatgpt-nvim",
 }
 
 function M.config(config)
