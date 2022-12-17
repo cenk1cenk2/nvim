@@ -26,6 +26,19 @@ function M.config()
         top_p = 1,
         n = 1,
       },
+      chat_window = {
+        border = {
+          style = "single",
+        },
+      },
+      chat_input = {
+        border = {
+          style = "single",
+        },
+        win_options = {
+          winhighlight = "Normal:Normal",
+        },
+      },
       keymaps = {
         close = "<ESC>",
         yank_last = "<C-y>",

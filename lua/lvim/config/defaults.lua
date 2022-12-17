@@ -95,6 +95,7 @@ lvim = {
     "dapui_scopes",
     "dapui_repl",
     "dap-repl",
+    "chatgpt",
   },
 }
 
