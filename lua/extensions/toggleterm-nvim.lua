@@ -168,9 +168,11 @@ function M.config()
       {
         { "TermOpen" },
         {
-          group = "__TERMINAL",
+          group = "_toggle_term",
           pattern = "*",
-          command = "nnoremap <buffer><LeftRelease> <LeftRelease>i",
+          callback = function(event)
+            vim.keymap.set("n", "<LeftRelease>", "<LeftRelease>i", { silent = true, buffer = event.buf })
+          end,
         },
       },
     },

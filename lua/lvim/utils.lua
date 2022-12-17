@@ -85,8 +85,6 @@ function M.is_directory(path)
   return stat and stat.type == "directory" or false
 end
 
-M.join_paths = _G.join_paths
-
 ---Write data to a file
 ---@param path string can be full or relative to `cwd`
 ---@param txt string|table text to be written, uses `vim.inspect` internally for tables

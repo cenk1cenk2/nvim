@@ -2,7 +2,6 @@ local plugin_loader = {}
 
 local utils = require "lvim.utils"
 local Log = require "lvim.core.log"
-local join_paths = utils.join_paths
 local in_headless = #vim.api.nvim_list_uis() == 0
 
 -- we need to reuse this outside of init()

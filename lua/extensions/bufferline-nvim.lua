@@ -180,7 +180,7 @@ function M.config()
               vim.bo.bufhidden = "unload"
             end
           end,
-          group = "__empty_buffer",
+          group = "_empty_buffer",
         },
       },
     },

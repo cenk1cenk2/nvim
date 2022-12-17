@@ -341,7 +341,9 @@ function M.config()
           pattern = {
             "noice",
           },
-          command = "nnoremap <silent> <buffer> q :close<CR>",
+          callback = function(event)
+            vim.keymap.set("n", "q", ":close<CR>", { silent = true, buffer = event.buf })
+          end,
         },
       },
     },

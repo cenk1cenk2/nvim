@@ -18,7 +18,9 @@ function M.setup()
             "dap-float",
             "lspsagaoutline",
           },
-          command = "nnoremap <silent> <buffer> q :close<CR>",
+          callback = function(event)
+            vim.keymap.set("n", "q", ":close<CR>", { silent = true, buffer = event.buf })
+          end,
         },
       },
       {
@@ -26,7 +28,11 @@ function M.setup()
         {
           group = "_format_options",
           pattern = "*",
-          command = "setlocal formatoptions-=c formatoptions-=r formatoptions-=o",
+          callback = function()
+            vim.opt_local.formatoptions:remove "c"
+            vim.opt_local.formatoptions:remove "r"
+            vim.opt_local.formatoptions:remove "o"
+          end,
         },
       },
       {
@@ -81,16 +87,6 @@ function M.setup()
           pattern = "gitcommit",
           callback = function()
             vim.bo.wrap = true
-          end,
-        },
-      },
-      {
-        "FileType",
-        {
-          group = "_filetype_settings",
-          pattern = "yaml.ansible",
-          callback = function()
-            require("lvim.lsp.manager").setup "ansiblels"
           end,
         },
       },

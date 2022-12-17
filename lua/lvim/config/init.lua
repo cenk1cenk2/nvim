@@ -3,7 +3,7 @@ local Log = require "lvim.core.log"
 
 local M = {}
 local user_config_dir = get_config_dir()
-local user_config_file = utils.join_paths(user_config_dir, "config.lua")
+local user_config_file = join_paths(user_config_dir, "config.lua")
 
 ---Get the full path to the user configuration file
 ---@return string

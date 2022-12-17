@@ -44,7 +44,6 @@ function M.reset_cache()
     end
   end
   Log:trace(string.format("Cache invalidated for core modules: { %s }", table.concat(lvim_modules, ", ")))
-  require("lvim.lsp.templates").generate_templates()
 end
 
 function M.run_post_update()

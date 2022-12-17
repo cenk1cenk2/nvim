@@ -94,7 +94,7 @@ return {
     ["<C-j>"] = "<C-\\><C-N><C-w>j",
     ["<C-k>"] = "<C-\\><C-N><C-w>k",
     ["<C-l>"] = "<C-\\><C-N><C-w>l",
-    ["^"] = "<C-\\><C-n>",
+    ["`"] = "<C-\\><C-n>",
   },
 
   ---@usage change or add keymappings for visual mode

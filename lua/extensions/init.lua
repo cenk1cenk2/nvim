@@ -49,6 +49,7 @@ local extensions = {
   "neogen",
   "coc",
   "lspsaga-nvim",
+  "nvim-navic",
   "nvim-dap-ui",
   "nvim-dap-virtual-text",
   "vim-jinja2-syntax",

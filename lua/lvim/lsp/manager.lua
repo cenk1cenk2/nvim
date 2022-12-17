@@ -61,18 +61,16 @@ end
 -- this helps guarding against a data-race condition where a server can get configured twice
 -- which seems to occur only when attaching to single-files
 local function client_is_configured(server_name, ft)
-  -- hack to make ansiblels work
-  if vim.tbl_contains({ "ansiblels" }, server_name) then
-    return false
-  end
   ft = ft or vim.bo.filetype
+
   local active_autocmds = vim.api.nvim_get_autocmds { event = "FileType", pattern = ft }
-  for _, result in ipairs(active_autocmds) do
-    if result.command:match(server_name) then
+  for _, result in pairs(active_autocmds) do
+    if result.group_name:match "lspconfig" then
       Log:debug(string.format("[%q] is already configured", server_name))
       return true
     end
   end
+
   return false
 end
 

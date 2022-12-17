@@ -71,21 +71,6 @@ function M.config()
         enable = true,
         separator = "  ",
         show_file = true,
-        click_support = function(node, clicks, button, modifiers)
-          -- To see all avaiable details: vim.pretty_print(node)
-          local st = node.range.start
-          local en = node.range["end"]
-          if button == "l" then
-            vim.fn.cursor(st.line + 1, st.character + 1)
-          elseif button == "r" then
-            vim.fn.cursor(en.line + 1, en.character + 1)
-          elseif button == "m" then
-            -- middle click to visual select node
-            vim.fn.cursor(st.line + 1, st.character + 1)
-            vim.cmd "normal v"
-            vim.fn.cursor(en.line + 1, en.character + 1)
-          end
-        end,
       },
       rename_action_quit = "<C-c>",
       rename_in_select = false,

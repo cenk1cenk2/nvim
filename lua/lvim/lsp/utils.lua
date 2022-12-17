@@ -25,7 +25,7 @@ end
 function M.get_client_capabilities(client_id)
   local client
   if not client_id then
-    local buf_clients = vim.lsp.buf_get_clients()
+    local buf_clients = vim.lsp.get_active_clients()
     for _, buf_client in pairs(buf_clients) do
       if buf_client.name ~= "null-ls" then
         client = buf_client

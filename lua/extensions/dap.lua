@@ -156,14 +156,16 @@ function M.config()
         {
           { "BufWritePost" },
           {
-            group = "__DEBUG_LAUNCHER",
+            group = "_dap",
             pattern = "launch.json",
             -- command = function()
             --   vscode.load_launchjs()
             --
             --   log:info "Reloaded launch.json."
             -- end,
-            command = ":lua require('dap.ext.vscode').load_launchjs()",
+            callback = function()
+              require("dap.ext.vscode").load_launchjs()
+            end,
           },
         },
       }

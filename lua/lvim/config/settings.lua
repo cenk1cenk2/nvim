@@ -2,7 +2,6 @@ local M = {}
 
 M.load_default_options = function()
   local utils = require "lvim.utils"
-  local join_paths = utils.join_paths
 
   local undodir = join_paths(get_cache_dir(), "undo")
 
