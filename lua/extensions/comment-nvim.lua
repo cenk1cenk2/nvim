@@ -15,6 +15,11 @@ function M.config()
         disable = not config.active,
       }
     end,
+    to_inject = function()
+      return {
+        ft = require "Comment.ft",
+      }
+    end,
     setup = {
       ---Add a space b/w comment and the line
       ---@type boolean
@@ -69,6 +74,16 @@ function M.config()
     on_setup = function(config)
       require("Comment").setup(config.setup)
     end,
+    on_done = function(config)
+      local ft = config.inject.ft
+
+      for _, value in pairs(config.comment_strings) do
+        ft(value[1], value[2])
+      end
+    end,
+    comment_strings = {
+      { { "gomod" }, "//%s" },
+    },
     keymaps = {
       normal_mode = {
         ["<C-\\>"] = "<CMD>lua require('Comment.api').call('gcc')<CR>g@$",

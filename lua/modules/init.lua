@@ -3,8 +3,9 @@ local M = {}
 local modules = {
   "nvim",
   "lsp",
-  "executables",
   "augroups",
+  "filetype",
+  "executables",
   "telescope",
   "unimpaired",
   "scratch",
