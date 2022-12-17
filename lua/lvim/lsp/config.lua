@@ -20,7 +20,7 @@ return {
       source = "always",
     },
     update_in_insert = false,
-    underline = false,
+    underline = true,
     severity_sort = true,
     float = {
       focusable = false,
