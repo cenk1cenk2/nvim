@@ -48,8 +48,10 @@ function M.config()
             search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
             shell = { pattern = "^:%s*!", icon = "$", lang = "bash" },
             read = { pattern = "^:%s*r!", icon = "$", lang = "bash" },
-            lua = { pattern = "^:%s*lua%s+", icon = "", lang = "lua" },
             -- lua = false, -- to disable a format, set to `false`
+            lua = { pattern = "^:%s*lua%s+", icon = "", lang = "lua" },
+            help = { pattern = "^:%s*he?l?p?%s+", icon = "" },
+            input = {}, -- Used by input()
           },
         },
         messages = {
@@ -337,7 +339,7 @@ function M.config()
       config.inject.telescope.load_extension "noice"
     end,
     wk = {
-      ["M"] = { ":NoiceTelescope<CR>", "messages" },
+      ["M"] = { ":Noice<CR>", "messages" },
     },
     autocmds = {
       {
