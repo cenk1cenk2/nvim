@@ -44,7 +44,7 @@ lvim.lsp.ensure_installed = {
   "golangci-lint",
   "shellharden",
   "beautysh",
-  "codespell",
+  "cspell",
   -- "checkmake",
   -- "revive",
   -- "rustfmt",

@@ -29,8 +29,12 @@ function M.setup()
       filetypes = { "python" },
     },
 
+    -- {
+    --   name = "codespell",
+    -- },
+
     {
-      name = "codespell",
+      name = "cspell",
     },
     -- {
     --   name = "ansiblelint",

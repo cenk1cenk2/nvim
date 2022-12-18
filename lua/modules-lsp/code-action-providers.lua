@@ -14,6 +14,9 @@ function M.setup()
       filetypes = { "sh", "bash", "zsh" },
     },
 
+    {
+      name = "cspell",
+    },
     -- {
     --   name = "refactoring",
     -- },
