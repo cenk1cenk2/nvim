@@ -1,0 +1,36 @@
+{
+  "$schema": "https://raw.githubusercontent.com/streetsidesoftware/cspell/main/cspell.schema.json",
+  "version": "0.2",
+  "language": "en",
+  "ignorePaths": ["node_modules", ".git"],
+  "languageSettings": [
+    {
+      "languageId": "python",
+      "includeRegExpList": ["/#.*/", "/('''|\"\"\")[^\\1]+?\\1/g", "strings"]
+    },
+    {
+      "languageId": "yaml",
+      "includeRegExpList": ["/#.*/", "/('''|\"\"\")[^\\1]+?\\1/g", "strings"]
+    },
+    {
+      "languageId": "javascript,typescript",
+      "includeRegExpList": ["CStyleComment", "strings"]
+    },
+    {
+      "languageId": "cpp,c",
+      "allowCompoundWords": false,
+      "includeRegExpList": ["CStyleComment", "string"],
+      "ignoreRegExpList": ["/#include.*/"]
+    }
+  ],
+  "patterns": [
+    {
+      "name": "comment-single-line",
+      "pattern": "/#.*/g"
+    },
+    {
+      "name": "comment-multi-line",
+      "pattern": "/(?:\\/\\*[\\s\\S]*?\\*\\/)/g"
+    }
+  ]
+}

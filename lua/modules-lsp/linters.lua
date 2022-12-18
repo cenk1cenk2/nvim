@@ -33,9 +33,10 @@ function M.setup()
     --   name = "codespell",
     -- },
 
-    {
-      name = "cspell",
-    },
+    -- {
+    --   name = "cspell",
+    --   args = { "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.cspell.json" },
+    -- },
     -- {
     --   name = "ansiblelint",
     --   filetypes = { "yaml.ansible" },
