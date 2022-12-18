@@ -12,13 +12,21 @@ function M.config()
       return {
         {
           "JoosepAlviste/nvim-ts-context-commentstring",
-          event = "BufReadPost",
           requires = { "nvim-treesitter/nvim-treesitter" },
         },
-        { "p00f/nvim-ts-rainbow", run = ":TSUpdate", requires = { "nvim-treesitter/nvim-treesitter" } },
-        { "windwp/nvim-ts-autotag", requires = { "nvim-treesitter/nvim-treesitter" } },
-        -- { "nvim-treesitter/playground", requires = { "nvim-treesitter/nvim-treesitter" } },
-        { "nullchilly/lsp-playground", requires = { "nvim-treesitter/nvim-treesitter" } },
+        {
+          "p00f/nvim-ts-rainbow",
+          run = ":TSUpdate",
+          requires = { "nvim-treesitter/nvim-treesitter" },
+        },
+        {
+          "windwp/nvim-ts-autotag",
+          requires = { "nvim-treesitter/nvim-treesitter" },
+        },
+        -- {
+        --   "nvim-treesitter/playground",
+        --   after = { "nvim-treesitter" },
+        -- },
       }
     end,
   })

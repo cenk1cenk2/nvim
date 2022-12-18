@@ -8,6 +8,7 @@ function M.config()
     packer = function(config)
       return {
         "rcarriga/nvim-dap-ui",
+        -- event = "BufWinEnter",
         requires = { "mfussenegger/nvim-dap" },
         after = { "nvim-dap" },
         config = function()

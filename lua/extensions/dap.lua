@@ -10,7 +10,7 @@ function M.config()
     packer = function(config)
       return {
         "mfussenegger/nvim-dap",
-        event = "BufWinEnter",
+        -- event = "BufWinEnter",
         requires = {},
         config = function()
           require("utils.setup").packer_config "dap"

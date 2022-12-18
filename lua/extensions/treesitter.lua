@@ -130,7 +130,8 @@ function M.config()
       return {
         [categories.TREESITTER] = {
           i = { ":TSConfigInfo<CR>", "treesitter info" },
-          k = { ":TSHighlightCapturesUnderCursor<CR>", "show treesitter theme color" },
+          -- k = { ":TSHighlightCapturesUnderCursor<CR>", "show treesitter theme color" },
+          k = { ":Inspect<CR>", "inspect color scheme" },
           u = { ":TSUpdate<CR>", "update installed treesitter packages" },
           U = { ":TSUninstall all<CR>", "uninstall all treesitter packages" },
           R = { ":TSInstall all<CR>", "reinstall all treesitter packages" },
