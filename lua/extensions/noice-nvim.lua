@@ -337,7 +337,7 @@ function M.config()
       config.inject.telescope.load_extension "noice"
     end,
     wk = {
-      ["M"] = { ":Noice<CR>", "messages" },
+      ["M"] = { ":NoiceTelescope<CR>", "messages" },
     },
     autocmds = {
       {
