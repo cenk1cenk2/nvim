@@ -27,7 +27,19 @@ function M.config()
       debug = false,
       -- only add a left buffer as "padding", which leave all the current buffer expand
       -- to the right of the screen.
-      leftPaddingOnly = false,
+      buffers = {
+        -- The background options of the side buffer(s).
+        background = {
+          colorCode = require("onedarker.colors").bg[100],
+        },
+        -- When `false`, the `left` padding buffer won't be created.
+        left = true,
+        -- When `false`, the `right` padding buffer won't be created.
+        right = true,
+        -- When `true`, the side buffers will be named `no-neck-pain-left` and `no-neck-pain-right` respectively.
+        showName = false,
+        -- The buffer options when creating the buffer.
+      },
     },
     on_setup = function(config)
       require("no-neck-pain").setup(config.setup)

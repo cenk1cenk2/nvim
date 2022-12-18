@@ -54,6 +54,7 @@ function M.config()
           g = true, -- bindings for prefixed with g,
         },
       },
+      operators = { gc = "Comments" },
       icons = {
         breadcrumb = "»", -- symbol used in the command line area that shows your active key combo
         separator = "➜", -- symbol used between a key and it's label
@@ -76,6 +77,8 @@ function M.config()
         align = "left", -- align columns left, center or right
       },
       triggers = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r" },
+      show_help = true, -- show help message on the command line when the popup is visible
+      show_keys = true, -- show the currently pressed key and its label as a message in the command line
     },
     on_setup = function(config, fn)
       local which_key = config.inject.which_key
