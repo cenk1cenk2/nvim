@@ -5,6 +5,7 @@
   "ignorePaths": ["node_modules", ".git"],
   "dictionaryDefinitions": [{ "name": "custom", "path": "./cspell-dict.txt" }],
   "dictionaries": ["custom"],
+  "numSuggestions": 3,
   "languageSettings": [
     {
       "languageId": ["markdown", "plaintext", "text", "gitcommit"],
