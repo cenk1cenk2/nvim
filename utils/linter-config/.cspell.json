@@ -8,24 +8,24 @@
   "numSuggestions": 3,
   "languageSettings": [
     {
+      "languageId": ["*"],
+      "includeRegExpList": ["CStyleComment", "PythonComment", "LuaComment", "String"],
+      "ignoreRegExpList": ["/#include.*/", "import\\s*\\((.|[\r\n])*?\\)", "/import.*/", "/.*require\\(.*\\)/"]
+    },
+    {
       "languageId": ["markdown", "plaintext", "text", "gitcommit"],
       "includeRegExpList": ["Everything"],
-      "ignoreRegExpList": ["string"]
+      "ignoreRegExpList": ["String"]
     },
     {
       "languageId": ["yaml.ansible"],
       "allowCompoundWords": false,
-      "ignoreRegExpList": ["string"]
+      "ignoreRegExpList": ["String"]
     },
     {
       "languageId": ["cpp,c"],
       "allowCompoundWords": false,
-      "ignoreRegExpList": ["/#include.*/"]
-    },
-    {
-      "languageId": ["*"],
-      "includeRegExpList": ["CStyleComment", "strings"],
-      "ignoreRegExpList": ["import\\s*\\((.|[\r\n])*?\\)", "/import.*/", "/require.*/"]
+      "ignoreRegExpList": []
     }
   ],
   "patterns": [
@@ -34,38 +34,14 @@
       "pattern": "/\\b(?:rf|fr|f|r|u|ur|b|br)'/gi"
     },
     {
-      "name": "string_binary",
-      "pattern": "/\\bbr?(['\"]).*?\\1/gi"
+      "name": "Lua",
+      "description": "Matches all comments in a Lua file.",
+      "pattern": ["/--.*|(?:('''|\"\"\")[^\\1]+?\\1)/gm"]
     },
     {
-      "name": "string_raw",
-      "pattern": "/\\bu?r(['\"]).*?\\1/gi"
-    },
-    {
-      "name": "string-multi-line",
-      "pattern": "/(\"\"\"|''')[^\\1]*?\\1/g"
-    },
-    {
-      "name": "string-single-line",
-      "pattern": "/((?<!\\\\)(?:'|\"))(?!\\1).*?(?<!\\1)(?<!\\\\)\\1(?!\\1)/g"
-    },
-    {
-      "name": "strings",
-      "description": "Matches all strings in a Python File.",
-      "pattern": ["/((?<!\\\\)(?:'|\"))(?!\\1).*?(?<!\\1)(?<!\\\\)\\1(?!\\1)/g", "/(\"\"\"|''')[^\\1]*?\\1/g"]
-    },
-    {
-      "name": "comment-single-line",
-      "pattern": "/#.*/g"
-    },
-    {
-      "name": "comment-multi-line",
-      "pattern": "/(\"\"\"|''')[^\\1]*?\\1/g"
-    },
-    {
-      "name": "comments",
-      "description": "Matches all comments in a Python File.",
-      "pattern": ["/#.*/g", "/(\"\"\"|''')[^\\1]*?\\1/g"]
+      "name": "PythonComment",
+      "description": "Matches all comments in a Python file.",
+      "pattern": ["/#.*|(?:('''|\"\"\")[^\\1]+?\\1)/gm"]
     }
   ]
 }
