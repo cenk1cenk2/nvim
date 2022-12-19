@@ -11,7 +11,7 @@
     {
       "languageId": ["*"],
       "includeRegExpList": ["CStyleComment", "PythonComment", "LuaComment", "Logger"],
-      "ignoreRegExpList": ["ImportStatement"]
+      "ignoreRegExpList": ["ImportStatement", "String"]
     },
     {
       "languageId": ["markdown", "plaintext", "text", "gitcommit"],
