@@ -23,7 +23,8 @@
     },
     {
       "languageId": ["*"],
-      "includeRegExpList": ["CStyleComment", "strings"]
+      "includeRegExpList": ["CStyleComment", "strings"],
+      "ignoreRegExpList": ["import\\s*\\((.|[\r\n])*?\\)", "/import.*/", "/require.*/"]
     }
   ],
   "patterns": [
