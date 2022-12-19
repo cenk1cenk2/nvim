@@ -11,7 +11,7 @@
     {
       "languageId": ["*"],
       "includeRegExpList": ["CStyleComment", "PythonComment", "LuaComment", "Logger"],
-      "ignoreRegExpList": ["/#include.*/", "import\\s*\\((.|[\r\n])*?\\)", "/import.*/", "/.*require\\(.*\\)/"]
+      "ignoreRegExpList": ["ImportStatement"]
     },
     {
       "languageId": ["markdown", "plaintext", "text", "gitcommit"],
@@ -46,7 +46,11 @@
     {
       "name": "Logger",
       "description": "Matches all logger patterns.",
-      "pattern": ["/(console\\.|log|Log|Error).*|(?:('''|\"\"\"|```)[^\\2]+?\\2)/gm"]
+      "pattern": ["/(console\\.|log|Log|Error|err).*|(?:('''|\"\"\"|```)[^\\2]+?\\2)/gm"]
+    },
+    {
+      "name": "ImportStatement",
+      "pattern": ["/#include.*/", "import\\s*\\((.|[\r\n])*?\\)", "/import.*/", "/.*require\\(.*\\)/"]
     }
   ]
 }
