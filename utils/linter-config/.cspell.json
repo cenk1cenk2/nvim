@@ -46,7 +46,7 @@
     {
       "name": "Logger",
       "description": "Matches all logger patterns.",
-      "pattern": ["/(console\\.|log|Log).*|(?:('''|\"\"\"|```)[^\\2]+?\\2)/gm"]
+      "pattern": ["/(console\\.|log|Log|Error).*|(?:('''|\"\"\"|```)[^\\2]+?\\2)/gm"]
     }
   ]
 }
