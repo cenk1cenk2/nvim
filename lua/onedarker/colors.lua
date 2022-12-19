@@ -25,6 +25,7 @@ local colors = {
   },
 
   red = {
+    [100] = "#2d1617",
     [300] = "#a04952",
     [600] = "#e06c75",
     [900] = "#ff7684",
@@ -43,18 +44,22 @@ local colors = {
   },
 
   green = {
+    [100] = "#122b0a",
     [300] = "#729c0c",
     [600] = "#98c379",
     [900] = "#d4ff79",
   },
 
   cyan = {
+    [100] = "#112427",
     [300] = "#2b6f77",
     [600] = "#56b6c2",
     [900] = "#87e6e2",
   },
 
   blue = {
+    [100] = "#132330",
+    [200] = "#1d3448",
     [300] = "#2c5372",
     [600] = "#61afef",
     [900] = "#93cfff",
@@ -74,10 +79,14 @@ local colors = {
 }
 
 colors.diff = {
-  add = "#1a311c",
-  delete = "#2d0d1a",
-  change = "#080d1b",
-  text = "#0b1f30",
+  add = colors.green[100],
+  delete = colors.red[100],
+  text = colors.blue[100],
+  change = colors.bg[100],
+  add_bright = colors.green[600],
+  delete_bright = colors.red[600],
+  text_bright = colors.blue[600],
+  change_bright = colors.cyan[600],
 }
 
 colors.file = {
