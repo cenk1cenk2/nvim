@@ -29,13 +29,13 @@ function M.setup()
     },
     pattern = {
       ["Dockerfile.*"] = "dockerfile",
-      [".*%.yml"] = function()
+      [".*%.yml"] = function(path)
         local ansible_project = vim.fs.find(
           { "ansible.cfg", ".ansible-lint", ".vault-password" },
-          { path = vim.loop.cwd(), type = "file" }
+          { path = vim.fs.dirname(path), type = "file" }
         )
 
-        if #ansible_project > 0 then
+        if ansible_project and #ansible_project > 0 then
           return "yaml.ansible"
         end
 
