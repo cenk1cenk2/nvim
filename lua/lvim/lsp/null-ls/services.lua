@@ -28,8 +28,8 @@ function M.register_sources(configs, method)
   local sources, registered_names = {}, {}
 
   for _, config in ipairs(configs) do
-    local cmd = config.command
-    local name = config.name or cmd:gsub("-", "_")
+    local command = config.command
+    local name = config.name or command:gsub("-", "_")
     local type = method == null_ls.methods.CODE_ACTION and "code_actions" or null_ls.methods[method]:lower()
     local source = type and null_ls.builtins[type][name]
     Log:trace(string.format("Received request to register [%s] as a %s source", name, type))
@@ -43,18 +43,11 @@ function M.register_sources(configs, method)
       return registered_names
     end
 
-    local opts = {
+    local opts = vim.tbl_extend("force", vim.deepcopy(config), {
       name = name,
-      command = cmd,
-      dynamic_command = config.dynamic_command,
-      env = config.env,
-      extra_args = config.extra_args,
-      filetypes = config.filetypes,
-      extra_filetypes = config.extra_filetypes,
+      command = command,
       disabled_filetypes = vim.list_extend(lvim.disabled_filetypes, config.disabled_filetypes or {}),
-      condition = config.condition,
-      runtime_condition = config.runtime_condition,
-    }
+    })
 
     Log:trace("Registering source " .. name)
     Log:trace(vim.inspect(opts))

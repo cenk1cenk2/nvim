@@ -30,7 +30,7 @@ lvim.lsp.ensure_installed = {
   "markdownlint",
   "markdown-toc",
   "prettierd",
-  "misspell",
+  -- "misspell",
   "shfmt",
   "black",
   "isort",

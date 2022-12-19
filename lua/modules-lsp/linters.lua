@@ -9,9 +9,9 @@ function M.setup()
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
-    {
-      name = "misspell",
-    },
+    -- {
+    --   name = "misspell",
+    -- },
 
     {
       name = "markdownlint",
@@ -33,10 +33,10 @@ function M.setup()
     --   name = "codespell",
     -- },
 
-    -- {
-    --   name = "cspell",
-    --   args = { "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.cspell.json" },
-    -- },
+    {
+      name = "cspell",
+      extra_args = { "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.cspell.json" },
+    },
     -- {
     --   name = "ansiblelint",
     --   filetypes = { "yaml.ansible" },

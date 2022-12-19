@@ -14,10 +14,10 @@ function M.setup()
       filetypes = { "sh", "bash", "zsh" },
     },
 
-    -- {
-    --   name = "cspell",
-    --   extra_args = { "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.cspell.json" },
-    -- },
+    {
+      name = "cspell",
+      extra_args = { "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.cspell.json" },
+    },
     -- {
     --   name = "refactoring",
     -- },

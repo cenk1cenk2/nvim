@@ -56,16 +56,16 @@ function M.setup()
           end,
         },
       },
-      {
-        "FileType",
-        {
-          group = "_filetype_settings",
-          pattern = { "gitcommit", "markdown" },
-          callback = function()
-            vim.bo.spell = true
-          end,
-        },
-      },
+      -- {
+      --   "FileType",
+      --   {
+      --     group = "_filetype_settings",
+      --     pattern = { "gitcommit", "markdown" },
+      --     callback = function()
+      --       vim.bo.spell = true
+      --     end,
+      --   },
+      -- },
       {
         "FileType",
         {
