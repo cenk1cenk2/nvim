@@ -53,6 +53,7 @@ function M.setup()
           pattern = "qf",
           callback = function()
             vim.bo.buflisted = false
+            vim.cmd [[wincmd J]]
           end,
         },
       },

@@ -11,9 +11,6 @@ function M.setup()
       ["tf"] = "terraform",
       ["tfvars"] = "terraform",
       ["zsh"] = "sh",
-      ["qf"] = function()
-        vim.cmd [[wincmd J]]
-      end,
     },
     filename = {
       [".editorconfig"] = "toml",
