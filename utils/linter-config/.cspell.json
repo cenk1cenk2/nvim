@@ -6,7 +6,6 @@
   "dictionaryDefinitions": [{ "name": "custom", "path": "./cspell-dict.txt" }],
   "dictionaries": ["custom"],
   "numSuggestions": 3,
-  "diagnosticLevel": "Hint",
   "languageSettings": [
     {
       "languageId": ["*"],

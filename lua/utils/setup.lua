@@ -6,9 +6,16 @@ local keys_which_key = require "keys.which-key"
 
 ---
 ---@param mappings table
-function M.load_wk_mappings(mappings)
+function M.load_wk_mappings(mappings, mode)
+  local current
+  if mode == "v" then
+    current = lvim.wk.vmappings
+  else
+    current = lvim.wk.mappings
+  end
+
   for key, value in pairs(mappings) do
-    lvim.wk.mappings[key] = vim.tbl_deep_extend("force", lvim.wk.mappings[key] or {}, value)
+    current[key] = vim.tbl_deep_extend("force", current[key] or {}, value)
   end
 end
 
@@ -45,6 +52,7 @@ function M.define_extension(extension_name, active, config)
     autocmds = { config.autocmds, { "t", "f" }, true },
     keymaps = { config.keymaps, { "t", "f" }, true },
     wk = { config.wk, { "t", "f" }, true },
+    wk_v = { config.wk_v, { "t", "f" }, true },
     legacy_setup = { config.legacy_setup, "t", true },
     setup = { config.legacy_setup, { "t", "f" }, true },
     on_setup = { config.on_setup, "f", true },
@@ -179,6 +187,10 @@ function M.run(config)
 
   if config ~= nil and config.wk ~= nil then
     M.load_wk_mappings(M.evaluate_property(config.wk, config, keys_which_key.CATEGORIES))
+  end
+
+  if config ~= nil and config.wk_v ~= nil then
+    M.load_wk_mappings(M.evaluate_property(config.wk_v, config, keys_which_key.CATEGORIES), "v")
   end
 
   if config ~= nil and config.hl ~= nil then

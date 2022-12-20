@@ -45,7 +45,7 @@ function M.config()
         },
       },
       keymaps = {
-        close = "<ESC>",
+        close = "<C-c>",
         yank_last = "<C-y>",
         scroll_up = "<C-u>",
         scroll_down = "<C-d>",
@@ -57,7 +57,8 @@ function M.config()
     wk = function(_, categories)
       return {
         [categories.ACTIONS] = {
-          ["a"] = { ":ChatGPT<CR>", "run chatgpt ai" },
+          ["a"] = { ":ChatGPT<CR>", "run chatgpt-ai" },
+          ["A"] = { ":ChatGPTEditWithInstructions<CR>", "edit code with chatgpt-ai" },
         },
       }
     end,
