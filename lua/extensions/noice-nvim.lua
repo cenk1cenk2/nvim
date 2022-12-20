@@ -310,22 +310,19 @@ function M.config()
         throttle = 1000 / 30,
         routes = {
           {
-            view = "split",
-            filter = { event = "msg_show", min_height = 5 },
-          },
-          {
-            filter = { event = "msg_show", kind = { "search_count", "echo", "echomsg" } },
+            filter = { event = "msg_show", kind = { "search_count" } },
             opts = { skip = true },
           },
           {
-            filter = { event = "split", kind = { "search_count" } },
+            view = "notify",
+            filter = { event = "msg_show", kind = { "echomsg" } }, -- echo
             opts = { skip = true },
           },
           {
             view = "notify",
             filter = {
               event = "noice",
-              kind = { "stats", "debug", "echo" },
+              kind = { "stats", "debug" },
             },
             opts = { replace = true },
           },
