@@ -5,15 +5,14 @@ local extension_name = "telescope_dap"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "nvim-telescope/telescope-dap.nvim",
-        requires = { "nvim-telescope/telescope.nvim" },
-        after = { "nvim-dap" },
+        dependencies = { "nvim-telescope/telescope.nvim" },
         config = function()
-          require("utils.setup").packer_config "telescope_dap"
+          require("utils.setup").plugin_init "telescope_dap"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     to_inject = function()

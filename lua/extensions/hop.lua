@@ -5,13 +5,15 @@ local extension_name = "hop"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "phaazon/hop.nvim",
         config = function()
-          require("utils.setup").packer_config "hop"
+          require("utils.setup").plugin_init "hop"
         end,
-        disable = not config.active,
+        event = "BufReadPost",
+        keys = { "f", "ff", "F", "FF", "t", "tt", "T", "TT", "s", "ss", "sw", "S", "SS" },
+        enabled = config.active,
       }
     end,
     to_inject = function()

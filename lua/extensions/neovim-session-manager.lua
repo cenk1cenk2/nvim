@@ -7,13 +7,13 @@ local extension_name = "session_manager"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "Shatur/neovim-session-manager",
         config = function()
-          require("utils.setup").packer_config "session_manager"
+          require("utils.setup").plugin_init "session_manager"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     to_inject = function()

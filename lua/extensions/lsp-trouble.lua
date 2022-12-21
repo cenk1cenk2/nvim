@@ -5,13 +5,14 @@ local extension_name = "lsp_trouble"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "folke/lsp-trouble.nvim",
         config = function()
-          require("utils.setup").packer_config "lsp_trouble"
+          require("utils.setup").plugin_init "lsp_trouble"
         end,
-        disable = not config.active,
+        cmd = { "TroubleToggle", "Trouble" },
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

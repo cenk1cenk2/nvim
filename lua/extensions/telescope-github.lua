@@ -5,14 +5,14 @@ local extension_name = "telescope_github"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "nvim-telescope/telescope-github.nvim",
-        requires = { "nvim-telescope/telescope.nvim" },
+        dependencies = { "nvim-telescope/telescope.nvim" },
         config = function()
-          require("utils.setup").packer_config "telescope_github"
+          require("utils.setup").plugin_init "telescope_github"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     to_inject = function()

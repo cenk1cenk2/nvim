@@ -5,17 +5,17 @@ local extension_name = "mason"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "williamboman/mason.nvim",
-        requires = {
+        dependencies = {
           { "williamboman/mason-lspconfig.nvim" },
           { "WhoIsSethDaniel/mason-tool-installer.nvim" },
         },
-        config = function()
-          require("utils.setup").packer_config "mason"
+        init = function()
+          require("utils.setup").plugin_init "mason"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

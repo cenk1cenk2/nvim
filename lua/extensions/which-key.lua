@@ -5,13 +5,13 @@ local extension_name = "wk"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "folke/which-key.nvim",
-        config = function()
-          require("utils.setup").packer_config "wk"
+        init = function()
+          require("utils.setup").plugin_init "wk"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     opts = {

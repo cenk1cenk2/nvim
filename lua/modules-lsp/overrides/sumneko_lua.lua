@@ -22,7 +22,7 @@ if neodev_loaded then
         workspace = {
           library = {
             vim.fn.expand "$VIMRUNTIME",
-            get_lvim_base_dir(),
+            get_config_dir(),
             neodev.types(),
             "${3rd}/busted/library",
             "${3rd}/luassert/library",

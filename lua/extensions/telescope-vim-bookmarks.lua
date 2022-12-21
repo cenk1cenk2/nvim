@@ -5,14 +5,14 @@ local extension_name = "telescope_vim_bookmarks"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "tom-anders/telescope-vim-bookmarks.nvim",
-        requires = { "nvim-telescope/telescope.nvim" },
+        dependencies = { "nvim-telescope/telescope.nvim" },
         config = function()
-          require("utils.setup").packer_config "telescope_vim_bookmarks"
+          require("utils.setup").plugin_init "telescope_vim_bookmarks"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     to_inject = function()

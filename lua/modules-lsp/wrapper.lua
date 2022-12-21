@@ -190,7 +190,7 @@ function M.setup()
     lvim.lsp_wrapper[key] = value
   end
 
-  require("utils.setup").run {
+  require("utils.setup").configure {
     name = "lsp-wrapper",
     commands = {
       {

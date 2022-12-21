@@ -4,40 +4,6 @@ local extension_name = "cmp_extensions"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    opts = {
-      multiple_packages = true,
-    },
-    packer = function()
-      return {
-        { "hrsh7th/cmp-nvim-lsp" },
-        { "hrsh7th/cmp-buffer" },
-        { "hrsh7th/cmp-path" },
-        { "saadparwaiz1/cmp_luasnip" },
-        { "hrsh7th/cmp-nvim-lua" },
-        { "hrsh7th/cmp-vsnip" },
-        -- https://github.com/petertriho/cmp-git
-        { "petertriho/cmp-git" },
-        -- https://github.com/David-Kunz/cmp-npm
-        { "David-Kunz/cmp-npm" },
-        -- https://github.com/hrsh7th/cmp-cmdline
-        { "hrsh7th/cmp-cmdline" },
-        { "davidsierradz/cmp-conventionalcommits" },
-        -- https://github.com/tzachar/cmp-fuzzy-buffer
-        { "tzachar/cmp-fuzzy-buffer" },
-        { "lukas-reineke/cmp-rg" },
-        -- -- https://github.com/hrsh7th/cmp-omni
-        --         { "hrsh7th/cmp-omni" },
-        -- { "tzachar/cmp-tabnine", run = "./install.sh" },
-        { "rafamadriz/friendly-snippets" },
-        { "L3MON4D3/LuaSnip" },
-        { "hrsh7th/cmp-nvim-lsp-signature-help" },
-        { "rcarriga/cmp-dap" },
-        -- https://github.com/bydlw98/cmp-env
-        { "bydlw98/cmp-env" },
-        -- https://github.com/hrsh7th/cmp-calc
-        { "hrsh7th/cmp-calc" },
-      }
-    end,
     setup = {
       cmp_git = {
         name = "git",

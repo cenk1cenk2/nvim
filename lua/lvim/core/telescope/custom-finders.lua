@@ -51,7 +51,7 @@ end
 
 function M.view_lunarvim_changelog()
   local opts = themes.get_ivy {
-    cwd = get_lvim_base_dir(),
+    cwd = get_config_dir(),
   }
   opts.entry_maker = make_entry.gen_from_git_commits(opts)
 

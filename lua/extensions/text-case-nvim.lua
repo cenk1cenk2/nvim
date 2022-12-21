@@ -5,14 +5,14 @@ local extension_name = "text_case_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "johmsalas/text-case.nvim",
         event = "BufReadPost",
         config = function()
-          require("utils.setup").packer_config "text_case_nvim"
+          require("utils.setup").plugin_init "text_case_nvim"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     setup = {

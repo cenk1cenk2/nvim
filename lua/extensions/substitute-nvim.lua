@@ -5,13 +5,13 @@ local extension_name = "substitute_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "gbprod/substitute.nvim",
         config = function()
-          require("utils.setup").packer_config "substitute_nvim"
+          require("utils.setup").plugin_init "substitute_nvim"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     to_inject = function()

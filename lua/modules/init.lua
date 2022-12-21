@@ -2,6 +2,7 @@ local M = {}
 
 local modules = {
   "nvim",
+  "commands",
   "lsp",
   "augroups",
   "filetype",

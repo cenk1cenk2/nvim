@@ -6,13 +6,14 @@ local extension_name = "nvim_surround"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "kylechui/nvim-surround",
         config = function()
-          require("utils.setup").packer_config "nvim_surround"
+          require("utils.setup").plugin_init "nvim_surround"
         end,
-        disable = not config.active,
+        event = "BufWinEnter",
+        enabled = config.active,
       }
     end,
     setup = {

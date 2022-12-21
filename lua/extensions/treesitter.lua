@@ -7,14 +7,14 @@ local Log = require "lvim.core.log"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "nvim-treesitter/nvim-treesitter",
-        run = ":TSUpdate",
+        build = ":TSUpdate",
         config = function()
-          require("utils.setup").packer_config "treesitter"
+          require("utils.setup").plugin_init "treesitter"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     condition = function()

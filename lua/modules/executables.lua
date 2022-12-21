@@ -64,7 +64,7 @@ function M.reload_file()
 end
 
 function M.setup()
-  require("utils.setup").run {
+  require("utils.setup").configure {
     name = "executables",
     wk = function(_, categories)
       return {

@@ -5,13 +5,13 @@ local extension_name = "mason_nvim_dap"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "jay-babu/mason-nvim-dap.nvim",
         config = function()
-          require("utils.setup").packer_config "mason_nvim_dap"
+          require("utils.setup").plugin_init "mason_nvim_dap"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     setup = {

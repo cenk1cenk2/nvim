@@ -5,13 +5,14 @@ local extension_name = "dressing"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "stevearc/dressing.nvim",
         config = function()
-          require("utils.setup").packer_config "dressing"
+          require("utils.setup").plugin_init "dressing"
         end,
-        disable = not config.active,
+        event = "VeryLazy",
+        enabled = config.active,
       }
     end,
     to_inject = function()

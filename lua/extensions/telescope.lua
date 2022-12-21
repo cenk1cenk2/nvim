@@ -5,20 +5,20 @@ local extension_name = "telescope"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "nvim-telescope/telescope.nvim",
-        requires = {
+        dependencies = {
           {
             "nvim-telescope/telescope-fzf-native.nvim",
-            run = "make",
+            build = "make",
           },
-          { "tzachar/fuzzy.nvim", requires = { "nvim-telescope/telescope-fzf-native.nvim" } },
+          { "tzachar/fuzzy.nvim", dependencies = { "nvim-telescope/telescope-fzf-native.nvim" } },
         },
         config = function()
-          require("utils.setup").packer_config "telescope"
+          require("utils.setup").plugin_init "telescope"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

@@ -20,7 +20,7 @@ function M.diff()
 end
 
 function M.setup()
-  require("utils.setup").run {
+  require("utils.setup").configure {
     wk = {
       g = {
         c = {

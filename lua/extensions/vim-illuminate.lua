@@ -5,13 +5,13 @@ local extension_name = "vim_illuminate"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "RRethy/vim-illuminate",
         config = function()
-          require("utils.setup").packer_config "vim_illuminate"
+          require("utils.setup").plugin_init "vim_illuminate"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     setup = {

@@ -5,17 +5,17 @@ local extension_name = "refactoring_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "ThePrimeagen/refactoring.nvim",
-        requires = {
+        dependencies = {
           { "nvim-lua/plenary.nvim" },
           { "nvim-treesitter/nvim-treesitter" },
         },
         config = function()
-          require("utils.setup").packer_config "refactoring_nvim"
+          require("utils.setup").plugin_init "refactoring_nvim"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     to_inject = function()

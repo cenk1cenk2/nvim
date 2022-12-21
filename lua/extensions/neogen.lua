@@ -5,14 +5,15 @@ local extension_name = "neogen"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "danymat/neogen",
-        requires = { "nvim-treesitter/nvim-treesitter" },
+        dependencies = { "nvim-treesitter/nvim-treesitter" },
         config = function()
-          require("utils.setup").packer_config "neogen"
+          require("utils.setup").plugin_init "neogen"
         end,
-        disable = not config.active,
+        event = "BufWinEnter",
+        enabled = config.active,
       }
     end,
     setup = {},

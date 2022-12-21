@@ -6,14 +6,14 @@ local utils = require "lvim.utils"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "MattesGroeger/vim-bookmarks",
         branch = "fix/118",
         config = function()
-          require("utils.setup").packer_config "vim_bookmarks"
+          require("utils.setup").plugin_init "vim_bookmarks"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     legacy_setup = {

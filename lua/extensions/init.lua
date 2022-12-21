@@ -1,6 +1,7 @@
 local M = {}
 
 local extensions = {
+  "core",
   -- core
   "which-key",
   "alpha-nvim",

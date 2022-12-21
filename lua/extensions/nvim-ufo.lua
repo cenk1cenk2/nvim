@@ -5,14 +5,14 @@ local extension_name = "nvim_ufo"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "kevinhwang91/nvim-ufo",
-        requires = { "kevinhwang91/promise-async" },
+        dependencies = { "kevinhwang91/promise-async" },
         config = function()
-          require("utils.setup").packer_config "nvim_ufo"
+          require("utils.setup").plugin_init "nvim_ufo"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     to_inject = function()

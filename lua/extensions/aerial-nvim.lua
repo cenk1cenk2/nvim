@@ -5,13 +5,17 @@ local extension_name = "aerial_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "stevearc/aerial.nvim",
         config = function()
-          require("utils.setup").packer_config "aerial_nvim"
+          require("utils.setup").plugin_configure "aerial_nvim"
         end,
-        disable = not config.active,
+        init = function()
+          require("utils.setup").plugin_init "aerial_nvim"
+        end,
+        cmd = { "AerialToggle" },
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

@@ -5,16 +5,14 @@ local extension_name = "nvim_dap_ui"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "rcarriga/nvim-dap-ui",
-        -- event = "BufWinEnter",
-        requires = { "mfussenegger/nvim-dap" },
-        after = { "nvim-dap" },
+        dependencies = { "mfussenegger/nvim-dap" },
         config = function()
-          require("utils.setup").packer_config "nvim_dap_ui"
+          require("utils.setup").plugin_init "nvim_dap_ui"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

@@ -5,20 +5,24 @@ local extension_name = "neotree_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "nvim-neo-tree/neo-tree.nvim",
-        config = function()
-          require("utils.setup").packer_config "neotree_nvim"
-        end,
         branch = "v2.x",
-        disable = not config.active,
-        requires = {
+        dependencies = {
           "nvim-lua/plenary.nvim",
           "kyazdani42/nvim-web-devicons",
           "MunifTanjim/nui.nvim",
           "s1n7ax/nvim-window-picker",
         },
+        config = function()
+          require("utils.setup").plugin_configure "neotree_nvim"
+        end,
+        init = function()
+          require("utils.setup").plugin_init "neotree_nvim"
+        end,
+        cmd = { "NeoTreeReveal", "NeoTreeFocusToggle", "NeoTreeFloat" },
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

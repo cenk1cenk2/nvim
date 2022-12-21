@@ -5,14 +5,44 @@ local extension_name = "cmp"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "hrsh7th/nvim-cmp",
         config = function()
-          require("utils.setup").packer_config "cmp"
-          require("utils.setup").packer_config "cmp_extensions"
+          require("utils.setup").plugin_init "cmp"
+          require("utils.setup").plugin_init "cmp_extensions"
         end,
-        disable = not config.active,
+        event = "InsertEnter",
+        dependencies = {
+          { "hrsh7th/cmp-nvim-lsp" },
+          { "hrsh7th/cmp-buffer" },
+          { "hrsh7th/cmp-path" },
+          { "saadparwaiz1/cmp_luasnip" },
+          { "hrsh7th/cmp-nvim-lua" },
+          { "hrsh7th/cmp-vsnip" },
+          -- https://github.com/petertriho/cmp-git
+          { "petertriho/cmp-git" },
+          -- https://github.com/David-Kunz/cmp-npm
+          { "David-Kunz/cmp-npm" },
+          -- https://github.com/hrsh7th/cmp-cmdline
+          { "hrsh7th/cmp-cmdline" },
+          { "davidsierradz/cmp-conventionalcommits" },
+          -- https://github.com/tzachar/cmp-fuzzy-buffer
+          { "tzachar/cmp-fuzzy-buffer" },
+          { "lukas-reineke/cmp-rg" },
+          -- -- https://github.com/hrsh7th/cmp-omni
+          --         { "hrsh7th/cmp-omni" },
+          -- { "tzachar/cmp-tabnine", build = "./install.sh" },
+          { "rafamadriz/friendly-snippets" },
+          { "L3MON4D3/LuaSnip" },
+          { "hrsh7th/cmp-nvim-lsp-signature-help" },
+          { "rcarriga/cmp-dap" },
+          -- https://github.com/bydlw98/cmp-env
+          { "bydlw98/cmp-env" },
+          -- https://github.com/hrsh7th/cmp-calc
+          { "hrsh7th/cmp-calc" },
+        },
+        enabled = config.active,
       }
     end,
     to_inject = function()

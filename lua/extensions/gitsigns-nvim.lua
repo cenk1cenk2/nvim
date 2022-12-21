@@ -5,14 +5,14 @@ local extension_name = "gitsigns_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "lewis6991/gitsigns.nvim",
-        -- event = "BufRead",
         config = function()
-          require("utils.setup").packer_config "gitsigns_nvim"
+          require("utils.setup").plugin_init "gitsigns_nvim"
         end,
-        disable = not config.active,
+        event = "BufReadPost",
+        enabled = config.active,
       }
     end,
     setup = {

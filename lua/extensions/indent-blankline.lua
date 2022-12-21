@@ -5,13 +5,13 @@ local extension_name = "indent_blankline"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "lukas-reineke/indent-blankline.nvim",
         config = function()
-          require("utils.setup").packer_config "indent_blankline"
+          require("utils.setup").plugin_init "indent_blankline"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     setup = function()

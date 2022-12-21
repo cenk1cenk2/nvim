@@ -7,15 +7,14 @@ local extension_name = "dap"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "mfussenegger/nvim-dap",
-        -- event = "BufWinEnter",
-        requires = {},
+        dependencies = {},
         config = function()
-          require("utils.setup").packer_config "dap"
+          require("utils.setup").plugin_init "dap"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)
@@ -155,19 +154,12 @@ function M.config()
       }
     end,
     autocmds = function()
-      -- local vscode = config.inject.vscode
-
       return {
         {
           { "BufWritePost" },
           {
             group = "_dap",
             pattern = "launch.json",
-            -- command = function()
-            --   vscode.load_launchjs()
-            --
-            --   log:info "Reloaded launch.json."
-            -- end,
             callback = function()
               require("dap.ext.vscode").load_launchjs()
             end,

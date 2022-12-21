@@ -5,13 +5,14 @@ local extension_name = "ccc_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "uga-rosa/ccc.nvim",
         config = function()
-          require("utils.setup").packer_config "ccc_nvim"
+          require("utils.setup").plugin_init "ccc_nvim"
         end,
-        disable = not config.active,
+        cmd = { "CccPick", "CccHighlighterToggle" },
+        enabled = config.active,
       }
     end,
     setup = {},

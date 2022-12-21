@@ -8,13 +8,13 @@ function M.config()
     opts = {
       multiple_packages = true,
     },
-    packer = function()
+    plugin = function()
       return {
         { "neovim/nvim-lspconfig" },
         { "tamago324/nlsp-settings.nvim" },
         { "jose-elias-alvarez/null-ls.nvim" },
         { "b0o/schemastore.nvim" },
-        { "folke/neodev.nvim" },
+        { "folke/neodev.nvim", ft = { "lua" } },
       }
     end,
   })

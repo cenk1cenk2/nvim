@@ -5,13 +5,14 @@ local extension_name = "lspsaga_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "glepnir/lspsaga.nvim",
         config = function()
-          require("utils.setup").packer_config "lspsaga_nvim"
+          require("utils.setup").plugin_init "lspsaga_nvim"
         end,
-        disable = not config.active,
+        event = "BufReadPost",
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

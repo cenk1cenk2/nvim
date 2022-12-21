@@ -5,16 +5,16 @@ local extension_name = "noice_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "folke/noice.nvim",
         config = function()
-          require("utils.setup").packer_config "noice_nvim"
+          require("utils.setup").plugin_init "noice_nvim"
         end,
-        requires = {
+        dependencies = {
           "MunifTanjim/nui.nvim",
         },
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

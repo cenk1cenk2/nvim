@@ -47,7 +47,7 @@ function M.define_extension(extension_name, active, config)
     config = { config, "t" },
     on_init = { config.on_init, "f", true },
     condition = { config.condition, "f", true },
-    packer = { config.packer, "f", true },
+    plugin = { config.plugin, "f", true },
     to_inject = { config.to_inject, "f", true },
     autocmds = { config.autocmds, { "t", "f" }, true },
     keymaps = { config.keymaps, { "t", "f" }, true },
@@ -86,8 +86,8 @@ function M.define_extension(extension_name, active, config)
   }
 
   if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[extension_name]) == false then
-    if config ~= nil and config.packer ~= nil then
-      lvim.extensions[extension_name].packer = config.packer(lvim.extensions[extension_name])
+    if config ~= nil and config.plugin ~= nil then
+      lvim.extensions[extension_name].plugin = config.plugin(lvim.extensions[extension_name])
     end
 
     Log:debug(string.format("Extension config stopped due to failed condition: %s", extension_name))
@@ -101,8 +101,8 @@ function M.define_extension(extension_name, active, config)
 
   lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config or {})
 
-  if config ~= nil and config.packer ~= nil then
-    lvim.extensions[extension_name].packer = config.packer(lvim.extensions[extension_name])
+  if config ~= nil and config.plugin ~= nil then
+    lvim.extensions[extension_name].plugin = config.plugin(lvim.extensions[extension_name])
   end
 end
 
@@ -120,8 +120,20 @@ end
 
 ---
 ---@param extension_name string
-function M.packer_config(extension_name)
-  return M.run(M.get_config(extension_name))
+function M.plugin_init(extension_name)
+  return M.init(M.get_config(extension_name))
+end
+
+---
+---@param extension_name string
+function M.plugin_configure(extension_name)
+  return M.configure(M.get_config(extension_name))
+end
+
+---
+---@param extension_name string
+function M.plugin_config(extension_name)
+  return M.configure(M.get_config(extension_name))
 end
 
 ---
@@ -159,7 +171,7 @@ end
 
 ---
 ---@param config config
-function M.run(config)
+function M.configure(config)
   if config ~= nil and config.to_inject ~= nil then
     local ok = pcall(function()
       ---@diagnostic disable-next-line: assign-type-mismatch
@@ -171,10 +183,6 @@ function M.run(config)
 
       return
     end
-  end
-
-  if config ~= nil and config.on_init ~= nil then
-    config.on_init(config)
   end
 
   if config ~= nil and config.autocmds ~= nil then
@@ -216,6 +224,27 @@ function M.run(config)
   if config ~= nil and config.nvim_opts ~= nil then
     require("utils.command").set_option(config.nvim_opts)
   end
+end
+
+---
+---@param config config
+function M.init(config)
+  if config ~= nil and config.to_inject ~= nil then
+    local ok = pcall(function()
+      ---@diagnostic disable-next-line: assign-type-mismatch
+      config.inject = vim.tbl_extend("force", config.inject, config.to_inject(config))
+    end)
+
+    if not ok then
+      Log:warn(string.format("Can not inject in extension: %s", config.name))
+
+      return
+    end
+  end
+
+  if config ~= nil and config.on_init ~= nil then
+    config.on_init(config)
+  end
 
   if config ~= nil and config.legacy_setup ~= nil then
     M.legacy_setup(config.legacy_setup)
@@ -255,26 +284,26 @@ end
 ---
 ---@param extension_name string
 ---@return table
-function M.packer(extension_name)
-  return M.get_config(extension_name).packer
+function M.plugin(extension_name)
+  return M.get_config(extension_name).plugin
 end
 
 ---
-function M.set_packer_extensions()
-  local packer = {}
+function M.set_plugins()
+  local plugins = {}
   for _, extension in pairs(lvim.extensions) do
-    if extension.packer ~= nil and type(extension.packer) == "table" then
+    if extension.plugin ~= nil and type(extension.plugin) == "table" then
       if extension.opts ~= nil and extension.opts.multiple_packages then
-        for _, e in pairs(extension.packer) do
-          table.insert(packer, e)
+        for _, e in pairs(extension.plugin) do
+          table.insert(plugins, e)
         end
       else
-        table.insert(packer, extension.packer)
+        table.insert(plugins, extension.plugin)
       end
     end
   end
 
-  lvim.plugins = packer
+  lvim.plugins = plugins
 end
 
 return M

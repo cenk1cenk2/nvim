@@ -5,13 +5,14 @@ local extension_name = "lsp_lines_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
-        "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
+        "~whynothugo/lsp_lines.nvim",
+        url = "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
         config = function()
-          require("utils.setup").packer_config "lsp_lines_nvim"
+          require("utils.setup").plugin_init "lsp_lines_nvim"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     on_init = function(config)

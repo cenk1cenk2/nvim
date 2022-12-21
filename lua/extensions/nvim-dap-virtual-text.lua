@@ -5,13 +5,14 @@ local extension_name = "nvim_dap_virtual_text"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "theHamsta/nvim-dap-virtual-text",
         config = function()
-          require("utils.setup").packer_config "nvim_dap_virtual_text"
+          require("utils.setup").plugin_init "nvim_dap_virtual_text"
         end,
-        disable = not config.active,
+        event = "BufWinEnter",
+        enabled = config.active,
       }
     end,
     setup = {

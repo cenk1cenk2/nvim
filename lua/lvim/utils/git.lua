@@ -10,7 +10,7 @@ local function git_cmd(opts)
   end
 
   opts = opts or {}
-  opts.cwd = opts.cwd or get_lvim_base_dir()
+  opts.cwd = opts.cwd or get_config_dir()
 
   local stderr = {}
   local stdout, ret = Job:new({
@@ -43,7 +43,7 @@ local function safe_deep_fetch()
   local fetch_mode = result[1] == "true" and "--unshallow" or "--all"
   ret = git_cmd { args = { "fetch", fetch_mode } }
   if ret ~= 0 then
-    Log:error("Git fetch failed! Please pull the changes manually in " .. get_lvim_base_dir())
+    Log:error("Git fetch failed! Please pull the changes manually in " .. get_config_dir())
     return
   end
   return true
@@ -67,7 +67,7 @@ function M.update_base_lvim()
 
   ret = git_cmd { args = { "merge", "--ff-only", "--progress" } }
   if ret ~= 0 then
-    Log:error("Update failed! Please pull the changes manually in " .. get_lvim_base_dir())
+    Log:error("Update failed! Please pull the changes manually in " .. get_config_dir())
     return
   end
 

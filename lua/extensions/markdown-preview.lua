@@ -5,14 +5,14 @@ local extension_name = "markdown_preview"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "iamcco/markdown-preview.nvim",
-        run = { "cd app & yarn & yarn add -D tslib", ":call mkdp#util#install()" },
         config = function()
-          require("utils.setup").packer_config "markdown_preview"
+          require("utils.setup").plugin_init "markdown_preview"
         end,
-        disable = not config.active,
+        build = { "cd app & yarn & yarn add -D tslib", ":call mkdp#util#install()" },
+        enabled = config.active,
       }
     end,
     legacy_setup = {

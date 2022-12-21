@@ -5,13 +5,13 @@ local extension_name = "todo_comments"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "folke/todo-comments.nvim",
         config = function()
-          require("utils.setup").packer_config "todo_comments"
+          require("utils.setup").plugin_init "todo_comments"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     setup = {

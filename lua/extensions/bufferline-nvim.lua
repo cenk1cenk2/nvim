@@ -5,18 +5,17 @@ local extension_name = "bufferline_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "akinsho/bufferline.nvim",
-        event = "BufWinEnter",
-        requires = {
+        dependencies = {
           -- https://github.com/ojroques/nvim-bufdel
           "ojroques/nvim-bufdel",
         },
-        config = function()
-          require("utils.setup").packer_config "bufferline_nvim"
+        init = function()
+          require("utils.setup").plugin_init "bufferline_nvim"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     setup = {

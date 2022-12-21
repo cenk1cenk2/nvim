@@ -8,20 +8,20 @@ function M.config()
     opts = {
       multiple_packages = true,
     },
-    packer = function()
+    plugin = function()
       return {
         {
           "JoosepAlviste/nvim-ts-context-commentstring",
-          requires = { "nvim-treesitter/nvim-treesitter" },
+          dependencies = { "nvim-treesitter/nvim-treesitter" },
         },
         {
           "p00f/nvim-ts-rainbow",
-          run = ":TSUpdate",
-          requires = { "nvim-treesitter/nvim-treesitter" },
+          build = ":TSUpdate",
+          dependencies = { "nvim-treesitter/nvim-treesitter" },
         },
         {
           "windwp/nvim-ts-autotag",
-          requires = { "nvim-treesitter/nvim-treesitter" },
+          dependencies = { "nvim-treesitter/nvim-treesitter" },
         },
         -- {
         --   "nvim-treesitter/playground",

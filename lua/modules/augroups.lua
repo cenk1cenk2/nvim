@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup()
-  require("utils.setup").run {
+  require("utils.setup").configure {
     autocmds = {
       {
         "FileType",

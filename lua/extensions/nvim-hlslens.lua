@@ -5,13 +5,13 @@ local extension_name = "nvim_hlslens"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "kevinhwang91/nvim-hlslens",
         config = function()
-          require("utils.setup").packer_config "nvim_hlslens"
+          require("utils.setup").plugin_init "nvim_hlslens"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     to_inject = function()

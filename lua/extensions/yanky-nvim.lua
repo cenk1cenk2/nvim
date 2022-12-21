@@ -5,13 +5,13 @@ local extension_name = "yanky_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "gbprod/yanky.nvim",
         config = function()
-          require("utils.setup").packer_config "yanky_nvim"
+          require("utils.setup").plugin_init "yanky_nvim"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     register = "+",

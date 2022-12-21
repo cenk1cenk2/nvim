@@ -50,30 +50,19 @@ end
 
 ---Initialize the `&runtimepath` variables and prepare for startup
 ---@return table
-function M:init(base_dir)
+function M:init()
   self.runtime_dir = get_runtime_dir()
   self.config_dir = get_config_dir()
   self.cache_dir = get_cache_dir()
   self.pack_dir = join_paths(self.runtime_dir, "site", "pack")
-  self.packer_install_dir = join_paths(self.runtime_dir, "site", "pack", "packer", "start", "packer.nvim")
-  self.packer_cache_path = join_paths(self.config_dir, "plugin", "packer_compiled.lua")
 
   ---Get the full path to LunarVim's base directory
-  ---@return string
-  function _G.get_lvim_base_dir()
-    return base_dir
-  end
-
   -- FIXME: currently unreliable in unit-tests
   if not in_headless then
     _G.PLENARY_DEBUG = false
-    require "lvim.impatient"
   end
 
-  require("lvim.plugin-loader").init {
-    package_root = self.pack_dir,
-    install_path = self.packer_install_dir,
-  }
+  require("lvim.plugins").init()
 
   require("lvim.config"):init()
 

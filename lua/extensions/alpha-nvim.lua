@@ -5,14 +5,17 @@ local extension_name = "alpha"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "goolord/alpha-nvim",
-        event = "BufWinEnter",
-        config = function()
-          require("utils.setup").packer_config "alpha"
+        init = function()
+          require("utils.setup").plugin_init "alpha"
         end,
-        disable = not config.active,
+        config = function()
+          require("utils.setup").plugin_configure "alpha"
+        end,
+        lazy = false,
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

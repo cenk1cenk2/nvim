@@ -6,15 +6,15 @@ local extension_name = "nvim_autopairs"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "windwp/nvim-autopairs",
         -- event = "InsertEnter",
-        after = { "nvim-cmp" },
         config = function()
-          require("utils.setup").packer_config "nvim_autopairs"
+          require("utils.setup").plugin_init "nvim_autopairs"
         end,
-        disable = not config.active,
+        dependencies = { "hrsh7th/nvim-cmp" },
+        enabled = config.active,
       }
     end,
     setup = {

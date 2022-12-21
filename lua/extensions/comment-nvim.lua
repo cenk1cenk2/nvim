@@ -5,14 +5,14 @@ local extension_name = "comment_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "numToStr/Comment.nvim",
-        event = "BufRead",
         config = function()
-          require("utils.setup").packer_config "comment_nvim"
+          require("utils.setup").plugin_init "comment_nvim"
         end,
-        disable = not config.active,
+        event = "BufRead",
+        enabled = config.active,
       }
     end,
     to_inject = function()

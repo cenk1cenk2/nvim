@@ -5,14 +5,17 @@ local extension_name = "spectre"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "nvim-pack/nvim-spectre",
-        run = "./build.sh",
+        build = "./build.sh",
         config = function()
-          require("utils.setup").packer_config "spectre"
+          require("utils.setup").plugin_init "spectre"
         end,
-        disable = not config.active,
+        init = function()
+          require("utils.setup").plugin_init "spectre"
+        end,
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

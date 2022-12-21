@@ -7,14 +7,14 @@ local Log = require "lvim.core.log"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "akinsho/toggleterm.nvim",
         event = "BufWinEnter",
         config = function()
-          require("utils.setup").packer_config "toggleterm_nvim"
+          require("utils.setup").plugin_init "toggleterm_nvim"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)

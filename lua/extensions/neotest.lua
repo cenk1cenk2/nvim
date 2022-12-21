@@ -8,18 +8,18 @@ local extension_name = "neotest"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "nvim-neotest/neotest",
-        requires = {
+        dependencies = {
           "nvim-neotest/neotest-go",
           "rouge8/neotest-rust",
           "haydenmeade/neotest-jest",
         },
         config = function()
-          require("utils.setup").packer_config "neotest"
+          require("utils.setup").plugin_init "neotest"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     to_inject = function()

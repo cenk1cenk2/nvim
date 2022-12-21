@@ -160,7 +160,7 @@ M.mappings = {
     i = { ":PackerInstall<CR>", "packer install" },
     r = {
       function()
-        require("lvim.plugin-loader").recompile()
+        require("lvim.plugins").recompile()
       end,
       "recompile",
     },

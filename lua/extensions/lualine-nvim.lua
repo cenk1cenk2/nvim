@@ -6,13 +6,13 @@ local colors = require "onedarker.colors"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "nvim-lualine/lualine.nvim",
         config = function()
-          require("utils.setup").packer_config "lualine_nvim"
+          require("utils.setup").plugin_init "lualine_nvim"
         end,
-        disable = not config.active,
+        enabled = config.active,
       }
     end,
     to_inject = function()

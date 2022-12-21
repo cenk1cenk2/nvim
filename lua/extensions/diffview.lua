@@ -7,13 +7,14 @@ local extension_name = "diffview"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function(config)
       return {
         "sindrets/diffview.nvim",
         config = function()
-          require("utils.setup").packer_config "diffview"
+          require("utils.setup").plugin_init "diffview"
         end,
-        disable = not config.active,
+        cmd = { "DiffviewFileHistory", "DiffviewOpen", "DiffviewClose" },
+        enabled = config.active,
       }
     end,
     configure = function(_, fn)
