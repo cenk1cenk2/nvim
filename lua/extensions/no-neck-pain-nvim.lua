@@ -33,11 +33,11 @@ function M.config()
           colorCode = require("onedarker.colors").bg[100],
         },
         -- When `false`, the `left` padding buffer won't be created.
-        left = true,
+        -- left = true,
         -- When `false`, the `right` padding buffer won't be created.
-        right = true,
+        -- right = true,
         -- When `true`, the side buffers will be named `no-neck-pain-left` and `no-neck-pain-right` respectively.
-        showName = false,
+        -- showName = false,
         -- The buffer options when creating the buffer.
       },
     },
