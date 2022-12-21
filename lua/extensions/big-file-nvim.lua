@@ -8,9 +8,7 @@ function M.config()
     plugin = function(config)
       return {
         "LunarVim/bigfile.nvim",
-        init = function()
-          require("utils.setup").plugin_init "big_file_nvim"
-        end,
+        lazy = false,
         enabled = config.active,
       }
     end,

@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "ahmedkhalf/project.nvim",
-        config = function()
-          require("utils.setup").plugin_init "project_nvim"
-        end,
         enabled = config.active,
       }
     end,

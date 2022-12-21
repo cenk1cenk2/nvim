@@ -10,10 +10,6 @@ function M.config()
     plugin = function(config)
       return {
         "akinsho/toggleterm.nvim",
-        event = "BufWinEnter",
-        config = function()
-          require("utils.setup").plugin_init "toggleterm_nvim"
-        end,
         enabled = config.active,
       }
     end,

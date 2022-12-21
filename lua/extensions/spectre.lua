@@ -9,12 +9,6 @@ function M.config()
       return {
         "nvim-pack/nvim-spectre",
         build = "./build.sh",
-        config = function()
-          require("utils.setup").plugin_init "spectre"
-        end,
-        init = function()
-          require("utils.setup").plugin_init "spectre"
-        end,
         enabled = config.active,
       }
     end,

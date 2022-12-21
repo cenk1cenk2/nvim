@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "stevearc/dressing.nvim",
-        config = function()
-          require("utils.setup").plugin_init "dressing"
-        end,
         event = "VeryLazy",
         enabled = config.active,
       }

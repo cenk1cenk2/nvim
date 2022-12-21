@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "amrbashir/nvim-docs-view",
-        config = function()
-          require("utils.setup").plugin_init "nvim_docs_view"
-        end,
         cmd = { "DocsViewToggle" },
         enabled = config.active,
       }

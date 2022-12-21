@@ -12,9 +12,6 @@ function M.config()
           { "williamboman/mason-lspconfig.nvim" },
           { "WhoIsSethDaniel/mason-tool-installer.nvim" },
         },
-        init = function()
-          require("utils.setup").plugin_init "mason"
-        end,
         enabled = config.active,
       }
     end,

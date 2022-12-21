@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "jackmort/chatgpt.nvim",
-        config = function()
-          require("utils.setup").plugin_init "chatgpt_nvim"
-        end,
         cmd = { "ChatGPT", "ChatGPTEditWithInstructions" },
         enabled = config.active,
       }

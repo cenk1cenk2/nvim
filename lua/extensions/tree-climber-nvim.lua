@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "drybalka/tree-climber.nvim",
-        config = function()
-          require("utils.setup").plugin_init "tree_climber_nvim"
-        end,
         enabled = config.active,
       }
     end,

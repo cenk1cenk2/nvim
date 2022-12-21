@@ -65,6 +65,7 @@ lvim = {
     "neo-tree",
     "terminal",
     "packer",
+    "lazy",
     "lspinfo",
     "prompt",
     "notify",

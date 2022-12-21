@@ -9,9 +9,6 @@ function M.config()
     plugin = function(config)
       return {
         "petertriho/nvim-scrollbar",
-        config = function()
-          require("utils.setup").plugin_init "nvim_scrollbar"
-        end,
         enabled = config.active,
       }
     end,

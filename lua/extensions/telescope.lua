@@ -15,9 +15,6 @@ function M.config()
           },
           { "tzachar/fuzzy.nvim", dependencies = { "nvim-telescope/telescope-fzf-native.nvim" } },
         },
-        config = function()
-          require("utils.setup").plugin_init "telescope"
-        end,
         enabled = config.active,
       }
     end,

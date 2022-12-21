@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "uga-rosa/ccc.nvim",
-        config = function()
-          require("utils.setup").plugin_init "ccc_nvim"
-        end,
         cmd = { "CccPick", "CccHighlighterToggle" },
         enabled = config.active,
       }

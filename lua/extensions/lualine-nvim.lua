@@ -9,9 +9,6 @@ function M.config()
     plugin = function(config)
       return {
         "nvim-lualine/lualine.nvim",
-        config = function()
-          require("utils.setup").plugin_init "lualine_nvim"
-        end,
         enabled = config.active,
       }
     end,

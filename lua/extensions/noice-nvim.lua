@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "folke/noice.nvim",
-        config = function()
-          require("utils.setup").plugin_init "noice_nvim"
-        end,
         dependencies = {
           "MunifTanjim/nui.nvim",
         },

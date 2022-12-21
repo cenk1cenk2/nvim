@@ -10,9 +10,7 @@ function M.config()
       return {
         "MattesGroeger/vim-bookmarks",
         branch = "fix/118",
-        config = function()
-          require("utils.setup").plugin_init "vim_bookmarks"
-        end,
+        lazy = false,
         enabled = config.active,
       }
     end,

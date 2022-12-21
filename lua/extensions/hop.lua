@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "phaazon/hop.nvim",
-        config = function()
-          require("utils.setup").plugin_init "hop"
-        end,
         event = "BufReadPost",
         keys = { "f", "ff", "F", "FF", "t", "tt", "T", "TT", "s", "ss", "sw", "S", "SS" },
         enabled = config.active,

@@ -8,10 +8,8 @@ function M.config()
     plugin = function(config)
       return {
         "glench/vim-jinja2-syntax",
-        config = function()
-          require("utils.setup").plugin_init "vim_jinja2_syntax"
-        end,
         enabled = config.active,
+        ft = { "jinja" },
       }
     end,
   })

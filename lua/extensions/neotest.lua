@@ -16,9 +16,6 @@ function M.config()
           "rouge8/neotest-rust",
           "haydenmeade/neotest-jest",
         },
-        config = function()
-          require("utils.setup").plugin_init "neotest"
-        end,
         enabled = config.active,
       }
     end,

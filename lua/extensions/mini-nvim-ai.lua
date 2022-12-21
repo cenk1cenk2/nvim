@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "echasnovski/mini.ai",
-        config = function()
-          require("utils.setup").plugin_init "mini_nvim_ai"
-        end,
         enabled = config.active,
       }
     end,

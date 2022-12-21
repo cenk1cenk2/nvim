@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "glepnir/lspsaga.nvim",
-        config = function()
-          require("utils.setup").plugin_init "lspsaga_nvim"
-        end,
         event = "BufReadPost",
         enabled = config.active,
       }

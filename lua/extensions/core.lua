@@ -13,18 +13,20 @@ function M.config()
         { "nvim-lua/plenary.nvim" },
         {
           "rcarriga/nvim-notify",
-          config = function()
+          init = function()
             require("lvim.core.notify").setup()
           end,
+          lazy = false,
           enabled = lvim.builtin.notify.active,
         },
-        { "nvim-lua/popup.nvim" },
-        { "Tastyep/structlog.nvim" },
+        { "nvim-lua/popup.nvim", lazy = false },
+        { "Tastyep/structlog.nvim", lazy = false },
         {
           "kyazdani42/nvim-web-devicons",
+          lazy = false,
           enabled = lvim.use_icons,
         },
-        { "MunifTanjim/nui.nvim" },
+        { "MunifTanjim/nui.nvim", event = "VeryLazy" },
       }
     end,
   })

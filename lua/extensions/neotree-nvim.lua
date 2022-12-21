@@ -15,12 +15,7 @@ function M.config()
           "MunifTanjim/nui.nvim",
           "s1n7ax/nvim-window-picker",
         },
-        config = function()
-          require("utils.setup").plugin_configure "neotree_nvim"
-        end,
-        init = function()
-          require("utils.setup").plugin_init "neotree_nvim"
-        end,
+        lazy = false,
         cmd = { "NeoTreeReveal", "NeoTreeFocusToggle", "NeoTreeFloat" },
         enabled = config.active,
       }

@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "kevinhwang91/nvim-hlslens",
-        config = function()
-          require("utils.setup").plugin_init "nvim_hlslens"
-        end,
         enabled = config.active,
       }
     end,

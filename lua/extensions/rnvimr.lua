@@ -9,9 +9,8 @@ function M.config()
     plugin = function(config)
       return {
         "kevinhwang91/rnvimr",
-        init = function()
-          require("utils.setup").plugin_init "rnvimr"
-        end,
+        cmd = { "RnvimrToggle" },
+        keys = { "<F5>" },
         enabled = config.active,
       }
     end,

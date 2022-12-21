@@ -10,9 +10,6 @@ function M.config()
     plugin = function(config)
       return {
         "Shatur/neovim-session-manager",
-        config = function()
-          require("utils.setup").plugin_init "session_manager"
-        end,
         enabled = config.active,
       }
     end,

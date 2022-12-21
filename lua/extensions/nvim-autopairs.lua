@@ -9,10 +9,6 @@ function M.config()
     plugin = function(config)
       return {
         "windwp/nvim-autopairs",
-        -- event = "InsertEnter",
-        config = function()
-          require("utils.setup").plugin_init "nvim_autopairs"
-        end,
         dependencies = { "hrsh7th/nvim-cmp" },
         enabled = config.active,
       }

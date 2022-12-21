@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "template",
-        config = function()
-          require("utils.setup").plugin_init "template"
-        end,
         enabled = config.active,
       }
     end,

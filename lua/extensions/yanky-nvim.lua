@@ -8,9 +8,7 @@ function M.config()
     plugin = function(config)
       return {
         "gbprod/yanky.nvim",
-        config = function()
-          require("utils.setup").plugin_init "yanky_nvim"
-        end,
+        event = "VeryLazy",
         enabled = config.active,
       }
     end,

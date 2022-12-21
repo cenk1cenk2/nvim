@@ -9,9 +9,6 @@ function M.config()
       return {
         "tom-anders/telescope-vim-bookmarks.nvim",
         dependencies = { "nvim-telescope/telescope.nvim" },
-        config = function()
-          require("utils.setup").plugin_init "telescope_vim_bookmarks"
-        end,
         enabled = config.active,
       }
     end,

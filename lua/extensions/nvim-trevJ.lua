@@ -9,9 +9,6 @@ function M.config()
     plugin = function(config)
       return {
         "AckslD/nvim-trevJ.lua",
-        config = function()
-          require("utils.setup").plugin_init "nvim_treevj"
-        end,
         enabled = config.active,
       }
     end,

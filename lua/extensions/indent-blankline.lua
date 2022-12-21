@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "lukas-reineke/indent-blankline.nvim",
-        config = function()
-          require("utils.setup").plugin_init "indent_blankline"
-        end,
         enabled = config.active,
       }
     end,

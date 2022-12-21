@@ -8,9 +8,7 @@ function M.config()
     plugin = function(config)
       return {
         "tpope/vim-repeat",
-        config = function()
-          require("utils.setup").plugin_init "vim_repeat"
-        end,
+        lazy = false,
         enabled = config.active,
       }
     end,

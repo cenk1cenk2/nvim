@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "RRethy/vim-illuminate",
-        config = function()
-          require("utils.setup").plugin_init "vim_illuminate"
-        end,
         enabled = config.active,
       }
     end,

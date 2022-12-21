@@ -8,9 +8,7 @@ function M.config()
     plugin = function(config)
       return {
         "folke/todo-comments.nvim",
-        config = function()
-          require("utils.setup").plugin_init "todo_comments"
-        end,
+        cmd = { "TodoTelescope" },
         enabled = config.active,
       }
     end,

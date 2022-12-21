@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "iamcco/markdown-preview.nvim",
-        config = function()
-          require("utils.setup").plugin_init "markdown_preview"
-        end,
         build = { "cd app & yarn & yarn add -D tslib", ":call mkdp#util#install()" },
         enabled = config.active,
       }

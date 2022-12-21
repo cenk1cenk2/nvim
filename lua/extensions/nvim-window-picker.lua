@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "s1n7ax/nvim-window-picker",
-        config = function()
-          require("utils.setup").plugin_init "nvim_window_picker"
-        end,
         enabled = config.active,
       }
     end,

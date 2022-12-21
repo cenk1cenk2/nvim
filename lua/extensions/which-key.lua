@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "folke/which-key.nvim",
-        init = function()
-          require("utils.setup").plugin_init "wk"
-        end,
         enabled = config.active,
       }
     end,

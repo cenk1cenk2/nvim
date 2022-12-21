@@ -6,11 +6,9 @@ local extension_name = "legendary_nvim"
 function M.config()
   require("utils.setup").define_extension(extension_name, false, {
     plugin = function(config)
+      print(config.active)
       return {
         "mrjones2014/legendary.nvim",
-        config = function()
-          require("utils.setup").plugin_init "legendary_nvim"
-        end,
         enabled = config.active,
       }
     end,

@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "SmiteshP/nvim-navic",
-        config = function()
-          require("utils.setup").plugin_init "nvim_navic"
-        end,
         enabled = config.active,
       }
     end,

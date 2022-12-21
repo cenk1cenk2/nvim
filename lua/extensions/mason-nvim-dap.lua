@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "jay-babu/mason-nvim-dap.nvim",
-        config = function()
-          require("utils.setup").plugin_init "mason_nvim_dap"
-        end,
         enabled = config.active,
       }
     end,

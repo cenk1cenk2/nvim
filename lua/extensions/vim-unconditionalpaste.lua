@@ -8,9 +8,7 @@ function M.config()
     plugin = function(config)
       return {
         "inkarkat/vim-UnconditionalPaste",
-        config = function()
-          require("utils.setup").plugin_init "vim_unconditionalpaste"
-        end,
+        keys = { "gp", "gP" },
         enabled = config.active,
       }
     end,

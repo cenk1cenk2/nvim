@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "theHamsta/nvim-dap-virtual-text",
-        config = function()
-          require("utils.setup").plugin_init "nvim_dap_virtual_text"
-        end,
         event = "BufWinEnter",
         enabled = config.active,
       }

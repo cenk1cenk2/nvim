@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "stevearc/stickybuf.nvim",
-        config = function()
-          require("utils.setup").plugin_init "stickybuf_nvim"
-        end,
         enabled = config.active,
       }
     end,

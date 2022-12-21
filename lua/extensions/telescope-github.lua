@@ -9,9 +9,6 @@ function M.config()
       return {
         "nvim-telescope/telescope-github.nvim",
         dependencies = { "nvim-telescope/telescope.nvim" },
-        config = function()
-          require("utils.setup").plugin_init "telescope_github"
-        end,
         enabled = config.active,
       }
     end,

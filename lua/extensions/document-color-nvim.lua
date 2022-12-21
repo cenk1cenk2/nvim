@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "mrshmllow/document-color.nvim",
-        config = function()
-          require("utils.setup").plugin_init "document_color_nvim"
-        end,
         ft = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
         enabled = config.active,
       }

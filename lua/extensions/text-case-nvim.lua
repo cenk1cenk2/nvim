@@ -9,9 +9,6 @@ function M.config()
       return {
         "johmsalas/text-case.nvim",
         event = "BufReadPost",
-        config = function()
-          require("utils.setup").plugin_init "text_case_nvim"
-        end,
         enabled = config.active,
       }
     end,

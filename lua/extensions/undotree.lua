@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "mbbill/undotree",
-        config = function()
-          require("utils.setup").plugin_init "undotree"
-        end,
         enabled = config.active,
       }
     end,

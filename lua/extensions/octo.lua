@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "pwntester/octo.nvim",
-        config = function()
-          require("utils.setup").plugin_init "octo"
-        end,
         enabled = config.active,
       }
     end,

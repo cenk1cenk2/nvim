@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "lewis6991/gitsigns.nvim",
-        config = function()
-          require("utils.setup").plugin_init "gitsigns_nvim"
-        end,
         event = "BufReadPost",
         enabled = config.active,
       }

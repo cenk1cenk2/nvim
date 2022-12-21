@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "numToStr/Comment.nvim",
-        config = function()
-          require("utils.setup").plugin_init "comment_nvim"
-        end,
         event = "BufRead",
         enabled = config.active,
       }

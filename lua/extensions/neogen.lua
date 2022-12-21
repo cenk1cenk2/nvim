@@ -9,9 +9,6 @@ function M.config()
       return {
         "danymat/neogen",
         dependencies = { "nvim-treesitter/nvim-treesitter" },
-        config = function()
-          require("utils.setup").plugin_init "neogen"
-        end,
         event = "BufWinEnter",
         enabled = config.active,
       }

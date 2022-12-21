@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "folke/lsp-trouble.nvim",
-        config = function()
-          require("utils.setup").plugin_init "lsp_trouble"
-        end,
         cmd = { "TroubleToggle", "Trouble" },
         enabled = config.active,
       }

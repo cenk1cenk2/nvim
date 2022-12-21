@@ -9,9 +9,6 @@ function M.config()
       return {
         "kevinhwang91/nvim-ufo",
         dependencies = { "kevinhwang91/promise-async" },
-        config = function()
-          require("utils.setup").plugin_init "nvim_ufo"
-        end,
         enabled = config.active,
       }
     end,

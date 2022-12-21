@@ -12,9 +12,6 @@ function M.config()
           { "nvim-lua/plenary.nvim" },
           { "nvim-treesitter/nvim-treesitter" },
         },
-        config = function()
-          require("utils.setup").plugin_init "refactoring_nvim"
-        end,
         enabled = config.active,
       }
     end,

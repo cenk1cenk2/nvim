@@ -85,10 +85,44 @@ function M.define_extension(extension_name, active, config)
     end,
   }
 
-  if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[extension_name]) == false then
-    if config ~= nil and config.plugin ~= nil then
-      lvim.extensions[extension_name].plugin = config.plugin(lvim.extensions[extension_name])
+  config = vim.tbl_extend("force", config, lvim.extensions[extension_name])
+
+  local function define_plugin(plugin)
+    if plugin.init ~= false or type(plugin.init) ~= "function" then
+      plugin.init = function()
+        require("utils.setup").plugin_init(extension_name)
+      end
     end
+
+    if plugin.config ~= false or type(plugin.config) ~= "function" then
+      plugin.config = function()
+        require("utils.setup").plugin_configure(extension_name)
+      end
+    end
+
+    return plugin
+  end
+
+  if config ~= nil and config.plugin ~= nil then
+    local plugins = {}
+
+    if config.plugin ~= nil then
+      local extension = config.plugin(config)
+
+      if config.opts ~= nil and config.opts.multiple_packages then
+        for _, e in pairs(extension) do
+          table.insert(plugins, define_plugin(e))
+        end
+      else
+        table.insert(plugins, define_plugin(extension))
+      end
+    end
+
+    config.plugin = plugins
+  end
+
+  if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[extension_name]) == false then
+    lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config or {})
 
     Log:debug(string.format("Extension config stopped due to failed condition: %s", extension_name))
 
@@ -100,10 +134,6 @@ function M.define_extension(extension_name, active, config)
   end
 
   lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config or {})
-
-  if config ~= nil and config.plugin ~= nil then
-    lvim.extensions[extension_name].plugin = config.plugin(lvim.extensions[extension_name])
-  end
 end
 
 ---
@@ -120,13 +150,13 @@ end
 
 ---
 ---@param extension_name string
-function M.plugin_init(extension_name)
-  return M.init(M.get_config(extension_name))
+function M.plugin_configure(extension_name)
+  return M.configure(M.get_config(extension_name))
 end
 
 ---
 ---@param extension_name string
-function M.plugin_configure(extension_name)
+function M.plugin_init(extension_name)
   return M.configure(M.get_config(extension_name))
 end
 
@@ -171,7 +201,7 @@ end
 
 ---
 ---@param config config
-function M.configure(config)
+function M.init(config)
   if config ~= nil and config.to_inject ~= nil then
     local ok = pcall(function()
       ---@diagnostic disable-next-line: assign-type-mismatch
@@ -183,6 +213,10 @@ function M.configure(config)
 
       return
     end
+  end
+
+  if config ~= nil and config.on_init ~= nil then
+    config.on_init(config)
   end
 
   if config ~= nil and config.autocmds ~= nil then
@@ -228,7 +262,7 @@ end
 
 ---
 ---@param config config
-function M.init(config)
+function M.configure(config)
   if config ~= nil and config.to_inject ~= nil then
     local ok = pcall(function()
       ---@diagnostic disable-next-line: assign-type-mismatch
@@ -240,10 +274,6 @@ function M.init(config)
 
       return
     end
-  end
-
-  if config ~= nil and config.on_init ~= nil then
-    config.on_init(config)
   end
 
   if config ~= nil and config.legacy_setup ~= nil then
@@ -291,14 +321,11 @@ end
 ---
 function M.set_plugins()
   local plugins = {}
+
   for _, extension in pairs(lvim.extensions) do
-    if extension.plugin ~= nil and type(extension.plugin) == "table" then
-      if extension.opts ~= nil and extension.opts.multiple_packages then
-        for _, e in pairs(extension.plugin) do
-          table.insert(plugins, e)
-        end
-      else
-        table.insert(plugins, extension.plugin)
+    if extension.plugin ~= nil then
+      for _, e in pairs(extension.plugin) do
+        table.insert(plugins, e)
       end
     end
   end

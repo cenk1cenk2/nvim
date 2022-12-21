@@ -8,12 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "goolord/alpha-nvim",
-        init = function()
-          require("utils.setup").plugin_init "alpha"
-        end,
-        config = function()
-          require("utils.setup").plugin_configure "alpha"
-        end,
         lazy = false,
         enabled = config.active,
       }

@@ -7,9 +7,7 @@ function M.config()
     plugin = function(config)
       return {
         "szw/vim-maximizer",
-        config = function()
-          require("utils.setup").plugin_init "vim_maximizer"
-        end,
+        lazy = false,
         enabled = config.active,
       }
     end,

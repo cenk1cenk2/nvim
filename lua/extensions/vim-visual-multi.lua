@@ -8,9 +8,7 @@ function M.config()
     plugin = function(config)
       return {
         "mg979/vim-visual-multi",
-        config = function()
-          require("utils.setup").plugin_init "vim_visual_multi"
-        end,
+        event = "BufWinEnter",
         enabled = config.active,
       }
     end,

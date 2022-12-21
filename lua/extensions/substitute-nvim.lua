@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "gbprod/substitute.nvim",
-        config = function()
-          require("utils.setup").plugin_init "substitute_nvim"
-        end,
         enabled = config.active,
       }
     end,

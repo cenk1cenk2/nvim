@@ -10,9 +10,6 @@ function M.config()
     plugin = function(config)
       return {
         "sindrets/diffview.nvim",
-        config = function()
-          require("utils.setup").plugin_init "diffview"
-        end,
         cmd = { "DiffviewFileHistory", "DiffviewOpen", "DiffviewClose" },
         enabled = config.active,
       }

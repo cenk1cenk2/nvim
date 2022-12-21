@@ -9,6 +9,10 @@ function M.config()
       return {
         "hrsh7th/nvim-cmp",
         config = function()
+          require("utils.setup").plugin_config "cmp"
+          require("utils.setup").plugin_config "cmp_extensions"
+        end,
+        init = function()
           require("utils.setup").plugin_init "cmp"
           require("utils.setup").plugin_init "cmp_extensions"
         end,

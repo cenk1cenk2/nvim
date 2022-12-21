@@ -11,9 +11,6 @@ function M.config()
       return {
         "mfussenegger/nvim-dap",
         dependencies = {},
-        config = function()
-          require("utils.setup").plugin_init "dap"
-        end,
         enabled = config.active,
       }
     end,

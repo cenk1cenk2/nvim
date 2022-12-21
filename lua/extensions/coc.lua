@@ -9,10 +9,8 @@ function M.config()
       return {
         "neoclide/coc.nvim",
         branch = "release",
-        config = function()
-          require("utils.setup").plugin_init "coc"
-        end,
         cmd = { "CocList", "CocCommand" },
+        keys = { "<Space-G>" },
         enabled = config.active,
       }
     end,

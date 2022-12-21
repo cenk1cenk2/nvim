@@ -9,9 +9,6 @@ function M.config()
       return {
         "rcarriga/nvim-dap-ui",
         dependencies = { "mfussenegger/nvim-dap" },
-        config = function()
-          require("utils.setup").plugin_init "nvim_dap_ui"
-        end,
         enabled = config.active,
       }
     end,

@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "sindrets/winshift.nvim",
-        config = function()
-          require("utils.setup").plugin_init "winshift_nvim"
-        end,
         enabled = config.active,
       }
     end,

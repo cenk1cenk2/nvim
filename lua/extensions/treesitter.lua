@@ -11,9 +11,6 @@ function M.config()
       return {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        config = function()
-          require("utils.setup").plugin_init "treesitter"
-        end,
         enabled = config.active,
       }
     end,

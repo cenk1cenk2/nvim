@@ -9,9 +9,6 @@ function M.config()
       return {
         "lvimuser/lsp-inlayhints.nvim",
         -- branch = "anticonceal",
-        config = function()
-          require("utils.setup").plugin_init "lsp_inlayhits_nvim"
-        end,
         event = "BufReadPost",
         enabled = config.active,
       }

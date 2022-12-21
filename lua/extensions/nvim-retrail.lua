@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "zakharykaplan/nvim-retrail",
-        config = function()
-          require("utils.setup").plugin_init "nvim_retrail"
-        end,
         enabled = config.active,
       }
     end,

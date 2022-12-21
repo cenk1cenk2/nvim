@@ -9,9 +9,6 @@ function M.config()
     plugin = function(config)
       return {
         "kylechui/nvim-surround",
-        config = function()
-          require("utils.setup").plugin_init "nvim_surround"
-        end,
         event = "BufWinEnter",
         enabled = config.active,
       }

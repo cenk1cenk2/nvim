@@ -8,9 +8,6 @@ function M.config()
     plugin = function(config)
       return {
         "MunifTanjim/exrc.nvim",
-        init = function()
-          require("utils.setup").plugin_init "exrc_nvim"
-        end,
         enabled = config.active,
       }
     end,

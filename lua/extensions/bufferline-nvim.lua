@@ -12,9 +12,7 @@ function M.config()
           -- https://github.com/ojroques/nvim-bufdel
           "ojroques/nvim-bufdel",
         },
-        init = function()
-          require("utils.setup").plugin_init "bufferline_nvim"
-        end,
+        lazy = false,
         enabled = config.active,
       }
     end,

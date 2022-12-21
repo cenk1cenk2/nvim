@@ -9,9 +9,6 @@ function M.config()
       return {
         "karb94/neoscroll.nvim",
         event = "VeryLazy",
-        config = function()
-          require("utils.setup").plugin_init "neoscroll"
-        end,
         enabled = config.active,
       }
     end,
