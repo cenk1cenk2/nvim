@@ -37,11 +37,12 @@ function M.config()
     },
     on_setup = function(config)
       local extension = require("alpha")
+      local plugins = require("lvim.plugins")
 
       local lvim_version = require("lvim.utils.git").get_lvim_current_sha()
       local nvim_version = require("lvim.utils.git").get_nvim_version()
-      local num_plugins_loaded = #vim.fn.globpath(get_data_dir() .. "/site/pack/packer/start", "*", 0, 1)
-      local num_opt_plugins_loaded = #vim.fn.globpath(get_data_dir() .. "/site/pack/packer/opt", "*", 0, 1)
+      local num_plugins_loaded = 0
+      local num_opt_plugins_loaded = 0
       local button = require("alpha.themes.dashboard").button
 
       local buttons = {}

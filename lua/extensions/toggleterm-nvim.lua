@@ -10,6 +10,7 @@ function M.config()
     plugin = function()
       return {
         "akinsho/toggleterm.nvim",
+        lazy = false,
       }
     end,
     configure = function(_, fn)

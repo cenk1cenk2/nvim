@@ -3,12 +3,12 @@ local M = {}
 local utils = require("lvim.utils")
 local Log = require("lvim.core.log")
 
-local lazy_dir = get_data_dir() .. "/lazy"
-local lazy_path = lazy_dir .. "/lazy.nvim"
-local lazy_cache_dir = get_cache_dir() .. "/lazy"
+M.plugins_dir = get_data_dir() .. "/lazy"
+M.plugin_manager_dir = M.plugins_dir .. "/lazy.nvim"
+M.plugin_manager_cache_dir = get_cache_dir() .. "/lazy"
 
 local lazy_setup = {
-  root = lazy_dir, -- directory where plugins will be installed
+  root = M.plugins_dir, -- directory where plugins will be installed
   defaults = {
     lazy = false, -- should plugins be lazy-loaded?
   },
@@ -40,7 +40,7 @@ local lazy_setup = {
   performance = {
     cache = {
       enabled = true,
-      path = lazy_cache_dir .. "/cache",
+      path = M.plugin_manager_cache_dir .. "/cache",
       -- Once one of the following events triggers, caching will be disabled.
       -- To cache all modules, set this to `{}`, but that is not recommended.
       -- The default is to disable on:
@@ -65,14 +65,14 @@ local lazy_setup = {
     },
   },
   readme = {
-    root = vim.fn.stdpath("state") .. "/lazy/readme",
+    root = get_state_dir() .. "/lazy/readme",
     files = { "README.md" },
     skip_if_doc_exists = true,
   },
 }
 
 function M.init()
-  if not utils.is_directory(lazy_path) then
+  if not utils.is_directory(M.plugin_manager_dir) then
     print("Initializing first time setup...")
     print("Installing plugin manager...")
     vim.fn.system({
@@ -81,11 +81,11 @@ function M.init()
       "--filter=blob:none",
       "--single-branch",
       "https://github.com/folke/lazy.nvim.git",
-      lazy_path,
+      M.plugin_manager_dir,
     })
   end
 
-  vim.opt.runtimepath:prepend(lazy_path)
+  vim.opt.runtimepath:prepend(M.plugin_manager_dir)
 end
 
 function M.load()

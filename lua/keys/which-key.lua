@@ -15,7 +15,7 @@ M.CATEGORIES = {
   TERMINAL = "t",
   SESSION = "w",
   NEOVIM = "L",
-  PACKER = "P",
+  PLUGINS = "P",
   TASKS = "r",
   BUILD = "R",
   TREESITTER = "T",
@@ -144,29 +144,21 @@ M.mappings = {
       N = { ":edit $NVIM_LOG_FILE<CR>", "open the neovim logfile" },
       p = {
         function()
-          lvim.fn.toggle_log_view("packer.nvim")
+          lvim.fn.toggle_log_view("lazy.nvim")
         end,
-        "view packer log",
+        "view plugin manager log",
       },
-      P = { ":exe 'edit '.stdpath('cache').'/packer.nvim.log'<CR>", "open the packer logfile" },
     },
     r = { ":LvimReload<CR>", "reload configuration" },
     u = { ":LvimUpdate<CR>", "git update config repository" },
   },
 
-  [M.CATEGORIES.PACKER] = {
-    name = "packer",
-    c = { ":PackerCompile<CR>", "packer compile" },
-    i = { ":PackerInstall<CR>", "packer install" },
-    r = {
-      function()
-        require("lvim.plugins").recompile()
-      end,
-      "recompile",
-    },
-    s = { ":PackerSync<CR>", "packer sync" },
-    S = { ":PackerStatus<CR>", "packer status" },
-    u = { ":PackerUpdate<CR>", "packer update" },
+  [M.CATEGORIES.PLUGINS] = {
+    name = "plugins",
+    i = { ":Lazy install<CR>", "install" },
+    s = { ":Lazy restore<CR>", "packer sync" },
+    S = { ":Lazy<CR>", "packer status" },
+    u = { ":Lazy update<CR>", "packer update" },
   },
 
   [M.CATEGORIES.TESTS] = {

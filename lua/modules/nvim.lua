@@ -14,9 +14,7 @@ end
 function M.rebuild_and_update()
   M.rebuild_latest_neovim()
 
-  vim.cmd([[PackerSync]])
-  vim.cmd([[PackerCompile]])
-  vim.cmd([[LvimCacheReset]])
+  vim.cmd([[Lazy update]])
 end
 
 function M.update_language_servers()

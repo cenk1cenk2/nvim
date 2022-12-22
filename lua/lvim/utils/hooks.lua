@@ -22,7 +22,6 @@ function M.on_plugin_manager_complete()
 
   vim.api.nvim_exec_autocmds("User", { pattern = "PluginManagerComplete" })
 
-  vim.g.colors_name = lvim.colorscheme
   pcall(vim.cmd, "colorscheme " .. lvim.colorscheme)
 
   if M._reload_triggered then

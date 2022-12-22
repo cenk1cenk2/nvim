@@ -100,7 +100,6 @@ lvim.lsp.automatic_configuration.skipped_servers = {
   "zeta_note",
 }
 
-
 lvim.lsp.null_ls.setup = {
   debug = false,
 }
@@ -139,5 +138,4 @@ require("utils.setup").fn.append_to_setup("treesitter", {
     "vue",
     "yaml",
   },
-  debug = false,
-}
+})

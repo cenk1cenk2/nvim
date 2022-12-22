@@ -73,11 +73,14 @@ function M.config()
       -- setup lua snip
       local utils = require("lvim.utils")
       local paths = {}
-      paths[#paths + 1] = join_paths(get_data_dir(), "site", "pack", "packer", "start", "friendly-snippets")
+
+      table.insert(paths, join_paths(require("lvim.plugins").plugins_dir, "friendly-snippets"))
+
       local user_snippets = join_paths(get_config_dir(), "snippets")
       if utils.is_directory(user_snippets) then
-        paths[#paths + 1] = user_snippets
+        table.insert(paths, user_snippets)
       end
+
       require("luasnip.loaders.from_lua").lazy_load()
       require("luasnip.loaders.from_vscode").lazy_load({ paths = paths })
       require("luasnip.loaders.from_snipmate").lazy_load()

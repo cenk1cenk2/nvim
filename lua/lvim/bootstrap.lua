@@ -1,13 +1,5 @@
 local M = {}
 
-if vim.fn.has("nvim-0.7") ~= 1 then
-  vim.notify("Please upgrade your Neovim base installation. Lunarvim requires v0.7+", vim.log.levels.WARN)
-  vim.wait(5000, function()
-    return false
-  end)
-  vim.cmd("cquit")
-end
-
 local uv = vim.loop
 local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
 local in_headless = #vim.api.nvim_list_uis() == 0
@@ -40,6 +32,12 @@ end
 ---@return string
 function _G.get_config_dir()
   return vim.fn.stdpath("config")
+end
+
+---Get the full path to `$LUNARVIM_CONFIG_DIR`
+---@return string
+function _G.get_state_dir()
+  return vim.fn.stdpath("state")
 end
 
 ---Get the full path to `$LUNARVIM_CACHE_DIR`
