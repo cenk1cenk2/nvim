@@ -6,11 +6,11 @@ local extension_name = "nvim_autopairs"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "windwp/nvim-autopairs",
         dependencies = { "hrsh7th/nvim-cmp" },
-        enabled = config.active,
+        event = "InsertEnter",
       }
     end,
     setup = {
@@ -58,7 +58,7 @@ function M.config()
       require("nvim-autopairs").setup(config.setup)
     end,
     on_done = function()
-      require("nvim-treesitter.configs").setup { autopairs = { enable = true } }
+      require("nvim-treesitter.configs").setup({ autopairs = { enable = true } })
 
       pcall(function()
         require("cmp").event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())

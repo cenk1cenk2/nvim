@@ -5,10 +5,9 @@ local extension_name = "template"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "template",
-        enabled = config.active,
       }
     end,
   })

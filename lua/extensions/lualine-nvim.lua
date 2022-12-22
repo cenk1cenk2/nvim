@@ -2,14 +2,14 @@
 local M = {}
 
 local extension_name = "lualine_nvim"
-local colors = require "onedarker.colors"
+local colors = require("onedarker.colors")
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "nvim-lualine/lualine.nvim",
-        enabled = config.active,
+        lazy = false,
       }
     end,
     to_inject = function()
@@ -17,7 +17,7 @@ function M.config()
 
       local conditions = {
         buffer_not_empty = function()
-          return vim.fn.empty(vim.fn.expand "%:t") ~= 1
+          return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
         end,
         hide_in_width = function()
           return vim.fn.winwidth(0) > window_width_limit
@@ -95,9 +95,9 @@ function M.config()
         },
         python_env = {
           function()
-            local utils = require "lvim.core.lualine.utils"
+            local utils = require("lvim.core.lualine.utils")
             if vim.bo.filetype == "python" then
-              local venv = os.getenv "CONDA_DEFAULT_ENV" or os.getenv "VIRTUAL_ENV"
+              local venv = os.getenv("CONDA_DEFAULT_ENV") or os.getenv("VIRTUAL_ENV")
               if venv then
                 return string.format("  (%s)", utils.env_cleanup(venv))
               end
@@ -134,7 +134,7 @@ function M.config()
         lsp = {
           function(msg)
             msg = msg or "❌"
-            local buf_clients = vim.lsp.get_active_clients { bufnr = vim.api.nvim_get_current_buf() }
+            local buf_clients = vim.lsp.get_active_clients({ bufnr = vim.api.nvim_get_current_buf() })
             if next(buf_clients) == nil then
               -- TODO: clean up this if statement
               if type(msg) == "boolean" or #msg == 0 then
@@ -153,11 +153,11 @@ function M.config()
             end
 
             -- add formatter
-            local formatters = require "lvim.lsp.null-ls.formatters"
+            local formatters = require("lvim.lsp.null-ls.formatters")
             local supported_formatters = formatters.list_registered(buf_ft)
 
             -- add linter
-            local linters = require "lvim.lsp.null-ls.linters"
+            local linters = require("lvim.lsp.null-ls.linters")
             local supported_linters = linters.list_registered(buf_ft)
 
             local lsps = table.concat(buf_client_names, ", ")
@@ -199,8 +199,8 @@ function M.config()
         },
         scrollbar = {
           function()
-            local current_line = vim.fn.line "."
-            local total_lines = vim.fn.line "$"
+            local current_line = vim.fn.line(".")
+            local total_lines = vim.fn.line("$")
             local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
             local line_ratio = current_line / total_lines
             local index = math.ceil(line_ratio * #chars)
@@ -270,7 +270,7 @@ function M.config()
         globalstatus = true,
         options = {
           theme = "auto",
-          icons_enabled = lvim.use_icons,
+          icons_enabled = lvim.ui.use_icons,
           component_separators = { left = "", right = "" },
           section_separators = { left = "", right = "" },
           disabled_filetypes = lvim.disabled_filetypes,

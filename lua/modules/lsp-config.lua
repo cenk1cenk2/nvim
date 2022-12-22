@@ -1,7 +1,7 @@
 local M = {}
 
-local configs = require "lspconfig/configs"
-local Log = require "lvim.core.log"
+local configs = require("lspconfig/configs")
+local Log = require("lvim.core.log")
 
 function M.set_lsp_default_config(server_name, config)
   configs[server_name] = {

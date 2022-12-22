@@ -13,7 +13,7 @@ function M.config()
           "anuvyklack/animation.nvim",
         },
         config = function()
-          require("utils.setup").packer_config "windows_nvim"
+          require("utils.setup").packer_config("windows_nvim")
         end,
         disable = not config.active,
       }

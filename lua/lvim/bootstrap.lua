@@ -1,15 +1,15 @@
 local M = {}
 
-if vim.fn.has "nvim-0.7" ~= 1 then
+if vim.fn.has("nvim-0.7") ~= 1 then
   vim.notify("Please upgrade your Neovim base installation. Lunarvim requires v0.7+", vim.log.levels.WARN)
   vim.wait(5000, function()
     return false
   end)
-  vim.cmd "cquit"
+  vim.cmd("cquit")
 end
 
 local uv = vim.loop
-local path_sep = uv.os_uname().version:match "Windows" and "\\" or "/"
+local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
 local in_headless = #vim.api.nvim_list_uis() == 0
 
 ---Join path segments that were passed as input
@@ -31,30 +31,29 @@ end
 
 ---Get the full path to `$LUNARVIM_RUNTIME_DIR`
 ---@return string
-function _G.get_runtime_dir()
+function _G.get_data_dir()
   -- when nvim is used directly
-  return vim.fn.stdpath "data"
+  return vim.fn.stdpath("data")
 end
 
 ---Get the full path to `$LUNARVIM_CONFIG_DIR`
 ---@return string
 function _G.get_config_dir()
-  return vim.fn.stdpath "config"
+  return vim.fn.stdpath("config")
 end
 
 ---Get the full path to `$LUNARVIM_CACHE_DIR`
 ---@return string
 function _G.get_cache_dir()
-  return vim.fn.stdpath "cache"
+  return vim.fn.stdpath("cache")
 end
 
 ---Initialize the `&runtimepath` variables and prepare for startup
 ---@return table
 function M:init()
-  self.runtime_dir = get_runtime_dir()
+  self.runtime_dir = get_data_dir()
   self.config_dir = get_config_dir()
   self.cache_dir = get_cache_dir()
-  self.pack_dir = join_paths(self.runtime_dir, "site", "pack")
 
   ---Get the full path to LunarVim's base directory
   -- FIXME: currently unreliable in unit-tests
@@ -73,7 +72,9 @@ end
 ---pulls the latest changes from github and, resets the startup cache
 function M:update()
   require_clean("lvim.utils.hooks").run_pre_update()
-  local ret = require_clean("lvim.utils.git").update_base_lvim()
+
+  local ret = require_clean("lvim.utils.git").update_repository()
+
   if ret then
     require_clean("lvim.utils.hooks").run_post_update()
   end

@@ -1,8 +1,8 @@
 local M = {}
 
-local Log = require "lvim.core.log"
-local lvim_lsp_utils = require "lvim.lsp.utils"
-local setup = require "utils.setup"
+local Log = require("lvim.core.log")
+local lvim_lsp_utils = require("lvim.lsp.utils")
+local setup = require("utils.setup")
 
 function M.remove_template_files()
   -- remove any outdated files

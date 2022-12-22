@@ -5,19 +5,18 @@ local extension_name = "refactoring_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "ThePrimeagen/refactoring.nvim",
         dependencies = {
           { "nvim-lua/plenary.nvim" },
           { "nvim-treesitter/nvim-treesitter" },
         },
-        enabled = config.active,
       }
     end,
     to_inject = function()
       return {
-        refactoring = require "refactoring",
+        refactoring = require("refactoring"),
       }
     end,
     setup = {},
@@ -31,25 +30,25 @@ function M.config()
         v = {
           ["re"] = {
             function()
-              refactoring.refactor "Extract Function"
+              refactoring.refactor("Extract Function")
             end,
             { desc = "extract to function" },
           },
           ["rf"] = {
             function()
-              refactoring.refactor "Extract Function To File"
+              refactoring.refactor("Extract Function To File")
             end,
             { desc = "extract function to file" },
           },
           ["rv"] = {
             function()
-              refactoring.refactor "Extract Variable"
+              refactoring.refactor("Extract Variable")
             end,
             { desc = "extract variable" },
           },
           ["ri"] = {
             function()
-              refactoring.refactor "Inline Variable"
+              refactoring.refactor("Inline Variable")
             end,
             { desc = "extract inline variable" },
           },

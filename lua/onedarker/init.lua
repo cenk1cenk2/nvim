@@ -1,9 +1,9 @@
 local M = {}
 
 function M.setup()
-  vim.cmd "hi clear"
-  if vim.fn.exists "syntax_on" then
-    vim.cmd "syntax reset"
+  vim.cmd("hi clear")
+  if vim.fn.exists("syntax_on") then
+    vim.cmd("syntax reset")
   end
 
   vim.o.background = "dark"
@@ -13,9 +13,9 @@ function M.setup()
   require("onedarker.highlights").setup()
   require("onedarker.terminal").setup()
 
-  vim.api.nvim_command [[syntax on]]
-  vim.api.nvim_command [[set termguicolors]]
-  vim.api.nvim_command [[colorscheme onedarker]]
+  vim.api.nvim_command([[syntax on]])
+  vim.api.nvim_command([[set termguicolors]])
+  vim.api.nvim_command([[colorscheme onedarker]])
 end
 
 return M

@@ -5,11 +5,10 @@ local extension_name = "big_file_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "LunarVim/bigfile.nvim",
         lazy = false,
-        enabled = config.active,
       }
     end,
     setup = {

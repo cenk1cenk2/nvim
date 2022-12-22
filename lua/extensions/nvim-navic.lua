@@ -5,15 +5,14 @@ local extension_name = "nvim_navic"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, false, {
-    plugin = function(config)
+    plugin = function()
       return {
         "SmiteshP/nvim-navic",
-        enabled = config.active,
       }
     end,
     to_inject = function()
       return {
-        navic = require "nvim-navic",
+        navic = require("nvim-navic"),
       }
     end,
     setup = {

@@ -9,7 +9,7 @@ function M.config()
       return {
         "nvim-zh/colorful-winsep.nvim",
         config = function()
-          require("utils.setup").packer_config "colorful_winsep_nvim"
+          require("utils.setup").packer_config("colorful_winsep_nvim")
         end,
         disable = not config.active,
       }

@@ -5,16 +5,15 @@ local extension_name = "comment_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "numToStr/Comment.nvim",
         event = "BufRead",
-        enabled = config.active,
       }
     end,
     to_inject = function()
       return {
-        ft = require "Comment.ft",
+        ft = require("Comment.ft"),
       }
     end,
     setup = {

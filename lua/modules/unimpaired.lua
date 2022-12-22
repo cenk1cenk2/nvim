@@ -14,15 +14,15 @@ local function paste_blank_line(line)
 end
 
 function M.paste_blank_line_above()
-  paste_blank_line(vim.fn.line "." - 1)
+  paste_blank_line(vim.fn.line(".") - 1)
 end
 
 function M.paste_blank_line_below()
-  paste_blank_line(vim.fn.line ".")
+  paste_blank_line(vim.fn.line("."))
 end
 
 function M.setup()
-  require("utils.setup").configure {
+  require("utils.setup").configure({
     name = "unimpaired",
     keymaps = {
       n = {
@@ -38,7 +38,7 @@ function M.setup()
         },
       },
     },
-  }
+  })
 end
 
 return M

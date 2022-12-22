@@ -1,7 +1,7 @@
 local M = {}
-local Log = require "lvim.core.log"
-local utils = require "lvim.utils"
-local autocmds = require "lvim.core.autocmds"
+
+local Log = require("lvim.core.log")
+local autocmds = require("lvim.core.autocmds")
 
 local function add_lsp_buffer_options(bufnr)
   for k, v in pairs(lvim.lsp.buffer_options) do
@@ -44,11 +44,11 @@ function M.common_on_exit(client, bufnr)
     for _, cb in pairs(lvim.lsp.on_exit) do
       cb(client, bufnr)
     end
-    Log:trace "Called lsp.on_exit"
+    Log:trace("Called lsp.on_exit")
   end
 
   if lvim.lsp.code_lens_refresh then
-    autocmds.clear_augroup "lsp_code_lens_refresh"
+    autocmds.clear_augroup("lsp_code_lens_refresh")
   end
 end
 
@@ -57,7 +57,7 @@ function M.common_on_init(client, bufnr)
     for _, cb in pairs(lvim.lsp.on_init_callbacks) do
       cb(client, bufnr)
     end
-    Log:trace "Called lsp.on_init_callbacks"
+    Log:trace("Called lsp.on_init_callbacks")
   end
 end
 
@@ -66,10 +66,10 @@ function M.common_on_attach(client, bufnr)
     for _, cb in pairs(lvim.lsp.on_attach_callbacks) do
       cb(client, bufnr)
     end
-    Log:trace "Called lsp.on_attach_callbacks"
+    Log:trace("Called lsp.on_attach_callbacks")
   end
 
-  local lu = require "lvim.lsp.utils"
+  local lu = require("lvim.lsp.utils")
   if lvim.lsp.code_lens_refresh then
     lu.setup_codelens_refresh(client, bufnr)
   end
@@ -88,18 +88,18 @@ end
 
 function M.setup()
   if #vim.api.nvim_list_uis() == 0 then
-    Log:debug "headless mode detected, skipping setting lsp support"
+    Log:debug("headless mode detected, skipping setting lsp support")
     return
   end
 
-  Log:debug "Setting up LSP support"
+  Log:debug("Setting up LSP support")
 
-  Log:debug "Installing LSP servers."
+  Log:debug("Installing LSP servers.")
 
   local installer_ok, installer = pcall(require, "mason-tool-installer")
 
   if installer_ok then
-    installer.setup {
+    installer.setup({
       -- a list of all tools you want to ensure are installed upon
       -- start; they should be the names Mason uses for each tool
       ensure_installed = lvim.lsp.ensure_installed,
@@ -117,9 +117,9 @@ function M.setup()
       run_on_start = true,
 
       start_delay = 1000, -- 3 second delay
-    }
+    })
   else
-    Log:warn "LSP installer not available."
+    Log:warn("LSP installer not available.")
   end
 
   local lsp_status_ok, _ = pcall(require, "lspconfig")
@@ -129,7 +129,7 @@ function M.setup()
 
   require("modules-lsp").setup()
 
-  if lvim.use_icons then
+  if lvim.ui.use_icons then
     for _, sign in ipairs(lvim.lsp.diagnostics.signs.values) do
       vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
     end
@@ -137,27 +137,23 @@ function M.setup()
 
   require("lvim.lsp.handlers").setup()
 
-  if not utils.is_directory(lvim.lsp.templates_dir) then
-    require("lvim.lsp.templates").generate_templates()
-  end
-
   pcall(function()
     require("nlspsettings").setup(lvim.lsp.nlsp_settings.setup)
   end)
 
   pcall(function()
     require("mason-lspconfig").setup(lvim.lsp.installer.setup)
-    require("mason-lspconfig").setup_handlers {
+    require("mason-lspconfig").setup_handlers({
       function(server_name)
         if require("lvim.lsp.attach").should_configure(server_name) then
           require("lvim.lsp.manager").setup(server_name)
         else
-          Log:debug("Skipping configuring LSP: %s", server_name)
+          Log:debug(("Skipping configuring LSP: %s"):format(server_name))
         end
       end,
-    }
+    })
 
-    local util = require "lspconfig.util"
+    local util = require("lspconfig.util")
     util.on_setup = nil
   end)
 

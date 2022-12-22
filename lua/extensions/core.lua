@@ -10,23 +10,32 @@ function M.config()
     },
     plugin = function()
       return {
-        { "nvim-lua/plenary.nvim" },
+        {
+          "nvim-lua/plenary.nvim",
+          lazy = false,
+        },
         {
           "rcarriga/nvim-notify",
-          init = function()
+          config = function()
             require("lvim.core.notify").setup()
           end,
           lazy = false,
           enabled = lvim.builtin.notify.active,
         },
-        { "nvim-lua/popup.nvim", lazy = false },
+        {
+          "nvim-lua/popup.nvim",
+          event = "VeryLazy",
+        },
         { "Tastyep/structlog.nvim", lazy = false },
         {
           "kyazdani42/nvim-web-devicons",
           lazy = false,
-          enabled = lvim.use_icons,
+          enabled = lvim.ui.use_icons,
         },
-        { "MunifTanjim/nui.nvim", event = "VeryLazy" },
+        {
+          "MunifTanjim/nui.nvim",
+          event = "VeryLazy",
+        },
       }
     end,
   })

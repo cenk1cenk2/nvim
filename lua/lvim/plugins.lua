@@ -1,16 +1,16 @@
 local M = {}
 
-local utils = require "lvim.utils"
-local Log = require "lvim.core.log"
+local utils = require("lvim.utils")
+local Log = require("lvim.core.log")
 
-local lazy_dir = get_runtime_dir() .. "/lazy"
+local lazy_dir = get_data_dir() .. "/lazy"
 local lazy_path = lazy_dir .. "/lazy.nvim"
 local lazy_cache_dir = get_cache_dir() .. "/lazy"
 
 local lazy_setup = {
   root = lazy_dir, -- directory where plugins will be installed
   defaults = {
-    lazy = true, -- should plugins be lazy-loaded?
+    lazy = false, -- should plugins be lazy-loaded?
   },
   lockfile = get_config_dir() .. "/lazy-lock.json", -- lockfile generated after running update.
   ui = {
@@ -54,8 +54,8 @@ local lazy_setup = {
       ---@type string[] list any plugins you want to disable here
       disabled_plugins = {
         "gzip",
-        -- "matchit",
-        -- "matchparen",
+        "matchit",
+        "matchparen",
         "netrwPlugin",
         "tarPlugin",
         "tohtml",
@@ -65,7 +65,7 @@ local lazy_setup = {
     },
   },
   readme = {
-    root = vim.fn.stdpath "state" .. "/lazy/readme",
+    root = vim.fn.stdpath("state") .. "/lazy/readme",
     files = { "README.md" },
     skip_if_doc_exists = true,
   },
@@ -73,28 +73,28 @@ local lazy_setup = {
 
 function M.init()
   if not utils.is_directory(lazy_path) then
-    print "Initializing first time setup..."
-    print "Installing plugin manager..."
-    vim.fn.system {
+    print("Initializing first time setup...")
+    print("Installing plugin manager...")
+    vim.fn.system({
       "git",
       "clone",
       "--filter=blob:none",
       "--single-branch",
       "https://github.com/folke/lazy.nvim.git",
       lazy_path,
-    }
+    })
   end
 
   vim.opt.runtimepath:prepend(lazy_path)
 end
 
 function M.load()
-  Log:debug "loading plugins configuration"
+  Log:debug("Loading plugins configurations...")
 
   local manager_ok, manager = pcall(require, "lazy")
 
   if not manager_ok then
-    Log:warn "skipping loading plugins until plugin manager is installed"
+    Log:warn("Skipping loading plugins until plugin manager is installed.")
 
     return
   end
@@ -105,7 +105,7 @@ function M.load()
   end, debug.traceback)
 
   if not status_ok then
-    Log:warn "Can not load plugin configurations."
+    Log:warn("Can not load plugin configurations.")
     Log:trace(debug.traceback())
   end
 

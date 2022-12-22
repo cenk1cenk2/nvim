@@ -6,18 +6,17 @@ local extension_name = "rnvimr"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "kevinhwang91/rnvimr",
         cmd = { "RnvimrToggle" },
         keys = { "<F5>" },
-        enabled = config.active,
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "rnvimr",
-      }
+      })
     end,
     legacy_setup = {
       rnvimr_draw_border = 1,

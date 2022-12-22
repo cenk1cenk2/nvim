@@ -5,14 +5,13 @@ local extension_name = "nvim_window_picker"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "s1n7ax/nvim-window-picker",
-        enabled = config.active,
       }
     end,
     setup = function()
-      local colors = require "onedarker.colors"
+      local colors = require("onedarker.colors")
 
       return {
         selection_chars = "ASDFGQWERYXCVB",

@@ -1,9 +1,9 @@
 local M = {}
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
-local null_ls = require "null-ls"
-local services = require "lvim.lsp.null-ls.services"
+local null_ls = require("null-ls")
+local services = require("lvim.lsp.null-ls.services")
 local method = null_ls.methods.DIAGNOSTICS
 
 local alternative_methods = {
@@ -22,7 +22,7 @@ function M.list_registered(filetype)
 end
 
 function M.list_supported(filetype)
-  local s = require "null-ls.sources"
+  local s = require("null-ls.sources")
   local supported_linters = s.get_supported(filetype, "diagnostics")
   table.sort(supported_linters)
   return supported_linters

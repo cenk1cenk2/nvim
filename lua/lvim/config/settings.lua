@@ -1,7 +1,7 @@
 local M = {}
 
 M.load_default_options = function()
-  local utils = require "lvim.utils"
+  local utils = require("lvim.utils")
 
   local undodir = join_paths(get_cache_dir(), "undo")
 
@@ -60,9 +60,9 @@ M.load_default_options = function()
   }
 
   ---  SETTINGS  ---
-  vim.opt.shortmess:append "c" -- don't show redundant messages from ins-completion-menu
-  vim.opt.shortmess:append "I" -- don't show the default intro message
-  vim.opt.whichwrap:append "<,>,[,],h,l"
+  vim.opt.shortmess:append("c") -- don't show redundant messages from ins-completion-menu
+  vim.opt.shortmess:append("I") -- don't show the default intro message
+  vim.opt.whichwrap:append("<,>,[,],h,l")
 
   for k, v in pairs(default_options) do
     vim.opt[k] = v

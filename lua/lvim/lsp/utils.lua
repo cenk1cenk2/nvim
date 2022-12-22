@@ -36,7 +36,7 @@ function M.get_client_capabilities(client_id)
     client = vim.lsp.get_client_by_id(tonumber(client_id))
   end
   if not client then
-    error "Unable to determine client_id"
+    error("Unable to determine client_id")
     return
   end
 
@@ -84,7 +84,7 @@ end
 
 function M.setup_codelens_refresh(client, bufnr)
   local status_ok, codelens_supported = pcall(function()
-    return client.supports_method "textDocument/codeLens"
+    return client.supports_method("textDocument/codeLens")
   end)
   if not status_ok or not codelens_supported then
     return
@@ -114,14 +114,14 @@ end
 ---@return boolean if client matches
 function M.format_filter(client)
   local filetype = vim.bo.filetype
-  local n = require "null-ls"
-  local s = require "null-ls.sources"
+  local n = require("null-ls")
+  local s = require("null-ls.sources")
   local method = n.methods.FORMATTING
   local available_formatters = s.get_available(filetype, method)
 
   if #available_formatters > 0 then
     return client.name == "null-ls"
-  elseif client.supports_method "textDocument/formatting" then
+  elseif client.supports_method("textDocument/formatting") then
     return true
   else
     return false
@@ -136,22 +136,22 @@ function M.format(opts)
   local bufnr = opts.bufnr or vim.api.nvim_get_current_buf()
 
   ---@type table|nil
-  local clients = vim.lsp.get_active_clients {
+  local clients = vim.lsp.get_active_clients({
     id = opts.id,
     bufnr = bufnr,
     name = opts.name,
-  }
+  })
 
   if opts.filter then
     clients = vim.tbl_filter(opts.filter, clients)
   end
 
   clients = vim.tbl_filter(function(client)
-    return client.supports_method "textDocument/formatting"
+    return client.supports_method("textDocument/formatting")
   end, clients)
 
   if #clients == 0 then
-    vim.notify_once "[LSP] Format request failed, no matching language servers."
+    vim.notify_once("[LSP] Format request failed, no matching language servers.")
   end
 
   local timeout_ms = opts.timeout_ms or 3000

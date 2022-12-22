@@ -9,32 +9,32 @@ local _, actions = pcall(require, "telescope.actions")
 local _, previewers = pcall(require, "telescope.previewers")
 local _, make_entry = pcall(require, "telescope.make_entry")
 
-local utils = require "lvim.utils"
+local utils = require("lvim.utils")
 
 function M.find_lunarvim_files(opts)
   opts = opts or {}
-  local theme_opts = themes.get_ivy {
+  local theme_opts = themes.get_ivy({
     sorting_strategy = "ascending",
     layout_strategy = "bottom_pane",
     prompt_prefix = ">> ",
     prompt_title = "~ LunarVim files ~",
-    cwd = get_runtime_dir(),
-    search_dirs = { join_paths(get_runtime_dir(), "lvim") },
-  }
+    cwd = get_data_dir(),
+    search_dirs = { join_paths(get_data_dir(), "lvim") },
+  })
   opts = vim.tbl_deep_extend("force", theme_opts, opts)
   builtin.find_files(opts)
 end
 
 function M.grep_lunarvim_files(opts)
   opts = opts or {}
-  local theme_opts = themes.get_ivy {
+  local theme_opts = themes.get_ivy({
     sorting_strategy = "ascending",
     layout_strategy = "bottom_pane",
     prompt_prefix = ">> ",
     prompt_title = "~ search LunarVim ~",
-    cwd = get_runtime_dir(),
-    search_dirs = { join_paths(get_runtime_dir(), "lvim") },
-  }
+    cwd = get_data_dir(),
+    search_dirs = { join_paths(get_data_dir(), "lvim") },
+  })
   opts = vim.tbl_deep_extend("force", theme_opts, opts)
   builtin.live_grep(opts)
 end
@@ -50,9 +50,9 @@ local copy_to_clipboard_action = function(prompt_bufnr)
 end
 
 function M.view_lunarvim_changelog()
-  local opts = themes.get_ivy {
+  local opts = themes.get_ivy({
     cwd = get_config_dir(),
-  }
+  })
   opts.entry_maker = make_entry.gen_from_git_commits(opts)
 
   pickers
@@ -60,12 +60,12 @@ function M.view_lunarvim_changelog()
       prompt_title = "~ LunarVim Changelog ~",
 
       finder = finders.new_oneshot_job(
-        vim.tbl_flatten {
+        vim.tbl_flatten({
           "git",
           "log",
           "--pretty=oneline",
           "--abbrev-commit",
-        },
+        }),
         opts
       ),
       previewer = {

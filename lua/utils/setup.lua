@@ -1,8 +1,8 @@
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 local M = { fn = {} }
 
-local keymappings = require "lvim.keymappings"
-local keys_which_key = require "keys.which-key"
+local keymappings = require("lvim.keymappings")
+local keys_which_key = require("keys.which-key")
 
 ---
 ---@param mappings table
@@ -33,16 +33,39 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias fn { add_disabled_filetypes: (fun(ft: table<string>): nil), extension_get_active: (fun(extension: string): boolean), get_current_setup: (fun(extension: string): (fun(): table)), fetch_current_setup: (fun(extension:string): table) }
+local function define_manager_plugin(config, plugin)
+  if plugin.init ~= false or type(plugin.init) ~= "function" then
+    Log:trace(string.format("Defining default init command for plugin: %s", config.name))
+
+    plugin.init = function()
+      require("utils.setup").plugin_init(config.name)
+    end
+  end
+
+  if plugin.config ~= false or type(plugin.config) ~= "function" then
+    Log:trace(string.format("Defining default config command for plugin: %s", config.name))
+    plugin.config = function()
+      require("utils.setup").plugin_configure(config.name)
+    end
+  end
+
+  if plugin.enabled == nil then
+    plugin.enabled = config.enabled
+  end
+
+  return plugin
+end
+
+---@alias fn { add_disabled_filetypes: (fun(ft: table<string>): nil), extension_get_active: (fun(extension: string): boolean), get_current_setup: (fun(extension: string): (fun(): table)), fetch_current_setup: (fun(extension:string): table), append_to_setup: (fun(extension:string): table | (fun(config: config): table)) }
 ---@alias config table
 
 ---
 ---@param extension_name string
----@param active boolean
+---@param enabled boolean
 ---@param config config
-function M.define_extension(extension_name, active, config)
-  vim.validate {
-    active = { active, "b" },
+function M.define_extension(extension_name, enabled, config)
+  vim.validate({
+    enabled = { enabled, "b" },
     extension_name = { extension_name, "s" },
     config = { config, "t" },
     on_init = { config.on_init, "f", true },
@@ -59,11 +82,11 @@ function M.define_extension(extension_name, active, config)
     hl = { config.hl, { "f", "t" }, true },
     signs = { config.signs, { "f", "t" }, true },
     on_complete = { config.on_complete, "f", true },
-  }
+  })
 
-  lvim.extensions[extension_name] = {
+  config = vim.tbl_extend("force", config, {
     name = extension_name,
-    active = active,
+    enabled = enabled,
     inject = {},
     store = {},
     to_setup = {},
@@ -83,25 +106,7 @@ function M.define_extension(extension_name, active, config)
     get_store = function(key)
       return lvim.extensions[extension_name].store[key]
     end,
-  }
-
-  config = vim.tbl_extend("force", config, lvim.extensions[extension_name])
-
-  local function define_plugin(plugin)
-    if plugin.init ~= false or type(plugin.init) ~= "function" then
-      plugin.init = function()
-        require("utils.setup").plugin_init(extension_name)
-      end
-    end
-
-    if plugin.config ~= false or type(plugin.config) ~= "function" then
-      plugin.config = function()
-        require("utils.setup").plugin_configure(extension_name)
-      end
-    end
-
-    return plugin
-  end
+  }, lvim.extensions[extension_name] or {})
 
   if config ~= nil and config.plugin ~= nil then
     local plugins = {}
@@ -111,10 +116,10 @@ function M.define_extension(extension_name, active, config)
 
       if config.opts ~= nil and config.opts.multiple_packages then
         for _, e in pairs(extension) do
-          table.insert(plugins, define_plugin(e))
+          table.insert(plugins, define_manager_plugin(config, e))
         end
       else
-        table.insert(plugins, define_plugin(extension))
+        table.insert(plugins, define_manager_plugin(config, extension))
       end
     end
 
@@ -122,7 +127,7 @@ function M.define_extension(extension_name, active, config)
   end
 
   if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[extension_name]) == false then
-    lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config or {})
+    lvim.extensions[extension_name] = config
 
     Log:debug(string.format("Extension config stopped due to failed condition: %s", extension_name))
 
@@ -133,14 +138,7 @@ function M.define_extension(extension_name, active, config)
     config.configure(config, M.fn)
   end
 
-  lvim.extensions[extension_name] = vim.tbl_extend("force", lvim.extensions[extension_name], config or {})
-end
-
----
----@param extension_name string
----@return table
-function M.get_config(extension_name)
-  return lvim.extensions[extension_name]
+  lvim.extensions[extension_name] = config
 end
 
 ---@param definitions table contains a tuple of event, opts, see `:h nvim_create_autocmd`
@@ -150,19 +148,20 @@ end
 
 ---
 ---@param extension_name string
-function M.plugin_configure(extension_name)
-  return M.configure(M.get_config(extension_name))
+---@return table
+function M.get_config(extension_name)
+  return lvim.extensions[extension_name]
 end
 
 ---
 ---@param extension_name string
 function M.plugin_init(extension_name)
-  return M.configure(M.get_config(extension_name))
+  return M.init(M.get_config(extension_name))
 end
 
 ---
 ---@param extension_name string
-function M.plugin_config(extension_name)
+function M.plugin_configure(extension_name)
   return M.configure(M.get_config(extension_name))
 end
 
@@ -177,28 +176,6 @@ function M.evaluate_property(property, ...)
   return property
 end
 
----@param ft table<string>
-function M.fn.add_disabled_filetypes(ft)
-  for _, value in pairs(ft) do
-    table.insert(lvim.disabled_filetypes, value)
-  end
-end
-
----@param extension string
-function M.fn.extension_get_active(extension)
-  return (M.get_config(extension) or {}).active
-end
-
-function M.fn.get_current_setup(extension_name)
-  return function()
-    return lvim.extensions[extension_name].current_setup
-  end
-end
-
-function M.fn.fetch_current_setup(extension_name)
-  return lvim.extensions[extension_name].current_setup
-end
-
 ---
 ---@param config config
 function M.init(config)
@@ -209,7 +186,7 @@ function M.init(config)
     end)
 
     if not ok then
-      Log:warn(string.format("Can not inject in extension: %s", config.name))
+      Log:error(("Can not inject in extension: %s"):format(config.name))
 
       return
     end
@@ -243,7 +220,7 @@ function M.init(config)
     end
   end
 
-  if config ~= nil and config.signs ~= nil and lvim.use_icons then
+  if config ~= nil and config.signs ~= nil and lvim.ui.use_icons then
     local signs = M.evaluate_property(config.signs, config)
 
     for key, value in pairs(signs) do
@@ -284,7 +261,9 @@ function M.configure(config)
     config.setup = M.evaluate_property(config.setup, config, M.fn)
 
     if config.to_setup ~= nil then
-      config.setup = vim.tbl_deep_extend("force", config.setup, config.to_setup)
+      for _, to_setup in pairs(config.to_setup) do
+        config.setup = vim.tbl_deep_extend("force", config.setup, M.evaluate_property(to_setup, config, M.fn))
+      end
     end
 
     lvim.extensions[config.name].current_setup = vim.deepcopy(config.setup)
@@ -331,6 +310,40 @@ function M.set_plugins()
   end
 
   lvim.plugins = plugins
+end
+
+-- fn functions
+
+---@param ft table<string>
+function M.fn.add_disabled_filetypes(ft)
+  for _, value in pairs(ft) do
+    table.insert(lvim.disabled_filetypes, value)
+  end
+end
+
+---@param extension string
+function M.fn.extension_get_active(extension)
+  return (M.get_config(extension) or {}).active
+end
+
+function M.fn.get_current_setup(extension_name)
+  return function()
+    return lvim.extensions[extension_name].current_setup
+  end
+end
+
+function M.fn.append_to_setup(extension_name, to_setup)
+  if lvim.extensions[extension_name] == nil then
+    lvim.extensions[extension_name] = {
+      to_setup = {},
+    }
+  end
+
+  table.insert(lvim.extensions[extension_name].to_setup, to_setup)
+end
+
+function M.fn.fetch_current_setup(extension_name)
+  return lvim.extensions[extension_name].current_setup
 end
 
 return M

@@ -8,7 +8,7 @@ local extension_name = "neotest"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "nvim-neotest/neotest",
         dependencies = {
@@ -16,27 +16,26 @@ function M.config()
           "rouge8/neotest-rust",
           "haydenmeade/neotest-jest",
         },
-        enabled = config.active,
       }
     end,
     to_inject = function()
       return {
-        neotest = require "neotest",
+        neotest = require("neotest"),
       }
     end,
     setup = function()
       return {
         adapters = {
-          require "neotest-go",
-          require "neotest-rust",
-          require "neotest-jest" {
+          require("neotest-go"),
+          require("neotest-rust"),
+          require("neotest-jest")({
             jestCommand = "yarn run test",
             jestConfigFile = "jest.config.js",
             env = { CI = true },
             cwd = function()
               return vim.fn.getcwd()
             end,
-          },
+          }),
         },
       }
     end,
@@ -56,19 +55,19 @@ function M.config()
           },
           ["f"] = {
             function()
-              neotest.run.run(vim.fn.expand "%")
+              neotest.run.run(vim.fn.expand("%"))
             end,
             "run current file",
           },
           ["d"] = {
             function()
-              neotest.run.run { strategy = "dap" }
+              neotest.run.run({ strategy = "dap" })
             end,
             "debug nearest test",
           },
           ["D"] = {
             function()
-              neotest.run.run { vim.fn.expand "%", strategy = "dap" }
+              neotest.run.run({ vim.fn.expand("%"), strategy = "dap" })
             end,
             "debug file",
           },

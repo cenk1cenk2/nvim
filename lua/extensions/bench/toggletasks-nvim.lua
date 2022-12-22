@@ -10,15 +10,15 @@ function M.config()
         "jedrzejboczar/toggletasks.nvim",
         branch = "toggleterm-default-opts",
         config = function()
-          require("utils.setup").packer_config "toggletasks_nvim"
+          require("utils.setup").packer_config("toggletasks_nvim")
         end,
         disable = not config.active,
       }
     end,
     to_inject = function()
       return {
-        telescope = require "telescope",
-        toggleterm_extension = require "extensions.toggleterm-nvim",
+        telescope = require("telescope"),
+        toggleterm_extension = require("extensions.toggleterm-nvim"),
       }
     end,
     setup = function(config)
@@ -53,9 +53,9 @@ function M.config()
           ["null-ls"] = -10,
         },
         -- Default values for task configuration options (available options described later)
-        toggleterm = toggleterm_extension.generate_defaults_float_terminal {
+        toggleterm = toggleterm_extension.generate_defaults_float_terminal({
           close_on_exit = false,
-        },
+        }),
         -- Configuration of telescope pickers
         telescope = {
           spawn = {
@@ -93,7 +93,7 @@ function M.config()
       require("toggletasks").setup(config.setup)
     end,
     on_done = function(config)
-      config.inject.telescope.load_extension "toggletasks"
+      config.inject.telescope.load_extension("toggletasks")
     end,
     wk = function(config, categories)
       local telescope = config.inject.telescope

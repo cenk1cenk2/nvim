@@ -5,25 +5,24 @@ local extension_name = "nvim_dap_ui"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "rcarriga/nvim-dap-ui",
         dependencies = { "mfussenegger/nvim-dap" },
-        enabled = config.active,
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "dapui_breakpoints",
         "dapui_stacks",
         "dapui_watches",
         "dapui_scopes",
         "dapui_repl",
-      }
+      })
     end,
     to_inject = function()
       return {
-        dap_ui = require "dapui",
+        dap_ui = require("dapui"),
       }
     end,
     on_init = function(config)
@@ -97,7 +96,7 @@ function M.config()
       },
     },
     on_setup = function(config)
-      if config.get_store "setup" then
+      if config.get_store("setup") then
         return
       end
 

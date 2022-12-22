@@ -5,10 +5,10 @@ local extension_name = "stickybuf_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "stevearc/stickybuf.nvim",
-        enabled = config.active,
+        event = "VeryLazy",
       }
     end,
     setup = {

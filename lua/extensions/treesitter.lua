@@ -3,27 +3,26 @@ local M = {}
 
 local extension_name = "treesitter"
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        enabled = config.active,
       }
     end,
     condition = function()
       if #vim.api.nvim_list_uis() == 0 then
-        Log:debug "Headless mode detected, skipping running setup for treesitter."
+        Log:debug("Headless mode detected, skipping running setup for treesitter.")
 
         return false
       end
     end,
     setup = function()
       return {
-        ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+        ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         ignore_install = {},
         matchup = {
           enable = false, -- mandatory, false will disable the whole extension
@@ -92,35 +91,35 @@ function M.config()
     on_setup = function(config)
       require("nvim-treesitter.configs").setup(config.setup)
     end,
-    on_done = function(config)
+    on_done = function(config, fn)
       if config.setup.context_commentstring and config.setup.context_commentstring.enable then
-        lvim.extensions.comment_nvim.to_setup.pre_hook = function(ctx)
-          if
-            vim.tbl_contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
+        fn.append_to_setup("comment_nvim", {
+          pre_hook = function(ctx)
+            if vim.tbl_contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
               return type ~= vim.bo.filetype
-            end)
-          then
-            return
-          end
+            end) then
+              return
+            end
 
-          local U = require "Comment.utils"
+            local U = require("Comment.utils")
 
-          -- Determine whether to use linewise or blockwise commentstring
-          local type = ctx.ctype == U.ctype.linewise and "__default" or "__multiline"
+            -- Determine whether to use linewise or blockwise commentstring
+            local type = ctx.ctype == U.ctype.linewise and "__default" or "__multiline"
 
-          -- Determine the location where to calculate commentstring from
-          local location = nil
-          if ctx.ctype == U.ctype.blockwise then
-            location = require("ts_context_commentstring.utils").get_cursor_location()
-          elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
-            location = require("ts_context_commentstring.utils").get_visual_start_location()
-          end
+            -- Determine the location where to calculate commentstring from
+            local location = nil
+            if ctx.ctype == U.ctype.blockwise then
+              location = require("ts_context_commentstring.utils").get_cursor_location()
+            elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+              location = require("ts_context_commentstring.utils").get_visual_start_location()
+            end
 
-          return require("ts_context_commentstring.internal").calculate_commentstring {
-            key = type,
-            location = location,
-          }
-        end
+            return require("ts_context_commentstring.internal").calculate_commentstring({
+              key = type,
+              location = location,
+            })
+          end,
+        })
       end
     end,
     wk = function(_, categories)

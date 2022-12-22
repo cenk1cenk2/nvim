@@ -9,15 +9,15 @@ function M.config()
       return {
         "kyazdani42/nvim-tree.lua",
         config = function()
-          require("utils.setup").packer_config "nvim_tree"
+          require("utils.setup").packer_config("nvim_tree")
         end,
         disable = not config.active,
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "NvimTree",
-      }
+      })
     end,
     setup = function()
       return {
@@ -123,13 +123,13 @@ function M.config()
               {
                 key = "gp",
                 cb = function()
-                  M.start_telescope "find_files"
+                  M.start_telescope("find_files")
                 end,
               },
               {
                 key = "gt",
                 cb = function()
-                  M.start_telescope "live_grep"
+                  M.start_telescope("live_grep")
                 end,
               },
             },
@@ -232,9 +232,9 @@ function M.start_telescope(telescope_mode)
   local abspath = node.link_to or node.absolute_path
   local is_folder = node.open ~= nil
   local basedir = is_folder and abspath or vim.fn.fnamemodify(abspath, ":h")
-  require("telescope.builtin")[telescope_mode] {
+  require("telescope.builtin")[telescope_mode]({
     cwd = basedir,
-  }
+  })
 end
 
 return M

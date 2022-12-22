@@ -1,6 +1,6 @@
 local M = {}
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 local if_nil = vim.F.if_nil
 
 local function git_cmd(opts)
@@ -34,14 +34,14 @@ local function git_cmd(opts)
 end
 
 local function safe_deep_fetch()
-  local ret, result, error = git_cmd { args = { "rev-parse", "--is-shallow-repository" } }
+  local ret, result, error = git_cmd({ args = { "rev-parse", "--is-shallow-repository" } })
   if ret ~= 0 then
     Log:error(vim.inspect(error))
     return
   end
   -- git fetch --unshallow will cause an error on a a complete clone
   local fetch_mode = result[1] == "true" and "--unshallow" or "--all"
-  ret = git_cmd { args = { "fetch", fetch_mode } }
+  ret = git_cmd({ args = { "fetch", fetch_mode } })
   if ret ~= 0 then
     Log:error("Git fetch failed! Please pull the changes manually in " .. get_config_dir())
     return
@@ -50,8 +50,8 @@ local function safe_deep_fetch()
 end
 
 ---pulls the latest changes from github
-function M.update_base_lvim()
-  Log:info "Checking for updates"
+function M.update_repository()
+  Log:info("Checking for updates")
 
   if not safe_deep_fetch() then
     return
@@ -59,13 +59,13 @@ function M.update_base_lvim()
 
   local ret
 
-  ret = git_cmd { args = { "diff", "--quiet", "@{upstream}" } }
+  ret = git_cmd({ args = { "diff", "--quiet", "@{upstream}" } })
   if ret == 0 then
-    Log:info "LunarVim is already up-to-date"
+    Log:info("LunarVim is already up-to-date")
     return
   end
 
-  ret = git_cmd { args = { "merge", "--ff-only", "--progress" } }
+  ret = git_cmd({ args = { "merge", "--ff-only", "--progress" } })
   if ret ~= 0 then
     Log:error("Update failed! Please pull the changes manually in " .. get_config_dir())
     return
@@ -82,14 +82,14 @@ function M.switch_lvim_branch(branch)
   end
   local args = { "switch", branch }
 
-  if branch:match "^[0-9]" then
+  if branch:match("^[0-9]") then
     -- avoids producing an error for tags
     vim.list_extend(args, { "--detach" })
   end
 
-  local ret = git_cmd { args = args }
+  local ret = git_cmd({ args = args })
   if ret ~= 0 then
-    Log:error "Unable to switch branches! Check the log for further information"
+    Log:error("Unable to switch branches! Check the log for further information")
     return
   end
   return true
@@ -98,7 +98,7 @@ end
 ---Get the current Lunarvim development branch
 ---@return string|nil
 function M.get_lvim_branch()
-  local _, results = git_cmd { args = { "rev-parse", "--abbrev-ref", "HEAD" } }
+  local _, results = git_cmd({ args = { "rev-parse", "--abbrev-ref", "HEAD" } })
   local branch = if_nil(results[1], "")
   return branch
 end
@@ -108,7 +108,7 @@ end
 function M.get_lvim_tag()
   local args = { "describe", "--tags", "--abbrev=0" }
 
-  local _, results = git_cmd { args = args }
+  local _, results = git_cmd({ args = args })
   local tag = if_nil(results[1], "")
   return tag
 end
@@ -130,7 +130,7 @@ end
 ---Get the commit hash of currently checked-out commit of Lunarvim
 ---@return string|nil
 function M.get_lvim_current_sha()
-  local _, log_results = git_cmd { args = { "log", "--pretty=format:%h", "-1" } }
+  local _, log_results = git_cmd({ args = { "log", "--pretty=format:%h", "-1" } })
   local abbrev_version = if_nil(log_results[1], "")
   return abbrev_version
 end
@@ -139,12 +139,12 @@ function M.generate_plugins_sha(output)
   local list = {}
   output = output or "commits.lua"
 
-  local core_plugins = require "lvim.plugins"
+  local core_plugins = require("lvim.plugins")
   for _, plugin in pairs(core_plugins) do
-    local name = plugin[1]:match "/(%S*)"
+    local name = plugin[1]:match("/(%S*)")
     local url = "https://github.com/" .. plugin[1]
     print("checking: " .. name .. ", at: " .. url)
-    local retval, latest_sha = git_cmd { args = { "ls-remote", url, "origin", "HEAD" } }
+    local retval, latest_sha = git_cmd({ args = { "ls-remote", url, "origin", "HEAD" } })
     if retval == 0 then
       -- replace dashes, remove postfixes and use lowercase
       local normalize_name = (name:gsub("-", "_"):gsub("%.%S+", "")):lower()
@@ -157,7 +157,7 @@ end
 ---Get currently installed version of LunarVim
 ---@return string
 function M.get_nvim_version()
-  local Job = require "plenary.job"
+  local Job = require("plenary.job")
 
   local stderr = {}
   local stdout, status_ok = Job:new({

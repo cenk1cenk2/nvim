@@ -5,11 +5,10 @@ local extension_name = "neoscroll"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "karb94/neoscroll.nvim",
         event = "VeryLazy",
-        enabled = config.active,
       }
     end,
     setup = {

@@ -1,4 +1,4 @@
-lvim.log.level = "info"
+lvim.log.level = "trace"
 
 lvim.lsp.ensure_installed = {
   ---- language servers
@@ -100,40 +100,44 @@ lvim.lsp.automatic_configuration.skipped_servers = {
   "zeta_note",
 }
 
-lvim.extensions.treesitter.to_setup.ensure_installed = {
-  "bash",
-  "c",
-  "c_sharp",
-  "cmake",
-  "comment",
-  "cpp",
-  "css",
-  "dart",
-  "dockerfile",
-  "go",
-  "graphql",
-  "html",
-  "java",
-  "javascript",
-  "jsdoc",
-  "json",
-  "json5",
-  "jsonc",
-  "julia",
-  "lua",
-  "php",
-  "python",
-  "regex",
-  "ruby",
-  "rust",
-  "scss",
-  "svelte",
-  "tsx",
-  "typescript",
-  "vue",
-  "yaml",
-}
 
 lvim.lsp.null_ls.setup = {
+  debug = false,
+}
+
+require("utils.setup").fn.append_to_setup("treesitter", {
+  ensure_installed = {
+    "bash",
+    "c",
+    "c_sharp",
+    "cmake",
+    "comment",
+    "cpp",
+    "css",
+    "dart",
+    "dockerfile",
+    "go",
+    "graphql",
+    "html",
+    "java",
+    "javascript",
+    "jsdoc",
+    "json",
+    "json5",
+    "jsonc",
+    "julia",
+    "lua",
+    "php",
+    "python",
+    "regex",
+    "ruby",
+    "rust",
+    "scss",
+    "svelte",
+    "tsx",
+    "typescript",
+    "vue",
+    "yaml",
+  },
   debug = false,
 }

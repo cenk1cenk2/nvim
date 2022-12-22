@@ -1,9 +1,9 @@
-local formatters = require "lvim.lsp.null-ls.formatters"
+local formatters = require("lvim.lsp.null-ls.formatters")
 
 local M = {}
 
 function M.setup()
-  formatters.setup {
+  formatters.setup({
     {
       name = "prettierd",
       filetypes = {
@@ -25,7 +25,7 @@ function M.setup()
         "graphql",
       },
       env = {
-        PRETTIERD_DEFAULT_CONFIG = vim.fn.expand "~/.config/nvim/utils/linter-config/.prettierrc.json",
+        PRETTIERD_DEFAULT_CONFIG = vim.fn.expand("~/.config/nvim/utils/linter-config/.prettierrc.json"),
       },
     },
 
@@ -88,7 +88,7 @@ function M.setup()
     --   filetypes = { "jinja" },
     --   extra_args = { "--profile", "jinja" },
     -- },
-  }
+  })
 end
 
 return M

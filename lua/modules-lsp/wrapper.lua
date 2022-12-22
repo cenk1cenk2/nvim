@@ -1,6 +1,6 @@
 local M = {}
-local Log = require "lvim.core.log"
-local lsp_utils = require "utils.lsp"
+local Log = require("lvim.core.log")
+local lsp_utils = require("utils.lsp")
 
 function M.add_to_workspace_folder()
   vim.lsp.buf.add_workspace_folder()
@@ -34,7 +34,7 @@ end
 
 function M.document_symbols()
   -- vim.lsp.buf.document_symbol()
-  vim.api.nvim_command "Telescope lsp_document_symbols"
+  vim.api.nvim_command("Telescope lsp_document_symbols")
 end
 
 function M.format()
@@ -84,17 +84,17 @@ end
 function M.workspace_symbols()
   -- vim.lsp.buf.workspace_symbol()
 
-  vim.api.nvim_command "Telescope lsp_dynamic_workspace_symbols"
+  vim.api.nvim_command("Telescope lsp_dynamic_workspace_symbols")
 end
 
 -- diagnostic
 
 function M.goto_next()
-  vim.diagnostic.goto_next { popup_opts = { border = lvim.lsp.popup_border } }
+  vim.diagnostic.goto_next({ popup_opts = { border = lvim.lsp.popup_border } })
 end
 
 function M.goto_prev()
-  vim.diagnostic.goto_prev { popup_opts = { border = lvim.lsp.popup_border } }
+  vim.diagnostic.goto_prev({ popup_opts = { border = lvim.lsp.popup_border } })
 end
 
 function M.show_line_diagnostics()
@@ -104,11 +104,11 @@ function M.show_line_diagnostics()
 end
 
 function M.document_diagonistics()
-  vim.api.nvim_command "Telescope lsp_document_diagnostics"
+  vim.api.nvim_command("Telescope lsp_document_diagnostics")
 end
 
 function M.workspace_diagonistics()
-  vim.api.nvim_command "Telescope lsp_workspace_diagnostics"
+  vim.api.nvim_command("Telescope lsp_workspace_diagnostics")
 end
 
 function M.code_lens()
@@ -125,7 +125,7 @@ function M.fix_current()
 
   vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
     if not responses or vim.tbl_isempty(responses) then
-      Log:warn "[QUICKFIX] Not found!"
+      Log:warn("[QUICKFIX] Not found!")
       return
     end
 
@@ -138,7 +138,7 @@ function M.fix_current()
     end
 
     if #available_fixes == 0 then
-      Log:warn "[QUICKFIX] Not found!"
+      Log:warn("[QUICKFIX] Not found!")
 
       return
     end
@@ -161,12 +161,12 @@ function M.organize_imports()
 
   vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
     if not responses or vim.tbl_isempty(responses) then
-      Log:warn "No response from language servers."
+      Log:warn("No response from language servers.")
       return
     end
 
     if vim.tbl_count(responses) == 0 then
-      Log:warn "No language server has answered the organize imports call."
+      Log:warn("No language server has answered the organize imports call.")
     end
 
     for _, response in pairs(responses) do
@@ -190,19 +190,19 @@ function M.setup()
     lvim.lsp_wrapper[key] = value
   end
 
-  require("utils.setup").configure {
+  require("utils.setup").configure({
     name = "lsp-wrapper",
     commands = {
       {
         name = "LspLogLevelDebug",
         fn = function()
-          M.lsp_logging_level "debug"
+          M.lsp_logging_level("debug")
         end,
       },
       {
         name = "LspLogLevelInfo",
         fn = function()
-          M.lsp_logging_level "info"
+          M.lsp_logging_level("info")
         end,
       },
       {
@@ -298,7 +298,7 @@ function M.setup()
         },
       }
     end,
-  }
+  })
 end
 
 return M

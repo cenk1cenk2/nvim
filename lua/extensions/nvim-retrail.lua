@@ -5,10 +5,10 @@ local extension_name = "nvim_retrail"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "zakharykaplan/nvim-retrail",
-        enabled = config.active,
+        event = "VeryLazy",
       }
     end,
     setup = function()

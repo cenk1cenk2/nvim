@@ -1,18 +1,18 @@
 local M = {}
 
-local Log = require "lvim.core.log"
-local fmt = string.format
-local lvim_lsp_utils = require "lvim.lsp.utils"
-local is_windows = vim.loop.os_uname().version:match "Windows"
+local Log = require("lvim.core.log")
+local lvim_lsp_utils = require("lvim.lsp.utils")
+local is_windows = vim.loop.os_uname().version:match("Windows")
 
 local function resolve_mason_config(server_name)
   local found, mason_config = pcall(require, "mason-lspconfig.server_configurations." .. server_name)
   if not found then
-    Log:trace(fmt("mason configuration not found for %s", server_name))
+    Log:trace(("mason configuration not found for %s"):format(server_name))
     return {}
   end
-  local server_mapping = require "mason-lspconfig.mappings.server"
-  local path = require "mason-core.path"
+
+  local server_mapping = require("mason-lspconfig.mappings.server")
+  local path = require("mason-core.path")
   local pkg_name = server_mapping.lspconfig_to_package[server_name]
   local install_dir = path.package_prefix(pkg_name)
   local conf = mason_config(install_dir)
@@ -22,7 +22,8 @@ local function resolve_mason_config(server_name)
       conf.cmd[1] = exepath
     end
   end
-  Log:trace(fmt("resolved mason configuration for %s, got %s", server_name, vim.inspect(conf)))
+  Log:trace(("resolved mason configuration for %s, got %s"):format(server_name, vim.inspect(conf)))
+
   return conf or {}
 end
 
@@ -63,10 +64,10 @@ end
 local function client_is_configured(server_name, ft)
   ft = ft or vim.bo.filetype
 
-  local active_autocmds = vim.api.nvim_get_autocmds { event = "FileType", pattern = ft }
+  local active_autocmds = vim.api.nvim_get_autocmds({ event = "FileType", pattern = ft })
   for _, result in pairs(active_autocmds) do
-    if result.group_name:match "lspconfig" then
-      Log:debug(string.format("[%q] is already configured", server_name))
+    if result.group_name:match("lspconfig") then
+      Log:debug(("[%q] is already configured"):format(server_name))
       return true
     end
   end
@@ -85,15 +86,15 @@ end
 ---@param server_name string name of the language server
 ---@param user_config table? when available it will take predence over any default configurations
 function M.setup(server_name, user_config)
-  vim.validate { name = { server_name, "string" } }
+  vim.validate({ name = { server_name, "string" } })
   user_config = user_config or {}
 
   if lvim_lsp_utils.is_client_active(server_name) or client_is_configured(server_name) then
     return
   end
 
-  local server_mapping = require "mason-lspconfig.mappings.server"
-  local registry = require "mason-registry"
+  local server_mapping = require("mason-lspconfig.mappings.server")
+  local registry = require("mason-registry")
 
   local pkg_name = server_mapping.lspconfig_to_package[server_name]
   if not pkg_name then
@@ -104,13 +105,12 @@ function M.setup(server_name, user_config)
 
   local should_auto_install = function(name)
     local installer_settings = lvim.lsp.installer.setup
-    return installer_settings.automatic_installation
-      and not vim.tbl_contains(installer_settings.automatic_installation.exclude, name)
+    return installer_settings.automatic_installation and not vim.tbl_contains(installer_settings.automatic_installation.exclude, name)
   end
 
   if not registry.is_installed(pkg_name) then
     if should_auto_install(server_name) then
-      Log:debug "Automatic server installation detected"
+      Log:debug("Automatic server installation detected")
       vim.notify_once(string.format("Installation in progress for [%s]", server_name), vim.log.levels.INFO)
       local pkg = registry.get_package(pkg_name)
       pkg:install():once("closed", function()

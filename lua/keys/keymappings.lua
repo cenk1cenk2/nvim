@@ -24,8 +24,8 @@ return {
     ["<C-s>"] = ":w<CR>",
     ["<C-S>"] = ":w!<CR>",
     ["<C-x>"] = function()
-      vim.cmd "noa w!"
-      require("lvim.core.log"):warn "File saved. No autocommands had run!"
+      vim.cmd("noa w!")
+      require("lvim.core.log"):warn("File saved. No autocommands had run!")
     end,
 
     -- close buffer

@@ -1,11 +1,12 @@
 local M = {}
 
 local _, Job = pcall(require, "plenary.job")
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 function M.spawn(opts)
   Log:debug(("Will run job: %s %s"):format(opts.command, table.concat(opts.args, " ")))
-  local job = Job:new {
+
+  local job = Job:new({
     command = opts.command,
     args = opts.args,
     cwd = opts.cwd,
@@ -25,7 +26,7 @@ function M.spawn(opts)
 
       Log:debug(vim.inspect(j:result()))
     end,
-  }
+  })
 
   job:sync(5000)
 end

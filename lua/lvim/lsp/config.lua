@@ -1,8 +1,5 @@
-local skipped_servers = {}
-local skipped_filetypes = {}
-
 return {
-  templates_dir = join_paths(get_runtime_dir(), "site", "after", "ftplugin"),
+  templates_dir = join_paths(get_data_dir(), "site", "after", "ftplugin"),
   diagnostics = {
     signs = {
       active = true,
@@ -50,12 +47,12 @@ return {
   on_init_callbacks = {},
   on_attach_callbacks = {},
   on_exit_callbacks = {},
-  buffer_mappings = require "keys.lsp-mappings",
+  buffer_mappings = require("keys.lsp-mappings"),
   automatic_configuration = {
     ---@usage list of servers that the automatic installer will skip
-    skipped_servers = skipped_servers,
+    skipped_servers = {},
     ---@usage list of filetypes that the automatic installer will skip
-    skipped_filetypes = skipped_filetypes,
+    skipped_filetypes = {},
   },
   buffer_options = {
     --- enable completion triggered by <c-x><c-o>
@@ -82,7 +79,9 @@ return {
     },
   },
   null_ls = {
-    setup = {},
+    setup = {
+      debug = false,
+    },
     config = {},
   },
   ---@deprecated use lvim.lsp.automatic_configuration.skipped_servers instead

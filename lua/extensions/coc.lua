@@ -5,13 +5,11 @@ local extension_name = "coc"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "neoclide/coc.nvim",
         branch = "release",
         cmd = { "CocList", "CocCommand" },
-        keys = { "<Space-G>" },
-        enabled = config.active,
       }
     end,
     legacy_setup = {

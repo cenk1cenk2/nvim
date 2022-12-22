@@ -1,13 +1,13 @@
 local M = {}
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 function M.diff()
   vim.ui.input({
     prompt = "Compare current file with branch:",
   }, function(branch)
     if branch == nil then
-      Log:warn "Nothing to compare."
+      Log:warn("Nothing to compare.")
 
       return
     end
@@ -20,7 +20,7 @@ function M.diff()
 end
 
 function M.setup()
-  require("utils.setup").configure {
+  require("utils.setup").configure({
     wk = {
       g = {
         c = {
@@ -31,7 +31,7 @@ function M.setup()
         },
       },
     },
-  }
+  })
 end
 
 return M

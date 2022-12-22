@@ -5,10 +5,10 @@ local extension_name = "nvim_bqf"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "kevinhwang91/nvim-bqf",
-        enabled = config.active,
+        event = "VeryLazy",
       }
     end,
     setup = {

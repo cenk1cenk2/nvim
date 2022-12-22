@@ -5,11 +5,10 @@ local extension_name = "todo_comments"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "folke/todo-comments.nvim",
         cmd = { "TodoTelescope" },
-        enabled = config.active,
       }
     end,
     setup = {

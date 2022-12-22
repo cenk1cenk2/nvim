@@ -5,21 +5,20 @@ local extension_name = "spectre"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "nvim-pack/nvim-spectre",
         build = "./build.sh",
-        enabled = config.active,
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "spectre_panel",
-      }
+      })
     end,
     to_inject = function()
       return {
-        spectre = require "spectre",
+        spectre = require("spectre"),
       }
     end,
     setup = {
@@ -183,13 +182,13 @@ function M.config()
           },
           w = {
             function()
-              spectre.open { path = string.format("%s/**", vim.fn.expand "%:h") }
+              spectre.open({ path = string.format("%s/**", vim.fn.expand("%:h")) })
             end,
             "find and replace in current folder",
           },
           v = {
             function()
-              spectre.open_visual { select_word = true }
+              spectre.open_visual({ select_word = true })
             end,
             "find the word under cursor and replace",
           },

@@ -5,11 +5,10 @@ local extension_name = "document_color_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "mrshmllow/document-color.nvim",
         ft = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
-        enabled = config.active,
       }
     end,
     setup = {

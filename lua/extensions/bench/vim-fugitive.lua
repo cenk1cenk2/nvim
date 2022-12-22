@@ -9,7 +9,7 @@ function M.config()
       return {
         "tpope/vim-fugitive",
         config = function()
-          require("utils.setup").packer_config "vim_fugitive"
+          require("utils.setup").packer_config("vim_fugitive")
         end,
         disable = not config.active,
       }

@@ -2,14 +2,13 @@
 local M = {}
 
 local extension_name = "nvim_scrollbar"
-local c = require "onedarker.colors"
+local c = require("onedarker.colors")
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "petertriho/nvim-scrollbar",
-        enabled = config.active,
       }
     end,
     setup = function()

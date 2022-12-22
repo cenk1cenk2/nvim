@@ -1,6 +1,6 @@
 local M = {}
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 local generic_opts_any = { noremap = true, silent = true }
 
@@ -115,12 +115,12 @@ local defaults = {
   },
 }
 
-if vim.fn.has "mac" == 1 then
+if vim.fn.has("mac") == 1 then
   defaults.normal_mode["<A-Up>"] = defaults.normal_mode["<C-Up>"]
   defaults.normal_mode["<A-Down>"] = defaults.normal_mode["<C-Down>"]
   defaults.normal_mode["<A-Left>"] = defaults.normal_mode["<C-Left>"]
   defaults.normal_mode["<A-Right>"] = defaults.normal_mode["<C-Right>"]
-  Log:debug "Activated mac keymappings"
+  Log:debug("Activated mac keymappings")
 end
 
 -- Unsets all keybindings defined in keymaps
@@ -185,7 +185,7 @@ function M.load_defaults()
   end
 
   -- the rest is irrelevant
-  lvim.keys = require "keys.keymappings"
+  lvim.keys = require("keys.keymappings")
 
   return lvim.keys
 end
@@ -197,7 +197,7 @@ end
 
 function M.setup()
   vim.g.mapleader = (lvim.leader == "space" and " ") or lvim.leader
-  Log:debug "Initialized keybindings."
+  Log:debug("Initialized keybindings.")
   M.load(lvim.keys)
 end
 

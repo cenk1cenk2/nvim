@@ -5,20 +5,19 @@ local extension_name = "mason"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "williamboman/mason.nvim",
         dependencies = {
           { "williamboman/mason-lspconfig.nvim" },
           { "WhoIsSethDaniel/mason-tool-installer.nvim" },
         },
-        enabled = config.active,
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "mason",
-      }
+      })
     end,
     setup = {
       ui = {

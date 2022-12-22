@@ -1,4 +1,4 @@
-local c = require "onedarker.colors"
+local c = require("onedarker.colors")
 
 local M = {}
 local hl = { langs = {}, plugins = {} }
@@ -654,7 +654,7 @@ end
 
 function M.setup()
   local loaded = {}
-  local ns = vim.api.nvim_create_namespace "onedarker"
+  local ns = vim.api.nvim_create_namespace("onedarker")
 
   M.load_highlights(0, hl.common, loaded)
   M.load_highlights(0, hl.syntax, loaded)

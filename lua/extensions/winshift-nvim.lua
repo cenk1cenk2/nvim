@@ -5,10 +5,10 @@ local extension_name = "winshift_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "sindrets/winshift.nvim",
-        enabled = config.active,
+        cmd = { "WinShift" },
       }
     end,
     setup = {

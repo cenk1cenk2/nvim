@@ -9,22 +9,22 @@ function M.config()
       return {
         "ThePrimeagen/harpoon",
         config = function()
-          require("utils.setup").packer_config "harpoon"
+          require("utils.setup").packer_config("harpoon")
         end,
         disable = not config.active,
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "harpoon",
-      }
+      })
     end,
     to_inject = function()
       return {
-        harpoon = require "harpoon",
-        harpoon_mark = require "harpoon.mark",
-        harpoon_ui = require "harpoon.ui",
-        telescope = require "telescope",
+        harpoon = require("harpoon"),
+        harpoon_mark = require("harpoon.mark"),
+        harpoon_ui = require("harpoon.ui"),
+        telescope = require("telescope"),
       }
     end,
     setup = function()
@@ -52,7 +52,7 @@ function M.config()
       require("harpoon").setup(config.setup)
     end,
     on_done = function(config)
-      config.inject.telescope.load_extension "harpoon"
+      config.inject.telescope.load_extension("harpoon")
     end,
     wk = function(config, categories)
       local mark = config.inject.harpoon_mark
@@ -82,7 +82,7 @@ function M.config()
           ["q"] = {
             function()
               mark.to_quickfix_list()
-              vim.cmd "QuickFixToggle"
+              vim.cmd("QuickFixToggle")
             end,
             "send to quickfix",
           },

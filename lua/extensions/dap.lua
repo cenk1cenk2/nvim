@@ -7,23 +7,26 @@ local extension_name = "dap"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "mfussenegger/nvim-dap",
-        dependencies = {},
-        enabled = config.active,
+        dependencies = {
+          "jay-babu/mason-nvim-dap.nvim",
+          "rcarriga/nvim-dap-ui",
+          "theHamsta/nvim-dap-virtual-text",
+        },
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "dap-repl",
-      }
+      })
     end,
     to_inject = function()
       return {
-        dap = require "dap",
-        vscode = require "dap.ext.vscode",
-        widgets = require "dap.ui.widgets",
+        dap = require("dap"),
+        vscode = require("dap.ext.vscode"),
+        widgets = require("dap.ui.widgets"),
         get_debugger = M.get_debugger,
       }
     end,
@@ -168,7 +171,7 @@ function M.config()
 end
 
 function M.get_debugger(name)
-  return vim.fn.stdpath "data" .. "/mason/bin/" .. name
+  return vim.fn.stdpath("data") .. "/mason/bin/" .. name
 end
 
 return M

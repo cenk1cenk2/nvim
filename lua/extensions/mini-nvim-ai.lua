@@ -5,10 +5,10 @@ local extension_name = "mini_nvim_ai"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "echasnovski/mini.ai",
-        enabled = config.active,
+        event = "BufWinEnter",
       }
     end,
     setup = {

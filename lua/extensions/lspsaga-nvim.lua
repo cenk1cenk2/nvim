@@ -5,22 +5,21 @@ local extension_name = "lspsaga_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "glepnir/lspsaga.nvim",
         event = "BufReadPost",
-        enabled = config.active,
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "lspsagaoutline",
         "lspsagarename",
-      }
+      })
     end,
     to_inject = function()
       return {
-        lspsaga_diagnostic = require "lspsaga.diagnostic",
+        lspsaga_diagnostic = require("lspsaga.diagnostic"),
       }
     end,
     setup = {
@@ -110,16 +109,16 @@ function M.config()
       local lspsaga_diagnostic = config.inject.lspsaga_diagnostic
 
       lvim.lsp_wrapper.code_action = function()
-        vim.api.nvim_command "Lspsaga code_action"
+        vim.api.nvim_command("Lspsaga code_action")
       end
       lvim.lsp_wrapper.range_code_action = function()
-        vim.api.nvim_command "Lspsaga code_action"
+        vim.api.nvim_command("Lspsaga code_action")
       end
       -- lvim.lsp_wrapper.hover = function()
       --   vim.api.nvim_command "Lspsaga hover_doc"
       -- end
       lvim.lsp_wrapper.rename = function()
-        vim.api.nvim_command "Lspsaga rename"
+        vim.api.nvim_command("Lspsaga rename")
       end
       lvim.lsp_wrapper.goto_next = function()
         lspsaga_diagnostic.goto_next()

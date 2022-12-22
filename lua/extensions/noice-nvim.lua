@@ -5,25 +5,25 @@ local extension_name = "noice_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "folke/noice.nvim",
         dependencies = {
           "MunifTanjim/nui.nvim",
         },
-        enabled = config.active,
+        event = "VeryLazy",
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "cmdline_popup",
         "noice",
-      }
+      })
     end,
     to_inject = function()
       return {
-        telescope = require "telescope",
-        noice_util = require "noice.util",
+        telescope = require("telescope"),
+        noice_util = require("noice.util"),
       }
     end,
     setup = function(config)
@@ -338,7 +338,7 @@ function M.config()
       vim.o.cmdheight = 0
     end,
     on_done = function(config)
-      config.inject.telescope.load_extension "noice"
+      config.inject.telescope.load_extension("noice")
     end,
     wk = {
       ["M"] = { ":Noice<CR>", "messages" },

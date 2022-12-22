@@ -5,7 +5,7 @@ local extension_name = "telescope"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "nvim-telescope/telescope.nvim",
         dependencies = {
@@ -13,22 +13,25 @@ function M.config()
             "nvim-telescope/telescope-fzf-native.nvim",
             build = "make",
           },
-          { "tzachar/fuzzy.nvim", dependencies = { "nvim-telescope/telescope-fzf-native.nvim" } },
+          {
+            "tzachar/fuzzy.nvim",
+            dependencies = { "nvim-telescope/telescope-fzf-native.nvim" },
+          },
         },
-        enabled = config.active,
+        event = "VeryLazy",
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "TelescopePrompt",
         "Telescope",
-      }
+      })
     end,
     to_inject = function()
       return {
-        actions = require "telescope.actions",
-        previewers = require "telescope.previewers",
-        sorters = require "telescope.sorters",
+        actions = require("telescope.actions"),
+        previewers = require("telescope.previewers"),
+        sorters = require("telescope.sorters"),
       }
     end,
     rg_arguments = {
@@ -178,13 +181,13 @@ function M.config()
     on_done = function(config)
       if lvim.builtin.notify.active then
         pcall(function()
-          require("telescope").load_extension "notify"
+          require("telescope").load_extension("notify")
         end)
       end
 
       if config.current_setup.extensions and config.current_setup.extensions.fzf then
         pcall(function()
-          require("telescope").load_extension "fzf"
+          require("telescope").load_extension("fzf")
         end)
       end
     end,
@@ -196,7 +199,7 @@ function M.config()
       }
     end,
     wk = function(_, categories)
-      local custom_finders = require "modules.telescope"
+      local custom_finders = require("modules.telescope")
 
       return {
         ["p"] = {

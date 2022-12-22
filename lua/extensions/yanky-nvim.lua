@@ -5,21 +5,20 @@ local extension_name = "yanky_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "gbprod/yanky.nvim",
         event = "VeryLazy",
-        enabled = config.active,
       }
     end,
     register = "+",
     to_inject = function()
       return {
-        mapping = require "yanky.telescope.mapping",
+        mapping = require("yanky.telescope.mapping"),
         default_register = require("yanky.utils").get_default_register(),
-        telescope = require "telescope",
-        yanky = require "yanky",
-        highlight = require "yanky.highlight",
+        telescope = require("telescope"),
+        yanky = require("yanky"),
+        highlight = require("yanky.highlight"),
       }
     end,
     setup = function(config)
@@ -48,14 +47,14 @@ function M.config()
             mappings = {
               default = mapping.set_register(register),
               i = {
-                ["<c-p>"] = mapping.put "p",
-                ["<c-P>"] = mapping.put "P",
+                ["<c-p>"] = mapping.put("p"),
+                ["<c-P>"] = mapping.put("P"),
                 ["<c-d>"] = mapping.delete(),
                 ["<c-r>"] = mapping.set_register(register),
               },
               n = {
-                ["p"] = mapping.put "p",
-                ["P"] = mapping.put "P",
+                ["p"] = mapping.put("p"),
+                ["P"] = mapping.put("P"),
                 ["d"] = mapping.delete(),
                 ["r"] = mapping.set_register(register),
               },
@@ -68,7 +67,7 @@ function M.config()
       require("yanky").setup(config.setup)
     end,
     on_done = function(config)
-      config.inject.telescope.load_extension "yank_history"
+      config.inject.telescope.load_extension("yank_history")
     end,
     keymaps = function(config)
       local yanky = config.inject.yanky
@@ -110,16 +109,10 @@ function M.config()
 
       local cb = function(state)
         if state.is_visual then
-          vim.cmd [[execute "normal! \<esc>"]]
+          vim.cmd([[execute "normal! \<esc>"]])
         end
 
-        local command = string.format(
-          'silent normal! %s"%s%s"_d%s',
-          state.is_visual and "gv" or "",
-          state.register,
-          state.count,
-          state.type
-        )
+        local command = string.format('silent normal! %s"%s%s"_d%s', state.is_visual and "gv" or "", state.register, state.count, state.type)
 
         local ok, val = pcall(vim.cmd, command)
 

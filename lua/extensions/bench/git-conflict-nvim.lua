@@ -9,7 +9,7 @@ function M.config()
       return {
         "akinsho/git-conflict.nvim",
         config = function()
-          require("utils.setup").packer_config "git_conflict_nvim"
+          require("utils.setup").packer_config("git_conflict_nvim")
         end,
         disable = not config.active,
       }

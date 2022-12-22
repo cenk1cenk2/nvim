@@ -6,15 +6,14 @@ local extension_name = "nvim_treevj"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "AckslD/nvim-trevJ.lua",
-        enabled = config.active,
       }
     end,
     to_inject = function()
       return {
-        trevj = require "trevj",
+        trevj = require("trevj"),
       }
     end,
     setup = {},

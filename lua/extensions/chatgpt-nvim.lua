@@ -5,17 +5,16 @@ local extension_name = "chatgpt_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "jackmort/chatgpt.nvim",
         cmd = { "ChatGPT", "ChatGPTEditWithInstructions" },
-        enabled = config.active,
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "chatgpt",
-      }
+      })
     end,
     setup = {
       welcome_message = "",

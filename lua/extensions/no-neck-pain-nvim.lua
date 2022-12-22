@@ -5,16 +5,15 @@ local extension_name = "no_neck_pain_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "shortcuts/no-neck-pain.nvim",
         lazy = false,
-        enabled = config.active,
       }
     end,
     to_inject = function()
       return {
-        no_neck_pain = require "no-neck-pain",
+        no_neck_pain = require("no-neck-pain"),
       }
     end,
     setup = function(config)

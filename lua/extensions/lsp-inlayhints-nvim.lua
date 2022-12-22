@@ -5,17 +5,16 @@ local extension_name = "lsp_inlayhits_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "lvimuser/lsp-inlayhints.nvim",
         -- branch = "anticonceal",
         event = "BufReadPost",
-        enabled = config.active,
       }
     end,
     to_inject = function()
       return {
-        inlay_hints = require "lsp-inlayhints",
+        inlay_hints = require("lsp-inlayhints"),
       }
     end,
     setup = {

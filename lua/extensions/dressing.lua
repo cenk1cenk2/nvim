@@ -5,16 +5,15 @@ local extension_name = "dressing"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "stevearc/dressing.nvim",
         event = "VeryLazy",
-        enabled = config.active,
       }
     end,
     to_inject = function()
       return {
-        telescope_themes = require "telescope.themes",
+        telescope_themes = require("telescope.themes"),
       }
     end,
     setup = function(config)
@@ -61,7 +60,7 @@ function M.config()
           backend = { "telescope", "fzf", "builtin", "nui" },
 
           -- Options for telescope selector
-          telescope = config.inject.telescope_themes.get_dropdown {},
+          telescope = config.inject.telescope_themes.get_dropdown({}),
 
           -- see :help dressing_get_config
           get_config = nil,

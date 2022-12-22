@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup()
-  require("utils.setup").configure {
+  require("utils.setup").configure({
     name = "commands",
     commands = {
       {
@@ -16,9 +16,9 @@ function M.setup()
           end, vim.fn.getwininfo())
 
           if vim.tbl_isempty(qf) then
-            vim.cmd "botright copen"
+            vim.cmd("botright copen")
           else
-            vim.cmd "cclose"
+            vim.cmd("cclose")
           end
         end,
       },
@@ -77,7 +77,7 @@ function M.setup()
         end,
       },
     },
-  }
+  })
 end
 
 return M

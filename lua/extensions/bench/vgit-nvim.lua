@@ -35,7 +35,7 @@ function M.config()
 end
 
 function M.setup()
-  local extension = require "vgit"
+  local extension = require("vgit")
 
   extension.setup(lvim.extensions[extension_name].setup)
 

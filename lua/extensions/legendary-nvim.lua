@@ -5,11 +5,9 @@ local extension_name = "legendary_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, false, {
-    plugin = function(config)
-      print(config.active)
+    plugin = function()
       return {
         "mrjones2014/legendary.nvim",
-        enabled = config.active,
       }
     end,
     setup = function()
@@ -59,7 +57,7 @@ function M.config()
           do_binding = false,
         },
         -- Directory used for caches
-        cache_path = string.format("%s/legendary/", vim.fn.stdpath "cache"),
+        cache_path = string.format("%s/legendary/", vim.fn.stdpath("cache")),
       }
     end,
     on_setup = function(config)

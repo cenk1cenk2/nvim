@@ -5,10 +5,10 @@ local extension_name = "octo"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "pwntester/octo.nvim",
-        enabled = config.active,
+        cmd = { "Octo" },
       }
     end,
     setup = {},

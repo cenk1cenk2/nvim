@@ -21,7 +21,7 @@ if neodev_loaded then
         },
         workspace = {
           library = {
-            vim.fn.expand "$VIMRUNTIME",
+            vim.fn.expand("$VIMRUNTIME"),
             get_config_dir(),
             neodev.types(),
             "${3rd}/busted/library",

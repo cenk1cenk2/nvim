@@ -5,10 +5,9 @@ local extension_name = "mason_nvim_dap"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "jay-babu/mason-nvim-dap.nvim",
-        enabled = config.active,
       }
     end,
     setup = {
@@ -39,14 +38,14 @@ function M.config()
     on_setup = function(config)
       require("mason-nvim-dap").setup(config.setup)
 
-      require("mason-nvim-dap").setup_handlers {
+      require("mason-nvim-dap").setup_handlers({
         function(source_name)
           -- all sources with no handler get passed here
 
           -- Keep original functionality of `automatic_setup = true`
-          require "mason-nvim-dap.automatic_setup"(source_name)
+          require("mason-nvim-dap.automatic_setup")(source_name)
         end,
-      }
+      })
     end,
   })
 end

@@ -9,7 +9,7 @@ function M.config()
       return {
         "ripxorip/aerojump.nvim",
         config = function()
-          require("utils.setup").packer_config "aerojump_nvim"
+          require("utils.setup").packer_config("aerojump_nvim")
         end,
         disable = not config.active,
         run = ":UpdateRemotePlugins",

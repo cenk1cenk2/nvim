@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup()
-  require("utils.setup").configure {
+  require("utils.setup").configure({
     autocmds = {
       {
         "FileType",
@@ -29,9 +29,9 @@ function M.setup()
           group = "_format_options",
           pattern = "*",
           callback = function()
-            vim.opt_local.formatoptions:remove "c"
-            vim.opt_local.formatoptions:remove "r"
-            vim.opt_local.formatoptions:remove "o"
+            vim.opt_local.formatoptions:remove("c")
+            vim.opt_local.formatoptions:remove("r")
+            vim.opt_local.formatoptions:remove("o")
           end,
         },
       },
@@ -42,7 +42,7 @@ function M.setup()
           pattern = "*",
           desc = "Highlight text on yank",
           callback = function()
-            require("vim.highlight").on_yank { higroup = "Search", timeout = 500 }
+            require("vim.highlight").on_yank({ higroup = "Search", timeout = 500 })
           end,
         },
       },
@@ -53,7 +53,7 @@ function M.setup()
           pattern = "qf",
           callback = function()
             vim.bo.buflisted = false
-            vim.cmd [[wincmd J]]
+            vim.cmd([[wincmd J]])
           end,
         },
       },
@@ -92,7 +92,7 @@ function M.setup()
         },
       },
     },
-  }
+  })
 end
 
 return M

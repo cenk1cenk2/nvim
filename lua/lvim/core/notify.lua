@@ -1,6 +1,6 @@
 local M = {}
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 local defaults = {
   active = true,
@@ -47,7 +47,7 @@ local defaults = {
 }
 
 function M.config()
-  if not lvim.use_icons then
+  if not lvim.ui.use_icons then
     defaults.opts.icons = {
       ERROR = "[ERROR]",
       WARN = "[WARNING]",
@@ -66,7 +66,7 @@ function M.setup()
   end
 
   local opts = lvim.builtin.notify and lvim.builtin.notify.opts or defaults
-  local notify = require "notify"
+  local notify = require("notify")
 
   notify.setup(opts)
   vim.notify = notify

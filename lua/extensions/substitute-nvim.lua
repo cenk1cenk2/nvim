@@ -5,17 +5,16 @@ local extension_name = "substitute_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "gbprod/substitute.nvim",
-        enabled = config.active,
       }
     end,
     to_inject = function()
       -- local _, yanky = pcall(require, "yanky")
 
       return {
-        substitute = require "substitute",
+        substitute = require("substitute"),
         -- yanky = yanky,
       }
     end,

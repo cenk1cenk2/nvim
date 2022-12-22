@@ -1,4 +1,4 @@
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 local opts = {
   settings = {
@@ -34,7 +34,7 @@ local opts = {
         local current = vim.api.nvim_buf_get_name(0)
         vim.ui.input({ prompt = "Set the path to rename to" .. " ➜  ", default = current }, function(rename)
           if not rename then
-            Log:warn "File name can not be empty."
+            Log:warn("File name can not be empty.")
 
             return
           end
@@ -49,11 +49,11 @@ local opts = {
             return
           end
 
-          vim.lsp.buf.execute_command {
+          vim.lsp.buf.execute_command({
             command = "_typescript.applyRenameFile",
             arguments = { { sourceUri = "file://" .. current, targetUri = "file://" .. rename } },
             title = "",
-          }
+          })
 
           vim.loop.fs_rename(current, rename)
 
@@ -63,7 +63,7 @@ local opts = {
                 vim.api.nvim_buf_set_name(buf, rename)
                 -- to avoid the 'overwrite existing file' error message on write
                 vim.api.nvim_buf_call(buf, function()
-                  vim.cmd "silent! w!"
+                  vim.cmd("silent! w!")
                 end)
               end
             end
@@ -85,13 +85,13 @@ local opts = {
 
     LspImportAll = {
       function()
-        vim.cmd [[TSLspImportAll]]
+        vim.cmd([[TSLspImportAll]])
       end,
     },
 
     LspImportCurrent = {
       function()
-        vim.cmd [[TSLspImportCurrent]]
+        vim.cmd([[TSLspImportCurrent]])
       end,
     },
   },

@@ -5,11 +5,10 @@ local extension_name = "vim_visual_multi"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "mg979/vim-visual-multi",
-        event = "BufWinEnter",
-        enabled = config.active,
+        event = "BufRead",
       }
     end,
     legacy_setup = {

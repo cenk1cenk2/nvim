@@ -5,16 +5,15 @@ local extension_name = "nvim_ufo"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "kevinhwang91/nvim-ufo",
         dependencies = { "kevinhwang91/promise-async" },
-        enabled = config.active,
       }
     end,
     to_inject = function()
       return {
-        ufo = require "ufo",
+        ufo = require("ufo"),
         handler = function(virtText, lnum, endLnum, width, truncate)
           local newVirtText = {}
           local suffix = ("   %d "):format(endLnum - lnum)

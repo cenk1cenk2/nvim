@@ -1,9 +1,9 @@
-local linters = require "lvim.lsp.null-ls.linters"
+local linters = require("lvim.lsp.null-ls.linters")
 
 local M = {}
 
 function M.setup()
-  linters.setup {
+  linters.setup({
     {
       name = "eslint_d",
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
@@ -16,7 +16,7 @@ function M.setup()
     {
       name = "markdownlint",
       filetypes = { "markdown" },
-      extra_args = { "-s", "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.markdownlintrc.json" },
+      extra_args = { "-s", "-c", vim.fn.expand("~/.config/nvim/utils/linter-config/.markdownlintrc.json") },
     },
 
     {
@@ -35,7 +35,7 @@ function M.setup()
 
     {
       name = "cspell",
-      extra_args = { "-c", vim.fn.expand "~/.config/nvim/utils/linter-config/.cspell.json" },
+      extra_args = { "-c", vim.fn.expand("~/.config/nvim/utils/linter-config/.cspell.json") },
     },
     -- {
     --   name = "ansiblelint",
@@ -69,7 +69,7 @@ function M.setup()
     --   managed = true,
     --   filetypes = { "markdown", "tex" },
     -- },
-  }
+  })
 end
 
 return M

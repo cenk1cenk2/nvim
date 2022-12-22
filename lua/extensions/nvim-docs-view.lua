@@ -5,11 +5,10 @@ local extension_name = "nvim_docs_view"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "amrbashir/nvim-docs-view",
         cmd = { "DocsViewToggle" },
-        enabled = config.active,
       }
     end,
     setup = {
