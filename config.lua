@@ -1,4 +1,4 @@
-lvim.log.level = "debug"
+lvim.log.level = "info"
 
 lvim.lsp.ensure_installed = {
   ---- language servers
