@@ -628,23 +628,6 @@ hl.plugins.hlslens = {
   HlSearchFloat = { link = "IncSearch" },
 }
 
--- setup
--- local function find_duplicates(t)
---   local Log = require "lvim.core.log"
---
---   local seen = {} --keep record of elements we've seen
---   local duplicated = {} --keep a record of duplicated elements
---   for i = 1, #t do
---     local element = t[i]
---     if seen[element] then --check if we've seen the element before
---       duplicated[element] = true --if we have then it must be a duplicate! add to a table to keep track of this
---     else
---       seen[element] = true -- set the element to seen
---     end
---   end
---   Log:warn(string.format("Duplicated highlights: %s", vim.inspect(duplicated)))
--- end
-
 function M.load_highlights(ns, highlights, loaded)
   for group_name, group_settings in pairs(highlights) do
     -- table.insert(loaded, group_name)
@@ -671,6 +654,23 @@ function M.setup()
   M.load_highlights(0, hl.treesitter, loaded)
   -- M.load_highlights(ns, hl.treesitter)
   vim.api.nvim_set_hl_ns(ns)
+
+  -- setup
+  -- local function find_duplicates(t)
+  --   local Log = require "lvim.core.log"
+  --
+  --   local seen = {} --keep record of elements we've seen
+  --   local duplicated = {} --keep a record of duplicated elements
+  --   for i = 1, #t do
+  --     local element = t[i]
+  --     if seen[element] then --check if we've seen the element before
+  --       duplicated[element] = true --if we have then it must be a duplicate! add to a table to keep track of this
+  --     else
+  --       seen[element] = true -- set the element to seen
+  --     end
+  --   end
+  --   Log:warn(string.format("Duplicated highlights: %s", vim.inspect(duplicated)))
+  -- end
 
   -- find_duplicates(loaded)
 end
