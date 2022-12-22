@@ -156,9 +156,13 @@ M.mappings = {
   [M.CATEGORIES.PLUGINS] = {
     name = "plugins",
     i = { ":Lazy install<CR>", "install" },
-    s = { ":Lazy restore<CR>", "packer sync" },
-    S = { ":Lazy<CR>", "packer status" },
-    u = { ":Lazy update<CR>", "packer update" },
+    x = { ":Lazy clean<CR>", "clean" },
+    l = { ":Lazy log<CR>", "log" },
+    s = { ":Lazy sync<CR>", "sync" },
+    S = { ":Lazy<CR>", "status" },
+    r = { ":Lazy restore<CR>", "restore" },
+    p = { ":Lazy profile<CR>", "profile" },
+    u = { ":Lazy update<CR>", "update" },
   },
 
   [M.CATEGORIES.TESTS] = {
