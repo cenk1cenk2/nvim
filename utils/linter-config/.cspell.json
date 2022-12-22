@@ -18,7 +18,7 @@
       "ignoreRegExpList": ["String"]
     },
     {
-      "languageId": ["yaml.ansible"],
+      "languageId": ["yaml.ansible", "yaml"],
       "ignoreRegExpList": ["String"]
     },
     {
