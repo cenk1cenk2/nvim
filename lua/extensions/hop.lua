@@ -8,12 +8,12 @@ function M.config()
     plugin = function()
       return {
         "phaazon/hop.nvim",
-        keys = {
-          ":HopChar2",
-          ":HopChar1",
-          ":HopPattern",
-          ":HopWord",
-          ":HopLine",
+        cmd = {
+          "HopChar2",
+          "HopChar1",
+          "HopPattern",
+          "HopWord",
+          "HopLine",
         },
       }
     end,

@@ -9,7 +9,7 @@ function M.config()
     plugin = function()
       return {
         "nvim-lualine/lualine.nvim",
-        lazy = false,
+        event = "VeryLazy",
       }
     end,
     inject_to_configure = function()
@@ -286,7 +286,16 @@ function M.config()
           },
           lualine_c = components.noice_left,
           lualine_x = components.noice_right,
-          lualine_y = { components.diagnostics, components.treesitter, components.lsp },
+          lualine_y = {
+            {
+              require("lazy.status").updates,
+              cond = require("lazy.status").has_updates,
+              color = { fg = colors.magenta[600] },
+            },
+            components.diagnostics,
+            components.treesitter,
+            components.lsp,
+          },
           lualine_z = { components.scrollbar },
         },
         inactive_sections = {

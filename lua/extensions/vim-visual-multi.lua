@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "mg979/vim-visual-multi",
-        event = "BufRead",
+        event = "BufReadPost",
       }
     end,
     legacy_setup = {

@@ -8,7 +8,10 @@ function M.config()
     plugin = function()
       return {
         "nvim-pack/nvim-spectre",
-        build = "./build.sh",
+        dependencies = {
+          { "nvim-lua/plenary.nvim" },
+        },
+        build = { "./build.sh" },
       }
     end,
     configure = function(_, fn)

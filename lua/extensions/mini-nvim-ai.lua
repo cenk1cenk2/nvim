@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "echasnovski/mini.ai",
-        event = "BufWinEnter",
+        event = "BufReadPost",
       }
     end,
     setup = {

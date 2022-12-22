@@ -11,14 +11,14 @@ function M.config()
         dependencies = {
           {
             "nvim-telescope/telescope-fzf-native.nvim",
-            build = "make",
+            build = { "make" },
           },
           {
             "tzachar/fuzzy.nvim",
             dependencies = { "nvim-telescope/telescope-fzf-native.nvim" },
           },
         },
-        event = "VeryLazy",
+        cmd = { "Telescope" },
       }
     end,
     configure = function(_, fn)
@@ -71,8 +71,19 @@ function M.config()
               preview_cutoff = 40,
               width = 0.8,
             },
-            horizontal = { mirror = true, width = 0.9, height = 0.9, prompt_position = "bottom" },
-            vertical = { mirror = false, width = 0.9, height = 0.9, prompt_position = "bottom" },
+            horizontal = {
+              preview_width = 0.55,
+              mirror = true,
+              width = 0.9,
+              height = 0.9,
+              prompt_position = "bottom",
+            },
+            vertical = {
+              mirror = false,
+              width = 0.9,
+              height = 0.9,
+              prompt_position = "bottom",
+            },
           },
           file_ignore_patterns = {
             "**/yarn.lock",

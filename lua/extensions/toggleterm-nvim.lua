@@ -10,7 +10,6 @@ function M.config()
     plugin = function()
       return {
         "akinsho/toggleterm.nvim",
-        event = "VeryLazy",
       }
     end,
     configure = function(_, fn)
@@ -448,7 +447,8 @@ function M.close_all()
   end
 
   -- let ranger act as terminal as well
-  vim.cmd([[
+  pcall(function()
+    vim.cmd([[
     let win_hd = rnvimr#context#winid()
     if rnvimr#context#bufnr() != -1
         if win_hd != -1 && nvim_win_is_valid(win_hd)
@@ -459,6 +459,7 @@ function M.close_all()
         endif
     endif
   ]])
+  end)
 end
 
 function M.kill_all()

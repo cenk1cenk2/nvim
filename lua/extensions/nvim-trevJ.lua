@@ -15,7 +15,7 @@ function M.config()
     on_setup = function(config)
       require("trevj").setup(config.setup)
     end,
-    keymaps = function(config)
+    keymaps = function()
       return {
         n = {
           ["gJ"] = {

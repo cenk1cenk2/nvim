@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "lukas-reineke/indent-blankline.nvim",
-        event = "VeryLazy",
+        event = "BufReadPost",
       }
     end,
     setup = function()
@@ -18,7 +18,7 @@ function M.config()
         show_first_indent_level = false,
         filetype_exclude = lvim.disabled_filetypes,
         enabled = true,
-        show_trailing_blankline_indent = false,
+        show_trailing_blankline_indent = true,
         char = "│",
         space_char_highlight_list = {},
         context_patterns = {

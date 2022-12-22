@@ -7,7 +7,7 @@ function M.config()
     plugin = function()
       return {
         "szw/vim-maximizer",
-        lazy = false,
+        cmd = { "MaximizerToggle" },
       }
     end,
     legacy_setup = {

@@ -9,6 +9,7 @@ function M.config()
     plugin = function()
       return {
         "petertriho/nvim-scrollbar",
+        event = "VeryLazy",
       }
     end,
     setup = function()

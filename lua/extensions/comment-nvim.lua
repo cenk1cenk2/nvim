@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "numToStr/Comment.nvim",
-        event = "BufRead",
+        keys = { "gc", "gb" },
       }
     end,
     inject_to_configure = function()
@@ -80,19 +80,19 @@ function M.config()
     comment_strings = {
       { { "gomod" }, "//%s" },
     },
-    keymaps = {
-      normal_mode = {
-        ["<C-\\>"] = "<CMD>lua require('Comment.api').call('gcc')<CR>g@$",
-        ["<C-#>"] = "<CMD>lua require('Comment.api').call('gcc')<CR>g@$",
-        ["<M-#>"] = "<CMD>lua require('Comment.api').call('gbc')<CR>g@$",
-      },
-
-      visual_mode = {
-        ["<C-\\>"] = "<ESC><CMD>lua require('Comment.api').gc(vim.fn.visualmode())<CR>",
-        ["<C-#>"] = "<ESC><CMD>lua require('Comment.api').gc(vim.fn.visualmode())<CR>",
-        ["<M-#>"] = "<ESC><CMD>lua require('Comment.api').gb(vim.fn.visualmode())<CR>",
-      },
-    },
+    -- keymaps = {
+    --   normal_mode = {
+    --     ["<C-\\>"] = "<CMD>lua require('Comment.api').call('gcc')<CR>g@$",
+    --     ["<C-#>"] = "<CMD>lua require('Comment.api').call('gcc')<CR>g@$",
+    --     ["<M-#>"] = "<CMD>lua require('Comment.api').call('gbc')<CR>g@$",
+    --   },
+    --
+    --   visual_mode = {
+    --     ["<C-\\>"] = "<ESC><CMD>lua require('Comment.api').gc(vim.fn.visualmode())<CR>",
+    --     ["<C-#>"] = "<ESC><CMD>lua require('Comment.api').gc(vim.fn.visualmode())<CR>",
+    --     ["<M-#>"] = "<ESC><CMD>lua require('Comment.api').gb(vim.fn.visualmode())<CR>",
+    --   },
+    -- },
   })
 end
 

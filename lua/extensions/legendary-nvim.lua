@@ -8,6 +8,10 @@ function M.config()
     plugin = function()
       return {
         "mrjones2014/legendary.nvim",
+        dependencies = {
+          "folke/which-key.nvim",
+        },
+        cmd = { "Legendary" },
       }
     end,
     setup = function()

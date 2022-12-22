@@ -12,7 +12,7 @@ function M.config()
           -- https://github.com/ojroques/nvim-bufdel
           "ojroques/nvim-bufdel",
         },
-        lazy = false,
+        event = "VeryLazy",
       }
     end,
     setup = {

@@ -8,6 +8,7 @@ function M.config()
     plugin = function()
       return {
         "theHamsta/nvim-dap-virtual-text",
+        cmd = "DapVirtualTextToggle",
       }
     end,
     setup = {

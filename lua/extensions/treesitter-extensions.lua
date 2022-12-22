@@ -13,12 +13,12 @@ function M.config()
         {
           "JoosepAlviste/nvim-ts-context-commentstring",
           dependencies = { "nvim-treesitter/nvim-treesitter" },
-          event = "BufRead",
+          event = "BufReadPost",
         },
         {
           "p00f/nvim-ts-rainbow",
           dependencies = { "nvim-treesitter/nvim-treesitter" },
-          event = "BufRead",
+          event = "BufReadPost",
         },
         {
           "windwp/nvim-ts-autotag",

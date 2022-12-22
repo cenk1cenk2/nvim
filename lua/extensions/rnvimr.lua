@@ -10,7 +10,7 @@ function M.config()
       return {
         "kevinhwang91/rnvimr",
         -- toggleterm still uses this
-        event = "VeryLazy",
+        cmd = { "RnvimrToggle" },
       }
     end,
     configure = function(_, fn)

@@ -9,7 +9,6 @@ function M.config()
       return {
         "danymat/neogen",
         dependencies = { "nvim-treesitter/nvim-treesitter" },
-        event = "BufWinEnter",
       }
     end,
     setup = {},

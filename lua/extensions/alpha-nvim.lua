@@ -37,11 +37,10 @@ function M.config()
     },
     on_setup = function(config)
       local extension = require("alpha")
-      local plugins = require("lvim.plugins")
 
       local lvim_version = require("lvim.utils.git").get_lvim_current_sha()
       local nvim_version = require("lvim.utils.git").get_nvim_version()
-      local num_plugins_loaded = #vim.fn.globpath(require("lvim.plugins").plugins_dir, "*", 0, 1)
+      local num_plugins_loaded = require("lazy").stats().count
       local button = require("alpha.themes.dashboard").button
 
       local buttons = {}
@@ -147,10 +146,9 @@ function M.config()
         { "SPC w l", "  Load Last Session" },
         { "SPC w f", "⧗  Sessions" },
         { "SPC p", "  Find File" },
-        { "SPC e", "  File Browser" },
         { "SPC w p", "  Recent Projects" },
         { "SPC f f", "  Recently Used Files" },
-        { "SPC L c", "  Configuration" },
+        { "SPC P S", "  Plugins" },
         { "q", "  Quit" },
       },
     },

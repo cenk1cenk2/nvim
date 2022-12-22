@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "kevinhwang91/nvim-hlslens",
-        event = "BufReadPost",
+        event = "VeryLazy",
       }
     end,
     inject_to_configure = function()

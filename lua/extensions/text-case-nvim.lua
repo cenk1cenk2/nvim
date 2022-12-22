@@ -8,7 +8,8 @@ function M.config()
     plugin = function()
       return {
         "johmsalas/text-case.nvim",
-        event = "BufReadPost",
+        cmd = { "Subs" },
+        keys = { "gs" },
       }
     end,
     setup = {

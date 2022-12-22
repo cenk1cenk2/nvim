@@ -2,7 +2,6 @@ local M = {}
 
 local Log = require("lvim.core.log")
 local in_headless = #vim.api.nvim_list_uis() == 0
-local plugin_loader = require("lvim.plugins")
 
 function M.run_pre_reload()
   Log:debug("Starting pre-reload hook")
@@ -10,7 +9,6 @@ end
 
 function M.run_post_reload()
   Log:debug("Starting post-reload hook")
-  M._reload_triggered = true
 end
 
 function M.on_plugin_manager_complete()

@@ -18,11 +18,6 @@ function M.config()
         },
       }
     end,
-    inject_to_configure = function()
-      return {
-        neotest = require("neotest"),
-      }
-    end,
     setup = function()
       return {
         adapters = {
@@ -43,43 +38,41 @@ function M.config()
       require("neotest").setup(config.setup)
     end,
     wk = function(config, categories)
-      local neotest = config.inject.neotest
-
       return {
         [categories.TESTS] = {
           ["r"] = {
             function()
-              neotest.run.run()
+              require("neotest").run.run()
             end,
             "run nearest test",
           },
           ["f"] = {
             function()
-              neotest.run.run(vim.fn.expand("%"))
+              require("neotest").run.run(vim.fn.expand("%"))
             end,
             "run current file",
           },
           ["d"] = {
             function()
-              neotest.run.run({ strategy = "dap" })
+              require("neotest").run.run({ strategy = "dap" })
             end,
             "debug nearest test",
           },
           ["D"] = {
             function()
-              neotest.run.run({ vim.fn.expand("%"), strategy = "dap" })
+              require("neotest").run.run({ vim.fn.expand("%"), strategy = "dap" })
             end,
             "debug file",
           },
           ["s"] = {
             function()
-              neotest.run.stop()
+              require("neotest").run.stop()
             end,
             "debug nearest test",
           },
           ["a"] = {
             function()
-              neotest.run.attach()
+              require("neotest").run.attach()
             end,
             "attach nearest test",
           },

@@ -16,7 +16,6 @@ function M.config()
           "s1n7ax/nvim-window-picker",
         },
         cmd = { "NeoTreeReveal", "NeoTreeFocusToggle", "NeoTreeFloat" },
-        event = "VeryLazy",
       }
     end,
     configure = function(_, fn)
@@ -178,8 +177,6 @@ function M.config()
             ["x"] = "cut_to_clipboard",
             ["p"] = "paste_from_clipboard",
             ["c"] = "copy", -- takes text input for destination, also accepts the optional config.show_path option like "add":
-            ["Y"] = "copy_filename",
-            ["C"] = "copy_filepath",
             ["m"] = "move", -- takes text input for destination, also accepts the optional config.show_path option like "add".
             ["q"] = "close_window",
             ["R"] = "refresh",
@@ -239,6 +236,8 @@ function M.config()
               ["S"] = "run_command",
               ["gp"] = "telescope_find",
               ["gt"] = "telescope_grep",
+              ["Y"] = "copy_filename",
+              ["C"] = "copy_filepath",
             },
           },
           commands = {

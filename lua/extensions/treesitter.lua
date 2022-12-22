@@ -13,6 +13,7 @@ function M.config()
         build = function()
           vim.cmd([[TSUpdate]])
         end,
+        lazy = false,
       }
     end,
     condition = function()

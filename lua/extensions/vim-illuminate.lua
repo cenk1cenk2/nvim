@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "RRethy/vim-illuminate",
-        event = "BufRead",
+        event = "BufReadPost",
       }
     end,
     setup = {

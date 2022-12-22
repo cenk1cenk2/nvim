@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "zakharykaplan/nvim-retrail",
-        event = "VeryLazy",
+        event = "BufReadPost",
       }
     end,
     setup = function()

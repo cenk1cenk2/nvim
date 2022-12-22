@@ -8,7 +8,6 @@ function M.config()
     plugin = function()
       return {
         "shortcuts/no-neck-pain.nvim",
-        lazy = false,
       }
     end,
     inject_to_configure = function()
