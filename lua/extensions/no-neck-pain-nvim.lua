@@ -10,6 +10,11 @@ function M.config()
         "shortcuts/no-neck-pain.nvim",
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes({
+        "no-neck-pain",
+      })
+    end,
     inject_to_configure = function()
       return {
         no_neck_pain = require("no-neck-pain"),

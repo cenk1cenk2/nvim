@@ -8,7 +8,8 @@ function M.config()
     plugin = function()
       return {
         "gbprod/yanky.nvim",
-        cmd = { "Telescope yanky" },
+        -- cmd = { "Telescope yanky" },
+        event = "BufReadPost",
       }
     end,
     register = "+",
@@ -85,7 +86,7 @@ function M.config()
         },
         ["y"] = {
           "<Plug>(YankyYank)",
-          desc = "yanky put before",
+          desc = "yanky",
         },
       }
 
