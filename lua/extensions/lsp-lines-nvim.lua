@@ -37,9 +37,9 @@ function M.toggle()
     return true
   end
 
-  local value = vim.diagnostic.config().virtual_lines
+  local value = vim.diagnostic.config()
 
-  if not value then
+  if not value.virtual_lines then
     vim.diagnostic.config({ virtual_lines = true, virtual_text = false })
   else
     vim.diagnostic.config({ virtual_lines = false, virtual_text = lvim.lsp.diagnostics.virtual_text })
