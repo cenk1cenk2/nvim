@@ -41,8 +41,7 @@ function M.config()
 
       local lvim_version = require("lvim.utils.git").get_lvim_current_sha()
       local nvim_version = require("lvim.utils.git").get_nvim_version()
-      local num_plugins_loaded = 0
-      local num_opt_plugins_loaded = 0
+      local num_plugins_loaded = #vim.fn.globpath(require("lvim.plugins").plugins_dir, "*", 0, 1)
       local button = require("alpha.themes.dashboard").button
 
       local buttons = {}
@@ -75,7 +74,7 @@ function M.config()
 
           {
             type = "text",
-            val = { "Neovim loaded: " .. num_plugins_loaded .. " + " .. num_opt_plugins_loaded .. " plugins " },
+            val = { "Neovim loaded: " .. num_plugins_loaded .. " plugins " },
             opts = {
               position = "center",
               hl = "DashboardFooter",
