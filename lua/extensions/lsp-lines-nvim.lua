@@ -7,7 +7,6 @@ function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
-        name = "lsp_lines.nvim",
         url = "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
         keys = { "gL" },
       }
