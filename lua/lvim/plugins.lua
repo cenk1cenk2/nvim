@@ -38,7 +38,7 @@ function M.load()
   local lazy_setup = {
     root = M.plugins_dir, -- directory where plugins will be installed
     defaults = {
-      lazy = false, -- should plugins be lazy-loaded?
+      lazy = true, -- should plugins be lazy-loaded?
     },
     lockfile = get_config_dir() .. "/lazy-lock.json", -- lockfile generated after running update.
     ui = {

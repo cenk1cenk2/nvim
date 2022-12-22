@@ -308,6 +308,10 @@ function M.config()
         throttle = 1000 / 30,
         routes = {
           {
+            view = "split",
+            filter = { event = "msg_show", min_height = 5 },
+          },
+          {
             filter = { event = "msg_show", kind = { "search_count" } },
             opts = { skip = true },
           },

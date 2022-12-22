@@ -14,7 +14,6 @@ function M.config()
         },
       }
     end,
-
     setup = {},
     on_setup = function(config)
       require("refactoring").setup(config.setup)

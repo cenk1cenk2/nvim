@@ -74,6 +74,7 @@ local extensions = {
   "telescope-vim-bookmarks",
   "telescope-dap",
   "nvim-trevJ",
+  "treesj",
   "aerial-nvim",
   "nvim-docs-view",
   "mini-nvim-ai",
