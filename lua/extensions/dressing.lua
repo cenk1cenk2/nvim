@@ -11,7 +11,7 @@ function M.config()
         event = "VeryLazy",
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         telescope_themes = require("telescope.themes"),
       }

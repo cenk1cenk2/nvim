@@ -4,6 +4,11 @@ local extension_name = "cmp_extensions"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
+    inject_to_configure = function()
+      return {
+        cmp = require("cmp"),
+      }
+    end,
     setup = {
       cmp_git = {
         name = "git",
@@ -16,8 +21,8 @@ function M.config()
         filetypes = { "json" },
       },
     },
-    configure = function()
-      lvim.extensions.cmp.to_setup = {
+    configure = function(_, fn)
+      fn.append_to_setup("cmp", {
         sources = {
           { name = "nvim_lsp" },
           { name = "path" },
@@ -56,12 +61,7 @@ function M.config()
             nvim_lsp_signature_help = "(SH)",
           },
         },
-      }
-    end,
-    to_inject = function()
-      return {
-        cmp = require("cmp"),
-      }
+      })
     end,
     on_setup = function(config)
       for key, e in pairs(config.setup) do
@@ -90,9 +90,7 @@ function M.config()
 
       -- command line
       cmp.setup.cmdline(":", {
-        mapping = cmp.mapping.preset.cmdline({
-          -- Your configuration here.
-        }),
+        mapping = cmp.mapping.preset.cmdline({}),
         sources = {
           { name = "cmdline" },
         },
@@ -100,18 +98,14 @@ function M.config()
 
       -- fuzzy buffer
       cmp.setup.cmdline("/", {
-        mapping = cmp.mapping.preset.cmdline({
-          -- Your configuration here.
-        }),
+        mapping = cmp.mapping.preset.cmdline({}),
         sources = cmp.config.sources({
           { name = "fuzzy_buffer" },
         }),
       })
 
       cmp.setup.cmdline("?", {
-        mapping = cmp.mapping.preset.cmdline({
-          -- Your configuration here.
-        }),
+        mapping = cmp.mapping.preset.cmdline({}),
         sources = cmp.config.sources({
           { name = "fuzzy_buffer" },
         }),

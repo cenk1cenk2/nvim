@@ -12,11 +12,6 @@ function M.config()
         event = "BufReadPost",
       }
     end,
-    to_inject = function()
-      return {
-        inlay_hints = require("lsp-inlayhints"),
-      }
-    end,
     setup = {
       inlay_hints = {
         parameter_hints = {
@@ -66,20 +61,18 @@ function M.config()
         end,
       })
     end,
-    wk = function(config, categories)
-      local inlay_hints = config.inject.inlay_hints
-
+    wk = function(_, categories)
       return {
         [categories.LSP] = {
           ["t"] = {
             function()
-              inlay_hints.toggle()
+              require("lsp-inlayhints").toggle()
             end,
             "toggle inlay hints",
           },
           ["T"] = {
             function()
-              inlay_hints.reset()
+              require("lsp-inlayhints").reset()
             end,
             "reset inlay hints",
           },

@@ -22,7 +22,7 @@ function M.paste_blank_line_below()
 end
 
 function M.setup()
-  require("utils.setup").configure({
+  require("utils.setup").init({
     name = "unimpaired",
     keymaps = {
       n = {

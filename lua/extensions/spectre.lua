@@ -16,11 +16,6 @@ function M.config()
         "spectre_panel",
       })
     end,
-    to_inject = function()
-      return {
-        spectre = require("spectre"),
-      }
-    end,
     setup = {
       color_devicons = true,
       highlight = { ui = "String", search = "SpectreChange", replace = "Spec.red[600]elete" },
@@ -169,32 +164,30 @@ function M.config()
       require("spectre").setup(config.setup)
     end,
     wk = function(config, categories)
-      local spectre = config.inject.spectre
-
       return {
         -- find and replace
         [categories.SEARCH] = {
           s = {
             function()
-              spectre.open()
+              require("spectre").open()
             end,
             "find and replace",
           },
           w = {
             function()
-              spectre.open({ path = string.format("%s/**", vim.fn.expand("%:h")) })
+              require("spectre").open({ path = string.format("%s/**", vim.fn.expand("%:h")) })
             end,
             "find and replace in current folder",
           },
           v = {
             function()
-              spectre.open_visual({ select_word = true })
+              require("spectre").open_visual({ select_word = true })
             end,
             "find the word under cursor and replace",
           },
           b = {
             function()
-              spectre.open_file_search()
+              require("spectre").open_file_search()
             end,
             "find and replace in current buffer",
           },

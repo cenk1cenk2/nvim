@@ -15,7 +15,6 @@ function M.setup()
 
   vim.api.nvim_command([[syntax on]])
   vim.api.nvim_command([[set termguicolors]])
-  vim.api.nvim_command([[colorscheme onedarker]])
 end
 
 return M

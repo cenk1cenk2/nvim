@@ -10,6 +10,7 @@ function M.config()
         "folke/noice.nvim",
         dependencies = {
           "MunifTanjim/nui.nvim",
+          "rcarriga/nvim-notify",
         },
         event = "VeryLazy",
       }
@@ -20,7 +21,7 @@ function M.config()
         "noice",
       })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         telescope = require("telescope"),
         noice_util = require("noice.util"),

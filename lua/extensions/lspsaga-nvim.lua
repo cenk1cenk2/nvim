@@ -17,7 +17,7 @@ function M.config()
         "lspsagarename",
       })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         lspsaga_diagnostic = require("lspsaga.diagnostic"),
       }

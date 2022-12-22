@@ -8,9 +8,10 @@ function M.config()
     plugin = function()
       return {
         "kevinhwang91/nvim-hlslens",
+        event = "BufReadPost",
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         scrollbar_handlers_search = require("scrollbar.handlers.search"),
         hlslens = require("hlslens"),

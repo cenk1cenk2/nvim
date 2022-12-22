@@ -10,7 +10,7 @@ function M.config()
         "SmiteshP/nvim-navic",
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         navic = require("nvim-navic"),
       }

@@ -16,7 +16,7 @@ function M.config()
           require("utils.setup").plugin_configure("cmp")
           require("utils.setup").plugin_configure("cmp_extensions")
         end,
-        lazy = false,
+        lazy = "InsertEnter",
         dependencies = {
           { "hrsh7th/cmp-nvim-lsp" },
           { "hrsh7th/cmp-buffer" },
@@ -48,7 +48,7 @@ function M.config()
         },
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         cmp = require("cmp"),
         luasnip = require("luasnip"),

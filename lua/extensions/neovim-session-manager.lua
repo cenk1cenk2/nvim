@@ -1,6 +1,4 @@
 -- https://github.com/Shatur/neovim-session-manager
-local utils = require("lvim.utils")
-
 local M = {}
 
 local extension_name = "session_manager"
@@ -10,9 +8,10 @@ function M.config()
     plugin = function()
       return {
         "Shatur/neovim-session-manager",
+        cmd = { "SessionManager" },
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         session_manager_config = require("session_manager.config"),
       }

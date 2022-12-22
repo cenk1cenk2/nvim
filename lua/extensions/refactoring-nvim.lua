@@ -14,41 +14,35 @@ function M.config()
         },
       }
     end,
-    to_inject = function()
-      return {
-        refactoring = require("refactoring"),
-      }
-    end,
+
     setup = {},
     on_setup = function(config)
       require("refactoring").setup(config.setup)
     end,
-    keymaps = function(config)
-      local refactoring = config.inject.refactoring
-
+    keymaps = function()
       return {
         v = {
           ["re"] = {
             function()
-              refactoring.refactor("Extract Function")
+              require("refactoring").refactor("Extract Function")
             end,
             { desc = "extract to function" },
           },
           ["rf"] = {
             function()
-              refactoring.refactor("Extract Function To File")
+              require("refactoring").refactor("Extract Function To File")
             end,
             { desc = "extract function to file" },
           },
           ["rv"] = {
             function()
-              refactoring.refactor("Extract Variable")
+              require("refactoring").refactor("Extract Variable")
             end,
             { desc = "extract variable" },
           },
           ["ri"] = {
             function()
-              refactoring.refactor("Inline Variable")
+              require("refactoring").refactor("Inline Variable")
             end,
             { desc = "extract inline variable" },
           },

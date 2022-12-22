@@ -98,6 +98,9 @@ function Log:configure_notifications(notif_handle)
     return
   end
 
+  -- ensure logger is initialized
+  Log:get_logger()
+
   local default_namer = function(logger, entry)
     entry["title"] = logger.name
     return entry

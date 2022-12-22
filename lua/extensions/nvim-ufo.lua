@@ -9,11 +9,11 @@ function M.config()
       return {
         "kevinhwang91/nvim-ufo",
         dependencies = { "kevinhwang91/promise-async" },
+        event = "BufReadPost",
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        ufo = require("ufo"),
         handler = function(virtText, lnum, endLnum, width, truncate)
           local newVirtText = {}
           local suffix = ("   %d "):format(endLnum - lnum)
@@ -84,21 +84,36 @@ function M.config()
       end
     end,
     keymaps = function(config)
-      local ufo = config.inject.ufo
+      local defaults = {
 
+        ["zR"] = {
+          function()
+            require("ufo").openAllFolds()
+          end,
+          { desc = "open all folds - ufo" },
+        },
+        ["zM"] = {
+          function()
+            require("ufo").closeAllFolds()
+          end,
+          { desc = "close all folds - ufo" },
+        },
+        ["zr"] = {
+          function()
+            require("ufo").openFoldsExceptKinds()
+          end,
+          { desc = "open fold - ufo" },
+        },
+        ["zm"] = {
+          function()
+            require("ufo").closeFoldsWith()
+          end,
+          { desc = "close fold - ufo" },
+        },
+      }
       return {
-        n = {
-          ["zR"] = { ufo.openAllFolds, { desc = "open all folds - ufo" } },
-          ["zM"] = { ufo.closeAllFolds, { desc = "close all folds - ufo" } },
-          ["zr"] = { ufo.openFoldsExceptKinds, { desc = "open fold - ufo" } },
-          ["zm"] = { ufo.closeFoldsWith, { desc = "close fold - ufo" } },
-        },
-        v = {
-          ["zR"] = { ufo.openAllFolds, { desc = "open all folds - ufo" } },
-          ["zM"] = { ufo.closeAllFolds, { desc = "close all folds - ufo" } },
-          ["zr"] = { ufo.openFoldsExceptKinds, { desc = "open fold - ufo" } },
-          ["zm"] = { ufo.closeFoldsWith, { desc = "close fold - ufo" } },
-        },
+        n = defaults,
+        v = defaults,
       }
     end,
   })

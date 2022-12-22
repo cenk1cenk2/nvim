@@ -20,11 +20,6 @@ function M.config()
         "dapui_repl",
       })
     end,
-    to_inject = function()
-      return {
-        dap_ui = require("dapui"),
-      }
-    end,
     on_init = function(config)
       config.set_store("setup", false)
     end,
@@ -103,20 +98,18 @@ function M.config()
       require("dapui").setup(config.setup)
       config.set_store("setup", true)
     end,
-    wk = function(config, categories)
-      local dap_ui = config.inject.dap_ui
-
+    wk = function(_, categories)
       return {
         [categories.DEBUG] = {
           u = {
             function()
-              dap_ui.toggle()
+              require("dapui").toggle()
             end,
             "toggle ui",
           },
           K = {
             function()
-              dap_ui.float_element()
+              require("dapui").float_element()
             end,
             "floating element",
           },

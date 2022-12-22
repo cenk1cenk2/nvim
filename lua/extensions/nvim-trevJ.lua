@@ -11,11 +11,6 @@ function M.config()
         "AckslD/nvim-trevJ.lua",
       }
     end,
-    to_inject = function()
-      return {
-        trevj = require("trevj"),
-      }
-    end,
     setup = {},
     on_setup = function(config)
       require("trevj").setup(config.setup)
@@ -24,7 +19,9 @@ function M.config()
       return {
         n = {
           ["gJ"] = {
-            config.inject.trevj.format_at_cursor,
+            function()
+              require("trevj").format_at_cursor()
+            end,
             { desc = "split lines" },
           },
         },

@@ -16,7 +16,7 @@ function M.config()
         "aerial",
       })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         telescope = require("telescope"),
       }

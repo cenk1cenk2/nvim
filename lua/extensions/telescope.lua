@@ -27,7 +27,7 @@ function M.config()
         "Telescope",
       })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         actions = require("telescope.actions"),
         previewers = require("telescope.previewers"),

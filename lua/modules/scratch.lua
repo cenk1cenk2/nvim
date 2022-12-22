@@ -95,7 +95,7 @@ function M.execute_scratch_buffer()
 end
 
 function M.setup()
-  require("utils.setup").configure({
+  require("utils.setup").init({
     name = "scratch",
     wk = function(_, categories)
       return {

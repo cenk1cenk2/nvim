@@ -23,7 +23,7 @@ function M.update_language_servers()
 end
 
 function M.setup()
-  require("utils.setup").configure({
+  require("utils.setup").init({
     name = "rebuild",
     wk = function(_, categories)
       return {

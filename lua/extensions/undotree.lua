@@ -8,6 +8,7 @@ function M.config()
     plugin = function()
       return {
         "mbbill/undotree",
+        cmd = { "UndotreeToggle" },
       }
     end,
     wk = function(_, categories)

@@ -12,7 +12,7 @@ function M.config()
         cmd = { "Telescope vim_bookmarks" },
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         telescope = require("telescope"),
       }

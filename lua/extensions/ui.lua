@@ -1,7 +1,7 @@
 --
 local M = {}
 
-local extension_name = "core"
+local extension_name = "ui"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
@@ -19,7 +19,7 @@ function M.config()
           config = function()
             require("lvim.core.notify").setup()
           end,
-          lazy = false,
+          event = "VeryLazy",
           enabled = lvim.builtin.notify.active,
         },
         {

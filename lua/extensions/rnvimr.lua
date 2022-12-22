@@ -9,8 +9,8 @@ function M.config()
     plugin = function()
       return {
         "kevinhwang91/rnvimr",
-        cmd = { "RnvimrToggle" },
-        keys = { "<F5>" },
+        -- toggleterm still uses this
+        event = "VeryLazy",
       }
     end,
     configure = function(_, fn)

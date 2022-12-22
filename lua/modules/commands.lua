@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup()
-  require("utils.setup").configure({
+  require("utils.setup").init({
     name = "commands",
     commands = {
       {
@@ -32,12 +32,6 @@ function M.setup()
         name = "LvimInfo",
         fn = function()
           require("lvim.core.info").toggle_popup(vim.bo.filetype)
-        end,
-      },
-      {
-        name = "LvimCacheReset",
-        fn = function()
-          require("lvim.utils.hooks").reset_cache()
         end,
       },
       {

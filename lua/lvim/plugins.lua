@@ -23,7 +23,7 @@ local lazy_setup = {
     -- install missing plugins on startup. This doesn't increase startup time.
     missing = true,
     -- try to load one of these colorscheme when starting an installation during startup
-    colorscheme = { "onedarker" },
+    colorscheme = { "habamax" },
   },
   checker = {
     -- automatically check for plugin updates

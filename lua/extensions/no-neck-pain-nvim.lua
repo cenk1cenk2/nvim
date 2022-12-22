@@ -11,7 +11,7 @@ function M.config()
         lazy = false,
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         no_neck_pain = require("no-neck-pain"),
       }
@@ -42,14 +42,12 @@ function M.config()
     on_setup = function(config)
       require("no-neck-pain").setup(config.setup)
     end,
-    wk = function(config, categories)
-      local no_neck_pain = config.inject.no_neck_pain
-
+    wk = function(_, categories)
       return {
         [categories.ACTIONS] = {
           ["z"] = {
             function()
-              no_neck_pain.toggle()
+              require("no-neck-pain").toggle()
             end,
             "no neck pain!",
           },

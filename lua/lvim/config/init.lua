@@ -62,10 +62,10 @@ function M:load(config_path)
   local builtins = require("lvim.core.builtins")
   builtins.config(self)
 
-  local extensions = require("extensions.init")
+  local extensions = require("extensions")
   extensions.config(self)
 
-  local modules = require("modules.init")
+  local modules = require("modules")
   modules.config(self)
 
   autocmds.define_autocmds(lvim.autocommands)

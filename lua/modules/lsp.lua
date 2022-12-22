@@ -20,7 +20,7 @@ function M.lsp_setup()
 end
 
 function M.setup()
-  require("utils.setup").configure({
+  require("utils.setup").init({
     commands = {
       {
         name = "LspSetup",

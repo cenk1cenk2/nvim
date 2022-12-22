@@ -10,7 +10,7 @@ function M.config()
     plugin = function()
       return {
         "akinsho/toggleterm.nvim",
-        lazy = false,
+        event = "VeryLazy",
       }
     end,
     configure = function(_, fn)
@@ -18,7 +18,7 @@ function M.config()
         "toggleterm",
       })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         telescope = require("telescope"),
       }

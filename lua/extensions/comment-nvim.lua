@@ -11,7 +11,7 @@ function M.config()
         event = "BufRead",
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         ft = require("Comment.ft"),
       }

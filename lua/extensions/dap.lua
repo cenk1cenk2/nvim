@@ -22,12 +22,9 @@ function M.config()
         "dap-repl",
       })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        dap = require("dap"),
         vscode = require("dap.ext.vscode"),
-        widgets = require("dap.ui.widgets"),
-        get_debugger = M.get_debugger,
       }
     end,
     on_done = function(config)
@@ -53,100 +50,96 @@ function M.config()
         numhl = "LspDiagnosticsSignInformation",
       },
     },
-    wk = function(config, categories)
-      local dap = config.inject.dap
-      local widgets = config.inject.widgets
-      local vscode = config.inject.vscode
-
+    wk = function(_, categories)
       return {
         [categories.DEBUG] = {
           d = {
             function()
-              dap.toggle_breakpoint()
+              require("dap").toggle_breakpoint()
             end,
             "breakpoint",
           },
           b = {
             function()
-              dap.step_back()
+              require("dap").step_back()
             end,
             "step back",
           },
           c = {
             function()
-              dap.continue()
+              require("dap").continue()
             end,
             "continue",
           },
           C = {
             function()
-              dap.run_to_cursor()
+              require("dap").run_to_cursor()
             end,
             "run to cursor",
           },
           D = {
             function()
-              dap.disconnect()
+              require("dap").disconnect()
             end,
             "disconnect",
           },
           g = {
             function()
-              dap.session()
+              require("dap").session()
             end,
             "get session",
           },
           i = {
             function()
-              dap.step_into()
+              require("dap").step_into()
             end,
             "step into",
           },
           o = {
             function()
-              dap.step_over()
+              require("dap").step_over()
             end,
             "step over",
           },
           k = {
             function()
-              widgets.hover()
+              require("dap.ui.widgets").hover()
             end,
             "inspect element",
           },
           L = {
             function()
-              dap.list_breakpoints()
+              require("dap").list_breakpoints()
             end,
             "list breakpoints",
           },
           O = {
             function()
-              dap.step_out()
+              require("dap").step_out()
             end,
             "step out",
           },
           p = {
             function()
-              dap.pause()
+              require("dap").pause()
             end,
             "Pause",
           },
           r = {
             function()
-              dap.repl.toggle()
+              require("dap").repl.toggle()
             end,
             "toggle repl",
           },
           R = {
             function()
-              vscode.load_launchjs()
+              require("dap.ext.vscode").load_launchjs()
             end,
             "reload launch.json",
           },
           q = {
             function()
-              dap.close()
+              require("dap").close()
             end,
             "quit",
           },

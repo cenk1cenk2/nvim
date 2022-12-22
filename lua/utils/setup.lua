@@ -34,7 +34,7 @@ function M.legacy_setup(opts)
 end
 
 local function define_manager_plugin(config, plugin)
-  if plugin.init ~= false or type(plugin.init) ~= "function" then
+  if plugin.init ~= false and type(plugin.init) ~= "function" then
     Log:trace(string.format("Defining default init command for plugin: %s", config.name))
 
     plugin.init = function()
@@ -42,8 +42,9 @@ local function define_manager_plugin(config, plugin)
     end
   end
 
-  if plugin.config ~= false or type(plugin.config) ~= "function" then
+  if plugin.config ~= false and type(plugin.config) ~= "function" then
     Log:trace(string.format("Defining default config command for plugin: %s", config.name))
+
     plugin.config = function()
       require("utils.setup").plugin_configure(config.name)
     end
@@ -71,7 +72,8 @@ function M.define_extension(extension_name, enabled, config)
     on_init = { config.on_init, "f", true },
     condition = { config.condition, "f", true },
     plugin = { config.plugin, "f", true },
-    to_inject = { config.to_inject, "f", true },
+    inject_to_init = { config.inject_to_init, "f", true },
+    inject_to_configure = { config.inject_to_configure, "f", true },
     autocmds = { config.autocmds, { "t", "f" }, true },
     keymaps = { config.keymaps, { "t", "f" }, true },
     wk = { config.wk, { "t", "f" }, true },
@@ -179,10 +181,11 @@ end
 ---
 ---@param config config
 function M.init(config)
-  if config ~= nil and config.to_inject ~= nil then
+  if config ~= nil and config.inject_to_init ~= nil then
     local ok = pcall(function()
       ---@diagnostic disable-next-line: assign-type-mismatch
-      config.inject = vim.tbl_extend("force", config.inject, config.to_inject(config))
+      lvim.extensions[config.name].inject = vim.tbl_extend("force", lvim.extensions[config.name].inject, config.inject_to_init(config))
+      print(vim.inspect(lvim.extensions[config.name]))
     end)
 
     if not ok then
@@ -240,10 +243,10 @@ end
 ---
 ---@param config config
 function M.configure(config)
-  if config ~= nil and config.to_inject ~= nil then
+  if config ~= nil and config.inject_to_configure ~= nil then
     local ok = pcall(function()
       ---@diagnostic disable-next-line: assign-type-mismatch
-      config.inject = vim.tbl_extend("force", config.inject, config.to_inject(config))
+      lvim.extensions[config.name].inject = vim.tbl_extend("force", lvim.extensions[config.name].inject, config.inject_to_configure(config))
     end)
 
     if not ok then

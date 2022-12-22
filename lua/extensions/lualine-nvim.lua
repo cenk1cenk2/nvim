@@ -12,7 +12,7 @@ function M.config()
         lazy = false,
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       local window_width_limit = 70
 
       local conditions = {

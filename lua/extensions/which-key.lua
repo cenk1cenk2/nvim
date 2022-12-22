@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "folke/which-key.nvim",
-        event = "VeryLazy",
+        keys = { "<Space>" },
       }
     end,
     opts = {
@@ -32,7 +32,7 @@ function M.config()
       lvim.wk.mappings = vim.deepcopy(wk.mappings)
       lvim.wk.vmappings = vim.deepcopy(wk.vmappings)
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         which_key = require("which-key"),
       }

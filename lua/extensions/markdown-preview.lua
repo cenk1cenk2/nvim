@@ -8,7 +8,9 @@ function M.config()
     plugin = function()
       return {
         "iamcco/markdown-preview.nvim",
-        build = { ":call mkdp#util#install()" },
+        build = function()
+          vim.cmd([[call mkdp#util#install()]])
+        end,
         cmd = { "MarkdownPreview" },
       }
     end,

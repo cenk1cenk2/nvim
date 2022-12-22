@@ -17,7 +17,11 @@ lvim = {
     transparent_window = false,
   },
 
-  builtin = {},
+  builtin = {
+    notify = {
+      active = true,
+    },
+  },
   extensions = {},
   plugins = {},
 

@@ -12,13 +12,11 @@ function M.config()
       }
     end,
     register = "+",
-    to_inject = function()
+    inject_to_configure = function()
       return {
         mapping = require("yanky.telescope.mapping"),
         default_register = require("yanky.utils").get_default_register(),
         telescope = require("telescope"),
-        yanky = require("yanky"),
-        highlight = require("yanky.highlight"),
       }
     end,
     setup = function(config)
@@ -69,19 +67,18 @@ function M.config()
     on_done = function(config)
       config.inject.telescope.load_extension("yank_history")
     end,
-    keymaps = function(config)
-      local yanky = config.inject.yanky
-      local highlight = config.inject.highlight
-
+    keymaps = function()
       local defaults = {
         ["gq"] = {
           function()
+            local yanky = require("yanky")
             yanky.cycle(yanky.direction.forward)
           end,
           desc = "yank cycle forward",
         },
         ["gQ"] = {
           function()
+            local yanky = require("yanky")
             yanky.cycle(yanky.direction.backward)
           end,
           desc = "yank cycle backward",
@@ -95,12 +92,16 @@ function M.config()
       local normal = {
         ["p"] = {
           function()
+            local yanky = require("yanky")
+
             yanky.put(yanky.type.PUT_AFTER, false)
           end,
           desc = "yanky put after",
         },
         ["P"] = {
           function()
+            local yanky = require("yanky")
+
             yanky.put(yanky.type.PUT_BEFORE, false)
           end,
           desc = "yanky put before",
@@ -121,18 +122,22 @@ function M.config()
           return
         end
 
-        highlight.highlight_put(state)
+        require("yanky.highlight").highlight_put(state)
       end
 
       local visual = {
         ["P"] = {
           function()
+            local yanky = require("yanky")
+
             yanky.put(yanky.type.PUT_AFTER, true, cb)
           end,
           desc = "yanky put after",
         },
         ["p"] = {
           function()
+            local yanky = require("yanky")
+
             yanky.put(yanky.type.PUT_BEFORE, true, cb)
           end,
           desc = "yanky put before",

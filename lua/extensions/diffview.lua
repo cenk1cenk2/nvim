@@ -18,7 +18,7 @@ function M.config()
         "DiffviewFiles",
       })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
         actions = require("diffview.actions"),
       }

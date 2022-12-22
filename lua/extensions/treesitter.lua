@@ -10,7 +10,9 @@ function M.config()
     plugin = function()
       return {
         "nvim-treesitter/nvim-treesitter",
-        build = ":TSUpdate",
+        build = function()
+          vim.cmd([[TSUpdate]])
+        end,
       }
     end,
     condition = function()
@@ -22,7 +24,7 @@ function M.config()
     end,
     setup = function()
       return {
-        ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+        ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         ignore_install = {},
         matchup = {
           enable = false, -- mandatory, false will disable the whole extension
