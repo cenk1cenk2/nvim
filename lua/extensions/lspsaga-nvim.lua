@@ -72,7 +72,7 @@ function M.config()
       symbol_in_winbar = {
         in_custom = false,
         enable = true,
-        separator = "  ",
+        separator = (" %s "):format(lvim.icons.ui.ChevronShortRight),
         show_file = true,
       },
       rename_action_quit = "<C-c>",

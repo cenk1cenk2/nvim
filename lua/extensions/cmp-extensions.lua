@@ -52,7 +52,7 @@ function M.config()
             vsnip = "(Snippet)",
             luasnip = "(Snippet)",
             buffer = "(Buffer)",
-            fuzzy_buffer = "(Buffer-FZF)",
+            fuzzy_buffer = "(FZF)",
             git = "(GIT)",
             omni = "(OMNI)",
             npm = "(NPM)",
@@ -74,7 +74,7 @@ function M.config()
       local utils = require("lvim.utils")
       local paths = {}
 
-      table.insert(paths, join_paths(require("lvim.plugins").plugins_dir, "friendly-snippets"))
+      table.insert(paths, join_paths(require("lvim.plugin-loader").plugins_dir, "friendly-snippets"))
 
       local user_snippets = join_paths(get_config_dir(), "snippets")
       if utils.is_directory(user_snippets) then

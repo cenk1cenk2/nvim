@@ -20,7 +20,7 @@ function M.config()
       return {
         input = {
           -- Default prompt string
-          default_prompt = "➤ ",
+          default_prompt = lvim.icons.ui.ChevronRight .. " ",
 
           -- When true, <Esc> will close the modal
           insert_only = true,

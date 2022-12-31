@@ -11,6 +11,7 @@ function M.init()
   if not utils.is_directory(M.plugin_manager_dir) then
     print("Initializing first time setup...")
     print("Installing plugin manager...")
+
     vim.fn.system({
       "git",
       "clone",
@@ -22,6 +23,20 @@ function M.init()
   end
 
   vim.opt.runtimepath:prepend(M.plugin_manager_dir)
+
+  local lazy_cache = require("lazy.core.cache")
+
+  ---@diagnostic disable-next-line: redundant-parameter
+  lazy_cache.setup({
+    performance = {
+      cache = {
+        enabled = true,
+        path = M.plugin_manager_cache_dir,
+      },
+    },
+  })
+  -- HACK: Don't allow lazy to call setup second time
+  lazy_cache.setup = function() end
 end
 
 function M.load()
@@ -34,6 +49,17 @@ function M.load()
 
     return
   end
+
+  -- Close lazy.nvim after installing plugins on startup
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "LazyDone",
+    callback = function()
+      if vim.opt.ft:get() == "lazy" then
+        require("lazy.view"):close()
+        vim.cmd("q")
+      end
+    end,
+  })
 
   local lazy_setup = {
     root = M.plugins_dir, -- directory where plugins will be installed
@@ -51,7 +77,7 @@ function M.load()
       -- install missing plugins on startup. This doesn't increase startup time.
       missing = true,
       -- try to load one of these colorscheme when starting an installation during startup
-      colorscheme = { "onedarker", "habamax" },
+      colorscheme = { lvim.colorscheme, "habamax" },
     },
     checker = {
       -- automatically check for plugin updates
@@ -82,8 +108,8 @@ function M.load()
         ---@type string[] list any plugins you want to disable here
         disabled_plugins = {
           "gzip",
-          -- "matchit",
-          -- "matchparen",
+          "matchit",
+          "matchparen",
           "netrwPlugin",
           "tarPlugin",
           "tohtml",
@@ -113,12 +139,35 @@ function M.load()
   require("lvim.utils.hooks").on_plugin_manager_complete()
 end
 
-function M.restore()
-  require("lazy").restore()
+function M.reset_cache()
+  os.remove(require("lazy.core.cache").config.path)
 end
 
-function M.ensure_plugins()
-  require("lazy").install()
+function M.reload(spec)
+  local Config = require("lazy.core.config")
+  local lazy = require("lazy")
+
+  -- TODO: reset cache? and unload plugins?
+
+  Config.spec = spec
+
+  require("lazy.core.plugin").load(true)
+  require("lazy.core.plugin").update_state()
+
+  local not_installed_plugins = vim.tbl_filter(function(plugin)
+    return not plugin._.installed
+  end, Config.plugins)
+
+  require("lazy.manage").clear()
+
+  if #not_installed_plugins > 0 then
+    lazy.install({ wait = true })
+  end
+
+  if #Config.to_clean > 0 then
+    -- TODO: set show to true when lazy shows something useful on clean
+    lazy.clean({ wait = true, show = false })
+  end
 end
 
 return M

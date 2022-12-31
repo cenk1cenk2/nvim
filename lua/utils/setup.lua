@@ -70,7 +70,6 @@ function M.define_extension(extension_name, enabled, config)
     extension_name = { extension_name, "s" },
     config = { config, "t" },
     on_init = { config.on_init, "f", true },
-    condition = { config.condition, "f", true },
     plugin = { config.plugin, "f", true },
     inject_to_init = { config.inject_to_init, "f", true },
     inject_to_configure = { config.inject_to_configure, "f", true },
@@ -113,19 +112,17 @@ function M.define_extension(extension_name, enabled, config)
   if config ~= nil and config.plugin ~= nil then
     local plugins = {}
 
-    if config.plugin ~= nil then
-      local extension = config.plugin(config)
+    local extension = config.plugin(config)
 
-      if config.opts ~= nil and config.opts.multiple_packages then
-        for _, e in pairs(extension) do
-          table.insert(plugins, define_manager_plugin(config, e))
-        end
-      else
-        table.insert(plugins, define_manager_plugin(config, extension))
+    if config.opts ~= nil and config.opts.multiple_packages then
+      for _, e in pairs(extension) do
+        table.insert(plugins, define_manager_plugin(config, e))
       end
+    else
+      table.insert(plugins, define_manager_plugin(config, extension))
     end
 
-    config.plugin = plugins
+    config.extensions = plugins
   end
 
   if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[extension_name]) == false then
@@ -238,6 +235,10 @@ function M.init(config)
   if config ~= nil and config.nvim_opts ~= nil then
     require("utils.command").set_option(config.nvim_opts)
   end
+
+  if config ~= nil and config.legacy_setup ~= nil then
+    M.legacy_setup(config.legacy_setup)
+  end
 end
 
 ---
@@ -254,10 +255,6 @@ function M.configure(config)
 
       return
     end
-  end
-
-  if config ~= nil and config.legacy_setup ~= nil then
-    M.legacy_setup(config.legacy_setup)
   end
 
   if config ~= nil and config.setup ~= nil then
@@ -297,7 +294,7 @@ end
 ---@param extension_name string
 ---@return table
 function M.plugin(extension_name)
-  return M.get_config(extension_name).plugin
+  return M.get_config(extension_name).extensions
 end
 
 ---
@@ -305,8 +302,8 @@ function M.set_plugins()
   local plugins = {}
 
   for _, extension in pairs(lvim.extensions) do
-    if extension.plugin ~= nil then
-      for _, e in pairs(extension.plugin) do
+    if extension.extensions ~= nil then
+      for _, e in pairs(extension.extensions) do
         table.insert(plugins, e)
       end
     end

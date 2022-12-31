@@ -11,8 +11,6 @@ function M.config()
       }
     end,
     setup = function()
-      local colors = require("onedarker.colors")
-
       return {
         selection_chars = "ASDFGQWERYXCVB",
         use_winbar = "always",
@@ -28,9 +26,9 @@ function M.config()
             end, lvim.disabled_filetypes),
           },
         },
-        fg_color = colors.fg,
-        current_win_hl_color = colors.green[300],
-        other_win_hl_color = colors.orange[300],
+        fg_color = lvim.colors.fg,
+        current_win_hl_color = lvim.colors.green[300],
+        other_win_hl_color = lvim.colors.orange[300],
       }
     end,
     on_setup = function(config)

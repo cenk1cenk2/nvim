@@ -34,7 +34,7 @@ function M.config()
         buffers = {
           -- The background options of the side buffer(s).
           background = {
-            colorCode = require("onedarker.colors").bg[100],
+            colorCode = lvim.colors.bg[100],
           },
           -- When `false`, the `left` padding buffer won't be created.
           left = no_neck_pain.bufferOptions,

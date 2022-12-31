@@ -1,6 +1,8 @@
 lvim = {
   leader = "space",
   colorscheme = "onedarker",
+  icons = require("lvim.icons"),
+  colors = require("onedarker.colors"),
   format_on_save = {
     ---@usage pattern string pattern used for the autocommand (Default: '*')
     pattern = "*",

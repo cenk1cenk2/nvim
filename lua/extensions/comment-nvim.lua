@@ -8,7 +8,12 @@ function M.config()
     plugin = function()
       return {
         "numToStr/Comment.nvim",
-        keys = { "gc", "gb" },
+        keys = {
+          { "gc", mode = "n" },
+          { "gb", mode = "n" },
+          { "gc", mode = "v" },
+          { "gb", mode = "v" },
+        },
       }
     end,
     inject_to_configure = function()

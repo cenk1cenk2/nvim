@@ -3,6 +3,7 @@
     "Lua.diagnostics.disable": [
         "param-type-mismatch"
     ],
+    "Lua.workspace.checkThirdParty": false,
     "Lua.workspace.library": [
         "/home/cenk/.local/share/nvim/lazy/neodev.nvim/types/nightly",
         "/usr/local/share/nvim/runtime",

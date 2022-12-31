@@ -121,8 +121,8 @@ function M.config()
           color_devicons = true,
           use_less = true,
           set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-          prompt_prefix = " ",
-          selection_caret = " ",
+          prompt_prefix = lvim.icons.ui.Telescope .. " ",
+          selection_caret = lvim.icons.ui.Forward .. " ",
           entry_prefix = "  ",
         },
         pickers = {

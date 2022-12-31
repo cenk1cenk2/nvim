@@ -19,7 +19,7 @@ function M.config()
         filetype_exclude = lvim.disabled_filetypes,
         enabled = true,
         show_trailing_blankline_indent = true,
-        char = "│",
+        char = lvim.icons.ui.LineLeft,
         space_char_highlight_list = {},
         context_patterns = {
           "class",

@@ -36,6 +36,9 @@ function M.setup()
     {
       name = "cspell",
       extra_args = { "-c", vim.fn.expand("~/.config/nvim/utils/linter-config/.cspell.json") },
+      diagnostics_postprocess = function(diagnostic)
+        diagnostic.severity = vim.diagnostic.severity.HINT
+      end,
     },
     -- {
     --   name = "ansiblelint",

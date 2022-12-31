@@ -27,7 +27,9 @@ function M.run_post_update()
   Log:debug("Starting post-update hook")
 
   if not in_headless then
-    vim.notify("Update complete", vim.log.levels.INFO)
+    vim.schedule(function()
+      vim.notify("Update complete", vim.log.levels.INFO)
+    end)
   end
 end
 

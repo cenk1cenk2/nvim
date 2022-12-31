@@ -8,7 +8,11 @@ function M.config()
     plugin = function()
       return {
         "inkarkat/vim-UnconditionalPaste",
-        keys = { "gp", "gP" },
+        lazy = false,
+        -- keys = {
+        --   { "gp", mode = "n" },
+        --   { "gP", mode = "n" },
+        -- },
       }
     end,
     legacy_setup = {

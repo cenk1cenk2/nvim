@@ -139,7 +139,7 @@ function M.generate_plugins_sha(output)
   local list = {}
   output = output or "commits.lua"
 
-  local core_plugins = require("lvim.plugins")
+  local core_plugins = require("lvim.plugin-loader")
   for _, plugin in pairs(core_plugins) do
     local name = plugin[1]:match("/(%S*)")
     local url = "https://github.com/" .. plugin[1]

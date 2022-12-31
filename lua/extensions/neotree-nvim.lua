@@ -125,16 +125,16 @@ function M.config()
           git_status = {
             symbols = {
               -- Change type
-              added = "✚",
-              deleted = "✖",
-              modified = "",
-              renamed = "",
+              added = lvim.icons.git.FileAdded,
+              deleted = lvim.icons.git.FileDeleted,
+              modified = lvim.icons.git.FileModified,
+              renamed = lvim.icons.git.FileRenamed,
               -- Status type
-              untracked = "",
-              ignored = "",
-              unstaged = "",
-              staged = "",
-              conflict = "",
+              untracked = lvim.icons.git.FileUntracked,
+              ignored = lvim.icons.git.FileIgnored,
+              unstaged = lvim.icons.git.FileUnstaged,
+              staged = lvim.icons.git.FileStaged,
+              conflict = lvim.icons.git.FileConflict,
             },
           },
         },

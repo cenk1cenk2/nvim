@@ -16,7 +16,7 @@ function M.config()
       return {
         handler = function(virtText, lnum, endLnum, width, truncate)
           local newVirtText = {}
-          local suffix = ("   %d "):format(endLnum - lnum)
+          local suffix = ("  %s %d "):format(lvim.icons.ui.ArrowCircleDown, endLnum - lnum)
           local sufWidth = vim.fn.strdisplaywidth(suffix)
           local targetWidth = width - sufWidth
           local curWidth = 0

@@ -89,10 +89,9 @@ function M:reload()
 
     require("lvim.core.autocmds").configure_format_on_save()
 
-    local plugins = require("lvim.plugins")
-    local plugin_loader = require("lvim.plugins")
+    local plugin_loader = require("lvim.plugin-loader")
 
-    plugin_loader.reload({ plugins, lvim.plugins })
+    plugin_loader.reload({ lvim.plugins })
     require_clean("lvim.utils.hooks").run_post_reload()
   end)
 end

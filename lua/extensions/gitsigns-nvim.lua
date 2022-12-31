@@ -13,13 +13,33 @@ function M.config()
     end,
     setup = {
       signs = {
-        add = { hl = "GitSignsAdd", text = "▎", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn" },
-        change = { hl = "GitSignsChange", text = "▎", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },
-        delete = { hl = "GitSignsDelete", text = "契", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
-        topdelete = { hl = "GitSignsDelete", text = "契", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
+        add = {
+          hl = "GitSignsAdd",
+          text = lvim.icons.ui.LineLeft,
+          numhl = "GitSignsAddNr",
+          linehl = "GitSignsAddLn",
+        },
+        change = {
+          hl = "GitSignsChange",
+          text = lvim.icons.ui.LineLeft,
+          numhl = "GitSignsChangeNr",
+          linehl = "GitSignsChangeLn",
+        },
+        delete = {
+          hl = "GitSignsDelete",
+          text = lvim.icons.ui.BoldDividerRight,
+          numhl = "GitSignsDeleteNr",
+          linehl = "GitSignsDeleteLn",
+        },
+        topdelete = {
+          hl = "GitSignsDelete",
+          text = lvim.icons.ui.BoldDividerRight,
+          numhl = "GitSignsDeleteNr",
+          linehl = "GitSignsDeleteLn",
+        },
         changedelete = {
           hl = "GitSignsChange",
-          text = "▎",
+          text = lvim.icons.ui.LineLeft,
           numhl = "GitSignsChangeNr",
           linehl = "GitSignsChangeLn",
         },

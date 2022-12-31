@@ -17,7 +17,7 @@ if neodev_loaded then
     settings = {
       Lua = {
         diagnostics = {
-          globals = { "vim", "lvim", "packer_plugins" },
+          globals = { "vim", "lvim" },
         },
         workspace = {
           library = {

@@ -59,7 +59,7 @@ function M:init()
     _G.PLENARY_DEBUG = false
   end
 
-  require("lvim.plugins").init()
+  require("lvim.plugin-loader").init()
 
   require("lvim.config"):init()
 

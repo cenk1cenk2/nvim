@@ -35,6 +35,12 @@ function M.setup()
         end,
       },
       {
+        name = "LvimCacheReset",
+        fn = function()
+          require("lvim.utils.hooks").reset_cache()
+        end,
+      },
+      {
         name = "LvimReload",
         fn = function()
           require("lvim.config"):reload()
@@ -44,12 +50,6 @@ function M.setup()
         name = "LvimUpdate",
         fn = function()
           require("lvim.bootstrap"):update()
-        end,
-      },
-      {
-        name = "LvimSyncCorePlugins",
-        fn = function()
-          require("lvim.plugins").sync_core_plugins()
         end,
       },
       {

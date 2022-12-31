@@ -2,7 +2,6 @@
 local M = {}
 
 local extension_name = "lualine_nvim"
-local colors = require("onedarker.colors")
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
@@ -51,27 +50,27 @@ function M.config()
             return mode_name[vim.fn.mode()]
           end,
           padding = { left = 1, right = 1 },
-          color = { fg = colors.black },
+          color = { fg = lvim.colors.black },
         },
         branch = {
           "b:gitsigns_head",
-          icon = "",
-          color = { fg = colors.black, bg = colors.yellow[300] },
+          icon = lvim.icons.git.Branch,
+          color = { fg = lvim.colors.black, bg = lvim.colors.yellow[300] },
           cond = conditions.hide_in_width,
         },
         filetype = {
           "filetype",
           cond = conditions.hide_in_width,
           color = {
-            fg = colors.fg,
-            bg = colors.bg[300],
+            fg = lvim.colors.fg,
+            bg = lvim.colors.bg[300],
           },
         },
         filename = {
           "filename",
           color = {
-            fg = colors.fg,
-            bg = colors.bg[300],
+            fg = lvim.colors.fg,
+            bg = lvim.colors.bg[300],
           },
         },
         diff = {
@@ -83,14 +82,14 @@ function M.config()
               return { added = gitsigns.added, modified = gitsigns.changed, removed = gitsigns.removed }
             end
           end,
-          symbols = { added = "  ", modified = " ", removed = " " },
+          symbols = { added = lvim.icons.git.LineAdded, modified = lvim.icons.git.LineModified, removed = lvim.icons.git.LineModified },
           diff_color = {
-            added = { fg = colors.green[600] },
-            modified = { fg = colors.blue[600] },
-            removed = { fg = colors.red[600] },
+            added = { fg = lvim.colors.green[600] },
+            modified = { fg = lvim.colors.blue[600] },
+            removed = { fg = lvim.colors.red[600] },
           },
           color = {
-            bg = colors.bg[300],
+            bg = lvim.colors.bg[300],
           },
           cond = conditions.hide_in_width,
         },
@@ -106,8 +105,8 @@ function M.config()
             return ""
           end,
           color = {
-            fg = colors.green[300],
-            bg = colors.bg[300],
+            fg = lvim.colors.green[300],
+            bg = lvim.colors.bg[300],
           },
           cond = conditions.hide_in_width,
         },
@@ -126,8 +125,8 @@ function M.config()
             local ts = vim.treesitter.highlighter.active[buf]
 
             return {
-              fg = ts and not vim.tbl_isempty(ts) and colors.green[300] or colors.red[300],
-              bg = colors.bg[300],
+              fg = ts and not vim.tbl_isempty(ts) and lvim.colors.green[300] or lvim.colors.red[300],
+              bg = lvim.colors.bg[300],
             }
           end,
           cond = conditions.hide_in_width,
@@ -173,7 +172,7 @@ function M.config()
 
             return lsps
           end,
-          color = { fg = colors.fg, bg = colors.bg[300] },
+          color = { fg = lvim.colors.fg, bg = lvim.colors.bg[300] },
           cond = conditions.hide_in_width,
         },
         location = { "location", cond = conditions.hide_in_width, color = {} },
@@ -208,7 +207,7 @@ function M.config()
             return chars[index]
           end,
           padding = { left = 0, right = 0 },
-          color = { fg = colors.yellow[300], bg = colors.grey[300] },
+          color = { fg = lvim.colors.yellow[300], bg = lvim.colors.grey[300] },
           cond = nil,
         },
       }
@@ -243,7 +242,7 @@ function M.config()
             cond = function()
               return require("noice").api.statusline.mode.has()
             end,
-            color = { fg = colors.yellow[600] },
+            color = { fg = lvim.colors.yellow[600] },
           },
           {
             function()
@@ -252,7 +251,7 @@ function M.config()
             cond = function()
               return require("noice").api.statusline.command.has()
             end,
-            color = { fg = colors.blue[600] },
+            color = { fg = lvim.colors.blue[600] },
           },
         }
       else
@@ -291,7 +290,7 @@ function M.config()
             {
               require("lazy.status").updates,
               cond = require("lazy.status").has_updates,
-              color = { fg = colors.magenta[600] },
+              color = { fg = lvim.colors.magenta[600] },
             },
             components.diagnostics,
             components.treesitter,

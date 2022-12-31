@@ -16,8 +16,8 @@ function M.config()
       inlay_hints = {
         parameter_hints = {
           show = true,
-          prefix = "<- ",
-          separator = ", ",
+          prefix = lvim.icons.ui.ChevronShortLeft .. " ",
+          separator = " " .. lvim.icons.ui.Ellipsis .. " ",
           remove_colon_start = false,
           remove_colon_end = true,
         },
@@ -25,7 +25,7 @@ function M.config()
           -- type and other hints
           show = true,
           prefix = "",
-          separator = ", ",
+          separator = " " .. lvim.icons.ui.Ellipsis .. " ",
           remove_colon_start = false,
           remove_colon_end = false,
         },

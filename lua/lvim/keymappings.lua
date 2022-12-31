@@ -123,7 +123,7 @@ if vim.fn.has("mac") == 1 then
   Log:debug("Activated mac keymappings")
 end
 
--- Unsets all keybindings defined in keymaps
+-- Unset all keybindings defined in keymaps
 -- @param keymaps The table of key mappings containing a list per mode (normal_mode, insert_mode, ..)
 function M.clear(keymaps)
   local default = M.get_defaults()
