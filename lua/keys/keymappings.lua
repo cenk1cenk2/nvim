@@ -27,6 +27,11 @@ return {
       vim.cmd("noa w!")
       require("lvim.core.log"):warn("File saved. No autocommands had run!")
     end,
+    ["<C-S-S>"] = function()
+      vim.cmd("silent write !sudo tee %")
+      vim.cmd("edit!")
+      require("lvim.core.log"):warn("File saved with sudo!")
+    end,
 
     -- close buffer
     ["<C-q>"] = ":BufferClose<CR>",
