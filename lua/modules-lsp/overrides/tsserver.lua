@@ -34,17 +34,17 @@ local opts = {
         local current = vim.api.nvim_buf_get_name(0)
         vim.ui.input({ prompt = "Set the path to rename to" .. " ➜  ", default = current }, function(rename)
           if not rename then
-            Log:warn("File name can not be empty.")
+            vim.notify("File name can not be empty.", vim.log.levels.ERROR)
 
             return
           end
 
-          Log:info(current .. " ➜  " .. rename)
+          vim.notify(current .. " ➜  " .. rename)
 
           local stat = vim.loop.fs_stat(rename)
 
           if stat and stat.type then
-            Log:warn("File already exists: " .. rename)
+            vim.notify("File already exists: " .. rename, vim.log.levels.ERROR)
 
             return
           end

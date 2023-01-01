@@ -148,7 +148,7 @@ function M.fix_current()
     local fix = available_fixes[1]
     lsp_utils.apply_lsp_edit(fix)
     local client = vim.lsp.get_client_by_id(fix.command.client_id)
-    Log:info("[QUICKFIX] " .. client.name .. ": " .. fix.title)
+    Log:info(("[QUICKFIX] %s: %s"):format(client.name, fix.title))
   end)
 end
 

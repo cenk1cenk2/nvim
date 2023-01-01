@@ -30,7 +30,7 @@ function M.config()
       },
       disable_filetype = { "TelescopePrompt", "spectre_panel" },
       ignored_next_char = string.gsub([[ [%w%%%'%[%"%.] ]], "%s+", ""),
-      enable_moveright = false,
+      enable_moveright = true,
       ---@usage disable when recording or executing a macro
       disable_in_macro = false,
       ---@usage add bracket pairs after quote

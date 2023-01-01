@@ -51,7 +51,7 @@ function M.entry_maker(entry)
     end,
     entry = entry,
     value = entry.cmd,
-    ordinal = entry.cmd .. " " .. entry.dir .. " " .. entry.direction,
+    ordinal = ("%s %s %s"):format(entry.cmd, entry.dir, entry.direction),
   }
 end
 

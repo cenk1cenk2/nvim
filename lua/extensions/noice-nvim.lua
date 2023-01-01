@@ -312,12 +312,18 @@ function M.config()
             filter = { event = "msg_show", min_height = 5 },
           },
           {
-            filter = { event = "msg_show", kind = { "search_count" } },
+            filter = {
+              event = "msg_show",
+              kind = { "search_count" },
+            },
             opts = { skip = true },
           },
           {
             view = "notify",
-            filter = { event = "msg_show", kind = { "echomsg" } }, -- echo
+            filter = {
+              event = "msg_show",
+              kind = { "echo", "echomsg" },
+            }, -- echo
             opts = { skip = true },
           },
           {
@@ -330,10 +336,10 @@ function M.config()
           },
           {
             view = "notify",
-            filter = { event = "msg_showmode" },
-            opts = {
-              timeout = 10000,
+            filter = {
+              event = "msg_showmode",
             },
+            opts = { timeout = 10000 },
           },
         },
       }
