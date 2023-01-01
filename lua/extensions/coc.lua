@@ -13,7 +13,7 @@ function M.config()
       }
     end,
     legacy_setup = {
-      coc_start_at_startup = false,
+      coc_start_at_startup = true,
       coc_suggest_disable = 1,
       coc_global_extensions = {
         "coc-lists",
