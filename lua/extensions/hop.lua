@@ -22,7 +22,7 @@ function M.config()
       require("hop").setup(config.setup)
     end,
     on_done = function()
-      vim.api.nvim_command("highlight HopUnmatched guifg=none guibg=none guisp=none ctermfg=none")
+      vim.cmd("highlight HopUnmatched guifg=none guibg=none guisp=none ctermfg=none")
     end,
     keymaps = function()
       return {

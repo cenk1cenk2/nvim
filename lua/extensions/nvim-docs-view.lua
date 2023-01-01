@@ -20,7 +20,9 @@ function M.config()
     end,
     wk = function(_, categories)
       return {
-        [categories.LSP] = { ["v"] = { ":DocsViewToggle<CR>", "toggle documentation" } },
+        [categories.LSP] = {
+          ["v"] = { ":DocsViewToggle<CR>", "toggle documentation" },
+        },
       }
     end,
   })

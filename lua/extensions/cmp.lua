@@ -57,7 +57,7 @@ function M.config()
     setup = function(config)
       local cmp = config.inject.cmp
       local luasnip = config.inject.luasnip
-      local jumpable = M.jumpable
+      -- local jumpable = M.jumpable
       local has_words_before = M.has_words_before
 
       return {

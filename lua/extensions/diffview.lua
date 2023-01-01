@@ -194,7 +194,7 @@ function M.compare_with_branch()
     Log:info(("Comparing with branch: %s"):format(branch))
     lvim.store.set_store(store_key, branch)
 
-    vim.api.nvim_command(":DiffviewOpen " .. branch)
+    vim.cmd(":DiffviewOpen " .. branch)
   end)
 end
 

@@ -41,7 +41,7 @@ function M.config()
       --   return string.format("%s [ %s ]: ", icon, entry.source)
       -- end,
       -- use emoji lightbulb in default
-      code_action_icon = "💡",
+      code_action_icon = lvim.icons.ui.LightbulbColored,
       -- if true can press number to execute the codeaction in codeaction window
       code_action_num_shortcut = true,
       -- same as nvim-lightbulb but async
@@ -109,16 +109,16 @@ function M.config()
       local lspsaga_diagnostic = config.inject.lspsaga_diagnostic
 
       lvim.lsp_wrapper.code_action = function()
-        vim.api.nvim_command("Lspsaga code_action")
+        vim.cmd("Lspsaga code_action")
       end
       lvim.lsp_wrapper.range_code_action = function()
-        vim.api.nvim_command("Lspsaga code_action")
+        vim.cmd("Lspsaga code_action")
       end
       -- lvim.lsp_wrapper.hover = function()
-      --   vim.api.nvim_command "Lspsaga hover_doc"
+      --   vim.cmd "Lspsaga hover_doc"
       -- end
       lvim.lsp_wrapper.rename = function()
-        vim.api.nvim_command("Lspsaga rename")
+        vim.cmd("Lspsaga rename")
       end
       lvim.lsp_wrapper.goto_next = function()
         lspsaga_diagnostic.goto_next()

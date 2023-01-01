@@ -50,17 +50,6 @@ function M.load()
     return
   end
 
-  -- Close lazy.nvim after installing plugins on startup
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "LazyDone",
-    callback = function()
-      if vim.opt.ft:get() == "lazy" then
-        require("lazy.view"):close()
-        vim.cmd("q")
-      end
-    end,
-  })
-
   local lazy_setup = {
     root = M.plugins_dir, -- directory where plugins will be installed
     defaults = {

@@ -17,8 +17,7 @@ function M.config()
         filter_rules = {
           bo = {
             filetype = vim.tbl_filter(function(ft)
-              local items = { "alpha" }
-              if vim.tbl_contains(items, ft) then
+              if vim.tbl_contains({ "alpha" }, ft) then
                 return false
               end
 

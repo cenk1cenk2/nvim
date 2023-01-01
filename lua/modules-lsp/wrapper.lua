@@ -34,7 +34,7 @@ end
 
 function M.document_symbols()
   -- vim.lsp.buf.document_symbol()
-  vim.api.nvim_command("Telescope lsp_document_symbols")
+  vim.cmd("Telescope lsp_document_symbols")
 end
 
 function M.format()
@@ -84,7 +84,7 @@ end
 function M.workspace_symbols()
   -- vim.lsp.buf.workspace_symbol()
 
-  vim.api.nvim_command("Telescope lsp_dynamic_workspace_symbols")
+  vim.cmd("Telescope lsp_dynamic_workspace_symbols")
 end
 
 -- diagnostic
@@ -104,11 +104,11 @@ function M.show_line_diagnostics()
 end
 
 function M.document_diagonistics()
-  vim.api.nvim_command("Telescope lsp_document_diagnostics")
+  vim.cmd("Telescope lsp_document_diagnostics")
 end
 
 function M.workspace_diagonistics()
-  vim.api.nvim_command("Telescope lsp_workspace_diagnostics")
+  vim.cmd("Telescope lsp_workspace_diagnostics")
 end
 
 function M.code_lens()

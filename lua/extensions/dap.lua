@@ -163,8 +163,4 @@ function M.config()
   })
 end
 
-function M.get_debugger(name)
-  return vim.fn.stdpath("data") .. "/mason/bin/" .. name
-end
-
 return M

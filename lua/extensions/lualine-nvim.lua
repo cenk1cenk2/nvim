@@ -113,12 +113,17 @@ function M.config()
         diagnostics = {
           "diagnostics",
           sources = { "nvim_diagnostic" },
-          symbols = { error = " ", warn = " ", info = " ", hint = " " },
+          symbols = {
+            error = lvim.icons.diagnostics.Error,
+            warn = lvim.icons.diagnostics.Warning .. " ",
+            info = lvim.icons.diagnostics.Information .. " ",
+            hint = lvim.icons.diagnostics.Hint .. " ",
+          },
           cond = conditions.hide_in_width,
         },
         treesitter = {
           function()
-            return ""
+            return lvim.icons.ui.Tree
           end,
           color = function()
             local buf = vim.api.nvim_get_current_buf()
@@ -133,15 +138,17 @@ function M.config()
         },
         lsp = {
           function(msg)
-            msg = msg or "❌"
             local buf_clients = vim.lsp.get_active_clients({ bufnr = vim.api.nvim_get_current_buf() })
+
             if next(buf_clients) == nil then
               -- TODO: clean up this if statement
               if type(msg) == "boolean" or #msg == 0 then
-                return "❌"
+                return lvim.icons.ui.Close
               end
+
               return msg
             end
+
             local buf_ft = vim.bo.filetype
             local buf_client_names = {}
 
@@ -163,11 +170,11 @@ function M.config()
             local lsps = table.concat(buf_client_names, ", ")
 
             if supported_linters and not vim.tbl_isempty(supported_linters) then
-              lsps = lsps .. " > " .. table.concat(supported_linters, ", ")
+              lsps = lsps .. (" %s "):format(lvim.icons.ui.DoubleChevronRight) .. table.concat(supported_linters, ", ")
             end
 
             if supported_formatters and not vim.tbl_isempty(supported_formatters) then
-              lsps = lsps .. " > " .. table.concat(supported_formatters, ", ")
+              lsps = lsps .. (" %s "):format(lvim.icons.ui.DoubleChevronRight) .. table.concat(supported_formatters, ", ")
             end
 
             return lsps

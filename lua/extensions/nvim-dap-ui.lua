@@ -24,7 +24,7 @@ function M.config()
       config.set_store("setup", false)
     end,
     setup = {
-      icons = { expanded = "▾", collapsed = "▸" },
+      icons = { expanded = lvim.icons.ui.ChevronShortDown, collapsed = lvim.icons.ui.ChevronShortRight },
       mappings = {
         -- Use a table to apply multiple mappings
         expand = { "<CR>", "<2-LeftMouse>" },

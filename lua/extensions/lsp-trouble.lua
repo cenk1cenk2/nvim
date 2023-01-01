@@ -37,11 +37,11 @@ function M.config()
     end,
     on_done = function()
       lvim.lsp_wrapper.document_diagnostics = function()
-        vim.api.nvim_command("TroubleToggle document_diagnostics")
+        vim.cmd("TroubleToggle document_diagnostics")
       end
 
       lvim.lsp_wrapper.workspace_diagnostics = function()
-        vim.api.nvim_command("TroubleToggle workspace_diagnostics")
+        vim.cmd("TroubleToggle workspace_diagnostics")
       end
     end,
   })

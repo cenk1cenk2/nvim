@@ -49,14 +49,14 @@ function M.config()
             -- view: (default is cmdline view)
             -- opts: any options passed to the view
             -- icon_hl_group: optional hl_group for the icon
-            cmdline = { pattern = "^:", icon = "" },
-            search_down = { kind = "search", pattern = "^/", icon = " ", lang = "regex" },
-            search_up = { kind = "search", pattern = "^%?", icon = " ", lang = "regex" },
+            cmdline = { pattern = "^:", icon = lvim.icons.ui.Command },
+            search_down = { kind = "search", pattern = "^/", icon = ("%s %s"):format(lvim.icons.ui.Search, lvim.icons.ui.DoubleChevronDown), lang = "regex" },
+            search_up = { kind = "search", pattern = "^%?", icon = ("%s %s"):format(lvim.icons.ui.Search, lvim.icons.ui.DoubleChevronUp), lang = "regex" },
             shell = { pattern = "^:%s*!", icon = "$", lang = "bash" },
             read = { pattern = "^:%s*r!", icon = "$", lang = "bash" },
             -- lua = false, -- to disable a format, set to `false`
             lua = { pattern = "^:%s*lua%s+", icon = "", lang = "lua" },
-            help = { pattern = "^:%s*he?l?p?%s+", icon = "" },
+            help = { pattern = "^:%s*he?l?p?%s+", icon = lvim.icons.ui.CircleQuestion },
             input = {}, -- Used by input()
           },
         },

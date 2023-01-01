@@ -246,10 +246,10 @@ function M.config()
               local path = node:get_id()
               -- macOs: open file in default application in the background.
               -- Probably you need to adapt the Linux recipe for manage path with spaces. I don't have a mac to try.
-              -- vim.api.nvim_command("silent !open -g " .. path)
+              -- vim.cmd("silent !open -g " .. path)
               -- Linux: open file in default application
 
-              vim.api.nvim_command(string.format("silent !xdg-open '%s'", path))
+              vim.cmd(string.format("silent !xdg-open '%s'", path))
             end,
             copy_filename = function(state)
               local node = state.tree:get_node()

@@ -17,7 +17,7 @@ function M.config()
         parameter_hints = {
           show = true,
           prefix = lvim.icons.ui.ChevronShortLeft .. " ",
-          separator = " " .. lvim.icons.ui.Ellipsis .. " ",
+          separator = (" %s "):format(lvim.icons.ui.Ellipsis),
           remove_colon_start = false,
           remove_colon_end = true,
         },
@@ -25,7 +25,7 @@ function M.config()
           -- type and other hints
           show = true,
           prefix = "",
-          separator = " " .. lvim.icons.ui.Ellipsis .. " ",
+          separator = (" %s "):format(lvim.icons.ui.Ellipsis),
           remove_colon_start = false,
           remove_colon_end = false,
         },

@@ -16,28 +16,7 @@ function M.config()
         "alpha",
       })
     end,
-    autocmds = {
-      {
-        "FileType",
-        {
-          group = "__alpha",
-          pattern = "alpha",
-          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs= ",
-        },
-      },
-
-      {
-        "FileType",
-        {
-          group = "__alpha",
-          pattern = "alpha",
-          command = "nnoremap <silent> <buffer> q :q<CR>",
-        },
-      },
-    },
     on_setup = function(config)
-      local extension = require("alpha")
-
       local lvim_version = require("lvim.utils.git").get_lvim_current_sha()
       local nvim_version = require("lvim.utils.git").get_nvim_version()
       local num_plugins_loaded = require("lazy").stats().count
@@ -48,7 +27,7 @@ function M.config()
         table.insert(buttons, button(value[1], value[2]))
       end
 
-      extension.setup({
+      require("alpha").setup({
         layout = {
           { type = "padding", val = 1 },
           {
@@ -110,6 +89,25 @@ function M.config()
         },
       }
     end,
+    autocmds = {
+      {
+        "FileType",
+        {
+          group = "__alpha",
+          pattern = "alpha",
+          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell nolist nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs=",
+        },
+      },
+
+      {
+        "FileType",
+        {
+          group = "__alpha",
+          pattern = "alpha",
+          command = "nnoremap <silent> <buffer> q :q<CR>",
+        },
+      },
+    },
     layout = {
       header = {
         [[                                                                                        ]],

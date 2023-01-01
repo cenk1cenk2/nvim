@@ -17,7 +17,7 @@ function M.config()
         win_height = 12,
         win_vheight = 12,
         delay_syntax = 80,
-        border_chars = { "┃", "┃", "━", "━", "┏", "┓", "┗", "┛", "█" },
+        border_chars = lvim.icons.borderchars,
       },
       func_map = { vsplit = "", ptogglemode = "z,", stoggleup = "" },
       filter = {
