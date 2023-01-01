@@ -25,6 +25,7 @@ function M.list_supported(filetype)
   local s = require("null-ls.sources")
   local supported_linters = s.get_supported(filetype, "diagnostics")
   table.sort(supported_linters)
+
   return supported_linters
 end
 

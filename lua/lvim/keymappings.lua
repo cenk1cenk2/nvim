@@ -36,93 +36,6 @@ local mode_adapters = {
   c = "c",
 }
 
----@class Keys
----@field insert_mode table
----@field normal_mode table
----@field terminal_mode table
----@field visual_mode table
----@field visual_block_mode table
----@field command_mode table
-
-local defaults = {
-  insert_mode = {
-    -- Move current line / block with Alt-j/k ala vscode.
-    -- ["<A-j>"] = "<Esc>:m .+1<CR>==gi",
-    -- Move current line / block with Alt-j/k ala vscode.
-    -- ["<A-k>"] = "<Esc>:m .-2<CR>==gi",
-    -- navigation
-    ["<A-Up>"] = "<C-\\><C-N><C-w>k",
-    ["<A-Down>"] = "<C-\\><C-N><C-w>j",
-    ["<A-Left>"] = "<C-\\><C-N><C-w>h",
-    ["<A-Right>"] = "<C-\\><C-N><C-w>l",
-  },
-
-  normal_mode = {
-    -- Better window movement
-    ["<C-h>"] = "<C-w>h",
-    ["<C-j>"] = "<C-w>j",
-    ["<C-k>"] = "<C-w>k",
-    ["<C-l>"] = "<C-w>l",
-
-    -- Resize with arrows
-    ["<C-Up>"] = ":resize -2<CR>",
-    ["<C-Down>"] = ":resize +2<CR>",
-    ["<C-Left>"] = ":vertical resize -2<CR>",
-    ["<C-Right>"] = ":vertical resize +2<CR>",
-
-    -- Move current line / block with Alt-j/k a la vscode.
-    -- ["<A-j>"] = ":m .+1<CR>==",
-    -- ["<A-k>"] = ":m .-2<CR>==",
-
-    -- QuickFix
-    ["]q"] = ":cnext<CR>",
-    ["[q"] = ":cprev<CR>",
-    ["<C-q>"] = ":QuickFixToggle",
-  },
-
-  term_mode = {
-    -- Terminal window navigation
-    ["<C-h>"] = "<C-\\><C-N><C-w>h",
-    ["<C-j>"] = "<C-\\><C-N><C-w>j",
-    ["<C-k>"] = "<C-\\><C-N><C-w>k",
-    ["<C-l>"] = "<C-\\><C-N><C-w>l",
-  },
-
-  visual_mode = {
-    -- Better indenting
-    ["<"] = "<gv",
-    [">"] = ">gv",
-
-    -- ["p"] = '"0p',
-    -- ["P"] = '"0P',
-  },
-
-  visual_block_mode = {
-    -- Move selected line / block of text in visual mode
-    -- ["K"] = ":move '<-2<CR>gv-gv",
-    -- ["J"] = ":move '>+1<CR>gv-gv",
-
-    -- Move current line / block with Alt-j/k ala vscode.
-    ["<A-j>"] = ":m '>+1<CR>gv-gv",
-    ["<A-k>"] = ":m '<-2<CR>gv-gv",
-  },
-
-  command_mode = {
-    -- navigate tab completion with <c-j> and <c-k>
-    -- runs conditionally
-    ["<C-j>"] = { 'pumvisible() ? "\\<C-n>" : "\\<C-j>"', { expr = true, noremap = true } },
-    ["<C-k>"] = { 'pumvisible() ? "\\<C-p>" : "\\<C-k>"', { expr = true, noremap = true } },
-  },
-}
-
-if vim.fn.has("mac") == 1 then
-  defaults.normal_mode["<A-Up>"] = defaults.normal_mode["<C-Up>"]
-  defaults.normal_mode["<A-Down>"] = defaults.normal_mode["<C-Down>"]
-  defaults.normal_mode["<A-Left>"] = defaults.normal_mode["<C-Left>"]
-  defaults.normal_mode["<A-Right>"] = defaults.normal_mode["<C-Right>"]
-  Log:debug("Activated mac keymappings")
-end
-
 -- Unset all keybindings defined in keymaps
 -- @param keymaps The table of key mappings containing a list per mode (normal_mode, insert_mode, ..)
 function M.clear(keymaps)
@@ -176,23 +89,9 @@ end
 
 -- Load the default keymappings
 function M.load_defaults()
-  M.load(M.get_defaults())
-  lvim.keys = lvim.keys or {}
-  for idx, _ in pairs(defaults) do
-    if not lvim.keys[idx] then
-      lvim.keys[idx] = {}
-    end
-  end
-
-  -- the rest is irrelevant
   lvim.keys = require("keys.keymappings")
 
   return lvim.keys
-end
-
--- Get the default keymappings
-function M.get_defaults()
-  return defaults
 end
 
 function M.setup()

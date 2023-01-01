@@ -137,5 +137,7 @@ return {
   command_mode = {
     -- navigate tab completion with <c-j> and <c-k>
     -- runs conditionally
+    -- ["<C-j>"] = { 'pumvisible() ? "\\<C-n>" : "\\<C-j>"', { expr = true, noremap = true } },
+    -- ["<C-k>"] = { 'pumvisible() ? "\\<C-p>" : "\\<C-k>"', { expr = true, noremap = true } },
   },
 }

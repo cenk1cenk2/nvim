@@ -74,27 +74,6 @@ function M.update_repository()
   return true
 end
 
----Switch Lunarvim to the specified development branch
----@param branch string
-function M.switch_lvim_branch(branch)
-  if not safe_deep_fetch() then
-    return
-  end
-  local args = { "switch", branch }
-
-  if branch:match("^[0-9]") then
-    -- avoids producing an error for tags
-    vim.list_extend(args, { "--detach" })
-  end
-
-  local ret = git_cmd({ args = args })
-  if ret ~= 0 then
-    Log:error("Unable to switch branches! Check the log for further information")
-    return
-  end
-  return true
-end
-
 ---Get the current Lunarvim development branch
 ---@return string|nil
 function M.get_lvim_branch()
@@ -133,25 +112,6 @@ function M.get_lvim_current_sha()
   local _, log_results = git_cmd({ args = { "log", "--pretty=format:%h", "-1" } })
   local abbrev_version = if_nil(log_results[1], "")
   return abbrev_version
-end
-
-function M.generate_plugins_sha(output)
-  local list = {}
-  output = output or "commits.lua"
-
-  local core_plugins = require("lvim.plugin-loader")
-  for _, plugin in pairs(core_plugins) do
-    local name = plugin[1]:match("/(%S*)")
-    local url = "https://github.com/" .. plugin[1]
-    print("checking: " .. name .. ", at: " .. url)
-    local retval, latest_sha = git_cmd({ args = { "ls-remote", url, "origin", "HEAD" } })
-    if retval == 0 then
-      -- replace dashes, remove postfixes and use lowercase
-      local normalize_name = (name:gsub("-", "_"):gsub("%.%S+", "")):lower()
-      list[normalize_name] = latest_sha[1]:gsub("\tHEAD", "")
-    end
-  end
-  require("lvim.utils").write_file(output, "local commit = " .. vim.inspect(list), "w")
 end
 
 ---Get currently installed version of LunarVim

@@ -15,16 +15,13 @@ end
 function M:init()
   lvim = vim.deepcopy(require("lvim.config.defaults"))
 
+  require("lvim.config.settings").load_defaults()
+
   require("lvim.keymappings").load_defaults()
 
-  local settings = require("lvim.config.settings")
-  settings.load_defaults()
+  require("lvim.core.autocmds").load_defaults()
 
-  local autocmds = require("lvim.core.autocmds")
-  autocmds.load_defaults()
-
-  local lvim_lsp_config = require("lvim.lsp.config")
-  lvim.lsp = vim.deepcopy(lvim_lsp_config)
+  lvim.lsp = vim.deepcopy(require("lvim.lsp.config"))
 end
 
 -- local function handle_deprecated_settings()

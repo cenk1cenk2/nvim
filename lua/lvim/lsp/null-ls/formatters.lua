@@ -15,6 +15,7 @@ function M.list_supported(filetype)
   local s = require("null-ls.sources")
   local supported_formatters = s.get_supported(filetype, "formatting")
   table.sort(supported_formatters)
+
   return supported_formatters
 end
 

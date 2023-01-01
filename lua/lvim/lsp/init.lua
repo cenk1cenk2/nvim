@@ -159,8 +159,6 @@ function M.setup()
 
   require("lvim.lsp.null-ls").setup()
 
-  require("lvim.lsp.attach").setup()
-
   autocmds.configure_format_on_save()
 end
 
