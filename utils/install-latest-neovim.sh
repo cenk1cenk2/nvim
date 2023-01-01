@@ -1,7 +1,9 @@
 #!/bin/bash
 
 SECONDS=0
-# COMMIT_SHA="cb7da02701d542d3c1618f44f6217944986f09f9"
+# FIXME: Remove after this merge has been finalized.
+# https://github.com/folke/noice.nvim/issues/298
+COMMIT_SHA="99cf111289bfcd14981255e805da43bac5139141"
 # PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
 
 ## inject logger
