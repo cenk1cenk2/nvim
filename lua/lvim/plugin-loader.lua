@@ -55,7 +55,7 @@ function M.load()
     defaults = {
       lazy = true, -- should plugins be lazy-loaded?
     },
-    lockfile = get_config_dir() .. "/lazy-lock.json", -- lockfile generated after running update.
+    lockfile = get_state_dir() .. "/lazy-lock.json", -- lockfile generated after running update.
     ui = {
       -- a number <1 is a percentage., >1 is a fixed size
       size = { width = 0.8, height = 0.8 },
