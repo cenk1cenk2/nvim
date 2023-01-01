@@ -125,7 +125,7 @@ function M.config()
         })
       end
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
         [categories.TREESITTER] = {
           i = { ":TSConfigInfo<CR>", "treesitter info" },
@@ -133,7 +133,14 @@ function M.config()
           k = { ":Inspect<CR>", "inspect color scheme" },
           u = { ":TSUpdate<CR>", "update installed treesitter packages" },
           U = { ":TSUninstall all<CR>", "uninstall all treesitter packages" },
-          R = { ":TSInstall all<CR>", "reinstall all treesitter packages" },
+          R = {
+            function()
+              for _, parser in pairs(fn.get_current_setup(extension_name).ensure_installed) do
+                vim.cmd(("TSInstall %s"):format(parser))
+              end
+            end,
+            "reinstall all treesitter packages",
+          },
         },
       }
     end,
