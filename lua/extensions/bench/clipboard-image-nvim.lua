@@ -9,7 +9,7 @@ function M.config()
       return {
         "ekickx/clipboard-image.nvim",
         config = function()
-          require("utils.setup").packer_config "clipboard_image_nvim"
+          require("utils.setup").packer_config("clipboard_image_nvim")
         end,
         disable = not config.active,
       }
@@ -20,7 +20,7 @@ function M.config()
         default = {
           img_dir = ".",
           img_name = function()
-            return os.date "%Y-%m-%d-%H-%M-%S"
+            return os.date("%Y-%m-%d-%H-%M-%S")
           end, -- Example result: "2021-04-13-10-04-18"
           affix = "<\n  %s\n>", -- Multi lines affix
         },

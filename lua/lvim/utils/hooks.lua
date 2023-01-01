@@ -1,65 +1,33 @@
 local M = {}
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 local in_headless = #vim.api.nvim_list_uis() == 0
-local plugin_loader = require "lvim.plugin-loader"
-
-function M.run_pre_update()
-  Log:debug "Starting pre-update hook"
-end
 
 function M.run_pre_reload()
-  Log:debug "Starting pre-reload hook"
-end
-
-function M.run_on_packer_complete()
-  Log:debug "Packer operation complete"
-  vim.api.nvim_exec_autocmds("User", { pattern = "PackerComplete" })
-
-  vim.g.colors_name = lvim.colorscheme
-  pcall(vim.cmd, "colorscheme " .. lvim.colorscheme)
-
-  if M._reload_triggered then
-    Log:debug "Reloaded configuration"
-    M._reload_triggered = nil
-  end
+  Log:debug("Starting pre-reload hook")
 end
 
 function M.run_post_reload()
-  Log:debug "Starting post-reload hook"
-  M._reload_triggered = true
+  Log:debug("Starting post-reload hook")
 end
 
----Reset any startup cache files used by Packer and Impatient
----It also forces regenerating any template ftplugin files
----Tip: Useful for clearing any outdated settings
-function M.reset_cache()
-  vim.cmd [[LuaCacheClear]]
-  plugin_loader.recompile()
-  local lvim_modules = {}
-  for module, _ in pairs(package.loaded) do
-    if module:match "lvim.core" or module:match "lvim.lsp" then
-      package.loaded[module] = nil
-      table.insert(lvim_modules, module)
-    end
-  end
-  Log:trace(string.format("Cache invalidated for core modules: { %s }", table.concat(lvim_modules, ", ")))
+function M.on_plugin_manager_complete()
+  Log:debug("Plugin manager operation complete.")
+
+  vim.api.nvim_exec_autocmds("User", { pattern = "PluginManagerComplete" })
+
+  vim.cmd("colorscheme " .. lvim.colorscheme)
+end
+
+function M.run_pre_update()
+  Log:debug("Starting pre-update hook")
 end
 
 function M.run_post_update()
-  Log:debug "Starting post-update hook"
-
-  M.reset_cache()
-
-  Log:debug "Syncing core plugins"
-  plugin_loader.sync_core_plugins()
+  Log:debug("Starting post-update hook")
 
   if not in_headless then
     vim.schedule(function()
-      if package.loaded["nvim-treesitter"] then
-        vim.cmd [[ TSUpdateSync ]]
-      end
-      -- TODO: add a changelog
       vim.notify("Update complete", vim.log.levels.INFO)
     end)
   end

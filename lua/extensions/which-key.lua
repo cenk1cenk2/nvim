@@ -5,13 +5,10 @@ local extension_name = "wk"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "folke/which-key.nvim",
-        config = function()
-          require("utils.setup").packer_config "wk"
-        end,
-        disable = not config.active,
+        keys = { "<Space>" },
       }
     end,
     opts = {
@@ -31,13 +28,13 @@ function M.config()
       nowait = true, -- use `nowait` when creating keymaps
     },
     configure = function()
-      local wk = require "keys.which-key"
+      local wk = require("keys.which-key")
       lvim.wk.mappings = vim.deepcopy(wk.mappings)
       lvim.wk.vmappings = vim.deepcopy(wk.vmappings)
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        which_key = require "which-key",
+        which_key = require("which-key"),
       }
     end,
     setup = {
@@ -88,7 +85,7 @@ function M.config()
       which_key.register(lvim.wk.mappings, config.opts)
       which_key.register(lvim.wk.vmappings, config.vopts)
 
-      if fn.extension_get_active "legendary_nvim" then
+      if fn.extension_get_active("legendary_nvim") then
         require("legendary.integrations.which-key").bind_whichkey(lvim.wk.mappings, config.opts, false)
       end
     end,

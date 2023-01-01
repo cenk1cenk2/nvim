@@ -2,25 +2,22 @@
 local M = {}
 
 local extension_name = "lualine_nvim"
-local colors = require "onedarker.colors"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "nvim-lualine/lualine.nvim",
-        config = function()
-          require("utils.setup").packer_config "lualine_nvim"
-        end,
-        disable = not config.active,
+        lazy = false,
+        -- event = "VeryLazy",
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       local window_width_limit = 70
 
       local conditions = {
         buffer_not_empty = function()
-          return vim.fn.empty(vim.fn.expand "%:t") ~= 1
+          return vim.fn.empty(vim.fn.expand("%:t")) ~= 1
         end,
         hide_in_width = function()
           return vim.fn.winwidth(0) > window_width_limit
@@ -53,27 +50,27 @@ function M.config()
             return mode_name[vim.fn.mode()]
           end,
           padding = { left = 1, right = 1 },
-          color = { fg = colors.black },
+          color = { fg = lvim.colors.black },
         },
         branch = {
           "b:gitsigns_head",
-          icon = "",
-          color = { fg = colors.black, bg = colors.yellow[300] },
+          icon = lvim.icons.git.Branch,
+          color = { fg = lvim.colors.black, bg = lvim.colors.yellow[300] },
           cond = conditions.hide_in_width,
         },
         filetype = {
           "filetype",
           cond = conditions.hide_in_width,
           color = {
-            fg = colors.fg,
-            bg = colors.bg[300],
+            fg = lvim.colors.fg,
+            bg = lvim.colors.bg[300],
           },
         },
         filename = {
           "filename",
           color = {
-            fg = colors.fg,
-            bg = colors.bg[300],
+            fg = lvim.colors.fg,
+            bg = lvim.colors.bg[300],
           },
         },
         diff = {
@@ -85,22 +82,22 @@ function M.config()
               return { added = gitsigns.added, modified = gitsigns.changed, removed = gitsigns.removed }
             end
           end,
-          symbols = { added = "  ", modified = " ", removed = " " },
+          symbols = { added = lvim.icons.git.LineAdded .. " ", modified = lvim.icons.git.LineModified .. " ", removed = lvim.icons.git.LineModified .. " " },
           diff_color = {
-            added = { fg = colors.green[600] },
-            modified = { fg = colors.blue[600] },
-            removed = { fg = colors.red[600] },
+            added = { fg = lvim.colors.green[600] },
+            modified = { fg = lvim.colors.blue[600] },
+            removed = { fg = lvim.colors.red[600] },
           },
           color = {
-            bg = colors.bg[300],
+            bg = lvim.colors.bg[300],
           },
           cond = conditions.hide_in_width,
         },
         python_env = {
           function()
-            local utils = require "lvim.core.lualine.utils"
+            local utils = require("lvim.core.lualine.utils")
             if vim.bo.filetype == "python" then
-              local venv = os.getenv "CONDA_DEFAULT_ENV" or os.getenv "VIRTUAL_ENV"
+              local venv = os.getenv("CONDA_DEFAULT_ENV") or os.getenv("VIRTUAL_ENV")
               if venv then
                 return string.format("  (%s)", utils.env_cleanup(venv))
               end
@@ -108,43 +105,50 @@ function M.config()
             return ""
           end,
           color = {
-            fg = colors.green[300],
-            bg = colors.bg[300],
+            fg = lvim.colors.green[300],
+            bg = lvim.colors.bg[300],
           },
           cond = conditions.hide_in_width,
         },
         diagnostics = {
           "diagnostics",
           sources = { "nvim_diagnostic" },
-          symbols = { error = " ", warn = " ", info = " ", hint = " " },
+          symbols = {
+            error = lvim.icons.diagnostics.Error,
+            warn = lvim.icons.diagnostics.Warning .. " ",
+            info = lvim.icons.diagnostics.Information .. " ",
+            hint = lvim.icons.diagnostics.Hint .. " ",
+          },
           cond = conditions.hide_in_width,
         },
         treesitter = {
           function()
-            return ""
+            return lvim.icons.ui.Tree
           end,
           color = function()
             local buf = vim.api.nvim_get_current_buf()
             local ts = vim.treesitter.highlighter.active[buf]
 
             return {
-              fg = ts and not vim.tbl_isempty(ts) and colors.green[300] or colors.red[300],
-              bg = colors.bg[300],
+              fg = ts and not vim.tbl_isempty(ts) and lvim.colors.green[300] or lvim.colors.red[300],
+              bg = lvim.colors.bg[300],
             }
           end,
           cond = conditions.hide_in_width,
         },
         lsp = {
           function(msg)
-            msg = msg or "❌"
-            local buf_clients = vim.lsp.get_active_clients { bufnr = vim.api.nvim_get_current_buf() }
+            local buf_clients = vim.lsp.get_active_clients({ bufnr = vim.api.nvim_get_current_buf() })
+
             if next(buf_clients) == nil then
               -- TODO: clean up this if statement
               if type(msg) == "boolean" or #msg == 0 then
-                return "❌"
+                return lvim.icons.ui.Close
               end
+
               return msg
             end
+
             local buf_ft = vim.bo.filetype
             local buf_client_names = {}
 
@@ -156,26 +160,26 @@ function M.config()
             end
 
             -- add formatter
-            local formatters = require "lvim.lsp.null-ls.formatters"
+            local formatters = require("lvim.lsp.null-ls.formatters")
             local supported_formatters = formatters.list_registered(buf_ft)
 
             -- add linter
-            local linters = require "lvim.lsp.null-ls.linters"
+            local linters = require("lvim.lsp.null-ls.linters")
             local supported_linters = linters.list_registered(buf_ft)
 
             local lsps = table.concat(buf_client_names, ", ")
 
             if supported_linters and not vim.tbl_isempty(supported_linters) then
-              lsps = lsps .. " > " .. table.concat(supported_linters, ", ")
+              lsps = lsps .. (" %s "):format(lvim.icons.ui.DoubleChevronRight) .. table.concat(supported_linters, ", ")
             end
 
             if supported_formatters and not vim.tbl_isempty(supported_formatters) then
-              lsps = lsps .. " > " .. table.concat(supported_formatters, ", ")
+              lsps = lsps .. (" %s "):format(lvim.icons.ui.DoubleChevronRight) .. table.concat(supported_formatters, ", ")
             end
 
             return lsps
           end,
-          color = { fg = colors.fg, bg = colors.bg[300] },
+          color = { fg = lvim.colors.fg, bg = lvim.colors.bg[300] },
           cond = conditions.hide_in_width,
         },
         location = { "location", cond = conditions.hide_in_width, color = {} },
@@ -202,15 +206,15 @@ function M.config()
         },
         scrollbar = {
           function()
-            local current_line = vim.fn.line "."
-            local total_lines = vim.fn.line "$"
+            local current_line = vim.fn.line(".")
+            local total_lines = vim.fn.line("$")
             local chars = { "__", "▁▁", "▂▂", "▃▃", "▄▄", "▅▅", "▆▆", "▇▇", "██" }
             local line_ratio = current_line / total_lines
             local index = math.ceil(line_ratio * #chars)
             return chars[index]
           end,
           padding = { left = 0, right = 0 },
-          color = { fg = colors.yellow[300], bg = colors.grey[300] },
+          color = { fg = lvim.colors.yellow[300], bg = lvim.colors.grey[300] },
           cond = nil,
         },
       }
@@ -245,7 +249,7 @@ function M.config()
             cond = function()
               return require("noice").api.statusline.mode.has()
             end,
-            color = { fg = colors.yellow[600] },
+            color = { fg = lvim.colors.yellow[600] },
           },
           {
             function()
@@ -254,7 +258,7 @@ function M.config()
             cond = function()
               return require("noice").api.statusline.command.has()
             end,
-            color = { fg = colors.blue[600] },
+            color = { fg = lvim.colors.blue[600] },
           },
         }
       else
@@ -273,7 +277,7 @@ function M.config()
         globalstatus = true,
         options = {
           theme = "auto",
-          icons_enabled = lvim.use_icons,
+          icons_enabled = lvim.ui.use_icons,
           component_separators = { left = "", right = "" },
           section_separators = { left = "", right = "" },
           disabled_filetypes = lvim.disabled_filetypes,
@@ -289,7 +293,16 @@ function M.config()
           },
           lualine_c = components.noice_left,
           lualine_x = components.noice_right,
-          lualine_y = { components.diagnostics, components.treesitter, components.lsp },
+          lualine_y = {
+            {
+              require("lazy.status").updates,
+              cond = require("lazy.status").has_updates,
+              color = { fg = lvim.colors.magenta[600] },
+            },
+            components.diagnostics,
+            components.treesitter,
+            components.lsp,
+          },
           lualine_z = { components.scrollbar },
         },
         inactive_sections = {

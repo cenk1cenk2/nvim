@@ -1,6 +1,6 @@
 M = {}
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 function M.rg_interactive()
   local store_key = "TELESCOPE_RG_INTERACTIVE_LAST_ARGS"
@@ -11,7 +11,7 @@ function M.rg_interactive()
     default = stored_value,
   }, function(args)
     if args == nil then
-      Log:warn "Nothing to do."
+      Log:warn("Nothing to do.")
 
       return
     end
@@ -20,28 +20,28 @@ function M.rg_interactive()
 
     local chunks = {}
 
-    for substring in args:gmatch "%S+" do
+    for substring in args:gmatch("%S+") do
       table.insert(chunks, substring)
     end
 
-    return require("telescope.builtin").live_grep {
+    return require("telescope.builtin").live_grep({
       vimgrep_arguments = vim.list_extend(vim.deepcopy(lvim.fn.get_telescope_rg_arguments()), chunks),
-    }
+    })
   end)
 end
 
 function M.rg_string()
-  return require("telescope.builtin").live_grep {
+  return require("telescope.builtin").live_grep({
     vimgrep_arguments = vim.list_extend(vim.deepcopy(lvim.fn.get_telescope_rg_arguments()), { "--fixed-strings" }),
-  }
+  })
 end
 
 function M.rg_dirty()
-  require("telescope.builtin").grep_string { shorten_path = true, word_match = "-w", only_sort_text = true, search = "" }
+  require("telescope.builtin").grep_string({ shorten_path = true, word_match = "-w", only_sort_text = true, search = "" })
 end
 
 function M.rg_grep_buffer()
-  return require("telescope.builtin").live_grep { search_dirs = { "%:p" } }
+  return require("telescope.builtin").live_grep({ search_dirs = { "%:p" } })
 end
 
 return M

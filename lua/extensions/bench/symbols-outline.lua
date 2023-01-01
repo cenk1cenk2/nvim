@@ -10,15 +10,15 @@ function M.config()
       return {
         "simrat39/symbols-outline.nvim",
         config = function()
-          require("utils.setup").packer_config "symbols_outline"
+          require("utils.setup").packer_config("symbols_outline")
         end,
         disable = not config.active,
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "Outline",
-      }
+      })
     end,
     setup = {
       highlight_hovered_item = true,

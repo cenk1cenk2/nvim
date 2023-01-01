@@ -1,172 +1,162 @@
-local plugin_loader = {}
+local M = {}
 
-local utils = require "lvim.utils"
-local Log = require "lvim.core.log"
-local in_headless = #vim.api.nvim_list_uis() == 0
+local utils = require("lvim.utils")
+local Log = require("lvim.core.log")
 
--- we need to reuse this outside of init()
-local compile_path = join_paths(get_config_dir(), "plugin", "packer_compiled.lua")
-local snapshot_path = join_paths(get_cache_dir(), "snapshots")
--- local default_snapshot = join_paths(get_lvim_base_dir(), "snapshots", "default.json")
+M.plugins_dir = get_data_dir() .. "/lazy"
+M.plugin_manager_dir = M.plugins_dir .. "/lazy.nvim"
+M.plugin_manager_cache_dir = get_cache_dir() .. "/lazy"
 
-function plugin_loader.init(opts)
-  opts = opts or {}
+function M.init()
+  if not utils.is_directory(M.plugin_manager_dir) then
+    print("Initializing first time setup...")
+    print("Installing plugin manager...")
 
-  local install_path = opts.install_path
-    or join_paths(vim.fn.stdpath "data", "site", "pack", "packer", "start", "packer.nvim")
+    vim.fn.system({
+      "git",
+      "clone",
+      "--filter=blob:none",
+      "--single-branch",
+      "https://github.com/folke/lazy.nvim.git",
+      M.plugin_manager_dir,
+    })
+  end
 
-  local init_opts = {
-    package_root = opts.package_root or join_paths(vim.fn.stdpath "data", "site", "pack"),
-    compile_path = compile_path,
-    snapshot_path = snapshot_path,
-    -- max_jobs = 200,
-    log = { level = "warn" },
-    git = {
-      clone_timeout = 300,
+  vim.opt.runtimepath:prepend(M.plugin_manager_dir)
+
+  local lazy_cache = require("lazy.core.cache")
+
+  ---@diagnostic disable-next-line: redundant-parameter
+  lazy_cache.setup({
+    performance = {
+      cache = {
+        enabled = true,
+        path = M.plugin_manager_cache_dir,
+      },
     },
-    display = {
-      open_fn = function()
-        return require("packer.util").float { border = lvim.ui.border }
-      end,
+  })
+  -- HACK: Don't allow lazy to call setup second time
+  lazy_cache.setup = function() end
+end
+
+function M.load()
+  Log:debug("Loading plugins configurations...")
+
+  local manager_ok, manager = pcall(require, "lazy")
+
+  if not manager_ok then
+    Log:warn("Skipping loading plugins until plugin manager is installed.")
+
+    return
+  end
+
+  local lazy_setup = {
+    root = M.plugins_dir, -- directory where plugins will be installed
+    defaults = {
+      lazy = true, -- should plugins be lazy-loaded?
+    },
+    lockfile = get_state_dir() .. "/lazy-lock.json", -- lockfile generated after running update.
+    ui = {
+      -- a number <1 is a percentage., >1 is a fixed size
+      size = { width = 0.8, height = 0.8 },
+      -- The border to use for the UI window. Accepts same border values as |nvim_open_win()|.
+      border = "single",
+    },
+    install = {
+      -- install missing plugins on startup. This doesn't increase startup time.
+      missing = true,
+      -- try to load one of these colorscheme when starting an installation during startup
+      colorscheme = { lvim.colorscheme, "habamax" },
+    },
+    checker = {
+      -- automatically check for plugin updates
+      enabled = true,
+      concurrency = nil, ---@type number? set to 1 to check for updates very slowly
+      notify = true, -- get a notification when new updates are found
+      frequency = 3600, -- check for updates every hour
+    },
+    change_detection = {
+      -- automatically check for config file changes and reload the ui
+      enabled = true,
+      notify = true, -- get a notification when changes are found
+    },
+    performance = {
+      cache = {
+        enabled = true,
+        path = M.plugin_manager_cache_dir,
+        -- Once one of the following events triggers, caching will be disabled.
+        -- To cache all modules, set this to `{}`, but that is not recommended.
+        -- The default is to disable on:
+        --  * VimEnter: not useful to cache anything else beyond startup
+        --  * BufReadPre: this will be triggered early when opening a file from the command line directly
+        disable_events = { "VimEnter", "BufReadPre" },
+      },
+      reset_packpath = true,
+      rtp = {
+        reset = true,
+        ---@type string[] list any plugins you want to disable here
+        disabled_plugins = {
+          "gzip",
+          "matchit",
+          "matchparen",
+          "netrwPlugin",
+          "tarPlugin",
+          "tohtml",
+          "tutor",
+          "zipPlugin",
+        },
+      },
+    },
+    readme = {
+      root = get_state_dir() .. "/lazy/readme",
+      files = { "README.md" },
+      skip_if_doc_exists = true,
     },
   }
 
-  if in_headless then
-    init_opts.display = nil
-  end
-
-  if not utils.is_directory(install_path) then
-    print "Initializing first time setup"
-    print "Installing packer"
-    print(vim.fn.system { "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
-    vim.cmd "packadd packer.nvim"
-  end
-
-  local status_ok, packer = pcall(require, "packer")
-  if status_ok then
-    packer.on_complete = vim.schedule_wrap(function()
-      require("lvim.utils.hooks").run_on_packer_complete()
-    end)
-    packer.init(init_opts)
-  end
-end
-
--- packer expects a space separated list
-local function pcall_packer_command(cmd, kwargs)
-  local status_ok, msg = pcall(function()
-    require("packer")[cmd](unpack(kwargs or {}))
-  end)
-  if not status_ok then
-    Log:warn(cmd .. " failed with: " .. vim.inspect(msg))
-    Log:trace(vim.inspect(vim.fn.eval "v:errmsg"))
-  end
-end
-
-function plugin_loader.cache_clear()
-  if not utils.is_file(compile_path) then
-    return
-  end
-  -- if vim.fn.delete(compile_path) == 0 then
-  --   Log:warn "deleted packer_compiled.lua"
-  -- end
-end
-
-function plugin_loader.compile()
-  Log:info "calling packer.compile()"
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "PackerCompileDone",
-    once = true,
-    callback = function()
-      if utils.is_file(compile_path) then
-        Log:info "finished compiling packer_compiled.lua"
-      end
-    end,
-  })
-  pcall_packer_command "compile"
-end
-
-function plugin_loader.recompile()
-  plugin_loader.cache_clear()
-  plugin_loader.compile()
-end
-
-function plugin_loader.reload(configurations)
-  _G.packer_plugins = _G.packer_plugins or {}
-  for k, v in pairs(_G.packer_plugins) do
-    if k ~= "packer.nvim" then
-      _G.packer_plugins[v] = nil
-    end
-  end
-  plugin_loader.load(configurations)
-
-  plugin_loader.ensure_plugins()
-end
-
-function plugin_loader.load(configurations)
-  Log:debug "loading plugins configuration"
-  local packer_available, packer = pcall(require, "packer")
-  if not packer_available then
-    Log:warn "skipping loading plugins until Packer is installed"
-    return
-  end
   local status_ok, _ = xpcall(function()
-    packer.reset()
-    packer.startup(function(use)
-      for _, plugins in ipairs(configurations) do
-        for _, plugin in ipairs(plugins) do
-          use(plugin)
-        end
-      end
-    end)
-    -- colorscheme must get called after plugins are loaded or it will break new installs.
-    vim.g.colors_name = lvim.colorscheme
-    vim.cmd("colorscheme " .. lvim.colorscheme)
+    require("utils.setup").set_plugins()
+
+    manager.setup(lvim.plugins, lazy_setup)
   end, debug.traceback)
 
   if not status_ok then
-    Log:warn "problems detected while loading plugins' configurations"
+    Log:warn("Can not load plugin configurations.")
     Log:trace(debug.traceback())
   end
+
+  require("lvim.utils.hooks").on_plugin_manager_complete()
 end
 
-function plugin_loader.get_core_plugins()
-  local list = {}
-  local plugins = require "lvim.plugins"
-  for _, item in pairs(plugins) do
-    if not item.disable then
-      table.insert(list, item[1]:match "/(%S*)")
-    end
+function M.reset_cache()
+  os.remove(require("lazy.core.cache").config.path)
+end
+
+function M.reload(spec)
+  local Config = require("lazy.core.config")
+  local lazy = require("lazy")
+
+  -- TODO: reset cache? and unload plugins?
+
+  Config.spec = spec
+
+  require("lazy.core.plugin").load(true)
+  require("lazy.core.plugin").update_state()
+
+  local not_installed_plugins = vim.tbl_filter(function(plugin)
+    return not plugin._.installed
+  end, Config.plugins)
+
+  require("lazy.manage").clear()
+
+  if #not_installed_plugins > 0 then
+    lazy.install({ wait = true })
   end
-  return list
+
+  if #Config.to_clean > 0 then
+    -- TODO: set show to true when lazy shows something useful on clean
+    lazy.clean({ wait = true, show = false })
+  end
 end
 
-function plugin_loader.load_snapshot(snapshot_file)
-  -- snapshot_file = snapshot_file or default_snapshot
-  -- if not in_headless then
-  --   vim.notify("Syncing core plugins is in progress..", vim.log.levels.INFO, { title = "lvim" })
-  -- end
-  -- Log:debug(string.format("Using snapshot file [%s]", snapshot_file))
-  -- local core_plugins = plugin_loader.get_core_plugins()
-  -- require("packer").rollback(snapshot_file, unpack(core_plugins))
-end
-
-function plugin_loader.sync_core_plugins()
-  -- plugin_loader.cache_clear()
-  -- local core_plugins = plugin_loader.get_core_plugins()
-  -- Log:trace(string.format("Syncing core plugins: [%q]", table.concat(core_plugins, ", ")))
-  -- pcall_packer_command("sync", core_plugins)
-end
-
-function plugin_loader.ensure_plugins()
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "PackerComplete",
-    once = true,
-    callback = function()
-      plugin_loader.compile()
-    end,
-  })
-  Log:debug "calling packer.install()"
-  pcall_packer_command "install"
-end
-
-return plugin_loader
+return M

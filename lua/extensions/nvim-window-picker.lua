@@ -5,26 +5,19 @@ local extension_name = "nvim_window_picker"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "s1n7ax/nvim-window-picker",
-        config = function()
-          require("utils.setup").packer_config "nvim_window_picker"
-        end,
-        disable = not config.active,
       }
     end,
     setup = function()
-      local colors = require "onedarker.colors"
-
       return {
         selection_chars = "ASDFGQWERYXCVB",
         use_winbar = "always",
         filter_rules = {
           bo = {
             filetype = vim.tbl_filter(function(ft)
-              local items = { "alpha" }
-              if vim.tbl_contains(items, ft) then
+              if vim.tbl_contains({ "alpha" }, ft) then
                 return false
               end
 
@@ -32,9 +25,9 @@ function M.config()
             end, lvim.disabled_filetypes),
           },
         },
-        fg_color = colors.fg,
-        current_win_hl_color = colors.green[300],
-        other_win_hl_color = colors.orange[300],
+        fg_color = lvim.colors.fg,
+        current_win_hl_color = lvim.colors.green[300],
+        other_win_hl_color = lvim.colors.orange[300],
       }
     end,
     on_setup = function(config)

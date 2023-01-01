@@ -3,23 +3,22 @@ local M = {}
 
 local extension_name = "treesitter"
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "nvim-treesitter/nvim-treesitter",
-        run = ":TSUpdate",
-        config = function()
-          require("utils.setup").packer_config "treesitter"
+        build = function()
+          vim.cmd([[TSUpdate]])
         end,
-        disable = not config.active,
+        lazy = false,
       }
     end,
     condition = function()
       if #vim.api.nvim_list_uis() == 0 then
-        Log:debug "Headless mode detected, skipping running setup for treesitter."
+        Log:debug("Headless mode detected, skipping running setup for treesitter.")
 
         return false
       end
@@ -95,38 +94,38 @@ function M.config()
     on_setup = function(config)
       require("nvim-treesitter.configs").setup(config.setup)
     end,
-    on_done = function(config)
+    on_done = function(config, fn)
       if config.setup.context_commentstring and config.setup.context_commentstring.enable then
-        lvim.extensions.comment_nvim.to_setup.pre_hook = function(ctx)
-          if
-            vim.tbl_contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
+        fn.append_to_setup("comment_nvim", {
+          pre_hook = function(ctx)
+            if vim.tbl_contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
               return type ~= vim.bo.filetype
-            end)
-          then
-            return
-          end
+            end) then
+              return
+            end
 
-          local U = require "Comment.utils"
+            local U = require("Comment.utils")
 
-          -- Determine whether to use linewise or blockwise commentstring
-          local type = ctx.ctype == U.ctype.linewise and "__default" or "__multiline"
+            -- Determine whether to use linewise or blockwise commentstring
+            local type = ctx.ctype == U.ctype.linewise and "__default" or "__multiline"
 
-          -- Determine the location where to calculate commentstring from
-          local location = nil
-          if ctx.ctype == U.ctype.blockwise then
-            location = require("ts_context_commentstring.utils").get_cursor_location()
-          elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
-            location = require("ts_context_commentstring.utils").get_visual_start_location()
-          end
+            -- Determine the location where to calculate commentstring from
+            local location = nil
+            if ctx.ctype == U.ctype.blockwise then
+              location = require("ts_context_commentstring.utils").get_cursor_location()
+            elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+              location = require("ts_context_commentstring.utils").get_visual_start_location()
+            end
 
-          return require("ts_context_commentstring.internal").calculate_commentstring {
-            key = type,
-            location = location,
-          }
-        end
+            return require("ts_context_commentstring.internal").calculate_commentstring({
+              key = type,
+              location = location,
+            })
+          end,
+        })
       end
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
         [categories.TREESITTER] = {
           i = { ":TSConfigInfo<CR>", "treesitter info" },
@@ -134,7 +133,14 @@ function M.config()
           k = { ":Inspect<CR>", "inspect color scheme" },
           u = { ":TSUpdate<CR>", "update installed treesitter packages" },
           U = { ":TSUninstall all<CR>", "uninstall all treesitter packages" },
-          R = { ":TSInstall all<CR>", "reinstall all treesitter packages" },
+          R = {
+            function()
+              for _, parser in pairs(fn.get_current_setup(extension_name).ensure_installed) do
+                vim.cmd(("TSInstall %s"):format(parser))
+              end
+            end,
+            "reinstall all treesitter packages",
+          },
         },
       }
     end,

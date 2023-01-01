@@ -1,7 +1,7 @@
 -- https://github.com/vuki656/package-info.nvim
 local M = {}
 
-local c = require "onedarker.colors"
+local c = require("onedarker.colors")
 
 local extension_name = "package_info"
 
@@ -12,14 +12,14 @@ function M.config()
         "vuki656/package-info.nvim",
         requires = "MunifTanjim/nui.nvim",
         config = function()
-          require("utils.setup").packer_config "package_info"
+          require("utils.setup").packer_config("package_info")
         end,
         disable = not config.active,
       }
     end,
     to_inject = function()
       return {
-        package_info = require "package-info",
+        package_info = require("package-info"),
       }
     end,
     setup = {

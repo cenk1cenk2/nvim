@@ -1,10 +1,10 @@
 local M = {}
 
 function M.rebuild_latest_neovim()
-  local term_opts = require("extensions.toggleterm-nvim").generate_defaults_float_terminal {
+  local term_opts = require("extensions.toggleterm-nvim").generate_defaults_float_terminal({
     cmd = join_paths(get_config_dir(), "/utils/install-latest-neovim.sh"),
     close_on_exit = false,
-  }
+  })
 
   local Terminal = require("toggleterm.terminal").Terminal
   local log_view = Terminal:new(term_opts)
@@ -14,18 +14,16 @@ end
 function M.rebuild_and_update()
   M.rebuild_latest_neovim()
 
-  vim.cmd [[PackerSync]]
-  vim.cmd [[PackerCompile]]
-  vim.cmd [[LvimCacheReset]]
+  vim.cmd([[Lazy update]])
 end
 
 function M.update_language_servers()
-  vim.cmd [[MasonToolsUpdate]]
-  vim.cmd [[Mason]]
+  vim.cmd([[MasonToolsUpdate]])
+  vim.cmd([[Mason]])
 end
 
 function M.setup()
-  require("utils.setup").run {
+  require("utils.setup").init({
     name = "rebuild",
     wk = function(_, categories)
       return {
@@ -52,7 +50,7 @@ function M.setup()
         },
       }
     end,
-  }
+  })
 end
 
 return M

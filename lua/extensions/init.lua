@@ -1,6 +1,7 @@
 local M = {}
 
 local extensions = {
+  "ui",
   -- core
   "which-key",
   "alpha-nvim",
@@ -49,7 +50,6 @@ local extensions = {
   "neogen",
   "coc",
   "lspsaga-nvim",
-  "nvim-navic",
   "nvim-dap-ui",
   "nvim-dap-virtual-text",
   "vim-jinja2-syntax",
@@ -74,6 +74,7 @@ local extensions = {
   "telescope-vim-bookmarks",
   "telescope-dap",
   "nvim-trevJ",
+  "treesj",
   "aerial-nvim",
   "nvim-docs-view",
   "mini-nvim-ai",
@@ -83,12 +84,12 @@ local extensions = {
 }
 
 function M.config(config)
-  local Log = require "lvim.core.log"
+  local Log = require("lvim.core.log")
 
   for _, extension_path in ipairs(extensions) do
     local extension_ok, extension = pcall(require, "extensions." .. extension_path)
     if not extension_ok then
-      Log:warn("Extension config can not be loaded: " .. extension_path)
+      Log:warn(("Extension config can not be loaded: %s"):format(extension_path))
     else
       extension.config(config)
     end

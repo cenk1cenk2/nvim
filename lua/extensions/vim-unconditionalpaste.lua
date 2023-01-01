@@ -5,13 +5,14 @@ local extension_name = "vim_unconditionalpaste"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "inkarkat/vim-UnconditionalPaste",
-        config = function()
-          require("utils.setup").packer_config "vim_unconditionalpaste"
-        end,
-        disable = not config.active,
+        lazy = false,
+        -- keys = {
+        --   { "gp", mode = "n" },
+        --   { "gP", mode = "n" },
+        -- },
       }
     end,
     legacy_setup = {

@@ -1,0 +1,43 @@
+---
+# https://taskfile.dev
+
+version: '3'
+
+vars: {}
+
+env: {}
+
+tasks:
+  format:
+    desc: Lints the repository.
+    deps:
+      - format:lua
+      - format:sh
+
+  format:lua:
+    cmds:
+      - stylua --config-path .stylua.toml . -v
+    sources:
+      - 'lua/**/*.lua'
+
+  format:sh:
+    cmds:
+      - shfmt -f .
+    sources:
+      - 'utils/**/*.sh'
+
+  lint:
+    desc: Lints the repository.
+    deps:
+      - lint:lua
+      - lint:sh
+
+  lint:lua:
+    cmds:
+      - stylua --config-path .stylua.toml --check .
+    sources:
+      - 'lua/**/*.lua'
+
+  lint:sh:
+    cmds:
+      - shfmt -f . | xargs shellcheck

@@ -5,19 +5,16 @@ local extension_name = "nvim_hlslens"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "kevinhwang91/nvim-hlslens",
-        config = function()
-          require("utils.setup").packer_config "nvim_hlslens"
-        end,
-        disable = not config.active,
+        event = "VeryLazy",
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        scrollbar_handlers_search = require "scrollbar.handlers.search",
-        hlslens = require "hlslens",
+        scrollbar_handlers_search = require("scrollbar.handlers.search"),
+        hlslens = require("hlslens"),
       }
     end,
     setup = function(config)
@@ -31,13 +28,13 @@ function M.config()
       require("hlslens").setup(config.setup)
     end,
     on_done = function(_, fn)
-      if fn.extension_get_active "nvim_scrollbar" then
-        vim.cmd [[
+      if fn.extension_get_active("nvim_scrollbar") then
+        vim.cmd([[
         augroup scrollbar_search_hide
           autocmd!
           autocmd CmdlineLeave : lua require('scrollbar.handlers.search').handler.hide()
         augroup END
-      ]]
+      ]])
       end
     end,
   })

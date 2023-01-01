@@ -9,7 +9,7 @@ local _, action_state = pcall(require, "telescope.actions.state")
 
 local M = {}
 
-M.terminal_previewer = previewers.new_buffer_previewer {
+M.terminal_previewer = previewers.new_buffer_previewer({
   title = "Terminal Preview",
   get_buffer_by_name = function(_, selection)
     return selection.entry.name
@@ -26,15 +26,15 @@ M.terminal_previewer = previewers.new_buffer_previewer {
 
     vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
   end,
-}
+})
 
-M.displayer = entry_display.create {
+M.displayer = entry_display.create({
   separator = " | ",
   items = {
     { width = 20 },
     { remaining = true },
   },
-}
+})
 
 function M.entries()
   return require("toggleterm.terminal").get_all(true)
@@ -43,15 +43,15 @@ end
 function M.entry_maker(entry)
   return {
     display = function()
-      return M.displayer {
+      return M.displayer({
         entry.cmd,
         entry.dir,
         entry.direction,
-      }
+      })
     end,
     entry = entry,
     value = entry.cmd,
-    ordinal = entry.cmd .. " " .. entry.dir .. " " .. entry.direction,
+    ordinal = ("%s %s %s"):format(entry.cmd, entry.dir, entry.direction),
   }
 end
 
@@ -75,16 +75,16 @@ function M.handle_delete(prompt_bufnr)
 end
 
 function M.list(opts)
-  local layout_opts = themes.get_dropdown {
+  local layout_opts = themes.get_dropdown({
     sorting_strategy = "ascending",
     prompt_title = "Open terminals",
     layout_strategy = "horizontal",
     layout_config = { width = 0.95, height = 0.9 },
     previewer = M.terminal_previewer,
-    finder = finders.new_table {
+    finder = finders.new_table({
       results = M.entries(),
       entry_maker = M.entry_maker,
-    },
+    }),
     attach_mappings = function(_, map)
       map("i", "<esc>", actions._close)
       map("n", "<esc>", actions._close)
@@ -99,13 +99,13 @@ function M.list(opts)
       return true
     end,
     sorter = sorters.get_fzy_sorter(),
-  }
+  })
 
   return pickers.new(opts, layout_opts):find()
 end
 
-return require("telescope").register_extension {
+return require("telescope").register_extension({
   exports = {
     list = M.list,
   },
-}
+})

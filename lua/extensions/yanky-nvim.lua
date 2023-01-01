@@ -5,23 +5,19 @@ local extension_name = "yanky_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "gbprod/yanky.nvim",
-        config = function()
-          require("utils.setup").packer_config "yanky_nvim"
-        end,
-        disable = not config.active,
+        -- cmd = { "Telescope yanky" },
+        event = "BufReadPost",
       }
     end,
     register = "+",
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        mapping = require "yanky.telescope.mapping",
+        mapping = require("yanky.telescope.mapping"),
         default_register = require("yanky.utils").get_default_register(),
-        telescope = require "telescope",
-        yanky = require "yanky",
-        highlight = require "yanky.highlight",
+        telescope = require("telescope"),
       }
     end,
     setup = function(config)
@@ -50,14 +46,14 @@ function M.config()
             mappings = {
               default = mapping.set_register(register),
               i = {
-                ["<c-p>"] = mapping.put "p",
-                ["<c-P>"] = mapping.put "P",
+                ["<c-p>"] = mapping.put("p"),
+                ["<c-P>"] = mapping.put("P"),
                 ["<c-d>"] = mapping.delete(),
                 ["<c-r>"] = mapping.set_register(register),
               },
               n = {
-                ["p"] = mapping.put "p",
-                ["P"] = mapping.put "P",
+                ["p"] = mapping.put("p"),
+                ["P"] = mapping.put("P"),
                 ["d"] = mapping.delete(),
                 ["r"] = mapping.set_register(register),
               },
@@ -70,40 +66,43 @@ function M.config()
       require("yanky").setup(config.setup)
     end,
     on_done = function(config)
-      config.inject.telescope.load_extension "yank_history"
+      config.inject.telescope.load_extension("yank_history")
     end,
-    keymaps = function(config)
-      local yanky = config.inject.yanky
-      local highlight = config.inject.highlight
-
+    keymaps = function()
       local defaults = {
         ["gq"] = {
           function()
+            local yanky = require("yanky")
             yanky.cycle(yanky.direction.forward)
           end,
           desc = "yank cycle forward",
         },
         ["gQ"] = {
           function()
+            local yanky = require("yanky")
             yanky.cycle(yanky.direction.backward)
           end,
           desc = "yank cycle backward",
         },
         ["y"] = {
           "<Plug>(YankyYank)",
-          desc = "yanky put before",
+          desc = "yanky",
         },
       }
 
       local normal = {
         ["p"] = {
           function()
+            local yanky = require("yanky")
+
             yanky.put(yanky.type.PUT_AFTER, false)
           end,
           desc = "yanky put after",
         },
         ["P"] = {
           function()
+            local yanky = require("yanky")
+
             yanky.put(yanky.type.PUT_BEFORE, false)
           end,
           desc = "yanky put before",
@@ -112,16 +111,10 @@ function M.config()
 
       local cb = function(state)
         if state.is_visual then
-          vim.cmd [[execute "normal! \<esc>"]]
+          vim.cmd([[execute "normal! \<esc>"]])
         end
 
-        local command = string.format(
-          'silent normal! %s"%s%s"_d%s',
-          state.is_visual and "gv" or "",
-          state.register,
-          state.count,
-          state.type
-        )
+        local command = string.format('silent normal! %s"%s%s"_d%s', state.is_visual and "gv" or "", state.register, state.count, state.type)
 
         local ok, val = pcall(vim.cmd, command)
 
@@ -130,18 +123,22 @@ function M.config()
           return
         end
 
-        highlight.highlight_put(state)
+        require("yanky.highlight").highlight_put(state)
       end
 
       local visual = {
         ["P"] = {
           function()
+            local yanky = require("yanky")
+
             yanky.put(yanky.type.PUT_AFTER, true, cb)
           end,
           desc = "yanky put after",
         },
         ["p"] = {
           function()
+            local yanky = require("yanky")
+
             yanky.put(yanky.type.PUT_BEFORE, true, cb)
           end,
           desc = "yanky put before",

@@ -5,27 +5,19 @@ local extension_name = "lsp_inlayhits_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "lvimuser/lsp-inlayhints.nvim",
         -- branch = "anticonceal",
-        config = function()
-          require("utils.setup").packer_config "lsp_inlayhits_nvim"
-        end,
-        disable = not config.active,
-      }
-    end,
-    to_inject = function()
-      return {
-        inlay_hints = require "lsp-inlayhints",
+        event = "BufReadPost",
       }
     end,
     setup = {
       inlay_hints = {
         parameter_hints = {
           show = true,
-          prefix = "<- ",
-          separator = ", ",
+          prefix = lvim.icons.ui.ChevronShortLeft .. " ",
+          separator = (" %s "):format(lvim.icons.ui.Ellipsis),
           remove_colon_start = false,
           remove_colon_end = true,
         },
@@ -33,7 +25,7 @@ function M.config()
           -- type and other hints
           show = true,
           prefix = "",
-          separator = ", ",
+          separator = (" %s "):format(lvim.icons.ui.Ellipsis),
           remove_colon_start = false,
           remove_colon_end = false,
         },
@@ -69,20 +61,18 @@ function M.config()
         end,
       })
     end,
-    wk = function(config, categories)
-      local inlay_hints = config.inject.inlay_hints
-
+    wk = function(_, categories)
       return {
         [categories.LSP] = {
           ["t"] = {
             function()
-              inlay_hints.toggle()
+              require("lsp-inlayhints").toggle()
             end,
             "toggle inlay hints",
           },
           ["T"] = {
             function()
-              inlay_hints.reset()
+              require("lsp-inlayhints").reset()
             end,
             "reset inlay hints",
           },

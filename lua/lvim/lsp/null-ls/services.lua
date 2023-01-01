@@ -1,13 +1,13 @@
 local M = {}
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 function M.find_command(command)
   return command
 end
 
 function M.list_registered_providers_names(filetype)
-  local s = require "null-ls.sources"
+  local s = require("null-ls.sources")
   local available_sources = s.get_available(filetype)
   local registered = {}
 
@@ -22,7 +22,7 @@ function M.list_registered_providers_names(filetype)
 end
 
 function M.register_sources(configs, method)
-  local null_ls = require "null-ls"
+  local null_ls = require("null-ls")
   local is_registered = require("null-ls.sources").is_registered
 
   local sources, registered_names = {}, {}
@@ -32,13 +32,13 @@ function M.register_sources(configs, method)
     local name = config.name or command:gsub("-", "_")
     local type = method == null_ls.methods.CODE_ACTION and "code_actions" or null_ls.methods[method]:lower()
     local source = type and null_ls.builtins[type][name]
-    Log:trace(string.format("Received request to register [%s] as a %s source", name, type))
+    Log:trace(("Received request to register [%s] as a %s source"):format(name, type))
     if not source then
       Log:error("Not a valid source: " .. name)
 
       return registered_names
-    elseif is_registered { name = source.name or name, method = method } then
-      Log:trace(string.format("Skipping registering [%s] more than once", name))
+    elseif is_registered({ name = source.name or name, method = method }) then
+      Log:trace(("Skipping registering [%s] more than once"):format(name))
 
       return registered_names
     end
@@ -64,7 +64,7 @@ function M.register_sources(configs, method)
   end
 
   if #sources > 0 then
-    null_ls.register { sources = sources }
+    null_ls.register({ sources = sources })
   end
 
   return registered_names

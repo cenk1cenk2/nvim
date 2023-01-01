@@ -9,7 +9,7 @@ function M.config()
       return {
         "nvchad/nvim-colorizer.lua",
         config = function()
-          require("utils.setup").packer_config "colorizer"
+          require("utils.setup").packer_config("colorizer")
         end,
         disable = not config.active,
       }

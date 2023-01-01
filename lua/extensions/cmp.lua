@@ -5,26 +5,59 @@ local extension_name = "cmp"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "hrsh7th/nvim-cmp",
-        config = function()
-          require("utils.setup").packer_config "cmp"
-          require("utils.setup").packer_config "cmp_extensions"
+        init = function()
+          require("utils.setup").plugin_init("cmp")
+          require("utils.setup").plugin_init("cmp_extensions")
         end,
-        disable = not config.active,
+        config = function()
+          require("utils.setup").plugin_configure("cmp")
+          require("utils.setup").plugin_configure("cmp_extensions")
+        end,
+        lazy = { "InsertEnter", "CmdlineEnter" },
+        dependencies = {
+          { "hrsh7th/cmp-nvim-lsp" },
+          { "hrsh7th/cmp-buffer" },
+          { "hrsh7th/cmp-path" },
+          { "saadparwaiz1/cmp_luasnip" },
+          { "hrsh7th/cmp-nvim-lua" },
+          { "hrsh7th/cmp-vsnip" },
+          -- https://github.com/petertriho/cmp-git
+          { "petertriho/cmp-git" },
+          -- https://github.com/David-Kunz/cmp-npm
+          { "David-Kunz/cmp-npm" },
+          -- https://github.com/hrsh7th/cmp-cmdline
+          { "hrsh7th/cmp-cmdline" },
+          { "davidsierradz/cmp-conventionalcommits" },
+          -- https://github.com/tzachar/cmp-fuzzy-buffer
+          { "tzachar/cmp-fuzzy-buffer" },
+          { "lukas-reineke/cmp-rg" },
+          -- -- https://github.com/hrsh7th/cmp-omni
+          --         { "hrsh7th/cmp-omni" },
+          -- { "tzachar/cmp-tabnine", build = "./install.sh" },
+          { "rafamadriz/friendly-snippets" },
+          { "L3MON4D3/LuaSnip" },
+          { "hrsh7th/cmp-nvim-lsp-signature-help" },
+          { "rcarriga/cmp-dap" },
+          -- https://github.com/bydlw98/cmp-env
+          { "bydlw98/cmp-env" },
+          -- https://github.com/hrsh7th/cmp-calc
+          { "hrsh7th/cmp-calc" },
+        },
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        cmp = require "cmp",
-        luasnip = require "luasnip",
+        cmp = require("cmp"),
+        luasnip = require("luasnip"),
       }
     end,
     setup = function(config)
       local cmp = config.inject.cmp
       local luasnip = config.inject.luasnip
-      local jumpable = M.jumpable
+      -- local jumpable = M.jumpable
       local has_words_before = M.has_words_before
 
       return {
@@ -42,33 +75,7 @@ function M.config()
         formatting = {
           fields = { "kind", "abbr", "menu" },
           max_width = 0,
-          kind_icons = {
-            Class = " ",
-            Color = " ",
-            Constant = "ﲀ ",
-            Constructor = " ",
-            Enum = "練",
-            EnumMember = " ",
-            Event = " ",
-            Field = " ",
-            File = "",
-            Folder = " ",
-            Function = " ",
-            Interface = "ﰮ ",
-            Keyword = " ",
-            Method = " ",
-            Module = " ",
-            Operator = "",
-            Property = " ",
-            Reference = " ",
-            Snippet = " ",
-            Struct = " ",
-            Text = " ",
-            TypeParameter = " ",
-            Unit = "塞",
-            Value = " ",
-            Variable = " ",
-          },
+          kind_icons = lvim.icons.kind,
           source_names = {},
           duplicates = {
             buffer = 1,
@@ -84,7 +91,7 @@ function M.config()
             if max_width ~= 0 and #vim_item.abbr > max_width then
               vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. lvim.icons.ui.Ellipsis
             end
-            if lvim.use_icons then
+            if lvim.ui.use_icons then
               vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind]
 
               if entry.source.name == "copilot" then
@@ -113,8 +120,7 @@ function M.config()
               end
             end
             vim_item.menu = current_setup.formatting.source_names[entry.source.name]
-            vim_item.dup = current_setup.formatting.duplicates[entry.source.name]
-              or current_setup.formatting.duplicates_default
+            vim_item.dup = current_setup.formatting.duplicates[entry.source.name] or current_setup.formatting.duplicates_default
             return vim_item
           end,
         },
@@ -124,27 +130,27 @@ function M.config()
           end,
         },
         window = {
-          completion = cmp.config.window.bordered { border = lvim.ui.border },
-          documentation = cmp.config.window.bordered { border = lvim.ui.border },
+          completion = cmp.config.window.bordered({ border = lvim.ui.border }),
+          documentation = cmp.config.window.bordered({ border = lvim.ui.border }),
         },
         sources = {},
-        mapping = cmp.mapping.preset.insert {
+        mapping = cmp.mapping.preset.insert({
           ["<C-k>"] = cmp.mapping.select_prev_item(),
           ["<C-j>"] = cmp.mapping.select_next_item(),
-          ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item { behavior = cmp.SelectBehavior.Select }, { "i" }),
-          ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item { behavior = cmp.SelectBehavior.Select }, { "i" }),
+          ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }), { "i" }),
+          ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }), { "i" }),
           ["<C-d>"] = cmp.mapping.scroll_docs(-4),
           ["<C-f>"] = cmp.mapping.scroll_docs(4),
-          ["<C-y>"] = cmp.mapping {
-            i = cmp.mapping.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false },
+          ["<C-y>"] = cmp.mapping({
+            i = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
             c = function(fallback)
               if cmp.visible() then
-                cmp.confirm { behavior = cmp.ConfirmBehavior.Replace, select = false }
+                cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
               else
                 fallback()
               end
             end,
-          },
+          }),
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
@@ -185,7 +191,7 @@ function M.config()
             end
             fallback() -- if not exited early, always fallback
           end),
-        },
+        }),
       }
     end,
     per_ft = {},
@@ -194,13 +200,7 @@ function M.config()
     end,
     on_done = function(config)
       for key, value in pairs(config.per_ft) do
-        vim.cmd(
-          string.format(
-            "autocmd FileType %s lua require('cmp').setup.buffer(%s)",
-            key,
-            vim.inspect(value, { newline = "\n\\" })
-          )
-        )
+        vim.cmd(string.format("autocmd FileType %s lua require('cmp').setup.buffer(%s)", key, vim.inspect(value, { newline = "\n\\" })))
       end
     end,
   })
@@ -210,7 +210,7 @@ M.current_setup = require("utils.setup").fn.get_current_setup(extension_name)
 
 function M.has_words_before()
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
 end
 
 function M.jumpable(dir)
@@ -257,8 +257,7 @@ function M.jumpable(dir)
     while node ~= nil and node.next ~= nil and node ~= snippet do
       local n_next = node.next
       local next_pos = n_next and n_next.mark:pos_begin()
-      local candidate = n_next ~= snippet and next_pos and (pos[1] < next_pos[1])
-        or (pos[1] == next_pos[1] and pos[2] < next_pos[2])
+      local candidate = n_next ~= snippet and next_pos and (pos[1] < next_pos[1]) or (pos[1] == next_pos[1] and pos[2] < next_pos[2])
 
       -- Past unmarked exit node, exit early
       if n_next == nil or n_next == snippet.next then

@@ -5,25 +5,22 @@ local extension_name = "dressing"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "stevearc/dressing.nvim",
-        config = function()
-          require("utils.setup").packer_config "dressing"
-        end,
-        disable = not config.active,
+        event = "VeryLazy",
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        telescope_themes = require "telescope.themes",
+        telescope_themes = require("telescope.themes"),
       }
     end,
     setup = function(config)
       return {
         input = {
           -- Default prompt string
-          default_prompt = "➤ ",
+          default_prompt = lvim.icons.ui.ChevronRight .. " ",
 
           -- When true, <Esc> will close the modal
           insert_only = true,
@@ -63,7 +60,7 @@ function M.config()
           backend = { "telescope", "fzf", "builtin", "nui" },
 
           -- Options for telescope selector
-          telescope = config.inject.telescope_themes.get_dropdown {},
+          telescope = config.inject.telescope_themes.get_dropdown({}),
 
           -- see :help dressing_get_config
           get_config = nil,

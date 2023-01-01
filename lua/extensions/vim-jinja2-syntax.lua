@@ -5,13 +5,10 @@ local extension_name = "vim_jinja2_syntax"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "glench/vim-jinja2-syntax",
-        config = function()
-          require("utils.setup").packer_config "vim_jinja2_syntax"
-        end,
-        disable = not config.active,
+        ft = { "jinja" },
       }
     end,
   })

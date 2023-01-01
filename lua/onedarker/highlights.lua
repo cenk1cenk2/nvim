@@ -1,4 +1,4 @@
-local c = require "onedarker.colors"
+local c = require("onedarker.colors")
 
 local M = {}
 local hl = { langs = {}, plugins = {} }
@@ -80,8 +80,8 @@ hl.common = {
   NormalFloat = { bg = c.bg[200] },
   FloatTitle = { fg = c.green[300] },
   FloatBorder = { fg = c.orange[300], bg = c.bg[200] },
-  FloatShadow = { bg = c.bg[100] },
-  FloatShadowThrough = { bg = c.bg[100] },
+  FloatShadow = { bg = c.bg[200] },
+  FloatShadowThrough = { bg = c.bg[200] },
 
   Pmenu = { fg = c.fg, bg = c.bg[300] },
   PmenuSbar = { fg = c.none, bg = c.bg[300] },
@@ -528,9 +528,15 @@ hl.plugins.telescope = {
     bg = c.bg[100],
   },
 
-  TelescopePreviewBorder = { fg = c.grey[100] },
+  -- TelescopePreviewBorder = {
+  --   fg = c.grey[100],
+  --   bg = c.grey[100],
+  -- },
 
-  TelescopeSelection = { bg = c.bg[300], fg = c.white },
+  TelescopeSelection = {
+    bg = c.bg[300],
+    fg = c.white,
+  },
 
   TelescopeResultsDiffAdd = {
     fg = c.green[600],
@@ -628,23 +634,6 @@ hl.plugins.hlslens = {
   HlSearchFloat = { link = "IncSearch" },
 }
 
--- setup
--- local function find_duplicates(t)
---   local Log = require "lvim.core.log"
---
---   local seen = {} --keep record of elements we've seen
---   local duplicated = {} --keep a record of duplicated elements
---   for i = 1, #t do
---     local element = t[i]
---     if seen[element] then --check if we've seen the element before
---       duplicated[element] = true --if we have then it must be a duplicate! add to a table to keep track of this
---     else
---       seen[element] = true -- set the element to seen
---     end
---   end
---   Log:warn(string.format("Duplicated highlights: %s", vim.inspect(duplicated)))
--- end
-
 function M.load_highlights(ns, highlights, loaded)
   for group_name, group_settings in pairs(highlights) do
     -- table.insert(loaded, group_name)
@@ -654,7 +643,7 @@ end
 
 function M.setup()
   local loaded = {}
-  local ns = vim.api.nvim_create_namespace "onedarker"
+  -- local ns = vim.api.nvim_create_namespace("onedarker")
 
   M.load_highlights(0, hl.common, loaded)
   M.load_highlights(0, hl.syntax, loaded)
@@ -669,8 +658,24 @@ function M.setup()
   end
 
   M.load_highlights(0, hl.treesitter, loaded)
-  -- M.load_highlights(ns, hl.treesitter)
-  vim.api.nvim_set_hl_ns(ns)
+  -- vim.api.nvim_set_hl_ns(ns)
+
+  -- setup
+  -- local function find_duplicates(t)
+  --   local Log = require "lvim.core.log"
+  --
+  --   local seen = {} --keep record of elements we've seen
+  --   local duplicated = {} --keep a record of duplicated elements
+  --   for i = 1, #t do
+  --     local element = t[i]
+  --     if seen[element] then --check if we've seen the element before
+  --       duplicated[element] = true --if we have then it must be a duplicate! add to a table to keep track of this
+  --     else
+  --       seen[element] = true -- set the element to seen
+  --     end
+  --   end
+  --   Log:warn(string.format("Duplicated highlights: %s", vim.inspect(duplicated)))
+  -- end
 
   -- find_duplicates(loaded)
 end

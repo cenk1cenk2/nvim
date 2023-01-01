@@ -5,33 +5,32 @@ local extension_name = "telescope"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "nvim-telescope/telescope.nvim",
-        requires = {
+        dependencies = {
           {
             "nvim-telescope/telescope-fzf-native.nvim",
-            run = "make",
+            build = { "make" },
           },
-          { "tzachar/fuzzy.nvim", requires = { "nvim-telescope/telescope-fzf-native.nvim" } },
+          {
+            "tzachar/fuzzy.nvim",
+          },
         },
-        config = function()
-          require("utils.setup").packer_config "telescope"
-        end,
-        disable = not config.active,
+        cmd = { "Telescope" },
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "TelescopePrompt",
         "Telescope",
-      }
+      })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        actions = require "telescope.actions",
-        previewers = require "telescope.previewers",
-        sorters = require "telescope.sorters",
+        actions = require("telescope.actions"),
+        previewers = require("telescope.previewers"),
+        sorters = require("telescope.sorters"),
       }
     end,
     rg_arguments = {
@@ -71,8 +70,19 @@ function M.config()
               preview_cutoff = 40,
               width = 0.8,
             },
-            horizontal = { mirror = true, width = 0.9, height = 0.9, prompt_position = "bottom" },
-            vertical = { mirror = false, width = 0.9, height = 0.9, prompt_position = "bottom" },
+            horizontal = {
+              preview_width = 0.55,
+              mirror = true,
+              width = 0.9,
+              height = 0.9,
+              prompt_position = "bottom",
+            },
+            vertical = {
+              mirror = false,
+              width = 0.9,
+              height = 0.9,
+              prompt_position = "bottom",
+            },
           },
           file_ignore_patterns = {
             "**/yarn.lock",
@@ -111,8 +121,8 @@ function M.config()
           color_devicons = true,
           use_less = true,
           set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-          prompt_prefix = " ",
-          selection_caret = " ",
+          prompt_prefix = lvim.icons.ui.Telescope .. " ",
+          selection_caret = lvim.icons.ui.Forward .. " ",
           entry_prefix = "  ",
         },
         pickers = {
@@ -181,13 +191,13 @@ function M.config()
     on_done = function(config)
       if lvim.builtin.notify.active then
         pcall(function()
-          require("telescope").load_extension "notify"
+          require("telescope").load_extension("notify")
         end)
       end
 
       if config.current_setup.extensions and config.current_setup.extensions.fzf then
         pcall(function()
-          require("telescope").load_extension "fzf"
+          require("telescope").load_extension("fzf")
         end)
       end
     end,
@@ -199,7 +209,7 @@ function M.config()
       }
     end,
     wk = function(_, categories)
-      local custom_finders = require "modules.telescope"
+      local custom_finders = require("modules.telescope")
 
       return {
         ["p"] = {

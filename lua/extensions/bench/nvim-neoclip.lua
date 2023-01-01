@@ -39,7 +39,7 @@ function M.setup()
 
   lvim.builtin.which_key.mappings["y"] = { ":Telescope neoclip<CR>", "list yank registers" }
 
-  require("telescope").load_extension "neoclip"
+  require("telescope").load_extension("neoclip")
 
   if lvim.extensions[extension_name].on_config_done then
     lvim.extensions[extension_name].on_config_done(extension)

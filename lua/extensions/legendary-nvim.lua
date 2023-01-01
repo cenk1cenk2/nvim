@@ -5,13 +5,13 @@ local extension_name = "legendary_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, false, {
-    packer = function(config)
+    plugin = function()
       return {
         "mrjones2014/legendary.nvim",
-        config = function()
-          require("utils.setup").packer_config "legendary_nvim"
-        end,
-        disable = not config.active,
+        dependencies = {
+          "folke/which-key.nvim",
+        },
+        cmd = { "Legendary" },
       }
     end,
     setup = function()
@@ -61,7 +61,7 @@ function M.config()
           do_binding = false,
         },
         -- Directory used for caches
-        cache_path = string.format("%s/legendary/", vim.fn.stdpath "cache"),
+        cache_path = string.format("%s/legendary/", vim.fn.stdpath("cache")),
       }
     end,
     on_setup = function(config)

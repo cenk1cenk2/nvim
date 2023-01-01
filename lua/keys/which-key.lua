@@ -15,7 +15,7 @@ M.CATEGORIES = {
   TERMINAL = "t",
   SESSION = "w",
   NEOVIM = "L",
-  PACKER = "P",
+  PLUGINS = "P",
   TASKS = "r",
   BUILD = "R",
   TREESITTER = "T",
@@ -36,7 +36,7 @@ M.mappings = {
     l = { ":set nonumber!<CR>", "toggle line numbers" },
     r = { ":set norelativenumber!<CR>", "toggle relative line numbers" },
     s = { ":setlocal spell!<CR>", "toggle spell check" },
-    S = { ":set signcolumns=yes:1<CR>", "fix sign columns" },
+    S = { ":set signcolumns=yes<CR>", "fix sign columns" },
     T = { ":setlocal bufhidden=delete<CR>", "set as temporary buffer" },
   },
 
@@ -48,8 +48,8 @@ M.mappings = {
     s = { ":edit #<CR>", "switch to last buffer" },
     S = {
       function()
-        vim.cmd "w!"
-        require("lvim.core.log"):warn "File overwritten."
+        vim.cmd("w!")
+        require("lvim.core.log"):warn("File overwritten.")
       end,
       "overwrite - force save",
     },
@@ -137,36 +137,32 @@ M.mappings = {
       },
       n = {
         function()
-          lvim.fn.toggle_log_view(os.getenv "NVIM_LOG_FILE")
+          lvim.fn.toggle_log_view(os.getenv("NVIM_LOG_FILE"))
         end,
         "view neovim log",
       },
       N = { ":edit $NVIM_LOG_FILE<CR>", "open the neovim logfile" },
       p = {
         function()
-          lvim.fn.toggle_log_view "packer.nvim"
+          lvim.fn.toggle_log_view("lazy.nvim")
         end,
-        "view packer log",
+        "view plugin manager log",
       },
-      P = { ":exe 'edit '.stdpath('cache').'/packer.nvim.log'<CR>", "open the packer logfile" },
     },
     r = { ":LvimReload<CR>", "reload configuration" },
     u = { ":LvimUpdate<CR>", "git update config repository" },
   },
 
-  [M.CATEGORIES.PACKER] = {
-    name = "packer",
-    c = { ":PackerCompile<CR>", "packer compile" },
-    i = { ":PackerInstall<CR>", "packer install" },
-    r = {
-      function()
-        require("lvim.plugin-loader").recompile()
-      end,
-      "recompile",
-    },
-    s = { ":PackerSync<CR>", "packer sync" },
-    S = { ":PackerStatus<CR>", "packer status" },
-    u = { ":PackerUpdate<CR>", "packer update" },
+  [M.CATEGORIES.PLUGINS] = {
+    name = "plugins",
+    i = { ":Lazy install<CR>", "install" },
+    x = { ":Lazy clean<CR>", "clean" },
+    l = { ":Lazy log<CR>", "log" },
+    s = { ":Lazy sync<CR>", "sync" },
+    S = { ":Lazy<CR>", "status" },
+    r = { ":Lazy restore<CR>", "restore" },
+    p = { ":Lazy profile<CR>", "profile" },
+    u = { ":Lazy update<CR>", "update" },
   },
 
   [M.CATEGORIES.TESTS] = {

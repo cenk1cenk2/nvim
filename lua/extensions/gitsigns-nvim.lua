@@ -5,25 +5,41 @@ local extension_name = "gitsigns_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "lewis6991/gitsigns.nvim",
-        -- event = "BufRead",
-        config = function()
-          require("utils.setup").packer_config "gitsigns_nvim"
-        end,
-        disable = not config.active,
+        event = "BufReadPost",
       }
     end,
     setup = {
       signs = {
-        add = { hl = "GitSignsAdd", text = "▎", numhl = "GitSignsAddNr", linehl = "GitSignsAddLn" },
-        change = { hl = "GitSignsChange", text = "▎", numhl = "GitSignsChangeNr", linehl = "GitSignsChangeLn" },
-        delete = { hl = "GitSignsDelete", text = "契", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
-        topdelete = { hl = "GitSignsDelete", text = "契", numhl = "GitSignsDeleteNr", linehl = "GitSignsDeleteLn" },
+        add = {
+          hl = "GitSignsAdd",
+          text = lvim.icons.ui.BoldLineLeft,
+          numhl = "GitSignsAddNr",
+          linehl = "GitSignsAddLn",
+        },
+        change = {
+          hl = "GitSignsChange",
+          text = lvim.icons.ui.BoldLineLeft,
+          numhl = "GitSignsChangeNr",
+          linehl = "GitSignsChangeLn",
+        },
+        delete = {
+          hl = "GitSignsDelete",
+          text = lvim.icons.ui.BoldDividerRight,
+          numhl = "GitSignsDeleteNr",
+          linehl = "GitSignsDeleteLn",
+        },
+        topdelete = {
+          hl = "GitSignsDelete",
+          text = lvim.icons.ui.BoldDividerRight,
+          numhl = "GitSignsDeleteNr",
+          linehl = "GitSignsDeleteLn",
+        },
         changedelete = {
           hl = "GitSignsChange",
-          text = "▎",
+          text = lvim.icons.ui.BoldLineLeft,
           numhl = "GitSignsChangeNr",
           linehl = "GitSignsChangeLn",
         },

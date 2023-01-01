@@ -5,30 +5,23 @@ local M = {}
 local extension_name = "nvim_treevj"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+  require("utils.setup").define_extension(extension_name, false, {
+    plugin = function()
       return {
         "AckslD/nvim-trevJ.lua",
-        config = function()
-          require("utils.setup").packer_config "nvim_treevj"
-        end,
-        disable = not config.active,
-      }
-    end,
-    to_inject = function()
-      return {
-        trevj = require "trevj",
       }
     end,
     setup = {},
     on_setup = function(config)
       require("trevj").setup(config.setup)
     end,
-    keymaps = function(config)
+    keymaps = function()
       return {
         n = {
           ["gJ"] = {
-            config.inject.trevj.format_at_cursor,
+            function()
+              require("trevj").format_at_cursor()
+            end,
             { desc = "split lines" },
           },
         },

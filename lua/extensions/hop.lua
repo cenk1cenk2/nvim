@@ -5,18 +5,16 @@ local extension_name = "hop"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "phaazon/hop.nvim",
-        config = function()
-          require("utils.setup").packer_config "hop"
-        end,
-        disable = not config.active,
-      }
-    end,
-    to_inject = function()
-      return {
-        hop = require "hop",
+        cmd = {
+          "HopChar2",
+          "HopChar1",
+          "HopPattern",
+          "HopWord",
+          "HopLine",
+        },
       }
     end,
     setup = {},
@@ -24,67 +22,65 @@ function M.config()
       require("hop").setup(config.setup)
     end,
     on_done = function()
-      vim.api.nvim_command "highlight HopUnmatched guifg=none guibg=none guisp=none ctermfg=none"
+      vim.cmd("highlight HopUnmatched guifg=none guibg=none guisp=none ctermfg=none")
     end,
-    keymaps = function(config)
-      local hop = config.inject.hop
-
+    keymaps = function()
       return {
         a = {
           ["f"] = {
             function()
-              hop.hint_char1 { direction = require("hop.hint").HintDirection.AFTER_CURSOR, current_line_only = true }
+              require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR, current_line_only = true })
             end,
           },
           ["ff"] = {
             function()
-              hop.hint_char1 { direction = require("hop.hint").HintDirection.AFTER_CURSOR, current_line_only = false }
+              require("hop").hint_char1({ direction = require("hop.hint").HintDirection.AFTER_CURSOR, current_line_only = false })
             end,
           },
           ["F"] = {
             function()
-              hop.hint_char1 { direction = require("hop.hint").HintDirection.BEFORE_CURSOR, current_line_only = true }
+              require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR, current_line_only = true })
             end,
           },
           ["FF"] = {
             function()
-              hop.hint_char1 { direction = require("hop.hint").HintDirection.BEFORE_CURSOR, current_line_only = false }
+              require("hop").hint_char1({ direction = require("hop.hint").HintDirection.BEFORE_CURSOR, current_line_only = false })
             end,
           },
           ["t"] = {
             function()
-              hop.hint_char1 {
+              require("hop").hint_char1({
                 direction = require("hop.hint").HintDirection.AFTER_CURSOR,
                 current_line_only = true,
                 hint_offset = -1,
-              }
+              })
             end,
           },
           ["tt"] = {
             function()
-              hop.hint_char1 {
+              require("hop").hint_char1({
                 direction = require("hop.hint").HintDirection.AFTER_CURSOR,
                 current_line_only = false,
                 hint_offset = -1,
-              }
+              })
             end,
           },
           ["T"] = {
             function()
-              hop.hint_char1 {
+              require("hop").hint_char1({
                 direction = require("hop.hint").HintDirection.BEFORE_CURSOR,
                 current_line_only = true,
                 hint_offset = 1,
-              }
+              })
             end,
           },
           ["TT"] = {
             function()
-              hop.hint_char1 {
+              require("hop").hint_char1({
                 direction = require("hop.hint").HintDirection.BEFORE_CURSOR,
                 current_line_only = false,
                 hint_offset = 1,
-              }
+              })
             end,
           },
         },

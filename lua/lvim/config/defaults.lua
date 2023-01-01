@@ -1,7 +1,8 @@
 lvim = {
   leader = "space",
   colorscheme = "onedarker",
-  transparent_window = false,
+  icons = require("lvim.icons"),
+  colors = require("onedarker.colors"),
   format_on_save = {
     ---@usage pattern string pattern used for the autocommand (Default: '*')
     pattern = "*",
@@ -12,19 +13,22 @@ lvim = {
   },
   keys = {},
 
-  use_icons = true,
-
   ui = {
+    use_icons = true,
     border = "single",
+    transparent_window = false,
   },
 
-  builtin = {},
+  builtin = {
+    notify = {
+      active = true,
+    },
+  },
   extensions = {},
-
   plugins = {},
 
   autocommands = {},
-  lang = {},
+
   log = {
     ---@usage can be { "trace", "debug", "info", "warn", "error", "fatal" },
     level = "debug",
@@ -65,6 +69,7 @@ lvim = {
     "neo-tree",
     "terminal",
     "packer",
+    "lazy",
     "lspinfo",
     "prompt",
     "notify",

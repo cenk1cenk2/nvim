@@ -5,13 +5,10 @@ local extension_name = "exrc_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "MunifTanjim/exrc.nvim",
-        config = function()
-          require("utils.setup").packer_config "exrc_nvim"
-        end,
-        disable = not config.active,
+        lazy = false,
       }
     end,
     setup = function()

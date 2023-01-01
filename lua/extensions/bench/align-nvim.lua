@@ -9,14 +9,14 @@ function M.config()
       return {
         "Vonr/align.nvim",
         config = function()
-          require("utils.setup").packer_config "align_nvim"
+          require("utils.setup").packer_config("align_nvim")
         end,
         disable = not config.active,
       }
     end,
     to_inject = function()
       return {
-        align = require "align",
+        align = require("align"),
       }
     end,
     keymaps = function(config)

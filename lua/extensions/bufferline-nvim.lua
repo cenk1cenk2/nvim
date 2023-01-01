@@ -5,18 +5,15 @@ local extension_name = "bufferline_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "akinsho/bufferline.nvim",
-        event = "BufWinEnter",
-        requires = {
+        dependencies = {
           -- https://github.com/ojroques/nvim-bufdel
           "ojroques/nvim-bufdel",
         },
-        config = function()
-          require("utils.setup").packer_config "bufferline_nvim"
-        end,
-        disable = not config.active,
+        lazy = false,
+        -- event = "VeryLazy",
       }
     end,
     setup = {
@@ -53,7 +50,7 @@ function M.config()
         --- some limitations that will *NOT* be fixed.
         name_formatter = function(buf) -- buf contains a "name", "path" and "bufnr"
           -- remove extension from markdown files for example
-          if buf.name:match "%.md" then
+          if buf.name:match("%.md") then
             return vim.fn.fnamemodify(buf.name, ":t:r")
           end
         end,
@@ -98,8 +95,8 @@ function M.config()
           -- },
         },
         color_icons = true, -- whether or not to add the filetype icon highlights
-        show_buffer_icons = lvim.use_icons, -- disable filetype icons for buffers
-        show_buffer_close_icons = lvim.use_icons,
+        show_buffer_icons = lvim.ui.use_icons, -- disable filetype icons for buffers
+        show_buffer_close_icons = lvim.ui.use_icons,
         show_close_icon = false,
         show_tab_indicators = true,
         persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
@@ -113,10 +110,10 @@ function M.config()
     on_setup = function(config)
       require("bufferline").setup(config.setup)
 
-      require("bufdel").setup {
+      require("bufdel").setup({
         next = "tabs", -- or 'cycle, 'alternate'
         quit = false, -- quit Neovim when last buffer is closed
-      }
+      })
     end,
     commands = {
       {
@@ -175,7 +172,7 @@ function M.config()
         {
           pattern = "{}",
           callback = function(args)
-            if vim.api.nvim_buf_get_name(args.buf) == "" and vim.fn.line "$" == 1 and vim.fn.getline(1) == "" then
+            if vim.api.nvim_buf_get_name(args.buf) == "" and vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
               -- vim.bo.buftype = "nofile"
               vim.bo.bufhidden = "unload"
             end
@@ -194,7 +191,7 @@ end
 function M.diagnostics_indicator(num, _, diagnostics, _)
   local result = {}
   local symbols = { error = "", warning = "", info = "" }
-  if not lvim.use_icons then
+  if not lvim.ui.use_icons then
     return "(" .. num .. ")"
   end
   for name, count in pairs(diagnostics) do
@@ -216,7 +213,7 @@ function M.custom_filter(buf, buf_nums)
     return true
   end
   local tab_num = vim.fn.tabpagenr()
-  local last_tab = vim.fn.tabpagenr "$"
+  local last_tab = vim.fn.tabpagenr("$")
   local is_log = M.is_ft(buf, "log")
   if last_tab == 1 then
     return true
@@ -229,7 +226,7 @@ function M.close_all_but_current()
   local current = vim.api.nvim_get_current_buf()
   local buffers = require("bufferline.utils").get_valid_buffers()
   for _, bufnr in pairs(buffers) do
-    if bufnr ~= current and not require("bufferline.groups").is_pinned { id = bufnr } then
+    if bufnr ~= current and not require("bufferline.groups").is_pinned({ id = bufnr }) then
       M.buf_kill(bufnr)
     end
   end
@@ -238,7 +235,7 @@ end
 function M.close_pinned()
   local buffers = require("bufferline.utils").get_valid_buffers()
   for _, bufnr in pairs(buffers) do
-    if require("bufferline.groups").is_pinned { id = bufnr } and bufnr then
+    if require("bufferline.groups").is_pinned({ id = bufnr }) and bufnr then
       M.buf_kill(bufnr)
     end
   end
@@ -247,7 +244,7 @@ end
 function M.close_unpinned()
   local buffers = require("bufferline.utils").get_valid_buffers()
   for _, bufnr in pairs(buffers) do
-    if not require("bufferline.groups").is_pinned { id = bufnr } and bufnr then
+    if not require("bufferline.groups").is_pinned({ id = bufnr }) and bufnr then
       M.buf_kill(bufnr)
     end
   end
@@ -287,7 +284,7 @@ function M.buf_kill(bufnr, force)
       }, function(choice)
         if not choice then
           return
-        elseif choice:match "ye?s?" then
+        elseif choice:match("ye?s?") then
           callback(bufnr, true)
         end
       end)

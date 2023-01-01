@@ -5,20 +5,17 @@ local extension_name = "lsp_trouble"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "folke/lsp-trouble.nvim",
-        config = function()
-          require("utils.setup").packer_config "lsp_trouble"
-        end,
-        disable = not config.active,
+        cmd = { "TroubleToggle", "Trouble" },
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "LspTrouble",
         "Trouble",
-      }
+      })
     end,
     setup = {
       action_keys = { -- key mappings for actions in the trouble list
@@ -40,11 +37,11 @@ function M.config()
     end,
     on_done = function()
       lvim.lsp_wrapper.document_diagnostics = function()
-        vim.api.nvim_command "TroubleToggle document_diagnostics"
+        vim.cmd("TroubleToggle document_diagnostics")
       end
 
       lvim.lsp_wrapper.workspace_diagnostics = function()
-        vim.api.nvim_command "TroubleToggle workspace_diagnostics"
+        vim.cmd("TroubleToggle workspace_diagnostics")
       end
     end,
   })

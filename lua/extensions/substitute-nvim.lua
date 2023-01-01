@@ -5,24 +5,12 @@ local extension_name = "substitute_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "gbprod/substitute.nvim",
-        config = function()
-          require("utils.setup").packer_config "substitute_nvim"
-        end,
-        disable = not config.active,
       }
     end,
-    to_inject = function()
-      -- local _, yanky = pcall(require, "yanky")
-
-      return {
-        substitute = require "substitute",
-        -- yanky = yanky,
-      }
-    end,
-    setup = function(config)
+    setup = function()
       return {
         -- on_substitute = function(event)
         --   if config.inject.yanky ~= nil then
@@ -46,17 +34,35 @@ function M.config()
     on_setup = function(config)
       require("substitute").setup(config.setup)
     end,
-    keymaps = function(config)
-      local substitute = config.inject.substitute
-
+    keymaps = function()
       return {
         n = {
-          ["sd"] = { substitute.operator, { desc = "substitute operator" } },
-          ["sds"] = { substitute.line, { desc = "substitute line" } },
-          ["sdd"] = { substitute.eol, { desc = "substitute eol" } },
+          ["sd"] = {
+            function()
+              require("substitute").operator()
+            end,
+            { desc = "substitute operator" },
+          },
+          ["sds"] = {
+            function()
+              require("substitute").line()
+            end,
+            { desc = "substitute line" },
+          },
+          ["sdd"] = {
+            function()
+              require("substitute").eol()
+            end,
+            { desc = "substitute eol" },
+          },
         },
         v = {
-          ["sd"] = { substitute.visual, { desc = "substitute visual" } },
+          ["sd"] = {
+            function()
+              require("substitute").visual()
+            end,
+            { desc = "substitute visual" },
+          },
         },
       }
     end,

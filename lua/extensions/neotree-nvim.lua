@@ -5,40 +5,37 @@ local extension_name = "neotree_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "nvim-neo-tree/neo-tree.nvim",
-        config = function()
-          require("utils.setup").packer_config "neotree_nvim"
-        end,
         branch = "v2.x",
-        disable = not config.active,
-        requires = {
+        dependencies = {
           "nvim-lua/plenary.nvim",
           "kyazdani42/nvim-web-devicons",
           "MunifTanjim/nui.nvim",
           "s1n7ax/nvim-window-picker",
         },
+        cmd = { "NeoTreeReveal", "NeoTreeFocusToggle", "NeoTreeFloat" },
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "neo-tree",
-      }
+      })
     end,
     setup = function()
-      local Log = require "lvim.core.log"
+      local Log = require("lvim.core.log")
       local system_registry = "+"
 
       local function get_telescope_options(state, opts)
         return vim.tbl_extend("force", opts, {
           hidden = true,
           attach_mappings = function(prompt_bufnr)
-            local actions = require "telescope.actions"
+            local actions = require("telescope.actions")
 
             actions.select_default:replace(function()
               actions.close(prompt_bufnr)
-              local action_state = require "telescope.actions.state"
+              local action_state = require("telescope.actions.state")
               local selection = action_state.get_selected_entry()
               local filename = selection.filename
               if filename == nil then
@@ -66,7 +63,7 @@ function M.config()
         elseif node.type == "file" then
           path = node:get_parent_id()
         else
-          Log:warn "Finding in node only works for files and directories."
+          Log:warn("Finding in node only works for files and directories.")
           return
         end
 
@@ -128,16 +125,16 @@ function M.config()
           git_status = {
             symbols = {
               -- Change type
-              added = "✚",
-              deleted = "✖",
-              modified = "",
-              renamed = "",
+              added = lvim.icons.git.FileAdded,
+              deleted = lvim.icons.git.FileDeleted,
+              modified = lvim.icons.git.FileModified,
+              renamed = lvim.icons.git.FileRenamed,
               -- Status type
-              untracked = "",
-              ignored = "",
-              unstaged = "",
-              staged = "",
-              conflict = "",
+              untracked = lvim.icons.git.FileUntracked,
+              ignored = lvim.icons.git.FileIgnored,
+              unstaged = lvim.icons.git.FileUnstaged,
+              staged = lvim.icons.git.FileStaged,
+              conflict = lvim.icons.git.FileConflict,
             },
           },
         },
@@ -180,8 +177,6 @@ function M.config()
             ["x"] = "cut_to_clipboard",
             ["p"] = "paste_from_clipboard",
             ["c"] = "copy", -- takes text input for destination, also accepts the optional config.show_path option like "add":
-            ["Y"] = "copy_filename",
-            ["C"] = "copy_filepath",
             ["m"] = "move", -- takes text input for destination, also accepts the optional config.show_path option like "add".
             ["q"] = "close_window",
             ["R"] = "refresh",
@@ -241,6 +236,8 @@ function M.config()
               ["S"] = "run_command",
               ["gp"] = "telescope_find",
               ["gt"] = "telescope_grep",
+              ["Y"] = "copy_filename",
+              ["C"] = "copy_filepath",
             },
           },
           commands = {
@@ -249,10 +246,10 @@ function M.config()
               local path = node:get_id()
               -- macOs: open file in default application in the background.
               -- Probably you need to adapt the Linux recipe for manage path with spaces. I don't have a mac to try.
-              -- vim.api.nvim_command("silent !open -g " .. path)
+              -- vim.cmd("silent !open -g " .. path)
               -- Linux: open file in default application
 
-              vim.api.nvim_command(string.format("silent !xdg-open '%s'", path))
+              vim.cmd(string.format("silent !xdg-open '%s'", path))
             end,
             copy_filename = function(state)
               local node = state.tree:get_node()

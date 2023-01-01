@@ -6,7 +6,7 @@ local function r_inspect_settings(structure, limit, separator)
   limit = limit or 100 -- default item limit
   separator = separator or "." -- indent string
   if limit < 1 then
-    print "ERROR: Item limit reached."
+    print("ERROR: Item limit reached.")
     return limit - 1
   end
   if structure == nil then
@@ -18,7 +18,7 @@ local function r_inspect_settings(structure, limit, separator)
   if ts == "table" then
     for k, v in pairs(structure) do
       -- replace non alpha keys with ["key"]
-      if tostring(k):match "[^%a_]" then
+      if tostring(k):match("[^%a_]") then
         k = '["' .. tostring(k) .. '"]'
       end
       limit = r_inspect_settings(v, limit, separator .. "." .. tostring(k))

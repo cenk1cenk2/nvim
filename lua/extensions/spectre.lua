@@ -5,29 +5,23 @@ local extension_name = "spectre"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "nvim-pack/nvim-spectre",
-        run = "./build.sh",
-        config = function()
-          require("utils.setup").packer_config "spectre"
-        end,
-        disable = not config.active,
+        dependencies = {
+          { "nvim-lua/plenary.nvim" },
+        },
+        build = { "./build.sh" },
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "spectre_panel",
-      }
-    end,
-    to_inject = function()
-      return {
-        spectre = require "spectre",
-      }
+      })
     end,
     setup = {
       color_devicons = true,
-      highlight = { ui = "String", search = "SpectreChange", replace = "Spec.red[600]elete" },
+      highlight = { ui = "String", search = "SpectreChange", replace = "SpectreDelete" },
       live_update = true,
       mapping = {
         ["delete_line"] = {
@@ -173,32 +167,30 @@ function M.config()
       require("spectre").setup(config.setup)
     end,
     wk = function(config, categories)
-      local spectre = config.inject.spectre
-
       return {
         -- find and replace
         [categories.SEARCH] = {
           s = {
             function()
-              spectre.open()
+              require("spectre").open()
             end,
             "find and replace",
           },
           w = {
             function()
-              spectre.open { path = string.format("%s/**", vim.fn.expand "%:h") }
+              require("spectre").open({ path = string.format("%s/**", vim.fn.expand("%:h")) })
             end,
             "find and replace in current folder",
           },
           v = {
             function()
-              spectre.open_visual { select_word = true }
+              require("spectre").open_visual({ select_word = true })
             end,
             "find the word under cursor and replace",
           },
           b = {
             function()
-              spectre.open_file_search()
+              require("spectre").open_file_search()
             end,
             "find and replace in current buffer",
           },

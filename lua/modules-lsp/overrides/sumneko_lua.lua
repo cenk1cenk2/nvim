@@ -17,12 +17,12 @@ if neodev_loaded then
     settings = {
       Lua = {
         diagnostics = {
-          globals = { "vim", "lvim", "packer_plugins" },
+          globals = { "vim", "lvim" },
         },
         workspace = {
           library = {
-            vim.fn.expand "$VIMRUNTIME",
-            get_lvim_base_dir(),
+            vim.fn.expand("$VIMRUNTIME"),
+            get_config_dir(),
             neodev.types(),
             "${3rd}/busted/library",
             "${3rd}/luassert/library",

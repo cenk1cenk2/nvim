@@ -5,13 +5,10 @@ local extension_name = "nvim_bqf"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "kevinhwang91/nvim-bqf",
-        config = function()
-          require("utils.setup").packer_config "nvim_bqf"
-        end,
-        disable = not config.active,
+        event = "VeryLazy",
       }
     end,
     setup = {
@@ -20,7 +17,7 @@ function M.config()
         win_height = 12,
         win_vheight = 12,
         delay_syntax = 80,
-        border_chars = { "┃", "┃", "━", "━", "┏", "┓", "┗", "┛", "█" },
+        border_chars = lvim.icons.borderchars,
       },
       func_map = { vsplit = "", ptogglemode = "z,", stoggleup = "" },
       filter = {

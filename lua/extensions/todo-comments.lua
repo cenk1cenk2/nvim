@@ -5,13 +5,10 @@ local extension_name = "todo_comments"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "folke/todo-comments.nvim",
-        config = function()
-          require("utils.setup").packer_config "todo_comments"
-        end,
-        disable = not config.active,
+        cmd = { "TodoTelescope" },
       }
     end,
     setup = {
@@ -20,16 +17,16 @@ function M.config()
         -- keywords recognized as todo comments
         keywords = {
           FIX = {
-            icon = " ", -- icon used for the sign, and in search results
+            icon = lvim.icons.diagnostics.Debug, -- icon used for the sign, and in search results
             color = "error", -- can be a hex color, or a named color (see below)
             alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
             -- signs = false, -- configure signs for some keywords individually
           },
-          TODO = { icon = " ", color = "info" },
-          HACK = { icon = " ", color = "warning" },
-          WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
-          PERF = { icon = "㧸 ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-          NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+          TODO = { icon = lvim.icons.misc.Watch, color = "info" },
+          HACK = { icon = lvim.icons.misc.Squirrel, color = "warning" },
+          WARN = { icon = lvim.icons.diagnostics.Warning, color = "warning", alt = { "WARNING", "XXX" } },
+          PERF = { icon = lvim.icons.diagnostics.Trace, alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+          NOTE = { icon = lvim.icons.ui.Note, color = "hint", alt = { "INFO" } },
         },
         -- highlighting of the line containing the todo comment
         -- * before: highlights before the keyword (typically comment characters)

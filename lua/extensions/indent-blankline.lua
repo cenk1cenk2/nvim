@@ -5,13 +5,10 @@ local extension_name = "indent_blankline"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "lukas-reineke/indent-blankline.nvim",
-        config = function()
-          require("utils.setup").packer_config "indent_blankline"
-        end,
-        disable = not config.active,
+        event = "BufReadPost",
       }
     end,
     setup = function()
@@ -21,8 +18,8 @@ function M.config()
         show_first_indent_level = false,
         filetype_exclude = lvim.disabled_filetypes,
         enabled = true,
-        show_trailing_blankline_indent = false,
-        char = "│",
+        show_trailing_blankline_indent = true,
+        char = lvim.icons.ui.LineLeft,
         space_char_highlight_list = {},
         context_patterns = {
           "class",

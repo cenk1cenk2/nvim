@@ -3,28 +3,24 @@ local M = {}
 
 local extension_name = "toggleterm_nvim"
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "akinsho/toggleterm.nvim",
-        event = "BufWinEnter",
-        config = function()
-          require("utils.setup").packer_config "toggleterm_nvim"
-        end,
-        disable = not config.active,
+        event = "VeryLazy",
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "toggleterm",
-      }
+      })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        telescope = require "telescope",
+        telescope = require("telescope"),
       }
     end,
     setup = {
@@ -79,7 +75,7 @@ function M.config()
       local editor_split = "nvr --servername " .. vim.v.servername .. " -cc split --remote-wait-silent"
       -- .. " +'setlocal bufhidden=delete'"
 
-      if vim.fn.has "nvim" and vim.fn.executable "nvr" then
+      if vim.fn.has("nvim") and vim.fn.executable("nvr") then
         vim.env.NVIM_LISTEN_ADDRESS = vim.v.servername
         vim.env.GIT_EDITOR = editor_split
         vim.env.VISUAL = editor_split
@@ -101,7 +97,7 @@ function M.config()
       end
 
       local telescope = config.inject.telescope
-      telescope.load_extension "find_terminals"
+      telescope.load_extension("find_terminals")
     end,
     define_global_fn = function()
       return { toggle_log_view = M.toggle_log_view }
@@ -112,10 +108,10 @@ function M.config()
           M.get_current_float_terminal():toggle()
         end,
         ["<F2>"] = function()
-          M.float_terminal_select "prev"
+          M.float_terminal_select("prev")
         end,
         ["<F3>"] = function()
-          M.float_terminal_select "next"
+          M.float_terminal_select("next")
         end,
         ["<F4>"] = function()
           M.append_float_terminal()
@@ -204,30 +200,30 @@ end
 function M.on_exit(terminal) end
 
 function M.create_toggle_term(opts)
-  local binary = opts.cmd:match "(%S+)"
+  local binary = opts.cmd:match("(%S+)")
   if vim.fn.executable(binary) ~= 1 then
-    Log:debug("Skipping configuring executable " .. binary .. ". Please make sure it is installed properly.")
+    Log:debug(("Skipping configuring executable %s. Please make sure it is installed properly.").format(binary))
     return
   end
 
-  require("utils.setup").load_wk_mappings {
+  require("utils.setup").load_wk_mappings({
     ["t"] = {
       [opts.keymap] = {
         function()
-          M.toggle_toggle_term { cmd = opts.cmd, count = opts.count, direction = opts.direction }
+          M.toggle_toggle_term({ cmd = opts.cmd, count = opts.count, direction = opts.direction })
         end,
         opts.label,
       },
     },
-  }
+  })
 end
 
 function M.toggle_toggle_term(toggler)
   if not M.terminals[toggler.cmd] then
-    M.terminals[toggler.cmd] = M.create_terminal {
+    M.terminals[toggler.cmd] = M.create_terminal({
       cmd = toggler.cmd,
       hidden = true,
-    }
+    })
   end
 
   M.terminals[toggler.cmd]:toggle()
@@ -247,7 +243,7 @@ function M.get_current_float_terminal()
     terminal = M.float_terminals[M.float_terminal_current]
   end
 
-  Log:trace(string.format("Terminal switched: %s -> %s -> %s", M.float_terminal_current, terminal.cmd, terminal.dir))
+  Log:trace(("Terminal switched: %s -> %s -> %s"):format(M.float_terminal_current, terminal.cmd, terminal.dir))
 
   return terminal
 end
@@ -266,7 +262,7 @@ function M.float_terminal_on_open(terminal)
 
   M.float_terminal_current = index
 
-  Log:debug(string.format("Terminal created: %s -> %s -> %s", M.float_terminal_current, terminal.cmd, terminal.dir))
+  Log:debug(("Terminal created: %s -> %s -> %s"):format(M.float_terminal_current, terminal.cmd, terminal.dir))
 
   M.on_open(terminal)
 end
@@ -295,7 +291,7 @@ function M.float_terminal_on_exit(terminal)
       terminal:shutdown()
       cb()
 
-      Log:debug("Shutdown current terminal manually: " .. terminal.cmd)
+      Log:debug(("Shutdown current terminal manually: %s"):format(terminal.cmd))
     end
 
     vim.keymap.set({ "n", "t", "i" }, "q", keymap_cb, { silent = true, buffer = terminal.bufnr })
@@ -356,9 +352,9 @@ function M.generate_defaults_float_terminal(opts)
 end
 
 function M.create_float_terminal()
-  local terminal = M.create_terminal(M.generate_defaults_float_terminal {
+  local terminal = M.create_terminal(M.generate_defaults_float_terminal({
     cmd = vim.o.shell,
-  })
+  }))
 
   return terminal
 end
@@ -405,11 +401,11 @@ end
 
 function M.create_bottom_terminal()
   if not M.terminals["bottom"] then
-    M.terminals["bottom"] = M.create_terminal {
+    M.terminals["bottom"] = M.create_terminal({
       cmd = vim.o.shell,
       direction = "horizontal",
       hidden = true,
-    }
+    })
   end
 
   M.terminals["bottom"]:toggle()
@@ -418,7 +414,7 @@ function M.create_bottom_terminal()
 end
 
 function M.create_buffer_terminal()
-  local current = vim.fn.expand "%:p:h"
+  local current = vim.fn.expand("%:p:h")
 
   local t = M.create_float_terminal()
 
@@ -432,10 +428,10 @@ function M.create_buffer_terminal()
 end
 
 function M.get_all()
-  local terms = require "toggleterm.terminal"
+  local terms = require("toggleterm.terminal")
 
   local all_terminals = {}
-  for _, value in pairs { terms.get_all(true), M.terminals, M.float_terminals } do
+  for _, value in pairs({ terms.get_all(true), M.terminals, M.float_terminals }) do
     vim.list_extend(all_terminals, value)
   end
 
@@ -452,7 +448,8 @@ function M.close_all()
   end
 
   -- let ranger act as terminal as well
-  vim.cmd [[
+  pcall(function()
+    vim.cmd([[
     let win_hd = rnvimr#context#winid()
     if rnvimr#context#bufnr() != -1
         if win_hd != -1 && nvim_win_is_valid(win_hd)
@@ -462,7 +459,8 @@ function M.close_all()
             endif
         endif
     endif
-  ]]
+  ]])
+  end)
 end
 
 function M.kill_all()

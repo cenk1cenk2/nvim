@@ -4,38 +4,9 @@ local extension_name = "cmp_extensions"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    opts = {
-      multiple_packages = true,
-    },
-    packer = function()
+    inject_to_configure = function()
       return {
-        { "hrsh7th/cmp-nvim-lsp" },
-        { "hrsh7th/cmp-buffer" },
-        { "hrsh7th/cmp-path" },
-        { "saadparwaiz1/cmp_luasnip" },
-        { "hrsh7th/cmp-nvim-lua" },
-        { "hrsh7th/cmp-vsnip" },
-        -- https://github.com/petertriho/cmp-git
-        { "petertriho/cmp-git" },
-        -- https://github.com/David-Kunz/cmp-npm
-        { "David-Kunz/cmp-npm" },
-        -- https://github.com/hrsh7th/cmp-cmdline
-        { "hrsh7th/cmp-cmdline" },
-        { "davidsierradz/cmp-conventionalcommits" },
-        -- https://github.com/tzachar/cmp-fuzzy-buffer
-        { "tzachar/cmp-fuzzy-buffer" },
-        { "lukas-reineke/cmp-rg" },
-        -- -- https://github.com/hrsh7th/cmp-omni
-        --         { "hrsh7th/cmp-omni" },
-        -- { "tzachar/cmp-tabnine", run = "./install.sh" },
-        { "rafamadriz/friendly-snippets" },
-        { "L3MON4D3/LuaSnip" },
-        { "hrsh7th/cmp-nvim-lsp-signature-help" },
-        { "rcarriga/cmp-dap" },
-        -- https://github.com/bydlw98/cmp-env
-        { "bydlw98/cmp-env" },
-        -- https://github.com/hrsh7th/cmp-calc
-        { "hrsh7th/cmp-calc" },
+        cmp = require("cmp"),
       }
     end,
     setup = {
@@ -50,8 +21,8 @@ function M.config()
         filetypes = { "json" },
       },
     },
-    configure = function()
-      lvim.extensions.cmp.to_setup = {
+    configure = function(_, fn)
+      fn.append_to_setup("cmp", {
         sources = {
           { name = "nvim_lsp" },
           { name = "path" },
@@ -81,7 +52,7 @@ function M.config()
             vsnip = "(Snippet)",
             luasnip = "(Snippet)",
             buffer = "(Buffer)",
-            fuzzy_buffer = "(Buffer-FZF)",
+            fuzzy_buffer = "(FZF)",
             git = "(GIT)",
             omni = "(OMNI)",
             npm = "(NPM)",
@@ -90,12 +61,7 @@ function M.config()
             nvim_lsp_signature_help = "(SH)",
           },
         },
-      }
-    end,
-    to_inject = function()
-      return {
-        cmp = require "cmp",
-      }
+      })
     end,
     on_setup = function(config)
       for key, e in pairs(config.setup) do
@@ -105,15 +71,18 @@ function M.config()
       end
 
       -- setup lua snip
-      local utils = require "lvim.utils"
+      local utils = require("lvim.utils")
       local paths = {}
-      paths[#paths + 1] = join_paths(get_runtime_dir(), "site", "pack", "packer", "start", "friendly-snippets")
+
+      table.insert(paths, join_paths(require("lvim.plugin-loader").plugins_dir, "friendly-snippets"))
+
       local user_snippets = join_paths(get_config_dir(), "snippets")
       if utils.is_directory(user_snippets) then
-        paths[#paths + 1] = user_snippets
+        table.insert(paths, user_snippets)
       end
+
       require("luasnip.loaders.from_lua").lazy_load()
-      require("luasnip.loaders.from_vscode").lazy_load { paths = paths }
+      require("luasnip.loaders.from_vscode").lazy_load({ paths = paths })
       require("luasnip.loaders.from_snipmate").lazy_load()
     end,
     on_done = function(config)
@@ -121,9 +90,7 @@ function M.config()
 
       -- command line
       cmp.setup.cmdline(":", {
-        mapping = cmp.mapping.preset.cmdline {
-          -- Your configuration here.
-        },
+        mapping = cmp.mapping.preset.cmdline({}),
         sources = {
           { name = "cmdline" },
         },
@@ -131,21 +98,17 @@ function M.config()
 
       -- fuzzy buffer
       cmp.setup.cmdline("/", {
-        mapping = cmp.mapping.preset.cmdline {
-          -- Your configuration here.
-        },
-        sources = cmp.config.sources {
+        mapping = cmp.mapping.preset.cmdline({}),
+        sources = cmp.config.sources({
           { name = "fuzzy_buffer" },
-        },
+        }),
       })
 
       cmp.setup.cmdline("?", {
-        mapping = cmp.mapping.preset.cmdline {
-          -- Your configuration here.
-        },
-        sources = cmp.config.sources {
+        mapping = cmp.mapping.preset.cmdline({}),
+        sources = cmp.config.sources({
           { name = "fuzzy_buffer" },
-        },
+        }),
       })
 
       -- dap

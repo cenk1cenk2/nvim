@@ -8,38 +8,29 @@ local extension_name = "neotest"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "nvim-neotest/neotest",
-        requires = {
+        dependencies = {
           "nvim-neotest/neotest-go",
           "rouge8/neotest-rust",
           "haydenmeade/neotest-jest",
         },
-        config = function()
-          require("utils.setup").packer_config "neotest"
-        end,
-        disable = not config.active,
-      }
-    end,
-    to_inject = function()
-      return {
-        neotest = require "neotest",
       }
     end,
     setup = function()
       return {
         adapters = {
-          require "neotest-go",
-          require "neotest-rust",
-          require "neotest-jest" {
+          require("neotest-go"),
+          require("neotest-rust"),
+          require("neotest-jest")({
             jestCommand = "yarn run test",
             jestConfigFile = "jest.config.js",
             env = { CI = true },
             cwd = function()
               return vim.fn.getcwd()
             end,
-          },
+          }),
         },
       }
     end,
@@ -47,43 +38,41 @@ function M.config()
       require("neotest").setup(config.setup)
     end,
     wk = function(config, categories)
-      local neotest = config.inject.neotest
-
       return {
         [categories.TESTS] = {
           ["r"] = {
             function()
-              neotest.run.run()
+              require("neotest").run.run()
             end,
             "run nearest test",
           },
           ["f"] = {
             function()
-              neotest.run.run(vim.fn.expand "%")
+              require("neotest").run.run(vim.fn.expand("%"))
             end,
             "run current file",
           },
           ["d"] = {
             function()
-              neotest.run.run { strategy = "dap" }
+              require("neotest").run.run({ strategy = "dap" })
             end,
             "debug nearest test",
           },
           ["D"] = {
             function()
-              neotest.run.run { vim.fn.expand "%", strategy = "dap" }
+              require("neotest").run.run({ vim.fn.expand("%"), strategy = "dap" })
             end,
             "debug file",
           },
           ["s"] = {
             function()
-              neotest.run.stop()
+              require("neotest").run.stop()
             end,
             "debug nearest test",
           },
           ["a"] = {
             function()
-              neotest.run.attach()
+              require("neotest").run.attach()
             end,
             "attach nearest test",
           },

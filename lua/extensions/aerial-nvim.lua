@@ -5,23 +5,20 @@ local extension_name = "aerial_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "stevearc/aerial.nvim",
-        config = function()
-          require("utils.setup").packer_config "aerial_nvim"
-        end,
-        disable = not config.active,
+        cmd = { "AerialToggle" },
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "aerial",
-      }
+      })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        telescope = require "telescope",
+        telescope = require("telescope"),
       }
     end,
     setup = {
@@ -121,18 +118,18 @@ function M.config()
       require("aerial").setup(config.setup)
     end,
     on_done = function(config)
-      config.inject.telescope.load_extension "aerial"
-      config.inject.telescope.setup {
+      config.inject.telescope.load_extension("aerial")
+      config.inject.telescope.setup({
         extensions = {
           aerial = {
             -- Display symbols as <root>.<parent>.<symbol>
             show_nesting = true,
           },
         },
-      }
+      })
 
       lvim.lsp_wrapper.lsp_document_symbols = function()
-        vim.cmd "Telescope aerial"
+        vim.cmd("Telescope aerial")
       end
     end,
     wk = function(_, categories)

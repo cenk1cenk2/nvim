@@ -9,7 +9,7 @@ function M.config()
       return {
         "otavioschwanck/cool-substitute.nvim",
         config = function()
-          require("utils.setup").packer_config "cool_substitute_nvim"
+          require("utils.setup").packer_config("cool_substitute_nvim")
         end,
         disable = not config.active,
       }

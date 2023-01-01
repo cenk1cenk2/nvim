@@ -5,47 +5,21 @@ local extension_name = "alpha"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "goolord/alpha-nvim",
-        event = "BufWinEnter",
-        config = function()
-          require("utils.setup").packer_config "alpha"
-        end,
-        disable = not config.active,
+        lazy = false,
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "alpha",
-      }
+      })
     end,
-    autocmds = {
-      {
-        "FileType",
-        {
-          group = "__alpha",
-          pattern = "alpha",
-          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs= ",
-        },
-      },
-
-      {
-        "FileType",
-        {
-          group = "__alpha",
-          pattern = "alpha",
-          command = "nnoremap <silent> <buffer> q :q<CR>",
-        },
-      },
-    },
     on_setup = function(config)
-      local extension = require "alpha"
-
       local lvim_version = require("lvim.utils.git").get_lvim_current_sha()
       local nvim_version = require("lvim.utils.git").get_nvim_version()
-      local num_plugins_loaded = #vim.fn.globpath(get_runtime_dir() .. "/site/pack/packer/start", "*", 0, 1)
-      local num_opt_plugins_loaded = #vim.fn.globpath(get_runtime_dir() .. "/site/pack/packer/opt", "*", 0, 1)
+      local num_plugins_loaded = require("lazy").stats().count
       local button = require("alpha.themes.dashboard").button
 
       local buttons = {}
@@ -53,7 +27,7 @@ function M.config()
         table.insert(buttons, button(value[1], value[2]))
       end
 
-      extension.setup {
+      require("alpha").setup({
         layout = {
           { type = "padding", val = 1 },
           {
@@ -78,7 +52,7 @@ function M.config()
 
           {
             type = "text",
-            val = { "Neovim loaded: " .. num_plugins_loaded .. " + " .. num_opt_plugins_loaded .. " plugins " },
+            val = { "Neovim loaded: " .. num_plugins_loaded .. " plugins " },
             opts = {
               position = "center",
               hl = "DashboardFooter",
@@ -106,7 +80,7 @@ function M.config()
         opts = {
           margin = 5,
         },
-      }
+      })
     end,
     wk = function(_, categories)
       return {
@@ -115,10 +89,27 @@ function M.config()
         },
       }
     end,
+    autocmds = {
+      {
+        "FileType",
+        {
+          group = "__alpha",
+          pattern = "alpha",
+          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell nolist nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs=",
+        },
+      },
+
+      {
+        "FileType",
+        {
+          group = "__alpha",
+          pattern = "alpha",
+          command = "nnoremap <silent> <buffer> q :q<CR>",
+        },
+      },
+    },
     layout = {
       header = {
-        [[                                                                                        ]],
-        [[                                                                                        ]],
         [[                                                                                        ]],
         [[                                      ████▒▒▒▒██████                                    ]],
         [[                                    ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                                  ]],
@@ -143,19 +134,15 @@ function M.config()
         [[                                                  ████                                  ]],
         [[                                                      ██                                ]],
         [[                                                                                        ]],
-        [[                                                                                        ]],
-        [[                                                                                        ]],
-        [[                                                                                        ]],
       },
       buttons = {
-        { "SPC w l", "  Load Last Session" },
-        { "SPC w f", "⧗  Sessions" },
-        { "SPC p", "  Find File" },
-        { "SPC e", "  File Browser" },
-        { "SPC w p", "  Recent Projects" },
-        { "SPC f f", "  Recently Used Files" },
-        { "SPC L c", "  Configuration" },
-        { "q", "  Quit" },
+        { "SPC w l", lvim.icons.ui.History .. "  Load Last Session" },
+        { "SPC w f", lvim.icons.ui.Stacks .. "  Sessions" },
+        { "SPC p", lvim.icons.ui.File .. "  Find File" },
+        { "SPC w p", lvim.icons.ui.Project .. "  Recent Projects" },
+        { "SPC f f", lvim.icons.ui.Files .. "  Recently Used Files" },
+        { "SPC P S", lvim.icons.ui.Gear .. "  Plugins" },
+        { "q", lvim.icons.ui.TriangleShortArrowLeft .. "  Quit" },
       },
     },
   })

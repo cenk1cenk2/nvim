@@ -7,6 +7,7 @@ Log.levels = {
   WARN = 4,
   ERROR = 5,
 }
+
 vim.tbl_add_reverse_lookup(Log.levels)
 
 local notify_opts = {}
@@ -14,24 +15,17 @@ local notify_opts = {}
 function Log:set_level(level)
   local logger_ok, _ = xpcall(function()
     local log_level = Log.levels[level:upper()]
-    local structlog = require "structlog"
+    local structlog = require("structlog")
     if structlog then
-      local logger = structlog.get_logger "lvim"
+      local logger = structlog.get_logger("lvim")
       for _, s in ipairs(logger.sinks) do
         s.level = log_level
       end
     end
   end, debug.traceback)
-  if not logger_ok then
-    Log:debug("Unable to set logger's level: " .. debug.traceback())
-  end
 
-  local packer_ok, _ = xpcall(function()
-    package.loaded["packer.log"] = nil
-    require("packer.log").new { level = lvim.log.level }
-  end, debug.traceback)
-  if not packer_ok then
-    Log:debug("Unable to set packer's log level: " .. debug.traceback())
+  if not logger_ok then
+    Log:warn("Unable to set logger's level: " .. debug.traceback())
   end
 end
 
@@ -49,7 +43,7 @@ function Log:init()
           async = true,
           processors = {
             structlog.processors.StackWriter({ "line", "file" }, { max_parents = 0, stack_level = 2 }),
-            structlog.processors.Timestamper "%H:%M:%S",
+            structlog.processors.Timestamper("%H:%M:%S"),
           },
           formatter = structlog.formatters.FormatColorizer( --
             "%s [%-5s] %-30s",
@@ -60,7 +54,7 @@ function Log:init()
         structlog.sinks.File(log_level, self:get_path(), {
           processors = {
             structlog.processors.StackWriter({ "line", "file" }, { max_parents = 3, stack_level = 2 }),
-            structlog.processors.Timestamper "%F %H:%M:%S",
+            structlog.processors.Timestamper("%F %H:%M:%S"),
           },
           formatter = structlog.formatters.Format( --
             "%s [%-5s] %-30s",
@@ -72,7 +66,7 @@ function Log:init()
   }
 
   structlog.configure(lvim_log)
-  local logger = structlog.get_logger "lvim"
+  local logger = structlog.get_logger("lvim")
 
   -- Overwrite `vim.notify` to use the logger
   if lvim.log.override_notify then
@@ -103,6 +97,9 @@ function Log:configure_notifications(notif_handle)
   if not status_ok then
     return
   end
+
+  -- ensure logger is initialized
+  Log:get_logger()
 
   local default_namer = function(logger, entry)
     entry["title"] = logger.name

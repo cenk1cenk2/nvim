@@ -1,7 +1,7 @@
 local M = {}
 
 M.load_default_options = function()
-  local utils = require "lvim.utils"
+  local utils = require("lvim.utils")
 
   local undodir = join_paths(get_cache_dir(), "undo")
 
@@ -53,16 +53,16 @@ M.load_default_options = function()
     wrap = true, -- display lines as one long line
     spell = false,
     spelllang = "en",
-    spellfile = join_paths(get_config_dir(), "spell", "en.utf-8.add"),
+    -- spellfile = join_paths(get_config_dir(), "spell", "en.utf-8.add"),
     shadafile = join_paths(get_cache_dir(), "lvim.shada"),
     scrolloff = 8, -- minimal number of screen lines to keep above and below the cursor.
     sidescrolloff = 8, -- minimal number of screen lines to keep left and right of the cursor.
   }
 
   ---  SETTINGS  ---
-  vim.opt.shortmess:append "c" -- don't show redundant messages from ins-completion-menu
-  vim.opt.shortmess:append "I" -- don't show the default intro message
-  vim.opt.whichwrap:append "<,>,[,],h,l"
+  vim.opt.shortmess:append("c") -- don't show redundant messages from ins-completion-menu
+  vim.opt.shortmess:append("I") -- don't show the default intro message
+  vim.opt.whichwrap:append("<,>,[,],h,l")
 
   for k, v in pairs(default_options) do
     vim.opt[k] = v

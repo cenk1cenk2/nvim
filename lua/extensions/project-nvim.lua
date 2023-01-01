@@ -5,13 +5,10 @@ local extension_name = "project_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "ahmedkhalf/project.nvim",
-        config = function()
-          require("utils.setup").packer_config "project_nvim"
-        end,
-        disable = not config.active,
+        lazy = false,
       }
     end,
     setup = {
@@ -49,7 +46,7 @@ function M.config()
       require("project_nvim").setup(config.setup)
     end,
     on_done = function()
-      require("telescope").load_extension "projects"
+      require("telescope").load_extension("projects")
     end,
     wk = function(_, categories)
       return {

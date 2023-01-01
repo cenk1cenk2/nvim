@@ -1,5 +1,5 @@
 local M = {}
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 function M.setup()
   local installers = {
@@ -14,7 +14,7 @@ function M.setup()
     local ok, _ = pcall(require, "modules-lsp.mason." .. r)
 
     if not ok then
-      Log:warn(("Mason server can not be setup: %s").format(r))
+      Log:warn(("Mason server can not be setup: %s"):format(r))
     end
   end
 end

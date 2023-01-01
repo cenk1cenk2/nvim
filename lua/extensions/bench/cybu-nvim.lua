@@ -2,7 +2,7 @@
 
 local M = {}
 
-local setup = require "utils.setup"
+local setup = require("utils.setup")
 
 local extension_name = "cybu_nvim"
 
@@ -12,7 +12,7 @@ function M.config()
       return {
         "ghillb/cybu.nvim",
         config = function()
-          require("utils.setup").packer_config "cybu_nvim"
+          require("utils.setup").packer_config("cybu_nvim")
         end,
         disable = not config.active,
       }

@@ -5,19 +5,20 @@ local extension_name = "comment_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "numToStr/Comment.nvim",
-        event = "BufRead",
-        config = function()
-          require("utils.setup").packer_config "comment_nvim"
-        end,
-        disable = not config.active,
+        keys = {
+          { "gc", mode = "n" },
+          { "gb", mode = "n" },
+          { "gc", mode = "v" },
+          { "gb", mode = "v" },
+        },
       }
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        ft = require "Comment.ft",
+        ft = require("Comment.ft"),
       }
     end,
     setup = {
@@ -84,19 +85,19 @@ function M.config()
     comment_strings = {
       { { "gomod" }, "//%s" },
     },
-    keymaps = {
-      normal_mode = {
-        ["<C-\\>"] = "<CMD>lua require('Comment.api').call('gcc')<CR>g@$",
-        ["<C-#>"] = "<CMD>lua require('Comment.api').call('gcc')<CR>g@$",
-        ["<M-#>"] = "<CMD>lua require('Comment.api').call('gbc')<CR>g@$",
-      },
-
-      visual_mode = {
-        ["<C-\\>"] = "<ESC><CMD>lua require('Comment.api').gc(vim.fn.visualmode())<CR>",
-        ["<C-#>"] = "<ESC><CMD>lua require('Comment.api').gc(vim.fn.visualmode())<CR>",
-        ["<M-#>"] = "<ESC><CMD>lua require('Comment.api').gb(vim.fn.visualmode())<CR>",
-      },
-    },
+    -- keymaps = {
+    --   normal_mode = {
+    --     ["<C-\\>"] = "<CMD>lua require('Comment.api').call('gcc')<CR>g@$",
+    --     ["<C-#>"] = "<CMD>lua require('Comment.api').call('gcc')<CR>g@$",
+    --     ["<M-#>"] = "<CMD>lua require('Comment.api').call('gbc')<CR>g@$",
+    --   },
+    --
+    --   visual_mode = {
+    --     ["<C-\\>"] = "<ESC><CMD>lua require('Comment.api').gc(vim.fn.visualmode())<CR>",
+    --     ["<C-#>"] = "<ESC><CMD>lua require('Comment.api').gc(vim.fn.visualmode())<CR>",
+    --     ["<M-#>"] = "<ESC><CMD>lua require('Comment.api').gb(vim.fn.visualmode())<CR>",
+    --   },
+    -- },
   })
 end
 

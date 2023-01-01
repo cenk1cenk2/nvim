@@ -9,7 +9,7 @@ function M.config()
       return {
         "Wansmer/sibling-swap.nvim",
         config = function()
-          require("utils.setup").packer_config "sibling_swap_nvim"
+          require("utils.setup").packer_config("sibling_swap_nvim")
         end,
         disable = not config.active,
       }

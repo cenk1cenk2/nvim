@@ -6,15 +6,11 @@ local extension_name = "nvim_autopairs"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "windwp/nvim-autopairs",
-        -- event = "InsertEnter",
-        after = { "nvim-cmp" },
-        config = function()
-          require("utils.setup").packer_config "nvim_autopairs"
-        end,
-        disable = not config.active,
+        dependencies = { "hrsh7th/nvim-cmp" },
+        event = "InsertEnter",
       }
     end,
     setup = {
@@ -34,7 +30,7 @@ function M.config()
       },
       disable_filetype = { "TelescopePrompt", "spectre_panel" },
       ignored_next_char = string.gsub([[ [%w%%%'%[%"%.] ]], "%s+", ""),
-      enable_moveright = false,
+      enable_moveright = true,
       ---@usage disable when recording or executing a macro
       disable_in_macro = false,
       ---@usage add bracket pairs after quote
@@ -47,22 +43,22 @@ function M.config()
       disable_in_visualblock = false,
       ---@usage  change default fast_wrap
       fast_wrap = {
-        map = "<M-e>",
+        map = "<M-w>",
         chars = { "{", "[", "(", '"', "'" },
         pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
         offset = 0, -- Offset from pattern match
         end_key = "$",
         keys = "qwertyuiopzxcvbnmasdfghjkl",
         check_comma = true,
-        highlight = "Search",
-        highlight_grey = "Comment",
+        highlight = "Substitute",
+        highlight_grey = "",
       },
     },
     on_setup = function(config)
       require("nvim-autopairs").setup(config.setup)
     end,
     on_done = function()
-      require("nvim-treesitter.configs").setup { autopairs = { enable = true } }
+      require("nvim-treesitter.configs").setup({ autopairs = { enable = true } })
 
       pcall(function()
         require("cmp").event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())

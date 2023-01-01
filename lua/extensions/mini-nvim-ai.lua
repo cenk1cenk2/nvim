@@ -5,13 +5,10 @@ local extension_name = "mini_nvim_ai"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "echasnovski/mini.ai",
-        config = function()
-          require("utils.setup").packer_config "mini_nvim_ai"
-        end,
-        disable = not config.active,
+        event = "BufReadPost",
       }
     end,
     setup = {
@@ -42,7 +39,7 @@ function M.config()
       -- How to search for object (first inside current line, then inside
       -- neighborhood). One of 'cover', 'cover_or_next', 'cover_or_prev',
       -- 'cover_or_nearest', 'next', 'previous', 'nearest'.
-      search_method = "cover",
+      search_method = "cover_or_nearest",
     },
     on_setup = function(config)
       require("mini.ai").setup(config.setup)

@@ -9,7 +9,7 @@ function M.config()
       return {
         "wesQ3/vim-windowswap",
         config = function()
-          require("utils.setup").packer_config "vim_windowswap"
+          require("utils.setup").packer_config("vim_windowswap")
         end,
         disable = not config.active,
       }

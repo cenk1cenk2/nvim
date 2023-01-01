@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup()
-  vim.filetype.add {
+  vim.filetype.add({
     extension = {
       ["j2"] = function()
         vim.bo.indentexpr = "nvim_treesitter#indent()"
@@ -36,7 +36,7 @@ function M.setup()
         return "yaml"
       end,
     },
-  }
+  })
 end
 
 return M

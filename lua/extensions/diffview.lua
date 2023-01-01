@@ -1,29 +1,26 @@
 -- https://github.com/sindrets/diffview.nvim
 local M = {}
 
-local Log = require "lvim.core.log"
+local Log = require("lvim.core.log")
 
 local extension_name = "diffview"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "sindrets/diffview.nvim",
-        config = function()
-          require("utils.setup").packer_config "diffview"
-        end,
-        disable = not config.active,
+        cmd = { "DiffviewFileHistory", "DiffviewOpen", "DiffviewClose" },
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes {
+      fn.add_disabled_filetypes({
         "DiffviewFiles",
-      }
+      })
     end,
-    to_inject = function()
+    inject_to_configure = function()
       return {
-        actions = require "diffview.actions",
+        actions = require("diffview.actions"),
       }
     end,
     setup = function(config)
@@ -73,11 +70,11 @@ function M.config()
             ["g<C-x>"] = actions.cycle_layout, -- Cycle through available layouts.
             ["[n"] = actions.prev_conflict, -- In the merge_tool: jump to the previous conflict
             ["]n"] = actions.next_conflict, -- In the merge_tool: jump to the next conflict
-            ["co"] = actions.conflict_choose "ours", -- Choose the OURS version of a conflict
-            ["ct"] = actions.conflict_choose "theirs", -- Choose the THEIRS version of a conflict
-            ["cB"] = actions.conflict_choose "base", -- Choose the BASE version of a conflict
-            ["cb"] = actions.conflict_choose "all", -- Choose all the versions of a conflict
-            ["cn"] = actions.conflict_choose "none", -- Delete the conflict region
+            ["co"] = actions.conflict_choose("ours"), -- Choose the OURS version of a conflict
+            ["ct"] = actions.conflict_choose("theirs"), -- Choose the THEIRS version of a conflict
+            ["cB"] = actions.conflict_choose("base"), -- Choose the BASE version of a conflict
+            ["cb"] = actions.conflict_choose("all"), -- Choose all the versions of a conflict
+            ["cn"] = actions.conflict_choose("none"), -- Delete the conflict region
           },
           diff1 = { --[[ Mappings in single window diff layouts ]]
           },
@@ -85,14 +82,14 @@ function M.config()
           },
           diff3 = {
             -- Mappings in 3-way diff layouts
-            { { "n", "x" }, "2do", actions.diffget "ours" }, -- Obtain the diff hunk from the OURS version of the file
-            { { "n", "x" }, "3do", actions.diffget "theirs" }, -- Obtain the diff hunk from the THEIRS version of the file
+            { { "n", "x" }, "2do", actions.diffget("ours") }, -- Obtain the diff hunk from the OURS version of the file
+            { { "n", "x" }, "3do", actions.diffget("theirs") }, -- Obtain the diff hunk from the THEIRS version of the file
           },
           diff4 = {
             -- Mappings in 4-way diff layouts
-            { { "n", "x" }, "1do", actions.diffget "base" }, -- Obtain the diff hunk from the BASE version of the file
-            { { "n", "x" }, "2do", actions.diffget "ours" }, -- Obtain the diff hunk from the OURS version of the file
-            { { "n", "x" }, "3do", actions.diffget "theirs" }, -- Obtain the diff hunk from the THEIRS version of the file
+            { { "n", "x" }, "1do", actions.diffget("base") }, -- Obtain the diff hunk from the BASE version of the file
+            { { "n", "x" }, "2do", actions.diffget("ours") }, -- Obtain the diff hunk from the OURS version of the file
+            { { "n", "x" }, "3do", actions.diffget("theirs") }, -- Obtain the diff hunk from the THEIRS version of the file
           },
           file_panel = {
             ["j"] = actions.next_entry, -- Bring the cursor to the next file entry
@@ -189,15 +186,15 @@ function M.compare_with_branch()
     default = stored_value,
   }, function(branch)
     if branch == nil then
-      Log:warn "Nothing to compare."
+      Log:warn("Nothing to compare.")
 
       return
     end
 
-    Log:info("Comparing with branch: " .. branch)
+    Log:info(("Comparing with branch: %s"):format(branch))
     lvim.store.set_store(store_key, branch)
 
-    vim.api.nvim_command(":DiffviewOpen " .. branch)
+    vim.cmd(":DiffviewOpen " .. branch)
   end)
 end
 

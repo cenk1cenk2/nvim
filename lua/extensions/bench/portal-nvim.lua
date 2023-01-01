@@ -9,14 +9,14 @@ function M.config()
       return {
         "cbochs/portal.nvim",
         config = function()
-          require("utils.setup").packer_config "portal_nvim"
+          require("utils.setup").packer_config("portal_nvim")
         end,
         disable = not config.active,
       }
     end,
     setup = {
       mark = {
-        save_path = vim.fn.stdpath "data" .. "/" .. "portal.json",
+        save_path = vim.fn.stdpath("data") .. "/" .. "portal.json",
       },
 
       jump = {

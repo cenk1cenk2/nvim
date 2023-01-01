@@ -1,7 +1,7 @@
 -- https://github.com/chipsenkbeil/distant.nvim
 local M = {}
 
-local setup = require "utils.setup"
+local setup = require("utils.setup")
 
 local extension_name = "distant"
 
@@ -11,7 +11,7 @@ function M.config()
       return {
         "chipsenkbeil/distant.nvim",
         config = function()
-          require("utils.setup").packer_config "distant"
+          require("utils.setup").packer_config("distant")
         end,
         disable = not config.active,
       }

@@ -5,13 +5,10 @@ local extension_name = "undotree"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "mbbill/undotree",
-        config = function()
-          require("utils.setup").packer_config "undotree"
-        end,
-        disable = not config.active,
+        cmd = { "UndotreeToggle" },
       }
     end,
     wk = function(_, categories)

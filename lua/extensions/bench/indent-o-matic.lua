@@ -9,7 +9,7 @@ function M.config()
       return {
         "Darazaki/indent-o-matic",
         config = function()
-          require("utils.setup").packer_config "indent_o_matic"
+          require("utils.setup").packer_config("indent_o_matic")
         end,
         disable = not config.active,
       }

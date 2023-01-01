@@ -9,7 +9,7 @@ function M.config()
       return {
         "j-hui/fidget.nvim",
         config = function()
-          require("utils.setup").packer_config "fidget_nvim"
+          require("utils.setup").packer_config("fidget_nvim")
         end,
         disable = not config.active,
       }
@@ -39,12 +39,7 @@ function M.config()
         end,
         -- function to format each task line
         task = function(task_name, message, percentage)
-          return string.format(
-            "%s%s [%s]",
-            message,
-            percentage and string.format(" (%s%%)", percentage) or "",
-            task_name
-          )
+          return string.format("%s%s [%s]", message, percentage and string.format(" (%s%%)", percentage) or "", task_name)
         end,
       },
       debug = {

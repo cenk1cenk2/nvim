@@ -5,13 +5,10 @@ local extension_name = "vim_repeat"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    packer = function(config)
+    plugin = function()
       return {
         "tpope/vim-repeat",
-        config = function()
-          require("utils.setup").packer_config "vim_repeat"
-        end,
-        disable = not config.active,
+        lazy = false,
       }
     end,
   })
