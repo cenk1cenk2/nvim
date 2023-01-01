@@ -11,9 +11,15 @@ function M.config()
         cmd = { "DocsViewToggle" },
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes({
+        "nvim-docs-view",
+      })
+    end,
     setup = {
       position = "bottom",
       width = 75,
+      height = 18,
     },
     on_setup = function(config)
       require("docs-view").setup(config.setup)
@@ -25,6 +31,25 @@ function M.config()
         },
       }
     end,
+    autocmds = {
+      {
+        "FileType",
+        {
+          group = "__nvim_docs_view",
+          pattern = "nvim-docs-view",
+          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell nolist nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs=",
+        },
+      },
+
+      {
+        "FileType",
+        {
+          group = "__nvim_docs_view",
+          pattern = "nvim-docs-view",
+          command = "nnoremap <silent> <buffer> q :q<CR>",
+        },
+      },
+    },
   })
 end
 
