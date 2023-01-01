@@ -82,7 +82,7 @@ function M.config()
               return { added = gitsigns.added, modified = gitsigns.changed, removed = gitsigns.removed }
             end
           end,
-          symbols = { added = lvim.icons.git.LineAdded, modified = lvim.icons.git.LineModified, removed = lvim.icons.git.LineModified },
+          symbols = { added = lvim.icons.git.LineAdded .. " ", modified = lvim.icons.git.LineModified .. " ", removed = lvim.icons.git.LineModified .. " " },
           diff_color = {
             added = { fg = lvim.colors.green[600] },
             modified = { fg = lvim.colors.blue[600] },
