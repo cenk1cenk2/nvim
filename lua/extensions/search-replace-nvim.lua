@@ -24,20 +24,17 @@ function M.config()
       return {
         -- find and replace
         [categories.SEARCH] = {
-          r = {
-            name = "search-replace-nvim",
-            s = {
-              function()
-                require("search-replace.single-buffer").open()
-              end,
-              "find and replace in single buffer",
-            },
-            v = {
-              function()
-                require("search-replace.single-buffer").cword()
-              end,
-              "find and replace in single buffer",
-            },
+          B = {
+            function()
+              require("search-replace.single-buffer").open()
+            end,
+            "find and replace in current buffer",
+          },
+          V = {
+            function()
+              require("search-replace.single-buffer").cword()
+            end,
+            "find and replace cword in current buffer",
           },
         },
       }
@@ -46,7 +43,7 @@ function M.config()
       x = {
         ["<C-r>"] = {
           function()
-            require("search-replace.single-buffer").visual_charwise_selection({ range = true })
+            require("search-replace.visual-multitype").within({ range = true })
           end,
         },
       },
