@@ -34,10 +34,12 @@ local extensions = {
   "neoscroll",
   "legendary-nvim",
   "spectre",
+  "search-replace-nvim",
   "rnvimr",
   "vim-visual-multi",
   "vim-maximizer",
   "undotree",
+  "telescope-undo-nvim",
   "nvim-ufo",
   "nvim-bqf",
   "lsp-trouble",
@@ -81,6 +83,7 @@ local extensions = {
   "winshift-nvim",
   "exrc-nvim",
   "chatgpt-nvim",
+  "browse-nvim",
 }
 
 function M.config(config)
