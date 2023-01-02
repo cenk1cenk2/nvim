@@ -53,7 +53,7 @@ function M.config()
             function()
               require("no-neck-pain").toggle()
             end,
-            "no neck pain!",
+            "zen mode",
           },
         },
       }

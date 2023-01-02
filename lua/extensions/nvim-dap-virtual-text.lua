@@ -35,7 +35,7 @@ function M.config()
         [categories.DEBUG] = {
           v = {
             ":DapVirtualTextToggle<CR>",
-            "toggle virtual text",
+            "toggle debugging virtual text",
           },
         },
       }

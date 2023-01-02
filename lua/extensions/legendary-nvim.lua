@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "legendary_nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, false, {
+  require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
         "mrjones2014/legendary.nvim",
@@ -26,9 +26,9 @@ function M.config()
         functions = {},
         -- Customize the prompt that appears on your vim.ui.select() handler
         -- Can be a string or a function that returns a string.
-        select_prompt = " legendary.nvim ",
+        select_prompt = "legend",
         -- Character to use to separate columns in the UI
-        col_separator_char = "│",
+        col_separator_char = lvim.icons.ui.LineMiddle,
         -- Optionally pass a custom formatter function. This function
         -- receives the item as a parameter and the mode that legendary
         -- was triggered from (e.g. `function(item, mode): string[]`)
@@ -61,12 +61,15 @@ function M.config()
           do_binding = false,
         },
         -- Directory used for caches
-        cache_path = string.format("%s/legendary/", vim.fn.stdpath("cache")),
+        cache_path = string.format("%s/legendary/", get_cache_dir()),
       }
     end,
     on_setup = function(config)
       require("legendary").setup(config.setup)
     end,
+    wk = {
+      ["<Space>"] = { ":Legendary<CR>", "open legend" },
+    },
   })
 end
 

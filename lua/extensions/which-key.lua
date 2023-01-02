@@ -85,7 +85,8 @@ function M.config()
       which_key.register(lvim.wk.mappings, config.opts)
       which_key.register(lvim.wk.vmappings, config.vopts)
 
-      if fn.extension_get_active("legendary_nvim") then
+      if fn.is_extension_enabled("legendary_nvim") then
+        print("binding")
         require("legendary.integrations.which-key").bind_whichkey(lvim.wk.mappings, config.opts, false)
       end
     end,

@@ -85,7 +85,7 @@ function M.config()
     wk = function(_, categories)
       return {
         [categories.SESSION] = {
-          c = { ":Alpha<CR>", "dashboard" },
+          w = { ":Alpha<CR>", "dashboard" },
         },
       }
     end,

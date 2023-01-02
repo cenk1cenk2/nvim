@@ -37,7 +37,7 @@ function M.config()
     on_setup = function(config)
       require("neotest").setup(config.setup)
     end,
-    wk = function(config, categories)
+    wk = function(_, categories)
       return {
         [categories.TESTS] = {
           ["r"] = {
@@ -74,7 +74,7 @@ function M.config()
             function()
               require("neotest").run.attach()
             end,
-            "attach nearest test",
+            "attach to nearest test",
           },
         },
       }

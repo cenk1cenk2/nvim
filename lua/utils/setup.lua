@@ -57,7 +57,7 @@ local function define_manager_plugin(config, plugin)
   return plugin
 end
 
----@alias fn { add_disabled_filetypes: (fun(ft: table<string>): nil), extension_get_active: (fun(extension: string): boolean), get_current_setup: (fun(extension: string): (fun(): table)), fetch_current_setup: (fun(extension:string): table), append_to_setup: (fun(extension:string): table | (fun(config: config): table)) }
+---@alias fn { add_disabled_filetypes: (fun(ft: table<string>): nil), is_extension_enabled: (fun(extension: string): boolean), get_current_setup: (fun(extension: string): (fun(): table)), fetch_current_setup: (fun(extension:string): table), append_to_setup: (fun(extension:string): table | (fun(config: config): table)) }
 ---@alias config table
 
 ---
@@ -322,8 +322,8 @@ function M.fn.add_disabled_filetypes(ft)
 end
 
 ---@param extension string
-function M.fn.extension_get_active(extension)
-  return (M.get_config(extension) or {}).active
+function M.fn.is_extension_enabled(extension)
+  return (M.get_config(extension) or {}).enabled
 end
 
 function M.fn.get_current_setup(extension_name)

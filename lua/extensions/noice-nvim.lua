@@ -258,7 +258,7 @@ function M.config()
             filter = {
               event = "msg_show",
               kind = { "echo", "echomsg" },
-            }, -- echo
+            },
             opts = { skip = true },
           },
           {

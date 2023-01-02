@@ -320,10 +320,10 @@ function M.config()
     end,
     wk = {
 
-      ["e"] = { ":NeoTreeFocusToggle<CR>", "tree" },
-      [","] = { ":NeoTreeReveal<CR>", "find file in explorer" },
-      ["."] = { ":NeoTreeFloat buffers<CR>", "open buffers in tree" },
-      ["-"] = { ":NeoTreeFloat git_status<CR>", "git files in tree" },
+      ["e"] = { ":NeoTreeFocusToggle<CR>", "open filetree" },
+      [","] = { ":NeoTreeReveal<CR>", "reveal file in filetree" },
+      ["."] = { ":NeoTreeFloat buffers<CR>", "open buffers in filetree" },
+      ["-"] = { ":NeoTreeFloat git_status<CR>", "git files in filetree" },
     },
   })
 end
