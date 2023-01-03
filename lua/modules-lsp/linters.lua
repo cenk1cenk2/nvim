@@ -27,6 +27,7 @@ function M.setup()
     {
       name = "flake8",
       filetypes = { "python" },
+      extra_args = { "--max-line-length", "179" },
     },
 
     -- {
