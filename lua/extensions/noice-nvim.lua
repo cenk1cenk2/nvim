@@ -110,13 +110,10 @@ function M.config()
             position = {
               col = "50%",
               row = "97%",
-              -- col = 0,
             },
-            size = "auto",
             border = {
               style = lvim.ui.border,
             },
-            zindex = 60,
             win_options = {
               winblend = 30,
               winhighlight = {
@@ -135,10 +132,9 @@ function M.config()
             zindex = 60,
             format = { "{confirm}" },
             position = {
-              row = "50%",
               col = "50%",
+              row = "75%",
             },
-            size = "auto",
             border = {
               style = lvim.ui.border,
               padding = { 0, 1 },
@@ -202,7 +198,6 @@ function M.config()
             },
           },
         },
-
         lsp = {
           progress = {
             enabled = true,
@@ -243,15 +238,20 @@ function M.config()
         },
         routes = {
           {
-            view = "split",
-            filter = { event = "msg_show", min_height = 5 },
-          },
-          {
             filter = {
               event = "msg_show",
               kind = { "search_count" },
             },
-            opts = { skip = true },
+            opts = { replace = false, skip = true, stop = true },
+          },
+          {
+            view = "split",
+            filter = {
+              event = "msg_show",
+              kind = { "echo", "echomsg" },
+              min_height = 5,
+            },
+            opts = { replace = false, skip = true, stop = true },
           },
           {
             view = "notify",
@@ -259,7 +259,7 @@ function M.config()
               event = "msg_show",
               kind = { "echo", "echomsg" },
             },
-            opts = { skip = true },
+            opts = { replace = false, skip = true, stop = false },
           },
           {
             view = "notify",
@@ -290,6 +290,15 @@ function M.config()
       ["M"] = { ":Noice<CR>", "messages" },
     },
     autocmds = {
+      {
+        "FileType",
+        {
+          group = "__noice",
+          pattern = "noice",
+          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell nolist nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs=",
+        },
+      },
+
       {
         "FileType",
         {
