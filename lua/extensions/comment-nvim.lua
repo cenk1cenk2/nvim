@@ -9,10 +9,8 @@ function M.config()
       return {
         "numToStr/Comment.nvim",
         keys = {
-          { "gc", mode = "n" },
-          { "gb", mode = "n" },
-          { "gc", mode = "v" },
-          { "gb", mode = "v" },
+          { "gc", mode = { "n", "v", "x" } },
+          { "gb", mode = { "n", "v", "x" } },
         },
       }
     end,
