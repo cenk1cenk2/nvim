@@ -22,8 +22,9 @@ function M.config()
     end,
     configure = function(_, fn)
       fn.add_disabled_filetypes({
-        "TelescopePrompt",
         "Telescope",
+        "TelescopePrompt",
+        "TelescopeResults",
       })
     end,
     inject_to_configure = function()
@@ -219,7 +220,12 @@ function M.config()
           ["."] = { ":Telescope commands<CR>", "search available commands" },
           [":"] = { ":Telescope command_history<CR>", "search command history" },
           A = { ":Telescope builtin<CR>", "telescope list builtin finders" },
-          b = { ":Telescope current_buffer_fuzzy_find<CR>", "search current buffer fuzzy" },
+          b = {
+            function()
+              finders.rg_current_buffer_fuzzy_find()
+            end,
+            "search current buffer fuzzy",
+          },
           B = {
             function()
               finders.rg_grep_buffer()

@@ -44,6 +44,12 @@ function M.rg_grep_buffer()
   return require("telescope.builtin").live_grep({ search_dirs = { "%:p" } })
 end
 
+function M.rg_current_buffer_fuzzy_find()
+  return require("telescope.builtin").current_buffer_fuzzy_find({
+    vimgrep_arguments = vim.list_extend(vim.deepcopy(lvim.fn.get_telescope_rg_arguments()), { "--no-ignore" }),
+  })
+end
+
 -- Smartly opens either git_files or find_files, depending on whether the working directory is
 -- contained in a Git repo.
 function M.find_project_files()
