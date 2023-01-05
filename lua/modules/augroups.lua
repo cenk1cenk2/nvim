@@ -87,7 +87,7 @@ function M.setup()
           group = "_filetype_settings",
           pattern = "gitcommit",
           callback = function()
-            vim.bo.wrap = true
+            -- vim.bo.wrap = true
           end,
         },
       },
