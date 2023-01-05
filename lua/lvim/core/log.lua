@@ -34,27 +34,15 @@ function Log:init()
   end
 
   local log_level = Log.levels[(lvim.log.level):upper() or "WARN"]
-  local lvim_log = {
+  local logger = {
     lvim = {
       sinks = {
-        -- structlog.sinks.Console(log_level, {
-        --   async = true,
-        --   processors = {
-        --     structlog.processors.StackWriter({ "line", "file" }, { max_parents = 0, stack_level = 2 }),
-        --     structlog.processors.Timestamper("%H:%M:%S"),
-        --   },
-        --   formatter = structlog.formatters.FormatColorizer( --
-        --     "%s [%-5s] %-30s",
-        --     { "timestamp", "level", "msg" },
-        --     { level = structlog.formatters.FormatColorizer.color_level() }
-        --   ),
-        -- }),
         structlog.sinks.File(log_level, self:get_path(), {
           processors = {
             structlog.processors.StackWriter({ "line", "file" }, { max_parents = 3, stack_level = 2 }),
             structlog.processors.Timestamper("%F %H:%M:%S"),
           },
-          formatter = structlog.formatters.Format(--
+          formatter = structlog.formatters.Format( --
             "%s [%-5s] %-30s",
             { "timestamp", "level", "msg" }
           ),
@@ -63,7 +51,24 @@ function Log:init()
     },
   }
 
-  structlog.configure(lvim_log)
+  if is_headless() then
+    logger.lvim.sinks = vim.list_extend(logger.lvim.sinks, {
+      structlog.sinks.Console(log_level, {
+        async = true,
+        processors = {
+          structlog.processors.StackWriter({ "line", "file" }, { max_parents = 0, stack_level = 2 }),
+          structlog.processors.Timestamper("%H:%M:%S"),
+        },
+        formatter = structlog.formatters.FormatColorizer( --
+          "%s [%-5s] %-30s",
+          { "timestamp", "level", "msg" },
+          { level = structlog.formatters.FormatColorizer.color_level() }
+        ),
+      }),
+    })
+  end
+
+  structlog.configure(logger)
 
   return structlog.get_logger("lvim")
 end
@@ -88,7 +93,7 @@ function Log:configure_notifications(notif_handle)
           return entry
         end,
       },
-      formatter = structlog.formatters.Format(--
+      formatter = structlog.formatters.Format( --
         "%s",
         { "msg" },
         { blacklist_all = true }

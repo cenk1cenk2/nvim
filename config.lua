@@ -1,5 +1,9 @@
 lvim.log.level = "info"
 
+if is_headless() then
+  lvim.log.level = "trace"
+end
+
 lvim.lsp.ensure_installed = {
   ---- language servers
   "json-lsp",
