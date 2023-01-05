@@ -32,6 +32,7 @@ local extensions = {
   "hop",
   "vim-repeat",
   "neoscroll",
+  "auto-hlsearch-nvim",
   "legendary-nvim",
   "spectre",
   "search-replace-nvim",
