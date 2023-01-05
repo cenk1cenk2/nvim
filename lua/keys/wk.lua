@@ -99,12 +99,6 @@ M.mappings = {
   -- workspace/session
   [M.CATEGORIES.SESSION] = {
     name = "session",
-    q = {
-      function()
-        require("lvim.utils.functions").smart_quit()
-      end,
-      "quit",
-    },
   },
 
   [M.CATEGORIES.NEOVIM] = {

@@ -2,7 +2,10 @@ local M = {}
 
 local uv = vim.loop
 local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
-local in_headless = #vim.api.nvim_list_uis() == 0
+
+function _G.is_headless()
+  return #vim.api.nvim_list_uis() == 0
+end
 
 ---Join path segments that were passed as input
 ---@return string
@@ -55,7 +58,7 @@ function M:init()
 
   ---Get the full path to LunarVim's base directory
   -- FIXME: currently unreliable in unit-tests
-  if not in_headless then
+  if not is_headless() then
     _G.PLENARY_DEBUG = false
   end
 

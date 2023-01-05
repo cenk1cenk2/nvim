@@ -1,8 +1,7 @@
 local Log = require("lvim.core.log")
 local M = { fn = {} }
 
-local keymappings = require("lvim.keymappings")
-local keys_which_key = require("keys.which-key")
+local keys_which_key = require("keys.wk")
 
 ---
 ---@param mappings table
@@ -22,7 +21,7 @@ end
 ---
 ---@param mappings table
 function M.load_mappings(mappings)
-  keymappings.load(mappings)
+  require("lvim.keymappings").load(mappings)
 end
 
 function M.create_commands(collection)
@@ -70,7 +69,7 @@ local function define_manager_plugin(config, plugin)
   return plugin
 end
 
----@alias fn { add_disabled_filetypes: (fun(ft: table<string>): nil), is_extension_enabled: (fun(extension: string): boolean), get_current_setup: (fun(extension: string): (fun(): table)), fetch_current_setup: (fun(extension:string): table), append_to_setup: (fun(extension:string): table | (fun(config: config): table)) }
+---@alias fn { add_disabled_filetypes: (fun(ft: table<string>): nil), is_extension_enabled: (fun(extension: string): boolean), get_current_setup_wrapper: (fun(extension: string): (fun(): table)), get_current_setup: (fun(extension:string): table), append_to_setup: (fun(extension:string): table | (fun(config: config): table)) }
 ---@alias config table
 
 ---
@@ -149,6 +148,8 @@ function M.define_extension(extension_name, enabled, config)
 
   if config ~= nil and config.configure ~= nil then
     config.configure(config, M.fn)
+
+    config.configure = nil
   end
 
   lvim.extensions[extension_name] = config
@@ -196,7 +197,8 @@ function M.init(config)
     local ok = pcall(function()
       ---@diagnostic disable-next-line: assign-type-mismatch
       lvim.extensions[config.name].inject = vim.tbl_extend("force", lvim.extensions[config.name].inject, config.inject_to_init(config))
-      print(vim.inspect(lvim.extensions[config.name]))
+
+      print(vim.inspect(config))
     end)
 
     if not ok then
@@ -204,26 +206,38 @@ function M.init(config)
 
       return
     end
+
+    config.inject_to_init = nil
   end
 
   if config ~= nil and config.on_init ~= nil then
     config.on_init(config)
+
+    config.on_init = nil
   end
 
   if config ~= nil and config.autocmds ~= nil then
     M.define_autocmds(M.evaluate_property(config.autocmds, config))
+
+    config.autocmds = nil
   end
 
   if config ~= nil and config.keymaps ~= nil then
     M.load_mappings(M.evaluate_property(config.keymaps, config))
+
+    config.keymaps = nil
   end
 
   if config ~= nil and config.wk ~= nil then
     M.load_wk_mappings(M.evaluate_property(config.wk, config, keys_which_key.CATEGORIES))
+
+    config.wk = nil
   end
 
   if config ~= nil and config.wk_v ~= nil then
     M.load_wk_mappings(M.evaluate_property(config.wk_v, config, keys_which_key.CATEGORIES), "v")
+
+    config.wk_v = nil
   end
 
   if config ~= nil and config.hl ~= nil then
@@ -232,6 +246,8 @@ function M.init(config)
     for key, value in pairs(highlights) do
       vim.api.nvim_set_hl(0, key, value)
     end
+
+    config.hl = nil
   end
 
   if config ~= nil and config.signs ~= nil then
@@ -240,14 +256,20 @@ function M.init(config)
     for key, value in pairs(signs) do
       vim.fn.sign_define(key, value)
     end
+
+    config.signs = nil
   end
 
   if config ~= nil and config.commands ~= nil then
     M.create_commands(M.evaluate_property(config.commands, config))
+
+    config.commands = nil
   end
 
   if config ~= nil and config.nvim_opts ~= nil then
     M.set_option(config.nvim_opts)
+
+    config.nvim_opts = nil
   end
 
   if config ~= nil and config.define_global_fn ~= nil then
@@ -256,10 +278,14 @@ function M.init(config)
     for key, value in pairs(functions) do
       lvim.fn[key] = value
     end
+
+    config.define_global_fn = nil
   end
 
   if config ~= nil and config.legacy_setup ~= nil then
     M.legacy_setup(config.legacy_setup)
+
+    config.legacy_setup = nil
   end
 end
 
@@ -277,6 +303,8 @@ function M.configure(config)
 
       return
     end
+
+    config.inject_to_configure = nil
   end
 
   if config ~= nil and config.setup ~= nil then
@@ -299,25 +327,26 @@ function M.configure(config)
 
   if config ~= nil and config.on_setup ~= nil then
     config.on_setup(config, M.fn)
+
+    config.on_setup = nil
   end
 
   if config ~= nil and config.on_done ~= nil then
     config.on_done(config, M.fn)
+
+    config.on_done = nil
   end
 
   if config ~= nil and config.on_complete ~= nil then
     config.on_complete(config, M.fn)
+
+    config.on_complete = nil
   end
+
+  config.setup = nil
+  config.extended_setup = nil
 end
 
----
----@param extension_name string
----@return table
-function M.plugin(extension_name)
-  return M.get_config(extension_name).extensions
-end
-
----
 function M.set_plugins()
   local plugins = {}
 
@@ -346,12 +375,6 @@ function M.fn.is_extension_enabled(extension)
   return (M.get_config(extension) or {}).enabled
 end
 
-function M.fn.get_current_setup(extension_name)
-  return function()
-    return lvim.extensions[extension_name].current_setup
-  end
-end
-
 function M.fn.append_to_setup(extension_name, to_setup)
   if lvim.extensions[extension_name] == nil then
     lvim.extensions[extension_name] = {
@@ -362,7 +385,13 @@ function M.fn.append_to_setup(extension_name, to_setup)
   table.insert(lvim.extensions[extension_name].to_setup, to_setup)
 end
 
-function M.fn.fetch_current_setup(extension_name)
+function M.fn.get_current_setup_wrapper(extension_name)
+  return function()
+    return M.fn.get_current_setup(extension_name)
+  end
+end
+
+function M.fn.get_current_setup(extension_name)
   return lvim.extensions[extension_name].current_setup
 end
 

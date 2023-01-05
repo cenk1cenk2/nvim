@@ -1,6 +1,17 @@
+local Log = require("lvim.core.log")
+
 return {
+  a = {
+    -- disable help
+    ["<F1>"] = "<Nop>",
+    -- to blachole
+    ["c"] = '"_c',
+    ["C"] = '"_C',
+    ["x"] = '"_x',
+  },
+
   ---@usage change or add keymappings for insert mode
-  insert_mode = {
+  i = {
     -- Move current line / block with Alt-j/k ala vscode.
     -- ["<A-j>"] = "<Esc>:m .+1<CR>==gi",
     -- Move current line / block with Alt-j/k ala vscode.
@@ -17,26 +28,21 @@ return {
   },
 
   ---@usage change or add keymappings for normal mode
-  normal_mode = {
-    ["qq"] = "",
-
+  n = {
     -- save
     ["<C-s>"] = ":w<CR>",
-    ["<C-S>"] = ":w!<CR>",
     ["<C-x>"] = function()
       vim.cmd("noa w!")
-      require("lvim.core.log"):warn("File saved. No autocommands had run!")
+      Log:warn("File saved. No autocommands had run!")
     end,
 
     -- close buffer
     ["<C-q>"] = ":BufferClose<CR>",
     ["<C-Q>"] = ":BufferClose<CR>",
 
-    -- disable help
-    ["<F1>"] = "<Nop>",
-
     -- disable Ex mode
-    -- ["Q"] = "<Nop>",
+    ["Q"] = "<Nop>",
+    ["qq"] = "<Nop>",
 
     -- split to tab
     ["<C-t>"] = "<C-w>T",
@@ -64,14 +70,6 @@ return {
     ["<C-a>"] = ":QuickFixToggle<CR>",
     ["<C-y>"] = ":QuickFixToggle<CR>",
 
-    -- create space on top and bottom
-    ["ü"] = "O<ESC>j",
-    ["Ü"] = "o<ESC>k",
-
-    -- jump between paragraphs
-    -- ["ö"] = "{zz",
-    -- ["ä"] = "}zz",
-
     -- paste last clipboard register
     -- ["op"] = '"_diw"*P',
 
@@ -88,7 +86,7 @@ return {
   },
 
   ---@usage change or add keymappings for terminal mode
-  term_mode = {
+  t = {
     -- Terminal window navigation
     ["<C-h>"] = "<C-\\><C-N><C-w>h",
     ["<C-j>"] = "<C-\\><C-N><C-w>j",
@@ -98,43 +96,29 @@ return {
   },
 
   ---@usage change or add keymappings for visual mode
-  visual_mode = {
+  v = {
     -- Better indenting
     ["<"] = "<gv",
     [">"] = ">gv",
 
-    -- jump between paragraphs
-    -- ["ö"] = "{zz",
-    -- ["ä"] = "}zz",
-
-    -- to blachole
-    ["c"] = '"_c',
-    ["C"] = '"_C',
-    ["x"] = '"_x',
-
     -- dont overwrite while pasting
     ["p"] = '"_dP',
     ["P"] = '"_dp',
-
-    -- ["p"] = '"0p',
-    -- ["P"] = '"0P',
   },
 
   ---@usage change or add keymappings for visual block mode
-  visual_block_mode = {
+  vb = {
     -- Move current line / block with Alt-j/k ala vscode.
     ["<A-j>"] = ":m '>+1<CR>gv-gv",
     ["<A-k>"] = ":m '<-2<CR>gv-gv",
 
     -- to blachole
-    ["c"] = '"_c',
-    ["x"] = '"_x',
     ["p"] = '"_dP',
     ["P"] = '"_dp',
   },
 
   ---@usage change or add keymappings for command mode
-  command_mode = {
+  c = {
     -- navigate tab completion with <c-j> and <c-k>
     -- runs conditionally
     -- ["<C-j>"] = { 'pumvisible() ? "\\<C-n>" : "\\<C-j>"', { expr = true, noremap = true } },

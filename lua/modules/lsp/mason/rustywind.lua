@@ -8,7 +8,7 @@ helper.set_lsp_default_config(server_name, {
   command = { "rustywind" },
 })
 
-helper.set_mason_registry(server_name, "modules-lsp.mason.rustywind")
+helper.set_mason_registry(server_name, "modules.lsp.mason.rustywind")
 
 return Pkg.new({
   name = server_name,

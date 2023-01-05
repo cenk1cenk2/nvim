@@ -24,25 +24,10 @@ function M:init()
   lvim.lsp = vim.deepcopy(require("lvim.config.lsp"))
 end
 
--- local function handle_deprecated_settings()
---   local function deprecation_notice(setting, new_setting)
---     local in_headless = #vim.api.nvim_list_uis() == 0
---     if in_headless then
---       return
---     end
---
---     local msg = string.format("Deprecation notice: [%s] setting is no longer supported. %s", setting, new_setting or "")
---     vim.schedule(function()
---       vim.notify_once(msg, vim.log.levels.WARN)
---     end)
---   end
--- end
-
 --- Override the configuration with a user provided one
 -- @param config_path The path to the configuration overrides
 function M:load(config_path)
   Log:debug("Loading configuration...")
-  local autocmds = require("lvim.core.autocmds")
 
   config_path = config_path or self:get_user_config_path()
   local ok, err = pcall(dofile, config_path)
@@ -60,15 +45,16 @@ function M:load(config_path)
 
   require("modules").config(self)
 
+  local autocmds = require("lvim.core.autocmds")
   autocmds.define_autocmds(lvim.autocommands)
-
-  vim.g.mapleader = (lvim.leader == "space" and " ") or lvim.leader
-
-  require("lvim.keymappings").load(lvim.keys)
 
   if lvim.ui.transparent_window then
     autocmds.enable_transparent_mode()
   end
+
+  vim.g.mapleader = (lvim.leader == "space" and " ") or lvim.leader
+
+  require("lvim.keymappings").load(lvim.keys)
 end
 
 --- Override the configuration with a user provided one
@@ -84,6 +70,7 @@ function M:reload()
     local plugin_loader = require("lvim.plugin-loader")
 
     plugin_loader.reload({ lvim.plugins })
+
     require_clean("lvim.utils.hooks").run_post_reload()
   end)
 end

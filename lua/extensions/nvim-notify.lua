@@ -10,7 +10,7 @@ function M.config()
         "rcarriga/nvim-notify",
         event = "VeryLazy",
         cond = function()
-          if #vim.api.nvim_list_uis() == 0 then
+          if is_headless() then
             -- no need to configure notifications in headless
             return false
           end

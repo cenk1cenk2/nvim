@@ -3,10 +3,12 @@ local M = {}
 local modules = {
   "nvim",
   "commands",
-  "lsp",
   "augroups",
   "filetype",
   "executables",
+  "quit",
+  -- rest
+  "lsp-setup",
   "telescope",
   "unimpaired",
   "scratch",

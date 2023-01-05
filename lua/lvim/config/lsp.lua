@@ -44,7 +44,7 @@ return {
     max_width = 180,
     context = 48,
   },
-  buffer_mappings = require("keys.lsp-mappings"),
+  buffer_mappings = require("keys.lsp"),
   automatic_configuration = {
     ---@usage list of servers that the automatic installer will skip
     skipped_servers = {},

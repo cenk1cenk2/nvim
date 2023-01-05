@@ -28,7 +28,7 @@ function M.config()
       nowait = true, -- use `nowait` when creating keymaps
     },
     configure = function(_, fn)
-      local wk = require("keys.which-key")
+      local wk = require("keys.wk")
 
       lvim.wk.mappings = vim.deepcopy(wk.mappings)
       lvim.wk.vmappings = vim.deepcopy(wk.vmappings)

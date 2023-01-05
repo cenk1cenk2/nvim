@@ -10,7 +10,7 @@ local lsp_stuff = {
 
 function M.setup()
   for _, lsp_item in ipairs(lsp_stuff) do
-    require("modules-lsp." .. lsp_item).setup()
+    require("modules.lsp." .. lsp_item).setup()
   end
 end
 

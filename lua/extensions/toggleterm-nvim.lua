@@ -496,6 +496,6 @@ function M.toggle_log_view(logfile)
   log_view:toggle()
 end
 
-M.current_setup = require("utils.setup").fn.get_current_setup(extension_name)
+M.current_setup = require("utils.setup").fn.get_current_setup_wrapper(extension_name)
 
 return M

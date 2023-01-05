@@ -8,7 +8,7 @@ helper.set_lsp_default_config(server_name, {
   command = { "md-printer" },
 })
 
-helper.set_mason_registry(server_name, "modules-lsp.mason.md-printer")
+helper.set_mason_registry(server_name, "modules.lsp.mason.md-printer")
 
 return Pkg.new({
   name = server_name,

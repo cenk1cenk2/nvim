@@ -9,7 +9,7 @@ helper.set_lsp_default_config(server_name, {
   args = { "--bullets=-", "-i" },
 })
 
-helper.set_mason_registry(server_name, "modules-lsp.mason.markdown-toc")
+helper.set_mason_registry(server_name, "modules.lsp.mason.markdown-toc")
 
 return Pkg.new({
   name = server_name,

@@ -10,7 +10,7 @@ function M.setup()
   }
 
   for _, r in ipairs(installers) do
-    local ok, _ = pcall(require, "modules-lsp.mason." .. r)
+    local ok, _ = pcall(require, "modules.lsp.mason." .. r)
 
     if not ok then
       Log:warn(("Mason server can not be setup: %s"):format(r))

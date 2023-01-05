@@ -2,6 +2,7 @@ local M = {}
 
 local Log = require("lvim.core.log")
 local autocmds = require("lvim.core.autocmds")
+local keymappings = require("lvim.keymappings")
 
 local function add_lsp_buffer_options(bufnr)
   for k, v in pairs(lvim.lsp.buffer_options) do
@@ -10,15 +11,9 @@ local function add_lsp_buffer_options(bufnr)
 end
 
 local function add_lsp_buffer_keybindings(bufnr)
-  local mappings = {
-    normal_mode = "n",
-    insert_mode = "i",
-    visual_mode = "v",
-  }
-
-  for mode_name, mode_char in pairs(mappings) do
-    for key, remap in pairs(lvim.lsp.buffer_mappings[mode_name]) do
-      local opts = { buffer = bufnr, desc = remap[2], noremap = true, silent = true }
+  for mode_name, mode_char in pairs(keymappings.modes) do
+    for key, remap in pairs(lvim.lsp.buffer_mappings[mode_name] or {}) do
+      local opts = vim.tbl_extend("force", keymappings.opts[keymappings.modes[mode_name]], { buffer = bufnr, desc = remap[2], noremap = true, silent = true })
       vim.keymap.set(mode_char, key, remap[1], opts)
     end
   end
@@ -87,7 +82,7 @@ function M.get_common_opts()
 end
 
 function M.setup()
-  if #vim.api.nvim_list_uis() == 0 then
+  if is_headless() then
     Log:debug("headless mode detected, skipping setting lsp support")
     return
   end
@@ -127,7 +122,7 @@ function M.setup()
     return
   end
 
-  require("modules-lsp").setup()
+  require("modules.lsp").setup()
 
   for _, sign in ipairs(lvim.lsp.diagnostics.signs.values) do
     vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })

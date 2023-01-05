@@ -4,16 +4,16 @@ local Log = require("lvim.core.log")
 
 local generic_opts_any = { noremap = true, silent = true }
 
-local generic_opts = {
-  insert_mode = generic_opts_any,
-  normal_mode = generic_opts_any,
-  visual_mode = generic_opts_any,
-  visual_block_mode = generic_opts_any,
-  command_mode = generic_opts_any,
-  term_mode = { silent = true },
+M.opts = {
+  i = generic_opts_any,
+  n = generic_opts_any,
+  v = generic_opts_any,
+  x = generic_opts_any,
+  c = generic_opts_any,
+  t = { silent = true },
 }
 
-local mode_adapters = {
+M.modes = {
   all = "",
   a = "",
   insert_mode = "i",
@@ -41,7 +41,7 @@ local mode_adapters = {
 function M.clear(keymaps)
   local default = M.get_defaults()
   for mode, mappings in pairs(keymaps) do
-    local translated_mode = mode_adapters[mode] or mode
+    local translated_mode = M.modes[mode] or mode
     for key, _ in pairs(mappings) do
       -- some plugins may override default bindings that the user hasn't manually overridden
       if default[mode][key] ~= nil or (default[translated_mode] ~= nil and default[translated_mode][key] ~= nil) then
@@ -56,7 +56,8 @@ end
 -- @param key The key of keymap
 -- @param val Can be form as a mapping or tuple of mapping and user defined opt
 function M.set_keymaps(mode, key, val)
-  local opt = generic_opts[mode] or generic_opts_any
+  local opt = M.opts[mode]
+
   if type(val) == "table" then
     opt = val[2]
     val = val[1]
@@ -72,7 +73,7 @@ end
 -- @param mode The keymap mode, can be one of the keys of mode_adapters
 -- @param keymaps The list of key mappings
 function M.load_mode(mode, keymaps)
-  mode = mode_adapters[mode] or mode
+  mode = M.modes[mode] or mode
   for k, v in pairs(keymaps) do
     M.set_keymaps(mode, k, v)
   end
@@ -89,7 +90,7 @@ end
 
 -- Load the default keymappings
 function M.load_defaults()
-  lvim.keys = require("keys.keymappings")
+  lvim.keys = require("keys.default")
 
   return lvim.keys
 end

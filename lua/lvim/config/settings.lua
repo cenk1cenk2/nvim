@@ -78,7 +78,7 @@ M.load_headless_options = function()
 end
 
 M.load_defaults = function()
-  if #vim.api.nvim_list_uis() == 0 then
+  if is_headless() then
     M.load_headless_options()
     return
   end

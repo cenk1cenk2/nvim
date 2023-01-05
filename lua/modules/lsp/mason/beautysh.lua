@@ -9,7 +9,7 @@ helper.set_lsp_default_config(server_name, {
   args = { "--indent-size", "2" },
 })
 
-helper.set_mason_registry(server_name, "modules-lsp.mason.beautysh")
+helper.set_mason_registry(server_name, "modules.lsp.mason.beautysh")
 
 return Pkg.new({
   name = server_name,
