@@ -44,9 +44,6 @@ return {
     max_width = 180,
     context = 48,
   },
-  on_init_callbacks = {},
-  on_attach_callbacks = {},
-  on_exit_callbacks = {},
   buffer_mappings = require("keys.lsp-mappings"),
   automatic_configuration = {
     ---@usage list of servers that the automatic installer will skip
@@ -84,8 +81,7 @@ return {
     },
     config = {},
   },
-  ---@deprecated use lvim.lsp.automatic_configuration.skipped_servers instead
-  override = {},
-  ---@deprecated use lvim.lsp.installer.setup.automatic_installation instead
-  automatic_servers_installation = nil,
+  on_init_callbacks = {},
+  on_attach_callbacks = {},
+  on_exit_callbacks = {},
 }

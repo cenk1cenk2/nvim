@@ -63,7 +63,7 @@ function M.config()
     on_setup = function(config)
       local notify = require("notify")
       notify.setup(config.setup)
-      vim.notify = notify
+      -- vim.notify = notify
       require("lvim.core.log"):configure_notifications(notify)
     end,
   })

@@ -10,10 +10,10 @@ function M.config()
     },
     plugin = function()
       return {
-        { "neovim/nvim-lspconfig", lazy = false },
-        { "tamago324/nlsp-settings.nvim", lazy = false },
-        { "jose-elias-alvarez/null-ls.nvim", lazy = false },
-        { "b0o/schemastore.nvim", lazy = false },
+        { "neovim/nvim-lspconfig" },
+        { "tamago324/nlsp-settings.nvim" },
+        { "jose-elias-alvarez/null-ls.nvim" },
+        { "b0o/schemastore.nvim" },
         { "folke/neodev.nvim", ft = { "lua" } },
       }
     end,

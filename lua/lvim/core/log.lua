@@ -10,8 +10,6 @@ Log.levels = {
 
 vim.tbl_add_reverse_lookup(Log.levels)
 
-local notify_opts = {}
-
 function Log:set_level(level)
   local logger_ok, _ = xpcall(function()
     local log_level = Log.levels[level:upper()]
@@ -66,28 +64,8 @@ function Log:init()
   }
 
   structlog.configure(lvim_log)
-  local logger = structlog.get_logger("lvim")
 
-  -- Overwrite `vim.notify` to use the logger
-  if lvim.log.override_notify then
-    vim.notify = function(msg, vim_log_level, opts)
-      notify_opts = opts or {}
-
-      -- vim_log_level can be omitted
-      if vim_log_level == nil then
-        vim_log_level = Log.levels["INFO"]
-      elseif type(vim_log_level) == "string" then
-        vim_log_level = Log.levels[(vim_log_level):upper()] or Log.levels["INFO"]
-      else
-        -- https://github.com/neovim/neovim/blob/685cf398130c61c158401b992a1893c2405cd7d2/runtime/lua/vim/lsp/log.lua#L5
-        vim_log_level = vim_log_level + 1
-      end
-
-      logger:log(vim_log_level, msg)
-    end
-  end
-
-  return logger
+  return structlog.get_logger("lvim")
 end
 
 --- Configure the sink in charge of logging notifications
@@ -101,33 +79,41 @@ function Log:configure_notifications(notif_handle)
   -- ensure logger is initialized
   Log:get_logger()
 
-  local default_namer = function(logger, entry)
-    entry["title"] = logger.name
-    return entry
-  end
+  table.insert(
+    self.__handle.sinks,
+    structlog.sinks.NvimNotify(Log.levels.INFO, {
+      processors = {
+        function(logger, entry)
+          entry["title"] = logger.name
+          return entry
+        end,
+      },
+      formatter = structlog.formatters.Format( --
+        "%s",
+        { "msg" },
+        { blacklist_all = true }
+      ),
+      impl = notif_handle,
+    })
+  )
 
-  local notify_opts_injecter = function(_, entry)
-    for key, value in pairs(notify_opts) do
-      entry[key] = value
-    end
-    notify_opts = {}
-    return entry
-  end
+  -- Overwrite `vim.notify` to use the logger
+  -- vim.notify = function(msg, level, opts)
+  --   notify_opts = opts or {}
+  --
+  --   if level == nil then
+  --     level = Log.levels["INFO"]
+  --   elseif type(level) == "string" then
+  --     level = Log.levels[(level):upper()] or Log.levels["INFO"]
+  --   else
+  --     -- https://github.com/neovim/neovim/blob/685cf398130c61c158401b992a1893c2405cd7d2/runtime/lua/vim/lsp/log.lua#L5
+  --     level = level + 1
+  --   end
+  --
+  --   self:log(level, msg)
+  -- end
 
-  local sink = structlog.sinks.NvimNotify(Log.levels.INFO, {
-    processors = {
-      default_namer,
-      notify_opts_injecter,
-    },
-    formatter = structlog.formatters.Format( --
-      "%s",
-      { "msg" },
-      { blacklist_all = true }
-    ),
-    impl = notif_handle,
-  })
-
-  table.insert(self.__handle.sinks, sink)
+  return self
 end
 
 --- Adds a log entry using Plenary.log

@@ -8,7 +8,8 @@ function M.config()
     plugin = function()
       return {
         "ahmedkhalf/project.nvim",
-        lazy = false,
+        cmd = { "Telescope project" },
+        event = { "BufReadPre" },
       }
     end,
     setup = {

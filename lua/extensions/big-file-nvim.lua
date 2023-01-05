@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "LunarVim/bigfile.nvim",
-        lazy = false,
+        event = "BufReadPre",
       }
     end,
     setup = {

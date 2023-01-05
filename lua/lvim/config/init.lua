@@ -21,7 +21,7 @@ function M:init()
 
   require("lvim.core.autocmds").load_defaults()
 
-  lvim.lsp = vim.deepcopy(require("lvim.lsp.config"))
+  lvim.lsp = vim.deepcopy(require("lvim.config.lsp"))
 end
 
 -- local function handle_deprecated_settings()

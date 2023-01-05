@@ -9,10 +9,9 @@ function M.config()
       return {
         "williamboman/mason.nvim",
         dependencies = {
-          { "williamboman/mason-lspconfig.nvim", lazy = false },
-          { "WhoIsSethDaniel/mason-tool-installer.nvim", lazy = false },
+          { "williamboman/mason-lspconfig.nvim" },
+          { "WhoIsSethDaniel/mason-tool-installer.nvim" },
         },
-        lazy = false,
       }
     end,
     configure = function(_, fn)

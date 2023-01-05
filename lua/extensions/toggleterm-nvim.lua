@@ -10,7 +10,7 @@ function M.config()
     plugin = function()
       return {
         "akinsho/toggleterm.nvim",
-        event = "VeryLazy",
+        -- event = "VeryLazy",
       }
     end,
     configure = function(_, fn)
@@ -18,10 +18,30 @@ function M.config()
         "toggleterm",
       })
     end,
+
     inject_to_configure = function()
       return {
         telescope = require("telescope"),
       }
+    end,
+    on_init = function(config)
+      local togglers = {
+        { cmd = "lazygit", keymap = "g", label = "LazyGit" },
+        { cmd = "lazydocker", keymap = "d", label = "LazyDocker" },
+        { cmd = "htop", keymap = "h", label = "htop" },
+        { cmd = "ncdu", keymap = "n", label = "ncdu" },
+      }
+
+      for i, exec in pairs(togglers) do
+        M.create_toggle_term({
+          cmd = exec.cmd,
+          keymap = exec.keymap,
+          label = exec.label,
+          -- NOTE: unable to consistently bind id/count <= 9, see #2146
+          count = i + 100,
+          direction = exec.direction,
+        })
+      end
     end,
     setup = {
       -- size can be a number or function which is passed the current terminal
@@ -61,12 +81,6 @@ function M.config()
       on_open = M.on_open,
       on_exit = M.on_exit,
     },
-    togglers = {
-      { cmd = "lazygit", keymap = "g", label = "LazyGit" },
-      { cmd = "lazydocker", keymap = "d", label = "LazyDocker" },
-      { cmd = "htop", keymap = "h", label = "htop" },
-      { cmd = "ncdu", keymap = "n", label = "ncdu" },
-    },
     on_setup = function(config)
       require("toggleterm").setup(config.setup)
     end,
@@ -80,20 +94,6 @@ function M.config()
         vim.env.GIT_EDITOR = editor_split
         vim.env.VISUAL = editor_split
         vim.env.EDITOR = editor_split
-      end
-
-      for i, exec in pairs(config.togglers) do
-        local opts = {
-          cmd = exec.cmd,
-          keymap = exec.keymap,
-          label = exec.label,
-          -- NOTE: unable to consistently bind id/count <= 9, see #2146
-          count = i + 100,
-          direction = exec.direction or M.current_setup().direction,
-          size = M.current_setup().size,
-        }
-
-        M.create_toggle_term(opts)
       end
 
       local telescope = config.inject.telescope

@@ -12,16 +12,22 @@ function M.config()
       return {
         {
           "nvim-lua/plenary.nvim",
+        },
+        {
+          "Tastyep/structlog.nvim",
           lazy = false,
+          init = function()
+            require("lvim.core.log"):init()
+          end,
+          config = false,
+        },
+        {
+          "kyazdani42/nvim-web-devicons",
+          event = "VeryLazy",
         },
         {
           "nvim-lua/popup.nvim",
           event = "VeryLazy",
-        },
-        { "Tastyep/structlog.nvim", lazy = false },
-        {
-          "kyazdani42/nvim-web-devicons",
-          lazy = false,
         },
         {
           "MunifTanjim/nui.nvim",

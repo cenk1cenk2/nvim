@@ -250,6 +250,14 @@ function M.init(config)
     M.set_option(config.nvim_opts)
   end
 
+  if config ~= nil and config.define_global_fn ~= nil then
+    local functions = config.define_global_fn(config)
+
+    for key, value in pairs(functions) do
+      lvim.fn[key] = value
+    end
+  end
+
   if config ~= nil and config.legacy_setup ~= nil then
     M.legacy_setup(config.legacy_setup)
   end
@@ -295,14 +303,6 @@ function M.configure(config)
 
   if config ~= nil and config.on_done ~= nil then
     config.on_done(config, M.fn)
-  end
-
-  if config ~= nil and config.define_global_fn ~= nil then
-    local functions = config.define_global_fn(config)
-
-    for key, value in pairs(functions) do
-      lvim.fn[key] = value
-    end
   end
 
   if config ~= nil and config.on_complete ~= nil then
