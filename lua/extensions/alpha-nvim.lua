@@ -17,9 +17,6 @@ function M.config()
       })
     end,
     on_setup = function(config)
-      local lvim_version = require("lvim.utils.git").get_lvim_current_sha()
-      local nvim_version = require("lvim.utils.git").get_nvim_version()
-      local num_plugins_loaded = require("lazy").stats().count
       local button = require("alpha.themes.dashboard").button
 
       local buttons = {}
@@ -52,7 +49,11 @@ function M.config()
 
           {
             type = "text",
-            val = { "Neovim loaded: " .. num_plugins_loaded .. " plugins " },
+            val = function()
+              local stats = require("lazy").stats()
+
+              return { ("%s %d/%d plugins in %s %.0fms"):format(lvim.ui.icons.ui.Package, stats.loaded, stats.count, lvim.ui.icons.misc.Watch, stats.startuptime) }
+            end,
             opts = {
               position = "center",
               hl = "DashboardFooter",
@@ -61,7 +62,7 @@ function M.config()
           { type = "padding", val = 0 },
           {
             type = "text",
-            val = { lvim_version },
+            val = { ("%s %s#%s"):format(lvim.ui.icons.git.Branch, require("lvim.utils.git").get_lvim_branch(), require("lvim.utils.git").get_lvim_current_sha()) },
             opts = {
               position = "center",
               hl = "DashboardFooter",
@@ -70,7 +71,7 @@ function M.config()
           { type = "padding", val = 0 },
           {
             type = "text",
-            val = { nvim_version },
+            val = { ("%s %s"):format(lvim.ui.icons.ui.Gear, require("lvim.utils.git").get_nvim_version()) },
             opts = {
               position = "center",
               hl = "DashboardFooter",
@@ -137,12 +138,12 @@ function M.config()
       },
       buttons = {
         { "SPC w l", lvim.ui.icons.ui.History .. "  Load Last Session" },
-        { "SPC w f", lvim.ui.icons.ui.Stacks .. "  Sessions" },
+        { "SPC w f", lvim.ui.icons.ui.Target .. "  Sessions" },
         { "SPC p", lvim.ui.icons.ui.File .. "  Find File" },
         { "SPC w p", lvim.ui.icons.ui.Project .. "  Recent Projects" },
         { "SPC f f", lvim.ui.icons.ui.Files .. "  Recently Used Files" },
         { "SPC P S", lvim.ui.icons.ui.Gear .. "  Plugins" },
-        { "q", lvim.ui.icons.ui.TriangleShortArrowLeft .. "  Quit" },
+        { "q", lvim.ui.icons.ui.SignOut .. "  Quit" },
       },
     },
   })

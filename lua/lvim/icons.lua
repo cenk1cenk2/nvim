@@ -68,6 +68,7 @@ return {
     BoldDividerLeft = "",
     BoldDividerRight = "",
     BoldLineLeft = "▎",
+    LineMiddleEnd = "└",
     BookMark = "",
     BoxChecked = "",
     Bug = "",

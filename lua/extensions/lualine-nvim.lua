@@ -114,7 +114,7 @@ function M.config()
           "diagnostics",
           sources = { "nvim_diagnostic" },
           symbols = {
-            error = lvim.ui.icons.diagnostics.Error,
+            error = lvim.ui.icons.diagnostics.Error .. " ",
             warn = lvim.ui.icons.diagnostics.Warning .. " ",
             info = lvim.ui.icons.diagnostics.Information .. " ",
             hint = lvim.ui.icons.diagnostics.Hint .. " ",

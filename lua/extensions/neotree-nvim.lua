@@ -99,24 +99,24 @@ function M.config()
             padding = 0, -- extra padding on left hand side
             -- indent guides
             with_markers = true,
-            indent_marker = "│",
-            last_indent_marker = "└",
+            indent_marker = lvim.ui.icons.ui.LineMiddle,
+            last_indent_marker = lvim.ui.icons.ui.LineMiddleEnd,
             highlight = "NeoTreeIndentMarker",
             -- expander config, needed for nesting files
             with_expanders = nil, -- if nil and file nesting is enabled, will enable expanders
-            expander_collapsed = "",
-            expander_expanded = "",
+            expander_collapsed = lvim.ui.icons.ui.ChevronShortRight,
+            expander_expanded = lvim.ui.icons.ui.ChevronShortDown,
             expander_highlight = "NeoTreeExpander",
           },
           icon = {
-            folder_closed = "",
-            folder_open = "",
-            folder_empty = "",
-            default = "",
+            folder_closed = lvim.ui.icons.ui.Folder,
+            folder_open = lvim.ui.icons.ui.FolderOpen,
+            folder_empty = lvim.ui.icons.ui.EmptyFolder,
+            default = lvim.ui.icons.ui.File,
             highlight = "NeoTreeFileIcon",
           },
           modified = {
-            symbol = "[+]",
+            symbol = lvim.ui.icons.git.LineModified,
             highlight = "NeoTreeModified",
           },
           name = {
