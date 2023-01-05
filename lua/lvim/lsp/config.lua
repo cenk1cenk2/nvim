@@ -4,10 +4,10 @@ return {
     signs = {
       active = true,
       values = {
-        { name = "DiagnosticSignError", text = lvim.icons.diagnostics.Error },
-        { name = "DiagnosticSignWarn", text = lvim.icons.diagnostics.Warning },
-        { name = "DiagnosticSignHint", text = lvim.icons.diagnostics.Hint },
-        { name = "DiagnosticSignInfo", text = lvim.icons.diagnostics.Information },
+        { name = "DiagnosticSignError", text = lvim.ui.icons.diagnostics.Error },
+        { name = "DiagnosticSignWarn", text = lvim.ui.icons.diagnostics.Warning },
+        { name = "DiagnosticSignHint", text = lvim.ui.icons.diagnostics.Hint },
+        { name = "DiagnosticSignInfo", text = lvim.ui.icons.diagnostics.Information },
       },
     },
     virtual_text = {

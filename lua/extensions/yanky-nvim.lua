@@ -12,7 +12,6 @@ function M.config()
         event = "BufReadPost",
       }
     end,
-    register = "+",
     inject_to_configure = function()
       return {
         mapping = require("yanky.telescope.mapping"),
@@ -22,7 +21,7 @@ function M.config()
     end,
     setup = function(config)
       local mapping = config.inject.mapping
-      local register = config.register
+      local system_register = lvim.system_register
 
       return {
         ring = {
@@ -44,18 +43,18 @@ function M.config()
         picker = {
           telescope = {
             mappings = {
-              default = mapping.set_register(register),
+              default = mapping.set_register(system_register),
               i = {
                 ["<c-p>"] = mapping.put("p"),
                 ["<c-P>"] = mapping.put("P"),
                 ["<c-d>"] = mapping.delete(),
-                ["<c-r>"] = mapping.set_register(register),
+                ["<c-r>"] = mapping.set_register(system_register),
               },
               n = {
                 ["p"] = mapping.put("p"),
                 ["P"] = mapping.put("P"),
                 ["d"] = mapping.delete(),
-                ["r"] = mapping.set_register(register),
+                ["r"] = mapping.set_register(system_register),
               },
             },
           },

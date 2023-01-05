@@ -12,7 +12,7 @@ function M.config()
     end,
     setup = function()
       return {
-        selection_chars = "ASDFGQWERYXCVB",
+        selection_chars = lvim.selection_chars:upper(),
         use_winbar = "always",
         filter_rules = {
           bo = {
@@ -25,9 +25,9 @@ function M.config()
             end, lvim.disabled_filetypes),
           },
         },
-        fg_color = lvim.colors.fg,
-        current_win_hl_color = lvim.colors.green[300],
-        other_win_hl_color = lvim.colors.orange[300],
+        fg_color = lvim.ui.colors.fg,
+        current_win_hl_color = lvim.ui.colors.green[300],
+        other_win_hl_color = lvim.ui.colors.orange[300],
       }
     end,
     on_setup = function(config)

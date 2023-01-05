@@ -14,7 +14,7 @@ end
 function M.rebuild_and_update()
   M.rebuild_latest_neovim()
 
-  vim.cmd([[Lazy update]])
+  vim.cmd([[Lazy sync]])
 end
 
 function M.update_language_servers()

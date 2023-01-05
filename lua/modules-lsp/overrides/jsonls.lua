@@ -6,7 +6,7 @@ local schemas = {
   },
 }
 
-local opts = {
+return {
   settings = {
     json = {
       schemas = vim.tbl_deep_extend("force", require("schemastore").json.schemas(), schemas),
@@ -28,5 +28,3 @@ local opts = {
     },
   },
 }
-
-return opts

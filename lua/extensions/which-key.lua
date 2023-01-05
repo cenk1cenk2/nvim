@@ -27,10 +27,13 @@ function M.config()
       noremap = true, -- use `noremap` when creating keymaps
       nowait = true, -- use `nowait` when creating keymaps
     },
-    configure = function()
+    configure = function(_, fn)
       local wk = require("keys.which-key")
+
       lvim.wk.mappings = vim.deepcopy(wk.mappings)
       lvim.wk.vmappings = vim.deepcopy(wk.vmappings)
+
+      fn.add_disabled_filetypes({ "which_key" })
     end,
     inject_to_configure = function()
       return {
@@ -53,9 +56,9 @@ function M.config()
       },
       operators = { gc = "Comments" },
       icons = {
-        breadcrumb = lvim.icons.ui.ChevronRight, -- symbol used in the command line area that shows your active key combo
-        separator = lvim.icons.ui.BoldArrowRight .. " ", -- symbol used between a key and it's label
-        group = lvim.icons.ui.Plus, -- symbol prepended to a group
+        breadcrumb = lvim.ui.icons.ui.ChevronRight, -- symbol used in the command line area that shows your active key combo
+        separator = lvim.ui.icons.ui.BoldArrowRight .. " ", -- symbol used between a key and it's label
+        group = lvim.ui.icons.ui.Plus, -- symbol prepended to a group
       },
       popup_mappings = {
         scroll_down = "<c-d>", -- binding to scroll down inside the popup

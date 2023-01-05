@@ -32,19 +32,19 @@ function M.config()
     end,
     signs = {
       DapBreakpoint = {
-        text = lvim.icons.ui.Bug,
+        text = lvim.ui.icons.ui.Bug,
         texthl = "LspDiagnosticsSignError",
         linehl = "",
         numhl = "",
       },
       DapBreakpointRejected = {
-        text = lvim.icons.ui.Bug,
+        text = lvim.ui.icons.ui.Bug,
         texthl = "LspDiagnosticsSignHint",
         linehl = "",
         numhl = "",
       },
       DapStopped = {
-        text = lvim.icons.ui.BoldArrowRight,
+        text = lvim.ui.icons.ui.BoldArrowRight,
         texthl = "LspDiagnosticsSignInformation",
         linehl = "DiagnosticUnderlineInfo",
         numhl = "LspDiagnosticsSignInformation",

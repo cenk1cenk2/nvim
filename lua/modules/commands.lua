@@ -53,12 +53,6 @@ function M.setup()
         end,
       },
       {
-        name = "LvimChangelog",
-        fn = function()
-          require("lvim.core.telescope.custom-finders").view_lunarvim_changelog()
-        end,
-      },
-      {
         name = "LvimVersion",
         fn = function()
           print(require("lvim.utils.git").get_lvim_version())

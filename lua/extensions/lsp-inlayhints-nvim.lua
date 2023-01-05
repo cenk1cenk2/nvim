@@ -16,8 +16,8 @@ function M.config()
       inlay_hints = {
         parameter_hints = {
           show = true,
-          prefix = lvim.icons.ui.ChevronShortLeft .. " ",
-          separator = (" %s "):format(lvim.icons.ui.Ellipsis),
+          prefix = lvim.ui.icons.ui.ChevronShortLeft .. " ",
+          separator = (" %s "):format(lvim.ui.icons.ui.Ellipsis),
           remove_colon_start = false,
           remove_colon_end = true,
         },
@@ -25,7 +25,7 @@ function M.config()
           -- type and other hints
           show = true,
           prefix = "",
-          separator = (" %s "):format(lvim.icons.ui.Ellipsis),
+          separator = (" %s "):format(lvim.ui.icons.ui.Ellipsis),
           remove_colon_start = false,
           remove_colon_end = false,
         },

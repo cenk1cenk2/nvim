@@ -15,31 +15,31 @@ function M.config()
       signs = {
         add = {
           hl = "GitSignsAdd",
-          text = lvim.icons.ui.BoldLineLeft,
+          text = lvim.ui.icons.ui.BoldLineLeft,
           numhl = "GitSignsAddNr",
           linehl = "GitSignsAddLn",
         },
         change = {
           hl = "GitSignsChange",
-          text = lvim.icons.ui.BoldLineLeft,
+          text = lvim.ui.icons.ui.BoldLineLeft,
           numhl = "GitSignsChangeNr",
           linehl = "GitSignsChangeLn",
         },
         delete = {
           hl = "GitSignsDelete",
-          text = lvim.icons.ui.BoldDividerRight,
+          text = lvim.ui.icons.ui.BoldDividerRight,
           numhl = "GitSignsDeleteNr",
           linehl = "GitSignsDeleteLn",
         },
         topdelete = {
           hl = "GitSignsDelete",
-          text = lvim.icons.ui.BoldDividerRight,
+          text = lvim.ui.icons.ui.BoldDividerRight,
           numhl = "GitSignsDeleteNr",
           linehl = "GitSignsDeleteLn",
         },
         changedelete = {
           hl = "GitSignsChange",
-          text = lvim.icons.ui.BoldLineLeft,
+          text = lvim.ui.icons.ui.BoldLineLeft,
           numhl = "GitSignsChangeNr",
           linehl = "GitSignsChangeLn",
         },

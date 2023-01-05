@@ -13,15 +13,67 @@ function M.config()
         build = function()
           vim.cmd([[TSUpdate]])
         end,
-        lazy = false,
+        event = "BufReadPre",
+        cond = function()
+          if #vim.api.nvim_list_uis() == 0 then
+            Log:debug("Headless mode detected, skipping running setup for treesitter.")
+
+            return false
+          end
+
+          return true
+        end,
+        dependencies = {
+          {
+            "JoosepAlviste/nvim-ts-context-commentstring",
+            dependencies = { "nvim-treesitter/nvim-treesitter" },
+            event = "BufReadPost",
+          },
+          {
+            "p00f/nvim-ts-rainbow",
+            dependencies = { "nvim-treesitter/nvim-treesitter" },
+            event = "BufReadPost",
+          },
+          {
+            "windwp/nvim-ts-autotag",
+            dependencies = { "nvim-treesitter/nvim-treesitter" },
+            event = "InsertEnter",
+          },
+          -- {
+          --   "nvim-treesitter/playground",
+          --   after = { "nvim-treesitter" },
+          -- },
+        },
       }
     end,
-    condition = function()
-      if #vim.api.nvim_list_uis() == 0 then
-        Log:debug("Headless mode detected, skipping running setup for treesitter.")
+    configure = function(_, fn)
+      fn.append_to_setup("comment_nvim", {
+        pre_hook = function(ctx)
+          if vim.tbl_contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
+            return type ~= vim.bo.filetype
+          end) then
+            return
+          end
 
-        return false
-      end
+          local U = require("Comment.utils")
+
+          -- Determine whether to use linewise or blockwise commentstring
+          local type = ctx.ctype == U.ctype.linewise and "__default" or "__multiline"
+
+          -- Determine the location where to calculate commentstring from
+          local location = nil
+          if ctx.ctype == U.ctype.blockwise then
+            location = require("ts_context_commentstring.utils").get_cursor_location()
+          elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+            location = require("ts_context_commentstring.utils").get_visual_start_location()
+          end
+
+          return require("ts_context_commentstring.internal").calculate_commentstring({
+            key = type,
+            location = location,
+          })
+        end,
+      })
     end,
     setup = function()
       return {
@@ -93,37 +145,6 @@ function M.config()
     end,
     on_setup = function(config)
       require("nvim-treesitter.configs").setup(config.setup)
-    end,
-    on_done = function(config, fn)
-      if config.setup.context_commentstring and config.setup.context_commentstring.enable then
-        fn.append_to_setup("comment_nvim", {
-          pre_hook = function(ctx)
-            if vim.tbl_contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
-              return type ~= vim.bo.filetype
-            end) then
-              return
-            end
-
-            local U = require("Comment.utils")
-
-            -- Determine whether to use linewise or blockwise commentstring
-            local type = ctx.ctype == U.ctype.linewise and "__default" or "__multiline"
-
-            -- Determine the location where to calculate commentstring from
-            local location = nil
-            if ctx.ctype == U.ctype.blockwise then
-              location = require("ts_context_commentstring.utils").get_cursor_location()
-            elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
-              location = require("ts_context_commentstring.utils").get_visual_start_location()
-            end
-
-            return require("ts_context_commentstring.internal").calculate_commentstring({
-              key = type,
-              location = location,
-            })
-          end,
-        })
-      end
     end,
     wk = function(_, categories, fn)
       return {

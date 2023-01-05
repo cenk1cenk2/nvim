@@ -8,14 +8,6 @@ function M.config()
     plugin = function()
       return {
         "hrsh7th/nvim-cmp",
-        init = function()
-          require("utils.setup").plugin_init("cmp")
-          require("utils.setup").plugin_init("cmp_extensions")
-        end,
-        config = function()
-          require("utils.setup").plugin_configure("cmp")
-          require("utils.setup").plugin_configure("cmp_extensions")
-        end,
         lazy = { "InsertEnter", "CmdlineEnter" },
         dependencies = {
           { "hrsh7th/cmp-nvim-lsp" },
@@ -75,8 +67,24 @@ function M.config()
         formatting = {
           fields = { "kind", "abbr", "menu" },
           max_width = 0,
-          kind_icons = lvim.icons.kind,
-          source_names = {},
+          kind_icons = lvim.ui.icons.kind,
+          source_names = {
+            nvim_lsp = "(LSP)",
+            emoji = "(Emoji)",
+            path = "(Path)",
+            calc = "(Calc)",
+            cmp_tabnine = "(Tabnine)",
+            vsnip = "(Snippet)",
+            luasnip = "(Snippet)",
+            buffer = "(Buffer)",
+            fuzzy_buffer = "(FZF)",
+            git = "(GIT)",
+            omni = "(OMNI)",
+            npm = "(NPM)",
+            rg = "(RG)",
+            tmux = "(TMUX)",
+            nvim_lsp_signature_help = "(SH)",
+          },
           duplicates = {
             buffer = 1,
             path = 1,
@@ -89,35 +97,34 @@ function M.config()
 
             local max_width = current_setup.formatting.max_width
             if max_width ~= 0 and #vim_item.abbr > max_width then
-              vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. lvim.icons.ui.Ellipsis
+              vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. lvim.ui.icons.ui.Ellipsis
             end
-            if lvim.ui.use_icons then
-              vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind]
 
-              if entry.source.name == "copilot" then
-                vim_item.kind = lvim.icons.git.Octoface
-                vim_item.kind_hl_group = "CmpItemKindCopilot"
-              end
+            vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind]
 
-              if entry.source.name == "cmp_tabnine" then
-                vim_item.kind = lvim.icons.misc.Robot
-                vim_item.kind_hl_group = "CmpItemKindTabnine"
-              end
+            if entry.source.name == "copilot" then
+              vim_item.kind = lvim.ui.icons.git.Octoface
+              vim_item.kind_hl_group = "CmpItemKindCopilot"
+            end
 
-              if entry.source.name == "crates" then
-                vim_item.kind = lvim.icons.misc.Package
-                vim_item.kind_hl_group = "CmpItemKindCrate"
-              end
+            if entry.source.name == "cmp_tabnine" then
+              vim_item.kind = lvim.ui.icons.misc.Robot
+              vim_item.kind_hl_group = "CmpItemKindTabnine"
+            end
 
-              if entry.source.name == "lab.quick_data" then
-                vim_item.kind = lvim.icons.misc.CircuitBoard
-                vim_item.kind_hl_group = "CmpItemKindConstant"
-              end
+            if entry.source.name == "crates" then
+              vim_item.kind = lvim.ui.icons.misc.Package
+              vim_item.kind_hl_group = "CmpItemKindCrate"
+            end
 
-              if entry.source.name == "emoji" then
-                vim_item.kind = lvim.icons.misc.Smiley
-                vim_item.kind_hl_group = "CmpItemKindEmoji"
-              end
+            if entry.source.name == "lab.quick_data" then
+              vim_item.kind = lvim.ui.icons.misc.CircuitBoard
+              vim_item.kind_hl_group = "CmpItemKindConstant"
+            end
+
+            if entry.source.name == "emoji" then
+              vim_item.kind = lvim.ui.icons.misc.Smiley
+              vim_item.kind_hl_group = "CmpItemKindEmoji"
             end
             vim_item.menu = current_setup.formatting.source_names[entry.source.name]
             vim_item.dup = current_setup.formatting.duplicates[entry.source.name] or current_setup.formatting.duplicates_default
@@ -133,7 +140,24 @@ function M.config()
           completion = cmp.config.window.bordered({ border = lvim.ui.border }),
           documentation = cmp.config.window.bordered({ border = lvim.ui.border }),
         },
-        sources = {},
+        sources = {
+          { name = "nvim_lsp" },
+          { name = "path" },
+          -- { name = "nvim_lsp_signature_help" },
+          { name = "luasnip" },
+          { name = "nvim_lua" },
+          -- { name = "omni" },
+          { name = "buffer" },
+          -- { name = "fuzzy_buffer" },
+
+          { name = "calc" },
+          { name = "env" },
+
+          { name = "git" },
+          { name = "npm" },
+
+          { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
+        },
         mapping = cmp.mapping.preset.insert({
           ["<C-k>"] = cmp.mapping.select_prev_item(),
           ["<C-j>"] = cmp.mapping.select_next_item(),
@@ -194,14 +218,94 @@ function M.config()
         }),
       }
     end,
-    per_ft = {},
+    extended_setup = {
+      per_ft = {},
+      extensions = {
+        ["cmp_git"] = {
+          name = "git",
+          -- defaults
+          filetypes = { "gitcommit" },
+          remotes = { "upstream", "origin" },
+        },
+        ["cmp-npm"] = {
+          name = "npm",
+          filetypes = { "json" },
+        },
+      },
+    },
     on_setup = function(config)
       require("cmp").setup(config.setup)
+
+      -- extensions
+      for name, e in pairs(config.extended_setup.extensions) do
+        local extension = require(name)
+
+        extension.setup(e)
+      end
+
+      -- setup lua snip
+      local utils = require("lvim.utils")
+      local paths = {}
+
+      table.insert(paths, join_paths(require("lvim.plugin-loader").plugins_dir, "friendly-snippets"))
+
+      local user_snippets = join_paths(get_config_dir(), "snippets")
+      if utils.is_directory(user_snippets) then
+        table.insert(paths, user_snippets)
+      end
+
+      require("luasnip.loaders.from_lua").lazy_load()
+      require("luasnip.loaders.from_vscode").lazy_load({ paths = paths })
+      require("luasnip.loaders.from_snipmate").lazy_load()
     end,
     on_done = function(config)
-      for key, value in pairs(config.per_ft) do
-        vim.cmd(string.format("autocmd FileType %s lua require('cmp').setup.buffer(%s)", key, vim.inspect(value, { newline = "\n\\" })))
+      local cmp = config.inject.cmp
+      local setup = require("utils.setup")
+
+      for key, value in pairs(setup.evaluate_property(config.extended_setup.per_ft, config)) do
+        setup.define_autocmds({
+          {
+            { "FileType" },
+            {
+              group = "_cmp_per_ft",
+              pattern = key,
+              callback = function()
+                cmp.setup.buffer(value)
+              end,
+            },
+          },
+        })
       end
+
+      -- command line
+      cmp.setup.cmdline(":", {
+        mapping = cmp.mapping.preset.cmdline({}),
+        sources = {
+          { name = "cmdline" },
+        },
+      })
+
+      -- fuzzy buffer
+      cmp.setup.cmdline("/", {
+        mapping = cmp.mapping.preset.cmdline({}),
+        sources = cmp.config.sources({
+          { name = "fuzzy_buffer" },
+        }),
+      })
+
+      cmp.setup.cmdline("?", {
+        mapping = cmp.mapping.preset.cmdline({}),
+        sources = cmp.config.sources({
+          { name = "fuzzy_buffer" },
+        }),
+      })
+
+      -- dap
+      cmp.setup.filetype({ "dap-repl", "dapui_watches" }, {
+        sources = {
+          { name = "dap" },
+        },
+      })
     end,
   })
 end

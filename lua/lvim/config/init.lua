@@ -56,14 +56,9 @@ function M:load(config_path)
 
   Log:debug(("Loaded user configuration at: %s"):format(config_path))
 
-  local builtins = require("lvim.core.builtins")
-  builtins.config(self)
+  require("extensions").config(self)
 
-  local extensions = require("extensions")
-  extensions.config(self)
-
-  local modules = require("modules")
-  modules.config(self)
+  require("modules").config(self)
 
   autocmds.define_autocmds(lvim.autocommands)
 

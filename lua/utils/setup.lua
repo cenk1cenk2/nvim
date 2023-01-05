@@ -25,6 +25,19 @@ function M.load_mappings(mappings)
   keymappings.load(mappings)
 end
 
+function M.create_commands(collection)
+  for _, cmd in pairs(collection) do
+    local opts = vim.tbl_deep_extend("force", { force = true }, cmd.opts or {})
+    vim.api.nvim_create_user_command(cmd.name, cmd.fn, opts)
+  end
+end
+
+function M.set_option(arr)
+  for k, v in pairs(arr) do
+    vim.o[k] = v
+  end
+end
+
 ---
 ---@param opts table
 function M.legacy_setup(opts)
@@ -78,7 +91,8 @@ function M.define_extension(extension_name, enabled, config)
     wk = { config.wk, { "t", "f" }, true },
     wk_v = { config.wk_v, { "t", "f" }, true },
     legacy_setup = { config.legacy_setup, "t", true },
-    setup = { config.legacy_setup, { "t", "f" }, true },
+    setup = { config.setup, { "t", "f" }, true },
+    extended_setup = { config.extended_setup, { "t", "f" }, true },
     on_setup = { config.on_setup, "f", true },
     hl = { config.hl, { "f", "t" }, true },
     signs = { config.signs, { "f", "t" }, true },
@@ -141,8 +155,8 @@ function M.define_extension(extension_name, enabled, config)
 end
 
 ---@param definitions table contains a tuple of event, opts, see `:h nvim_create_autocmd`
-function M.define_autocmds(definitions)
-  require("lvim.core.autocmds").define_autocmds(definitions)
+function M.define_autocmds(...)
+  require("lvim.core.autocmds").define_autocmds(...)
 end
 
 ---
@@ -220,7 +234,7 @@ function M.init(config)
     end
   end
 
-  if config ~= nil and config.signs ~= nil and lvim.ui.use_icons then
+  if config ~= nil and config.signs ~= nil then
     local signs = M.evaluate_property(config.signs, config)
 
     for key, value in pairs(signs) do
@@ -229,11 +243,11 @@ function M.init(config)
   end
 
   if config ~= nil and config.commands ~= nil then
-    require("utils.command").create_commands(M.evaluate_property(config.commands, config))
+    M.create_commands(M.evaluate_property(config.commands, config))
   end
 
   if config ~= nil and config.nvim_opts ~= nil then
-    require("utils.command").set_option(config.nvim_opts)
+    M.set_option(config.nvim_opts)
   end
 
   if config ~= nil and config.legacy_setup ~= nil then
@@ -267,6 +281,12 @@ function M.configure(config)
     end
 
     lvim.extensions[config.name].current_setup = vim.deepcopy(config.setup)
+  end
+
+  if config ~= nil and config.extended_setup ~= nil then
+    config.extended_setup = M.evaluate_property(config.extended_setup, config, M.fn)
+
+    lvim.extensions[config.name].current_extended_setup = vim.deepcopy(config.extended_setup)
   end
 
   if config ~= nil and config.on_setup ~= nil then

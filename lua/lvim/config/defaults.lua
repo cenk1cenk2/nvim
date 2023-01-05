@@ -1,8 +1,6 @@
 lvim = {
   leader = "space",
   colorscheme = "onedarker",
-  icons = require("lvim.icons"),
-  colors = require("onedarker.colors"),
   format_on_save = {
     ---@usage pattern string pattern used for the autocommand (Default: '*')
     pattern = "*",
@@ -11,23 +9,16 @@ lvim = {
     ---@usage filter func to select client
     filter = require("lvim.lsp.utils").format_filter,
   },
-  keys = {},
 
   ui = {
-    use_icons = true,
+    icons = require("lvim.icons"),
+    colors = require("onedarker.colors"),
     border = "single",
     transparent_window = false,
   },
 
-  builtin = {
-    notify = {
-      active = true,
-    },
-  },
-  extensions = {},
-  plugins = {},
-
-  autocommands = {},
+  selection_chars = "qwertyuiopzxcvbnmasdfghjkl",
+  system_register = "+",
 
   log = {
     ---@usage can be { "trace", "debug", "info", "warn", "error", "fatal" },
@@ -46,8 +37,6 @@ lvim = {
     override_notify = true,
   },
 
-  lsp_wrapper = {},
-
   store = {
     set_store = function(key, value)
       lvim.store[key] = value
@@ -57,17 +46,9 @@ lvim = {
     end,
   },
 
-  fn = {},
-
-  wk = {
-    mappings = {},
-    vmappings = {},
-  },
-
-  -- add disabled filetypes function was a bit unreliable due to cached loading of this object
   disabled_filetypes = {
-    "neo-tree",
     "terminal",
+    "checkhealth",
     "packer",
     "lazy",
     "lspinfo",
@@ -78,6 +59,17 @@ lvim = {
     "diff",
     "help",
     "prompt",
+  },
+
+  keys = {},
+  extensions = {},
+  plugins = {},
+  autocommands = {},
+  lsp_wrapper = {},
+  fn = {},
+  wk = {
+    mappings = {},
+    vmappings = {},
   },
 }
 

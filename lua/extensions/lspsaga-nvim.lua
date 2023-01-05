@@ -41,7 +41,7 @@ function M.config()
       --   return string.format("%s [ %s ]: ", icon, entry.source)
       -- end,
       -- use emoji lightbulb in default
-      code_action_icon = lvim.icons.ui.LightbulbColored,
+      code_action_icon = lvim.ui.icons.ui.LightbulbColored,
       -- if true can press number to execute the codeaction in codeaction window
       code_action_num_shortcut = true,
       -- same as nvim-lightbulb but async
@@ -72,7 +72,7 @@ function M.config()
       symbol_in_winbar = {
         in_custom = false,
         enable = true,
-        separator = (" %s "):format(lvim.icons.ui.ChevronShortRight),
+        separator = (" %s "):format(lvim.ui.icons.ui.ChevronShortRight),
         show_file = true,
       },
       rename_action_quit = "<C-c>",

@@ -28,7 +28,7 @@ function M.config()
         javascript = { "string", "template_string" },
         java = false,
       },
-      disable_filetype = { "TelescopePrompt", "spectre_panel" },
+      disable_filetype = lvim.disabled_filetypes,
       ignored_next_char = string.gsub([[ [%w%%%'%[%"%.] ]], "%s+", ""),
       enable_moveright = true,
       ---@usage disable when recording or executing a macro
@@ -48,9 +48,9 @@ function M.config()
         pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
         offset = 0, -- Offset from pattern match
         end_key = "$",
-        keys = "qwertyuiopzxcvbnmasdfghjkl",
+        keys = lvim.selection_chars,
         check_comma = true,
-        highlight = "Substitute",
+        highlight = "AutoPairsFastWrap",
         highlight_grey = "",
       },
     },

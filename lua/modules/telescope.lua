@@ -44,4 +44,14 @@ function M.rg_grep_buffer()
   return require("telescope.builtin").live_grep({ search_dirs = { "%:p" } })
 end
 
+-- Smartly opens either git_files or find_files, depending on whether the working directory is
+-- contained in a Git repo.
+function M.find_project_files()
+  -- local ok = pcall(builtin.git_files)
+
+  -- if not ok then
+  require("telescope.builtin").find_files()
+  -- end
+end
+
 return M

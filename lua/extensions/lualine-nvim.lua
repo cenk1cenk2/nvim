@@ -50,27 +50,27 @@ function M.config()
             return mode_name[vim.fn.mode()]
           end,
           padding = { left = 1, right = 1 },
-          color = { fg = lvim.colors.black },
+          color = { fg = lvim.ui.colors.black },
         },
         branch = {
           "b:gitsigns_head",
-          icon = lvim.icons.git.Branch,
-          color = { fg = lvim.colors.black, bg = lvim.colors.yellow[300] },
+          icon = lvim.ui.icons.git.Branch,
+          color = { fg = lvim.ui.colors.black, bg = lvim.ui.colors.yellow[300] },
           cond = conditions.hide_in_width,
         },
         filetype = {
           "filetype",
           cond = conditions.hide_in_width,
           color = {
-            fg = lvim.colors.fg,
-            bg = lvim.colors.bg[300],
+            fg = lvim.ui.colors.fg,
+            bg = lvim.ui.colors.bg[300],
           },
         },
         filename = {
           "filename",
           color = {
-            fg = lvim.colors.fg,
-            bg = lvim.colors.bg[300],
+            fg = lvim.ui.colors.fg,
+            bg = lvim.ui.colors.bg[300],
           },
         },
         diff = {
@@ -82,14 +82,14 @@ function M.config()
               return { added = gitsigns.added, modified = gitsigns.changed, removed = gitsigns.removed }
             end
           end,
-          symbols = { added = lvim.icons.git.LineAdded .. " ", modified = lvim.icons.git.LineModified .. " ", removed = lvim.icons.git.LineModified .. " " },
+          symbols = { added = lvim.ui.icons.git.LineAdded .. " ", modified = lvim.ui.icons.git.LineModified .. " ", removed = lvim.ui.icons.git.LineModified .. " " },
           diff_color = {
-            added = { fg = lvim.colors.green[600] },
-            modified = { fg = lvim.colors.blue[600] },
-            removed = { fg = lvim.colors.red[600] },
+            added = { fg = lvim.ui.colors.green[600] },
+            modified = { fg = lvim.ui.colors.blue[600] },
+            removed = { fg = lvim.ui.colors.red[600] },
           },
           color = {
-            bg = lvim.colors.bg[300],
+            bg = lvim.ui.colors.bg[300],
           },
           cond = conditions.hide_in_width,
         },
@@ -105,8 +105,8 @@ function M.config()
             return ""
           end,
           color = {
-            fg = lvim.colors.green[300],
-            bg = lvim.colors.bg[300],
+            fg = lvim.ui.colors.green[300],
+            bg = lvim.ui.colors.bg[300],
           },
           cond = conditions.hide_in_width,
         },
@@ -114,24 +114,24 @@ function M.config()
           "diagnostics",
           sources = { "nvim_diagnostic" },
           symbols = {
-            error = lvim.icons.diagnostics.Error,
-            warn = lvim.icons.diagnostics.Warning .. " ",
-            info = lvim.icons.diagnostics.Information .. " ",
-            hint = lvim.icons.diagnostics.Hint .. " ",
+            error = lvim.ui.icons.diagnostics.Error,
+            warn = lvim.ui.icons.diagnostics.Warning .. " ",
+            info = lvim.ui.icons.diagnostics.Information .. " ",
+            hint = lvim.ui.icons.diagnostics.Hint .. " ",
           },
           cond = conditions.hide_in_width,
         },
         treesitter = {
           function()
-            return lvim.icons.ui.Tree
+            return lvim.ui.icons.ui.Tree
           end,
           color = function()
             local buf = vim.api.nvim_get_current_buf()
             local ts = vim.treesitter.highlighter.active[buf]
 
             return {
-              fg = ts and not vim.tbl_isempty(ts) and lvim.colors.green[300] or lvim.colors.red[300],
-              bg = lvim.colors.bg[300],
+              fg = ts and not vim.tbl_isempty(ts) and lvim.ui.colors.green[300] or lvim.ui.colors.red[300],
+              bg = lvim.ui.colors.bg[300],
             }
           end,
           cond = conditions.hide_in_width,
@@ -143,7 +143,7 @@ function M.config()
             if next(buf_clients) == nil then
               -- TODO: clean up this if statement
               if type(msg) == "boolean" or #msg == 0 then
-                return lvim.icons.ui.Close
+                return lvim.ui.icons.ui.Close
               end
 
               return msg
@@ -170,16 +170,16 @@ function M.config()
             local lsps = table.concat(buf_client_names, ", ")
 
             if supported_linters and not vim.tbl_isempty(supported_linters) then
-              lsps = lsps .. (" %s "):format(lvim.icons.ui.DoubleChevronRight) .. table.concat(supported_linters, ", ")
+              lsps = lsps .. (" %s "):format(lvim.ui.icons.ui.DoubleChevronRight) .. table.concat(supported_linters, ", ")
             end
 
             if supported_formatters and not vim.tbl_isempty(supported_formatters) then
-              lsps = lsps .. (" %s "):format(lvim.icons.ui.DoubleChevronRight) .. table.concat(supported_formatters, ", ")
+              lsps = lsps .. (" %s "):format(lvim.ui.icons.ui.DoubleChevronRight) .. table.concat(supported_formatters, ", ")
             end
 
             return lsps
           end,
-          color = { fg = lvim.colors.fg, bg = lvim.colors.bg[300] },
+          color = { fg = lvim.ui.colors.fg, bg = lvim.ui.colors.bg[300] },
           cond = conditions.hide_in_width,
         },
         location = { "location", cond = conditions.hide_in_width, color = {} },
@@ -214,7 +214,7 @@ function M.config()
             return chars[index]
           end,
           padding = { left = 0, right = 0 },
-          color = { fg = lvim.colors.yellow[300], bg = lvim.colors.grey[300] },
+          color = { fg = lvim.ui.colors.yellow[300], bg = lvim.ui.colors.grey[300] },
           cond = nil,
         },
       }
@@ -249,7 +249,7 @@ function M.config()
             cond = function()
               return require("noice").api.statusline.mode.has()
             end,
-            color = { fg = lvim.colors.yellow[600] },
+            color = { fg = lvim.ui.colors.yellow[600] },
           },
           {
             function()
@@ -258,7 +258,7 @@ function M.config()
             cond = function()
               return require("noice").api.statusline.command.has()
             end,
-            color = { fg = lvim.colors.blue[600] },
+            color = { fg = lvim.ui.colors.blue[600] },
           },
         }
       else
@@ -277,7 +277,7 @@ function M.config()
         globalstatus = true,
         options = {
           theme = "auto",
-          icons_enabled = lvim.ui.use_icons,
+          icons_enabled = true,
           component_separators = { left = "", right = "" },
           section_separators = { left = "", right = "" },
           disabled_filetypes = lvim.disabled_filetypes,
@@ -297,7 +297,7 @@ function M.config()
             {
               require("lazy.status").updates,
               cond = require("lazy.status").has_updates,
-              color = { fg = lvim.colors.magenta[600] },
+              color = { fg = lvim.ui.colors.magenta[600] },
             },
             components.diagnostics,
             components.treesitter,

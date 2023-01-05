@@ -1,6 +1,7 @@
 local M = {}
 
 local extensions = {
+  "nvim-notify",
   "ui",
   -- core
   "which-key",
@@ -9,9 +10,7 @@ local extensions = {
   "lualine-nvim",
   "telescope",
   "cmp",
-  "cmp-extensions",
   "treesitter",
-  "treesitter-extensions",
   "lsp",
   "mason",
   "mason-nvim-dap",

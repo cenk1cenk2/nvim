@@ -15,14 +15,6 @@ function M.config()
           lazy = false,
         },
         {
-          "rcarriga/nvim-notify",
-          config = function()
-            require("lvim.core.notify").setup()
-          end,
-          event = "VeryLazy",
-          enabled = lvim.builtin.notify.active,
-        },
-        {
           "nvim-lua/popup.nvim",
           event = "VeryLazy",
         },
@@ -30,7 +22,6 @@ function M.config()
         {
           "kyazdani42/nvim-web-devicons",
           lazy = false,
-          enabled = lvim.ui.use_icons,
         },
         {
           "MunifTanjim/nui.nvim",

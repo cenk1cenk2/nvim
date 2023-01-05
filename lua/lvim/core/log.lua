@@ -124,15 +124,6 @@ function Log:configure_notifications(notif_handle)
       { "msg" },
       { blacklist_all = true }
     ),
-    -- This should probably not be hard-coded
-    params_map = {
-      icon = "icon",
-      keep = "keep",
-      on_open = "on_open",
-      on_close = "on_close",
-      timeout = "timeout",
-      title = "title",
-    },
     impl = notif_handle,
   })
 

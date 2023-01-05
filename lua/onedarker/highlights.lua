@@ -634,6 +634,10 @@ hl.plugins.hlslens = {
   HlSearchFloat = { link = "IncSearch" },
 }
 
+hl.plugins.autopairs = {
+  AutoPairsFastWrap = { bg = c.magenta[600] },
+}
+
 function M.load_highlights(ns, highlights, loaded)
   for group_name, group_settings in pairs(highlights) do
     -- table.insert(loaded, group_name)

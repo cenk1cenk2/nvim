@@ -95,8 +95,8 @@ function M.config()
           -- },
         },
         color_icons = true, -- whether or not to add the filetype icon highlights
-        show_buffer_icons = lvim.ui.use_icons, -- disable filetype icons for buffers
-        show_buffer_close_icons = lvim.ui.use_icons,
+        show_buffer_icons = true, -- disable filetype icons for buffers
+        show_buffer_close_icons = true,
         show_close_icon = false,
         show_tab_indicators = true,
         persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
@@ -190,10 +190,8 @@ end
 
 function M.diagnostics_indicator(num, _, diagnostics, _)
   local result = {}
-  local symbols = { error = "", warning = "", info = "" }
-  if not lvim.ui.use_icons then
-    return "(" .. num .. ")"
-  end
+  local symbols = { error = lvim.ui.icons.diagnostics.Error, warning = lvim.ui.icons.diagnostics.Warning, info = lvim.ui.icons.diagnostics.Information }
+
   for name, count in pairs(diagnostics) do
     if symbols[name] and count > 0 then
       table.insert(result, symbols[name] .. " " .. count)

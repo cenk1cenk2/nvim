@@ -1,4 +1,4 @@
-local opts = {
+return {
   filetypes = {
     "yaml",
     "!yaml.ansible",
@@ -41,5 +41,3 @@ local opts = {
     },
   },
 }
-
-return opts

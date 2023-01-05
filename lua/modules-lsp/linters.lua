@@ -9,10 +9,6 @@ function M.setup()
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
     },
 
-    -- {
-    --   name = "misspell",
-    -- },
-
     {
       name = "markdownlint",
       filetypes = { "markdown" },
@@ -30,10 +26,6 @@ function M.setup()
       extra_args = { "--max-line-length", "179" },
     },
 
-    -- {
-    --   name = "codespell",
-    -- },
-
     {
       name = "cspell",
       extra_args = { "-c", vim.fn.expand("~/.config/nvim/utils/linter-config/.cspell.json") },
@@ -41,10 +33,6 @@ function M.setup()
         diagnostic.severity = vim.diagnostic.severity.HINT
       end,
     },
-    -- {
-    --   name = "ansiblelint",
-    --   filetypes = { "yaml.ansible" },
-    -- },
 
     -- {
     --   name = "djlint",

@@ -20,11 +20,8 @@ function M.config()
         "dapui_repl",
       })
     end,
-    on_init = function(config)
-      config.set_store("setup", false)
-    end,
     setup = {
-      icons = { expanded = lvim.icons.ui.ChevronShortDown, collapsed = lvim.icons.ui.ChevronShortRight },
+      icons = { expanded = lvim.ui.icons.ui.ChevronShortDown, collapsed = lvim.ui.icons.ui.ChevronShortRight },
       mappings = {
         -- Use a table to apply multiple mappings
         expand = { "<CR>", "<2-LeftMouse>" },
@@ -96,7 +93,6 @@ function M.config()
       end
 
       require("dapui").setup(config.setup)
-      config.set_store("setup", true)
     end,
     wk = function(_, categories)
       return {

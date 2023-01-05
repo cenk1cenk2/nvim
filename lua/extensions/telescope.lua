@@ -28,6 +28,7 @@ function M.config()
     end,
     inject_to_configure = function()
       return {
+        telescope = require("telescope"),
         actions = require("telescope.actions"),
         previewers = require("telescope.previewers"),
         sorters = require("telescope.sorters"),
@@ -121,8 +122,8 @@ function M.config()
           color_devicons = true,
           use_less = true,
           set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-          prompt_prefix = lvim.icons.ui.Telescope .. " ",
-          selection_caret = lvim.icons.ui.Forward .. " ",
+          prompt_prefix = lvim.ui.icons.ui.Telescope .. " ",
+          selection_caret = lvim.ui.icons.ui.Forward .. " ",
           entry_prefix = "  ",
         },
         pickers = {
@@ -189,16 +190,11 @@ function M.config()
       require("telescope").setup(config.setup)
     end,
     on_done = function(config)
-      if lvim.builtin.notify.active then
-        pcall(function()
-          require("telescope").load_extension("notify")
-        end)
-      end
+      local telescope = config.inject.telescope
+      telescope.load_extension("notify")
 
       if config.current_setup.extensions and config.current_setup.extensions.fzf then
-        pcall(function()
-          require("telescope").load_extension("fzf")
-        end)
+        telescope.load_extension("fzf")
       end
     end,
     define_global_fn = function(config)
@@ -209,12 +205,12 @@ function M.config()
       }
     end,
     wk = function(_, categories)
-      local custom_finders = require("modules.telescope")
+      local finders = require("modules.telescope")
 
       return {
         ["p"] = {
           function()
-            require("lvim.core.telescope.custom-finders").find_project_files()
+            finders.find_project_files()
           end,
           "find file",
         },
@@ -224,35 +220,35 @@ function M.config()
           [":"] = { ":Telescope command_history<CR>", "search command history" },
           A = { ":Telescope builtin<CR>", "telescope list builtin finders" },
           b = { ":Telescope current_buffer_fuzzy_find<CR>", "search current buffer fuzzy" },
+          B = {
+            function()
+              finders.rg_grep_buffer()
+            end,
+            "search current buffer grep",
+          },
+          d = {
+            function()
+              finders.rg_dirty()
+            end,
+            "dirty fuzzy grep",
+          },
           f = { ":Telescope oldfiles<CR>", "search file history" },
           g = { ":Telescope grep_string<CR>", "grep string under cursor" },
           j = { ":Telescope jumplist<CR>", "list jumps" },
           s = { ":Telescope spell_suggest<CR>", "spell suggest" },
-          T = { ":Telescope live_grep<CR>", "grep with regexp" },
-          B = {
-            function()
-              custom_finders.rg_grep_buffer()
-            end,
-            "search current buffer grep",
-          },
           r = {
             function()
-              custom_finders.rg_interactive()
+              finders.rg_interactive()
             end,
             "ripgrep interactive",
           },
-          d = {
-            function()
-              custom_finders.rg_dirty()
-            end,
-            "dirty fuzzy grep",
-          },
           t = {
             function()
-              custom_finders.rg_string()
+              finders.rg_string()
             end,
             "grep string",
           },
+          T = { ":Telescope live_grep<CR>", "grep with regexp" },
         },
 
         [categories.ACTIONS] = {

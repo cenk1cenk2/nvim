@@ -21,11 +21,13 @@ function M.config()
     configure = function(_, fn)
       fn.add_disabled_filetypes({
         "neo-tree",
+        "neo-tree-preview",
+        "neo-tree-popup",
       })
     end,
     setup = function()
       local Log = require("lvim.core.log")
-      local system_registry = "+"
+      local system_register = lvim.system_register
 
       local function get_telescope_options(state, opts)
         return vim.tbl_extend("force", opts, {
@@ -125,16 +127,16 @@ function M.config()
           git_status = {
             symbols = {
               -- Change type
-              added = lvim.icons.git.FileAdded,
-              deleted = lvim.icons.git.FileDeleted,
-              modified = lvim.icons.git.FileModified,
-              renamed = lvim.icons.git.FileRenamed,
+              added = lvim.ui.icons.git.FileAdded,
+              deleted = lvim.ui.icons.git.FileDeleted,
+              modified = lvim.ui.icons.git.FileModified,
+              renamed = lvim.ui.icons.git.FileRenamed,
               -- Status type
-              untracked = lvim.icons.git.FileUntracked,
-              ignored = lvim.icons.git.FileIgnored,
-              unstaged = lvim.icons.git.FileUnstaged,
-              staged = lvim.icons.git.FileStaged,
-              conflict = lvim.icons.git.FileConflict,
+              untracked = lvim.ui.icons.git.FileUntracked,
+              ignored = lvim.ui.icons.git.FileIgnored,
+              unstaged = lvim.ui.icons.git.FileUnstaged,
+              staged = lvim.ui.icons.git.FileStaged,
+              conflict = lvim.ui.icons.git.FileConflict,
             },
           },
         },
@@ -254,14 +256,14 @@ function M.config()
             copy_filename = function(state)
               local node = state.tree:get_node()
 
-              vim.fn.setreg(system_registry, node.name, "c")
+              vim.fn.setreg(system_register, node.name, "c")
             end,
             copy_filepath = function(state)
               local node = state.tree:get_node()
               local full_path = node.path
               local relative_path = full_path:sub(#state.path + 2)
 
-              vim.fn.setreg(system_registry, relative_path, "c")
+              vim.fn.setreg(system_register, relative_path, "c")
             end,
             run_command = function(state)
               local node = state.tree:get_node()

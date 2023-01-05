@@ -28,7 +28,7 @@ function M.config()
         -- Can be a string or a function that returns a string.
         select_prompt = "legend",
         -- Character to use to separate columns in the UI
-        col_separator_char = lvim.icons.ui.LineMiddle,
+        col_separator_char = lvim.ui.icons.ui.LineMiddle,
         -- Optionally pass a custom formatter function. This function
         -- receives the item as a parameter and the mode that legendary
         -- was triggered from (e.g. `function(item, mode): string[]`)

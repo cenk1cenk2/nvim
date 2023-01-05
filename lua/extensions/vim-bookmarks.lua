@@ -14,8 +14,8 @@ function M.config()
     end,
     legacy_setup = {
       -- bookmark_no_default_key_mappings = 0
-      bookmark_annotation_sign = lvim.icons.ui.List,
-      bookmark_sign = lvim.icons.ui.BookMark,
+      bookmark_annotation_sign = lvim.ui.icons.ui.List,
+      bookmark_sign = lvim.ui.icons.ui.BookMark,
       -- bookmark_save_per_working_dir = 0
       -- bookmark_auto_save = 1
       -- bookmark_manage_per_buffer = 0

@@ -17,16 +17,16 @@ function M.config()
         -- keywords recognized as todo comments
         keywords = {
           FIX = {
-            icon = lvim.icons.diagnostics.Debug, -- icon used for the sign, and in search results
+            icon = lvim.ui.icons.diagnostics.Debug, -- icon used for the sign, and in search results
             color = "error", -- can be a hex color, or a named color (see below)
             alt = { "FIXME", "BUG", "FIXIT", "FIX", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
             -- signs = false, -- configure signs for some keywords individually
           },
-          TODO = { icon = lvim.icons.misc.Watch, color = "info" },
-          HACK = { icon = lvim.icons.misc.Squirrel, color = "warning" },
-          WARN = { icon = lvim.icons.diagnostics.Warning, color = "warning", alt = { "WARNING", "XXX" } },
-          PERF = { icon = lvim.icons.diagnostics.Trace, alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
-          NOTE = { icon = lvim.icons.ui.Note, color = "hint", alt = { "INFO" } },
+          TODO = { icon = lvim.ui.icons.misc.Watch, color = "info" },
+          HACK = { icon = lvim.ui.icons.misc.Squirrel, color = "warning" },
+          WARN = { icon = lvim.ui.icons.diagnostics.Warning, color = "warning", alt = { "WARNING", "XXX" } },
+          PERF = { icon = lvim.ui.icons.diagnostics.Trace, alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+          NOTE = { icon = lvim.ui.icons.ui.Note, color = "hint", alt = { "INFO" } },
         },
         -- highlighting of the line containing the todo comment
         -- * before: highlights before the keyword (typically comment characters)

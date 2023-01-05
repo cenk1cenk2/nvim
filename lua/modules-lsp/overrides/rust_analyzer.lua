@@ -1,7 +1,7 @@
 -- local rust_tools_ok, rust_tools = pcall(require, "rust-tools")
 -- local Log = require "lvim.core.log"
 
-local opts = {
+return {
   -- Needed for inlayHints. Merge this table with your settings or copy
   -- it from the source if you want to add your own init_options.
   on_init = function(client, bufnr)
@@ -35,5 +35,3 @@ local opts = {
     require("lvim.lsp").common_on_init(client, bufnr)
   end,
 }
-
-return opts

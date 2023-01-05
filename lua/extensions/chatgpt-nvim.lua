@@ -18,7 +18,7 @@ function M.config()
     end,
     setup = {
       welcome_message = "",
-      yank_register = "+",
+      yank_register = lvim.system_register,
       openai_params = {
         model = "text-davinci-003",
         frequency_penalty = 0,

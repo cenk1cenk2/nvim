@@ -16,7 +16,7 @@ local function make_formatters_info(ft)
   local supported_formatters = null_formatters.list_supported(ft)
   local section = {
     "Formatters info",
-    fmt("* Active: %s%s", table.concat(registered_formatters, " " .. lvim.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered_formatters) > 0 and "  " or ""),
+    fmt("* Active: %s%s", table.concat(registered_formatters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered_formatters) > 0 and "  " or ""),
     fmt("* Supported: %s", str_list(supported_formatters)),
   }
 
@@ -28,7 +28,7 @@ local function make_code_actions_info(ft)
   local registered_actions = null_actions.list_registered(ft)
   local section = {
     "Code actions info",
-    fmt("* Active: %s%s", table.concat(registered_actions, " " .. lvim.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered_actions) > 0 and "  " or ""),
+    fmt("* Active: %s%s", table.concat(registered_actions, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered_actions) > 0 and "  " or ""),
   }
 
   return section
@@ -40,7 +40,7 @@ local function make_linters_info(ft)
   local registered_linters = null_linters.list_registered(ft)
   local section = {
     "Linters info",
-    fmt("* Active: %s%s", table.concat(registered_linters, " " .. lvim.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered_linters) > 0 and "  " or ""),
+    fmt("* Active: %s%s", table.concat(registered_linters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered_linters) > 0 and "  " or ""),
     fmt("* Supported: %s", str_list(supported_linters)),
   }
 

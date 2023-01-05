@@ -14,7 +14,7 @@ function M.config()
       maximizer_set_default_mapping = 0,
     },
     on_done = function()
-      require("utils.command").set_option({ winminheight = 0, winminwidth = 0 })
+      require("utils.setup").set_option({ winminheight = 0, winminwidth = 0 })
     end,
     wk = function(_, categories)
       return {

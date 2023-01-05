@@ -5,7 +5,6 @@ function M.setup()
   local installers = {
     "markdown-toc",
     "rustywind",
-    "codespell",
     "beautysh",
     "md-printer",
   }

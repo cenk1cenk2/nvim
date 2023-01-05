@@ -129,7 +129,7 @@ function M.format_filter(client)
 end
 
 ---Provide vim.lsp.buf.format for nvim <0.8
----@param opts table
+---@param opts table?
 function M.format(opts)
   opts = vim.tbl_extend("force", { filter = M.format_filter }, opts or {})
 
