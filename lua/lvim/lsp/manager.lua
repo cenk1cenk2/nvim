@@ -7,7 +7,6 @@ local is_windows = vim.loop.os_uname().version:match("Windows")
 local function resolve_mason_config(server_name)
   local found, mason_config = pcall(require, "mason-lspconfig.server_configurations." .. server_name)
   if not found then
-    Log:trace(("mason configuration not found for %s"):format(server_name))
     return {}
   end
 
@@ -22,6 +21,7 @@ local function resolve_mason_config(server_name)
       conf.cmd[1] = exepath
     end
   end
+
   Log:trace(("resolved mason configuration for %s, got %s"):format(server_name, vim.inspect(conf)))
 
   return conf or {}

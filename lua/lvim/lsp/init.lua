@@ -155,4 +155,13 @@ function M.setup()
   autocmds.configure_format_on_save()
 end
 
+function M.load()
+  vim.api.nvim_create_autocmd("BufReadPre", {
+    pattern = "*",
+    callback = function()
+      M.setup()
+    end,
+  })
+end
+
 return M

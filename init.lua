@@ -4,4 +4,4 @@ require("lvim.config"):load()
 
 require("lvim.plugin-loader").load()
 
-require("lvim.lsp").setup()
+require("lvim.lsp").load()

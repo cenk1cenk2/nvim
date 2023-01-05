@@ -477,6 +477,13 @@ end
 ---Toggles a log viewer according to log.viewer.layout_config
 ---@param logfile string the fullpath to the logfile
 function M.toggle_log_view(logfile)
+  local ok = pcall(require, "toggleterm")
+
+  if not ok then
+    Log:debug("Terminal not ready.")
+    return
+  end
+
   local log_viewer = lvim.log.viewer.cmd
   if vim.fn.executable(log_viewer) ~= 1 then
     log_viewer = "less +F"

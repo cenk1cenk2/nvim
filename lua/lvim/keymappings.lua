@@ -14,8 +14,8 @@ M.opts = {
 }
 
 M.modes = {
-  all = "",
-  a = "",
+  all = { "n", "v", "x" },
+  a = { "n", "v", "x" },
   insert_mode = "i",
   normal_mode = "n",
   term_mode = "t",

@@ -184,24 +184,33 @@ function M.config()
         },
         location = { "location", cond = conditions.hide_in_width, color = {} },
         progress = { "progress", cond = conditions.hide_in_width, color = {} },
+        ff = {
+          function()
+            return vim.api.nvim_buf_get_option(0, "ff")
+          end,
+          cond = conditions.hide_in_width,
+          fmt = string.upper,
+          color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
+        },
         spaces = {
           function()
             if not vim.api.nvim_buf_get_option(0, "expandtab") then
-              return "Tab size: " .. vim.api.nvim_buf_get_option(0, "tabstop") .. " "
+              return ("<TAB>%s"):format(vim.api.nvim_buf_get_option(0, "tabstop"))
             end
             local size = vim.api.nvim_buf_get_option(0, "shiftwidth")
             if size == 0 then
               size = vim.api.nvim_buf_get_option(0, "tabstop")
             end
-            return "Spaces: " .. size .. " "
+            return ("<SPC>%s"):format(size)
           end,
           cond = conditions.hide_in_width,
-          color = {},
+          fmt = string.upper,
+          color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
         },
         encoding = {
           "o:encoding",
           fmt = string.upper,
-          color = {},
+          color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
           cond = conditions.hide_in_width,
         },
         scrollbar = {
@@ -297,8 +306,11 @@ function M.config()
             {
               require("lazy.status").updates,
               cond = require("lazy.status").has_updates,
-              color = { fg = lvim.ui.colors.magenta[600] },
+              color = { fg = lvim.ui.colors.yellow[900] },
             },
+            components.spaces,
+            components.ff,
+            -- components.encoding,
             components.diagnostics,
             components.treesitter,
             components.lsp,

@@ -49,7 +49,7 @@ function M.register_sources(configs, method)
       disabled_filetypes = vim.list_extend(lvim.disabled_filetypes, config.disabled_filetypes or {}),
     })
 
-    Log:trace("Registering source " .. name)
+    Log:debug(("Registering source for method %s: %s"):format(method, name))
     Log:trace(vim.inspect(opts))
 
     local s = source.with(opts)

@@ -25,10 +25,10 @@ function M.config()
           "kyazdani42/nvim-web-devicons",
           event = "VeryLazy",
         },
-        {
-          "nvim-lua/popup.nvim",
-          event = "VeryLazy",
-        },
+        -- {
+        --   "nvim-lua/popup.nvim",
+        --   event = "VeryLazy",
+        -- },
         {
           "MunifTanjim/nui.nvim",
           event = "VeryLazy",

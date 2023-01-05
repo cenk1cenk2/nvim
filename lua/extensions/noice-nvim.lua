@@ -242,7 +242,7 @@ function M.config()
               event = "msg_show",
               kind = { "search_count" },
             },
-            opts = { replace = false, skip = true, stop = true },
+            opts = { skip = true },
           },
           {
             view = "notify",
@@ -250,23 +250,6 @@ function M.config()
               event = "msg_showmode",
             },
             opts = { timeout = 10000 },
-          },
-          {
-            view = "split",
-            filter = {
-              event = "msg_show",
-              kind = { "echo", "echomsg" },
-              min_height = 5,
-            },
-            opts = { replace = false, skip = true, stop = true },
-          },
-          {
-            view = "notify",
-            filter = {
-              event = "msg_show",
-              kind = { "echo", "echomsg" },
-            },
-            opts = { replace = false, skip = true, stop = false },
           },
           {
             view = "notify",
@@ -299,18 +282,20 @@ function M.config()
         },
       },
 
-      {
-        "FileType",
-        {
-          group = "_buffer_mappings",
-          pattern = {
-            "noice",
-          },
-          callback = function(event)
-            vim.keymap.set("n", "q", ":close<CR>", { silent = true, buffer = event.buf })
-          end,
-        },
-      },
+      -- {
+      --   "FileType",
+      --   {
+      --     group = "_buffer_mappings",
+      --     pattern = {
+      --       "noice",
+      --     },
+      --     callback = function(event)
+      --       vim.keymap.set("n", "q", function()
+      --         vim.api.nvim_win_close(vim.api.nvim_get_current_win(), 0)
+      --       end, { silent = true, buffer = event.buf })
+      --     end,
+      --   },
+      -- },
     },
   })
 end

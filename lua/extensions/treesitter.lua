@@ -156,7 +156,7 @@ function M.config()
           U = { ":TSUninstall all<CR>", "uninstall all treesitter packages" },
           R = {
             function()
-              for _, parser in pairs(fn.fetch_current_setup(extension_name).ensure_installed) do
+              for _, parser in pairs(fn.get_current_setup(extension_name).ensure_installed) do
                 vim.cmd(("TSInstall %s"):format(parser))
               end
             end,

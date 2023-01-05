@@ -78,11 +78,6 @@ return {
 
     -- visual select last word
     -- ["üü"] = "viw",
-
-    -- to blachole
-    ["c"] = '"_c',
-    ["C"] = '"_C',
-    ["x"] = '"_x',
   },
 
   ---@usage change or add keymappings for terminal mode

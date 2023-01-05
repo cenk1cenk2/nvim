@@ -16,6 +16,19 @@ function M.load_wk_mappings(mappings, mode)
   for key, value in pairs(mappings) do
     current[key] = vim.tbl_deep_extend("force", current[key] or {}, value)
   end
+
+  if lvim.store.get_store(require("extensions.which-key").store_registered_key) then
+    local config
+    if mode == "v" then
+      config = require("extensions.which-key").vopts
+    else
+      config = require("extensions.which-key").opts
+    end
+
+    vim.schedule(function()
+      require("which-key").register(current, config)
+    end)
+  end
 end
 
 ---
@@ -229,7 +242,7 @@ function M.init(config)
   end
 
   if config ~= nil and config.wk ~= nil then
-    M.load_wk_mappings(M.evaluate_property(config.wk, config, keys_which_key.CATEGORIES))
+    M.load_wk_mappings(M.evaluate_property(config.wk, config, keys_which_key.CATEGORIES, M.fn))
 
     config.wk = nil
   end

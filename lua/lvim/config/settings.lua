@@ -36,6 +36,8 @@ M.load_default_options = function()
     termguicolors = true, -- set term gui colors (most terminals support this)
     timeoutlen = 250, -- time to wait for a mapped sequence to complete (in milliseconds)
     title = true, -- set the title of window to the value of the titlestring
+    grepprg = "rg --vimgrep --no-heading --smart-case",
+    grepformat = "%f:%l:%c:%m,%f:%l:%m",
     laststatus = 3,
     -- opt.titlestring = "%<%F%=%l/%L - nvim" -- what the title of the window will be set to
     undodir = undodir, -- set an undo directory

@@ -3,30 +3,34 @@ local M = {}
 
 local extension_name = "wk"
 
+M.store_registered_key = "WHICH_KEY_REGISTERED"
+
+M.opts = {
+  mode = "n", -- NORMAL mode
+  prefix = "<leader>",
+  buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
+  silent = true, -- use `silent` when creating keymaps
+  noremap = true, -- use `noremap` when creating keymaps
+  nowait = true, -- use `nowait` when creating keymaps
+}
+
+M.vopts = {
+  mode = "v", -- VISUAL mode
+  prefix = "<leader>",
+  buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
+  silent = true, -- use `silent` when creating keymaps
+  noremap = true, -- use `noremap` when creating keymaps
+  nowait = true, -- use `nowait` when creating keymaps
+}
+
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
         "folke/which-key.nvim",
-        keys = { "<Space>" },
+        keys = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r" },
       }
     end,
-    opts = {
-      mode = "n", -- NORMAL mode
-      prefix = "<leader>",
-      buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-      silent = true, -- use `silent` when creating keymaps
-      noremap = true, -- use `noremap` when creating keymaps
-      nowait = true, -- use `nowait` when creating keymaps
-    },
-    vopts = {
-      mode = "v", -- VISUAL mode
-      prefix = "<leader>",
-      buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-      silent = true, -- use `silent` when creating keymaps
-      noremap = true, -- use `noremap` when creating keymaps
-      nowait = true, -- use `nowait` when creating keymaps
-    },
     configure = function(_, fn)
       local wk = require("keys.wk")
 
@@ -67,7 +71,7 @@ function M.config()
       window = {
         border = lvim.ui.border, -- none, single, double, shadow
         position = "bottom", -- bottom, top
-        margin = { 0, 0, 1, 0 }, -- extra window margin [top, right, bottom, left]
+        margin = { 0, 0, 0, 0 }, -- extra window margin [top, right, bottom, left]
         padding = { 1, 1, 1, 1 }, -- extra window padding [top, right, bottom, left]
       },
       layout = {
@@ -85,8 +89,10 @@ function M.config()
 
       which_key.setup(config.setup)
 
-      which_key.register(lvim.wk.mappings, config.opts)
-      which_key.register(lvim.wk.vmappings, config.vopts)
+      which_key.register(lvim.wk.mappings, M.opts)
+      which_key.register(lvim.wk.vmappings, M.vopts)
+
+      lvim.store.set_store(M.store_registered_key, true)
 
       if fn.is_extension_enabled("legendary_nvim") then
         require("legendary.integrations.which-key").bind_whichkey(lvim.wk.mappings, config.opts, false)

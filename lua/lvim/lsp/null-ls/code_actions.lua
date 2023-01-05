@@ -20,7 +20,7 @@ function M.setup(actions_configs)
   local registered = services.register_sources(actions_configs, method)
 
   if #registered > 0 then
-    Log:debug("Registered the following action-handlers: " .. unpack(registered))
+    Log:debug("Registered the following action-handlers: " .. table.concat(registered, ", "))
   end
 end
 
