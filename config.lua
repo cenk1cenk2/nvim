@@ -91,6 +91,7 @@ lvim.lsp.automatic_configuration.skipped_servers = {
   "sqls",
   "remark_ls",
   "stylelint_lsp",
+  "sourcery",
   -- "tailwindcss",
   "quick_lint_js",
   "tflint",
