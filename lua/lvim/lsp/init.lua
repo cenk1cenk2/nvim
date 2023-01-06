@@ -134,7 +134,7 @@ function M.setup()
     require("nlspsettings").setup(lvim.lsp.nlsp_settings.setup)
   end)
 
-  pcall(function()
+  xpcall(function()
     require("mason-lspconfig").setup(lvim.lsp.installer.setup)
     require("mason-lspconfig").setup_handlers({
       function(server_name)
@@ -150,7 +150,7 @@ function M.setup()
 
     local util = require("lspconfig.util")
     util.on_setup = nil
-  end)
+  end, debug.traceback)
 
   require("lvim.lsp.null-ls").setup()
 

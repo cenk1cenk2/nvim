@@ -13,6 +13,7 @@ function M.config()
         {
           "neovim/nvim-lspconfig",
           event = "BufReadPre",
+          init = false,
           config = function()
             require("lvim.lsp").setup()
           end,
@@ -25,7 +26,9 @@ function M.config()
         {
           "jose-elias-alvarez/null-ls.nvim",
           init = false,
-          config = false,
+          config = function()
+            require("modules.lsp.null-ls").setup()
+          end,
         },
         {
           "b0o/schemastore.nvim",

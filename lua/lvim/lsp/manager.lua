@@ -89,9 +89,11 @@ local function launch_server(server_name, config)
         group = "lsp_launch_server",
         pattern = ft,
         callback = function(event)
-          pcall(function()
+          xpcall(function()
             require("lspconfig")[server_name].setup(config)
+          end, debug.traceback)
 
+          pcall(function()
             buf_try_add(server_name, event.buf)
           end)
         end,
