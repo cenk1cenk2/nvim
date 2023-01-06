@@ -8,7 +8,8 @@ function M.config()
     plugin = function()
       return {
         "glench/vim-jinja2-syntax",
-        ft = { "jinja" },
+        lazy = false,
+        -- ft = { "jinja" },
       }
     end,
   })
