@@ -138,11 +138,13 @@ function M.setup()
     require("mason-lspconfig").setup(lvim.lsp.installer.setup)
     require("mason-lspconfig").setup_handlers({
       function(server_name)
-        if require("lvim.lsp.attach").should_configure(server_name) then
-          require("lvim.lsp.manager").setup(server_name)
-        else
+        if not require("lvim.lsp.attach").should_configure(server_name) then
           Log:debug(("Skipping configuring LSP: %s"):format(server_name))
+
+          return
         end
+
+        require("lvim.lsp.manager").setup(server_name)
       end,
     })
 
@@ -153,15 +155,6 @@ function M.setup()
   require("lvim.lsp.null-ls").setup()
 
   autocmds.configure_format_on_save()
-end
-
-function M.load()
-  vim.api.nvim_create_autocmd("BufReadPre", {
-    pattern = "*",
-    callback = function()
-      M.setup()
-    end,
-  })
 end
 
 return M

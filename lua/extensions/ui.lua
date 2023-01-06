@@ -12,6 +12,8 @@ function M.config()
       return {
         {
           "nvim-lua/plenary.nvim",
+          init = false,
+          config = false,
         },
         {
           "Tastyep/structlog.nvim",
@@ -24,14 +26,20 @@ function M.config()
         {
           "kyazdani42/nvim-web-devicons",
           event = "VeryLazy",
+          init = false,
+          config = false,
         },
         -- {
         --   "nvim-lua/popup.nvim",
         --   event = "VeryLazy",
+        -- init = false,
+        -- config = false,
         -- },
         {
           "MunifTanjim/nui.nvim",
           event = "VeryLazy",
+          init = false,
+          config = false,
         },
       }
     end,

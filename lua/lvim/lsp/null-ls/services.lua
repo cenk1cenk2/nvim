@@ -50,7 +50,7 @@ function M.register_sources(configs, method)
     })
 
     Log:debug(("Registering source for method %s: %s"):format(method, name))
-    Log:trace(vim.inspect(opts))
+    -- Log:trace(vim.inspect(opts))
 
     local s = source.with(opts)
 

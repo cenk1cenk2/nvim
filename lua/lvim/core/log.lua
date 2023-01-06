@@ -51,22 +51,22 @@ function Log:init()
     },
   }
 
-  if is_headless() then
-    logger.lvim.sinks = vim.list_extend(logger.lvim.sinks, {
-      structlog.sinks.Console(log_level, {
-        async = true,
-        processors = {
-          structlog.processors.StackWriter({ "line", "file" }, { max_parents = 0, stack_level = 2 }),
-          structlog.processors.Timestamper("%H:%M:%S"),
-        },
-        formatter = structlog.formatters.FormatColorizer( --
-          "%s [%-5s] %-30s",
-          { "timestamp", "level", "msg" },
-          { level = structlog.formatters.FormatColorizer.color_level() }
-        ),
-      }),
-    })
-  end
+  -- if is_headless() then
+  logger.lvim.sinks = vim.list_extend(logger.lvim.sinks, {
+    structlog.sinks.Console(log_level, {
+      async = true,
+      processors = {
+        structlog.processors.StackWriter({ "line", "file" }, { max_parents = 0, stack_level = 2 }),
+        structlog.processors.Timestamper("%H:%M:%S"),
+      },
+      formatter = structlog.formatters.FormatColorizer( --
+        "%s [%-5s] %-30s",
+        { "timestamp", "level", "msg" },
+        { level = structlog.formatters.FormatColorizer.color_level() }
+      ),
+    }),
+  })
+  -- end
 
   structlog.configure(logger)
 

@@ -22,7 +22,8 @@ local function resolve_mason_config(server_name)
     end
   end
 
-  Log:trace(("resolved mason configuration for %s, got %s"):format(server_name, vim.inspect(conf)))
+  Log:debug(("resolved mason configuration: %s"):format(server_name))
+  -- Log:trace(vim.inspect(conf))
 
   return conf or {}
 end
@@ -55,6 +56,7 @@ end
 -- manually start the server and don't wait for the usual filetype trigger from lspconfig
 local function buf_try_add(server_name, bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
+
   require("lspconfig")[server_name].manager.try_add_wrapper(bufnr)
 end
 
@@ -68,6 +70,7 @@ local function client_is_configured(server_name, ft)
   for _, result in pairs(active_autocmds) do
     if result.group_name:match("lspconfig") then
       Log:debug(("[%q] is already configured"):format(server_name))
+
       return true
     end
   end
@@ -76,10 +79,25 @@ local function client_is_configured(server_name, ft)
 end
 
 local function launch_server(server_name, config)
-  pcall(function()
-    require("lspconfig")[server_name].setup(config)
-    buf_try_add(server_name)
-  end)
+  local ft = config.filetypes or require("lvim.lsp.utils").get_supported_filetypes(server_name)
+  Log:trace(("%s is hooked for fts: %s"):format(server_name, vim.inspect(ft)))
+
+  require("utils.setup").define_autocmds({
+    {
+      "FileType",
+      {
+        group = "lsp_launch_server",
+        pattern = ft,
+        callback = function(event)
+          pcall(function()
+            require("lspconfig")[server_name].setup(config)
+
+            buf_try_add(server_name, event.buf)
+          end)
+        end,
+      },
+    },
+  })
 end
 
 ---Setup a language server by providing a name
@@ -99,12 +117,15 @@ function M.setup(server_name, user_config)
   local pkg_name = server_mapping.lspconfig_to_package[server_name]
   if not pkg_name then
     local config = resolve_config(server_name, user_config)
+
     launch_server(server_name, config)
+
     return
   end
 
   local should_auto_install = function(name)
     local installer_settings = lvim.lsp.installer.setup
+
     return installer_settings.automatic_installation and not vim.tbl_contains(installer_settings.automatic_installation.exclude, name)
   end
 
@@ -112,6 +133,7 @@ function M.setup(server_name, user_config)
     if should_auto_install(server_name) then
       Log:debug("Automatic server installation detected")
       vim.notify_once(string.format("Installation in progress for [%s]", server_name), vim.log.levels.INFO)
+
       local pkg = registry.get_package(pkg_name)
       pkg:install():once("closed", function()
         if pkg:is_installed() then
@@ -119,10 +141,12 @@ function M.setup(server_name, user_config)
             vim.notify_once(string.format("Installation complete for [%s]", server_name), vim.log.levels.INFO)
             -- mason config is only available once the server has been installed
             local config = resolve_config(server_name, resolve_mason_config(server_name), user_config)
+
             launch_server(server_name, config)
           end)
         end
       end)
+
       return
     else
       Log:debug(server_name .. " is not managed by the automatic installer")
@@ -130,6 +154,7 @@ function M.setup(server_name, user_config)
   end
 
   local config = resolve_config(server_name, resolve_mason_config(server_name), user_config)
+
   launch_server(server_name, config)
 end
 

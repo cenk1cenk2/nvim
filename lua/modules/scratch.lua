@@ -30,16 +30,19 @@ function M.create_scratch_buffer()
     vim.api.nvim_win_set_buf(0, bufnr)
     Log:info(("Created temporary file: %s"):format(filename))
 
-    local augroup = "_scratch"
-    vim.api.nvim_create_augroup(augroup, {})
-    vim.api.nvim_create_autocmd("BufDelete", {
-      group = augroup,
-      buffer = bufnr,
-      callback = function()
-        os.remove(filename)
+    require("utils.setup").define_autocmds({
+      {
+        "BufDelete",
+        {
+          group = "_scratch",
+          buffer = bufnr,
+          callback = function()
+            os.remove(filename)
 
-        Log:info(("Removed temporary file: %s"):format(filename))
-      end,
+            Log:info(("Removed temporary file: %s"):format(filename))
+          end,
+        },
+      },
     })
   end)
 end
