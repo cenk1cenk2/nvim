@@ -29,7 +29,7 @@ function M.setup()
       [".*%.yml"] = function(path)
         local root = require("lspconfig/util").root_pattern("ansible.cfg", ".ansible-lint", ".vault-password")(path)
 
-        if root then
+        if root and not (path:find("environments/") or path:find("vars/")) and vim.fs.dirname(path) ~= root then
           return "yaml.ansible"
         end
 

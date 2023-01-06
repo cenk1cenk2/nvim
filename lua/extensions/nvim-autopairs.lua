@@ -30,7 +30,7 @@ function M.config()
       },
       disable_filetype = lvim.disabled_filetypes,
       ignored_next_char = string.gsub([[ [%w%%%'%[%"%.] ]], "%s+", ""),
-      enable_moveright = true,
+      enable_moveright = false,
       ---@usage disable when recording or executing a macro
       disable_in_macro = false,
       ---@usage add bracket pairs after quote
@@ -38,7 +38,7 @@ function M.config()
       ---@usage map the <BS> key
       map_bs = true,
       ---@usage map <c-w> to delete a pair if possible
-      map_c_w = false,
+      map_c_w = true,
       ---@usage disable when insert after visual block mode
       disable_in_visualblock = false,
       ---@usage  change default fast_wrap
