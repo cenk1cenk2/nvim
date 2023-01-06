@@ -18,10 +18,9 @@ function M.config()
         {
           "Tastyep/structlog.nvim",
           lazy = false,
-          init = function()
-            require("lvim.core.log"):init()
+          config = function()
+            require("lvim.core.log"):get_logger()
           end,
-          config = false,
         },
         {
           "kyazdani42/nvim-web-devicons",

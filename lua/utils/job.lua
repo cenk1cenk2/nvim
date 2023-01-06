@@ -1,9 +1,10 @@
 local M = {}
 
-local _, Job = pcall(require, "plenary.job")
 local Log = require("lvim.core.log")
 
 function M.spawn(opts)
+  local Job = require("plenary.job")
+
   Log:debug(("Will run job: %s %s"):format(opts.command, table.concat(opts.args, " ")))
 
   local job = Job:new({
