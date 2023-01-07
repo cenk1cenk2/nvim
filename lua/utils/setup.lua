@@ -6,17 +6,6 @@ local keys_which_key = require("keys.wk")
 ---
 ---@param mappings table
 function M.load_wk_mappings(mappings, mode)
-  local current
-  if mode == "v" then
-    current = lvim.wk.vmappings
-  else
-    current = lvim.wk.mappings
-  end
-
-  for key, value in pairs(mappings) do
-    current[key] = vim.tbl_deep_extend("force", current[key] or {}, value)
-  end
-
   if lvim.store.get_store(require("extensions.which-key").store_registered_key) then
     local config
     if mode == "v" then
@@ -26,8 +15,21 @@ function M.load_wk_mappings(mappings, mode)
     end
 
     vim.schedule(function()
-      require("which-key").register(current, config)
+      require("which-key").register(mappings, config)
     end)
+
+    return
+  end
+
+  local current
+  if mode == "v" then
+    current = lvim.wk.vmappings
+  else
+    current = lvim.wk.mappings
+  end
+
+  for key, value in pairs(mappings) do
+    current[key] = vim.tbl_deep_extend("force", current[key] or {}, value)
   end
 end
 
