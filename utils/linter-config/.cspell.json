@@ -10,7 +10,7 @@
     {
       "languageId": ["*"],
       "includeRegExpList": [],
-      "ignoreRegExpList": ["ImportStatement", "String"]
+      "ignoreRegExpList": ["String"]
     },
     {
       "languageId": ["markdown", "plaintext", "text", "gitcommit"],
@@ -19,7 +19,8 @@
     },
     {
       "languageId": ["yaml.ansible", "yaml"],
-      "ignoreRegExpList": ["String", "PythonComment"]
+      "includeRegExpList": ["PythonComment"],
+      "ignoreRegExpList": ["String"]
     },
     {
       "languageId": ["python"],
