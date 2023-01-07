@@ -9,7 +9,7 @@
   "languageSettings": [
     {
       "languageId": ["*"],
-      "includeRegExpList": ["CStyleComment", "PythonComment", "LuaComment", "Logger"],
+      "includeRegExpList": [],
       "ignoreRegExpList": ["ImportStatement", "String"]
     },
     {
@@ -19,12 +19,32 @@
     },
     {
       "languageId": ["yaml.ansible", "yaml"],
-      "ignoreRegExpList": ["String"]
+      "ignoreRegExpList": ["String", "PythonComment"]
+    },
+    {
+      "languageId": ["python"],
+      "includeRegExpList": ["PythonComment", "Logger"]
+    },
+    {
+      "languageId": ["lua"],
+      "includeRegExpList": ["LuaComment", "Logger"],
+      "ignoreRegExpList": ["ImportStatement", "String"]
+    },
+    {
+      "languageId": ["javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte"],
+      "includeRegExpList": ["CStyleComment", "Logger"],
+      "ignoreRegExpList": ["ImportStatement", "String"]
+    },
+    {
+      "languageId": ["go"],
+      "includeRegExpList": ["CStyleComment", "Logger"],
+      "ignoreRegExpList": ["ImportStatement", "String"]
     },
     {
       "languageId": ["cpp,c"],
       "allowCompoundWords": false,
-      "ignoreRegExpList": []
+      "includeRegExpList": ["CStyleComment", "Logger"],
+      "ignoreRegExpList": ["ImportStatement", "String"]
     }
   ],
   "patterns": [
