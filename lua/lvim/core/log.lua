@@ -36,37 +36,38 @@ function Log:init()
   local log_level = Log.levels[(lvim.log.level):upper() or "WARN"]
   local logger = {
     lvim = {
-      sinks = {
-        structlog.sinks.File(log_level, self:get_path(), {
+      pipelines = {
+        {
+          level = log_level,
+          sink = structlog.sinks.RotatingFile(self:get_path(), { max_size = 1048576 * 50 }),
           processors = {
             structlog.processors.StackWriter({ "line", "file" }, { max_parents = 3, stack_level = 2 }),
             structlog.processors.Timestamper("%F %H:%M:%S"),
           },
           formatter = structlog.formatters.Format( --
-            "%s [%-5s] %-30s",
-            { "timestamp", "level", "msg" }
+            "%s [%-5s] %s",
+            { "timestamp", "level", "msg" },
+            {
+              blacklist = { "logger_name" },
+            }
           ),
-        }),
+        },
+        {
+          level = Log.levels.INFO,
+          sink = structlog.sinks.Console(),
+          processors = {},
+          formatter = structlog.formatters.FormatColorizer( --
+            "[%-5s] %s",
+            { "level", "msg" },
+            {
+              blacklist = { "logger_name" },
+              level = structlog.formatters.FormatColorizer.color_level(),
+            }
+          ),
+        },
       },
     },
   }
-
-  -- if is_headless() then
-    logger.lvim.sinks = vim.list_extend(logger.lvim.sinks, {
-      structlog.sinks.Console(log_level, {
-        async = true,
-        processors = {
-          structlog.processors.StackWriter({ "line", "file" }, { max_parents = 0, stack_level = 2 }),
-          structlog.processors.Timestamper("%H:%M:%S"),
-        },
-        formatter = structlog.formatters.FormatColorizer( --
-          "%s [%-5s] %-30s",
-          { "timestamp", "level", "msg" },
-          { level = structlog.formatters.FormatColorizer.color_level() }
-        ),
-      }),
-    })
-  -- end
 
   structlog.configure(logger)
 
@@ -84,23 +85,22 @@ function Log:configure_notifications(notif_handle)
   -- ensure logger is initialized
   Log:get_logger()
 
-  table.insert(
-    self.__handle.sinks,
-    structlog.sinks.NvimNotify(Log.levels.INFO, {
-      processors = {
-        function(logger, entry)
-          entry["title"] = logger.name
-          return entry
-        end,
-      },
-      formatter = structlog.formatters.Format( --
-        "%s",
-        { "msg" },
-        { blacklist_all = true }
-      ),
-      impl = notif_handle,
-    })
-  )
+  -- table.insert(self.__handle.pipelines, {
+  --   level = Log.levels.INFO,
+  --   sink = structlog.sinks.NvimNotify(),
+  --   processors = {
+  --     function(logger, entry)
+  --       entry["title"] = logger.name
+  --       return entry
+  --     end,
+  --   },
+  --   formatter = structlog.formatters.Format( --
+  --     "%s",
+  --     { "msg" },
+  --     { blacklist_all = true }
+  --   ),
+  --   impl = notif_handle,
+  -- })
 
   -- Overwrite `vim.notify` to use the logger
   -- vim.notify = function(msg, level, opts)
@@ -129,6 +129,7 @@ function Log:add_entry(level, msg, event)
   if not logger then
     return
   end
+
   logger:log(level, vim.inspect(msg), event)
 end
 
