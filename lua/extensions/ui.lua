@@ -17,6 +17,8 @@ function M.config()
         },
         {
           "Tastyep/structlog.nvim",
+          -- TODO: update whenever you can to new format.
+          commit = "232a8e26060440e0db9fefba857036442b34227d",
           lazy = false,
           config = function()
             require("lvim.core.log"):get_logger()
