@@ -254,6 +254,14 @@ function M.config()
           {
             view = "notify",
             filter = {
+              event = "msg_show",
+              kind = { "echomsg" },
+            },
+            opts = { skip = true },
+          },
+          {
+            view = "notify",
+            filter = {
               event = "noice",
               kind = { "stats", "debug" },
             },

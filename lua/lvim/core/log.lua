@@ -33,6 +33,12 @@ function Log:init()
     return nil
   end
 
+  local SinkAdapter = require("structlog.sinks.adapter")
+
+  local function notify(log)
+    vim.notify(log.msg, log.level)
+  end
+
   local log_level = Log.levels[(lvim.log.level):upper() or "WARN"]
   local logger = {
     lvim = {
@@ -65,6 +71,16 @@ function Log:init()
             }
           ),
         },
+        {
+          level = Log.levels.INFO,
+          sink = SinkAdapter(notify),
+          processors = {},
+          formatter = structlog.formatters.Format( --
+            "%s",
+            { "msg" },
+            { blacklist_all = true }
+          ),
+        },
       },
     },
   }
@@ -72,53 +88,6 @@ function Log:init()
   structlog.configure(logger)
 
   return structlog.get_logger("lvim")
-end
-
---- Configure the sink in charge of logging notifications
----@param notif_handle table The implementation used by the sink for displaying the notifications
-function Log:configure_notifications(notif_handle)
-  local status_ok, structlog = pcall(require, "structlog")
-  if not status_ok then
-    return
-  end
-
-  -- ensure logger is initialized
-  Log:get_logger()
-
-  -- table.insert(self.__handle.pipelines, {
-  --   level = Log.levels.INFO,
-  --   sink = structlog.sinks.NvimNotify(),
-  --   processors = {
-  --     function(logger, entry)
-  --       entry["title"] = logger.name
-  --       return entry
-  --     end,
-  --   },
-  --   formatter = structlog.formatters.Format( --
-  --     "%s",
-  --     { "msg" },
-  --     { blacklist_all = true }
-  --   ),
-  --   impl = notif_handle,
-  -- })
-
-  -- Overwrite `vim.notify` to use the logger
-  -- vim.notify = function(msg, level, opts)
-  --   notify_opts = opts or {}
-  --
-  --   if level == nil then
-  --     level = Log.levels["INFO"]
-  --   elseif type(level) == "string" then
-  --     level = Log.levels[(level):upper()] or Log.levels["INFO"]
-  --   else
-  --     -- https://github.com/neovim/neovim/blob/685cf398130c61c158401b992a1893c2405cd7d2/runtime/lua/vim/lsp/log.lua#L5
-  --     level = level + 1
-  --   end
-  --
-  --   self:log(level, msg)
-  -- end
-
-  return self
 end
 
 --- Adds a log entry using Plenary.log
