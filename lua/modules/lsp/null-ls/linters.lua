@@ -1,8 +1,8 @@
-local linters = require("lvim.lsp.null-ls.linters")
-
 local M = {}
 
 function M.setup()
+  local linters = require("lvim.lsp.null-ls.linters")
+
   linters.setup({
     {
       name = "eslint_d",

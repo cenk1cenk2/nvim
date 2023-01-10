@@ -1,8 +1,8 @@
-local formatters = require("lvim.lsp.null-ls.formatters")
-
 local M = {}
 
 function M.setup()
+  local formatters = require("lvim.lsp.null-ls.formatters")
+
   formatters.setup({
     {
       name = "prettierd",

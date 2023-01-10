@@ -1,8 +1,8 @@
-local code_action_providers = require("lvim.lsp.null-ls.code_actions")
-
 local M = {}
 
 function M.setup()
+  local code_action_providers = require("lvim.lsp.null-ls.code_actions")
+
   code_action_providers.setup({
     {
       name = "eslint_d",
