@@ -17,7 +17,7 @@ function M.config()
         parameter_hints = {
           show = true,
           prefix = lvim.ui.icons.ui.BoldArrowLeft .. " ",
-          separator = ",",
+          separator = ", ",
           remove_colon_start = false,
           remove_colon_end = true,
         },
@@ -25,7 +25,7 @@ function M.config()
           -- type and other hints
           show = true,
           prefix = "",
-          separator = ",",
+          separator = ", ",
           remove_colon_start = false,
           remove_colon_end = false,
         },
