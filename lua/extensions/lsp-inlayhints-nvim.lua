@@ -16,8 +16,8 @@ function M.config()
       inlay_hints = {
         parameter_hints = {
           show = true,
-          prefix = lvim.ui.icons.ui.ChevronShortLeft .. " ",
-          separator = (" %s "):format(lvim.ui.icons.ui.Ellipsis),
+          prefix = lvim.ui.icons.ui.BoldArrowLeft .. " ",
+          separator = ",",
           remove_colon_start = false,
           remove_colon_end = true,
         },
@@ -25,14 +25,14 @@ function M.config()
           -- type and other hints
           show = true,
           prefix = "",
-          separator = (" %s "):format(lvim.ui.icons.ui.Ellipsis),
+          separator = ",",
           remove_colon_start = false,
           remove_colon_end = false,
         },
         only_current_line = false,
         -- separator between types and parameter hints. Note that type hints are
         -- shown before parameter
-        labels_separator = "  ",
+        labels_separator = " ",
         -- whether to align to the length of the longest line in the file
         max_len_align = false,
         -- padding from the left if max_len_align is true
