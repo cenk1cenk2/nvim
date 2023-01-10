@@ -143,6 +143,7 @@ require("utils.setup").fn.append_to_setup("treesitter", {
     "lua",
     "php",
     "python",
+    "prisma",
     "regex",
     "ruby",
     "rust",
