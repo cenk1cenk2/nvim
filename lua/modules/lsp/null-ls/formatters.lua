@@ -1,9 +1,10 @@
 local M = {}
 
 function M.setup()
-  local formatters = require("lvim.lsp.null-ls.formatters")
+  local service = require("lvim.lsp.null-ls")
+  local methods = require("null-ls").methods
 
-  formatters.setup({
+  service.register(methods.FORMATTING, {
     {
       name = "prettierd",
       filetypes = {
@@ -50,19 +51,10 @@ function M.setup()
       filetypes = { "python" },
     },
 
-    -- {
-    --   name = "rustfmt",
-    --   filetypes = { "rust" },
-    -- },
-
     {
       name = "goimports",
       filetypes = { "go" },
     },
-    -- {
-    --   name = "gofmt",
-    --   filetypes = { "go" },
-    -- },
     {
       name = "golines",
       extra_args = { "-m", "180", "-t", "2" },

@@ -2,10 +2,6 @@ local M = {}
 
 local Log = require("lvim.core.log")
 
-function M.find_command(command)
-  return command
-end
-
 function M.list_registered_providers_names(filetype)
   local s = require("null-ls.sources")
   local available_sources = s.get_available(filetype)
@@ -32,6 +28,7 @@ function M.register_sources(configs, method)
     local name = config.name or command:gsub("-", "_")
     local type = method == null_ls.methods.CODE_ACTION and "code_actions" or null_ls.methods[method]:lower()
     local source = type and null_ls.builtins[type][name]
+
     Log:trace(("Received request to register [%s] as a %s source"):format(name, type))
     if not source then
       Log:error("Not a valid source: " .. name)
@@ -68,6 +65,55 @@ function M.register_sources(configs, method)
   end
 
   return registered_names
+end
+
+function M.list_supported(filetype, methods)
+  local null_ls_sources = require("null-ls.sources")
+  local supported = {}
+
+  for _, method in pairs(methods) do
+    table.insert(supported, null_ls_sources.get_supported(filetype, M.get_readable_name(method)))
+  end
+
+  supported = vim.tbl_flatten(supported)
+  table.sort(supported)
+
+  return supported
+end
+
+function M.list_registered(filetype, methods)
+  local registered_providers = M.list_registered_providers_names(filetype)
+
+  return vim.tbl_flatten(vim.tbl_map(function(m)
+    return registered_providers[m] or {}
+  end, methods))
+end
+
+function M.register(method, config)
+  if vim.tbl_isempty(config) then
+    return
+  end
+
+  local registered = M.register_sources(config, method)
+
+  if #registered > 0 then
+    Log:debug(("Registered the following source for %s: %s"):format(method, table.concat(registered, ", ")))
+  end
+end
+
+function M.get_readable_name(...)
+  return require("null-ls.methods").get_readable_name(...)
+end
+
+function M.setup()
+  local status_ok, null_ls = pcall(require, "null-ls")
+  if not status_ok then
+    Log:error("Missing null-ls dependency")
+    return
+  end
+
+  local default_opts = require("lvim.lsp").get_common_opts()
+  null_ls.setup(vim.tbl_deep_extend("force", default_opts, lvim.lsp.null_ls.setup))
 end
 
 return M

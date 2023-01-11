@@ -160,12 +160,14 @@ function M.config()
             end
 
             -- add formatter
-            local formatters = require("lvim.lsp.null-ls.formatters")
-            local supported_formatters = formatters.list_registered(buf_ft)
-
-            -- add linter
-            local linters = require("lvim.lsp.null-ls.linters")
-            local supported_linters = linters.list_registered(buf_ft)
+            local null_ls_service = require("lvim.lsp.null-ls")
+            local null_ls_methods = require("null-ls").methods
+            local supported_formatters = null_ls_service.list_registered(buf_ft, { null_ls_methods.FORMATTING })
+            local supported_linters = null_ls_service.list_registered(buf_ft, {
+              null_ls_methods.DIAGNOSTICS,
+              null_ls_methods.DIAGNOSTICS_ON_SAVE,
+              null_ls_methods.DIAGNOSTICS_ON_OPEN,
+            })
 
             local lsps = table.concat(buf_client_names, ", ")
 

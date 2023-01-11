@@ -1,9 +1,10 @@
 local M = {}
 
 function M.setup()
-  local code_action_providers = require("lvim.lsp.null-ls.code_actions")
+  local service = require("lvim.lsp.null-ls")
+  local methods = require("null-ls").methods
 
-  code_action_providers.setup({
+  service.register(methods.CODE_ACTION, {
     {
       name = "eslint_d",
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },

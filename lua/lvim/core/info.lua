@@ -10,38 +10,20 @@ local function str_list(list)
   return #list == 1 and list[1] or fmt("[%s]", table.concat(list, ", "))
 end
 
-local function make_formatters_info(ft)
-  local null_formatters = require("lvim.lsp.null-ls.formatters")
-  local registered_formatters = null_formatters.list_registered(ft)
-  local supported_formatters = null_formatters.list_supported(ft)
+local function make_info(ft, methods)
+  local null_ls_service = require("lvim.lsp.null-ls")
+
+  local registered = null_ls_service.list_registered(ft, methods)
+  local supported = null_ls_service.list_supported(ft, methods)
   local section = {
-    "Formatters info",
-    fmt("* Active: %s%s", table.concat(registered_formatters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered_formatters) > 0 and "  " or ""),
-    fmt("* Supported: %s", str_list(supported_formatters)),
-  }
-
-  return section
-end
-
-local function make_code_actions_info(ft)
-  local null_actions = require("lvim.lsp.null-ls.code_actions")
-  local registered_actions = null_actions.list_registered(ft)
-  local section = {
-    "Code actions info",
-    fmt("* Active: %s%s", table.concat(registered_actions, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered_actions) > 0 and "  " or ""),
-  }
-
-  return section
-end
-
-local function make_linters_info(ft)
-  local null_linters = require("lvim.lsp.null-ls.linters")
-  local supported_linters = null_linters.list_supported(ft)
-  local registered_linters = null_linters.list_registered(ft)
-  local section = {
-    "Linters info",
-    fmt("* Active: %s%s", table.concat(registered_linters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered_linters) > 0 and "  " or ""),
-    fmt("* Supported: %s", str_list(supported_linters)),
+    ("null-ls - %s"):format(table.concat(
+      vim.tbl_map(function(method)
+        return null_ls_service.get_readable_name(method)
+      end, methods),
+      ", "
+    )),
+    fmt("* Active: %s%s", table.concat(registered, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered) > 0 and "  " or ""),
+    fmt("* Supported: %s", str_list(supported)),
   }
 
   return section
@@ -141,11 +123,10 @@ function M.toggle_popup(ft)
 
   local auto_lsp_info = make_auto_lsp_info(ft)
 
-  local formatters_info = make_formatters_info(ft)
-
-  local linters_info = make_linters_info(ft)
-
-  local code_actions_info = make_code_actions_info(ft)
+  local null_ls_methods = require("null-ls").methods
+  local formatters_info = make_info(ft, { null_ls_methods.FORMATTING })
+  local linters_info = make_info(ft, { null_ls_methods.DIAGNOSTICS, null_ls_methods.DIAGNOSTICS_ON_SAVE, null_ls_methods.DIAGNOSTICS_ON_OPEN })
+  local code_actions_info = make_info(ft, { null_ls_methods.CODE_ACTION })
 
   local content_provider = function(popup)
     local content = {}
@@ -177,9 +158,7 @@ function M.toggle_popup(ft)
     vim.fn.matchadd("LvimInfoHeader", "Buffer info")
     vim.fn.matchadd("LvimInfoHeader", "Active client(s)")
     vim.fn.matchadd("LvimInfoHeader", fmt("Overridden %s server(s)", ft))
-    vim.fn.matchadd("LvimInfoHeader", "Formatters info")
-    vim.fn.matchadd("LvimInfoHeader", "Linters info")
-    vim.fn.matchadd("LvimInfoHeader", "Code actions info")
+    vim.fn.matchadd("LvimInfoHeader", "null-ls - .*")
     vim.fn.matchadd("LvimInfoHeader", "Automatic LSP info")
     vim.fn.matchadd("LvimInfoIdentifier", " " .. ft .. "$")
     vim.fn.matchadd("string", "true")
@@ -187,9 +166,6 @@ function M.toggle_popup(ft)
     vim.fn.matchadd("string", "")
     vim.fn.matchadd("boolean", "inactive")
     vim.fn.matchadd("error", "false")
-    tbl_set_highlight(require("lvim.lsp.null-ls.formatters").list_registered(ft), "LvimInfoIdentifier")
-    tbl_set_highlight(require("lvim.lsp.null-ls.linters").list_registered(ft), "LvimInfoIdentifier")
-    tbl_set_highlight(require("lvim.lsp.null-ls.code_actions").list_registered(ft), "LvimInfoIdentifier")
   end
 
   local Popup = require("lvim.interface.popup"):new({

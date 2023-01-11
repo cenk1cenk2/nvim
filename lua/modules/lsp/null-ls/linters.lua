@@ -1,9 +1,10 @@
 local M = {}
 
 function M.setup()
-  local linters = require("lvim.lsp.null-ls.linters")
+  local service = require("lvim.lsp.null-ls")
+  local methods = require("null-ls").methods
 
-  linters.setup({
+  service.register(methods.DIAGNOSTICS, {
     {
       name = "eslint_d",
       filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
@@ -26,14 +27,6 @@ function M.setup()
       extra_args = { "--max-line-length", "179" },
     },
 
-    {
-      name = "cspell",
-      extra_args = { "-c", vim.fn.expand("~/.config/nvim/utils/linter-config/.cspell.json") },
-      diagnostics_postprocess = function(diagnostic)
-        diagnostic.severity = vim.diagnostic.severity.HINT
-      end,
-    },
-
     -- {
     --   name = "djlint",
     --   filetypes = { "jinja" },
@@ -45,22 +38,13 @@ function M.setup()
       filetypes = { "sh", "bash", "zsh" },
     },
 
-    -- {
-    --   name = "protolint",
-    --   filetypes = { "proto" },
-    -- },
-
-    -- {
-    --   name = "mypy",
-    --   managed = true,
-    --   filetypes = { "python" },
-    -- },
-
-    -- {
-    --   name = "proselint",
-    --   managed = true,
-    --   filetypes = { "markdown", "tex" },
-    -- },
+    {
+      name = "cspell",
+      extra_args = { "-c", vim.fn.expand("~/.config/nvim/utils/linter-config/.cspell.json") },
+      diagnostics_postprocess = function(diagnostic)
+        diagnostic.severity = vim.diagnostic.severity.HINT
+      end,
+    },
   })
 end
 
