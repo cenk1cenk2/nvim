@@ -129,7 +129,10 @@ function M.load()
 end
 
 function M.reset_cache()
-  os.remove(require("lazy.core.cache").config.path)
+  local path = require("lazy.core.cache").config.path
+  Log:warn(("Removing cache directory for package manager: %s"):format(path))
+
+  os.remove(path)
 end
 
 function M.reload(spec)
