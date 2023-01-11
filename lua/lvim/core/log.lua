@@ -59,7 +59,7 @@ function Log:init()
           ),
         },
         {
-          level = Log.levels.INFO,
+          level = log_level,
           sink = structlog.sinks.Console(),
           processors = {},
           formatter = structlog.formatters.FormatColorizer( --
