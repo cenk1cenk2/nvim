@@ -37,6 +37,7 @@ local extensions = {
   "search-replace-nvim",
   "rnvimr",
   "vim-visual-multi",
+  "nvim-recorder",
   "vim-maximizer",
   "telescope-undo-nvim",
   "nvim-ufo",
