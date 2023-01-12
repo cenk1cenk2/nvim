@@ -244,13 +244,13 @@ function M.config()
             },
             opts = { skip = true },
           },
-          {
-            view = "notify",
-            filter = {
-              event = "msg_showmode",
-            },
-            opts = { timeout = 10000 },
-          },
+          -- {
+          --   view = "notify",
+          --   filter = {
+          --     event = "msg_showmode",
+          --   },
+          --   opts = { timeout = 10000 },
+          -- },
           {
             view = "notify",
             filter = {
