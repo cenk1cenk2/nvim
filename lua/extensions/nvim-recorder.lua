@@ -32,7 +32,7 @@ function M.config()
 
         -- log level used for any notification, mostly relevant for nvim-notify
         -- (note that by default, nvim-notify does not show the levels trace and debug.)
-        logLevel = vim.log.levels.INFO,
+        logLevel = vim.log.levels.WARN,
 
         -- experimental, see README
         dapSharedKeymaps = true,
