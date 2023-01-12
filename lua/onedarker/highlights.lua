@@ -277,68 +277,6 @@ hl.lsp = {
 }
 
 -- langs
-hl.langs.markdown = {
-  markdownBlockquote = { fg = c.grey[600] },
-  markdownBold = { fg = c.none, bold = true },
-  markdownBoldDelimiter = { fg = c.grey[600] },
-  markdownCode = { fg = c.yellow[600] },
-  markdownCodeBlock = { fg = c.yellow[600] },
-  markdownCodeDelimiter = { fg = c.green[300] },
-  htmlH1 = { fg = c.red[600], bold = true },
-  htmlH2 = { fg = c.red[600], bold = true },
-  htmlH3 = { fg = c.red[600], bold = true },
-  htmlH4 = { fg = c.red[600], bold = true },
-  htmlH5 = { fg = c.red[600], bold = true },
-  htmlH6 = { fg = c.red[600], bold = true },
-  markdownHeadingDelimiter = { fg = c.grey[600] },
-  markdownHeadingRule = { fg = c.grey[600] },
-  markdownId = { fg = c.yellow[600] },
-  markdownIdDeclaration = { fg = c.red[600] },
-  markdownItalic = { fg = c.none, italic = true },
-  markdownItalicDelimiter = { fg = c.grey[600], italic = true },
-  markdownLinkDelimiter = { fg = c.grey[600] },
-  markdownLinkText = { fg = c.red[600] },
-  markdownLinkTextDelimiter = { fg = c.grey[600] },
-  markdownListMarker = { fg = c.red[600] },
-  markdownOrderedListMarker = { fg = c.red[600] },
-  markdownRule = { fg = c.purple[600] },
-  markdownUrl = { fg = c.blue[600], underline = true },
-  markdownUrlDelimiter = { fg = c.grey[600] },
-  markdownUrlTitleDelimiter = { fg = c.green[300] },
-}
-
-hl.langs.gitcommit = {
-  gitcommitComment = { fg = c.grey[600] },
-  gitcommitUnmerged = { fg = c.green[300] },
-  gitcommitOnBranch = {},
-  gitcommitBranch = { fg = c.yellow[600] },
-  gitcommitDiscardedType = { fg = c.red[600] },
-  gitcommitSelectedType = { fg = c.green[300] },
-  gitcommitHeader = {},
-  gitcommitUntrackedFile = { fg = c.cyan[600] },
-  gitcommitDiscardedFile = { fg = c.red[600] },
-  gitcommitSelectedFile = { fg = c.green[300] },
-  gitcommitUnmergedFile = { fg = c.yellow[600] },
-  gitcommitFile = {},
-  gitcommitSummary = { fg = c.fg },
-  gitcommitOverflow = { fg = c.red[600] },
-  gitcommitNoBranch = { fg = c.yellow[600] },
-  gitcommitUntracked = { fg = c.cyan[600] },
-  gitcommitDiscarded = { fg = c.red[600] },
-  gitcommitSelected = { fg = c.green[300] },
-  gitcommitDiscardedArrow = { fg = c.red[600] },
-  gitcommitSelectedArrow = { fg = c.green[300] },
-  gitcommitUnmergedArrow = { fg = c.yellow[600] },
-}
-
-hl.langs.yaml = {
-  yamlBlockCollectionItemStart = { fg = c.fg },
-  yamlKeyValueDelimiter = { fg = c.fg },
-  yamlBlockMappingKey = { fg = c.red[600] },
-}
-
-hl.langs.docker_compose = { dockercomposeKeywords = { fg = c.red[600] } }
-
 hl.langs.bash = { ["@parameter.bash"] = { fg = c.fg } }
 
 hl.langs.dockerfile = { ["@parameter.dockerfile"] = { fg = c.fg } }
@@ -354,8 +292,6 @@ hl.langs.jinja = {
   jinjaVarDelim = { fg = c.yellow[900] },
   jinjaFilter = { fg = c.blue[600] },
 }
-
-hl.langs.ansible = { ansible_normal_keywords = { fg = c.blue[600] } }
 
 hl.langs.typescript = {
   -- ["@decorator.typescript"] = { fg = c.fg },
