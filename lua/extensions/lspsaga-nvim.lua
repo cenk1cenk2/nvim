@@ -45,7 +45,7 @@ function M.config()
         scroll_up = "<C-b>", -- quit can be a table
       },
       diagnostic = {
-        twice_into = true,
+        twice_into = false,
         show_code_action = false,
         show_source = true,
         keys = {
