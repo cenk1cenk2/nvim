@@ -83,7 +83,7 @@ function M.get_all_supported_filetypes()
 end
 
 function M.setup_codelens_refresh(client, bufnr)
-  if vim.tbl_contains("yamlls", client.name) then
+  if vim.tbl_contains({ "yamlls" }, client.name) then
     return
   end
 
