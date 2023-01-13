@@ -81,6 +81,7 @@ return {
     },
     config = {},
   },
+  wrapper = {},
   on_init_callbacks = {},
   on_attach_callbacks = {},
   on_exit_callbacks = {},

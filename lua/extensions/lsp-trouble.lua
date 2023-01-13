@@ -36,11 +36,11 @@ function M.config()
       require("trouble").setup(config.setup)
     end,
     on_done = function()
-      lvim.lsp_wrapper.document_diagnostics = function()
+      lvim.lsp.wrapper.document_diagnostics = function()
         vim.cmd("TroubleToggle document_diagnostics")
       end
 
-      lvim.lsp_wrapper.workspace_diagnostics = function()
+      lvim.lsp.wrapper.workspace_diagnostics = function()
         vim.cmd("TroubleToggle workspace_diagnostics")
       end
     end,

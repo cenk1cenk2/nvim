@@ -572,6 +572,10 @@ hl.plugins.hlslens = {
   HlSearchFloat = { link = "IncSearch" },
 }
 
+hl.plugins.lspsaga = {
+  SagaBeacon = { link = "NormalFloat" },
+}
+
 hl.plugins.autopairs = {
   AutoPairsFastWrap = { bg = c.magenta[600] },
 }

@@ -74,9 +74,9 @@ function M.config()
       vim.o.foldenable = true
       -- vim.o.foldexpr = "manual"
 
-      local original = lvim.lsp_wrapper.hover
+      local original = lvim.lsp.wrapper.hover
 
-      lvim.lsp_wrapper.hover = function()
+      lvim.lsp.wrapper.hover = function()
         local winid = require("ufo").peekFoldedLinesUnderCursor()
         if not winid then
           original()

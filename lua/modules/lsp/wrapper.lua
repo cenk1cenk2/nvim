@@ -187,7 +187,7 @@ end
 
 function M.setup()
   for key, value in pairs(M) do
-    lvim.lsp_wrapper[key] = value
+    lvim.lsp.wrapper[key] = value
   end
 
   require("utils.setup").init({
@@ -216,7 +216,7 @@ function M.setup()
       return {
         ["q"] = {
           function()
-            lvim.lsp_wrapper.fix_current()
+            lvim.lsp.wrapper.fix_current()
           end,
           "fix current",
         },
@@ -224,19 +224,19 @@ function M.setup()
           name = "lsp",
           d = {
             function()
-              lvim.lsp_wrapper.document_diagnostics()
+              lvim.lsp.wrapper.document_diagnostics()
             end,
             "document diagnostics",
           },
           D = {
             function()
-              lvim.lsp_wrapper.workspace_diagnostics()
+              lvim.lsp.wrapper.workspace_diagnostics()
             end,
             "workspace diagnostics",
           },
           f = {
             function()
-              lvim.lsp_wrapper.format()
+              lvim.lsp.wrapper.format()
             end,
             "format buffer",
           },
@@ -254,43 +254,43 @@ function M.setup()
           H = { ":LspImportCurrent<CR>", "import current" },
           n = {
             function()
-              lvim.lsp_wrapper.goto_next()
+              lvim.lsp.wrapper.goto_next()
             end,
             "next diagnostic",
           },
           p = {
             function()
-              lvim.lsp_wrapper.goto_prev()
+              lvim.lsp.wrapper.goto_prev()
             end,
             "prev diagnostic",
           },
           l = {
             function()
-              lvim.lsp_wrapper.code_lens()
+              lvim.lsp.wrapper.code_lens()
             end,
             "codelens",
           },
           R = {
             function()
-              lvim.lsp_wrapper.rename()
+              lvim.lsp.wrapper.rename()
             end,
             "rename item under cursor",
           },
           q = {
             function()
-              lvim.lsp_wrapper.diagonistics_set_list()
+              lvim.lsp.wrapper.diagonistics_set_list()
             end,
             "set quickfix list",
           },
           s = {
             function()
-              lvim.lsp_wrapper.document_symbols()
+              lvim.lsp.wrapper.document_symbols()
             end,
             "document symbols",
           },
           S = {
             function()
-              lvim.lsp_wrapper.workspace_symbols()
+              lvim.lsp.wrapper.workspace_symbols()
             end,
             "workspace symbols",
           },

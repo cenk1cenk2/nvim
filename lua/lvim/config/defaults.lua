@@ -64,7 +64,6 @@ lvim = {
   extensions = {},
   plugins = {},
   autocommands = {},
-  lsp_wrapper = {},
   fn = {},
   wk = {
     mappings = {},

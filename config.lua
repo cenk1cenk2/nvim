@@ -68,10 +68,6 @@ lvim.lsp.ensure_installed = {
 
 lvim.lsp.automatic_configuration.skipped_filetypes = {}
 
-lvim.lsp.ignored_formatters = {
-  "tsserver",
-}
-
 lvim.lsp.automatic_configuration.skipped_servers = {
   "angularls",
   -- "ansiblels",

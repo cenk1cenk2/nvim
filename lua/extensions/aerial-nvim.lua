@@ -128,7 +128,7 @@ function M.config()
         },
       })
 
-      lvim.lsp_wrapper.lsp_document_symbols = function()
+      lvim.lsp.wrapper.lsp_document_symbols = function()
         vim.cmd("Telescope aerial")
       end
     end,

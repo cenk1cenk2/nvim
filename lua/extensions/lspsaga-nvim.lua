@@ -14,49 +14,29 @@ function M.config()
     configure = function(_, fn)
       fn.add_disabled_filetypes({
         "lspsagaoutline",
+        "lspsagafinder",
         "lspsagarename",
+        "sagarename",
+        "sagaoutline",
+        "sagafinder",
       })
     end,
-    inject_to_configure = function()
-      return {
-        lspsaga_diagnostic = require("lspsaga.diagnostic"),
-      }
-    end,
     setup = {
-      -- Error,Warn,Info,Hint
-      -- diagnostic_header = function(entry)
-      --   print(vim.inspect(entry.source))
-      --
-      --   local icon = "ﴞ"
-      --   if entry.severity == vim.diagnostic.severity.ERROR then
-      --     icon = ""
-      --   elseif entry.severity == vim.diagnostic.severity.WARN then
-      --     icon = ""
-      --   elseif entry.severity == vim.diagnostic.severity.INFO then
-      --     icon = ""
-      --   elseif entry.severity == vim.diagnostic.severity.HINT then
-      --     icon = "ﴞ"
-      --   end
-      --
-      --   return string.format("%s [ %s ]: ", icon, entry.source)
-      -- end,
-      -- use emoji lightbulb in default
-      code_action_icon = lvim.ui.icons.ui.LightbulbColored,
-      -- if true can press number to execute the codeaction in codeaction window
-      code_action_num_shortcut = true,
-      -- same as nvim-lightbulb but async
-      code_action_lightbulb = {
+      lightbulb = {
         enable = false,
         enable_in_insert = false,
-        cache_code_action = false,
         sign = true,
         update_time = 1000,
-        sign_priority = 20,
         virtual_text = false,
       },
-      -- preview lines of lsp_finder and definition preview
-      max_preview_lines = 10,
-      finder_action_keys = {
+      code_action = {
+        num_shortcut = true,
+        keys = {
+          quit = "q",
+          exec = "<CR>",
+        },
+      },
+      finder = {
         open = "<CR>",
         vsplit = "s",
         split = "h",
@@ -64,9 +44,19 @@ function M.config()
         scroll_down = "<C-f>",
         scroll_up = "<C-b>", -- quit can be a table
       },
-      code_action_keys = {
+      diagnostic = {
+        twice_into = true,
+        show_code_action = false,
+        show_source = true,
+        keys = {
+          exec_action = "o",
+          quit = "q",
+        },
+      },
+      rename = {
         quit = "<C-c>",
         exec = "<CR>",
+        in_select = true,
       },
       -- show symbols in winbar must nightly
       symbol_in_winbar = {
@@ -75,60 +65,65 @@ function M.config()
         separator = (" %s "):format(lvim.ui.icons.ui.ChevronShortRight),
         show_file = true,
       },
-      rename_action_quit = "<C-c>",
-      rename_in_select = false,
-      -- lvim.ui.border "double" "rounded" "bold" "plus"
-      border_style = lvim.ui.border,
-      --the range of 0 for fully opaque window (disabled) to 100 for fully
-      --transparent background. Values between 0-30 are typically most useful.
-      saga_winblend = 0,
-      -- when cursor in saga window you config these to move
-      move_in_saga = { prev = "<C-p>", next = "<C-n>" },
-      -- if you don't use nvim-lspconfig you must pass your server name and
-      -- the related filetypes into this table
-      -- like server_filetype_map = {metals = {'sbt', 'scala'}}
-      server_filetype_map = {},
-      -- show outline
-      show_outline = {
-        win_position = "right",
-        -- set the special filetype in there which in left like nvimtree neotree defx
-        left_with = "",
-        win_width = 40,
-        auto_enter = true,
-        auto_preview = true,
-        virt_text = "┃",
-        jump_key = "<CR>",
-        -- auto refresh when change buffer
-        auto_refresh = true,
+      ui = {
+        -- currently only round theme
+        theme = "round",
+        -- border type can be single,double,rounded,solid,shadow.
+        border = lvim.ui.border,
+        winblend = 0,
+        expand = lvim.ui.icons.ui.ChevronShortLeft,
+        collaspe = lvim.ui.icons.ui.ChevronShortDown,
+        preview = lvim.ui.icons.ui.FindFile,
+        code_action = "💡",
+        diagnostic = lvim.ui.icons.ui.Bug,
+        incoming = " ",
+        outgoing = " ",
+        colors = {
+          --float window normal bakcground color
+          normal_bg = lvim.ui.colors.bg[200],
+          --title background color
+          title_bg = lvim.ui.colors.yellow[300],
+          red = lvim.ui.colors.red[600],
+          magenta = lvim.ui.colors.magenta[600],
+          orange = lvim.ui.colors.orange[600],
+          yellow = lvim.ui.colors.yellow[600],
+          green = lvim.ui.colors.green[600],
+          cyan = lvim.ui.colors.cyan[600],
+          blue = lvim.ui.colors.blue[600],
+          purple = lvim.ui.colors.purple[600],
+          white = lvim.ui.colors.white,
+          black = lvim.ui.colors.black,
+        },
+        kind = {},
       },
     },
     on_setup = function(config)
-      require("lspsaga").init_lsp_saga(config.setup)
+      require("lspsaga").setup(config.setup)
     end,
-    on_done = function(config)
-      local lspsaga_diagnostic = config.inject.lspsaga_diagnostic
-
-      lvim.lsp_wrapper.code_action = function()
+    on_done = function()
+      lvim.lsp.wrapper.code_action = function()
         vim.cmd("Lspsaga code_action")
       end
-      lvim.lsp_wrapper.range_code_action = function()
+      lvim.lsp.wrapper.range_code_action = function()
         vim.cmd("Lspsaga code_action")
       end
-      -- lvim.lsp_wrapper.hover = function()
-      --   vim.cmd "Lspsaga hover_doc"
-      -- end
-      lvim.lsp_wrapper.rename = function()
+      lvim.lsp.wrapper.hover = function()
+        vim.cmd("Lspsaga hover_doc")
+      end
+      lvim.lsp.wrapper.rename = function()
         vim.cmd("Lspsaga rename")
       end
-      lvim.lsp_wrapper.goto_next = function()
-        lspsaga_diagnostic.goto_next()
+      lvim.lsp.wrapper.goto_next = function()
+        vim.cmd("Lspsaga diagnostic_jump_next")
+        -- require("lspsaga.diagnostic").goto_next({ severity = vim.diagnostic.severity.ERROR })
       end
-      lvim.lsp_wrapper.goto_prev = function()
-        lspsaga_diagnostic.goto_prev()
+      lvim.lsp.wrapper.goto_prev = function()
+        vim.cmd("Lspsaga diagnostic_jump_prev")
+        -- require("lspsaga.diagnostic").goto_prev({ severity = vim.diagnostic.severity.ERROR })
       end
-      -- lvim.lsp_wrapper.show_line_diagnostics = function()
-      --   lspsaga_diagnostic.show_line_diagnostics()
-      -- end
+      lvim.lsp.wrapper.show_line_diagnostics = function()
+        vim.cmd("Lspsaga show_line_diagnostics")
+      end
     end,
     keymaps = {
       n = {
