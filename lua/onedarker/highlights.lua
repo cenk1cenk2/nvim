@@ -304,7 +304,7 @@ hl.plugins.whichkey = {
   WhichKeyDesc = { fg = c.blue[600] },
   WhichKeyGroup = { fg = c.orange[600] },
   WhichKeySeperator = { fg = c.green[300] },
-  WhichKeyFloat = { bg = c.bg[300] },
+  WhichKeyFloat = { bg = c.bg[200] },
 }
 
 hl.plugins.gitgutter = {
