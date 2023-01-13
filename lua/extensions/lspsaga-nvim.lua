@@ -64,6 +64,7 @@ function M.config()
         enable = true,
         separator = (" %s "):format(lvim.ui.icons.ui.ChevronShortRight),
         show_file = true,
+        folder_level = 1,
       },
       ui = {
         -- currently only round theme

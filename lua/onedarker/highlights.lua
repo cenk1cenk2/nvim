@@ -79,7 +79,7 @@ hl.common = {
 
   NormalFloat = { bg = c.bg[200] },
   FloatTitle = { fg = c.green[300] },
-  FloatBorder = { fg = c.orange[300], bg = c.bg[200] },
+  FloatBorder = { fg = c.blue[300], bg = c.bg[200] },
   FloatShadow = { bg = c.bg[200] },
   FloatShadowThrough = { bg = c.bg[200] },
 
@@ -573,7 +573,18 @@ hl.plugins.hlslens = {
 }
 
 hl.plugins.lspsaga = {
-  SagaBeacon = { link = "NormalFloat" },
+  SagaBorder = { fg = c.bg[600] },
+  ActionPreviewBorder = { fg = c.yellow[300] },
+  CodeActionBorder = { fg = c.yellow[600] },
+  FinderBorder = { fg = c.cyan[300] },
+  FinderPreviewBorder = { fg = c.cyan[600] },
+  HoverBorder = { fg = c.orange[600] },
+  RenameBorder = { fg = c.purple[600] },
+  DiagnosticBorder = { fg = c.white },
+  DiagnosticErrorBorder = { fg = c.red[300] },
+  DiagnosticWarnBorder = { fg = c.orange[300] },
+  DiagnosticHintBorder = { fg = c.blue[300] },
+  DiagnosticInfoBorder = { fg = c.bg[900] },
 }
 
 hl.plugins.autopairs = {
