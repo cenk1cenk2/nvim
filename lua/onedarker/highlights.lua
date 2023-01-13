@@ -574,8 +574,8 @@ hl.plugins.hlslens = {
 
 hl.plugins.lspsaga = {
   SagaBorder = { fg = c.bg[600] },
-  ActionPreviewBorder = { fg = c.yellow[300] },
-  CodeActionBorder = { fg = c.yellow[600] },
+  ActionPreviewBorder = { fg = c.yellow[600] },
+  CodeActionBorder = { fg = c.yellow[300] },
   FinderBorder = { fg = c.cyan[300] },
   FinderPreviewBorder = { fg = c.cyan[600] },
   HoverBorder = { fg = c.orange[600] },
