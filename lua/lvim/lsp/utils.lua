@@ -83,14 +83,21 @@ function M.get_all_supported_filetypes()
 end
 
 function M.setup_codelens_refresh(client, bufnr)
+  if vim.tbl_contains("yamlls", client.name) then
+    return
+  end
+
   local status_ok, codelens_supported = pcall(function()
     return client.supports_method("textDocument/codeLens")
   end)
+
   if not status_ok or not codelens_supported then
     return
   end
+
   local group = "lsp_code_lens_refresh"
-  local cl_events = { "BufEnter", "LspAttach", "InsertLeave" }
+  local cl_events = { "LspAttach", "InsertLeave" }
+
   local ok, cl_autocmds = pcall(vim.api.nvim_get_autocmds, {
     group = group,
     buffer = bufnr,
@@ -100,6 +107,7 @@ function M.setup_codelens_refresh(client, bufnr)
   if ok and #cl_autocmds > 0 then
     return
   end
+
   vim.api.nvim_create_augroup(group, { clear = false })
   vim.api.nvim_create_autocmd(cl_events, {
     group = group,
