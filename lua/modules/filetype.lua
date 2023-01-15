@@ -4,8 +4,6 @@ function M.setup()
   vim.filetype.add({
     extension = {
       ["j2"] = function()
-        vim.bo.indentexpr = "nvim_treesitter#indent()"
-
         return "jinja"
       end,
       ["tf"] = "terraform",

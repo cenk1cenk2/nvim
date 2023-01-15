@@ -92,7 +92,7 @@ function M.config()
           enable = true,
           enable_autocmd = false,
         },
-        indent = { enable = true, disable = { "yaml", "python" } },
+        indent = { enable = true, disable = {} },
         autotag = { enable = true },
         textobjects = {
           swap = {

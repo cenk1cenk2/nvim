@@ -9,6 +9,7 @@ M.load_default_options = function()
     vim.fn.mkdir(undodir, "p")
   end
 
+  ---@type vim.opt
   local default_options = {
     backup = false, -- creates a backup file
     clipboard = "unnamedplus", -- allows neovim to access the system clipboard
@@ -18,6 +19,7 @@ M.load_default_options = function()
     fileencoding = "utf-8", -- the encoding written to a file
     foldmethod = "expr", -- folding, set to "expr" for treesitter based folding
     foldexpr = "nvim_treesitter#foldexpr()", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
+    indentexpr = "nvim_treesitter#indent()",
     foldenable = false,
     foldlevel = 99,
     guifont = "monospace:h17", -- the font used in graphical neovim applications
@@ -82,6 +84,7 @@ end
 M.load_defaults = function()
   if is_headless() then
     M.load_headless_options()
+
     return
   end
   M.load_default_options()
