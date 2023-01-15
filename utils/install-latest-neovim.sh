@@ -1,8 +1,6 @@
 #!/bin/bash
 
 SECONDS=0
-# FIXME: Remove after this merge has been finalized.
-# https://github.com/folke/noice.nvim/issues/298
 # COMMIT_SHA="99cf111289bfcd14981255e805da43bac5139141"
 # PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
 
