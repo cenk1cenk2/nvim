@@ -66,25 +66,24 @@ function M.config()
         -- },
         formatting = {
           fields = { "kind", "abbr", "menu" },
-          max_width = 0,
+          max_width = 40,
           kind_icons = lvim.ui.icons.kind,
           source_names = {
-            nvim_lsp = "(LSP)",
-            emoji = "(Emoji)",
-            path = "(Path)",
-            calc = "(Calc)",
-            cmp_tabnine = "(Tabnine)",
-            vsnip = "(Snippet)",
-            luasnip = "(Snippet)",
-            buffer = "(Buffer)",
-            fuzzy_buffer = "(FZF)",
-            git = "(GIT)",
-            omni = "(OMNI)",
-            npm = "(NPM)",
-            rg = "(RG)",
-            tmux = "(TMUX)",
-            nvim_lsp_signature_help = "(SH)",
-            copilot = "(Copilot)",
+            nvim_lsp = "LSP",
+            emoji = "Emoji",
+            path = "Path",
+            calc = "Calc",
+            cmp_tabnine = "T9",
+            vsnip = "Snip",
+            luasnip = "Snip",
+            buffer = "Buff",
+            fuzzy_buffer = "FZF",
+            git = "GIT",
+            omni = "OMNI",
+            npm = "NPM",
+            rg = "RG",
+            tmux = "TMUX",
+            copilot = "CoPi",
           },
           duplicates = {
             buffer = 1,
@@ -98,10 +97,10 @@ function M.config()
 
             local max_width = current_setup.formatting.max_width
             if max_width ~= 0 and #vim_item.abbr > max_width then
-              vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. lvim.ui.icons.ui.Ellipsis
+              vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. " " .. lvim.ui.icons.ui.Ellipsis
             end
 
-            vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind]
+            vim_item.kind = ("[%s]"):format(current_setup.formatting.kind_icons[vim_item.kind])
 
             vim_item.menu = current_setup.formatting.source_names[entry.source.name]
 
