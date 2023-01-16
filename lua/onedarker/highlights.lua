@@ -585,6 +585,7 @@ hl.plugins.lspsaga = {
   DiagnosticWarnBorder = { fg = c.orange[300] },
   DiagnosticHintBorder = { fg = c.blue[300] },
   DiagnosticInfoBorder = { fg = c.bg[900] },
+  SagaBeacon = { bg = c.yellow[300] },
 }
 
 hl.plugins.autopairs = {
