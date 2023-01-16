@@ -8,7 +8,8 @@ function M.config()
     plugin = function()
       return {
         "folke/todo-comments.nvim",
-        cmd = { "TodoTelescope" },
+        event = "BufReadPost",
+        -- cmd = { "TodoTelescope" },
       }
     end,
     setup = {
