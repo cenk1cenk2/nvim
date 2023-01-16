@@ -84,6 +84,7 @@ function M.config()
             rg = "(RG)",
             tmux = "(TMUX)",
             nvim_lsp_signature_help = "(SH)",
+            copilot = "(Copilot)",
           },
           duplicates = {
             buffer = 1,
@@ -102,32 +103,10 @@ function M.config()
 
             vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind]
 
-            if entry.source.name == "copilot" then
-              vim_item.kind = lvim.ui.icons.git.Octoface
-              vim_item.kind_hl_group = "CmpItemKindCopilot"
-            end
-
-            if entry.source.name == "cmp_tabnine" then
-              vim_item.kind = lvim.ui.icons.misc.Robot
-              vim_item.kind_hl_group = "CmpItemKindTabnine"
-            end
-
-            if entry.source.name == "crates" then
-              vim_item.kind = lvim.ui.icons.misc.Package
-              vim_item.kind_hl_group = "CmpItemKindCrate"
-            end
-
-            if entry.source.name == "lab.quick_data" then
-              vim_item.kind = lvim.ui.icons.misc.CircuitBoard
-              vim_item.kind_hl_group = "CmpItemKindConstant"
-            end
-
-            if entry.source.name == "emoji" then
-              vim_item.kind = lvim.ui.icons.misc.Smiley
-              vim_item.kind_hl_group = "CmpItemKindEmoji"
-            end
             vim_item.menu = current_setup.formatting.source_names[entry.source.name]
+
             vim_item.dup = current_setup.formatting.duplicates[entry.source.name] or current_setup.formatting.duplicates_default
+
             return vim_item
           end,
         },
