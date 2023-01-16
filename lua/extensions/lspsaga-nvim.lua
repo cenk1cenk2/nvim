@@ -56,7 +56,7 @@ function M.config()
       rename = {
         quit = "<C-c>",
         exec = "<CR>",
-        in_select = true,
+        in_select = false,
       },
       -- show symbols in winbar must nightly
       symbol_in_winbar = {
