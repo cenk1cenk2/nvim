@@ -100,9 +100,9 @@ function M.config()
               vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. " " .. lvim.ui.icons.ui.Ellipsis
             end
 
-            vim_item.kind = ("[%s]"):format(current_setup.formatting.kind_icons[vim_item.kind])
+            vim_item.kind = ("%s"):format(current_setup.formatting.kind_icons[vim_item.kind])
 
-            vim_item.menu = current_setup.formatting.source_names[entry.source.name]
+            vim_item.menu = ("[%s]"):format(current_setup.formatting.source_names[entry.source.name])
 
             vim_item.dup = current_setup.formatting.duplicates[entry.source.name] or current_setup.formatting.duplicates_default
 
