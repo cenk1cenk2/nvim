@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "jay-babu/mason-nvim-dap.nvim",
-        keys = { "<Space>d" },
+        keys = { { "<Space>d" } },
       }
     end,
     setup = {

@@ -9,7 +9,7 @@ function M.config()
       return {
         "johmsalas/text-case.nvim",
         cmd = { "Subs" },
-        keys = { { "gs", mode = { "n", "v", "x" } } },
+        keys = { { "gs", mode = { "n", "v", "x" }, desc = "text case [lazy]" } },
       }
     end,
     setup = {
