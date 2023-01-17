@@ -16,7 +16,7 @@ function M.config()
       inlay_hints = {
         parameter_hints = {
           show = true,
-          prefix = lvim.ui.icons.ui.BoldArrowLeft .. " ",
+          prefix = lvim.ui.icons.ui.ChevronShortLeft .. " ",
           separator = ", ",
           remove_colon_start = false,
           remove_colon_end = true,
