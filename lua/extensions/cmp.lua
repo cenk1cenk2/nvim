@@ -85,6 +85,7 @@ function M.config()
             tmux = "TMUX",
             copilot = "CoPi",
             cmdline = "CMD",
+            noice_popupmenu = "CMD",
           },
           duplicates = {
             buffer = 1,
