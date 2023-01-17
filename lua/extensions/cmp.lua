@@ -84,6 +84,7 @@ function M.config()
             rg = "RG",
             tmux = "TMUX",
             copilot = "CoPi",
+            cmdline = "CMD",
           },
           duplicates = {
             buffer = 1,
