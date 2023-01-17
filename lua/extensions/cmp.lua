@@ -102,7 +102,7 @@ function M.config()
 
             vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind]
 
-            vim_item.menu = ("[%s]"):format(current_setup.formatting.source_names[entry.source.name])
+            vim_item.menu = ("[%s]"):format(current_setup.formatting.source_names[entry.source.name] or entry.source.name)
 
             vim_item.dup = current_setup.formatting.duplicates[entry.source.name] or current_setup.formatting.duplicates_default
 

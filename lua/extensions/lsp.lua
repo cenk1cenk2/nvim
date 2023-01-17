@@ -14,6 +14,7 @@ function M.config()
           "neovim/nvim-lspconfig",
           event = "BufReadPre",
           init = false,
+          cmd = { "Mason", "MasonLog", "MasonInstall", "MasonUninstall", "MasonToolsUpdate", "MasonToolsUpdate" },
           config = function()
             require("lvim.lsp").setup()
           end,
