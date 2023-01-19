@@ -36,7 +36,7 @@ M.mappings = {
     l = { ":set nonumber!<CR>", "toggle line numbers" },
     r = { ":set norelativenumber!<CR>", "toggle relative line numbers" },
     s = { ":setlocal spell!<CR>", "toggle spell check" },
-    S = { ":set signcolumns=yes<CR>", "fix sign columns" },
+    S = { ":set signcolumns=yes:2<CR>", "fix sign columns" },
     T = { ":setlocal bufhidden=delete<CR>", "set as temporary buffer" },
   },
 
