@@ -3,7 +3,7 @@ local M = {}
 local modules = {
   "nvim",
   "commands",
-  "augroups",
+  "autocmds",
   "filetype",
   "executables",
   "quit",
