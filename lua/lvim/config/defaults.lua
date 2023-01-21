@@ -17,7 +17,7 @@ lvim = {
     transparent_window = false,
   },
 
-  selection_chars = "qwertyuiopzxcvbnmasdfghjkl",
+  selection_chars = "asdfgzxcqwervbrt",
   system_register = "+",
 
   log = {
