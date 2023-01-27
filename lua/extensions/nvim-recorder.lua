@@ -15,7 +15,7 @@ function M.config()
       return {
         -- Named registers where macros are saved. The first register is the default
         -- register/macro-slot used after startup.
-        slots = { "a", "s", "d", "f" },
+        slots = { "n", "m", "y", "u" },
 
         -- default keymaps, see README for description what the commands do
         mapping = {
