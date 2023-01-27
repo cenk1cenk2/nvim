@@ -90,7 +90,7 @@ local function launch_server(server_name, config)
         pattern = ft,
         callback = function(event)
           xpcall(function()
-            if lvim_lsp_utils.is_client_active(server_name) or client_is_configured(server_name) then
+            if M.has_setup(server_name) then
               return
             end
 
@@ -106,6 +106,14 @@ local function launch_server(server_name, config)
   })
 end
 
+function M.has_setup(server_name)
+  if lvim_lsp_utils.is_client_active(server_name) or client_is_configured(server_name) then
+    return true
+  end
+
+  return false
+end
+
 ---Setup a language server by providing a name
 ---@param server_name string name of the language server
 ---@param user_config table? when available it will take predence over any default configurations
@@ -113,7 +121,7 @@ function M.setup(server_name, user_config)
   vim.validate({ name = { server_name, "string" } })
   user_config = user_config or {}
 
-  if lvim_lsp_utils.is_client_active(server_name) or client_is_configured(server_name) then
+  if M.has_setup(server_name) then
     return
   end
 
