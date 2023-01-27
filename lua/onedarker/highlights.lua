@@ -219,6 +219,7 @@ hl.treesitter = {
   ["@enumMember"] = { fg = c.yellow[900] },
   ["@event"] = { fg = c.cyan[600] },
   ["@interface"] = { fg = c.yellow[600] },
+  ["@readonly"] = { fg = c.yellow[300] },
   ["@modifier"] = { fg = c.cyan[600] },
   ["@regexp"] = { fg = c.orange[300] },
   ["@typeParameter"] = { fg = c.yellow[600] },
