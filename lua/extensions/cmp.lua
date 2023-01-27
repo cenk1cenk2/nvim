@@ -32,7 +32,7 @@ function M.config()
           { "rafamadriz/friendly-snippets" },
           { "L3MON4D3/LuaSnip" },
           { "hrsh7th/cmp-nvim-lsp-signature-help" },
-          { "rcarriga/cmp-dap" },
+          -- { "rcarriga/cmp-dap" },
           -- https://github.com/bydlw98/cmp-env
           { "bydlw98/cmp-env" },
           -- https://github.com/hrsh7th/cmp-calc
@@ -281,11 +281,11 @@ function M.config()
       })
 
       -- dap
-      cmp.setup.filetype({ "dap-repl", "dapui_watches" }, {
-        sources = {
-          { name = "dap" },
-        },
-      })
+      -- cmp.setup.filetype({ "dap-repl", "dapui_watches" }, {
+      --   sources = {
+      --     { name = "dap" },
+      --   },
+      -- })
     end,
   })
 end
