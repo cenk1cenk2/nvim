@@ -90,6 +90,10 @@ local function launch_server(server_name, config)
         pattern = ft,
         callback = function(event)
           xpcall(function()
+            if lvim_lsp_utils.is_client_active(server_name) or client_is_configured(server_name) then
+              return
+            end
+
             require("lspconfig")[server_name].setup(config)
           end, debug.traceback)
 
