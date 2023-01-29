@@ -75,6 +75,12 @@ function M.config()
         end,
       })
     end,
+    inject_to_configure = function()
+      return {
+        parser_config = require("nvim-treesitter.parsers").get_parser_configs(),
+        ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername,
+      }
+    end,
     setup = function()
       return {
         ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
@@ -143,8 +149,34 @@ function M.config()
         },
       }
     end,
+    parser_config = {
+      -- jinja = {
+      --   install_info = {
+      --     url = "https://github.com/theHamsta/tree-sitter-jinja2.git",
+      --     files = { "src/parser.c" },
+      --     generate_requires_npm = false,
+      --     requires_generate_from_grammar = false,
+      --   },
+      --   filetype = "jinja",
+      -- },
+    },
+    ft_to_parser = {
+      -- ["jinja"] = "jinja",
+    },
     on_setup = function(config)
       require("nvim-treesitter.configs").setup(config.setup)
+    end,
+    on_done = function(config)
+      local parser_config = config.inject.parser_config
+      local ft_to_parser = config.inject.ft_to_parser
+
+      for key, value in pairs(config.parser_config) do
+        parser_config[key] = value
+      end
+
+      for key, value in pairs(config.ft_to_parser) do
+        ft_to_parser[key] = value
+      end
     end,
     wk = function(_, categories, fn)
       return {
