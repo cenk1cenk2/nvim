@@ -97,8 +97,8 @@ return {
     [">"] = ">gv",
 
     -- dont overwrite while pasting
-    ["p"] = '"_dP',
-    ["P"] = '"_dp',
+    ["p"] = '"_dp',
+    ["P"] = '"_dP',
   },
 
   ---@usage change or add keymappings for visual block mode
@@ -108,8 +108,8 @@ return {
     ["<A-k>"] = ":m '<-2<CR>gv-gv",
 
     -- to blachole
-    ["p"] = '"_dP',
-    ["P"] = '"_dp',
+    ["p"] = '"_dp',
+    ["P"] = '"_dP',
   },
 
   ---@usage change or add keymappings for command mode

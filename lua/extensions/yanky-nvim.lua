@@ -126,7 +126,7 @@ function M.config()
       end
 
       local visual = {
-        ["P"] = {
+        ["p"] = {
           function()
             local yanky = require("yanky")
 
@@ -134,7 +134,7 @@ function M.config()
           end,
           desc = "yanky put after",
         },
-        ["p"] = {
+        ["P"] = {
           function()
             local yanky = require("yanky")
 
