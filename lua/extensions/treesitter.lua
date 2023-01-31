@@ -138,13 +138,14 @@ function M.config()
           disable = lvim.disabled_filetypes,
         },
         refactor = { highlight_current_scope = { enable = false } },
+        -- https://github.com/nvim-treesitter/nvim-treesitter/issues/4000
         incremental_selection = {
           enable = true,
           keymaps = {
             init_selection = "<CR>",
-            scope_incremental = "<CR>",
-            node_incremental = "<TAB>",
-            node_decremental = "<S-TAB>",
+            node_incremental = "<CR>",
+            scope_incremental = "<S-CR>",
+            node_decremental = "<BS>",
           },
         },
       }
