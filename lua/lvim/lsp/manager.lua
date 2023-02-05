@@ -107,7 +107,7 @@ local function launch_server(server_name, config)
 end
 
 function M.has_setup(server_name)
-  if lvim_lsp_utils.is_client_active(server_name) or client_is_configured(server_name) then
+  if lvim_lsp_utils.is_client_active(server_name) then
     return true
   end
 
