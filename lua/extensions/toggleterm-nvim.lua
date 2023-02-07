@@ -86,8 +86,7 @@ function M.config()
     end,
     on_done = function(config)
       -- local editor = "nvr --servername " .. vim.v.servername .. " "
-      local editor_split = "nvr --servername " .. vim.v.servername .. " -cc split --remote-wait-silent"
-      -- .. " +'setlocal bufhidden=delete'"
+      local editor_split = "nvr --servername " .. vim.v.servername .. " -cc split --remote-wait-silent" .. " +'setlocal bufhidden=delete'"
 
       if vim.fn.has("nvim") and vim.fn.executable("nvr") then
         vim.env.NVIM_LISTEN_ADDRESS = vim.v.servername
