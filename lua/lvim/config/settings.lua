@@ -20,8 +20,12 @@ M.load_default_options = function()
     foldmethod = "expr", -- folding, set to "expr" for treesitter based folding
     foldexpr = "nvim_treesitter#foldexpr()", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
     indentexpr = "nvim_treesitter#indent()",
+    fillchars = {
+      foldclose = lvim.ui.icons.ArrowCircleRight,
+    },
     foldenable = false,
     foldlevel = 99,
+    foldcolumn = "0",
     guifont = "monospace:h17", -- the font used in graphical neovim applications
     hidden = true, -- required to keep multiple buffers and open multiple buffers
     hlsearch = true, -- highlight all matches on previous search pattern
