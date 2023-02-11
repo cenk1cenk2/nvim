@@ -84,6 +84,7 @@ local extensions = {
   "chatgpt-nvim",
   "browse-nvim",
   "mind-nvim",
+  "nvim-insx",
 }
 
 function M.config(config)
