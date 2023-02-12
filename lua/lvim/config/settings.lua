@@ -19,7 +19,7 @@ M.load_default_options = function()
     fileencoding = "utf-8", -- the encoding written to a file
     foldmethod = "expr", -- folding, set to "expr" for treesitter based folding
     foldexpr = "nvim_treesitter#foldexpr()", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
-    indentexpr = "nvim_treesitter#indent()",
+    -- indentexpr = "nvim_treesitter#indent()",
     fillchars = {
       foldclose = lvim.ui.icons.ArrowCircleRight,
     },
