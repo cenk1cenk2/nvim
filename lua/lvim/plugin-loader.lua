@@ -1,13 +1,12 @@
 local M = {}
 
-local utils = require("lvim.utils")
 local Log = require("lvim.core.log")
 
 M.plugins_dir = get_data_dir() .. "/lazy"
 M.plugin_manager_dir = M.plugins_dir .. "/lazy.nvim"
 
 function M.init()
-  if not utils.is_directory(M.plugin_manager_dir) then
+  if not vim.loop.fs_stat(M.plugin_manager_dir) then
     print("Initializing first time setup...")
     print("Installing plugin manager...")
 
