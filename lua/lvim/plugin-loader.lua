@@ -5,7 +5,6 @@ local Log = require("lvim.core.log")
 
 M.plugins_dir = get_data_dir() .. "/lazy"
 M.plugin_manager_dir = M.plugins_dir .. "/lazy.nvim"
-M.plugin_manager_cache_dir = get_cache_dir() .. "/lazy"
 
 function M.init()
   if not utils.is_directory(M.plugin_manager_dir) then
@@ -22,21 +21,7 @@ function M.init()
     })
   end
 
-  vim.opt.runtimepath:prepend(M.plugin_manager_dir)
-
-  local lazy_cache = require("lazy.core.cache")
-
-  ---@diagnostic disable-next-line: redundant-parameter
-  lazy_cache.setup({
-    performance = {
-      cache = {
-        enabled = true,
-        path = M.plugin_manager_cache_dir,
-      },
-    },
-  })
-  -- HACK: Don't allow lazy to call setup second time
-  lazy_cache.setup = function() end
+  vim.opt.rtp:prepend(M.plugin_manager_dir)
 end
 
 function M.load()
@@ -83,13 +68,6 @@ function M.load()
     performance = {
       cache = {
         enabled = true,
-        path = M.plugin_manager_cache_dir,
-        -- Once one of the following events triggers, caching will be disabled.
-        -- To cache all modules, set this to `{}`, but that is not recommended.
-        -- The default is to disable on:
-        --  * VimEnter: not useful to cache anything else beyond startup
-        --  * BufReadPre: this will be triggered early when opening a file from the command line directly
-        disable_events = { "VimEnter", "BufReadPre" },
       },
       reset_packpath = true,
       rtp = {
@@ -122,17 +100,11 @@ function M.load()
 
   if not status_ok then
     Log:warn("Can not load plugin configurations.")
+
     Log:trace(debug.traceback())
   end
 
   require("lvim.utils.hooks").on_plugin_manager_complete()
-end
-
-function M.reset_cache()
-  local path = require("lazy.core.cache").config.path
-  Log:warn(("Removing cache directory for package manager: %s"):format(path))
-
-  os.remove(path)
 end
 
 function M.reload(spec)

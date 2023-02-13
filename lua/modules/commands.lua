@@ -35,12 +35,6 @@ function M.setup()
         end,
       },
       {
-        name = "LvimCacheReset",
-        fn = function()
-          require("lvim.utils.hooks").reset_cache()
-        end,
-      },
-      {
         name = "LvimReload",
         fn = function()
           require("lvim.config"):reload()

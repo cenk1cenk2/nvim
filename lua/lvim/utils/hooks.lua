@@ -32,8 +32,4 @@ function M.run_post_update()
   end
 end
 
-function M.reset_cache()
-  require("lvim.plugin-loader").reset_cache()
-end
-
 return M
