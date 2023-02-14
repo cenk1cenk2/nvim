@@ -31,7 +31,10 @@ function M.config()
       },
       code_action = {
         num_shortcut = true,
+        show_server_name = true,
+        extend_gitsigns = false,
         keys = {
+          -- string | table type
           quit = "q",
           exec = "<CR>",
         },
@@ -45,7 +48,7 @@ function M.config()
         scroll_up = "<C-b>", -- quit can be a table
       },
       diagnostic = {
-        twice_into = false,
+        twice_into = true,
         show_code_action = false,
         show_source = true,
         keys = {
