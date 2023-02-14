@@ -20,7 +20,14 @@ end
 
 function M.update_sync()
   vim.cmd([[Lazy! sync]])
-  -- M.update_language_servers_sync()
+  M.update_language_servers_sync()
+
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "MasonToolsUpdateCompleted",
+    callback = function()
+      vim.cmd([[qa!]])
+    end,
+  })
 end
 
 function M.rebuild_and_update()
@@ -33,13 +40,8 @@ function M.update_language_servers()
 end
 
 function M.update_language_servers_sync()
+  require("lvim.lsp").setup(true)
   M.update_language_servers()
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "MasonToolsUpdateCompleted",
-    callback = function()
-      Log:debug("Mason tools update has been completed.")
-    end,
-  })
 end
 
 function M.setup()

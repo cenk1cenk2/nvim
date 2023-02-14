@@ -81,8 +81,8 @@ function M.get_common_opts()
   }
 end
 
-function M.setup()
-  if is_headless() then
+function M.setup(force)
+  if is_headless() and not force then
     Log:debug("headless mode detected, skipping setting lsp support")
     return
   end
