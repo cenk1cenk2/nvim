@@ -25,7 +25,7 @@ function M.setup()
     pattern = {
       ["Dockerfile.*"] = "dockerfile",
       [".*%.yml"] = function(path)
-        if path:find("docker-compose.*$") then
+        if path:find("docker%-compose.*$") then
           return "yaml.docker-compose"
         end
 
