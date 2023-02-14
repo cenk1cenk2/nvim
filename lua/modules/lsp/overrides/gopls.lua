@@ -1,4 +1,4 @@
-local opts = {
+return {
   settings = {
     gopls = {
       hints = {
@@ -12,5 +12,3 @@ local opts = {
     },
   },
 }
-
-return opts

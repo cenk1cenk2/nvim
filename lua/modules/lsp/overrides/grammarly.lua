@@ -1,4 +1,4 @@
-local opts = {
+return {
   filetypes = { "markdown", "plaintext", "text" },
   single_file_support = true,
   settings = {
@@ -14,5 +14,3 @@ local opts = {
     },
   },
 }
-
-return opts

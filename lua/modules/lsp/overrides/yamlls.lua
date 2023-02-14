@@ -2,6 +2,7 @@ return {
   filetypes = {
     "yaml",
     "!yaml.ansible",
+    "!yaml.docker-compose",
   },
   settings = {
     yaml = {

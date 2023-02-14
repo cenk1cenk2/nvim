@@ -28,6 +28,7 @@ lvim.lsp.ensure_installed = {
   "prisma-language-server",
   "prosemd-lsp",
   "taplo",
+  "docker-compose-language-service",
   ---- formatters/linters
   "stylua",
   "eslint_d",

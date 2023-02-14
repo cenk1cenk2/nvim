@@ -25,6 +25,10 @@ function M.setup()
     pattern = {
       ["Dockerfile.*"] = "dockerfile",
       [".*%.yml"] = function(path)
+        if path:find("docker-compose.*$") then
+          return "yaml.docker-compose"
+        end
+
         local root = require("lspconfig/util").root_pattern("ansible.cfg", ".ansible-lint", ".vault-password")(path)
 
         if root and not (path:find("environments/") or path:find("vars/") or path:find("group_vars/") or path:find("host_vars/")) and vim.fs.dirname(path) ~= root then
