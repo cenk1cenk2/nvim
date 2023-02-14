@@ -1,5 +1,7 @@
 local M = {}
 
+local Log = require("lvim.core.log")
+
 function M.rebuild_latest_neovim()
   local term_opts = require("extensions.toggleterm-nvim").generate_defaults_float_terminal({
     cmd = join_paths(get_config_dir(), "/utils/install-latest-neovim.sh"),
@@ -11,20 +13,46 @@ function M.rebuild_latest_neovim()
   log_view:toggle()
 end
 
+function M.update()
+  vim.cmd([[Lazy sync]])
+  M.update_language_servers()
+end
+
+function M.update_sync()
+  vim.cmd([[Lazy! sync]])
+  -- M.update_language_servers_sync()
+end
+
 function M.rebuild_and_update()
   M.rebuild_latest_neovim()
-
-  vim.cmd([[Lazy sync]])
+  M.update()
 end
 
 function M.update_language_servers()
-  vim.cmd([[MasonToolsUpdate]])
-  vim.cmd([[Mason]])
+  require("mason-tool-installer").check_install(true)
+end
+
+function M.update_language_servers_sync()
+  M.update_language_servers()
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "MasonToolsUpdateCompleted",
+    callback = function()
+      Log:debug("Mason tools update has been completed.")
+    end,
+  })
 end
 
 function M.setup()
   require("utils.setup").init({
     name = "rebuild",
+    commands = {
+      {
+        name = "LvimHeadlessUpdate",
+        fn = function()
+          M.update_sync()
+        end,
+      },
+    },
     wk = function(_, categories)
       return {
         [categories.BUILD] = {
@@ -34,13 +62,19 @@ function M.setup()
             end,
             "install latest neovim",
           },
-          u = {
+          l = {
             function()
               M.update_language_servers()
             end,
             "update language servers",
           },
-          U = {
+          u = {
+            function()
+              M.update()
+            end,
+            "update",
+          },
+          R = {
             function()
               M.rebuild_and_update()
             end,
