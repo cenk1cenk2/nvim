@@ -47,6 +47,8 @@ if [ -f "/bin/nvim" ]; then
 	sudo rm /bin/nvim
 fi
 
+cd /tmp || exit 127
+
 pip3 install neovim-remote
 
 ## goodbye
