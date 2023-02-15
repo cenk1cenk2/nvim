@@ -19,6 +19,8 @@ function M.update()
 end
 
 function M.update_sync()
+  Log:warn("Triggered the special update method.")
+
   vim.cmd([[Lazy! sync]])
   M.update_language_servers_sync()
 
