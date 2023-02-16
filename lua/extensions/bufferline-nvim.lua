@@ -265,7 +265,7 @@ function M.buf_kill(bufnr, force)
   local bufname = api.nvim_buf_get_name(bufnr)
 
   local callback = function(b, f)
-    require("bufdel").delete_buffer(b, f)
+    require("bufdel").delete_buffer_expr(b, f)
   end
 
   if not force then
