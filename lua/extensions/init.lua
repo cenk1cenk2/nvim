@@ -81,7 +81,6 @@ local extensions = {
   "winshift-nvim",
   "exrc-nvim",
   "browse-nvim",
-  "nvim-insx",
 }
 
 function M.config(config)
