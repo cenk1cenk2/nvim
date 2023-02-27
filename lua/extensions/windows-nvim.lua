@@ -4,18 +4,15 @@ local M = {}
 local extension_name = "windows_nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, false, {
-    packer = function(config)
+  require("utils.setup").define_extension(extension_name, true, {
+    plugin = function(config)
       return {
         "anuvyklack/windows.nvim",
-        requires = {
+        dependencies = {
           "anuvyklack/middleclass",
           "anuvyklack/animation.nvim",
         },
-        config = function()
-          require("utils.setup").packer_config("windows_nvim")
-        end,
-        disable = not config.active,
+        event = "BufReadPost",
       }
     end,
     setup = function()
@@ -32,7 +29,7 @@ function M.config()
           filetype = lvim.disabled_filetypes,
         },
         animation = {
-          enable = true,
+          enable = false,
           duration = 100,
           fps = 60,
           easing = "in_out_sine",
@@ -43,8 +40,9 @@ function M.config()
       require("windows").setup(config.setup)
     end,
     nvim_opts = {
-      -- winwidth = 10,
+      winwidth = 10,
       winminwidth = 0,
+      equalalways = false,
     },
     wk = function(_, categories)
       return {

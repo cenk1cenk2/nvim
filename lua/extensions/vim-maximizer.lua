@@ -3,7 +3,7 @@ local M = {}
 local extension_name = "vim_maximizer"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     plugin = function()
       return {
         "szw/vim-maximizer",
