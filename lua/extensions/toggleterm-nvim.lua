@@ -85,8 +85,8 @@ function M.config()
       require("toggleterm").setup(config.setup)
     end,
     on_done = function(config)
-      local editor = "nvr --servername " .. vim.v.servername .. " +'setlocal bufhidden=delete'"
-      local editor_split = editor .. " -cc split --remote-wait-silent"
+      local editor = ([[nvr --servername %s --remote-wait-silent +'set bufhidden=delete']]):format(vim.v.servername)
+      local editor_split = ([[%s -cc split]]):format(editor)
 
       if vim.fn.has("nvim") and vim.fn.executable("nvr") then
         vim.env.NVIM_LISTEN_ADDRESS = vim.v.servername
