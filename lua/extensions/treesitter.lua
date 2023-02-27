@@ -140,7 +140,7 @@ function M.config()
         refactor = { highlight_current_scope = { enable = false } },
         -- https://github.com/nvim-treesitter/nvim-treesitter/issues/4000
         incremental_selection = {
-          enable = false,
+          enable = true,
           keymaps = {
             init_selection = "<CR>",
             node_incremental = "<CR>",
