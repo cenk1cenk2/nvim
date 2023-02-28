@@ -52,8 +52,8 @@ function M.config()
       shade_filetypes = {},
       shade_terminals = true,
       shading_factor = 2, -- the degree by which to darken to terminal colour, default: 1 for dark backgrounds, 3 for light
-      start_in_insert = true,
-      insert_mappings = true, -- whether or not the open mapping applies in insert mode
+      start_in_insert = false,
+      insert_mappings = false, -- whether or not the open mapping applies in insert mode
       persist_size = false,
       -- direction = 'vertical' | 'horizontal' | 'window' | 'float',
       direction = "float",
@@ -164,16 +164,16 @@ function M.config()
       }
     end,
     autocmds = {
-      {
-        { "TermOpen" },
-        {
-          group = "_toggle_term",
-          pattern = "*",
-          callback = function(event)
-            vim.keymap.set("n", "<LeftRelease>", "<LeftRelease>i", { silent = true, buffer = event.buf })
-          end,
-        },
-      },
+      -- {
+      --   { "TermOpen" },
+      --   {
+      --     group = "_toggle_term",
+      --     pattern = "*",
+      --     callback = function(event)
+      --       vim.keymap.set("n", "<LeftRelease>", "<LeftRelease>i", { silent = true, buffer = event.buf })
+      --     end,
+      --   },
+      -- },
     },
   })
 end
@@ -191,9 +191,9 @@ M.marks = {
 function M.on_open(terminal)
   terminal:focus()
 
-  if not M.get_mark(terminal, M.marks.HAS_EXIT) then
-    terminal:set_mode(require("toggleterm.terminal").mode.INSERT)
-  end
+  -- if not M.get_mark(terminal, M.marks.HAS_EXIT) then
+  -- terminal:set_mode(require("toggleterm.terminal").mode.INSERT)
+  -- end
 end
 
 function M.on_exit(terminal) end

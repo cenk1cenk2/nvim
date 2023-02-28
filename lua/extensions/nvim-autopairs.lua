@@ -90,7 +90,7 @@ function M.config()
 
       -- angle brackets
       npairs.add_rules({
-        Rule("<", ">"):with_pair(cond.before_regex("%a+")):with_move(),
+        Rule("<", ">"):with_pair(cond.before_regex("%a+")),
       })
 
       -- arrow key on javascript
