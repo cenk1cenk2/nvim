@@ -10,12 +10,8 @@ function M.clear_references()
   vim.lsp.buf.clear_references()
 end
 
-function M.code_action()
-  vim.lsp.buf.code_action()
-end
-
-function M.range_code_action()
-  vim.lsp.buf.range_code_action()
+function M.code_action(...)
+  vim.lsp.buf.code_action(...)
 end
 
 function M.declaration()
@@ -126,6 +122,7 @@ function M.fix_current()
   vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
     if not responses or vim.tbl_isempty(responses) then
       Log:warn("[QUICKFIX] Not found!")
+
       return
     end
 
@@ -148,7 +145,8 @@ function M.fix_current()
     local fix = available_fixes[1]
     lsp_utils.apply_lsp_edit(fix)
     local client = vim.lsp.get_client_by_id(fix.command.client_id)
-    Log:info(("[QUICKFIX] %s: %s"):format(client.name, fix.title))
+    local client_name = (client or {}).name
+    Log:info(("[QUICKFIX] %s: %s"):format(client_name, fix.title))
   end)
 end
 

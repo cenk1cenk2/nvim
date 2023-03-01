@@ -53,7 +53,7 @@ return {
   visual_mode = {
     ["ca"] = {
       function()
-        lvim.lsp.wrapper.range_code_action()
+        lvim.lsp.wrapper.code_action()
       end,
       "range code action",
     },
