@@ -104,12 +104,19 @@ function M.config()
     on_setup = function(config)
       require("lspsaga").setup(config.setup)
     end,
-    on_done = function()
+    on_done = function(_, fn)
       lvim.lsp.wrapper.code_action = function()
         vim.cmd("Lspsaga code_action")
       end
       lvim.lsp.wrapper.hover = function()
-        vim.cmd("Lspsaga hover_doc")
+        if fn.is_extension_enabled("nvim_ufo") then
+          local winid = require("ufo").peekFoldedLinesUnderCursor()
+          if not winid then
+            vim.cmd("Lspsaga hover_doc")
+          end
+        else
+          vim.cmd("Lspsaga hover_doc")
+        end
       end
       lvim.lsp.wrapper.rename = function()
         vim.cmd("Lspsaga rename")

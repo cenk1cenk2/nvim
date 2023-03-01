@@ -25,6 +25,10 @@ function M.common_capabilities()
   capabilities.textDocument.completion.completionItem.resolveSupport = {
     properties = { "documentation", "detail", "additionalTextEdits" },
   }
+  capabilities.textDocument.foldingRange = {
+    dynamicRegistration = false,
+    lineFoldingOnly = true,
+  }
 
   local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
   if status_ok then

@@ -45,12 +45,12 @@ function M.config()
     end,
     setup = function(config)
       return {
-        open_fold_hl_timeout = 0,
-        -- close_fold_kinds = { "imports", "comment" },
+        open_fold_hl_timeout = 100,
+        close_fold_kinds = { "imports", "comment" },
         preview = {
           win_config = {
-            border = { "", "─", "", "", "", "─", "", "" },
-            winhighlight = "Normal:Folded",
+            border = lvim.ui.border,
+            winhighlight = "Normal:Normal",
             winblend = 0,
           },
           mappings = {
@@ -58,9 +58,9 @@ function M.config()
             scrollD = "<C-d>",
           },
         },
-        provider_selector = function()
-          return { "treesitter", "indent" }
-        end,
+        -- provider_selector = function()
+        --   return { "treesitter", "indent" }
+        -- end,
         fold_virt_text_handler = config.inject.handler,
       }
     end,
@@ -72,20 +72,20 @@ function M.config()
       vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
       vim.o.foldlevelstart = 99
       vim.o.foldenable = true
-      -- vim.o.foldexpr = "manual"
+      vim.o.foldmethod = "manual"
 
-      local original = lvim.lsp.wrapper.hover
-
-      lvim.lsp.wrapper.hover = function()
-        local winid = require("ufo").peekFoldedLinesUnderCursor()
-        if not winid then
-          original()
-        end
-      end
+      -- local original = lvim.lsp.wrapper.hover
+      --
+      -- lvim.lsp.wrapper.hover = function()
+      --   local winid = require("ufo").peekFoldedLinesUnderCursor()
+      --
+      --   if not winid then
+      --     original()
+      --   end
+      -- end
     end,
-    keymaps = function(config)
+    keymaps = function()
       local defaults = {
-
         ["zR"] = {
           function()
             require("ufo").openAllFolds()
