@@ -225,9 +225,12 @@ function M.toggle_toggle_term(toggler)
     })
   end
 
-  M.terminals[toggler.cmd]:toggle()
+  local terminal = M.terminals[toggler.cmd]
 
-  return M.terminals[toggler.cmd]
+  terminal:toggle()
+  terminal:set_mode(require("toggleterm.terminal").mode.INSERT)
+
+  return terminal
 end
 
 function M.get_current_float_terminal()
