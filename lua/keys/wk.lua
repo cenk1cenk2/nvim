@@ -35,7 +35,7 @@ M.mappings = {
     E = { ":set ff=dos<CR>", "set crlf" },
     l = { ":set nonumber!<CR>", "toggle line numbers" },
     r = { ":set norelativenumber!<CR>", "toggle relative line numbers" },
-    s = { ":set signcolumns=yes<CR>", "fix sign columns" },
+    s = { ":set signcolumn=yes<CR>", "fix sign columns" },
     S = { ":setlocal spell!<CR>", "toggle spell check" },
     T = { ":setlocal bufhidden=delete<CR>", "set as temporary buffer" },
   },
