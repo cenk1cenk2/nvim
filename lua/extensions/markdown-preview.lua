@@ -12,6 +12,7 @@ function M.config()
           vim.cmd([[call mkdp#util#install()]])
         end,
         cmd = { "MarkdownPreview" },
+        ft = { "markdown" },
       }
     end,
     legacy_setup = {
