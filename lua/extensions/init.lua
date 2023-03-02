@@ -56,7 +56,6 @@ local extensions = {
   "dressing",
   "nvim-hlslens",
   "nvim-scrollbar",
-  "vim-unconditionalpaste",
   "refactoring-nvim",
   "lsp-lines-nvim",
   "yanky-nvim",
