@@ -46,6 +46,7 @@ function M.config()
     setup = function(config)
       return {
         open_fold_hl_timeout = 100,
+        close_fold_kinds = {},
         -- close_fold_kinds = { "imports", "comment" },
         preview = {
           win_config = {
