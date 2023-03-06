@@ -85,7 +85,7 @@ function M.config()
       require("toggleterm").setup(config.setup)
     end,
     on_done = function(config)
-      local editor = ([[nvr --servername %s --remote-wait-silent +'setlocal bufhidden=delete']]):format(vim.v.servername)
+      local editor = ([[nvr --servername %s --remote-wait-silent]]):format(vim.v.servername) -- +'setlocal bufhidden=delete'
       local editor_split = ([[%s -cc split]]):format(editor)
 
       if vim.fn.has("nvim") and vim.fn.executable("nvr") then
