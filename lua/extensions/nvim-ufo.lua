@@ -46,8 +46,8 @@ function M.config()
     setup = function(config)
       return {
         open_fold_hl_timeout = 100,
-        close_fold_kinds = {},
-        -- close_fold_kinds = { "imports", "comment" },
+        -- close_fold_kinds = {},
+        close_fold_kinds = { "imports", "comment" },
         preview = {
           win_config = {
             border = lvim.ui.border,
@@ -59,9 +59,13 @@ function M.config()
             scrollD = "<C-d>",
           },
         },
-        -- provider_selector = function()
-        --   return { "treesitter", "indent" }
-        -- end,
+        provider_selector = function(bufnr, filetype, buftype)
+          if vim.tbl_contains({ "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte", "go" }, filetype) then
+            return
+          end
+
+          return { "treesitter", "indent" }
+        end,
         fold_virt_text_handler = config.inject.handler,
       }
     end,

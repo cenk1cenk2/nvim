@@ -94,7 +94,7 @@ function M.config()
       })
 
       -- arrow key on javascript
-      Rule("%(.*%)%s*%=>$", " {  }", { "typescript", "typescriptreact", "javascript" }):use_regex(true):set_end_pair_length(2)
+      Rule("%(.*%)%s*%=>$", " {  }", { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" }):use_regex(true):set_end_pair_length(2)
 
       -- auto addspace on =
       Rule("=", "")
