@@ -20,7 +20,7 @@ function M.config()
           return "buftype"
         elseif buftype == "prompt" then
           return "bufnr"
-        elseif filetype == "aerial" or filetype == "nerdtree" or filetype == "neotest-summary" then
+        elseif vim.tbl_contains({ "aerial", "nerdtree", "neotest-summary", "neo-tree", "DiffviewFiles" }, filetype) then
           return "filetype"
         elseif bufname:match("Neogit.*Popup") then
           return "bufnr"
@@ -30,7 +30,7 @@ function M.config()
         elseif filetype == "fern" and (vim.wo.winfixwidth or vim.wo.winfixheight) then
           -- Only pin fern if it was opened as a split (has fixed height/width)
           return "filetype"
-        elseif filetype == "NeogitStatus" or filetype == "NeogitLog" or filetype == "NeogitGitCommandHistory" then
+        elseif vim.tbl_contains({ "NeogitStatus", "NeogitLog", "NeogitGitCommandHistory" }, filetype) then
           if vim.fn.winnr("$") > 1 then
             return "filetype"
           end
