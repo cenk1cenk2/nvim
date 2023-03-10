@@ -1,4 +1,4 @@
---
+-- https://github.com/ahmedkhalf/project.nvim
 local M = {}
 
 local extension_name = "project_nvim"
@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "ahmedkhalf/project.nvim",
-        cmd = { "Telescope project" },
+        cmd = { "ProjectRoot" },
         event = { "BufReadPre" },
       }
     end,
@@ -52,7 +52,12 @@ function M.config()
     wk = function(_, categories)
       return {
         [categories.SESSION] = {
-          p = { ":Telescope projects<CR>", "projects" },
+          p = {
+            function()
+              require("telescope").extensions.projects.projects({})
+            end,
+            "projects",
+          },
         },
       }
     end,
