@@ -23,22 +23,18 @@ function M.config()
       telescope.load_extension("vim_bookmarks")
 
       local bookmark_actions = telescope.extensions.vim_bookmarks.actions
-      telescope.extensions.vim_bookmarks.all({
-        attach_mappings = function(_, map)
-          map("n", "dd", bookmark_actions.delete_selected_or_at_cursor)
-          map("n", "D", bookmark_actions.delete_all)
+      local mappings = function(_, map)
+        map("i", "<C-d>", bookmark_actions.delete_selected_or_at_cursor)
+        map("i", "<C-D>", bookmark_actions.delete_all)
 
-          return true
-        end,
+        return true
+      end
+      telescope.extensions.vim_bookmarks.all({
+        attach_mappings = mappings,
       })
 
       telescope.extensions.vim_bookmarks.current_file({
-        attach_mappings = function(_, map)
-          map("n", "dd", bookmark_actions.delete_selected_or_at_cursor)
-          map("n", "D", bookmark_actions.delete_all)
-
-          return true
-        end,
+        attach_mappings = mappings,
       })
     end,
     keymaps = {
