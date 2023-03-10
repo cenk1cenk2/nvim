@@ -25,6 +25,14 @@ function M.config()
         "neo-tree-popup",
       })
     end,
+    on_init = function()
+      if vim.fn.argc() == 1 then
+        local stat = vim.loop.fs_stat(vim.fn.argv(0))
+        if stat and stat.type == "directory" then
+          require("neo-tree")
+        end
+      end
+    end,
     setup = function()
       local Log = require("lvim.core.log")
       local system_register = lvim.system_register
@@ -219,7 +227,7 @@ function M.config()
           follow_current_file = false, -- This will find and focus the file in the active buffer every
           -- time the current file is changed while the tree is open.
           group_empty_dirs = false, -- when true, empty folders will be grouped together
-          hijack_netrw_behavior = "open_current", -- netrw disabled, opening a directory opens neo-tree
+          hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
           -- in whatever position is specified in window.position
           -- "open_current",  -- netrw disabled, opening a directory opens within the
           -- window like netrw would, regardless of window.position
