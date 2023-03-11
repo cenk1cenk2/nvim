@@ -15,6 +15,7 @@ local extensions = {
   "mason",
   "mason-nvim-dap",
   "toggleterm-nvim",
+  "flatten-nvim",
   "nvim-window-picker",
   "neotree-nvim",
   "dap",
