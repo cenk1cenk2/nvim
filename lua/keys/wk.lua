@@ -144,7 +144,7 @@ M.mappings = {
       },
     },
     r = { ":LvimReload<CR>", "reload configuration" },
-    u = { ":LvimUpdate<CR>", "git update config repository" },
+    p = { ":LvimUpdate<CR>", "git update config repository" },
   },
 
   [M.CATEGORIES.PLUGINS] = {
