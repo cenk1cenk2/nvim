@@ -29,9 +29,9 @@ function M.config()
                 callback = function()
                   -- This is a bit of a hack, but if you run bufdelete immediately
                   -- the shell can occasionally freeze
-                  vim.defer_fn(function()
-                    vim.api.nvim_buf_delete(bufnr, {})
-                  end, 50)
+                  -- vim.defer_fn(function()
+                  --   vim.api.nvim_buf_delete(bufnr, {})
+                  -- end, 50)
                 end,
               })
             else
