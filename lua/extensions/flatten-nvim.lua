@@ -19,7 +19,9 @@ function M.config()
             require("toggleterm").toggle(0)
           end,
           post_open = function(bufnr, winnr, ft)
-            if vim.tbl_contains({ "gitcommit", "" }, ft) then
+            local fts = { "gitcommit", "" }
+
+            if vim.tbl_contains(fts, ft) then
               -- If the file is a git commit, create one-shot autocmd to delete it on write
               -- If you just want the toggleable terminal integration, ignore this bit and only use the
               -- code in the else block
@@ -29,9 +31,11 @@ function M.config()
                 callback = function()
                   -- This is a bit of a hack, but if you run bufdelete immediately
                   -- the shell can occasionally freeze
-                  -- vim.defer_fn(function()
-                  --   vim.api.nvim_buf_delete(bufnr, {})
-                  -- end, 50)
+                  if vim.tbl_contains(fts, ft) then
+                    vim.defer_fn(function()
+                      vim.api.nvim_buf_delete(bufnr, {})
+                    end, 50)
+                  end
                 end,
               })
             else
