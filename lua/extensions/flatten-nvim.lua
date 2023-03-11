@@ -45,6 +45,10 @@ function M.config()
             -- After blocking ends (for a git commit, etc), reopen the terminal
             require("toggleterm").toggle(0)
           end,
+          block_for = {
+            gitcommit = true,
+            [""] = true,
+          },
         },
       }
     end,
