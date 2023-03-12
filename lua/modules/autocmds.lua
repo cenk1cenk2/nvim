@@ -17,6 +17,7 @@ function M.setup()
             "null-ls-info",
             "dap-float",
             "lspsagaoutline",
+            "neotest-summary",
           },
           callback = function(event)
             vim.keymap.set("n", "q", ":close<CR>", { silent = true, buffer = event.buf })
