@@ -4,6 +4,7 @@ local Log = require("lvim.core.log")
 
 M.plugins_dir = get_data_dir() .. "/lazy"
 M.plugin_manager_dir = M.plugins_dir .. "/lazy.nvim"
+M.cache_dir = join_paths(get_cache_dir(), "lazy")
 
 function M.init()
   if not vim.loop.fs_stat(M.plugin_manager_dir) then
@@ -131,6 +132,10 @@ function M.reload(spec)
     -- TODO: set show to true when lazy shows something useful on clean
     lazy.clean({ wait = true, show = false })
   end
+end
+
+function M.reset_cache()
+  os.remove(M.cache_dir)
 end
 
 return M

@@ -25,11 +25,6 @@ function M.config()
           require("neotest-rust"),
           require("neotest-jest")({
             jestCommand = "yarn run test",
-            jestConfigFile = "jest.config.js",
-            env = { CI = true },
-            cwd = function()
-              return vim.fn.getcwd()
-            end,
           }),
         },
       }
@@ -70,6 +65,12 @@ function M.config()
             end,
             "show test output",
           },
+          ["K"] = {
+            function()
+              require("neotest").summary.toggle()
+            end,
+            "show test summary",
+          },
           ["s"] = {
             function()
               require("neotest").run.stop()
@@ -81,6 +82,12 @@ function M.config()
               require("neotest").run.attach()
             end,
             "attach to nearest test",
+          },
+          ["L"] = {
+            function()
+              lvim.fn.toggle_log_view(join_paths(get_state_dir(), "neotest.log"))
+            end,
+            "open the default logfile",
           },
         },
       }

@@ -251,14 +251,14 @@ function M.config()
           --   },
           --   opts = { timeout = 10000 },
           -- },
-          -- {
-          --   view = "notify",
-          --   filter = {
-          --     event = "msg_show",
-          --     kind = { "echomsg" },
-          --   },
-          --   opts = { skip = true },
-          -- },
+          {
+            view = "notify",
+            filter = {
+              event = "msg_show",
+              kind = { "echomsg" },
+            },
+            opts = { skip = true },
+          },
           {
             view = "notify",
             filter = {
