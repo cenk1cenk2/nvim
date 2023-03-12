@@ -25,6 +25,11 @@ function M.config()
         },
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes({
+        "neotest-summary",
+      })
+    end,
     setup = function()
       return {
         -- log_level = vim.log.levels.TRACE,
