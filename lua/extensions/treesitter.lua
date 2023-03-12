@@ -82,7 +82,12 @@ function M.config()
       }
     end,
     setup = function()
+      local parsers = join_paths(get_data_dir(), "parsers")
+
+      vim.opt.runtimepath:prepend(parsers)
+
       return {
+        parser_install_dir = parsers,
         ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         ignore_install = {},
         matchup = {
@@ -183,7 +188,6 @@ function M.config()
       return {
         [categories.TREESITTER] = {
           i = { ":TSConfigInfo<CR>", "treesitter info" },
-          -- k = { ":TSHighlightCapturesUnderCursor<CR>", "show treesitter theme color" },
           k = { ":Inspect<CR>", "inspect color scheme" },
           u = { ":TSUpdate<CR>", "update installed treesitter packages" },
           U = { ":TSUninstall all<CR>", "uninstall all treesitter packages" },

@@ -46,7 +46,7 @@ function M.config()
             end,
             "run nearest test",
           },
-          ["f"] = {
+          ["R"] = {
             function()
               require("neotest").run.run(vim.fn.expand("%"))
             end,
@@ -63,6 +63,12 @@ function M.config()
               require("neotest").run.run({ vim.fn.expand("%"), strategy = "dap" })
             end,
             "debug file",
+          },
+          ["k"] = {
+            function()
+              require("neotest").output.open()
+            end,
+            "show test output",
           },
           ["s"] = {
             function()

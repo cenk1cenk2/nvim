@@ -50,7 +50,7 @@ function M.config()
       diagnostic = {
         -- maybe disable this later on
         -- https://www.reddit.com/r/neovim/comments/11o68vz/text_appearing_on_the_corner_of_the_screen/?utm_source=share&utm_medium=android_app&utm_name=androidcss&utm_term=2&utm_content=share_button
-        on_insert = true,
+        on_insert = false,
         on_insert_follow = true,
         insert_winblend = 0,
         twice_into = true,

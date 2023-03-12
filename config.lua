@@ -154,6 +154,7 @@ require("utils.setup").fn.append_to_setup("treesitter", {
     "typescript",
     "terraform",
     "toml",
+    "vim",
     "vue",
     "yaml",
   },
