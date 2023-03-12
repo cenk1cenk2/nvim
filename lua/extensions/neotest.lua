@@ -15,11 +15,25 @@ function M.config()
           "nvim-neotest/neotest-go",
           "rouge8/neotest-rust",
           "haydenmeade/neotest-jest",
+          "nvim-treesitter/nvim-treesitter",
+          {
+            "antoinemadec/FixCursorHold.nvim",
+            init = false,
+            config = false,
+            lazy = false,
+          },
         },
       }
     end,
     setup = function()
       return {
+        -- log_level = vim.log.levels.TRACE,
+        discover = {
+          concurrent = 1,
+        },
+        floating = {
+          border = lvim.ui.border,
+        },
         adapters = {
           require("neotest-go"),
           require("neotest-rust"),

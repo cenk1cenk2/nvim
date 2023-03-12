@@ -40,12 +40,6 @@ function M.config()
           init = false,
           config = false,
         },
-        {
-          "antoinemadec/FixCursorHold.nvim",
-          init = false,
-          config = false,
-          lazy = false,
-        },
       }
     end,
   })

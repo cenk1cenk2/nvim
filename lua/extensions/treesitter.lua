@@ -5,6 +5,8 @@ local extension_name = "treesitter"
 
 local Log = require("lvim.core.log")
 
+M.parsers_dir = join_paths(get_data_dir(), "parsers")
+
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
@@ -82,12 +84,10 @@ function M.config()
       }
     end,
     setup = function()
-      local parsers = join_paths(get_data_dir(), "parsers")
-
-      vim.opt.runtimepath:prepend(parsers)
+      vim.opt.runtimepath:prepend(M.parsers_dir)
 
       return {
-        parser_install_dir = parsers,
+        parser_install_dir = M.parsers_dir,
         ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
         ignore_install = {},
         matchup = {
