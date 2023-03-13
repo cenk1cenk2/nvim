@@ -8,7 +8,6 @@ function M.config()
     plugin = function()
       return {
         "echasnovski/mini.splitjoin",
-        event = "BufReadPost",
       }
     end,
     setup = function()

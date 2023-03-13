@@ -49,10 +49,26 @@ function M.config()
             -- After blocking ends (for a git commit, etc), reopen the terminal
             -- require("toggleterm").toggle(0)
           end,
-          block_for = {
-            gitcommit = true,
-            [""] = true,
-          },
+        },
+        block_for = {
+          gitcommit = true,
+          [""] = true,
+        },
+        -- Window options
+        window = {
+          -- Options:
+          -- tab            -> open in new tab (default)
+          -- split          -> open in split
+          -- vsplit         -> open in vsplit
+          -- current        -> open in current window
+          -- func(new_bufs) -> only open the files, allowing you to handle window opening yourself.
+          -- Argument is an array of buffer numbers representing the newly opened files.
+          open = "tab",
+          -- Affects which file gets focused when opening multiple at once
+          -- Options:
+          -- "first"        -> open first file of new files (default)
+          -- "last"         -> open last file of new files
+          focus = "first",
         },
       }
     end,

@@ -1,11 +1,9 @@
 local M = {}
 
 function M.unconditional_paste(after)
-  local data = vim.fn.getreg(vim.v.register or lvim.system_register):gsub("^%s*(.-)%s*$", "%1")
+  local lines = vim.fn.getreg(vim.v.register or lvim.system_register):gsub("^%s*(.-)%s*$", "%1")
 
-  local splitted = vim.split(data, "\n")
-
-  vim.api.nvim_put(splitted, "c", after, true)
+  vim.api.nvim_paste(lines, false, -1)
 end
 
 function M.setup()
