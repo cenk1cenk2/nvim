@@ -1,5 +1,5 @@
 return {
-  filetypes = { "markdown", "plaintext", "text" },
+  filetypes = { "markdown", "plaintext", "text", "gitcommit" },
   single_file_support = true,
   settings = {
     grammarly = {
