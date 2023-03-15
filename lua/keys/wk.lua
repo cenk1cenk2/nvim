@@ -53,6 +53,13 @@ M.mappings = {
       end,
       "overwrite - force save",
     },
+    W = {
+      function()
+        vim.cmd("wa")
+        require("lvim.core.log"):warn("Wrote all files.")
+      end,
+      "write all",
+    },
   },
 
   [M.CATEGORIES.DEBUG] = {
