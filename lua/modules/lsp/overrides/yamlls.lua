@@ -12,6 +12,7 @@ return {
       schemaStore = { enable = true, url = "https://www.schemastore.org/api/json/catalog.json" },
       schemas = {
         kubernetes = {
+          "*.k8s.{yml,yaml}",
           "daemon.{yml,yaml}",
           "manager.{yml,yaml}",
           "restapi.{yml,yaml}",
@@ -24,6 +25,8 @@ return {
           "*ervic*.{yml,yaml}",
           "kubectl-edit*.yaml",
         },
+        ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = { "*flow*.{yml,yaml}" },
+        ["http://json.schemastore.org/chart"] = { "Chart.{yml,yaml}" },
         ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = {
           ".gitlab-ci.yml",
         },
