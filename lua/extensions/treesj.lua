@@ -33,6 +33,8 @@ function M.config()
         -- Notify about possible problems or not
         notify = true,
         -- langs = langs,
+
+        dot_repeat = false,
       }
     end,
     on_setup = function(config)

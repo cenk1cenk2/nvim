@@ -77,7 +77,7 @@ local extensions = {
   "nvim-docs-view",
   "mini-nvim-ai",
   "mini-nvim-bracketed",
-  "mini-nvim-splitjoin",
+  "treesj",
   "winshift-nvim",
   "exrc-nvim",
   "browse-nvim",
