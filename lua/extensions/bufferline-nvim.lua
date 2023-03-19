@@ -2,6 +2,7 @@
 local M = {}
 
 local extension_name = "bufferline_nvim"
+local Log = require("lvim.core.log")
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
@@ -268,9 +269,15 @@ function M.buf_kill(bufnr, force)
     require("bufdel").delete_buffer_expr(b, f)
   end
 
+  local is_pinned = require("bufferline.groups").is_pinned({ id = bufnr })
+
+  if is_pinned then
+    Log:warn("This buffer is pinned!")
+  end
+
   if not force then
     local warning
-    if bo[bufnr].modified then
+    if bo[bufnr].modified or is_pinned then
       warning = fmt([[No write since last change for (%s)]], fnamemodify(bufname, ":t"))
     elseif api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
       warning = fmt([[Terminal %s will be killed]], bufname)
