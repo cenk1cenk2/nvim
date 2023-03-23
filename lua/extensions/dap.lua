@@ -20,6 +20,7 @@ function M.config()
     configure = function(_, fn)
       fn.add_disabled_filetypes({
         "dap-repl",
+        "dap-float",
       })
     end,
     inject_to_configure = function()
