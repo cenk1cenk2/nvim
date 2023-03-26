@@ -12,6 +12,12 @@ function M.config()
       }
     end,
     setup = function()
+      local utils = require("treesj.langs.utils")
+
+      local langs = {
+        terraform = utils.merge_preset(require("treesj.langs.javascript"), {}),
+      }
+
       return {
         -- Use default keymaps
         -- (<space>m - toggle, <space>j - join, <space>s - split)
@@ -32,9 +38,10 @@ function M.config()
 
         -- Notify about possible problems or not
         notify = true,
-        -- langs = langs,
 
         dot_repeat = false,
+
+        langs = langs,
       }
     end,
     on_setup = function(config)
