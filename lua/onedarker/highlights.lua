@@ -278,11 +278,11 @@ hl.lsp = {
 }
 
 -- langs
-hl.langs.bash = { ["@parameter.bash"] = { fg = c.fg } }
+hl.langs.bash = { ["@lsp.type.parameter.bash"] = { fg = c.fg } }
 
-hl.langs.dockerfile = { ["@parameter.dockerfile"] = { fg = c.fg } }
+hl.langs.dockerfile = { ["@lsp.type.parameter.dockerfile"] = { fg = c.fg } }
 
-hl.langs.terraform = { ["@type.terraform"] = { fg = c.purple[600] } }
+hl.langs.terraform = { ["@lsp.type.type.terraform"] = { fg = c.purple[600] } }
 
 hl.langs.jinja = {
   jinjaTagBlock = { fg = c.yellow[600] },
