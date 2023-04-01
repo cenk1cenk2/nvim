@@ -9,7 +9,6 @@ return {
         documentDomain = "business",
         suggestions = {
           MissingSpaces = false,
-          OxfordComma = true,
         },
       },
     },
