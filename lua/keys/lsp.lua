@@ -6,7 +6,7 @@ return {
       end,
       "hover",
     },
-    ["gf"] = {
+    ["gd"] = {
       function()
         lvim.lsp.wrapper.definition()
       end,
@@ -24,7 +24,7 @@ return {
       end,
       "go to references",
     },
-    ["gz"] = {
+    ["gy"] = {
       function()
         lvim.lsp.wrapper.implementation()
       end,
