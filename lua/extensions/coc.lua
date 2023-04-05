@@ -26,7 +26,7 @@ function M.config()
       return {
         [categories.GIST] = {
           f = { ":CocList gist<CR>", "list gists" },
-          i = { ":CocList gitignore<CR>", "generate git ignore" },
+          -- i = { ":CocList gitignore<CR>", "generate git ignore" },
           p = { ":CocCommand gist.create<CR>", "post new gist" },
           U = { ":CocCommand gist.update<CR>", "update current gist" },
         },

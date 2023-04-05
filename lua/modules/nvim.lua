@@ -25,7 +25,7 @@ function M.update_sync()
   M.update_language_servers_sync()
 
   vim.api.nvim_create_autocmd("User", {
-    pattern = "MasonToolsUpdateCompleted",
+    pattern = "MasonUpdateAllComplete",
     callback = function()
       vim.cmd([[qa!]])
     end,
@@ -38,7 +38,7 @@ function M.rebuild_and_update()
 end
 
 function M.update_language_servers()
-  require("mason-tool-installer").check_install(true)
+  require("mason-update-all").update_all()
 end
 
 function M.update_language_servers_sync()
