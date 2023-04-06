@@ -38,6 +38,7 @@ function M.rebuild_and_update()
 end
 
 function M.update_language_servers()
+  require("lvim.lsp").setup(true)
   require("mason-update-all").update_all()
 end
 
