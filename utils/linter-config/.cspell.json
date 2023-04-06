@@ -10,7 +10,7 @@
     {
       "languageId": ["*"],
       "includeRegExpList": [],
-      "ignoreRegExpList": ["Everything"]
+      "ignoreRegExpList": []
     },
     {
       "languageId": ["markdown", "plaintext", "text", "gitcommit"],

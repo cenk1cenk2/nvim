@@ -82,6 +82,7 @@ function M.config()
     end,
     comment_strings = {
       { { "gomod" }, "//%s" },
+      { { "javascript", "typescript" }, { "//%s", "/**%s*/" } },
     },
     -- keymaps = {
     --   normal_mode = {

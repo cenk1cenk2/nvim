@@ -51,7 +51,7 @@ function M.config()
     configure = function(_, fn)
       fn.append_to_setup("comment_nvim", {
         pre_hook = function(ctx)
-          if vim.tbl_contains({ "javascript", "typescriptreact", "vue", "svelte" }, function(type)
+          if vim.tbl_contains({ "typescriptreact", "vue", "svelte" }, function(type)
             return type ~= vim.bo.filetype
           end) then
             return
