@@ -9,6 +9,7 @@ function M.config()
       return {
         "willothy/flatten.nvim",
         lazy = false,
+        commit = "cbea79fef62ecc3048d9a2af38cc96acbbe85e37",
       }
     end,
     setup = function()

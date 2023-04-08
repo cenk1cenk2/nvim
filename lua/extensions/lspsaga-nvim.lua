@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "glepnir/lspsaga.nvim",
-        event = "BufReadPost",
+        event = "LspAttach",
       }
     end,
     configure = function(_, fn)

@@ -9,7 +9,7 @@ function M.config()
       return {
         "lvimuser/lsp-inlayhints.nvim",
         -- branch = "anticonceal",
-        event = "BufReadPost",
+        event = "LspAttach",
       }
     end,
     setup = {
