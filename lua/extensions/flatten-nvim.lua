@@ -9,7 +9,7 @@ function M.config()
       return {
         "willothy/flatten.nvim",
         lazy = false,
-        commit = "cbea79fef62ecc3048d9a2af38cc96acbbe85e37",
+        priority = 1001,
       }
     end,
     setup = function()
@@ -58,13 +58,14 @@ function M.config()
         -- Window options
         window = {
           -- Options:
-          -- tab            -> open in new tab (default)
+          -- current        -> open in current window (default)
+          -- alternate      -> open in alternate window (recommended)
+          -- tab            -> open in new tab
           -- split          -> open in split
           -- vsplit         -> open in vsplit
-          -- current        -> open in current window
-          -- func(new_bufs) -> only open the files, allowing you to handle window opening yourself.
+          -- func(new_bufs, argv) -> only open the files, allowing you to handle window opening yourself.
           -- Argument is an array of buffer numbers representing the newly opened files.
-          open = "tab",
+          open = "alternate",
           -- Affects which file gets focused when opening multiple at once
           -- Options:
           -- "first"        -> open first file of new files (default)
