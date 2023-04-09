@@ -35,18 +35,17 @@ function M.config()
       -- 	- true: Dap is automatically configured.
       -- 	- {adapters: {ADAPTER: {}, }, configurations: {ADAPTER: {}, }}. Allows overriding default configuration.
       automatic_setup = true,
-    },
-    on_setup = function(config)
-      require("mason-nvim-dap").setup(config.setup)
-
-      require("mason-nvim-dap").setup_handlers({
+      handlers = {
         function(source_name)
           -- all sources with no handler get passed here
 
           -- Keep original functionality of `automatic_setup = true`
           require("mason-nvim-dap.automatic_setup")(source_name)
         end,
-      })
+      },
+    },
+    on_setup = function(config)
+      require("mason-nvim-dap").setup(config.setup)
     end,
   })
 end
