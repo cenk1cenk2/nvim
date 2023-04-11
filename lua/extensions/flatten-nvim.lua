@@ -65,7 +65,8 @@ function M.config()
           -- vsplit         -> open in vsplit
           -- func(new_bufs, argv) -> only open the files, allowing you to handle window opening yourself.
           -- Argument is an array of buffer numbers representing the newly opened files.
-          open = "alternate",
+          -- open = "alternate",
+          open = "tab",
           -- Affects which file gets focused when opening multiple at once
           -- Options:
           -- "first"        -> open first file of new files (default)
