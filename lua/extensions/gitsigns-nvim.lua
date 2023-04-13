@@ -27,12 +27,14 @@ function M.config()
         },
         delete = {
           hl = "GitSignsDelete",
+          -- text = lvim.ui.icons.ui.BoldLineLeft,
           text = lvim.ui.icons.ui.BoldDividerRight,
           numhl = "GitSignsDeleteNr",
           linehl = "GitSignsDeleteLn",
         },
         topdelete = {
           hl = "GitSignsDelete",
+          -- text = lvim.ui.icons.ui.BoldLineLeft,
           text = lvim.ui.icons.ui.BoldDividerRight,
           numhl = "GitSignsDeleteNr",
           linehl = "GitSignsDeleteLn",
