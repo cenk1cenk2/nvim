@@ -28,7 +28,7 @@ function M.config()
         thousands = false, -- or line number thousands separator string ("." / ",")
         relculright = true, -- whether to right-align the cursor line number with 'relativenumber' set
         -- Builtin 'statuscolumn' options
-        ft_ignore = nil, -- lua table with filetypes for which 'statuscolumn' will be unset
+        ft_ignore = lvim.disabled_filetypes, -- lua table with filetypes for which 'statuscolumn' will be unset
         bt_ignore = nil, -- lua table with 'buftype' values for which 'statuscolumn' will be unset
         -- Default segments (fold -> sign -> line number + separator), explained below
         segments = {
