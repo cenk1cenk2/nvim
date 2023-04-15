@@ -80,7 +80,6 @@ function M.config()
     inject_to_configure = function()
       return {
         parser_config = require("nvim-treesitter.parsers").get_parser_configs(),
-        ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername,
       }
     end,
     setup = function()
@@ -167,21 +166,20 @@ function M.config()
       -- },
     },
     ft_to_parser = {
-      ["yaml.ansible"] = "ansible",
+      ["yaml"] = { "yaml.ansible" },
     },
     on_setup = function(config)
       require("nvim-treesitter.configs").setup(config.setup)
     end,
     on_done = function(config)
       local parser_config = config.inject.parser_config
-      local ft_to_parser = config.inject.ft_to_parser
 
       for key, value in pairs(config.parser_config) do
         parser_config[key] = value
       end
 
       for key, value in pairs(config.ft_to_parser) do
-        ft_to_parser[key] = value
+        vim.treesitter.language.register(key, value)
       end
     end,
     wk = function(_, categories, fn)
