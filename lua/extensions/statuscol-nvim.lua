@@ -67,7 +67,6 @@ function M.config()
       }
     end,
     on_setup = function(config)
-      print("test")
       require("statuscol").setup(config.setup)
     end,
   })
