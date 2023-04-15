@@ -167,7 +167,7 @@ function M.config()
       -- },
     },
     ft_to_parser = {
-      -- ["jinja"] = "jinja",
+      ["yaml.ansible"] = "ansible",
     },
     on_setup = function(config)
       require("nvim-treesitter.configs").setup(config.setup)
