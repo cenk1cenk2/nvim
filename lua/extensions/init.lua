@@ -67,7 +67,6 @@ local extensions = {
   "tree-climber-nvim",
   "nvim-retrail",
   "nvim-surround",
-  "document-color-nvim",
   "ccc-nvim",
   "vim-illuminate",
   "neotest",
