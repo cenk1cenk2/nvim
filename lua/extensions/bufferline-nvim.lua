@@ -13,6 +13,8 @@ function M.config()
           -- https://github.com/ojroques/nvim-bufdel
           "ojroques/nvim-bufdel",
         },
+        -- https://github.com/akinsho/bufferline.nvim/issues/736
+        commit = "efdf6628b2cbfde6417a11b6337c16154e6779c5",
         lazy = false,
         -- event = "VeryLazy",
       }
