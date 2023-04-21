@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SECONDS=0
-# COMMIT_SHA="51b39f816ca4a44660e7ab7906520ae908492734"
+COMMIT_SHA="c4fb418626187066f213b2cc5cdfe728a40f1fed"
 # PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
 
 ## inject logger
