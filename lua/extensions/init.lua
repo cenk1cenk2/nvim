@@ -68,6 +68,7 @@ local extensions = {
   "nvim-retrail",
   "nvim-surround",
   "ccc-nvim",
+  "nvim-colorizer",
   "vim-illuminate",
   "neotest",
   "lsp-inlayhints-nvim",
