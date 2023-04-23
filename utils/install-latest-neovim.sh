@@ -47,9 +47,9 @@ if [ -f "/bin/nvim" ]; then
 	sudo rm /bin/nvim
 fi
 
-cd /tmp || exit 127
+# cd /tmp || exit 127
 
-pip3 install neovim-remote
+# pip3 install neovim-remote
 
 ## goodbye
 log_finish "Built neovim in $((SECONDS / 60)) minutes and $((SECONDS % 60)) seconds." "top"
