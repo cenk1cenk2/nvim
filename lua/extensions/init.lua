@@ -38,6 +38,7 @@ local extensions = {
   "rnvimr",
   "vim-visual-multi",
   "nvim-recorder",
+  "neocomposer-nvim",
   "windows-nvim",
   "telescope-undo-nvim",
   "nvim-ufo",
