@@ -1,7 +1,6 @@
 local M = {}
 
 local lsp_stuff = {
-  "mason",
   "wrapper",
 }
 
