@@ -1,0 +1,12 @@
+{
+  "exportGlobstar": {
+    "prefix": "exportgs",
+    "body": "export * from './$0'\n",
+    "description": "Export with globstar."
+  },
+  "exportPartial": {
+    "prefix": "exportps",
+    "body": "export { $1 } from './$0'\n",
+    "description": "Export selected frorm the file."
+  }
+}
