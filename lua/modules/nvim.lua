@@ -39,6 +39,7 @@ end
 
 function M.update_language_servers()
   require("lvim.lsp").setup(true)
+  vim.cmd([[MasonUpdate]])
   require("mason-update-all").update_all()
 end
 
