@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "nvim_recorder"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, false, {
+  require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
         "chrisgrieser/nvim-recorder",
