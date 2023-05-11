@@ -1,4 +1,4 @@
---
+-- https://github.com/folke/which-key.nvim
 local M = {}
 
 local extension_name = "wk"

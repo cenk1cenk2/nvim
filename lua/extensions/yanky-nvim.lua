@@ -113,10 +113,16 @@ function M.config()
           vim.cmd([[execute "normal! \<esc>"]])
         end
 
-        local command = string.format('silent normal! %s"%s%s"_d%s', state.is_visual and "gv" or "", state.register, state.count, state.type)
-
-        local ok, val = pcall(vim.cmd, command)
-
+        local ok, val = pcall(
+          vim.cmd,
+          string.format(
+            'silent normal! %s"%s%s%s',
+            state.is_visual and "gv" or "",
+            state.register ~= "=" and state.register or "=" .. vim.api.nvim_replace_termcodes("<CR>", true, false, true),
+            state.count,
+            state.type
+          )
+        )
         if not ok then
           vim.notify(val, vim.log.levels.WARN)
           return
