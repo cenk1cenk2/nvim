@@ -1,12 +1,24 @@
 #!/bin/bash
 
 SECONDS=0
-# COMMIT_SHA="c4fb418626187066f213b2cc5cdfe728a40f1fed"
+COMMIT_SHA="v0.9.0"
 # PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
 
 ## inject logger
 LOG_LEVEL=${LOG_LEVEL-"INFO"}
 source <(curl -s "https://gist.githubusercontent.com/cenk1cenk2/e03d8610534a9c78f755c1c1ed93a293/raw/logger.sh")
+
+if [ -n "$COMMIT_SHA" ] && [ -x "$(command -v nvim)" ]; then
+	log_warn "Checking neovim version against: ${COMMIT_SHA}"
+
+	NVIM_VERSION=$(nvim --version)
+	log_info "Current version: ${NVIM_VERSION}"
+
+	if [[ $NVIM_VERSION =~ "NVIM $COMMIT_SHA".* ]]; then
+		log_warn "No need to rebuild!"
+		exit 0
+	fi
+fi
 
 log_this "[install-nvim]" "false" "lifetime" "bottom"
 
