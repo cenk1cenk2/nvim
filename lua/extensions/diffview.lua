@@ -161,10 +161,9 @@ function M.config()
       return {
         [categories.GIT] = {
           ["a"] = { ":DiffviewFileHistory %<CR>", "buffer commits" },
-          ["A"] = { ":DiffviewFileHistory<CR>", "workspace commits" },
           ["d"] = { ":DiffviewOpen<CR>", "diff view open" },
           ["D"] = { ":DiffviewClose<CR>", "diff view close" },
-          ["v"] = { ":DiffviewFileHistory<CR>", "workspace commits" },
+          ["w"] = { ":DiffviewFileHistory<CR>", "workspace commits" },
           ["c"] = {
             function()
               M.compare_with_branch()

@@ -38,6 +38,7 @@ local colors = {
   },
 
   yellow = {
+    [100] = "#3f3518",
     [300] = "#d3b051",
     [600] = "#e5c07b",
     [900] = "#ebcd8f",
@@ -82,7 +83,7 @@ colors.diff = {
   add = colors.green[100],
   delete = colors.red[100],
   text = colors.blue[100],
-  change = colors.bg[100],
+  change = colors.yellow[100],
   add_bright = colors.green[600],
   delete_bright = colors.red[600],
   text_bright = colors.blue[600],
