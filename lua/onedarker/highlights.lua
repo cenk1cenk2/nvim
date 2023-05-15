@@ -298,6 +298,10 @@ hl.langs.typescript = {
   -- ["@decorator.typescript"] = { fg = c.fg },
 }
 
+hl.langs.c = {
+  ["@lsp.type.comment.c"] = {},
+}
+
 -- plugins
 
 hl.plugins.whichkey = {
