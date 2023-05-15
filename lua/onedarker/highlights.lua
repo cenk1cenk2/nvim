@@ -32,7 +32,7 @@ hl.common = {
   TermCursorNC = { bg = c.cursor },
   LineNr = { fg = c.grey[600] },
   Conceal = { fg = c.grey[600], bg = c.bg[300] },
-  Folded = { fg = c.fg, bg = c.blue[200] },
+  Folded = { fg = c.fg, bg = c.cyan[100] },
   NormalNC = { fg = c.fg, bg = c.bg[200] },
 
   DiffAdd = { fg = c.none, bg = c.diff.add },
