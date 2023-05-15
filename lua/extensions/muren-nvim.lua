@@ -69,7 +69,7 @@ function M.config()
         [categories.SEARCH] = {
           m = {
             function()
-              require("muren.api").toggle_ui()
+              require("muren.api").toggle_ui({})
             end,
             "toggle muren",
           },
