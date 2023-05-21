@@ -329,7 +329,8 @@ hl.plugins.leap = {
   -- LeapBackdrop = { link = "Comment" },
   LeapMatch = { fg = c.bg[200], bg = c.cyan[600], bold = true },
   LeapLabelPrimary = { fg = c.bg[200], bg = c.red[600], bold = true },
-  LeapLabelSecondary = { fg = c.bg[200], bg = c.red[900], bold = true },
+  LeapLabelSecondary = { fg = c.bg[200], bg = c.orange[600], bold = true },
+  LeapLabelSelected = { fg = c.bg[200], bg = c.blue[600], bold = true },
 }
 
 hl.plugins.vim_illuminate = {

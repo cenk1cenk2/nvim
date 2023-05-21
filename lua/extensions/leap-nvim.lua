@@ -12,10 +12,10 @@ function M.config()
     plugin = function()
       return {
         "ggandor/leap.nvim",
+        keys = { "f", "F", "t", "T" },
         dependencies = {
           {
             "ggandor/flit.nvim",
-            keys = { "f", "F", "t", "T" },
           },
           { "ggandor/leap-spooky.nvim" },
           -- {
@@ -35,21 +35,21 @@ function M.config()
 
       return {
         leap = {
-          -- max_phase_one_targets = nil,
-          -- highlight_unlabeled_phase_one_targets = false,
-          -- max_highlighted_traversal_targets = nil,
+          max_phase_one_targets = nil,
+          highlight_unlabeled_phase_one_targets = true,
+          max_highlighted_traversal_targets = 10,
           case_sensitive = false,
           equivalence_classes = { " \t\r\n" },
-          -- substitute_chars = {},
-          -- safe_labels = chars,
-          -- labels = chars,
+          substitute_chars = {},
+          safe_labels = chars,
+          labels = chars,
           special_keys = {
             repeat_search = "<enter>",
             next_phase_one_target = "<enter>",
-            next_target = { "<enter>", ";" },
-            prev_target = { "<tab>", "," },
-            next_group = "<space>",
-            prev_group = "<tab>",
+            next_target = { "<enter>" },
+            prev_target = { "<backspace>" },
+            next_group = "<enter>",
+            prev_group = "<backspace>",
             multi_accept = "<enter>",
             multi_revert = "<backspace>",
           },
@@ -69,12 +69,12 @@ function M.config()
           },
           -- If this option is set to true, the yanked text will automatically be pasted
           -- at the cursor position if the unnamed register is in use.
-          paste_on_remote_yank = true,
+          paste_on_remote_yank = false,
         },
         flit = {
           keys = { f = "f", F = "F", t = "t", T = "T" },
           -- A string like "nv", "nvo", "o", etc.
-          labeled_modes = "v",
+          labeled_modes = "nvo",
           multiline = true,
           -- Like `leap`s similar argument (call-specific overrides).
           -- E.g.: opts = { equivalence_classes = {} }
@@ -110,7 +110,7 @@ function M.config()
           ["ss"] = {
             function()
               require("leap").leap({
-                targets = require("leap-word").get_forward_words(0),
+                targets = require("leap-word").get_forward_words(1),
               })
             end,
             { desc = "leap to word." },
@@ -119,7 +119,7 @@ function M.config()
           ["SS"] = {
             function()
               require("leap").leap({
-                targets = require("leap-word").get_backward_words(0),
+                targets = require("leap-word").get_backward_words(1),
               })
             end,
             { desc = "leap to word backward." },
