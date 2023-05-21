@@ -30,6 +30,7 @@ local extensions = {
   "no-neck-pain-nvim",
   "statuscol-nvim",
   "hop",
+  "leap-nvim",
   "vim-repeat",
   "neoscroll",
   "auto-hlsearch-nvim",
