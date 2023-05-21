@@ -162,5 +162,7 @@ return {
     Smiley = "",
     Package = "",
     CircuitBoard = "",
+    Linux = "",
+    Windows = "",
   },
 }

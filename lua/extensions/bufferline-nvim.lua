@@ -51,12 +51,6 @@ function M.config()
         --- Please note some names can/will break the
         --- bufferline so use this at your discretion knowing that it has
         --- some limitations that will *NOT* be fixed.
-        name_formatter = function(buf) -- buf contains a "name", "path" and "bufnr"
-          -- remove extension from markdown files for example
-          if buf.name:match("%.md") then
-            return vim.fn.fnamemodify(buf.name, ":t:r")
-          end
-        end,
         max_name_length = 18,
         max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
         tab_size = 20,
@@ -65,7 +59,7 @@ function M.config()
         diagnostics_update_in_insert = false,
         diagnostics_indicator = M.diagnostics_indicator,
         -- NOTE: this will be called a lot so don't do any heavy processing here
-        custom_filter = M.custom_filter,
+        -- custom_filter = M.custom_filter,
         offsets = {
           -- {
           --   filetype = "undotree",
@@ -191,7 +185,7 @@ function M.is_ft(b, ft)
   return vim.bo[b].filetype == ft
 end
 
-function M.diagnostics_indicator(num, _, diagnostics, _)
+function M.diagnostics_indicator(_, _, diagnostics, _)
   local result = {}
   local symbols = { error = lvim.ui.icons.diagnostics.Error, warning = lvim.ui.icons.diagnostics.Warning, info = lvim.ui.icons.diagnostics.Information }
 
@@ -204,23 +198,6 @@ function M.diagnostics_indicator(num, _, diagnostics, _)
   local text = table.concat(result, " ")
 
   return #text > 0 and text or ""
-end
-
-function M.custom_filter(buf, buf_nums)
-  local logs = vim.tbl_filter(function(b)
-    return M.is_ft(b, "log")
-  end, buf_nums)
-  if vim.tbl_isempty(logs) then
-    return true
-  end
-  local tab_num = vim.fn.tabpagenr()
-  local last_tab = vim.fn.tabpagenr("$")
-  local is_log = M.is_ft(buf, "log")
-  if last_tab == 1 then
-    return true
-  end
-  -- only show log buffers in secondary tabs
-  return (tab_num == last_tab and is_log) or (tab_num ~= last_tab and not is_log)
 end
 
 function M.close_all_but_current()

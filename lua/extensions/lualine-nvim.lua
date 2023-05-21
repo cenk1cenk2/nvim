@@ -188,22 +188,29 @@ function M.config()
         progress = { "progress", cond = conditions.hide_in_width, color = {} },
         ff = {
           function()
-            return vim.api.nvim_buf_get_option(0, "ff")
+            local ff = vim.api.nvim_buf_get_option(0, "ff"):upper()
+
+            if ff == "UNIX" then
+              return lvim.ui.icons.misc.Linux
+            elseif ff == "DOS" then
+              return lvim.ui.icons.misc.Windows
+            end
+
+            return ff
           end,
           cond = conditions.hide_in_width,
-          fmt = string.upper,
           color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
         },
         spaces = {
           function()
             if not vim.api.nvim_buf_get_option(0, "expandtab") then
-              return ("<TAB>%s"):format(vim.api.nvim_buf_get_option(0, "tabstop"))
+              return ("%s%s"):format(lvim.ui.icons.ui.Tab, vim.api.nvim_buf_get_option(0, "tabstop"))
             end
             local size = vim.api.nvim_buf_get_option(0, "shiftwidth")
             if size == 0 then
               size = vim.api.nvim_buf_get_option(0, "tabstop")
             end
-            return ("<SPC>%s"):format(size)
+            return ("%s%s"):format(lvim.ui.icons.ui.BoldLineLeft, size)
           end,
           cond = conditions.hide_in_width,
           fmt = string.upper,
@@ -310,8 +317,8 @@ function M.config()
               cond = require("lazy.status").has_updates,
               color = { fg = lvim.ui.colors.yellow[900] },
             },
-            components.spaces,
             components.ff,
+            components.spaces,
             -- components.encoding,
             components.diagnostics,
             components.treesitter,
