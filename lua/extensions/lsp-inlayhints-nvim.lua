@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "lvimuser/lsp-inlayhints.nvim",
-        -- branch = "anticonceal",
+        branch = "anticonceal",
         event = "LspAttach",
       }
     end,
