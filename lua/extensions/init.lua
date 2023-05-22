@@ -85,7 +85,6 @@ local extensions = {
   "mini-nvim-bracketed",
   "treesj",
   "winshift-nvim",
-  "exrc-nvim",
   "browse-nvim",
 }
 
