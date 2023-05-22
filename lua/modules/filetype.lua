@@ -4,6 +4,8 @@ function M.setup()
   vim.filetype.add({
     extension = {
       ["j2"] = function()
+        vim.opt_local.indentexpr = "GetDjangoIndent()"
+
         return "jinja"
       end,
       ["tf"] = "terraform",
