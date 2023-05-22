@@ -8,15 +8,17 @@ SECONDS=0
 LOG_LEVEL=${LOG_LEVEL-"INFO"}
 source <(curl -s "https://gist.githubusercontent.com/cenk1cenk2/e03d8610534a9c78f755c1c1ed93a293/raw/logger.sh")
 
-if [ -n "$COMMIT_SHA" ] && [ -x "$(command -v nvim)" ]; then
-	log_warn "Checking neovim version against: ${COMMIT_SHA}"
-
+if [ -x "$(command -v nvim)" ]; then
 	NVIM_VERSION=$(nvim --version)
 	log_info "Current version: ${NVIM_VERSION}"
 
-	if [[ $NVIM_VERSION =~ "NVIM $COMMIT_SHA".* ]]; then
-		log_warn "No need to rebuild!"
-		exit 0
+	if [ -n "$COMMIT_SHA" ]; then
+		log_warn "Checking neovim version against: ${COMMIT_SHA}"
+
+		if [[ $NVIM_VERSION =~ "NVIM $COMMIT_SHA".* ]]; then
+			log_warn "No need to rebuild!"
+			exit 0
+		fi
 	fi
 fi
 
@@ -58,10 +60,6 @@ if [ -f "/bin/nvim" ]; then
 	log_warn "Neovim installed with fuse appimage deleting it first."
 	sudo rm /bin/nvim
 fi
-
-# cd /tmp || exit 127
-
-# pip3 install neovim-remote
 
 ## goodbye
 log_finish "Built neovim in $((SECONDS / 60)) minutes and $((SECONDS % 60)) seconds." "top"
