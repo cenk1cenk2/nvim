@@ -23,22 +23,33 @@ function M.run_markdown_toc()
 end
 
 function M.run_md_printer()
-  local server_name = "md-printer"
-  local server = require("mason-registry").get_package(server_name)
-
-  if not server:is_installed() then
-    Log:error(("Server %s is not available."):format(server_name))
-
-    return
-  end
-
-  local config = vim.deepcopy(require("modules.lsp-config").get_lsp_default_config(server_name))
-
   job.spawn({
-    command = table.concat(config.command),
-    args = vim.list_extend(vim.deepcopy(config.args), { vim.fn.expand("%") }),
+    command = "md-printer",
+    args = { vim.fn.expand("%") },
   })
   M.reload_file()
+end
+
+function M.run_genpass()
+  local store_key = "RUN_GENPASS_ARGS"
+  local stored_value = lvim.store.get_store(store_key)
+
+  vim.ui.input({
+    prompt = "Genpass arguments:",
+    default = stored_value,
+  }, function(arguments)
+    local result = job.spawn({
+      command = "genpass",
+      args = vim.split(arguments or {}, " "),
+    })
+
+    lvim.store.set_store(store_key, arguments)
+
+    local generated = result:result()[1]
+
+    Log:info(("Copied generated code to clipboard: %s"):format(generated))
+    vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+  end)
 end
 
 function M.run_ansible_vault_decrypt()
@@ -80,6 +91,12 @@ function M.setup()
               M.run_ansible_vault_encrypt()
             end,
             "ansible-vault encrypt",
+          },
+          g = {
+            function()
+              M.run_genpass()
+            end,
+            "run genpass",
           },
           t = {
             function()

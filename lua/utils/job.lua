@@ -30,6 +30,8 @@ function M.spawn(opts)
   })
 
   job:sync(5000)
+
+  return job
 end
 
 return M
