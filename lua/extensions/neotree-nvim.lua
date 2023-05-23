@@ -15,7 +15,7 @@ function M.config()
           "MunifTanjim/nui.nvim",
           "s1n7ax/nvim-window-picker",
         },
-        cmd = { "NeoTreeReveal", "NeoTreeFocusToggle", "NeoTreeFloat" },
+        cmd = { "Neotree", "NeoTreeReveal", "NeoTreeFocusToggle", "NeoTreeFloat" },
       }
     end,
     configure = function(_, fn)
@@ -84,13 +84,20 @@ function M.config()
         source_selector = {
           winbar = true,
           statusline = false,
+          sources = {
+            { source = "filesystem", display_name = (" %s Files "):format(lvim.ui.icons.ui.Folder) },
+            { source = "buffers", display_name = (" %s Buffers "):format(lvim.ui.icons.ui.File) },
+            { source = "git_status", display_name = (" %s Git "):format(lvim.ui.icons.ui.Git) },
+            { source = "document_symbols", display_name = (" %s Symbols "):format(lvim.ui.icons.kind.Function) },
+          },
         },
+        sources = { "filesystem", "buffers", "git_status", "document_symbols" },
         close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
         popup_border_style = lvim.ui.border,
         -- https://github.com/nvim-neo-tree/neo-tree.nvim/issues/338
         enable_diagnostics = false,
         enable_git_status = true,
-        enable_modified_markers = false, -- Show markers for files with unsaved changes.sort_case_insensitive = true, -- used when sorting files and directories in the tree
+        enable_modified_markers = true, -- Show markers for files with unsaved changes.sort_case_insensitive = true, -- used when sorting files and directories in the tree
         sort_function = nil, -- use a custom function for sorting files and directories in the tree
         -- sort_function = function (a,b)
         --       if a.type == b.type then
@@ -147,6 +154,26 @@ function M.config()
               staged = lvim.ui.icons.git.FileStaged,
               conflict = lvim.ui.icons.git.FileConflict,
             },
+          },
+        },
+        document_symbols = {
+          kinds = {
+            File = { icon = lvim.ui.icons.kind.File, hl = "Tag" },
+            Namespace = { icon = lvim.ui.icons.kind.Namespace, hl = "Include" },
+            Package = { icon = lvim.ui.icons.kind.Package, hl = "Label" },
+            Class = { icon = lvim.ui.icons.kind.Class, hl = "Include" },
+            Property = { icon = lvim.ui.icons.kind.Property, hl = "@property" },
+            Enum = { icon = lvim.ui.icons.kind.Enum, hl = "@number" },
+            Function = { icon = lvim.ui.icons.kind.Function, hl = "Function" },
+            String = { icon = lvim.ui.icons.kind.String, hl = "String" },
+            Number = { icon = lvim.ui.icons.kind.Number, hl = "Number" },
+            Array = { icon = lvim.ui.icons.kind.Array, hl = "Type" },
+            Object = { icon = lvim.ui.icons.kind.Object, hl = "Type" },
+            Key = { icon = lvim.ui.icons.kind.Key, hl = "" },
+            Struct = { icon = lvim.ui.icons.kind.Struct, hl = "Type" },
+            Operator = { icon = lvim.ui.icons.kind.Operator, hl = "Operator" },
+            TypeParameter = { icon = lvim.ui.icons.kind.TypeParameter, hl = "Type" },
+            StaticMethod = { icon = lvim.ui.icons.kind.Method, hl = "Function" },
           },
         },
         window = {
@@ -322,7 +349,7 @@ function M.config()
               ["RR"] = "git_revert_file",
               ["C"] = "git_commit",
               ["P"] = "git_push",
-              ["gg"] = "git_commit_and_push",
+              ["GG"] = "git_commit_and_push",
             },
           },
         },
@@ -332,8 +359,7 @@ function M.config()
       require("neo-tree").setup(config.setup)
     end,
     wk = {
-
-      ["e"] = { ":NeoTreeFocusToggle<CR>", "open filetree" },
+      ["e"] = { ":Neotree focus toggle<CR>", "open filetree" },
       [","] = { ":NeoTreeReveal<CR>", "reveal file in filetree" },
       ["."] = { ":NeoTreeFloat buffers<CR>", "open buffers in filetree" },
       ["-"] = { ":NeoTreeFloat git_status<CR>", "git files in filetree" },

@@ -109,6 +109,7 @@ return {
     FolderSymlink = "",
     Forward = "",
     Gear = "",
+    Git = "󰊢",
     History = "",
     Lightbulb = "",
     LightbulbColored = "💡",
