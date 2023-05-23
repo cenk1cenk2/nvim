@@ -34,7 +34,7 @@ function M.config()
           { "hrsh7th/cmp-nvim-lsp-signature-help" },
           { "rcarriga/cmp-dap" },
           -- https://github.com/bydlw98/cmp-env
-          { "bydlw98/cmp-env" },
+          -- { "bydlw98/cmp-env" },
           -- https://github.com/hrsh7th/cmp-calc
           { "hrsh7th/cmp-calc" },
         },
@@ -131,7 +131,7 @@ function M.config()
           -- { name = "fuzzy_buffer" },
 
           { name = "calc" },
-          { name = "env" },
+          -- { name = "env" },
 
           { name = "git" },
           { name = "npm" },
