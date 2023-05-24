@@ -43,7 +43,7 @@ function M.config()
           require("neotest-go"),
           require("neotest-rust"),
           require("neotest-jest")({
-            jestCommand = "yarn run test",
+            jestCommand = "pnpm run test",
           }),
         },
       }
