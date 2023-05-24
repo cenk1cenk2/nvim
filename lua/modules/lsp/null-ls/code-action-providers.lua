@@ -28,9 +28,8 @@ function M.setup()
         end,
       },
     },
-    -- {
-    --   name = "refactoring",
-    -- },
+
+    -- { name = "refactoring" },
 
     -- {
     --   exe = "proselint",

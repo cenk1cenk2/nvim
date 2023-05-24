@@ -43,6 +43,7 @@ function M.setup()
       config = {
         find_json = function(cwd)
           local file = vim.fn.expand(cwd .. "/cspell.json")
+
           if require("lvim.utils").is_file(file) then
             return file
           end
