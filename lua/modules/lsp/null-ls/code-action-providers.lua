@@ -17,7 +17,16 @@ function M.setup()
 
     {
       name = "cspell",
-      extra_args = { "-c", vim.fn.expand("~/.config/nvim/utils/linter-config/.cspell.json") },
+      config = {
+        find_json = function(cwd)
+          local file = vim.fn.expand(cwd .. "/cspell.json")
+          if require("lvim.utils").is_file(file) then
+            return file
+          end
+
+          return vim.fn.expand("~/.config/nvim/utils/linter-config/.cspell.json")
+        end,
+      },
     },
     -- {
     --   name = "refactoring",
