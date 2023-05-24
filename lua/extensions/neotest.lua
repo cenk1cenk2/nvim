@@ -94,7 +94,7 @@ function M.config()
             function()
               require("neotest").run.stop()
             end,
-            "debug nearest test",
+            "stop nearest test",
           },
           ["a"] = {
             function()
