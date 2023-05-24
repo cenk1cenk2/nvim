@@ -22,18 +22,21 @@ M.modes = {
   visual_mode = "v",
   visual_block_mode = "x",
   command_mode = "c",
+  operator_pending_mode = "o",
   normal = "n",
   insert = "i",
   visual = "v",
   term = "t",
   visual_block = "x",
   command = "c",
+  operator = "o",
   n = "n",
   i = "i",
   v = "v",
   t = "t",
   vb = "x",
   c = "c",
+  o = "o",
 }
 
 -- Unset all keybindings defined in keymaps
@@ -62,6 +65,7 @@ function M.set_keymaps(mode, key, val)
     opt = val[2]
     val = val[1]
   end
+
   if val then
     vim.keymap.set(mode, key, val, opt)
   else
@@ -72,10 +76,17 @@ end
 -- Load key mappings for a given mode
 -- @param mode The keymap mode, can be one of the keys of mode_adapters
 -- @param keymaps The list of key mappings
-function M.load_mode(mode, keymaps)
-  mode = M.modes[mode] or mode
-  for k, v in pairs(keymaps) do
-    M.set_keymaps(mode, k, v)
+function M.load_mode(modes, keymaps)
+  if type(modes) == "string" then
+    modes = { modes }
+  end
+
+  for _, mode in pairs(modes) do
+    mode = M.modes[mode] or mode
+
+    for k, v in pairs(keymaps) do
+      M.set_keymaps(mode, k, v)
+    end
   end
 end
 
@@ -83,6 +94,18 @@ end
 -- @param keymaps A list of key mappings for each mode
 function M.load(keymaps)
   keymaps = keymaps or {}
+
+  if vim.tbl_islist(keymaps) then
+    for _, map in pairs(keymaps) do
+      local mode = map[1]
+      table.remove(map, 1)
+
+      M.load_mode(mode, map)
+    end
+
+    return
+  end
+
   for mode, mapping in pairs(keymaps) do
     M.load_mode(mode, mapping)
   end

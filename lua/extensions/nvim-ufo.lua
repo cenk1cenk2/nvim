@@ -90,35 +90,34 @@ function M.config()
       -- end
     end,
     keymaps = function()
-      local defaults = {
-        ["zR"] = {
-          function()
-            require("ufo").openAllFolds()
-          end,
-          { desc = "open all folds - ufo" },
-        },
-        ["zM"] = {
-          function()
-            require("ufo").closeAllFolds()
-          end,
-          { desc = "close all folds - ufo" },
-        },
-        ["zr"] = {
-          function()
-            require("ufo").openFoldsExceptKinds()
-          end,
-          { desc = "open fold - ufo" },
-        },
-        ["zm"] = {
-          function()
-            require("ufo").closeFoldsWith()
-          end,
-          { desc = "close fold - ufo" },
-        },
-      }
       return {
-        n = defaults,
-        v = defaults,
+        {
+          { "n", "v" },
+          ["zR"] = {
+            function()
+              require("ufo").openAllFolds()
+            end,
+            { desc = "open all folds - ufo" },
+          },
+          ["zM"] = {
+            function()
+              require("ufo").closeAllFolds()
+            end,
+            { desc = "close all folds - ufo" },
+          },
+          ["zr"] = {
+            function()
+              require("ufo").openFoldsExceptKinds()
+            end,
+            { desc = "open fold - ufo" },
+          },
+          ["zm"] = {
+            function()
+              require("ufo").closeFoldsWith()
+            end,
+            { desc = "close fold - ufo" },
+          },
+        },
       }
     end,
   })

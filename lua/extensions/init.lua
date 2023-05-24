@@ -26,6 +26,7 @@ local extensions = {
   "stickybuf-nvim",
   "noice-nvim",
   -- extensions
+  "spider-nvim",
   "dap",
   "no-neck-pain-nvim",
   "statuscol-nvim",

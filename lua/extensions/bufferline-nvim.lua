@@ -244,15 +244,15 @@ function M.buf_kill(bufnr, force)
 
   local bufname = api.nvim_buf_get_name(bufnr)
 
+  local is_pinned = require("bufferline.groups").is_pinned({ id = bufnr })
+
   local callback = function(b, f)
     require("bufdel").delete_buffer_expr(b, f)
   end
 
-  local is_pinned = require("bufferline.groups").is_pinned({ id = bufnr })
-
   if not force then
     local warning
-    if bo[bufnr].modified or is_pinned then
+    if bo[bufnr].modified then
       warning = fmt([[No write since last change for (%s)]], fnamemodify(bufname, ":t"))
     elseif is_pinned then
       warning = fmt([[Buffer is pinned (%s)]], fnamemodify(bufname, ":t"))

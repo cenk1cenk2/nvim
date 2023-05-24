@@ -102,37 +102,38 @@ function M.config()
       return { toggle_log_view = M.toggle_log_view }
     end,
     keymaps = function()
-      local maps = {
-        ["<F1>"] = function()
-          M.get_current_float_terminal():toggle()
-        end,
-        ["<F2>"] = function()
-          M.float_terminal_select("prev")
-        end,
-        ["<F3>"] = function()
-          M.float_terminal_select("next")
-        end,
-        ["<F4>"] = function()
-          M.append_float_terminal()
-        end,
-        ["<F6>"] = function()
-          M.create_buffer_terminal()
-        end,
-        ["<F7>"] = function()
-          M.create_bottom_terminal()
-        end,
-        ["<F9>"] = function()
-          M.kill_all()
-        end,
-      }
-
       return {
-        n = maps,
-        t = vim.tbl_extend("force", maps, {
+        {
+          { "n", "t" },
+          ["<F1>"] = function()
+            M.get_current_float_terminal():toggle()
+          end,
+          ["<F2>"] = function()
+            M.float_terminal_select("prev")
+          end,
+          ["<F3>"] = function()
+            M.float_terminal_select("next")
+          end,
+          ["<F4>"] = function()
+            M.append_float_terminal()
+          end,
+          ["<F6>"] = function()
+            M.create_buffer_terminal()
+          end,
+          ["<F7>"] = function()
+            M.create_bottom_terminal()
+          end,
+          ["<F9>"] = function()
+            M.kill_all()
+          end,
+        },
+
+        {
+          { "t" },
           ["<F1>"] = function()
             M.close_all()
           end,
-        }),
+        },
       }
     end,
     wk = function(_, categories)
