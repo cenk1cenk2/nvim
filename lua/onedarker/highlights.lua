@@ -159,7 +159,7 @@ hl.treesitter = {
   ["@function"] = { fg = c.blue[600] },
   ["@function.call"] = { fg = c.blue[600] },
   ["@function.builtin"] = { fg = c.cyan[600] },
-  ["@function.macro"] = { fg = c.fg },
+  ["@function.macro"] = { fg = c.cyan[600] },
   ["@include"] = { fg = c.purple[600] },
   ["@keyword"] = { fg = c.purple[600] },
   ["@keyword.function"] = { fg = c.purple[600] },
