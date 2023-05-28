@@ -1,6 +1,6 @@
 local Log = require("lvim.core.log")
 
-local opts = {
+return {
   settings = {
     typescript = {
       preferences = {
@@ -95,4 +95,3 @@ local opts = {
     },
   },
 }
-return opts

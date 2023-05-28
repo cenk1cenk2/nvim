@@ -39,6 +39,7 @@ local extensions = {
   "muren-nvim",
   "search-replace-nvim",
   "rnvimr",
+  "tabout-nvim",
   "vim-visual-multi",
   "nvim-recorder",
   "neocomposer-nvim",

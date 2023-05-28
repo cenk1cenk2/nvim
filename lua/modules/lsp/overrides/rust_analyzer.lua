@@ -34,4 +34,21 @@ return {
 
     require("lvim.lsp").common_on_init(client, bufnr)
   end,
+  settings = {
+    ["rust-analyzer"] = {
+      diagnostics = {
+        enable = true,
+        enableExperimental = true,
+      },
+      check = {
+        command = "clippy",
+        extraEnv = { CARGO_TARGET_DIR = "/tmp/rust-analyzer" },
+      },
+      server = {
+        extraEnv = {
+          CARGO_TARGET_DIR = "/tmp/rust-analyzer",
+        },
+      },
+    },
+  },
 }
