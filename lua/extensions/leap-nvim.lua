@@ -93,21 +93,21 @@ function M.config()
     keymaps = function()
       return {
         n = {
-          ["s"] = {
+          ["ss"] = {
             function()
               require("leap").leap({ backward = false })
             end,
             { desc = "leap with 2 chars." },
           },
 
-          ["S"] = {
+          ["SS"] = {
             function()
               require("leap").leap({ backward = true })
             end,
             { desc = "leap with 2 backwards chars." },
           },
 
-          ["ss"] = {
+          ["s"] = {
             function()
               require("leap").leap({
                 targets = require("leap-word").get_forward_words(1),
@@ -116,7 +116,7 @@ function M.config()
             { desc = "leap to word." },
           },
 
-          ["SS"] = {
+          ["S"] = {
             function()
               require("leap").leap({
                 targets = require("leap-word").get_backward_words(1),
