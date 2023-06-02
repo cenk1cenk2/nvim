@@ -88,7 +88,9 @@ function M.config()
       require("gitsigns").setup(config.setup)
     end,
     keymaps = {
-      n = {
+      {
+        { "n" },
+
         ["]"] = {
           ["h"] = { ":Gitsigns next_hunk<CR>", { desc = "next hunk" } },
         },

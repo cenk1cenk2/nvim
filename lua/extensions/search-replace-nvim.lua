@@ -40,7 +40,9 @@ function M.config()
       }
     end,
     keymaps = {
-      x = {
+      {
+        { "x" },
+
         ["<C-r>"] = {
           function()
             require("search-replace.visual-multitype").within({ range = true })

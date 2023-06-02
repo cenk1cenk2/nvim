@@ -18,36 +18,36 @@ function M.config()
     on_setup = function(config)
       require("refactoring").setup(config.setup)
     end,
-    keymaps = function()
-      return {
-        v = {
-          ["re"] = {
-            function()
-              require("refactoring").refactor("Extract Function")
-            end,
-            { desc = "extract to function" },
-          },
-          ["rf"] = {
-            function()
-              require("refactoring").refactor("Extract Function To File")
-            end,
-            { desc = "extract function to file" },
-          },
-          ["rv"] = {
-            function()
-              require("refactoring").refactor("Extract Variable")
-            end,
-            { desc = "extract variable" },
-          },
-          ["ri"] = {
-            function()
-              require("refactoring").refactor("Inline Variable")
-            end,
-            { desc = "extract inline variable" },
-          },
+    keymaps = {
+      {
+        { "v" },
+
+        ["re"] = {
+          function()
+            require("refactoring").refactor("Extract Function")
+          end,
+          { desc = "extract to function" },
         },
-      }
-    end,
+        ["rf"] = {
+          function()
+            require("refactoring").refactor("Extract Function To File")
+          end,
+          { desc = "extract function to file" },
+        },
+        ["rv"] = {
+          function()
+            require("refactoring").refactor("Extract Variable")
+          end,
+          { desc = "extract variable" },
+        },
+        ["ri"] = {
+          function()
+            require("refactoring").refactor("Inline Variable")
+          end,
+          { desc = "extract inline variable" },
+        },
+      },
+    },
   })
 end
 

@@ -18,45 +18,44 @@ function M.config()
     on_setup = function(config)
       require("spider").setup(config.setup)
     end,
-    keymaps = function()
-      return {
-        {
-          { "n", "o", "x" },
-          ["w"] = {
-            function()
-              require("spider").motion("w")
-            end,
-            {
-              desc = "spider-w",
-            },
-          },
-          ["e"] = {
-            function()
-              require("spider").motion("e")
-            end,
-            {
-              desc = "spider-e",
-            },
-          },
-          ["b"] = {
-            function()
-              require("spider").motion("b")
-            end,
-            {
-              desc = "spider-b",
-            },
-          },
-          ["ge"] = {
-            function()
-              require("spider").motion("ge")
-            end,
-            {
-              desc = "spider-ge",
-            },
+    keymaps = {
+      {
+        { "n", "o", "x" },
+
+        ["w"] = {
+          function()
+            require("spider").motion("w")
+          end,
+          {
+            desc = "spider-w",
           },
         },
-      }
-    end,
+        ["e"] = {
+          function()
+            require("spider").motion("e")
+          end,
+          {
+            desc = "spider-e",
+          },
+        },
+        ["b"] = {
+          function()
+            require("spider").motion("b")
+          end,
+          {
+            desc = "spider-b",
+          },
+        },
+        ["ge"] = {
+          function()
+            require("spider").motion("ge")
+          end,
+          {
+            desc = "spider-ge",
+          },
+        },
+      },
+    },
   })
 end
 

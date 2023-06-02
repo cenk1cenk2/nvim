@@ -139,7 +139,9 @@ function M.config()
       },
     },
     keymaps = {
-      normal_mode = {
+      {
+        { "n" },
+
         ["<M-l>"] = ":BufferLineCycleNext<CR>",
         ["<M-j>"] = ":BufferLineMoveNext<CR>",
         ["<M-h>"] = ":BufferLineCyclePrev<CR>",

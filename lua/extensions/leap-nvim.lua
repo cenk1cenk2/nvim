@@ -90,43 +90,43 @@ function M.config()
     -- on_done = function()
     -- require("leap").add_default_mappings()
     -- end,
-    keymaps = function()
-      return {
-        n = {
-          ["ss"] = {
-            function()
-              require("leap").leap({ backward = false })
-            end,
-            { desc = "leap with 2 chars." },
-          },
+    keymaps = {
+      {
+        { "n" },
 
-          ["SS"] = {
-            function()
-              require("leap").leap({ backward = true })
-            end,
-            { desc = "leap with 2 backwards chars." },
-          },
-
-          ["s"] = {
-            function()
-              require("leap").leap({
-                targets = require("leap-word").get_forward_words(1),
-              })
-            end,
-            { desc = "leap to word." },
-          },
-
-          ["S"] = {
-            function()
-              require("leap").leap({
-                targets = require("leap-word").get_backward_words(1),
-              })
-            end,
-            { desc = "leap to word backward." },
-          },
+        ["ss"] = {
+          function()
+            require("leap").leap({ backward = false })
+          end,
+          { desc = "leap with 2 chars." },
         },
-      }
-    end,
+
+        ["SS"] = {
+          function()
+            require("leap").leap({ backward = true })
+          end,
+          { desc = "leap with 2 backwards chars." },
+        },
+
+        ["s"] = {
+          function()
+            require("leap").leap({
+              targets = require("leap-word").get_forward_words(1),
+            })
+          end,
+          { desc = "leap to word." },
+        },
+
+        ["S"] = {
+          function()
+            require("leap").leap({
+              targets = require("leap-word").get_backward_words(1),
+            })
+          end,
+          { desc = "leap to word backward." },
+        },
+      },
+    },
   })
 end
 

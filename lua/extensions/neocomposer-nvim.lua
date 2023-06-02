@@ -36,7 +36,9 @@ function M.config()
       require("telescope").load_extension("macros")
     end,
     keymaps = {
-      n = {
+      {
+        { "n" },
+
         ["q"] = "<Nop>",
         ["<M-Q>"] = {
           function()

@@ -30,10 +30,14 @@ function M.config()
       -- netrw_loaded_netrwPlugin = 1
     },
     keymaps = {
-      n = {
+      {
+        { "n" },
+
         ["<F5>"] = ":RnvimrToggle<CR>",
       },
-      t = {
+      {
+        { "t" },
+
         ["<F5>"] = "<C-\\><C-n>:RnvimrToggle<CR>",
       },
     },

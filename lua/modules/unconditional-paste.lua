@@ -7,26 +7,23 @@ function M.unconditional_paste(after)
 end
 
 function M.setup()
-  local keymaps = {
-    ["gp"] = {
-      function()
-        M.unconditional_paste(true)
-      end,
-    },
-    ["gP"] = {
-      function()
-        M.unconditional_paste(false)
-      end,
-    },
-  }
-
   require("utils.setup").init({
     name = "unconditional_paste",
     keymaps = {
-      n = keymaps,
-      v = keymaps,
-      x = keymaps,
-      t = keymaps,
+      {
+        { "n", "v", "x", "t" },
+
+        ["gp"] = {
+          function()
+            M.unconditional_paste(true)
+          end,
+        },
+        ["gP"] = {
+          function()
+            M.unconditional_paste(false)
+          end,
+        },
+      },
     },
   })
 end

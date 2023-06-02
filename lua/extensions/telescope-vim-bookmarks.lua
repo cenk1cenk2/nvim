@@ -38,7 +38,9 @@ function M.config()
       })
     end,
     keymaps = {
-      n = {
+      {
+        { "n" },
+
         ["mf"] = { ":Telescope vim_bookmarks all<CR>", { desc = "list all bookmarks" } },
         ["mF"] = { ":Telescope vim_bookmarks current_file<CR>", { desc = "list document bookmarks" } },
       },

@@ -140,7 +140,9 @@ function M.config()
       end
     end,
     keymaps = {
-      n = {
+      {
+        { "n" },
+
         ["ge"] = { ":Lspsaga lsp_finder<CR>", { desc = "finder" } },
         ["gw"] = { ":Lspsaga peek_definition<CR>", { desc = "peek" } },
       },

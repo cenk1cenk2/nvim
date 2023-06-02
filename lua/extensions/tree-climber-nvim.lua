@@ -10,8 +10,10 @@ function M.config()
         "drybalka/tree-climber.nvim",
       }
     end,
-    keymaps = function()
-      local common = {
+    keymaps = {
+      {
+        { "n", "v" },
+
         ["H"] = {
           function()
             require("tree-climber").goto_parent()
@@ -32,24 +34,23 @@ function M.config()
             require("tree-climber").goto_prev()
           end,
         },
-      }
+      },
 
-      return {
-        n = vim.tbl_extend("force", {
-          ["HHH"] = {
-            function()
-              require("tree-climber").swap_prev()
-            end,
-          },
-          ["LLL"] = {
-            function()
-              require("tree-climber").swap_next()
-            end,
-          },
-        }, common),
-        v = common,
-      }
-    end,
+      {
+        { "n" },
+
+        ["HHH"] = {
+          function()
+            require("tree-climber").swap_prev()
+          end,
+        },
+        ["LLL"] = {
+          function()
+            require("tree-climber").swap_next()
+          end,
+        },
+      },
+    },
   })
 end
 

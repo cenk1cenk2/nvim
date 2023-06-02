@@ -18,7 +18,9 @@ function M.config()
       vim.diagnostic.config({ virtual_lines = false, virtual_text = lvim.lsp.diagnostics.virtual_text })
     end,
     keymaps = {
-      n = {
+      {
+        { "n" },
+
         ["gL"] = { M.toggle, { desc = "toggle lsp lines" } },
       },
     },

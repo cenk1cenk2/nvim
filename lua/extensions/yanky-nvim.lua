@@ -91,8 +91,6 @@ function M.config()
         require("yanky.highlight").highlight_put(state)
       end
 
-      local visual = {}
-
       return {
         {
           { "n", "v", "vb" },

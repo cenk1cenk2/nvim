@@ -47,18 +47,18 @@ function M.config()
     on_setup = function(config)
       require("treesj").setup(config.setup)
     end,
-    keymaps = function()
-      return {
-        n = {
-          ["gJ"] = {
-            function()
-              require("treesj").toggle()
-            end,
-            { desc = "split lines" },
-          },
+    keymaps = {
+      {
+        { "n" },
+
+        ["gJ"] = {
+          function()
+            require("treesj").toggle()
+          end,
+          { desc = "split lines" },
         },
-      }
-    end,
+      },
+    },
   })
 end
 
