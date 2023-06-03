@@ -12,7 +12,7 @@ function M.config()
     plugin = function()
       return {
         "ggandor/leap.nvim",
-        keys = { "f", "F", "t", "T" },
+        keys = { "f", "F", "t", "T", "drr", "dir", "dar", "diR", "daR", "yir", "yar", "yiR", "yaR", "yrr" },
         dependencies = {
           {
             "ggandor/flit.nvim",

@@ -44,9 +44,9 @@ return {
         command = "clippy",
         extraEnv = { CARGO_TARGET_DIR = "/tmp/rust-analyzer" },
       },
-      -- checkOnSave = {
-      --   overrideCommand = { "cargo", "clippy", "--workspace", "--message-format=json", "--all-targets", "--fix", "--allow-dirty" },
-      -- },
+      checkOnSave = {
+        command = "clippy",
+      },
       server = {
         extraEnv = {
           CARGO_TARGET_DIR = "/tmp/rust-analyzer",
