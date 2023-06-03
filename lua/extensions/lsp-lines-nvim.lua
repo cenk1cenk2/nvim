@@ -8,7 +8,6 @@ function M.config()
     plugin = function()
       return {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
-        keys = { "gL" },
       }
     end,
     on_init = function(config)
@@ -21,7 +20,12 @@ function M.config()
       {
         { "n" },
 
-        ["gL"] = { M.toggle, { desc = "toggle lsp lines" } },
+        ["gL"] = {
+          function()
+            M.toggle()
+          end,
+          { desc = "toggle lsp lines" },
+        },
       },
     },
   })
