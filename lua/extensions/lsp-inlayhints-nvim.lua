@@ -64,13 +64,13 @@ function M.config()
     wk = function(_, categories)
       return {
         [categories.LSP] = {
-          ["t"] = {
+          ["T"] = {
             function()
               require("lsp-inlayhints").toggle()
             end,
             "toggle inlay hints",
           },
-          ["T"] = {
+          ["t"] = {
             function()
               require("lsp-inlayhints").reset()
             end,
