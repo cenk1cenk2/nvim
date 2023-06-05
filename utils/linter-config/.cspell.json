@@ -3,7 +3,7 @@
   "version": "0.2",
   "language": "en",
   "ignorePaths": ["node_modules", ".git"],
-  "dictionaryDefinitions": [{ "name": "custom", "path": "./cspell-dict.txt" }],
+  "dictionaryDefinitions": [{ "name": "custom", "path": "./.cspell.txt" }],
   "dictionaries": ["custom"],
   "numSuggestions": 3,
   "languageSettings": [
@@ -49,10 +49,6 @@
     }
   ],
   "patterns": [
-    {
-      "name": "ignore_string_literal_prefix",
-      "pattern": "/\\b(?:rf|fr|f|r|u|ur|b|br)'/gi"
-    },
     {
       "name": "LuaComment",
       "description": "Matches all comments in a Lua file.",
