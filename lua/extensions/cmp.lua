@@ -49,13 +49,16 @@ function M.config()
     setup = function(config)
       local cmp = config.inject.cmp
       local luasnip = config.inject.luasnip
-      local has_words_before = M.has_words_before
 
       return {
         confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false },
         completion = {
           ---@usage The minimum length of a word to complete on.
           keyword_length = 0,
+          autocomplete = {
+            cmp.TriggerEvent.TextChanged,
+            cmp.TriggerEvent.InsertEnter,
+          },
         },
         experimental = {
           ghost_text = false,
@@ -119,7 +122,7 @@ function M.config()
           completion = cmp.config.window.bordered({ border = lvim.ui.border }),
           documentation = cmp.config.window.bordered({ border = lvim.ui.border }),
         },
-        sources = {
+        sources = cmp.config.sources({
           { name = "nvim_lsp" },
           { name = "path" },
           -- { name = "nvim_lsp_signature_help" },
@@ -136,7 +139,7 @@ function M.config()
           { name = "npm" },
 
           { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
-        },
+        }),
         mapping = cmp.mapping.preset.insert({
           ["<C-k>"] = cmp.mapping.select_prev_item(),
           ["<C-j>"] = cmp.mapping.select_next_item(),
@@ -149,9 +152,8 @@ function M.config()
             c = function(fallback)
               if cmp.visible() then
                 cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
-              else
-                fallback()
               end
+              fallback()
             end,
           }),
           ["<Tab>"] = cmp.mapping(function(fallback)
@@ -159,18 +161,16 @@ function M.config()
               cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
               vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
-            else
-              fallback()
             end
+            fallback()
           end, { "i", "s" }),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
               vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
-            else
-              fallback()
             end
+            fallback()
           end, { "i", "s" }),
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
@@ -189,6 +189,12 @@ function M.config()
             end
             fallback() -- if not exited early, always fallback
           end),
+          ["<C-l>"] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              return cmp.complete_common_string()
+            end
+            fallback()
+          end, { "i", "c" }),
         }),
       }
     end,
@@ -285,10 +291,5 @@ function M.config()
 end
 
 M.current_setup = require("utils.setup").fn.get_current_setup_wrapper(extension_name)
-
-function M.has_words_before()
-  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-end
 
 return M

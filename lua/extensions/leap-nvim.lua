@@ -111,7 +111,7 @@ function M.config()
         ["s"] = {
           function()
             require("leap").leap({
-              targets = require("leap-word").get_forward_words(1),
+              targets = require("leap-word").get_forward_words(0),
             })
           end,
           { desc = "leap to word." },
@@ -120,7 +120,7 @@ function M.config()
         ["S"] = {
           function()
             require("leap").leap({
-              targets = require("leap-word").get_backward_words(1),
+              targets = require("leap-word").get_backward_words(0),
             })
           end,
           { desc = "leap to word backward." },

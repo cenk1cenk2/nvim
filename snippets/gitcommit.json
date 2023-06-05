@@ -1,0 +1,7 @@
+{
+  "skipCi": {
+    "prefix": "sci",
+    "body": "[skip-ci]",
+    "description": "Skip CI actions on common pipeline executors."
+  }
+}
