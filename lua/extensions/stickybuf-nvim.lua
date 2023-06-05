@@ -20,7 +20,8 @@ function M.config()
           return "buftype"
         elseif buftype == "prompt" then
           return "bufnr"
-        elseif vim.tbl_contains({ "aerial", "nerdtree", "neotest-summary", "neo-tree", "DiffviewFiles" }, filetype) then
+        elseif vim.tbl_contains({ "aerial", "nerdtree", "neotest-summary", "DiffviewFiles" }, filetype) then
+          -- "neo-tree",
           return "filetype"
         elseif bufname:match("Neogit.*Popup") then
           return "bufnr"
