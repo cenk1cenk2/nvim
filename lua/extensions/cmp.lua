@@ -55,10 +55,10 @@ function M.config()
         completion = {
           ---@usage The minimum length of a word to complete on.
           keyword_length = 0,
-          autocomplete = {
-            cmp.TriggerEvent.TextChanged,
-            cmp.TriggerEvent.InsertEnter,
-          },
+          -- autocomplete = {
+          --   cmp.TriggerEvent.TextChanged,
+          --   cmp.TriggerEvent.InsertEnter,
+          -- },
         },
         experimental = {
           ghost_text = false,
