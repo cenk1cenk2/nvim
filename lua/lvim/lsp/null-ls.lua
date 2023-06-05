@@ -29,15 +29,13 @@ function M.register_sources(configs, method)
     local type = method == null_ls.methods.CODE_ACTION and "code_actions" or null_ls.methods[method]:lower()
     local source = type and null_ls.builtins[type][name]
 
-    Log:trace(("Received request to register [%s] as a %s source"):format(name, type))
+    Log:trace(("Received request to register: %s as a %s source"):format(name, type))
     if not source then
-      Log:error("Not a valid source: " .. name)
+      Log:error(("Not a valid source: %s"):format(name))
 
       return registered_names
     elseif is_registered({ name = source.name or name, method = method }) then
-      Log:trace(("Skipping registering [%s] more than once"):format(name))
-
-      return registered_names
+      Log:warn(("Registring more than once: %s as a %s source."):format(name, type))
     end
 
     local opts = vim.tbl_extend("force", vim.deepcopy(config), {
@@ -97,7 +95,7 @@ function M.register(method, config)
   local registered = M.register_sources(config, method)
 
   if #registered > 0 then
-    Log:debug(("Registered the following source for %s: %s"):format(method, table.concat(registered, ", ")))
+    Log:debug(("Registered the following sources for %s: %s"):format(method, table.concat(registered, ", ")))
   end
 end
 
