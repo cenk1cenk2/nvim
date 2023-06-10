@@ -1,4 +1,5 @@
 -- https://github.com/tom-anders/telescope-vim-bookmarks.nvim
+-- https://github.com/tom-anders/reaz1995/telescope-vim-bookmarks.nvim
 local M = {}
 
 local extension_name = "telescope_vim_bookmarks"
@@ -7,7 +8,7 @@ function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
-        "tom-anders/telescope-vim-bookmarks.nvim",
+        "reaz1995/telescope-vim-bookmarks.nvim",
         dependencies = { "nvim-telescope/telescope.nvim" },
         cmd = { "Telescope vim_bookmarks" },
       }
