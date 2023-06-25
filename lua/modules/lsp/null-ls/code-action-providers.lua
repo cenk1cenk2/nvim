@@ -27,6 +27,7 @@ function M.setup()
           return vim.fn.expand("~/.config/nvim/utils/linter-config/.cspell.json")
         end,
       },
+      filetypes = { "markdown", "text", "gitcommit", "" },
     },
 
     -- { name = "refactoring" },
