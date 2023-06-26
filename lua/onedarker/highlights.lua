@@ -336,8 +336,8 @@ hl.plugins.leap = {
 hl.plugins.flash = {
   -- FlashBackdrop = { link = "Comment" },
   FlashMatch = { fg = c.bg[200], bg = c.cyan[600], bold = true },
-  FlashLabel = { fg = c.bg[200], bg = c.red[600], bold = true },
-  FlashCurrent = { fg = c.bg[200], bg = c.blue[600], bold = true },
+  FlashCurrent = { fg = c.bg[200], bg = c.blue[900], bold = true },
+  FlashLabel = { fg = c.bg[200], bg = c.orange[600], bold = true },
 }
 
 hl.plugins.vim_illuminate = {
