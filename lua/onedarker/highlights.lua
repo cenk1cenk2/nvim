@@ -333,6 +333,13 @@ hl.plugins.leap = {
   LeapLabelSelected = { fg = c.bg[200], bg = c.blue[600], bold = true },
 }
 
+hl.plugins.flash = {
+  -- FlashBackdrop = { link = "Comment" },
+  FlashMatch = { fg = c.bg[200], bg = c.cyan[600], bold = true },
+  FlashLabel = { fg = c.bg[200], bg = c.red[600], bold = true },
+  FlashCurrent = { fg = c.bg[200], bg = c.blue[600], bold = true },
+}
+
 hl.plugins.vim_illuminate = {
   IlluminatedWordText = { bg = c.bg[300] },
   IlluminatedWordWrite = { bg = c.bg[300] },
