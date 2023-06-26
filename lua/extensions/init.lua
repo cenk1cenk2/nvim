@@ -32,6 +32,7 @@ local extensions = {
   "statuscol-nvim",
   "hop",
   "leap-nvim",
+  "flash-nvim",
   "vim-repeat",
   "neoscroll",
   "auto-hlsearch-nvim",
@@ -87,6 +88,7 @@ local extensions = {
   "treesj",
   "winshift-nvim",
   "browse-nvim",
+  "edgy-nvim",
 }
 
 function M.config(config)

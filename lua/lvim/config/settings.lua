@@ -45,6 +45,7 @@ M.load_default_options = function()
     grepprg = "rg --vimgrep --no-heading --smart-case",
     grepformat = "%f:%l:%c:%m,%f:%l:%m",
     laststatus = 3,
+    splitkeep = "screen",
     -- opt.titlestring = "%<%F%=%l/%L - nvim" -- what the title of the window will be set to
     undodir = undodir, -- set an undo directory
     undofile = true, -- enable persistent undo

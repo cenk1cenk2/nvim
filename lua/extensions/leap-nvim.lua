@@ -8,7 +8,7 @@ local M = {}
 local extension_name = "leap_nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     plugin = function()
       return {
         "ggandor/leap.nvim",
