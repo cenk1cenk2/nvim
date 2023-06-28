@@ -1,5 +1,7 @@
 return {
-  normal_mode = {
+  {
+    { "n", "v", "vb" },
+
     ["K"] = {
       function()
         lvim.lsp.wrapper.hover()
@@ -42,6 +44,10 @@ return {
       end,
       "show line diagnostics",
     },
+  },
+  {
+    { "n" },
+
     ["gh"] = {
       function()
         lvim.lsp.wrapper.code_action()
@@ -49,9 +55,10 @@ return {
       "code action",
     },
   },
-  insert_mode = {},
-  visual_mode = {
-    ["ca"] = {
+  {
+    { "v", "vb" },
+
+    ["gh"] = {
       function()
         lvim.lsp.wrapper.code_action()
       end,

@@ -1,7 +1,9 @@
 local Log = require("lvim.core.log")
 
 return {
-  a = {
+  {
+    { "a" },
+
     -- disable help
     ["<F1>"] = "<Nop>",
     -- to blachole
@@ -11,7 +13,9 @@ return {
   },
 
   ---@usage change or add keymappings for insert mode
-  i = {
+  {
+    { "i" },
+
     -- Move current line / block with Alt-j/k ala vscode.
     -- ["<A-j>"] = "<Esc>:m .+1<CR>==gi",
     -- Move current line / block with Alt-j/k ala vscode.
@@ -28,7 +32,9 @@ return {
   },
 
   ---@usage change or add keymappings for normal mode
-  n = {
+  {
+    { "n" },
+
     -- save
     ["<C-s>"] = ":w<CR>",
     ["<C-x>"] = function()
@@ -81,7 +87,9 @@ return {
   },
 
   ---@usage change or add keymappings for terminal mode
-  t = {
+  {
+    { "t" },
+
     -- Terminal window navigation
     ["<C-h>"] = "<C-\\><C-N><C-w>h",
     ["<C-j>"] = "<C-\\><C-N><C-w>j",
@@ -91,7 +99,9 @@ return {
   },
 
   ---@usage change or add keymappings for visual mode
-  v = {
+  {
+    { "v" },
+
     -- Better indenting
     ["<"] = "<gv",
     [">"] = ">gv",
@@ -102,7 +112,9 @@ return {
   },
 
   ---@usage change or add keymappings for visual block mode
-  vb = {
+  {
+    { "vb" },
+
     -- Move current line / block with Alt-j/k ala vscode.
     ["<A-j>"] = ":m '>+1<CR>gv-gv",
     ["<A-k>"] = ":m '<-2<CR>gv-gv",
@@ -110,13 +122,5 @@ return {
     -- to blachole
     ["P"] = '"_dp',
     ["p"] = '"_dP',
-  },
-
-  ---@usage change or add keymappings for command mode
-  c = {
-    -- navigate tab completion with <c-j> and <c-k>
-    -- runs conditionally
-    -- ["<C-j>"] = { 'pumvisible() ? "\\<C-n>" : "\\<C-j>"', { expr = true, noremap = true } },
-    -- ["<C-k>"] = { 'pumvisible() ? "\\<C-p>" : "\\<C-k>"', { expr = true, noremap = true } },
   },
 }

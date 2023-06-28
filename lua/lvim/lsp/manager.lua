@@ -82,28 +82,40 @@ local function launch_server(server_name, config)
   local ft = config.filetypes or require("lvim.lsp.utils").get_supported_filetypes(server_name)
   Log:trace(("%s is hooked for fts: %s"):format(server_name, vim.inspect(ft)))
 
-  require("utils.setup").define_autocmds({
-    {
-      "FileType",
-      {
-        group = "lsp_launch_server",
-        pattern = ft,
-        callback = function(event)
-          xpcall(function()
-            if M.has_setup(server_name) then
-              return
-            end
+  local callback = function()
+    xpcall(function()
+      if M.has_setup(server_name) then
+        return
+      end
 
-            require("lspconfig")[server_name].setup(config)
-          end, debug.traceback)
+      if type(config.override) == "function" then
+        config.override(config)
 
-          pcall(function()
-            buf_try_add(server_name, event.buf)
-          end)
-        end,
-      },
-    },
-  })
+        return
+      end
+
+      require("lspconfig")[server_name].setup(config)
+    end, debug.traceback)
+  end
+
+  callback()
+
+  -- require("utils.setup").define_autocmds({
+  --   {
+  --     "FileType",
+  --     {
+  --       group = "lsp_launch_server",
+  --       pattern = ft,
+  --       callback = function(event)
+  --         callback()
+  --
+  --         pcall(function()
+  --           buf_try_add(server_name, event.buf)
+  --         end)
+  --       end,
+  --     },
+  --   },
+  -- })
 end
 
 function M.has_setup(server_name)

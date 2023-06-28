@@ -58,16 +58,21 @@ end
 -- @param mode The keymap mode, can be one of the keys of mode_adapters
 -- @param key The key of keymap
 -- @param val Can be form as a mapping or tuple of mapping and user defined opt
-function M.set_keymaps(mode, key, val)
-  local opt = M.opts[mode]
+function M.set_keymaps(mode, key, val, opts)
+  opts = opts or M.opts[mode]
 
   if type(val) == "table" then
-    opt = val[2]
+    local o = val[2]
+    if type(val[2]) == "string" then
+      o = { desc = val[2] }
+    end
+
+    opts = vim.tbl_extend("keep", o or {}, opts or {})
     val = val[1]
   end
 
   if val then
-    vim.keymap.set(mode, key, val, opt)
+    vim.keymap.set(mode, key, val, opts)
   else
     pcall(vim.api.nvim_del_keymap, mode, key)
   end
@@ -76,7 +81,7 @@ end
 -- Load key mappings for a given mode
 -- @param mode The keymap mode, can be one of the keys of mode_adapters
 -- @param keymaps The list of key mappings
-function M.load_mode(modes, keymaps)
+function M.load_mode(modes, keymaps, opts)
   if type(modes) == "string" then
     modes = { modes }
   end
@@ -85,22 +90,22 @@ function M.load_mode(modes, keymaps)
     mode = M.modes[mode] or mode
 
     for k, v in pairs(keymaps) do
-      M.set_keymaps(mode, k, v)
+      M.set_keymaps(mode, k, v, opts)
     end
   end
 end
 
 -- Load key mappings for all provided modes
 -- @param keymaps A list of key mappings for each mode
-function M.load(keymaps)
-  keymaps = keymaps or {}
+function M.load(keymaps, opts)
+  keymaps = vim.deepcopy(keymaps) or {}
 
   if vim.tbl_islist(keymaps) then
     for _, map in pairs(keymaps) do
       local mode = map[1]
       table.remove(map, 1)
 
-      M.load_mode(mode, map)
+      M.load_mode(mode, map, opts)
     end
 
     return

@@ -11,12 +11,7 @@ local function add_lsp_buffer_options(bufnr)
 end
 
 local function add_lsp_buffer_keybindings(bufnr)
-  for mode_name, mode_char in pairs(keymappings.modes) do
-    for key, remap in pairs(lvim.lsp.buffer_mappings[mode_name] or {}) do
-      local opts = vim.tbl_extend("force", keymappings.opts[keymappings.modes[mode_name]], { buffer = bufnr, desc = remap[2], noremap = true, silent = true })
-      vim.keymap.set(mode_char, key, remap[1], opts)
-    end
-  end
+  keymappings.load(lvim.lsp.buffer_mappings, { buffer = bufnr, noremap = true, silent = true })
 end
 
 function M.common_capabilities()

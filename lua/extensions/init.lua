@@ -89,6 +89,7 @@ local extensions = {
   "winshift-nvim",
   "browse-nvim",
   "edgy-nvim",
+  "typescript-tools-nvim",
 }
 
 function M.config(config)

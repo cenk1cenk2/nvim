@@ -1,6 +1,10 @@
 local Log = require("lvim.core.log")
 
 return {
+  override = function(config)
+    -- typescript-tools if this is enabled it will override it
+    require("typescript-tools").setup(config)
+  end,
   single_file_support = false,
   settings = {
     typescript = {
@@ -75,23 +79,13 @@ return {
 
     LspOrganizeImports = {
       function()
-        vim.lsp.buf.execute_command({
-          command = "_typescript.organizeImports",
-          arguments = { vim.api.nvim_buf_get_name(0) },
-          title = "",
-        })
-      end,
-    },
+        -- vim.lsp.buf.execute_command({
+        --   command = "_typescript.organizeImports",
+        --   arguments = { vim.api.nvim_buf_get_name(0) },
+        --   title = "",
+        -- })
 
-    LspImportAll = {
-      function()
-        vim.cmd([[TSLspImportAll]])
-      end,
-    },
-
-    LspImportCurrent = {
-      function()
-        vim.cmd([[TSLspImportCurrent]])
+        vim.cmd([[TsToolsOrganizeImports]])
       end,
     },
   },
