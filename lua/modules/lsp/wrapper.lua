@@ -179,6 +179,50 @@ function M.organize_imports()
   end)
 end
 
+function M.rename_file()
+  local current = vim.api.nvim_buf_get_name(0)
+  vim.ui.input({ prompt = "Set the path to rename to" .. " ➜  ", default = current }, function(rename)
+    if not rename then
+      vim.notify("File name can not be empty.", vim.log.levels.ERROR)
+
+      return
+    end
+
+    local stat = vim.loop.fs_stat(rename)
+
+    if stat and stat.type then
+      vim.notify("File already exists: " .. rename, vim.log.levels.ERROR)
+
+      return
+    end
+
+    vim.lsp.buf_request(0, "workspace/willRenameFiles", {
+      files = {
+        {
+          oldUri = ("file://%s/%s"):format(vim.fn.getcwd(), current),
+          newUri = ("file://%s/%s"):format(vim.fn.getcwd(), rename),
+        },
+      },
+    }, function(error, result, _context, _config)
+      if error then
+        Log:warn(error.message)
+      end
+
+      if result == nil or #result == 0 then
+        Log:warn("No language server has answered the rename call.")
+
+        return
+      end
+
+      for _, r in pairs(result or {}) do
+        lsp_utils.apply_lsp_edit(r)
+      end
+
+      vim.notify(current .. " ➜  " .. rename)
+    end)
+  end)
+end
+
 function M.lsp_logging_level(level)
   vim.lsp.set_log_level(level)
 end
@@ -207,6 +251,12 @@ function M.setup()
         name = "LspOrganizeImports",
         fn = function()
           M.organize_imports()
+        end,
+      },
+      {
+        name = "LspRenameFile",
+        fn = function()
+          M.rename_file()
         end,
       },
     },
