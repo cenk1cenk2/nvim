@@ -85,7 +85,7 @@ return {
         --   title = "",
         -- })
 
-        vim.cmd([[TsToolsOrganizeImports]])
+        vim.cmd([[TSToolsOrganizeImports]])
       end,
     },
   },

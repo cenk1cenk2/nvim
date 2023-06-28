@@ -79,25 +79,25 @@ function M.config()
           -- 1: when pos == "end" and pos < current position
           offset = nil, ---@type number
         },
+        label = {
+          -- allow uppercase labels
+          uppercase = true,
+          -- add a label for the first match in the current window.
+          -- you can always jump to the first match with `<CR>`
+          current = true,
+          -- show the label after the match
+          after = true, ---@type boolean|number[]
+          -- show the label before the match
+          before = false, ---@type boolean|number[]
+          -- position of the label extmark
+          style = "overlay", ---@type "eol" | "overlay" | "right_align" | "inline"
+          -- flash tries to re-use labels that were already assigned to a position,
+          -- when typing more characters. By default only lower-case labels are re-used.
+          reuse = "lowercase", ---@type "lowercase" | "all"
+          -- for the current window, label targets closer to the cursor first
+          distance = true,
+        },
         highlight = {
-          label = {
-            -- allow uppercase labels
-            uppercase = true,
-            -- add a label for the first match in the current window.
-            -- you can always jump to the first match with `<CR>`
-            current = true,
-            -- show the label after the match
-            after = true, ---@type boolean|number[]
-            -- show the label before the match
-            before = false, ---@type boolean|number[]
-            -- position of the label extmark
-            style = "overlay", ---@type "eol" | "overlay" | "right_align" | "inline"
-            -- flash tries to re-use labels that were already assigned to a position,
-            -- when typing more characters. By default only lower-case labels are re-used.
-            reuse = "lowercase", ---@type "lowercase" | "all"
-            -- for the current window, label targets closer to the cursor first
-            distance = true,
-          },
           -- show a backdrop with hl FlashBackdrop
           backdrop = false,
           -- Highlight the search matches
