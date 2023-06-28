@@ -1,6 +1,7 @@
 local Log = require("lvim.core.log")
 
 return {
+  single_file_support = false,
   settings = {
     typescript = {
       preferences = {
