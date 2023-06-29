@@ -7,6 +7,22 @@ return {
   end,
   single_file_support = false,
   settings = {
+    tsserver_file_preferences = {
+      includeCompletionsForModuleExports = true,
+      quotePreference = "auto",
+      includeCompletionsForImportStatements = true,
+      includeAutomaticOptionalChainCompletions = true,
+      includeCompletionsWithClassMemberSnippets = true,
+      includeCompletionsWithObjectLiteralMethodSnippets = true,
+      importModuleSpecifierPreference = "shortest",
+      includeInlayParameterNameHints = "all",
+      includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+      includeInlayFunctionParameterTypeHints = true,
+      includeInlayVariableTypeHints = true,
+      includeInlayPropertyDeclarationTypeHints = true,
+      includeInlayFunctionLikeReturnTypeHints = true,
+      includeInlayEnumMemberValueHints = true,
+    },
     typescript = {
       preferences = {
         importModuleSpecifier = "relative",
