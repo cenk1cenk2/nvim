@@ -155,6 +155,14 @@ function M.config()
       }
     end,
     parser_config = {
+      gotmpl = {
+        install_info = {
+          url = "https://github.com/ngalaiko/tree-sitter-go-template",
+          files = { "src/parser.c" },
+        },
+        filetype = "gotmpl",
+        used_by = { "gotmpl" },
+      },
       -- jinja = {
       --   install_info = {
       --     url = "https://github.com/theHamsta/tree-sitter-jinja2.git",
@@ -167,6 +175,7 @@ function M.config()
     },
     ft_to_parser = {
       ["yaml"] = { "yaml.ansible" },
+      ["gotmpl"] = { "helm" },
     },
     on_setup = function(config)
       require("nvim-treesitter.configs").setup(config.setup)
