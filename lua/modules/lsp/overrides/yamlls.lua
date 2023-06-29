@@ -1,6 +1,7 @@
 return {
   filetypes = {
     "yaml",
+    "helm",
     "!yaml.ansible",
     "!yaml.docker-compose",
   },
@@ -12,17 +13,19 @@ return {
       schemaStore = { enable = true, url = "https://www.schemastore.org/api/json/catalog.json" },
       schemas = {
         kubernetes = {
+          "templates/*.{yml,yaml}",
           "*.k8s.{yml,yaml}",
           "daemon.{yml,yaml}",
           "manager.{yml,yaml}",
           "restapi.{yml,yaml}",
+          "*namespace*.{yml,yaml}",
           "role.{yml,yaml}",
-          "role_binding.{yml,yaml}",
+          "role-binding.{yml,yaml}",
           "*onfigma*.{yml,yaml}",
-          "*ngres*.{yml,yaml}",
-          "*ecre*.{yml,yaml}",
-          "*eployment*.{yml,yaml}",
-          "*ervic*.{yml,yaml}",
+          "*ingress*.{yml,yaml}",
+          "*secret*.{yml,yaml}",
+          "*deployment*.{yml,yaml}",
+          "*service*.{yml,yaml}",
           "kubectl-edit*.yaml",
         },
         ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = { "*flow*.{yml,yaml}" },
