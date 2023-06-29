@@ -14,6 +14,20 @@ function M.config()
     on_done = function()
       require("telescope").load_extension("yaml_schema")
     end,
+    wk = function(_, categories)
+      return {
+        [categories.ACTIONS] = {
+          ["F"] = {
+            ["y"] = {
+              function()
+                require("telescope").extensions.yaml_schema.yaml_schema()
+              end,
+              "select yaml schema",
+            },
+          },
+        },
+      }
+    end,
   })
 end
 
