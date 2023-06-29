@@ -51,6 +51,7 @@ function M.setup()
           return vim.fn.expand("~/.config/nvim/utils/linter-config/.cspell.json")
         end,
       },
+      method = methods.DIAGNOSTICS_ON_SAVE,
       filetypes = { "markdown", "text", "gitcommit", "" },
       diagnostics_postprocess = function(diagnostic)
         diagnostic.severity = vim.diagnostic.severity.HINT
