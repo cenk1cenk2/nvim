@@ -13,7 +13,7 @@ function M.apply_lsp_edit(result)
     return
   end
 
-  if result.edit or type(result.command) == "table" then
+  if result.edit or result.command and type(result.command) == "table" then
     if result.edit then
       vim.lsp.util.apply_workspace_edit(result.edit, "utf-8")
 
