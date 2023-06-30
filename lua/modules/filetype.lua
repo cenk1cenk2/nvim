@@ -16,6 +16,8 @@ function M.setup()
       ["tmpl"] = "gotmpl",
       ["tpl"] = function(path)
         if path:find("templates/") then
+          vim.opt_local.indentexpr = "GetDjangoIndent()"
+
           return "helm"
         end
 
