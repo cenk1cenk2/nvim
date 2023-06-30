@@ -16,7 +16,7 @@ return {
     },
     {
       name = "Kubernetes master",
-      uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/all.json",
+      uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master/all.json",
     },
   },
   lspconfig = {
