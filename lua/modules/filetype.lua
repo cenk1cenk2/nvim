@@ -13,6 +13,7 @@ function M.setup()
       ["zsh"] = "sh",
       ["go.tmpl"] = "gotmpl",
       ["gotmpl"] = "gotmpl",
+      ["tmpl"] = "gotmpl",
     },
     filename = {
       [".editorconfig"] = "toml",
