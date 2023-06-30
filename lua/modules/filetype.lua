@@ -14,7 +14,13 @@ function M.setup()
       ["go.tmpl"] = "gotmpl",
       ["gotmpl"] = "gotmpl",
       ["tmpl"] = "gotmpl",
-      ["tpl"] = "gotmpl",
+      ["tpl"] = function(path)
+        if path:find("templates/") then
+          return "helm"
+        end
+
+        return "gotmpl"
+      end,
     },
     filename = {
       [".editorconfig"] = "toml",
