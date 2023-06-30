@@ -14,6 +14,7 @@ function M.setup()
       ["go.tmpl"] = "gotmpl",
       ["gotmpl"] = "gotmpl",
       ["tmpl"] = "gotmpl",
+      ["tpl"] = "gotmpl",
     },
     filename = {
       [".editorconfig"] = "toml",
