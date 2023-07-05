@@ -68,9 +68,9 @@ function M.config()
       local function get_node_dir(state)
         local node = state.tree:get_node()
         local path
-        if node.type == "directory" then
-          path = node:get_id()
-        elseif node.type == "file" then
+        -- if node.type == "directory" then
+        --   path = node:get_id()
+        if node.type == "file" or node.type == "directory" then
           path = node:get_parent_id()
         else
           Log:warn("Finding in node only works for files and directories.")
