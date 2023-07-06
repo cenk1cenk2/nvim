@@ -24,6 +24,7 @@ function M.setup()
         "css",
         "markdown",
         "graphql",
+        "helm",
       },
       env = {
         PRETTIERD_DEFAULT_CONFIG = vim.fn.expand("~/.config/nvim/utils/linter-config/.prettierrc.json"),
