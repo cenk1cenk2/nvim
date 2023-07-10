@@ -593,6 +593,8 @@ hl.plugins.hlslens = {
 }
 
 hl.plugins.lspsaga = {
+  SagaFolderName = { fg = c.grey[900] },
+  SagaFileName = { fg = c.grey[900] },
   SagaBorder = { fg = c.bg[600] },
   ActionPreviewBorder = { fg = c.yellow[600] },
   CodeActionBorder = { fg = c.yellow[300] },
