@@ -41,11 +41,13 @@ function M.update_language_servers()
   require("lvim.lsp").setup(true)
   vim.cmd([[MasonUpdate]])
   require("mason-update-all").update_all()
+  vim.cmd([[TSUpdate]])
 end
 
 function M.update_language_servers_sync()
   require("lvim.lsp").setup(true)
   M.update_language_servers()
+  vim.cmd([[TSUpdateSync]])
 end
 
 function M.setup()

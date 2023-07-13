@@ -3,7 +3,7 @@ local M = {}
 
 local extension_name = "treesitter"
 
-local Log = require("lvim.core.log")
+-- local Log = require("lvim.core.log")
 
 M.parsers_dir = join_paths(get_data_dir(), "parsers")
 
@@ -16,15 +16,15 @@ function M.config()
           vim.cmd([[TSUpdate]])
         end,
         event = "BufReadPre",
-        cond = function()
-          if is_headless() then
-            Log:debug("Headless mode detected, skipping running setup for treesitter.")
-
-            return false
-          end
-
-          return true
-        end,
+        -- cond = function()
+        --   if is_headless() then
+        --     Log:debug("Headless mode detected, skipping running setup for treesitter.")
+        --
+        --     return false
+        --   end
+        --
+        --   return true
+        -- end,
         dependencies = {
           {
             "JoosepAlviste/nvim-ts-context-commentstring",
