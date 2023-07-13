@@ -76,7 +76,6 @@ local extensions = {
   "nvim-colorizer",
   "vim-illuminate",
   "neotest",
-  "lsp-inlayhints-nvim",
   "telescope-github",
   "bookmarks-nvim",
   "telescope-dap",

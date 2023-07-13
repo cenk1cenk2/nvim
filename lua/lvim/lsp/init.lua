@@ -41,7 +41,7 @@ function M.common_on_exit(client, bufnr)
     Log:trace("Called lsp.on_exit")
   end
 
-  if lvim.lsp.code_lens_refresh then
+  if lvim.lsp.code_lens.refresh then
     autocmds.clear_augroup("lsp_code_lens_refresh")
   end
 end
@@ -64,9 +64,15 @@ function M.common_on_attach(client, bufnr)
   end
 
   local lu = require("lvim.lsp.utils")
-  if lvim.lsp.code_lens_refresh then
+
+  if lvim.lsp.code_lens.refresh then
     lu.setup_codelens_refresh(client, bufnr)
   end
+
+  if lvim.lsp.inlay_hints.enabled then
+    lu.setup_inlay_hints(client, bufnr)
+  end
+
   add_lsp_buffer_keybindings(bufnr)
   add_lsp_buffer_options(bufnr)
 end

@@ -83,10 +83,7 @@ function M.get_all_supported_filetypes()
 end
 
 function M.setup_codelens_refresh(client, bufnr)
-  if vim.tbl_contains({ "yamlls" }, client.name) then
-    return
-  end
-
+  require("lvim.core.log"):info(vim.inspect(client.server_capabilities.inlayHintProvider))
   local status_ok, codelens_supported = pcall(function()
     return client.supports_method("textDocument/codeLens")
   end)
@@ -116,6 +113,12 @@ function M.setup_codelens_refresh(client, bufnr)
       pcall(vim.lsp.codelens.refresh)
     end,
   })
+end
+
+function M.setup_inlay_hints(client, bufnr)
+  if client.server_capabilities.inlayHintProvider then
+    vim.lsp.inlay_hint(bufnr, true)
+  end
 end
 
 ---filter passed to vim.lsp.buf.format

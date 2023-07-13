@@ -115,6 +115,10 @@ function M.diagonistics_set_list()
   vim.diagnostic.set_loclist()
 end
 
+function M.toggle_inlay_hints()
+  vim.lsp.inlay_hint(0, nil)
+end
+
 function M.fix_current()
   local params = vim.lsp.util.make_range_params()
   params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
@@ -344,6 +348,12 @@ function M.setup()
               lvim.lsp.wrapper.workspace_symbols()
             end,
             "workspace symbols",
+          },
+          ["t"] = {
+            function()
+              lvim.lsp.wrapper.toggle_inlay_hints()
+            end,
+            "toggle inlay hints",
           },
           Q = { ":LspRestart<CR>", "restart currently active lsps" },
         },
