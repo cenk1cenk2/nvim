@@ -83,7 +83,6 @@ function M.get_all_supported_filetypes()
 end
 
 function M.setup_codelens_refresh(client, bufnr)
-  require("lvim.core.log"):info(vim.inspect(client.server_capabilities.inlayHintProvider))
   local status_ok, codelens_supported = pcall(function()
     return client.supports_method("textDocument/codeLens")
   end)
