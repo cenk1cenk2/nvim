@@ -139,7 +139,6 @@ require("utils.setup").fn.append_to_setup("treesitter", {
     "jsonnet",
     "json5",
     "jsonc",
-    "julia",
     "lua",
     "php",
     "python",
