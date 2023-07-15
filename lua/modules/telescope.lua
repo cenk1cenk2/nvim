@@ -56,7 +56,7 @@ function M.find_project_files()
   -- local ok = pcall(builtin.git_files)
 
   -- if not ok then
-  require("telescope.builtin").find_files()
+  require("telescope.builtin").find_files({ previewer = true })
   -- end
 end
 
