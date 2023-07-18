@@ -39,8 +39,6 @@ function M.setup()
     pattern = {
       ["Dockerfile.*"] = "dockerfile",
       [".*%.yml"] = function(path)
-        vim.opt_local.indentexpr = "GetYAMLIndent()"
-
         if path:find("docker%-compose.*$") then
           return "yaml.docker-compose"
         end
@@ -55,14 +53,16 @@ function M.setup()
           return "yaml.ansible"
         end
 
+        vim.opt_local.indentexpr = "GetYAMLIndent()"
+
         return "yaml"
       end,
       [".*%.yaml"] = function(path)
-        vim.opt_local.indentexpr = "GetYAMLIndent()"
-
         if require("lspconfig/util").root_pattern("Chart.yaml")(path) and path:find("templates/") then
           return "helm"
         end
+
+        vim.opt_local.indentexpr = "GetYAMLIndent()"
 
         return "yaml"
       end,
