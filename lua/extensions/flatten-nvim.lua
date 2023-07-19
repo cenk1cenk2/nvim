@@ -20,7 +20,7 @@ function M.config()
           end,
           pre_open = function()
             -- Close toggleterm when an external open request is received
-            require("toggleterm").toggle(0)
+            -- require("toggleterm").toggle(0)
           end,
           post_open = function(bufnr, winnr, ft, is_blocking)
             if is_blocking then
@@ -67,12 +67,24 @@ function M.config()
           -- func(new_bufs, argv) -> only open the files, allowing you to handle window opening yourself.
           -- Argument is an array of buffer numbers representing the newly opened files.
           -- open = "alternate",
-          open = "tab",
+          open = "alternate",
           -- Affects which file gets focused when opening multiple at once
           -- Options:
           -- "first"        -> open first file of new files (default)
           -- "last"         -> open last file of new files
           focus = "first",
+        },
+        -- Override this function to use a different socket to connect to the host
+        -- On the host side this can return nil or the socket address.
+        -- On the guest side this should return the socket address
+        -- or a non-zero channel id from `sockconnect`
+        -- flatten.nvim will detect if the address refers to this instance of nvim, to determine if this is a host or a guest
+        pipe_path = require("flatten").default_pipe_path,
+        -- The `default_pipe_path` will treat the first nvim instance within a single kitty/wezterm session as the host
+        -- You can configure this behaviour using the following:
+        one_per = {
+          kitty = false, -- Flatten all instance in the current Kitty session
+          wezterm = false, -- Flatten all instance in the current Wezterm session
         },
       }
     end,
