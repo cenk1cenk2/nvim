@@ -614,6 +614,13 @@ hl.plugins.autopairs = {
   AutoPairsFastWrap = { bg = c.magenta[600] },
 }
 
+hl.plugins.treesitter_rainbow = {
+  TSRainbow1 = { fg = c.yellow[900] },
+  TSRainbow2 = { fg = c.cyan[900] },
+  TSRainbow3 = { fg = c.orange[900] },
+  TSRainbow4 = { fg = c.blue[900] },
+}
+
 function M.load_highlights(ns, highlights, loaded)
   for group_name, group_settings in pairs(highlights) do
     -- table.insert(loaded, group_name)

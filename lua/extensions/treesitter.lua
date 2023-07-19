@@ -32,7 +32,7 @@ function M.config()
             event = "BufReadPost",
           },
           {
-            "mrjones2014/nvim-ts-rainbow",
+            "HiPhish/nvim-ts-rainbow2",
             dependencies = { "nvim-treesitter/nvim-treesitter" },
             event = "BufReadPost",
           },
@@ -136,10 +136,18 @@ function M.config()
         },
         rainbow = {
           enable = true,
-          extended_mode = false, -- Highlight also non-parentheses delimiters, boolean or table: lang -> boolean
-          max_file_lines = 1000, -- Do not enable for files with more than 1000 lines, int
-          colors = { lvim.ui.colors.yellow[900], lvim.ui.colors.cyan[900], lvim.ui.colors.orange[900], lvim.ui.colors.blue[900] },
+          -- list of languages you want to disable the plugin for
           disable = lvim.disabled_filetypes,
+          -- Which query to use for finding delimiters
+          query = "rainbow-parens",
+          -- Highlight the entire buffer all at once
+          strategy = require("ts-rainbow").strategy.global,
+          hlgroups = {
+            "TSRainbow1",
+            "TSRainbow2",
+            "TSRainbow3",
+            "TSRainbow4",
+          },
         },
         refactor = { highlight_current_scope = { enable = false } },
         -- https://github.com/nvim-treesitter/nvim-treesitter/issues/4000
