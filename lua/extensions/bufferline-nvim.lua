@@ -51,9 +51,9 @@ function M.config()
           --- Please note some names can/will break the
           --- bufferline so use this at your discretion knowing that it has
           --- some limitations that will *NOT* be fixed.
-          max_name_length = 18,
+          max_name_length = 20,
           max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
-          tab_size = 20,
+          tab_size = 25,
           truncate_names = true, -- whether or not tab names should be truncated
           diagnostics = "nvim_lsp",
           diagnostics_update_in_insert = false,
