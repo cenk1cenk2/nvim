@@ -2,7 +2,6 @@
 local M = {}
 
 local extension_name = "bufferline_nvim"
-local Log = require("lvim.core.log")
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
@@ -13,97 +12,75 @@ function M.config()
           -- https://github.com/ojroques/nvim-bufdel
           "ojroques/nvim-bufdel",
         },
-        -- https://github.com/akinsho/bufferline.nvim/issues/736
-        commit = "efdf6628b2cbfde6417a11b6337c16154e6779c5",
-        lazy = false,
-        -- event = "VeryLazy",
+        -- lazy = false,
+        event = "VeryLazy",
       }
     end,
-    setup = {
-      highlights = {
-        background = {
-          -- gui = "italic",
+    setup = function()
+      return {
+        highlights = {
+          background = {},
+          buffer_selected = {
+            italic = false,
+          },
         },
-        buffer_selected = {
-          italic = false,
+        options = {
+          mode = "buffers", -- set to "tabs" to only show tabpages instead
+          numbers = "none", -- can be "none" | "ordinal" | "buffer_id" | "both" | function
+          close_command = function(bufnr, force)
+            M.close_buffer(bufnr, force)
+          end, -- can be a string | function, see "Mouse actions"
+          right_mouse_command = "vert sbuffer %d", -- can be a string | function, see "Mouse actions"
+          left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
+          middle_mouse_command = function(bufnr)
+            M.close_buffer(bufnr)
+          end, -- can be a string | function, see "Mouse actions"
+          -- NOTE: this plugin is designed with this icon in mind,
+          -- and so changing this is NOT recommended, this is intended
+          -- as an escape hatch for people who cannot bear it for whatever reason
+          indicator = {
+            icon = lvim.ui.icons.ui.BoldLineLeft,
+            style = "icon", -- can also be 'underline'|'none',
+          },
+          buffer_close_icon = lvim.ui.icons.ui.Close,
+          modified_icon = lvim.ui.icons.git.FileModified,
+          close_icon = lvim.ui.icons.ui.Close,
+          left_trunc_marker = lvim.ui.icons.ui.ArrowCircleLeft,
+          right_trunc_marker = lvim.ui.icons.ui.ArrowCircleRight,
+          --- name_formatter can be used to change the buffer's label in the bufferline.
+          --- Please note some names can/will break the
+          --- bufferline so use this at your discretion knowing that it has
+          --- some limitations that will *NOT* be fixed.
+          max_name_length = 18,
+          max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
+          tab_size = 20,
+          truncate_names = true, -- whether or not tab names should be truncated
+          diagnostics = "nvim_lsp",
+          diagnostics_update_in_insert = false,
+          diagnostics_indicator = M.diagnostics_indicator,
+          -- NOTE: this will be called a lot so don't do any heavy processing here
+          -- custom_filter = M.custom_filter,
+          offsets = {},
+          color_icons = true, -- whether or not to add the filetype icon highlights
+          show_buffer_icons = true, -- disable filetype icons for buffers
+          show_buffer_close_icons = true,
+          show_close_icon = false,
+          show_tab_indicators = true,
+          persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
+          -- can also be a table containing 2 custom separators
+          -- [focused and unfocused]. eg: { '|', '|' }
+          -- https://github.com/akinsho/bufferline.nvim/blob/main/doc/bufferline.txt#L194
+          separator_style = "thick",
+          enforce_regular_tabs = false,
+          hover = {
+            enabled = true,
+            delay = 200,
+            reveal = { "close" },
+          },
+          sort_by = "insert_after_current",
         },
-      },
-      options = {
-        mode = "buffers", -- set to "tabs" to only show tabpages instead
-        numbers = "none", -- can be "none" | "ordinal" | "buffer_id" | "both" | function
-        close_command = "BufferClose", -- can be a string | function, see "Mouse actions"
-        right_mouse_command = "vert sbuffer %d", -- can be a string | function, see "Mouse actions"
-        left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
-        middle_mouse_command = "BufferClose", -- can be a string | function, see "Mouse actions"
-        -- NOTE: this plugin is designed with this icon in mind,
-        -- and so changing this is NOT recommended, this is intended
-        -- as an escape hatch for people who cannot bear it for whatever reason
-        indicator = {
-          icon = "▎",
-          style = "icon", -- can also be 'underline'|'none',
-        },
-        buffer_close_icon = "",
-        modified_icon = "●",
-        close_icon = "",
-        left_trunc_marker = "",
-        right_trunc_marker = "",
-        --- name_formatter can be used to change the buffer's label in the bufferline.
-        --- Please note some names can/will break the
-        --- bufferline so use this at your discretion knowing that it has
-        --- some limitations that will *NOT* be fixed.
-        max_name_length = 18,
-        max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
-        tab_size = 20,
-        truncate_names = true, -- whether or not tab names should be truncated
-        diagnostics = "nvim_lsp",
-        diagnostics_update_in_insert = false,
-        diagnostics_indicator = M.diagnostics_indicator,
-        -- NOTE: this will be called a lot so don't do any heavy processing here
-        -- custom_filter = M.custom_filter,
-        offsets = {
-          -- {
-          --   filetype = "undotree",
-          --   text = "Undotree",
-          --   highlight = "PanelHeading",
-          --   padding = 1,
-          -- },
-          -- {
-          --   filetype = "NvimTree",
-          --   text = "Explorer",
-          --   highlight = "PanelHeading",
-          --   padding = 1,
-          -- },
-          -- {
-          --   filetype = "DiffviewFiles",
-          --   text = "Diff View",
-          --   highlight = "PanelHeading",
-          --   padding = 1,
-          -- },
-          -- {
-          --   filetype = "flutterToolsOutline",
-          --   text = "Flutter Outline",
-          --   highlight = "PanelHeading",
-          -- },
-          -- {
-          --   filetype = "packer",
-          --   text = "Packer",
-          --   highlight = "PanelHeading",
-          --   padding = 1,
-          -- },
-        },
-        color_icons = true, -- whether or not to add the filetype icon highlights
-        show_buffer_icons = true, -- disable filetype icons for buffers
-        show_buffer_close_icons = true,
-        show_close_icon = false,
-        show_tab_indicators = true,
-        persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
-        -- can also be a table containing 2 custom separators
-        -- [focused and unfocused]. eg: { '|', '|' }
-        separator_style = "thin",
-        enforce_regular_tabs = false,
-        sort_by = "id",
-      },
-    },
+      }
+    end,
     on_setup = function(config)
       require("bufferline").setup(config.setup)
 
@@ -116,25 +93,7 @@ function M.config()
       {
         name = "BufferClose",
         fn = function()
-          M.buf_kill()
-        end,
-      },
-      {
-        name = "BufferCloseAllButCurrent",
-        fn = function()
-          M.close_all_but_current()
-        end,
-      },
-      {
-        name = "BufferClosePinned",
-        fn = function()
-          M.close_pinned()
-        end,
-      },
-      {
-        name = "BufferCloseUnpinned",
-        fn = function()
-          M.close_unpinned()
+          M.close_buffer()
         end,
       },
     },
@@ -142,26 +101,100 @@ function M.config()
       {
         { "n" },
 
-        ["<M-l>"] = ":BufferLineCycleNext<CR>",
-        ["<M-j>"] = ":BufferLineMoveNext<CR>",
-        ["<M-h>"] = ":BufferLineCyclePrev<CR>",
-        ["<M-k>"] = ":BufferLineMovePrev<CR>",
-        ["<C-q>"] = ":BufferClose<CR>",
-        ["<C-Q>"] = ":BufferClose<CR>",
+        ["<M-l>"] = {
+          function()
+            require("bufferline").cycle(1)
+          end,
+          { desc = "next buffer" },
+        },
+        ["<M-h>"] = {
+          function()
+            require("bufferline").cycle(-1)
+          end,
+          { desc = "previous buffer" },
+        },
+        ["<M-k>"] = {
+          function()
+            require("bufferline").move(1)
+          end,
+          { desc = "move buffer to next" },
+        },
+        ["<M-j>"] = {
+          function()
+            require("bufferline").move(-1)
+          end,
+          { desc = "move buffer to previous" },
+        },
+        ["<C-q>"] = {
+          function()
+            M.close_buffer()
+          end,
+          { desc = "close current buffer" },
+        },
       },
     },
     wk = function(_, categories)
       return {
         [categories.BUFFER] = {
-          ["b"] = { ":BufferLinePick<CR>", "pick buffer" },
-          ["x"] = { ":BufferClose<CR>", "force close buffer" },
-          ["X"] = { ":BufferCloseAllButCurrent<CR>", "close all buffers but this" },
-          ["d"] = { ":BufferLinePickClose<CR>", "pick buffer to close" },
-          ["D"] = { ":BufferCloseUnpinned<CR>", "close unpinned tabs" },
-          ["y"] = { ":BufferLineCloseLeft<CR>", "close all buffers to the left" },
-          ["Y"] = { ":BufferLineCloseRight<CR>", "close all buffers to the right" },
-          ["p"] = { ":BufferLineTogglePin<CR>", "pin current buffer" },
-          ["P"] = { ":BufferClosePinned<CR>", "close pinned buffer group" },
+          ["b"] = {
+            function()
+              require("bufferline").pick()
+            end,
+            "pick buffer",
+          },
+          ["B"] = {
+            function()
+              require("bufferline").close_with_pick()
+            end,
+            "pick buffer to close",
+          },
+          ["X"] = {
+            function()
+              -- require("bufferline").close_others()
+              local current = vim.api.nvim_get_current_buf()
+
+              for _, e in ipairs(require("bufferline").get_elements().elements) do
+                if current ~= e.id and not require("bufferline.groups")._is_pinned(e) then
+                  vim.schedule(function()
+                    M.close_buffer(e.id)
+                  end)
+                end
+              end
+
+              require("bufferline.ui").refresh()
+            end,
+            "close all buffers but this",
+          },
+          ["D"] = {
+            function()
+              require("bufferline.groups").action("ungrouped", "close")
+            end,
+            "close unpinned tabs",
+          },
+          ["y"] = {
+            function()
+              require("bufferline").close_in_direction("left")
+            end,
+            "close all buffers to the left",
+          },
+          ["Y"] = {
+            function()
+              require("bufferline").close_in_direction("right")
+            end,
+            "close all buffers to the right",
+          },
+          ["p"] = {
+            function()
+              require("bufferline.groups").toggle_pin(0)
+            end,
+            "pin current buffer",
+          },
+          ["P"] = {
+            function()
+              require("bufferline.groups").action("pinned", "close")
+            end,
+            "close pinned buffer group",
+          },
         },
       }
     end,
@@ -183,10 +216,6 @@ function M.config()
   })
 end
 
-function M.is_ft(b, ft)
-  return vim.bo[b].filetype == ft
-end
-
 function M.diagnostics_indicator(_, _, diagnostics, _)
   local result = {}
   local symbols = { error = lvim.ui.icons.diagnostics.Error, warning = lvim.ui.icons.diagnostics.Warning, info = lvim.ui.icons.diagnostics.Information }
@@ -202,82 +231,16 @@ function M.diagnostics_indicator(_, _, diagnostics, _)
   return #text > 0 and text or ""
 end
 
-function M.close_all_but_current()
-  local current = vim.api.nvim_get_current_buf()
-  local buffers = require("bufferline.utils").get_valid_buffers()
-  for _, bufnr in pairs(buffers) do
-    if bufnr ~= current and not require("bufferline.groups").is_pinned({ id = bufnr }) then
-      M.buf_kill(bufnr)
-    end
-  end
-end
-
-function M.close_pinned()
-  local buffers = require("bufferline.utils").get_valid_buffers()
-  for _, bufnr in pairs(buffers) do
-    if require("bufferline.groups").is_pinned({ id = bufnr }) and bufnr then
-      M.buf_kill(bufnr)
-    end
-  end
-end
-
-function M.close_unpinned()
-  local buffers = require("bufferline.utils").get_valid_buffers()
-  for _, bufnr in pairs(buffers) do
-    if not require("bufferline.groups").is_pinned({ id = bufnr }) and bufnr then
-      M.buf_kill(bufnr)
-    end
-  end
-end
-
 -- Common kill function for bdelete and bwipeout
 -- credits: based on bbye and nvim-bufdel
 ---@param bufnr? number defaults to the current buffer
 ---@param force? boolean defaults to false
-function M.buf_kill(bufnr, force)
-  local bo = vim.bo
-  local api = vim.api
-  local fmt = string.format
-  local fnamemodify = vim.fn.fnamemodify
-
+function M.close_buffer(bufnr, force)
   if bufnr == 0 or bufnr == nil then
-    bufnr = api.nvim_get_current_buf()
+    bufnr = vim.api.nvim_get_current_buf()
   end
 
-  local bufname = api.nvim_buf_get_name(bufnr)
-
-  local is_pinned = require("bufferline.groups").is_pinned({ id = bufnr })
-
-  local callback = function(b, f)
-    require("bufdel").delete_buffer_expr(b, f)
-  end
-
-  if not force then
-    local warning
-    if bo[bufnr].modified then
-      warning = fmt([[No write since last change for (%s)]], fnamemodify(bufname, ":t"))
-    elseif is_pinned then
-      warning = fmt([[Buffer is pinned (%s)]], fnamemodify(bufname, ":t"))
-    elseif api.nvim_buf_get_option(bufnr, "buftype") == "terminal" then
-      warning = fmt([[Terminal %s will be killed]], bufname)
-    end
-
-    if warning then
-      vim.ui.input({
-        prompt = string.format([[%s. Close it anyway? [y]es or [n]o (default: no): ]], warning),
-      }, function(choice)
-        if not choice then
-          return
-        elseif choice:match("ye?s?") then
-          callback(bufnr, true)
-        end
-      end)
-
-      return
-    end
-  end
-
-  callback(bufnr, false)
+  require("bufdel").delete_buffer_expr(bufnr, force)
 end
 
 return M
