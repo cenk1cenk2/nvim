@@ -45,13 +45,12 @@ local function make_client_info(client)
   local client_enabled_caps = lsp_utils.get_client_capabilities(client.id)
   local id = client.id
   local name = client.name
-  require("lvim.core.log"):info(vim.inspect(ipairs(client)))
   local client_info = {
     fmt("* name:                      %s", name),
     fmt("* id:                        %s", tostring(id)),
-    fmt("* supported filetype(s):     %s", str_list(lsp_utils.get_supported_filetypes(name))),
+    fmt("* supported filetype(s):     %s", str_list(client.config.filetypes)),
     fmt("* attached buffers:          %s", tostring(str_list(vim.lsp.get_buffers_by_client_id(client.id)))),
-    fmt("* root_dir:          %s", tostring(client.config.root_dir)),
+    fmt("* root directory:            %s", tostring(client.config.root_dir)),
   }
   if not vim.tbl_isempty(client_enabled_caps) then
     local caps_text = "* capabilities:              "
@@ -92,7 +91,7 @@ local function make_auto_lsp_info(ft)
 end
 
 function M.toggle_popup(ft)
-  local clients = vim.lsp.buf_get_clients()
+  local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
   local client_names = {}
   local bufnr = vim.api.nvim_get_current_buf()
   local ts_active_buffers = vim.tbl_keys(vim.treesitter.highlighter.active)
@@ -110,16 +109,27 @@ function M.toggle_popup(ft)
     fmt("* treesitter status:       %s", is_treesitter_active()),
   }
 
-  local lsp_info = {
-    "Active client(s)",
+  local current_buffer_lsp_info = {
+    "Current buffer LSP client(s)",
   }
 
   for _, client in pairs(clients) do
     local client_info = make_client_info(client)
     if client_info then
-      vim.list_extend(lsp_info, client_info)
+      vim.list_extend(current_buffer_lsp_info, client_info)
     end
     table.insert(client_names, client.name)
+  end
+
+  local lsp_info = {
+    "Active LSP client(s)",
+  }
+
+  for _, client in pairs(vim.lsp.get_clients()) do
+    local client_info = make_client_info(client)
+    if client_info then
+      vim.list_extend(lsp_info, client_info)
+    end
   end
 
   local auto_lsp_info = make_auto_lsp_info(ft)
@@ -137,13 +147,15 @@ function M.toggle_popup(ft)
       { "" },
       header,
       { "" },
-      lsp_info,
+      current_buffer_lsp_info,
       { "" },
       formatters_info,
       { "" },
       linters_info,
       { "" },
       code_actions_info,
+      { "" },
+      lsp_info,
       { "" },
       auto_lsp_info,
     }) do
@@ -157,7 +169,8 @@ function M.toggle_popup(ft)
     vim.cmd([[highlight LvimInfoIdentifier gui=bold]])
     vim.cmd([[highlight link LvimInfoHeader Type]])
     vim.fn.matchadd("LvimInfoHeader", "Buffer info")
-    vim.fn.matchadd("LvimInfoHeader", "Active client(s)")
+    vim.fn.matchadd("LvimInfoHeader", "Current buffer LSP client(s)")
+    vim.fn.matchadd("LvimInfoHeader", "Active LSP client(s)")
     vim.fn.matchadd("LvimInfoHeader", fmt("Overridden %s server(s)", ft))
     vim.fn.matchadd("LvimInfoHeader", "null-ls - .*")
     vim.fn.matchadd("LvimInfoHeader", "Automatic LSP info")
