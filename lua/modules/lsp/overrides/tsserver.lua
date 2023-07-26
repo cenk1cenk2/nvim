@@ -1,5 +1,3 @@
-local Log = require("lvim.core.log")
-
 return {
   override = function(config)
     -- typescript-tools if this is enabled it will override it
