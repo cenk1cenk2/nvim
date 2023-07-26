@@ -36,21 +36,22 @@ local function tbl_set_highlight(terms, highlight_group)
   end
 end
 
+--- @param client lsp.Client
+--- @return table<string> | nil
 local function make_client_info(client)
   if client.name == "null-ls" then
     return
   end
   local client_enabled_caps = lsp_utils.get_client_capabilities(client.id)
-  local name = client.name
   local id = client.id
-  local filetypes = lsp_utils.get_supported_filetypes(name)
-  local attached_buffers_list = str_list(vim.lsp.get_buffers_by_client_id(client.id))
+  local name = client.name
+  require("lvim.core.log"):info(vim.inspect(ipairs(client)))
   local client_info = {
     fmt("* name:                      %s", name),
     fmt("* id:                        %s", tostring(id)),
-    fmt("* supported filetype(s):     %s", str_list(filetypes)),
-    fmt("* attached buffers:          %s", tostring(attached_buffers_list)),
-    fmt("* root_dir pattern:          %s", tostring(attached_buffers_list)),
+    fmt("* supported filetype(s):     %s", str_list(lsp_utils.get_supported_filetypes(name))),
+    fmt("* attached buffers:          %s", tostring(str_list(vim.lsp.get_buffers_by_client_id(client.id)))),
+    fmt("* root_dir:          %s", tostring(client.config.root_dir)),
   }
   if not vim.tbl_isempty(client_enabled_caps) then
     local caps_text = "* capabilities:              "
