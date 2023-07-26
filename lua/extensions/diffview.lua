@@ -29,7 +29,7 @@ function M.config()
       return {
         diff_binaries = false, -- Show diffs for binaries
         use_icons = true, -- Requires nvim-web-devicons
-        file_panel = { win_config = { width = 35 } },
+        file_panel = { win_config = { width = 50 } },
         view = {
           -- Configure the layout and behavior of different types of views.
           -- Available layouts:
