@@ -28,7 +28,6 @@ local extensions = {
   -- extensions
   "spider-nvim",
   "dap",
-  "no-neck-pain-nvim",
   "statuscol-nvim",
   "flash-nvim",
   "vim-repeat",
@@ -65,7 +64,6 @@ local extensions = {
   "yanky-nvim",
   "substitute-nvim",
   "text-case-nvim",
-  "tree-climber-nvim",
   "nvim-retrail",
   "nvim-surround",
   "ccc-nvim",

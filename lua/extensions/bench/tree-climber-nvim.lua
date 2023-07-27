@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "tree_climber_nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     plugin = function()
       return {
         "drybalka/tree-climber.nvim",
