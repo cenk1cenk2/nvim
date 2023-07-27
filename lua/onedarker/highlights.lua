@@ -621,6 +621,10 @@ hl.plugins.treesitter_rainbow = {
   TSRainbow4 = { fg = c.blue[900] },
 }
 
+hl.plugins.treesitter_context = {
+  TreesitterContext = { bg = c.bg[300] },
+}
+
 function M.load_highlights(ns, highlights, loaded)
   for group_name, group_settings in pairs(highlights) do
     -- table.insert(loaded, group_name)
