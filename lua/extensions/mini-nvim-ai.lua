@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "mini_nvim_ai"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, false, {
+  require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
         "echasnovski/mini.ai",

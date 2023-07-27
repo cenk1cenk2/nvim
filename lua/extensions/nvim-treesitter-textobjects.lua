@@ -18,8 +18,8 @@ function M.config()
             enable = true,
             lookahead = false,
             keymaps = {
-              ["ia"] = { query = "@parameter.inner", desc = "select inner part of a parameter/argument" },
-              ["aa"] = { query = "@parameter.outer", desc = "select outer part of a parameter/argument" },
+              -- ["ia"] = { query = "@parameter.inner", desc = "select inner part of a parameter/argument" },
+              -- ["aa"] = { query = "@parameter.outer", desc = "select outer part of a parameter/argument" },
               ["im"] = { query = "@function.inner", desc = "select inner part of a method" },
               ["am"] = { query = "@function.outer", desc = "select outer part of a method" },
               ["ic"] = { query = "@class.inner", desc = "select inner part of a class region" },
