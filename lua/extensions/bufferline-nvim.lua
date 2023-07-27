@@ -1,4 +1,5 @@
 -- https://github.com/akinsho/bufferline.nvim
+local Log = require("lvim.core.log")
 local M = {}
 
 local extension_name = "bufferline_nvim"
@@ -238,6 +239,12 @@ end
 function M.close_buffer(bufnr, force)
   if bufnr == 0 or bufnr == nil then
     bufnr = vim.api.nvim_get_current_buf()
+  end
+
+  if not force and require("bufferline.groups")._is_pinned({ id = bufnr }) then
+    Log:warn("Buffer is pinned!")
+
+    return
   end
 
   require("bufdel").delete_buffer_expr(bufnr, force)
