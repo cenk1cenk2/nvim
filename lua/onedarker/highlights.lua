@@ -623,7 +623,7 @@ hl.plugins.treesitter_rainbow = {
 
 hl.plugins.treesitter_context = {
   TreesitterContext = { bg = c.bg[300] },
-  TreesitterContextSeparator = { fg = c.bg[600] },
+  TreesitterContextSeparator = { fg = c.bg[400] },
 }
 
 function M.load_highlights(ns, highlights, loaded)
