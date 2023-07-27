@@ -38,6 +38,7 @@ local extensions = {
   "rnvimr",
   "tabout-nvim",
   "vim-visual-multi",
+  "nvim-treesitter-textobjects",
   "nvim-recorder",
   "windows-nvim",
   "telescope-undo-nvim",
