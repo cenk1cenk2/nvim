@@ -287,7 +287,7 @@ function M.setup()
             function()
               lvim.lsp.wrapper.outgoing_calls()
             end,
-            "incoming calls",
+            "outgoing calls",
           },
           d = {
             function()
