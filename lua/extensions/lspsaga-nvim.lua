@@ -140,6 +140,12 @@ function M.config()
       lvim.lsp.wrapper.show_line_diagnostics = function()
         vim.cmd("Lspsaga show_line_diagnostics")
       end
+      lvim.lsp.wrapper.incoming_calls = function()
+        vim.cmd("Lspsaga incoming_calls")
+      end
+      lvim.lsp.wrapper.outgoing_calls = function()
+        vim.cmd("Lspsaga outgoing_calls")
+      end
     end,
     keymaps = {
       {

@@ -49,12 +49,12 @@ function M.incoming_calls()
   vim.lsp.buf.incoming_calls()
 end
 
-function M.list_workspace_folders()
-  vim.lsp.buf.list_workspace_folders()
-end
-
 function M.outgoing_calls()
   vim.lsp.buf.outgoing_calls()
+end
+
+function M.list_workspace_folders()
+  vim.lsp.buf.list_workspace_folders()
 end
 
 function M.references()
@@ -277,6 +277,18 @@ function M.setup()
         },
         [categories.LSP] = {
           name = "lsp",
+          c = {
+            function()
+              lvim.lsp.wrapper.incoming_calls()
+            end,
+            "incoming calls",
+          },
+          C = {
+            function()
+              lvim.lsp.wrapper.outgoing_calls()
+            end,
+            "incoming calls",
+          },
           d = {
             function()
               lvim.lsp.wrapper.document_diagnostics()
