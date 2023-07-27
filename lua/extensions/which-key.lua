@@ -72,13 +72,13 @@ function M.config()
         border = lvim.ui.border, -- none, single, double, shadow
         position = "bottom", -- bottom, top
         margin = { 0, 0, 0, 0 }, -- extra window margin [top, right, bottom, left]
-        padding = { 1, 1, 1, 1 }, -- extra window padding [top, right, bottom, left]
+        padding = { 1, 1, 0, 1 }, -- extra window padding [top, right, bottom, left]
       },
       layout = {
         height = { min = 4, max = 25 }, -- min and max height of the columns
         width = { min = 20, max = 50 }, -- min and max width of the columns
-        spacing = 3, -- spacing between columns
-        align = "left", -- align columns left, center or right
+        spacing = 4, -- spacing between columns
+        align = "center", -- align columns left, center or right
       },
       triggers = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r" },
       show_help = false, -- show help message on the command line when the popup is visible

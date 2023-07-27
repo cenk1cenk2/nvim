@@ -9,7 +9,9 @@ function M.config()
       return {
         "MattesGroeger/vim-bookmarks",
         branch = "fix/118",
-        keys = { "m" },
+        keys = { "m", "mf", "mF", "<Leader>m" },
+        cmd = { "Telescope vim_bookmarks" },
+        event = "BufReadPost",
       }
     end,
     legacy_setup = {
