@@ -1,7 +1,7 @@
 local M = {}
 
 function M.is_client_active(name)
-  local clients = vim.lsp.get_active_clients()
+  local clients = vim.lsp.get_clients()
 
   for _, client in pairs(clients) do
     if client.name == name then
@@ -10,9 +10,9 @@ function M.is_client_active(name)
   end
 end
 
-function M.get_active_clients_by_ft(filetype)
+function M.get_clients_by_ft(filetype)
   local matches = {}
-  local clients = vim.lsp.get_active_clients()
+  local clients = vim.lsp.get_clients()
   for _, client in pairs(clients) do
     local supported_filetypes = client.config.filetypes or {}
     if client.name ~= "null-ls" and vim.tbl_contains(supported_filetypes, filetype) then
@@ -25,7 +25,7 @@ end
 function M.get_client_capabilities(client_id)
   local client
   if not client_id then
-    local buf_clients = vim.lsp.get_active_clients()
+    local buf_clients = vim.lsp.get_clients()
     for _, buf_client in pairs(buf_clients) do
       if buf_client.name ~= "null-ls" then
         client = buf_client
@@ -148,7 +148,7 @@ function M.format(opts)
   local bufnr = opts.bufnr or vim.api.nvim_get_current_buf()
 
   ---@type table|nil
-  local clients = vim.lsp.get_active_clients({
+  local clients = vim.lsp.get_clients({
     id = opts.id,
     bufnr = bufnr,
     name = opts.name,

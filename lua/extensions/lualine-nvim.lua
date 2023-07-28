@@ -138,7 +138,7 @@ function M.config()
         },
         lsp = {
           function(msg)
-            local buf_clients = vim.lsp.get_active_clients({ bufnr = vim.api.nvim_get_current_buf() })
+            local buf_clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
 
             if next(buf_clients) == nil then
               -- TODO: clean up this if statement
