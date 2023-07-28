@@ -41,12 +41,22 @@ function M.config()
           },
         },
         finder = {
-          open = "<CR>",
-          vsplit = "s",
-          split = "h",
-          quit = "q",
-          scroll_down = "<C-f>",
-          scroll_up = "<C-b>", -- quit can be a table
+          keys = {
+            edit = "<CR>",
+            vsplit = "v",
+            split = "x",
+            quit = "q",
+            scroll_down = "<C-f>",
+            scroll_up = "<C-b>", -- quit can be a table
+          },
+        },
+        definition = {
+          keys = {
+            edit = "<C-c>o",
+            vsplit = "<C-c>v",
+            split = "<C-c>x",
+            quit = "q",
+          },
         },
         diagnostic = {
           -- maybe disable this later on
@@ -151,7 +161,7 @@ function M.config()
       {
         { "n" },
 
-        ["ge"] = { ":Lspsaga lsp_finder<CR>", { desc = "finder" } },
+        ["ge"] = { ":Lspsaga finder<CR>", { desc = "finder" } },
         ["gw"] = { ":Lspsaga peek_definition<CR>", { desc = "peek" } },
       },
     },

@@ -46,14 +46,14 @@ function M.config()
             desc = "spider-b",
           },
         },
-        ["ge"] = {
-          function()
-            require("spider").motion("ge")
-          end,
-          {
-            desc = "spider-ge",
-          },
-        },
+        -- ["ge"] = {
+        --   function()
+        --     require("spider").motion("ge")
+        --   end,
+        --   {
+        --     desc = "spider-ge",
+        --   },
+        -- },
       },
     },
   })
