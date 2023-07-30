@@ -26,8 +26,6 @@ function M.config()
           insert_only = true,
 
           -- These are passed to nvim_open_win
-          anchor = "SW",
-          -- relative = "cursor",
           relative = "editor",
           border = lvim.ui.border,
 
