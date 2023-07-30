@@ -40,6 +40,7 @@ local extensions = {
   "vim-visual-multi",
   "nvim-treesitter-textobjects",
   "nvim-treesitter-context",
+  "rainbow-delimiters-nvim",
   "nvim-recorder",
   "windows-nvim",
   "telescope-undo-nvim",

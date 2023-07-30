@@ -32,11 +32,6 @@ function M.config()
             event = "BufReadPost",
           },
           {
-            "HiPhish/nvim-ts-rainbow2",
-            dependencies = { "nvim-treesitter/nvim-treesitter" },
-            event = "BufReadPost",
-          },
-          {
             "windwp/nvim-ts-autotag",
             dependencies = { "nvim-treesitter/nvim-treesitter" },
             event = "InsertEnter",
@@ -132,21 +127,6 @@ function M.config()
             update = "R",
             goto_node = "<cr>",
             show_help = "?",
-          },
-        },
-        rainbow = {
-          enable = true,
-          -- list of languages you want to disable the plugin for
-          disable = lvim.disabled_filetypes,
-          -- Which query to use for finding delimiters
-          query = "rainbow-parens",
-          -- Highlight the entire buffer all at once
-          strategy = require("ts-rainbow").strategy.global,
-          hlgroups = {
-            "TSRainbow1",
-            "TSRainbow2",
-            "TSRainbow3",
-            "TSRainbow4",
           },
         },
         refactor = { highlight_current_scope = { enable = false } },
