@@ -76,6 +76,10 @@ function M.setup()
       extra_args = { "--indent-size", "2", "-t" },
     },
 
+    {
+      name = "terraform_fmt",
+    },
+
     -- {
     --   name = "djlint",
     --   filetypes = { "jinja" },
