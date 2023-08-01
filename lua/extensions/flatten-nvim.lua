@@ -72,7 +72,7 @@ function M.config()
           -- Options:
           -- "first"        -> open first file of new files (default)
           -- "last"         -> open last file of new files
-          focus = "first",
+          focus = "tab",
         },
         -- Override this function to use a different socket to connect to the host
         -- On the host side this can return nil or the socket address.
