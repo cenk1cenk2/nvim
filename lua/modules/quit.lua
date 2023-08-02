@@ -1,8 +1,14 @@
 local M = {}
 
 function M.workspace_quit()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local modified = vim.api.nvim_buf_get_option(bufnr, "modified")
+  local buffers = vim.api.nvim_list_bufs()
+  local modified = false
+  for _, bufnr in ipairs(buffers) do
+    if vim.api.nvim_buf_get_option(bufnr, "modified") then
+      modified = true
+    end
+  end
+
   if modified then
     vim.ui.input({
       prompt = "You have unsaved changes. Quit anyway? (y/n) ",

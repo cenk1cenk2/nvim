@@ -124,36 +124,59 @@ function M.fix_current()
   params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
 
   vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
-    if not responses or vim.tbl_isempty(responses) then
+    if not responses or vim.tbl_values(responses) == 0 then
       Log:warn("[QUICKFIX] Not found!")
 
       return
     end
 
-    local available_fixes = {}
+    local fixes = {}
 
-    for _, response in ipairs(responses) do
+    for client_id, response in ipairs(responses) do
       for _, result in ipairs(response.result or {}) do
-        table.insert(available_fixes, result)
+        table.insert(fixes, vim.tbl_extend("force", result, { client_id = client_id }))
       end
     end
 
-    if #available_fixes == 0 then
+    if #fixes == 0 then
       Log:warn("[QUICKFIX] Not found!")
 
       return
     end
 
-    -- prioritize real language servers?
+    local null_ls_client = (vim.lsp.get_clients({ name = "null-ls" })[1] or {}).id
 
-    local fix = available_fixes[1]
-    if fix.command then
-      local client = vim.lsp.get_client_by_id(fix.command.client_id)
-      local client_name = (client or {}).name
-      Log:info(("[QUICKFIX] %s: %s"):format(client_name, fix.title))
-    else
-      Log:info(("[QUICKFIX] %s: %s"):format(fix.title))
-    end
+    local lsp_fixes = vim.tbl_filter(function(fix)
+      if not fix.edit and not fix.command then
+        return false
+      end
+
+      if fix.client_id == null_ls_client then
+        return false
+      end
+
+      return true
+    end, fixes)
+
+    local null_ls_fixes = vim.tbl_filter(function(fix)
+      if not fix.edit and not fix.command then
+        return false
+      end
+
+      if fix.client_id ~= null_ls_client then
+        return false
+      end
+
+      return true
+    end, fixes)
+
+    local fix = lsp_fixes[1] or null_ls_fixes[1]
+
+    local client = vim.lsp.get_client_by_id(fix.client_id)
+
+    lsp_utils.apply_lsp_edit(fix)
+
+    Log:info(("[QUICKFIX] %s: %s"):format((client or {}).name, fix.title or ""))
   end)
 end
 
