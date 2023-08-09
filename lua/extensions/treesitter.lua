@@ -16,6 +16,7 @@ function M.config()
           vim.cmd([[TSUpdate]])
         end,
         event = "BufReadPre",
+        cmd = { "TSUpdate", "TSUpdateSync" },
         -- cond = function()
         --   if is_headless() then
         --     Log:debug("Headless mode detected, skipping running setup for treesitter.")
