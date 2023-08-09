@@ -21,15 +21,23 @@ end
 function M.update_sync()
   Log:warn("Triggered the special update method.")
 
-  vim.cmd([[Lazy! sync]])
-  M.update_language_servers_sync()
+  local _, err = pcall(function()
+    vim.cmd([[Lazy! sync]])
+    M.update_language_servers_sync()
 
-  vim.api.nvim_create_autocmd("User", {
-    pattern = "MasonUpdateAllComplete",
-    callback = function()
-      vim.cmd([[qa!]])
-    end,
-  })
+    vim.api.nvim_create_autocmd("User", {
+      pattern = "MasonUpdateAllComplete",
+      callback = function()
+        vim.cmd([[qa!]])
+      end,
+    })
+  end)
+
+  if err then
+    vim.cmd([[qa!]])
+
+    Log:error(err)
+  end
 end
 
 function M.rebuild_and_update()
