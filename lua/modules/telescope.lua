@@ -33,7 +33,7 @@ end
 function M.rg_string(options)
   options = options or {}
   return require("telescope.builtin").live_grep({
-    additional_args = vim.list_extend({ "--no-ignore" }, options.additional_args or {}),
+    additional_args = vim.list_extend({ "--fixed-strings" }, options.additional_args or {}),
   })
 end
 
@@ -48,14 +48,14 @@ end
 
 function M.rg_grep_buffer()
   return require("telescope.builtin").live_grep({
-    additional_args = { "--no-ignore", "--glob=*" },
+    additional_args = { "--no-ignore" },
     search_dirs = { "%:p" },
   })
 end
 
 function M.rg_current_buffer_fuzzy_find()
   return require("telescope.builtin").current_buffer_fuzzy_find({
-    additional_args = { "--no-ignore", "--glob=*" },
+    additional_args = { "--no-ignore" },
   })
 end
 
