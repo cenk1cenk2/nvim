@@ -249,13 +249,21 @@ function M.config()
             end,
             "ripgrep interactive",
           },
+          R = { ":Telescope live_grep<CR>", "grep with regexp" },
           t = {
             function()
               finders.rg_string()
             end,
             "grep string",
           },
-          T = { ":Telescope live_grep<CR>", "grep with regexp" },
+          T = {
+            function()
+              finders.rg_string({
+                additional_args = { grep_open_files = true },
+              })
+            end,
+            "grep string open buffers",
+          },
         },
 
         [categories.ACTIONS] = {

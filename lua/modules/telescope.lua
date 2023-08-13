@@ -25,28 +25,37 @@ function M.rg_interactive()
     end
 
     return require("telescope.builtin").live_grep({
-      vimgrep_arguments = vim.list_extend(vim.deepcopy(lvim.fn.get_telescope_rg_arguments()), chunks),
+      additional_args = chunks,
     })
   end)
 end
 
-function M.rg_string()
+function M.rg_string(options)
+  options = options or {}
   return require("telescope.builtin").live_grep({
-    vimgrep_arguments = vim.list_extend(vim.deepcopy(lvim.fn.get_telescope_rg_arguments()), { "--fixed-strings" }),
+    additional_args = vim.list_extend({ "--no-ignore" }, options.additional_args or {}),
   })
 end
 
 function M.rg_dirty()
-  require("telescope.builtin").grep_string({ shorten_path = true, word_match = "-w", only_sort_text = true, search = "" })
+  require("telescope.builtin").grep_string({
+    shorten_path = true,
+    word_match = "-w",
+    only_sort_text = true,
+    search = "",
+  })
 end
 
 function M.rg_grep_buffer()
-  return require("telescope.builtin").live_grep({ search_dirs = { "%:p" } })
+  return require("telescope.builtin").live_grep({
+    additional_args = { "--no-ignore", "--glob=*" },
+    search_dirs = { "%:p" },
+  })
 end
 
 function M.rg_current_buffer_fuzzy_find()
   return require("telescope.builtin").current_buffer_fuzzy_find({
-    vimgrep_arguments = vim.list_extend(vim.deepcopy(lvim.fn.get_telescope_rg_arguments()), { "--no-ignore" }),
+    additional_args = { "--no-ignore", "--glob=*" },
   })
 end
 
