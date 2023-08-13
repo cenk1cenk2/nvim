@@ -212,8 +212,6 @@ function M.init(config)
     local ok = pcall(function()
       ---@diagnostic disable-next-line: assign-type-mismatch
       lvim.extensions[config.name].inject = vim.tbl_extend("force", lvim.extensions[config.name].inject, config.inject_to_init(config))
-
-      print(vim.inspect(config))
     end)
 
     if not ok then

@@ -45,7 +45,7 @@ function Log:init()
       pipelines = {
         {
           level = log_level,
-          sink = structlog.sinks.RotatingFile(self:get_path(), { max_size = 1048576 * 50 }),
+          sink = structlog.sinks.RotatingFile(self:get_path(), { max_size = 1048576 * 10 }),
           processors = {
             structlog.processors.StackWriter({ "line", "file" }, { max_parents = 3, stack_level = 2 }),
             structlog.processors.Timestamper("%F %H:%M:%S"),

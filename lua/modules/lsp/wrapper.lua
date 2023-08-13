@@ -124,16 +124,10 @@ function M.fix_current()
   params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
 
   vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
-    if not responses or vim.tbl_values(responses) == 0 then
-      Log:warn("[QUICKFIX] Not found!")
-
-      return
-    end
-
     local fixes = {}
 
     for client_id, response in ipairs(responses) do
-      for _, result in ipairs(response.result or {}) do
+      for _, result in pairs(response.result or {}) do
         table.insert(fixes, vim.tbl_extend("force", result, { client_id = client_id }))
       end
     end
