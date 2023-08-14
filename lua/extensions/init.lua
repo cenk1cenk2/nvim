@@ -25,6 +25,7 @@ local extensions = {
   "neovim-session-manager",
   "stickybuf-nvim",
   "noice-nvim",
+  "efmls-configs-nvim",
   -- extensions
   "spider-nvim",
   "dap",

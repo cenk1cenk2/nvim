@@ -30,6 +30,7 @@ lvim.lsp.ensure_installed = {
   "taplo",
   "docker-compose-language-service",
   "helm-ls",
+  "efm",
   ---- formatters/linters
   "stylua",
   "eslint_d",
@@ -65,7 +66,7 @@ lvim.lsp.ensure_installed = {
   -- external
   "markdown-toc",
   -- "md-printer",
-  "rustywind",
+  -- "rustywind",
 }
 
 lvim.lsp.automatic_configuration.skipped_filetypes = {}
@@ -101,10 +102,6 @@ lvim.lsp.automatic_configuration.skipped_servers = {
   -- "volar",
   "zk",
   "zeta_note",
-}
-
-lvim.lsp.null_ls.setup = {
-  debug = false,
 }
 
 require("utils.setup").fn.append_to_setup("treesitter", {

@@ -1,12 +1,12 @@
 local M = {}
 
-local lsp_stuff = {
+local modules = {
   "wrapper",
 }
 
 function M.setup()
-  for _, lsp_item in ipairs(lsp_stuff) do
-    require("modules.lsp." .. lsp_item).setup()
+  for _, module in ipairs(modules) do
+    require("modules.lsp." .. module).setup()
   end
 end
 

@@ -157,6 +157,7 @@ function M.setup(force)
     util.on_setup = nil
   end, debug.traceback)
 
+  require("lvim.lsp.efm").setup()
   require("lvim.lsp.null-ls").setup()
 
   autocmds.configure_format_on_save()

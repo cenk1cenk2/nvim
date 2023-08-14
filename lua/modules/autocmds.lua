@@ -14,7 +14,6 @@ function M.setup()
             "floaterm",
             "lspinfo",
             "lsp-installer",
-            "null-ls-info",
             "dap-float",
             "lspsagaoutline",
             "neotest-summary",
@@ -103,7 +102,7 @@ function M.setup()
               local clients = vim.lsp.get_clients()
 
               for _, client in pairs(clients) do
-                if (client.attached_buffers == nil or #vim.tbl_keys(client.attached_buffers) == 0) and not vim.tbl_contains({ "null-ls" }, client.name) then
+                if client.attached_buffers == nil or #vim.tbl_keys(client.attached_buffers) == 0 then
                   vim.lsp.stop_client(client.id)
                 end
               end

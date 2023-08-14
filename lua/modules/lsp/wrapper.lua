@@ -138,33 +138,35 @@ function M.fix_current()
       return
     end
 
-    local null_ls_client = (vim.lsp.get_clients({ name = "null-ls" })[1] or {}).id
+    local efm = require("lvim.lsp.efm")
+
+    local efm_client_id = (vim.lsp.get_clients({ name = efm.CLIENT_NAME })[1] or {}).id
 
     local lsp_fixes = vim.tbl_filter(function(fix)
       if not fix.edit and not fix.command then
         return false
       end
 
-      if fix.client_id == null_ls_client then
+      if fix.client_id == efm_client_id then
         return false
       end
 
       return true
     end, fixes)
 
-    local null_ls_fixes = vim.tbl_filter(function(fix)
+    local efm_fixes = vim.tbl_filter(function(fix)
       if not fix.edit and not fix.command then
         return false
       end
 
-      if fix.client_id ~= null_ls_client then
+      if fix.client_id ~= efm_client_id then
         return false
       end
 
       return true
     end, fixes)
 
-    local fix = lsp_fixes[1] or null_ls_fixes[1]
+    local fix = lsp_fixes[1] or efm_fixes[1]
 
     local client = vim.lsp.get_client_by_id(fix.client_id)
 
