@@ -29,13 +29,6 @@ function M.setup()
       },
       filetypes = { "markdown", "text", "gitcommit", "" },
     },
-
-    -- { name = "refactoring" },
-
-    -- {
-    --   exe = "proselint",
-    --   filetypes = { "markdown", "tex" },
-    -- },
   })
 end
 

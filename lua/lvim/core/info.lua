@@ -10,20 +10,16 @@ local function str_list(list)
   return #list == 1 and list[1] or fmt("[%s]", table.concat(list, ", "))
 end
 
-local function make_info(ft, methods)
-  local null_ls_service = require("lvim.lsp.null-ls")
+local function make_efm_info(ft)
+  local efm = require("lvim.lsp.efm")
 
-  local registered = null_ls_service.list_registered(ft, methods)
-  local supported = null_ls_service.list_supported(ft, methods)
+  local supported_linters = efm.list_registered(ft, efm.METHOD.LINTER)
+  local supported_formatters = efm.list_registered(ft, efm.METHOD.FORMATTER)
+
   local section = {
-    ("null-ls - %s"):format(table.concat(
-      vim.tbl_map(function(method)
-        return null_ls_service.get_readable_name(method)
-      end, methods),
-      ", "
-    )),
-    fmt("* Active: %s%s", table.concat(registered, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(registered) > 0 and "  " or ""),
-    fmt("* Supported: %s", str_list(supported)),
+    "efm",
+    fmt("* Active Linters: %s%s", table.concat(supported_linters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(supported_linters) > 0 and "  " or ""),
+    fmt("* Active Formatters: %s%s", table.concat(supported_formatters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(supported_formatters) > 0 and "  " or ""),
   }
 
   return section
@@ -39,9 +35,6 @@ end
 --- @param client lsp.Client
 --- @return table<string> | nil
 local function make_client_info(client)
-  if client.name == "null-ls" then
-    return
-  end
   local client_enabled_caps = lsp_utils.get_client_capabilities(client.id)
   local id = client.id
   local name = client.name
@@ -133,11 +126,7 @@ function M.toggle_popup(ft)
   end
 
   local auto_lsp_info = make_auto_lsp_info(ft)
-
-  local null_ls_methods = require("null-ls").methods
-  local formatters_info = make_info(ft, { null_ls_methods.FORMATTING })
-  local linters_info = make_info(ft, { null_ls_methods.DIAGNOSTICS, null_ls_methods.DIAGNOSTICS_ON_SAVE, null_ls_methods.DIAGNOSTICS_ON_OPEN })
-  local code_actions_info = make_info(ft, { null_ls_methods.CODE_ACTION })
+  local efm_info = make_efm_info(ft)
 
   local content_provider = function(popup)
     local content = {}
@@ -149,11 +138,7 @@ function M.toggle_popup(ft)
       { "" },
       current_buffer_lsp_info,
       { "" },
-      formatters_info,
-      { "" },
-      linters_info,
-      { "" },
-      code_actions_info,
+      efm_info,
       { "" },
       lsp_info,
       { "" },
@@ -172,7 +157,7 @@ function M.toggle_popup(ft)
     vim.fn.matchadd("LvimInfoHeader", "Current buffer LSP client(s)")
     vim.fn.matchadd("LvimInfoHeader", "Active LSP client(s)")
     vim.fn.matchadd("LvimInfoHeader", fmt("Overridden %s server(s)", ft))
-    vim.fn.matchadd("LvimInfoHeader", "null-ls - .*")
+    vim.fn.matchadd("LvimInfoHeader", "efm")
     vim.fn.matchadd("LvimInfoHeader", "Automatic LSP info")
     vim.fn.matchadd("LvimInfoIdentifier", " " .. ft .. "$")
     vim.fn.matchadd("string", "true")

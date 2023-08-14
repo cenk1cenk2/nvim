@@ -138,48 +138,28 @@ function M.config()
         },
         lsp = {
           function(msg)
-            local buf_clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
+            local buf_clients = vim.tbl_map(function(client)
+              return client.name
+            end, vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() }))
 
-            if next(buf_clients) == nil then
-              -- TODO: clean up this if statement
-              if type(msg) == "boolean" or #msg == 0 then
-                return lvim.ui.icons.ui.Close
-              end
-
-              return msg
-            end
-
-            local buf_ft = vim.bo.filetype
-            local buf_client_names = {}
-
-            -- add client
-            for _, client in pairs(buf_clients) do
-              if client.name ~= "null-ls" then
-                table.insert(buf_client_names, client.name)
-              end
-            end
+            local ft = vim.bo.filetype
 
             -- add formatter
-            local null_ls_service = require("lvim.lsp.null-ls")
-            local null_ls_methods = require("null-ls").methods
-            local supported_formatters = null_ls_service.list_registered(buf_ft, { null_ls_methods.FORMATTING })
-            local supported_linters = null_ls_service.list_registered(buf_ft, {
-              null_ls_methods.DIAGNOSTICS,
-              null_ls_methods.DIAGNOSTICS_ON_SAVE,
-              null_ls_methods.DIAGNOSTICS_ON_OPEN,
-            })
+            local message = { table.concat(buf_clients or { lvim.ui.icons.ui.Close }, ", ") }
+            local efm = require("lvim.lsp.efm")
 
-            local lsps = table.concat(buf_client_names, ", ")
+            local supported_linters = efm.list_registered(ft, efm.METHOD.LINTER)
+            local supported_formatters = efm.list_registered(ft, efm.METHOD.FORMATTER)
 
             if supported_linters and not vim.tbl_isempty(supported_linters) then
-              lsps = lsps .. (" %s "):format(lvim.ui.icons.ui.DoubleChevronRight) .. table.concat(supported_linters, ", ")
+              vim.list_extend(message, { ("%s %s"):format(lvim.ui.icons.ui.DoubleChevronRight, table.concat(supported_linters, ", ")) })
             end
 
             if supported_formatters and not vim.tbl_isempty(supported_formatters) then
-              lsps = lsps .. (" %s "):format(lvim.ui.icons.ui.DoubleChevronRight) .. table.concat(supported_formatters, ", ")
+              vim.list_extend(message, { ("%s %s"):format(lvim.ui.icons.ui.DoubleChevronRight, table.concat(supported_formatters, ", ")) })
             end
 
-            return lsps
+            return table.concat(message, " ")
           end,
           color = { fg = lvim.ui.colors.fg, bg = lvim.ui.colors.bg[300] },
           cond = conditions.hide_in_width,

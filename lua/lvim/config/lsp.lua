@@ -89,6 +89,9 @@ return {
     },
     config = {},
   },
+  efm = {
+    languages = {},
+  },
   wrapper = {},
   on_init_callbacks = {},
   on_attach_callbacks = {},

@@ -15,7 +15,7 @@ function M.get_clients_by_ft(filetype)
   local clients = vim.lsp.get_clients()
   for _, client in pairs(clients) do
     local supported_filetypes = client.config.filetypes or {}
-    if client.name ~= "null-ls" and vim.tbl_contains(supported_filetypes, filetype) then
+    if vim.tbl_contains(supported_filetypes, filetype) then
       table.insert(matches, client)
     end
   end
@@ -23,18 +23,8 @@ function M.get_clients_by_ft(filetype)
 end
 
 function M.get_client_capabilities(client_id)
-  local client
-  if not client_id then
-    local buf_clients = vim.lsp.get_clients()
-    for _, buf_client in pairs(buf_clients) do
-      if buf_client.name ~= "null-ls" then
-        client = buf_client
-        break
-      end
-    end
-  else
-    client = vim.lsp.get_client_by_id(tonumber(client_id))
-  end
+  local client = vim.lsp.get_client_by_id(tonumber(client_id))
+
   if not client then
     error("Unable to determine client_id")
     return
@@ -121,18 +111,15 @@ function M.setup_inlay_hints(client, bufnr)
 end
 
 ---filter passed to vim.lsp.buf.format
----always selects null-ls if it's available and caches the value per buffer
 ---@param client table client attached to a buffer
 ---@return boolean if client matches
 function M.format_filter(client)
   local filetype = vim.bo.filetype
-  local n = require("null-ls")
-  local s = require("null-ls.sources")
-  local method = n.methods.FORMATTING
-  local available_formatters = s.get_available(filetype, method)
+  local efm = require("lvim.lsp.efm")
+  local available_formatters = efm.list_registered(filetype, efm.METHOD.FORMATTER)
 
   if #available_formatters > 0 then
-    return client.name == "null-ls"
+    return client.name == efm.CLIENT_NAME
   elseif client.supports_method("textDocument/formatting") then
     return true
   else
