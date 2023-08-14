@@ -62,6 +62,11 @@ function M.setup()
   efm.register(efm.load("hadolint"), {
     "dockerfile",
   })
+
+  efm.register(efm.load("terraform_fmt"), {
+    "terraform",
+    "tfvars",
+  })
 end
 
 return M
