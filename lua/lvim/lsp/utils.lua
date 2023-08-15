@@ -122,9 +122,9 @@ function M.format_filter(client)
     return client.name == efm.CLIENT_NAME
   elseif client.supports_method("textDocument/formatting") then
     return true
-  else
-    return false
   end
+
+  return false
 end
 
 ---Provide vim.lsp.buf.format for nvim <0.8
