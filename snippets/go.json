@@ -1,0 +1,6 @@
+{
+  "iferr": {
+    "prefix": "ie",
+    "body": "if err != nil {\n  return err$0\n}\n"
+  }
+}
