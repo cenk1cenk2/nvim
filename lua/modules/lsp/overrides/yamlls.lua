@@ -70,6 +70,9 @@ return {
           ["https://taskfile.dev/schema.json"] = {
             "Taskfile*.{yml,yaml}",
           },
+          ["https://json.schemastore.org/pulumi.json"] = {
+            "Pulumi.{yml,yaml}",
+          },
         },
       },
     },
