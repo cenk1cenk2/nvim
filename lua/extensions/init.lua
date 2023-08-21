@@ -48,6 +48,7 @@ local extensions = {
   "nvim-ufo",
   "nvim-bqf",
   "lsp-trouble",
+  "nvim-lsp-file-operations",
   "todo-comments",
   "indent-blankline",
   "octo",

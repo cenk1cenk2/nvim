@@ -1,30 +1,25 @@
 local M = {}
 
-local Log = require("lvim.core.log")
-
 function M.lsp_execute_command(bn, command)
   vim.lsp.buf_request_sync(bn, "workspace/executeCommand", command)
 end
 
 function M.apply_lsp_edit(result)
-  if result.changes then
-    Log:warn(("Changes are not supported: %s"):format(vim.inspect(result)))
+  if result.edit then
+    vim.lsp.util.apply_workspace_edit(result.edit, "utf-8")
 
     return
-  end
+  elseif result.command then
+    M.lsp_execute_command(0, result.command)
 
-  if result.edit or result.command and type(result.command) == "table" then
-    if result.edit then
-      vim.lsp.util.apply_workspace_edit(result.edit, "utf-8")
-
-      return
+    return
+  elseif result.changes then
+    for uri, changes in pairs(result.changes) do
+      local bufnr = vim.uri_to_bufnr(uri)
+      vim.lsp.util.apply_text_edits(changes, bufnr, "utf-8")
     end
 
-    if type(result.command) == "table" then
-      M.lsp_execute_command(0, result.command)
-
-      return
-    end
+    return
   end
 
   M.lsp_execute_command(0, result)

@@ -222,11 +222,16 @@ function M.rename_file()
       return
     end
 
+    local files = {
+      current = ("file://%s"):format(current),
+      rename = ("file://%s"):format(rename),
+    }
+
     vim.lsp.buf_request(0, "workspace/willRenameFiles", {
       files = {
         {
-          oldUri = ("file://%s/%s"):format(vim.fn.getcwd(), current),
-          newUri = ("file://%s/%s"):format(vim.fn.getcwd(), rename),
+          oldUri = files.current,
+          newUri = files.rename,
         },
       },
     }, function(error, result, _context, _config)
@@ -234,15 +239,15 @@ function M.rename_file()
         Log:warn(error.message)
       end
 
-      if result == nil or #result == 0 then
+      if result == nil or #vim.tbl_keys(result) == nil then
         Log:warn("No language server has answered the rename call.")
 
         return
       end
 
-      for _, r in pairs(result or {}) do
-        lsp_utils.apply_lsp_edit(r)
-      end
+      lsp_utils.apply_lsp_edit(result)
+
+      os.rename(current, rename)
 
       vim.notify(current .. " ➜  " .. rename)
     end)
