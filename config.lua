@@ -41,7 +41,7 @@ lvim.lsp.ensure_installed = {
   "shfmt",
   "black",
   "isort",
-  "marksman",
+  -- "marksman",
   "flake8",
   "shellcheck",
   -- "mypy",
