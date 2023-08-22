@@ -206,7 +206,10 @@ function M.organize_imports()
 end
 
 function M.rename_file()
-  local current = vim.api.nvim_buf_get_name(0)
+  local win = vim.api.nvim_get_current_win()
+  local bufnr = vim.api.nvim_get_current_buf()
+
+  local current = vim.api.nvim_buf_get_name(bufnr)
   vim.ui.input({ prompt = "Set the path to rename to" .. " ➜  ", default = current }, function(rename)
     if not rename then
       vim.notify("File name can not be empty.", vim.log.levels.ERROR)
@@ -227,7 +230,7 @@ function M.rename_file()
       rename = ("file://%s"):format(rename),
     }
 
-    vim.lsp.buf_request(0, "workspace/willRenameFiles", {
+    vim.lsp.buf_request(bufnr, "workspace/willRenameFiles", {
       files = {
         {
           oldUri = files.current,
@@ -247,7 +250,16 @@ function M.rename_file()
 
       lsp_utils.apply_lsp_edit(result)
 
-      os.rename(current, rename)
+      if vim.fn.getbufvar(bufnr, "&modified") then
+        vim.cmd("silent noautocmd w")
+      end
+
+      local ok, err = vim.loop.fs_rename(current, rename)
+      if not ok then
+        Log:error(string.format("Failed to move file %s to %s: %s", current, rename, err))
+      end
+
+      vim.cmd("e " .. rename)
 
       vim.notify(current .. " ➜  " .. rename)
     end)
