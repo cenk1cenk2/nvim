@@ -16,6 +16,7 @@ local colors = {
   cursor = "#6c778d",
   fg = "#abb2bf",
   white = "#efefef",
+  bright_white = "#ffffff",
   black = "#121212",
 
   grey = {
