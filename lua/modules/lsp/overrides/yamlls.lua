@@ -43,7 +43,7 @@ return {
         schemaStore = { enable = true, url = "https://www.schemastore.org/api/json/catalog.json" },
         schemas = {
           kubernetes = {
-            "templates/*.{yml,yaml}",
+            "templates/*!(.gitlab-ci).{yml,yaml}",
             "*.k8s.{yml,yaml}",
             "daemon.{yml,yaml}",
             "manager.{yml,yaml}",
