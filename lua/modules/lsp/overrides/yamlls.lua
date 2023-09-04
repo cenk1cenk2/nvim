@@ -18,6 +18,10 @@ return {
       name = "Kubernetes master",
       uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master/all.json",
     },
+    {
+      name = "Gitlab CI",
+      uri = "https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json",
+    },
   },
   lspconfig = {
     filetypes = {
