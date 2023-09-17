@@ -358,6 +358,7 @@ function M.config()
       require("neo-tree").setup(config.setup)
     end,
     wk = {
+      ["E"] = { ":Neotree focus<CR>", "focus filetree" },
       ["e"] = { ":Neotree focus toggle<CR>", "open filetree" },
       [","] = { ":NeoTreeReveal<CR>", "reveal file in filetree" },
       ["."] = { ":NeoTreeFloat buffers<CR>", "open buffers in filetree" },
