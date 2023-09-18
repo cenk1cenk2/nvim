@@ -31,7 +31,7 @@ function M.enable_format_on_save()
     group = "lsp_format_on_save",
     pattern = opts.pattern,
     callback = function()
-      require("lvim.lsp.utils").format({ timeout_ms = opts.timeout, filter = opts.filter })
+      lvim.lsp.wrapper.format({ timeout_ms = opts.timeout, filter = opts.filter })
     end,
   })
   Log:debug("enabled format-on-save")

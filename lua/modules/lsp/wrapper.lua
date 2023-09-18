@@ -33,8 +33,10 @@ function M.document_symbols()
   vim.cmd("Telescope lsp_document_symbols")
 end
 
-function M.format()
-  require("lvim.lsp.utils").format()
+function M.format(opts)
+  opts = vim.tbl_extend("force", { timeout_ms = 3000, filter = require("lvim.lsp.utils").format_filter }, opts or {})
+
+  vim.lsp.buf.format(opts)
 end
 
 function M.hover()
