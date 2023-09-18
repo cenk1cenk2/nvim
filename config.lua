@@ -31,6 +31,7 @@ lvim.lsp.ensure_installed = {
   "docker-compose-language-service",
   "helm-ls",
   "efm",
+  "eslint-lsp",
   ---- formatters/linters
   "stylua",
   "eslint_d",
@@ -79,7 +80,7 @@ lvim.lsp.automatic_configuration.skipped_servers = {
   "csharp_ls",
   "cssmodules_ls",
   -- "emmet_ls",
-  "eslint",
+  -- "eslint",
   "eslintls",
   "glint",
   -- "grammarly",

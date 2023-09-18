@@ -6,11 +6,6 @@ function M.setup()
 
   service.register(methods.CODE_ACTION, {
     {
-      name = "eslint_d",
-      filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
-    },
-
-    {
       name = "shellcheck",
       filetypes = { "sh", "bash", "zsh" },
     },
