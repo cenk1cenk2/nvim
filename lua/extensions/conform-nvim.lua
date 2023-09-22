@@ -107,7 +107,7 @@ function M.config()
       -- lvim.lsp.tools.list_registered.formatters = function(ft)
       --   return require("conform").list_formatters()
       -- end
-      vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+      lvim.lsp.buffer_options.formatexpr = "v:lua.require'conform'.formatexpr()"
     end,
   })
 end
