@@ -53,6 +53,7 @@ function M.setup()
     "bash",
     "zsh",
   })
+
   efm.register(efm.load("shellcheck"), {
     "sh",
     "bash",

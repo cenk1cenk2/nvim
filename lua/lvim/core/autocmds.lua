@@ -11,27 +11,13 @@ function M.load_defaults()
   end
 end
 
-local get_format_on_save_opts = function()
-  local defaults = require("lvim.config.defaults").format_on_save
-  -- accept a basic boolean `lvim.format_on_save=true`
-  if type(lvim.format_on_save) ~= "table" then
-    return defaults
-  end
-
-  return {
-    pattern = lvim.format_on_save.pattern or defaults.pattern,
-    timeout = lvim.format_on_save.timeout or defaults.timeout,
-  }
-end
-
 function M.enable_format_on_save()
-  local opts = get_format_on_save_opts()
   vim.api.nvim_create_augroup("lsp_format_on_save", {})
   vim.api.nvim_create_autocmd("BufWritePre", {
     group = "lsp_format_on_save",
-    pattern = opts.pattern,
+    pattern = lvim.lsp.format_on_save.pattern,
     callback = function()
-      lvim.lsp.wrapper.format({ timeout_ms = opts.timeout, filter = opts.filter })
+      lvim.lsp.wrapper.format()
     end,
   })
   Log:debug("enabled format-on-save")
@@ -43,7 +29,7 @@ function M.disable_format_on_save()
 end
 
 function M.configure_format_on_save()
-  if lvim.format_on_save then
+  if lvim.lsp.format_on_save.enable then
     M.enable_format_on_save()
   else
     M.disable_format_on_save()

@@ -10,14 +10,12 @@ local function str_list(list)
   return #list == 1 and list[1] or fmt("[%s]", table.concat(list, ", "))
 end
 
-local function make_efm_info(ft)
-  local efm = require("lvim.lsp.efm")
-
-  local supported_linters = efm.list_registered(ft, efm.METHOD.LINTER)
-  local supported_formatters = efm.list_registered(ft, efm.METHOD.FORMATTER)
+local function make_tools_info(ft)
+  local supported_formatters = lvim.lsp.tools.list_registered.formatters(ft)
+  local supported_linters = lvim.lsp.tools.list_registered.linters(ft)
 
   local section = {
-    "efm",
+    "Tools",
     fmt("* Active Linters: %s%s", table.concat(supported_linters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(supported_linters) > 0 and "  " or ""),
     fmt("* Active Formatters: %s%s", table.concat(supported_formatters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(supported_formatters) > 0 and "  " or ""),
   }
@@ -126,7 +124,7 @@ function M.toggle_popup(ft)
   end
 
   local auto_lsp_info = make_auto_lsp_info(ft)
-  local efm_info = make_efm_info(ft)
+  local tools_info = make_tools_info(ft)
 
   local content_provider = function(popup)
     local content = {}
@@ -138,7 +136,7 @@ function M.toggle_popup(ft)
       { "" },
       current_buffer_lsp_info,
       { "" },
-      efm_info,
+      tools_info,
       { "" },
       lsp_info,
       { "" },
@@ -157,7 +155,7 @@ function M.toggle_popup(ft)
     vim.fn.matchadd("LvimInfoHeader", "Current buffer LSP client(s)")
     vim.fn.matchadd("LvimInfoHeader", "Active LSP client(s)")
     vim.fn.matchadd("LvimInfoHeader", fmt("Overridden %s server(s)", ft))
-    vim.fn.matchadd("LvimInfoHeader", "efm")
+    vim.fn.matchadd("LvimInfoHeader", "Tools")
     vim.fn.matchadd("LvimInfoHeader", "Automatic LSP info")
     vim.fn.matchadd("LvimInfoIdentifier", " " .. ft .. "$")
     vim.fn.matchadd("string", "true")

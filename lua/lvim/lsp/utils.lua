@@ -1,3 +1,5 @@
+local Log = require("lvim.core.log")
+
 local M = {}
 
 function M.is_client_active(name)
@@ -114,17 +116,51 @@ end
 ---@param client table client attached to a buffer
 ---@return boolean if client matches
 function M.format_filter(client)
-  local filetype = vim.bo.filetype
-  local efm = require("lvim.lsp.efm")
-  local available_formatters = efm.list_registered(filetype, efm.METHOD.FORMATTER)
+  local ft = vim.bo.filetype
+  local available_formatters = lvim.lsp.tools.list_registered.formatters(ft)
 
   if #available_formatters > 0 then
-    return client.name == efm.CLIENT_NAME
+    return client.name == lvim.lsp.tools.clients[M.METHODS.FORMATTER]
   elseif client.supports_method("textDocument/formatting") then
     return true
   end
 
   return false
+end
+
+M.METHODS = {
+  FORMATTER = "formatters",
+  LINTER = "linters",
+}
+
+function M.read_tools(method)
+  return lvim.lsp.tools.by_ft[method]
+end
+
+function M.register_tools(method, configs, filetypes)
+  if type(configs) == "string" then
+    configs = { configs }
+  end
+
+  for _, ft in pairs(filetypes) do
+    if lvim.lsp.tools.by_ft[method][ft] == nil then
+      lvim.lsp.tools.by_ft[method][ft] = {}
+    end
+
+    vim.list_extend(lvim.lsp.tools.by_ft[method][ft], configs)
+  end
+
+  Log:debug(("Registered the following method %s for %s: %s"):format(
+    method,
+    vim.tbl_map(function(config)
+      if type(config) == "string" then
+        return config
+      end
+
+      return config.name
+    end, configs),
+    table.concat(filetypes, ", ")
+  ))
 end
 
 return M

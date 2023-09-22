@@ -1,5 +1,14 @@
 return {
   templates_dir = join_paths(get_data_dir(), "site", "after", "ftplugin"),
+  format_on_save = {
+    enable = true,
+    ---@usage pattern string pattern used for the autocommand (Default: '*')
+    pattern = "*",
+    ---@usage timeout number timeout in ms for the format request (Default: 1000)
+    timeout = 3000,
+    ---@usage filter func to select client
+    filter = require("lvim.lsp.utils").format_filter,
+  },
   diagnostics = {
     signs = {
       active = true,
@@ -83,14 +92,29 @@ return {
       loader = "json",
     },
   },
+  tools = {
+    clients = {
+      formatters = "",
+      linters = "",
+    },
+    by_ft = {
+      formatters = {},
+      linters = {},
+    },
+    list_registered = {
+      formatters = function(ft)
+        return lvim.lsp.tools.by_ft.formatters[ft] or {}
+      end,
+      linters = function(ft)
+        return lvim.lsp.tools.by_ft.linters[ft] or {}
+      end,
+    },
+  },
   null_ls = {
     setup = {
       debug = false,
     },
     config = {},
-  },
-  efm = {
-    languages = {},
   },
   wrapper = {},
   on_init_callbacks = {},

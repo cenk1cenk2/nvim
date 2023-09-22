@@ -23,14 +23,6 @@ function M.config()
           init = false,
           config = false,
         },
-        -- TODO: disable this completely at sometime
-        {
-          "jose-elias-alvarez/null-ls.nvim",
-          init = false,
-          config = function()
-            require("modules.lsp.null-ls").setup()
-          end,
-        },
         {
           "b0o/schemastore.nvim",
           init = false,

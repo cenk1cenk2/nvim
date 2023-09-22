@@ -34,7 +34,7 @@ function M.document_symbols()
 end
 
 function M.format(opts)
-  opts = vim.tbl_extend("force", { timeout_ms = 3000, filter = require("lvim.lsp.utils").format_filter }, opts or {})
+  opts = vim.tbl_extend("force", { timeout_ms = lvim.lsp.format_on_save.timeout_ms, filter = lvim.lsp.format_on_save.filter }, opts or {})
 
   vim.lsp.buf.format(opts)
 end
@@ -140,35 +140,33 @@ function M.fix_current()
       return
     end
 
-    local efm = require("lvim.lsp.efm")
-
-    local efm_client_id = (vim.lsp.get_clients({ name = efm.CLIENT_NAME })[1] or {}).id
+    local tools_client_id = (vim.lsp.get_clients({ name = lvim.lsp.tools.clients.linters })[1] or {}).id
 
     local lsp_fixes = vim.tbl_filter(function(fix)
       if not fix.edit and not fix.command then
         return false
       end
 
-      if fix.client_id == efm_client_id then
+      if fix.client_id == tools_client_id then
         return false
       end
 
       return true
     end, fixes)
 
-    local efm_fixes = vim.tbl_filter(function(fix)
+    local tool_fixes = vim.tbl_filter(function(fix)
       if not fix.edit and not fix.command then
         return false
       end
 
-      if fix.client_id ~= efm_client_id then
+      if fix.client_id ~= tools_client_id then
         return false
       end
 
       return true
     end, fixes)
 
-    local fix = lsp_fixes[1] or efm_fixes[1]
+    local fix = lsp_fixes[1] or tool_fixes[1]
 
     local client = vim.lsp.get_client_by_id(fix.client_id)
 

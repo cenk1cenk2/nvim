@@ -1,14 +1,6 @@
 lvim = {
   leader = "space",
   colorscheme = "onedarker",
-  format_on_save = {
-    ---@usage pattern string pattern used for the autocommand (Default: '*')
-    pattern = "*",
-    ---@usage timeout number timeout in ms for the format request (Default: 1000)
-    timeout = 7500,
-    ---@usage filter func to select client
-    filter = require("lvim.lsp.utils").format_filter,
-  },
 
   ui = {
     icons = require("lvim.icons"),

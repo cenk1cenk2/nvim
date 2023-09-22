@@ -146,10 +146,9 @@ function M.config()
 
             -- add formatter
             local message = { table.concat(buf_clients or { lvim.ui.icons.ui.Close }, ", ") }
-            local efm = require("lvim.lsp.efm")
 
-            local supported_linters = efm.list_registered(ft, efm.METHOD.LINTER)
-            local supported_formatters = efm.list_registered(ft, efm.METHOD.FORMATTER)
+            local supported_formatters = lvim.lsp.tools.list_registered.formatters(ft)
+            local supported_linters = lvim.lsp.tools.list_registered.linters(ft)
 
             if supported_linters and not vim.tbl_isempty(supported_linters) then
               vim.list_extend(message, { ("%s %s"):format(lvim.ui.icons.ui.DoubleChevronRight, table.concat(supported_linters, ", ")) })

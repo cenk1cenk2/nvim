@@ -7,3 +7,5 @@
 .gitignore
 /.luacheckrc
 /coc-settings.json
+
+_deprecated

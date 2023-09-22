@@ -30,7 +30,7 @@ lvim.lsp.ensure_installed = {
   "taplo",
   "docker-compose-language-service",
   "helm-ls",
-  "efm",
+  -- "efm",
   "eslint-lsp",
   ---- formatters/linters
   "stylua",
