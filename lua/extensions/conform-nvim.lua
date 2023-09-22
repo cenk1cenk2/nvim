@@ -14,11 +14,11 @@ function M.config()
     setup = function()
       local lsp_utils = require("lvim.lsp.utils")
       local METHOD = lsp_utils.METHODS.FORMATTER
-      local conform = require('conform')
+      local conform = require("conform")
 
       conform.formatters.prettierd = vim.tbl_deep_extend("force", require("conform.formatters.prettierd"), {
         env = {
-          "PRETTIERD_DEFAULT_CONFIG=" .. vim.fn.expand("~/.config/nvim/utils/linter-config/.prettierrc.json"),
+          ["PRETTIERD_DEFAULT_CONFIG"] = vim.fn.expand("~/.config/nvim/utils/linter-config/.prettierrc.json"),
         },
       })
 
