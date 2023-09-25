@@ -8,8 +8,6 @@ function M.config()
     plugin = function()
       return {
         "HiPhish/rainbow-delimiters.nvim",
-        -- https://github.com/HiPhish/rainbow-delimiters.nvim/issues/36
-        branch = "use-children",
         event = "BufReadPost",
       }
     end,
