@@ -90,6 +90,7 @@ local extensions = {
   "edgy-nvim",
   "typescript-tools-nvim",
   "yaml-companion-nvim",
+  "uuid-nvim",
 }
 
 function M.config(config)
