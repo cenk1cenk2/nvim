@@ -57,7 +57,11 @@ lvim.lsp.ensure_installed = {
   -- "revive",
   -- "rustfmt",
   "hadolint",
-  -- "proselint",
+  "proselint",
+  "bufls",
+  "protolint",
+  -- "tflint",
+  "tfsec",
   "terraform-ls",
   -- "djlint",
   ---- debugers

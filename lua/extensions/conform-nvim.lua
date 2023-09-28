@@ -12,74 +12,16 @@ function M.config()
       }
     end,
     setup = function()
+      local conform = require("conform")
       local lsp_utils = require("lvim.lsp.utils")
       local METHOD = lsp_utils.METHODS.FORMATTER
-      local conform = require("conform")
 
-      conform.formatters.prettierd = vim.tbl_deep_extend("force", require("conform.formatters.prettierd"), {
-        env = {
-          ["PRETTIERD_DEFAULT_CONFIG"] = vim.fn.expand("~/.config/nvim/utils/linter-config/.prettierrc.json"),
-        },
-      })
-
-      lsp_utils.register_tools(METHOD, "prettierd", {
-        "javascript",
-        "typescript",
-        "javascriptreact",
-        "typescriptreact",
-        "vue",
-        "svelte",
-        "yaml",
-        "yaml.ansible",
-        "yaml.docker-compose",
-        "json",
-        "jsonc",
-        "html",
-        "scss",
-        "css",
-        "markdown",
-        "graphql",
-        "helm",
-      })
-
-      lsp_utils.register_tools(METHOD, "eslint_d", {
-        "javascript",
-        "typescript",
-        "javascriptreact",
-        "typescriptreact",
-        "vue",
-        "svelte",
-      })
-
-      lsp_utils.register_tools(METHOD, "stylua", {
-        "lua",
-      })
-
-      lsp_utils.register_tools(METHOD, { "golines", "goimports" }, {
-        "go",
-      })
-
-      lsp_utils.register_tools(METHOD, "shfmt", {
-        "sh",
-        "bash",
-        "zsh",
-      })
-      -- lsp_utils.register_tools(METHOD, "beautysh", {
-      --   "sh",
-      --   "bash",
-      --   "zsh",
-      -- })
-
-      lsp_utils.register_tools(METHOD, "terraform_fmt", {
-        "terraform",
-        "tfvars",
-      })
-
-      local formatters_by_ft = lsp_utils.read_tools(METHOD)
+      M.extend_tools(conform)
+      M.register_tools(lsp_utils, METHOD)
 
       return {
         -- Map of filetype to formatters
-        formatters_by_ft = formatters_by_ft,
+        formatters_by_ft = lsp_utils.read_tools(METHOD),
         -- If this is set, Conform will run the formatter on save.
         -- It will pass the table to conform.format().
         -- This can also be a function that returns the table.
@@ -104,11 +46,71 @@ function M.config()
       require("conform").setup(config.setup)
     end,
     on_done = function()
-      -- lvim.lsp.tools.list_registered.formatters = function(ft)
-      --   return require("conform").list_formatters()
-      -- end
       lvim.lsp.buffer_options.formatexpr = "v:lua.require'conform'.formatexpr()"
     end,
+  })
+end
+
+function M.register_tools(lsp_utils, METHOD)
+  lsp_utils.register_tools(METHOD, "prettierd", {
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact",
+    "vue",
+    "svelte",
+    "yaml",
+    "yaml.ansible",
+    "yaml.docker-compose",
+    "json",
+    "jsonc",
+    "html",
+    "scss",
+    "css",
+    "markdown",
+    "graphql",
+    "helm",
+  })
+
+  lsp_utils.register_tools(METHOD, "eslint_d", {
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact",
+    "vue",
+    "svelte",
+  })
+
+  lsp_utils.register_tools(METHOD, "stylua", {
+    "lua",
+  })
+
+  lsp_utils.register_tools(METHOD, { "golines", "goimports" }, {
+    "go",
+  })
+
+  lsp_utils.register_tools(METHOD, "shfmt", {
+    "sh",
+    "bash",
+    "zsh",
+  })
+  -- lsp_utils.register_tools(METHOD, "beautysh", {
+  --   "sh",
+  --   "bash",
+  --   "zsh",
+  -- })
+
+  lsp_utils.register_tools(METHOD, "terraform_fmt", {
+    "terraform",
+    "tfvars",
+  })
+end
+
+function M.extend_tools(conform)
+  conform.formatters.prettierd = vim.tbl_deep_extend("force", require("conform.formatters.prettierd"), {
+    env = {
+      ["PRETTIERD_DEFAULT_CONFIG"] = vim.fn.expand("~/.config/nvim/utils/linter-config/.prettierrc.json"),
+    },
   })
 end
 
