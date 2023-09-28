@@ -72,12 +72,17 @@ function M.config()
       }
     end,
     on_setup = function(config)
+      local hooks = require("ibl.hooks")
+      hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_space_indent_level)
+      hooks.register(hooks.type.WHITESPACE, hooks.builtin.hide_first_tab_indent_level)
+
       require("ibl").setup(config.setup)
     end,
     wk = function(_, categories)
       return {
         [categories.ACTIONS] = {
-          ["i"] = { ":IndentBlanklineToggle<CR>", "toggle indentation guides" },
+          ["i"] = { ":IBLToggle<CR>", "toggle indentation guides" },
+          ["i"] = { ":IBLToggleScope<CR>", "toggle indentation guides" },
         },
       }
     end,
