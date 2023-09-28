@@ -82,7 +82,7 @@ function M.config()
       return {
         [categories.ACTIONS] = {
           ["i"] = { ":IBLToggle<CR>", "toggle indentation guides" },
-          ["i"] = { ":IBLToggleScope<CR>", "toggle indentation guides" },
+          ["I"] = { ":IBLToggleScope<CR>", "toggle indentation guides" },
         },
       }
     end,
