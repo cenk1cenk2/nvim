@@ -125,7 +125,7 @@ function M.fix_current()
   local params = vim.lsp.util.make_range_params()
   params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
 
-  vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
+  vim.lsp.buf_request_all(vim.api.nvim_get_current_buf(), "textDocument/codeAction", params, function(responses)
     local fixes = {}
 
     for client_id, response in ipairs(responses) do
@@ -135,7 +135,12 @@ function M.fix_current()
     end
 
     if #fixes == 0 then
-      Log:warn("[QUICKFIX] Not found!")
+      Log:warn(("[QUICKFIX] Not found: %s -> %s"):format(
+        vim.inspect(vim.tbl_map(function(client)
+          return client.name
+        end, vim.lsp.get_clients())),
+        vim.inspect(responses)
+      ))
 
       return
     end
