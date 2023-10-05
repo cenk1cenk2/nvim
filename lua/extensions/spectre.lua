@@ -174,25 +174,25 @@ function M.config()
             function()
               require("spectre").open()
             end,
-            "find and replace",
+            "[spectre] find and replace",
           },
           w = {
             function()
               require("spectre").open({ path = string.format("%s/**", vim.fn.expand("%:h:~:.")) })
             end,
-            "find and replace in current folder",
+            "[spectre] find and replace in current folder",
           },
           v = {
             function()
               require("spectre").open_visual({ select_word = true })
             end,
-            "find the word under cursor and replace",
+            "[spectre] find the word under cursor and replace",
           },
           b = {
             function()
               require("spectre").open_file_search()
             end,
-            "find and replace in current buffer",
+            "[spectre] find and replace in current buffer",
           },
         },
       }

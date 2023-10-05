@@ -12,9 +12,30 @@ function M.config()
         event = "BufReadPost",
       }
     end,
-    inject_to_configure = function()
+    setup = function()
       return {
-        handler = function(virtText, lnum, endLnum, width, truncate)
+        open_fold_hl_timeout = 100,
+        close_fold_kinds = {},
+        -- close_fold_kinds = { "imports", "comment" },
+        preview = {
+          win_config = {
+            border = lvim.ui.border,
+            winhighlight = "Normal:Normal",
+            winblend = 0,
+          },
+          mappings = {
+            scrollU = "<C-u>",
+            scrollD = "<C-d>",
+          },
+        },
+        provider_selector = function(bufnr, filetype, buftype)
+          -- if vim.tbl_contains({ "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte", "go" }, filetype) then
+          --   return
+          -- end
+
+          return { "treesitter", "indent" }
+        end,
+        fold_virt_text_handler = function(virtText, lnum, endLnum, width, truncate)
           local newVirtText = {}
           local suffix = ("  %s %d "):format(lvim.ui.icons.ui.ArrowCircleDown, endLnum - lnum)
           local sufWidth = vim.fn.strdisplaywidth(suffix)
@@ -41,32 +62,6 @@ function M.config()
           table.insert(newVirtText, { suffix, "MoreMsg" })
           return newVirtText
         end,
-      }
-    end,
-    setup = function(config)
-      return {
-        open_fold_hl_timeout = 100,
-        close_fold_kinds = {},
-        -- close_fold_kinds = { "imports", "comment" },
-        preview = {
-          win_config = {
-            border = lvim.ui.border,
-            winhighlight = "Normal:Normal",
-            winblend = 0,
-          },
-          mappings = {
-            scrollU = "<C-u>",
-            scrollD = "<C-d>",
-          },
-        },
-        provider_selector = function(bufnr, filetype, buftype)
-          -- if vim.tbl_contains({ "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte", "go" }, filetype) then
-          --   return
-          -- end
-
-          return { "treesitter", "indent" }
-        end,
-        fold_virt_text_handler = config.inject.handler,
       }
     end,
     on_setup = function(config)

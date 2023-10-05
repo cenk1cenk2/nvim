@@ -36,6 +36,7 @@ local extensions = {
   "neoscroll",
   "auto-hlsearch-nvim",
   "spectre",
+  "rgflow-nvim",
   "search-replace-nvim",
   "rnvimr",
   "tabout-nvim",

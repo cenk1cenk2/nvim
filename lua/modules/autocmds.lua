@@ -1,28 +1,32 @@
 local M = {}
 
+function M.q_close_autocmd(pattern)
+  return {
+    "FileType",
+    {
+      group = "_buffer_mappings",
+      pattern = pattern,
+      callback = function(event)
+        vim.keymap.set("n", "q", ":close<CR>", { silent = true, buffer = event.buf })
+      end,
+    },
+  }
+end
+
 function M.setup()
   require("utils.setup").init({
     autocmds = {
-      {
-        "FileType",
-        {
-          group = "_buffer_mappings",
-          pattern = {
-            "qf",
-            "help",
-            "man",
-            "floaterm",
-            "lspinfo",
-            "lsp-installer",
-            "dap-float",
-            "lspsagaoutline",
-            "neotest-summary",
-          },
-          callback = function(event)
-            vim.keymap.set("n", "q", ":close<CR>", { silent = true, buffer = event.buf })
-          end,
-        },
-      },
+      M.q_close_autocmd({
+        "qf",
+        "help",
+        "man",
+        "floaterm",
+        "lspinfo",
+        "lsp-installer",
+        "dap-float",
+        "lspsagaoutline",
+        "neotest-summary",
+      }),
       {
         { "BufWinEnter", "BufRead", "BufNewFile" },
         {

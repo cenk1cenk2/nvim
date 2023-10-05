@@ -28,13 +28,13 @@ function M.config()
             function()
               require("search-replace.single-buffer").open()
             end,
-            "find and replace in current buffer",
+            "[sr] find and replace in current buffer",
           },
           V = {
             function()
               require("search-replace.single-buffer").cword()
             end,
-            "find and replace cword in current buffer",
+            "[sr] find and replace cword in current buffer",
           },
         },
       }
