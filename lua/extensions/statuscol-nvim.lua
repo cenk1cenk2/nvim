@@ -34,7 +34,11 @@ function M.config()
         segments = {
           -- { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
           {
-            sign = { name = { ".*" }, maxwidth = 1, colwidth = 1, auto = false },
+            sign = { namespace = { "gitsign.*" }, maxwidth = 1, colwidth = 1, auto = false },
+            click = "v:lua.ScSa",
+          },
+          {
+            sign = { name = { "Dap*" }, auto = true },
             click = "v:lua.ScSa",
           },
           {
@@ -42,27 +46,6 @@ function M.config()
             click = "v:lua.ScSa",
           },
           { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
-        },
-        clickmod = "c", -- modifier used for certain actions in the builtin clickhandlers:
-        -- "a" for Alt, "c" for Ctrl and "m" for Meta.
-        clickhandlers = { -- builtin click handlers
-          Lnum = builtin.lnum_click,
-          FoldClose = builtin.foldclose_click,
-          FoldOpen = builtin.foldopen_click,
-          FoldOther = builtin.foldother_click,
-          DapBreakpointRejected = builtin.toggle_breakpoint,
-          DapBreakpoint = builtin.toggle_breakpoint,
-          DapBreakpointCondition = builtin.toggle_breakpoint,
-          DiagnosticSignError = builtin.diagnostic_click,
-          DiagnosticSignHint = builtin.diagnostic_click,
-          DiagnosticSignInfo = builtin.diagnostic_click,
-          DiagnosticSignWarn = builtin.diagnostic_click,
-          GitSignsTopdelete = builtin.gitsigns_click,
-          GitSignsUntracked = builtin.gitsigns_click,
-          GitSignsAdd = builtin.gitsigns_click,
-          GitSignsChange = builtin.gitsigns_click,
-          GitSignsChangedelete = builtin.gitsigns_click,
-          GitSignsDelete = builtin.gitsigns_click,
         },
       }
     end,
