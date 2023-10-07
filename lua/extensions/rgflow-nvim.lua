@@ -8,6 +8,7 @@ function M.config()
     plugin = function()
       return {
         "mangelozzi/rgflow.nvim",
+        ft = { "qf" },
       }
     end,
     configure = function(_, fn)
