@@ -67,7 +67,7 @@ function M.extend_tools(lint)
 
       local decoded = vim.json.decode(output, { object = true, array = true })
 
-      if decoded.lints == nil then
+      if decoded == nil or decoded.lints == nil then
         return diagnostics
       end
 
