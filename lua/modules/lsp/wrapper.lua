@@ -124,11 +124,12 @@ end
 function M.fix_current()
   local params = vim.lsp.util.make_range_params()
   params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
+  local bufnr = vim.api.nvim_get_current_buf()
 
-  vim.lsp.buf_request_all(vim.api.nvim_get_current_buf(), "textDocument/codeAction", params, function(responses)
+  vim.lsp.buf_request_all(bufnr, "textDocument/codeAction", params, function(responses)
     local fixes = {}
 
-    for client_id, response in ipairs(responses) do
+    for client_id, response in pairs(responses) do
       for _, result in pairs(response.result or {}) do
         table.insert(fixes, vim.tbl_extend("force", result, { client_id = client_id }))
       end
@@ -138,7 +139,7 @@ function M.fix_current()
       Log:warn(("[QUICKFIX] Not found: %s -> %s"):format(
         vim.inspect(vim.tbl_map(function(client)
           return client.name
-        end, vim.lsp.get_clients())),
+        end, vim.lsp.get_clients({ bufnr = bufnr }))),
         vim.inspect(responses)
       ))
 
