@@ -26,7 +26,7 @@ return {
     tsserver_format_options = {},
     tsserver_file_preferences = {
       includeCompletionsForModuleExports = true,
-      quotePreference = "auto",
+      quotePreference = "single",
       includeCompletionsForImportStatements = true,
       includeAutomaticOptionalChainCompletions = true,
       includeCompletionsWithClassMemberSnippets = true,
