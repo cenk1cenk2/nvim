@@ -31,7 +31,7 @@ function M.config()
     end,
     autocmds = {
       {
-        { "InsertLeave", "BufReadPost" },
+        { "InsertLeave", "TextChanged", "BufReadPost" },
         {
           group = "__linter",
           pattern = "*",
