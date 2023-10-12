@@ -96,24 +96,24 @@ function M.setup()
           end,
         },
       },
-      -- {
-      --   { "BufDelete", "LspDetach" },
-      --   {
-      --     group = "_lsp_cleanup",
-      --     callback = function()
-      --       -- somehow the lsp clients does not get automatically deallocated from the buffer
-      --       vim.schedule(function()
-      --         local clients = vim.lsp.get_clients()
-      --
-      --         for _, client in pairs(clients) do
-      --           if client.attached_buffers == nil or #vim.tbl_keys(client.attached_buffers) == 0 then
-      --             vim.lsp.stop_client(client.id)
-      --           end
-      --         end
-      --       end)
-      --     end,
-      --   },
-      -- },
+      {
+        { "BufDelete", "LspDetach" },
+        {
+          group = "_lsp_cleanup",
+          callback = function()
+            -- somehow the lsp clients does not get automatically deallocated from the buffer
+            vim.schedule(function()
+              local clients = vim.lsp.get_clients()
+
+              for _, client in pairs(clients) do
+                if client.attached_buffers == nil or #vim.tbl_keys(client.attached_buffers) == 0 then
+                  vim.lsp.stop_client(client.id)
+                end
+              end
+            end)
+          end,
+        },
+      },
       -- NOTE: Telescope opens file in insert mode after neovim commit: d52cc66
       -- Ref: https://github.com/nvim-telescope/telescope.nvim/issues/2501#issuecomment-1541009573
       -- Neovim commit pull request: https://github.com/neovim/neovim/pull/22984

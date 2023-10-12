@@ -214,6 +214,7 @@ end
 function M.rename_file()
   local win = vim.api.nvim_get_current_win()
   local bufnr = vim.api.nvim_get_current_buf()
+  local source = vim.api.nvim_buf_get_name(bufnr)
 
   local current = vim.api.nvim_buf_get_name(bufnr)
   vim.ui.input({ prompt = "Set the path to rename to" .. " ➜  ", default = current }, function(rename)
@@ -265,7 +266,11 @@ function M.rename_file()
         Log:error(string.format("Failed to move file %s to %s: %s", current, rename, err))
       end
 
-      vim.cmd("e " .. rename)
+      for _, b in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.api.nvim_buf_is_valid(b) and vim.api.nvim_buf_get_name(b) == source then
+          vim.api.nvim_buf_set_name(b, rename)
+        end
+      end
 
       vim.notify(current .. " ➜  " .. rename)
     end)
