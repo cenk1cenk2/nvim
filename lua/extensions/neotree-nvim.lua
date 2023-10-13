@@ -8,14 +8,13 @@ function M.config()
     plugin = function()
       return {
         "nvim-neo-tree/neo-tree.nvim",
-        branch = "v2.x",
         dependencies = {
           "nvim-lua/plenary.nvim",
           "kyazdani42/nvim-web-devicons",
           "MunifTanjim/nui.nvim",
           "s1n7ax/nvim-window-picker",
         },
-        cmd = { "Neotree", "NeoTreeReveal", "NeoTreeFocusToggle", "NeoTreeFloat" },
+        cmd = { "Neotree" },
       }
     end,
     configure = function(_, fn)
@@ -79,6 +78,24 @@ function M.config()
 
         return path
       end
+
+      local function index_of(array, value)
+        for i, v in ipairs(array) do
+          if v == value then
+            return i
+          end
+        end
+        return nil
+      end
+
+      local function get_siblings(state, node)
+        local parent = state.tree:get_node(node:get_parent_id())
+        local siblings = parent:get_child_ids()
+
+        return siblings
+      end
+
+      local renderer = require("neo-tree.ui.renderer")
 
       return {
         source_selector = {
@@ -199,14 +216,15 @@ function M.config()
             -- ["t"] = "open_tab_drop",
             ["w"] = "open_with_window_picker",
             ["h"] = "close_node",
-            ["zm"] = "close_all_nodes",
-            ["zr"] = "expand_all_nodes",
+            ["zC"] = "close_all_nodes",
+            ["zO"] = "expand_all_nodes",
             ["r"] = "rename",
             ["q"] = "close_window",
             ["R"] = "refresh",
             ["?"] = "show_help",
-            ["H"] = "prev_source",
-            ["L"] = "next_source",
+            ["H"] = "parent",
+            ["HH"] = "prev_sibling",
+            ["LL"] = "next_sibling",
           },
         },
         nesting_rules = {},
@@ -234,7 +252,11 @@ function M.config()
             never_show_by_pattern = { -- uses glob style patterns
             },
           },
-          follow_current_file = false, -- This will find and focus the file in the active buffer every
+          follow_current_file = {
+            enabled = true, -- This will find and focus the file in the active buffer every time
+            --               -- the current file is changed while the tree is open.
+            leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+          },
           -- time the current file is changed while the tree is open.
           group_empty_dirs = false, -- when true, empty folders will be grouped together
           hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
@@ -322,6 +344,29 @@ function M.config()
                 search_dirs = { path },
               }))
             end,
+            next_sibling = function(state)
+              local node = state.tree:get_node()
+              local siblings = get_siblings(state, node)
+              if not node.is_last_child then
+                local current = index_of(siblings, node.id)
+                local next = siblings[current + 1]
+                renderer.focus_node(state, next)
+              end
+            end,
+            prev_sibling = function(state)
+              local node = state.tree:get_node()
+              local siblings = get_siblings(state, node)
+              local current = index_of(siblings, node.id)
+              if current > 1 then
+                local next = siblings[current - 1]
+                renderer.focus_node(state, next)
+              end
+            end,
+            parent = function(state)
+              local node = state.tree:get_node()
+              local parent_path, _ = require("neo-tree.utils").split_path(node:get_id())
+              renderer.focus_node(state, parent_path)
+            end,
           },
         },
         buffers = {
@@ -360,9 +405,9 @@ function M.config()
     wk = {
       ["E"] = { ":Neotree focus<CR>", "focus filetree" },
       ["e"] = { ":Neotree focus toggle<CR>", "open filetree" },
-      [","] = { ":NeoTreeReveal<CR>", "reveal file in filetree" },
-      ["."] = { ":NeoTreeFloat buffers<CR>", "open buffers in filetree" },
-      ["-"] = { ":NeoTreeFloat git_status<CR>", "git files in filetree" },
+      [","] = { ":Neotree reveal<CR>", "reveal file in filetree" },
+      ["."] = { ":Neotree position=float buffers<CR>", "open buffers in filetree" },
+      ["-"] = { ":Neotree position=float git_status<CR>", "git files in filetree" },
     },
   })
 end
