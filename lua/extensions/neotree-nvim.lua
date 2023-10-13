@@ -174,6 +174,7 @@ function M.config()
           },
         },
         document_symbols = {
+          follow_cursor = true,
           kinds = {
             File = { icon = lvim.ui.icons.kind.File, hl = "Tag" },
             Namespace = { icon = lvim.ui.icons.kind.Namespace, hl = "Include" },
@@ -253,7 +254,7 @@ function M.config()
             },
           },
           follow_current_file = {
-            enabled = true, -- This will find and focus the file in the active buffer every time
+            enabled = false, -- This will find and focus the file in the active buffer every time
             --               -- the current file is changed while the tree is open.
             leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
           },
@@ -266,7 +267,7 @@ function M.config()
           -- "disabled",    -- netrw left alone, neo-tree does not handle opening dirs
           enable_buffer_write_refresh = true,
           enable_refresh_on_write = false, -- Refresh the tree when a file is written. Only used if `use_libuv_file_watcher` is false.
-          use_libuv_file_watcher = false, -- This will use the OS level file watchers to detect changes
+          use_libuv_file_watcher = true, -- This will use the OS level file watchers to detect changes
           -- instead of relying on nvim autocmd events.
           window = {
             mappings = {
