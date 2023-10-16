@@ -12,23 +12,23 @@
   "constructor": {
     "prefix": "cns",
     "description": "Create a basic constructor.",
-    "body": ["constructor ($1) {", "\t$1", "}", "\n"]
+    "body": ["constructor ($0) {", "\t$1", "}", "\n"]
   },
   "nestjs_controller": {
     "prefix": "n-controller",
     "description": "NestJS Controller",
-    "body": ["import { Controller } from '@nestjs/common';", "", "@Controller()", "export class $1Controller {", "\tconstructor(){}", "", "\t${1}", "}"]
+    "body": ["import { Controller } from '@nestjs/common'", "", "@Controller()", "export class $0Controller {", "\tconstructor(){}", "", "\t$1", "}"]
   },
   "nestjs_service": {
     "prefix": "n-service",
     "description": "NestJS Service",
-    "body": ["import { Injectable } from '@nestjs/common';", "", "@Injectable()", "export class ${0}Service {", "\tconstructor() {}", "\t${1}", "}"]
+    "body": ["import { Injectable } from '@nestjs/common'", "", "@Injectable()", "export class $0Service {", "\tconstructor() {}", "", "\t$1", "}"]
   },
   "nestjs_module": {
     "prefix": "n-module",
     "description": "NestJS Module",
     "body": [
-      "import { Module } from '@nestjs/common';",
+      "import { Module } from '@nestjs/common'",
       "",
       "@Module({",
       "\timports: [],",
@@ -36,7 +36,7 @@
       "\tproviders: [],",
       "\texports: []",
       "})",
-      "export class $1Module {}"
+      "export class $0Module {}"
     ]
   }
 }
