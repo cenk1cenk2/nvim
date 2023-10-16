@@ -250,7 +250,7 @@ hl.lsp = {
   LspReferenceText = { fg = c.grey[300], bold = false },
   LspReferenceWrite = { fg = c.grey[300], bold = false },
   LspReferenceRead = { fg = c.grey[300], bold = false },
-  LspSignatureActiveParameter = { fg = c.grey[700], bold = true },
+  LspSignatureActiveParameter = { bg = c.bg[400], bold = true },
   LspCodeLens = { fg = c.grey[600], bold = true },
   LspInlayHint = { link = "@inlayhint" },
   LspDiagnosticsVirtualTextError = { link = "DiagnosticVirtualTextError" },
