@@ -7,6 +7,11 @@
   "exportPartial": {
     "prefix": "exps",
     "body": "export { $1 } from './$0'\n",
-    "description": "Export selected frorm the file."
+    "description": "Export selected from the file."
+  },
+  "constructor": {
+    "prefix": "cns",
+    "body": "constructor ($1) {\n$1\n}\n",
+    "description": "Create a basic constructor."
   }
 }
