@@ -1,17 +1,42 @@
 {
-  "exportGlobstar": {
+  "export_globstar": {
     "prefix": "exgs",
-    "body": "export * from './$0'\n",
-    "description": "Export with globstar."
+    "description": "Export with globstar.",
+    "body": ["export * from './$0'", "\n"]
   },
-  "exportPartial": {
+  "export_partial": {
     "prefix": "exps",
-    "body": "export { $1 } from './$0'\n",
-    "description": "Export selected from the file."
+    "description": "Export selected from the file.",
+    "body": ["export { $1 } from './$0'", "\n"]
   },
   "constructor": {
     "prefix": "cns",
-    "body": "constructor ($1) {\n$1\n}\n",
-    "description": "Create a basic constructor."
+    "description": "Create a basic constructor.",
+    "body": ["constructor ($1) {", "\t$1", "}", "\n"]
+  },
+  "nestjs_controller": {
+    "prefix": "n-controller",
+    "description": "NestJS Controller",
+    "body": ["import { Controller } from '@nestjs/common';", "", "@Controller()", "export class $1Controller {", "\tconstructor(){}", "", "\t${1}", "}"]
+  },
+  "nestjs_service": {
+    "prefix": "n-service",
+    "description": "NestJS Service",
+    "body": ["import { Injectable } from '@nestjs/common';", "", "@Injectable()", "export class ${0}Service {", "\tconstructor() {}", "\t${1}", "}"]
+  },
+  "nestjs_module": {
+    "prefix": "n-module",
+    "description": "NestJS Module",
+    "body": [
+      "import { Module } from '@nestjs/common';",
+      "",
+      "@Module({",
+      "\timports: [],",
+      "\tcontrollers: [],",
+      "\tproviders: [],",
+      "\texports: []",
+      "})",
+      "export class $1Module {}"
+    ]
   }
 }

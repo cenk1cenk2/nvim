@@ -1,6 +1,6 @@
 {
-  "iferr": {
+  "if_err": {
     "prefix": "ie",
-    "body": "if err != nil {\n  return err$0\n}\n"
+    "body": ["if err != nil {", "return err$0", "}", "\n"]
   }
 }
