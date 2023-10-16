@@ -22,6 +22,12 @@ return {
     -- this value is passed to: https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
     -- memory limit in megabytes or "auto"(basically no limit)
     tsserver_max_memory = "auto",
+    -- CodeLens
+    -- possible values: ("off"|"all"|"implementations_only"|"references_only")
+    code_lens = "all",
+    -- by default code lenses are displayed on all referencable values and for some of you it can
+    -- be too much this option reduce count of them by removing member references from lenses
+    disable_member_code_lens = true,
     -- described below
     tsserver_format_options = {},
     tsserver_file_preferences = {
