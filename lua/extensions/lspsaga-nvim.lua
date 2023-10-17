@@ -20,6 +20,40 @@ function M.config()
         "sagaoutline",
         "sagafinder",
       })
+
+      lvim.lsp.wrapper.code_action = function()
+        vim.cmd("Lspsaga code_action")
+      end
+      lvim.lsp.wrapper.hover = function()
+        if fn.is_extension_enabled("nvim_ufo") then
+          local winid = require("ufo").peekFoldedLinesUnderCursor()
+          if not winid then
+            vim.cmd("Lspsaga hover_doc")
+          end
+        else
+          vim.cmd("Lspsaga hover_doc")
+        end
+      end
+      lvim.lsp.wrapper.rename = function()
+        vim.cmd("Lspsaga rename")
+      end
+      lvim.lsp.wrapper.goto_next = function()
+        vim.cmd("Lspsaga diagnostic_jump_next")
+        -- require("lspsaga.diagnostic").goto_next({ severity = vim.diagnostic.severity.ERROR })
+      end
+      lvim.lsp.wrapper.goto_prev = function()
+        vim.cmd("Lspsaga diagnostic_jump_prev")
+        -- require("lspsaga.diagnostic").goto_prev({ severity = vim.diagnostic.severity.ERROR })
+      end
+      lvim.lsp.wrapper.show_line_diagnostics = function()
+        vim.cmd("Lspsaga show_line_diagnostics")
+      end
+      lvim.lsp.wrapper.incoming_calls = function()
+        vim.cmd("Lspsaga incoming_calls")
+      end
+      lvim.lsp.wrapper.outgoing_calls = function()
+        vim.cmd("Lspsaga outgoing_calls")
+      end
     end,
     setup = function()
       return {
@@ -121,41 +155,6 @@ function M.config()
     end,
     on_setup = function(config)
       require("lspsaga").setup(config.setup)
-    end,
-    on_done = function(_, fn)
-      lvim.lsp.wrapper.code_action = function()
-        vim.cmd("Lspsaga code_action")
-      end
-      lvim.lsp.wrapper.hover = function()
-        if fn.is_extension_enabled("nvim_ufo") then
-          local winid = require("ufo").peekFoldedLinesUnderCursor()
-          if not winid then
-            vim.cmd("Lspsaga hover_doc")
-          end
-        else
-          vim.cmd("Lspsaga hover_doc")
-        end
-      end
-      lvim.lsp.wrapper.rename = function()
-        vim.cmd("Lspsaga rename")
-      end
-      lvim.lsp.wrapper.goto_next = function()
-        vim.cmd("Lspsaga diagnostic_jump_next")
-        -- require("lspsaga.diagnostic").goto_next({ severity = vim.diagnostic.severity.ERROR })
-      end
-      lvim.lsp.wrapper.goto_prev = function()
-        vim.cmd("Lspsaga diagnostic_jump_prev")
-        -- require("lspsaga.diagnostic").goto_prev({ severity = vim.diagnostic.severity.ERROR })
-      end
-      lvim.lsp.wrapper.show_line_diagnostics = function()
-        vim.cmd("Lspsaga show_line_diagnostics")
-      end
-      lvim.lsp.wrapper.incoming_calls = function()
-        vim.cmd("Lspsaga incoming_calls")
-      end
-      lvim.lsp.wrapper.outgoing_calls = function()
-        vim.cmd("Lspsaga outgoing_calls")
-      end
     end,
     keymaps = {
       {

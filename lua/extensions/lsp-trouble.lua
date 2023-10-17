@@ -16,6 +16,14 @@ function M.config()
         "LspTrouble",
         "Trouble",
       })
+
+      lvim.lsp.wrapper.document_diagnostics = function()
+        require("trouble").toggle("document_diagnostics")
+      end
+
+      lvim.lsp.wrapper.workspace_diagnostics = function()
+        require("trouble").toggle("workspace_diagnostics")
+      end
     end,
     setup = {
       action_keys = { -- key mappings for actions in the trouble list
@@ -34,15 +42,6 @@ function M.config()
     },
     on_setup = function(config)
       require("trouble").setup(config.setup)
-    end,
-    on_done = function()
-      lvim.lsp.wrapper.document_diagnostics = function()
-        vim.cmd("TroubleToggle document_diagnostics")
-      end
-
-      lvim.lsp.wrapper.workspace_diagnostics = function()
-        vim.cmd("TroubleToggle workspace_diagnostics")
-      end
     end,
   })
 end
