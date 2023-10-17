@@ -267,7 +267,7 @@ function M.config()
           -- "disabled",    -- netrw left alone, neo-tree does not handle opening dirs
           enable_buffer_write_refresh = true,
           enable_refresh_on_write = false, -- Refresh the tree when a file is written. Only used if `use_libuv_file_watcher` is false.
-          use_libuv_file_watcher = true, -- This will use the OS level file watchers to detect changes
+          use_libuv_file_watcher = false, -- This will use the OS level file watchers to detect changes
           -- instead of relying on nvim autocmd events.
           window = {
             mappings = {
