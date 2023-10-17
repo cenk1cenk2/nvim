@@ -229,8 +229,8 @@ hl.treesitter = {
 hl.lsp = {
   DiagnosticError = { fg = c.red[600] },
   DiagnosticWarning = { fg = c.orange[600] },
-  DiagnosticInformation = { fg = c.cyan[600] },
-  DiagnosticHint = { fg = c.blue[600] },
+  DiagnosticInformation = { fg = c.cyan[300] },
+  DiagnosticHint = { fg = c.blue[300] },
   DiagnosticUnderlineError = { sp = c.red[600], undercurl = true },
   DiagnosticUnderlineWarn = { sp = c.orange[600], undercurl = true },
   DiagnosticUnderlineInfo = {},
