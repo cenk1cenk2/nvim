@@ -76,6 +76,9 @@ return {
     ["<C-a>"] = ":QuickFixToggle<CR>",
     ["<C-y>"] = ":QuickFixToggle<CR>",
 
+    -- redraw
+    ["<C-;>"] = ":redraw<CR>",
+
     -- paste last clipboard register
     -- ["op"] = '"_diw"*P',
 

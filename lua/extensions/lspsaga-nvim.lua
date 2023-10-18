@@ -20,7 +20,8 @@ function M.config()
         "sagaoutline",
         "sagafinder",
       })
-
+    end,
+    on_done = function(_, fn)
       lvim.lsp.wrapper.code_action = function()
         vim.cmd("Lspsaga code_action")
       end
@@ -39,11 +40,9 @@ function M.config()
       end
       lvim.lsp.wrapper.goto_next = function()
         vim.cmd("Lspsaga diagnostic_jump_next")
-        -- require("lspsaga.diagnostic").goto_next({ severity = vim.diagnostic.severity.ERROR })
       end
       lvim.lsp.wrapper.goto_prev = function()
         vim.cmd("Lspsaga diagnostic_jump_prev")
-        -- require("lspsaga.diagnostic").goto_prev({ severity = vim.diagnostic.severity.ERROR })
       end
       lvim.lsp.wrapper.show_line_diagnostics = function()
         vim.cmd("Lspsaga show_line_diagnostics")
