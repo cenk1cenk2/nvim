@@ -2,17 +2,17 @@
   "export_globstar": {
     "prefix": "exgs",
     "description": "Export with globstar.",
-    "body": ["export * from './$0'", "\n"]
+    "body": ["export * from './$0'", ""]
   },
   "export_partial": {
     "prefix": "exps",
     "description": "Export selected from the file.",
-    "body": ["export { $1 } from './$0'", "\n"]
+    "body": ["export { $1 } from './$0'", ""]
   },
   "constructor": {
     "prefix": "cns",
     "description": "Create a basic constructor.",
-    "body": ["constructor ($0) {", "\t$1", "}", "\n"]
+    "body": ["constructor ($0) {", "\t$1", "}", ""]
   },
   "nestjs_controller": {
     "prefix": "n-controller",
