@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "nvim_lsp_file_operations"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     plugin = function()
       return {
         "antosha417/nvim-lsp-file-operations",
