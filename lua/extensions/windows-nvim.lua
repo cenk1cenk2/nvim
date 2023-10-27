@@ -5,7 +5,7 @@ local extension_name = "windows_nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
-    plugin = function(config)
+    plugin = function()
       return {
         "anuvyklack/windows.nvim",
         dependencies = {
@@ -13,6 +13,7 @@ function M.config()
           "anuvyklack/animation.nvim",
         },
         event = "BufReadPost",
+        cmd = { "WindowsEqualize" },
       }
     end,
     setup = function()
