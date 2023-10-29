@@ -27,14 +27,14 @@ function M.config()
         -- This can also be a function that returns the table.
         format_on_save = {
           -- I recommend these options. See :help conform.format for details.
-          lsp_fallback = true,
+          lsp_fallback = M.get_lsp_fallback,
           timeout_ms = lvim.lsp.format_on_save.timeout,
         },
         -- If this is set, Conform will run the formatter asynchronously after save.
         -- It will pass the table to conform.format().
         -- This can also be a function that returns the table.
         format_after_save = {
-          lsp_fallback = true,
+          lsp_fallback = M.get_lsp_fallback,
         },
         -- Set the log level. Use `:ConformInfo` to see the location of the log file.
         log_level = vim.log.levels.ERROR,
@@ -49,6 +49,21 @@ function M.config()
       lvim.lsp.buffer_options.formatexpr = "v:lua.require'conform'.formatexpr()"
     end,
   })
+end
+
+function M.get_lsp_fallback(bufnr)
+  -- if vim.tbl_contains({
+  --   "javascript",
+  --   "typescript",
+  --   "javascriptreact",
+  --   "typescriptreact",
+  --   "vue",
+  --   "svelte",
+  -- }, vim.bo[bufnr].filetype) then
+  --   return "always"
+  -- end
+
+  return true
 end
 
 function M.register_tools(lsp_utils, METHOD)

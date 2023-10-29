@@ -1,16 +1,6 @@
 local M = {}
 local Log = require("lvim.core.log")
 
---- Load the default set of autogroups and autocommands.
-function M.load_defaults()
-  local user_config_file = require("lvim.config"):get_user_config_path()
-
-  if vim.loop.os_uname().version:match("Windows") then
-    -- autocmds require forward slashes even on windows
-    user_config_file = user_config_file:gsub("\\", "/")
-  end
-end
-
 function M.enable_format_on_save()
   vim.api.nvim_create_augroup("lsp_format_on_save", {})
   vim.api.nvim_create_autocmd("BufWritePre", {

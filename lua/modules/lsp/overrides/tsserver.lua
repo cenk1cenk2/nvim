@@ -1,8 +1,12 @@
+local capabilities = require("lvim.lsp").common_capabilities()
+capabilities.textDocument.formatting = false
+
 return {
   override = function(config)
     -- typescript-tools if this is enabled it will override it
     require("typescript-tools").setup(config)
   end,
+  capabilities = capabilities,
   single_file_support = false,
   settings = {
     -- https://github.com/pmizio/typescript-tools.nvim#%EF%B8%8F-configuration

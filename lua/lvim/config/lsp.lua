@@ -83,15 +83,6 @@ return {
       },
     },
   },
-  nlsp_settings = {
-    setup = {
-      config_home = join_paths(get_config_dir(), "lsp-settings"),
-      -- set to false to overwrite schemastore.nvim
-      append_default_schemas = true,
-      ignored_servers = {},
-      loader = "json",
-    },
-  },
   tools = {
     clients = {
       formatters = "",

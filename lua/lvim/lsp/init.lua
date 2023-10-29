@@ -135,10 +135,6 @@ function M.setup(force)
 
   require("lvim.lsp.handlers").setup()
 
-  pcall(function()
-    require("nlspsettings").setup(lvim.lsp.nlsp_settings.setup)
-  end)
-
   xpcall(function()
     require("mason-lspconfig").setup(lvim.lsp.installer.setup)
     require("mason-lspconfig").setup_handlers({

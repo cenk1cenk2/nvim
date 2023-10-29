@@ -19,11 +19,6 @@ function M.config()
           end,
         },
         {
-          "tamago324/nlsp-settings.nvim",
-          init = false,
-          config = false,
-        },
-        {
           "b0o/schemastore.nvim",
           init = false,
           config = false,
