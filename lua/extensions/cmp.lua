@@ -68,7 +68,7 @@ function M.config()
         -- },
         formatting = {
           fields = { "kind", "abbr", "menu" },
-          -- max_width = 60,
+          max_width = 80,
           kind_icons = lvim.ui.icons.kind,
           source_names = {
             nvim_lsp = "LSP",
