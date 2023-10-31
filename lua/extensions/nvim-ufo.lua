@@ -35,32 +35,26 @@ function M.config()
 
           return { "treesitter", "indent" }
         end,
-        fold_virt_text_handler = function(virtText, lnum, endLnum, width, truncate)
-          local newVirtText = {}
-          local suffix = ("  %s %d "):format(lvim.ui.icons.ui.ArrowCircleDown, endLnum - lnum)
-          local sufWidth = vim.fn.strdisplaywidth(suffix)
-          local targetWidth = width - sufWidth
-          local curWidth = 0
-          for _, chunk in ipairs(virtText) do
-            local chunkText = chunk[1]
-            local chunkWidth = vim.fn.strdisplaywidth(chunkText)
-            if targetWidth > curWidth + chunkWidth then
-              table.insert(newVirtText, chunk)
-            else
-              chunkText = truncate(chunkText, targetWidth - curWidth)
-              local hlGroup = chunk[2]
-              table.insert(newVirtText, { chunkText, hlGroup })
-              chunkWidth = vim.fn.strdisplaywidth(chunkText)
-              -- str width returned from truncate() may less than 2nd argument, need padding
-              if curWidth + chunkWidth < targetWidth then
-                suffix = suffix .. (" "):rep(targetWidth - curWidth - chunkWidth)
+        enable_get_fold_virt_text = true,
+        fold_virt_text_handler = function(virt_text, lnum, end_lnum, width, truncate, ctx)
+          local result = {}
+
+          vim.list_extend(result, M.chunker(virt_text, width, truncate))
+          table.insert(result, { ("%s"):format(lvim.ui.icons.ui.Ellipsis) })
+          vim.list_extend(
+            result,
+            vim.tbl_map(function(value)
+              if value[1] then
+                value[1] = value[1]:gsub("^%s+", "")
               end
-              break
-            end
-            curWidth = curWidth + chunkWidth
-          end
-          table.insert(newVirtText, { suffix, "MoreMsg" })
-          return newVirtText
+
+              return value
+            end, M.chunker(ctx.get_fold_virt_text(end_lnum), width, truncate))
+          )
+
+          table.insert(result, { (" 󰁂 %d"):format(end_lnum - lnum), "MoreMsg" })
+
+          return result
         end,
       }
     end,
@@ -115,6 +109,35 @@ function M.config()
       },
     },
   })
+end
+
+function M.chunker(virt_text, target_width, truncate)
+  local result = {}
+  local cursor_width = 0
+  local suffix
+
+  for _, chunk in ipairs(virt_text) do
+    local chunk_text = chunk[1]
+    local chunk_width = vim.fn.strdisplaywidth(chunk_text)
+
+    if target_width > cursor_width + chunk_width then
+      table.insert(result, chunk)
+    else
+      chunk_text = truncate(chunk_text, target_width - cursor_width)
+      local hl_group = chunk[2]
+      table.insert(result, { chunk_text, hl_group })
+      chunk_width = vim.fn.strdisplaywidth(chunk_text)
+      -- str width returned from truncate() may less than 2nd argument, need padding
+      if cursor_width + chunk_width < target_width then
+        suffix = suffix .. (" "):rep(target_width - cursor_width - chunk_width)
+      end
+      break
+    end
+
+    cursor_width = cursor_width + chunk_width
+  end
+
+  return result
 end
 
 return M

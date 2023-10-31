@@ -47,7 +47,7 @@ hl.common = {
   ErrorMsg = { fg = c.red[600], bold = true, bg = c.bg[200] },
   WarningMsg = { fg = c.orange[600], bold = true, bg = c.bg[200] },
   Question = { fg = c.yellow[600] },
-  MoreMsg = { fg = c.cyan[600], bold = true, bg = c.bg[200] },
+  MoreMsg = { fg = c.cyan[600], bold = true },
 
   Search = { bg = c.bg[400] },
   IncSearch = { bg = c.bg[500] },
