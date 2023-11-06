@@ -99,7 +99,7 @@ function M.config()
 
       return {
         source_selector = {
-          winbar = true,
+          winbar = false,
           statusline = false,
           sources = {
             { source = "filesystem", display_name = (" %s Files "):format(lvim.ui.icons.ui.Folder) },
@@ -115,6 +115,7 @@ function M.config()
         enable_diagnostics = false,
         enable_git_status = true,
         enable_modified_markers = true, -- Show markers for files with unsaved changes.sort_case_insensitive = true, -- used when sorting files and directories in the tree
+        open_files_do_not_replace_types = lvim.disabled_filetypes, -- when opening files, do not use windows containing these filetypes or buftypes
         sort_function = nil, -- use a custom function for sorting files and directories in the tree
         -- sort_function = function (a,b)
         --       if a.type == b.type then
@@ -223,12 +224,11 @@ function M.config()
             ["q"] = "close_window",
             ["R"] = "refresh",
             ["?"] = "show_help",
-            ["H"] = "parent",
-            ["HH"] = "prev_sibling",
-            ["LL"] = "next_sibling",
           },
         },
-        nesting_rules = {},
+        nesting_rules = {
+          ["js"] = { "js.map", "d.ts" },
+        },
         filesystem = {
           filtered_items = {
             visible = false, -- when true, they will just be displayed differently than normal items
@@ -265,7 +265,7 @@ function M.config()
           -- "open_current",  -- netrw disabled, opening a directory opens within the
           -- window like netrw would, regardless of window.position
           -- "disabled",    -- netrw left alone, neo-tree does not handle opening dirs
-          enable_buffer_write_refresh = false,
+          enable_buffer_write_refresh = true,
           enable_refresh_on_write = false, -- Refresh the tree when a file is written. Only used if `use_libuv_file_watcher` is false.
           use_libuv_file_watcher = false, -- This will use the OS level file watchers to detect changes
           -- instead of relying on nvim autocmd events.
@@ -300,6 +300,9 @@ function M.config()
               ["gt"] = "telescope_grep",
               ["c"] = "copy_filename",
               ["C"] = "copy_filepath",
+              ["HH"] = "prev_sibling",
+              ["LL"] = "next_sibling",
+              ["H"] = "parent",
             },
           },
           commands = {
@@ -371,7 +374,11 @@ function M.config()
           },
         },
         buffers = {
-          follow_current_file = true, -- This will find and focus the file in the active buffer every
+          follow_current_file = {
+            enabled = false, -- This will find and focus the file in the active buffer every time
+            --               -- the current file is changed while the tree is open.
+            leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+          },
           -- time the current file is changed while the tree is open.
           group_empty_dirs = true, -- when true, empty folders will be grouped together
           show_unloaded = true,
@@ -405,7 +412,7 @@ function M.config()
     end,
     wk = {
       ["E"] = { ":Neotree focus<CR>", "focus filetree" },
-      ["e"] = { ":Neotree focus toggle<CR>", "open filetree" },
+      ["e"] = { ":Neotree toggle<CR>", "open filetree" },
       [","] = { ":Neotree reveal<CR>", "reveal file in filetree" },
       ["."] = { ":Neotree position=float buffers<CR>", "open buffers in filetree" },
       ["-"] = { ":Neotree position=float git_status<CR>", "git files in filetree" },
