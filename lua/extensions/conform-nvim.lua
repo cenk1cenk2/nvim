@@ -127,6 +127,10 @@ function M.extend_tools(conform)
       ["PRETTIERD_DEFAULT_CONFIG"] = vim.fn.expand("~/.config/nvim/utils/linter-config/.prettierrc.json"),
     },
   })
+
+  conform.formatters.golines = vim.tbl_deep_extend("force", require("conform.formatters.golines"), {
+    prepend_args = { "-m", "180" },
+  })
 end
 
 return M
