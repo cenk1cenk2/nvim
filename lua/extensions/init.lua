@@ -92,6 +92,7 @@ local extensions = {
   "typescript-tools-nvim",
   "yaml-companion-nvim",
   "uuid-nvim",
+  "rest-nvim",
 }
 
 function M.config(config)

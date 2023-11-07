@@ -130,6 +130,7 @@ require("utils.setup").fn.append_to_setup("treesitter", {
     "gitignore",
     "graphql",
     "html",
+    "http",
     "vimdoc",
     "java",
     "javascript",
