@@ -11,7 +11,7 @@ function M.config()
         dependencies = {
           { "nvim-lua/plenary.nvim" },
         },
-        build = { "./build.sh" },
+        build = { "lua build.lua nvim-oxi" },
       }
     end,
     configure = function(_, fn)

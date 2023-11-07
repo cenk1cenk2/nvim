@@ -8,6 +8,7 @@
         "/home/cenk/.local/share/nvim/lazy/neodev.nvim/types/nightly",
         "/usr/local/share/nvim/runtime",
         "/home/cenk/.local/share/nvim/lazy/plenary.nvim",
-        "${3rd}/luassert/library"
+        "${3rd}/luassert/library",
+        "${3rd}/luv/library"
     ]
 }
