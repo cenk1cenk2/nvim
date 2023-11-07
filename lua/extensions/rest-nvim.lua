@@ -8,6 +8,8 @@ function M.config()
     plugin = function()
       return {
         "rest-nvim/rest.nvim",
+        -- https://github.com/rest-nvim/rest.nvim/issues/246
+        -- commit = "8b62563",
         requires = { "nvim-lua/plenary.nvim" },
       }
     end,
