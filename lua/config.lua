@@ -131,6 +131,7 @@ require("utils.setup").fn.append_to_setup("treesitter", {
     "graphql",
     "html",
     "http",
+    "hurl",
     "vimdoc",
     "java",
     "javascript",
