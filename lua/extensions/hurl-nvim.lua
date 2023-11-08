@@ -17,7 +17,7 @@ function M.config()
         -- Show debugging info
         debug = false,
         -- Show response in popup or split
-        mode = "split",
+        mode = "popup",
       }
     end,
     on_setup = function(config)
