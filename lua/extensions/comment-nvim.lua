@@ -84,6 +84,7 @@ function M.config()
       { { "gomod" }, "//%s" },
       { { "helm" }, "#%s" },
       { { "javascript", "typescript" }, { "//%s", "/**%s*/" } },
+      { { "hurl" }, "#%s" },
     },
     -- keymaps = {
     --   normal_mode = {
