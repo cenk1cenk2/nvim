@@ -9,7 +9,7 @@ function M.config()
       return {
         "jellydn/hurl.nvim",
         dependencies = { "MunifTanjim/nui.nvim" },
-        cmd = { "HurlRunner", "HurlRunnerAt" },
+        cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunner" },
       }
     end,
     setup = function()
@@ -18,6 +18,23 @@ function M.config()
         debug = false,
         -- Show response in popup or split
         mode = "popup",
+        -- Split settings
+        split_position = "right",
+        split_size = "50%",
+
+        -- Popup settings
+        popup_position = "50%",
+        popup_size = {
+          width = 180,
+          height = 60,
+        },
+        -- Default environment file name
+        env_file = "vars.env",
+        -- Specify formatters for different response types
+        formatters = {
+          json = { "prettierd", "result.json" }, -- Uses jq to format JSON responses
+          html = { "prettierd", "result.html" },
+        },
       }
     end,
     on_setup = function(config)
