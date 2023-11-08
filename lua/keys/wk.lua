@@ -183,12 +183,6 @@ M.mappings = {
   },
 }
 
-M.vmappings = {
-  [M.CATEGORIES.ACTIONS] = M.mappings[M.CATEGORIES.ACTIONS],
-  ["x"] = M.mappings["x"],
-  ["v"] = M.mappings["v"],
-  ["n"] = M.mappings["n"],
-  ["p"] = M.mappings["p"],
-}
+M.vmappings = vim.deepcopy(M.mappings)
 
 return M

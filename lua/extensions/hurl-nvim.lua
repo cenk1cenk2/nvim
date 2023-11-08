@@ -9,7 +9,7 @@ function M.config()
       return {
         "jellydn/hurl.nvim",
         dependencies = { "MunifTanjim/nui.nvim" },
-        cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunner" },
+        cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry" },
       }
     end,
     setup = function()
@@ -32,7 +32,8 @@ function M.config()
         env_file = "vars.env",
         -- Specify formatters for different response types
         formatters = {
-          json = { "prettierd", "result.json" }, -- Uses jq to format JSON responses
+          -- json = { "prettierd", "result.json" },
+          json = { "jq" },
           html = { "prettierd", "result.html" },
         },
       }
@@ -44,12 +45,26 @@ function M.config()
       return {
         [categories.TASKS] = {
           r = {
+            ":HurlRunnerToEntry<CR>",
+            "run hurl to entry",
+          },
+          R = {
             ":HurlRunnerAt<CR>",
             "run hurl under cursor",
           },
-          R = {
+          h = {
             ":HurlRunner<CR>",
-            "run hurl under cursor",
+            "run hurl for all requests",
+          },
+        },
+      }
+    end,
+    wk_v = function(_, categories)
+      return {
+        [categories.TASKS] = {
+          r = {
+            ":HurlRunner<CR>",
+            "run hurl for selected requests",
           },
         },
       }
