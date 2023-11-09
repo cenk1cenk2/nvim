@@ -1,6 +1,6 @@
 {
   "if_err": {
-    "prefix": "ie",
-    "body": ["if err != nil {", "return err$0", "}", "\n"]
+    "prefix": "ierr",
+    "body": ["if err != nil {", "\treturn err$0", "}", "\n"]
   }
 }
