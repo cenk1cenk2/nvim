@@ -5,7 +5,7 @@ local Log = require("lvim.core.log")
 function M.spawn(opts)
   local Job = require("plenary.job")
 
-  Log:debug(("Will run job: %s %s"):format(opts.command, table.concat(opts.args, " ")))
+  Log:debug(("Will run job: %s %s"):format(opts.command, table.concat(opts.args or {}, " ")))
 
   local job = Job:new({
     command = opts.command,

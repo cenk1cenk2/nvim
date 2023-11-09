@@ -56,6 +56,22 @@ function M.config()
             ":HurlRunner<CR>",
             "run hurl for all requests",
           },
+          c = {
+            function()
+              local Log = require("lvim.core.log")
+              local job = require("utils.job")
+
+              local result = job.spawn({
+                command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
+              })
+
+              local generated = result:result()[1]
+
+              Log:info(("Copied generated hurl to clipboard: %s"):format(generated))
+              vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+            end,
+            "curl to hurl",
+          },
         },
       }
     end,
