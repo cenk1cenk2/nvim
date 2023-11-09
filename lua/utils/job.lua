@@ -16,9 +16,7 @@ function M.spawn(opts)
     detached = true,
     on_exit = function(j, code)
       if code ~= 0 then
-        Log:error(("Command %s exited with exit code %s."):format(opts.command, code))
-
-        Log:debug(vim.inspect(j:stderr_result()))
+        Log:error(("Command %s exited with exit code %s: %s"):format(opts.command, code, vim.inspect(j:stderr_result())))
 
         return
       end

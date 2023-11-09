@@ -65,7 +65,7 @@ function M.config()
                 command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
               })
 
-              local generated = result:result()[1]
+              local generated = table.concat(result:result(), "\n")
 
               Log:info(("Copied generated hurl to clipboard: %s"):format(generated))
               vim.fn.setreg(vim.v.register or lvim.system_register, generated)
