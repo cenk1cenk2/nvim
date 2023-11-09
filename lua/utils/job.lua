@@ -29,6 +29,14 @@ function M.spawn(opts)
 
   job:sync(5000)
 
+  if job.code == 0 and opts.on_success then
+    opts.on_success(job)
+  end
+
+  if job.code ~= 0 and opts.on_failure then
+    opts.on_failure(job)
+  end
+
   return job
 end
 

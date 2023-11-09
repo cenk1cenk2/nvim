@@ -61,14 +61,15 @@ function M.config()
               local Log = require("lvim.core.log")
               local job = require("utils.job")
 
-              local result = job.spawn({
+              job.spawn({
                 command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
+                on_success = function(j)
+                  local generated = table.concat(j:result(), "\n")
+
+                  Log:info("Copied generated hurl to clipboard.")
+                  vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+                end,
               })
-
-              local generated = table.concat(result:result(), "\n")
-
-              Log:info(("Copied generated hurl to clipboard: %s"):format(generated))
-              vim.fn.setreg(vim.v.register or lvim.system_register, generated)
             end,
             "curl to hurl",
           },

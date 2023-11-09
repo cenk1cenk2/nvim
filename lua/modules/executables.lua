@@ -38,17 +38,18 @@ function M.run_genpass()
     prompt = "Genpass arguments:",
     default = stored_value,
   }, function(arguments)
-    local result = job.spawn({
+    job.spawn({
       command = "genpass",
       args = vim.split(arguments or {}, " "),
+      on_success = function(j)
+        lvim.store.set_store(store_key, arguments)
+
+        local generated = j:result()[1]
+
+        Log:info(("Copied generated code to clipboard: %s"):format(generated))
+        vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+      end,
     })
-
-    lvim.store.set_store(store_key, arguments)
-
-    local generated = result:result()[1]
-
-    Log:info(("Copied generated code to clipboard: %s"):format(generated))
-    vim.fn.setreg(vim.v.register or lvim.system_register, generated)
   end)
 end
 
