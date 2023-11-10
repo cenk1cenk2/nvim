@@ -226,6 +226,7 @@ function M.config()
           end,
           "find file",
         },
+        ["o"] = { ":Telescope buffers<CR>", "open buffers" },
 
         [categories.FIND] = {
           ["."] = { ":Telescope commands<CR>", "search available commands" },
@@ -279,10 +280,6 @@ function M.config()
 
         [categories.ACTIONS] = {
           f = { ":Telescope filetypes<CR>", "select from filetypes" },
-        },
-
-        [categories.BUFFER] = {
-          p = { ":Telescope buffers<CR>", "open buffers" },
         },
 
         [categories.GIT] = {
