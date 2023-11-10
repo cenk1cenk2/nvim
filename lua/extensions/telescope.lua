@@ -282,7 +282,7 @@ function M.config()
         },
 
         [categories.BUFFER] = {
-          f = { ":Telescope buffers<CR>", "find buffer" },
+          p = { ":Telescope buffers<CR>", "open buffers" },
         },
 
         [categories.GIT] = {
