@@ -93,6 +93,7 @@ local extensions = {
   "yaml-companion-nvim",
   "uuid-nvim",
   "hurl-nvim",
+  "dadbod",
 }
 
 function M.config(config)

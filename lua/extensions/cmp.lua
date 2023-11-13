@@ -88,6 +88,7 @@ function M.config()
             copilot = "CoPi",
             cmdline = "CMD",
             noice_popupmenu = "CMD",
+            ["vim-dadbod-completion"] = "DB",
           },
           duplicates = {
             buffer = 1,
