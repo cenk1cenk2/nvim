@@ -12,6 +12,14 @@ return {
     ["x"] = '"_x',
   },
 
+  {
+    { "v", "vb" },
+
+    -- to blachole
+    ["P"] = '"_dp',
+    ["p"] = '"_dP',
+  },
+
   ---@usage change or add keymappings for insert mode
   {
     { "i" },
@@ -44,7 +52,6 @@ return {
 
     -- close buffer
     ["<C-q>"] = ":BufferClose<CR>",
-    ["<C-Q>"] = ":BufferClose<CR>",
 
     -- disable Ex mode
     ["Q"] = "<Nop>",
@@ -78,15 +85,6 @@ return {
 
     -- redraw
     ["<C-;>"] = ":redraw<CR>",
-
-    -- paste last clipboard register
-    -- ["op"] = '"_diw"*P',
-
-    -- paste last yank register
-    -- ["üp"] = '"_diw"0P',
-
-    -- visual select last word
-    -- ["üü"] = "viw",
   },
 
   ---@usage change or add keymappings for terminal mode
@@ -108,10 +106,6 @@ return {
     -- Better indenting
     ["<"] = "<gv",
     [">"] = ">gv",
-
-    -- dont overwrite while pasting
-    ["P"] = '"_dp',
-    ["p"] = '"_dP',
   },
 
   ---@usage change or add keymappings for visual block mode
@@ -121,9 +115,5 @@ return {
     -- Move current line / block with Alt-j/k ala vscode.
     ["<A-j>"] = ":m '>+1<CR>gv-gv",
     ["<A-k>"] = ":m '<-2<CR>gv-gv",
-
-    -- to blachole
-    ["P"] = '"_dp',
-    ["p"] = '"_dP',
   },
 }
