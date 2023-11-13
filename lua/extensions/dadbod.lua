@@ -35,6 +35,12 @@ function M.config()
     legacy_setup = {
       db_ui_use_nerd_fonts = 1,
       db_ui_save_location = get_data_dir() .. "/" .. "dadbod",
+      db_ui_winwidth = 50,
+      db_ui_table_helpers = {
+        postgresql = {
+          List = 'select * from "{table}"',
+        },
+      },
     },
     autocmds = {
       {
@@ -54,6 +60,10 @@ function M.config()
           ["b"] = {
             ":DBUIToggle<CR>",
             "dadbod",
+          },
+          ["B"] = {
+            "<Plug>(DBUI_JumpToForeignKey)",
+            "dadbod - jump to foreign key",
           },
         },
       }
