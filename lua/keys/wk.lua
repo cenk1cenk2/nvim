@@ -25,11 +25,11 @@ M.mappings = {
   ["x"] = { "<C-W>s", "split below" },
   ["v"] = { "<C-W>v", "split right" },
   ["n"] = { ":nohlsearch<CR>", "no highlight" },
+  ["="] = { "<C-W>=<CR>", "balance open windows" },
 
   -- actions
   [M.CATEGORIES.ACTIONS] = {
     name = "actions",
-    ["="] = { "<C-W>=<CR>", "balance open windows" },
     c = { ":set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20<CR>", "bring back cursor" },
     e = { ":set ff=unix<CR>", "set lf" },
     E = { ":set ff=dos<CR>", "set crlf" },

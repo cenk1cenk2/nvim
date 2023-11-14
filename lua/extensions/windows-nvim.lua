@@ -47,10 +47,8 @@ function M.config()
     },
     wk = function(_, categories)
       return {
-        [categories.ACTIONS] = {
-          ["M"] = { ":WindowsMaximize<CR>", "maximize current window" },
-          ["="] = { ":WindowsEqualize<CR>", "balance all windows" },
-        },
+        ["="] = { ":WindowsEqualize<CR>", "balance all windows" },
+        ["M"] = { ":WindowsMaximize<CR>", "maximize current window" },
       }
     end,
     autocmds = {
