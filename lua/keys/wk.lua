@@ -25,7 +25,6 @@ M.mappings = {
   ["x"] = { "<C-W>s", "split below" },
   ["v"] = { "<C-W>v", "split right" },
   ["n"] = { ":nohlsearch<CR>", "no highlight" },
-  ["="] = { "<C-W>=<CR>", "balance open windows" },
 
   -- actions
   [M.CATEGORIES.ACTIONS] = {
@@ -34,6 +33,7 @@ M.mappings = {
     e = { ":set ff=unix<CR>", "set lf" },
     E = { ":set ff=dos<CR>", "set crlf" },
     l = { ":set nonumber!<CR>", "toggle line numbers" },
+    m = { "<C-W>=<CR>", "balance open windows" },
     r = { ":set norelativenumber!<CR>", "toggle relative line numbers" },
     s = { ":set signcolumn=yes<CR>", "fix sign columns" },
     S = { ":setlocal spell!<CR>", "toggle spell check" },
