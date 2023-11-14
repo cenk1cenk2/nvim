@@ -7,7 +7,9 @@ function M.q_close_autocmd(pattern)
       group = "_buffer_mappings",
       pattern = pattern,
       callback = function(event)
-        vim.keymap.set("n", "q", ":close<CR>", { silent = true, buffer = event.buf })
+        vim.keymap.set("n", "q", function()
+          vim.api.nvim_buf_delete(event.buf, { force = true })
+        end, { silent = true, buffer = event.buf })
       end,
     },
   }
