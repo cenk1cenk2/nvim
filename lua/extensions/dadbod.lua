@@ -12,7 +12,7 @@ function M.config()
       return {
         {
           "tpope/vim-dadbod",
-          cmd = { "DB", "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer" },
+          cmd = { "DB" },
         },
         {
           "kristijanhusak/vim-dadbod-ui",
@@ -58,7 +58,10 @@ function M.config()
       return {
         [categories.TASKS] = {
           ["b"] = {
-            ":DBUIToggle<CR>",
+            function()
+              require("lazy").load({ plugins = { "vim-dadbod" } })
+              vim.cmd([[DBUIToggle]])
+            end,
             "dadbod",
           },
           ["B"] = {
