@@ -9,7 +9,7 @@ function M.config()
       return {
         "jellydn/hurl.nvim",
         dependencies = { "MunifTanjim/nui.nvim" },
-        cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry" },
+        cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry", "HurlToggleMode" },
       }
     end,
     setup = function()
@@ -17,7 +17,7 @@ function M.config()
         -- Show debugging info
         debug = false,
         -- Show response in popup or split
-        mode = "popup",
+        mode = "split",
         -- Split settings
         split_position = "right",
         split_size = "50%",
@@ -55,6 +55,10 @@ function M.config()
           h = {
             ":HurlRunner<CR>",
             "run hurl for all requests",
+          },
+          H = {
+            ":HurlToggleMode<CR>",
+            "toggle hurl.nvim mode",
           },
           c = {
             function()
