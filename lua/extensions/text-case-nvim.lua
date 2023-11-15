@@ -26,7 +26,12 @@ function M.config()
         -- subs
 
         ["gsr"] = {
-          ":Subs",
+          ":Subs ",
+          { desc = "SUBS" },
+        },
+
+        ["gsR"] = {
+          ":'<,'>Subs ",
           { desc = "SUBS" },
         },
 
