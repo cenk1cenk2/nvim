@@ -30,11 +30,6 @@ function M.config()
           { desc = "SUBS" },
         },
 
-        ["gsR"] = {
-          ":'<,'>Subs ",
-          { desc = "SUBS" },
-        },
-
         -- operator
 
         ["gsu"] = {
