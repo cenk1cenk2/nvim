@@ -68,10 +68,10 @@ return {
     ["<C-l>"] = "<C-w>l",
 
     -- Resize with arrows
-    ["<C-M-k>"] = ":resize +2<CR>",
-    ["<C-M-j>"] = ":resize -2<CR>",
-    ["<C-M-h>"] = ":vertical resize -2<CR>",
-    ["<C-M-l>"] = ":vertical resize +2<CR>",
+    ["<C-M-k>"] = ":resize +5<CR>",
+    ["<C-M-j>"] = ":resize -5<CR>",
+    ["<C-M-l>"] = ":vertical resize -5<CR>",
+    ["<C-M-h>"] = ":vertical resize +5<CR>",
 
     -- Move current line / block with Alt-j/k a la vscode.
     ["<A-j>"] = ":m .+1<CR>==",
