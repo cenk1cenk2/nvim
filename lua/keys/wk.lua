@@ -38,6 +38,8 @@ M.mappings = {
     s = { ":set signcolumn=yes<CR>", "fix sign columns" },
     S = { ":setlocal spell!<CR>", "toggle spell check" },
     T = { ":setlocal bufhidden=delete<CR>", "set as temporary buffer" },
+    q = { ":colder<CR>", "quickfix older" },
+    Q = { ":cnewer<CR>", "quickfix newer" },
   },
 
   -- buffer
