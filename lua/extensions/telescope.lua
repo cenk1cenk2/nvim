@@ -166,6 +166,9 @@ function M.config()
               prompt_position = "bottom",
             },
           },
+          oldfiles = {
+            theme = "dropdown",
+          },
           live_grep = {
             -- @usage don't include the filename in the search results
             only_sort_text = true,
@@ -227,6 +230,7 @@ function M.config()
           "find file",
         },
         ["o"] = { ":Telescope buffers<CR>", "open buffers" },
+        ["O"] = { ":Telescope oldfiles<CR>", "search file history" },
 
         [categories.FIND] = {
           ["."] = { ":Telescope commands<CR>", "search available commands" },
@@ -251,7 +255,6 @@ function M.config()
             "dirty fuzzy grep",
           },
           f = { ":Telescope resume<CR>", "resume last search" },
-          o = { ":Telescope oldfiles<CR>", "search file history" },
           g = { ":Telescope grep_string<CR>", "grep string under cursor" },
           j = { ":Telescope jumplist<CR>", "list jumps" },
           s = { ":Telescope spell_suggest<CR>", "spell suggest" },
