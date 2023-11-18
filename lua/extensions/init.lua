@@ -94,6 +94,7 @@ local extensions = {
   "uuid-nvim",
   "hurl-nvim",
   "dadbod",
+  "git-worktree-nvim",
 }
 
 function M.config(config)
