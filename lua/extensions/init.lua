@@ -55,7 +55,7 @@ local extensions = {
   "indent-blankline",
   "octo",
   "diffview",
-  "markdown-preview",
+  "github-preview-nvim",
   "neogen",
   "coc",
   "gitignore-nvim",
