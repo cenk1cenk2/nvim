@@ -44,35 +44,35 @@ function M.config()
         },
       }
     end,
-    configure = function(_, fn)
-      fn.append_to_setup("comment_nvim", {
-        pre_hook = function(ctx)
-          if vim.tbl_contains({ "typescriptreact", "vue", "svelte" }, function(type)
-            return type ~= vim.bo.filetype
-          end) then
-            return
-          end
-
-          local U = require("Comment.utils")
-
-          -- Determine whether to use linewise or blockwise commentstring
-          local type = ctx.ctype == U.ctype.linewise and "__default" or "__multiline"
-
-          -- Determine the location where to calculate commentstring from
-          local location = nil
-          if ctx.ctype == U.ctype.blockwise then
-            location = require("ts_context_commentstring.utils").get_cursor_location()
-          elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
-            location = require("ts_context_commentstring.utils").get_visual_start_location()
-          end
-
-          return require("ts_context_commentstring.internal").calculate_commentstring({
-            key = type,
-            location = location,
-          })
-        end,
-      })
-    end,
+    -- configure = function(_, fn)
+    -- fn.append_to_setup("comment_nvim", {
+    --   pre_hook = function(ctx)
+    --     if vim.tbl_contains({ "typescriptreact", "vue", "svelte" }, function(type)
+    --       return type ~= vim.bo.filetype
+    --     end) then
+    --       return
+    --     end
+    --
+    --     local U = require("Comment.utils")
+    --
+    --     -- Determine whether to use linewise or blockwise commentstring
+    --     local type = ctx.ctype == U.ctype.linewise and "__default" or "__multiline"
+    --
+    --     -- Determine the location where to calculate commentstring from
+    --     local location = nil
+    --     if ctx.ctype == U.ctype.blockwise then
+    --       location = require("ts_context_commentstring.utils").get_cursor_location()
+    --     elseif ctx.cmotion == U.cmotion.v or ctx.cmotion == U.cmotion.V then
+    --       location = require("ts_context_commentstring.utils").get_visual_start_location()
+    --     end
+    --
+    --     return require("ts_context_commentstring.internal").calculate_commentstring({
+    --       key = type,
+    --       location = location,
+    --     })
+    --   end,
+    -- })
+    -- end,
     inject_to_configure = function()
       return {
         parser_config = require("nvim-treesitter.parsers").get_parser_configs(),
@@ -168,7 +168,13 @@ function M.config()
     },
     on_setup = function(config)
       require("nvim-treesitter.configs").setup(config.setup)
+      require("ts_context_commentstring").setup({
+        enable_autocmd = false,
+      })
     end,
+    legacy_setup = {
+      skip_ts_context_commentstring_module = true,
+    },
     on_done = function(config)
       local parser_config = config.inject.parser_config
 
