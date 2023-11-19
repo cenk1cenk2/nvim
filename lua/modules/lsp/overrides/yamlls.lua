@@ -77,6 +77,9 @@ return {
           ["https://json.schemastore.org/pulumi.json"] = {
             "Pulumi.{yml,yaml}",
           },
+          ["https://raw.githubusercontent.com/cenk1cenk2/docker-vizier/main/schema.json"] = {
+            "vizier.{yml,yaml}",
+          },
         },
       },
     },
