@@ -26,7 +26,7 @@ function M.config()
         popup_position = "50%",
         popup_size = {
           width = 180,
-          height = 60,
+          height = 40,
         },
         -- Default environment file name
         env_file = ".env",
