@@ -34,7 +34,7 @@ lvim.lsp.ensure_installed = {
   "eslint-lsp",
   ---- formatters/linters
   "stylua",
-  "eslint_d",
+  -- "eslint_d",
   "markdownlint",
   "markdown-toc",
   "prettierd",

@@ -25,17 +25,19 @@ function M.config()
         -- If this is set, Conform will run the formatter on save.
         -- It will pass the table to conform.format().
         -- This can also be a function that returns the table.
-        format_on_save = {
-          -- I recommend these options. See :help conform.format for details.
-          lsp_fallback = M.get_lsp_fallback,
-          timeout_ms = lvim.lsp.format_on_save.timeout,
-        },
+        -- format_on_save = {
+        --   -- I recommend these options. See :help conform.format for details.
+        --   lsp_fallback = M.get_lsp_fallback(0),
+        --   timeout_ms = lvim.lsp.format_on_save.timeout,
+        -- },
         -- If this is set, Conform will run the formatter asynchronously after save.
         -- It will pass the table to conform.format().
         -- This can also be a function that returns the table.
-        format_after_save = {
-          lsp_fallback = M.get_lsp_fallback,
-        },
+        format_after_save = function(bufnr)
+          return {
+            lsp_fallback = M.get_lsp_fallback(bufnr),
+          }
+        end,
         -- Set the log level. Use `:ConformInfo` to see the location of the log file.
         log_level = vim.log.levels.ERROR,
         -- Conform will notify you when a formatter errors
@@ -52,16 +54,16 @@ function M.config()
 end
 
 function M.get_lsp_fallback(bufnr)
-  -- if vim.tbl_contains({
-  --   "javascript",
-  --   "typescript",
-  --   "javascriptreact",
-  --   "typescriptreact",
-  --   "vue",
-  --   "svelte",
-  -- }, vim.bo[bufnr].filetype) then
-  --   return "always"
-  -- end
+  if vim.tbl_contains({
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact",
+    "vue",
+    "svelte",
+  }, vim.bo[bufnr].filetype) then
+    return "always"
+  end
 
   return true
 end
@@ -87,14 +89,14 @@ function M.register_tools(lsp_utils, METHOD)
     "helm",
   })
 
-  lsp_utils.register_tools(METHOD, "eslint_d", {
-    "javascript",
-    "typescript",
-    "javascriptreact",
-    "typescriptreact",
-    "vue",
-    "svelte",
-  })
+  -- lsp_utils.register_tools(METHOD, "eslint_d", {
+  --   "javascript",
+  --   "typescript",
+  --   "javascriptreact",
+  --   "typescriptreact",
+  --   "vue",
+  --   "svelte",
+  -- })
 
   lsp_utils.register_tools(METHOD, "stylua", {
     "lua",
@@ -131,18 +133,6 @@ function M.extend_tools(conform)
   conform.formatters.golines = vim.tbl_deep_extend("force", require("conform.formatters.golines"), {
     prepend_args = { "-m", "180" },
   })
-
-  conform.formatters.eslint = {
-    meta = {
-      url = "eslint",
-      description = "Eslint run from lsp.",
-    },
-    format = function(self, ctx, lines, callback)
-      vim.cmd([[EslintFixAll]])
-
-      callback(nil, {})
-    end,
-  }
 end
 
 return M

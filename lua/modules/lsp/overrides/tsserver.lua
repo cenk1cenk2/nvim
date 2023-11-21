@@ -1,10 +1,12 @@
-local capabilities = require("lvim.lsp").common_capabilities()
-capabilities.textDocument.formatting = false
-
 return {
   override = function(config)
     -- typescript-tools if this is enabled it will override it
     require("typescript-tools").setup(config)
+  end,
+  on_attach = function(client, bufnr)
+    require("lvim.lsp").common_on_attach(client, bufnr)
+    client.server_capabilities.documentFormattingProvider = false
+    client.server_capabilities.documentRangeFormattingProvider = false
   end,
   capabilities = capabilities,
   single_file_support = false,
