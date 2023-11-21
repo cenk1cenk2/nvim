@@ -131,6 +131,18 @@ function M.extend_tools(conform)
   conform.formatters.golines = vim.tbl_deep_extend("force", require("conform.formatters.golines"), {
     prepend_args = { "-m", "180" },
   })
+
+  conform.formatters.eslint = {
+    meta = {
+      url = "eslint",
+      description = "Eslint run from lsp.",
+    },
+    format = function(self, ctx, lines, callback)
+      vim.cmd([[EslintFixAll]])
+
+      callback(nil, {})
+    end,
+  }
 end
 
 return M
