@@ -248,7 +248,7 @@ function M.config()
             filter = {
               event = "msg_show",
               kind = "",
-              find = "written",
+              -- find = "written",
             },
             opts = { skip = true },
           },
