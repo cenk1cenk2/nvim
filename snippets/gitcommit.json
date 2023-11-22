@@ -2,6 +2,8 @@
   "skip_ci": {
     "prefix": "sci",
     "description": "Skip CI actions on common pipeline executors.",
-    "body": ["[skip-ci]"]
+    "body": [
+      "[skip-ci]"
+    ]
   }
 }
