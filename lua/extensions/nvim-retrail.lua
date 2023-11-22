@@ -29,9 +29,9 @@ function M.config()
         },
         -- Trim on write behaviour.
         trim = {
-          auto = true,
+          auto = false,
           -- Trailing whitespace as highlighted.
-          whitespace = true,
+          whitespace = false,
           -- Final blank (i.e. whitespace only) lines.
           blanklines = false,
         },

@@ -70,6 +70,14 @@ function M.get_lsp_fallback(bufnr)
 end
 
 function M.register_tools(lsp_utils, METHOD)
+  lsp_utils.register_tools(METHOD, "trim_whitespace", {
+    "*",
+  })
+
+  lsp_utils.register_tools(METHOD, "trim_multiple_newlines", {
+    "*",
+  })
+
   lsp_utils.register_tools(METHOD, "prettierd", {
     "javascript",
     "typescript",
@@ -134,6 +142,15 @@ function M.extend_tools(conform)
   conform.formatters.golines = vim.tbl_deep_extend("force", require("conform.formatters.golines"), {
     prepend_args = { "-m", "180" },
   })
+
+  conform.formatters.trim_multiple_newlines = {
+    meta = {
+      url = "https://www.gnu.org/software/gawk/manual/gawk.html",
+      description = "Trim multiple new lines with awk.",
+    },
+    command = "awk",
+    args = { "!NF {if (++n <= 1) print; next}; {n=0;print}" },
+  }
 end
 
 return M
