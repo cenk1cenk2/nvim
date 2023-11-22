@@ -231,10 +231,10 @@ function M.config()
         },
         ["o"] = { ":Telescope buffers<CR>", "open buffers" },
         ["O"] = { ":Telescope oldfiles<CR>", "search file history" },
+        [":"] = { ":Telescope command_history<CR>", "search command history" },
 
         [categories.FIND] = {
           ["."] = { ":Telescope commands<CR>", "search available commands" },
-          [":"] = { ":Telescope command_history<CR>", "search command history" },
           A = { ":Telescope builtin<CR>", "telescope list builtin finders" },
           b = {
             function()
