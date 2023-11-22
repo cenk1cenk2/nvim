@@ -93,11 +93,45 @@ return {
       linters = {},
     },
     list_registered = {
-      formatters = function(ft)
-        return lvim.lsp.tools.by_ft.formatters[ft] or {}
+      default = {
+        formatters = function(bufnr)
+          local ft = vim.bo[bufnr].ft
+          local tools = {}
+
+          if lvim.lsp.tools.by_ft.formatters["*"] then
+            vim.list_extend(tools, lvim.lsp.tools.by_ft.formatters["*"])
+          end
+
+          if lvim.lsp.tools.by_ft.formatters[ft] ~= nil then
+            vim.list_extend(tools, lvim.lsp.tools.by_ft.formatters[ft])
+          elseif lvim.lsp.tools.by_ft.formatters["_"] ~= nil then
+            vim.list_extend(tools, lvim.lsp.tools.by_ft.formatters["_"])
+          end
+
+          return tools
+        end,
+        linters = function(bufnr)
+          local ft = vim.bo[bufnr].ft
+          local tools = {}
+
+          if lvim.lsp.tools.by_ft.linters["*"] then
+            vim.list_extend(tools, lvim.lsp.tools.by_ft.linters["*"])
+          end
+
+          if lvim.lsp.tools.by_ft.linters[ft] ~= nil then
+            vim.list_extend(tools, lvim.lsp.tools.by_ft.linters[ft])
+          else
+            vim.list_extend(tools, lvim.lsp.tools.by_ft.linters["_"])
+          end
+
+          return tools
+        end,
+      },
+      formatters = function(bufnr)
+        return lvim.lsp.tools.list_registered.default.formatters(bufnr)
       end,
-      linters = function(ft)
-        return lvim.lsp.tools.by_ft.linters[ft] or {}
+      linters = function(bufnr)
+        return lvim.lsp.tools.list_registered.default.linters(bufnr)
       end,
     },
   },

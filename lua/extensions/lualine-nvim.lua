@@ -138,21 +138,22 @@ function M.config()
         },
         lsp = {
           function(msg)
+            local bufnr = vim.api.nvim_get_current_buf()
+
             local buf_clients = vim.tbl_map(function(client)
               return client.name
-            end, vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() }))
-
-            local ft = vim.bo.filetype
+            end, vim.lsp.get_clients({ bufnr = bufnr }))
 
             -- add formatter
             local message = { table.concat(buf_clients or { lvim.ui.icons.ui.Close }, ", ") }
 
-            local supported_formatters = lvim.lsp.tools.list_registered.formatters(ft)
-            local supported_linters = lvim.lsp.tools.list_registered.linters(ft)
+            local supported_linters = lvim.lsp.tools.list_registered.linters(bufnr)
 
             if supported_linters and not vim.tbl_isempty(supported_linters) then
               vim.list_extend(message, { ("%s %s"):format(lvim.ui.icons.ui.DoubleChevronRight, table.concat(supported_linters, ", ")) })
             end
+
+            local supported_formatters = lvim.lsp.tools.list_registered.formatters(bufnr)
 
             if supported_formatters and not vim.tbl_isempty(supported_formatters) then
               vim.list_extend(message, { ("%s %s"):format(lvim.ui.icons.ui.DoubleChevronRight, table.concat(supported_formatters, ", ")) })
@@ -167,7 +168,7 @@ function M.config()
         progress = { "progress", cond = conditions.hide_in_width, color = {} },
         ff = {
           function()
-            local ff = vim.api.nvim_buf_get_option(0, "ff"):upper()
+            local ff = vim.bo.ff:upper()
 
             if ff == "UNIX" then
               return lvim.ui.icons.misc.Linux
@@ -182,12 +183,12 @@ function M.config()
         },
         spaces = {
           function()
-            if not vim.api.nvim_buf_get_option(0, "expandtab") then
-              return ("%s%s"):format(lvim.ui.icons.ui.Tab, vim.api.nvim_buf_get_option(0, "tabstop"))
+            if not vim.bo.expandtab then
+              return ("%s%s"):format(lvim.ui.icons.ui.Tab, vim.bo.tabstop)
             end
-            local size = vim.api.nvim_buf_get_option(0, "shiftwidth")
+            local size = vim.bo.shiftwidth
             if size == 0 then
-              size = vim.api.nvim_buf_get_option(0, "tabstop")
+              size = vim.bo.tabstop
             end
             return ("%s%s"):format(lvim.ui.icons.ui.BoldLineLeft, size)
           end,

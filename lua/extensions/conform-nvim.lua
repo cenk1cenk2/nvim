@@ -50,6 +50,35 @@ function M.config()
     end,
     on_done = function()
       lvim.lsp.buffer_options.formatexpr = "v:lua.require'conform'.formatexpr()"
+
+      lvim.lsp.tools.list_registered.formatters = function(bufnr)
+        local formatters = lvim.lsp.tools.list_registered.default.formatters(bufnr)
+
+        if M.get_lsp_fallback(bufnr) then
+          local lsp = vim.tbl_filter(function(client)
+            if client.server_capabilities.documentFormattingProvider == true then
+              return true
+            end
+
+            return false
+          end, vim.lsp.get_clients({ bufnr = bufnr }))
+
+          vim.list_extend(
+            formatters,
+            vim.tbl_map(function(client)
+              return ("%s [lsp]"):format(client.name)
+            end, lsp)
+          )
+        end
+
+        return vim.tbl_filter(function(formatter)
+          if vim.list_contains({ "trim_multiple_newlines", "trim_whitespace", "trim_whitespace" }, formatter) then
+            return false
+          end
+
+          return true
+        end, formatters)
+      end
     end,
   })
 end
@@ -76,6 +105,11 @@ function M.register_tools(lsp_utils, METHOD)
 
   lsp_utils.register_tools(METHOD, "trim_multiple_newlines", {
     "*",
+  })
+
+  lsp_utils.register_tools(METHOD, "injected", {
+    "hurl",
+    "markdown",
   })
 
   lsp_utils.register_tools(METHOD, "prettierd", {
