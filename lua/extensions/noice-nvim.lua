@@ -244,6 +244,21 @@ function M.config()
             },
             opts = { skip = true },
           },
+          {
+            filter = {
+              event = "msg_show",
+              kind = "",
+              find = "written",
+            },
+            opts = { skip = true },
+          },
+          {
+            view = "notify",
+            filter = {
+              find = "Format request failed, no matching language servers.",
+            },
+            opts = { skip = true },
+          },
           -- {
           --   view = "notify",
           --   filter = {
