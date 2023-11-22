@@ -54,7 +54,8 @@ function M.config()
       lvim.lsp.tools.list_registered.formatters = function(bufnr)
         local formatters = lvim.lsp.tools.list_registered.default.formatters(bufnr)
 
-        if M.get_lsp_fallback(bufnr) then
+        local lsp_fallback = M.get_lsp_fallback(bufnr)
+        if lsp_fallback == true and #formatters == 0 or lsp_fallback == 'always' then
           local lsp = vim.tbl_filter(function(client)
             if client.server_capabilities.documentFormattingProvider == true then
               return true

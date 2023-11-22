@@ -22,6 +22,8 @@ function M.init()
   end
 
   vim.opt.rtp:prepend(M.plugin_manager_dir)
+
+  vim.cmd.packadd("cfilter")
 end
 
 function M.load()

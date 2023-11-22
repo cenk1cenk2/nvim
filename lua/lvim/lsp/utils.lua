@@ -116,12 +116,11 @@ end
 ---@param client table client attached to a buffer
 ---@return boolean if client matches
 function M.format_filter(client)
-  local ft = vim.bo.filetype
-  local available_formatters = lvim.lsp.tools.list_registered.formatters(ft)
+  -- local available_formatters = lvim.lsp.tools.list_registered.formatters(0)
 
-  if #available_formatters > 0 then
-    return client.name == lvim.lsp.tools.clients[M.METHODS.FORMATTER]
-  elseif client.supports_method("textDocument/formatting") then
+  -- if #available_formatters > 0 then
+  --   return client.name == lvim.lsp.tools.clients[M.METHODS.FORMATTER]
+  if client.supports_method("textDocument/formatting") then
     return true
   end
 
