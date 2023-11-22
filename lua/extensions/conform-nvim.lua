@@ -108,6 +108,10 @@ function M.register_tools(lsp_utils, METHOD)
   -- })
 
   lsp_utils.register_tools(METHOD, "stylua", {
+    "markdown-toc",
+  })
+
+  lsp_utils.register_tools(METHOD, "stylua", {
     "lua",
   })
 
@@ -133,17 +137,21 @@ function M.register_tools(lsp_utils, METHOD)
 end
 
 function M.extend_tools(conform)
-  conform.formatters.prettierd = vim.tbl_deep_extend("force", require("conform.formatters.prettierd"), {
+  conform.formatters["prettierd"] = vim.tbl_deep_extend("force", require("conform.formatters.prettierd"), {
     env = {
       ["PRETTIERD_DEFAULT_CONFIG"] = vim.fn.expand("~/.config/nvim/utils/linter-config/.prettierrc.json"),
     },
   })
 
-  conform.formatters.golines = vim.tbl_deep_extend("force", require("conform.formatters.golines"), {
+  conform.formatters["markdown-toc"] = vim.tbl_deep_extend("force", require("conform.formatters.markdown-toc"), {
+    prepend_args = { "--bullets='-'" },
+  })
+
+  conform.formatters["golines"] = vim.tbl_deep_extend("force", require("conform.formatters.golines"), {
     prepend_args = { "-m", "180" },
   })
 
-  conform.formatters.trim_multiple_newlines = {
+  conform.formatters["trim_multiple_newlines"] = {
     meta = {
       url = "https://www.gnu.org/software/gawk/manual/gawk.html",
       description = "Trim multiple new lines with awk.",

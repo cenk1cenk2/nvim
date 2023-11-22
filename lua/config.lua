@@ -36,7 +36,6 @@ lvim.lsp.ensure_installed = {
   "stylua",
   -- "eslint_d",
   "markdownlint",
-  "markdown-toc",
   "prettierd",
   -- "misspell",
   "shfmt",
