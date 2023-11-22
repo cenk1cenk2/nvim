@@ -37,10 +37,10 @@ function M.config()
           swap = {
             enable = true,
             swap_previous = {
-              ["HHH"] = "@parameter.inner",
+              ["HH"] = "@parameter.inner",
             },
             swap_next = {
-              ["LLL"] = "@parameter.inner",
+              ["LL"] = "@parameter.inner",
             },
           },
           move = {
