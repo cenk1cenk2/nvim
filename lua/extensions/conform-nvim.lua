@@ -55,7 +55,7 @@ function M.config()
         local formatters = lvim.lsp.tools.list_registered.default.formatters(bufnr)
 
         local lsp_fallback = M.get_lsp_fallback(bufnr)
-        if lsp_fallback == true and #formatters == 0 or lsp_fallback == 'always' then
+        if lsp_fallback == true and #formatters == 0 or lsp_fallback == "always" then
           local lsp = vim.tbl_filter(function(client)
             if client.server_capabilities.documentFormattingProvider == true then
               return true
@@ -86,13 +86,13 @@ end
 
 function M.get_lsp_fallback(bufnr)
   if vim.tbl_contains({
-    "javascript",
-    "typescript",
-    "javascriptreact",
-    "typescriptreact",
-    "vue",
-    "svelte",
-  }, vim.bo[bufnr].filetype) then
+        "javascript",
+        "typescript",
+        "javascriptreact",
+        "typescriptreact",
+        "vue",
+        "svelte",
+      }, vim.bo[bufnr].filetype) then
     return "always"
   end
 
