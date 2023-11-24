@@ -19,6 +19,10 @@ function M.config()
         -- Which query to use for finding delimiters
         query = {
           [""] = "rainbow-delimiters",
+          jsx = "rainbow-parens",
+          tsx = "rainbow-parens",
+          vue = "rainbow-parens",
+          html = "",
         },
         -- Highlight the entire buffer all at once
         strategy = {
