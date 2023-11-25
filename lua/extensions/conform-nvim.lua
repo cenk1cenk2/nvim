@@ -112,6 +112,7 @@ function M.register_tools(lsp_utils, METHOD)
     "hurl",
     "markdown",
     "helm",
+    "gotmpl",
   })
 
   lsp_utils.register_tools(METHOD, "prettierd", {
