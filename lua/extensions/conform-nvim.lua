@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "stevearc/conform.nvim",
-        event = "BufReadPost",
+        event = "BufWritePre",
       }
     end,
     setup = function()
@@ -86,13 +86,13 @@ end
 
 function M.get_lsp_fallback(bufnr)
   if vim.tbl_contains({
-        "javascript",
-        "typescript",
-        "javascriptreact",
-        "typescriptreact",
-        "vue",
-        "svelte",
-      }, vim.bo[bufnr].filetype) then
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact",
+    "vue",
+    "svelte",
+  }, vim.bo[bufnr].filetype) then
     return "always"
   end
 
