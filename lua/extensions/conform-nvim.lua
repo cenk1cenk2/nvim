@@ -111,6 +111,7 @@ function M.register_tools(lsp_utils, METHOD)
   lsp_utils.register_tools(METHOD, "injected", {
     "hurl",
     "markdown",
+    "helm",
   })
 
   lsp_utils.register_tools(METHOD, "prettierd", {
@@ -130,7 +131,6 @@ function M.register_tools(lsp_utils, METHOD)
     "css",
     "markdown",
     "graphql",
-    "helm",
   })
 
   -- lsp_utils.register_tools(METHOD, "eslint_d", {
