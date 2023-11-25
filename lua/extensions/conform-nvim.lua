@@ -25,20 +25,20 @@ function M.config()
         -- If this is set, Conform will run the formatter on save.
         -- It will pass the table to conform.format().
         -- This can also be a function that returns the table.
-        -- format_on_save = function(bufnr)
-        --   return {
-        --     lsp_fallback = M.get_lsp_fallback(bufnr),
-        --     timeout_ms = lvim.lsp.format_on_save.timeout,
-        --   }
-        -- end,
+        format_on_save = function(bufnr)
+          return {
+            lsp_fallback = M.get_lsp_fallback(bufnr),
+            timeout_ms = lvim.lsp.format_on_save.timeout,
+          }
+        end,
         -- If this is set, Conform will run the formatter asynchronously after save.
         -- It will pass the table to conform.format().
         -- This can also be a function that returns the table.
-        format_after_save = function(bufnr)
-          return {
-            lsp_fallback = M.get_lsp_fallback(bufnr),
-          }
-        end,
+        -- format_after_save = function(bufnr)
+        --   return {
+        --     lsp_fallback = M.get_lsp_fallback(bufnr),
+        --   }
+        -- end,
         -- Set the log level. Use `:ConformInfo` to see the location of the log file.
         log_level = vim.log.levels.ERROR,
         -- Conform will notify you when a formatter errors
