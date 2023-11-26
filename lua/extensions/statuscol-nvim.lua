@@ -8,6 +8,7 @@ function M.config()
     plugin = function()
       return {
         "luukvbaal/statuscol.nvim",
+        branch = "0.10",
         event = "BufReadPost",
       }
     end,
