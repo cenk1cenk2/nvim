@@ -190,7 +190,8 @@ function M.config()
       return {
         [categories.TREESITTER] = {
           i = { ":TSConfigInfo<CR>", "treesitter info" },
-          k = { ":Inspect<CR>", "inspect color scheme" },
+          k = { ":Inspect<CR>", "inspect node" },
+          K = { ":InspectTree<CR>", "inspect tree" },
           u = { ":TSUpdate<CR>", "update installed treesitter packages" },
           U = { ":TSUninstall all<CR>", "uninstall all treesitter packages" },
           R = {
