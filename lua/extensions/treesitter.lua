@@ -150,7 +150,7 @@ function M.config()
           files = { "src/parser.c" },
         },
         filetype = "gotmpl",
-        used_by = { "gotmpl" },
+        used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl", "yaml" },
       },
       -- jinja = {
       --   install_info = {
