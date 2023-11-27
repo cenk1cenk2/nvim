@@ -111,7 +111,6 @@ function M.register_tools(lsp_utils, METHOD)
   lsp_utils.register_tools(METHOD, "injected", {
     "hurl",
     "markdown",
-    "helm",
     "gotmpl",
   })
 

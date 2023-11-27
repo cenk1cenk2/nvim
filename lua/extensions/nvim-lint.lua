@@ -47,7 +47,7 @@ end
 function M.register_tools(lsp_utils, METHOD)
   lsp_utils.register_tools(METHOD, "shellcheck", { "sh", "bash", "zsh" })
   lsp_utils.register_tools(METHOD, "hadolint", { "dockerfile" })
-  lsp_utils.register_tools(METHOD, "cspell", { "markdown", "text", "gitcommit", "" })
+  lsp_utils.register_tools(METHOD, "cspell", { "markdown", "text", "gitcommit" })
   lsp_utils.register_tools(METHOD, "proto", { "protolint" })
   lsp_utils.register_tools(METHOD, "tfsec", { "terraform", "tfvars" })
   lsp_utils.register_tools(METHOD, "protolint", { "proto" })
