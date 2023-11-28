@@ -28,6 +28,7 @@ lvim.lsp.ensure_installed = {
   "prisma-language-server",
   "prosemd-lsp",
   "taplo",
+  "ruff-lsp",
   "docker-compose-language-service",
   "helm-ls",
   -- "efm",
