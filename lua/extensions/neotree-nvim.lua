@@ -10,7 +10,7 @@ function M.config()
         "nvim-neo-tree/neo-tree.nvim",
         dependencies = {
           "nvim-lua/plenary.nvim",
-          "kyazdani42/nvim-web-devicons",
+          "nvim-tree/nvim-web-devicons",
           "MunifTanjim/nui.nvim",
           "s1n7ax/nvim-window-picker",
         },
