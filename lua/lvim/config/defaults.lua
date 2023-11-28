@@ -53,6 +53,12 @@ lvim = {
     "prompt",
   },
 
+  disabled_buffer_types = {
+    "terminal",
+    "prompt",
+    "quickfix",
+  },
+
   keys = {},
   extensions = {},
   plugins = {},

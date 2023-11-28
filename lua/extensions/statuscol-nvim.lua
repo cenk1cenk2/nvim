@@ -30,7 +30,7 @@ function M.config()
         relculright = true, -- whether to right-align the cursor line number with 'relativenumber' set
         -- Builtin 'statuscolumn' options
         ft_ignore = lvim.disabled_filetypes, -- lua table with filetypes for which 'statuscolumn' will be unset
-        bt_ignore = nil, -- lua table with 'buftype' values for which 'statuscolumn' will be unset
+        bt_ignore = lvim.disabled_buffer_types, -- lua table with 'buftype' values for which 'statuscolumn' will be unset
         -- Default segments (fold -> sign -> line number + separator), explained below
         segments = {
           -- { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
