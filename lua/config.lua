@@ -31,7 +31,7 @@ lvim.lsp.ensure_installed = {
   "ruff-lsp",
   "docker-compose-language-service",
   "helm-ls",
-  -- "efm",
+  "typos-lsp",
   "eslint-lsp",
   ---- formatters/linters
   "stylua",
@@ -52,7 +52,7 @@ lvim.lsp.ensure_installed = {
   "golangci-lint",
   "shellharden",
   "beautysh",
-  "cspell",
+  -- "cspell",
   -- "checkmake",
   -- "revive",
   -- "rustfmt",
