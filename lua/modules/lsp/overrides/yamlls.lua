@@ -32,7 +32,7 @@ return {
     },
     settings = {
       flags = {
-        debounce_text_changes = 150,
+        debounce_text_changes = 50,
       },
       redhat = { telemetry = { enabled = false } },
       yaml = {
