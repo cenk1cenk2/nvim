@@ -410,13 +410,21 @@ function M.config()
     on_setup = function(config)
       require("neo-tree").setup(config.setup)
     end,
-    wk = {
-      ["E"] = { ":Neotree focus<CR>", "focus filetree" },
-      ["e"] = { ":Neotree toggle<CR>", "open filetree" },
-      [","] = { ":Neotree reveal<CR>", "reveal file in filetree" },
-      ["."] = { ":Neotree position=float buffers<CR>", "open buffers in filetree" },
-      ["-"] = { ":Neotree position=float git_status<CR>", "git files in filetree" },
-    },
+    wk = function(_, categories)
+      return {
+        ["E"] = { ":Neotree focus<CR>", "focus filetree" },
+        ["e"] = { ":Neotree toggle<CR>", "open filetree" },
+        [","] = { ":Neotree reveal<CR>", "reveal file in filetree" },
+        ["."] = { ":Neotree position=float buffers<CR>", "open buffers in filetree" },
+        ["-"] = { ":Neotree position=float git_status<CR>", "git files in filetree" },
+        [categories.LSP] = {
+          o = {
+            ":Neotree source=document_symbols right toggle",
+            "toggle outline",
+          },
+        },
+      }
+    end,
   })
 end
 

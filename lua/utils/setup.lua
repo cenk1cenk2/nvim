@@ -5,13 +5,12 @@ local keys_which_key = require("keys.wk")
 
 ---
 ---@param mappings table
-function M.load_wk_mappings(mappings, mode)
+function M.load_wk_mappings(mappings, mode, config)
   if lvim.store.get_store(require("extensions.which-key").store_registered_key) then
-    local config
     if mode == "v" then
-      config = require("extensions.which-key").vopts
+      config = vim.tbl_deep_extend("force", config or {}, require("extensions.which-key").vopts)
     else
-      config = require("extensions.which-key").opts
+      config = vim.tbl_deep_extend("force", config or {}, require("extensions.which-key").opts)
     end
 
     vim.schedule(function()

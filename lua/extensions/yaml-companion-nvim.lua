@@ -14,16 +14,33 @@ function M.config()
     on_done = function()
       require("telescope").load_extension("yaml_schema")
     end,
-    wk = function(_, categories)
+    autocmds = function()
+      local categories = require("keys.wk").CATEGORIES
+
       return {
-        [categories.ACTIONS] = {
-          ["F"] = {
-            ["y"] = {
-              function()
-                require("telescope").extensions.yaml_schema.yaml_schema()
-              end,
-              "select yaml schema",
-            },
+        {
+          "FileType",
+          {
+            group = "__extensions",
+            pattern = "yaml",
+            callback = function(event)
+              require("utils.setup").load_wk_mappings(
+                {
+                  [categories.ACTIONS] = {
+                    ["F"] = {
+                      function()
+                        return require("telescope").extensions.yaml_schema.yaml_schema()
+                      end,
+                      "select yaml schema",
+                    },
+                  },
+                },
+                nil,
+                {
+                  buffer = event.buf,
+                }
+              )
+            end,
           },
         },
       }
