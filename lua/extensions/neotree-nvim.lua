@@ -102,9 +102,9 @@ function M.config()
           winbar = false,
           statusline = false,
           sources = {
-            { source = "filesystem",       display_name = (" %s Files "):format(lvim.ui.icons.ui.Folder) },
-            { source = "buffers",          display_name = (" %s Buffers "):format(lvim.ui.icons.ui.File) },
-            { source = "git_status",       display_name = (" %s Git "):format(lvim.ui.icons.ui.Git) },
+            { source = "filesystem", display_name = (" %s Files "):format(lvim.ui.icons.ui.Folder) },
+            { source = "buffers", display_name = (" %s Buffers "):format(lvim.ui.icons.ui.File) },
+            { source = "git_status", display_name = (" %s Git "):format(lvim.ui.icons.ui.Git) },
             { source = "document_symbols", display_name = (" %s Symbols "):format(lvim.ui.icons.kind.Function) },
           },
         },
@@ -114,9 +114,9 @@ function M.config()
         -- https://github.com/nvim-neo-tree/neo-tree.nvim/issues/338
         enable_diagnostics = false,
         enable_git_status = true,
-        enable_modified_markers = true,                            -- Show markers for files with unsaved changes.sort_case_insensitive = true, -- used when sorting files and directories in the tree
+        enable_modified_markers = true, -- Show markers for files with unsaved changes.sort_case_insensitive = true, -- used when sorting files and directories in the tree
         open_files_do_not_replace_types = lvim.disabled_filetypes, -- when opening files, do not use windows containing these filetypes or buftypes
-        sort_function = nil,                                       -- use a custom function for sorting files and directories in the tree
+        sort_function = nil, -- use a custom function for sorting files and directories in the tree
         -- sort_function = function (a,b)
         --       if a.type == b.type then
         --           return a.path > b.path
@@ -254,12 +254,12 @@ function M.config()
             },
           },
           follow_current_file = {
-            enabled = false,         -- This will find and focus the file in the active buffer every time
+            enabled = false, -- This will find and focus the file in the active buffer every time
             --               -- the current file is changed while the tree is open.
             leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
           },
           -- time the current file is changed while the tree is open.
-          group_empty_dirs = false,               -- when true, empty folders will be grouped together
+          group_empty_dirs = false, -- when true, empty folders will be grouped together
           hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
           -- in whatever position is specified in window.position
           -- "open_current",  -- netrw disabled, opening a directory opens within the
@@ -267,7 +267,7 @@ function M.config()
           -- "disabled",    -- netrw left alone, neo-tree does not handle opening dirs
           enable_buffer_write_refresh = true,
           enable_refresh_on_write = false, -- Refresh the tree when a file is written. Only used if `use_libuv_file_watcher` is false.
-          use_libuv_file_watcher = false,  -- This will use the OS level file watchers to detect changes
+          use_libuv_file_watcher = false, -- This will use the OS level file watchers to detect changes
           -- instead of relying on nvim autocmd events.
           window = {
             mappings = {
@@ -375,7 +375,7 @@ function M.config()
         },
         buffers = {
           follow_current_file = {
-            enabled = false,         -- This will find and focus the file in the active buffer every time
+            enabled = false, -- This will find and focus the file in the active buffer every time
             --               -- the current file is changed while the tree is open.
             leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
           },
@@ -415,8 +415,10 @@ function M.config()
         ["E"] = { ":Neotree focus<CR>", "focus filetree" },
         ["e"] = { ":Neotree toggle<CR>", "open filetree" },
         [","] = { ":Neotree reveal<CR>", "reveal file in filetree" },
-        ["."] = { ":Neotree position=float buffers<CR>", "open buffers in filetree" },
-        ["-"] = { ":Neotree position=float git_status<CR>", "git files in filetree" },
+        ["."] = { ":Neotree position=right buffers toggle<CR>", "open buffers in filetree" },
+        [categories.GIT] = {
+          ["e"] = { ":Neotree position=right git_status toggle<CR>", "git files in filetree" },
+        },
         [categories.LSP] = {
           o = {
             ":Neotree source=document_symbols right toggle<CR>",
