@@ -12,11 +12,7 @@ function M.config()
     end,
     setup = function()
       return {
-        -- on_substitute = function(event)
-        --   if config.inject.yanky ~= nil then
-        --     config.inject.yanky.init_ring("p", event.register, event.count, event.vmode:match "[vV�]")
-        --   end
-        -- end,
+        on_substitute = require("yanky.integration").substitute(),
         yank_substitued_text = false,
         range = {
           prefix = "s",

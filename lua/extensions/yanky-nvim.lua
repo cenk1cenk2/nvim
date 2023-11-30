@@ -28,6 +28,7 @@ function M.config()
           history_length = 10,
           storage = "shada",
           sync_with_numbered_registers = true,
+          update_register_on_cycle = true,
         },
         system_clipboard = {
           sync_with_ring = true,
@@ -151,6 +152,19 @@ function M.config()
               yanky.put(yanky.type.PUT_BEFORE, true, cb)
             end,
             desc = "yanky put before",
+          },
+        },
+
+        {
+          { "n", "v", "x", "t" },
+
+          ["gp"] = {
+            "<Plug>(YankyPutAfterCharwise)",
+            "unconditional paste",
+          },
+          ["gP"] = {
+            "<Plug>(YankyPutBeforeCharwise)",
+            "unconditional paste before",
           },
         },
       }

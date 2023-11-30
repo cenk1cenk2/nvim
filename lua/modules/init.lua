@@ -11,7 +11,6 @@ local modules = {
   "lsp-setup",
   "telescope",
   "unimpaired",
-  "unconditional-paste",
   "scratch",
 }
 
