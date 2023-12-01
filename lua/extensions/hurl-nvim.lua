@@ -10,6 +10,7 @@ function M.config()
         "jellydn/hurl.nvim",
         dependencies = { "MunifTanjim/nui.nvim" },
         cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry", "HurlToggleMode", "HurlSetEnvFile" },
+        ft = { "hurl" },
       }
     end,
     setup = function()
@@ -46,6 +47,29 @@ function M.config()
         [categories.TASKS] = {
           r = {
             e = {
+              function()
+                local store_key = "HURL_ENVIRONMENT"
+                local stored_value = lvim.store.get_store(store_key)
+
+                vim.ui.input({
+                  prompt = "Select hurl environment: ",
+                  default = stored_value,
+                }, function(env)
+                  if env == nil then
+                    Log:warn("Nothing to select.")
+
+                    return
+                  end
+
+                  Log:info(("Hurl environment file switched: %s"):format(env))
+                  lvim.store.set_store(store_key, env)
+
+                  vim.cmd(":HurlSetEnvFile " .. env)
+                end)
+              end,
+              "select hurl environment",
+            },
+            t = {
               ":HurlRunnerToEntry<CR>",
               "run hurl to entry",
             },
