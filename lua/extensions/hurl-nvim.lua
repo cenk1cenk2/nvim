@@ -48,6 +48,7 @@ function M.config()
           r = {
             e = {
               function()
+                local Log = require("lvim.core.log")
                 local store_key = "HURL_ENVIRONMENT"
                 local stored_value = lvim.store.get_store(store_key)
 
