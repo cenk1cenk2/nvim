@@ -143,7 +143,7 @@ function M.config()
           buffers = {
             sort_lastused = true,
             theme = "dropdown",
-            previewer = false,
+            previewer = true,
             layout_config = {
               width = 0.5,
               height = 0.25,
