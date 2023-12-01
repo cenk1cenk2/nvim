@@ -45,37 +45,39 @@ function M.config()
       return {
         [categories.TASKS] = {
           r = {
-            ":HurlRunnerToEntry<CR>",
-            "run hurl to entry",
-          },
-          R = {
-            ":HurlRunnerAt<CR>",
-            "run hurl under cursor",
-          },
-          h = {
-            ":HurlRunner<CR>",
-            "run hurl for all requests",
-          },
-          H = {
-            ":HurlToggleMode<CR>",
-            "toggle hurl.nvim mode",
-          },
-          c = {
-            function()
-              local Log = require("lvim.core.log")
-              local job = require("utils.job")
+            e = {
+              ":HurlRunnerToEntry<CR>",
+              "run hurl to entry",
+            },
+            r = {
+              ":HurlRunnerAt<CR>",
+              "run hurl under cursor",
+            },
+            f = {
+              ":HurlRunner<CR>",
+              "run hurl for all requests",
+            },
+            m = {
+              ":HurlToggleMode<CR>",
+              "toggle hurl.nvim mode",
+            },
+            c = {
+              function()
+                local Log = require("lvim.core.log")
+                local job = require("utils.job")
 
-              job.spawn({
-                command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
-                on_success = function(j)
-                  local generated = table.concat(j:result(), "\n")
+                job.spawn({
+                  command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
+                  on_success = function(j)
+                    local generated = table.concat(j:result(), "\n")
 
-                  Log:info("Copied generated hurl to clipboard.")
-                  vim.fn.setreg(vim.v.register or lvim.system_register, generated)
-                end,
-              })
-            end,
-            "curl to hurl",
+                    Log:info("Copied generated hurl to clipboard.")
+                    vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+                  end,
+                })
+              end,
+              "curl to hurl",
+            },
           },
         },
       }
