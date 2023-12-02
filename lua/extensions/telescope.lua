@@ -27,14 +27,6 @@ function M.config()
         "TelescopeResults",
       })
     end,
-    inject_to_configure = function()
-      return {
-        telescope = require("telescope"),
-        actions = require("telescope.actions"),
-        previewers = require("telescope.previewers"),
-        sorters = require("telescope.sorters"),
-      }
-    end,
     rg_arguments = {
       "rg",
       "--color=never",
@@ -47,9 +39,9 @@ function M.config()
       "--glob=!.git/",
     },
     setup = function(config)
-      local actions = config.inject.actions
-      local previewers = config.inject.previewers
-      local sorters = config.inject.sorters
+      local actions = require("telescope.actions")
+      local previewers = require("telescope.previewers")
+      local sorters = require("telescope.sorters")
 
       return {
         defaults = {
@@ -205,7 +197,7 @@ function M.config()
       require("telescope").setup(config.setup)
     end,
     on_done = function(config)
-      local telescope = config.inject.telescope
+      local telescope = require("telescope")
       telescope.load_extension("notify")
 
       if config.current_setup.extensions and config.current_setup.extensions.fzf then

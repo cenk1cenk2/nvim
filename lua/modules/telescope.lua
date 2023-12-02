@@ -3,8 +3,9 @@ local M = {}
 local Log = require("lvim.core.log")
 
 function M.rg_interactive()
+  local shada = require("modules.shada")
   local store_key = "TELESCOPE_RG_INTERACTIVE_LAST_ARGS"
-  local stored_value = lvim.store.get_store(store_key)
+  local stored_value = shada.get(store_key)
 
   vim.ui.input({
     prompt = "Pass in rg args:",
@@ -16,7 +17,7 @@ function M.rg_interactive()
       return
     end
 
-    lvim.store.set_store(store_key, args)
+    shada.set(store_key, args)
 
     local chunks = {}
 

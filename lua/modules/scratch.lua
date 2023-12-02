@@ -48,8 +48,9 @@ function M.create_scratch_buffer()
 end
 
 function M.execute_scratch_buffer()
+  local shada = require("modules.shada")
   local store_key = "EXECUTE_SCRATCH_BUFFER_LAST"
-  local stored_value = lvim.store.get_store(store_key)
+  local stored_value = shada.get(store_key)
 
   -- local bufnr = vim.api.nvim_get_current_buf()
   local Terminal = require("extensions.toggleterm-nvim")
@@ -64,7 +65,7 @@ function M.execute_scratch_buffer()
       return
     end
 
-    -- lvim.store.set_store(store_key, command)
+    shada.set(store_key, command)
     --
     -- local contents = table.concat(vim.api.nvim_buf_get_lines(bufnr, 0, -1, false), "\n")
     --

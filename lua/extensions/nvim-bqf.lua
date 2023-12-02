@@ -11,22 +11,24 @@ function M.config()
         event = "VeryLazy",
       }
     end,
-    setup = {
-      auto_enable = true,
-      preview = {
-        win_height = 12,
-        win_vheight = 12,
-        delay_syntax = 80,
-        border_chars = lvim.ui.icons.borderchars,
-      },
-      func_map = { vsplit = "", ptogglemode = "z,", stoggleup = "" },
-      filter = {
-        fzf = {
-          action_for = { ["ctrl-s"] = "split" },
-          extra_opts = { "--bind", "ctrl-o:toggle-all", "--prompt", "> " },
+    setup = function()
+      return {
+        auto_enable = true,
+        preview = {
+          win_height = 12,
+          win_vheight = 12,
+          delay_syntax = 80,
+          border_chars = lvim.ui.icons.borderchars,
         },
-      },
-    },
+        func_map = { vsplit = "", ptogglemode = "z,", stoggleup = "" },
+        filter = {
+          fzf = {
+            action_for = { ["ctrl-s"] = "split" },
+            extra_opts = { "--bind", "ctrl-o:toggle-all", "--prompt", "> " },
+          },
+        },
+      }
+    end,
     on_setup = function(config)
       require("bqf").setup(config.setup)
     end,

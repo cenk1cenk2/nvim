@@ -22,13 +22,15 @@ function M.config()
         "mason",
       })
     end,
-    setup = {
-      ui = {
-        border = lvim.ui.border,
-      },
-      log_level = vim.log.levels.INFO,
-      max_concurrent_installers = 10,
-    },
+    setup = function()
+      return {
+        ui = {
+          border = lvim.ui.border,
+        },
+        log_level = vim.log.levels.INFO,
+        max_concurrent_installers = 10,
+      }
+    end,
     on_setup = function(config)
       require("mason").setup(config.setup)
       require("mason-update-all").setup()

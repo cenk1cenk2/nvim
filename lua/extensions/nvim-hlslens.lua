@@ -11,16 +11,12 @@ function M.config()
         event = "BufReadPost",
       }
     end,
-    inject_to_configure = function()
-      return {
-        scrollbar_handlers_search = require("scrollbar.handlers.search"),
-        hlslens = require("hlslens"),
-      }
-    end,
-    setup = function(config)
+    setup = function()
+      local scrollbar_handlers_search = require("scrollbar.handlers.search")
+
       return {
         build_position_cb = function(plist)
-          config.inject.scrollbar_handlers_search.handler.show(plist.start_pos)
+          scrollbar_handlers_search.handler.show(plist.start_pos)
         end,
       }
     end,

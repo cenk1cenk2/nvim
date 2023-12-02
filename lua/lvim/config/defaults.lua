@@ -28,15 +28,6 @@ lvim = {
     },
   },
 
-  store = {
-    set_store = function(key, value)
-      lvim.store[key] = value
-    end,
-    get_store = function(key)
-      return lvim.store[key]
-    end,
-  },
-
   disabled_filetypes = {
     "terminal",
     "checkhealth",

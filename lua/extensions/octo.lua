@@ -11,7 +11,9 @@ function M.config()
         cmd = { "Octo" },
       }
     end,
-    setup = {},
+    setup = function()
+      return {}
+    end,
     on_setup = function(config)
       require("octo").setup(config.setup)
     end,

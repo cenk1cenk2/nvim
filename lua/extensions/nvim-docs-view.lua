@@ -16,11 +16,13 @@ function M.config()
         "nvim-docs-view",
       })
     end,
-    setup = {
-      position = "bottom",
-      width = 75,
-      height = 18,
-    },
+    setup = function()
+      return {
+        position = "bottom",
+        width = 75,
+        height = 18,
+      }
+    end,
     on_setup = function(config)
       require("docs-view").setup(config.setup)
     end,

@@ -6,7 +6,7 @@ local keys_which_key = require("keys.wk")
 ---
 ---@param mappings table
 function M.load_wk_mappings(mappings, mode, config)
-  if lvim.store.get_store(require("extensions.which-key").store_registered_key) then
+  if M.registered then
     if mode == "v" then
       config = vim.tbl_deep_extend("force", config or {}, require("extensions.which-key").vopts)
     else
@@ -97,8 +97,6 @@ function M.define_extension(extension_name, enabled, config)
     config = { config, "t" },
     on_init = { config.on_init, "f", true },
     plugin = { config.plugin, "f", true },
-    inject_to_init = { config.inject_to_init, "f", true },
-    inject_to_configure = { config.inject_to_configure, "f", true },
     autocmds = { config.autocmds, { "t", "f" }, true },
     keymaps = { config.keymaps, { "t", "f" }, true },
     wk = { config.wk, { "t", "f" }, true },
@@ -115,25 +113,8 @@ function M.define_extension(extension_name, enabled, config)
   config = vim.tbl_extend("force", config, {
     name = extension_name,
     enabled = enabled,
-    inject = {},
     store = {},
     to_setup = {},
-    set_injected = function(key, value)
-      lvim.extensions[extension_name].inject[key] = value
-
-      return value
-    end,
-    get_injected = function(key)
-      return lvim.extensions[extension_name].inject[key]
-    end,
-    set_store = function(key, value)
-      lvim.extensions[extension_name].store[key] = value
-
-      return value
-    end,
-    get_store = function(key)
-      return lvim.extensions[extension_name].store[key]
-    end,
   }, lvim.extensions[extension_name] or {})
 
   if config ~= nil and config.plugin ~= nil then
@@ -207,21 +188,6 @@ end
 ---
 ---@param config config
 function M.init(config)
-  if config ~= nil and config.inject_to_init ~= nil then
-    local ok = pcall(function()
-      ---@diagnostic disable-next-line: assign-type-mismatch
-      lvim.extensions[config.name].inject = vim.tbl_extend("force", lvim.extensions[config.name].inject, config.inject_to_init(config))
-    end)
-
-    if not ok then
-      Log:error(("Can not inject in extension: %s"):format(config.name))
-
-      return
-    end
-
-    config.inject_to_init = nil
-  end
-
   if config ~= nil and config.on_init ~= nil then
     config.on_init(config)
 
@@ -304,21 +270,6 @@ end
 ---
 ---@param config config
 function M.configure(config)
-  if config ~= nil and config.inject_to_configure ~= nil then
-    local ok = pcall(function()
-      ---@diagnostic disable-next-line: assign-type-mismatch
-      lvim.extensions[config.name].inject = vim.tbl_extend("force", lvim.extensions[config.name].inject, config.inject_to_configure(config))
-    end)
-
-    if not ok then
-      Log:warn(string.format("Can not inject in extension: %s", config.name))
-
-      return
-    end
-
-    config.inject_to_configure = nil
-  end
-
   if config ~= nil and config.setup ~= nil then
     config.setup = M.evaluate_property(config.setup, config, M.fn)
 

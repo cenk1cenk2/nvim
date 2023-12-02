@@ -11,13 +11,8 @@ function M.config()
         dependencies = { "nvim-telescope/telescope.nvim" },
       }
     end,
-    inject_to_configure = function()
-      return {
-        telescope = require("telescope"),
-      }
-    end,
-    on_setup = function(config)
-      local telescope = config.inject.telescope
+    on_setup = function()
+      local telescope = require("telescope")
 
       telescope.load_extension("vim_bookmarks")
 

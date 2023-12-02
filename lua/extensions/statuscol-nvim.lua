@@ -9,16 +9,11 @@ function M.config()
       return {
         "luukvbaal/statuscol.nvim",
         branch = "0.10",
-        event = "BufReadPost",
+        event = "BufReadPre",
       }
     end,
-    inject_to_configure = function()
-      return {
-        builtin = require("statuscol.builtin"),
-      }
-    end,
-    setup = function(config)
-      local builtin = config.inject.builtin
+    setup = function()
+      local builtin = require("statuscol.builtin")
 
       return {
         setopt = true, -- Whether to set the 'statuscolumn' option, may be set to false for those who

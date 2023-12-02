@@ -12,13 +12,8 @@ function M.config()
         cmd = { "Telescope gh" },
       }
     end,
-    inject_to_configure = function()
-      return {
-        telescope = require("telescope"),
-      }
-    end,
-    on_setup = function(config)
-      config.inject.telescope.load_extension("gh")
+    on_setup = function()
+      require("telescope").load_extension("gh")
     end,
   })
 end

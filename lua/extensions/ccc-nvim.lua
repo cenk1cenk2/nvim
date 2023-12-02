@@ -11,7 +11,9 @@ function M.config()
         cmd = { "CccPick", "CccHighlighterToggle" },
       }
     end,
-    setup = {},
+    setup = function()
+      return {}
+    end,
     on_setup = function(config)
       require("ccc").setup(config.setup)
     end,

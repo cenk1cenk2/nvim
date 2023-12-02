@@ -73,11 +73,6 @@ function M.config()
     --   end,
     -- })
     -- end,
-    inject_to_configure = function()
-      return {
-        parser_config = require("nvim-treesitter.parsers").get_parser_configs(),
-      }
-    end,
     setup = function()
       vim.opt.runtimepath:prepend(M.parsers_dir)
 
@@ -176,7 +171,7 @@ function M.config()
       skip_ts_context_commentstring_module = true,
     },
     on_done = function(config)
-      local parser_config = config.inject.parser_config
+      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 
       for key, value in pairs(config.parser_config) do
         parser_config[key] = value

@@ -18,13 +18,8 @@ function M.config()
         "DiffviewFiles",
       })
     end,
-    inject_to_configure = function()
-      return {
-        actions = require("diffview.actions"),
-      }
-    end,
-    setup = function(config)
-      local actions = config.inject.actions
+    setup = function()
+      local actions = require("diffview.actions")
 
       return {
         diff_binaries = false, -- Show diffs for binaries
@@ -178,7 +173,8 @@ end
 
 function M.compare_with_branch()
   local store_key = "DIFFVIEW_COMPARE_BRANCH"
-  local stored_value = lvim.store.get_store(store_key)
+  local shada = require("modules.shada")
+  local stored_value = shada.get(store_key)
 
   vim.ui.input({
     prompt = "Compare with branch:",
@@ -191,7 +187,7 @@ function M.compare_with_branch()
     end
 
     Log:info(("Comparing with branch: %s"):format(branch))
-    lvim.store.set_store(store_key, branch)
+    shada.set(store_key, branch)
 
     vim.cmd(":DiffviewOpen " .. branch)
   end)

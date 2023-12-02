@@ -11,12 +11,7 @@ function M.config()
         event = "VeryLazy",
       }
     end,
-    inject_to_configure = function()
-      return {
-        telescope_themes = require("telescope.themes"),
-      }
-    end,
-    setup = function(config)
+    setup = function()
       return {
         input = {
           -- Default prompt string
@@ -58,7 +53,7 @@ function M.config()
           backend = { "telescope", "fzf", "builtin", "nui" },
 
           -- Options for telescope selector
-          telescope = config.inject.telescope_themes.get_dropdown({}),
+          telescope = require("telescope.themes").get_dropdown({}),
 
           -- see :help dressing_get_config
           get_config = nil,

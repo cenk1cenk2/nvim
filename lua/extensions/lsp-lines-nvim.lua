@@ -3,15 +3,14 @@ local M = {}
 
 local extension_name = "lsp_lines_nvim"
 
+M.loaded = false
+
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
       }
-    end,
-    on_init = function(config)
-      config.set_store("loaded", false)
     end,
     on_done = function()
       vim.diagnostic.config({ virtual_lines = false, virtual_text = lvim.lsp.diagnostics.virtual_text })
@@ -32,13 +31,13 @@ function M.config()
 end
 
 function M.toggle()
-  if not lvim.extensions[extension_name].store.loaded then
+  if not M.loaded then
     local extension = require("lsp_lines")
     extension.setup()
 
     vim.diagnostic.config({ virtual_lines = true, virtual_text = false })
 
-    lvim.extensions[extension_name].set_store("loaded", true)
+    M.loaded = true
 
     return true
   end

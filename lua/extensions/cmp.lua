@@ -40,15 +40,9 @@ function M.config()
         },
       }
     end,
-    inject_to_configure = function()
-      return {
-        cmp = require("cmp"),
-        luasnip = require("luasnip"),
-      }
-    end,
-    setup = function(config)
-      local cmp = config.inject.cmp
-      local luasnip = config.inject.luasnip
+    setup = function()
+      local cmp = require("cmp")
+      local luasnip = require("luasnip")
 
       return {
         confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false },
@@ -240,7 +234,7 @@ function M.config()
       require("luasnip.loaders.from_snipmate").lazy_load()
     end,
     on_done = function(config)
-      local cmp = config.inject.cmp
+      local cmp = require("cmp")
       local setup = require("utils.setup")
 
       for key, value in pairs(setup.evaluate_property(config.extended_setup.per_ft, config)) do

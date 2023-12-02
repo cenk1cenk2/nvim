@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 SECONDS=0
 # COMMIT_SHA="cdc8bacc7945da816738e330555fa85d3ffffd56"
@@ -6,6 +6,7 @@ SECONDS=0
 
 ## inject logger
 LOG_LEVEL=${LOG_LEVEL-"INFO"}
+# shellcheck disable=SC1090
 source <(curl -s "https://gist.githubusercontent.com/cenk1cenk2/e03d8610534a9c78f755c1c1ed93a293/raw/logger.sh")
 
 if [ -x "$(command -v nvim)" ]; then

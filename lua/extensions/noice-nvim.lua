@@ -21,14 +21,8 @@ function M.config()
         "noice",
       })
     end,
-    inject_to_configure = function()
-      return {
-        telescope = require("telescope"),
-        noice_util = require("noice.util"),
-      }
-    end,
     setup = function(config)
-      local noice_util = config.inject.noice_util
+      local noice_util = require("noice.util")
 
       return {
         presets = {
@@ -290,7 +284,7 @@ function M.config()
       vim.o.cmdheight = 0
     end,
     on_done = function(config)
-      config.inject.telescope.load_extension("noice")
+      require("telescope").load_extension("noice")
     end,
     wk = {
       ["M"] = { ":Noice<CR>", "messages" },

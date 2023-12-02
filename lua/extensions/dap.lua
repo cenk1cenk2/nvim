@@ -23,13 +23,8 @@ function M.config()
         "dap-float",
       })
     end,
-    inject_to_configure = function()
-      return {
-        vscode = require("dap.ext.vscode"),
-      }
-    end,
-    on_done = function(config)
-      config.inject.vscode.load_launchjs()
+    on_done = function()
+      require("dap.ext.vscode").load_launchjs()
     end,
     signs = {
       DapBreakpoint = {

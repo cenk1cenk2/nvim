@@ -12,19 +12,20 @@ function M.run_md_printer()
 end
 
 function M.run_genpass()
+  local shada = require("modules.shada")
   local store_key = "RUN_GENPASS_ARGS"
-  local stored_value = lvim.store.get_store(store_key)
+  local stored_value = shada.get(store_key)
 
   vim.ui.input({
     prompt = "Genpass arguments:",
     default = stored_value,
   }, function(arguments)
+    shada.set(store_key, arguments)
+
     job.spawn({
       command = "genpass",
       args = vim.split(arguments or {}, " "),
       on_success = function(j)
-        lvim.store.set_store(store_key, arguments)
-
         local generated = j:result()[1]
 
         Log:info(("Copied generated code to clipboard: %s"):format(generated))

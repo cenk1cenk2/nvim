@@ -12,16 +12,10 @@ function M.config()
         event = "BufReadPost",
       }
     end,
-    inject_to_configure = function()
-      return {
-        mapping = require("yanky.telescope.mapping"),
-        default_register = require("yanky.utils").get_default_register(),
-        telescope = require("telescope"),
-      }
-    end,
-    setup = function(config)
-      local mapping = config.inject.mapping
+    setup = function()
+      local mapping = require("yanky.telescope.mapping")
       local system_register = lvim.system_register
+      -- local default_register = require("yanky.utils").get_default_register()
 
       return {
         ring = {
@@ -65,8 +59,8 @@ function M.config()
     on_setup = function(config)
       require("yanky").setup(config.setup)
     end,
-    on_done = function(config)
-      config.inject.telescope.load_extension("yank_history")
+    on_done = function()
+      require("telescope").load_extension("yank_history")
     end,
     keymaps = function()
       local cb = function(state)

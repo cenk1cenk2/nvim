@@ -11,7 +11,9 @@ function M.config()
         dependencies = { "nvim-treesitter/nvim-treesitter" },
       }
     end,
-    setup = {},
+    setup = function()
+      return {}
+    end,
     on_setup = function(config)
       require("neogen").setup(config.setup)
     end,

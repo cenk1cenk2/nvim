@@ -50,7 +50,8 @@ function M.config()
               function()
                 local Log = require("lvim.core.log")
                 local store_key = "HURL_ENVIRONMENT"
-                local stored_value = lvim.store.get_store(store_key)
+                local shada = require("modules.shada")
+                local stored_value = shada.get(store_key)
 
                 vim.ui.input({
                   prompt = "Select hurl environment: ",
@@ -63,7 +64,7 @@ function M.config()
                   end
 
                   Log:info(("Hurl environment file switched: %s"):format(env))
-                  lvim.store.set_store(store_key, env)
+                  shada.set(store_key, env)
 
                   vim.cmd(":HurlSetEnvFile " .. env)
                 end)
