@@ -23,7 +23,7 @@ function M.config()
           end,
         },
         {
-          "kyazdani42/nvim-web-devicons",
+          "nvim-tree/nvim-web-devicons",
           event = "VeryLazy",
           init = false,
           config = false,
