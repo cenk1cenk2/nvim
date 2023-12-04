@@ -24,6 +24,7 @@ function M.config()
       return {
         [categories.GIT] = {
           W = {
+            name = "worktree",
             f = {
               function()
                 require("telescope").extensions.git_worktree.git_worktrees()

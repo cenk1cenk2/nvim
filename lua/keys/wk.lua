@@ -8,7 +8,6 @@ M.CATEGORIES = {
   FIND = "f",
   SEARCH = "s",
   GIT = "g",
-  GIST = "G",
   LSP = "l",
   BOOKMARKS = "m",
   TESTS = "j",
@@ -84,11 +83,12 @@ M.mappings = {
   -- git
   [M.CATEGORIES.GIT] = {
     name = "git",
-  },
-
-  -- gist
-  [M.CATEGORIES.GIST] = {
-    name = "gist",
+    ["g"] = {
+      name = "github",
+    },
+    ["G"] = {
+      name = "gitlab",
+    },
   },
 
   -- lsp

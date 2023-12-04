@@ -12,7 +12,7 @@ function M.config()
     end,
     wk = function(_, categories)
       return {
-        [categories.GIST] = {
+        [categories.GIT] = {
           i = {
             function()
               require("gitignore").generate()

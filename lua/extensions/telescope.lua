@@ -285,11 +285,10 @@ function M.config()
         [categories.GIT] = {
           f = { ":Telescope git_status<CR>", "git status" },
           F = { ":Telescope git_files<CR>", "list git tracked files" },
-        },
-
-        [categories.GIST] = {
-          I = { ":Telescope gh issues<CR>", "github issues" },
-          P = { ":Telescope gh pull_request<CR>", "github pull requests" },
+          g = {
+            I = { ":Telescope gh issues<CR>", "github issues" },
+            P = { ":Telescope gh pull_request<CR>", "github pull requests" },
+          },
         },
 
         [categories.NEOVIM] = {
