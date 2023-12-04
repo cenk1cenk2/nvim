@@ -26,7 +26,7 @@ function M.create_scratch_buffer()
     local bufnr = vim.api.nvim_create_buf(true, false)
     local filename = string.format("_scratch-%s.%s", uuid(), filetype)
     vim.api.nvim_buf_set_name(bufnr, filename)
-    vim.api.nvim_buf_set_option(bufnr, "filetype", filetype)
+    vim.api.nvim_set_option_value("filetype", filetype, { buf = bufnr })
     vim.api.nvim_win_set_buf(0, bufnr)
     Log:info(("Created temporary file: %s"):format(filename))
 

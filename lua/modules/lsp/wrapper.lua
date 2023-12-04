@@ -225,7 +225,7 @@ function M.rename_file()
       return
     end
 
-    local stat = vim.loop.fs_stat(rename)
+    local stat = vim.uv.fs_stat(rename)
 
     if stat and stat.type then
       vim.notify("File already exists: " .. rename, vim.log.levels.ERROR)
@@ -262,7 +262,7 @@ function M.rename_file()
         vim.cmd("silent noautocmd w")
       end
 
-      local ok, err = vim.loop.fs_rename(current, rename)
+      local ok, err = vim.uv.fs_rename(current, rename)
       if not ok then
         Log:error(string.format("Failed to move file %s to %s: %s", current, rename, err))
       end

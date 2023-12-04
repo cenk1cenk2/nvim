@@ -3,7 +3,7 @@ local Popup = {}
 --- Create a new floating window
 -- @param config The configuration passed to vim.api.nvim_open_win
 -- @param win_opts The options registered with vim.api.nvim_win_set_option
--- @param buf_opts The options registered with vim.api.nvim_buf_set_option
+-- @param buf_opts The options registered with vim.api.nvim_buf_set_option_value
 -- @return A new popup
 function Popup:new(opts)
   opts = opts or {}
@@ -55,7 +55,7 @@ function Popup:display(content_provider)
 
   -- buffer options
   for key, value in pairs(self.buf_opts) do
-    vim.api.nvim_buf_set_option(self.buffer, key, value)
+    vim.api.nvim_set_option_value(key, value, { buf = self.bufnr })
   end
 end
 

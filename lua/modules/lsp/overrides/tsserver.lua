@@ -91,7 +91,7 @@ return {
     --
     --       vim.notify(current .. " ➜  " .. rename)
     --
-    --       local stat = vim.loop.fs_stat(rename)
+    --       local stat = vim.uv.fs_stat(rename)
     --
     --       if stat and stat.type then
     --         vim.notify("File already exists: " .. rename, vim.log.levels.ERROR)
@@ -105,7 +105,7 @@ return {
     --         title = "",
     --       })
     --
-    --       vim.loop.fs_rename(current, rename)
+    --       vim.uv.fs_rename(current, rename)
     --
     --       for _, buf in pairs(vim.api.nvim_list_bufs()) do
     --         if vim.api.nvim_buf_is_loaded(buf) then

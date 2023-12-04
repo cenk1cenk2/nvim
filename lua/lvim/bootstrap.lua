@@ -1,6 +1,6 @@
 local M = {}
 
-local uv = vim.loop
+local uv = vim.uv
 local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
 
 function _G.is_headless()

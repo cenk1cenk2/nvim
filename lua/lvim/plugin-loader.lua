@@ -7,7 +7,7 @@ M.plugin_manager_dir = M.plugins_dir .. "/lazy.nvim"
 M.cache_dir = join_paths(get_cache_dir(), "lazy")
 
 function M.init()
-  if not vim.loop.fs_stat(M.plugin_manager_dir) then
+  if not vim.uv.fs_stat(M.plugin_manager_dir) then
     print("Initializing first time setup...")
     print("Installing plugin manager...")
 

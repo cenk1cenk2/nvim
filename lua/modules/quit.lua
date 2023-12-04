@@ -4,7 +4,7 @@ function M.workspace_quit()
   local buffers = vim.api.nvim_list_bufs()
   local modified = false
   for _, bufnr in ipairs(buffers) do
-    if vim.api.nvim_buf_get_option(bufnr, "modified") then
+    if vim.api.nvim_get_option_value("modified", { buf = bufnr }) then
       modified = true
     end
   end

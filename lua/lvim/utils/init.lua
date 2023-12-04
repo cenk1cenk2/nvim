@@ -1,5 +1,5 @@
 local M = {}
-local uv = vim.loop
+local uv = vim.uv
 
 --- Checks whether a given path exists and is a file.
 --@param path (string) path to check
