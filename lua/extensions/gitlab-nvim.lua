@@ -34,23 +34,23 @@ function M.config()
         },
         discussion_tree = { -- The discussion tree that holds all comments
           blacklist = {}, -- List of usernames to remove from tree (bots, CI, etc)
-          jump_to_file = "o", -- Jump to comment location in file
-          jump_to_reviewer = "m", -- Jump to the location in the reviewer window
+          jump_to_file = "f", -- Jump to comment location in file
+          jump_to_reviewer = "g", -- Jump to the location in the reviewer window
           edit_comment = "e", -- Edit comment
           delete_comment = "dd", -- Delete comment
           reply = "r", -- Reply to comment
-          toggle_node = "t", -- Opens or closes the discussion
-          toggle_resolved = "p", -- Toggles the resolved status of the whole discussion
-          position = "left", -- "top", "right", "bottom" or "left"
-          size = "20%", -- Size of split
+          toggle_node = "o", -- Opens or closes the discussion
+          toggle_resolved = "R", -- Toggles the resolved status of the whole discussion
+          position = "bottom", -- "top", "right", "bottom" or "left"
+          size = "30%", -- Size of split
           relative = "editor", -- Position of tree split relative to "editor" or "window"
           resolved = lvim.ui.icons.ui.Check, -- Symbol to show next to resolved discussions
           unresolved = lvim.ui.icons.ui.Close, -- Symbol to show next to unresolved discussions
-          tree_type = "simple", -- Type of discussion tree - "simple" means just list of discussions, "by_file_name" means file tree with discussions under file
+          tree_type = "by_file_name", -- Type of discussion tree - "simple" means just list of discussions, "by_file_name" means file tree with discussions under file
         },
         info = { -- Show additional fields in the summary pane
           enabled = true,
-          horizontal = false, -- Display metadata to the left of the summary rather than underneath
+          horizontal = true, -- Display metadata to the left of the summary rather than underneath
           fields = { -- The fields listed here will be displayed, in whatever order you choose
             "author",
             "created_at",
@@ -90,7 +90,7 @@ function M.config()
           -- If you want to customize diagnostics for discussions you can make special config
           -- for namespace `gitlab_discussion`. See :h vim.diagnostic.config
           enabled = true,
-          severity = vim.diagnostic.severity.INFO,
+          severity = vim.diagnostic.severity.WARN,
           code = nil, -- see :h diagnostic-structure
           display_opts = {}, -- see opts in vim.diagnostic.set
         },

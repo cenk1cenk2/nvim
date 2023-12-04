@@ -83,6 +83,12 @@ M.mappings = {
   -- git
   [M.CATEGORIES.GIT] = {
     name = "git",
+    ["g"] = {
+      name = "github",
+    },
+    ["G"] = {
+      name = "gitlab",
+    },
   },
 
   -- lsp
