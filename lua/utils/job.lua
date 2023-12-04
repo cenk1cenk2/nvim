@@ -7,10 +7,7 @@ function M.spawn(opts)
 
   Log:debug(("Will run job: %s %s"):format(opts.command, table.concat(opts.args or {}, " ")))
 
-  local job = Job:new({
-    command = opts.command,
-    args = opts.args,
-    cwd = opts.cwd,
+  local job = Job:new(vim.tbl_extend("force", opts, {
     env = vim.tbl_extend("force", vim.fn.environ(), opts.env or {}),
     enabled_recording = true,
     detached = true,
@@ -25,7 +22,7 @@ function M.spawn(opts)
 
       Log:debug(vim.inspect(j:result()))
     end,
-  })
+  }))
 
   job:sync(5000)
 

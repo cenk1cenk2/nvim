@@ -47,6 +47,34 @@ function M.run_ansible_vault_encrypt()
   M.reload_file()
 end
 
+function M.run_jq()
+  local store_key = "JQ_INPUT"
+  local shada = require("modules.shada")
+  local stored_value = shada.get(store_key)
+
+  vim.ui.input({
+    prompt = "jq: ",
+    default = stored_value,
+  }, function(arguments)
+    arguments = vim.split(arguments, " ") or { "." }
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+    job.spawn({
+      command = "jq",
+      args = arguments,
+      writer = lines,
+      on_success = function(j)
+        shada.set(store_key, table.concat(arguments, " "))
+
+        local result = table.concat(j:result(), "\n")
+
+        Log:info(("Copied result to clipboard: %s"):format(result))
+        vim.fn.setreg(vim.v.register or lvim.system_register, result)
+      end,
+    })
+  end)
+end
+
 function M.reload_file()
   local ok = pcall(function()
     vim.cmd("e")
@@ -80,6 +108,12 @@ function M.setup()
               M.run_genpass()
             end,
             "run genpass",
+          },
+          j = {
+            function()
+              M.run_jq()
+            end,
+            "run jq",
           },
           P = {
             function()
