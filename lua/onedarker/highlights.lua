@@ -605,11 +605,11 @@ hl.plugins.lspsaga = {
   FinderPreviewBorder = { fg = c.cyan[600] },
   HoverBorder = { fg = c.orange[600] },
   RenameBorder = { fg = c.purple[600] },
-  DiagnosticBorder = { fg = c.white },
-  DiagnosticErrorBorder = { fg = c.red[300] },
-  DiagnosticWarnBorder = { fg = c.orange[300] },
-  DiagnosticHintBorder = { fg = c.blue[300] },
-  DiagnosticInfoBorder = { fg = c.bg[900] },
+  DiagnosticBorder = { fg = c.bg[200] },
+  DiagnosticErrorBorder = { link = "DiagnosticError" },
+  DiagnosticWarnBorder = { link = "DiagnosticWarn" },
+  DiagnosticHintBorder = { link = "DiagnosticHint" },
+  DiagnosticInfoBorder = { link = "DiagnosticInfo" },
   SagaBeacon = { bg = c.yellow[300] },
 }
 
