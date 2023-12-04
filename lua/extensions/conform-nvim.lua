@@ -55,7 +55,7 @@ function M.config()
         local formatters = lvim.lsp.tools.list_registered.default.formatters(bufnr)
 
         local lsp_fallback = M.get_lsp_fallback(bufnr)
-        if lsp_fallback == true and #formatters == 0 or lsp_fallback == "always" then
+        if lsp_fallback == true and #formatters == 0 or lsp_fallback == "always" or lsp_fallback == true then
           local lsp = vim.tbl_filter(function(client)
             if client.server_capabilities.documentFormattingProvider == true then
               return true
@@ -73,7 +73,7 @@ function M.config()
         end
 
         return vim.tbl_filter(function(formatter)
-          if vim.list_contains({ "trim_multiple_newlines", "trim_whitespace", "trim_whitespace" }, formatter) then
+          if vim.list_contains({ "trim_multiple_newlines", "trim_whitespace", "trim_newlines" }, formatter) then
             return false
           end
 
@@ -103,6 +103,10 @@ function M.register_tools(lsp_utils, METHOD)
   lsp_utils.register_tools(METHOD, "trim_whitespace", {
     "*",
   })
+
+  -- lsp_utils.register_tools(METHOD, "trim_newlines", {
+  --   "*",
+  -- })
 
   lsp_utils.register_tools(METHOD, "trim_multiple_newlines", {
     "*",
