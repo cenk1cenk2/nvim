@@ -8,7 +8,6 @@ M.CATEGORIES = {
   FIND = "f",
   SEARCH = "s",
   GIT = "g",
-  GIST = "G",
   LSP = "l",
   BOOKMARKS = "m",
   TESTS = "j",
