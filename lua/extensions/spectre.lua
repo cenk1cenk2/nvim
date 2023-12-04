@@ -11,7 +11,7 @@ function M.config()
         dependencies = {
           { "nvim-lua/plenary.nvim" },
         },
-        -- build = { "build.lua", "nvim-oxi" },
+        build = { "./build.sh nvim-oxi" },
       }
     end,
     configure = function(_, fn)
@@ -24,6 +24,7 @@ function M.config()
         color_devicons = true,
         highlight = { ui = "String", search = "SpectreChange", replace = "SpectreDelete" },
         live_update = true,
+        is_block_ui_break = true,
         mapping = {
           ["delete_line"] = {
             map = "D",
@@ -156,13 +157,13 @@ function M.config()
             options = { "ignore-case" },
           },
           replace = {
-            -- pick one of item that replace_engine
-            cmd = "sed",
+            -- pick one of item that replace_engine sed/oxi
+            cmd = "oxi",
           },
         },
         replace_vim_cmd = "cfdo",
         is_open_target_win = true, -- open file on opener window
-        is_insert_mode = false, -- start open panel on is_insert_mode
+        is_insert_mode = false,    -- start open panel on is_insert_mode
       }
     end,
     on_setup = function(config)
@@ -205,7 +206,8 @@ function M.config()
         {
           group = "__spectre",
           pattern = "spectre_panel",
-          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0",
+          command =
+          "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0",
         },
       },
     },

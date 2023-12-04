@@ -160,6 +160,11 @@ function M.config()
           },
           oldfiles = {
             theme = "dropdown",
+            layout_config = {
+              width = 0.5,
+              height = 0.25,
+              prompt_position = "bottom",
+            },
           },
           live_grep = {
             -- @usage don't include the filename in the search results
