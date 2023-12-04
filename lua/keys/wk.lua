@@ -85,11 +85,6 @@ M.mappings = {
     name = "git",
   },
 
-  -- gist
-  [M.CATEGORIES.GIST] = {
-    name = "gist",
-  },
-
   -- lsp
   [M.CATEGORIES.LSP] = {
     name = "lsp",
