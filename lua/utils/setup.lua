@@ -6,7 +6,7 @@ local keys_which_key = require("keys.wk")
 ---
 ---@param mappings table
 function M.load_wk_mappings(mappings, mode, config)
-  if M.registered then
+  if require("extensions.which-key").registered then
     if mode == "v" then
       config = vim.tbl_deep_extend("force", config or {}, require("extensions.which-key").vopts)
     else
