@@ -32,7 +32,7 @@ function M.config()
         end
       end
     end,
-    setup = function()
+    setup = function(_, fn)
       local Log = require("lvim.core.log")
       local system_register = lvim.system_register
 
@@ -97,18 +97,18 @@ function M.config()
 
       local renderer = require("neo-tree.ui.renderer")
 
-      return {
+      local setup = {
+        sources = { "filesystem", "buffers", "git_status", "document_symbols" },
         source_selector = {
           winbar = false,
           statusline = false,
           sources = {
             { source = "filesystem", display_name = (" %s Files "):format(lvim.ui.icons.ui.Folder) },
-            { source = "buffers", display_name = (" %s Buffers "):format(lvim.ui.icons.ui.File) },
-            { source = "git_status", display_name = (" %s Git "):format(lvim.ui.icons.ui.Git) },
-            { source = "document_symbols", display_name = (" %s Symbols "):format(lvim.ui.icons.kind.Function) },
+            -- { source = "buffers", display_name = (" %s Buffers "):format(lvim.ui.icons.ui.File) },
+            -- { source = "git_status", display_name = (" %s Git "):format(lvim.ui.icons.ui.Git) },
+            -- { source = "document_symbols", display_name = (" %s Symbols "):format(lvim.ui.icons.kind.Function) },
           },
         },
-        sources = { "filesystem", "buffers", "git_status", "document_symbols" },
         close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
         popup_border_style = lvim.ui.border,
         -- https://github.com/nvim-neo-tree/neo-tree.nvim/issues/338
@@ -406,16 +406,41 @@ function M.config()
           },
         },
       }
+
+      -- add external sources
+      if fn.is_extension_enabled("miversen33/netman.nvim") then
+        table.insert(setup.sources, "netman.ui.neo-tree")
+        table.insert(setup.source_selector.sources, { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(lvim.ui.icons.kind.Struct) })
+      end
+
+      return setup
     end,
     on_setup = function(config)
       require("neo-tree").setup(config.setup)
     end,
     wk = function(_, categories)
+      local Log = require("lvim.core.log")
+
       return {
-        ["E"] = { ":Neotree focus<CR>", "focus filetree" },
-        ["e"] = { ":Neotree toggle<CR>", "open filetree" },
+        ["E"] = { M.focus, "focus filetree" },
+        ["e"] = { M.toggle, "open filetree" },
         [","] = { ":Neotree reveal<CR>", "reveal file in filetree" },
         ["."] = { ":Neotree position=right buffers toggle<CR>", "open buffers in filetree" },
+        ["?"] = {
+          function()
+            local sources = { "filesystem", "remote", "buffers", "git_status", "document_symbols" }
+
+            vim.ui.select(sources, {
+              prompt = "Change tree source: ",
+              default = M.source,
+            }, function(source)
+              Log:info(("Source switched for tree: %s"):format(source))
+
+              M.source = source
+            end)
+          end,
+          "select tree source",
+        },
         [categories.GIT] = {
           ["e"] = { ":Neotree position=right git_status toggle<CR>", "git files in filetree" },
         },
@@ -429,5 +454,23 @@ function M.config()
     end,
   })
 end
+
+function M.focus()
+  if M.source == "" then
+    return vim.cmd([[Neotree focus]])
+  end
+
+  return vim.cmd(([[Neotree focus source=%s]]):format(M.source))
+end
+
+function M.toggle()
+  if M.source == "" then
+    return vim.cmd([[Neotree toggle]])
+  end
+
+  return vim.cmd(([[Neotree toggle source=%s]]):format(M.source))
+end
+
+M.source = ""
 
 return M
