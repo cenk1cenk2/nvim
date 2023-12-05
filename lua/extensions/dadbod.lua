@@ -38,7 +38,7 @@ function M.config()
       db_ui_winwidth = 50,
       db_ui_table_helpers = {
         postgresql = {
-          List = 'select * from "{table}"',
+          List = "select * from {table}",
         },
       },
     },
