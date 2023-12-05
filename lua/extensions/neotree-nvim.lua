@@ -434,6 +434,10 @@ function M.config()
               prompt = "Change tree source: ",
               default = M.source,
             }, function(source)
+              if source == nil then
+                return
+              end
+
               Log:info(("Source switched for tree: %s"):format(source))
 
               M.source = source

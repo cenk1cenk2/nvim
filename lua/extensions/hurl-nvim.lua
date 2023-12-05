@@ -46,6 +46,7 @@ function M.config()
       return {
         [categories.TASKS] = {
           r = {
+            name = "hurl",
             e = {
               function()
                 local Log = require("lvim.core.log")
@@ -111,6 +112,7 @@ function M.config()
     wk_v = function(_, categories)
       return {
         [categories.TASKS] = {
+          name = "hurl",
           r = {
             ":HurlRunner<CR>",
             "run hurl for selected requests",

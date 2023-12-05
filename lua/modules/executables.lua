@@ -56,6 +56,10 @@ function M.run_jq()
     prompt = "jq: ",
     default = stored_value,
   }, function(arguments)
+    if arguments == nil then
+      return
+    end
+
     arguments = vim.split(arguments, " ") or { "." }
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
