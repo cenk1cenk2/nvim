@@ -9,7 +9,7 @@ function M.config()
       return {
         "jellydn/hurl.nvim",
         dependencies = { "MunifTanjim/nui.nvim" },
-        cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry", "HurlToggleMode", "HurlSetEnvFile" },
+        cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry", "HurlToggleMode", "HurlSetEnvFile", "HurlVerbose" },
         ft = { "hurl" },
       }
     end,
@@ -87,6 +87,10 @@ function M.config()
             m = {
               ":HurlToggleMode<CR>",
               "toggle hurl.nvim mode",
+            },
+            v = {
+              ":HurlVerbose<CR>",
+              "hurl verbose mode",
             },
             c = {
               function()
