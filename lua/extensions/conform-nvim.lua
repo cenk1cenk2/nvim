@@ -72,32 +72,43 @@ function M.config()
           )
         end
 
-        return vim.tbl_filter(function(formatter)
-          if vim.list_contains({ "trim_multiple_newlines", "trim_whitespace", "trim_newlines" }, formatter) then
-            return false
-          end
-
-          return true
-        end, formatters)
+        return M.filter_default_formatters(formatters)
       end
     end,
   })
 end
 
-function M.get_lsp_fallback(bufnr)
-  -- if vim.tbl_contains({
-  --   "javascript",
-  --   "typescript",
-  --   "javascriptreact",
-  --   "typescriptreact",
-  --   "vue",
-  --   "svelte",
-  -- }, vim.bo[bufnr].filetype) then
-  --   return "always"
-  -- end
+M.default_formatters = {
+  "trim_whitespace",
+  -- "trim_newlines",
+  "trim_multiple_newlines",
+}
 
-  -- return true
-  return "always"
+function M.filter_default_formatters(formatters)
+  return vim.tbl_filter(function(formatter)
+    if vim.list_contains(M.default_formatters, formatter) then
+      return false
+    end
+
+    return true
+  end, formatters)
+end
+
+function M.get_lsp_fallback(bufnr)
+  if vim.tbl_contains({
+        "javascript",
+        "typescript",
+        "javascriptreact",
+        "typescriptreact",
+        "vue",
+        "svelte",
+      }, vim.bo[bufnr].filetype) then
+    return "always"
+  elseif #M.filter_default_formatters(require('conform').list_formatters(bufnr)) == 0 then
+    return "always"
+  end
+
+  return true
 end
 
 function M.register_tools(lsp_utils, METHOD)

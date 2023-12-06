@@ -167,7 +167,7 @@ function M.toggle_popup(ft)
 
   local Popup = require("lvim.interface.popup"):new({
     win_opts = { number = false },
-    buf_opts = { modifiable = false, filetype = "lspinfo" },
+    buf_opts = { modifiable = true, filetype = "lspinfo" },
   })
   Popup:display(content_provider)
   set_syntax_hl()
