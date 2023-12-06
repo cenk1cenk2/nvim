@@ -10,9 +10,9 @@ local function str_list(list)
   return #list == 1 and list[1] or fmt("[%s]", table.concat(list, ", "))
 end
 
-local function make_tools_info(ft)
-  local supported_formatters = lvim.lsp.tools.list_registered.formatters(ft)
-  local supported_linters = lvim.lsp.tools.list_registered.linters(ft)
+local function make_tools_info(bufnr)
+  local supported_formatters = lvim.lsp.tools.list_registered.formatters(bufnr)
+  local supported_linters = lvim.lsp.tools.list_registered.linters(bufnr)
 
   local section = {
     "Tools",
@@ -82,9 +82,9 @@ local function make_auto_lsp_info(ft)
 end
 
 function M.toggle_popup(ft)
-  local clients = vim.lsp.get_clients({ bufnr = vim.api.nvim_get_current_buf() })
-  local client_names = {}
   local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.lsp.get_clients({ bufnr = bufnr })
+  local client_names = {}
   local ts_active_buffers = vim.tbl_keys(vim.treesitter.highlighter.active)
   local is_treesitter_active = function()
     local status = "inactive"
@@ -124,7 +124,7 @@ function M.toggle_popup(ft)
   end
 
   local auto_lsp_info = make_auto_lsp_info(ft)
-  local tools_info = make_tools_info(ft)
+  local tools_info = make_tools_info(bufnr)
 
   local content_provider = function(popup)
     local content = {}
@@ -174,4 +174,5 @@ function M.toggle_popup(ft)
 
   return Popup
 end
+
 return M
