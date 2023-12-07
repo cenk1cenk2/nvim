@@ -147,7 +147,7 @@ function M.config()
           ["<C-y>"] = cmp.mapping({
             i = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false }),
             c = function(fallback)
-              if cmp.visible() then
+              if cmp.visible() and M.has_words_before() then
                 cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
               end
               fallback()
