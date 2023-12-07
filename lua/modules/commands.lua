@@ -25,7 +25,7 @@ function M.setup()
       {
         name = "LvimToggleFormatOnSave",
         fn = function()
-          require("lvim.core.autocmds").toggle_format_on_save()
+          require("lvim.lsp.format").toggle_format_on_save()
         end,
       },
       {

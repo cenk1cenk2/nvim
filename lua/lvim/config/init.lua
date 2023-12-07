@@ -25,11 +25,26 @@ function M:load()
 
   require("modules").config(self)
 
-  local autocmds = require("lvim.core.autocmds")
-  autocmds.define_autocmds(lvim.autocommands)
+  require("utils.setup").define_autocmds(lvim.autocommands)
 
   if lvim.ui.transparent_window then
-    autocmds.enable_transparent_mode()
+    vim.api.nvim_create_autocmd("ColorScheme", {
+      pattern = "*",
+      callback = function()
+        local hl_groups = {
+          "Normal",
+          "SignColumn",
+          "NormalNC",
+          "NvimTreeNormal",
+          "EndOfBuffer",
+          "MsgArea",
+        }
+        for _, name in ipairs(hl_groups) do
+          vim.cmd(string.format("highlight %s ctermbg=none guibg=none", name))
+        end
+      end,
+    })
+    vim.opt.fillchars = "eob: "
   end
 
   vim.g.mapleader = (lvim.leader == "space" and " ") or lvim.leader
@@ -45,7 +60,7 @@ function M:reload()
 
     M:load()
 
-    require("lvim.core.autocmds").configure_format_on_save()
+    require("lvim.lsp.format").configure_format_on_save()
 
     local plugin_loader = require("lvim.plugin-loader")
 

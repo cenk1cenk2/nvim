@@ -1,7 +1,7 @@
 local M = {}
 
 local Log = require("lvim.core.log")
-local autocmds = require("lvim.core.autocmds")
+local setup = require("utils.setup")
 local keymappings = require("lvim.keymappings")
 
 local function add_lsp_buffer_options(bufnr)
@@ -42,7 +42,7 @@ function M.common_on_exit(client, bufnr)
   end
 
   if lvim.lsp.code_lens.refresh then
-    autocmds.clear_augroup("lsp_code_lens_refresh")
+    setup.clear_augroup("lsp_code_lens_refresh")
   end
 end
 
@@ -153,7 +153,7 @@ function M.setup(force)
     util.on_setup = nil
   end, debug.traceback)
 
-  autocmds.configure_format_on_save()
+  require("lvim.lsp.format").configure_format_on_save()
 end
 
 return M

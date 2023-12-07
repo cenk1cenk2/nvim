@@ -1,14 +1,5 @@
 {
   "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
   "Lua.diagnostics.disable": ["param-type-mismatch"],
-  "Lua.workspace.checkThirdParty": false,
-  "Lua.workspace.library": [
-    "/home/cenk/.local/share/nvim/lazy/neodev.nvim/types/nightly",
-    "/usr/local/share/nvim/runtime",
-    "/home/cenk/.local/share/nvim/lazy/plenary.nvim",
-    "${3rd}/luassert/library",
-    "${3rd}/luv/library"
-  ],
-  "diagnostics.globals": ["Log"]
+  "Lua.workspace.checkThirdParty": false
 }
-

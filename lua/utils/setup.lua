@@ -151,8 +151,31 @@ function M.define_extension(extension_name, enabled, config)
 end
 
 ---@param definitions table contains a tuple of event, opts, see `:h nvim_create_autocmd`
-function M.define_autocmds(...)
-  require("lvim.core.autocmds").define_autocmds(...)
+function M.define_autocmds(definitions)
+  for _, entry in ipairs(definitions) do
+    local event = entry[1]
+    local opts = entry[2]
+    if type(opts.group) == "string" and opts.group ~= "" then
+      local exists, _ = pcall(vim.api.nvim_get_autocmds, { group = opts.group })
+      if not exists then
+        vim.api.nvim_create_augroup(opts.group, {})
+      end
+    end
+    vim.api.nvim_create_autocmd(event, opts)
+  end
+end
+
+--- Clean autocommand in a group if it exists
+--- This is safer than trying to delete the augroup itself
+---@param name string the augroup name
+function M.clear_augroup(name)
+  -- defer the function in case the autocommand is still in-use
+  Log:trace("request to clear autocmds  " .. name)
+  vim.schedule(function()
+    pcall(function()
+      vim.api.nvim_clear_autocmds({ group = name })
+    end)
+  end)
 end
 
 ---
