@@ -37,6 +37,7 @@ function M.config()
           -- { "bydlw98/cmp-env" },
           -- https://github.com/hrsh7th/cmp-calc
           { "hrsh7th/cmp-calc" },
+          { "zbirenbaum/copilot-cmp" },
         },
       }
     end,
@@ -119,10 +120,11 @@ function M.config()
         },
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
-          { name = "path" },
+          { name = "copilot" },
           -- { name = "nvim_lsp_signature_help" },
           { name = "luasnip" },
           { name = "nvim_lua" },
+          { name = "path" },
           -- { name = "omni" },
           { name = "buffer" },
           -- { name = "fuzzy_buffer" },
@@ -157,6 +159,7 @@ function M.config()
             elseif luasnip.expand_or_jumpable() then
               vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
             end
+
             fallback()
           end, { "i", "s" }),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
@@ -165,6 +168,7 @@ function M.config()
             elseif luasnip.jumpable(-1) then
               vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
             end
+
             fallback()
           end, { "i", "s" }),
           ["<C-Space>"] = cmp.mapping.complete(),
@@ -206,6 +210,7 @@ function M.config()
           name = "npm",
           filetypes = { "json" },
         },
+        ["copilot_cmp"] = {},
       },
     },
     on_setup = function(config)
@@ -283,6 +288,14 @@ function M.config()
       })
     end,
   })
+end
+
+function M.has_words_before()
+  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+    return false
+  end
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
 M.current_setup = require("utils.setup").fn.get_current_setup_wrapper(extension_name)

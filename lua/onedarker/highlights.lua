@@ -527,6 +527,7 @@ hl.plugins.spectre = {
 hl.plugins.nvim_cmp = {
   CmpItemMenuDefault = { fg = c.fg },
   CmpItemKindDefault = { fg = c.orange[300] },
+  CmpItemKindCopilot = { fg = c.red[900] },
   CmpItemAbbr = { fg = c.fg },
   CmpItemAbbrMatch = { fg = c.green[300] },
   CmpItemAbbrMatchFuzzy = { fg = c.yellow[300] },

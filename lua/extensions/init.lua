@@ -36,6 +36,7 @@ local extensions = {
   "neoscroll",
   "auto-hlsearch-nvim",
   "spectre",
+  "copilot-nvim",
   "rgflow-nvim",
   "search-replace-nvim",
   "rnvimr",
@@ -97,6 +98,7 @@ local extensions = {
   "git-worktree-nvim",
   "netman-nvim",
   "gitlab-nvim",
+  "better-ts-errors-nvim",
 }
 
 function M.config(config)
