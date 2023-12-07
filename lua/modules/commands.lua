@@ -29,12 +29,6 @@ function M.setup()
         end,
       },
       {
-        name = "LvimInfo",
-        fn = function()
-          require("lvim.core.info").toggle_popup(vim.bo.filetype)
-        end,
-      },
-      {
         name = "LvimCacheReset",
         fn = function()
           require("lvim.plugin-loader").reset_cache()

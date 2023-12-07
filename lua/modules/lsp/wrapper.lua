@@ -359,7 +359,7 @@ function M.setup()
           g = { ":LspOrganizeImports<CR>", "organize imports" },
           i = {
             function()
-              require("lvim.core.info").toggle_popup(vim.bo.filetype)
+              require("lvim.lsp.info").toggle(vim.bo.filetype)
             end,
             "lsp info",
           },
