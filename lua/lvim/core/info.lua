@@ -16,8 +16,10 @@ local function make_tools_info(bufnr)
 
   local section = {
     "Tools",
-    fmt("* Active Linters: %s%s", table.concat(supported_linters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(supported_linters) > 0 and "  " or ""),
-    fmt("* Active Formatters: %s%s", table.concat(supported_formatters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "), vim.tbl_count(supported_formatters) > 0 and "  " or ""),
+    fmt("* Active Linters: %s%s", table.concat(supported_linters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "),
+      vim.tbl_count(supported_linters) > 0 and "  " or ""),
+    fmt("* Active Formatters: %s%s", table.concat(supported_formatters, " " .. lvim.ui.icons.ui.BoxChecked .. " , "),
+      vim.tbl_count(supported_formatters) > 0 and "  " or ""),
   }
 
   return section
