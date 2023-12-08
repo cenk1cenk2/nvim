@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "stevearc/conform.nvim",
-        event = "BufWritePre",
+        event = "BufReadPost",
       }
     end,
     setup = function()
@@ -96,15 +96,15 @@ end
 
 function M.get_lsp_fallback(bufnr)
   if vim.tbl_contains({
-        "javascript",
-        "typescript",
-        "javascriptreact",
-        "typescriptreact",
-        "vue",
-        "svelte",
-      }, vim.bo[bufnr].filetype) then
+    "javascript",
+    "typescript",
+    "javascriptreact",
+    "typescriptreact",
+    "vue",
+    "svelte",
+  }, vim.bo[bufnr].filetype) then
     return "always"
-  elseif #M.filter_default_formatters(require('conform').list_formatters(bufnr)) == 0 then
+  elseif #M.filter_default_formatters(require("conform").list_formatters(bufnr)) == 0 then
     return "always"
   end
 

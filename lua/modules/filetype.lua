@@ -4,7 +4,7 @@ function M.setup()
   vim.filetype.add({
     extension = {
       ["j2"] = function()
-        vim.opt_local.indentexpr = "GetDjangoIndent()"
+        vim.api.nvim_set_option_value("indentexpr", "GetDjangoIndent()", { buf = 0 })
 
         return "jinja"
       end,
@@ -17,8 +17,6 @@ function M.setup()
       ["http"] = "http",
       ["tpl"] = function(path)
         if path:find("templates/") then
-          vim.opt_local.indentexpr = "GetDjangoIndent()"
-
           return "helm"
         end
 
@@ -54,16 +52,16 @@ function M.setup()
           return "yaml.ansible"
         end
 
-        vim.opt_local.indentexpr = "GetYAMLIndent()"
+        vim.api.nvim_set_option_value("indentexpr", "GetYAMLIndent()", { buf = 0 })
 
         return "yaml"
       end,
       [".*%.yaml"] = function(path)
-        if require("lspconfig/util").root_pattern("Chart.yaml")(path) then
+        if require("lspconfig/util").root_pattern("Chart.yaml")(path) and path:find("templates/") then
           return "helm"
         end
 
-        vim.opt_local.indentexpr = "GetYAMLIndent()"
+        vim.api.nvim_set_option_value("indentexpr", "GetYAMLIndent()", { buf = 0 })
 
         return "yaml"
       end,

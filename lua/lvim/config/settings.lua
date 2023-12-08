@@ -20,7 +20,7 @@ M.load_default_options = function()
     foldmethod = "expr", -- folding, set to "expr" for treesitter based folding
     foldexpr = "v:lua.vim.treesitter.foldexpr()", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
     foldtext = "v:lua.vim.treesitter.foldtext()",
-    -- indentexpr = "nvim_treesitter#indent()",
+    indentexpr = "nvim_treesitter#indent()",
     fillchars = {
       foldclose = lvim.ui.icons.ArrowCircleRight,
     },

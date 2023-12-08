@@ -38,7 +38,6 @@ function M.setup()
             vim.opt_local.formatoptions:remove("c")
             vim.opt_local.formatoptions:remove("r")
             vim.opt_local.formatoptions:remove("o")
-            vim.opt_local.indentexpr = "nvim_treesitter#indent()"
           end,
         },
       },
