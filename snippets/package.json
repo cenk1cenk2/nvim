@@ -17,6 +17,10 @@
       {
         "language": "go",
         "path": "./go.json"
+      },
+      {
+        "language": "yaml",
+        "path": "./yaml.json"
       }
     ]
   }
