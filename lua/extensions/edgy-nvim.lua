@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "edgy_nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, false, {
+  require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
         "folke/edgy.nvim",
@@ -22,18 +22,9 @@ function M.config()
           -- toggleterm / lazyterm at the bottom with a height of 40% of the screen
           {
             ft = "toggleterm",
-            size = { height = 0.4 },
             -- exclude floating windows
             filter = function(buf, win)
               return vim.api.nvim_win_get_config(win).relative == ""
-            end,
-          },
-          {
-            ft = "lazyterm",
-            title = "LazyTerm",
-            size = { height = 0.4 },
-            filter = function(buf)
-              return not vim.b[buf].lazyterm_cmd
             end,
           },
           "Trouble",
@@ -46,17 +37,15 @@ function M.config()
               return vim.bo[buf].buftype == "help"
             end,
           },
-          { ft = "spectre_panel", size = { height = 0.4 } },
-        },
-        left = {
-          -- Neo-tree filesystem always takes half the screen height
           {
-            title = "Neo-Tree",
-            ft = "neo-tree",
-            filter = function(buf)
-              return vim.b[buf].neo_tree_source == "filesystem"
-            end,
-            size = { height = 0.5 },
+            ft = "dbout",
+            title = "DadBod-Out",
+          },
+        },
+        right = {
+          {
+            ft = "spectre_panel",
+            size = { width = 150 },
           },
           {
             title = "Neo-Tree Git",
@@ -64,8 +53,6 @@ function M.config()
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "git_status"
             end,
-            pinned = true,
-            open = "Neotree position=right git_status",
           },
           {
             title = "Neo-Tree Buffers",
@@ -73,8 +60,6 @@ function M.config()
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "buffers"
             end,
-            pinned = true,
-            open = "Neotree position=top buffers",
           },
           {
             title = "Neo-Tree Outline",
@@ -82,19 +67,30 @@ function M.config()
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "document_symbols"
             end,
-            pinned = true,
-            open = "Neotree position=top document_symbols",
           },
-          -- any other neo-tree windows
-          "neo-tree",
+        },
+        left = {
+          -- Neo-tree filesystem always takes half the screen height
+          {
+            title = "Neo-Tree",
+            ft = "neo-tree",
+            filter = function(buf)
+              return vim.b[buf].neo_tree_source == "filesystem" or vim.b[buf].neo_tree_source == "remote"
+            end,
+          },
+
+          {
+            ft = "dbui",
+            title = "DadBod-UI",
+          },
         },
 
         ---@type table<Edgy.Pos, {size:integer, wo?:vim.wo}>
         options = {
-          left = { size = 40 },
-          bottom = { size = 15 },
-          right = { size = 40 },
-          top = { size = 15 },
+          left = { size = 50 },
+          bottom = { size = 25 },
+          right = { size = 50 },
+          top = { size = 25 },
         },
         -- edgebar animations
         animate = {
@@ -123,7 +119,7 @@ function M.config()
           -- Setting to `true`, will add an edgy winbar.
           -- Setting to `false`, won't set any winbar.
           -- Setting to a string, will set the winbar to that string.
-          winbar = true,
+          winbar = false,
           winfixwidth = true,
           winfixheight = false,
           winhighlight = "WinBar:EdgyWinBar,Normal:EdgyNormal",
@@ -188,9 +184,6 @@ function M.config()
           closed = lvim.ui.icons.ui.ChevronShortRight,
           open = lvim.ui.icons.ui.ChevronShortDown,
         },
-        -- enable this on Neovim <= 0.10.0 to properly fold edgebar windows.
-        -- Not needed on a nightly build >= June 5, 2023.
-        fix_win_height = vim.fn.has("nvim-0.10.0") == 0,
       }
     end,
     on_setup = function(config)

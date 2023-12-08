@@ -82,7 +82,6 @@ local extensions = {
   "vim-bookmarks",
   "telescope-vim-bookmarks",
   "telescope-dap",
-  "nvim-navbuddy",
   "nvim-docs-view",
   "mini-nvim-ai",
   "mini-nvim-bracketed",
