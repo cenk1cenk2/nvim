@@ -21,6 +21,10 @@
       {
         "language": "yaml",
         "path": "./yaml.json"
+      },
+      {
+        "language": "helm",
+        "path": "./helm.json"
       }
     ]
   }
