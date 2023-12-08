@@ -88,9 +88,9 @@ function M.config()
         ---@type table<Edgy.Pos, {size:integer, wo?:vim.wo}>
         options = {
           left = { size = 50 },
-          bottom = { size = 25 },
+          bottom = { size = 20 },
           right = { size = 50 },
-          top = { size = 25 },
+          top = { size = 20 },
         },
         -- edgebar animations
         animate = {
