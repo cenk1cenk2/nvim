@@ -18,28 +18,22 @@ function M.config()
     end,
     setup = function()
       return {
-        bottom = {
-          -- toggleterm / lazyterm at the bottom with a height of 40% of the screen
+        left = {
+          -- Neo-tree filesystem always takes half the screen height
           {
-            ft = "toggleterm",
-            -- exclude floating windows
-            filter = function(buf, win)
-              return vim.api.nvim_win_get_config(win).relative == ""
-            end,
-          },
-          "Trouble",
-          { ft = "qf", title = "QuickFix" },
-          {
-            ft = "help",
-            size = { height = 20 },
-            -- only show help buffers
+            title = "Neo-Tree",
+            ft = "neo-tree",
             filter = function(buf)
-              return vim.bo[buf].buftype == "help"
+              return vim.b[buf].neo_tree_source == "filesystem" or vim.b[buf].neo_tree_source == "remote"
             end,
           },
           {
-            ft = "dbout",
-            title = "DadBod-Out",
+            ft = "dbui",
+            title = "DadBod-UI",
+          },
+          {
+            ft = "DiffviewFiles",
+            title = "Diffview",
           },
         },
         right = {
@@ -69,33 +63,51 @@ function M.config()
             end,
           },
         },
-        left = {
-          -- Neo-tree filesystem always takes half the screen height
+        bottom = {
+          -- toggleterm / lazyterm at the bottom with a height of 40% of the screen
           {
-            title = "Neo-Tree",
-            ft = "neo-tree",
-            filter = function(buf)
-              return vim.b[buf].neo_tree_source == "filesystem" or vim.b[buf].neo_tree_source == "remote"
+            ft = "toggleterm",
+            size = { height = 20 },
+            -- exclude floating windows
+            filter = function(_, win)
+              return vim.api.nvim_win_get_config(win).relative == ""
             end,
           },
-
           {
-            ft = "dbui",
-            title = "DadBod-UI",
+            ft = "Trouble",
+            title = "LSP Trouble",
+          },
+          { ft = "qf", title = "QuickFix" },
+          { ft = "nvim-docs-view", title = "LSP Documentation" },
+          {
+            ft = "help",
+            size = { height = 20 },
+            -- only show help buffers
+            filter = function(buf)
+              return vim.bo[buf].buftype == "help"
+            end,
+          },
+          {
+            ft = "dbout",
+            title = "DadBod-Out",
+          },
+          {
+            ft = "neotest-summary",
+            title = "Neotest Summary",
           },
         },
 
         ---@type table<Edgy.Pos, {size:integer, wo?:vim.wo}>
         options = {
           left = { size = 50 },
-          bottom = { size = 20 },
+          bottom = { size = 15 },
           right = { size = 50 },
-          top = { size = 20 },
+          top = { size = 15 },
         },
         -- edgebar animations
         animate = {
           enabled = false,
-          fps = 100, -- frames per second
+          fps = 120, -- frames per second
           cps = 120, -- cells per second
           on_begin = function()
             vim.g.minianimate_disable = true
@@ -160,19 +172,19 @@ function M.config()
             win:prev({ pinned = false, focus = true })
           end,
           -- increase width
-          ["<c-w>>"] = function(win)
-            win:resize("width", 2)
+          ["<C-M-h>"] = function(win)
+            win:resize("width", 5)
           end,
           -- decrease width
-          ["<c-w><lt>"] = function(win)
-            win:resize("width", -2)
+          ["<C-M-l>"] = function(win)
+            win:resize("width", -5)
           end,
           -- increase height
-          ["<c-w>+"] = function(win)
-            win:resize("height", 2)
+          ["<C-M-k>"] = function(win)
+            win:resize("height", 5)
           end,
           -- decrease height
-          ["<c-w>-"] = function(win)
+          ["<C-M-j>"] = function(win)
             win:resize("height", -2)
           end,
           -- reset all custom sizing
