@@ -59,7 +59,7 @@ function M.setup()
         return "yaml"
       end,
       [".*%.yaml"] = function(path)
-        if require("lspconfig/util").root_pattern("Chart.yaml")(path) and path:find("templates/") then
+        if require("lspconfig/util").root_pattern("Chart.yaml")(path) then
           return "helm"
         end
 

@@ -26,7 +26,6 @@ return {
   lspconfig = {
     filetypes = {
       "yaml",
-      "helm",
       "!yaml.ansible",
       "!yaml.docker-compose",
     },
