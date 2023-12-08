@@ -80,9 +80,9 @@ end
 
 M.default_formatters = {
   "trim_whitespace",
+  -- "trim_multiple_whitespace",
   -- "trim_newlines",
   "trim_multiple_newlines",
-  "trim_multiple_whitespace",
 }
 
 function M.filter_default_formatters(formatters)
@@ -117,9 +117,9 @@ function M.register_tools(lsp_utils, METHOD)
     "*",
   })
 
-  lsp_utils.register_tools(METHOD, "trim_multiple_whitespace", {
-    "*",
-  })
+  -- lsp_utils.register_tools(METHOD, "trim_multiple_whitespace", {
+  --   "*",
+  -- })
 
   -- lsp_utils.register_tools(METHOD, "trim_newlines", {
   --   "*",
