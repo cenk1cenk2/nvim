@@ -24,6 +24,7 @@ function M.config()
         { cmd = "lazydocker", keymap = "d", label = "LazyDocker" },
         { cmd = "htop", keymap = "h", label = "htop" },
         { cmd = "ncdu", keymap = "n", label = "ncdu" },
+        { cmd = "k9s", keymap = "k", label = "k9s" },
       }
 
       for i, exec in pairs(togglers) do
