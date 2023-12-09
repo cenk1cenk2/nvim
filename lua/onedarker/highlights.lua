@@ -14,9 +14,9 @@ hl.common = {
   SignColumn = { fg = c.fg, bg = c.bg[200] },
   MsgArea = { fg = c.fg, bg = c.bg[200] },
   FoldColumn = { fg = c.fg, bg = c.bg[200] },
-  ModeMsg = { fg = c.fg, bg = c.bg[200] },
+  ModeMsg = { fg = c.fg, bg = c.bg[200], bold = true },
   MsgSeparator = { fg = c.fg, bg = c.bg[300] },
-  VertSplit = { fg = c.bg[300] },
+  WinSeparator = { fg = c.bg[300] },
 
   Cursor = { reverse = true },
   vCursor = { bg = c.cursor },
