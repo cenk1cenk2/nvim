@@ -12,10 +12,11 @@ hl.common = {
   Terminal = { fg = c.fg, bg = c.bg[200] },
   EndOfBuffer = { fg = c.bg[200], bg = c.bg[200] },
   SignColumn = { fg = c.fg, bg = c.bg[200] },
-  MsgArea = { fg = c.fg, bg = c.bg[200] },
+  -- MsgArea = { fg = c.fg, bg = c.bg[200] }, -- Area for messages and cmdline, don't set this highlight because of https://github.com/neovim/neovim/issues/17832
   FoldColumn = { fg = c.fg, bg = c.bg[200] },
   ModeMsg = { fg = c.fg, bg = c.bg[200], bold = true },
   MsgSeparator = { fg = c.fg, bg = c.bg[300] },
+  WinBar = { fg = c.grey[900] },
   WinSeparator = { fg = c.bg[300] },
 
   Cursor = { reverse = true },
@@ -34,6 +35,7 @@ hl.common = {
   Conceal = { fg = c.grey[600], bg = c.bg[300] },
   Folded = { fg = c.fg, bg = c.cyan[100] },
   NormalNC = { fg = c.fg, bg = c.bg[200] },
+  NormalSB = { fg = c.fg, bg = c.bg[200] },
 
   DiffAdd = { fg = c.none, bg = c.diff.add },
   DiffChange = { fg = c.none, bg = c.diff.change },
