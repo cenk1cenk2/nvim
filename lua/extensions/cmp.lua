@@ -100,7 +100,7 @@ function M.config()
               vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. " " .. lvim.ui.icons.ui.Ellipsis
             end
 
-            vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind]
+            vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind] or vim_item.kind
 
             vim_item.menu = ("[%s]"):format(current_setup.formatting.source_names[entry.source.name] or entry.source.name)
 
@@ -120,10 +120,10 @@ function M.config()
         },
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
-          { name = "copilot" },
           -- { name = "nvim_lsp_signature_help" },
           { name = "luasnip" },
           { name = "nvim_lua" },
+          { name = "copilot" },
           { name = "path" },
           -- { name = "omni" },
           { name = "buffer" },

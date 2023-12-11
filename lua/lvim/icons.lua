@@ -35,6 +35,7 @@ return {
     Constant = "",
     Property = "",
     Struct = "פּ",
+    Copilot = "ﮧ",
   },
   git = {
     LineAdded = "",
