@@ -3,14 +3,6 @@ local job = require("utils.job")
 
 local M = {}
 
-function M.run_md_printer()
-  job.spawn({
-    command = "md-printer",
-    args = { vim.fn.expand("%") },
-  })
-  M.reload_file()
-end
-
 function M.run_genpass()
   local shada = require("modules.shada")
   local store_key = "RUN_GENPASS_ARGS"
@@ -156,12 +148,6 @@ function M.setup()
               M.run_yq()
             end,
             "run yq",
-          },
-          P = {
-            function()
-              M.run_md_printer()
-            end,
-            "run md-printer",
           },
         },
       }
