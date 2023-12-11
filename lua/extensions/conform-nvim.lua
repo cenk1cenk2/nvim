@@ -87,7 +87,9 @@ M.default_formatters = {
 
 function M.filter_default_formatters(formatters)
   return vim.tbl_filter(function(formatter)
-    if vim.list_contains(M.default_formatters, formatter) then
+    if type(formatter) == "string" and vim.list_contains(M.default_formatters, formatter) then
+      return false
+    elseif type(formatter) == "table" and formatter.name and vim.list_contains(M.default_formatters, formatter.name) then
       return false
     end
 
