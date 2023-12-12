@@ -95,6 +95,10 @@ function M.config()
             ft = "neotest-summary",
             title = "Neotest Summary",
           },
+          {
+            ft = "gitlab",
+            title = "Gitlab",
+          },
         },
 
         ---@type table<Edgy.Pos, {size:integer, wo?:vim.wo}>

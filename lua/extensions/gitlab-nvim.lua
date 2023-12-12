@@ -20,6 +20,11 @@ function M.config()
         end,
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes({
+        "gitlab",
+      })
+    end,
     setup = function()
       return {
         port = nil, -- The port of the Go server, which runs in the background, if omitted or `nil` the port will be chosen automatically
@@ -202,6 +207,16 @@ function M.config()
         },
       }
     end,
+    autocmds = {
+      {
+        "FileType",
+        {
+          group = "__gitlab",
+          pattern = "gitlab",
+          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0",
+        },
+      },
+    },
   })
 end
 
