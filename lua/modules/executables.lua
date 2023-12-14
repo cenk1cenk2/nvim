@@ -28,15 +28,56 @@ function M.run_genpass()
 end
 
 function M.run_ansible_vault_decrypt()
-  job.spawn({ command = "ansible-vault", args = { "decrypt", vim.fn.expand("%") } })
-
-  M.reload_file()
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  job.spawn({
+    command = "ansible-vault",
+    writer = lines,
+    args = { "decrypt" },
+    on_success = function(j)
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, j:result())
+    end,
+  })
 end
 
 function M.run_ansible_vault_encrypt()
-  job.spawn({ command = "ansible-vault", args = { "encrypt", vim.fn.expand("%") } })
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  job.spawn({
+    command = "ansible-vault",
+    writer = lines,
+    args = { "encrypt" },
+    on_success = function(j)
+      vim.api.nvim_buf_set_lines(0, 0, -1, false, j:result())
+    end,
+  })
+end
 
-  M.reload_file()
+function M.run_sd()
+  local store_key = "SD_INPUT"
+  local shada = require("modules.shada")
+  local stored_value = shada.get(store_key)
+
+  vim.ui.input({
+    prompt = "sd: ",
+    default = stored_value,
+  }, function(arguments)
+    if arguments == nil then
+      return
+    end
+
+    arguments = vim.split(arguments, " ") or { "." }
+    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+    job.spawn({
+      command = "sd",
+      args = arguments,
+      writer = lines,
+      on_success = function(j)
+        shada.set(store_key, table.concat(arguments, " "))
+
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, j:result())
+      end,
+    })
+  end)
 end
 
 function M.run_jq()
@@ -118,6 +159,14 @@ function M.setup()
     name = "executables",
     wk = function(_, categories)
       return {
+        [categories.SEARCH] = {
+          d = {
+            function()
+              M.run_sd()
+            end,
+            "sd",
+          },
+        },
         [categories.TASKS] = {
           d = {
             function()
