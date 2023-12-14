@@ -61,10 +61,12 @@ function M.run_sd()
     default = stored_value,
   }, function(arguments)
     if arguments == nil then
+      Log:warn("No arguments provided")
+
       return
     end
 
-    arguments = vim.split(arguments, " ") or { "." }
+    arguments = vim.split(arguments, " ")
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
     job.spawn({
@@ -90,10 +92,10 @@ function M.run_jq()
     default = stored_value,
   }, function(arguments)
     if arguments == nil then
-      return
+      arguments = "."
     end
 
-    arguments = vim.split(arguments, " ") or { "." }
+    arguments = vim.split(arguments, " ")
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
     job.spawn({
@@ -122,7 +124,7 @@ function M.run_yq()
     default = stored_value,
   }, function(arguments)
     if arguments == nil then
-      return
+      arguments = "."
     end
 
     arguments = vim.split(arguments, " ") or { "." }
