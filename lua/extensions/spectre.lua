@@ -158,7 +158,7 @@ function M.config()
           },
           replace = {
             -- pick one of item that replace_engine sed/oxi
-            cmd = "oxi",
+            cmd = "sed",
           },
         },
         replace_vim_cmd = "cfdo",
