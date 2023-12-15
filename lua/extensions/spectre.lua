@@ -163,7 +163,7 @@ function M.config()
         },
         replace_vim_cmd = "cfdo",
         is_open_target_win = true, -- open file on opener window
-        is_insert_mode = false,    -- start open panel on is_insert_mode
+        is_insert_mode = false, -- start open panel on is_insert_mode
       }
     end,
     on_setup = function(config)
@@ -206,8 +206,7 @@ function M.config()
         {
           group = "__spectre",
           pattern = "spectre_panel",
-          command =
-          "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0",
+          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0",
         },
       },
     },
