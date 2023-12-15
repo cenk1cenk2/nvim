@@ -105,9 +105,9 @@ function M.run_jq()
       on_success = function(j)
         shada.set(store_key, table.concat(arguments, " "))
 
-        local result = j:result()
+        local result = table.concat(j:result(), "\n")
 
-        Log:info(("Copied result to clipboard: %s"):format(table.concat(result, "\n")))
+        Log:info(("Copied result to clipboard: %s"):format(result))
         vim.fn.setreg(vim.v.register or lvim.system_register, result)
       end,
     })
@@ -137,9 +137,9 @@ function M.run_yq()
       on_success = function(j)
         shada.set(store_key, table.concat(arguments, " "))
 
-        local result = j:result()
+        local result = table.concat(j:result(), "\n")
 
-        Log:info(("Copied result to clipboard: %s"):format(table.concat(result, "\n")))
+        Log:info(("Copied result to clipboard: %s"):format(result))
         vim.fn.setreg(vim.v.register or lvim.system_register, result)
       end,
     })
