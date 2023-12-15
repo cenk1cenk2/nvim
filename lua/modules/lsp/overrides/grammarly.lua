@@ -1,5 +1,5 @@
 return {
-  cmd = { "fnm", "exec", "--using=16", "--", "grammarly-languageserver", "--stdio" },
+  cmd = { "grammarly-languageserver", "--stdio" },
   filetypes = { "markdown", "plaintext", "text", "gitcommit" },
   single_file_support = true,
   settings = {
