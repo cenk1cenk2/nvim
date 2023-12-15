@@ -286,9 +286,15 @@ function M.config()
     on_done = function(config)
       require("telescope").load_extension("noice")
     end,
-    wk = {
-      ["M"] = { ":Noice<CR>", "messages" },
-    },
+    wk = function(_, categories)
+      return {
+        [categories.ACTIONS] = {
+          ["N"] = { ":Noice disable<CR>", "disable noice" },
+          ["n"] = { ":Noice enable<CR>", "enable noice" },
+        },
+        ["M"] = { ":Noice<CR>", "messages" },
+      }
+    end,
     autocmds = {
       {
         "FileType",
