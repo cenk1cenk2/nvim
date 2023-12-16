@@ -38,6 +38,9 @@ function M.setup()
     pattern = {
       ["Dockerfile.*"] = "dockerfile",
       [".*%.yml"] = function(path)
+        -- vim.api.nvim_set_option_value("indentexpr", "GetYAMLIndent()", { buf = 0 })
+        -- vim.cmd([[TSDisable indent]])
+
         if path:find("docker%-compose.*$") then
           return "yaml.docker-compose"
         end
@@ -52,8 +55,6 @@ function M.setup()
           return "yaml.ansible"
         end
 
-        vim.api.nvim_set_option_value("indentexpr", "GetYAMLIndent()", { buf = 0 })
-
         return "yaml"
       end,
       [".*%.yaml"] = function(path)
@@ -61,7 +62,8 @@ function M.setup()
           return "helm"
         end
 
-        vim.api.nvim_set_option_value("indentexpr", "GetYAMLIndent()", { buf = 0 })
+        -- vim.api.nvim_set_option_value("indentexpr", "GetYAMLIndent()", { buf = 0 })
+        -- vim.cmd([[TSDisable indent]])
 
         return "yaml"
       end,
