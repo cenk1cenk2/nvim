@@ -8,10 +8,6 @@ return {
     client.server_capabilities.documentFormattingProvider = false
     client.server_capabilities.documentRangeFormattingProvider = false
   end,
-  flags = {
-    allow_incremental_sync = false,
-    debounce_text_changes = 80,
-  },
   single_file_support = false,
   settings = {
     -- https://github.com/pmizio/typescript-tools.nvim#%EF%B8%8F-configuration
