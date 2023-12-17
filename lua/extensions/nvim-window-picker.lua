@@ -13,7 +13,11 @@ function M.config()
     setup = function()
       return {
         selection_chars = lvim.selection_chars:upper(),
-        use_winbar = "always",
+        picker_config = {
+          statusline_winbar_picker = {
+            use_winbar = "always",
+          },
+        },
         filter_rules = {
           bo = {
             filetype = vim.tbl_filter(function(ft)
@@ -25,9 +29,20 @@ function M.config()
             end, lvim.disabled_filetypes),
           },
         },
-        fg_color = lvim.ui.colors.fg,
-        current_win_hl_color = lvim.ui.colors.green[300],
-        other_win_hl_color = lvim.ui.colors.orange[300],
+        highlights = {
+          winbar = {
+            focused = {
+              fg = lvim.ui.colors.fg,
+              bg = lvim.ui.colors.yellow[300],
+              bold = true,
+            },
+            unfocused = {
+              fg = lvim.ui.colors.fg,
+              bg = lvim.ui.colors.orange[300],
+              bold = true,
+            },
+          },
+        },
       }
     end,
     on_setup = function(config)
