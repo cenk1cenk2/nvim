@@ -85,6 +85,10 @@ return {
 
     -- redraw
     ["<C-;>"] = ":redraw<CR>",
+
+    -- select last put text
+    ["gy"] = { "`[v`]", { desc = "select visual last put text" } },
+    ["gY"] = { "`[V`]", { desc = "select visual block last put text" } },
   },
 
   ---@usage change or add keymappings for terminal mode

@@ -26,7 +26,7 @@ return {
       end,
       "go to references",
     },
-    ["gy"] = {
+    ["gT"] = {
       function()
         lvim.lsp.wrapper.implementation()
       end,
