@@ -8,8 +8,6 @@ function M.config()
     plugin = function()
       return {
         "s1n7ax/nvim-window-picker",
-        -- TODO: fix this and update after
-        commit = "65bbc52c27b0cd4b29976fe03be73cc943357528",
       }
     end,
     setup = function()
