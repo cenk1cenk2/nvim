@@ -34,6 +34,7 @@ function M.config()
         else
           vim.cmd("Lspsaga hover_doc")
         end
+        require("lspsaga.hover").pending_request = false
       end
       lvim.lsp.wrapper.rename = function()
         vim.cmd("Lspsaga rename")
