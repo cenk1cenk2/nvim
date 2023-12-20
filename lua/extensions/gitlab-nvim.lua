@@ -162,16 +162,19 @@ function M.config()
               "gitlab mr create comment",
             },
             ["m"] = {
-              function()
-                require("gitlab").merge({ delete_branch = true })
-              end,
-              "gitlab merge branch through mr",
-            },
-            ["M"] = {
-              function()
-                require("gitlab").create_mr()
-              end,
-              "gitlab create mr",
+              name = "merge request",
+              ["c"] = {
+                function()
+                  require("gitlab").create_mr()
+                end,
+                "gitlab create mr",
+              },
+              ["a"] = {
+                function()
+                  require("gitlab").merge({ delete_branch = true })
+                end,
+                "gitlab merge branch through mr",
+              },
             },
             ["n"] = {
               function()
@@ -198,6 +201,7 @@ function M.config()
               "gitlab mr open in browser",
             },
             ["p"] = {
+              name = "people",
               ["a"] = {
                 function()
                   require("gitlab").add_assignee()
