@@ -3,6 +3,22 @@ local job = require("utils.job")
 
 local M = {}
 
+local function treesitter_highlight(ft)
+  return function(input)
+    local parser = vim.treesitter.get_string_parser(input, ft)
+    local tree = parser:parse()[1]
+    local query = vim.treesitter.query.get(ft, "highlights")
+    local highlights = {}
+
+    for id, node, _ in query:iter_captures(tree:root(), input) do
+      local _, cstart, _, cend = node:range()
+      table.insert(highlights, { cstart, cend, "@" .. query.captures[id] })
+    end
+
+    return highlights
+  end
+end
+
 function M.run_genpass()
   local shada = require("modules.shada")
   local store_key = "RUN_GENPASS_ARGS"
@@ -10,6 +26,7 @@ function M.run_genpass()
 
   vim.ui.input({
     prompt = "Genpass arguments:",
+    highlight = treesitter_highlight("bash"),
     default = stored_value,
   }, function(arguments)
     shada.set(store_key, arguments)
@@ -58,6 +75,7 @@ function M.run_sd()
 
   vim.ui.input({
     prompt = "sd: ",
+    highlight = treesitter_highlight("bash"),
     default = stored_value,
   }, function(arguments)
     if arguments == nil then
@@ -89,6 +107,7 @@ function M.run_jq()
 
   vim.ui.input({
     prompt = "jq: ",
+    highlight = treesitter_highlight("bash"),
     default = stored_value,
   }, function(arguments)
     if arguments == nil then
@@ -121,6 +140,7 @@ function M.run_yq()
 
   vim.ui.input({
     prompt = "yq: ",
+    highlight = treesitter_highlight("bash"),
     default = stored_value,
   }, function(arguments)
     if arguments == nil then

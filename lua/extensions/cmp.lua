@@ -280,6 +280,14 @@ function M.config()
         }),
       })
 
+      -- vim.ui
+      cmp.setup.cmdline("@", {
+        sources = {
+          { name = "cmdline" },
+          { name = "path" },
+        },
+      })
+
       -- dap
       cmp.setup.filetype({ "dap-repl", "dapui_watches" }, {
         sources = {
