@@ -163,9 +163,15 @@ function M.config()
             },
             ["m"] = {
               function()
-                require("gitlab").move_to_discussion_tree_from_diagnostic()
+                require("gitlab").merge({ delete_branch = true })
               end,
-              "gitlab mr move to discussion tree",
+              "gitlab merge branch through mr",
+            },
+            ["M"] = {
+              function()
+                require("gitlab").create_mr()
+              end,
+              "gitlab create mr",
             },
             ["n"] = {
               function()
@@ -179,17 +185,49 @@ function M.config()
               end,
               "gitlab mr toggle discussions",
             },
-            ["p"] = {
+            ["D"] = {
               function()
-                require("gitlab").pipeline()
+                require("gitlab").move_to_discussion_tree_from_diagnostic()
               end,
-              "gitlab mr pipeline",
+              "gitlab mr move to discussion tree",
             },
             ["f"] = {
               function()
                 require("gitlab").open_in_browser()
               end,
               "gitlab mr open in browser",
+            },
+            ["p"] = {
+              ["a"] = {
+                function()
+                  require("gitlab").add_assignee()
+                end,
+                "add assignee",
+              },
+              ["A"] = {
+                function()
+                  require("gitlab").remove_assignee()
+                end,
+                "remove assignee",
+              },
+              ["r"] = {
+                function()
+                  require("gitlab").add_reviewer()
+                end,
+                "add reviewer",
+              },
+              ["R"] = {
+                function()
+                  require("gitlab").remove_reviewer()
+                end,
+                "remove reviewer",
+              },
+            },
+            ["P"] = {
+              function()
+                require("gitlab").pipeline()
+              end,
+              "gitlab mr pipeline",
             },
           },
         },
