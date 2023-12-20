@@ -92,6 +92,7 @@ function M.config()
 
       vim.env.VISUAL = editor
       vim.env.EDITOR = editor
+      vim.env.GIT_EDITOR = editor
 
       require("telescope").load_extension("find_terminals")
     end,
