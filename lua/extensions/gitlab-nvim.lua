@@ -38,6 +38,8 @@ function M.config()
           perform_linewise_action = "<C-l>", -- Once in normal mode, does the linewise action (see logs for this job, etc)
         },
         discussion_tree = { -- The discussion tree that holds all comments
+          switch_view = "T", -- Toggles between the notes and discussions views
+          default_view = "discussions", -- Show "discussions" or "notes" by default
           blacklist = {}, -- List of usernames to remove from tree (bots, CI, etc)
           jump_to_file = "f", -- Jump to comment location in file
           jump_to_reviewer = "g", -- Jump to the location in the reviewer window
