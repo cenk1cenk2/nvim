@@ -233,6 +233,12 @@ function M.config()
               end,
               "gitlab mr pipeline",
             },
+            ["Q"] = {
+              function()
+                require("gitlab").restart()
+              end,
+              "gitlab restart server",
+            },
           },
         },
       }
