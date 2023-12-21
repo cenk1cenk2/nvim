@@ -253,6 +253,12 @@ function M.config()
               end,
               "gitlab mr create comment",
             },
+            ["C"] = {
+              function()
+                require("gitlab").create_comment_suggestions()
+              end,
+              "gitlab mr create suggestion",
+            },
           },
         },
       }
