@@ -93,7 +93,7 @@ function M.setup()
           group = "_filetype_settings",
           pattern = "gitcommit",
           callback = function(event)
-            vim.api.nvim_set_option_value("wrap", false, { buf = event.buf })
+            vim.opt_local.wrap = false
           end,
         },
       },
