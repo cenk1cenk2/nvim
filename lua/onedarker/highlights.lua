@@ -634,6 +634,12 @@ hl.plugins.treesitter_context = {
   TreesitterContextLineNumber = { fg = c.cyan[600] },
 }
 
+hl.plugins.symbol_usage_nvim = {
+  ["SymbolUsageRef"] = { fg = c.yellow[300], bold = true },
+  ["SymbolUsageDef"] = { fg = c.purple[300], bold = true },
+  ["SymbolUsageImpl"] = { fg = c.red[300], bold = true },
+}
+
 function M.load_highlights(ns, highlights, loaded)
   for group_name, group_settings in pairs(highlights) do
     -- table.insert(loaded, group_name)

@@ -242,7 +242,7 @@ function M.init(config)
   end
 
   if config ~= nil and config.hl ~= nil then
-    local highlights = M.evaluate_property(config.hl, config)
+    local highlights = M.evaluate_property(config.hl, config, M.fn)
 
     for key, value in pairs(highlights) do
       vim.api.nvim_set_hl(0, key, value)
@@ -379,6 +379,10 @@ end
 
 function M.fn.get_current_setup(extension_name)
   return lvim.extensions[extension_name].current_setup
+end
+
+function M.fn.get_highlight(name)
+  return vim.api.nvim_get_hl(0, { name = name })
 end
 
 return M

@@ -98,6 +98,7 @@ local extensions = {
   "netman-nvim",
   "gitlab-nvim",
   "better-ts-errors-nvim",
+  "symbol-usage-nvim",
 }
 
 function M.config(config)

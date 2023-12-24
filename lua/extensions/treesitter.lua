@@ -200,6 +200,27 @@ function M.config()
         },
       }
     end,
+    -- keymaps = function()
+    --   return {
+    --     {
+    --       { "n" },
+    --       ["<F10>"] = {
+    --         function()
+    --           vim.cmd([[call <SID>SynStack()]])
+    --           vim.cmd([[
+    --           function! <SID>SynStack()
+    --           if !exists("*synstack")
+    --           return
+    --           endif
+    --           echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+    --           endfunc
+    --           ]])
+    --         end,
+    --         { desc = "show highlight" },
+    --       },
+    --     },
+    --   }
+    -- end,
   })
 end
 
