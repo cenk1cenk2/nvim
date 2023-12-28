@@ -48,8 +48,12 @@ function M.config()
     on_setup = function(config)
       require("window-picker").setup(config.setup)
     end,
-    on_done = function()
-      lvim.fn.pick_window = require("window-picker").pick_window()
+    define_global_fn = function()
+      return {
+        pick_window = function()
+          return require("window-picker").pick_window()
+        end,
+      }
     end,
   })
 end
