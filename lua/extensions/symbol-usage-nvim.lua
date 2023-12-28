@@ -42,7 +42,8 @@ function M.config()
         ---created until the request is finished. Recommended to use with `above`
         ---vt_position to avoid "jumping lines".
         ---@type string|table|false
-        request_pending_text = lvim.ui.icons.misc.Watch,
+        request_pending_text = false,
+        -- request_pending_text = lvim.ui.icons.misc.Watch,
         ---The function can return a string to which the highlighting group from `opts.hl` is applied.
         ---Alternatively, it can return a table of tuples of the form `{ { text, hl_group }, ... }`` - in this case the specified groups will be applied.
         ---See `#format-text-examples`
@@ -52,7 +53,7 @@ function M.config()
         definition = { enabled = false },
         implementation = { enabled = true },
         ---@type { lsp?: string[], filetypes?: string[] } Disables `symbol-usage.nvim' on certain LSPs or file types.
-        disable = { lsp = {}, filetypes = { "lua" } },
+        disable = { lsp = { "yamlls", "lua_ls", "dockerls" }, filetypes = {} },
         ---@type UserOpts[] See default overridings in `lua/symbol-usage/langs.lua`
         filetypes = {
           typescript = {
