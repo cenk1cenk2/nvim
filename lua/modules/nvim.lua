@@ -22,7 +22,10 @@ function M.update_sync()
   Log:warn("Triggered the special update method.")
 
   local _, err = pcall(function()
+    require("lvim.bootstrap"):update()
+
     vim.cmd([[Lazy! sync]])
+
     M.update_language_servers_sync()
 
     vim.api.nvim_create_autocmd("User", {
@@ -41,6 +44,7 @@ function M.update_sync()
 end
 
 function M.rebuild_and_update()
+  require("lvim.bootstrap"):update()
   M.rebuild_latest_neovim()
   M.update()
 end
