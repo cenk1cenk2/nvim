@@ -28,10 +28,19 @@ function M.config()
         bt_ignore = lvim.disabled_buffer_types, -- lua table with 'buftype' values for which 'statuscolumn' will be unset
         -- Default segments (fold -> sign -> line number + separator), explained below
         segments = {
-          -- { text = { builtin.foldfunc }, click = "v:lua.ScFa" },
           {
-            sign = { namespace = { "gitsign.*" }, maxwidth = 1, colwidth = 1, auto = false },
+            sign = { namespace = { "gitsign" }, maxwidth = 1, colwidth = 1, auto = false },
             click = "v:lua.ScSa",
+          },
+          {
+            text = {
+              function()
+                return "%="
+              end,
+              builtin.foldfunc,
+            },
+            click = "v:lua.ScFa",
+            auto = true,
           },
           {
             sign = { name = { "Dap*" }, auto = true },
@@ -39,6 +48,10 @@ function M.config()
           },
           {
             sign = { name = { "Diagnostic" }, colwidth = 1, maxwidth = 1, auto = false },
+            click = "v:lua.ScSa",
+          },
+          {
+            sign = { name = { ".*" }, maxwidth = 1, colwidth = 1, auto = true },
             click = "v:lua.ScSa",
           },
           { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
