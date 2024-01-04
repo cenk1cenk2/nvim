@@ -357,6 +357,7 @@ function M.setup()
           },
           F = { ":LvimToggleFormatOnSave<CR>", "toggle autoformat" },
           g = { ":LspOrganizeImports<CR>", "organize imports" },
+          G = { ":LspAddMissingImports<CR>", "add all missing imports" },
           i = {
             function()
               require("lvim.lsp.info").toggle(vim.bo.filetype)
