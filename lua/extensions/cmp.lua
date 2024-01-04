@@ -37,7 +37,7 @@ function M.config()
           -- { "bydlw98/cmp-env" },
           -- https://github.com/hrsh7th/cmp-calc
           { "hrsh7th/cmp-calc" },
-          { "zbirenbaum/copilot-cmp" },
+          -- { "zbirenbaum/copilot-cmp" },
         },
       }
     end,
@@ -123,7 +123,7 @@ function M.config()
           -- { name = "nvim_lsp_signature_help" },
           { name = "luasnip" },
           { name = "nvim_lua" },
-          { name = "copilot" },
+          -- { name = "copilot" },
           { name = "path" },
           -- { name = "omni" },
           { name = "buffer" },
