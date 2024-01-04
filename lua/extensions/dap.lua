@@ -135,6 +135,12 @@ function M.config()
             end,
             "inspect element",
           },
+          K = {
+            function()
+              require("dap.ui.widgets").preview()
+            end,
+            "preview",
+          },
           L = {
             function()
               require("dap").list_breakpoints()
@@ -146,12 +152,6 @@ function M.config()
               require("dap").step_out()
             end,
             "step out",
-          },
-          p = {
-            function()
-              require("dap.ui.widgets").preview()
-            end,
-            "preview",
           },
           P = {
             function()

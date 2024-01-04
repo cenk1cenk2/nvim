@@ -101,7 +101,7 @@ function M.config()
             end,
             "toggle ui",
           },
-          K = {
+          U = {
             function()
               require("dapui").float_element()
             end,
