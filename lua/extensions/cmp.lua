@@ -210,7 +210,7 @@ function M.config()
           name = "npm",
           filetypes = { "json" },
         },
-        ["copilot_cmp"] = {},
+        -- ["copilot_cmp"] = {},
       },
     },
     on_setup = function(config)
