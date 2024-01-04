@@ -50,14 +50,14 @@ function M.config()
               },
               {
                 id = "stacks",
-                size = 0.6,
+                size = 0.5,
               },
               {
                 id = "breakpoints",
-                size = 0.2,
+                size = 0.3,
               },
             },
-            size = 40,
+            size = 60,
             position = "right",
           },
           {

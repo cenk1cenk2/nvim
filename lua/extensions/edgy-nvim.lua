@@ -62,6 +62,21 @@ function M.config()
               return vim.b[buf].neo_tree_source == "document_symbols"
             end,
           },
+          {
+            title = "Dap Watches",
+            ft = "dapui_watches",
+            size = { width = 75 },
+          },
+          {
+            title = "Dap Stacks",
+            ft = "dapui_stacks",
+            size = { width = 75 },
+          },
+          {
+            title = "Dap Breakpoints",
+            ft = "dapui_breakpoints",
+            size = { width = 75 },
+          },
         },
         bottom = {
           -- toggleterm / lazyterm at the bottom with a height of 40% of the screen
@@ -98,6 +113,16 @@ function M.config()
           {
             ft = "gitlab",
             title = "Gitlab",
+          },
+          {
+            ft = "dap-repl",
+            title = "Dap Replication",
+            size = { height = 20 },
+          },
+          {
+            ft = "dapui_scopes",
+            title = "Dap Scopes",
+            size = { height = 20 },
           },
         },
 

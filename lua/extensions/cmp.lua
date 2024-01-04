@@ -46,6 +46,10 @@ function M.config()
       local luasnip = require("luasnip")
 
       return {
+        -- required for https://github.com/rcarriga/cmp-dap
+        enabled = function()
+          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt" or require("cmp_dap").is_dap_buffer()
+        end,
         confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false },
         completion = {
           ---@usage The minimum length of a word to complete on.
@@ -289,7 +293,7 @@ function M.config()
       })
 
       -- dap
-      cmp.setup.filetype({ "dap-repl", "dapui_watches" }, {
+      cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
         sources = {
           { name = "dap" },
         },
