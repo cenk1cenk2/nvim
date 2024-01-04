@@ -25,7 +25,7 @@ function M.config()
         icons = { expanded = lvim.ui.icons.ui.ChevronShortDown, collapsed = lvim.ui.icons.ui.ChevronShortRight },
         mappings = {
           -- Use a table to apply multiple mappings
-          expand = { "<CR>", "<2-LeftMouse>" },
+          expand = { "<CR>", "<2-LeftMouse>", "O" },
           open = "o",
           remove = "d",
           edit = "e",
