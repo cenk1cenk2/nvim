@@ -24,6 +24,7 @@ function M.config()
     on_done = function(_, fn)
       lvim.lsp.wrapper.code_action = function()
         vim.cmd("Lspsaga code_action")
+        require("lspsaga.codeaction").pending_request = false
       end
       lvim.lsp.wrapper.hover = function()
         if fn.is_extension_enabled("nvim_ufo") then
@@ -50,9 +51,11 @@ function M.config()
       end
       lvim.lsp.wrapper.incoming_calls = function()
         vim.cmd("Lspsaga incoming_calls")
+        require("lspsaga.callhierarchy").pending_request = false
       end
       lvim.lsp.wrapper.outgoing_calls = function()
         vim.cmd("Lspsaga outgoing_calls")
+        require("lspsaga.callhierarchy").pending_request = false
       end
     end,
     setup = function()
