@@ -29,21 +29,27 @@ function M.config()
     signs = {
       DapBreakpoint = {
         text = lvim.ui.icons.ui.Bug,
-        texthl = "LspDiagnosticsSignError",
+        texthl = "DiagnosticWarning",
         linehl = "",
         numhl = "",
       },
       DapBreakpointRejected = {
         text = lvim.ui.icons.ui.Bug,
-        texthl = "LspDiagnosticsSignHint",
+        texthl = "DiagnosticError",
         linehl = "",
         numhl = "",
       },
       DapStopped = {
         text = lvim.ui.icons.ui.BoldArrowRight,
-        texthl = "LspDiagnosticsSignInformation",
-        linehl = "DiagnosticUnderlineInfo",
-        numhl = "LspDiagnosticsSignInformation",
+        texthl = "DiagnosticInformation",
+        linehl = "",
+        numhl = "",
+      },
+      DapLogPoint = {
+        text = lvim.ui.icons.ui.Watches,
+        texthl = "DiagnosticWarning",
+        linehl = "",
+        numhl = "",
       },
     },
     wk = function(_, categories)
@@ -54,6 +60,12 @@ function M.config()
               require("dap").toggle_breakpoint()
             end,
             "breakpoint",
+          },
+          D = {
+            function()
+              require("dap").set_breakpoint(nil, nil, vim.fn.input({ prompt = "log" }))
+            end,
+            "logpint",
           },
           b = {
             function()
@@ -73,11 +85,11 @@ function M.config()
             end,
             "run to cursor",
           },
-          D = {
+          F = {
             function()
-              require("dap").disconnect()
+              require("dap").run_last()
             end,
-            "disconnect",
+            "run last",
           },
           g = {
             function()
@@ -117,9 +129,15 @@ function M.config()
           },
           p = {
             function()
+              require("dap.ui.widgets").preview()
+            end,
+            "preview",
+          },
+          P = {
+            function()
               require("dap").pause()
             end,
-            "Pause",
+            "pause",
           },
           r = {
             function()
@@ -138,6 +156,12 @@ function M.config()
               require("dap").close()
             end,
             "quit",
+          },
+          Q = {
+            function()
+              require("dap").disconnect()
+            end,
+            "disconnect",
           },
         },
       }
