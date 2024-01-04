@@ -33,21 +33,27 @@ function M.config()
         linehl = "",
         numhl = "",
       },
-      DapBreakpointRejected = {
-        text = lvim.ui.icons.ui.Bug,
-        texthl = "DiagnosticError",
-        linehl = "",
-        numhl = "",
-      },
-      DapStopped = {
-        text = lvim.ui.icons.ui.BoldArrowRight,
-        texthl = "DiagnosticInformation",
+      DapBreakpointCondition = {
+        text = lvim.ui.icons.ui.Scopes,
+        texthl = "DiagnosticWarning",
         linehl = "",
         numhl = "",
       },
       DapLogPoint = {
         text = lvim.ui.icons.ui.Watches,
         texthl = "DiagnosticWarning",
+        linehl = "",
+        numhl = "",
+      },
+      DapStopped = {
+        text = lvim.ui.icons.ui.BoldArrowRight,
+        texthl = "DiagnosticWarning",
+        linehl = "",
+        numhl = "",
+      },
+      DapBreakpointRejected = {
+        text = lvim.ui.icons.ui.Bug,
+        texthl = "DiagnosticError",
         linehl = "",
         numhl = "",
       },
@@ -63,9 +69,23 @@ function M.config()
           },
           D = {
             function()
-              require("dap").set_breakpoint(nil, nil, vim.fn.input({ prompt = "log" }))
+              vim.ui.input({
+                prompt = "Conditional breakpoint: ",
+              }, function(value)
+                require("dap").set_breakpoint(value, nil, nil)
+              end)
             end,
-            "logpint",
+            "conditional breakpoint",
+          },
+          l = {
+            function()
+              vim.ui.input({
+                prompt = "Log: ",
+              }, function(value)
+                require("dap").set_breakpoint(nil, nil, value)
+              end)
+            end,
+            "log point",
           },
           b = {
             function()
@@ -115,7 +135,7 @@ function M.config()
             end,
             "inspect element",
           },
-          l = {
+          L = {
             function()
               require("dap").list_breakpoints()
             end,
