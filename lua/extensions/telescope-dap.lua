@@ -18,7 +18,7 @@ function M.config()
     wk = function(_, categories)
       return {
         [categories.DEBUG] = {
-          ["l"] = { ":Telescope dap configurations<CR>", "configurations" },
+          ["f"] = { ":Telescope dap configurations<CR>", "configurations" },
         },
       }
     end,

@@ -103,7 +103,7 @@ function M.config()
             end,
             "inspect element",
           },
-          L = {
+          l = {
             function()
               require("dap").list_breakpoints()
             end,
@@ -151,6 +151,8 @@ function M.config()
             pattern = "launch.json",
             callback = function()
               require("dap.ext.vscode").load_launchjs()
+
+              require("lvim.core.log"):info("Reloaded launch.json for dap.")
             end,
           },
         },
