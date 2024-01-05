@@ -1,50 +1,84 @@
 #!/usr/bin/env bash
 
 SECONDS=0
-# COMMIT_TAG="nightly"
-COMMIT_SHA="bdfea2a8919963dfe24052635883f0213cff83e8"
+set -o pipefail
+
+COMMIT_TAG="nightly"
+# COMMIT_SHA="bdfea2a8919963dfe24052635883f0213cff83e8"
 # PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
+
+REMOTE_API_URL="https://api.github.com/repos/neovim/neovim"
 
 ## inject logger
 LOG_LEVEL=${LOG_LEVEL-"INFO"}
 # shellcheck disable=SC1090
 source <(curl -s "https://gist.githubusercontent.com/cenk1cenk2/e03d8610534a9c78f755c1c1ed93a293/raw/logger.sh")
 
-log_this "tag: [ ${COMMIT_TAG} ] sha: [ ${COMMIT_SHA} ]" "${BLUE}build-neovim${RESET}" "LIFETIME" "bottom"
+log_this "" "${BLUE}build-neovim${RESET}" "LIFETIME" "bottom"
+log_this "${COMMIT_TAG}" "${MAGENTA}COMMIT_TAG${RESET}" "LIFETIME"
+log_this "${COMMIT_SHA}" "${MAGENTA}COMMIT_SHA${RESET}" "LIFETIME"
+log_this "${PATCHES}" "${MAGENTA}PATCHES${RESET}" "LIFETIME"
+log_this "${NVIM_FORCE_BUILD}" "${MAGENTA}NVIM_FORCE_BUILD${RESET}" "LIFETIME"
+log_divider
+
+NVIM_VERSION=$(nvim --version | head -1 | sed 's/^NVIM \(v.*\)$/\1/')
+
+log_info "Current neovim version: ${NVIM_VERSION}"
 
 if [ -x "$(command -v nvim)" ]; then
-	if [ -n "$COMMIT_TAG" ]; then
-		NVIM_VERSION=$(nvim --version | sed 's/^NVIM \(v.*\)$/\1/' | head -1)
+	if [[ -z "$COMMIT_TAG" ]] && [[ -z "$COMMIT_SHA" ]] && [[ -x "$(command -v curl)" ]] && [[ -x "$(command -v jq)" ]]; then
+		REMOTE_LATEST_COMMIT=$(curl -L -s -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "$REMOTE_API_URL/commits?per_page=1" | jq -r '. | first .sha')
+		REMOTE_LATEST_COMMIT_SHORT="$(git rev-parse --short=9 "$REMOTE_LATEST_COMMIT")"
+		NVIM_LAST_BUILD_HEAD=$(echo "$NVIM_VERSION" | sed 's/.*+g\(.*\)$/\1/')
 
-		log_info "Current neovim version: ${NVIM_VERSION}"
+		log_info "Current neovim head: ${NVIM_LAST_BUILD_HEAD}"
+		log_info "Checking neovim remote latest commit: ${REMOTE_LATEST_COMMIT} -> ${REMOTE_LATEST_COMMIT_SHORT}"
 
-		log_warn "Checking neovim version against tag: ${COMMIT_TAG}"
+		if [[ "$NVIM_LAST_BUILD_HEAD" == "$REMOTE_LATEST_COMMIT_SHORT" ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
+			log_warn "No need to rebuild! Already at latest commit."
+			exit 0
+		fi
+	elif [[ -n "$COMMIT_TAG" ]] && [[ -x "$(command -v curl)" ]] && [[ -x "$(command -v jq)" ]] && ! [[ "$COMMIT_TAG" =~ ^v\d\.\d\.\d ]]; then
+		REMOTE_LATEST_COMMIT=$(curl -L -s -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "$REMOTE_API_URL/git/matching-refs/tags/nightly" | jq -r '. | first | .object.sha')
+		REMOTE_LATEST_COMMIT_SHORT="$(git rev-parse --short=9 "$REMOTE_LATEST_COMMIT")"
+		NVIM_LAST_BUILD_HEAD=$(echo "$NVIM_VERSION" | sed 's/.*+g\(.*\)$/\1/')
+
+		log_info "Current neovim head: ${NVIM_LAST_BUILD_HEAD}"
+		log_info "Checking neovim remote latest commit: ${REMOTE_LATEST_COMMIT} -> ${REMOTE_LATEST_COMMIT_SHORT} for ${COMMIT_TAG}"
 
 		if [ -n "$COMMIT_SHA" ]; then
 			logger_warn "Commit sha is also set and ignored: ${COMMIT_SHA}"
 		fi
 
-		if [[ $NVIM_VERSION == "$COMMIT_TAG" ]]; then
+		if [[ "$NVIM_LAST_BUILD_HEAD" == "$REMOTE_LATEST_COMMIT_SHORT" ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
+			log_warn "No need to rebuild! Already at latest commit for given rolling tag: ${COMMIT_TAG}"
+			exit 0
+		fi
+	elif [ -n "$COMMIT_TAG" ]; then
+		log_info "Checking neovim version against tag: ${COMMIT_TAG}"
+
+		if [ -n "$COMMIT_SHA" ]; then
+			logger_warn "Commit sha is also set and ignored: ${COMMIT_SHA}"
+		fi
+
+		if [[ "$NVIM_VERSION" == "$COMMIT_TAG" ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
 			log_warn "No need to rebuild!"
 			exit 0
 		fi
 	elif [ -n "$COMMIT_SHA" ]; then
-		NVIM_VERSION=$(nvim --version | sed 's/.*+g\(.........\)$/\1/' | head -1)
+		NVIM_LAST_BUILD_HEAD=$(echo "$NVIM_VERSION" | sed 's/.*+g\(.*\)$/\1/')
+		SHORT_COMMIT_SHA="$(git rev-parse --short=9 "$COMMIT_SHA")"
 
-		log_info "Current neovim version: ${NVIM_VERSION}"
+		log_info "Current neovim head: ${NVIM_LAST_BUILD_HEAD}"
 
-		SHORT_COMMIT_SHA=$(echo "$COMMIT_SHA" | cut -c1-9)
+		log_info "Checking neovim version against commit sha: ${COMMIT_SHA} -> ${SHORT_COMMIT_SHA}"
 
-		log_warn "Checking neovim version against commit sha: ${COMMIT_SHA} -> ${SHORT_COMMIT_SHA}"
-
-		if [[ $NVIM_VERSION == "$SHORT_COMMIT_SHA" ]]; then
+		if [[ "$NVIM_LAST_BUILD_HEAD" == "$SHORT_COMMIT_SHA" ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
 			log_warn "No need to rebuild!"
 			exit 0
 		fi
 	fi
 fi
-
-log_this "[install-nvim]" "false" "lifetime" "bottom"
 
 ASSET=$(tr -cd 'a-f0-9' </dev/urandom | head -c 32)
 
