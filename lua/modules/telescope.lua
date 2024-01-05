@@ -10,6 +10,7 @@ function M.rg_interactive()
   vim.ui.input({
     prompt = "Pass in rg args:",
     default = stored_value,
+    highlight = require("utils").treesitter_highlight("bash"),
   }, function(args)
     if args == nil then
       Log:warn("Nothing to do.")
