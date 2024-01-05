@@ -10,8 +10,7 @@ LOG_LEVEL=${LOG_LEVEL-"INFO"}
 # shellcheck disable=SC1090
 source <(curl -s "https://gist.githubusercontent.com/cenk1cenk2/e03d8610534a9c78f755c1c1ed93a293/raw/logger.sh")
 
-SCRIPT_VERSION=$(git rev-parse --short HEAD)
-log_this "${SCRIPT_VERSION}" "${BLUE}build-neovim${RESET}" "LIFETIME" "bottom"
+log_this "tag: [ ${COMMIT_TAG} ] sha: [ ${COMMIT_SHA} ]" "${BLUE}build-neovim${RESET}" "LIFETIME" "bottom"
 
 if [ -x "$(command -v nvim)" ]; then
 	if [ -n "$COMMIT_TAG" ]; then
@@ -20,6 +19,10 @@ if [ -x "$(command -v nvim)" ]; then
 		log_info "Current neovim version: ${NVIM_VERSION}"
 
 		log_warn "Checking neovim version against tag: ${COMMIT_TAG}"
+
+		if [ -n "$COMMIT_SHA" ]; then
+			logger_warn "Commit sha is also set and ignored: ${COMMIT_SHA}"
+		fi
 
 		if [[ $NVIM_VERSION == "$COMMIT_TAG" ]]; then
 			log_warn "No need to rebuild!"
