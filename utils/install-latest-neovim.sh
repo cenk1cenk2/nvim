@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 SECONDS=0
-COMMIT_SHA="nightly"
+# COMMIT_TAG="nightly"
 COMMIT_SHA="bdfea2a8919963dfe24052635883f0213cff83e8"
 # PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
 
@@ -11,13 +11,27 @@ LOG_LEVEL=${LOG_LEVEL-"INFO"}
 source <(curl -s "https://gist.githubusercontent.com/cenk1cenk2/e03d8610534a9c78f755c1c1ed93a293/raw/logger.sh")
 
 if [ -x "$(command -v nvim)" ]; then
-	NVIM_VERSION=$(nvim --version)
-	log_info "Current version: ${NVIM_VERSION}"
+	if [ -n "$COMMIT_TAG" ]; then
+		NVIM_VERSION=$(nvim --version | sed 's/^NVIM \(v.*\)$/\1/' | head -1)
 
-	if [ -n "$COMMIT_SHA" ]; then
-		log_warn "Checking neovim version against: ${COMMIT_SHA}"
+		log_info "Current neovim version: ${NVIM_VERSION}"
 
-		if [[ $NVIM_VERSION =~ "NVIM $COMMIT_SHA".* ]]; then
+		log_warn "Checking neovim version against tag: ${COMMIT_TAG}"
+
+		if [[ $NVIM_VERSION == "$COMMIT_TAG" ]]; then
+			log_warn "No need to rebuild!"
+			exit 0
+		fi
+	elif [ -n "$COMMIT_SHA" ]; then
+		NVIM_VERSION=$(nvim --version | sed 's/.*+g\(.........\)$/\1/' | head -1)
+
+		log_info "Current neovim version: ${NVIM_VERSION}"
+
+		SHORT_COMMIT_SHA=$(echo "$COMMIT_SHA" | cut -c1-9)
+
+		log_warn "Checking neovim version against commit sha: ${COMMIT_SHA} -> ${SHORT_COMMIT_SHA}"
+
+		if [[ $NVIM_VERSION == "$SHORT_COMMIT_SHA" ]]; then
 			log_warn "No need to rebuild!"
 			exit 0
 		fi
@@ -38,7 +52,10 @@ log_finish "Neovim cloned."
 
 cd "$TMP_DOWNLOAD_PATH" || exit 127
 
-if [ "$COMMIT_SHA" != "" ]; then
+if [ -n "$COMMIT_TAG" ]; then
+	log_warn "Certain commit tag is set: ${COMMIT_TAG}"
+	git checkout "$COMMIT_TAG"
+elif [ -n "$COMMIT_SHA" ]; then
 	log_warn "Certain commit sha is set: ${COMMIT_SHA}"
 	git checkout "$COMMIT_SHA"
 fi
