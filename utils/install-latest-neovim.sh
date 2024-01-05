@@ -10,6 +10,9 @@ LOG_LEVEL=${LOG_LEVEL-"INFO"}
 # shellcheck disable=SC1090
 source <(curl -s "https://gist.githubusercontent.com/cenk1cenk2/e03d8610534a9c78f755c1c1ed93a293/raw/logger.sh")
 
+SCRIPT_VERSION=$(git rev-parse --short HEAD)
+log_this "${SCRIPT_VERSION}" "${BLUE}build-neovim${RESET}" "LIFETIME" "bottom"
+
 if [ -x "$(command -v nvim)" ]; then
 	if [ -n "$COMMIT_TAG" ]; then
 		NVIM_VERSION=$(nvim --version | sed 's/^NVIM \(v.*\)$/\1/' | head -1)
