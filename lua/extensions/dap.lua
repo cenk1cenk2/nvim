@@ -71,6 +71,7 @@ function M.config()
             function()
               vim.ui.input({
                 prompt = "Conditional breakpoint: ",
+                highlight = require("utils").treesitter_highlight(vim.bo.filetype),
               }, function(value)
                 require("dap").set_breakpoint(value, nil, nil)
               end)
@@ -81,6 +82,7 @@ function M.config()
             function()
               vim.ui.input({
                 prompt = "Log: ",
+                highlight = require("utils").treesitter_highlight(vim.bo.filetype),
               }, function(value)
                 require("dap").set_breakpoint(nil, nil, value)
               end)

@@ -11,6 +11,7 @@ function M.config()
         dependencies = { "MunifTanjim/nui.nvim" },
         cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry", "HurlToggleMode", "HurlSetEnvFile", "HurlVerbose" },
         ft = { "hurl" },
+        commit = "ce6705e8747df1a1079540b70da92fd53ea281e6",
       }
     end,
     setup = function()
