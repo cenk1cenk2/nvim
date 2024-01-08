@@ -37,10 +37,10 @@ function M.config()
           swap = {
             enable = true,
             swap_previous = {
-              ["HH"] = "@parameter.inner",
+              ["HH"] = { query = { "@parameter.inner", "@element" }, desc = "" },
             },
             swap_next = {
-              ["LL"] = "@parameter.inner",
+              ["LL"] = { query = { "@parameter.inner", "@element" }, desc = "" },
             },
           },
           move = {
