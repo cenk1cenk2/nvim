@@ -34,6 +34,7 @@ M.mappings = {
     l = { ":set nonumber!<CR>", "toggle line numbers" },
     m = { "<C-W>=<CR>", "balance open windows" },
     r = { ":set norelativenumber!<CR>", "toggle relative line numbers" },
+    R = { "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>", "redraw" },
     s = { ":set signcolumn=yes<CR>", "fix sign columns" },
     S = { ":setlocal spell!<CR>", "toggle spell check" },
     T = { ":setlocal bufhidden=delete<CR>", "set as temporary buffer" },
