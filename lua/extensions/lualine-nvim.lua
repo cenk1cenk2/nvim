@@ -44,6 +44,7 @@ function M.config()
             components.ff,
             components.spaces,
             -- components.encoding,
+            components.dap,
             components.diagnostics,
             components.treesitter,
             components.lsp,
@@ -192,6 +193,24 @@ function M.components()
         hint = lvim.ui.icons.diagnostics.Hint .. " ",
       },
       cond = conditions.hide_in_width,
+    },
+    dap = {
+      function()
+        return ("%s - %s"):format(lvim.ui.icons.ui.Bug, require("dap").status())
+      end,
+      color = function()
+        return {
+          fg = lvim.ui.colors.yellow[300],
+          bg = lvim.ui.colors.bg[300],
+        }
+      end,
+      cond = function()
+        if not package.loaded["dap"] or require("dap").status() == "" then
+          return false
+        end
+
+        return conditions.hide_in_width()
+      end,
     },
     treesitter = {
       function()
