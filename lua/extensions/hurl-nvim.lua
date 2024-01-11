@@ -99,6 +99,7 @@ function M.config()
 
                 job.spawn({
                   command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
+                  -- writer = vim.fn.getreg(vim.v.register or lvim.system_register),
                   on_success = function(j)
                     local generated = table.concat(j:result(), "\n")
 
@@ -108,6 +109,21 @@ function M.config()
                 })
               end,
               "curl to hurl",
+            },
+            q = {
+              function()
+                local Log = require("lvim.core.log")
+                local job = require("utils.job")
+
+                job.spawn({
+                  command = "pkill",
+                  args = { "hurl" },
+                  on_success = function()
+                    Log:info("Killed running hurl instance.")
+                  end,
+                })
+              end,
+              "kill running hurl instance",
             },
           },
         },
