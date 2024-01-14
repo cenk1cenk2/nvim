@@ -99,6 +99,7 @@ local extensions = {
   "gitlab-nvim",
   "better-ts-errors-nvim",
   "symbol-usage-nvim",
+  "obsidian-nvim",
 }
 
 function M.config(config)
