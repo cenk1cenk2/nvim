@@ -13,6 +13,7 @@ function M.config()
           "BufNewFile " .. vim.fn.expand("~") .. "/notes/**.md",
         },
         dependencies = { "nvim-lua/plenary.nvim" },
+        cmd = { "Obsidian", "ObsidianToday", "ObsidianWorkspace" },
       }
     end,
     setup = function()
