@@ -63,11 +63,14 @@ function M.config()
               ["]M"] = { query = "@function.outer", des = "jump to next method end" },
               ["]C"] = { query = "@class.outer", desc = "jump to next class end" },
               ["]S"] = { query = "@scope", query_group = "locals", desc = "jump to next scope end" },
+              ["[Z"] = { query = "@fold", query_group = "folds", desc = "jump to next fold start" },
+              ["]A"] = { query = "@parameter.inner", desc = "jump to next parameter start" },
             },
             goto_previous_end = {
               ["[M"] = { query = "@function.outer", des = "jump to previous method end" },
               ["[C"] = { query = "@class.outer", desc = "jump to previous class end" },
               ["[S"] = { query = "@scope", query_group = "locals", desc = "jump to previous scope end" },
+              ["[A"] = { query = "@parameter.inner", desc = "jump to next parameter start" },
             },
             -- Below will go to either the start or the end, whichever is closer.
             -- Use if you want more granular movements
