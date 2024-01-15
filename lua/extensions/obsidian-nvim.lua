@@ -128,7 +128,7 @@ function M.config()
         use_advanced_uri = false,
 
         -- Optional, set to true to force ':ObsidianOpen' to bring the app to the foreground.
-        open_app_foreground = false,
+        open_app_foreground = true,
 
         -- Optional, by default commands like `:ObsidianSearch` will attempt to use
         -- telescope.nvim, fzf-lua, fzf.vim, or mini.pick (in that order), and use the
@@ -155,6 +155,14 @@ function M.config()
         -- 2. "vsplit" - to open in a vertical split if there's not already a vertical split
         -- 3. "hsplit" - to open in a horizontal split if there's not already a horizontal split
         open_notes_in = "current",
+
+        -- Specify how to handle attachments.
+        attachments = {
+          -- The default folder to place images in via `:ObsidianPasteImg`.
+          -- If this is a relative path it will be interpreted as relative to the vault root.
+          -- You can always override this per image by passing a full path to the command instead of just a filename.
+          img_folder = "assets", -- This is the default
+        },
 
         -- Optional, configure additional syntax highlighting / extmarks.
         -- This requires you have `conceallevel` set to 1 or 2. See `:help conceallevel` for more details.
