@@ -105,6 +105,7 @@ function M.config()
           b = { ":Gitsigns blame_line<CR>", "git hover blame" },
           k = { ":Gitsigns preview_hunk<CR>", "preview hunk" },
           U = { ":Gitsigns reset_hunk<CR>", "reset hunk" },
+          r = { ":Gitsigns refresh<CR>", "refresh" },
           R = {
             R = { ":Gitsigns reset_buffer<CR>", "reset buffer" },
           },
