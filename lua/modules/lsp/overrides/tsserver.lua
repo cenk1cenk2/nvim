@@ -139,7 +139,7 @@ return {
     },
     LspAddMissingImports = {
       function()
-        vim.cmd([[TsToolsAddMissingImports]])
+        vim.cmd([[TSToolsAddMissingImports]])
       end,
     },
   },
