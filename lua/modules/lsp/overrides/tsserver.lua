@@ -140,6 +140,7 @@ return {
     LspAddMissingImports = {
       function()
         vim.cmd([[TSToolsAddMissingImports]])
+        vim.cmd([[TSToolsOrganizeImports]])
       end,
     },
   },
