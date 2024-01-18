@@ -22,7 +22,7 @@ local extensions = {
   "gitsigns-nvim",
   "nvim-autopairs",
   "project-nvim",
-  "neovim-session-manager",
+  "possession-nvim",
   "stickybuf-nvim",
   "noice-nvim",
   "nvim-lint",
