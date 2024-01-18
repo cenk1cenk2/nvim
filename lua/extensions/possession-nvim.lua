@@ -145,7 +145,7 @@ function M.config()
 
               require("possession.session").save(session, { no_confirm = true })
 
-              Log:warn(("Session saved: %s -> %s"):format(cwd, session))
+              Log:info(("Session saved: %s -> %s"):format(cwd, session))
             end,
             "save session",
           },
