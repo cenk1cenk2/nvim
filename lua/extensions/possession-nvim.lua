@@ -144,6 +144,8 @@ function M.config()
               local session = M.dir_to_session_filename(cwd)
 
               require("possession.session").save(session, { no_confirm = true })
+
+              Log:warn(("Session saved: %s -> %s"):format(cwd, session))
             end,
             "save session",
           },
