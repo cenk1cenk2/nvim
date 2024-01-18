@@ -44,6 +44,7 @@ function M.config()
             components.ff,
             components.spaces,
             -- components.encoding,
+            components.session,
             components.dap,
             components.diagnostics,
             components.treesitter,
@@ -193,6 +194,24 @@ function M.components()
         hint = lvim.ui.icons.diagnostics.Hint .. " ",
       },
       cond = conditions.hide_in_width,
+    },
+    session = {
+      function()
+        return ("%s"):format(lvim.ui.icons.ui.History)
+      end,
+      color = function()
+        return {
+          fg = lvim.ui.colors.green[300],
+          bg = lvim.ui.colors.bg[300],
+        }
+      end,
+      cond = function()
+        if not package.loaded["possession"] or require("possession").session_name == "" then
+          return false
+        end
+
+        return conditions.hide_in_width()
+      end,
     },
     dap = {
       function()
