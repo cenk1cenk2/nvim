@@ -25,6 +25,7 @@ function M.config()
               ["ic"] = { query = "@class.inner", desc = "select inner part of a class region" },
               ["ac"] = { query = "@class.outer", desc = "select outer part of a class region" },
               ["as"] = { query = "@scope", query_group = "locals", desc = "select language scope" },
+              ["is"] = { query = "@scope.inner", query_group = "locals", desc = "select language scope" },
             },
             selection_modes = {
               ["@parameter.outer"] = "v",
