@@ -214,6 +214,7 @@ hl.treesitter = {
   ["@variable"] = { fg = c.red[600] },
   ["@variable.builtin"] = { fg = c.yellow[600] },
   ["@inlayhint"] = { italic = true, bg = c.bg[300], fg = c.bg[600] },
+  ["@module"] = { fg = c.orange[600] },
   -- Semantic
   ["@class"] = { fg = c.orange[900] },
   ["@struct"] = { fg = c.orange[900] },
