@@ -110,6 +110,7 @@ function M.config()
           },
         },
         close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
+        enable_cursor_hijack = true, -- If enabled neotree will keep the cursor on the first letter of the filename when moving in the tree.
         popup_border_style = lvim.ui.border,
         -- https://github.com/nvim-neo-tree/neo-tree.nvim/issues/338
         enable_diagnostics = false,
