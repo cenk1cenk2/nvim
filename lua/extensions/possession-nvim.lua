@@ -41,10 +41,10 @@ function M.config()
         hooks = {
           before_save = function(name)
             local res = {}
-            local neo_state = M.neotree_get_state()
-            if neo_state ~= nil then
-              res["neo_tree"] = neo_state
-            end
+            -- local neo_state = M.neotree_get_state()
+            -- if neo_state ~= nil then
+            --   res["neo_tree"] = neo_state
+            -- end
             return res
           end,
           after_save = function(name, user_data, aborted) end,
@@ -52,9 +52,9 @@ function M.config()
             return user_data
           end,
           after_load = function(name, user_data)
-            if user_data["neo_tree"] ~= nil then
-              M.neotree_set_state(user_data["neo_tree"])
-            end
+            -- if user_data["neo_tree"] ~= nil then
+            --   M.neotree_set_state(user_data["neo_tree"])
+            -- end
           end,
         },
         plugins = {
