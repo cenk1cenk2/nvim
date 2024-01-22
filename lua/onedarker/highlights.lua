@@ -311,6 +311,7 @@ hl.langs.c = {
 hl.langs.markdown = {
   ["@nospell.markdown_inline"] = {},
   ["@spell.markdown"] = {},
+  ["@markup.raw.markdown_inline"] = { link = "@string" },
 }
 
 -- plugins
