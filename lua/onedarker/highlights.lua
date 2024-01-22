@@ -308,6 +308,11 @@ hl.langs.c = {
   ["@lsp.type.comment.c"] = {},
 }
 
+hl.langs.markdown = {
+  ["@nospell.markdown_inline"] = {},
+  ["@spell.markdown"] = {},
+}
+
 -- plugins
 
 hl.plugins.whichkey = {
