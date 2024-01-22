@@ -213,7 +213,7 @@ function M.generate_buffer_lsp_info(popup, bufnr)
         header = "Capabilities",
         accessor_key = "capabilities",
         cell = function(cell)
-          return Text(table.concat(cell.get_value(), ", "))
+          return Text(table.concat(cell.get_value() or {}, ", "))
         end,
       },
     },
@@ -262,7 +262,7 @@ function M.generate_lsp_info(popup, bufnr)
         header = "Filetypes",
         accessor_key = "filetypes",
         cell = function(cell)
-          return Text(table.concat(cell.get_value(), ", "))
+          return Text(table.concat(cell.get_value() or {}, ", "))
         end,
       },
       {
@@ -271,7 +271,7 @@ function M.generate_lsp_info(popup, bufnr)
         header = "Attached Buffers",
         accessor_key = "attached_buffers",
         cell = function(cell)
-          return Text(table.concat(cell.get_value(), ", "))
+          return Text(table.concat(cell.get_value() or {}, ", "))
         end,
       },
       {
@@ -280,7 +280,7 @@ function M.generate_lsp_info(popup, bufnr)
         header = "Capabilities",
         accessor_key = "capabilities",
         cell = function(cell)
-          return Text(table.concat(cell.get_value(), ", "))
+          return Text(table.concat(cell.get_value() or {}, ", "))
         end,
       },
     },
@@ -308,7 +308,7 @@ function M.generate_current_buffer_tools_info(popup, bufnr)
         header = "Tools",
         accessor_key = "value",
         cell = function(cell)
-          return Text(table.concat(cell.get_value(), ", "))
+          return Text(table.concat(cell.get_value() or {}, ", "))
         end,
       },
     },
