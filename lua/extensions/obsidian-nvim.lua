@@ -47,6 +47,7 @@ function M.config()
           template = nil,
         },
 
+        disable_frontmatter = true,
         note_frontmatter_func = function(note)
           -- This is equivalent to the default frontmatter function.
           local out = {
@@ -111,10 +112,6 @@ function M.config()
             opts = { buffer = true },
           },
         },
-
-        -- Optional, boolean or a function that takes a filename and returns a boolean.
-        -- `true` indicates that you don't want obsidian.nvim to manage frontmatter.
-        disable_frontmatter = false,
 
         templates = {
           subdir = "templates",
