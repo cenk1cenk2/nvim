@@ -23,6 +23,10 @@
         "path": "./yaml.json"
       },
       {
+        "language": "markdown",
+        "path": "./markdown.json"
+      },
+      {
         "language": "helm",
         "path": "./helm.json"
       }

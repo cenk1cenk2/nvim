@@ -1,0 +1,7 @@
+{
+  "frontmatter": {
+    "prefix": "-f",
+    "description": "Frontmatter seperator.",
+    "body": ["---", "$1", "---"]
+  }
+}
