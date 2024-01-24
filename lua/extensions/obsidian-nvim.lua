@@ -51,7 +51,7 @@ function M.config()
           -- This is equivalent to the default frontmatter function.
           local out = {
             id = note.id,
-            aliases = note.aliases,
+            -- aliases = note.aliases,
             tags = note.tags,
           }
           -- `note.metadata` contains any manually added fields in the frontmatter.
