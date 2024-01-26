@@ -118,7 +118,7 @@ function M.config()
             opts = { noremap = false, expr = true, buffer = true },
           },
           -- Toggle check-boxes.
-          ["gch"] = {
+          ["gc"] = {
             action = function()
               return require("obsidian").util.toggle_checkbox()
             end,
