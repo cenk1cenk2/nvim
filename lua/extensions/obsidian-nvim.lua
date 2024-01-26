@@ -43,7 +43,7 @@ function M.config()
 
         -- Optional, set to true to use the current directory as a vault; otherwise
         -- the first workspace is opened by default.
-        detect_cwd = false,
+        detect_cwd = true,
 
         -- Optional, set the log level for obsidian.nvim. This is an integer corresponding to one of the log
         -- levels defined by "vim.log.levels.*".
@@ -51,7 +51,7 @@ function M.config()
 
         daily_notes = {
           -- Optional, if you keep daily notes in a separate directory.
-          folder = "Calendar",
+          folder = "Calendar/Day",
           -- Optional, if you want to change the date format for the ID of daily notes.
           date_format = "%Y-%m-%d",
           -- Optional, if you want to change the date format of the default alias of daily notes.
