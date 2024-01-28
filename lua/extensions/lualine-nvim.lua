@@ -41,6 +41,7 @@ function M.config()
               cond = require("lazy.status").has_updates,
               color = { fg = lvim.ui.colors.yellow[900] },
             },
+            "location",
             components.ff,
             components.spaces,
             -- components.encoding,
