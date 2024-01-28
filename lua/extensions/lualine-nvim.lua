@@ -275,23 +275,17 @@ function M.components()
       color = { fg = lvim.ui.colors.fg, bg = lvim.ui.colors.bg[300] },
       cond = conditions.hide_in_width,
     },
-    progress = { "progress", cond = conditions.hide_in_width, color = {} },
+    progress = {
+      "progress",
+      cond = conditions.hide_in_width,
+      color = {},
+    },
     location = {
       "location",
       color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
     },
     ff = {
-      function()
-        local ff = vim.bo.ff:upper()
-
-        if ff == "UNIX" then
-          return lvim.ui.icons.misc.Linux
-        elseif ff == "DOS" then
-          return lvim.ui.icons.misc.Windows
-        end
-
-        return ff
-      end,
+      "fileformat",
       cond = conditions.hide_in_width,
       color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
     },
@@ -311,7 +305,7 @@ function M.components()
       color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
     },
     encoding = {
-      "o:encoding",
+      "encoding",
       fmt = string.upper,
       color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
       cond = conditions.hide_in_width,
