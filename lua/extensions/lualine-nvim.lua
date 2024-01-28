@@ -41,7 +41,7 @@ function M.config()
               cond = require("lazy.status").has_updates,
               color = { fg = lvim.ui.colors.yellow[900] },
             },
-            "location",
+            components.location,
             components.ff,
             components.spaces,
             -- components.encoding,
@@ -275,8 +275,11 @@ function M.components()
       color = { fg = lvim.ui.colors.fg, bg = lvim.ui.colors.bg[300] },
       cond = conditions.hide_in_width,
     },
-    location = { "location", cond = conditions.hide_in_width, color = {} },
     progress = { "progress", cond = conditions.hide_in_width, color = {} },
+    location = {
+      "location",
+      color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
+    },
     ff = {
       function()
         local ff = vim.bo.ff:upper()
