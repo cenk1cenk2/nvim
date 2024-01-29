@@ -3,6 +3,9 @@ return {
     -- typescript-tools if this is enabled it will override it
     require("typescript-tools").setup(config)
   end,
+  flags = {
+    debounce_text_changes = 250,
+  },
   on_init = function(client, bufnr)
     require("lvim.lsp").common_on_init(client, bufnr)
     client.server_capabilities.documentFormattingProvider = false
