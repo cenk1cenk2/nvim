@@ -126,56 +126,35 @@ function M.config()
         },
         sources = cmp.config.sources({
 
-          { name = "nvim_lsp", priority = 100 },
-          { name = "nvim_lua", priority = 100 },
-          { name = "vim-dadbod-completion", priority = 100 },
+          { name = "nvim_lsp", priority_weight = 100 },
+          { name = "nvim_lua", priority_weight = 100 },
+          { name = "vim-dadbod-completion", priority_weight = 100 },
           -- { name = "nvim_lsp_signature_help" },
-          { name = "luasnip", priority = 50 },
-          { name = "calc", priority = 50 },
+          { name = "luasnip", priority_weight = 50 },
+          { name = "calc", priority_weight = 50 },
           -- { name = "copilot" },
-          { name = "path", priority = 40 },
+          { name = "path", priority_weight = 40 },
           -- { name = "omni" },
-          { name = "buffer", priority = 30 },
+          { name = "buffer", priority_weight = 30 },
           -- { name = "fuzzy_buffer" },
 
           -- { name = "env" },
 
-          { name = "git", priority = 20 },
-          { name = "npm", priority = 20 },
+          { name = "git", priority_weight = 20 },
+          { name = "npm", priority_weight = 20 },
 
-          { name = "rg", priority = 10, option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
+          { name = "rg", priority_weight = 10, option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
         }),
         sorting = {
           priority_weight = 1.0,
           comparators = {
             compare.offset,
             compare.exact,
+            compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
             compare.locality,
             compare.recently_used,
-            function(entry1, entry2) -- sort by compare kind (Variable, Function etc)
-              local modified_priority = {
-                [types.lsp.CompletionItemKind.Variable] = types.lsp.CompletionItemKind.Method,
-                [types.lsp.CompletionItemKind.Snippet] = 0, -- top
-                [types.lsp.CompletionItemKind.Keyword] = 0, -- top
-                [types.lsp.CompletionItemKind.Text] = 100, -- bottom
-              }
-              local function modified_kind(kind)
-                return modified_priority[kind] or kind
-              end
-              local kind1 = modified_kind(entry1:get_kind())
-              local kind2 = modified_kind(entry2:get_kind())
-              if kind1 ~= kind2 then
-                return kind1 - kind2 < 0
-              end
-            end,
-            function(entry1, entry2) -- score by lsp, if available
-              local t1 = entry1.completion_item.sortText
-              local t2 = entry2.completion_item.sortText
-              if t1 ~= nil and t2 ~= nil and t1 ~= t2 then
-                return t1 < t2
-              end
-            end,
-            compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
+            compare.kind,
+            compare.length,
             compare.order,
             -- compare.scopes, -- what?
             -- compare.sort_text,
