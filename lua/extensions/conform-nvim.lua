@@ -81,7 +81,7 @@ end
 M.default_formatters = {
   "trim_whitespace",
   -- "trim_multiple_whitespace",
-  -- "trim_newlines",
+  "trim_newlines",
   "trim_multiple_newlines",
 }
 
@@ -123,9 +123,9 @@ function M.register_tools(lsp_utils, METHOD)
   --   "*",
   -- })
 
-  -- lsp_utils.register_tools(METHOD, "trim_newlines", {
-  --   "*",
-  -- })
+  lsp_utils.register_tools(METHOD, "trim_newlines", {
+    "*",
+  })
 
   lsp_utils.register_tools(METHOD, "trim_multiple_newlines", {
     "*",
