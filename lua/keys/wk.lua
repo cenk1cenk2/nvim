@@ -28,6 +28,7 @@ M.mappings = {
   -- actions
   [M.CATEGORIES.ACTIONS] = {
     name = "actions",
+    a = { "ggVG", "select all" },
     c = { ":set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20<CR>", "bring back cursor" },
     e = { ":set ff=unix<CR>", "set lf" },
     E = { ":set ff=dos<CR>", "set crlf" },
@@ -35,8 +36,8 @@ M.mappings = {
     m = { "<C-W>=<CR>", "balance open windows" },
     r = { ":set norelativenumber!<CR>", "toggle relative line numbers" },
     R = { "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>", "redraw" },
-    s = { ":set signcolumn=yes<CR>", "fix sign columns" },
-    S = { ":setlocal spell!<CR>", "toggle spell check" },
+    s = { ":sort<CR>", "sort" },
+    S = { ":set signcolumn=yes<CR>", "fix sign columns" },
     T = { ":setlocal bufhidden=delete<CR>", "set as temporary buffer" },
     q = { ":colder<CR>", "quickfix older" },
     Q = { ":cnewer<CR>", "quickfix newer" },

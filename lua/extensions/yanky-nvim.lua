@@ -22,6 +22,8 @@ function M.config()
           history_length = 10,
           storage = "shada",
           sync_with_numbered_registers = true,
+          cancel_event = "update",
+          ignore_registers = { "_" },
           update_register_on_cycle = true,
         },
         system_clipboard = {
@@ -34,6 +36,9 @@ function M.config()
         },
         preserve_cursor_position = {
           enabled = true,
+        },
+        textobj = {
+          enabled = false,
         },
         picker = {
           telescope = {
@@ -63,44 +68,15 @@ function M.config()
       require("telescope").load_extension("yank_history")
     end,
     keymaps = function()
-      local cb = function(state)
-        if state.is_visual then
-          vim.cmd([[execute "normal! \<esc>"]])
-        end
-
-        local ok, val = pcall(
-          vim.cmd,
-          string.format(
-            'silent normal! %s"%s%s%s',
-            state.is_visual and "gv" or "",
-            state.register ~= "=" and state.register or "=" .. vim.api.nvim_replace_termcodes("<CR>", true, false, true),
-            state.count,
-            state.type
-          )
-        )
-        if not ok then
-          vim.notify(val, vim.log.levels.WARN)
-          return
-        end
-
-        require("yanky.highlight").highlight_put(state)
-      end
-
       return {
         {
-          { "n", "v", "vb" },
+          { "n", "v", "vb", "t" },
           ["gq"] = {
-            function()
-              local yanky = require("yanky")
-              yanky.cycle(yanky.direction.forward)
-            end,
+            "<Plug>(YankyPreviousEntry)",
             desc = "yank cycle forward",
           },
           ["gQ"] = {
-            function()
-              local yanky = require("yanky")
-              yanky.cycle(yanky.direction.backward)
-            end,
+            "<Plug>(YankyNextEntry)",
             desc = "yank cycle backward",
           },
           ["y"] = {
@@ -110,21 +86,13 @@ function M.config()
         },
 
         {
-          { "n" },
+          { "n", "t" },
           ["p"] = {
-            function()
-              local yanky = require("yanky")
-
-              yanky.put(yanky.type.PUT_AFTER, false)
-            end,
+            "<Plug>(YankyPutAfter)",
             desc = "yanky put after",
           },
           ["P"] = {
-            function()
-              local yanky = require("yanky")
-
-              yanky.put(yanky.type.PUT_BEFORE, false)
-            end,
+            "<Plug>(YankyPutBefore)",
             desc = "yanky put before",
           },
         },
@@ -132,25 +100,17 @@ function M.config()
         {
           { "v", "vb" },
           ["P"] = {
-            function()
-              local yanky = require("yanky")
-
-              yanky.put(yanky.type.PUT_AFTER, true, cb)
-            end,
+            "<Plug>(YankyPutAfter)",
             desc = "yanky put after",
           },
           ["p"] = {
-            function()
-              local yanky = require("yanky")
-
-              yanky.put(yanky.type.PUT_BEFORE, true, cb)
-            end,
+            "<Plug>(YankyPutBefore)",
             desc = "yanky put before",
           },
         },
 
         {
-          { "n", "v", "x", "t" },
+          { "n", "v", "vb", "t" },
 
           ["gp"] = {
             "<Plug>(YankyPutAfterCharwise)",

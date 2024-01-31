@@ -60,13 +60,24 @@ function M.config()
     on_setup = function(config)
       require("copilot").setup(config.setup)
     end,
+    on_done = function()
+      local autopairs = require("nvim-autopairs")
+      local suggestion = require("copilot.suggestion")
+      vim.keymap.set("i", "<M-l>", function()
+        autopairs.disable()
+        suggestion.accept()
+        autopairs.enable()
+      end, { desc = "Accept Copilot suggestion" })
+    end,
     wk = function(_, categories)
       return {
-        ["C"] = {
-          ["p"] = { ":Copilot panel<CR>", "copilot panel" },
-          ["S"] = { ":Copilot status<CR>", "copilot status" },
-          ["t"] = { ":Copilot toggle<CR>", "copilot toggle" },
-          ["s"] = { ":Copilot suggestion<CR>", "copilot suggestion" },
+        [categories.ACTIONS] = {
+          ["C"] = {
+            ["p"] = { ":Copilot panel<CR>", "copilot panel" },
+            ["S"] = { ":Copilot status<CR>", "copilot status" },
+            ["t"] = { ":Copilot toggle<CR>", "copilot toggle" },
+            ["s"] = { ":Copilot suggestion<CR>", "copilot suggestion" },
+          },
         },
       }
     end,
