@@ -70,7 +70,7 @@ function M.config()
     keymaps = function()
       return {
         {
-          { "n", "v", "vb", "t" },
+          { "n", "v", "vb" },
           ["gq"] = {
             "<Plug>(YankyPreviousEntry)",
             desc = "yank cycle forward",
@@ -86,7 +86,7 @@ function M.config()
         },
 
         {
-          { "n", "t" },
+          { "n" },
           ["p"] = {
             "<Plug>(YankyPutAfter)",
             desc = "yanky put after",
@@ -110,7 +110,7 @@ function M.config()
         },
 
         {
-          { "n", "v", "vb", "t" },
+          { "n", "v", "vb" },
 
           ["gp"] = {
             "<Plug>(YankyPutAfterCharwise)",
