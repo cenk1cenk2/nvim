@@ -36,6 +36,7 @@ hl.common = {
   Folded = { fg = c.fg, bg = c.cyan[100] },
   NormalNC = { fg = c.fg, bg = c.bg[200] },
   NormalSB = { fg = c.fg, bg = c.bg[200] },
+  BufferlineFill = { bg = c.bg[100] },
 
   DiffAdd = { fg = c.none, bg = c.diff.add },
   DiffAdded = { fg = c.diff.add_bright },
