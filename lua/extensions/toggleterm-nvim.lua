@@ -204,13 +204,16 @@ function M.create_toggle_term(opts)
     return
   end
 
-  require("utils.setup").load_wk_mappings({
-    ["t"] = {
-      [opts.keymap] = {
-        function()
-          M.toggle_toggle_term({ cmd = opts.cmd, count = opts.count, direction = opts.direction })
-        end,
-        opts.label,
+  require("utils.setup").load_wk({
+    {
+      { "n" },
+      ["t"] = {
+        [opts.keymap] = {
+          function()
+            M.toggle_toggle_term({ cmd = opts.cmd, count = opts.count, direction = opts.direction })
+          end,
+          opts.label,
+        },
       },
     },
   })

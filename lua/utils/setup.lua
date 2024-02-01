@@ -5,31 +5,54 @@ local keys_which_key = require("keys.wk")
 
 ---
 ---@param mappings table
-function M.load_wk_mappings(mappings, mode, config)
-  if require("extensions.which-key").registered then
-    if mode == "v" then
-      config = vim.tbl_deep_extend("force", config or {}, require("extensions.which-key").vopts)
-    else
-      config = vim.tbl_deep_extend("force", config or {}, require("extensions.which-key").opts)
+function M.load_wk_mode(modes, mappings, config)
+  if type(modes) == "string" then
+    modes = { modes }
+  end
+
+  for _, mode in pairs(modes) do
+    if require("extensions.which-key").registered then
+      if mode == "v" then
+        config = vim.tbl_deep_extend("force", config or {}, require("extensions.which-key").vopts)
+      else
+        config = vim.tbl_deep_extend("force", config or {}, require("extensions.which-key").opts)
+      end
+
+      vim.schedule(function()
+        require("which-key").register(mappings, config)
+      end)
+
+      return
     end
 
-    vim.schedule(function()
-      require("which-key").register(mappings, config)
-    end)
+    local current
+    if mode == "v" then
+      current = lvim.wk.vmappings
+    else
+      current = lvim.wk.mappings
+    end
+
+    for key, value in pairs(mappings) do
+      current[key] = vim.tbl_deep_extend("force", current[key] or {}, value)
+    end
+  end
+end
+
+function M.load_wk(mappings, config)
+  mappings = vim.deepcopy(mappings) or {}
+
+  if vim.tbl_islist(mappings) then
+    for _, map in pairs(mappings) do
+      local mode = map[1]
+      table.remove(map, 1)
+
+      M.load_wk_mode(mode, map, config)
+    end
 
     return
   end
 
-  local current
-  if mode == "v" then
-    current = lvim.wk.vmappings
-  else
-    current = lvim.wk.mappings
-  end
-
-  for key, value in pairs(mappings) do
-    current[key] = vim.tbl_deep_extend("force", current[key] or {}, value)
-  end
+  M.load_wk_mode({ "n" }, mappings)
 end
 
 ---
@@ -100,7 +123,6 @@ function M.define_extension(extension_name, enabled, config)
     autocmds = { config.autocmds, { "t", "f" }, true },
     keymaps = { config.keymaps, { "t", "f" }, true },
     wk = { config.wk, { "t", "f" }, true },
-    wk_v = { config.wk_v, { "t", "f" }, true },
     legacy_setup = { config.legacy_setup, "t", true },
     setup = { config.setup, { "t", "f" }, true },
     extended_setup = { config.extended_setup, { "t", "f" }, true },
@@ -230,15 +252,9 @@ function M.init(config)
   end
 
   if config ~= nil and config.wk ~= nil then
-    M.load_wk_mappings(M.evaluate_property(config.wk, config, keys_which_key.CATEGORIES, M.fn))
+    M.load_wk(M.evaluate_property(config.wk, config, keys_which_key.CATEGORIES, M.fn))
 
     config.wk = nil
-  end
-
-  if config ~= nil and config.wk_v ~= nil then
-    M.load_wk_mappings(M.evaluate_property(config.wk_v, config, keys_which_key.CATEGORIES), "v")
-
-    config.wk_v = nil
   end
 
   if config ~= nil and config.hl ~= nil then

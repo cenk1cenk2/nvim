@@ -220,79 +220,80 @@ function M.config()
       local finders = require("modules.telescope")
 
       return {
-        ["p"] = {
-          function()
-            finders.find_project_files()
-          end,
-          "find file",
+        {
+          { "n", "v" },
+          ["p"] = {
+            function()
+              finders.find_project_files()
+            end,
+            "find file",
+          },
+          ["o"] = { ":Telescope buffers<CR>", "open buffers" },
+          ["O"] = { ":Telescope oldfiles<CR>", "search file history" },
+          [":"] = { ":Telescope command_history<CR>", "search command history" },
         },
-        ["o"] = { ":Telescope buffers<CR>", "open buffers" },
-        ["O"] = { ":Telescope oldfiles<CR>", "search file history" },
-        [":"] = { ":Telescope command_history<CR>", "search command history" },
+        {
+          { "n" },
+          [categories.FIND] = {
+            ["."] = { ":Telescope commands<CR>", "search available commands" },
+            A = { ":Telescope builtin<CR>", "telescope list builtin finders" },
+            b = {
+              function()
+                finders.rg_current_buffer_fuzzy_find()
+              end,
+              "search current buffer fuzzy",
+            },
+            B = {
+              function()
+                finders.rg_grep_buffer()
+              end,
+              "search current buffer grep",
+            },
+            d = {
+              function()
+                finders.rg_dirty()
+              end,
+              "dirty fuzzy grep",
+            },
+            f = { ":Telescope resume<CR>", "resume last search" },
+            g = { ":Telescope grep_string<CR>", "grep string under cursor" },
+            j = { ":Telescope jumplist<CR>", "list jumps" },
+            s = { ":Telescope spell_suggest<CR>", "spell suggest" },
+            r = {
+              function()
+                finders.rg_interactive()
+              end,
+              "ripgrep interactive",
+            },
+            R = { ":Telescope live_grep<CR>", "grep with regexp" },
+            t = {
+              function()
+                finders.rg_string()
+              end,
+              "grep string",
+            },
+            T = {
+              function()
+                finders.rg_string({
+                  additional_args = { grep_open_files = true },
+                })
+              end,
+              "grep string open buffers",
+            },
+          },
 
-        [categories.FIND] = {
-          ["."] = { ":Telescope commands<CR>", "search available commands" },
-          A = { ":Telescope builtin<CR>", "telescope list builtin finders" },
-          b = {
-            function()
-              finders.rg_current_buffer_fuzzy_find()
-            end,
-            "search current buffer fuzzy",
+          [categories.ACTIONS] = {
+            f = { ":Telescope filetypes<CR>", "select from filetypes" },
           },
-          B = {
-            function()
-              finders.rg_grep_buffer()
-            end,
-            "search current buffer grep",
-          },
-          d = {
-            function()
-              finders.rg_dirty()
-            end,
-            "dirty fuzzy grep",
-          },
-          f = { ":Telescope resume<CR>", "resume last search" },
-          g = { ":Telescope grep_string<CR>", "grep string under cursor" },
-          j = { ":Telescope jumplist<CR>", "list jumps" },
-          s = { ":Telescope spell_suggest<CR>", "spell suggest" },
-          r = {
-            function()
-              finders.rg_interactive()
-            end,
-            "ripgrep interactive",
-          },
-          R = { ":Telescope live_grep<CR>", "grep with regexp" },
-          t = {
-            function()
-              finders.rg_string()
-            end,
-            "grep string",
-          },
-          T = {
-            function()
-              finders.rg_string({
-                additional_args = { grep_open_files = true },
-              })
-            end,
-            "grep string open buffers",
-          },
-        },
 
-        [categories.ACTIONS] = {
-          f = { ":Telescope filetypes<CR>", "select from filetypes" },
-        },
-
-        [categories.GIT] = {
-          f = { ":Telescope git_status<CR>", "git status" },
-          F = { ":Telescope git_files<CR>", "list git tracked files" },
-          g = {
-            I = { ":Telescope gh issues<CR>", "github issues" },
-            P = { ":Telescope gh pull_request<CR>", "github pull requests" },
+          [categories.GIT] = {
+            f = { ":Telescope git_status<CR>", "git status" },
+            F = { ":Telescope git_files<CR>", "list git tracked files" },
           },
-        },
 
-        [categories.NEOVIM] = {
-          k = { ":Telescope keymaps<CR>", "list keymaps" },
+          [categories.NEOVIM] = {
+            k = { ":Telescope keymaps<CR>", "list keymaps" },
+          },
         },
       }
     end,

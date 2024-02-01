@@ -129,135 +129,137 @@ function M.config()
     end,
     wk = function(_, categories)
       return {
-        [categories.GIT] = {
-          ["G"] = {
-            ["r"] = {
-              function()
-                require("gitlab").review()
-              end,
-              "gitlab review",
-            },
-            ["s"] = {
-              function()
-                require("gitlab").summary()
-              end,
-              "gitlab summary",
-            },
-            ["a"] = {
-              function()
-                require("gitlab").approve()
-              end,
-              "gitlab mr approve",
-            },
-            ["A"] = {
-              function()
-                require("gitlab").revoke()
-              end,
-              "gitlab mr revoke",
-            },
-            ["c"] = {
-              function()
-                require("gitlab").create_comment()
-              end,
-              "gitlab mr create comment",
-            },
-            ["m"] = {
-              name = "merge request",
-              ["c"] = {
+        {
+          { "n" },
+          [categories.GIT] = {
+            ["G"] = {
+              ["r"] = {
                 function()
-                  require("gitlab").create_mr()
+                  require("gitlab").review()
                 end,
-                "gitlab create mr",
+                "gitlab review",
+              },
+              ["s"] = {
+                function()
+                  require("gitlab").summary()
+                end,
+                "gitlab summary",
               },
               ["a"] = {
                 function()
-                  require("gitlab").merge({ delete_branch = true })
+                  require("gitlab").approve()
                 end,
-                "gitlab merge branch through mr",
-              },
-            },
-            ["n"] = {
-              function()
-                require("gitlab").create_note()
-              end,
-              "gitlab mr create note",
-            },
-            ["d"] = {
-              function()
-                require("gitlab").toggle_discussions()
-              end,
-              "gitlab mr toggle discussions",
-            },
-            ["D"] = {
-              function()
-                require("gitlab").move_to_discussion_tree_from_diagnostic()
-              end,
-              "gitlab mr move to discussion tree",
-            },
-            ["f"] = {
-              function()
-                require("gitlab").open_in_browser()
-              end,
-              "gitlab mr open in browser",
-            },
-            ["p"] = {
-              name = "people",
-              ["a"] = {
-                function()
-                  require("gitlab").add_assignee()
-                end,
-                "add assignee",
+                "gitlab mr approve",
               },
               ["A"] = {
                 function()
-                  require("gitlab").remove_assignee()
+                  require("gitlab").revoke()
                 end,
-                "remove assignee",
+                "gitlab mr revoke",
               },
-              ["r"] = {
+              ["c"] = {
                 function()
-                  require("gitlab").add_reviewer()
+                  require("gitlab").create_comment()
                 end,
-                "add reviewer",
+                "gitlab mr create comment",
               },
-              ["R"] = {
+              ["m"] = {
+                name = "merge request",
+                ["c"] = {
+                  function()
+                    require("gitlab").create_mr()
+                  end,
+                  "gitlab create mr",
+                },
+                ["a"] = {
+                  function()
+                    require("gitlab").merge({ delete_branch = true })
+                  end,
+                  "gitlab merge branch through mr",
+                },
+              },
+              ["n"] = {
                 function()
-                  require("gitlab").remove_reviewer()
+                  require("gitlab").create_note()
                 end,
-                "remove reviewer",
+                "gitlab mr create note",
               },
-            },
-            ["P"] = {
-              function()
-                require("gitlab").pipeline()
-              end,
-              "gitlab mr pipeline",
-            },
-            ["Q"] = {
-              function()
-                require("gitlab").restart()
-              end,
-              "gitlab restart server",
+              ["d"] = {
+                function()
+                  require("gitlab").toggle_discussions()
+                end,
+                "gitlab mr toggle discussions",
+              },
+              ["D"] = {
+                function()
+                  require("gitlab").move_to_discussion_tree_from_diagnostic()
+                end,
+                "gitlab mr move to discussion tree",
+              },
+              ["f"] = {
+                function()
+                  require("gitlab").open_in_browser()
+                end,
+                "gitlab mr open in browser",
+              },
+              ["p"] = {
+                name = "people",
+                ["a"] = {
+                  function()
+                    require("gitlab").add_assignee()
+                  end,
+                  "add assignee",
+                },
+                ["A"] = {
+                  function()
+                    require("gitlab").remove_assignee()
+                  end,
+                  "remove assignee",
+                },
+                ["r"] = {
+                  function()
+                    require("gitlab").add_reviewer()
+                  end,
+                  "add reviewer",
+                },
+                ["R"] = {
+                  function()
+                    require("gitlab").remove_reviewer()
+                  end,
+                  "remove reviewer",
+                },
+              },
+              ["P"] = {
+                function()
+                  require("gitlab").pipeline()
+                end,
+                "gitlab mr pipeline",
+              },
+              ["Q"] = {
+                function()
+                  require("gitlab").restart()
+                end,
+                "gitlab restart server",
+              },
             },
           },
         },
-      }
-    end,
-    wk_v = function(_, categories)
-      return {
-        [categories.GIT] = {
-          ["G"] = {
-            ["c"] = {
-              function()
-                require("gitlab").create_multiline_comment()
-              end,
-              "gitlab mr create comment",
-            },
-            ["C"] = {
-              function()
-                require("gitlab").create_comment_suggestions()
-              end,
-              "gitlab mr create suggestion",
+        {
+          { "v" },
+          [categories.GIT] = {
+            ["G"] = {
+              ["c"] = {
+                function()
+                  require("gitlab").create_multiline_comment()
+                end,
+                "gitlab mr create comment",
+              },
+              ["C"] = {
+                function()
+                  require("gitlab").create_comment_suggestions()
+                end,
+                "gitlab mr create suggestion",
+              },
             },
           },
         },

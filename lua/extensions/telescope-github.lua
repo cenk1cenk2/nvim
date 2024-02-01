@@ -15,6 +15,16 @@ function M.config()
     on_setup = function()
       require("telescope").load_extension("gh")
     end,
+    wk = function(_, categories)
+      return {
+        [categories.GIT] = {
+          g = {
+            I = { ":Telescope gh issues<CR>", "github issues" },
+            P = { ":Telescope gh pull_request<CR>", "github pull requests" },
+          },
+        },
+      }
+    end,
   })
 end
 

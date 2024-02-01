@@ -44,98 +44,100 @@ function M.config()
     end,
     wk = function(_, categories)
       return {
-        [categories.TASKS] = {
-          r = {
-            name = "hurl",
-            e = {
-              function()
-                local Log = require("lvim.core.log")
-                local store_key = "HURL_ENVIRONMENT"
-                local shada = require("modules.shada")
-                local stored_value = shada.get(store_key)
-
-                vim.ui.input({
-                  prompt = "Select hurl environment: ",
-                  default = stored_value,
-                }, function(env)
-                  if env == nil then
-                    Log:warn("Nothing to select.")
-
-                    return
-                  end
-
-                  Log:info(("Hurl environment file switched: %s"):format(env))
-                  shada.set(store_key, env)
-
-                  vim.cmd(":HurlSetEnvFile " .. env)
-                end)
-              end,
-              "select hurl environment",
-            },
-            t = {
-              ":HurlRunnerToEntry<CR>",
-              "run hurl to entry",
-            },
+        {
+          { "n" },
+          [categories.TASKS] = {
             r = {
-              ":HurlRunnerAt<CR>",
-              "run hurl under cursor",
-            },
-            f = {
-              ":HurlRunner<CR>",
-              "run hurl for all requests",
-            },
-            m = {
-              ":HurlToggleMode<CR>",
-              "toggle hurl.nvim mode",
-            },
-            v = {
-              ":HurlVerbose<CR>",
-              "hurl verbose mode",
-            },
-            c = {
-              function()
-                local Log = require("lvim.core.log")
-                local job = require("utils.job")
+              name = "hurl",
+              e = {
+                function()
+                  local Log = require("lvim.core.log")
+                  local store_key = "HURL_ENVIRONMENT"
+                  local shada = require("modules.shada")
+                  local stored_value = shada.get(store_key)
 
-                job.spawn({
-                  command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
-                  -- writer = vim.fn.getreg(vim.v.register or lvim.system_register),
-                  on_success = function(j)
-                    local generated = table.concat(j:result(), "\n")
+                  vim.ui.input({
+                    prompt = "Select hurl environment: ",
+                    default = stored_value,
+                  }, function(env)
+                    if env == nil then
+                      Log:warn("Nothing to select.")
 
-                    Log:info("Copied generated hurl to clipboard.")
-                    vim.fn.setreg(vim.v.register or lvim.system_register, generated)
-                  end,
-                })
-              end,
-              "curl to hurl",
-            },
-            q = {
-              function()
-                local Log = require("lvim.core.log")
-                local job = require("utils.job")
+                      return
+                    end
 
-                job.spawn({
-                  command = "pkill",
-                  args = { "hurl" },
-                  on_success = function()
-                    Log:info("Killed running hurl instance.")
-                  end,
-                })
-              end,
-              "kill running hurl instance",
+                    Log:info(("Hurl environment file switched: %s"):format(env))
+                    shada.set(store_key, env)
+
+                    vim.cmd(":HurlSetEnvFile " .. env)
+                  end)
+                end,
+                "select hurl environment",
+              },
+              t = {
+                ":HurlRunnerToEntry<CR>",
+                "run hurl to entry",
+              },
+              r = {
+                ":HurlRunnerAt<CR>",
+                "run hurl under cursor",
+              },
+              f = {
+                ":HurlRunner<CR>",
+                "run hurl for all requests",
+              },
+              m = {
+                ":HurlToggleMode<CR>",
+                "toggle hurl.nvim mode",
+              },
+              v = {
+                ":HurlVerbose<CR>",
+                "hurl verbose mode",
+              },
+              c = {
+                function()
+                  local Log = require("lvim.core.log")
+                  local job = require("utils.job")
+
+                  job.spawn({
+                    command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
+                    -- writer = vim.fn.getreg(vim.v.register or lvim.system_register),
+                    on_success = function(j)
+                      local generated = table.concat(j:result(), "\n")
+
+                      Log:info("Copied generated hurl to clipboard.")
+                      vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+                    end,
+                  })
+                end,
+                "curl to hurl",
+              },
+              q = {
+                function()
+                  local Log = require("lvim.core.log")
+                  local job = require("utils.job")
+
+                  job.spawn({
+                    command = "pkill",
+                    args = { "hurl" },
+                    on_success = function()
+                      Log:info("Killed running hurl instance.")
+                    end,
+                  })
+                end,
+                "kill running hurl instance",
+              },
             },
           },
         },
-      }
-    end,
-    wk_v = function(_, categories)
-      return {
-        [categories.TASKS] = {
-          name = "hurl",
-          r = {
-            ":HurlRunner<CR>",
-            "run hurl for selected requests",
+        {
+          { "v" },
+          [categories.TASKS] = {
+            name = "hurl",
+            r = {
+              ":HurlRunner<CR>",
+              "run hurl for selected requests",
+            },
           },
         },
       }

@@ -24,8 +24,9 @@ function M.config()
             group = "__extensions",
             pattern = "yaml",
             callback = function(event)
-              require("utils.setup").load_wk_mappings(
+              require("utils.setup").load_wk({
                 {
+                  { "n" },
                   [categories.ACTIONS] = {
                     ["F"] = {
                       function()
@@ -35,11 +36,9 @@ function M.config()
                     },
                   },
                 },
-                nil,
-                {
-                  buffer = event.buf,
-                }
-              )
+              }, {
+                buffer = event.buf,
+              })
             end,
           },
         },
