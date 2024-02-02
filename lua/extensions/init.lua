@@ -100,6 +100,7 @@ local extensions = {
   "better-ts-errors-nvim",
   "symbol-usage-nvim",
   "obsidian-nvim",
+  "iswap-nvim",
 }
 
 function M.config(config)

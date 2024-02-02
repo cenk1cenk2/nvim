@@ -36,12 +36,12 @@ function M.config()
             include_surrounding_whitespace = false,
           },
           swap = {
-            enable = true,
+            enable = false,
             swap_previous = {
-              ["HH"] = { query = { "@parameter.inner", "@element" }, desc = "" },
+              ["HH"] = { query = { "@field", "@pair", "@array", "@element", "@parameter.inner" }, desc = "" },
             },
             swap_next = {
-              ["LL"] = { query = { "@parameter.inner", "@element" }, desc = "" },
+              ["LL"] = { query = { "@field", "@pair", "@array", "@element", "@parameter.inner" }, desc = "" },
             },
           },
           move = {
