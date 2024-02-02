@@ -116,6 +116,7 @@ function M.config()
         enable_diagnostics = false,
         enable_git_status = true,
         enable_modified_markers = true, -- Show markers for files with unsaved changes.sort_case_insensitive = true, -- used when sorting files and directories in the tree
+        enable_opened_markers = true,
         open_files_do_not_replace_types = lvim.disabled_filetypes, -- when opening files, do not use windows containing these filetypes or buftypes
         sort_function = nil, -- use a custom function for sorting files and directories in the tree
         -- sort_function = function (a,b)
@@ -424,8 +425,26 @@ function M.config()
       local Log = require("lvim.core.log")
 
       return {
-        ["E"] = { M.focus, "focus filetree" },
-        ["e"] = { M.toggle, "open filetree" },
+        ["E"] = {
+          function()
+            if M.source == "" then
+              return vim.cmd([[Neotree focus]])
+            end
+
+            return vim.cmd(([[Neotree focus source=%s]]):format(M.source))
+          end,
+          "focus filetree",
+        },
+        ["e"] = {
+          function()
+            if M.source == "" then
+              return vim.cmd([[Neotree toggle]])
+            end
+
+            return vim.cmd(([[Neotree toggle source=%s]]):format(M.source))
+          end,
+          "open filetree",
+        },
         [","] = { ":Neotree reveal<CR>", "reveal file in filetree" },
         ["."] = { ":Neotree position=right buffers toggle<CR>", "open buffers in filetree" },
         ["?"] = {
@@ -459,22 +478,6 @@ function M.config()
       }
     end,
   })
-end
-
-function M.focus()
-  if M.source == "" then
-    return vim.cmd([[Neotree focus]])
-  end
-
-  return vim.cmd(([[Neotree focus source=%s]]):format(M.source))
-end
-
-function M.toggle()
-  if M.source == "" then
-    return vim.cmd([[Neotree toggle]])
-  end
-
-  return vim.cmd(([[Neotree toggle source=%s]]):format(M.source))
 end
 
 M.source = ""
