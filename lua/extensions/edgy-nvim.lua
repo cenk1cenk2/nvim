@@ -23,6 +23,7 @@ function M.config()
           {
             title = "Neo-Tree",
             ft = "neo-tree",
+            size = { width = 55 },
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "filesystem" or vim.b[buf].neo_tree_source == "remote"
             end,
