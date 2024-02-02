@@ -4,7 +4,7 @@ return {
     require("typescript-tools").setup(config)
   end,
   flags = {
-    debounce_text_changes = 300,
+    debounce_text_changes = 500,
   },
   on_init = function(client, bufnr)
     require("lvim.lsp").common_on_init(client, bufnr)

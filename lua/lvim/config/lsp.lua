@@ -15,12 +15,22 @@ return {
       values = {
         { name = "DiagnosticSignError", text = lvim.ui.icons.diagnostics.Error },
         { name = "DiagnosticSignWarn", text = lvim.ui.icons.diagnostics.Warning },
-        { name = "DiagnosticSignHint", text = lvim.ui.icons.diagnostics.Hint },
         { name = "DiagnosticSignInfo", text = lvim.ui.icons.diagnostics.Information },
+        { name = "DiagnosticSignHint", text = lvim.ui.icons.diagnostics.Hint },
       },
     },
     virtual_text = {
-      prefix = "",
+      prefix = function(diagnostic)
+        if diagnostic.severity == vim.diagnostic.severity.ERROR then
+          return lvim.ui.icons.diagnostics.Error
+        elseif diagnostic.severity == vim.diagnostic.severity.WARN then
+          return lvim.ui.icons.diagnostics.Warning
+        elseif diagnostic.severity == vim.diagnostic.severity.INFO then
+          return lvim.ui.icons.diagnostics.Hint
+        end
+
+        return lvim.ui.icons.diagnostics.Hint
+      end,
       source = "always",
     },
     update_in_insert = false,
