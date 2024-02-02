@@ -53,7 +53,7 @@ hl.common = {
   Question = { fg = c.yellow[600] },
   WarningMsg = { fg = c.orange[600], bold = true, bg = c.bg[200] },
 
-  IncSearch = { bg = c.bg[600] },
+  IncSearch = { bg = c.bg[500] },
   MatchParen = { fg = c.blue[600], underline = true },
   MatchParenCur = { underline = true },
   MatchWord = { underline = true },
