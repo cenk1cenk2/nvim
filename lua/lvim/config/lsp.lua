@@ -26,7 +26,7 @@ return {
         elseif diagnostic.severity == vim.diagnostic.severity.WARN then
           return lvim.ui.icons.diagnostics.Warning
         elseif diagnostic.severity == vim.diagnostic.severity.INFO then
-          return lvim.ui.icons.diagnostics.Hint
+          return lvim.ui.icons.diagnostics.Information
         end
 
         return lvim.ui.icons.diagnostics.Hint
