@@ -5,10 +5,11 @@ return {
     ---@usage pattern string pattern used for the autocommand (Default: '*')
     pattern = "*",
     ---@usage timeout number timeout in ms for the format request (Default: 1000)
-    timeout = 7500,
+    timeout = 5000,
     ---@usage filter func to select client
     filter = require("lvim.lsp.utils").format_filter,
   },
+  --- @type vim.diagnostic.Opts
   diagnostics = {
     signs = {
       active = true,
@@ -20,17 +21,10 @@ return {
       },
     },
     virtual_text = {
-      prefix = function(diagnostic)
-        if diagnostic.severity == vim.diagnostic.severity.ERROR then
-          return lvim.ui.icons.diagnostics.Error
-        elseif diagnostic.severity == vim.diagnostic.severity.WARN then
-          return lvim.ui.icons.diagnostics.Warning
-        elseif diagnostic.severity == vim.diagnostic.severity.INFO then
-          return lvim.ui.icons.diagnostics.Information
-        end
-
-        return lvim.ui.icons.diagnostics.Hint
-      end,
+      severity_sort = true,
+      -- prefix = function(diagnostic)
+      --   return signs[vim.diagnostic.severity[diagnostic.severity]]
+      -- end,
       source = "always",
     },
     update_in_insert = false,
@@ -65,11 +59,6 @@ return {
     focusable = true,
     style = "minimal",
     border = lvim.ui.border,
-  },
-  peek = {
-    max_height = 36,
-    max_width = 180,
-    context = 48,
   },
   buffer_mappings = require("keys.lsp"),
   automatic_configuration = {
@@ -144,12 +133,6 @@ return {
         return lvim.lsp.tools.list_registered.default.linters(bufnr)
       end,
     },
-  },
-  null_ls = {
-    setup = {
-      debug = false,
-    },
-    config = {},
   },
   wrapper = {},
   on_init_callbacks = {},
