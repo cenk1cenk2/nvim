@@ -354,6 +354,10 @@ hl.langs.typescript = {
   ["@lsp.type.parameter.typescript"] = { fg = c.red[900] },
 }
 
+hl.langs.typescriptreact = {
+  ["@tag.tsx"] = { fg = c.yellow[600] },
+}
+
 hl.langs.c = {
   ["@lsp.type.comment.c"] = {},
 }
