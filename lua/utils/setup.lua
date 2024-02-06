@@ -123,7 +123,7 @@ function M.define_extension(extension_name, enabled, config)
     autocmds = { config.autocmds, { "t", "f" }, true },
     keymaps = { config.keymaps, { "t", "f" }, true },
     wk = { config.wk, { "t", "f" }, true },
-    legacy_setup = { config.legacy_setup, "t", true },
+    legacy_setup = { config.legacy_setup, { "t", "f" }, true },
     setup = { config.setup, { "t", "f" }, true },
     extended_setup = { config.extended_setup, { "t", "f" }, true },
     on_setup = { config.on_setup, "f", true },
@@ -300,7 +300,7 @@ function M.init(config)
   end
 
   if config ~= nil and config.legacy_setup ~= nil then
-    M.legacy_setup(config.legacy_setup)
+    M.legacy_setup(M.evaluate_property(config.legacy_setup, config))
 
     config.legacy_setup = nil
   end

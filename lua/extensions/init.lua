@@ -68,6 +68,7 @@ local extensions = {
   "nvim-scrollbar",
   "refactoring-nvim",
   "lsp-lines-nvim",
+  "lsp-timeout-nvim",
   "yanky-nvim",
   "substitute-nvim",
   "text-case-nvim",

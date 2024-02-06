@@ -3,6 +3,19 @@ return {
     -- typescript-tools if this is enabled it will override it
     require("typescript-tools").setup(config)
   end,
+  filetypes = {
+    "javascript",
+    "js",
+    "jsx",
+    "ts",
+    "tsx",
+    "typescript",
+    "javascriptreact",
+    "javascript.jsx",
+    "typescript",
+    "typescriptreact",
+    "typescript.tsx",
+  },
   flags = {
     debounce_text_changes = 500,
   },
