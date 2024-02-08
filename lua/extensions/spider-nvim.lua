@@ -36,7 +36,7 @@ function M.config()
             desc = "non-spider-w",
           },
         },
-        ["WW"] = {
+        ["gW"] = {
           "W",
           {
             desc = "non-spider-W",
@@ -56,7 +56,7 @@ function M.config()
             desc = "non-spider-e",
           },
         },
-        ["EE"] = {
+        ["gE"] = {
           "E",
           {
             desc = "non-spider-E",
@@ -76,7 +76,7 @@ function M.config()
             desc = "non-spider-b",
           },
         },
-        ["BB"] = {
+        ["gB"] = {
           "B",
           {
             desc = "non-spider-B",
