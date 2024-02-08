@@ -12,8 +12,11 @@ function M.config()
         cmd = { "Telescope undo" },
       }
     end,
-    configure = function(_, fn)
-      fn.append_to_setup("telescope", {
+    on_setup = function()
+      local telescope = require("telescope")
+      telescope.load_extension("undo")
+
+      telescope.setup({
         extensions = {
           undo = {
             use_delta = true,
@@ -36,10 +39,6 @@ function M.config()
           },
         },
       })
-    end,
-    on_setup = function()
-      local telescope = require("telescope")
-      telescope.load_extension("undo")
     end,
     wk = function(_, categories)
       return {

@@ -117,6 +117,10 @@ function M.diagonistics_set_list()
   vim.diagnostic.set_loclist()
 end
 
+function M.reset_diagnostics()
+  vim.diagnostic.reset()
+end
+
 function M.toggle_inlay_hints()
   local bufnr = vim.api.nvim_get_current_buf()
   vim.lsp.inlay_hint.enable(bufnr, not vim.lsp.inlay_hint.is_enabled(bufnr))
@@ -415,6 +419,12 @@ function M.setup()
               lvim.lsp.wrapper.toggle_inlay_hints()
             end,
             "toggle inlay hints",
+          },
+          ["T"] = {
+            function()
+              lvim.lsp.wrapper.reset_diagnostics()
+            end,
+            "reset diagnostics",
           },
           Q = { ":LspRestart<CR>", "restart currently active lsps" },
         },
