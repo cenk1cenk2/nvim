@@ -36,6 +36,7 @@ M.mappings = {
     m = { "<C-W>=<CR>", "balance open windows" },
     r = { ":set norelativenumber!<CR>", "toggle relative line numbers" },
     R = { "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>", "redraw" },
+    b = { ":wincmd p | q<CR>", "previous window" },
     s = { ":sort<CR>", "sort" },
     S = { ":set signcolumn=yes<CR>", "fix sign columns" },
     T = { ":setlocal bufhidden=delete<CR>", "set as temporary buffer" },

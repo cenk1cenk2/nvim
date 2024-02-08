@@ -99,6 +99,7 @@ function M.config()
     wk = function(_, categories)
       return {
         [categories.GIT] = {
+          D = { ":Gitsigns diffthis<CR>", "diff current buffer with head" },
           B = { ":Gitsigns toggle_current_line_blame<CR>", "git blame" },
           n = { ":Gitsigns next_hunk<CR>", "next hunk" },
           p = { ":Gitsigns prev_hunk<CR>", "prev hunk" },
@@ -107,10 +108,12 @@ function M.config()
           U = { ":Gitsigns reset_hunk<CR>", "reset hunk" },
           r = { ":Gitsigns refresh<CR>", "refresh" },
           R = {
+            name = "reset",
             R = { ":Gitsigns reset_buffer<CR>", "reset buffer" },
           },
           s = { ":Gitsigns stage_hunk<CR>", "stage hunk" },
           S = { ":Gitsigns undo_stage_hunk<CR>", "undo stage hunk" },
+          q = { ":Gitsigns setqflist<CR>", "set quickfix for current buffer changes" },
         },
       }
     end,

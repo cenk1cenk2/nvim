@@ -156,8 +156,16 @@ function M.config()
       return {
         [categories.GIT] = {
           ["a"] = { ":DiffviewFileHistory %<CR>", "buffer commits" },
-          ["d"] = { ":DiffviewOpen<CR>", "diff view open" },
-          ["D"] = { ":DiffviewClose<CR>", "diff view close" },
+          ["d"] = {
+            function()
+              if next(require("diffview.lib").views) == nil then
+                vim.cmd("DiffviewOpen")
+              else
+                vim.cmd("DiffviewClose")
+              end
+            end,
+            "diff view toggle",
+          },
           ["w"] = { ":DiffviewFileHistory<CR>", "workspace commits" },
           ["c"] = {
             function()
