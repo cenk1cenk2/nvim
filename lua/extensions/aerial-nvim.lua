@@ -12,6 +12,25 @@ function M.config()
       }
     end,
     configure = function(_, fn)
+      fn.append_to_setup("telescope", {
+        extensions = {
+          aerial = {
+            theme = "dropdown",
+            layout_config = {
+              width = 0.5,
+              height = 0.25,
+              prompt_position = "bottom",
+            },
+            -- Display symbols as <root>.<parent>.<symbol>
+            show_nesting = {
+              ["_"] = false, -- This key will be the default
+              json = true, -- You can set the option for specific filetypes
+              yaml = true,
+            },
+          },
+        },
+      })
+
       fn.add_disabled_filetypes({
         "aerial",
       })
@@ -58,6 +77,7 @@ function M.config()
         -- A list of all symbols to display. Set to false to display all symbols.
         -- This can be a filetype map (see :help aerial-filetype-map)
         -- To see all available values, see :help SymbolKind
+        -- Array Boolean Class Constant Constructor Enum EnumMember Event Field File Function Interface Key Method Module Namespace Null Number Object Operator Package Property String Struct TypeParameter Variable
         filter_kind = {
           "Class",
           "Constructor",
@@ -67,6 +87,7 @@ function M.config()
           "Module",
           "Method",
           "Struct",
+          "EnumMember",
           -- "Constant",
           -- "Variable",
         },
@@ -117,17 +138,9 @@ function M.config()
     on_done = function()
       local telescope = require("telescope")
       telescope.load_extension("aerial")
-      telescope.setup({
-        extensions = {
-          aerial = {
-            -- Display symbols as <root>.<parent>.<symbol>
-            show_nesting = true,
-          },
-        },
-      })
 
       lvim.lsp.wrapper.lsp_document_symbols = function()
-        vim.cmd("Telescope aerial")
+        require("telescope").extensions.aerial.aerial()
       end
     end,
     wk = function(_, categories)

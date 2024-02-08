@@ -101,7 +101,7 @@ function M.config()
           { ft = "nvim-docs-view", title = "LSP Documentation" },
           {
             ft = "help",
-            size = { height = 20 },
+            size = { height = 35 },
             -- only show help buffers
             filter = function(buf)
               return vim.bo[buf].buftype == "help"
