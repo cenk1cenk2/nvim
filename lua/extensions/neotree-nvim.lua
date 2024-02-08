@@ -8,6 +8,7 @@ function M.config()
     plugin = function()
       return {
         "nvim-neo-tree/neo-tree.nvim",
+        branch = "main",
         dependencies = {
           "nvim-lua/plenary.nvim",
           "nvim-tree/nvim-web-devicons",
@@ -115,7 +116,7 @@ function M.config()
           },
         },
         close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
-        enable_cursor_hijack = true, -- If enabled neotree will keep the cursor on the first letter of the filename when moving in the tree.
+        enable_cursor_hijack = false, -- If enabled neotree will keep the cursor on the first letter of the filename when moving in the tree.
         popup_border_style = lvim.ui.border,
         -- https://github.com/nvim-neo-tree/neo-tree.nvim/issues/338
         enable_diagnostics = false,
@@ -230,7 +231,7 @@ function M.config()
             ["r"] = "rename",
             ["q"] = "close_window",
             ["R"] = "refresh",
-            ["K"] = "show_file_details2",
+            ["K"] = "show_file_details",
             ["?"] = "show_help",
           },
         },
@@ -261,12 +262,12 @@ function M.config()
             never_show_by_pattern = { -- uses glob style patterns
             },
           },
-          follow_current_file = false,
-          -- follow_current_file = {
-          --   enabled = true, -- This will find and focus the file in the active buffer every time
-          --   --               -- the current file is changed while the tree is open.
-          --   leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
-          -- },
+          -- follow_current_file = false,
+          follow_current_file = {
+            enabled = true, -- This will find and focus the file in the active buffer every time
+            --               -- the current file is changed while the tree is open.
+            leave_dirs_open = false, -- `false` closes auto expanded dirs, such as with `:Neotree reveal`
+          },
           -- time the current file is changed while the tree is open.
           group_empty_dirs = false, -- when true, empty folders will be grouped together
           hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
@@ -379,41 +380,6 @@ function M.config()
               local node = state.tree:get_node()
               local parent_path, _ = require("neo-tree.utils").split_path(node:get_id())
               renderer.focus_node(state, parent_path)
-            end,
-            show_file_details2 = function(state)
-              local node = state.tree:get_node()
-              if node.type == "message" then
-                return
-              end
-
-              -- local utils = require("neo-tree.utils")
-              local popups = require("neo-tree.ui.popups")
-
-              -- local stat = utils.get_stat(node)
-              local left = {}
-              local right = {}
-              table.insert(left, "Name")
-              table.insert(right, node.name)
-              table.insert(left, "Path")
-              table.insert(right, vim.fn.fnamemodify(node:get_id(), ":p:~:."))
-              table.insert(left, "Type")
-              table.insert(right, node.type)
-              -- if stat.size then
-              --   table.insert(left, "Size")
-              --   table.insert(right, utils.human_size(stat.size))
-              --   table.insert(left, "Created")
-              --   table.insert(right, os.date("%Y-%m-%d %I:%M %p", stat.birthtime.sec))
-              --   table.insert(left, "Modified")
-              --   table.insert(right, os.date("%Y-%m-%d %I:%M %p", stat.mtime.sec))
-              -- end
-
-              local lines = {}
-              for i, v in ipairs(left) do
-                local line = string.format("%9s: %s", v, right[i])
-                table.insert(lines, line)
-              end
-
-              popups.alert("File Details", lines)
             end,
           },
         },
