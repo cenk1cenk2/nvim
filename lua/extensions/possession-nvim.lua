@@ -40,7 +40,10 @@ function M.config()
         },
         hooks = {
           before_save = function(name)
-            vim.cmd([[AerialCloseAll]])
+            pcall(function()
+              vim.cmd([[AerialCloseAll]])
+            end)
+
             local res = {}
             -- local neo_state = M.neotree_get_state()
             -- if neo_state ~= nil then

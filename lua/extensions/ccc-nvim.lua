@@ -20,8 +20,8 @@ function M.config()
     wk = function(_, categories)
       return {
         [categories.TASKS] = {
-          c = { ":CccHighlighterToggle<CR>", "highlight colors" },
-          C = { ":CccPick<CR>", "color picker" },
+          c = { ":CccPick<CR>", "color picker" },
+          C = { ":CccHighlighterToggle<CR>", "highlight colors" },
         },
       }
     end,
