@@ -30,6 +30,18 @@ function M.config()
             desc = "spider-w",
           },
         },
+        ["W"] = {
+          "w",
+          {
+            desc = "non-spider-w",
+          },
+        },
+        ["WW"] = {
+          "W",
+          {
+            desc = "non-spider-W",
+          },
+        },
         ["e"] = {
           function()
             require("spider").motion("e")
@@ -38,12 +50,36 @@ function M.config()
             desc = "spider-e",
           },
         },
+        ["E"] = {
+          "e",
+          {
+            desc = "non-spider-e",
+          },
+        },
+        ["EE"] = {
+          "E",
+          {
+            desc = "non-spider-E",
+          },
+        },
         ["b"] = {
           function()
             require("spider").motion("b")
           end,
           {
             desc = "spider-b",
+          },
+        },
+        ["B"] = {
+          "b",
+          {
+            desc = "non-spider-b",
+          },
+        },
+        ["BB"] = {
+          "B",
+          {
+            desc = "non-spider-B",
           },
         },
         -- ["ge"] = {
