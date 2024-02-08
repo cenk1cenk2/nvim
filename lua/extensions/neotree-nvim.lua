@@ -231,7 +231,7 @@ function M.config()
             ["r"] = "rename",
             ["q"] = "close_window",
             ["R"] = "refresh",
-            ["K"] = "show_file_details",
+            ["K"] = "show_file_details2",
             ["?"] = "show_help",
           },
         },
@@ -380,6 +380,41 @@ function M.config()
               local node = state.tree:get_node()
               local parent_path, _ = require("neo-tree.utils").split_path(node:get_id())
               renderer.focus_node(state, parent_path)
+            end,
+            show_file_details2 = function(state)
+              local node = state.tree:get_node()
+              if node.type == "message" then
+                return
+              end
+
+              -- local utils = require("neo-tree.utils")
+              local popups = require("neo-tree.ui.popups")
+
+              -- local stat = utils.get_stat(node)
+              local left = {}
+              local right = {}
+              table.insert(left, "Name")
+              table.insert(right, node.name)
+              table.insert(left, "Path")
+              table.insert(right, vim.fn.fnamemodify(node:get_id(), ":p:~:."))
+              table.insert(left, "Type")
+              table.insert(right, node.type)
+              -- if stat.size then
+              --   table.insert(left, "Size")
+              --   table.insert(right, utils.human_size(stat.size))
+              --   table.insert(left, "Created")
+              --   table.insert(right, os.date("%Y-%m-%d %I:%M %p", stat.birthtime.sec))
+              --   table.insert(left, "Modified")
+              --   table.insert(right, os.date("%Y-%m-%d %I:%M %p", stat.mtime.sec))
+              -- end
+
+              local lines = {}
+              for i, v in ipairs(left) do
+                local line = string.format("%9s: %s", v, right[i])
+                table.insert(lines, line)
+              end
+
+              popups.alert("File Details", lines)
             end,
           },
         },
