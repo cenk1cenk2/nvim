@@ -14,7 +14,7 @@ return {
       end,
       "go to definition",
     },
-    ["gt"] = {
+    ["gD"] = {
       function()
         lvim.lsp.wrapper.declaration()
       end,
@@ -26,7 +26,7 @@ return {
       end,
       "go to references",
     },
-    ["gT"] = {
+    ["gt"] = {
       function()
         lvim.lsp.wrapper.implementation()
       end,
