@@ -148,7 +148,7 @@ function M.config()
         sorting = {
           priority_weight = 1.0,
           comparators = {
-            compare.offset,
+            -- compare.offset,
             compare.exact,
             compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
             compare.locality,
