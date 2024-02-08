@@ -52,9 +52,9 @@ function M.config()
           --- Please note some names can/will break the
           --- bufferline so use this at your discretion knowing that it has
           --- some limitations that will *NOT* be fixed.
-          max_name_length = 20,
+          max_name_length = 30,
           max_prefix_length = 15, -- prefix used when a buffer is de-duplicated
-          tab_size = 25,
+          tab_size = 30,
           truncate_names = true, -- whether or not tab names should be truncated
           diagnostics = "nvim_lsp",
           diagnostics_update_in_insert = false,
@@ -64,7 +64,7 @@ function M.config()
           offsets = {},
           color_icons = true, -- whether or not to add the filetype icon highlights
           show_buffer_icons = true, -- disable filetype icons for buffers
-          show_buffer_close_icons = true,
+          show_buffer_close_icons = false,
           show_close_icon = false,
           show_tab_indicators = true,
           persist_buffer_sort = true, -- whether or not custom sorted buffers should persist
