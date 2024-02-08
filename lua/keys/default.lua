@@ -96,10 +96,10 @@ return {
     { "t" },
 
     -- Terminal window navigation
-    ["<C-h>"] = "<C-\\><C-N><C-w>h",
-    ["<C-j>"] = "<C-\\><C-N><C-w>j",
-    ["<C-k>"] = "<C-\\><C-N><C-w>k",
-    ["<C-l>"] = "<C-\\><C-N><C-w>l",
+    ["<C-H>"] = "<C-\\><C-N><C-w>h",
+    ["<C-J>"] = "<C-\\><C-N><C-w>j",
+    ["<C-K>"] = "<C-\\><C-N><C-w>k",
+    ["<C-L>"] = "<C-\\><C-N><C-w>l",
     ["`"] = "<C-\\><C-n>",
   },
 
