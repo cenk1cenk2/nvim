@@ -181,7 +181,7 @@ function M.config()
           },
           w = {
             function()
-              require("spectre").open({ path = string.format("%s/**", vim.fn.expand("%:h:~:.")) })
+              require("spectre").open({ path = string.format("%s**", vim.fn.fnamemodify(vim.fn.expand("%:h:~:."), ":p:~:.")) })
             end,
             "[spectre] find and replace in current folder",
           },
