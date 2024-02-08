@@ -57,11 +57,15 @@ function M.config()
             end,
           },
           {
-            title = "Neo-Tree Outline",
+            title = "Neo-Tree LSP Outline",
             ft = "neo-tree",
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "document_symbols"
             end,
+          },
+          {
+            title = "LSP Outline",
+            ft = "aerial",
           },
           {
             title = "Dap Watches",

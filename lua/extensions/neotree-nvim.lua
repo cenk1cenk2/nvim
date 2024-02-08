@@ -510,12 +510,12 @@ function M.config()
         [categories.GIT] = {
           ["e"] = { ":Neotree position=right git_status toggle<CR>", "git files in filetree" },
         },
-        [categories.LSP] = {
-          o = {
-            ":Neotree source=document_symbols right toggle<CR>",
-            "toggle outline",
-          },
-        },
+        -- [categories.LSP] = {
+        --   o = {
+        --     ":Neotree source=document_symbols right toggle<CR>",
+        --     "toggle outline",
+        --   },
+        -- },
       }
     end,
   })
