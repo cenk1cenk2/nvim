@@ -22,7 +22,7 @@ function M.config()
 
         -- Automatically swap with only two arguments
         -- default nil
-        autoswap = true,
+        autoswap = false,
       }
     end,
     on_setup = function(config)
