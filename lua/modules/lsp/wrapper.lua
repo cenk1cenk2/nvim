@@ -6,22 +6,8 @@ function M.add_to_workspace_folder()
   vim.lsp.buf.add_workspace_folder()
 end
 
-function M.clear_references()
-  vim.lsp.buf.clear_references()
-end
-
 function M.code_action(...)
   vim.lsp.buf.code_action(...)
-end
-
-function M.declaration()
-  vim.lsp.buf.declaration()
-  vim.lsp.buf.clear_references()
-end
-
-function M.definition()
-  vim.lsp.buf.definition()
-  vim.lsp.buf.clear_references()
 end
 
 function M.document_highlight()
@@ -30,7 +16,7 @@ end
 
 function M.document_symbols()
   -- vim.lsp.buf.document_symbol()
-  vim.cmd("Telescope lsp_document_symbols")
+  require("telescope.builtin").lsp_document_symbols()
 end
 
 function M.format(opts)
@@ -43,16 +29,29 @@ function M.hover()
   vim.lsp.buf.hover()
 end
 
+function M.declaration()
+  vim.lsp.buf.declaration()
+  vim.lsp.buf.clear_references()
+end
+
+function M.definition()
+  vim.lsp.buf.definition()
+  vim.lsp.buf.clear_references()
+end
+
 function M.implementation()
-  vim.lsp.buf.implementation()
+  require("telescope.builtin").lsp_implementations()
+  -- vim.lsp.buf.implementation()
 end
 
 function M.incoming_calls()
-  vim.lsp.buf.incoming_calls()
+  require("telescope.builtin").lsp_incoming_calls()
+  -- vim.lsp.buf.incoming_calls()
 end
 
 function M.outgoing_calls()
-  vim.lsp.buf.outgoing_calls()
+  require("telescope.builtin").lsp_outgoing_calls()
+  -- vim.lsp.buf.outgoing_calls()
 end
 
 function M.list_workspace_folders()
@@ -60,7 +59,12 @@ function M.list_workspace_folders()
 end
 
 function M.references()
-  vim.lsp.buf.references()
+  -- vim.lsp.buf.references()
+  require("telescope.builtin").lsp_references()
+end
+
+function M.clear_references()
+  vim.lsp.buf.clear_references()
 end
 
 function M.remove_workspace_folder()
@@ -82,7 +86,7 @@ end
 function M.workspace_symbols()
   -- vim.lsp.buf.workspace_symbol()
 
-  vim.cmd("Telescope lsp_dynamic_workspace_symbols")
+  require("telescope.builtin").lsp_dynamic_workspace_symbols()
 end
 
 -- diagnostic
@@ -102,11 +106,11 @@ function M.show_line_diagnostics()
 end
 
 function M.document_diagonistics()
-  vim.cmd("Telescope lsp_document_diagnostics")
+  require("telescope.builtin").lsp_document_diagnostics()
 end
 
 function M.workspace_diagonistics()
-  vim.cmd("Telescope lsp_workspace_diagnostics")
+  require("telescope.builtin").lsp_workspace_diagnostics()
 end
 
 function M.code_lens()
