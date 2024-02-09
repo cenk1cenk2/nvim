@@ -39,6 +39,7 @@ M.mappings = {
     b = { ":wincmd p | q<CR>", "previous window" },
     s = { ":sort<CR>", "sort" },
     S = { ":set signcolumn=yes<CR>", "fix sign columns" },
+    t = { ":setlocal wrap!<CR>", "toggle wrap" },
     T = { ":setlocal bufhidden=delete<CR>", "set as temporary buffer" },
     q = { ":colder<CR>", "quickfix older" },
     Q = { ":cnewer<CR>", "quickfix newer" },
