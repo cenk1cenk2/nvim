@@ -394,7 +394,7 @@ function M.setup()
             end,
             "codelens",
           },
-          R = {
+          r = {
             function()
               lvim.lsp.wrapper.rename()
             end,
@@ -424,7 +424,7 @@ function M.setup()
             end,
             "toggle inlay hints",
           },
-          ["T"] = {
+          ["R"] = {
             function()
               lvim.lsp.wrapper.reset_diagnostics()
             end,

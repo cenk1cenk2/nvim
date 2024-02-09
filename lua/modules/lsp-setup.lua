@@ -32,7 +32,7 @@ function M.setup()
     wk = function(_, categories)
       return {
         [categories.LSP] = {
-          ["r"] = {
+          ["a"] = {
             function()
               M.lsp_setup()
             end,
