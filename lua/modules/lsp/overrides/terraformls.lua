@@ -6,6 +6,10 @@ return {
   end,
   settings = {
     terraform = {
+      codelens = { referenceCount = true },
+      validation = {
+        enableEnhancedValidation = true,
+      },
       experimentalFeatures = {
         validateOnSave = true,
         prefillRequiredFields = true,

@@ -188,10 +188,10 @@ function M.register_tools(lsp_utils, METHOD)
   --   "zsh",
   -- })
 
-  lsp_utils.register_tools(METHOD, "terraform_fmt", {
-    "terraform",
-    "tfvars",
-  })
+  -- lsp_utils.register_tools(METHOD, "terraform_fmt", {
+  --   "terraform",
+  --   "tfvars",
+  -- })
 end
 
 function M.extend_tools(conform)

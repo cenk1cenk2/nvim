@@ -48,7 +48,9 @@ function M.register_tools(lsp_utils, METHOD)
   lsp_utils.register_tools(METHOD, "shellcheck", { "sh", "bash", "zsh" })
   lsp_utils.register_tools(METHOD, "hadolint", { "dockerfile" })
   lsp_utils.register_tools(METHOD, "proto", { "protolint" })
-  lsp_utils.register_tools(METHOD, "tfsec", { "terraform", "tfvars" })
+  lsp_utils.register_tools(METHOD, "tfvalidate", { "terraform", "tfvars" })
+  -- lsp_utils.register_tools(METHOD, "tfsec", { "terraform" })
+  -- lsp_utils.register_tools(METHOD, "tflint", { "terraform" })
   lsp_utils.register_tools(METHOD, "protolint", { "proto" })
   -- lsp_utils.register_tools(METHOD, "cspell", { "markdown", "text", "gitcommit" })
 end
@@ -73,12 +75,50 @@ function M.extend_tools(lint)
 
       for _, message in ipairs(decoded.lints) do
         table.insert(diagnostics, {
+          source = "protolint",
           lnum = message.line - 1,
           col = message.column - 1,
           -- end_lnum = decoded.location["end"].line - 1,
           -- end_col = decoded.location["end"].column - 1,
           severity = vim.diagnostic.severity.WARN,
           message = ("%s [%s]"):format(message.message, message.rule),
+        })
+      end
+
+      return diagnostics
+    end,
+  }
+
+  lint.linters.tfvalidate = {
+    cmd = "terraform",
+    stdin = false, -- or false if it doesn't support content input via stdin. In that case the filename is automatically added to the arguments.
+    append_fname = false, -- Automatically append the file name to `args` if `stdin = false` (default: true)
+    args = { "validate", "-json" }, -- list of arguments. Can contain functions with zero arguments that will be evaluated once the linter is used.
+    stream = "stdout", -- ('stdout' | 'stderr' | 'both') configure the stream to which the linter outputs the linting result.
+    ignore_exitcode = true, -- set this to true if the linter exits with a code != 0 and that's considered normal.
+    env = nil, -- custom environment table to use with the external process. Note that this replaces the *entire* environment, it is not additive.
+    parser = function(output)
+      local diagnostics = {}
+
+      local decoded = vim.json.decode(output, { object = true, array = true })
+
+      if decoded == nil or decoded.diagnostics == nil then
+        return diagnostics
+      end
+
+      for _, message in ipairs(decoded.diagnostics) do
+        local m = vim.split(message.detail, ":")
+
+        table.insert(diagnostics, {
+          source = "tfvalidate",
+          severity = message.severity,
+          file = message.range.filename,
+          lnum = message.range["start"].line - 1,
+          col = message.range["start"].column - 1,
+          end_lnum = message.range["end"].line - 1,
+          end_col = message.range["end"].column - 1,
+          message = vim.trim(m[3] or m[1] or message.detail),
+          code = message.summary,
         })
       end
 
