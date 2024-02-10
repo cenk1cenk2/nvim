@@ -97,7 +97,7 @@ function M.extend_tools(lint)
     stream = "stdout", -- ('stdout' | 'stderr' | 'both') configure the stream to which the linter outputs the linting result.
     ignore_exitcode = true, -- set this to true if the linter exits with a code != 0 and that's considered normal.
     env = nil, -- custom environment table to use with the external process. Note that this replaces the *entire* environment, it is not additive.
-    parser = function(output)
+    parser = function(output, bufnr)
       local diagnostics = {}
 
       local decoded = vim.json.decode(output, { object = true, array = true })
@@ -106,20 +106,24 @@ function M.extend_tools(lint)
         return diagnostics
       end
 
-      for _, message in ipairs(decoded.diagnostics) do
-        local m = vim.split(message.detail, ":")
+      local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":t")
 
-        table.insert(diagnostics, {
-          source = "tfvalidate",
-          severity = message.severity,
-          file = message.range.filename,
-          lnum = message.range["start"].line - 1,
-          col = message.range["start"].column - 1,
-          end_lnum = message.range["end"].line - 1,
-          end_col = message.range["end"].column - 1,
-          message = vim.trim(m[3] or m[1] or message.detail),
-          code = message.summary,
-        })
+      for _, message in ipairs(decoded.diagnostics) do
+        if message.range.filename == filename then
+          local m = vim.split(message.detail, ":")
+
+          table.insert(diagnostics, {
+            source = "tfvalidate",
+            severity = message.severity,
+            file = filename,
+            lnum = message.range["start"].line - 1,
+            col = message.range["start"].column - 1,
+            end_lnum = message.range["end"].line - 1,
+            end_col = message.range["end"].column - 1,
+            message = vim.trim(m[3] or m[1] or message.detail),
+            code = message.summary,
+          })
+        end
       end
 
       return diagnostics
