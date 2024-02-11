@@ -5,6 +5,15 @@ local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
 
 function _G.is_headless()
   return #vim.api.nvim_list_uis() == 0
+    and #vim.tbl_filter(function(argv)
+        if argv:find("sk.lua$") then
+          print("Headless but in surfing keys mode.")
+          return true
+        end
+
+        return false
+      end, vim.v.argv)
+      == 0
 end
 
 ---Join path segments that were passed as input

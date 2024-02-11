@@ -136,6 +136,10 @@ function M.get_nvim_version()
     Log:debug(stdout[1])
   end
 
+  if is_headless() then
+    Log:debug("Headless mode detected.")
+  end
+
   if not status_ok then
     return nil
   end

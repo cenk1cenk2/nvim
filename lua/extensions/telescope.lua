@@ -203,7 +203,6 @@ function M.config()
     end,
     on_done = function(config)
       local telescope = require("telescope")
-      telescope.load_extension("notify")
 
       if config.current_setup.extensions and config.current_setup.extensions.fzf then
         telescope.load_extension("fzf")

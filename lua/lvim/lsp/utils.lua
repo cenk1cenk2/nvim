@@ -151,13 +151,13 @@ function M.register_tools(method, configs, filetypes)
 
   Log:debug(("Registered the following method %s for %s: %s"):format(
     method,
-    vim.tbl_map(function(config)
+    vim.inspect(vim.tbl_map(function(config)
       if type(config) == "string" then
         return config
       end
 
       return config.name
-    end, configs),
+    end, configs)),
     table.concat(filetypes, ", ")
   ))
 end

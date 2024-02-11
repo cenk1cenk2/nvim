@@ -58,6 +58,12 @@ M.mappings = {
       end,
       "overwrite - force save",
     },
+    w = {
+      function()
+        vim.cmd("w")
+      end,
+      "write",
+    },
     W = {
       function()
         vim.cmd("wa")

@@ -90,11 +90,12 @@ M.load_headless_options = function()
 end
 
 M.load_defaults = function()
-  if is_headless() then
-    M.load_headless_options()
+  -- if is_headless() then
+  --   M.load_headless_options()
+  --
+  --   return
+  -- end
 
-    return
-  end
   M.load_default_options()
 end
 

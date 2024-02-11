@@ -74,6 +74,10 @@ function M.config()
 
         return M.filter_default_formatters(formatters)
       end
+
+      lvim.lsp.wrapper.format = function(opts)
+        require("conform").format(opts)
+      end
     end,
   })
 end
