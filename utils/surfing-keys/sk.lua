@@ -492,11 +492,11 @@ else
   vim.api.nvim_command("quit")
 end
 
-function _G.surfingkeys_notify(...)
-  vim.fn.rpcnotify(0, "surfingkeys:rpc", ...)
+function _G.surfingkeys_notify(event, ...)
+  vim.fn.rpcnotify(0, "surfingkeys:rpc", event, ...)
 end
 
-_G.surfingkeys_tempdir = join_paths(get_state_dir(), "/tmp/surfingkeys")
+_G.surfingkeys_tempdir = "/tmp/surfingkeys"
 vim.fn.mkdir(surfingkeys_tempdir, "p")
 vim.api.nvim_set_current_dir(surfingkeys_tempdir)
 
@@ -524,13 +524,13 @@ function _G.surfingkeys_scratch(fn, content, type)
   vim.api.nvim_exec_autocmds({ "BufReadPre", "BufRead", "BufReadPost" }, { buffer = bufnr })
   vim.cmd("silent only")
 
-  -- vim.keymap.set("n", "<CR>", function()
-  --   vim.cmd("wq")
-  -- end, { silent = true, buffer = bufnr })
-
   if vim.tbl_contains({ "url", "input" }, type) then
     vim.api.nvim_set_option_value("number", false, { buf = bufnr })
     vim.api.nvim_set_option_value("relativenumber", false, { buf = bufnr })
+
+    vim.keymap.set("i", "<CR>", function()
+      vim.cmd([[<ESC>:w<CR>]])
+    end, { silent = true, buffer = bufnr })
   end
 end
 
@@ -554,8 +554,11 @@ require("utils.setup").define_autocmds({
     {
       group = "_surfingkeys",
       pattern = ("%s/*"):format(surfingkeys_tempdir),
-      callback = function()
+      callback = function(event)
         vim.cmd([[call SurfingkeysWrite()]])
+
+        -- surfingkeys_notify("WriteData", vim.api.nvim_buf_get_lines(event.buf, 0, -1, false))
+        -- vim.api.nvim_set_option_value("modified", false, { buf = event.buf })
       end,
     },
   },
