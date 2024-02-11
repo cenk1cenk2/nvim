@@ -522,7 +522,7 @@ function _G.surfingkeys_scratch(fn, content, type)
   vim.api.nvim_set_option_value("modified", false, { buf = bufnr })
   vim.api.nvim_win_set_buf(0, bufnr)
   vim.api.nvim_exec_autocmds({ "BufReadPre", "BufRead", "BufReadPost" }, { buffer = bufnr })
-  vim.cmd("only")
+  vim.cmd("silent only")
 
   -- vim.keymap.set("n", "<CR>", function()
   --   vim.cmd("wq")
