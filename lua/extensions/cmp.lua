@@ -125,39 +125,38 @@ function M.config()
           documentation = cmp.config.window.bordered({ border = lvim.ui.border }),
         },
         sources = cmp.config.sources({
-
-          { name = "nvim_lsp", priority_weight = 100 },
-          { name = "nvim_lua", priority_weight = 100 },
-          { name = "vim-dadbod-completion", priority_weight = 100 },
+          { name = "nvim_lsp" },
+          { name = "nvim_lua" },
+          { name = "vim-dadbod-completion" },
           -- { name = "nvim_lsp_signature_help" },
-          { name = "luasnip", priority_weight = 50 },
-          { name = "calc", priority_weight = 50 },
+          { name = "luasnip" },
+          { name = "calc" },
           -- { name = "copilot" },
-          { name = "path", priority_weight = 40 },
+          { name = "path" },
           -- { name = "omni" },
-          { name = "buffer", priority_weight = 30 },
+          { name = "buffer" },
           -- { name = "fuzzy_buffer" },
 
           -- { name = "env" },
 
-          { name = "git", priority_weight = 20 },
-          { name = "npm", priority_weight = 20 },
+          { name = "git" },
+          { name = "npm" },
 
-          { name = "rg", priority_weight = 10, option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
+          { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
         }),
         sorting = {
           priority_weight = 1.0,
           comparators = {
-            -- compare.offset,
             compare.exact,
+            compare.offset,
             compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
-            compare.locality,
             compare.recently_used,
+            compare.locality,
             compare.kind,
+            compare.sort_text,
             compare.length,
             compare.order,
             -- compare.scopes, -- what?
-            -- compare.sort_text,
             -- compare.exact,
             -- compare.kind,
             -- compare.length, -- useless
