@@ -144,22 +144,26 @@ function M.config()
 
           { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
         }),
+        matching = {
+          disallow_fuzzy_matching = false,
+          disallow_fullfuzzy_matching = false,
+          disallow_partial_fuzzy_matching = true,
+          disallow_partial_matching = false,
+          disallow_prefix_unmatching = false,
+        },
         sorting = {
           priority_weight = 1.0,
           comparators = {
-            compare.exact,
             compare.offset,
-            compare.score, -- based on :  score = score + ((#sources - (source_index - 1)) * sorting.priority_weight)
+            compare.exact,
+            -- compare.scopes,
+            compare.score,
             compare.recently_used,
             compare.locality,
             compare.kind,
-            compare.sort_text,
+            -- compare.sort_text,
             compare.length,
             compare.order,
-            -- compare.scopes, -- what?
-            -- compare.exact,
-            -- compare.kind,
-            -- compare.length, -- useless
           },
         },
         mapping = cmp.mapping.preset.insert({
