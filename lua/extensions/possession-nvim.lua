@@ -40,9 +40,9 @@ function M.config()
         },
         hooks = {
           before_save = function(name)
-            pcall(function()
-              vim.cmd([[AerialCloseAll]])
-            end)
+            -- pcall(function()
+            --   vim.cmd([[AerialCloseAll]])
+            -- end)
 
             local res = {}
             -- local neo_state = M.neotree_get_state()
@@ -64,11 +64,11 @@ function M.config()
         plugins = {
           close_windows = {
             hooks = { "before_save", "before_load" },
-            preserve_layout = true, -- or fun(win): boolean
+            preserve_layout = false, -- or fun(win): boolean
             match = {
               floating = true,
-              buftype = {},
-              filetype = {},
+              buftype = lvim.disabled_buffer_types,
+              filetype = lvim.disabled_filetypes,
               custom = false, -- or fun(win): boolean
             },
           },

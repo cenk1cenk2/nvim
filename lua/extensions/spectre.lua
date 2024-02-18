@@ -42,7 +42,7 @@ function M.config()
             desc = "send all item to quickfix",
           },
           ["replace_cmd"] = {
-            map = "C",
+            map = "tC",
             cmd = ":lua require('spectre.actions').replace_cmd()<CR>",
             desc = "input replace vim command",
           },
@@ -67,37 +67,42 @@ function M.config()
             desc = "change result view mode",
           },
           ["change_replace_sed"] = {
-            map = "zO",
+            map = "tO",
             cmd = ":lua require('spectre').change_engine_replace('sed')<CR>",
             desc = "use sed to replace",
           },
           ["change_replace_oxi"] = {
-            map = "zo",
+            map = "to",
             cmd = ":lua require('spectre').change_engine_replace('oxi')<CR>",
             desc = "use oxi to replace",
           },
           ["toggle_ignore_case"] = {
-            map = "zi",
+            map = "ti",
             cmd = ":lua require('spectre').change_options('ignore-case')<CR>",
             desc = "toggle ignore case",
           },
+          ["toggle_no_ignore_dot"] = {
+            map = "tn",
+            cmd = ":lua require('spectre').change_options('no-ignore-dot')<CR>",
+            desc = "toggle no ignore dot",
+          },
           ["toggle_ignore_hidden"] = {
-            map = "zh",
+            map = "th",
             cmd = ":lua require('spectre').change_options('hidden')<CR>",
             desc = "toggle search hidden",
           },
           ["toggle_string_search"] = {
-            map = "zs",
+            map = "ts",
             cmd = ":lua require('spectre').change_options('string')<CR>",
             desc = "toggle string search mode",
           },
           ["toggle_live_update"] = {
-            map = "zu",
+            map = "tu",
             cmd = ":lua require('spectre').toggle_live_update()<CR>",
             desc = "update change when vim write file.",
           },
           ["resume_last_search"] = {
-            map = "zl",
+            map = "tl",
             cmd = ":lua require('spectre').resume_last_search()<CR>",
             desc = "resume last search before close",
           },
@@ -110,7 +115,8 @@ function M.config()
             -- default args
             args = { "--color=never", "--no-heading", "--with-filename", "--line-number", "--column" },
             options = {
-              ["ignore-case"] = { value = "--ignore-case", desc = "ignore case", icon = "[I]" },
+              ["ignore-case"] = { value = "--ignore-case", desc = "ignore case", icon = "[IC]" },
+              ["no-ignore-dot"] = { value = "--no-ignore-dot", desc = "disable ripgrep ignore", icon = "[NID]" },
               ["hidden"] = { value = "--hidden", desc = "hidden file", icon = "[H]" },
               ["string"] = { value = "--fixed-strings", desc = "fixed string mode", icon = "[S]" },
               -- you can put any option you want here it can toggle with
