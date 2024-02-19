@@ -441,7 +441,7 @@ function M.setup()
               end
 
               Log:warn(("Killed LSPs for buffer: %s -> %s"):format(
-                vim.api.nvim_buf_get_name(bufnr),
+                vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":p:~:."),
                 vim.fn.join(
                   vim.tbl_map(function(client)
                     return client.name
