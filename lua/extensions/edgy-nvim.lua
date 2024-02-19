@@ -93,12 +93,23 @@ function M.config()
               return vim.api.nvim_win_get_config(win).relative == ""
             end,
           },
+          -- {
+          --   ft = "noice",
+          --   title = "Noice",
+          --   size = { height = 35 },
+          -- },
           {
             ft = "Trouble",
             title = "LSP Trouble",
           },
-          { ft = "qf", title = "QuickFix" },
-          { ft = "nvim-docs-view", title = "LSP Documentation" },
+          {
+            ft = "qf",
+            title = "QuickFix",
+          },
+          {
+            ft = "nvim-docs-view",
+            title = "LSP Documentation",
+          },
           {
             ft = "help",
             size = { height = 35 },

@@ -240,7 +240,7 @@ function M.init(config)
   end
 
   if config ~= nil and config.autocmds ~= nil then
-    M.define_autocmds(M.evaluate_property(config.autocmds, config))
+    M.define_autocmds(M.evaluate_property(config.autocmds, config, M.fn))
 
     config.autocmds = nil
   end
@@ -385,6 +385,10 @@ function M.fn.append_to_setup(extension_name, to_setup)
   end
 
   table.insert(lvim.extensions[extension_name].to_setup, to_setup)
+end
+
+function M.fn.get_wk_category(category)
+  return keys_which_key.CATEGORIES[category]
 end
 
 function M.fn.get_current_setup_wrapper(extension_name)

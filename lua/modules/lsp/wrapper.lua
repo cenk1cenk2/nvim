@@ -432,9 +432,27 @@ function M.setup()
           },
           Q = {
             function()
-              vim.cmd("LspRestart")
+              -- vim.cmd("LspRestart")
+              local bufnr = vim.api.nvim_get_current_buf()
+              local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+              for _, client in pairs(clients) do
+                vim.lsp.stop_client(client.id, true)
+              end
+
+              Log:warn(("Killed LSPs for buffer: %s -> %s"):format(
+                vim.api.nvim_buf_get_name(bufnr),
+                vim.fn.join(
+                  vim.tbl_map(function(client)
+                    return client.name
+                  end, clients),
+                  ", "
+                )
+              ))
+
+              vim.cmd([[e]])
             end,
-            "restart currently active lsps",
+            "restart currently active LSPs for this buffer",
           },
         },
       }
