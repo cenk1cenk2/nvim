@@ -234,7 +234,7 @@ function M.config()
         {
           { "n" },
           [categories.FIND] = {
-            ["."] = { ":Telescope commands<CR>", "search available commands" },
+            [":"] = { ":Telescope commands<CR>", "search available commands" },
             A = { ":Telescope builtin<CR>", "telescope list builtin finders" },
             b = {
               function()
