@@ -22,7 +22,7 @@ function M.config()
     --   })
     -- end,
     on_setup = function()
-      require("netman")
+      require("netman").setup()
     end,
   })
 end
