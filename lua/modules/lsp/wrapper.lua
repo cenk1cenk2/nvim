@@ -433,8 +433,6 @@ function M.setup()
           Q = {
             function()
               vim.cmd("LspRestart")
-
-              vim.fn.system({ "pkill", "-9", "terraform-ls" })
             end,
             "restart currently active lsps",
           },
