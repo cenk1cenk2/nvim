@@ -430,7 +430,14 @@ function M.setup()
             end,
             "reset diagnostics",
           },
-          Q = { ":LspRestart<CR>", "restart currently active lsps" },
+          Q = {
+            function()
+              vim.cmd("LspRestart")
+
+              vim.fn.system({ "pkill", "-9", "terraform-ls" })
+            end,
+            "restart currently active lsps",
+          },
         },
       }
     end,
