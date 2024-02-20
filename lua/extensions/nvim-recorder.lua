@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "chrisgrieser/nvim-recorder",
-        keys = { "Q", "@", "#", "cq", "yq", "cqq" },
+        keys = { "q", "Q", "@", "cq", "yq", "dq", "cq" },
       }
     end,
     setup = function()
@@ -19,12 +19,14 @@ function M.config()
 
         -- default keymaps, see README for description what the commands do
         mapping = {
-          startStopRecording = "Q",
-          playMacro = "@",
-          switchSlot = "#",
+          startStopRecording = "q",
+          playMacro = "Q",
+          switchSlot = "@",
           editMacro = "cq",
-          yankMacro = "yq", -- also decodes it for turning macros to mappings
-          addBreakPoint = "cqq",
+          deleteAllMacros = "dq",
+          yankMacro = "yq",
+          -- ⚠️ this should be a string you don't use in insert mode during a macro
+          addBreakPoint = "##",
         },
 
         -- clears all macros-slots on startup
