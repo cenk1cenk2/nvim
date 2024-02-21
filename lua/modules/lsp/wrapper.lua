@@ -130,6 +130,34 @@ function M.toggle_inlay_hints()
   vim.lsp.inlay_hint.enable(bufnr, not vim.lsp.inlay_hint.is_enabled(bufnr))
 end
 
+function M.reset_buffer_lsp()
+  -- vim.cmd("LspRestart")
+  local bufnr = vim.api.nvim_get_current_buf()
+  local clients = vim.tbl_filter(function(client)
+    if vim.tbl_contains({ "copilot" }, client.name) then
+      return false
+    end
+
+    return true
+  end, vim.lsp.get_clients({ bufnr = bufnr }))
+
+  for _, client in pairs(clients) do
+    vim.lsp.stop_client(client.id, true)
+  end
+
+  Log:warn(("Killed LSPs for buffer: %s -> %s"):format(
+    vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":p:~:."),
+    vim.fn.join(
+      vim.tbl_map(function(client)
+        return client.name
+      end, clients),
+      ", "
+    )
+  ))
+
+  vim.cmd([[e]])
+end
+
 function M.fix_current()
   local params = vim.lsp.util.make_range_params()
   params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
@@ -432,25 +460,7 @@ function M.setup()
           },
           Q = {
             function()
-              -- vim.cmd("LspRestart")
-              local bufnr = vim.api.nvim_get_current_buf()
-              local clients = vim.lsp.get_clients({ bufnr = bufnr })
-
-              for _, client in pairs(clients) do
-                vim.lsp.stop_client(client.id, true)
-              end
-
-              Log:warn(("Killed LSPs for buffer: %s -> %s"):format(
-                vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":p:~:."),
-                vim.fn.join(
-                  vim.tbl_map(function(client)
-                    return client.name
-                  end, clients),
-                  ", "
-                )
-              ))
-
-              vim.cmd([[e]])
+              lvim.lsp.wrapper.reset_buffer_lsp()
             end,
             "restart currently active LSPs for this buffer",
           },
