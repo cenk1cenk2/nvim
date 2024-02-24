@@ -1,5 +1,7 @@
 local M = {}
 
+local Log = require("lvim.core.log")
+
 function M.treesitter_highlight(ft)
   return function(input)
     local parser = vim.treesitter.get_string_parser(input, ft)
@@ -13,6 +15,16 @@ function M.treesitter_highlight(ft)
     end
 
     return highlights
+  end
+end
+
+function M.reload_file()
+  local ok = pcall(function()
+    vim.cmd("e")
+  end)
+
+  if not ok then
+    Log:warn(("Can not reload file since it is unsaved: %s"):format(vim.fn.expand("%")))
   end
 end
 

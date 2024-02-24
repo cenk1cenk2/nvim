@@ -1,4 +1,5 @@
 local M = {}
+local Log = require("lvim.core.log")
 
 function M.setup()
   require("utils.setup").init({

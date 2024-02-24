@@ -155,7 +155,7 @@ function M.reset_buffer_lsp()
     )
   ))
 
-  vim.cmd([[e]])
+  require("utils").reload_file()
 end
 
 function M.fix_current()

@@ -43,13 +43,6 @@ function M.config()
     on_setup = function(config)
       require("recorder").setup(config.setup)
     end,
-    keymaps = {
-      {
-        { "n" },
-
-        ["q"] = "<Nop>",
-      },
-    },
   })
 end
 

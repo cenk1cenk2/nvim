@@ -151,14 +151,36 @@ function M.run_yq()
   end)
 end
 
-function M.reload_file()
-  local ok = pcall(function()
-    vim.cmd("e")
-  end)
+function M.set_env()
+  local store_key = "LVIM_SET_ENV_VAR"
+  local shada = require("modules.shada")
+  local stored_value = shada.get(store_key)
 
-  if not ok then
-    Log:warn(("Can not reload file since it is unsaved: %s"):format(vim.fn.expand("%")))
-  end
+  vim.ui.input({
+    prompt = "Environment Variable:",
+    default = stored_value,
+  }, function(env)
+    if env == nil then
+      Log:warn("Nothing to do.")
+
+      return
+    end
+
+    shada.set(store_key, env)
+
+    vim.ui.input({
+      prompt = "Value:",
+      default = vim.env[env],
+    }, function(val)
+      if val == nil then
+        Log:warn("Nothing to do.")
+
+        return
+      end
+
+      vim.env[env] = tostring(val)
+    end)
+  end)
 end
 
 function M.setup()
@@ -175,31 +197,37 @@ function M.setup()
           },
         },
         [categories.TASKS] = {
-          d = {
+          ["d"] = {
             function()
               M.run_ansible_vault_decrypt()
             end,
             "ansible-vault decrypt",
           },
-          D = {
+          ["D"] = {
             function()
               M.run_ansible_vault_encrypt()
             end,
             "ansible-vault encrypt",
           },
-          g = {
+          ["e"] = {
+            function()
+              M.set_env()
+            end,
+            "set environment variable",
+          },
+          ["g"] = {
             function()
               M.run_genpass()
             end,
             "run genpass",
           },
-          j = {
+          ["j"] = {
             function()
               M.run_jq()
             end,
             "run jq",
           },
-          J = {
+          ["J"] = {
             function()
               M.run_yq()
             end,
