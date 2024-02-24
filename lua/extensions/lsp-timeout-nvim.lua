@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "hinell/lsp-timeout.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     plugin = function()
       return {
         "hinell/lsp-timeout.nvim",
