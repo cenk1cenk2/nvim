@@ -159,6 +159,7 @@ function M.set_env()
   vim.ui.input({
     prompt = "Environment Variable:",
     default = stored_value,
+    completion = "environment",
   }, function(env)
     if env == nil then
       Log:warn("Nothing to do.")
