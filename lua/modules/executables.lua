@@ -180,7 +180,8 @@ function M.set_env()
         return
       end
 
-      vim.env[env] = vim.fn.expand(tostring(val))
+      -- vim.env[env] = vim.fn.expand(tostring(val))
+      vim.env[env] = tostring(val)
     end)
   end)
 end
