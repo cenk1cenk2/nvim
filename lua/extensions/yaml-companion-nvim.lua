@@ -22,7 +22,7 @@ function M.config()
           "FileType",
           {
             group = "__extensions",
-            pattern = "yaml",
+            pattern = { "yaml", "helm" },
             callback = function(event)
               require("utils.setup").load_wk({
                 {

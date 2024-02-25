@@ -16,7 +16,15 @@ return {
     },
     {
       name = "Kubernetes master",
-      uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master/all.json",
+      uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/all.json",
+    },
+    {
+      name = "Kubernetes v1.27",
+      uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.11-standalone-strict/all.json",
+    },
+    {
+      name = "Kubernetes v1.29",
+      uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.2-standalone-strict/all.json",
     },
     {
       name = "Gitlab CI",
