@@ -118,6 +118,12 @@ M.mappings = {
   -- workspace/session
   [M.CATEGORIES.SESSION] = {
     name = "session",
+    r = {
+      function()
+        vim.api.nvim_set_current_dir(vim.fn.fnamemodify(vim.fn.finddir(".git", ".;"), ":h"))
+      end,
+      "cwd as git root",
+    },
   },
 
   [M.CATEGORIES.NEOVIM] = {
