@@ -4,7 +4,8 @@ SECONDS=0
 set -o pipefail
 
 COMMIT_TAG="nightly"
-# COMMIT_SHA="bdfea2a8919963dfe24052635883f0213cff83e8"
+# https://github.com/zbirenbaum/copilot.lua/issues/273
+# COMMIT_SHA="091e374c7f4886ef875e801ae0473b88f6caefe2"
 # PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
 
 REMOTE_API_URL="https://api.github.com/repos/neovim/neovim"
