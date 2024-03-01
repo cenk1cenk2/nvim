@@ -210,7 +210,7 @@ for PATCH in "${PATCHES[@]}"; do
 done
 
 log_start "Building neovim..."
-sudo make CMAKE_BUILD_TYPE=Release install
+make CMAKE_BUILD_TYPE=Release install
 log_finish "Finished installing neovim."
 
 log_debug "Clean up temporary path."
