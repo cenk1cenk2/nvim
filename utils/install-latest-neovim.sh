@@ -13,7 +13,7 @@ REMOTE_API_URL="https://api.github.com/repos/neovim/neovim"
 ## inject logger
 LOG_LEVEL=${LOG_LEVEL-"INFO"}
 # shellcheck disable=SC1090
-source <(curl -s "https://gist.githubusercontent.com/cenk1cenk2/e03d8610534a9c78f755c1c1ed93a293/raw/logger.sh")
+. <(curl -s "https://gist.githubusercontent.com/cenk1cenk2/e03d8610534a9c78f755c1c1ed93a293/raw/logger.sh")
 
 log_this "" "${BLUE}build-neovim${RESET}" "LIFETIME" "bottom"
 log_this "${COMMIT_TAG}" "${MAGENTA}COMMIT_TAG${RESET}" "LIFETIME"
