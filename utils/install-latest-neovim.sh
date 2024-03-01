@@ -68,7 +68,7 @@ fi
 
 ASSET=$RANDOM
 
-TMP_DOWNLOAD_PATH="${TMPDIR-:'/tmp/'}${ASSET}"
+TMP_DOWNLOAD_PATH="${TMPDIR:-/tmp/}${ASSET}"
 
 log_debug "Temporary path: ${TMP_DOWNLOAD_PATH}"
 
