@@ -66,7 +66,7 @@ if [ -x "$(command -v nvim)" ]; then
 	fi
 fi
 
-ASSET=$(tr -cd 'a-f0-9' </dev/urandom | head -c 32)
+ASSET=$RANDOM
 
 TMP_DOWNLOAD_PATH="/tmp/${ASSET}"
 
