@@ -66,9 +66,7 @@ if [ -x "$(command -v nvim)" ]; then
 	fi
 fi
 
-ASSET=$RANDOM
-
-TMP_DOWNLOAD_PATH="${TMPDIR:-/tmp/}${ASSET}"
+TMP_DOWNLOAD_PATH=$(mktemp -d -t neovim-XXXXXXXXXX)
 
 log_debug "Temporary path: ${TMP_DOWNLOAD_PATH}"
 
