@@ -185,7 +185,7 @@ TMP_DOWNLOAD_PATH=$(mktemp -d -t neovim-XXXXXXXXXX)
 
 log_debug "Temporary path: ${TMP_DOWNLOAD_PATH}"
 
-log_start "Downloading neovim head~0..."
+log_start "Downloading neovim head..."
 if [ -n "$COMMIT_TAG" ]; then
 	git clone https://github.com/neovim/neovim "$TMP_DOWNLOAD_PATH" --branch "${COMMIT_TAG}" --single-branch --depth 1
 	log_warn "Certain commit tag is set: ${COMMIT_TAG}"
