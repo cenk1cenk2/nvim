@@ -55,6 +55,8 @@ function _G.get_cache_dir()
   return vim.fn.stdpath("cache")
 end
 
+_G.OS_UNAME = string.lower(vim.loop.os_uname().sysname)
+
 ---Initialize the `&runtimepath` variables and prepare for startup
 ---@return table
 function M:init()

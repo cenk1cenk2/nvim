@@ -127,7 +127,7 @@ function M.config()
         replace_engine = {
           ["sed"] = {
             cmd = "sed",
-            args = nil,
+            args = OS_UNAME == "darwin" and { "-i", "", "-E" } or nil,
             options = {
               ["ignore-case"] = { value = "--ignore-case", icon = "[I]", desc = "ignore case" },
               ["string"] = { value = "--string-mode", desc = "fixed string mode", icon = "[S]" },
