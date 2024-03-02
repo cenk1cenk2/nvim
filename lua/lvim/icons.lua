@@ -7,7 +7,7 @@ return {
     Color = "",
     Event = "",
     File = "",
-    Folder = "",
+    Folder = "",
     Function = "",
     Key = "",
     Method = "",
