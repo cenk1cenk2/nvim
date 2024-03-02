@@ -1,5 +1,7 @@
 #!/usr/bin/env zsh
 
+# vim:ft=sh
+
 SECONDS=0
 set -o pipefail
 
