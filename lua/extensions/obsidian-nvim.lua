@@ -146,8 +146,11 @@ function M.config()
         -- URL it will be ignored but you can customize this behavior here.
         follow_url_func = function(url)
           -- Open the URL in the default web browser.
-          -- vim.fn.jobstart({ "open", url }) -- Mac OS
-          vim.fn.jobstart({ "xdg-open", url }) -- linux
+          if OS_UNAME == "darwin" then
+            vim.fn.jobstart({ "open", url }) -- Mac OS
+          else
+            vim.fn.jobstart({ "xdg-open", url }) -- linux
+          end
         end,
 
         -- Optional, set to true if you use the Obsidian Advanced URI plugin.

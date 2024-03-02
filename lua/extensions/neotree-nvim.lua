@@ -324,7 +324,11 @@ function M.config()
               -- vim.cmd("silent !open -g " .. path)
               -- Linux: open file in default application
 
-              vim.cmd(string.format("silent !xdg-open '%s'", path))
+              if OS_UNAME == "darwin" then
+                vim.fn.jobstart({ "open", path }) -- Mac OS
+              else
+                vim.fn.jobstart({ "xdg-open", path }) -- linux
+              end
             end,
             copy_filename = function(state)
               local node = state.tree:get_node()
