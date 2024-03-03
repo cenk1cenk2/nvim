@@ -40,7 +40,7 @@ function M.config()
         right = {
           {
             ft = "spectre_panel",
-            size = { width = 150 },
+            size = { width = 100 },
           },
           {
             title = "Neo-Tree Git",
