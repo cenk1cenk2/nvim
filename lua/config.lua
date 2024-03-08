@@ -72,6 +72,7 @@ lvim.lsp.ensure_installed = {
   "markdown-toc",
   -- "md-printer",
   -- "rustywind",
+  "checkmake",
 }
 
 lvim.lsp.automatic_configuration.skipped_filetypes = {}

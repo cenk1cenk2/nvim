@@ -53,6 +53,7 @@ function M.register_tools(lsp_utils, METHOD)
   -- lsp_utils.register_tools(METHOD, "tflint", { "terraform" })
   lsp_utils.register_tools(METHOD, "protolint", { "proto" })
   -- lsp_utils.register_tools(METHOD, "cspell", { "markdown", "text", "gitcommit" })
+  lsp_utils.register_tools(METHOD, "checkmake", { "make" })
 end
 
 function M.extend_tools(lint)
