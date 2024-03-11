@@ -1,6 +1,8 @@
 -- https://github.com/altermo/iedit.nvim
 local M = {}
 
+local Log = require("lvim.core.log")
+
 local extension_name = "altermo/iedit.nvim"
 
 function M.config()
@@ -50,21 +52,36 @@ function M.config()
           [categories.TASKS] = {
             i = {
               function()
+                if M.is_active() then
+                  Log:info("Editing stopped.")
+
+                  return require("iedit").stop()
+                end
+
+                Log:info("Editing started.")
                 require("iedit").select()
               end,
               "start iedit",
             },
             I = {
               function()
-                require("iedit").stop()
+                Log:info("Editing started with selection.")
+
+                require("iedit").select_all()
               end,
-              "stop iedit",
+              "iedit select all",
             },
           },
         },
       }
     end,
   })
+end
+
+function M.is_active(bufnr)
+  bufnr = bufnr or vim.api.nvim_get_current_buf()
+
+  return vim.b[bufnr].iedit_data ~= nil
 end
 
 return M
