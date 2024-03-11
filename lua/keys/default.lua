@@ -51,7 +51,7 @@ return {
     end,
 
     -- close buffer
-    ["<C-q>"] = ":BufferClose<CR>",
+    ["<C-q>"] = ":bdelete<CR>",
 
     -- disable Ex mode
     ["Q"] = "<Nop>",

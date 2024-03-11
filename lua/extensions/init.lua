@@ -7,6 +7,7 @@ local extensions = {
   "which-key",
   "alpha-nvim",
   "bufferline-nvim",
+  "mini-bufremove",
   "lualine-nvim",
   "telescope",
   "cmp",
@@ -101,6 +102,7 @@ local extensions = {
   "symbol-usage-nvim",
   "obsidian-nvim",
   "iswap-nvim",
+  "iedit-nvim",
 }
 
 function M.config(config)

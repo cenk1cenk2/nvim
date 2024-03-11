@@ -207,7 +207,7 @@ function M.components()
         }
       end,
       cond = function()
-        if not package.loaded["possession"] or require("possession").session_name == "" then
+        if not package_is_loaded("possession") or require("possession").session_name == "" then
           return false
         end
 
@@ -225,7 +225,7 @@ function M.components()
         }
       end,
       cond = function()
-        if not package.loaded["dap"] or require("dap").status() == "" then
+        if not package_is_loaded("dap") or require("dap").status() == "" then
           return false
         end
 

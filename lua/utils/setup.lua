@@ -405,4 +405,10 @@ function M.fn.get_highlight(name)
   return vim.api.nvim_get_hl(0, { name = name })
 end
 
+function M.fn.add_global_function(name, fn)
+  local f = lvim.fn[name] == fn
+
+  return f
+end
+
 return M

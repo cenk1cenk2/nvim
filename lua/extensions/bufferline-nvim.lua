@@ -1,5 +1,4 @@
 -- https://github.com/akinsho/bufferline.nvim
-local Log = require("lvim.core.log")
 local M = {}
 
 local extension_name = "bufferline_nvim"
@@ -9,10 +8,6 @@ function M.config()
     plugin = function()
       return {
         "akinsho/bufferline.nvim",
-        dependencies = {
-          -- https://github.com/ojroques/nvim-bufdel
-          "ojroques/nvim-bufdel",
-        },
         lazy = false,
         -- event = "VeryLazy",
       }
@@ -29,12 +24,12 @@ function M.config()
           mode = "buffers", -- set to "tabs" to only show tabpages instead
           numbers = "none", -- can be "none" | "ordinal" | "buffer_id" | "both" | function
           close_command = function(bufnr, force)
-            M.close_buffer(bufnr, force)
+            lvim.fn.close_buffer(bufnr, force)
           end, -- can be a string | function, see "Mouse actions"
           right_mouse_command = "vert sbuffer %d", -- can be a string | function, see "Mouse actions"
           left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
           middle_mouse_command = function(bufnr)
-            M.close_buffer(bufnr)
+            lvim.fn.close_buffer(bufnr)
           end, -- can be a string | function, see "Mouse actions"
           -- NOTE: this plugin is designed with this icon in mind,
           -- and so changing this is NOT recommended, this is intended
@@ -84,20 +79,7 @@ function M.config()
     end,
     on_setup = function(config)
       require("bufferline").setup(config.setup)
-
-      require("bufdel").setup({
-        next = "tabs", -- or 'cycle, 'alternate'
-        quit = false, -- quit Neovim when last buffer is closed
-      })
     end,
-    commands = {
-      {
-        name = "BufferClose",
-        fn = function()
-          M.close_buffer()
-        end,
-      },
-    },
     keymaps = {
       {
         { "n" },
@@ -126,12 +108,6 @@ function M.config()
           end,
           { desc = "move buffer to previous" },
         },
-        ["<C-q>"] = {
-          function()
-            M.close_buffer()
-          end,
-          { desc = "close current buffer" },
-        },
       },
     },
     wk = function(_, categories)
@@ -157,7 +133,7 @@ function M.config()
               for _, e in ipairs(require("bufferline").get_elements().elements) do
                 if current ~= e.id and not require("bufferline.groups")._is_pinned(e) then
                   vim.schedule(function()
-                    M.close_buffer(e.id)
+                    lvim.fn.close_buffer(e.id)
                   end)
                 end
               end
@@ -199,21 +175,6 @@ function M.config()
         },
       }
     end,
-    autocmds = {
-      {
-        { "BufLeave" },
-        {
-          pattern = "{}",
-          callback = function(args)
-            if vim.api.nvim_buf_get_name(args.buf) == "" and vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
-              -- vim.bo.buftype = "nofile"
-              vim.bo.bufhidden = "unload"
-            end
-          end,
-          group = "_empty_buffer",
-        },
-      },
-    },
   })
 end
 
@@ -230,24 +191,6 @@ function M.diagnostics_indicator(_, _, diagnostics, _)
   local text = table.concat(result, " ")
 
   return #text > 0 and text or ""
-end
-
--- Common kill function for bdelete and bwipeout
--- credits: based on bbye and nvim-bufdel
----@param bufnr? number defaults to the current buffer
----@param force? boolean defaults to false
-function M.close_buffer(bufnr, force)
-  if bufnr == 0 or bufnr == nil then
-    bufnr = vim.api.nvim_get_current_buf()
-  end
-
-  if not force and require("bufferline.groups")._is_pinned({ id = bufnr }) then
-    Log:warn("Buffer is pinned!")
-
-    return
-  end
-
-  require("bufdel").delete_buffer_expr(bufnr, force)
 end
 
 return M

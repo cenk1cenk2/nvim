@@ -57,6 +57,10 @@ end
 
 _G.OS_UNAME = string.lower(vim.loop.os_uname().sysname)
 
+function _G.package_is_loaded(name)
+  return package.loaded[name] ~= nil
+end
+
 ---Initialize the `&runtimepath` variables and prepare for startup
 ---@return table
 function M:init()
