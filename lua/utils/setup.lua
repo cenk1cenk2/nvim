@@ -406,9 +406,9 @@ function M.fn.get_highlight(name)
 end
 
 function M.fn.add_global_function(name, fn)
-  local f = lvim.fn[name] == fn
+  lvim.fn[name] = fn
 
-  return f
+  return fn
 end
 
 return M
