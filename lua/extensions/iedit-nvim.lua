@@ -81,8 +81,9 @@ end
 function M.is_active(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
   local data = vim.b[bufnr].iedit_data
+  Log:info(vim.inspect(data))
 
-  return data ~= nil or type(data) == "table" and vim.tbl_keys(data) == 0
+  return data ~= nil or type(data) == "table" and #vim.tbl_keys(data) == 0
 end
 
 return M
