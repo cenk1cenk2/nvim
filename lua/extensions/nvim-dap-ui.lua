@@ -8,7 +8,10 @@ function M.config()
     plugin = function()
       return {
         "rcarriga/nvim-dap-ui",
-        dependencies = { "mfussenegger/nvim-dap" },
+        dependencies = {
+          "mfussenegger/nvim-dap",
+          "nvim-neotest/nvim-nio",
+        },
       }
     end,
     configure = function(_, fn)

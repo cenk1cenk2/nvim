@@ -12,6 +12,7 @@ function M.config()
       return {
         "nvim-neotest/neotest",
         dependencies = {
+          "nvim-neotest/nvim-nio",
           "nvim-neotest/neotest-go",
           "rouge8/neotest-rust",
           "haydenmeade/neotest-jest",
