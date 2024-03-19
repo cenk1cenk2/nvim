@@ -34,7 +34,7 @@ function M.common_capabilities()
 end
 
 function M.common_on_exit(client, bufnr)
-  if #lvim.lsp.on_exit > 0 then
+  if #lvim.lsp.on_exit_callbacks > 0 then
     for _, cb in pairs(lvim.lsp.on_exit) do
       cb(client, bufnr)
     end
