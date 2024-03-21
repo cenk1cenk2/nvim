@@ -8,8 +8,7 @@ function M.config()
     plugin = function()
       return {
         "nvim-lualine/lualine.nvim",
-        lazy = false,
-        -- event = "VeryLazy",
+        event = "VeryLazy",
       }
     end,
     setup = function()

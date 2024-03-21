@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "mfussenegger/nvim-lint",
-        event = "BufReadPre",
+        event = "BufReadPost",
       }
     end,
     setup = function()

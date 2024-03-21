@@ -66,7 +66,7 @@ function M.config()
       -- vim.notify = notify
     end,
     on_done = function()
-      require("telescope").load_extension("notify")
+      -- require("telescope").load_extension("notify")
     end,
   })
 end
