@@ -24,7 +24,7 @@ function M.config()
         },
         {
           "nvim-tree/nvim-web-devicons",
-          event = "VeryLazy",
+          event = "UIEnter",
           init = false,
           config = false,
         },

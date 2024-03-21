@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "nvim-lualine/lualine.nvim",
-        event = "VeryLazy",
+        event = "UIEnter",
       }
     end,
     setup = function()

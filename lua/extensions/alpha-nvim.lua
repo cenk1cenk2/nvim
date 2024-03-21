@@ -55,6 +55,7 @@ function M.config()
               return { ("%s %d/%d plugins in %s %.0fms"):format(lvim.ui.icons.ui.Package, stats.loaded, stats.count, lvim.ui.icons.misc.Watch, stats.startuptime) }
             end,
             opts = {
+              redraw = true,
               position = "center",
               hl = "DashboardFooter",
             },
@@ -64,6 +65,7 @@ function M.config()
             type = "text",
             val = { ("%s %s#%s"):format(lvim.ui.icons.git.Branch, require("lvim.utils.git").get_lvim_branch(), require("lvim.utils.git").get_lvim_current_sha()) },
             opts = {
+              redraw = false,
               position = "center",
               hl = "DashboardFooter",
             },
@@ -73,6 +75,7 @@ function M.config()
             type = "text",
             val = { ("%s %s"):format(lvim.ui.icons.ui.Gear, require("lvim.utils.git").get_nvim_version()) },
             opts = {
+              redraw = false,
               position = "center",
               hl = "DashboardFooter",
             },

@@ -12,7 +12,7 @@ function M.config()
           "MunifTanjim/nui.nvim",
           "rcarriga/nvim-notify",
         },
-        event = "VeryLazy",
+        event = "UIEnter",
       }
     end,
     configure = function(_, fn)
@@ -284,7 +284,7 @@ function M.config()
       vim.o.cmdheight = 0
     end,
     on_done = function(config)
-      require("telescope").load_extension("noice")
+      -- require("telescope").load_extension("noice")
     end,
     wk = function(_, categories)
       return {
