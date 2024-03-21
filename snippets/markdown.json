@@ -3,5 +3,10 @@
     "prefix": "-f",
     "description": "Frontmatter seperator.",
     "body": ["---", "$1", "---"]
+  },
+  "l": {
+    "prefix": "l",
+    "description": "List item",
+    "body": ["- [ ] $1"]
   }
 }
