@@ -185,13 +185,13 @@ function M.set_env()
   end)
 end
 
-function M.set_rancher_cluster()
-  local store_key = "RANCHER_CLUSTER"
+function M.set_kubeconfig()
+  local store_key = "KUBECONFIG"
   local shada = require("modules.shada")
   local stored_value = shada.get(store_key)
 
   vim.ui.input({
-    prompt = "Rancher cluster:",
+    prompt = "Kubeconfig file:",
     default = stored_value,
   }, function(arguments)
     if arguments == nil then
@@ -200,11 +200,17 @@ function M.set_rancher_cluster()
       return
     end
 
+    local kubeconfig = vim.fn.expand(("~/.kube/%s.yaml"):format(arguments))
+
+    if not require("lvim.utils").is_file(kubeconfig) then
+      Log:warn(("Kubeconfig file not found: %s"):format(kubeconfig))
+
+      return
+    end
+
     shada.set(store_key, arguments)
 
-    local cluster = arguments[1]
-
-    vim.env["KUBECONFIG"] = vim.fn.expand(("~/.kube/rancher/%s.yaml"):format(cluster))
+    vim.env["KUBECONFIG"] = kubeconfig
   end)
 end
 
@@ -260,7 +266,7 @@ function M.setup()
           },
           ["k"] = {
             function()
-              M.set_rancher_cluster()
+              M.set_kubeconfig()
             end,
             "set rancher cluster",
           },
