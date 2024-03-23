@@ -193,6 +193,7 @@ function M.set_kubeconfig()
   vim.ui.input({
     prompt = "Kubeconfig file:",
     default = stored_value,
+    completion = "file",
   }, function(arguments)
     if arguments == nil then
       Log:warn("Nothing to do.")
@@ -200,7 +201,7 @@ function M.set_kubeconfig()
       return
     end
 
-    local kubeconfig = vim.fn.expand(("~/.kube/%s.yaml"):format(arguments))
+    local kubeconfig = vim.fn.expand(arguments)
 
     if not require("lvim.utils").is_file(kubeconfig) then
       Log:warn(("Kubeconfig file not found: %s"):format(kubeconfig))
