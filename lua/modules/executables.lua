@@ -185,6 +185,29 @@ function M.set_env()
   end)
 end
 
+function M.set_rancher_cluster()
+  local store_key = "RANCHER_CLUSTER"
+  local shada = require("modules.shada")
+  local stored_value = shada.get(store_key)
+
+  vim.ui.input({
+    prompt = "Rancher cluster:",
+    default = stored_value,
+  }, function(arguments)
+    if arguments == nil then
+      Log:warn("Nothing to do.")
+
+      return
+    end
+
+    shada.set(store_key, arguments)
+
+    local cluster = arguments[1]
+
+    vim.env["KUBECONFIG"] = vim.fn.expand(("~/.kube/rancher/%s.yaml"):format(cluster))
+  end)
+end
+
 function M.setup()
   require("utils.setup").init({
     name = "executables",
@@ -234,6 +257,12 @@ function M.setup()
               M.run_yq()
             end,
             "run yq",
+          },
+          ["k"] = {
+            function()
+              M.set_rancher_cluster()
+            end,
+            "set rancher cluster",
           },
         },
       }
