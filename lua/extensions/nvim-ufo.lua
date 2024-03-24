@@ -40,17 +40,17 @@ function M.config()
           local result = {}
 
           vim.list_extend(result, M.chunker(virt_text, width, truncate))
-          table.insert(result, { ("%s"):format(lvim.ui.icons.ui.Ellipsis) })
-          vim.list_extend(
-            result,
-            vim.tbl_map(function(value)
-              if value[1] then
-                value[1] = value[1]:gsub("^%s+", "")
-              end
-
-              return value
-            end, M.chunker(ctx.get_fold_virt_text(end_lnum), width, truncate))
-          )
+          table.insert(result, { (" %s "):format(lvim.ui.icons.ui.Ellipsis) })
+          -- vim.list_extend(
+          --   result,
+          --   vim.tbl_map(function(value)
+          --     if value[1] then
+          --       value[1] = value[1]:gsub("^%s+", "")
+          --     end
+          --
+          --     return value
+          --   end, M.chunker(ctx.get_fold_virt_text(end_lnum), width, truncate))
+          -- )
 
           table.insert(result, { (" 󰁂 %d"):format(end_lnum - lnum), "MoreMsg" })
 
