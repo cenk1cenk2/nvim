@@ -8,6 +8,12 @@ function M.setup()
 
         return "jinja"
       end,
+      ["md"] = function()
+        vim.api.nvim_set_option_value("shiftwidth", 2, { buf = 0 })
+        vim.api.nvim_set_option_value("tabstop", 2, { buf = 0 })
+
+        return "markdown"
+      end,
       ["tf"] = "terraform",
       ["tfvars"] = "terraform",
       ["zsh"] = "sh",
