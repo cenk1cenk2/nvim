@@ -5,7 +5,7 @@
     "body": ["---", "$1", "---"]
   },
   "l": {
-    "prefix": "l",
+    "prefix": "tl",
     "description": "List item",
     "body": ["- [ ] $1"]
   }
