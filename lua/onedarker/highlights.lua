@@ -336,7 +336,8 @@ hl.langs.dockerfile = {
 }
 
 hl.langs.terraform = {
-  ["@lsp.type.type.terraform"] = { fg = c.purple[600] },
+  ["@lsp.type.type.terraform"] = { fg = c.orange[600] },
+  ["@lsp.type.keyword.terraform"] = { fg = c.yellow[600] },
 }
 
 hl.langs.jinja = {
