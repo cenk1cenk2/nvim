@@ -353,6 +353,7 @@ hl.langs.jinja = {
 hl.langs.typescript = {
   -- ["@decorator.typescript"] = { fg = c.fg },
   ["@lsp.type.parameter.typescript"] = { fg = c.red[900] },
+  ["@lsp.typemod.variable.readonly.typescript"] = { fg = c.red[300] },
 }
 
 hl.langs.typescriptreact = {
