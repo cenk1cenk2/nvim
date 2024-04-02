@@ -99,7 +99,7 @@ function M.config()
           --   size = { height = 35 },
           -- },
           {
-            ft = "Trouble",
+            ft = "trouble",
             title = "LSP Trouble",
           },
           {
