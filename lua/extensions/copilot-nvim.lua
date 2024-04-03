@@ -71,14 +71,11 @@ function M.config()
     end,
     wk = function(_, categories)
       return {
-        [categories.ACTIONS] = {
-          ["C"] = {
-            name = "copilot",
-            ["p"] = { ":Copilot panel<CR>", "copilot panel" },
-            ["S"] = { ":Copilot status<CR>", "copilot status" },
-            ["t"] = { ":Copilot toggle<CR>", "copilot toggle" },
-            ["s"] = { ":Copilot suggestion<CR>", "copilot suggestion" },
-          },
+        [categories.COPILOT] = {
+          ["p"] = { ":Copilot panel<CR>", "copilot panel" },
+          ["S"] = { ":Copilot status<CR>", "copilot status" },
+          ["t"] = { ":Copilot toggle<CR>", "copilot toggle" },
+          ["s"] = { ":Copilot suggestion<CR>", "copilot suggestion" },
         },
       }
     end,

@@ -3,6 +3,7 @@ local M = {}
 M.CATEGORIES = {
   ACTIONS = "a",
   BUFFER = "b",
+  COPILOT = "c",
   DEBUG = "d",
   DEPENDENCIES = "D",
   FIND = "f",
@@ -71,6 +72,10 @@ M.mappings = {
       end,
       "write all",
     },
+  },
+
+  [M.CATEGORIES.COPILOT] = {
+    name = "copilot",
   },
 
   [M.CATEGORIES.DEBUG] = {
