@@ -38,6 +38,7 @@ local extensions = {
   "auto-hlsearch-nvim",
   "spectre",
   "copilot-nvim",
+  "copilotchat-nvim",
   "aerial-nvim",
   "rgflow-nvim",
   "search-replace-nvim",
