@@ -15,10 +15,15 @@ local options = {
       workspace = {
         maxPreload = 5000,
         preloadFileSize = 10000,
+        library = {},
       },
     },
   },
 }
+
+if OS_UNAME == "darwin" then
+  table.insert(options.settings.Lua.workspace.library, vim.fn.expand("~/.hammerspoon/Spoons/EmmyLua.spoon/annotations"))
+end
 
 if neodev_loaded then
   neodev.setup({
