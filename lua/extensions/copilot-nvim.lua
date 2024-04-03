@@ -74,7 +74,7 @@ function M.config()
         [categories.COPILOT] = {
           ["p"] = { ":Copilot panel<CR>", "copilot panel" },
           ["S"] = { ":Copilot status<CR>", "copilot status" },
-          ["Q"] = { ":Copilot toggle<CR>", "copilot toggle" },
+          ["t"] = { ":Copilot toggle<CR>", "copilot toggle" },
           ["s"] = { ":Copilot suggestion<CR>", "copilot suggestion" },
         },
       }

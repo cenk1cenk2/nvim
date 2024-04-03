@@ -101,7 +101,7 @@ function M.config()
               "ask",
             },
 
-            ["t"] = {
+            ["c"] = {
               function()
                 require("CopilotChat").toggle()
               end,
@@ -160,7 +160,7 @@ function M.config()
               "ask selection",
             },
 
-            ["t"] = {
+            ["c"] = {
               function()
                 require("CopilotChat").toggle({
                   selection = require("CopilotChat.select").visual,
