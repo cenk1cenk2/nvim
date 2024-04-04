@@ -3,5 +3,10 @@
     "prefix": "-f",
     "description": "Frontmatter seperator.",
     "body": ["---"]
+  },
+  "schema": {
+    "prefix": "schema",
+    "description": "Add schema declaration to yaml file.",
+    "body": ["# yaml-language-server: $schema=$1"]
   }
 }

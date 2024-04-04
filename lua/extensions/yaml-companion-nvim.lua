@@ -7,7 +7,8 @@ function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
-        "someone-stole-my-name/yaml-companion.nvim",
+        -- "someone-stole-my-name/yaml-companion.nvim",
+        "astephanh/yaml-companion.nvim",
         ft = { "yaml", "helm" },
       }
     end,
