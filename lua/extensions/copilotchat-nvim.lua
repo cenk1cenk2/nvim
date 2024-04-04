@@ -34,6 +34,11 @@ function M.config()
         },
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes({
+        "copilot-chat",
+      })
+    end,
     setup = function()
       return {
         -- default mappings
