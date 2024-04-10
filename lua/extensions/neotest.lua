@@ -90,17 +90,17 @@ function M.config()
           },
           ["k"] = {
             function()
-              require("neotest").output.open()
+              require("neotest").output.open({ enter = true })
             end,
             "show test output",
           },
-          ["K"] = {
+          ["s"] = {
             function()
-              require("neotest").summary.toggle()
+              require("neotest").summary.toggle({ enter = true })
             end,
             "show test summary",
           },
-          ["s"] = {
+          ["q"] = {
             function()
               require("neotest").run.stop()
             end,
