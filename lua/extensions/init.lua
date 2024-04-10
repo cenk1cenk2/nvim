@@ -81,6 +81,7 @@ local extensions = {
   "nvim-colorizer",
   "vim-illuminate",
   "neotest",
+  "nvim-coverage",
   "telescope-github",
   "vim-bookmarks",
   "telescope-vim-bookmarks",

@@ -16,6 +16,7 @@ function M.config()
           "nvim-neotest/neotest-go",
           "rouge8/neotest-rust",
           "haydenmeade/neotest-jest",
+          "nvim-extensions/nvim-ginkgo",
           "nvim-treesitter/nvim-treesitter",
           {
             "antoinemadec/FixCursorHold.nvim",
@@ -29,8 +30,15 @@ function M.config()
     configure = function(_, fn)
       fn.add_disabled_filetypes({
         "neotest-summary",
+        "neotest-output",
       })
     end,
+    autocmds = {
+      require("modules.autocmds").q_close_autocmd({
+        "neotest-summary",
+        "neotest-output",
+      }),
+    },
     setup = function()
       return {
         -- log_level = vim.log.levels.TRACE,
@@ -46,6 +54,7 @@ function M.config()
           require("neotest-jest")({
             jestCommand = "pnpm run test",
           }),
+          require("nvim-ginkgo"),
         },
       }
     end,
