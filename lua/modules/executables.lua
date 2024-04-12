@@ -29,6 +29,37 @@ function M.run_genpass()
   end)
 end
 
+function M.b64encode()
+  local selection = require("utils").get_visual_selection()
+
+  job.spawn({
+    command = "base64",
+    writer = selection,
+    on_success = function(j)
+      local encoded = j:result()[1]
+
+      Log:info(("Copied encoded value to clipboard: %s"):format(encoded))
+      vim.fn.setreg(vim.v.register or lvim.system_register, encoded)
+    end,
+  })
+end
+
+function M.b64decode()
+  local selection = require("utils").get_visual_selection()
+
+  job.spawn({
+    command = "base64",
+    args = { "-d" },
+    writer = selection,
+    on_success = function(j)
+      local decoded = j:result()[1]
+
+      Log:info(("Copied decoded value to clipboard: %s"):format(decoded))
+      vim.fn.setreg(vim.v.register or lvim.system_register, decoded)
+    end,
+  })
+end
+
 function M.run_ansible_vault_decrypt()
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   job.spawn({
@@ -220,56 +251,76 @@ function M.setup()
     name = "executables",
     wk = function(_, categories)
       return {
-        [categories.SEARCH] = {
-          d = {
-            function()
-              M.run_sd()
-            end,
-            "sd",
+        {
+          { "n" },
+          [categories.SEARCH] = {
+            d = {
+              function()
+                M.run_sd()
+              end,
+              "sd",
+            },
+          },
+          [categories.TASKS] = {
+            ["d"] = {
+              function()
+                M.run_ansible_vault_decrypt()
+              end,
+              "ansible-vault decrypt",
+            },
+            ["D"] = {
+              function()
+                M.run_ansible_vault_encrypt()
+              end,
+              "ansible-vault encrypt",
+            },
+            ["e"] = {
+              function()
+                M.set_env()
+              end,
+              "set environment variable",
+            },
+            ["g"] = {
+              function()
+                M.run_genpass()
+              end,
+              "run genpass",
+            },
+            ["j"] = {
+              function()
+                M.run_jq()
+              end,
+              "run jq",
+            },
+            ["J"] = {
+              function()
+                M.run_yq()
+              end,
+              "run yq",
+            },
+            ["k"] = {
+              function()
+                M.set_kubeconfig()
+              end,
+              "set kubeconfig",
+            },
           },
         },
-        [categories.TASKS] = {
-          ["d"] = {
-            function()
-              M.run_ansible_vault_decrypt()
-            end,
-            "ansible-vault decrypt",
-          },
-          ["D"] = {
-            function()
-              M.run_ansible_vault_encrypt()
-            end,
-            "ansible-vault encrypt",
-          },
-          ["e"] = {
-            function()
-              M.set_env()
-            end,
-            "set environment variable",
-          },
-          ["g"] = {
-            function()
-              M.run_genpass()
-            end,
-            "run genpass",
-          },
-          ["j"] = {
-            function()
-              M.run_jq()
-            end,
-            "run jq",
-          },
-          ["J"] = {
-            function()
-              M.run_yq()
-            end,
-            "run yq",
-          },
-          ["k"] = {
-            function()
-              M.set_kubeconfig()
-            end,
-            "set rancher cluster",
+        {
+          { "v" },
+          [categories.TASKS] = {
+            ["d"] = {
+              function()
+                M.b64decode()
+              end,
+              "b64decode",
+            },
+            ["D"] = {
+              function()
+                M.b64encode()
+              end,
+              "b64encode",
+            },
           },
         },
       }
