@@ -108,7 +108,7 @@ end
 
 function M.setup_inlay_hints(client, bufnr)
   if client.server_capabilities.inlayHintProvider then
-    vim.lsp.inlay_hint.enable(bufnr, false)
+    vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
   end
 end
 
