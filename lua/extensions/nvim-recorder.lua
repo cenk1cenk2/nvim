@@ -19,9 +19,9 @@ function M.config()
 
         -- default keymaps, see README for description what the commands do
         mapping = {
-          startStopRecording = "q",
-          playMacro = "Q",
-          switchSlot = "@",
+          startStopRecording = "Q",
+          playMacro = "@",
+          switchSlot = "#",
           editMacro = "cq",
           deleteAllMacros = "dq",
           yankMacro = "yq",
@@ -43,6 +43,12 @@ function M.config()
     on_setup = function(config)
       require("recorder").setup(config.setup)
     end,
+    keymaps = {
+      {
+        { "a" },
+        ["q"] = "<Nop>",
+      },
+    },
   })
 end
 
