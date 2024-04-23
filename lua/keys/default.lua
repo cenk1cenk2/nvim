@@ -10,6 +10,32 @@ return {
     ["c"] = '"_c',
     ["C"] = '"_C',
     ["x"] = '"_x',
+
+    -- tab control
+    ["<M-q>"] = {
+      function()
+        vim.cmd([[tabclose]])
+      end,
+      { desc = "close tab" },
+    },
+    ["<M-S-l>"] = {
+      function()
+        vim.cmd([[tabnext]])
+      end,
+      { desc = "next tab" },
+    },
+    ["<M-S-h>"] = {
+      function()
+        vim.cmd([[tabprevious]])
+      end,
+      { desc = "prev tab" },
+    },
+
+    -- split to tab
+    ["<C-t>"] = "<C-w>T",
+
+    -- split to window
+    ["<C-e>"] = "<C-w><C-o>",
   },
 
   {
@@ -56,10 +82,6 @@ return {
     -- disable Ex mode
     ["Q"] = "<Nop>",
     ["qq"] = "<Nop>",
-
-    -- split to tab
-    ["<C-t>"] = "<C-w>T",
-    ["<C-E>"] = "<C-w><C-o>",
 
     -- Better window movement
     ["<C-h>"] = "<C-w>h",
