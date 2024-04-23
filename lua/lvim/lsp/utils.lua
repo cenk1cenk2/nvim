@@ -79,32 +79,30 @@ function M.setup_codelens_refresh(client, bufnr)
     return client.supports_method("textDocument/codeLens")
   end)
 
-  if not status_ok then
-    return
-  elseif not codelens_supported then
-    vim.api.nvim_clear_autocmds({
-      group = "lsp_code_lens_refresh",
+  local group = "lsp_code_lens_refresh"
+  local events = { "LspAttach", "InsertLeave" }
+
+  if not status_ok or not codelens_supported then
+    pcall(vim.api.nvim_clear_autocmds, {
+      group = group,
       buffer = bufnr,
     })
 
     return
   end
 
-  local group = "lsp_code_lens_refresh"
-  local cl_events = { "LspAttach", "InsertLeave" }
-
-  local ok, cl_autocmds = pcall(vim.api.nvim_get_autocmds, {
+  local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
     group = group,
     buffer = bufnr,
-    event = cl_events,
+    event = events,
   })
 
-  if ok and #cl_autocmds > 0 then
+  if ok and #autocmds > 0 then
     return
   end
 
   vim.api.nvim_create_augroup(group, { clear = false })
-  vim.api.nvim_create_autocmd(cl_events, {
+  vim.api.nvim_create_autocmd(events, {
     group = group,
     buffer = bufnr,
     callback = function()
