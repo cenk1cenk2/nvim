@@ -75,19 +75,15 @@ function M.get_all_supported_filetypes()
 end
 
 function M.setup_codelens_refresh(client, bufnr)
+  local method = "textDocument/codeLens"
   local status_ok, codelens_supported = pcall(function()
-    return client.supports_method("textDocument/codeLens")
+    return client.supports_method(method)
   end)
 
   local group = "lsp_code_lens_refresh"
   local events = { "LspAttach", "InsertLeave" }
 
   if not status_ok or not codelens_supported then
-    pcall(vim.api.nvim_clear_autocmds, {
-      group = group,
-      buffer = bufnr,
-    })
-
     return
   end
 
@@ -106,7 +102,9 @@ function M.setup_codelens_refresh(client, bufnr)
     group = group,
     buffer = bufnr,
     callback = function()
-      pcall(vim.lsp.codelens.refresh)
+      if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) > 0 then
+        pcall(vim.lsp.codelens.refresh)
+      end
     end,
   })
 end
