@@ -79,7 +79,14 @@ function M.setup_codelens_refresh(client, bufnr)
     return client.supports_method("textDocument/codeLens")
   end)
 
-  if not status_ok or not codelens_supported then
+  if not status_ok then
+    return
+  elseif not codelens_supported then
+    vim.api.nvim_clear_autocmds({
+      group = "lsp_code_lens_refresh",
+      buffer = bufnr,
+    })
+
     return
   end
 
