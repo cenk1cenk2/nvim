@@ -10,5 +10,6 @@ return {
     "typescriptreact",
     "vue",
     "svelte",
+    "go",
   },
 }
