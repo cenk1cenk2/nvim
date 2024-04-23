@@ -84,6 +84,19 @@ function M.config()
       {
         { "n" },
 
+        ["<M-S-l>"] = {
+          function()
+            vim.cmd([[tabnext]])
+          end,
+          { desc = "next tab" },
+        },
+        ["<M-S-h>"] = {
+          function()
+            vim.cmd([[tabprevious]])
+          end,
+          { desc = "prev tab" },
+        },
+
         ["<M-l>"] = {
           function()
             require("bufferline").cycle(1)
