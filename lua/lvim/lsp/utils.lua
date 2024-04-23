@@ -81,7 +81,7 @@ function M.setup_codelens_refresh(client, bufnr)
   end)
 
   local group = "lsp_code_lens_refresh"
-  local events = { "LspAttach", "InsertLeave" }
+  local events = { "LspAttach", "InsertLeave", "BufReadPost" }
 
   if not status_ok or not codelens_supported then
     return
