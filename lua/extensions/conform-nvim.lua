@@ -9,6 +9,8 @@ function M.config()
       return {
         "stevearc/conform.nvim",
         event = "BufReadPost",
+        -- new functions does not have defaults: https://github.com/stevearc/conform.nvim/commit/7a205c944d228ca0a5ec67656f59d20ba11ccca2
+        commit = "a6965ac128eba75537ec2bc5ddd5d5e357062bdc",
       }
     end,
     setup = function()
@@ -76,6 +78,12 @@ function M.config()
       end
 
       lvim.lsp.wrapper.format = function(opts)
+        opts = vim.tbl_extend("force", {
+          bufnr = vim.api.nvim_get_current_buf(),
+          timeout_ms = lvim.lsp.format_on_save.timeout_ms,
+          filter = lvim.lsp.format_on_save.filter,
+        }, opts or {})
+
         require("conform").format(opts)
       end
     end,

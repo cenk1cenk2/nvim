@@ -20,7 +20,11 @@ function M.document_symbols()
 end
 
 function M.format(opts)
-  opts = vim.tbl_extend("force", { timeout_ms = lvim.lsp.format_on_save.timeout_ms, filter = lvim.lsp.format_on_save.filter }, opts or {})
+  opts = vim.tbl_extend("force", {
+    bufnr = vim.api.nvim_get_current_buf(),
+    timeout_ms = lvim.lsp.format_on_save.timeout_ms,
+    filter = lvim.lsp.format_on_save.filter,
+  }, opts or {})
 
   vim.lsp.buf.format(opts)
 end
