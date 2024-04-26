@@ -237,7 +237,7 @@ function M.config()
               },
               ["Q"] = {
                 function()
-                  require("gitlab").restart()
+                  require("gitlab.server").restart()
                 end,
                 "gitlab restart server",
               },
