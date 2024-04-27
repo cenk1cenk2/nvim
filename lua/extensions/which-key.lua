@@ -29,6 +29,7 @@ function M.config()
       return {
         "folke/which-key.nvim",
         keys = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r", "d", "c", "r", "y", "p", "P" },
+        event = "BufReadPost",
       }
     end,
     configure = function(_, fn)
