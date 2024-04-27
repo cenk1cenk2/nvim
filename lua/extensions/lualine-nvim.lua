@@ -31,15 +31,17 @@ function M.config()
             -- components.filename,
             components.diff,
             components.python_env,
+            components.iedit,
           },
-          lualine_c = components.noice_left,
-          lualine_x = components.noice_right,
+          lualine_c = {
+            components.noice_message,
+          },
+          lualine_x = {
+            components.noice_mode,
+            components.noice_command,
+          },
           lualine_y = {
-            {
-              require("lazy.status").updates,
-              cond = require("lazy.status").has_updates,
-              color = { fg = lvim.ui.colors.yellow[900] },
-            },
+            components.lazy_updates,
             components.location,
             components.ff,
             components.spaces,
@@ -322,54 +324,60 @@ function M.components()
       color = { fg = lvim.ui.colors.yellow[300], bg = lvim.ui.colors.grey[300] },
       cond = nil,
     },
+    iedit = {
+      function()
+        return lvim.ui.icons.ui.Pencil
+      end,
+      color = { fg = lvim.ui.colors.black, bg = lvim.ui.colors.orange[600] },
+      cond = function()
+        return package_is_loaded("iedit") and require("extensions.iedit-nvim").is_active()
+      end,
+    },
+    lazy_updates = {
+      function()
+        require("lazy.status").updates()
+      end,
+      cond = function()
+        return package_is_loaded("lazy") and require("lazy.status").has_updates()
+      end,
+      color = { fg = lvim.ui.colors.yellow[900] },
+    },
+    noice_message = {
+      function()
+        return require("noice").api.statusline.message.get_hl()
+      end,
+      cond = function()
+        return package_is_loaded("noice") and require("noice").api.statusline.message.has()
+      end,
+    },
+    noice_search = {
+      function()
+        return require("noice").api.statusline.search.get()
+      end,
+      color = { fg = lvim.ui.colors.cyan[600] },
+      cond = function()
+        return package_is_loaded("noice") and require("noice").api.statusline.search.has()
+      end,
+    },
+    noice_mode = {
+      function()
+        return require("noice").api.statusline.mode.get()
+      end,
+      color = { fg = lvim.ui.colors.yellow[600] },
+      cond = function()
+        return package_is_loaded("noice") and require("noice").api.statusline.mode.has()
+      end,
+    },
+    noice_command = {
+      function()
+        return require("noice").api.statusline.command.get()
+      end,
+      color = { fg = lvim.ui.colors.blue[600] },
+      cond = function()
+        return package_is_loaded("noice") and require("noice").api.statusline.command.has()
+      end,
+    },
   }
-
-  local noice_ok = pcall(require, "noice")
-
-  if noice_ok then
-    components.noice_left = {
-      {
-        function()
-          return require("noice").api.statusline.message.get_hl()
-        end,
-        cond = function()
-          return require("noice").api.statusline.message.has()
-        end,
-      },
-    }
-    components.noice_right = {
-      -- {
-      --   function()
-      --     return require("noice").api.statusline.search.get()
-      --   end,
-      --   cond = function()
-      --     return require("noice").api.statusline.search.has()
-      --   end,
-      --   color = { fg = colors.cyan[600] },
-      -- },
-      {
-        function()
-          return require("noice").api.statusline.mode.get()
-        end,
-        cond = function()
-          return require("noice").api.statusline.mode.has()
-        end,
-        color = { fg = lvim.ui.colors.yellow[600] },
-      },
-      {
-        function()
-          return require("noice").api.statusline.command.get()
-        end,
-        cond = function()
-          return require("noice").api.statusline.command.has()
-        end,
-        color = { fg = lvim.ui.colors.blue[600] },
-      },
-    }
-  else
-    components.noice_left = {}
-    components.noice_right = {}
-  end
 
   return components
 end
