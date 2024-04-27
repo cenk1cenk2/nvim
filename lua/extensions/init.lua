@@ -105,6 +105,7 @@ local extensions = {
   "obsidian-nvim",
   "iswap-nvim",
   "iedit-nvim",
+  "decipher-nvim",
 }
 
 function M.config(config)
