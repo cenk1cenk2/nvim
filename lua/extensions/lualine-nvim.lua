@@ -335,7 +335,7 @@ function M.components()
     },
     lazy_updates = {
       function()
-        require("lazy.status").updates()
+        return require("lazy.status").updates()
       end,
       cond = function()
         return package_is_loaded("lazy") and require("lazy.status").has_updates()
