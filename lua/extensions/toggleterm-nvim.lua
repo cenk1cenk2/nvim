@@ -25,6 +25,7 @@ function M.config()
         { cmd = "htop", keymap = "h", label = "htop" },
         { cmd = "ncdu", keymap = "n", label = "ncdu" },
         { cmd = "k9s", keymap = "k", label = "k9s" },
+        { cmd = "termscp", keymap = "s", label = "termscp" },
       }
 
       for i, exec in pairs(togglers) do
@@ -355,10 +356,10 @@ function M.generate_defaults_float_terminal(opts)
   })
 end
 
-function M.create_float_terminal()
-  local terminal = M.create_terminal(M.generate_defaults_float_terminal({
+function M.create_float_terminal(opts)
+  local terminal = M.create_terminal(M.generate_defaults_float_terminal(vim.tbl_extend("force", {
     cmd = vim.o.shell,
-  }))
+  }, opts or {})))
 
   return terminal
 end

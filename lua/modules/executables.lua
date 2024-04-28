@@ -118,6 +118,15 @@ function M.run_jq()
   end)
 end
 
+function M.run_jqp()
+  local terminal = require("extensions.toggleterm-nvim")
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+  local t = terminal.create_float_terminal({ cmd = ("echo '%s' | jqp"):format(table.concat(lines, "\\n")) })
+
+  t:toggle()
+end
+
 function M.run_yq()
   local store_key = "YQ_INPUT"
   local shada = require("modules.shada")
@@ -266,6 +275,12 @@ function M.setup()
                 M.run_yq()
               end,
               "run yq",
+            },
+            ["p"] = {
+              function()
+                M.run_jqp()
+              end,
+              "run jqp",
             },
             ["k"] = {
               function()
