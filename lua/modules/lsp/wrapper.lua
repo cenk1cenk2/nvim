@@ -95,12 +95,20 @@ end
 
 -- diagnostic
 
-function M.goto_next()
-  vim.diagnostic.goto_next({ popup_opts = { border = lvim.lsp.popup_border } })
+function M.diagnostics_goto_next(opts)
+  opts = opts or {}
+
+  vim.tbl_extend("force", opts, { popup_opts = { border = lvim.lsp.popup_border } })
+
+  vim.diagnostic.goto_next(opts)
 end
 
-function M.goto_prev()
-  vim.diagnostic.goto_prev({ popup_opts = { border = lvim.lsp.popup_border } })
+function M.diagnostics_goto_prev(opts)
+  opts = opts or {}
+
+  vim.tbl_extend("force", opts, { popup_opts = { border = lvim.lsp.popup_border } })
+
+  vim.diagnostic.goto_prev(opts)
 end
 
 function M.show_line_diagnostics()
@@ -410,15 +418,27 @@ function M.setup()
           H = { ":LspImportCurrent<CR>", "import current" },
           n = {
             function()
-              lvim.lsp.wrapper.goto_next()
+              lvim.lsp.wrapper.diagnostics_goto_next({ severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
             end,
-            "next diagnostic",
+            "next diagnostic (error, warn)",
+          },
+          N = {
+            function()
+              lvim.lsp.wrapper.diagnostics_goto_next({ severity = { vim.diagnostic.severity.INFO, vim.diagnostic.severity.HINT } })
+            end,
+            "next diagnostic (info, hint)",
           },
           p = {
             function()
-              lvim.lsp.wrapper.goto_prev()
+              lvim.lsp.wrapper.diagnostics_goto_prev({ severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
             end,
-            "prev diagnostic",
+            "prev diagnostic (error, warn)",
+          },
+          P = {
+            function()
+              lvim.lsp.wrapper.diagnostics_goto_prev({ severity = { vim.diagnostic.severity.INFO, vim.diagnostic.severity.HINT } })
+            end,
+            "prev diagnostic (info, hint)",
           },
           l = {
             function()

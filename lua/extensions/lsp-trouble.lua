@@ -22,7 +22,7 @@ function M.config()
           mode = "diagnostics",
           filter = {
             buf = 0,
-            severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN },
+            -- severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN },
           },
         })
       end

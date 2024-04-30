@@ -40,11 +40,15 @@ function M.config()
       lvim.lsp.wrapper.rename = function()
         vim.cmd("Lspsaga rename")
       end
-      lvim.lsp.wrapper.goto_next = function()
-        require("lspsaga.diagnostic"):goto_next({ severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
+      lvim.lsp.wrapper.diagnostics_goto_next = function(opts)
+        opts = opts or {}
+
+        require("lspsaga.diagnostic"):goto_next(opts)
       end
-      lvim.lsp.wrapper.goto_prev = function()
-        require("lspsaga.diagnostic"):goto_prev({ severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
+      lvim.lsp.wrapper.diagnostics_goto_prev = function(opts)
+        opts = opts or {}
+
+        require("lspsaga.diagnostic"):goto_prev(opts)
       end
       lvim.lsp.wrapper.show_line_diagnostics = function()
         vim.cmd("Lspsaga show_line_diagnostics")
