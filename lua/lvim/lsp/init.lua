@@ -41,9 +41,9 @@ function M.common_on_exit(client, bufnr)
     Log:trace("Called lsp.on_exit")
   end
 
-  if lvim.lsp.code_lens.refresh then
-    setup.clear_augroup("lsp_code_lens_refresh")
-  end
+  -- if lvim.lsp.code_lens.refresh then
+  --   setup.clear_augroup("lsp_code_lens_refresh")
+  -- end
 end
 
 function M.common_on_init(client, bufnr)
