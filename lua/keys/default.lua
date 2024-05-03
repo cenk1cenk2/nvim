@@ -12,6 +12,12 @@ return {
     ["x"] = '"_x',
 
     -- tab control
+    ["<M-t>"] = {
+      function()
+        vim.cmd([[tabnew]])
+      end,
+      { desc = "create tab" },
+    },
     ["<M-q>"] = {
       function()
         vim.cmd([[tabclose]])
