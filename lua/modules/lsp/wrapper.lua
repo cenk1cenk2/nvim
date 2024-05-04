@@ -154,7 +154,8 @@ function M.reset_buffer_lsp()
   end, vim.lsp.get_clients({ bufnr = bufnr }))
 
   for _, client in pairs(clients) do
-    vim.lsp.stop_client(client.id, true)
+    -- vim.lsp.stop_client(client.id, true)
+    vim.cmd(("LspRestart %s"):format(client.id))
   end
 
   Log:warn(("Killed LSPs for buffer: %s -> %s"):format(
