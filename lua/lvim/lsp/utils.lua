@@ -97,7 +97,7 @@ function M.setup_codelens_refresh(client, bufnr)
     return
   end
 
-  vim.api.nvim_create_augroup(group, { clear = false })
+  local augroup = vim.api.nvim_create_augroup(group, { clear = false })
   vim.api.nvim_create_autocmd(events, {
     group = group,
     buffer = bufnr,
@@ -105,6 +105,14 @@ function M.setup_codelens_refresh(client, bufnr)
       if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) > 0 then
         pcall(vim.lsp.codelens.refresh)
       end
+    end,
+  })
+
+  vim.api.nvim_create_autocmd({ "LspDetach" }, {
+    group = group,
+    buffer = bufnr,
+    callback = function()
+      vim.api.nvim_del_augroup_by_id(augroup)
     end,
   })
 end
