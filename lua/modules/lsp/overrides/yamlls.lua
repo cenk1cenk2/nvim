@@ -5,6 +5,7 @@ return {
       formatting = false,
       -- Built in file matchers
       builtin_matchers = {
+        kubernetes = { enabled = true },
         -- Detects Kubernetes files based on content
         kubernetes_crd = { enabled = true },
         -- kubernetes = { enabled = true },
