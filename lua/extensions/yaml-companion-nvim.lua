@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         -- "someone-stole-my-name/yaml-companion.nvim",
-        "astephanh/yaml-companion.nvim",
+        "cenk1cenk2/yaml-companion.nvim",
         ft = { "yaml", "helm" },
       }
     end,

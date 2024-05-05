@@ -104,6 +104,8 @@ function M.setup_codelens_refresh(client, bufnr)
     callback = function()
       if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) > 0 then
         pcall(vim.lsp.codelens.refresh)
+      else
+        vim.api.nvim_del_augroup_by_id(augroup)
       end
     end,
   })

@@ -8,5 +8,10 @@
     "prefix": "schema",
     "description": "Add schema declaration to yaml file.",
     "body": ["# yaml-language-server: $schema=$1"]
+  },
+  "crd": {
+    "prefix": "crd",
+    "description": "Add CRD declaration to yaml file.",
+    "body": ["# yaml-language-server: $schema=https://raw.githubusercontent.com/datreeio/CRDs-catalog/main/$1"]
   }
 }

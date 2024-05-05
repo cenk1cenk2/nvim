@@ -4,6 +4,11 @@ local schemas = {
     fileMatch = { "tsconfig.json", "tsconfig.*.json" },
     url = "https://json.schemastore.org/tsconfig.json",
   },
+  {
+    description = "JSON Schema.",
+    fileMatch = { "*.schema.json" },
+    url = "http://json-schema.org/draft-07/schema#",
+  },
 }
 
 return {
