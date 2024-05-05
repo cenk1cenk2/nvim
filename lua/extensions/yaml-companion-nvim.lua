@@ -31,7 +31,15 @@ function M.config()
                   [categories.ACTIONS] = {
                     ["F"] = {
                       function()
-                        return require("telescope").extensions.yaml_schema.yaml_schema()
+                        -- return require("telescope").extensions.yaml_schema.yaml_schema()
+                        local result = require("yaml-companion").get_buf_schema(0).result
+
+                        if not result or not result[1] then
+                          require("lvim.core.log"):warn("No schema found.")
+                          return
+                        end
+
+                        vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result[1].uri) }, "l", true, true)
                       end,
                       "select yaml schema",
                     },

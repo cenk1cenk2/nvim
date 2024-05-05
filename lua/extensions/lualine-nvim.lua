@@ -50,7 +50,7 @@ function M.config()
             components.dap,
             components.diagnostics,
             components.treesitter,
-            components.yaml_schema,
+            -- components.yaml_schema,
             components.lsp,
           },
           lualine_z = { components.scrollbar },
