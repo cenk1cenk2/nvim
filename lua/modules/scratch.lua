@@ -32,7 +32,7 @@ function M.create_scratch_buffer()
 
     require("utils.setup").define_autocmds({
       {
-        "BufDelete",
+        { "BufDelete", "VimLeavePre" },
         {
           group = "_scratch",
           buffer = bufnr,
