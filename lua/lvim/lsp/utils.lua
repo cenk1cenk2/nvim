@@ -102,7 +102,9 @@ function M.setup_codelens_refresh(client, bufnr)
     group = group,
     buffer = bufnr,
     callback = function()
-      pcall(vim.lsp.codelens.refresh)
+      vim.schedule(function()
+        pcall(vim.lsp.codelens.refresh)
+      end)
     end,
   })
 
