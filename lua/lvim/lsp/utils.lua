@@ -110,7 +110,7 @@ function M.setup_codelens_refresh(client, bufnr)
     group = group,
     buffer = bufnr,
     callback = function()
-      if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) > 0 then
+      if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
         vim.api.nvim_del_augroup_by_id(augroup)
       end
     end,
