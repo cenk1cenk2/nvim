@@ -146,7 +146,7 @@ function M.reset_buffer_lsp()
   -- vim.cmd("LspRestart")
   local bufnr = vim.api.nvim_get_current_buf()
   local clients = vim.tbl_filter(function(client)
-    if vim.tbl_contains({ "copilot" }, client.name) then
+    if vim.tbl_contains({ "copilot", "typos_lsp" }, client.name) then
       return false
     end
 
