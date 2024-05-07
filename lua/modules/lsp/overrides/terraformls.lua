@@ -17,8 +17,6 @@ require("utils.setup").init({
 
                       require("lvim.core.log"):warn("terraform-ls will be killed.")
                       vim.fn.system({ "pkill", "-9", "terraform-ls" })
-
-                      require("utils").reload_file()
                     end,
                     "lsp restart (terraform-ls)",
                   },

@@ -168,7 +168,7 @@ function M.reset_buffer_lsp()
     )
   ))
 
-  require("utils").reload_file()
+  -- require("utils").reload_file()
 end
 
 function M.fix_current()
