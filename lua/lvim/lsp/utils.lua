@@ -80,12 +80,12 @@ function M.setup_codelens_refresh(client, bufnr)
     return client.supports_method(method)
   end)
 
-  local group = "lsp_code_lens_refresh"
-  local events = { "LspAttach", "InsertLeave", "BufReadPost" }
-
   if not status_ok or not codelens_supported then
     return
   end
+
+  local group = "lsp_code_lens_refresh"
+  local events = { "LspAttach", "InsertLeave", "BufReadPost" }
 
   local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
     group = group,
@@ -108,7 +108,7 @@ function M.setup_codelens_refresh(client, bufnr)
     end,
   })
 
-  vim.api.nvim_create_autocmd({ "LspDetach" }, {
+  vim.api.nvim_create_autocmd({ "BufDelete" }, {
     group = group,
     buffer = bufnr,
     callback = function()
