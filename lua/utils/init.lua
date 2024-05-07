@@ -20,7 +20,9 @@ end
 
 function M.reload_file()
   local ok = pcall(function()
-    vim.cmd("e")
+    vim.schedule(function()
+      vim.cmd("e")
+    end)
   end)
 
   if not ok then
