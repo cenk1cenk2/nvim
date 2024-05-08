@@ -103,7 +103,9 @@ function M.setup_codelens_refresh(client, bufnr)
     buffer = bufnr,
     callback = function()
       vim.schedule(function()
-        pcall(vim.lsp.codelens.refresh)
+        if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
+          pcall(vim.lsp.codelens.refresh)
+        end
       end)
     end,
   })
