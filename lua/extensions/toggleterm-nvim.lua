@@ -42,7 +42,13 @@ function M.config()
     setup = function()
       return {
         -- size can be a number or function which is passed the current terminal
-        size = 20,
+        size = function(term)
+          if term.direction == "horizontal" then
+            return math.floor(vim.o.lines * 0.25)
+          elseif term.direction == "vertical" then
+            return math.floor(vim.o.columns * 0.25)
+          end
+        end,
         -- open_mapping = [[<c-\>]],
         open_mapping = [[<F12>]],
         hide_numbers = true, -- hide the number column in toggleterm buffers
@@ -64,8 +70,20 @@ function M.config()
           -- not natively supported but implemented in this plugin.
           -- border = 'single' | 'double' | 'shadow' | 'curved' | ... other options supported by win open
           border = lvim.ui.border,
-          -- width = <value>,
-          -- height = <value>,
+          width = function()
+            if vim.o.columns < 180 then
+              return math.floor(vim.o.columns * 0.975)
+            end
+
+            return math.floor(vim.o.columns * 0.85)
+          end,
+          height = function()
+            if vim.o.lines < 60 then
+              return math.floor(vim.o.lines * 0.95)
+            end
+
+            return math.floor(vim.o.lines * 0.8)
+          end,
           winblend = 0,
           highlights = { border = "Normal", background = "Normal" },
         },
