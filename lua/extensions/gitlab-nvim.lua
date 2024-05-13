@@ -71,19 +71,16 @@ function M.config()
             "pipeline",
           },
         },
-        discussion_sign_and_diagnostic = {
-          skip_resolved_discussion = false,
-          skip_old_revision_discussion = true,
-        },
-        discussion_sign = {
+        discussion_signs = {
           -- See :h sign_define for details about sign configuration.
           enabled = true,
+          severity = vim.diagnostic.severity.WARN,
+          skip_resolved_discussion = false,
           text = lvim.ui.icons.ui.Comment,
           linehl = nil,
           texthl = nil,
           culhl = nil,
           numhl = nil,
-          priority = 20, -- Priority of sign, the lower the number the higher the priority
           helper_signs = {
             -- For multiline comments the helper signs are used to indicate the whole context
             -- Priority of helper signs is lower than the main sign (-1).
@@ -92,14 +89,12 @@ function M.config()
             mid = lvim.ui.icons.borderchars[1],
             ["end"] = lvim.ui.icons.ui.ChevronShortDown,
           },
-        },
-        discussion_diagnostic = {
-          -- If you want to customize diagnostics for discussions you can make special config
-          -- for namespace `gitlab_discussion`. See :h vim.diagnostic.config
-          enabled = true,
-          severity = vim.diagnostic.severity.WARN,
-          code = nil, -- see :h diagnostic-structure
-          display_opts = {}, -- see opts in vim.diagnostic.set
+          virtual_text = false, -- Whether to show the comment text inline as floating virtual text
+          priority = 100, -- Higher will override LSP warnings, etc
+          icons = {
+            comment = lvim.ui.icons.ui.Tab,
+            range = lvim.ui.icons.ui.LineMiddle,
+          },
         },
         pipeline = {
           created = "",
@@ -120,6 +115,16 @@ function M.config()
             directory = "Directory",
             directory_icon = "DiffviewFolderSign",
             file_name = "Normal",
+          },
+        },
+        create_mr = {
+          target = nil, -- Default branch to target when creating an MR
+          template_file = nil, -- Default MR template in .gitlab/merge_request_templates
+          delete_branch = true, -- Whether the source branch will be marked for deletion
+          squash = false, -- Whether the commits will be marked for squashing
+          title_input = { -- Default settings for MR title input window
+            width = 40,
+            border = lvim.ui.border,
           },
         },
       }
