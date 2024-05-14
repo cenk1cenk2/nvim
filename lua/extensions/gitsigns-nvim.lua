@@ -105,14 +105,15 @@ function M.config()
           p = { ":Gitsigns prev_hunk<CR>", "prev hunk" },
           b = { ":Gitsigns blame_line<CR>", "git hover blame" },
           k = { ":Gitsigns preview_hunk<CR>", "preview hunk" },
-          U = { ":Gitsigns reset_hunk<CR>", "reset hunk" },
           r = { ":Gitsigns refresh<CR>", "refresh" },
           R = {
             name = "reset",
             R = { ":Gitsigns reset_buffer<CR>", "reset buffer" },
           },
           s = { ":Gitsigns stage_hunk<CR>", "stage hunk" },
-          S = { ":Gitsigns undo_stage_hunk<CR>", "undo stage hunk" },
+          S = { ":Gitsigns stage_buffer<CR>", "stage buffer" },
+          u = { ":Gitsigns undo_stage_hunk<CR>", "undo stage hunk" },
+          U = { ":Gitsigns reset_hunk<CR>", "reset hunk" },
           q = { ":Gitsigns setqflist<CR>", "set quickfix for current buffer changes" },
         },
       }
