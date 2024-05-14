@@ -75,14 +75,14 @@ function M.config()
               return math.floor(vim.o.columns * 0.975)
             end
 
-            return math.floor(vim.o.columns * 0.85)
+            return math.floor(vim.o.columns * 0.9)
           end,
           height = function()
             if vim.o.lines < 60 then
               return math.floor(vim.o.lines * 0.95)
             end
 
-            return math.floor(vim.o.lines * 0.85)
+            return math.floor(vim.o.lines * 0.9)
           end,
           winblend = 0,
           highlights = { border = "Normal", background = "Normal" },
