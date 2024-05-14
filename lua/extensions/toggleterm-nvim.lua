@@ -82,7 +82,7 @@ function M.config()
               return math.floor(vim.o.lines * 0.95)
             end
 
-            return math.floor(vim.o.lines * 0.8)
+            return math.floor(vim.o.lines * 0.85)
           end,
           winblend = 0,
           highlights = { border = "Normal", background = "Normal" },
