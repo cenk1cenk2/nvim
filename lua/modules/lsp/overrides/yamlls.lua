@@ -23,11 +23,15 @@ return {
         },
         {
           name = "Kubernetes v1.27",
-          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.11-standalone-strict/all.json",
+          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.14-standalone-strict/all.json",
+        },
+        {
+          name = "Kubernetes v1.28",
+          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.28.9-standalone-strict/all.json",
         },
         {
           name = "Kubernetes v1.29",
-          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.2-standalone-strict/all.json",
+          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.5-standalone-strict/all.json",
         },
         {
           name = "Gitlab CI",
@@ -57,6 +61,7 @@ return {
       schemas = {
         kubernetes = {
           "templates/*!(.gitlab-ci).{yml,yaml}",
+          "workloads/*.{yml,yaml}",
           "*.k8s.{yml,yaml}",
           "daemon.{yml,yaml}",
           "manager.{yml,yaml}",
