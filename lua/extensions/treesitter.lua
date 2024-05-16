@@ -93,7 +93,11 @@ function M.config()
           enable = true,
           enable_autocmd = false,
         },
-        indent = { enable = true, disable = {} },
+        indent = {
+          enable = true,
+          -- TSBufDisable indent
+          disable = { "yaml" },
+        },
         autotag = { enable = true },
         textobjects = {
           swap = {
