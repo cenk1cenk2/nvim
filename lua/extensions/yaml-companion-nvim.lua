@@ -46,7 +46,7 @@ function M.config()
                             return
                           end
 
-                          vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result[1].uri) }, "l", true, true)
+                          vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result[1].uri) }, "l", false, true)
                         end,
                         "print yaml schema",
                       },
