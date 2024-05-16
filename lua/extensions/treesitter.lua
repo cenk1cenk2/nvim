@@ -96,7 +96,7 @@ function M.config()
         indent = {
           enable = true,
           -- TSBufDisable indent
-          disable = { "yaml" },
+          disable = {},
         },
         autotag = { enable = true },
         textobjects = {

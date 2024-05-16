@@ -111,6 +111,10 @@ lvim.lsp.automatic_configuration.skipped_servers = {
 }
 
 require("utils.setup").fn.append_to_setup("treesitter", {
+  indent = {
+    -- TSBufDisable indent
+    disable = { "yaml" },
+  },
   ensure_installed = {
     "bash",
     "c",
