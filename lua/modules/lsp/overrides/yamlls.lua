@@ -61,7 +61,7 @@ return {
       schemas = {
         kubernetes = {
           "templates/*!(.gitlab-ci).{yml,yaml}",
-          "workloads/*.{yml,yaml}",
+          "workloads/**/*.{yml,yaml}",
           "*.k8s.{yml,yaml}",
           "daemon.{yml,yaml}",
           "manager.{yml,yaml}",
