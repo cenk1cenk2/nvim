@@ -22,6 +22,7 @@ function M.config()
           jsx = "rainbow-parens",
           tsx = "rainbow-parens",
           vue = "rainbow-parens",
+          svelte = "rainbow-parens",
           html = "",
         },
         -- Highlight the entire buffer all at once
