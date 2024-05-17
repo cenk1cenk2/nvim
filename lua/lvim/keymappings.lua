@@ -100,7 +100,7 @@ end
 function M.load(keymaps, opts)
   keymaps = vim.deepcopy(keymaps) or {}
 
-  if vim.tbl_islist(keymaps) then
+  if vim.islist(keymaps) then
     for _, map in pairs(keymaps) do
       local mode = map[1]
       table.remove(map, 1)

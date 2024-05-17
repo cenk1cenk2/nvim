@@ -12,12 +12,11 @@ return {
   --- @type vim.diagnostic.Opts
   diagnostics = {
     signs = {
-      active = true,
-      values = {
-        { name = "DiagnosticSignError", text = lvim.ui.icons.diagnostics.Error },
-        { name = "DiagnosticSignWarn", text = lvim.ui.icons.diagnostics.Warning },
-        { name = "DiagnosticSignInfo", text = lvim.ui.icons.diagnostics.Information },
-        { name = "DiagnosticSignHint", text = lvim.ui.icons.diagnostics.Hint },
+      text = {
+        [vim.diagnostic.severity.ERROR] = lvim.ui.icons.diagnostics.Error,
+        [vim.diagnostic.severity.WARN] = lvim.ui.icons.diagnostics.Warning,
+        [vim.diagnostic.severity.INFO] = lvim.ui.icons.diagnostics.Information,
+        [vim.diagnostic.severity.HINT] = lvim.ui.icons.diagnostics.Hint,
       },
     },
     virtual_text = {
@@ -25,7 +24,7 @@ return {
       -- prefix = function(diagnostic)
       --   return signs[vim.diagnostic.severity[diagnostic.severity]]
       -- end,
-      source = "always",
+      source = true,
     },
     update_in_insert = false,
     underline = false,
@@ -34,7 +33,7 @@ return {
       focusable = true,
       style = "minimal",
       border = lvim.ui.border,
-      source = "always",
+      source = true,
       header = "",
       prefix = "",
       format = function(d)

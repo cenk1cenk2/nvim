@@ -41,7 +41,7 @@ end
 function M.load_wk(mappings, config)
   mappings = vim.deepcopy(mappings) or {}
 
-  if vim.tbl_islist(mappings) then
+  if vim.islist(mappings) then
     for _, map in pairs(mappings) do
       local mode = map[1]
       table.remove(map, 1)
@@ -271,6 +271,7 @@ function M.init(config)
     local signs = M.evaluate_property(config.signs, config)
 
     for key, value in pairs(signs) do
+      -- this should be removed at some point since deprecated
       vim.fn.sign_define(key, value)
     end
 

@@ -1,14 +1,17 @@
 local Log = {}
 
 Log.levels = {
+  [1] = "TRACE",
+  [2] = "DEBUG",
+  [3] = "INFO",
+  [4] = "WARN",
+  [5] = "ERROR",
   TRACE = 1,
   DEBUG = 2,
   INFO = 3,
   WARN = 4,
   ERROR = 5,
 }
-
-vim.tbl_add_reverse_lookup(Log.levels)
 
 function Log:set_level(level)
   local logger_ok, _ = xpcall(function()
