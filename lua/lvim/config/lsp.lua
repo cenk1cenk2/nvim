@@ -12,6 +12,12 @@ return {
   --- @type vim.diagnostic.Opts
   diagnostics = {
     signs = {
+      numhl = {
+        [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+        [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+        [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+        [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+      },
       text = {
         [vim.diagnostic.severity.ERROR] = lvim.ui.icons.diagnostics.Error,
         [vim.diagnostic.severity.WARN] = lvim.ui.icons.diagnostics.Warning,
