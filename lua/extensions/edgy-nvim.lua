@@ -23,7 +23,15 @@ function M.config()
           {
             title = "Neo-Tree",
             ft = "neo-tree",
-            size = { width = 55 },
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.25
+                end
+
+                return 50
+              end,
+            },
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "filesystem" or vim.b[buf].neo_tree_source == "remote"
             end,
@@ -40,7 +48,15 @@ function M.config()
         right = {
           {
             ft = "spectre_panel",
-            size = { width = 100 },
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.5
+                end
+
+                return 100
+              end,
+            },
           },
           {
             title = "Neo-Tree Git",
@@ -70,24 +86,56 @@ function M.config()
           {
             title = "Dap Watches",
             ft = "dapui_watches",
-            size = { width = 75 },
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.25
+                end
+
+                return 75
+              end,
+            },
           },
           {
             title = "Dap Stacks",
             ft = "dapui_stacks",
-            size = { width = 75 },
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.25
+                end
+
+                return 75
+              end,
+            },
           },
           {
             title = "Dap Breakpoints",
             ft = "dapui_breakpoints",
-            size = { width = 75 },
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.25
+                end
+
+                return 75
+              end,
+            },
           },
         },
         bottom = {
           -- toggleterm / lazyterm at the bottom with a height of 40% of the screen
           {
             ft = "toggleterm",
-            size = { height = 20 },
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.25
+                end
+
+                return 20
+              end,
+            },
             -- exclude floating windows
             filter = function(_, win)
               return vim.api.nvim_win_get_config(win).relative == ""
@@ -112,7 +160,15 @@ function M.config()
           },
           {
             ft = "help",
-            size = { height = 35 },
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.5
+                end
+
+                return 35
+              end,
+            },
             -- only show help buffers
             filter = function(buf)
               return vim.bo[buf].buftype == "help"
@@ -133,21 +189,69 @@ function M.config()
           {
             ft = "dap-repl",
             title = "Dap Replication",
-            size = { height = 20 },
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.25
+                end
+
+                return 20
+              end,
+            },
           },
           {
             ft = "dapui_scopes",
             title = "Dap Scopes",
-            size = { height = 20 },
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.25
+                end
+
+                return 20
+              end,
+            },
           },
         },
 
         ---@type table<Edgy.Pos, {size:integer, wo?:vim.wo}>
         options = {
-          left = { size = 50 },
-          bottom = { size = 15 },
-          right = { size = 50 },
-          top = { size = 15 },
+          left = {
+            size = function()
+              if vim.o.columns < 180 then
+                return 0.2
+              end
+
+              return 50
+            end,
+          },
+          bottom = {
+            size = function()
+              if vim.o.lines < 60 then
+                return 0.15
+              end
+
+              return 15
+            end,
+          },
+          right = {
+            size = function()
+              if vim.o.columns < 180 then
+                return 0.2
+              end
+
+              return 50
+            end,
+          },
+          top = {
+            size = function()
+              if vim.o.lines < 60 then
+                return 0.15
+              end
+
+              return 15
+            end,
+          },
         },
         -- edgebar animations
         animate = {
