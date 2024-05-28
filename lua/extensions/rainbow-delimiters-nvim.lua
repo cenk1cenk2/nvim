@@ -9,6 +9,7 @@ function M.config()
       return {
         -- https://github.com/HiPhish/rainbow-delimiters.nvim/pull/120
         "Danielkonge/rainbow-delimiters.nvim",
+        branch = "cleanup",
         event = "BufReadPost",
       }
     end,
