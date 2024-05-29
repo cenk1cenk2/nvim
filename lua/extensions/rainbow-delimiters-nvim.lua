@@ -7,9 +7,7 @@ function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
-        -- https://github.com/HiPhish/rainbow-delimiters.nvim/pull/120
-        "Danielkonge/rainbow-delimiters.nvim",
-        branch = "cleanup",
+        "HiPhish/rainbow-delimiters.nvim",
         event = "BufReadPost",
       }
     end,
