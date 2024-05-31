@@ -8,7 +8,6 @@ function M.config()
     plugin = function()
       return {
         "folke/lsp-trouble.nvim",
-        branch = "dev",
         cmd = { "Trouble" },
       }
     end,
