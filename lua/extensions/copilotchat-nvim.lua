@@ -203,7 +203,7 @@ function M.config()
         {
           group = "__copilot",
           pattern = "copilot-chat",
-          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0",
+          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell nolist nonumber colorcolumn= foldcolumn=0",
         },
       },
     },
