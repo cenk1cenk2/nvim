@@ -37,6 +37,7 @@ local extensions = {
   "neoscroll",
   "auto-hlsearch-nvim",
   "spectre",
+  "grug-far-nvim",
   "copilot-nvim",
   "copilotchat-nvim",
   "aerial-nvim",
