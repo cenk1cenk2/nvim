@@ -180,21 +180,6 @@ function M.config()
               end,
               "[grug-far] find and replace",
             },
-            S = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = "",
-                    flags = "--fixed-strings",
-                  },
-                }
-
-                require("grug-far").with_visual_selection(opts)
-              end,
-              "[grug-far] find and replace (fixed strings)",
-            },
             w = {
               function()
                 local opts = {
@@ -210,21 +195,6 @@ function M.config()
               end,
               "[grug-far] find and replace in current folder",
             },
-            W = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = string.format("%s**", vim.fn.fnamemodify(vim.fn.expand("%:h:~:."), ":p:~:.")),
-                    flags = "--no-ignore-dot --fixed-strings",
-                  },
-                }
-
-                require("grug-far").with_visual_selection(opts)
-              end,
-              "[grug-far] find and replace in current folder (fixed strings)",
-            },
             b = {
               function()
                 local opts = {
@@ -239,21 +209,6 @@ function M.config()
                 require("grug-far").with_visual_selection(opts)
               end,
               "[grug-far] find and replace in current buffer",
-            },
-            B = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p:~:."),
-                    flags = "--no-ignore-dot --fixed-strings",
-                  },
-                }
-
-                require("grug-far").with_visual_selection(opts)
-              end,
-              "[grug-far] find and replace in current buffer (fixed strings)",
             },
           },
         },
