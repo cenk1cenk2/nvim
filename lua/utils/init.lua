@@ -69,4 +69,16 @@ function M.get_visual_selection()
   return table.concat(lines, "\n")
 end
 
+function M.get_project_buffer_filepath(bufnr)
+  bufnr = bufnr or 0
+
+  return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":p:~:.")
+end
+
+function M.get_project_buffer_dirpath(bufnr)
+  bufnr = bufnr or 0
+
+  return vim.fn.fnamemodify(vim.fn.expand("%:h:~:."), ":p:~:.")
+end
+
 return M

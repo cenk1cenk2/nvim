@@ -161,7 +161,7 @@ function M.reset_buffer_lsp()
   end
 
   Log:warn(("Killed LSPs for buffer: %s -> %s"):format(
-    vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":p:~:."),
+    require("utils").get_project_buffer_filepath(bufnr),
     vim.fn.join(
       vim.tbl_map(function(client)
         return client.name

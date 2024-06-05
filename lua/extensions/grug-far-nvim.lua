@@ -105,7 +105,7 @@ function M.config()
                   prefills = {
                     search = "",
                     replacement = "",
-                    filesFilter = string.format("%s**", vim.fn.fnamemodify(vim.fn.expand("%:h:~:."), ":p:~:.")),
+                    filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
                     flags = "--no-ignore-dot",
                   },
                 }
@@ -120,7 +120,7 @@ function M.config()
                   prefills = {
                     search = "",
                     replacement = "",
-                    filesFilter = string.format("%s**", vim.fn.fnamemodify(vim.fn.expand("%:h:~:."), ":p:~:.")),
+                    filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
                     flags = "--no-ignore-dot --fixed-strings",
                   },
                 }
@@ -135,7 +135,7 @@ function M.config()
                   prefills = {
                     search = "",
                     replacement = "",
-                    filesFilter = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p:~:."),
+                    filesFilter = require("utils").get_project_buffer_filepath(),
                     flags = "--no-ignore-dot",
                   },
                 }
@@ -150,7 +150,7 @@ function M.config()
                   prefills = {
                     search = "",
                     replacement = "",
-                    filesFilter = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p:~:."),
+                    filesFilter = require("utils").get_project_buffer_filepath(),
                     flags = "--no-ignore-dot --fixed-strings",
                   },
                 }
@@ -186,7 +186,7 @@ function M.config()
                   prefills = {
                     search = "",
                     replacement = "",
-                    filesFilter = string.format("%s**", vim.fn.fnamemodify(vim.fn.expand("%:h:~:."), ":p:~:.")),
+                    filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
                     flags = "--no-ignore-dot",
                   },
                 }
@@ -201,7 +201,7 @@ function M.config()
                   prefills = {
                     search = "",
                     replacement = "",
-                    filesFilter = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p:~:."),
+                    filesFilter = require("utils").get_project_buffer_filepath(),
                     flags = "--no-ignore-dot",
                   },
                 }
