@@ -106,6 +106,12 @@ function M.config()
             end,
             "stop nearest test",
           },
+          ["Q"] = {
+            function()
+              require("neotest").run.stop({ vim.fn.expand("%") })
+            end,
+            "stop all tests for the file",
+          },
           ["a"] = {
             function()
               require("neotest").run.attach()
