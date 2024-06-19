@@ -98,19 +98,14 @@ function M.config()
         "FileType",
         {
           group = "__alpha",
-          pattern = "alpha",
-          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell nolist nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs=",
+          pattern = { "alpha" },
+          callback = function()
+            require("utils").set_view_buffer()
+          end,
         },
       },
 
-      {
-        "FileType",
-        {
-          group = "__alpha",
-          pattern = "alpha",
-          command = "nnoremap <silent> <buffer> q :q<CR>",
-        },
-      },
+      require("modules.autocmds").q_close_autocmd({ "alpha" }),
     },
     layout = {
       header = {

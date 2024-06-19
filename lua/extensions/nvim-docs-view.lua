@@ -39,7 +39,9 @@ function M.config()
         {
           group = "__nvim_docs_view",
           pattern = "nvim-docs-view",
-          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell nolist nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs=",
+          callback = function()
+            require("utils").set_view_buffer()
+          end,
         },
       },
 

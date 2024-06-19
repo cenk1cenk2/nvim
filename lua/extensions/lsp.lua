@@ -23,12 +23,6 @@ function M.config()
           init = false,
           config = false,
         },
-        {
-          "folke/neodev.nvim",
-          init = false,
-          config = false,
-          ft = { "lua" },
-        },
       }
     end,
   })

@@ -15,36 +15,21 @@ function M.config()
       return {
         signs = {
           add = {
-            hl = "GitSignsAdd",
             text = lvim.ui.icons.ui.BoldLineLeft,
-            numhl = "GitSignsAddNr",
-            linehl = "GitSignsAddLn",
           },
           change = {
-            hl = "GitSignsChange",
             text = lvim.ui.icons.ui.BoldLineLeft,
-            numhl = "GitSignsChangeNr",
-            linehl = "GitSignsChangeLn",
           },
           delete = {
-            hl = "GitSignsDelete",
             -- text = lvim.ui.icons.ui.BoldLineLeft,
             text = lvim.ui.icons.ui.BoldDividerRight,
-            numhl = "GitSignsDeleteNr",
-            linehl = "GitSignsDeleteLn",
           },
           topdelete = {
-            hl = "GitSignsDelete",
             -- text = lvim.ui.icons.ui.BoldLineLeft,
             text = lvim.ui.icons.ui.BoldDividerRight,
-            numhl = "GitSignsDeleteNr",
-            linehl = "GitSignsDeleteLn",
           },
           changedelete = {
-            hl = "GitSignsChange",
             text = lvim.ui.icons.ui.BoldLineLeft,
-            numhl = "GitSignsChangeNr",
-            linehl = "GitSignsChangeLn",
           },
         },
         numhl = false,
@@ -58,8 +43,6 @@ function M.config()
           virt_text_pos = "eol", -- 'eol' | 'overlay' | 'right_align'
           delay = 1000,
           ignore_whitespace = false,
-        },
-        current_line_blame_formatter_opts = {
           relative_time = false,
         },
         max_file_length = 40000,
@@ -78,7 +61,6 @@ function M.config()
         sign_priority = 6,
         update_debounce = 200,
         status_formatter = nil, -- Use default
-        yadm = { enable = false },
       }
     end,
     on_setup = function(config)

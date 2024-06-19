@@ -73,6 +73,7 @@ function M.config()
           kind_icons = lvim.ui.icons.kind,
           source_names = {
             nvim_lsp = "LSP",
+            lazydev = "LD",
             emoji = "Emoji",
             path = "Path",
             calc = "Calc",
@@ -126,7 +127,7 @@ function M.config()
         },
         sources = cmp.config.sources({
           { name = "nvim_lsp" },
-          { name = "nvim_lua" },
+          { name = "lazydev", group_index = 0 },
           { name = "vim-dadbod-completion" },
           -- { name = "nvim_lsp_signature_help" },
           { name = "luasnip" },

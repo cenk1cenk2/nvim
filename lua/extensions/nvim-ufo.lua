@@ -63,10 +63,10 @@ function M.config()
     end,
     on_done = function()
       -- vim.o.foldcolumn = "1"
-      vim.o.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
-      vim.o.foldlevelstart = 99
-      vim.o.foldenable = true
-      vim.o.foldmethod = "manual"
+      vim.opt.foldlevel = 99 -- Using ufo provider need a large value, feel free to decrease the value
+      vim.opt.foldlevelstart = 99
+      vim.opt.foldenable = true
+      vim.opt.foldmethod = "manual"
 
       -- local original = lvim.lsp.wrapper.hover
       --

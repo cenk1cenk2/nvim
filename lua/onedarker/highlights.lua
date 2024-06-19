@@ -456,6 +456,12 @@ hl.plugins.gitsigns = {
   GitSignsDelete = { fg = c.red[600] },
   GitSignsDeleteLn = { fg = c.red[600] },
   GitSignsDeleteNr = { fg = c.red[600] },
+  GitSignsTopdelete = { fg = c.red[300] },
+  GitSignsTopdeleteLn = { fg = c.red[300] },
+  GitSignsTopdeleteNr = { fg = c.red[300] },
+  GitSignsChangedelete = { fg = c.red[900] },
+  GitSignsChangedeleteLn = { fg = c.red[900] },
+  GitSignsChangedeleteNr = { fg = c.red[900] },
 }
 
 hl.plugins.nvim_tree = {

@@ -276,7 +276,9 @@ function M.config()
         {
           group = "__gitlab",
           pattern = "gitlab",
-          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell  nolist  nonumber bufhidden=wipe colorcolumn= foldcolumn=0",
+          callback = function()
+            require("utils").set_view_buffer()
+          end,
         },
       },
     },

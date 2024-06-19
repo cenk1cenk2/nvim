@@ -300,8 +300,10 @@ function M.config()
         "FileType",
         {
           group = "__noice",
-          pattern = "noice",
-          command = "setlocal nocursorline noswapfile synmaxcol& signcolumn=no norelativenumber nocursorcolumn nospell nolist nonumber bufhidden=wipe colorcolumn= foldcolumn=0 matchpairs=",
+          pattern = { "noice" },
+          callback = function()
+            require("utils").set_view_buffer()
+          end,
         },
       },
 

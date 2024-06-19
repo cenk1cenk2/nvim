@@ -5,8 +5,8 @@ function M.setup()
   -- if vim.g.colors_name then
   -- end
 
-  vim.o.termguicolors = true
-  vim.o.background = "dark"
+  vim.opt.termguicolors = true
+  vim.opt.background = "dark"
   vim.g.colors_name = "onedarker"
 
   vim.cmd("hi clear")

@@ -13,6 +13,7 @@ local extensions = {
   "cmp",
   "treesitter",
   "lsp",
+  "lazydev-nvim",
   "mason",
   "mason-nvim-dap",
   "toggleterm-nvim",
