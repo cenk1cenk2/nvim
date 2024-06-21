@@ -18,7 +18,8 @@ function M.setup()
   vim.g.terminal_color_12 = c.blue[900] -- bright blue
   vim.g.terminal_color_13 = c.magenta[900] -- bright magenta
   vim.g.terminal_color_14 = c.cyan[900] -- bright cyan
-  vim.g.terminal_color_15 = c.white -- bright white
+  vim.g.terminal_color_15 = c.bg[900] -- bright grey
+  vim.g.terminal_color_16 = c.white -- bright white
 end
 
 return M
