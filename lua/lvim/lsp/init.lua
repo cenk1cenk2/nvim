@@ -128,7 +128,11 @@ function M.setup(force)
   require("lvim.lsp.handlers").setup()
 
   xpcall(function()
-    require("neoconf").setup({})
+    require("neoconf").setup({
+      jsonls = {
+        configured_servers_only = false,
+      },
+    })
     require("mason-lspconfig").setup(lvim.lsp.installer.setup)
     require("mason-lspconfig").setup_handlers({
       function(server_name)
