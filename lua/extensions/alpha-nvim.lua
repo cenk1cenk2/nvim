@@ -94,16 +94,7 @@ function M.config()
       }
     end,
     autocmds = {
-      {
-        "FileType",
-        {
-          group = "__view",
-          pattern = { "alpha" },
-          callback = function()
-            require("utils").set_view_buffer()
-          end,
-        },
-      },
+      require("modules.autocmds").set_view_buffer({ "alpha" }),
 
       require("modules.autocmds").q_close_autocmd({ "alpha" }),
     },

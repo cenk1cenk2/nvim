@@ -207,16 +207,7 @@ function M.config()
       }
     end,
     autocmds = {
-      {
-        "FileType",
-        {
-          group = "__view",
-          pattern = { "spectre_panel" },
-          callback = function()
-            require("utils").set_view_buffer()
-          end,
-        },
-      },
+      require("modules.autocmds").set_view_buffer({ "spectre_panel" }),
     },
   })
 end

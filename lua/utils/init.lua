@@ -81,23 +81,4 @@ function M.get_project_buffer_dirpath(bufnr)
   return vim.fn.fnamemodify(vim.fn.expand("%:h:~:."), ":p:~:.")
 end
 
-function M.set_view_buffer()
-  local bufnr = 0
-  local winid = vim.api.nvim_get_current_win()
-
-  vim.bo[bufnr].bufhidden = "wipe"
-  vim.bo[bufnr].matchpairs = ""
-  vim.bo[bufnr].swapfile = false
-  vim.bo[bufnr].synmaxcol = 0
-  vim.wo[winid][bufnr].colorcolumn = ""
-  vim.wo[winid][bufnr].cursorcolumn = false
-  vim.wo[winid][bufnr].cursorline = false
-  vim.wo[winid][bufnr].foldcolumn = "0"
-  vim.wo[winid][bufnr].list = false
-  vim.wo[winid][bufnr].number = false
-  vim.wo[winid][bufnr].relativenumber = false
-  vim.wo[winid][bufnr].signcolumn = "no"
-  vim.wo[winid][bufnr].spell = false
-end
-
 return M

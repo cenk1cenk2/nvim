@@ -271,16 +271,7 @@ function M.config()
       }
     end,
     autocmds = {
-      {
-        "FileType",
-        {
-          group = "__view",
-          pattern = { "gitlab" },
-          callback = function()
-            require("utils").set_view_buffer()
-          end,
-        },
-      },
+      require("modules.autocmds").set_view_buffer({ "gitlab" }),
     },
   })
 end

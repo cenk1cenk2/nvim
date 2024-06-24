@@ -15,6 +15,31 @@ function M.q_close_autocmd(pattern)
   }
 end
 
+function M.set_view_buffer(pattern)
+  return {
+    "FileType",
+    {
+      group = "_view",
+      pattern = pattern,
+      callback = function(event)
+        vim.bo.bufhidden = "wipe"
+        -- vim.bo.matchpairs = ""
+        vim.bo.swapfile = false
+        vim.bo.synmaxcol = 0
+        vim.opt_local.colorcolumn = ""
+        vim.opt_local.cursorcolumn = false
+        vim.opt_local.cursorline = false
+        vim.opt_local.foldcolumn = "0"
+        vim.opt_local.list = false
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
+        vim.opt_local.signcolumn = "no"
+        vim.opt_local.spell = false
+      end,
+    },
+  }
+end
+
 function M.setup()
   require("utils.setup").init({
     autocmds = {
