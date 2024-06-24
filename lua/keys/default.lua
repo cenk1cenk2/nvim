@@ -124,10 +124,16 @@ return {
     { "t" },
 
     -- Terminal window navigation
-    ["<C-H>"] = "<C-\\><C-N><C-w>h",
-    ["<C-J>"] = "<C-\\><C-N><C-w>j",
-    ["<C-K>"] = "<C-\\><C-N><C-w>k",
-    ["<C-L>"] = "<C-\\><C-N><C-w>l",
+    ["<C-S-H>"] = "<C-\\><C-N><C-w>h",
+    ["<C-S-J>"] = "<C-\\><C-N><C-w>j",
+    ["<C-S-K>"] = "<C-\\><C-N><C-w>k",
+    ["<C-S-L>"] = "<C-\\><C-N><C-w>l",
+    ["<C-L>"] = function()
+      vim.fn.feedkeys("", "n")
+      local sb = vim.bo.scrollback
+      vim.bo.scrollback = 1
+      vim.bo.scrollback = sb
+    end,
     ["`"] = "<C-\\><C-n>",
   },
 
