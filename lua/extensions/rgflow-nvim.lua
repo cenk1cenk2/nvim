@@ -24,6 +24,7 @@ function M.config()
         cmd_flags = table.concat(
           vim.list_extend(lvim.fn.get_telescope_rg_arguments(true), {
             "--fixed-strings",
+            "--no-ignore-dot",
           }),
           " "
         ),
