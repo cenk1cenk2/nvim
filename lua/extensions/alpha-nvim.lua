@@ -97,7 +97,7 @@ function M.config()
       {
         "FileType",
         {
-          group = "__alpha",
+          group = "__view",
           pattern = { "alpha" },
           callback = function()
             require("utils").set_view_buffer()

@@ -37,8 +37,8 @@ function M.config()
       {
         "FileType",
         {
-          group = "__nvim_docs_view",
-          pattern = "nvim-docs-view",
+          group = "__view",
+          pattern = { "nvim-docs-view" },
           callback = function()
             require("utils").set_view_buffer()
           end,

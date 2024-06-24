@@ -274,8 +274,8 @@ function M.config()
       {
         "FileType",
         {
-          group = "__gitlab",
-          pattern = "gitlab",
+          group = "__view",
+          pattern = { "gitlab" },
           callback = function()
             require("utils").set_view_buffer()
           end,

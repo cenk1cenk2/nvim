@@ -201,8 +201,8 @@ function M.config()
       {
         "FileType",
         {
-          group = "__copilot",
-          pattern = "copilot-chat",
+          group = "__view",
+          pattern = { "copilot-chat" },
           callback = function()
             require("utils").set_view_buffer()
           end,

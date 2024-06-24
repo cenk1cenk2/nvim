@@ -299,7 +299,7 @@ function M.config()
       {
         "FileType",
         {
-          group = "__noice",
+          group = "__view",
           pattern = { "noice" },
           callback = function()
             require("utils").set_view_buffer()
