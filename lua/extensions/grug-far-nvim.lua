@@ -63,6 +63,10 @@ function M.config()
       require("grug-far").setup(config.setup)
     end,
     wk = function(_, categories)
+      local function generate_rg_flags(f)
+        return table.concat(vim.list_extend(lvim.fn.get_telescope_rg_arguments(true), f or {}), " ")
+      end
+
       return {
         {
           { "n" },
@@ -76,7 +80,7 @@ function M.config()
                     search = "",
                     replacement = "",
                     filesFilter = "",
-                    flags = "",
+                    flags = generate_rg_flags({}),
                   },
                 }
 
@@ -91,7 +95,7 @@ function M.config()
                     search = "",
                     replacement = "",
                     filesFilter = "",
-                    flags = "--fixed-strings",
+                    flags = generate_rg_flags({ "--fixed-strings" }),
                   },
                 }
 
@@ -106,7 +110,7 @@ function M.config()
                     search = "",
                     replacement = "",
                     filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
-                    flags = "--no-ignore-dot",
+                    flags = generate_rg_flags({ "--no-ignore-dot" }),
                   },
                 }
 
@@ -121,7 +125,7 @@ function M.config()
                     search = "",
                     replacement = "",
                     filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
-                    flags = "--no-ignore-dot --fixed-strings",
+                    flags = generate_rg_flags({ "--no-ignore-dot", "--fixed-strings" }),
                   },
                 }
 
@@ -136,7 +140,7 @@ function M.config()
                     search = "",
                     replacement = "",
                     filesFilter = require("utils").get_project_buffer_filepath(),
-                    flags = "--no-ignore-dot",
+                    flags = generate_rg_flags({ "--no-ignore-dot" }),
                   },
                 }
 
@@ -151,7 +155,7 @@ function M.config()
                     search = "",
                     replacement = "",
                     filesFilter = require("utils").get_project_buffer_filepath(),
-                    flags = "--no-ignore-dot --fixed-strings",
+                    flags = generate_rg_flags({ "--no-ignore-dot", "--fixed-strings" }),
                   },
                 }
 
@@ -172,7 +176,7 @@ function M.config()
                     search = "",
                     replacement = "",
                     filesFilter = "",
-                    flags = "",
+                    flags = generate_rg_flags({}),
                   },
                 }
 
@@ -187,7 +191,7 @@ function M.config()
                     search = "",
                     replacement = "",
                     filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
-                    flags = "--no-ignore-dot",
+                    flags = generate_rg_flags({ "--no-ignore-dot" }),
                   },
                 }
 
@@ -202,7 +206,7 @@ function M.config()
                     search = "",
                     replacement = "",
                     filesFilter = require("utils").get_project_buffer_filepath(),
-                    flags = "--no-ignore-dot",
+                    flags = generate_rg_flags({ "--no-ignore-dot" }),
                   },
                 }
 
