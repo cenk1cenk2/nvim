@@ -11,6 +11,11 @@ function M.config()
     plugin = function()
       return {
         {
+          "folke/neoconf.nvim",
+          init = false,
+          config = false,
+        },
+        {
           "neovim/nvim-lspconfig",
           event = "BufReadPre",
           init = false,
