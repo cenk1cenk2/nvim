@@ -21,12 +21,12 @@ function M.config()
         -- Set the default rip grep flags and options for when running a search via
         -- RgFlow. Once changed via the UI, the previous search flags are used for
         -- each subsequent search (until Neovim restarts).
-        cmd_flags = table.concat({
-          "--glob=!.git/",
-          "--smart-case",
-          "--hidden",
-          "--fixed-strings",
-        }, " "),
+        cmd_flags = table.concat(
+          vim.list_extend(lvim.fn.get_telescope_rg_arguments(true), {
+            "--fixed-strings",
+          }),
+          " "
+        ),
 
         -- Mappings to trigger RgFlow functions
         default_trigger_mappings = false,

@@ -159,6 +159,10 @@ function M.config()
           --   size = { height = 35 },
           -- },
           {
+            ft = "rgflow",
+            title = "RGFlow",
+          },
+          {
             ft = "trouble",
             title = "LSP Trouble",
           },
