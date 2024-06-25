@@ -158,10 +158,10 @@ function M.config()
           --   title = "Noice",
           --   size = { height = 35 },
           -- },
-          {
-            ft = "rgflow",
-            title = "RGFlow",
-          },
+          -- {
+          --   ft = "rgflow",
+          --   title = "RGFlow",
+          -- },
           {
             ft = "trouble",
             title = "LSP Trouble",
@@ -194,10 +194,10 @@ function M.config()
             ft = "dbout",
             title = "DadBod-Out",
           },
-          {
-            ft = "neotest-summary",
-            title = "Neotest Summary",
-          },
+          -- {
+          --   ft = "neotest-summary",
+          --   title = "Neotest Summary",
+          -- },
           {
             ft = "gitlab",
             title = "Gitlab",
