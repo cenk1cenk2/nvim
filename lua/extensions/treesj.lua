@@ -28,7 +28,7 @@ function M.config()
 
         -- If line after join will be longer than max value,
         -- node will not be formatted
-        max_join_length = 180,
+        max_join_length = math.huge,
 
         -- hold|start|end:
         -- hold - cursor follows the node/place on which it was called
