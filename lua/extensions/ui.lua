@@ -22,17 +22,11 @@ function M.config()
             require("lvim.core.log"):get_logger()
           end,
         },
-        {
-          "nvim-tree/nvim-web-devicons",
-          event = "UIEnter",
-          init = false,
-          config = false,
-        },
         -- {
-        --   "nvim-lua/popup.nvim",
-        --   event = "VeryLazy",
-        -- init = false,
-        -- config = false,
+        --   "nvim-tree/nvim-web-devicons",
+        --   event = "UIEnter",
+        --   init = false,
+        --   config = false,
         -- },
         {
           "MunifTanjim/nui.nvim",

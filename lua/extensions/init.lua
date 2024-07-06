@@ -3,6 +3,7 @@ local M = {}
 local extensions = {
   "nvim-notify",
   "ui",
+  "mini-nvim-icons",
   -- core
   "which-key",
   "alpha-nvim",

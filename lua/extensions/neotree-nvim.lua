@@ -151,11 +151,11 @@ function M.config()
             expander_highlight = "NeoTreeExpander",
           },
           icon = {
-            folder_closed = lvim.ui.icons.ui.Folder,
-            folder_open = lvim.ui.icons.ui.FolderOpen,
-            folder_empty = lvim.ui.icons.ui.EmptyFolder,
-            default = lvim.ui.icons.ui.File,
-            highlight = "NeoTreeFileIcon",
+            -- folder_closed = lvim.ui.icons.ui.Folder,
+            -- folder_open = lvim.ui.icons.ui.FolderOpen,
+            -- folder_empty = lvim.ui.icons.ui.EmptyFolder,
+            -- default = lvim.ui.icons.ui.File,
+            -- highlight = "NeoTreeFileIcon",
           },
           modified = {
             symbol = lvim.ui.icons.git.LineModified,
