@@ -651,6 +651,18 @@ hl.plugins.treesitter_context = {
   TreesitterContextSeparator = { fg = c.bg[400], bg = c.bg[300] },
 }
 
+hl.plugins.mini_icons = {
+  MiniIconsAzure = { fg = c.blue[900] },
+  MiniIconsBlue = { fg = c.blue[600] },
+  MiniIconsCyan = { fg = c.cyan[600] },
+  MiniIconsGreen = { fg = c.green[600] },
+  MiniIconsGrey = { fg = c.grey[900] },
+  MiniIconsOrange = { fg = c.orange[600] },
+  MiniIconsPurple = { fg = c.purple[600] },
+  MiniIconsRed = { fg = c.red[600] },
+  MiniIconsYellow = { fg = c.yellow[600] },
+}
+
 hl.plugins.symbol_usage_nvim = {
   ["SymbolUsageDef"] = { fg = c.purple[300], bold = true },
   ["SymbolUsageImpl"] = { fg = c.red[300], bold = true },
