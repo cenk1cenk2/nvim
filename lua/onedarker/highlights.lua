@@ -652,15 +652,15 @@ hl.plugins.treesitter_context = {
 }
 
 hl.plugins.mini_icons = {
-  MiniIconsAzure = { fg = c.blue[900] },
-  MiniIconsBlue = { fg = c.blue[600] },
-  MiniIconsCyan = { fg = c.cyan[600] },
-  MiniIconsGreen = { fg = c.green[600] },
-  MiniIconsGrey = { fg = c.grey[900] },
-  MiniIconsOrange = { fg = c.orange[600] },
-  MiniIconsPurple = { fg = c.purple[600] },
-  MiniIconsRed = { fg = c.red[600] },
-  MiniIconsYellow = { fg = c.yellow[600] },
+  MiniIconsAzure = { fg = c.blue[600] },
+  MiniIconsBlue = { fg = c.blue[300] },
+  MiniIconsCyan = { fg = c.cyan[300] },
+  MiniIconsGreen = { fg = c.green[300] },
+  MiniIconsGrey = { fg = c.grey[300] },
+  MiniIconsOrange = { fg = c.orange[300] },
+  MiniIconsPurple = { fg = c.purple[300] },
+  MiniIconsRed = { fg = c.red[300] },
+  MiniIconsYellow = { fg = c.yellow[300] },
 }
 
 hl.plugins.symbol_usage_nvim = {
