@@ -656,7 +656,7 @@ hl.plugins.mini_icons = {
   MiniIconsBlue = { fg = c.blue[300] },
   MiniIconsCyan = { fg = c.cyan[300] },
   MiniIconsGreen = { fg = c.green[300] },
-  MiniIconsGrey = { fg = c.grey[300] },
+  MiniIconsGrey = { fg = c.grey[900] },
   MiniIconsOrange = { fg = c.orange[300] },
   MiniIconsPurple = { fg = c.purple[300] },
   MiniIconsRed = { fg = c.red[300] },
