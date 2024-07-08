@@ -1,10 +1,10 @@
 {
   "if_err": {
     "prefix": "ierr",
-    "body": [
-      "if err != nil {",
-      "\treturn err$0",
-      "}"
-    ]
+    "body": ["if err != nil {", "\treturn err$0", "}"]
+  },
+  "if_err_inline": {
+    "prefix": "iierr",
+    "body": ["if err := $0; err != nil {", "\treturn err$1", "}"]
   }
 }
