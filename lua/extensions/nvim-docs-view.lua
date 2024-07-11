@@ -34,25 +34,8 @@ function M.config()
       }
     end,
     autocmds = {
-      {
-        "FileType",
-        {
-          group = "__view",
-          pattern = { "nvim-docs-view" },
-          callback = function()
-            require("utils").set_view_buffer()
-          end,
-        },
-      },
-
-      {
-        "FileType",
-        {
-          group = "__nvim_docs_view",
-          pattern = "nvim-docs-view",
-          command = "nnoremap <silent> <buffer> q :q<CR>",
-        },
-      },
+      require("modules.autocmds").set_view_buffer({ "nvim-docs-view" }),
+      require("modules.autocmds").q_close_autocmd({ "nvim-docs-view" }),
     },
   })
 end
