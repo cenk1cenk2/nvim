@@ -285,6 +285,10 @@ function M.config()
               end,
               "grep string open buffers",
             },
+            q = {
+              ":Telescope quickfixhistory<CR>",
+              "quickfix history",
+            },
           },
 
           [categories.ACTIONS] = {
