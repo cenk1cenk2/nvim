@@ -412,4 +412,12 @@ function M.fn.add_global_function(name, fn)
   return fn
 end
 
+--- Builds a WK mapping location with leader.
+---@param keystrokes table
+---@return string
+function M.build_wk_mapping(keystrokes)
+  keystrokes = vim.list_extend({ "<Leader>" }, keystrokes)
+  return table.concat(keystrokes, "")
+end
+
 return M

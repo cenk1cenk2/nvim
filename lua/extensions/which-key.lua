@@ -21,8 +21,6 @@ M.vopts = {
   nowait = true, -- use `nowait` when creating keymaps
 }
 
-M.registered = false
-
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
@@ -89,12 +87,6 @@ function M.config()
 
       which_key.register(lvim.wk.mappings, M.opts)
       which_key.register(lvim.wk.vmappings, M.vopts)
-
-      M.registered = true
-
-      if fn.is_extension_enabled("legendary_nvim") then
-        require("legendary.integrations.which-key").bind_whichkey(lvim.wk.mappings, config.opts, false)
-      end
     end,
     autocmds = {
       {
