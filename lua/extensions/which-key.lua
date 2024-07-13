@@ -68,7 +68,7 @@ function M.config()
         show_keys = false, -- show the currently pressed key and its label as a message in the command line
       }
     end,
-    on_setup = function(config, fn)
+    on_setup = function(config)
       local which_key = require("which-key")
 
       which_key.setup(config.setup)
