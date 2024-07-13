@@ -128,7 +128,7 @@ function M.config()
           search = {
             enabled = false, -- enable flash for search
             highlight = { backdrop = false },
-            jump = { history = true, register = true, nohlsearch = true },
+            jump = { autojump = true, history = true, register = true, nohlsearch = true },
             search = {
               -- `forward` will be automatically set to the search direction
               -- `mode` is always set to `search`
@@ -144,7 +144,8 @@ function M.config()
             keys = { "f", "F", "t", "T", ";", "," },
             search = { wrap = false },
             highlight = { backdrop = false },
-            jump = { register = false },
+            jump = { register = false, autojump = true },
+            multi_line = false,
           },
           -- options used for treesitter selections
           -- `require("flash").treesitter()`
