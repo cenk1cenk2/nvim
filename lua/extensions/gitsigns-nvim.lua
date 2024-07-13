@@ -9,6 +9,7 @@ function M.config()
       return {
         "lewis6991/gitsigns.nvim",
         event = "BufReadPost",
+        cmd = { "Gitsigns" },
       }
     end,
     setup = function()
