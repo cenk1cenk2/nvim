@@ -52,7 +52,7 @@ function M.config()
           function()
             vim.cmd([[WindowsEqualize]])
           end,
-          desc = "balance all windows",
+          desc = "balance open windows",
         },
         {
           fn.wk_keystroke({ categories.ACTIONS, "m" }),

@@ -25,10 +25,6 @@ function M.config()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.GIT, "g" }),
-          group = "gists",
-        },
-        {
           fn.wk_keystroke({ categories.GIT, "g", "f" }),
           function()
             vim.cmd([[CocList gist]])

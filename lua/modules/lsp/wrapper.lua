@@ -409,7 +409,7 @@ function M.setup()
             lvim.lsp.wrapper.format()
           end,
           desc = "format buffer",
-          mode = { "n", "v", "x" },
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "F" }),

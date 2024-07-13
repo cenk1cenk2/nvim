@@ -94,7 +94,7 @@ function M.config()
             vim.cmd([[HurlRunner]])
           end,
           desc = "run hurl for file",
-          mode = { "n", "v", "x" },
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TASKS, "r", "m" }),

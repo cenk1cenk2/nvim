@@ -110,7 +110,7 @@ function M.config()
           desc = "toggle copilot chat",
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "p" }),
+          fn.wk_keystroke({ categories.COPILOT, "P" }),
           function()
             local actions = require("CopilotChat.actions")
             actions.pick(actions.prompt_actions({

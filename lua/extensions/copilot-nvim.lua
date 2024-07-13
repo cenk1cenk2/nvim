@@ -93,7 +93,7 @@ function M.config()
           desc = "copilot toggle",
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "t" }),
+          fn.wk_keystroke({ categories.COPILOT, "s" }),
           function()
             vim.cmd([[Copilot suggestion]])
           end,

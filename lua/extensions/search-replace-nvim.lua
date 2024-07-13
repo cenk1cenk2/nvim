@@ -4,7 +4,7 @@ local M = {}
 local extension_name = "search_replace_nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     plugin = function()
       return {
         "roobert/search-replace.nvim",
@@ -23,14 +23,14 @@ function M.config()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.SEARCH, "B" }),
+          fn.wk_keystroke({ categories.SEARCH, "r" }),
           function()
             require("search-replace.single-buffer").open()
           end,
           desc = "[sr] find and replace in current buffer",
         },
         {
-          fn.wk_keystroke({ categories.SEARCH, "V" }),
+          fn.wk_keystroke({ categories.SEARCH, "R" }),
           function()
             require("search-replace.single-buffer").cword()
           end,

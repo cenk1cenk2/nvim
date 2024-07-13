@@ -81,7 +81,7 @@ M.wk = {
     desc = "toggle relative line numbers",
   },
   {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "m" }),
+    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "w" }),
     "<C-W>=<CR>",
     desc = "balance open windows",
     mode = { "n", "v" },
@@ -98,7 +98,7 @@ M.wk = {
     desc = "previous window",
   },
   {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "a" }),
+    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "s" }),
     ":sort<CR>",
     desc = "sort",
     mode = { "n", "v" },
@@ -238,14 +238,6 @@ M.wk = {
   {
     fn.wk_keystroke({ M.CATEGORIES.DEBUG, "G" }),
     group = "gitlab",
-    mode = { "n", "v" },
-  },
-
-  -- search
-
-  {
-    fn.wk_keystroke({ M.CATEGORIES.SEARCH }),
-    group = "search",
     mode = { "n", "v" },
   },
 
@@ -391,7 +383,7 @@ M.wk = {
     desc = "sync",
   },
   {
-    fn.wk_keystroke({ M.CATEGORIES.PLUGINS, "i" }),
+    fn.wk_keystroke({ M.CATEGORIES.PLUGINS, "S" }),
     ":Lazy<CR>",
     desc = "status",
   },

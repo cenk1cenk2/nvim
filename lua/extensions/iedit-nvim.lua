@@ -60,7 +60,7 @@ function M.config()
             require("iedit").select()
           end,
           desc = "start iedit",
-          mode = { "n", "v", "x" },
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TASKS, "I" }),
@@ -70,7 +70,7 @@ function M.config()
             require("iedit").select_all()
           end,
           desc = "iedit select all",
-          mode = { "n", "v", "x" },
+          mode = { "n", "v" },
         },
       }
     end,

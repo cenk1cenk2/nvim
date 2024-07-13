@@ -18,14 +18,14 @@ function M.config()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.GIT, "g", "i" }),
+          fn.wk_keystroke({ categories.GIT, "g", "I" }),
           function()
             require("telescope").extensions.gh.issues()
           end,
           desc = "github issues",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "g", "p" }),
+          fn.wk_keystroke({ categories.GIT, "g", "P" }),
           function()
             require("telescope").extensions.gh.pull_requests()
           end,
