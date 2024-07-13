@@ -40,7 +40,7 @@ function M.config()
         },
       })
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
         {
           fn.wk_keystroke({ categories.ACTIONS, "u" }),

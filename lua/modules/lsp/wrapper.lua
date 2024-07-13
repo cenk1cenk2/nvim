@@ -535,7 +535,7 @@ function M.setup()
           function()
             lvim.lsp.wrapper.toggle_inlay_hints()
           end,
-          "toggle inlay hints",
+          desc = "toggle inlay hints",
         },
         {
           fn.wk_keystroke({ categories.LSP, "R" }),

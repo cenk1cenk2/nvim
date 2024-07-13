@@ -55,10 +55,7 @@ lvim = {
   plugins = {},
   autocommands = {},
   fn = {},
-  wk = {
-    mappings = {},
-    vmappings = {},
-  },
+  wk = {},
 }
 
 return lvim

@@ -2,6 +2,12 @@ local Log = require("lvim.core.log")
 local M = { fn = {} }
 
 function M.load_wk(mappings)
+  if not package_is_loaded("which-key") then
+    lvim.wk = vim.list_extend(lvim.wk, mappings)
+
+    return
+  end
+
   require("which-key").add(mappings)
 end
 

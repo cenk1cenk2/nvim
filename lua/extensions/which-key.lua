@@ -12,25 +12,18 @@ M.opts = {
   nowait = true, -- use `nowait` when creating keymaps
 }
 
-M.vopts = {
-  mode = "v", -- VISUAL mode
-  prefix = "<leader>",
-  buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-  silent = true, -- use `silent` when creating keymaps
-  noremap = true, -- use `noremap` when creating keymaps
-  nowait = true, -- use `nowait` when creating keymaps
-}
-
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
         "folke/which-key.nvim",
         keys = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r", "d", "c", "r", "y", "p", "P" },
-        event = "BufReadPost",
+        event = "UIEnter",
       }
     end,
     configure = function(_, fn)
+      lvim.wk = vim.list_extend(lvim.wk, vim.deepcopy(require("keys.wk").wk))
+
       fn.add_disabled_filetypes({ "which_key" })
     end,
     setup = function()
@@ -80,7 +73,7 @@ function M.config()
 
       which_key.setup(config.setup)
 
-      which_key.add(require("keys.wk").wk)
+      which_key.add(lvim.wk)
     end,
     autocmds = {
       {
