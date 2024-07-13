@@ -152,27 +152,39 @@ function M.config()
     on_setup = function(config)
       require("diffview").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.GIT] = {
-          ["a"] = { ":DiffviewFileHistory %<CR>", "buffer commits" },
-          ["d"] = {
-            function()
-              if next(require("diffview.lib").views) == nil then
-                vim.cmd("DiffviewOpen")
-              else
-                vim.cmd("DiffviewClose")
-              end
-            end,
-            "diff view toggle",
-          },
-          ["w"] = { ":DiffviewFileHistory<CR>", "workspace commits" },
-          ["c"] = {
-            function()
-              M.compare_with_branch()
-            end,
-            "compare with branch",
-          },
+        {
+          fn.wk_keystroke({ categories.GIT, "a" }),
+          function()
+            vim.cmd([[DiffviewFileHistory %]])
+          end,
+          desc = "buffer commits",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "d" }),
+          function()
+            if next(require("diffview.lib").views) == nil then
+              vim.cmd("DiffviewOpen")
+            else
+              vim.cmd("DiffviewClose")
+            end
+          end,
+          desc = "diff view toggle",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "w" }),
+          function()
+            vim.cmd([[DiffviewFileHistory]])
+          end,
+          desc = "workspace commits",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "c" }),
+          function()
+            M.compare_with_branch()
+          end,
+          desc = "compare with branch",
         },
       }
     end,

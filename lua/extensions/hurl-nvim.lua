@@ -42,103 +42,108 @@ function M.config()
     on_setup = function(config)
       require("hurl").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
         {
-          { "n" },
-          [categories.TASKS] = {
-            r = {
-              name = "hurl",
-              e = {
-                function()
-                  local Log = require("lvim.core.log")
-                  local store_key = "HURL_ENVIRONMENT"
-                  local shada = require("modules.shada")
-                  local stored_value = shada.get(store_key)
-
-                  vim.ui.input({
-                    prompt = "Select hurl environment: ",
-                    default = stored_value,
-                  }, function(env)
-                    if env == nil then
-                      Log:warn("Nothing to select.")
-
-                      return
-                    end
-
-                    Log:info(("Hurl environment file switched: %s"):format(env))
-                    shada.set(store_key, env)
-
-                    vim.cmd(":HurlSetEnvFile " .. env)
-                  end)
-                end,
-                "select hurl environment",
-              },
-              t = {
-                ":HurlRunnerToEntry<CR>",
-                "run hurl to entry",
-              },
-              r = {
-                ":HurlRunnerAt<CR>",
-                "run hurl under cursor",
-              },
-              f = {
-                ":HurlRunner<CR>",
-                "run hurl for all requests",
-              },
-              m = {
-                ":HurlToggleMode<CR>",
-                "toggle hurl.nvim mode",
-              },
-              v = {
-                ":HurlVerbose<CR>",
-                "hurl verbose mode",
-              },
-              c = {
-                function()
-                  local Log = require("lvim.core.log")
-                  local job = require("utils.job")
-
-                  job.spawn({
-                    command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
-                    -- writer = vim.fn.getreg(vim.v.register or lvim.system_register),
-                    on_success = function(j)
-                      local generated = table.concat(j:result(), "\n")
-
-                      Log:info("Copied generated hurl to clipboard.")
-                      vim.fn.setreg(vim.v.register or lvim.system_register, generated)
-                    end,
-                  })
-                end,
-                "curl to hurl",
-              },
-              q = {
-                function()
-                  local Log = require("lvim.core.log")
-                  local job = require("utils.job")
-
-                  job.spawn({
-                    command = "pkill",
-                    args = { "hurl" },
-                    on_success = function()
-                      Log:info("Killed running hurl instance.")
-                    end,
-                  })
-                end,
-                "kill running hurl instance",
-              },
-            },
-          },
+          fn.wk_keystroke({ categories.TASKS, "r" }),
+          group = "hurl",
         },
         {
-          { "v" },
-          [categories.TASKS] = {
-            name = "hurl",
-            r = {
-              ":HurlRunner<CR>",
-              "run hurl for selected requests",
-            },
-          },
+          fn.wk_keystroke({ categories.TASKS, "r", "e" }),
+          function()
+            local Log = require("lvim.core.log")
+            local store_key = "HURL_ENVIRONMENT"
+            local shada = require("modules.shada")
+            local stored_value = shada.get(store_key)
+
+            vim.ui.input({
+              prompt = "Select hurl environment: ",
+              default = stored_value,
+            }, function(env)
+              if env == nil then
+                Log:warn("Nothing to select.")
+
+                return
+              end
+
+              Log:info(("Hurl environment file switched: %s"):format(env))
+              shada.set(store_key, env)
+
+              vim.cmd(":HurlSetEnvFile " .. env)
+            end)
+          end,
+          desc = "select hurl environment",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "r", "t" }),
+          function()
+            vim.cmd([[HurlRunnerToEntry]])
+          end,
+          desc = "run hurl to entry",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "r", "r" }),
+          function()
+            vim.cmd([[HurlRunnerAt]])
+          end,
+          desc = "run hurl under cursor",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "r", "f" }),
+          function()
+            vim.cmd([[HurlRunner]])
+          end,
+          desc = "run hurl for file",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "r", "m" }),
+          function()
+            vim.cmd([[HurlToggleMode]])
+          end,
+          desc = "toggle hurl mode",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "r", "v" }),
+          function()
+            vim.cmd([[HurlVerbose]])
+          end,
+          desc = "run hurl for file with verbose mode",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "r", "c" }),
+          function()
+            local Log = require("lvim.core.log")
+            local job = require("utils.job")
+
+            job.spawn({
+              command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
+              -- writer = vim.fn.getreg(vim.v.register or lvim.system_register),
+              on_success = function(j)
+                local generated = table.concat(j:result(), "\n")
+
+                Log:info("Copied generated hurl to clipboard.")
+                vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+              end,
+            })
+          end,
+          desc = "curl to hurl",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "r", "q" }),
+          function()
+            local Log = require("lvim.core.log")
+            local job = require("utils.job")
+
+            job.spawn({
+              command = "pkill",
+              args = { "hurl" },
+              on_success = function()
+                Log:info("Killed running hurl instance.")
+              end,
+            })
+          end,
+          desc = "kill running hurl instance",
         },
       }
     end,

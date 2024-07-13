@@ -56,10 +56,14 @@ function M.config()
     on_setup = function(config)
       require("winshift").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.ACTIONS] = {
-          ["W"] = { ":WinShift swap<CR>", "move window" },
+        {
+          fn.wk_keystroke({ categories.ACTIONS, "W" }),
+          function()
+            vim.cmd([[WinShift swap]])
+          end,
+          desc = "move window",
         },
       }
     end,

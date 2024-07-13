@@ -40,15 +40,14 @@ function M.config()
         },
       })
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.ACTIONS] = {
-          ["u"] = {
-            function()
-              require("telescope").extensions.undo.undo()
-            end,
-            "toggle undo tree",
-          },
+        {
+          fn.wk_keystroke({ categories.ACTIONS, "u" }),
+          function()
+            require("telescope").extensions.undo.undo()
+          end,
+          desc = "toggle undo tree",
         },
       }
     end,

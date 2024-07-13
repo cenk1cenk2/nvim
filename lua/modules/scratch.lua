@@ -101,21 +101,21 @@ end
 function M.setup()
   require("utils.setup").init({
     name = "scratch",
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.TASKS] = {
-          s = {
-            function()
-              M.create_scratch_buffer()
-            end,
-            "create scratch buffer",
-          },
-          S = {
-            function()
-              M.execute_scratch_buffer()
-            end,
-            "execute current scratch buffer",
-          },
+        {
+          fn.wk_keystroke({ categories.TASKS, "s" }),
+          function()
+            M.create_scratch_buffer()
+          end,
+          desc = "create scratch buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "S" }),
+          function()
+            M.execute_scratch_buffer()
+          end,
+          desc = "execute current scratch buffer",
         },
       }
     end,

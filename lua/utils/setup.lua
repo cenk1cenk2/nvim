@@ -1,58 +1,14 @@
 local Log = require("lvim.core.log")
 local M = { fn = {} }
 
-local keys_which_key = require("keys.wk")
-
----
----@param mappings table
-function M.load_wk_mode(modes, mappings, config)
-  if type(modes) == "string" then
-    modes = { modes }
-  end
-
-  for _, mode in pairs(modes) do
-    if require("extensions.which-key").registered then
-      if mode == "v" then
-        config = vim.tbl_deep_extend("force", config or {}, require("extensions.which-key").vopts)
-      else
-        config = vim.tbl_deep_extend("force", config or {}, require("extensions.which-key").opts)
-      end
-
-      vim.schedule(function()
-        require("which-key").register(mappings, config)
-      end)
-
-      return
-    end
-
-    local current
-    if mode == "v" then
-      current = lvim.wk.vmappings
-    else
-      current = lvim.wk.mappings
-    end
-
-    for key, value in pairs(mappings) do
-      current[key] = vim.tbl_deep_extend("force", current[key] or {}, value)
-    end
-  end
-end
-
-function M.load_wk(mappings, config)
-  mappings = vim.deepcopy(mappings) or {}
-
-  if vim.islist(mappings) then
-    for _, map in pairs(mappings) do
-      local mode = map[1]
-      table.remove(map, 1)
-
-      M.load_wk_mode(mode, map, config)
-    end
+function M.load_wk(mappings)
+  if not package_is_loaded("which-key") then
+    lvim.wk = vim.list_extend(lvim.wk, mappings)
 
     return
   end
 
-  M.load_wk_mode({ "n" }, mappings)
+  require("which-key").add(mappings)
 end
 
 ---
@@ -252,7 +208,7 @@ function M.init(config)
   end
 
   if config ~= nil and config.wk ~= nil then
-    M.load_wk(M.evaluate_property(config.wk, config, keys_which_key.CATEGORIES, M.fn))
+    M.load_wk(M.evaluate_property(config.wk, config, require("keys.wk").CATEGORIES, M.fn))
 
     config.wk = nil
   end
@@ -389,7 +345,7 @@ function M.fn.append_to_setup(extension_name, to_setup)
 end
 
 function M.fn.get_wk_category(category)
-  return keys_which_key.CATEGORIES[category]
+  return require("keys.wk").CATEGORIES[category]
 end
 
 function M.fn.get_current_setup_wrapper(extension_name)
@@ -410,6 +366,14 @@ function M.fn.add_global_function(name, fn)
   lvim.fn[name] = fn
 
   return fn
+end
+
+--- Builds a WK mapping location with leader.
+---@param keystrokes table
+---@return string
+function M.fn.wk_keystroke(keystrokes)
+  keystrokes = vim.list_extend({ "<Leader>" }, keystrokes)
+  return table.concat(keystrokes, "")
 end
 
 return M

@@ -86,10 +86,14 @@ function M.config()
         },
       })
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.SESSION] = {
-          w = { ":Alpha<CR>", "dashboard" },
+        {
+          fn.wk_keystroke({ categories.SESSION, "w" }),
+          function()
+            vim.cmd([[Alpha]])
+          end,
+          desc = "dashboard",
         },
       }
     end,

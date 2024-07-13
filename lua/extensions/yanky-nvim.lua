@@ -123,10 +123,14 @@ function M.config()
         },
       }
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.ACTIONS] = {
-          ["y"] = { ":Telescope yank_history<CR>", "list yanky.nvim registers" },
+        {
+          fn.wk_keystroke({ categories.ACTIONS, "y" }),
+          function()
+            vim.cmd([[Telescope yank_history]])
+          end,
+          desc = "list yanky.nvim registers",
         },
       }
     end,

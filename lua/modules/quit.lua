@@ -25,16 +25,14 @@ end
 function M.setup()
   require("utils.setup").init({
     name = "quit",
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.SESSION] = {
-          name = "session",
-          q = {
-            function()
-              M.workspace_quit()
-            end,
-            "quit",
-          },
+        {
+          fn.wk_keystroke({ categories.SESSION, "q" }),
+          function()
+            M.workspace_quit()
+          end,
+          desc = "quit",
         },
       }
     end,

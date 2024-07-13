@@ -33,13 +33,14 @@ function M.config()
     on_setup = function(config)
       require("nvim-dap-virtual-text").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.DEBUG] = {
-          v = {
-            ":DapVirtualTextToggle<CR>",
-            "toggle debugging virtual text",
-          },
+        {
+          fn.wk_keystroke({ categories.DEBUG, "v" }),
+          function()
+            vim.cmd([[DapVirtualTextToggle]])
+          end,
+          desc = "toggle debugging virtual text",
         },
       }
     end,

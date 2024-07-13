@@ -81,118 +81,110 @@ function M.config()
     on_setup = function(config)
       require("CopilotChat").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
         {
-          { "n" },
+          fn.wk_keystroke({ categories.COPILOT, "a" }),
+          function()
+            vim.ui.input({
+              prompt = "ask chatgpt:",
+            }, function(question)
+              if question == nil then
+                Log:warn("Nothing to do.")
 
-          [categories.COPILOT] = {
-            ["a"] = {
-              function()
-                vim.ui.input({
-                  prompt = "ask chatgpt:",
-                }, function(question)
-                  if question == nil then
-                    Log:warn("Nothing to do.")
+                return
+              end
 
-                    return
-                  end
-
-                  require("CopilotChat").ask(question, {
-                    selection = require("CopilotChat.select").buffer,
-                  })
-                end)
-              end,
-              "ask",
-            },
-
-            ["c"] = {
-              function()
-                require("CopilotChat").toggle()
-              end,
-              "toggle copilot chat",
-            },
-
-            ["p"] = {
-              function()
-                local actions = require("CopilotChat.actions")
-                actions.pick(actions.prompt_actions({
-                  selection = require("CopilotChat.select").buffer,
-                }))
-              end,
-              "prompt",
-            },
-
-            ["r"] = {
-              function()
-                require("CopilotChat").reset()
-              end,
-              "reset chat",
-            },
-
-            ["h"] = {
-              function()
-                local actions = require("CopilotChat.actions")
-                actions.pick(actions.help_actions({
-                  selection = require("CopilotChat.select").buffer,
-                }))
-              end,
-              "help",
-            },
-          },
+              require("CopilotChat").ask(question, {
+                selection = require("CopilotChat.select").buffer,
+              })
+            end)
+          end,
+          desc = "ask",
         },
-
         {
-          { "v" },
+          fn.wk_keystroke({ categories.COPILOT, "c" }),
+          function()
+            require("CopilotChat").toggle()
+          end,
+          desc = "toggle copilot chat",
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "P" }),
+          function()
+            local actions = require("CopilotChat.actions")
+            actions.pick(actions.prompt_actions({
+              selection = require("CopilotChat.select").buffer,
+            }))
+          end,
+          desc = "prompt",
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "r" }),
+          function()
+            require("CopilotChat").reset()
+          end,
+          desc = "reset chat",
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "h" }),
+          function()
+            local actions = require("CopilotChat.actions")
+            actions.pick(actions.help_actions({
+              selection = require("CopilotChat.select").buffer,
+            }))
+          end,
+          desc = "help",
+        },
+        {
+          mode = { "v" },
+          {
+            fn.wk_keystroke({ categories.COPILOT, "a" }),
+            function()
+              vim.ui.input({
+                prompt = "ask chatgpt:",
+              }, function(question)
+                if question == nil then
+                  Log:warn("Nothing to do.")
 
-          [categories.COPILOT] = {
-            ["a"] = {
-              function()
-                vim.ui.input({
-                  prompt = "ask chatgpt:",
-                }, function(question)
-                  if question == nil then
-                    Log:warn("Nothing to do.")
+                  return
+                end
 
-                    return
-                  end
-
-                  require("CopilotChat").ask(question, {
-                    selection = require("CopilotChat.select").visual,
-                  })
-                end)
-              end,
-              "ask selection",
-            },
-
-            ["c"] = {
-              function()
-                require("CopilotChat").toggle({
+                require("CopilotChat").ask(question, {
                   selection = require("CopilotChat.select").visual,
                 })
-              end,
-              "toggle copilot chat",
-            },
-
-            ["p"] = {
-              function()
-                local actions = require("CopilotChat.actions")
-                actions.pick(actions.prompt_actions({
-                  selection = require("CopilotChat.select").visual,
-                }))
-              end,
-              "prompt selection",
-            },
-
-            ["h"] = {
-              function()
-                local actions = require("CopilotChat.actions")
-                actions.pick(actions.help_actions({
-                  selection = require("CopilotChat.select").visual,
-                }))
-              end,
-              "help selection",
-            },
+              end)
+            end,
+            desc = "ask selection",
+          },
+          {
+            fn.wk_keystroke({ categories.COPILOT, "c" }),
+            function()
+              require("CopilotChat").toggle({
+                selection = require("CopilotChat.select").visual,
+              })
+            end,
+            desc = "toggle copilot chat",
+          },
+          {
+            fn.wk_keystroke({ categories.COPILOT, "p" }),
+            function()
+              local actions = require("CopilotChat.actions")
+              actions.pick(actions.prompt_actions({
+                selection = require("CopilotChat.select").visual,
+              }))
+            end,
+            desc = "prompt selection",
+          },
+          {
+            fn.wk_keystroke({ categories.COPILOT, "h" }),
+            function()
+              local actions = require("CopilotChat.actions")
+              actions.pick(actions.help_actions({
+                selection = require("CopilotChat.select").visual,
+              }))
+            end,
+            desc = "help selection",
           },
         },
       }

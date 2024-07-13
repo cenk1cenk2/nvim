@@ -17,11 +17,21 @@ function M.config()
     on_setup = function(config)
       require("ccc").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.TASKS] = {
-          c = { ":CccPick<CR>", "color picker" },
-          C = { ":CccHighlighterToggle<CR>", "highlight colors" },
+        {
+          fn.wk_keystroke({ categories.TASKS, "c" }),
+          function()
+            vim.cmd([[CccPick]])
+          end,
+          desc = "color picker",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "C" }),
+          function()
+            vim.cmd([[CccHighlighterToggle]])
+          end,
+          desc = "highlight colors",
         },
       }
     end,

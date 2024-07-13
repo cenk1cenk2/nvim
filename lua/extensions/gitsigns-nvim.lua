@@ -9,6 +9,7 @@ function M.config()
       return {
         "lewis6991/gitsigns.nvim",
         event = "BufReadPost",
+        cmd = { "Gitsigns" },
       }
     end,
     setup = function()
@@ -78,25 +79,102 @@ function M.config()
         },
       },
     },
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.GIT] = {
-          D = { ":Gitsigns diffthis<CR>", "diff current buffer with head" },
-          B = { ":Gitsigns toggle_current_line_blame<CR>", "git blame" },
-          n = { ":Gitsigns next_hunk<CR>", "next hunk" },
-          p = { ":Gitsigns prev_hunk<CR>", "prev hunk" },
-          b = { ":Gitsigns blame_line<CR>", "git hover blame" },
-          k = { ":Gitsigns preview_hunk<CR>", "preview hunk" },
-          r = { ":Gitsigns refresh<CR>", "refresh" },
-          R = {
-            name = "reset",
-            R = { ":Gitsigns reset_buffer<CR>", "reset buffer" },
-          },
-          s = { ":Gitsigns stage_hunk<CR>", "stage hunk" },
-          S = { ":Gitsigns stage_buffer<CR>", "stage buffer" },
-          u = { ":Gitsigns undo_stage_hunk<CR>", "undo stage hunk" },
-          U = { ":Gitsigns reset_hunk<CR>", "reset hunk" },
-          q = { ":Gitsigns setqflist<CR>", "set quickfix for current buffer changes" },
+        {
+          fn.wk_keystroke({ categories.GIT, "D" }),
+          function()
+            vim.cmd([[Gitsigns diffthis]])
+          end,
+          desc = "diff current buffer with head",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "B" }),
+          function()
+            vim.cmd([[Gitsigns toggle_current_line_blame]])
+          end,
+          desc = "git blame",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "n" }),
+          function()
+            vim.cmd([[Gitsigns next_hunk]])
+          end,
+          desc = "next hunk",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "p" }),
+          function()
+            vim.cmd([[Gitsigns prev_hunk]])
+          end,
+          desc = "prev hunk",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "b" }),
+          function()
+            vim.cmd([[Gitsigns blame_line]])
+          end,
+          desc = "git hover blame",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "k" }),
+          function()
+            vim.cmd([[Gitsigns preview_hunk]])
+          end,
+          desc = "preview hunk",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "r" }),
+          function()
+            vim.cmd([[Gitsigns refresh]])
+          end,
+          desc = "refresh",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "R" }),
+          group = "reset",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "R", "R" }),
+          function()
+            vim.cmd([[Gitsigns reset_buffer]])
+          end,
+          desc = "reset buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "s" }),
+          function()
+            vim.cmd([[Gitsigns stage_hunk]])
+          end,
+          desc = "stage hunk",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "S" }),
+          function()
+            vim.cmd([[Gitsigns stage_buffer]])
+          end,
+          desc = "stage buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "u" }),
+          function()
+            vim.cmd([[Gitsigns undo_stage_hunk]])
+          end,
+          desc = "undo stage hunk",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "U" }),
+          function()
+            vim.cmd([[Gitsigns reset_hunk]])
+          end,
+          desc = "reset hunk",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "q" }),
+          function()
+            vim.cmd([[Gitsigns setqflist]])
+          end,
+          desc = "set quickfix for current buffer changes",
         },
       }
     end,

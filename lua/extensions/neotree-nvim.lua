@@ -467,21 +467,12 @@ function M.config()
     on_setup = function(config)
       require("neo-tree").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       local Log = require("lvim.core.log")
 
       return {
-        ["E"] = {
-          function()
-            if M.source == "" then
-              return vim.cmd([[Neotree focus]])
-            end
-
-            return vim.cmd(([[Neotree focus source=%s]]):format(M.source))
-          end,
-          "focus filetree",
-        },
-        ["e"] = {
+        {
+          fn.wk_keystroke({ "e" }),
           function()
             if M.source == "" then
               return vim.cmd([[Neotree toggle]])
@@ -489,11 +480,35 @@ function M.config()
 
             return vim.cmd(([[Neotree toggle source=%s]]):format(M.source))
           end,
-          "open filetree",
+          desc = "open filetree",
         },
-        [","] = { ":Neotree reveal<CR>", "reveal file in filetree" },
-        ["."] = { ":Neotree position=right buffers toggle<CR>", "open buffers in filetree" },
-        ["?"] = {
+        {
+          fn.wk_keystroke({ "E" }),
+          function()
+            if M.source == "" then
+              return vim.cmd([[Neotree focus]])
+            end
+
+            return vim.cmd(([[Neotree focus source=%s]]):format(M.source))
+          end,
+          desc = "focus filetree",
+        },
+        {
+          fn.wk_keystroke({ "," }),
+          function()
+            vim.cmd([[Neotree reveal]])
+          end,
+          desc = "reveal file in filetree",
+        },
+        {
+          fn.wk_keystroke({ "." }),
+          function()
+            vim.cmd([[Neotree position=right buffers toggle]])
+          end,
+          desc = "open buffers in filetree",
+        },
+        {
+          fn.wk_keystroke({ categories.SESSION, "?" }),
           function()
             local sources = { "filesystem", "remote", "buffers", "git_status", "document_symbols" }
 
@@ -510,16 +525,21 @@ function M.config()
               M.source = source
             end)
           end,
-          "select tree source",
+          desc = "select tree source",
         },
-        [categories.GIT] = {
-          ["e"] = { ":Neotree position=right git_status toggle<CR>", "git files in filetree" },
+        {
+          fn.wk_keystroke({ categories.GIT, "e" }),
+          function()
+            vim.cmd([[Neotree position=right git_status toggle]])
+          end,
+          desc = "git file explorer",
         },
-        -- [categories.LSP] = {
-        --   o = {
-        --     ":Neotree source=document_symbols right toggle<CR>",
-        --     "toggle outline",
-        --   },
+        -- {
+        --   fn.wk_keystroke({ categories.LSP, "o" }),
+        --   function ()
+        --     vim.cmd([[Neotree source=document_symbols right toggle]])
+        --   end,
+        --   desc = "toggle outline"
         -- },
       }
     end,

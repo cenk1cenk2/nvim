@@ -44,40 +44,40 @@ function M.config()
     on_setup = function(config)
       require("coverage").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.TESTS] = {
-          ["c"] = {
-            name = "coverage",
+        {
+          fn.wk_keystroke({ categories.TESTS, "c" }),
+          group = "coverage",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "c", "c" }),
+          function()
+            require("coverage").clear()
+          end,
+          desc = "clear coverage",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "c", "l" }),
+          function()
+            require("coverage").load(true)
+          end,
+          desc = "load coverage file",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "c", "t" }),
+          function()
+            require("coverage").toggle()
+          end,
+          desc = "toggle coverage",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "c", "s" }),
 
-            ["c"] = {
-              function()
-                require("coverage").clear()
-              end,
-              "clear coverage",
-            },
-
-            ["l"] = {
-              function()
-                require("coverage").load(true)
-              end,
-              "load coverage file",
-            },
-
-            ["t"] = {
-              function()
-                require("coverage").toggle()
-              end,
-              "toggle coverage",
-            },
-
-            ["s"] = {
-              function()
-                require("coverage").summary()
-              end,
-              "coverage summary",
-            },
-          },
+          function()
+            require("coverage").summary()
+          end,
+          desc = "coverage summary",
         },
       }
     end,

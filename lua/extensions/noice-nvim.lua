@@ -286,13 +286,29 @@ function M.config()
     on_done = function(config)
       -- require("telescope").load_extension("noice")
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.ACTIONS] = {
-          ["N"] = { ":Noice disable<CR>", "disable noice" },
-          ["n"] = { ":Noice enable<CR>", "enable noice" },
+        {
+          fn.wk_keystroke({ "M" }),
+          function()
+            vim.cmd([[Noice]])
+          end,
+          desc = "messages [noice]",
         },
-        ["M"] = { ":Noice<CR>", "messages" },
+        {
+          fn.wk_keystroke({ categories.ACTIONS, "n" }),
+          function()
+            vim.cmd([[Noice enable]])
+          end,
+          desc = "enable noice",
+        },
+        {
+          fn.wk_keystroke({ categories.ACTIONS, "N" }),
+          function()
+            vim.cmd([[Noice disable]])
+          end,
+          desc = "disable noice",
+        },
       }
     end,
     autocmds = {

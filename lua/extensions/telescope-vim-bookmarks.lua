@@ -44,21 +44,21 @@ function M.config()
     --     },
     --   },
     -- },
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.FIND] = {
-          m = {
-            function()
-              require("telescope").extensions.vim_bookmarks.all()
-            end,
-            "list all bookmarks",
-          },
-          M = {
-            function()
-              require("telescope").extensions.vim_bookmarks.current_file()
-            end,
-            "list document bookmarks",
-          },
+        {
+          fn.wk_keystroke({ categories.FIND, "m" }),
+          function()
+            require("telescope").extensions.vim_bookmarks.all()
+          end,
+          desc = "list all bookmarks",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "M" }),
+          function()
+            require("telescope").extensions.vim_bookmarks.current_file()
+          end,
+          desc = "list document bookmarks",
         },
       }
     end,

@@ -51,15 +51,14 @@ function M.config()
     on_done = function()
       require("telescope").load_extension("projects")
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.SESSION] = {
-          p = {
-            function()
-              require("telescope").extensions.projects.projects({})
-            end,
-            "projects",
-          },
+        {
+          fn.wk_keystroke({ categories.SESSION, "p" }),
+          function()
+            require("telescope").extensions.projects.projects({})
+          end,
+          desc = "projects",
         },
       }
     end,

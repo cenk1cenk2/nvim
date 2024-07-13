@@ -110,68 +110,74 @@ function M.config()
         },
       },
     },
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.BUFFER] = {
-          ["b"] = {
-            function()
-              require("bufferline").pick()
-            end,
-            "pick buffer",
-          },
-          ["B"] = {
-            function()
-              require("bufferline").close_with_pick()
-            end,
-            "pick buffer to close",
-          },
-          ["X"] = {
-            function()
-              -- require("bufferline").close_others()
-              local current = vim.api.nvim_get_current_buf()
+        {
+          fn.wk_keystroke({ categories.BUFFER, "b" }),
+          function()
+            require("bufferline").pick()
+          end,
+          desc = "pick buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.BUFFER, "B" }),
+          function()
+            require("bufferline").close_with_pick()
+          end,
+          desc = "pick buffer to close",
+        },
+        {
+          fn.wk_keystroke({ categories.BUFFER, "X" }),
+          function()
+            -- require("bufferline").close_others()
+            local current = vim.api.nvim_get_current_buf()
 
-              for _, e in ipairs(require("bufferline").get_elements().elements) do
-                if current ~= e.id and not require("bufferline.groups")._is_pinned(e) then
-                  vim.schedule(function()
-                    lvim.fn.close_buffer(e.id)
-                  end)
-                end
+            for _, e in ipairs(require("bufferline").get_elements().elements) do
+              if current ~= e.id and not require("bufferline.groups")._is_pinned(e) then
+                vim.schedule(function()
+                  lvim.fn.close_buffer(e.id)
+                end)
               end
+            end
 
-              require("bufferline.ui").refresh()
-            end,
-            "close all buffers but this",
-          },
-          ["D"] = {
-            function()
-              require("bufferline.groups").action("ungrouped", "close")
-            end,
-            "close unpinned tabs",
-          },
-          ["y"] = {
-            function()
-              require("bufferline").close_in_direction("left")
-            end,
-            "close all buffers to the left",
-          },
-          ["Y"] = {
-            function()
-              require("bufferline").close_in_direction("right")
-            end,
-            "close all buffers to the right",
-          },
-          ["p"] = {
-            function()
-              require("bufferline.groups").toggle_pin(0)
-            end,
-            "pin current buffer",
-          },
-          ["P"] = {
-            function()
-              require("bufferline.groups").action("pinned", "close")
-            end,
-            "close pinned buffer group",
-          },
+            require("bufferline.ui").refresh()
+          end,
+          desc = "close all buffers but this",
+        },
+        {
+          fn.wk_keystroke({ categories.BUFFER, "D" }),
+          function()
+            require("bufferline.groups").action("ungrouped", "close")
+          end,
+          desc = "close unpinned tabs",
+        },
+        {
+          fn.wk_keystroke({ categories.BUFFER, "y" }),
+          function()
+            require("bufferline").close_in_direction("left")
+          end,
+          desc = "close all buffers to the left",
+        },
+        {
+          fn.wk_keystroke({ categories.BUFFER, "Y" }),
+          function()
+            require("bufferline").close_in_direction("right")
+          end,
+          desc = "close all buffers to the right",
+        },
+        {
+          fn.wk_keystroke({ categories.BUFFER, "p" }),
+          function()
+            require("bufferline.groups").toggle_pin(0)
+          end,
+          desc = "pin current buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.BUFFER, "P" }),
+          function()
+            require("bufferline.groups").action("pinned", "close")
+          end,
+          desc = "close pinned buffer group",
         },
       }
     end,

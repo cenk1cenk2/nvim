@@ -12,36 +12,23 @@ M.opts = {
   nowait = true, -- use `nowait` when creating keymaps
 }
 
-M.vopts = {
-  mode = "v", -- VISUAL mode
-  prefix = "<leader>",
-  buffer = nil, -- Global mappings. Specify a buffer number for buffer local mappings
-  silent = true, -- use `silent` when creating keymaps
-  noremap = true, -- use `noremap` when creating keymaps
-  nowait = true, -- use `nowait` when creating keymaps
-}
-
-M.registered = false
-
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
         "folke/which-key.nvim",
         keys = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r", "d", "c", "r", "y", "p", "P" },
-        event = "BufReadPost",
+        event = "UIEnter",
       }
     end,
     configure = function(_, fn)
-      local wk = require("keys.wk")
-
-      lvim.wk.mappings = vim.deepcopy(wk.mappings)
-      lvim.wk.vmappings = vim.deepcopy(wk.vmappings)
+      lvim.wk = vim.list_extend(lvim.wk, vim.deepcopy(require("keys.wk").wk))
 
       fn.add_disabled_filetypes({ "which_key" })
     end,
     setup = function()
       return {
+        preset = "modern",
         plugins = {
           marks = false, -- shows a list of your marks on ' and `
           registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
@@ -82,19 +69,12 @@ function M.config()
         show_keys = false, -- show the currently pressed key and its label as a message in the command line
       }
     end,
-    on_setup = function(config, fn)
+    on_setup = function(config)
       local which_key = require("which-key")
 
       which_key.setup(config.setup)
 
-      which_key.register(lvim.wk.mappings, M.opts)
-      which_key.register(lvim.wk.vmappings, M.vopts)
-
-      M.registered = true
-
-      if fn.is_extension_enabled("legendary_nvim") then
-        require("legendary.integrations.which-key").bind_whichkey(lvim.wk.mappings, config.opts, false)
-      end
+      which_key.add(lvim.wk)
     end,
     autocmds = {
       {

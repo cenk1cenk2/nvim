@@ -29,15 +29,14 @@ function M.setup()
         end,
       },
     },
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.LSP] = {
-          ["a"] = {
-            function()
-              M.lsp_setup()
-            end,
-            "setup lsp for this buffer",
-          },
+        {
+          fn.wk_keystroke({ categories.LSP, "e" }),
+          function()
+            M.lsp_setup()
+          end,
+          desc = "setup lsp for this buffer",
         },
       }
     end,

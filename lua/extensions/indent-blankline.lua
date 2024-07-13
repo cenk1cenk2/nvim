@@ -78,11 +78,21 @@ function M.config()
 
       require("ibl").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.ACTIONS] = {
-          ["i"] = { ":IBLToggle<CR>", "toggle indentation guides" },
-          ["I"] = { ":IBLToggleScope<CR>", "toggle indentation guides" },
+        {
+          fn.wk_keystroke({ categories.ACTIONS, "i" }),
+          function()
+            vim.cmd([[IBLToggle]])
+          end,
+          desc = "toggle indentation guides",
+        },
+        {
+          fn.wk_keystroke({ categories.ACTIONS, "I" }),
+          function()
+            vim.cmd([[IBLToggleScope]])
+          end,
+          desc = "toggle indentation guides in scope",
         },
       }
     end,
