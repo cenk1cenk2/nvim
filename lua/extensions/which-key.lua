@@ -42,6 +42,15 @@ function M.config()
             g = true, -- bindings for prefixed with g,
           },
         },
+        modes = {
+          n = true, -- Normal mode
+          i = false, -- Insert mode
+          x = false, -- Visual mode
+          s = true, -- Select mode
+          o = true, -- Operator pending mode
+          t = false, -- Terminal mode
+          c = true, -- Command mode
+        },
         operators = { gc = "Comments" },
         icons = {
           breadcrumb = lvim.ui.icons.ui.ChevronRight, -- symbol used in the command line area that shows your active key combo
@@ -52,15 +61,27 @@ function M.config()
           scroll_down = "<c-d>", -- binding to scroll down inside the popup
           scroll_up = "<c-u>", -- binding to scroll up inside the popup
         },
-        window = {
-          border = lvim.ui.border, -- none, single, double, shadow
-          position = "bottom", -- bottom, top
-          margin = { 0, 0, 0, 0 }, -- extra window margin [top, right, bottom, left]
-          padding = { 1, 1, 0, 1 }, -- extra window padding [top, right, bottom, left]
+        win = {
+          -- don't allow the popup to overlap with the cursor
+          no_overlap = true,
+          -- width = 1,
+          -- height = { min = 4, max = 25 },
+          -- col = 0,
+          -- row = math.huge,
+          border = lvim.ui.border,
+          padding = { 0, 2 }, -- extra window padding [top/bottom, right/left]
+          title = true,
+          title_pos = "center",
+          zindex = 1000,
+          -- Additional vim.wo and vim.bo options
+          bo = {},
+          wo = {
+            -- winblend = 95, -- value between 0-100 0 for fully opaque and 100 for fully transparent
+          },
         },
         layout = {
-          height = { min = 4, max = 25 }, -- min and max height of the columns
-          width = { min = 20, max = 50 }, -- min and max width of the columns
+          height = { min = 4 }, -- min and max height of the columns
+          width = { min = 20 }, -- min and max width of the columns
           spacing = 4, -- spacing between columns
           align = "center", -- align columns left, center or right
         },
