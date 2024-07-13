@@ -54,20 +54,20 @@ function M.config()
         },
       },
     },
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.TASKS] = {
-          ["b"] = {
-            function()
-              require("lazy").load({ plugins = { "vim-dadbod" } })
-              vim.cmd([[DBUIToggle]])
-            end,
-            "dadbod",
-          },
-          ["B"] = {
-            "<Plug>(DBUI_JumpToForeignKey)",
-            "dadbod - jump to foreign key",
-          },
+        {
+          fn.wk_keystroke({ categories.TASKS, "b" }),
+          function()
+            require("lazy").load({ plugins = { "vim-dadbod" } })
+            vim.cmd([[DBUIToggle]])
+          end,
+          desc = "dadbod",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "B" }),
+          "<Plug>(DBUI_JumpToForeignKey)",
+          desc = "dadbod - jump to foreign key",
         },
       }
     end,

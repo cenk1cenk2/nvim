@@ -187,20 +187,49 @@ function M.config()
     end,
     wk = function(_, categories, fn)
       return {
-        [categories.TREESITTER] = {
-          i = { ":TSConfigInfo<CR>", "treesitter info" },
-          k = { ":Inspect<CR>", "inspect node" },
-          K = { ":InspectTree<CR>", "inspect tree" },
-          u = { ":TSUpdate<CR>", "update installed treesitter packages" },
-          U = { ":TSUninstall all<CR>", "uninstall all treesitter packages" },
-          R = {
-            function()
-              for _, parser in pairs(fn.get_current_setup(extension_name).ensure_installed) do
-                vim.cmd(("TSInstall %s"):format(parser))
-              end
-            end,
-            "reinstall all treesitter packages",
-          },
+        {
+          fn.wk_keystroke({ categories.TREESITTER, "i" }),
+          function()
+            vim.cmd([[TSConfigInfo]])
+          end,
+          desc = "treesitter info",
+        },
+        {
+          fn.wk_keystroke({ categories.TREESITTER, "k" }),
+          function()
+            vim.cmd([[Inspect]])
+          end,
+          desc = "inspect node",
+        },
+        {
+          fn.wk_keystroke({ categories.TREESITTER, "K" }),
+          function()
+            vim.cmd([[InspectTree]])
+          end,
+          desc = "inspect tree",
+        },
+        {
+          fn.wk_keystroke({ categories.TREESITTER, "u" }),
+          function()
+            vim.cmd([[TSUpdate]])
+          end,
+          desc = "update installed treesitter packages",
+        },
+        {
+          fn.wk_keystroke({ categories.TREESITTER, "U" }),
+          function()
+            vim.cmd([[TSUninstall all]])
+          end,
+          desc = "uninstall all treesitter packages",
+        },
+        {
+          fn.wk_keystroke({ categories.TREESITTER, "R" }),
+          function()
+            for _, parser in pairs(fn.get_current_setup(extension_name).ensure_installed) do
+              vim.cmd(("TSInstall %s"):format(parser))
+            end
+          end,
+          desc = "reinstall all treesitter packages",
         },
       }
     end,

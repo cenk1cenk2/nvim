@@ -230,28 +230,28 @@ function M.setup()
     wk = function(_, categories, fn)
       return {
         {
-          fn.build_wk_mapping({ categories.SEARCH, "d" }),
+          fn.wk_keystroke({ categories.SEARCH, "d" }),
           function()
             M.run_sd()
           end,
           desc = "sd",
         },
         {
-          fn.build_wk_mapping({ categories.TASKS, "d" }),
+          fn.wk_keystroke({ categories.TASKS, "d" }),
           function()
             M.run_ansible_vault_decrypt()
           end,
           desc = "ansible-vault decrypt",
         },
         {
-          fn.build_wk_mapping({ categories.TASKS, "D" }),
+          fn.wk_keystroke({ categories.TASKS, "D" }),
           function()
             M.run_ansible_vault_encrypt()
           end,
           desc = "ansible-vault encrypt",
         },
         {
-          fn.build_wk_mapping(categories.TASKS, "e"),
+          fn.wk_keystroke({ categories.TASKS, "e" }),
           function()
             M.set_env()
           end,
@@ -259,44 +259,39 @@ function M.setup()
         },
 
         {
-          fn.build_wk_mapping(categories.TASKS, "g"),
+          fn.wk_keystroke({ categories.TASKS, "g" }),
           function()
             M.run_genpass()
           end,
           desc = "run genpass",
         },
         {
-          fn.build_wk_mapping(categories.TASKS, "j"),
+          fn.wk_keystroke({ categories.TASKS, "j" }),
           function()
             M.run_jq()
           end,
           desc = "run jq",
         },
         {
-          fn.build_wk_mapping(categories.TASKS, "J"),
+          fn.wk_keystroke({ categories.TASKS, "J" }),
           function()
             M.run_yq()
           end,
           desc = "run yq",
         },
         {
-          fn.build_wk_mapping(categories.TASKS, "e"),
+          fn.wk_keystroke({ categories.TASKS, "p" }),
           function()
             M.run_jqp()
           end,
           desc = "run jqp",
         },
         {
-          { "n" },
-          [categories.TASKS] = {
-            ["p"] = {},
-            ["k"] = {
-              function()
-                M.set_kubeconfig()
-              end,
-              "set kubeconfig",
-            },
-          },
+          fn.wk_keystroke({ categories.TASKS, "k" }),
+          function()
+            M.set_kubeconfig()
+          end,
+          desc = "set kubeconfig",
         },
       }
     end,

@@ -10,15 +10,14 @@ function M.config()
         "wintermute-cell/gitignore.nvim",
       }
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.GIT] = {
-          i = {
-            function()
-              require("gitignore").generate()
-            end,
-            "generate git ignore",
-          },
+        {
+          fn.wk_keystroke({ categories.GIT, "i" }),
+          function()
+            require("gitignore").generate()
+          end,
+          desc = "generate git ignore",
         },
       }
     end,

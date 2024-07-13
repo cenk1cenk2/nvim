@@ -72,34 +72,42 @@ function M.setup()
         end,
       },
     },
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.BUILD] = {
-          r = {
-            function()
-              M.rebuild_latest_neovim()
-            end,
-            "install latest neovim",
-          },
-          l = {
-            function()
-              M.update_language_servers()
-            end,
-            "update language servers",
-          },
-          u = {
-            function()
-              M.update()
-            end,
-            "update",
-          },
-          R = {
-            function()
-              M.rebuild_and_update()
-            end,
-            "rebuild and update everything",
-          },
-          p = { ":LvimUpdate<CR>", "git update config repository" },
+        {
+          fn.wk_keystroke({ categories.BUILD, "r" }),
+          function()
+            M.rebuild_latest_neovim()
+          end,
+          desc = "install latest neovim",
+        },
+        {
+          fn.wk_keystroke({ categories.BUILD, "l" }),
+          function()
+            M.update_language_servers()
+          end,
+          desc = "update language servers",
+        },
+        {
+          fn.wk_keystroke({ categories.BUILD, "u" }),
+          function()
+            M.update()
+          end,
+          desc = "update",
+        },
+        {
+          fn.wk_keystroke({ categories.BUILD, "R" }),
+          function()
+            M.rebuild_and_update()
+          end,
+          desc = "rebuild and update everything",
+        },
+        {
+          fn.wk_keystroke({ categories.BUILD, "p" }),
+          function()
+            require("lvim.bootstrap"):update()
+          end,
+          desc = "git update config repository",
         },
       }
     end,

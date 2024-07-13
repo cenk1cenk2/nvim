@@ -62,158 +62,157 @@ function M.config()
     on_setup = function(config)
       require("grug-far").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       local function generate_rg_flags(f)
         return table.concat(vim.list_extend(lvim.fn.get_telescope_rg_arguments(true), f or {}), " ")
       end
 
       return {
         {
-          { "n" },
+          fn.wk_keystroke({ categories.SEARCH, "s" }),
+          function()
+            local opts = {
+              prefills = {
+                search = "",
+                replacement = "",
+                filesFilter = "",
+                flags = generate_rg_flags({}),
+              },
+            }
 
-          -- find and replace
-          [categories.SEARCH] = {
-            s = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = "",
-                    flags = generate_rg_flags({}),
-                  },
-                }
-
-                require("grug-far").grug_far(opts)
-              end,
-              "[grug-far] find and replace",
-            },
-            S = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = "",
-                    flags = generate_rg_flags({ "--fixed-strings" }),
-                  },
-                }
-
-                require("grug-far").grug_far(opts)
-              end,
-              "[grug-far] find and replace (fixed strings)",
-            },
-            w = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
-                    flags = generate_rg_flags({ "--no-ignore-dot" }),
-                  },
-                }
-
-                require("grug-far").grug_far(opts)
-              end,
-              "[grug-far] find and replace in current folder",
-            },
-            W = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
-                    flags = generate_rg_flags({ "--no-ignore-dot", "--fixed-strings" }),
-                  },
-                }
-
-                require("grug-far").grug_far(opts)
-              end,
-              "[grug-far] find and replace in current folder (fixed strings)",
-            },
-            b = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = require("utils").get_project_buffer_filepath(),
-                    flags = generate_rg_flags({ "--no-ignore-dot" }),
-                  },
-                }
-
-                require("grug-far").grug_far(opts)
-              end,
-              "[grug-far] find and replace in current buffer",
-            },
-            B = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = require("utils").get_project_buffer_filepath(),
-                    flags = generate_rg_flags({ "--no-ignore-dot", "--fixed-strings" }),
-                  },
-                }
-
-                require("grug-far").grug_far(opts)
-              end,
-              "[grug-far] find and replace in current buffer (fixed strings)",
-            },
-          },
+            require("grug-far").grug_far(opts)
+          end,
+          desc = "[grug-far] find and replace",
         },
         {
-          { "v" },
-          -- find and replace
-          [categories.SEARCH] = {
-            s = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = "",
-                    flags = generate_rg_flags({}),
-                  },
-                }
+          fn.wk_keystroke({ categories.SEARCH, "S" }),
+          function()
+            local opts = {
+              prefills = {
+                search = "",
+                replacement = "",
+                filesFilter = "",
+                flags = generate_rg_flags({ "--fixed-strings" }),
+              },
+            }
 
-                require("grug-far").with_visual_selection(opts)
-              end,
-              "[grug-far] find and replace",
-            },
-            w = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
-                    flags = generate_rg_flags({ "--no-ignore-dot" }),
-                  },
-                }
+            require("grug-far").grug_far(opts)
+          end,
+          desc = "[grug-far] find and replace (fixed strings)",
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "w" }),
+          function()
+            local opts = {
+              prefills = {
+                search = "",
+                replacement = "",
+                filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
+                flags = generate_rg_flags({ "--no-ignore-dot" }),
+              },
+            }
 
-                require("grug-far").with_visual_selection(opts)
-              end,
-              "[grug-far] find and replace in current folder",
-            },
-            b = {
-              function()
-                local opts = {
-                  prefills = {
-                    search = "",
-                    replacement = "",
-                    filesFilter = require("utils").get_project_buffer_filepath(),
-                    flags = generate_rg_flags({ "--no-ignore-dot" }),
-                  },
-                }
+            require("grug-far").grug_far(opts)
+          end,
+          desc = "[grug-far] find and replace in current folder",
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "W" }),
+          function()
+            local opts = {
+              prefills = {
+                search = "",
+                replacement = "",
+                filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
+                flags = generate_rg_flags({ "--no-ignore-dot", "--fixed-strings" }),
+              },
+            }
 
-                require("grug-far").with_visual_selection(opts)
-              end,
-              "[grug-far] find and replace in current buffer",
-            },
+            require("grug-far").grug_far(opts)
+          end,
+          desc = "[grug-far] find and replace in current folder (fixed strings)",
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "b" }),
+          function()
+            local opts = {
+              prefills = {
+                search = "",
+                replacement = "",
+                filesFilter = require("utils").get_project_buffer_filepath(),
+                flags = generate_rg_flags({ "--no-ignore-dot" }),
+              },
+            }
+
+            require("grug-far").grug_far(opts)
+          end,
+          desc = "[grug-far] find and replace in current buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "B" }),
+          function()
+            local opts = {
+              prefills = {
+                search = "",
+                replacement = "",
+                filesFilter = require("utils").get_project_buffer_filepath(),
+                flags = generate_rg_flags({ "--no-ignore-dot", "--fixed-strings" }),
+              },
+            }
+
+            require("grug-far").grug_far(opts)
+          end,
+          desc = "[grug-far] find and replace in current buffer (fixed strings)",
+        },
+        {
+          mode = { "v" },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "s" }),
+            function()
+              local opts = {
+                prefills = {
+                  search = "",
+                  replacement = "",
+                  filesFilter = "",
+                  flags = generate_rg_flags({}),
+                },
+              }
+
+              require("grug-far").with_visual_selection(opts)
+            end,
+            desc = "[grug-far] find and replace",
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "w" }),
+            function()
+              local opts = {
+                prefills = {
+                  search = "",
+                  replacement = "",
+                  filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
+                  flags = generate_rg_flags({ "--no-ignore-dot" }),
+                },
+              }
+
+              require("grug-far").with_visual_selection(opts)
+            end,
+            desc = "[grug-far] find and replace in current folder",
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "b" }),
+            function()
+              local opts = {
+                prefills = {
+                  search = "",
+                  replacement = "",
+                  filesFilter = require("utils").get_project_buffer_filepath(),
+                  flags = generate_rg_flags({ "--no-ignore-dot" }),
+                },
+              }
+
+              require("grug-far").with_visual_selection(opts)
+            end,
+            desc = "[grug-far] find and replace in current buffer",
           },
         },
       }

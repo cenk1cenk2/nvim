@@ -107,58 +107,60 @@ function M.config()
     on_done = function()
       require("telescope").load_extension("possession")
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.SESSION] = {
-          d = {
-            function()
-              local cwd = vim.fn.getcwd()
-              local session = M.dir_to_session_filename(cwd)
-              local stat = vim.uv.fs_stat(M.session_to_full_path(("%s.json"):format(session)))
+        {
+          fn.wk_keystroke({ categories.SESSIONS, "d" }),
+          function()
+            local cwd = vim.fn.getcwd()
+            local session = M.dir_to_session_filename(cwd)
+            local stat = vim.uv.fs_stat(M.session_to_full_path(("%s.json"):format(session)))
 
-              if stat == nil or stat.type ~= "file" then
-                Log:warn(("Session does not exist: %s -> %s"):format(cwd, session))
+            if stat == nil or stat.type ~= "file" then
+              Log:warn(("Session does not exist: %s -> %s"):format(cwd, session))
 
-                return
-              end
+              return
+            end
 
-              require("possession.session").delete(session)
-            end,
-            "delete sessions",
-          },
-          l = {
-            function()
-              local cwd = vim.fn.getcwd()
-              local session = M.dir_to_session_filename(cwd)
-              local stat = vim.uv.fs_stat(M.session_to_full_path(("%s.json"):format(session)))
+            require("possession.session").delete(session)
+          end,
+          desc = "delete sessions",
+        },
+        {
+          fn.wk_keystroke({ categories.SESSIONS, "l" }),
+          function()
+            local cwd = vim.fn.getcwd()
+            local session = M.dir_to_session_filename(cwd)
+            local stat = vim.uv.fs_stat(M.session_to_full_path(("%s.json"):format(session)))
 
-              if stat == nil or stat.type ~= "file" then
-                Log:warn(("Session does not exist: %s -> %s"):format(cwd, session))
+            if stat == nil or stat.type ~= "file" then
+              Log:warn(("Session does not exist: %s -> %s"):format(cwd, session))
 
-                return
-              end
+              return
+            end
 
-              require("possession.session").load(session)
-            end,
-            "load cwd last session",
-          },
-          s = {
-            function()
-              local cwd = vim.fn.getcwd()
-              local session = M.dir_to_session_filename(cwd)
+            require("possession.session").load(session)
+          end,
+          desc = "load cwd last session",
+        },
+        {
+          fn.wk_keystroke({ categories.SESSIONS, "s" }),
+          function()
+            local cwd = vim.fn.getcwd()
+            local session = M.dir_to_session_filename(cwd)
 
-              require("possession.session").save(session, { no_confirm = true })
+            require("possession.session").save(session, { no_confirm = true })
 
-              Log:info(("Session saved: %s -> %s"):format(cwd, session))
-            end,
-            "save session",
-          },
-          f = {
-            function()
-              require("telescope").extensions.possession.list()
-            end,
-            "list sessions",
-          },
+            Log:info(("Session saved: %s -> %s"):format(cwd, session))
+          end,
+          desc = "save session",
+        },
+        {
+          fn.wk_keystroke({ categories.SESSIONS, "f" }),
+          function()
+            require("telescope").extensions.possession.list()
+          end,
+          desc = "list sessions",
         },
       }
     end,

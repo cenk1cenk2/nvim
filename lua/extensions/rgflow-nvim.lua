@@ -40,22 +40,21 @@ function M.config()
     on_setup = function(config)
       require("rgflow").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        -- find and replace
-        [categories.SEARCH] = {
-          r = {
-            function()
-              require("rgflow").open_again()
-            end,
-            "[rgflow] open",
-          },
-          R = {
-            function()
-              require("rgflow").open_cword()
-            end,
-            "[rgflow] open cword",
-          },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "r" }),
+          function()
+            require("rgflow").open_again()
+          end,
+          desc = "[rgflow] open",
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "R" }),
+          function()
+            require("rgflow").open_cword()
+          end,
+          desc = "[rgflow] open cword",
         },
       }
     end,

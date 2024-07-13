@@ -45,33 +45,32 @@ function M.config()
     on_setup = function(config)
       -- require("iedit").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
         {
-          { "n", "v", "vb" },
-          [categories.TASKS] = {
-            i = {
-              function()
-                if M.is_active() then
-                  Log:info("Editing stopped.")
+          fn.wk_keystroke({ categories.TASKS, "i" }),
+          function()
+            if M.is_active() then
+              Log:info("Editing stopped.")
 
-                  return require("iedit").stop()
-                end
+              return require("iedit").stop()
+            end
 
-                Log:info("Editing started.")
-                require("iedit").select()
-              end,
-              "start iedit",
-            },
-            I = {
-              function()
-                Log:info("Editing started with selection.")
+            Log:info("Editing started.")
+            require("iedit").select()
+          end,
+          desc = "start iedit",
+          mode = { "n", "v", "x" },
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "I" }),
+          function()
+            Log:info("Editing started with selection.")
 
-                require("iedit").select_all()
-              end,
-              "iedit select all",
-            },
-          },
+            require("iedit").select_all()
+          end,
+          desc = "iedit select all",
+          mode = { "n", "v", "x" },
         },
       }
     end,

@@ -153,31 +153,35 @@ function M.config()
         end,
       },
     },
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.TERMINAL] = {
-          f = { ":Telescope find_terminals list<CR>", "list terminals" },
-
-          ["b"] = {
-            function()
-              M.create_buffer_terminal()
-            end,
-            "buffer cwd terminal",
-          },
-
-          ["B"] = {
-            function()
-              M.create_bottom_terminal()
-            end,
-            "bottom terminal",
-          },
-
-          ["X"] = {
-            function()
-              M.kill_all()
-            end,
-            "kill all terminals",
-          },
+        {
+          fn.wk_keystroke({ categories.TERMINAL, "f" }),
+          function()
+            require("telescope").extensions.find_terminals.list()
+          end,
+          desc = "list terminals",
+        },
+        {
+          fn.wk_keystroke({ categories.TERMINAL, "b" }),
+          function()
+            M.create_buffer_terminal()
+          end,
+          desc = "buffer cwd terminal",
+        },
+        {
+          fn.wk_keystroke({ categories.TERMINAL, "B" }),
+          function()
+            M.create_bottom_terminal()
+          end,
+          desc = "bottom terminal",
+        },
+        {
+          fn.wk_keystroke({ categories.TERMINAL, "X" }),
+          function()
+            M.kill_all()
+          end,
+          desc = "kill all terminals",
         },
       }
     end,
@@ -225,15 +229,12 @@ function M.create_toggle_term(opts)
 
   require("utils.setup").load_wk({
     {
-      { "n" },
-      ["t"] = {
-        [opts.keymap] = {
-          function()
-            M.toggle_toggle_term({ cmd = opts.cmd, count = opts.count, direction = opts.direction })
-          end,
-          opts.label,
-        },
-      },
+      require("utils.setup").fn.wk_keystroke({ require("utils.setup").fn.get_wk_category("TERMINAL"), opts.keymap }),
+
+      function()
+        M.toggle_toggle_term({ cmd = opts.cmd, count = opts.count, direction = opts.direction })
+      end,
+      desc = opts.label,
     },
   })
 end

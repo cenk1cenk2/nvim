@@ -9,18 +9,14 @@ require("utils.setup").init({
           callback = function(event)
             require("utils.setup").load_wk({
               {
-                { "n" },
-                [fn.get_wk_category("LSP")] = {
-                  ["Q"] = {
-                    function()
-                      require("modules.lsp.wrapper").reset_buffer_lsp()
+                fn.wk_keystroke({ fn.get_wk_category("LSP"), "Q" }),
+                function()
+                  require("modules.lsp.wrapper").reset_buffer_lsp()
 
-                      require("lvim.core.log"):warn("terraform-ls will be killed.")
-                      vim.fn.system({ "pkill", "-9", "terraform-ls" })
-                    end,
-                    "lsp restart (terraform-ls)",
-                  },
-                },
+                  require("lvim.core.log"):warn("terraform-ls will be killed.")
+                  vim.fn.system({ "pkill", "-9", "terraform-ls" })
+                end,
+                desc = "lsp restart (terraform-ls)",
               },
             }, {
               buffer = event.buf,

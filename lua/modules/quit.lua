@@ -28,7 +28,7 @@ function M.setup()
     wk = function(_, categories, fn)
       return {
         {
-          fn.build_wk_mapping({ categories.SESSION, "q" }),
+          fn.wk_keystroke({ categories.SESSION, "q" }),
           function()
             M.workspace_quit()
           end,

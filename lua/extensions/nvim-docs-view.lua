@@ -26,10 +26,14 @@ function M.config()
     on_setup = function(config)
       require("docs-view").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.LSP] = {
-          ["v"] = { ":DocsViewToggle<CR>", "toggle documentation" },
+        {
+          fn.wk_keystroke({ categories.LSP, "v" }),
+          function()
+            vim.cmd([[DocsViewToggle]])
+          end,
+          desc = "toggle documentation",
         },
       }
     end,

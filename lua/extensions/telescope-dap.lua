@@ -15,10 +15,15 @@ function M.config()
     on_setup = function()
       require("telescope").load_extension("dap")
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.DEBUG] = {
-          ["f"] = { ":Telescope dap configurations<CR>", "configurations" },
+        {
+          fn.wk_keystroke({ categories.DEBUG, "f" }),
+          function()
+            require("telescope").extensions.dap.configurations()
+          end,
+          desc = "configurations",
+          mode = { "v" },
         },
       }
     end,

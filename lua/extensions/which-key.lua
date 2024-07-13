@@ -31,11 +31,6 @@ function M.config()
       }
     end,
     configure = function(_, fn)
-      local wk = require("keys.wk")
-
-      lvim.wk.mappings = vim.deepcopy(wk.mappings)
-      lvim.wk.vmappings = vim.deepcopy(wk.vmappings)
-
       fn.add_disabled_filetypes({ "which_key" })
     end,
     setup = function()
@@ -85,8 +80,7 @@ function M.config()
 
       which_key.setup(config.setup)
 
-      which_key.register(lvim.wk.mappings, M.opts)
-      which_key.register(lvim.wk.vmappings, M.vopts)
+      which_key.add(require("keys.wk").wk)
     end,
     autocmds = {
       {

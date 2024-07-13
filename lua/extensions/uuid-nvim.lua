@@ -20,24 +20,24 @@ function M.config()
     on_setup = function(config)
       require("uuid-nvim").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.TASKS] = {
-          ["u"] = {
-            function()
-              local uuid = require("uuid-nvim").get_v4({ quotes = "none" })
+        {
+          fn.wk_keystroke({ categories.TASKS, "u" }),
+          function()
+            local uuid = require("uuid-nvim").get_v4({ quotes = "none" })
 
-              vim.fn.setreg(vim.v.register or lvim.system_register, uuid)
-              Log:info(("Copied generated uuid to clipboard: %s"):format(uuid))
-            end,
-            "generate uuid",
-          },
-          ["U"] = {
-            function()
-              require("uuid-nvim").insert_v4()
-            end,
-            "insert uuid",
-          },
+            vim.fn.setreg(vim.v.register or lvim.system_register, uuid)
+            Log:info(("Copied generated uuid to clipboard: %s"):format(uuid))
+          end,
+          desc = "generate uuid",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "U" }),
+          function()
+            require("uuid-nvim").insert_v4()
+          end,
+          desc = "insert uuid",
         },
       }
     end,

@@ -45,11 +45,21 @@ function M.config()
       winminwidth = 0,
       equalalways = false,
     },
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.ACTIONS] = {
-          ["w"] = { ":WindowsEqualize<CR>", "balance all windows" },
-          ["m"] = { ":WindowsMaximize<CR>", "maximize current window" },
+        {
+          fn.wk_keystroke({ categories.ACTIONS, "w" }),
+          function()
+            vim.cmd([[WindowsEqualize]])
+          end,
+          desc = "balance all windows",
+        },
+        {
+          fn.wk_keystroke({ categories.ACTIONS, "m" }),
+          function()
+            vim.cmd([[WindowsMaximize]])
+          end,
+          desc = "maximize current window",
         },
       }
     end,

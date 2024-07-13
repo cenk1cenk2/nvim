@@ -20,22 +20,21 @@ function M.config()
     on_setup = function(config)
       require("search-replace").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        -- find and replace
-        [categories.SEARCH] = {
-          B = {
-            function()
-              require("search-replace.single-buffer").open()
-            end,
-            "[sr] find and replace in current buffer",
-          },
-          V = {
-            function()
-              require("search-replace.single-buffer").cword()
-            end,
-            "[sr] find and replace cword in current buffer",
-          },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "B" }),
+          function()
+            require("search-replace.single-buffer").open()
+          end,
+          desc = "[sr] find and replace in current buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "V" }),
+          function()
+            require("search-replace.single-buffer").cword()
+          end,
+          desc = "[sr] find and replace cword in current buffer",
         },
       }
     end,

@@ -22,15 +22,32 @@ function M.config()
         "coc-gist",
       },
     },
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.GIT] = {
-          ["g"] = {
-            f = { ":CocList gist<CR>", "list gists" },
-            -- i = { ":CocList gitignore<CR>", "generate git ignore" },
-            p = { ":CocCommand gist.create<CR>", "post new gist" },
-            U = { ":CocCommand gist.update<CR>", "update current gist" },
-          },
+        {
+          fn.wk_keystroke({ categories.GIT, "g" }),
+          group = "gists",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "g", "f" }),
+          function()
+            vim.cmd([[CocList gist]])
+          end,
+          desc = "list gists",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "g", "p" }),
+          function()
+            vim.cmd([[CocList gist.create]])
+          end,
+          desc = "post new gist",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "g", "U" }),
+          function()
+            vim.cmd([[CocList gist.update]])
+          end,
+          desc = "update current gist",
         },
       }
     end,

@@ -104,14 +104,14 @@ function M.setup()
     wk = function(_, categories, fn)
       return {
         {
-          fn.build_wk_mapping({ categories.TASKS, "s" }),
+          fn.wk_keystroke({ categories.TASKS, "s" }),
           function()
             M.create_scratch_buffer()
           end,
           desc = "create scratch buffer",
         },
         {
-          fn.build_wk_mapping({ categories.TASKS, "S" }),
+          fn.wk_keystroke({ categories.TASKS, "S" }),
           function()
             M.execute_scratch_buffer()
           end,

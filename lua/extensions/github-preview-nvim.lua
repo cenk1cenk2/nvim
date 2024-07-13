@@ -59,10 +59,14 @@ function M.config()
     on_setup = function(config)
       require("github-preview").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.TASKS] = {
-          ["m"] = { ":GithubPreviewToggle<CR>", "toggle markdown preview" },
+        {
+          fn.wk_keystroke({ categories.TASKS, "m" }),
+          function()
+            vim.cmd([[GithubPreviewToggle]])
+          end,
+          desc = "toggle markdown preview",
         },
       }
     end,

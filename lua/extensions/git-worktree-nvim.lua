@@ -20,24 +20,25 @@ function M.config()
     on_done = function()
       require("telescope").load_extension("git_worktree")
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.GIT] = {
-          W = {
-            name = "worktree",
-            f = {
-              function()
-                require("telescope").extensions.git_worktree.git_worktrees()
-              end,
-              "git worktrees",
-            },
-            c = {
-              function()
-                require("telescope").extensions.git_worktree.create_git_worktree()
-              end,
-              "create git worktree",
-            },
-          },
+        {
+          fn.wk_keystroke({ categories.GIT, "W" }),
+          group = "worktree",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "W", "f" }),
+          function()
+            require("telescope").extensions.git_worktree.git_worktrees()
+          end,
+          desc = "git worktrees",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "W", "c" }),
+          function()
+            require("telescope").extensions.git_worktree.create_git_worktree()
+          end,
+          desc = "create git worktree",
         },
       }
     end,

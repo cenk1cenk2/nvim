@@ -201,10 +201,14 @@ function M.config()
         require("telescope").extensions.aerial.aerial()
       end
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.LSP] = {
-          o = { ":AerialToggle!<CR>", "toggle outline" },
+        {
+          fn.wk_keystroke({ categories.LSP, "o" }),
+          function()
+            vim.cmd([[AerialToggle!]])
+          end,
+          desc = "toggle outline",
         },
       }
     end,

@@ -95,21 +95,21 @@ function M.config()
     on_setup = function(config)
       require("dapui").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.DEBUG] = {
-          u = {
-            function()
-              require("dapui").toggle()
-            end,
-            "toggle ui",
-          },
-          U = {
-            function()
-              require("dapui").float_element()
-            end,
-            "floating element",
-          },
+        {
+          fn.wk_keystroke({ categories.DEBUG, "u" }),
+          function()
+            require("dapui").toggle()
+          end,
+          desc = "toggle ui",
+        },
+        {
+          fn.wk_keystroke({ categories.DEBUG, "U" }),
+          function()
+            require("dapui").float_element()
+          end,
+          desc = "floating element",
         },
       }
     end,

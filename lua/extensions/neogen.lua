@@ -17,15 +17,14 @@ function M.config()
     on_setup = function(config)
       require("neogen").setup(config.setup)
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.LSP] = {
-          ["j"] = {
-            function()
-              require("neogen").generate()
-            end,
-            "generate documentation",
-          },
+        {
+          fn.wk_keystroke({ categories.LSP, "j" }),
+          function()
+            require("neogen").generate()
+          end,
+          desc = "generate documentation",
         },
       }
     end,

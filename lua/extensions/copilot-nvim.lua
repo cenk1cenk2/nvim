@@ -69,13 +69,35 @@ function M.config()
         autopairs.enable()
       end, { desc = "Accept Copilot suggestion" })
     end,
-    wk = function(_, categories)
+    wk = function(_, categories, fn)
       return {
-        [categories.COPILOT] = {
-          ["p"] = { ":Copilot panel<CR>", "copilot panel" },
-          ["S"] = { ":Copilot status<CR>", "copilot status" },
-          ["t"] = { ":Copilot toggle<CR>", "copilot toggle" },
-          ["s"] = { ":Copilot suggestion<CR>", "copilot suggestion" },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "p" }),
+          function()
+            vim.cmd([[Copilot panel]])
+          end,
+          desc = "copilot panel",
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "S" }),
+          function()
+            vim.cmd([[Copilot status]])
+          end,
+          desc = "copilot status",
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "t" }),
+          function()
+            vim.cmd([[Copilot toggle]])
+          end,
+          desc = "copilot toggle",
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "t" }),
+          function()
+            vim.cmd([[Copilot suggestion]])
+          end,
+          desc = "copilot suggestion",
         },
       }
     end,
