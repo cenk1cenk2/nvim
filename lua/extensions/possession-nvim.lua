@@ -110,7 +110,7 @@ function M.config()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.SESSIONS, "d" }),
+          fn.wk_keystroke({ categories.SESSION, "d" }),
           function()
             local cwd = vim.fn.getcwd()
             local session = M.dir_to_session_filename(cwd)
@@ -127,7 +127,7 @@ function M.config()
           desc = "delete sessions",
         },
         {
-          fn.wk_keystroke({ categories.SESSIONS, "l" }),
+          fn.wk_keystroke({ categories.SESSION, "l" }),
           function()
             local cwd = vim.fn.getcwd()
             local session = M.dir_to_session_filename(cwd)
@@ -144,7 +144,7 @@ function M.config()
           desc = "load cwd last session",
         },
         {
-          fn.wk_keystroke({ categories.SESSIONS, "s" }),
+          fn.wk_keystroke({ categories.SESSION, "s" }),
           function()
             local cwd = vim.fn.getcwd()
             local session = M.dir_to_session_filename(cwd)
@@ -156,7 +156,7 @@ function M.config()
           desc = "save session",
         },
         {
-          fn.wk_keystroke({ categories.SESSIONS, "f" }),
+          fn.wk_keystroke({ categories.SESSION, "f" }),
           function()
             require("telescope").extensions.possession.list()
           end,
