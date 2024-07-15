@@ -15,7 +15,7 @@ function M.config()
     on_done = function()
       require("telescope").load_extension("yaml_schema")
     end,
-    autocmds = function(fn)
+    autocmds = function(_, fn)
       return {
         {
           "FileType",
