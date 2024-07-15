@@ -52,8 +52,9 @@ function M.config()
           c = true, -- Command mode
         },
         icons = {
-          breadcrumb = lvim.ui.icons.ui.ChevronRight, -- symbol used in the command line area that shows your active key combo
-          separator = lvim.ui.icons.ui.BoldArrowRight .. " ", -- symbol used between a key and it's label
+          rules = false,
+          breadcrumb = lvim.ui.icons.ui.DoubleChevronRight, -- symbol used in the command line area that shows your active key combo
+          separator = lvim.ui.icons.ui.DoubleChevronRight .. " ", -- symbol used between a key and it's label
           group = lvim.ui.icons.ui.Plus, -- symbol prepended to a group
         },
         win = {
