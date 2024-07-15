@@ -45,7 +45,7 @@ function M.config()
         modes = {
           n = true, -- Normal mode
           i = false, -- Insert mode
-          x = false, -- Visual mode
+          x = true, -- Visual mode
           s = true, -- Select mode
           o = true, -- Operator pending mode
           t = false, -- Terminal mode
