@@ -51,15 +51,10 @@ function M.config()
           t = false, -- Terminal mode
           c = true, -- Command mode
         },
-        operators = { gc = "Comments" },
         icons = {
           breadcrumb = lvim.ui.icons.ui.ChevronRight, -- symbol used in the command line area that shows your active key combo
           separator = lvim.ui.icons.ui.BoldArrowRight .. " ", -- symbol used between a key and it's label
           group = lvim.ui.icons.ui.Plus, -- symbol prepended to a group
-        },
-        popup_mappings = {
-          scroll_down = "<c-d>", -- binding to scroll down inside the popup
-          scroll_up = "<c-u>", -- binding to scroll up inside the popup
         },
         win = {
           -- don't allow the popup to overlap with the cursor
