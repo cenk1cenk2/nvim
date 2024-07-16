@@ -28,7 +28,7 @@ function M.config()
     end,
     setup = function()
       return {
-        preset = "modern",
+        preset = "helix",
         plugins = {
           marks = false, -- shows a list of your marks on ' and `
           registers = true, -- shows your registers on " in NORMAL or <C-r> in INSERT mode
