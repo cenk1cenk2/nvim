@@ -73,7 +73,7 @@ function M.config()
           align = "center", -- align columns left, center or right
         },
         triggers = {
-          { "<auto>", modes = { "n", "i", "x", "s", "o", "t", "c" } },
+          { "<auto>", mode = { "n", "i", "x", "s", "o", "t", "c" } },
           -- { "<leader>" },
           -- { "g" },
           -- { "z" },
