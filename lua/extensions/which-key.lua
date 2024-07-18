@@ -42,15 +42,6 @@ function M.config()
             g = true, -- bindings for prefixed with g,
           },
         },
-        modes = {
-          n = true, -- Normal mode
-          i = false, -- Insert mode
-          x = true, -- Visual mode
-          s = true, -- Select mode
-          o = true, -- Operator pending mode
-          t = false, -- Terminal mode
-          c = true, -- Command mode
-        },
         icons = {
           rules = false,
           breadcrumb = lvim.ui.icons.ui.DoubleChevronRight, -- symbol used in the command line area that shows your active key combo
@@ -81,7 +72,18 @@ function M.config()
           spacing = 4, -- spacing between columns
           align = "center", -- align columns left, center or right
         },
-        triggers = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r" },
+        triggers = {
+          { "<auto>", modes = { "n", "i", "x", "s", "o", "t", "c" } },
+          -- { "<leader>" },
+          -- { "g" },
+          -- { "z" },
+          -- { '"' },
+          -- { "<C-r>" },
+          -- { "m" },
+          -- { "]" },
+          -- { "[" },
+          -- { "r" },
+        },
         show_help = false, -- show help message on the command line when the popup is visible
         show_keys = false, -- show the currently pressed key and its label as a message in the command line
       }
