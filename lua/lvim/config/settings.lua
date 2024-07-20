@@ -73,11 +73,7 @@ M.load_default_options = function()
 
   if vim.env["SSH_TTY"] then
     local copy = function(register)
-      require("vim.ui.clipboard.osc52").copy(register)
-
-      if vim.env["TMUX_PANE"] then
-        os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
-      end
+      return require("vim.ui.clipboard.osc52").copy(register)
     end
 
     local paste = function(register)
@@ -85,7 +81,7 @@ M.load_default_options = function()
         os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
       end
 
-      require("vim.ui.clipboard.osc52").paste(register)
+      return require("vim.ui.clipboard.osc52").paste(register)
     end
     vim.g.clipboard = {
       name = "OSC 52",
