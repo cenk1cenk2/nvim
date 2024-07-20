@@ -106,15 +106,14 @@ M.load_default_options = function()
         return cb(...)
       end
     end
-    default_options.clipboard = "unnamed"
     vim.g.clipboard = {
       name = "OSC 52",
       copy = {
-        -- ["+"] = copy("*"),
+        ["+"] = copy("*"),
         ["*"] = copy("*"),
       },
       paste = {
-        -- ["+"] = paste("+"),
+        ["+"] = paste("+"),
         ["*"] = paste("*"),
       },
     }
