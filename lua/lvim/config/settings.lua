@@ -107,7 +107,7 @@ M.load_default_options = function()
       end
     end
 
-    if NVIM_OSC52 == true then
+    if vim.env["NVIM_OSC52"] == true then
       vim.g.clipboard = {
         name = "OSC 52",
         copy = {
