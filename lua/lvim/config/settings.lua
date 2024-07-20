@@ -76,11 +76,13 @@ M.load_default_options = function()
       local cb = require("vim.ui.clipboard.osc52").copy(register)
 
       return function(...)
-        -- if vim.env["TMUX_PANE"] then
-        --   os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
-        -- end
+        if vim.env["TMUX_PANE"] then
+          os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
+        end
 
-        cb(...)
+        local result = cb(...)
+
+        return result
       end
     end
 
@@ -88,11 +90,13 @@ M.load_default_options = function()
       local cb = require("vim.ui.clipboard.osc52").paste(register)
 
       return function(...)
-        -- if vim.env["TMUX_PANE"] then
-        --   os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
-        -- end
+        if vim.env["TMUX_PANE"] then
+          os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
+        end
 
-        cb(...)
+        local result = cb(...)
+
+        return result
       end
     end
     vim.g.clipboard = {
