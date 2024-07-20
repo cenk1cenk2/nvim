@@ -88,6 +88,8 @@ M.load_default_options = function()
       return true
     end
 
+    refresh_tmux_client()
+
     local copy = function(register)
       local cb = require("vim.ui.clipboard.osc52").copy(register)
 
