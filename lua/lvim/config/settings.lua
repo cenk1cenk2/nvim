@@ -80,9 +80,7 @@ M.load_default_options = function()
           os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
         end
 
-        local result = cb(...)
-
-        return result
+        return cb(...)
       end
     end
 
@@ -94,9 +92,7 @@ M.load_default_options = function()
           os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
         end
 
-        local result = cb(...)
-
-        return result
+        return cb(...)
       end
     end
     vim.g.clipboard = {
