@@ -71,7 +71,7 @@ M.load_default_options = function()
     exrc = true,
   }
 
-  if vim.env["SSH_TTY"] then
+  if false and vim.env["SSH_TTY"] then
     local refresh_tmux_client = function()
       if vim.env["TMUX_PANE"] then
         local result = os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
