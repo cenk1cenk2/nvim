@@ -72,12 +72,27 @@ M.load_default_options = function()
   }
 
   if vim.env["SSH_TTY"] then
+    local refresh_tmux_client = function()
+      if vim.env["TMUX_PANE"] then
+        local result = os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
+
+        if result == false then
+          require("lvim.core.log"):warn("Failed to refresh tmux client.")
+
+          return false
+        end
+      end
+
+      return true
+    end
+
     local copy = function(register)
       local cb = require("vim.ui.clipboard.osc52").copy(register)
 
       return function(...)
-        if vim.env["TMUX_PANE"] then
-          os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
+        local result = refresh_tmux_client()
+        if result == false then
+          return
         end
 
         return cb(...)
@@ -88,8 +103,9 @@ M.load_default_options = function()
       local cb = require("vim.ui.clipboard.osc52").paste(register)
 
       return function(...)
-        if vim.env["TMUX_PANE"] then
-          os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
+        local result = refresh_tmux_client()
+        if result == false then
+          return
         end
 
         return cb(...)
