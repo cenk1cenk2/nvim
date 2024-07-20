@@ -81,14 +81,10 @@ M.load_default_options = function()
 
           return false
         end
-
-        require("lvim.core.log"):info(("Updated tmux client for pane: %s"):format(vim.env["TMUX_PANE"]))
       end
 
       return true
     end
-
-    refresh_tmux_client()
 
     local copy = function(register)
       local cb = require("vim.ui.clipboard.osc52").copy(register)
@@ -114,9 +110,11 @@ M.load_default_options = function()
       name = "OSC 52",
       copy = {
         ["+"] = copy("+"),
+        ["*"] = copy("*"),
       },
       paste = {
         ["+"] = paste("+"),
+        ["*"] = paste("*"),
       },
     }
   end
