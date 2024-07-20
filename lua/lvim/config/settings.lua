@@ -71,9 +71,9 @@ M.load_default_options = function()
     exrc = true,
   }
 
-  -- if vim.env["SSH_TTY"] then
-  --   default_options.clipboard = ""
-  -- end
+  if vim.env["SSH_TTY"] then
+    default_options.clipboard = ""
+  end
 
   ---  SETTINGS  ---
   vim.opt.shortmess:append("c") -- don't show redundant messages from ins-completion-menu
