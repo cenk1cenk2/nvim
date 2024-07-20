@@ -119,7 +119,7 @@ M.load_default_options = function()
           ["*"] = paste("*"),
         },
       }
-    else
+    elseif vim.env["DISPLAY"] then
       default_options.clipboard = "unnamed"
     end
   end
