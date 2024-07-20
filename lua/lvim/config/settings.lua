@@ -71,7 +71,7 @@ M.load_default_options = function()
     exrc = true,
   }
 
-  if false and vim.env["SSH_TTY"] then
+  if vim.env["SSH_TTY"] then
     local refresh_tmux_client = function()
       if vim.env["TMUX_PANE"] then
         local result = os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
@@ -106,17 +106,22 @@ M.load_default_options = function()
         return cb(...)
       end
     end
-    vim.g.clipboard = {
-      name = "OSC 52",
-      copy = {
-        ["+"] = copy("+"),
-        ["*"] = copy("*"),
-      },
-      paste = {
-        ["+"] = paste("+"),
-        ["*"] = paste("*"),
-      },
-    }
+
+    if NVIM_OSC52 == true then
+      vim.g.clipboard = {
+        name = "OSC 52",
+        copy = {
+          ["+"] = copy("+"),
+          ["*"] = copy("*"),
+        },
+        paste = {
+          ["+"] = paste("+"),
+          ["*"] = paste("*"),
+        },
+      }
+    else
+      default_options.clipboard = "unnamed"
+    end
   end
 
   ---  SETTINGS  ---
