@@ -83,6 +83,8 @@ M.load_default_options = function()
         end
       end
 
+      require("lvim.core.log"):info(("Updated tmux client for pane: %s"):format(vim.env["TMUX_PANE"]))
+
       return true
     end
 
