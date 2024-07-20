@@ -90,11 +90,6 @@ M.load_default_options = function()
       local cb = require("vim.ui.clipboard.osc52").copy(register)
 
       return function(...)
-        local result = refresh_tmux_client()
-        if result == false then
-          return
-        end
-
         return cb(...)
       end
     end
