@@ -81,11 +81,11 @@ M.load_default_options = function()
     end
 
     local paste = function(register)
-      require("vim.ui.clipboard.osc52").paste(register)
-
       if vim.env["TMUX_PANE"] then
         os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
       end
+
+      require("vim.ui.clipboard.osc52").paste(register)
     end
     vim.g.clipboard = {
       name = "OSC 52",
