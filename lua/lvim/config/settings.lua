@@ -71,6 +71,21 @@ M.load_default_options = function()
     exrc = true,
   }
 
+  if vim.env["SSH_TTY"] then
+    default_options.clipboard = ""
+    vim.g.clipboard = {
+      name = "OSC 52",
+      copy = {
+        ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+        ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+      },
+      paste = {
+        ["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+        ["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+      },
+    }
+  end
+
   ---  SETTINGS  ---
   vim.opt.shortmess:append("c") -- don't show redundant messages from ins-completion-menu
   vim.opt.shortmess:append("I") -- don't show the default intro message
