@@ -71,59 +71,6 @@ M.load_default_options = function()
     exrc = true,
   }
 
-  if vim.env["SSH_TTY"] then
-    local refresh_tmux_client = function()
-      if vim.env["TMUX_PANE"] then
-        local result = os.execute(("tmux refresh-client -l %s"):format(vim.env["TMUX_PANE"]))
-
-        if result == false then
-          require("lvim.core.log"):warn("Failed to refresh tmux client.")
-
-          return false
-        end
-      end
-
-      return true
-    end
-
-    local copy = function(register)
-      local cb = require("vim.ui.clipboard.osc52").copy(register)
-
-      return function(...)
-        return cb(...)
-      end
-    end
-
-    local paste = function(register)
-      local cb = require("vim.ui.clipboard.osc52").paste(register)
-
-      return function(...)
-        local result = refresh_tmux_client()
-        if result == false then
-          return
-        end
-
-        return cb(...)
-      end
-    end
-
-    if vim.env["NVIM_OSC52"] == true then
-      vim.g.clipboard = {
-        name = "OSC 52",
-        copy = {
-          ["+"] = copy("+"),
-          ["*"] = copy("*"),
-        },
-        paste = {
-          ["+"] = paste("+"),
-          ["*"] = paste("*"),
-        },
-      }
-    elseif vim.env["DISPLAY"] then
-      default_options.clipboard = "unnamed"
-    end
-  end
-
   ---  SETTINGS  ---
   vim.opt.shortmess:append("c") -- don't show redundant messages from ins-completion-menu
   vim.opt.shortmess:append("I") -- don't show the default intro message
