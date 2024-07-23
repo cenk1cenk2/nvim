@@ -370,6 +370,10 @@ hl.langs.markdown = {
   ["@markup.raw.markdown_inline"] = { link = "@string" },
 }
 
+hl.langs.gitignore = {
+  ["@string.special.path.gitignore"] = {},
+}
+
 -- plugins
 
 hl.plugins.whichkey = {
