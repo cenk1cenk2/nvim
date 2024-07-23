@@ -43,6 +43,15 @@ function M.config()
           {
             ft = "DiffviewFiles",
             title = "Diffview",
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.25
+                end
+
+                return 50
+              end,
+            },
           },
         },
         right = {
