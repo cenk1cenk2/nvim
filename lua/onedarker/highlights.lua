@@ -372,6 +372,7 @@ hl.langs.markdown = {
 
 hl.langs.gitignore = {
   ["@string.special.path.gitignore"] = {},
+  ["@character.special.gitignore"] = { fg = c.cyan[600] },
 }
 
 -- plugins
