@@ -47,6 +47,7 @@ function M.config()
             components.spaces,
             -- components.encoding,
             components.session,
+            components.arrow,
             components.dap,
             components.diagnostics,
             components.treesitter,
@@ -197,6 +198,18 @@ function M.components()
       },
       cond = function()
         return conditions.hide_in_width() and vim.tbl_contains({ "yaml", "helm" }, vim.api.nvim_get_option_value("ft", { buf = 0 })) and package_is_loaded("yaml-companion")
+      end,
+    },
+    arrow = {
+      function()
+        return require("arrow.statusline").text_for_statusline_with_icons()
+      end,
+      color = {
+        fg = lvim.ui.colors.green[600],
+        bg = lvim.ui.colors.bg[300],
+      },
+      cond = function()
+        return conditions.hide_in_width() and package_is_loaded("arrow")
       end,
     },
     diagnostics = {

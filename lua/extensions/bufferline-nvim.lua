@@ -152,14 +152,14 @@ function M.config()
           desc = "close unpinned tabs",
         },
         {
-          fn.wk_keystroke({ categories.BUFFER, "y" }),
+          fn.wk_keystroke({ categories.BUFFER, "H" }),
           function()
             require("bufferline").close_in_direction("left")
           end,
           desc = "close all buffers to the left",
         },
         {
-          fn.wk_keystroke({ categories.BUFFER, "Y" }),
+          fn.wk_keystroke({ categories.BUFFER, "L" }),
           function()
             require("bufferline").close_in_direction("right")
           end,

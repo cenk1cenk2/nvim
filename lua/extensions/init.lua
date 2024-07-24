@@ -85,8 +85,6 @@ local extensions = {
   "neotest",
   "nvim-coverage",
   "telescope-github",
-  "vim-bookmarks",
-  "telescope-vim-bookmarks",
   "telescope-dap",
   "nvim-docs-view",
   "mini-nvim-ai",
@@ -108,6 +106,7 @@ local extensions = {
   "iswap-nvim",
   "iedit-nvim",
   "decipher-nvim",
+  "arrow-nvim",
 }
 
 function M.config(config)
