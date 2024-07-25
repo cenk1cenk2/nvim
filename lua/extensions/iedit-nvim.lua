@@ -69,7 +69,7 @@ function M.config()
 
             require("iedit").select_all()
           end,
-          desc = "iedit select all",
+          desc = "start iedit select all",
           mode = { "n", "v" },
         },
       }

@@ -102,6 +102,7 @@ local extensions = {
   "obsidian-nvim",
   "iswap-nvim",
   "iedit-nvim",
+  "viedit-nvim",
   "decipher-nvim",
   "arrow-nvim",
 }
