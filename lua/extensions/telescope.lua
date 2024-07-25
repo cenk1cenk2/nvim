@@ -450,8 +450,6 @@ function M.extend_rg_arguments(...)
     end
   end
 
-  vim.print(target)
-
   local args = vim.env[M.RG_ARGS_ENV_VAR]
 
   if args == nil then
