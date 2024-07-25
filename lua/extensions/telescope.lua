@@ -452,7 +452,7 @@ function M.extend_rg_arguments(...)
 
   local args = vim.env[M.RG_ARGS_ENV_VAR]
 
-  if args == nil then
+  if args == nil or args == "" then
     return target
   end
 
