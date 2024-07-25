@@ -202,7 +202,7 @@ function M.config()
     define_global_fn = function()
       return {
         get_telescope_rg_arguments = function(flags_only, extend)
-          local rg_arguments = M.rg_arguments()
+          local rg_arguments = vim.deepcopy(M.default_rg_arguments)
 
           if flags_only then
             table.remove(rg_arguments, 1)
