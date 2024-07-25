@@ -1,6 +1,8 @@
 -- https://github.com/nvim-telescope/telescope.nvim
 local M = {}
 
+local Log = require("lvim.core.log")
+
 local extension_name = "telescope"
 
 function M.config()
@@ -27,25 +29,14 @@ function M.config()
         "TelescopeResults",
       })
     end,
-    rg_arguments = {
-      "rg",
-      "--color=never",
-      "--no-heading",
-      "--with-filename",
-      "--line-number",
-      "--column",
-      "--smart-case",
-      "--hidden",
-      "--glob=!.git/",
-    },
-    setup = function(config)
+    setup = function()
       local actions = require("telescope.actions")
       local previewers = require("telescope.previewers")
       local sorters = require("telescope.sorters")
 
       return {
         defaults = {
-          vimgrep_arguments = config.rg_arguments,
+          vimgrep_arguments = M.default_rg_arguments,
           find_command = "rg",
           layout_config = {
             bottom_pane = {
@@ -208,13 +199,17 @@ function M.config()
         telescope.load_extension("fzf")
       end
     end,
-    define_global_fn = function(config)
+    define_global_fn = function()
       return {
-        get_telescope_rg_arguments = function(flags_only)
-          local rg_arguments = vim.deepcopy(config.rg_arguments)
+        get_telescope_rg_arguments = function(flags_only, extend)
+          local rg_arguments = M.rg_arguments()
 
           if flags_only then
             table.remove(rg_arguments, 1)
+          end
+
+          if extend then
+            rg_arguments = M.extend_rg_arguments(rg_arguments)
           end
 
           return rg_arguments
@@ -222,13 +217,11 @@ function M.config()
       }
     end,
     wk = function(_, categories, fn)
-      local finders = require("modules.telescope")
-
       return {
         {
           fn.wk_keystroke({ "p" }),
           function()
-            finders.find_project_files()
+            M.find_project_files()
           end,
           desc = "find file",
           mode = { "n", "v" },
@@ -236,7 +229,7 @@ function M.config()
         {
           fn.wk_keystroke({ "o" }),
           function()
-            vim.cmd([[Telescope buffers]])
+            require("telescope.builtin").buffers()
           end,
           desc = "open buffers",
           mode = { "n", "v" },
@@ -244,7 +237,7 @@ function M.config()
         {
           fn.wk_keystroke({ "O" }),
           function()
-            vim.cmd([[Telescope oldfiles]])
+            require("telescope.builtin").oldfiles()
           end,
           desc = "search file history",
           mode = { "n", "v" },
@@ -252,7 +245,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TREESITTER, ":" }),
           function()
-            vim.cmd([[Telescope command_history]])
+            require("telescope.builtin").command_history()
           end,
           desc = "search command history",
           mode = { "n", "v" },
@@ -260,134 +253,270 @@ function M.config()
         {
           fn.wk_keystroke({ categories.FIND, ":" }),
           function()
-            vim.cmd([[Telescope commands]])
+            require("telescope.builtin").commands()
           end,
           desc = "search available commands",
         },
         {
           fn.wk_keystroke({ categories.FIND, "A" }),
           function()
-            vim.cmd([[Telescope builtin]])
+            require("telescope.builtin").builtin()
           end,
           desc = "telescope list builtin finders",
         },
         {
-          fn.wk_keystroke({ categories.FIND, "b" }),
-          function()
-            finders.rg_current_buffer_fuzzy_find()
-          end,
-          desc = "search current buffer fuzzy",
-        },
-        {
-          fn.wk_keystroke({ categories.FIND, "B" }),
-          function()
-            finders.rg_grep_buffer()
-          end,
-          desc = "search current buffer grep",
-        },
-        {
-          fn.wk_keystroke({ categories.FIND, "d" }),
-          function()
-            finders.rg_dirty()
-          end,
-          desc = "dirty fuzzy grep",
-        },
-        {
-          fn.wk_keystroke({ categories.FIND, "f" }),
-          function()
-            vim.cmd([[Telescope resume]])
-          end,
-          desc = "resume last search",
-        },
-        {
-          fn.wk_keystroke({ categories.FIND, "g" }),
-          function()
-            vim.cmd([[Telescope grep_string]])
-          end,
-          desc = "grep string under cursor",
-        },
-        {
           fn.wk_keystroke({ categories.FIND, "j" }),
           function()
-            vim.cmd([[Telescope jumplist]])
+            require("telescope.builtin").jumplist()
           end,
           desc = "list jumps",
         },
         {
           fn.wk_keystroke({ categories.FIND, "s" }),
           function()
-            vim.cmd([[Telescope spell_suggest]])
+            require("telescope.builtin").spell_suggest()
           end,
           desc = "search spell suggestions",
         },
-        {
-          fn.wk_keystroke({ categories.FIND, "r" }),
-          function()
-            finders.rg_interactive()
-          end,
-          desc = "ripgrep interactive",
-        },
-        {
-          fn.wk_keystroke({ categories.FIND, "R" }),
-          function()
-            vim.cmd([[Telescope live_grep]])
-          end,
-          desc = "grep with regexp",
-        },
-        {
-          fn.wk_keystroke({ categories.FIND, "t" }),
-          function()
-            finders.rg_string()
-          end,
-          desc = "grep string",
-        },
-        {
-          fn.wk_keystroke({ categories.FIND, "T" }),
-          function()
-            finders.rg_string({
-              additional_args = { grep_open_files = true },
-            })
-          end,
-          desc = "grep string open buffers",
-        },
+
         {
           fn.wk_keystroke({ categories.FIND, "q" }),
           function()
-            vim.cmd([[Telescope quickfixhistory]])
+            require("telescope.builtin").quickfixhistory()
           end,
           desc = "quickfix history",
         },
         {
           fn.wk_keystroke({ categories.ACTIONS, "f" }),
           function()
-            vim.cmd([[Telescope filetypes]])
+            require("telescope.builtin").filetypes()
           end,
           desc = "select from filetypes",
         },
         {
           fn.wk_keystroke({ categories.GIT, "f" }),
           function()
-            vim.cmd([[Telescope git_status]])
+            require("telescope.builtin").git_status()
           end,
           desc = "git status",
         },
         {
           fn.wk_keystroke({ categories.GIT, "F" }),
           function()
-            vim.cmd([[Telescope git_files]])
+            require("telescope.builtin").git_files()
           end,
           desc = "list git tracked files",
         },
         {
           fn.wk_keystroke({ categories.NEOVIM, "k" }),
           function()
-            vim.cmd([[Telescope keymaps]])
+            require("telescope.builtin").keymaps()
           end,
           desc = "list keymaps",
+        },
+
+        -- searches
+
+        {
+          fn.wk_keystroke({ categories.FIND, "f" }),
+          function()
+            require("telescope.builtin").resume()
+          end,
+          desc = "resume last search",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "a" }),
+          function()
+            M.set_rg_arguments()
+          end,
+          desc = "set ripgrep arguments",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "b" }),
+          function()
+            M.rg_grep_buffer_fuzzy()
+          end,
+          desc = "grep fuzzy current buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "B" }),
+          function()
+            M.rg_grep_buffer()
+          end,
+          desc = "grep current buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "d" }),
+          function()
+            M.rg_dirty()
+          end,
+          desc = "grep dirty",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "D" }),
+          function()
+            M.rg_dirty({
+              grep_open_files = true,
+            })
+          end,
+          desc = "grep dirty for open buffers",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "g" }),
+          function()
+            require("telescope.builtin").grep_string({
+              additional_args = M.extend_rg_arguments(),
+            })
+          end,
+          desc = "grep under cursor",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "G" }),
+          function()
+            require("telescope.builtin").grep_string({
+              grep_open_files = true,
+              additional_args = M.extend_rg_arguments(),
+            })
+          end,
+          desc = "grep under cursor for open buffers",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "r" }),
+          function()
+            require("telescope.builtin").live_grep({
+              additional_args = M.extend_rg_arguments(),
+            })
+          end,
+          desc = "grep with regexp",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "R" }),
+          function()
+            require("telescope.builtin").live_grep({
+              grep_open_files = true,
+              additional_args = M.extend_rg_arguments(),
+            })
+          end,
+          desc = "grep regexp open buffers",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "t" }),
+          function()
+            M.rg_string()
+          end,
+          desc = "grep string",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "T" }),
+          function()
+            M.rg_string({
+              grep_open_files = true,
+              additional_args = M.extend_rg_arguments(),
+            })
+          end,
+          desc = "grep string open buffers",
         },
       }
     end,
   })
+end
+
+M.default_rg_arguments = {
+  "rg",
+  "--color=never",
+  "--no-heading",
+  "--with-filename",
+  "--line-number",
+  "--column",
+  "--smart-case",
+  "--hidden",
+  "--glob=!.git/",
+}
+
+M.RG_ARGS_ENV_VAR = "RG_ARGS"
+
+function M.extend_rg_arguments(...)
+  local target = {}
+
+  if ... and vim.tbl_count(...) > 0 then
+    for _, args in ipairs(...) do
+      if args then
+        if type(args) == "string" then
+          args = { args }
+        end
+
+        target = vim.list_extend(target, args)
+      end
+    end
+  end
+
+  vim.print(target)
+
+  local args = vim.env[M.RG_ARGS_ENV_VAR]
+
+  if args == nil then
+    return target
+  end
+
+  local chunks = {}
+
+  for substring in args:gmatch("%S+") do
+    table.insert(chunks, substring)
+  end
+
+  return vim.list_extend(target, chunks)
+end
+
+function M.set_rg_arguments()
+  vim.ui.input({
+    prompt = "Ripgrep arguments:",
+    default = vim.env[M.RG_ARGS_ENV_VAR],
+  }, function(val)
+    vim.env["RG_ARGS"] = vim.fn.expand(tostring(val))
+  end)
+end
+
+function M.rg_string(options)
+  options = options or {}
+  return require("telescope.builtin").live_grep(vim.tbl_extend("force", options, {
+    additional_args = M.extend_rg_arguments({ "--fixed-strings" }, options.additional_args),
+  }))
+end
+
+function M.rg_dirty(options)
+  options = options or {}
+  require("telescope.builtin").grep_string(vim.tbl_extend("force", options or {}, {
+    shorten_path = true,
+    word_match = "-w",
+    search = "",
+    additional_args = M.extend_rg_arguments(options.additional_args),
+  }))
+end
+
+function M.rg_grep_buffer(options)
+  options = options or {}
+  return require("telescope.builtin").live_grep(vim.tbl_extend("force", options or {}, {
+    additional_args = { "--no-ignore" },
+    search_dirs = { "%:p" },
+  }))
+end
+
+function M.rg_grep_buffer_fuzzy(options)
+  options = options or {}
+  return require("telescope.builtin").current_buffer_fuzzy_find(vim.tbl_extend("force", options or {}, {
+    additional_args = { "--no-ignore" },
+  }))
+end
+
+-- Smartly opens either git_files or find_files, depending on whether the working directory is
+-- contained in a Git repo.
+function M.find_project_files(options)
+  options = options or {}
+  -- local ok = pcall(builtin.git_files)
+
+  -- if not ok then
+  require("telescope.builtin").find_files(vim.tbl_extend("force", options, { previewer = true }))
+  -- end
 end
 
 return M

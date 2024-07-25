@@ -9,7 +9,6 @@ local modules = {
   "quit",
   -- rest
   "lsp-setup",
-  "telescope",
   "unimpaired",
   "scratch",
 }
