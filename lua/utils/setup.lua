@@ -16,14 +16,8 @@ end
 function M.load_mappings(mappings, opts)
   opts = opts or {}
 
-  for _, mapping in ipairs(mappings) do
-    if mapping.silent ~= false then
-      mapping.silent = true
-    end
-    if mapping.noremap ~= false then
-      mapping.noremap = true
-    end
-    local m = vim.deepcopy(mapping)
+  for _, mapping in pairs(mappings) do
+    local m = vim.tbl_extend("force", { silent = true, noremap = true }, mapping)
     local lhs = table.remove(m, 1)
     local rhs = table.remove(m, 1)
     local mode = m.mode or { "n" }
