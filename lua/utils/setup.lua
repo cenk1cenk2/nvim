@@ -17,7 +17,7 @@ function M.load_mappings(mappings, opts)
   opts = opts or {}
 
   for _, mapping in pairs(mappings) do
-    local m = vim.tbl_extend("force", { silent = true, noremap = true }, mapping)
+    local m = vim.tbl_extend("force", { silent = true }, mapping)
     local lhs = table.remove(m, 1)
     local rhs = table.remove(m, 1)
     local mode = m.mode

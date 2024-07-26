@@ -73,19 +73,19 @@ function M.config()
           "gq",
           "<Plug>(YankyPreviousEntry)",
           desc = "yank cycle forward",
-          mode = { "n", "v", "x", "o" },
+          mode = { "n", "v", "x" },
         },
         {
           "gQ",
           "<Plug>(YankyNextEntry)",
           desc = "yank cycle backward",
-          mode = { "n", "v", "x", "o" },
+          mode = { "n", "v", "x" },
         },
         {
           "y",
           "<Plug>(YankyYank)",
           desc = "yanky",
-          mode = { "n", "v", "x", "o" },
+          mode = { "n", "v", "x" },
         },
         {
           "p",
@@ -130,7 +130,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.ACTIONS, "y" }),
           function()
-            vim.cmd([[Telescope yank_history]])
+            require("telescope").extensions.yank_history.yank_history()
           end,
           desc = "list yanky.nvim registers",
         },

@@ -10,27 +10,27 @@ return {
   -- to blachole
   {
     "c",
-    '"_c',
+    [["_c]],
     mode = { "n", "v", "x" },
   },
   {
     "C",
-    '"_C',
+    [["_C]],
     mode = { "n", "v", "x" },
   },
   {
     "x",
-    '"_x',
+    [["_x]],
     mode = { "n", "v", "x" },
   },
   {
     "P",
-    '"_dp',
+    [["_dp]],
     mode = { "v", "vb" },
   },
   {
     "p",
-    '"_dP',
+    [["_dP]],
     mode = { "v", "vb" },
   },
   -- tab control
@@ -66,15 +66,9 @@ return {
     desc = "prev tab",
     mode = { "n", "v", "x" },
   },
-  -- split to tab
-  {
-    "<C-t>",
-    "<C-w>T",
-    mode = { "n", "v", "x" },
-  },
   -- split to window
   {
-    "<C-e>",
+    "<C-t>",
     "<C-w><C-o>",
     mode = { "n", "v", "x" },
   },
@@ -104,7 +98,6 @@ return {
     "<ESC>",
     mode = { "i" },
   },
-
   -- save
   {
     "<C-s>",

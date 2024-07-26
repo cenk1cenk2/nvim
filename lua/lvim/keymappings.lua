@@ -12,7 +12,8 @@ end
 function M.setup()
   vim.g.mapleader = (lvim.leader == "space" and " ") or lvim.leader
   Log:debug("Initialized keybindings.")
-  M.load(lvim.keys)
+
+  require("utils.setup").load_mappings(lvim.keys)
 end
 
 return M

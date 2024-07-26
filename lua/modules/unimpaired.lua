@@ -32,14 +32,15 @@ function M.setup()
             M.paste_blank_line_below()
           end,
           desc = "paste blank line below",
+          mode = { "n" },
         },
         {
-
           "OO",
           function()
             M.paste_blank_line_above()
           end,
           desc = "paste blank line above",
+          mode = { "n" },
         },
       }
     end,
