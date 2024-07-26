@@ -128,7 +128,7 @@ function M.config()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.ACTIONS, "y" }),
+          fn.wk_keystroke({ categories.FIND, "y" }),
           function()
             require("telescope").extensions.yank_history.yank_history()
           end,
