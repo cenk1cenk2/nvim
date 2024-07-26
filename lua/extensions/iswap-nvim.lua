@@ -43,7 +43,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          "HL",
+          "HH",
           ":ISwapWith<CR>",
           desc = "swap with selected node",
           mode = { "n" },
