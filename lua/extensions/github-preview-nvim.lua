@@ -62,11 +62,11 @@ function M.config()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "m" }),
+          fn.wk_keystroke({ categories.TASKS, "M" }),
           function()
             vim.cmd([[GithubPreviewToggle]])
           end,
-          desc = "toggle markdown preview",
+          desc = "toggle markdown preview in browser",
         },
       }
     end,
