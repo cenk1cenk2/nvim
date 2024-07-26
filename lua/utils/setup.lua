@@ -20,14 +20,14 @@ function M.load_mappings(mappings, opts)
     local m = vim.tbl_extend("force", { silent = true, noremap = true }, mapping)
     local lhs = table.remove(m, 1)
     local rhs = table.remove(m, 1)
-    local mode = m.mode or { "n" }
+    local mode = m.mode
     m.mode = nil
     m = vim.tbl_extend("force", m, opts)
 
     local ok, result = pcall(vim.keymap.set, mode, lhs, rhs, m)
 
     if not ok then
-      Log:error(("Can not map keybind: %s > %s"):format(result, vim.inspect(m)))
+      Log:error(("Can not map keybind: %s > %s"):format(result, vim.inspect(mapping)))
     end
   end
 end

@@ -174,6 +174,7 @@ function M.config()
           function()
             M.kill_all()
           end,
+          mode = { "n", "t" },
         },
       }
     end,
