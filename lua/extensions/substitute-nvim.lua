@@ -12,9 +12,7 @@ function M.config()
     end,
     setup = function()
       return {
-        on_substitute = function()
-          require("yanky.integration").substitute()
-        end,
+        on_substitute = require("yanky.integration").substitute(),
         yank_substitued_text = false,
         range = {
           prefix = "s",

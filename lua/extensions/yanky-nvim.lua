@@ -91,13 +91,13 @@ function M.config()
           "p",
           "<Plug>(YankyPutAfter)",
           desc = "yanky put after",
-          mode = { "n" },
+          mode = { "n", "o" },
         },
         {
           "P",
           "<Plug>(YankyPutBefore)",
           desc = "yanky put before",
-          mode = { "n" },
+          mode = { "n", "o" },
         },
         {
           "P",
