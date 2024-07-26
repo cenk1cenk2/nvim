@@ -67,18 +67,22 @@ function M.config()
     on_setup = function(config)
       require("gitsigns").setup(config.setup)
     end,
-    keymaps = {
-      {
-        { "n" },
-
-        ["]"] = {
-          ["h"] = { ":Gitsigns next_hunk<CR>", { desc = "next hunk" } },
+    keymaps = function()
+      return {
+        {
+          "]h",
+          ":Gitsigns next_hunk<CR>",
+          desc = "next git hunk",
+          mode = { "n" },
         },
-        ["["] = {
-          ["h"] = { ":Gitsigns prev_hunk<CR>", { desc = "previous hunk" } },
+        {
+          "[h",
+          ":Gitsigns prev_hunk<CR>",
+          desc = "previous git hunk",
+          mode = { "n" },
         },
-      },
-    },
+      }
+    end,
     wk = function(_, categories, fn)
       return {
         {

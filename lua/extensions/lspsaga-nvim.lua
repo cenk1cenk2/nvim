@@ -163,14 +163,22 @@ function M.config()
     on_setup = function(config)
       require("lspsaga").setup(config.setup)
     end,
-    keymaps = {
-      {
-        { "n" },
-
-        ["ge"] = { ":Lspsaga finder<CR>", { desc = "finder" } },
-        ["gw"] = { ":Lspsaga peek_definition<CR>", { desc = "peek" } },
-      },
-    },
+    keymaps = function()
+      return {
+        {
+          "ge",
+          ":Lspsaga finder<CR>",
+          desc = "finder",
+          mode = { "n" },
+        },
+        {
+          "gw",
+          ":Lspsaga peek_definition<CR>",
+          desc = "peek",
+          mode = { "n" },
+        },
+      }
+    end,
     -- wk = function(_, categories)
     --   return {
     --     [categories.LSP] = {

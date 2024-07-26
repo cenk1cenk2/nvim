@@ -32,41 +32,42 @@ function M.config()
     on_setup = function(config)
       require("substitute").setup(config.setup)
     end,
-    keymaps = {
-      {
-        { "n" },
-
-        ["sd"] = {
+    keymaps = function()
+      return {
+        {
+          "sd",
           function()
             require("substitute").operator()
           end,
-          { desc = "substitute operator" },
+          desc = "substitute operator",
+          mode = { "n" },
         },
-        ["sds"] = {
+        {
+          "sds",
           function()
             require("substitute").line()
           end,
-          { desc = "substitute line" },
+          desc = "substitute line",
+          mode = { "n" },
         },
-        ["sdd"] = {
+        {
+          "sdd",
           function()
             require("substitute").eol()
           end,
-          { desc = "substitute eol" },
+          desc = "substitute eol",
+          mode = { "n" },
         },
-      },
-
-      {
-        { "v" },
-
-        ["sd"] = {
+        {
+          "sd",
           function()
             require("substitute").visual()
           end,
-          { desc = "substitute visual" },
+          desc = "substitute visual",
+          mode = { "v" },
         },
-      },
-    },
+      }
+    end,
   })
 end
 

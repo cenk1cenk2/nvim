@@ -24,22 +24,25 @@ end
 function M.setup()
   require("utils.setup").init({
     name = "unimpaired",
-    keymaps = {
-      {
-        { "n" },
-
-        ["oo"] = {
+    keymaps = function()
+      return {
+        {
+          "oo",
           function()
             M.paste_blank_line_below()
           end,
+          desc = "paste blank line below",
         },
-        ["OO"] = {
+        {
+
+          "OO",
           function()
             M.paste_blank_line_above()
           end,
+          desc = "paste blank line above",
         },
-      },
-    },
+      }
+    end,
   })
 end
 

@@ -19,190 +19,213 @@ function M.config()
     -- subs command comes from here!
     -- require("textcase").setup(config.setup)
     -- end,
-    keymaps = {
-      {
-        { "v", "vb", "o", "n" },
-
+    keymaps = function()
+      return {
         -- subs
-
-        ["gsr"] = {
+        {
+          "gsr",
           ":Subs ",
-          { desc = "SUBS" },
+          desc = "SUBS",
+          mode = { "n", "v", "x", "o" },
         },
-
         -- operator
-
-        ["gsu"] = {
+        {
+          "gsu",
           function()
             return require("textcase").operator("to_upper_case")
           end,
-          { desc = "to upper case [LOREM IPSUM]" },
+          desc = "to upper case [LOREM IPSUM]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gsl"] = {
+        {
+          "gsl",
           function()
             return require("textcase").operator("to_lower_case")
           end,
-          { desc = "to lower case [lorem ipsum]" },
+          desc = "to lower case [lorem ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gss"] = {
+        {
+          "gss",
           function()
             return require("textcase").operator("to_snake_case")
           end,
-          { desc = "to snake case [lorem_ipsum]" },
+          desc = "to snake case [lorem_ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gsd"] = {
+        {
+          "gsd",
           function()
             return require("textcase").operator("to_dash_case")
           end,
-          { desc = "to dash case [lorem-ipsum]" },
+          desc = "to dash case [lorem-ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gsT"] = {
+        {
+          "gsT",
           function()
             return require("textcase").operator("to_title_dash_case")
           end,
-          { desc = "to title dash case  [Lorem-Ipsum]" },
+          desc = "to title dash case  [Lorem-Ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gsC"] = {
+        {
+          "gsC",
           function()
             return require("textcase").operator("to_constant_case")
           end,
-          { desc = "to constant case [LOREM_IPSUM]" },
+          desc = "to constant case [LOREM_IPSUM]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gsD"] = {
+        {
+          "gsD",
           function()
             return require("textcase").operator("to_dot_case")
           end,
-          { desc = "to dot case [lorem.ipsum]" },
+          desc = "to dot case [lorem.ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gsc"] = {
+        {
+          "gsc",
           function()
             return require("textcase").operator("to_camel_case")
           end,
-          { desc = "to camel case [loremIpsum]" },
+          desc = "to camel case [loremIpsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gsp"] = {
+        {
+          "gsp",
           function()
             return require("textcase").operator("to_pascal_case")
           end,
-          { desc = "to pascal case [LoremIpsum]" },
+          desc = "to pascal case [LoremIpsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gst"] = {
+        {
+          "gst",
           function()
             return require("textcase").operator("to_title_case")
           end,
-          { desc = "to title case [Lorem Ipsum]" },
+          desc = "to title case [Lorem Ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gsf"] = {
+        {
+          "gsf",
           function()
             return require("textcase").operator("to_path_case")
           end,
-          { desc = "to path case [lorem/ipsum]" },
+          desc = "to path case [lorem/ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gsP"] = {
+        {
+          "gsP",
           function()
             return require("textcase").operator("to_phrase_case")
           end,
-          { desc = "to phrase case [Lorem ipsum]" },
+          desc = "to phrase case [Lorem ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
 
         -- lsp
 
-        ["gSu"] = {
+        {
+          "gSu",
           function()
             return require("textcase").lsp_rename("to_upper_case")
           end,
-          { desc = "to upper case [LOREM IPSUM]" },
+          desc = "to upper case [LOREM IPSUM]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gSl"] = {
+        {
+          "gSl",
           function()
             return require("textcase").lsp_rename("to_lower_case")
           end,
-          { desc = "to lower case [lorem ipsum]" },
+          desc = "to lower case [lorem ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gSs"] = {
+        {
+          "gSs",
           function()
             return require("textcase").lsp_rename("to_snake_case")
           end,
-          { desc = "to snake case [lorem_ipsum]" },
+          desc = "to snake case [lorem_ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gSd"] = {
+        {
+          "gSd",
           function()
             return require("textcase").lsp_rename("to_dash_case")
           end,
-          { desc = "to dash case [lorem-ipsum]" },
+          desc = "to dash case [lorem-ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gST"] = {
+        {
+          "gST",
           function()
             return require("textcase").lsp_rename("to_title_dash_case")
           end,
-          { desc = "to title dash case [Lorem-Ipsum]" },
+          desc = "to title dash case [Lorem-Ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gSC"] = {
+        {
+          "gSC",
           function()
             return require("textcase").lsp_rename("to_constant_case")
           end,
-          { desc = "to constant case [LOREM_IPSUM]" },
+          desc = "to constant case [LOREM_IPSUM]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gSD"] = {
+        {
+          "gSD",
           function()
             return require("textcase").lsp_rename("to_dot_case")
           end,
-          { desc = "to dot case [lorem.ipsum]" },
+          desc = "to dot case [lorem.ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gSc"] = {
+        {
+          "gSc",
           function()
             return require("textcase").lsp_rename("to_camel_case")
           end,
-          { desc = "to camel case [loremIpsum]" },
+          desc = "to camel case [loremIpsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gSp"] = {
+        {
+          "gSp",
           function()
             return require("textcase").lsp_rename("to_pascal_case")
           end,
-          { desc = "to pascal case [LoremIpsum]" },
+          desc = "to pascal case [LoremIpsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gSt"] = {
+        {
+          "gSt",
           function()
             return require("textcase").lsp_rename("to_title_case")
           end,
-          { desc = "to title case [Lorem Ipsum]" },
+          desc = "to title case [Lorem Ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gSf"] = {
+        {
+          "gSf",
           function()
             return require("textcase").lsp_rename("to_path_case")
           end,
-          { desc = "to path case [lorem/ipsum]" },
+          desc = "to path case [lorem/ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-
-        ["gSP"] = {
+        {
+          "gSP",
           function()
             return require("textcase").lsp_rename("to_phrase_case")
           end,
-          { desc = "to phrase case [Lorem ipsum]" },
+          desc = "to phrase case [Lorem ipsum]",
+          mode = { "n", "v", "x", "o" },
         },
-      },
-    },
+      }
+    end,
   })
 end
 

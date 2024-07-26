@@ -23,18 +23,18 @@ function M.config()
         end,
       },
     },
-    keymaps = {
-      {
-        { "n" },
-
-        ["<C-q>"] = {
+    keymaps = function()
+      return {
+        {
+          "<C-q>",
           function()
             M.close_buffer()
           end,
-          { desc = "close current buffer" },
+          desc = "close current buffer",
+          mode = { "n" },
         },
-      },
-    },
+      }
+    end,
     -- autocmds = {
     --   {
     --     { "BufLeave" },

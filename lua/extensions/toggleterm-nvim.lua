@@ -118,41 +118,65 @@ function M.config()
     define_global_fn = function()
       return { toggle_log_view = M.toggle_log_view }
     end,
-    keymaps = {
-      {
-        { "n", "t" },
-
-        ["<F1>"] = function()
-          M.get_current_float_terminal():toggle()
-        end,
-        ["<F2>"] = function()
-          M.float_terminal_select("prev")
-        end,
-        ["<F3>"] = function()
-          M.float_terminal_select("next")
-        end,
-        ["<F4>"] = function()
-          M.append_float_terminal()
-        end,
-        ["<F6>"] = function()
-          M.create_buffer_terminal()
-        end,
-        ["<F7>"] = function()
-          M.create_bottom_terminal()
-        end,
-        ["<F9>"] = function()
-          M.kill_all()
-        end,
-      },
-
-      {
-        { "t" },
-
-        ["<F1>"] = function()
-          M.close_all()
-        end,
-      },
-    },
+    keymaps = function()
+      return {
+        {
+          "<F1>",
+          function()
+            M.get_current_float_terminal():toggle()
+          end,
+          mode = { "n" },
+        },
+        {
+          "<F1>",
+          function()
+            M.close_all()
+          end,
+          mode = { "t" },
+        },
+        {
+          "<F2>",
+          function()
+            M.float_terminal_select("prev")
+          end,
+          mode = { "n", "t" },
+        },
+        {
+          "<F3>",
+          function()
+            M.float_terminal_select("next")
+          end,
+          mode = { "n", "t" },
+        },
+        {
+          "<F4>",
+          function()
+            M.append_float_terminal()
+          end,
+          mode = { "n", "t" },
+        },
+        {
+          "<F6>",
+          function()
+            M.create_buffer_terminal()
+          end,
+          mode = { "n", "t" },
+        },
+        {
+          "<F7>",
+          function()
+            M.create_bottom_terminal()
+          end,
+          mode = { "n", "t" },
+        },
+        {
+          "<F9>",
+          function()
+            M.kill_all()
+          end,
+        },
+      }
+    end,
     wk = function(_, categories, fn)
       return {
         {

@@ -29,18 +29,20 @@ function M.config()
       -- loaded_netrw = 1
       -- netrw_loaded_netrwPlugin = 1
     },
-    keymaps = {
-      {
-        { "n" },
-
-        ["<F5>"] = ":RnvimrToggle<CR>",
-      },
-      {
-        { "t" },
-
-        ["<F5>"] = "<C-\\><C-n>:RnvimrToggle<CR>",
-      },
-    },
+    keymaps = function()
+      return {
+        {
+          "<F5>",
+          ":RnvimrToggle<CR>",
+          mode = { "n" },
+        },
+        {
+          "<F5>",
+          "<C-\\><C-n>:RnvimrToggle<CR>",
+          mode = { "t" },
+        },
+      }
+    end,
   })
 end
 

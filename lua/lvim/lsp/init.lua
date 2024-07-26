@@ -2,7 +2,6 @@ local M = {}
 
 local Log = require("lvim.core.log")
 local setup = require("utils.setup")
-local keymappings = require("lvim.keymappings")
 
 local function add_lsp_buffer_options(bufnr)
   for k, v in pairs(lvim.lsp.buffer_options) do
@@ -11,7 +10,7 @@ local function add_lsp_buffer_options(bufnr)
 end
 
 local function add_lsp_buffer_keybindings(bufnr)
-  keymappings.load(lvim.lsp.buffer_mappings, { buffer = bufnr, noremap = true, silent = true })
+  setup.load_mappings(lvim.lsp.buffer_mappings, { buffer = bufnr })
 end
 
 function M.common_capabilities()

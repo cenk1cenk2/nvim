@@ -49,7 +49,7 @@ function M:load()
 
   vim.g.mapleader = (lvim.leader == "space" and " ") or lvim.leader
 
-  require("lvim.keymappings").load(lvim.keys)
+  require("utils.setup").load_mappings(lvim.keys)
 end
 
 --- Override the configuration with a user provided one

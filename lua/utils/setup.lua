@@ -13,8 +13,29 @@ end
 
 ---
 ---@param mappings table
-function M.load_mappings(mappings)
-  require("lvim.keymappings").load(mappings)
+function M.load_mappings(mappings, opts)
+  opts = opts or {}
+
+  for _, mapping in ipairs(mappings) do
+    if mapping.silent ~= false then
+      mapping.silent = true
+    end
+    if mapping.noremap ~= false then
+      mapping.noremap = true
+    end
+    local m = vim.deepcopy(mapping)
+    local lhs = table.remove(m, 1)
+    local rhs = table.remove(m, 1)
+    local mode = m.mode or { "n" }
+    m.mode = nil
+    m = vim.tbl_extend("force", m, opts)
+
+    local ok, result = pcall(vim.keymap.set, mode, lhs, rhs, m)
+
+    if not ok then
+      Log:error(("Can not map keybind: %s > %s"):format(result, vim.inspect(m)))
+    end
+  end
 end
 
 function M.create_commands(collection)

@@ -18,80 +18,70 @@ function M.config()
     on_setup = function(config)
       require("spider").setup(config.setup)
     end,
-    keymaps = {
-      {
-        { "n", "o", "x" },
-
-        ["w"] = {
+    keymaps = function()
+      return {
+        {
+          "w",
           function()
             require("spider").motion("w")
           end,
-          {
-            desc = "spider-w",
-          },
+          desc = "spider-w",
+          mode = { "n", "o", "x" },
         },
-        ["W"] = {
-          "w",
-          {
-            desc = "non-spider-w",
-          },
-        },
-        ["gW"] = {
+        {
           "W",
-          {
-            desc = "non-spider-W",
-          },
+          "w",
+          desc = "non-spider-w",
+          mode = { "n", "o", "x" },
         },
-        ["e"] = {
+        {
+          "gW",
+          "W",
+          desc = "non-spider-W",
+          mode = { "n", "o", "x" },
+        },
+        {
+          "e",
           function()
             require("spider").motion("e")
           end,
-          {
-            desc = "spider-e",
-          },
+          desc = "spider-e",
+          mode = { "n", "o", "x" },
         },
-        ["E"] = {
-          "e",
-          {
-            desc = "non-spider-e",
-          },
-        },
-        ["gE"] = {
+        {
           "E",
-          {
-            desc = "non-spider-E",
-          },
+          "e",
+          desc = "non-spider-e",
+          mode = { "n", "o", "x" },
         },
-        ["b"] = {
+        {
+          "gE",
+          "E",
+          desc = "non-spider-E",
+          mode = { "n", "o", "x" },
+        },
+        {
+          "b",
           function()
             require("spider").motion("b")
           end,
-          {
-            desc = "spider-b",
-          },
+          desc = "spider-b",
+          mode = { "n", "o", "x" },
         },
-        ["B"] = {
-          "b",
-          {
-            desc = "non-spider-b",
-          },
-        },
-        ["gB"] = {
+        {
           "B",
-          {
-            desc = "non-spider-B",
-          },
+          "b",
+          desc = "non-spider-b",
+          mode = { "n", "o", "x" },
         },
-        -- ["ge"] = {
-        --   function()
-        --     require("spider").motion("ge")
-        --   end,
-        --   {
-        --     desc = "spider-ge",
-        --   },
-        -- },
-      },
-    },
+        {
+          "gB",
+          "B",
+          desc = "non-spider-B",
+          mode = { "n", "o", "x" },
+        },
+      }
+    end,
   })
 end
 

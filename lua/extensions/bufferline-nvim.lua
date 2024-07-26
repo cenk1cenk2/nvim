@@ -80,36 +80,42 @@ function M.config()
     on_setup = function(config)
       require("bufferline").setup(config.setup)
     end,
-    keymaps = {
-      {
-        { "n" },
-
-        ["<M-l>"] = {
+    keymaps = function()
+      return {
+        {
+          "<M-l>",
           function()
             require("bufferline").cycle(1)
           end,
-          { desc = "next buffer" },
+          desc = "next buffer",
+          mode = { "n" },
         },
-        ["<M-h>"] = {
+        {
+          "<M-h>",
           function()
             require("bufferline").cycle(-1)
           end,
-          { desc = "previous buffer" },
+          desc = "previous buffer",
+          mode = { "n" },
         },
-        ["<M-k>"] = {
+        {
+          "<M-k>",
           function()
             require("bufferline").move(1)
           end,
-          { desc = "move buffer to next" },
+          desc = "move buffer to next",
+          mode = { "n" },
         },
-        ["<M-j>"] = {
+        {
+          "<M-j>",
           function()
             require("bufferline").move(-1)
           end,
-          { desc = "move buffer to previous" },
+          desc = "move buffer to previous",
+          mode = { "n" },
         },
-      },
-    },
+      }
+    end,
     wk = function(_, categories, fn)
       return {
         {

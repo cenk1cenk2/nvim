@@ -70,7 +70,6 @@ local extensions = {
   "dressing",
   "nvim-hlslens",
   "nvim-scrollbar",
-  "refactoring-nvim",
   "lsp-lines-nvim",
   "yanky-nvim",
   "substitute-nvim",

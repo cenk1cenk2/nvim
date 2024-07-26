@@ -222,20 +222,20 @@ function M.config()
         end)
       end
     end,
-    keymaps = {
-      {
-        { "n", "x", "o" },
-
-        ["ss"] = {
+    keymaps = function()
+      return {
+        {
+          "ss",
           function()
             require("flash").jump({
               search = { wrap = true, multi_window = false },
             })
           end,
-          { desc = "flash" },
+          desc = "flash",
+          mode = { "n", "o", "x" },
         },
-
-        ["s"] = {
+        {
+          "s",
           function()
             require("flash").jump({
               pattern = ".", -- initialize pattern with any char
@@ -247,28 +247,27 @@ function M.config()
               },
             })
           end,
-          { desc = "flash to word." },
+          desc = "flash to word.",
+          mode = { "n", "o", "x" },
         },
-
-        ["S"] = {
+        {
+          "S",
           function()
             require("flash").treesitter({})
           end,
-          { desc = "flash treesitter" },
+          desc = "flash treesitter",
+          mode = { "n", "o", "x" },
         },
-      },
-
-      {
-        { "o" },
-
-        ["r"] = {
+        {
+          "r",
           function()
             require("flash").remote({})
           end,
-          { desc = "remote flash" },
+          desc = "remote flash",
+          mode = { "o" },
         },
-      },
-    },
+      }
+    end,
   })
 end
 

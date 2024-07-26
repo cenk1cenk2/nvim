@@ -70,56 +70,58 @@ function M.config()
     keymaps = function()
       return {
         {
-          { "n", "v", "vb" },
-          ["gq"] = {
-            "<Plug>(YankyPreviousEntry)",
-            desc = "yank cycle forward",
-          },
-          ["gQ"] = {
-            "<Plug>(YankyNextEntry)",
-            desc = "yank cycle backward",
-          },
-          ["y"] = {
-            "<Plug>(YankyYank)",
-            desc = "yanky",
-          },
+          "gq",
+          "<Plug>(YankyPreviousEntry)",
+          desc = "yank cycle forward",
+          mode = { "n", "v", "x", "o" },
         },
-
         {
-          { "n" },
-          ["p"] = {
-            "<Plug>(YankyPutAfter)",
-            desc = "yanky put after",
-          },
-          ["P"] = {
-            "<Plug>(YankyPutBefore)",
-            desc = "yanky put before",
-          },
+          "gQ",
+          "<Plug>(YankyNextEntry)",
+          desc = "yank cycle backward",
+          mode = { "n", "v", "x", "o" },
         },
-
         {
-          { "v", "vb" },
-          ["P"] = {
-            "<Plug>(YankyPutAfter)",
-            desc = "yanky put after",
-          },
-          ["p"] = {
-            "<Plug>(YankyPutBefore)",
-            desc = "yanky put before",
-          },
+          "y",
+          "<Plug>(YankyYank)",
+          desc = "yanky",
+          mode = { "n", "v", "x", "o" },
         },
-
         {
-          { "n", "v", "vb" },
-
-          ["gp"] = {
-            "<Plug>(YankyPutAfterCharwise)",
-            "unconditional paste",
-          },
-          ["gP"] = {
-            "<Plug>(YankyPutBeforeCharwise)",
-            "unconditional paste before",
-          },
+          "p",
+          "<Plug>(YankyPutAfter)",
+          desc = "yanky put after",
+          mode = { "n" },
+        },
+        {
+          "P",
+          "<Plug>(YankyPutBefore)",
+          desc = "yanky put before",
+          mode = { "n" },
+        },
+        {
+          "P",
+          "<Plug>(YankyPutAfter)",
+          desc = "yanky put after",
+          mode = { "v", "x" },
+        },
+        {
+          "p",
+          "<Plug>(YankyPutBefore)",
+          desc = "yanky put before",
+          mode = { "v", "x" },
+        },
+        {
+          "gp",
+          "<Plug>(YankyPutAfterCharwise)",
+          desc = "unconditional paste",
+          mode = { "n", "v", "x" },
+        },
+        {
+          "gP",
+          "<Plug>(YankyPutBeforeCharwise)",
+          desc = "unconditional paste before",
+          mode = { "n", "v", "x" },
         },
       }
     end,

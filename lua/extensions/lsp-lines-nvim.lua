@@ -15,18 +15,18 @@ function M.config()
     on_done = function()
       vim.diagnostic.config({ virtual_lines = false, virtual_text = lvim.lsp.diagnostics.virtual_text })
     end,
-    keymaps = {
-      {
-        { "n" },
-
-        ["gL"] = {
+    keymaps = function()
+      return {
+        {
+          "gL",
           function()
             M.toggle()
           end,
-          { desc = "toggle lsp lines" },
+          desc = "toggle lsp lines",
+          mode = { "n" },
         },
-      },
-    },
+      }
+    end,
   })
 end
 

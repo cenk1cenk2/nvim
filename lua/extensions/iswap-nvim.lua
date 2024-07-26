@@ -28,32 +28,28 @@ function M.config()
     on_setup = function(config)
       require("iswap").setup(config.setup)
     end,
-    keymaps = {
-      {
-        { "n" },
-
-        ["H"] = {
+    keymaps = function()
+      return {
+        {
+          "H",
           ":ISwapNodeWithLeft<CR>",
-          {
-            desc = "swap with left node",
-          },
+          desc = "swap with left node",
+          mode = { "n" },
         },
-
-        ["L"] = {
+        {
+          "L",
           ":ISwapNodeWithRight<CR>",
-          {
-            desc = "swap with left node",
-          },
+          desc = "swap with left node",
+          mode = { "n" },
         },
-
-        ["HL"] = {
+        {
+          "HL",
           ":ISwapWith<CR>",
-          {
-            desc = "swap with selected node",
-          },
+          desc = "swap with selected node",
+          mode = { "n" },
         },
-      },
-    },
+      }
+    end,
   })
 end
 
