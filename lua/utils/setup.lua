@@ -371,9 +371,15 @@ end
 --- Builds a WK mapping location with leader.
 ---@param keystrokes table
 ---@return string
-function M.fn.wk_keystroke(keystrokes)
-  keystrokes = vim.list_extend({ "<Leader>" }, keystrokes)
+function M.fn.keystroke(keystrokes)
   return table.concat(keystrokes, "")
+end
+
+--- Builds a WK mapping location with leader.
+---@param keystrokes table
+---@return string
+function M.fn.wk_keystroke(keystrokes)
+  return M.fn.keystroke(vim.list_extend({ "<Leader>" }, keystrokes))
 end
 
 return M
