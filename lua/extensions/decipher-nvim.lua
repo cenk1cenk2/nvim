@@ -105,14 +105,14 @@ function M.config()
             desc = "crockford",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "e", "u" }),
+            fn.wk_keystroke({ categories.TASKS, "D", "u" }),
             function()
               require("decipher").encode_selection("url", { preview = true })
             end,
             desc = "url",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "e", "U" }),
+            fn.wk_keystroke({ categories.TASKS, "D", "U" }),
             function()
               require("decipher").encode_selection("base64-url", { preview = true })
             end,
