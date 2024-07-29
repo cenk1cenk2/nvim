@@ -34,7 +34,14 @@ function M.setup()
       [".babelrc"] = "json",
     },
     pattern = {
-      ["Dockerfile.*"] = "dockerfile",
+      ["Dockerfile.*"] = function(path)
+        if path:find(".dockerignore*$") then
+          return "gitignore"
+        end
+
+        return "dockerfile"
+      end,
+      ["*.dockerignore"] = "gitignore",
       [".*%.yml"] = function(path)
         if path:find("docker%-compose.*$") then
           return "yaml.docker-compose"
