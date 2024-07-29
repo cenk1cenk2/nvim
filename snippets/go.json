@@ -10,5 +10,9 @@
   "implements": {
     "prefix": "impl",
     "body": ["var _ $2 = (*$1)(nil)"]
+  },
+  "ginkgo": {
+    "prefix": "ginkgo",
+    "body": [". \"github.com/onsi/ginkgo/v2\"", ". \"github.com/onsi/gomega\""]
   }
 }
