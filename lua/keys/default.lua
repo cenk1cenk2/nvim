@@ -98,6 +98,11 @@ return {
     "<ESC>",
     mode = { "i" },
   },
+  {
+    "<C-c><C-c>",
+    "<C-c>",
+    mode = { "i" },
+  },
   -- save
   {
     "<C-s>",
