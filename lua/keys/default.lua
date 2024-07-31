@@ -93,16 +93,11 @@ return {
     mode = { "i" },
   },
   -- escape with c-c
-  {
-    "<C-c>",
-    "<ESC>",
-    mode = { "i" },
-  },
-  {
-    "<C-c><C-c>",
-    "<C-c>",
-    mode = { "i" },
-  },
+  -- {
+  --   "<C-c>",
+  --   "<ESC>",
+  --   mode = { "i" },
+  -- },
   -- save
   {
     "<C-s>",
