@@ -19,27 +19,37 @@ function M.config()
     on_setup = function(config)
       local button = require("alpha.themes.dashboard").button
 
-      local function session_button(key, name, path)
+      local function cb_button(key, name, cb)
         local element = button(key, name)
-        element.on_press = function()
-          vim.cmd(("cd %s"):format(path))
-          require("possession").load(require("possession.paths").cwd_session_name())
-        end
+        element.on_press = cb
         element.opts.keymap = { "n", key, element.on_press, { noremap = true, silent = true, nowait = true } }
 
         return element
       end
 
+      local function session_button(key, name, path)
+        return cb_button(key, name, function()
+          vim.cmd(("cd %s"):format(path))
+          require("possession").load(require("possession.paths").cwd_session_name())
+        end)
+      end
+
       local button_text = function(icon, name)
+        if not icon then
+          return " " .. name
+        end
+
         return (" %s  %s"):format(icon, name)
       end
 
       local buttons = {}
-      for _, value in ipairs(config.layout.buttons) do
-        if value.path then
-          table.insert(buttons, session_button(value.key, button_text(value.icon, value.name), value.path))
+      for _, b in ipairs(config.layout.buttons) do
+        if b.cb then
+          table.insert(buttons, cb_button(b.key, button_text(b.icon, b.name), b.cb))
+        elseif b.path then
+          table.insert(buttons, session_button(b.key, button_text(b.icon, b.name), b.path))
         else
-          table.insert(buttons, button(value.key, button_text(value.icon, value.name)))
+          table.insert(buttons, button(b.key, button_text(b.icon, b.name)))
         end
       end
 
