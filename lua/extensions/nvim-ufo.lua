@@ -9,7 +9,9 @@ function M.config()
       return {
         "kevinhwang91/nvim-ufo",
         dependencies = { "kevinhwang91/promise-async" },
-        event = "BufReadPost",
+        -- https://github.com/kevinhwang91/nvim-ufo/issues/235
+        -- event = "BufReadPre",
+        lazy = false,
       }
     end,
     setup = function()
