@@ -2,17 +2,17 @@
   "frontmatter": {
     "prefix": "f",
     "description": "Frontmatter seperator.",
-    "body": ["---"]
+    "body": ["---", ""]
   },
   "frontmatter_double": {
     "prefix": "ff",
     "description": "Frontmatter double seperator.",
-    "body": ["---", "---"]
+    "body": ["---", "---", ""]
   },
   "labels": {
     "prefix": "o",
     "description": "Obsidian labels.",
-    "body": ["---", "aliases:", "tags:", "---"]
+    "body": ["---", "aliases:", "tags:", "---", ""]
   },
   "label_bookmarks": {
     "prefix": "ob",
