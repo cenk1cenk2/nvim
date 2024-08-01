@@ -12,7 +12,32 @@ function M.config()
       }
     end,
     setup = function()
-      return {}
+      local defaults = require("markview").configuration
+      return {
+        headings = vim.tbl_deep_extend("force", vim.deepcopy(defaults.headings), {
+          enable = true,
+          shift_width = 0,
+          shift_char = "",
+          heading_1 = {
+            hl = "@markup.heading.1.markdown",
+          },
+          heading_2 = {
+            hl = "@markup.heading.2.markdown",
+          },
+          heading_3 = {
+            hl = "@markup.heading.3.markdown",
+          },
+          heading_4 = {
+            hl = "@markup.heading.4.markdown",
+          },
+          heading_5 = {
+            hl = "@markup.heading.5.markdown",
+          },
+          heading_6 = {
+            hl = "@markup.heading.6.markdown",
+          },
+        }),
+      }
     end,
     on_setup = function(config)
       require("markview").setup(config.setup)
