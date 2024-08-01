@@ -12,7 +12,7 @@
   "labels": {
     "prefix": "o",
     "description": "Obsidian labels.",
-    "body": ["---", "id:", "aliases:", "tags:", "---"]
+    "body": ["---", "aliases:", "tags:", "---"]
   },
   "l": {
     "prefix": "tl",
