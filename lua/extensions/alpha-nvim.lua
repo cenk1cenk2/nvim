@@ -20,13 +20,8 @@ function M.config()
       local button = require("alpha.themes.dashboard").button
 
       local function file_button(key, name, path)
-        local cd = "cd %:p:h"
-        local element = button(
-          key,
-          name,
-          (':e %s | %s | lua require("possession").load(require("possession.paths").cwd_session_name())<CR>'):format(vim.fn.fnameescape(path), cd),
-          { silent = true }
-        )
+        local element =
+          button(key, name, (':cd %s | lua require("possession").load(require("possession.paths").cwd_session_name())<CR>'):format(vim.fn.fnameescape(path)), { silent = true })
 
         return element
       end
