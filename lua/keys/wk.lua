@@ -11,7 +11,7 @@ M.CATEGORIES = {
   GIT = "g",
   LSP = "l",
   BOOKMARKS = "m",
-  NOTES = "N",
+  NOTES = "n",
   TESTS = "j",
   TERMINAL = "t",
   SESSION = "w",
@@ -38,7 +38,7 @@ M.wk = {
     mode = { "n", "v" },
   },
   {
-    fn.wk_keystroke({ "n" }),
+    fn.wk_keystroke({ "N" }),
     ":nohlsearch<CR>",
     desc = "no highlight",
     mode = { "n", "v" },
