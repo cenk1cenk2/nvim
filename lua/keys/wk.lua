@@ -11,6 +11,7 @@ M.CATEGORIES = {
   GIT = "g",
   LSP = "l",
   BOOKMARKS = "m",
+  NOTES = "N",
   TESTS = "j",
   TERMINAL = "t",
   SESSION = "w",
@@ -218,6 +219,14 @@ M.wk = {
   {
     fn.wk_keystroke({ M.CATEGORIES.SEARCH }),
     group = "search",
+    mode = { "n", "v" },
+  },
+
+  -- notes
+
+  {
+    fn.wk_keystroke({ M.CATEGORIES.NOTES }),
+    group = "notes",
     mode = { "n", "v" },
   },
 

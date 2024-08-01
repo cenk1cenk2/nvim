@@ -14,18 +14,30 @@ function M.config()
         },
         dependencies = { "nvim-lua/plenary.nvim" },
         cmd = {
-          "ObsidianFollowLink",
-          "ObsidianBacklinks",
+          "ObsidianCheck",
+          "ObsidianToggleCheckbox",
           "ObsidianToday",
           "ObsidianYesterday",
           "ObsidianTomorrow",
-          "ObsidianTemplate",
+          "ObsidianDailies",
+          "ObsidianNew",
+          "ObsidianOpen",
+          "ObsidianBacklinks",
           "ObsidianSearch",
-          "ObsidianLink",
+          "ObsidianTags",
+          "ObsidianTemplate",
+          "ObsidianNewFromTemplate",
+          "ObsidianQuickSwitch",
           "ObsidianLinkNew",
+          "ObsidianLink",
+          "ObsidianLinks",
+          "ObsidianFollowLink",
           "ObsidianWorkspace",
-          "ObsidianPasteImg",
           "ObsidianRename",
+          "ObsidianPasteImg",
+          "ObsidianExtractNote",
+          "ObsidianDebug",
+          "ObsidianTOC",
         },
       }
     end,
@@ -109,6 +121,13 @@ function M.config()
             end,
             opts = { buffer = true },
           },
+          -- Smart action depending on context, either follow link or toggle checkbox.
+          ["<cr>"] = {
+            action = function()
+              return require("obsidian").util.smart_action()
+            end,
+            opts = { buffer = true, expr = true },
+          },
         },
 
         templates = {
@@ -180,6 +199,144 @@ function M.config()
     end,
     on_setup = function(config)
       require("obsidian").setup(config.setup)
+    end,
+    wk = function(_, categories, fn)
+      return {
+        {
+          fn.wk_keystroke({ categories.NOTES, "p" }),
+          function()
+            vim.cmd([[ObsidianQuickSwitch]])
+          end,
+          desc = "find notes",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "f" }),
+          function()
+            vim.cmd([[ObsidianSearch]])
+          end,
+          desc = "search",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "F" }),
+          function()
+            vim.cmd([[ObsidianTags]])
+          end,
+          desc = "search with tags",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "d" }),
+          group = "day",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "d", "t" }),
+          function()
+            vim.cmd([[ObsidianToday]])
+          end,
+          desc = "today",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "d", "n" }),
+          function()
+            vim.cmd([[ObsidianTomorrow]])
+          end,
+          desc = "tomorrow",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "d", "p" }),
+          function()
+            vim.cmd([[ObsidianYesterday]])
+          end,
+          desc = "yesterday",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "d", "f" }),
+          function()
+            vim.cmd([[ObsidianDailies]])
+          end,
+          desc = "find",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "o" }),
+          function()
+            vim.cmd([[ObsidianOpen]])
+          end,
+          desc = "open in gui",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "l" }),
+          function()
+            vim.cmd([[ObsidianBacklinks]])
+          end,
+          desc = "backlinks",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "L" }),
+          function()
+            vim.cmd([[ObsidianLinks]])
+          end,
+          desc = "links",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "L" }),
+          function()
+            vim.cmd([[ObsidianLinkNew]])
+          end,
+          desc = "link this with new",
+          mode = { "v" },
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "n" }),
+          function()
+            vim.cmd([[ObsidianNew]])
+          end,
+          desc = "create new note",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "n" }),
+          function()
+            vim.cmd([[ObsidianExtractNote]])
+          end,
+          desc = "extract note",
+          mode = { "v" },
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "w" }),
+          function()
+            vim.cmd([[ObsidianWorkspace]])
+          end,
+          desc = "select workspace",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "P" }),
+          function()
+            vim.cmd([[ObsidianPasteImg]])
+          end,
+          desc = "paste image from clipboard",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "r" }),
+          function()
+            vim.cmd([[ObsidianRename]])
+          end,
+          desc = "rename note",
+        },
+      }
     end,
   })
 end
