@@ -12,7 +12,7 @@
   "obsidian_labels": {
     "prefix": "o",
     "description": "Obsidian labels.",
-    "body": ["---", "---", ""]
+    "body": ["---", "$1", "---", "", ""]
   },
   "obsidian_label_bookmarks": {
     "prefix": "ob",
