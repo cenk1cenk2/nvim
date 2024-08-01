@@ -36,6 +36,10 @@ function M.config()
           heading_6 = {
             hl = "@markup.heading.6.markdown",
           },
+          list_items = vim.tbl_deep_extend("force", vim.deepcopy(defaults.list_items), {
+            enable = true,
+            shift_width = 0,
+          }),
         }),
       }
     end,
