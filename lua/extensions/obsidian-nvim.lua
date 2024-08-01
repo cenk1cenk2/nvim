@@ -211,6 +211,14 @@ function M.config()
         },
 
         {
+          fn.wk_keystroke({ categories.NOTES, "P" }),
+          function()
+            vim.cmd([[ObsidianTOC]])
+          end,
+          desc = "find in toc",
+        },
+
+        {
           fn.wk_keystroke({ categories.NOTES, "f" }),
           function()
             vim.cmd([[ObsidianSearch]])
@@ -327,6 +335,22 @@ function M.config()
             vim.cmd(("ObsidianPasteImg %s"):format(join_paths(require("utils").get_project_buffer_filepath(), "assets/")))
           end,
           desc = "paste image from clipboard",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "t" }),
+          function()
+            vim.cmd([[ObsidianNewFromTemplate]])
+          end,
+          desc = "new from template",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "T" }),
+          function()
+            vim.cmd([[ObsidianTemplate]])
+          end,
+          desc = "paste from template",
         },
 
         {
