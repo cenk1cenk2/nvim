@@ -9,17 +9,27 @@
     "description": "Frontmatter double seperator.",
     "body": ["---", "---", "", ""]
   },
-  "labels": {
+  "obsidian_labels": {
     "prefix": "o",
     "description": "Obsidian labels.",
-    "body": ["---", "aliases:", "tags:", "---", ""]
+    "body": ["---", "---", ""]
   },
-  "label_bookmarks": {
+  "obsidian_label_bookmarks": {
     "prefix": "ob",
-    "description": "Obsidian labels.",
+    "description": "Obsidian label bookmarks.",
     "body": ["bookmarks:", "  - "]
   },
-  "label_contacts": {
+  "obsidian_label_aliases": {
+    "prefix": "oa",
+    "description": "Obsidian label aliases.",
+    "body": ["aliases:", "  - "]
+  },
+  "obsidian_label_tags": {
+    "prefix": "ot",
+    "description": "Obsidian label tags.",
+    "body": ["tags:", "  - "]
+  },
+  "obsidian_label_contacts": {
     "prefix": "oc",
     "description": "Obsidian label contacts.",
     "body": ["contacts:", "  - "]
