@@ -161,6 +161,8 @@ return {
     Trace = "✎",
   },
   misc = {
+    Neovim = "",
+    Obsidian = "󰍔",
     Robot = "󰚩",
     Squirrel = "",
     Tag = "",

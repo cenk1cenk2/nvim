@@ -19,19 +19,27 @@ function M.config()
     on_setup = function(config)
       local button = require("alpha.themes.dashboard").button
 
-      local function file_button(key, name, path)
-        local element =
-          button(key, name, (':cd %s | lua require("possession").load(require("possession.paths").cwd_session_name())<CR>'):format(vim.fn.fnameescape(path)), { silent = true })
+      local function session_button(key, name, path)
+        local element = button(key, name)
+        element.on_press = function()
+          vim.cmd(("cd %s"):format(path))
+          require("possession").load(require("possession.paths").cwd_session_name())
+        end
+        element.opts.keymap = { "n", key, element.on_press, { noremap = true, silent = true, nowait = true } }
 
         return element
+      end
+
+      local button_text = function(icon, name)
+        return (" %s  %s"):format(icon, name)
       end
 
       local buttons = {}
       for _, value in ipairs(config.layout.buttons) do
         if value.path then
-          table.insert(buttons, file_button(value.key, (" %s  %s"):format(value.icon, value.name), value.path))
+          table.insert(buttons, session_button(value.key, button_text(value.icon, value.name), value.path))
         else
-          table.insert(buttons, button(value.key, (" %s  %s"):format(value.icon, value.name)))
+          table.insert(buttons, button(value.key, button_text(value.icon, value.name)))
         end
       end
 
@@ -155,8 +163,8 @@ function M.config()
         { key = "SPC w f", name = "Sessions", icon = lvim.ui.icons.ui.Target },
         { key = "SPC p", name = "Find File", icon = lvim.ui.icons.ui.File },
         { key = "SPC w p", name = "Recent Projects", icon = lvim.ui.icons.ui.Project },
-        { key = "c", name = "~Config", path = join_paths(vim.env.HOME, "/.config/nvim/"), icon = lvim.ui.icons.ui.Gear },
-        { key = "n", name = "~Notes", path = join_paths(vim.env.HOME, "/notes/"), icon = lvim.ui.icons.ui.Files },
+        { key = "c", name = "~Config", path = join_paths(vim.env.HOME, ".config/nvim/"), icon = lvim.ui.icons.misc.Neovim },
+        { key = "n", name = "~Notes", path = join_paths(vim.env.HOME, "notes/"), icon = lvim.ui.icons.misc.Obsidian },
         { key = "SPC P S", name = "Plugins", icon = lvim.ui.icons.ui.Gear },
         { key = "q", name = "Quit", icon = lvim.ui.icons.ui.SignOut },
       },
