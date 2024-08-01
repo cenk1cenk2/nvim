@@ -174,7 +174,6 @@ function M.config()
         { key = "SPC p", name = "Find File", icon = lvim.ui.icons.ui.File },
         { key = "c", name = "~Config", path = join_paths(vim.env.HOME, ".config/nvim/"), icon = lvim.ui.icons.misc.Neovim },
         { key = "n", name = "~Notes", path = join_paths(vim.env.HOME, "notes/"), icon = lvim.ui.icons.misc.Obsidian },
-        { key = "SPC P S", name = "Plugins", icon = lvim.ui.icons.ui.Gear },
         { key = "SPC w q", name = "Quit", icon = lvim.ui.icons.ui.SignOut },
       },
     },
