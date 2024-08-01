@@ -30,11 +30,12 @@ function M.config()
         prompt_no_cr = false,
         autosave = {
           current = true, -- or fun(name): boolean
-          tmp = false, -- or fun(): boolean
+          tmp = true, -- or fun(): boolean
           tmp_name = "tmp", -- or fun(): string
           on_load = true,
           on_quit = true,
         },
+        autoload = false,
         hooks = {
           before_save = function(name)
             -- pcall(function()
