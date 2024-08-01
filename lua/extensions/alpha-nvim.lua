@@ -170,9 +170,8 @@ function M.config()
       },
       buttons = {
         { key = "SPC w l", name = "Load Last Session", icon = lvim.ui.icons.ui.History },
-        { key = "SPC w f", name = "Sessions", icon = lvim.ui.icons.ui.Target },
+        { key = "SPC w f", name = "Sessions", icon = lvim.ui.icons.ui.Project },
         { key = "SPC p", name = "Find File", icon = lvim.ui.icons.ui.File },
-        { key = "SPC w p", name = "Recent Projects", icon = lvim.ui.icons.ui.Project },
         { key = "c", name = "~Config", path = join_paths(vim.env.HOME, ".config/nvim/"), icon = lvim.ui.icons.misc.Neovim },
         { key = "n", name = "~Notes", path = join_paths(vim.env.HOME, "notes/"), icon = lvim.ui.icons.misc.Obsidian },
         { key = "SPC P S", name = "Plugins", icon = lvim.ui.icons.ui.Gear },
