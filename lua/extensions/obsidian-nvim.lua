@@ -360,6 +360,14 @@ function M.config()
           end,
           desc = "rename note",
         },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "R" }),
+          function()
+            vim.cmd([[ObsidianRename --dry-run]])
+          end,
+          desc = "dry-run rename note",
+        },
       }
     end,
   })
