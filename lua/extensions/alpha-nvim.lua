@@ -39,7 +39,7 @@ function M.config()
           return " " .. name
         end
 
-        return (" %s  %s"):format(icon, name)
+        return ("%s  %s"):format(icon, name)
       end
 
       local buttons = {}
