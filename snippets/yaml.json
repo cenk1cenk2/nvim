@@ -2,12 +2,12 @@
   "frontmatter": {
     "prefix": "f",
     "description": "Frontmatter seperator.",
-    "body": ["---", ""]
+    "body": ["---", "", ""]
   },
   "frontmatter_double": {
     "prefix": "ff",
     "description": "Frontmatter double seperator.",
-    "body": ["---", "---", ""]
+    "body": ["---", "---", "", ""]
   },
   "schema": {
     "prefix": "schema",
