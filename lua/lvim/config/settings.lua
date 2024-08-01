@@ -24,7 +24,17 @@ M.load_default_options = function()
     fillchars = {
       foldclose = lvim.ui.icons.ArrowCircleRight,
     },
-    sessionoptions = { "blank", "buffers", "curdir", "folds", "help", "tabpages", "winsize", "terminal", "globals" },
+    sessionoptions = {
+      "blank",
+      "buffers",
+      "curdir",
+      -- "folds",
+      "help",
+      "tabpages",
+      "winsize",
+      "terminal",
+      "globals",
+    },
     foldenable = false,
     foldlevel = 99,
     foldcolumn = "0",

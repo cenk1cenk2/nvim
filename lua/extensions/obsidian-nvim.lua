@@ -85,6 +85,13 @@ function M.config()
           return out
         end,
 
+        -- Optional, customize how note IDs are generated given an optional title.
+        ---@param title string|?
+        ---@return string
+        note_id_func = function(title)
+          return title or os.time("%Y%m%dT%H%M%S")
+        end,
+
         new_notes_location = "current_dir",
 
         -- Optional, completion of wiki links, local markdown links, and tags using nvim-cmp.
