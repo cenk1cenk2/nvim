@@ -508,7 +508,7 @@ function M.config()
           desc = "open buffers in filetree",
         },
         {
-          fn.wk_keystroke({ categories.SESSION, "?" }),
+          fn.wk_keystroke({ "?" }),
           function()
             local sources = { "filesystem", "remote", "buffers", "git_status", "document_symbols" }
 
