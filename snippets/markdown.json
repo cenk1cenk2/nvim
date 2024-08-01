@@ -1,8 +1,18 @@
 {
   "frontmatter": {
-    "prefix": "-f",
+    "prefix": "f",
     "description": "Frontmatter seperator.",
-    "body": ["---", "$1", "---"]
+    "body": ["---"]
+  },
+  "frontmatter_double": {
+    "prefix": "ff",
+    "description": "Frontmatter double seperator.",
+    "body": ["---", "---"]
+  },
+  "labels": {
+    "prefix": "o",
+    "description": "Obsidian labels.",
+    "body": ["---", "id:", "aliases: []", "tags: []", "---"]
   },
   "l": {
     "prefix": "tl",

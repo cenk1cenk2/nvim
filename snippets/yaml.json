@@ -9,11 +9,6 @@
     "description": "Frontmatter double seperator.",
     "body": ["---", "---"]
   },
-  "labels": {
-    "prefix": "o",
-    "description": "Obisidan labels.",
-    "body": ["---", "id:", "aliases: []", "tags: []", "---"]
-  },
   "schema": {
     "prefix": "schema",
     "description": "Add schema declaration to yaml file.",
