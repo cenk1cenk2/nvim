@@ -19,9 +19,25 @@ function M.config()
     on_setup = function(config)
       local button = require("alpha.themes.dashboard").button
 
+      local function file_button(key, name, path)
+        local cd = "cd %:p:h"
+        local element = button(
+          key,
+          name,
+          (':e %s | %s | lua require("possession").load(require("possession.paths").cwd_session_name())<CR>'):format(vim.fn.fnameescape(path), cd),
+          { silent = true }
+        )
+
+        return element
+      end
+
       local buttons = {}
       for _, value in ipairs(config.layout.buttons) do
-        table.insert(buttons, button(value[1], value[2]))
+        if value.path then
+          table.insert(buttons, file_button(value.key, (" %s  %s"):format(value.icon, value.name), value.path))
+        else
+          table.insert(buttons, button(value.key, (" %s  %s"):format(value.icon, value.name)))
+        end
       end
 
       require("alpha").setup({
@@ -40,6 +56,16 @@ function M.config()
           {
             type = "group",
             val = buttons,
+            opts = {
+              spacing = 1,
+              hl = "DashboardCenter",
+            },
+          },
+          {
+            type = "group",
+            val = function()
+              return {}
+            end,
             opts = {
               spacing = 1,
               hl = "DashboardCenter",
@@ -130,13 +156,15 @@ function M.config()
         [[                                                                                        ]],
       },
       buttons = {
-        { "SPC w l", (" %s  Load Last Session"):format(lvim.ui.icons.ui.History) },
-        { "SPC w f", (" %s  Sessions"):format(lvim.ui.icons.ui.Target) },
-        { "SPC p", (" %s  Find File"):format(lvim.ui.icons.ui.File) },
-        { "SPC w p", (" %s  Recent Projects"):format(lvim.ui.icons.ui.Project) },
-        { "SPC f f", (" %s  Recently Used Files"):format(lvim.ui.icons.ui.Files) },
-        { "SPC P S", (" %s  Plugins"):format(lvim.ui.icons.ui.Gear) },
-        { "q", (" %s  Quit"):format(lvim.ui.icons.ui.SignOut) },
+        { key = "SPC w l", name = "Load Last Session", icon = lvim.ui.icons.ui.History },
+        { key = "SPC w f", name = "Sessions", icon = lvim.ui.icons.ui.Target },
+        { key = "SPC p", name = "Find File", icon = lvim.ui.icons.ui.File },
+        { key = "SPC w p", name = "Recent Projects", icon = lvim.ui.icons.ui.Project },
+        { key = "SPC f f", name = "Recently Used Files", icon = lvim.ui.icons.ui.Files },
+        { key = "c", name = "Config", path = join_paths(vim.env.HOME, "/.config/nvim/"), icon = lvim.ui.icons.ui.Gear },
+        { key = "n", name = "Notes", path = join_paths(vim.env.HOME, "/notes/"), icon = lvim.ui.icons.ui.Files },
+        { key = "SPC P S", name = "Plugins", icon = lvim.ui.icons.ui.Gear },
+        { key = "q", name = "Quit", icon = lvim.ui.icons.ui.SignOut },
       },
     },
   })
