@@ -296,17 +296,17 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "l" }),
           function()
-            vim.cmd([[ObsidianBacklinks]])
+            vim.cmd([[ObsidianLinks]])
           end,
-          desc = "backlinks",
+          desc = "links",
         },
 
         {
           fn.wk_keystroke({ categories.NOTES, "L" }),
           function()
-            vim.cmd([[ObsidianLinks]])
+            vim.cmd([[ObsidianBacklinks]])
           end,
-          desc = "links",
+          desc = "backlinks",
         },
 
         {
