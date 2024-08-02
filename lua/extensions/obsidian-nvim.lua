@@ -388,21 +388,21 @@ function M.config()
 end
 
 function M.note_from_template(root, title, template)
+  local client = require("obsidian"):get_client()
   local file = ("%s/%s.md"):format(root, title)
+  local matches = client:resolve_note(file)
 
-  local ok = pcall(function()
-    vim.cmd(([[ObsidianQuickSwitch %s]]):format(file))
+  if matches then
     require("lvim.core.log"):info("Opening note: %s", file)
-  end)
-
-  if not ok then
+    vim.cmd(([[ObsidianQuickSwitch %s]]):format(file))
+  else
     vim.cmd(([[ObsidianNew %s]]):format(file))
 
     local bufnr = vim.api.nvim_get_current_buf()
     local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
     if #lines == 2 and lines[1] == ("# %s"):format(title) then
       require("lvim.core.log"):info("Templating note: %s -> %s", file, template)
-      vim.api.nvim_buf_set_lines(bufnr, 0, 2, true, {})
+      vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, {})
       vim.cmd(([[ObsidianTemplate %s]]):format(template))
     end
   end
