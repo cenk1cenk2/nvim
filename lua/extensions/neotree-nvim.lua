@@ -541,6 +541,13 @@ function M.config()
         --   end,
         --   desc = "toggle outline"
         -- },
+        {
+          fn.wk_keystroke({ "D" }),
+          function()
+            require("neo-tree.sources.filesystem.lib.fs_actions").delete_node(require("utils").get_buffer_filepath())
+          end,
+          desc = "delete current buffer from file system",
+        },
       }
     end,
   })
