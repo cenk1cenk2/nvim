@@ -319,13 +319,14 @@ function M.components()
     spaces = {
       function()
         if not vim.bo.expandtab then
-          return ("%s%s"):format(lvim.ui.icons.ui.Tab, vim.bo.tabstop)
+          return ("%s %s"):format(lvim.ui.icons.ui.Tab, vim.bo.tabstop)
         end
         local size = vim.bo.shiftwidth
         if size == 0 then
           size = vim.bo.tabstop
         end
-        return ("%s%s"):format(lvim.ui.icons.ui.BoldLineLeft, size)
+
+        return ("%s %s"):format(lvim.ui.icons.ui.Space, size)
       end,
       cond = conditions.hide_in_width,
       fmt = string.upper,

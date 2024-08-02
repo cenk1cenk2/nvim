@@ -131,6 +131,7 @@ return {
     SignIn = "",
     SignOut = "",
     Tab = "󰌒",
+    Space = "󱁐",
     Table = "",
     Target = "",
     Telescope = "",
