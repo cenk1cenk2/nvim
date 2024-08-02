@@ -310,7 +310,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.NOTES, "L" }),
+          fn.wk_keystroke({ categories.NOTES, "l" }),
           function()
             vim.cmd([[ObsidianLinkNew]])
           end,
