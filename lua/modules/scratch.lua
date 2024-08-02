@@ -84,7 +84,7 @@ function M.execute_scratch_buffer()
     local terminal = Terminal.create_terminal(Terminal.generate_defaults_float_terminal({
       cmd = string.format("%s -c '%s %s'", vim.o.shell, command, vim.fn.expand("%")),
       close_on_exit = false,
-      dir = vim.fn.getcwd(),
+      dir = require("utils").get_cwd(),
       on_exit = function()
         -- temp:close()
         -- Log:debug(string.format("Closing temporary file: %s", filename))

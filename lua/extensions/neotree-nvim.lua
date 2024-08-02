@@ -550,7 +550,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "f", "c" }),
           function()
-            require("neo-tree.sources.filesystem.lib.fs_actions").create_node(require("utils").get_project_buffer_dirpath())
+            require("neo-tree.sources.filesystem.lib.fs_actions").create_node(require("utils").get_buffer_dirpath())
           end,
           desc = "create file relative to current buffer in filesystem",
         },
@@ -574,7 +574,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "f", "r" }),
           function()
-            require("neo-tree.sources.filesystem.lib.fs_actions").move_node(require("utils").get_buffer_filepath())
+            require("neo-tree.sources.filesystem.lib.fs_actions").rename_node(require("utils").get_buffer_filepath())
           end,
           desc = "rename current buffer in filesystem",
         },

@@ -69,22 +69,24 @@ function M.get_visual_selection()
   return table.concat(lines, "\n")
 end
 
-function M.get_buffer_filepath(bufnr)
-  bufnr = bufnr or 0
+function M.get_cwd()
+  return vim.uv.cwd()
+end
 
-  return vim.fn.expand("%")
+function M.get_buffer_filepath(bufnr)
+  return require("plenary.path").new(vim.api.nvim_buf_get_name(bufnr or 0)):absolute()
+end
+
+function M.get_buffer_dirpath(bufnr)
+  return vim.fs.dirname(M.get_buffer_filepath(bufnr))
 end
 
 function M.get_project_buffer_filepath(bufnr)
-  bufnr = bufnr or 0
-
-  return vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":p:~:.")
+  return require("plenary.path").new(vim.api.nvim_buf_get_name(bufnr or 0)):make_relative()
 end
 
 function M.get_project_buffer_dirpath(bufnr)
-  bufnr = bufnr or 0
-
-  return vim.fn.fnamemodify(vim.fn.expand("%:h:~:."), ":p:~:.")
+  return vim.fs.dirname(M.get_project_buffer_filepath(bufnr))
 end
 
 return M
