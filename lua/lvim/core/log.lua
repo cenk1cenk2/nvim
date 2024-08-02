@@ -96,13 +96,13 @@ end
 --- Adds a log entry using Plenary.log
 ---@param msg any
 ---@param level string [same as vim.log.log_levels]
-function Log:add_entry(level, msg, event)
+function Log:add_entry(level, msg, ...)
   local logger = self:get_logger()
   if not logger then
     return
   end
 
-  logger:log(level, vim.inspect(msg), event)
+  logger:log(level, vim.inspect(msg):format(...))
 end
 
 ---Retrieves the handle of the logger object
@@ -129,37 +129,37 @@ end
 
 ---Add a log entry at TRACE level
 ---@param msg any
----@param event any
-function Log:trace(msg, event)
-  self:add_entry(self.levels.TRACE, msg, event)
+---@param ... any
+function Log:trace(msg, ...)
+  self:add_entry(self.levels.TRACE, msg, ...)
 end
 
 ---Add a log entry at DEBUG level
 ---@param msg any
----@param event any
-function Log:debug(msg, event)
-  self:add_entry(self.levels.DEBUG, msg, event)
+---@param ... any
+function Log:debug(msg, ...)
+  self:add_entry(self.levels.DEBUG, msg, ...)
 end
 
 ---Add a log entry at INFO level
 ---@param msg any
----@param event any
-function Log:info(msg, event)
-  self:add_entry(self.levels.INFO, msg, event)
+---@param ... any
+function Log:info(msg, ...)
+  self:add_entry(self.levels.INFO, msg, ...)
 end
 
 ---Add a log entry at WARN level
 ---@param msg any
----@param event any
-function Log:warn(msg, event)
-  self:add_entry(self.levels.WARN, msg, event)
+---@param ... any
+function Log:warn(msg, ...)
+  self:add_entry(self.levels.WARN, msg, ...)
 end
 
 ---Add a log entry at ERROR level
 ---@param msg any
----@param event any
-function Log:error(msg, event)
-  self:add_entry(self.levels.ERROR, msg, event)
+---@param ... any
+function Log:error(msg, ...)
+  self:add_entry(self.levels.ERROR, msg, ...)
 end
 
 setmetatable({}, Log)

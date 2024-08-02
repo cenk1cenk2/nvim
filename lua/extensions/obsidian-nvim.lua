@@ -246,6 +246,14 @@ function M.config()
         },
 
         {
+          fn.wk_keystroke({ categories.NOTES, "d", "w" }),
+          function()
+            M.note_from_template("Calendar/Week", os.date("%Y-%W"), "Daily.md")
+          end,
+          desc = "week",
+        },
+
+        {
           fn.wk_keystroke({ categories.NOTES, "d", "t" }),
           function()
             vim.cmd([[ObsidianToday]])
@@ -372,11 +380,34 @@ function M.config()
           function()
             vim.cmd([[ObsidianRename --dry-run]])
           end,
-          desc = "dry-run rename note",
+          desc = "rename note [dry-run]",
         },
       }
     end,
   })
+end
+
+function M.note_from_template(root, title, template)
+  local file = ("%s/%s.md"):format(root, title)
+
+  local ok = pcall(function()
+    vim.cmd(([[ObsidianQuickSwitch %s]]):format(file))
+    -- HACK: just to undo what this is erroring out
+    vim.api.nvim_feedkeys("u", "n", true)
+    require("lvim.core.log"):info("Opening note: %s", file)
+  end)
+
+  if not ok then
+    vim.cmd(([[ObsidianNew %s]]):format(file))
+
+    local bufnr = vim.api.nvim_get_current_buf()
+    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
+    if #lines == 2 and lines[1] == ("# %s"):format(title) then
+      require("lvim.core.log"):info("Templating note: %s -> %s", file, template)
+      vim.api.nvim_buf_set_lines(bufnr, 0, 2, true, {})
+      vim.cmd(([[ObsidianTemplate %s]]):format(template))
+    end
+  end
 end
 
 return M
