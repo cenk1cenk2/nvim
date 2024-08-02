@@ -272,7 +272,7 @@ function M.config()
           desc = "list jumps",
         },
         {
-          fn.wk_keystroke({ categories.FIND, "s" }),
+          fn.wk_keystroke({ categories.FIND, "S" }),
           function()
             require("telescope.builtin").spell_suggest()
           end,

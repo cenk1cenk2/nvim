@@ -19,10 +19,10 @@ function M.config()
     on_setup = function(config)
       require("browse").setup(config.setup)
     end,
-    wk = function(_, _, fn)
+    wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ "S" }),
+          fn.wk_keystroke({ categories.FIND, "s" }),
           function()
             require("browse").input_search()
           end,
