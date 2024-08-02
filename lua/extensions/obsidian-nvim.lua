@@ -392,8 +392,6 @@ function M.note_from_template(root, title, template)
 
   local ok = pcall(function()
     vim.cmd(([[ObsidianQuickSwitch %s]]):format(file))
-    -- HACK: just to undo what this is erroring out
-    vim.api.nvim_feedkeys("u", "n", true)
     require("lvim.core.log"):info("Opening note: %s", file)
   end)
 
