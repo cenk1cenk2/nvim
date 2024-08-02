@@ -105,6 +105,7 @@ local extensions = {
   "viedit-nvim",
   "decipher-nvim",
   "arrow-nvim",
+  "urlview-nvim",
 }
 
 function M.config(config)
