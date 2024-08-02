@@ -347,7 +347,7 @@ function M.components()
         return chars[index]
       end,
       padding = { left = 0, right = 0 },
-      color = { fg = lvim.ui.colors.yellow[300], bg = lvim.ui.colors.grey[300] },
+      color = { fg = lvim.ui.colors.yellow[300], bg = lvim.ui.colors.gray[300] },
       cond = nil,
     },
     iedit = {

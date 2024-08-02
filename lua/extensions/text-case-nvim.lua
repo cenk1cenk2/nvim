@@ -24,9 +24,9 @@ function M.config()
         -- subs
         {
           "gsr",
-          ":Subs ",
+          ":Subs/",
           desc = "SUBS",
-          mode = { "n", "v", "x", "o" },
+          mode = { "n", "v", "x" },
         },
         -- operator
         {

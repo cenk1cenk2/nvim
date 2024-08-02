@@ -21,7 +21,7 @@ local colors = {
   bright_white = "#ffffff",
   black = "#121212",
 
-  grey = {
+  gray = {
     [300] = "#38404b",
     [600] = "#5c6370",
     [900] = "#b0b0b0",
@@ -100,7 +100,7 @@ colors.file = {
   modified = colors.yellow[300],
   renamed = colors.orange[300],
   untracked = colors.green[600],
-  ignored = colors.grey[600],
+  ignored = colors.gray[600],
   symbolic_link = colors.cyan[300],
 }
 
