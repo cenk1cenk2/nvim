@@ -572,7 +572,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.BUFFER, "f", "m" }),
+          fn.wk_keystroke({ categories.BUFFER, "f", "r" }),
           function()
             require("neo-tree.sources.filesystem.lib.fs_actions").move_node(require("utils").get_buffer_filepath())
           end,
