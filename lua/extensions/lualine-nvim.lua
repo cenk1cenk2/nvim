@@ -309,7 +309,7 @@ function M.components()
     },
     location = {
       "location",
-      color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
+      color = { fg = lvim.ui.colors.blue[300], bg = lvim.ui.colors.bg[300] },
     },
     ff = {
       "fileformat",
