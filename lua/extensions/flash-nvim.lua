@@ -165,8 +165,8 @@ function M.config()
           treesitter = {
             labels = lvim.selection_chars,
             jump = { pos = "range" },
+            label = { before = true, after = true, style = "inline" },
             highlight = {
-              label = { before = true, after = true, style = "inline" },
               backdrop = false,
               matches = false,
             },
