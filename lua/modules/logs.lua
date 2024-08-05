@@ -51,13 +51,6 @@ function M.setup()
           ":edit $NVIM_LOG_FILE<CR>",
           desc = "open the neovim logfile",
         },
-        {
-          fn.wk_keystroke({ categories.LOGS, "p" }),
-          function()
-            lvim.fn.toggle_log_view("lazy.nvim")
-          end,
-          desc = "view plugin manager log",
-        },
       }
     end,
   })
