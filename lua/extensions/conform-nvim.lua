@@ -85,6 +85,17 @@ function M.config()
         require("conform").format(opts)
       end
     end,
+    wk = function(_, categories, fn)
+      return {
+        {
+          fn.wk_keystroke({ categories.LOGS, "f" }),
+          function()
+            vim.cmd([[ConformInfo]])
+          end,
+          desc = "formatter logs",
+        },
+      }
+    end,
   })
 end
 
