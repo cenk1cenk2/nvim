@@ -75,35 +75,35 @@ function M.setup()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.BUILD, "r" }),
+          fn.wk_keystroke({ categories.NEOVIM, "r" }),
           function()
             M.rebuild_latest_neovim()
           end,
           desc = "install latest neovim",
         },
         {
-          fn.wk_keystroke({ categories.BUILD, "l" }),
+          fn.wk_keystroke({ categories.NEOVIM, "l" }),
           function()
             M.update_language_servers()
           end,
           desc = "update language servers",
         },
         {
-          fn.wk_keystroke({ categories.BUILD, "u" }),
+          fn.wk_keystroke({ categories.NEOVIM, "u" }),
           function()
             M.update()
           end,
           desc = "update",
         },
         {
-          fn.wk_keystroke({ categories.BUILD, "R" }),
+          fn.wk_keystroke({ categories.NEOVIM, "R" }),
           function()
             M.rebuild_and_update()
           end,
           desc = "rebuild and update everything",
         },
         {
-          fn.wk_keystroke({ categories.BUILD, "p" }),
+          fn.wk_keystroke({ categories.NEOVIM, "p" }),
           function()
             require("lvim.bootstrap"):update()
           end,

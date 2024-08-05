@@ -10,435 +10,329 @@ M.CATEGORIES = {
   SEARCH = "s",
   GIT = "g",
   LSP = "l",
+  LOGS = "L",
   BOOKMARKS = "m",
   NOTES = "n",
   TESTS = "j",
   TERMINAL = "t",
   SESSION = "w",
-  NEOVIM = "L",
+  NEOVIM = "R",
   PLUGINS = "P",
   TASKS = "r",
-  BUILD = "R",
   TREESITTER = "T",
 }
 
-local fn = require("utils.setup").fn
+function M.setup(fn)
+  local categories = M.CATEGORIES
 
-M.wk = {
-  {
-    fn.wk_keystroke({ "x" }),
-    "<C-W>s",
-    desc = "split below",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ "v" }),
-    "<C-W>v",
-    desc = "split right",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ "N" }),
-    ":nohlsearch<CR>",
-    desc = "no highlight",
-    mode = { "n", "v" },
-  },
+  return {
+    {
+      fn.wk_keystroke({ "x" }),
+      "<C-W>s",
+      desc = "split below",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ "v" }),
+      "<C-W>v",
+      desc = "split right",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ "N" }),
+      ":nohlsearch<CR>",
+      desc = "no highlight",
+      mode = { "n", "v" },
+    },
 
-  -- actions
+    -- actions
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS }),
-    group = "actions",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "a" }),
-    "ggVG",
-    desc = "select all",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "c" }),
-    ":set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20<CR>",
-    desc = "bring back cursor",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "e" }),
-    ":set ff=unix<CR>",
-    desc = "set lf",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "E" }),
-    ":set ff=dos<CR>",
-    desc = "set crlf",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "l" }),
-    ":set nonumber!<CR>",
-    desc = "toggle line numbers",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "L" }),
-    ":set norelativenumber!<CR>",
-    desc = "toggle relative line numbers",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "w" }),
-    "<C-W>=<CR>",
-    desc = "balance open windows",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "R" }),
-    "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
-    desc = "redraw",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "b" }),
-    ":wincmd p | q<CR>",
-    desc = "previous window",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "s" }),
-    ":sort<CR>",
-    desc = "sort",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "S" }),
-    ":set signcolumn=yes<CR>",
-    desc = "fix sign columns",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "t" }),
-    ":setlocal wrap!<CR>",
-    desc = "toggle wrap",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "T" }),
-    ":setlocal bufhidden=delete<CR>",
-    desc = "set as temporary buffer",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "q" }),
-    ":colder<CR>",
-    desc = "quickfix older",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.ACTIONS, "Q" }),
-    ":cnewer<CR>",
-    desc = "quickfix newer",
-  },
+    {
+      fn.wk_keystroke({ categories.ACTIONS }),
+      group = "actions",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "a" }),
+      "ggVG",
+      desc = "select all",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "c" }),
+      ":set guicursor=n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20<CR>",
+      desc = "bring back cursor",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "e" }),
+      ":set ff=unix<CR>",
+      desc = "set lf",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "E" }),
+      ":set ff=dos<CR>",
+      desc = "set crlf",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "l" }),
+      ":set nonumber!<CR>",
+      desc = "toggle line numbers",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "L" }),
+      ":set norelativenumber!<CR>",
+      desc = "toggle relative line numbers",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "w" }),
+      "<C-W>=<CR>",
+      desc = "balance open windows",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "R" }),
+      "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
+      desc = "redraw",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "b" }),
+      ":wincmd p | q<CR>",
+      desc = "previous window",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "s" }),
+      ":sort<CR>",
+      desc = "sort",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "S" }),
+      ":set signcolumn=yes<CR>",
+      desc = "fix sign columns",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "t" }),
+      ":setlocal wrap!<CR>",
+      desc = "toggle wrap",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "T" }),
+      ":setlocal bufhidden=delete<CR>",
+      desc = "set as temporary buffer",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "q" }),
+      ":colder<CR>",
+      desc = "quickfix older",
+    },
+    {
+      fn.wk_keystroke({ categories.ACTIONS, "Q" }),
+      ":cnewer<CR>",
+      desc = "quickfix newer",
+    },
 
-  -- buffer
+    -- buffer
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.BUFFER }),
-    group = "buffer",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.BUFFER, "e" }),
-    ":e<CR>",
-    desc = "reopen current buffer",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.BUFFER, "E" }),
-    ":e!<CR>",
-    desc = "force reopen current buffer",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.BUFFER, "s" }),
-    ":edit #<CR>",
-    desc = "switch to last buffer",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.BUFFER, "S" }),
-    function()
-      vim.cmd("w!")
-      require("lvim.core.log"):warn("File overwritten.")
-    end,
-    desc = "overwrite - force save",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.BUFFER, "w" }),
-    function()
-      vim.cmd("w")
-    end,
-    desc = "write",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.BUFFER, "W" }),
-    function()
-      vim.cmd("wa")
-      require("lvim.core.log"):warn("Wrote all files.")
-    end,
-    desc = "write all",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.BUFFER }),
+      group = "buffer",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ categories.BUFFER, "e" }),
+      ":e<CR>",
+      desc = "reopen current buffer",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ categories.BUFFER, "E" }),
+      ":e!<CR>",
+      desc = "force reopen current buffer",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ categories.BUFFER, "s" }),
+      ":edit #<CR>",
+      desc = "switch to last buffer",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ categories.BUFFER, "S" }),
+      function()
+        vim.cmd("w!")
+        require("lvim.core.log"):warn("File overwritten.")
+      end,
+      desc = "overwrite - force save",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ categories.BUFFER, "w" }),
+      function()
+        vim.cmd("w")
+      end,
+      desc = "write",
+      mode = { "n", "v" },
+    },
+    {
+      fn.wk_keystroke({ categories.BUFFER, "W" }),
+      function()
+        vim.cmd("wa")
+        require("lvim.core.log"):warn("Wrote all files.")
+      end,
+      desc = "write all",
+      mode = { "n", "v" },
+    },
 
-  -- copilot
+    -- copilot
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.COPILOT }),
-    group = "copilot",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.COPILOT }),
+      group = "copilot",
+      mode = { "n", "v" },
+    },
 
-  -- debug
+    -- debug
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.DEBUG }),
-    group = "debug",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.DEBUG }),
+      group = "debug",
+      mode = { "n", "v" },
+    },
 
-  -- dependencies
+    -- dependencies
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.DEPENDENCIES }),
-    group = "dependencies",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.DEPENDENCIES }),
+      group = "dependencies",
+      mode = { "n", "v" },
+    },
 
-  -- find
+    -- find
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.FIND }),
-    group = "find",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.FIND }),
+      group = "find",
+      mode = { "n", "v" },
+    },
 
-  -- search
+    -- search
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.SEARCH }),
-    group = "search",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.SEARCH }),
+      group = "search",
+      mode = { "n", "v" },
+    },
 
-  -- notes
+    -- notes
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NOTES }),
-    group = "notes",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.NOTES }),
+      group = "notes",
+      mode = { "n", "v" },
+    },
 
-  -- git
+    -- git
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.GIT }),
-    group = "git",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.GIT }),
+      group = "git",
+      mode = { "n", "v" },
+    },
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.GIT, "g" }),
-    group = "github",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.GIT, "g" }),
+      group = "github",
+      mode = { "n", "v" },
+    },
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.DEBUG, "G" }),
-    group = "gitlab",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.DEBUG, "G" }),
+      group = "gitlab",
+      mode = { "n", "v" },
+    },
 
-  -- lsp
+    -- lsp
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.LSP }),
-    group = "lsp",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.LSP }),
+      group = "lsp",
+      mode = { "n", "v" },
+    },
 
-  -- bookmarks
+    -- bookmarks
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.BOOKMARKS }),
-    group = "bookmarks",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.BOOKMARKS }),
+      group = "bookmarks",
+      mode = { "n", "v" },
+    },
 
-  -- terminal
+    -- terminal
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.TERMINAL }),
-    group = "terminal",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.TERMINAL }),
+      group = "terminal",
+      mode = { "n", "v" },
+    },
 
-  -- sessions
+    -- sessions
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.SESSION }),
-    group = "session",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.SESSION }),
+      group = "session",
+      mode = { "n", "v" },
+    },
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.SESSION, "r" }),
-    function()
-      vim.api.nvim_set_current_dir(vim.fn.fnamemodify(vim.fn.finddir(".git", ".;"), ":h"))
-    end,
-    desc = "cwd as git root",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.SESSION, "r" }),
+      function()
+        vim.api.nvim_set_current_dir(vim.fn.fnamemodify(vim.fn.finddir(".git", ".;"), ":h"))
+      end,
+      desc = "cwd as git root",
+      mode = { "n", "v" },
+    },
 
-  -- neovim
+    -- neovim
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM }),
-    group = "neovim",
-    mode = { "n", "v" },
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM, "l" }),
-    group = "logs",
-    mode = { "n", "v" },
-  },
+    {
+      fn.wk_keystroke({ categories.LOGS }),
+      group = "logs",
+      mode = { "n", "v" },
+    },
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM, "l", "d" }),
-    function()
-      lvim.fn.toggle_log_view(require("lvim.core.log").get_path())
-    end,
-    desc = "view default log",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM, "l", "D" }),
-    function()
-      vim.fn.execute("edit " .. require("lvim.core.log").get_path())
-    end,
-    desc = "open the default logfile",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM, "l", "l" }),
-    function()
-      lvim.fn.toggle_log_view(vim.lsp.get_log_path())
-    end,
-    desc = "view lsp log",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM, "l", "L" }),
-    function()
-      vim.fn.execute("edit " .. vim.lsp.get_log_path())
-    end,
-    desc = "open the lsp logfile",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM, "l", "n" }),
-    function()
-      lvim.fn.toggle_log_view(os.getenv("NVIM_LOG_FILE"))
-    end,
-    desc = "view neovim log",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM, "l", "N" }),
-    ":edit $NVIM_LOG_FILE<CR>",
-    desc = "open the neovim logfile",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM, "l", "p" }),
-    function()
-      lvim.fn.toggle_log_view("lazy.nvim")
-    end,
-    desc = "view plugin manager log",
-  },
+    {
+      fn.wk_keystroke({ categories.PLUGINS }),
+      group = "plugins",
+    },
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM, "r" }),
-    function()
-      vim.cmd([[LvimReload]])
-    end,
-    desc = "reload configuration",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.NEOVIM, "p" }),
-    function()
-      vim.cmd([[LvimUpdate]])
-    end,
-    desc = "git update config repository",
-  },
+    -- tests
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.PLUGINS }),
-    group = "plugins",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.PLUGINS, "i" }),
-    ":Lazy install<CR>",
-    desc = "install",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.PLUGINS, "x" }),
-    ":Lazy clean<CR>",
-    desc = "clean",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.PLUGINS, "l" }),
-    ":Lazy log<CR>",
-    desc = "log",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.PLUGINS, "s" }),
-    ":Lazy sync<CR>",
-    desc = "sync",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.PLUGINS, "S" }),
-    ":Lazy<CR>",
-    desc = "status",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.PLUGINS, "r" }),
-    ":Lazy restore<CR>",
-    desc = "restore",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.PLUGINS, "p" }),
-    ":Lazy profile<CR>",
-    desc = "profile",
-  },
-  {
-    fn.wk_keystroke({ M.CATEGORIES.PLUGINS, "u" }),
-    ":Lazy update<CR>",
-    desc = "update",
-  },
+    {
+      fn.wk_keystroke({ categories.TESTS }),
+      group = "tests",
+    },
 
-  -- tests
+    -- tasks
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.TESTS }),
-    group = "tests",
-  },
+    {
+      fn.wk_keystroke({ categories.TASKS }),
+      group = "tasks",
+    },
 
-  -- tasks
+    -- neovim
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.TASKS }),
-    group = "tasks",
-  },
+    {
+      fn.wk_keystroke({ categories.NEOVIM }),
+      group = "neovim",
+    },
 
-  -- build
+    -- treesitter
 
-  {
-    fn.wk_keystroke({ M.CATEGORIES.BUILD }),
-    group = "build",
-  },
-
-  -- treesitter
-
-  {
-    fn.wk_keystroke({ M.CATEGORIES.TREESITTER }),
-    group = "treesitter",
-  },
-}
+    {
+      fn.wk_keystroke({ categories.TREESITTER }),
+      group = "treesitter",
+    },
+  }
+end
 
 return M

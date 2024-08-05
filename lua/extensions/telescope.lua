@@ -308,7 +308,7 @@ function M.config()
           desc = "list git tracked files",
         },
         {
-          fn.wk_keystroke({ categories.NEOVIM, "k" }),
+          fn.wk_keystroke({ categories.FIND, "k" }),
           function()
             require("telescope.builtin").keymaps()
           end,

@@ -22,7 +22,7 @@ function M.config()
       }
     end,
     configure = function(_, fn)
-      lvim.wk = vim.list_extend(lvim.wk, vim.deepcopy(require("keys.wk").wk))
+      lvim.wk = vim.list_extend(lvim.wk, require("keys.wk").setup(fn))
 
       fn.add_disabled_filetypes({ "which_key" })
     end,

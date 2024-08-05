@@ -359,8 +359,12 @@ function M.fn.append_to_setup(extension_name, to_setup)
   table.insert(lvim.extensions[extension_name].to_setup, to_setup)
 end
 
+function M.fn.get_wk_categories()
+  return require("keys.wk").CATEGORIES
+end
+
 function M.fn.get_wk_category(category)
-  return require("keys.wk").CATEGORIES[category]
+  return M.fn.get_wk_categories()[category]
 end
 
 function M.fn.get_current_setup_wrapper(extension_name)

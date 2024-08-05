@@ -1,6 +1,7 @@
 local M = {}
 
 local extensions = {
+  "lazy-nvim",
   "nvim-notify",
   "ui",
   "mini-nvim-icons",
