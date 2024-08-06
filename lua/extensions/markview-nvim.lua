@@ -14,6 +14,7 @@ function M.config()
     setup = function()
       local defaults = require("markview").configuration
       return {
+        hybrid_modes = { "n", "v", "x" },
         headings = vim.tbl_deep_extend("force", vim.deepcopy(defaults.headings), {
           enable = true,
           shift_width = 0,
@@ -41,16 +42,6 @@ function M.config()
           enable = true,
           shift_width = 2,
         }),
-        options = {
-          on_enable = {
-            conceallevel = 2,
-            concealcursor = "",
-          },
-          on_disable = {
-            conceallevel = 0,
-            concealcursor = "",
-          },
-        },
       }
     end,
     on_setup = function(config)
