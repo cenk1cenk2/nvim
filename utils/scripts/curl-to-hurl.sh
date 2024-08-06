@@ -1,3 +1,5 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
-wl-paste | sed 's/\\//' | tr -d '\r\n' | hurlfmt --in curl --out hurl
+set -o pipefail
+
+cbp | sed 's/\\//' | tr -d '\r\n' | hurlfmt --in curl --out hurl
