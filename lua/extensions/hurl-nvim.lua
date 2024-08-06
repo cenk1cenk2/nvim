@@ -9,7 +9,16 @@ function M.config()
       return {
         "jellydn/hurl.nvim",
         dependencies = { "MunifTanjim/nui.nvim" },
-        cmd = { "HurlRunner", "HurlRunnerAt", "HurlRunnerToEntry", "HurlToggleMode", "HurlSetEnvFile", "HurlVerbose" },
+        cmd = {
+          "HurlRunner",
+          "HurlRunnerAt",
+          "HurlRunnerToEntry",
+          "HurlToggleMode",
+          "HurlSetEnvFile",
+          "HurlVerbose",
+          "HurlManageVariables",
+          "HurlShowLastResponse",
+        },
         ft = { "hurl" },
       }
     end,
@@ -109,6 +118,20 @@ function M.config()
             vim.cmd([[HurlVerbose]])
           end,
           desc = "run hurl for file with verbose mode",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "r", "m" }),
+          function()
+            vim.cmd([[HurlManageVariables]])
+          end,
+          desc = "manage hurl variables",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "r", "o" }),
+          function()
+            vim.cmd([[HurlShowLastResponse]])
+          end,
+          desc = "show last response",
         },
         {
           fn.wk_keystroke({ categories.TASKS, "r", "c" }),
