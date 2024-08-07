@@ -1,4 +1,5 @@
 -- https://github.com/someone-stole-my-name/yaml-companion.nvim
+-- https://github.com/cenk1cenk2/yaml-companion.nvim
 local M = {}
 
 local extension_name = "yaml_companion_nvim"
