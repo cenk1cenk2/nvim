@@ -18,59 +18,57 @@ function M.config()
     autocmds = function(_, fn)
       return {
         {
-          "FileType",
-          {
-            group = "__extensions",
-            pattern = { "yaml", "helm" },
-            callback = function(event)
-              require("utils.setup").load_wk({
-                {
-                  fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F" }),
-                  group = "schema",
-                },
-                {
-                  fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "f" }),
-                  function()
-                    return require("telescope").extensions.yaml_schema.yaml_schema()
-                  end,
-                  desc = "select yaml schema",
-                  buffer = event.buf,
-                },
-                {
-                  fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "p" }),
-                  function()
-                    local result = require("yaml-companion").get_buf_schema(0).result
+          event = "FileType",
+          group = "__extensions",
+          pattern = { "yaml", "helm" },
+          callback = function(event)
+            require("utils.setup").load_wk({
+              {
+                fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F" }),
+                group = "schema",
+              },
+              {
+                fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "f" }),
+                function()
+                  return require("telescope").extensions.yaml_schema.yaml_schema()
+                end,
+                desc = "select yaml schema",
+                buffer = event.buf,
+              },
+              {
+                fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "p" }),
+                function()
+                  local result = require("yaml-companion").get_buf_schema(0).result
 
-                    if not result or not result[1] then
-                      require("lvim.core.log"):warn("No schema found.")
+                  if not result or not result[1] then
+                    require("lvim.core.log"):warn("No schema found.")
+                    return
+                  end
+
+                  vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result[1].uri) }, "l", false, true)
+                end,
+                desc = "print yaml schema",
+                buffer = event.buf,
+              },
+              {
+                fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "k" }),
+                function()
+                  vim.ui.input({
+                    prompt = "Kubernetes version;",
+                    default = require("yaml-companion").ctx.kubernetes_version,
+                  }, function(version)
+                    if not version then
                       return
                     end
 
-                    vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result[1].uri) }, "l", false, true)
-                  end,
-                  desc = "print yaml schema",
-                  buffer = event.buf,
-                },
-                {
-                  fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "k" }),
-                  function()
-                    vim.ui.input({
-                      prompt = "Kubernetes version;",
-                      default = require("yaml-companion").ctx.kubernetes_version,
-                    }, function(version)
-                      if not version then
-                        return
-                      end
-
-                      local result = require("yaml-companion").set_kubernetes_version(version)
-                    end)
-                  end,
-                  desc = "set kubernetes version",
-                  buffer = event.buf,
-                },
-              })
-            end,
-          },
+                    local result = require("yaml-companion").set_kubernetes_version(version)
+                  end)
+                end,
+                desc = "set kubernetes version",
+                buffer = event.buf,
+              },
+            })
+          end,
         },
       }
     end,

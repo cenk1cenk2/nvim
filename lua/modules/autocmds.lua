@@ -2,61 +2,57 @@ local M = {}
 
 function M.q_close_autocmd(pattern)
   return {
-    "FileType",
-    {
-      group = "_buffer_mappings",
-      pattern = pattern,
-      callback = function(event)
-        vim.keymap.set("n", "q", function()
-          vim.api.nvim_buf_delete(event.buf, { force = true })
-        end, { silent = true, buffer = event.buf })
-      end,
-    },
+    event = "FileType",
+    group = "_buffer_mappings",
+    pattern = pattern,
+    callback = function(event)
+      vim.keymap.set("n", "q", function()
+        vim.api.nvim_buf_delete(event.buf, { force = true })
+      end, { silent = true, buffer = event.buf })
+    end,
   }
 end
 
 function M.set_view_buffer(pattern)
   return {
-    "FileType",
-    {
-      group = "_view",
-      pattern = pattern,
-      callback = function(event)
-        vim.bo.bufhidden = "wipe"
-        -- vim.bo.matchpairs = ""
-        vim.bo.swapfile = false
-        vim.bo.synmaxcol = 0
-        vim.opt_local.colorcolumn = ""
-        vim.opt_local.cursorcolumn = false
-        vim.opt_local.cursorline = false
-        vim.opt_local.foldcolumn = "0"
-        vim.opt_local.list = false
-        vim.opt_local.number = false
-        vim.opt_local.relativenumber = false
-        vim.opt_local.signcolumn = "no"
-        vim.opt_local.spell = false
-      end,
-    },
+    event = "FileType",
+    group = "_view",
+    pattern = pattern,
+    callback = function(event)
+      vim.bo.bufhidden = "wipe"
+      -- vim.bo.matchpairs = ""
+      vim.bo.swapfile = false
+      vim.bo.synmaxcol = 0
+      vim.opt_local.colorcolumn = ""
+      vim.opt_local.cursorcolumn = false
+      vim.opt_local.cursorline = false
+      vim.opt_local.foldcolumn = "0"
+      vim.opt_local.list = false
+      vim.opt_local.number = false
+      vim.opt_local.relativenumber = false
+      vim.opt_local.signcolumn = "no"
+      vim.opt_local.spell = false
+    end,
   }
 end
 
 function M.setup()
   require("utils.setup").init({
-    autocmds = {
-      M.q_close_autocmd({
-        "qf",
-        "help",
-        "man",
-        "floaterm",
-        "lspinfo",
-        "lsp-installer",
-        "dap-float",
-        "lspsagaoutline",
-        "neotest-summary",
-      }),
-      {
-        { "BufWinEnter", "BufRead", "BufNewFile" },
+    autocmds = function()
+      return {
+        M.q_close_autocmd({
+          "qf",
+          "help",
+          "man",
+          "floaterm",
+          "lspinfo",
+          "lsp-installer",
+          "dap-float",
+          "lspsagaoutline",
+          "neotest-summary",
+        }),
         {
+          event = { "BufWinEnter", "BufRead", "BufNewFile" },
           group = "_format_options",
           pattern = "*",
           callback = function()
@@ -65,10 +61,8 @@ function M.setup()
             vim.opt_local.formatoptions:remove("o")
           end,
         },
-      },
-      {
-        "TextYankPost",
         {
+          event = "TextYankPost",
           group = "_filetype_settings",
           pattern = "*",
           desc = "Highlight text on yank",
@@ -76,10 +70,8 @@ function M.setup()
             require("vim.highlight").on_yank({ higroup = "Search", timeout = 500 })
           end,
         },
-      },
-      {
-        "FileType",
         {
+          event = "FileType",
           group = "_filetype_settings",
           pattern = "qf",
           callback = function()
@@ -87,20 +79,8 @@ function M.setup()
             vim.cmd([[wincmd J]])
           end,
         },
-      },
-      -- {
-      --   "FileType",
-      --   {
-      --     group = "_filetype_settings",
-      --     pattern = { "gitcommit", "markdown" },
-      --     callback = function()
-      --       vim.bo.spell = true
-      --     end,
-      --   },
-      -- },
-      {
-        "FileType",
         {
+          event = "FileType",
           group = "_filetype_settings",
           pattern = {
             "gitcommit",
@@ -111,43 +91,21 @@ function M.setup()
             vim.bo.bufhidden = "delete"
           end,
         },
-      },
-      {
-        "FileType",
         {
+          event = "FileType",
           group = "_filetype_settings",
           pattern = "gitcommit",
           callback = function(event)
             vim.opt_local.wrap = false
           end,
         },
-      },
-      -- {
-      --   { "BufDelete", "LspDetach" },
-      --   {
-      --     group = "_lsp_cleanup",
-      --     callback = function()
-      --       -- somehow the lsp clients does not get automatically deallocated from the buffer
-      --       vim.schedule(function()
-      --         local clients = vim.lsp.get_clients()
-      --
-      --         for _, client in pairs(clients) do
-      --           if client.attached_buffers == nil or #vim.tbl_keys(client.attached_buffers) == 0 then
-      --             vim.lsp.stop_client(client.id)
-      --           end
-      --         end
-      --       end)
-      --     end,
-      --   },
-      -- },
-      -- NOTE: Telescope opens file in insert mode after neovim commit: d52cc66
-      -- Ref: https://github.com/nvim-telescope/telescope.nvim/issues/2501#issuecomment-1541009573
-      -- Neovim commit pull request: https://github.com/neovim/neovim/pull/22984
-      -- Workaround: Leave insert mode when leaving Telescope prompt.
-      -- Ref: https://github.com/nvim-telescope/telescope.nvim/issues/2027#issuecomment-1510001730
-      {
-        "WinLeave",
+        -- NOTE: Telescope opens file in insert mode after neovim commit: d52cc66
+        -- Ref: https://github.com/nvim-telescope/telescope.nvim/issues/2501#issuecomment-1541009573
+        -- Neovim commit pull request: https://github.com/neovim/neovim/pull/22984
+        -- Workaround: Leave insert mode when leaving Telescope prompt.
+        -- Ref: https://github.com/nvim-telescope/telescope.nvim/issues/2027#issuecomment-1510001730
         {
+          event = "WinLeave",
           group = "_telescope",
           pattern = "*",
           callback = function()
@@ -156,8 +114,8 @@ function M.setup()
             end
           end,
         },
-      },
-    },
+      }
+    end,
   })
 end
 

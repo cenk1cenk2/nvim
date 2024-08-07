@@ -311,24 +311,11 @@ function M.config()
         },
       }
     end,
-    autocmds = {
-      require("modules.autocmds").set_view_buffer({ "noice" }),
-
-      -- {
-      --   "FileType",
-      --   {
-      --     group = "_buffer_mappings",
-      --     pattern = {
-      --       "noice",
-      --     },
-      --     callback = function(event)
-      --       vim.keymap.set("n", "q", function()
-      --         vim.api.nvim_win_close(vim.api.nvim_get_current_win(), 0)
-      --       end, { silent = true, buffer = event.buf })
-      --     end,
-      --   },
-      -- },
-    },
+    autocmds = function()
+      return {
+        require("modules.autocmds").set_view_buffer({ "noice" }),
+      }
+    end,
   })
 end
 

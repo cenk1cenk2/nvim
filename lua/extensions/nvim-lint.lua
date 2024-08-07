@@ -29,18 +29,18 @@ function M.config()
         return require("lint").linters_by_ft[vim.bo[bufnr].ft] or {}
       end
     end,
-    autocmds = {
-      {
-        { "TextChanged", "BufReadPost" },
+    autocmds = function()
+      return {
         {
+          event = { "TextChanged", "BufReadPost" },
           group = "__linter",
           pattern = "*",
           callback = function()
             require("lint").try_lint()
           end,
         },
-      },
-    },
+      }
+    end,
   })
 end
 

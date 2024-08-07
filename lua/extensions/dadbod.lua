@@ -42,18 +42,18 @@ function M.config()
         },
       },
     },
-    autocmds = {
-      {
-        "FileType",
+    autocmds = function()
+      return {
         {
+          event = "FileType",
           group = "__dadbod",
           pattern = { "sql", "mysql", "plsql" },
           callback = function()
             require("cmp").setup.buffer({ sources = { { name = "vim-dadbod-completion" } } })
           end,
         },
-      },
-    },
+      }
+    end,
     wk = function(_, categories, fn)
       return {
         {

@@ -275,14 +275,12 @@ function M.config()
       for key, value in pairs(setup.evaluate_property(config.extended_setup.per_ft, config)) do
         setup.define_autocmds({
           {
-            { "FileType" },
-            {
-              group = "_cmp_per_ft",
-              pattern = key,
-              callback = function()
-                cmp.setup.buffer(value)
-              end,
-            },
+            event = "FileType",
+            group = "_cmp_per_ft",
+            pattern = key,
+            callback = function()
+              cmp.setup.buffer(value)
+            end,
           },
         })
       end

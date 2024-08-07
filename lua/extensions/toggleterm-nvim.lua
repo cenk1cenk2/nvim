@@ -210,18 +210,18 @@ function M.config()
         },
       }
     end,
-    autocmds = {
-      -- {
-      --   { "TermOpen" },
-      --   {
-      --     group = "_toggle_term",
-      --     pattern = "*",
-      --     callback = function(event)
-      --       vim.keymap.set("n", "<LeftRelease>", "<LeftRelease>i", { silent = true, buffer = event.buf })
-      --     end,
-      --   },
-      -- },
-    },
+    autocmds = function()
+      return {
+        {
+          event = { "TermOpen" },
+          group = "_toggle_term",
+          pattern = "*",
+          callback = function(event)
+            vim.keymap.set("n", "<LeftRelease>", "<LeftRelease>i", { silent = true, buffer = event.buf })
+          end,
+        },
+      }
+    end,
   })
 end
 

@@ -189,9 +189,11 @@ function M.config()
         },
       }
     end,
-    autocmds = {
-      require("modules.autocmds").set_view_buffer({ "copilot-chat" }),
-    },
+    autocmds = function()
+      return {
+        require("modules.autocmds").set_view_buffer({ "copilot-chat" }),
+      }
+    end,
   })
 end
 

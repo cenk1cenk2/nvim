@@ -208,16 +208,14 @@ function M.config()
     autocmds = function()
       return {
         {
-          { "BufWritePost" },
-          {
-            group = "_dap",
-            pattern = "launch.json",
-            callback = function()
-              require("dap.ext.vscode").load_launchjs()
+          event = "BufWritePost",
+          group = "_dap",
+          pattern = "launch.json",
+          callback = function()
+            require("dap.ext.vscode").load_launchjs()
 
-              require("lvim.core.log"):info("Reloaded launch.json for dap.")
-            end,
-          },
+            require("lvim.core.log"):info("Reloaded launch.json for dap.")
+          end,
         },
       }
     end,

@@ -136,11 +136,13 @@ function M.config()
         },
       }
     end,
-    autocmds = {
-      require("modules.autocmds").set_view_buffer({ "alpha" }),
+    autocmds = function()
+      return {
+        require("modules.autocmds").set_view_buffer({ "alpha" }),
 
-      require("modules.autocmds").q_close_autocmd({ "alpha" }),
-    },
+        require("modules.autocmds").q_close_autocmd({ "alpha" }),
+      }
+    end,
     layout = {
       header = {
         [[                                                                                        ]],

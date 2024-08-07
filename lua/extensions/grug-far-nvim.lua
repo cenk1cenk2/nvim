@@ -85,22 +85,6 @@ function M.config()
           desc = "[grug-far] find and replace",
         },
         {
-          fn.wk_keystroke({ categories.SEARCH, "S" }),
-          function()
-            local opts = {
-              prefills = {
-                search = "",
-                replacement = "",
-                filesFilter = "",
-                flags = generate_rg_flags({ "--fixed-strings" }),
-              },
-            }
-
-            require("grug-far").grug_far(opts)
-          end,
-          desc = "[grug-far] find and replace (fixed strings)",
-        },
-        {
           fn.wk_keystroke({ categories.SEARCH, "w" }),
           function()
             local opts = {
@@ -117,22 +101,6 @@ function M.config()
           desc = "[grug-far] find and replace in current folder",
         },
         {
-          fn.wk_keystroke({ categories.SEARCH, "W" }),
-          function()
-            local opts = {
-              prefills = {
-                search = "",
-                replacement = "",
-                filesFilter = string.format("%s**", require("utils").get_project_buffer_dirpath()),
-                flags = generate_rg_flags({ "--no-ignore-dot", "--fixed-strings" }),
-              },
-            }
-
-            require("grug-far").grug_far(opts)
-          end,
-          desc = "[grug-far] find and replace in current folder (fixed strings)",
-        },
-        {
           fn.wk_keystroke({ categories.SEARCH, "b" }),
           function()
             local opts = {
@@ -147,22 +115,6 @@ function M.config()
             require("grug-far").grug_far(opts)
           end,
           desc = "[grug-far] find and replace in current buffer",
-        },
-        {
-          fn.wk_keystroke({ categories.SEARCH, "B" }),
-          function()
-            local opts = {
-              prefills = {
-                search = "",
-                replacement = "",
-                filesFilter = require("utils").get_project_buffer_filepath(),
-                flags = generate_rg_flags({ "--no-ignore-dot", "--fixed-strings" }),
-              },
-            }
-
-            require("grug-far").grug_far(opts)
-          end,
-          desc = "[grug-far] find and replace in current buffer (fixed strings)",
         },
         {
           mode = { "v" },
@@ -217,9 +169,22 @@ function M.config()
         },
       }
     end,
-    autocmds = {
-      require("modules.autocmds").q_close_autocmd({ "grug-far-history" }),
-    },
+    autocmds = function()
+      return {
+        require("modules.autocmds").q_close_autocmd({ "grug-far-history" }),
+        {
+          event = "FileType",
+          group = vim.api.nvim_create_augroup("my-grug-far-custom-keybinds", { clear = true }),
+          pattern = { "grug-far" },
+          callback = function()
+            vim.keymap.set("n", "<localleader>w", function()
+              local state = unpack(require("grug-far").toggle_flags({ "--fixed-strings" }))
+              vim.notify("grug-far: toggled --fixed-strings " .. (state and "ON" or "OFF"))
+            end, { buffer = true })
+          end,
+        },
+      }
+    end,
   })
 end
 

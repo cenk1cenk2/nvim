@@ -2,26 +2,24 @@ require("utils.setup").init({
   autocmds = function(_, fn)
     return {
       {
-        "FileType",
-        {
-          group = "__lsp",
-          pattern = { "terraform", "tfvars" },
-          callback = function(event)
-            require("utils.setup").load_wk({
-              {
-                fn.wk_keystroke({ fn.get_wk_category("LSP"), "Q" }),
-                function()
-                  require("modules.lsp.wrapper").reset_buffer_lsp()
+        event = "FileType",
+        group = "__lsp",
+        pattern = { "terraform", "tfvars" },
+        callback = function(event)
+          require("utils.setup").load_wk({
+            {
+              fn.wk_keystroke({ fn.get_wk_category("LSP"), "Q" }),
+              function()
+                require("modules.lsp.wrapper").reset_buffer_lsp()
 
-                  require("lvim.core.log"):warn("terraform-ls will be killed.")
-                  vim.fn.system({ "pkill", "-9", "terraform-ls" })
-                end,
-                desc = "lsp restart (terraform-ls)",
-                buffer = event.buf,
-              },
-            })
-          end,
-        },
+                require("lvim.core.log"):warn("terraform-ls will be killed.")
+                vim.fn.system({ "pkill", "-9", "terraform-ls" })
+              end,
+              desc = "lsp restart (terraform-ls)",
+              buffer = event.buf,
+            },
+          })
+        end,
       },
     }
   end,

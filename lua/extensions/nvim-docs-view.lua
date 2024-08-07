@@ -37,10 +37,12 @@ function M.config()
         },
       }
     end,
-    autocmds = {
-      require("modules.autocmds").set_view_buffer({ "nvim-docs-view" }),
-      require("modules.autocmds").q_close_autocmd({ "nvim-docs-view" }),
-    },
+    autocmds = function()
+      return {
+        require("modules.autocmds").set_view_buffer({ "nvim-docs-view" }),
+        require("modules.autocmds").q_close_autocmd({ "nvim-docs-view" }),
+      }
+    end,
   })
 end
 

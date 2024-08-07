@@ -283,9 +283,11 @@ function M.config()
         },
       }
     end,
-    autocmds = {
-      require("modules.autocmds").set_view_buffer({ "gitlab" }),
-    },
+    autocmds = function()
+      return {
+        require("modules.autocmds").set_view_buffer({ "gitlab" }),
+      }
+    end,
   })
 end
 

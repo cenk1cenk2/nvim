@@ -33,12 +33,14 @@ function M.config()
         "neotest-output",
       })
     end,
-    autocmds = {
-      require("modules.autocmds").q_close_autocmd({
-        "neotest-summary",
-        "neotest-output",
-      }),
-    },
+    autocmds = function()
+      return {
+        require("modules.autocmds").q_close_autocmd({
+          "neotest-summary",
+          "neotest-output",
+        }),
+      }
+    end,
     setup = function()
       return {
         -- log_level = vim.log.levels.TRACE,

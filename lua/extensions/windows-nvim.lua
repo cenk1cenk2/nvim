@@ -63,16 +63,16 @@ function M.config()
         },
       }
     end,
-    autocmds = {
-      {
-        "VimResized",
+    autocmds = function()
+      return {
         {
+          event = "VimResized",
           group = "_auto_resize",
           pattern = "*",
           command = ":WindowsEqualize",
         },
-      },
-    },
+      }
+    end,
   })
 end
 

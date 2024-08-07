@@ -32,16 +32,14 @@ function M.create_scratch_buffer()
 
     require("utils.setup").define_autocmds({
       {
-        { "BufDelete", "VimLeavePre" },
-        {
-          group = "_scratch",
-          buffer = bufnr,
-          callback = function()
-            os.remove(filename)
+        event = { "BufDelete", "VimLeavePre" },
+        group = "_scratch",
+        buffer = bufnr,
+        callback = function()
+          os.remove(filename)
 
-            Log:info(("Removed temporary file: %s"):format(filename))
-          end,
-        },
+          Log:info(("Removed temporary file: %s"):format(filename))
+        end,
       },
     })
   end)

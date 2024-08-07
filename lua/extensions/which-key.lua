@@ -95,12 +95,16 @@ function M.config()
 
       which_key.add(lvim.wk)
     end,
-    autocmds = {
-      {
-        "FileType",
-        { group = "__which_key", pattern = "which_key", command = "nnoremap <silent> <buffer> <esc> <C-c><CR>" },
-      },
-    },
+    autocmds = function()
+      return {
+        {
+          event = "FileType",
+          group = "__which_key",
+          pattern = "which_key",
+          command = "nnoremap <silent> <buffer> <esc> <C-c><CR>",
+        },
+      }
+    end,
   })
 end
 
