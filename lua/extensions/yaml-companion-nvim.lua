@@ -14,7 +14,7 @@ function M.config()
     end,
     setup = function()
       return {
-        log_level = "debug",
+        log_level = "info",
         formatting = false,
         -- Built in file matchers
         matchers = {
