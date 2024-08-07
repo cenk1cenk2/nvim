@@ -170,17 +170,38 @@ function M.config()
       }
     end,
     autocmds = function()
+      local function grug_far_toggle_flags(flags)
+        local status = require("grug-far").toggle_flags(flags)
+        local state = unpack(status) and "ON" or "OFF"
+        vim.notify(("Grug Far: toggled %s: %s"):format(table.concat(flags, " "), state))
+      end
       return {
         require("modules.autocmds").q_close_autocmd({ "grug-far-history" }),
         {
           event = "FileType",
-          group = vim.api.nvim_create_augroup("my-grug-far-custom-keybinds", { clear = true }),
+          group = "__grug_far",
           pattern = { "grug-far" },
-          callback = function()
-            vim.keymap.set("n", "<localleader>w", function()
-              local state = unpack(require("grug-far").toggle_flags({ "--fixed-strings" }))
-              vim.notify("grug-far: toggled --fixed-strings " .. (state and "ON" or "OFF"))
-            end, { buffer = true })
+          callback = function(event)
+            require("utils.setup").load_mappings({
+              {
+                "<localleader>w",
+                function()
+                  return grug_far_toggle_flags({ "--fixed-strings" })
+                end,
+                desc = "Grug Far: toggle --fixed-strings",
+                mode = { "n" },
+                buffer = event.buf,
+              },
+              {
+                "<localleader>i",
+                function()
+                  return grug_far_toggle_flags({ "--no-ignore-dot" })
+                end,
+                mode = { "n" },
+                desc = "Grug Far: toggle --no-ignore-dot",
+                buffer = event.buf,
+              },
+            })
           end,
         },
       }
