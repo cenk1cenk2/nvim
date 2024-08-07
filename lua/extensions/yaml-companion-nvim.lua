@@ -34,6 +34,7 @@ function M.config()
                     return require("telescope").extensions.yaml_schema.yaml_schema()
                   end,
                   desc = "select yaml schema",
+                  buffer = event.buf,
                 },
                 {
                   fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "p" }),
@@ -48,9 +49,25 @@ function M.config()
                     vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result[1].uri) }, "l", false, true)
                   end,
                   desc = "print yaml schema",
+                  buffer = event.buf,
                 },
-              }, {
-                buffer = event.buf,
+                {
+                  fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "k" }),
+                  function()
+                    vim.ui.input({
+                      prompt = "Kubernetes version;",
+                      default = require("yaml-companion").ctx.kubernetes_version,
+                    }, function(version)
+                      if not version then
+                        return
+                      end
+
+                      local result = require("yaml-companion").set_kubernetes_version(version)
+                    end)
+                  end,
+                  desc = "set kubernetes version",
+                  buffer = event.buf,
+                },
               })
             end,
           },

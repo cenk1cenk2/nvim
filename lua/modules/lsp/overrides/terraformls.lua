@@ -17,9 +17,8 @@ require("utils.setup").init({
                   vim.fn.system({ "pkill", "-9", "terraform-ls" })
                 end,
                 desc = "lsp restart (terraform-ls)",
+                buffer = event.buf,
               },
-            }, {
-              buffer = event.buf,
             })
           end,
         },

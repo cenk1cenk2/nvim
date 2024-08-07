@@ -3,6 +3,7 @@ return {
     return require("yaml-companion").setup({
       -- log_level = "debug",
       formatting = false,
+      kubernetes_version = "master",
       -- Built in file matchers
       builtin_matchers = {
         kubernetes = { enabled = true },
@@ -23,15 +24,19 @@ return {
         },
         {
           name = "Kubernetes v1.27",
-          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.14-standalone-strict/all.json",
+          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.16-standalone-strict/all.json",
         },
         {
           name = "Kubernetes v1.28",
-          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.28.9-standalone-strict/all.json",
+          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.28.12-standalone-strict/all.json",
         },
         {
           name = "Kubernetes v1.29",
-          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.5-standalone-strict/all.json",
+          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.7-standalone-strict/all.json",
+        },
+        {
+          name = "Kubernetes v1.30",
+          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.3-standalone-strict/all.json",
         },
         {
           name = "Gitlab CI",
@@ -59,23 +64,23 @@ return {
       schemaStore = { enable = true, url = "https://www.schemastore.org/api/json/catalog.json" },
       schemaDownload = { enable = true },
       schemas = {
-        kubernetes = {
-          "templates/*!(.gitlab-ci).{yml,yaml}",
-          "workloads/**/*!(kustomization).{yml,yaml}",
-          "*.k8s.{yml,yaml}",
-          "daemon.{yml,yaml}",
-          "manager.{yml,yaml}",
-          "restapi.{yml,yaml}",
-          "*namespace*.{yml,yaml}",
-          "role.{yml,yaml}",
-          "role-binding.{yml,yaml}",
-          "*onfigma*.{yml,yaml}",
-          "*ingress*.{yml,yaml}",
-          "*secret*.{yml,yaml}",
-          "*deployment*.{yml,yaml}",
-          "*service*.{yml,yaml}",
-          "kubectl-edit*.yaml",
-        },
+        -- kubernetes = {
+        --   "templates/*!(.gitlab-ci).{yml,yaml}",
+        --   "workloads/**/*!(kustomization).{yml,yaml}",
+        --   "*.k8s.{yml,yaml}",
+        --   "daemon.{yml,yaml}",
+        --   "manager.{yml,yaml}",
+        --   "restapi.{yml,yaml}",
+        --   "*namespace*.{yml,yaml}",
+        --   "role.{yml,yaml}",
+        --   "role-binding.{yml,yaml}",
+        --   "*onfigma*.{yml,yaml}",
+        --   "*ingress*.{yml,yaml}",
+        --   "*secret*.{yml,yaml}",
+        --   "*deployment*.{yml,yaml}",
+        --   "*service*.{yml,yaml}",
+        --   "kubectl-edit*.yaml",
+        -- },
         ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = { "*argocd*.{yml,yaml}" },
         ["http://json.schemastore.org/chart"] = { "Chart.{yml,yaml}" },
         ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = {
