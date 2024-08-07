@@ -52,13 +52,6 @@ function M.config()
           ":Lazy update<CR>",
           desc = "update",
         },
-        {
-          fn.wk_keystroke({ categories.LOGS, "p" }),
-          function()
-            lvim.fn.toggle_log_view("lazy.nvim")
-          end,
-          desc = "view plugin manager log",
-        },
       }
     end,
   })
