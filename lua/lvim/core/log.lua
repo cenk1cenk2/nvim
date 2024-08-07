@@ -13,6 +13,8 @@ Log.levels = {
   ERROR = 5,
 }
 
+local queue = {}
+
 function Log:set_level(level)
   local logger_ok, _ = xpcall(function()
     local log_level = Log.levels[level:upper()]
@@ -99,6 +101,8 @@ end
 function Log:add_entry(level, msg, ...)
   local logger = self:get_logger()
   if not logger then
+    table.insert(queue, { level or vim.log.levels.DEBUG, msg, { ... } })
+
     return
   end
 
@@ -118,6 +122,16 @@ function Log:get_logger()
   end
 
   self.__handle = logger
+
+  for _, entry in ipairs(queue) do
+    if #entry == 3 then
+      Log:log(entry[1], entry[2], unpack(entry[3]))
+    else
+      Log:log(entry[1], entry[2])
+    end
+  end
+  queue = nil
+
   return logger
 end
 
@@ -125,6 +139,13 @@ end
 ---@return string path of the logfile
 function Log:get_path()
   return string.format("%s/%s.log", get_cache_dir(), "lvim")
+end
+
+---Add a log entry at TRACE level
+---@param msg any
+---@param ... any
+function Log:log(level, msg, ...)
+  self:add_entry(level, msg, ...)
 end
 
 ---Add a log entry at TRACE level

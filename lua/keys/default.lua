@@ -26,12 +26,12 @@ return {
   {
     "P",
     [["_dp]],
-    mode = { "v", "vb" },
+    mode = { "v", "x" },
   },
   {
     "p",
     [["_dP]],
-    mode = { "v", "vb" },
+    mode = { "v", "x" },
   },
   -- tab control
   {

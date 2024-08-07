@@ -1,52 +1,6 @@
 return {
   override = function(config)
-    return require("yaml-companion").setup({
-      -- log_level = "debug",
-      formatting = false,
-      versions = {
-        kubernetes = "master",
-      },
-      -- Built in file matchers
-      builtin_matchers = {
-        kubernetes = { enabled = true },
-        -- Detects Kubernetes files based on content
-        kubernetes_crd = { enabled = true },
-        -- kubernetes = { enabled = true },
-        cloud_init = { enabled = true },
-      },
-      -- Additional schemas available in Telescope picker
-      schemas = {
-        {
-          name = "ArgoCD",
-          uri = "https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json",
-        },
-        {
-          name = "Kubernetes master",
-          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/all.json",
-        },
-        {
-          name = "Kubernetes v1.27",
-          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.16-standalone-strict/all.json",
-        },
-        {
-          name = "Kubernetes v1.28",
-          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.28.12-standalone-strict/all.json",
-        },
-        {
-          name = "Kubernetes v1.29",
-          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.7-standalone-strict/all.json",
-        },
-        {
-          name = "Kubernetes v1.30",
-          uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.3-standalone-strict/all.json",
-        },
-        {
-          name = "Gitlab CI",
-          uri = "https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json",
-        },
-      },
-      lspconfig = config,
-    })
+    return require("yaml-companion").setup_client(config)
   end,
   filetypes = {
     "yaml",
