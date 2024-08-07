@@ -7,20 +7,19 @@ function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
-        -- dir = "~/development/yaml-companion.nvim",
         "cenk1cenk2/yaml-companion.nvim",
+        -- dir = "~/development/yaml-companion.nvim",
         ft = { "yaml", "helm" },
       }
     end,
     setup = function()
       return {
-        log_level = "info",
+        log_level = lvim.log.level,
         formatting = false,
         -- Built in file matchers
         matchers = {
           require("yaml-companion.matchers.kubernetes").setup({ version = "master" }),
         },
-        -- Additional schemas available in Telescope picker
         schemas = {
           {
             name = "ArgoCD",
@@ -82,14 +81,14 @@ function M.config()
               {
                 fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "p" }),
                 function()
-                  local result = require("yaml-companion").get_buf_schema(0).result
+                  local result = require("yaml-companion").get_buffer_schema(0)
 
-                  if not result or not result[1] then
+                  if not result then
                     require("lvim.core.log"):warn("No schema found.")
                     return
                   end
 
-                  vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result[1].uri) }, "l", false, true)
+                  vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result.uri) }, "l", false, true)
                 end,
                 desc = "print yaml schema",
                 buffer = event.buf,

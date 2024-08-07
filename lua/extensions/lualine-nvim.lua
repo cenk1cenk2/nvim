@@ -190,7 +190,7 @@ function M.components()
     },
     yaml_schema = {
       function()
-        return ("%s %s"):format(lvim.ui.icons.ui.Table, require("yaml-companion").get_buf_schema(0).result[1].name)
+        return ("%s %s"):format(lvim.ui.icons.ui.Table, require("yaml-companion").get_buffer_schema(0).name)
       end,
       color = {
         fg = lvim.ui.colors.purple[600],

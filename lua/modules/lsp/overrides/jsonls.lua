@@ -1,20 +1,18 @@
-local schemas = {
-  {
-    description = "TypeScript compiler configuration file",
-    fileMatch = { "tsconfig.json", "tsconfig.*.json" },
-    url = "https://json.schemastore.org/tsconfig.json",
-  },
-  {
-    description = "JSON Schema.",
-    fileMatch = { "*.schema.json" },
-    url = "http://json-schema.org/draft-07/schema#",
-  },
-}
-
 return {
   settings = {
     json = {
-      schemas = vim.tbl_deep_extend("force", require("schemastore").json.schemas(), schemas),
+      schemas = vim.tbl_deep_extend("force", require("schemastore").json.schemas(), {
+        {
+          description = "TypeScript compiler configuration file",
+          fileMatch = { "tsconfig.json", "tsconfig.*.json" },
+          url = "https://json.schemastore.org/tsconfig.json",
+        },
+        {
+          description = "JSON Schema.",
+          fileMatch = { "*.schema.json" },
+          url = "http://json-schema.org/draft-07/schema#",
+        },
+      }),
       schemaDownload = {
         enable = true,
       },
