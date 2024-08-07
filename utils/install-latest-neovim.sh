@@ -30,42 +30,42 @@ NVIM_LAST_BUILD_HEAD=$(echo "$NVIM_VERSION" | sed -E 's/.*(-dev-|\+g)(.*)$/\2/')
 log_info "Current neovim version: ${NVIM_VERSION}"
 
 if [ -x "$(command -v nvim)" ]; then
-	if [[ -z "$COMMIT_TAG" ]] && [[ -z "$COMMIT_SHA" ]] && [[ -x "$(command -v curl)" ]] && [[ -x "$(command -v jq)" ]]; then
-		REMOTE_LATEST_COMMIT=$(curl -L -s -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "$REMOTE_API_URL/commits?per_page=1" | jq -r '. | first .sha')
+  if [[ -z "$COMMIT_TAG" ]] && [[ -z "$COMMIT_SHA" ]] && [[ -x "$(command -v curl)" ]] && [[ -x "$(command -v jq)" ]]; then
+    REMOTE_LATEST_COMMIT=$(curl -L -s -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "$REMOTE_API_URL/commits?per_page=1" | jq -r '. | first .sha')
 
-		log_info "Current neovim head: ${NVIM_LAST_BUILD_HEAD}"
-		log_info "Checking neovim remote latest commit: ${REMOTE_LATEST_COMMIT}"
+    log_info "Current neovim head: ${NVIM_LAST_BUILD_HEAD}"
+    log_info "Checking neovim remote latest commit: ${REMOTE_LATEST_COMMIT}"
 
-		if [[ "$REMOTE_LATEST_COMMIT" =~ "$NVIM_LAST_BUILD_HEAD".* ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
-			log_warn "No need to rebuild! Already at latest commit."
-			exit 0
-		fi
-	elif [[ -n "$COMMIT_TAG" ]] && [[ -x "$(command -v curl)" ]] && [[ -x "$(command -v jq)" ]] && ! [[ "$COMMIT_TAG" =~ ^v\d\.\d\.\d ]]; then
-		REMOTE_LATEST_COMMIT=$(curl -L -s -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "$REMOTE_API_URL/git/matching-refs/tags/nightly" | jq -r '. | first | .object.sha')
+    if [[ "$REMOTE_LATEST_COMMIT" =~ "$NVIM_LAST_BUILD_HEAD".* ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
+      log_warn "No need to rebuild! Already at latest commit."
+      exit 0
+    fi
+  elif [[ -n "$COMMIT_TAG" ]] && [[ -x "$(command -v curl)" ]] && [[ -x "$(command -v jq)" ]] && ! [[ "$COMMIT_TAG" =~ ^v\d\.\d\.\d ]]; then
+    REMOTE_LATEST_COMMIT=$(curl -L -s -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" "$REMOTE_API_URL/git/matching-refs/tags/nightly" | jq -r '. | first | .object.sha')
 
-		log_info "Current neovim head: ${NVIM_LAST_BUILD_HEAD}"
-		log_info "Checking neovim remote latest commit: ${REMOTE_LATEST_COMMIT} for ${COMMIT_TAG}"
+    log_info "Current neovim head: ${NVIM_LAST_BUILD_HEAD}"
+    log_info "Checking neovim remote latest commit: ${REMOTE_LATEST_COMMIT} for ${COMMIT_TAG}"
 
-		if [[ "$REMOTE_LATEST_COMMIT" =~ "$NVIM_LAST_BUILD_HEAD".* ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
-			log_warn "No need to rebuild! Already at latest commit for given rolling tag: ${COMMIT_TAG}"
-			exit 0
-		fi
-	elif [ -n "$COMMIT_TAG" ]; then
-		log_info "Checking neovim version against tag: ${COMMIT_TAG}"
+    if [[ "$REMOTE_LATEST_COMMIT" =~ "$NVIM_LAST_BUILD_HEAD".* ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
+      log_warn "No need to rebuild! Already at latest commit for given rolling tag: ${COMMIT_TAG}"
+      exit 0
+    fi
+  elif [ -n "$COMMIT_TAG" ]; then
+    log_info "Checking neovim version against tag: ${COMMIT_TAG}"
 
-		if [[ "$NVIM_VERSION" == "$COMMIT_TAG" ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
-			log_warn "No need to rebuild!"
-			exit 0
-		fi
-	elif [ -n "$COMMIT_SHA" ]; then
-		log_info "Current neovim head: ${NVIM_LAST_BUILD_HEAD}"
-		log_info "Checking neovim version against commit sha: ${COMMIT_SHA}"
+    if [[ "$NVIM_VERSION" == "$COMMIT_TAG" ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
+      log_warn "No need to rebuild!"
+      exit 0
+    fi
+  elif [ -n "$COMMIT_SHA" ]; then
+    log_info "Current neovim head: ${NVIM_LAST_BUILD_HEAD}"
+    log_info "Checking neovim version against commit sha: ${COMMIT_SHA}"
 
-		if [[ "$COMMIT_SHA" =~ "$NVIM_LAST_BUILD_HEAD".* ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
-			log_warn "No need to rebuild!"
-			exit 0
-		fi
-	fi
+    if [[ "$COMMIT_SHA" =~ "$NVIM_LAST_BUILD_HEAD".* ]] && [[ -z "$NVIM_FORCE_BUILD" ]]; then
+      log_warn "No need to rebuild!"
+      exit 0
+    fi
+  fi
 fi
 
 TMP_DOWNLOAD_PATH=$(mktemp -d -t neovim-XXXXXXXXXX)
@@ -74,26 +74,26 @@ log_debug "Temporary path: ${TMP_DOWNLOAD_PATH}"
 
 log_start "Downloading neovim head~0..."
 if [ -n "$COMMIT_TAG" ]; then
-	git clone https://github.com/neovim/neovim "$TMP_DOWNLOAD_PATH" --branch "${COMMIT_TAG}" --single-branch --depth 1
-	log_warn "Certain commit tag is set: ${COMMIT_TAG}"
+  git clone https://github.com/neovim/neovim "$TMP_DOWNLOAD_PATH" --branch "${COMMIT_TAG}" --single-branch --depth 1
+  log_warn "Certain commit tag is set: ${COMMIT_TAG}"
 else
-	git clone https://github.com/neovim/neovim "$TMP_DOWNLOAD_PATH" --single-branch
+  git clone https://github.com/neovim/neovim "$TMP_DOWNLOAD_PATH" --single-branch
 fi
 log_finish "Neovim cloned."
 
 cd "$TMP_DOWNLOAD_PATH" || exit 127
 
 if [ -n "$COMMIT_SHA" ]; then
-	log_warn "Certain commit sha is set: ${COMMIT_SHA}"
-	git checkout "$COMMIT_SHA"
+  log_warn "Certain commit sha is set: ${COMMIT_SHA}"
+  git checkout "$COMMIT_SHA"
 fi
 
 for PATCH in "${PATCHES[@]}"; do
-	log_info "Applying patch: $PATCH"
+  log_info "Applying patch: $PATCH"
 
-	rm p.patch
-	wget -O "p.patch" "$PATCH"
-	git apply p.patch
+  rm p.patch
+  wget -O "p.patch" "$PATCH"
+  git apply p.patch
 done
 
 log_start "Building neovim..."
@@ -102,11 +102,6 @@ log_finish "Finished installing neovim."
 
 log_debug "Clean up temporary path."
 sudo rm -r "$TMP_DOWNLOAD_PATH"
-
-if [ -f "/bin/nvim" ]; then
-	log_warn "Neovim installed with fuse appimage deleting it first."
-	sudo rm /bin/nvim
-fi
 
 ## goodbye
 log_finish "Built neovim in $((SECONDS / 60)) minutes and $((SECONDS % 60)) seconds." "top"
