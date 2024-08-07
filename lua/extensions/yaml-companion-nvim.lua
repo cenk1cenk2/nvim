@@ -62,7 +62,7 @@ function M.config()
                       return
                     end
 
-                    local result = require("yaml-companion").set_kubernetes_version(version)
+                    local result = require("yaml-companion").set_version("kubernetes", version)
                   end)
                 end,
                 desc = "set kubernetes version",
