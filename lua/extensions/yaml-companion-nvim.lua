@@ -22,10 +22,6 @@ function M.config()
         },
         schemas = {
           {
-            name = "ArgoCD",
-            uri = "https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json",
-          },
-          {
             name = "Kubernetes master",
             uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/all.json",
           },
