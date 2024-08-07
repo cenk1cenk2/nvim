@@ -1,5 +1,6 @@
 lvim = {
-  leader = "space",
+  leader = " ",
+  localleader = ",",
   colorscheme = "onedarker",
 
   ui = {

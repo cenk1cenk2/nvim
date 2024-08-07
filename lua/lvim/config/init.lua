@@ -47,9 +47,7 @@ function M:load()
     vim.opt.fillchars = "eob: "
   end
 
-  vim.g.mapleader = (lvim.leader == "space" and " ") or lvim.leader
-
-  require("utils.setup").load_mappings(lvim.keys)
+  require("lvim.keymappings").setup()
 end
 
 --- Override the configuration with a user provided one

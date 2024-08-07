@@ -10,8 +10,10 @@ function M.load_defaults()
 end
 
 function M.setup()
-  vim.g.mapleader = (lvim.leader == "space" and " ") or lvim.leader
-  Log:debug("Initialized keybindings.")
+  Log:debug("Initializing keybindings.")
+
+  vim.g.mapleader = lvim.leader
+  vim.g.maplocalleader = lvim.localleader
 
   require("utils.setup").load_mappings(lvim.keys)
 end
