@@ -3,7 +3,9 @@ return {
     return require("yaml-companion").setup({
       -- log_level = "debug",
       formatting = false,
-      kubernetes_version = "master",
+      versions = {
+        kubernetes = "master",
+      },
       -- Built in file matchers
       builtin_matchers = {
         kubernetes = { enabled = true },
