@@ -1,7 +1,7 @@
 -- https://github.com/cenk1cenk2/schema-companion.nvim
 local M = {}
 
-local extension_name = "yaml_companion_nvim"
+local extension_name = "cenk1cenk2/schema-companion.nvim"
 
 function M.config()
   require("utils.setup").define_extension(extension_name, true, {
