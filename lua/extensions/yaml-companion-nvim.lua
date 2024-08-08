@@ -16,6 +16,7 @@ function M.config()
       return {
         log_level = lvim.log.level,
         formatting = false,
+        enable_telescope = true,
         -- Built in file matchers
         matchers = {
           require("yaml-companion.matchers.kubernetes").setup({ version = "master" }),
@@ -50,9 +51,6 @@ function M.config()
     end,
     on_setup = function(config)
       require("yaml-companion").setup(config.setup)
-    end,
-    on_done = function()
-      require("telescope").load_extension("yaml_schema")
     end,
     autocmds = function(_, fn)
       return {
