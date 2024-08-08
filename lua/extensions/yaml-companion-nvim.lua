@@ -7,7 +7,7 @@ function M.config()
   require("utils.setup").define_extension(extension_name, true, {
     plugin = function()
       return {
-        "cenk1cenk2/yaml-companion.nvim",
+        "cenk1cenk2/schema-companion.nvim",
         -- dir = "~/development/yaml-companion.nvim",
         ft = { "yaml", "helm" },
       }
