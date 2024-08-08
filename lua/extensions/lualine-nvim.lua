@@ -190,7 +190,7 @@ function M.components()
     },
     schema_companion = {
       function()
-        return ("%s %s"):format(lvim.ui.icons.ui.Table, require("schema-companion").get_buffer_schema(0).name)
+        return ("%s %s"):format(lvim.ui.icons.ui.Table, require("schema-companion.context").get_buffer_schema(0).name)
       end,
       color = {
         fg = lvim.ui.colors.purple[600],

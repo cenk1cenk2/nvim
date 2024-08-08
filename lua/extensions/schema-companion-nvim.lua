@@ -75,7 +75,7 @@ function M.config()
               {
                 fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "p" }),
                 function()
-                  local result = require("schema-companion").get_buffer_schema(0)
+                  local result = require("schema-companion.context").get_buffer_schema(0)
 
                   if not result then
                     require("lvim.core.log"):warn("No schema found.")
