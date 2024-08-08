@@ -65,6 +65,14 @@ function M.config()
                 group = "schema",
               },
               {
+                fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "s" }),
+                function()
+                  return require("telescope").extensions.schema_companion.select_from_matching_schemas()
+                end,
+                desc = "select from matching schema",
+                buffer = event.buf,
+              },
+              {
                 fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "f" }),
                 function()
                   return require("telescope").extensions.schema_companion.select_schema()
