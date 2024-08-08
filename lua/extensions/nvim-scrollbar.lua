@@ -16,7 +16,7 @@ function M.config()
         show = true,
         handle = {
           text = " ",
-          color = lvim.ui.colors.bg[400],
+          color = lvim.ui.colors.bg[500],
           hide_if_all_visible = true, -- Hides handle if all lines are visible
         },
         marks = {
@@ -48,6 +48,9 @@ function M.config()
     end,
     on_setup = function(config)
       require("scrollbar").setup(config.setup)
+    end,
+    on_done = function()
+      vim.opt.virtualedit = "onemore"
     end,
   })
 end
