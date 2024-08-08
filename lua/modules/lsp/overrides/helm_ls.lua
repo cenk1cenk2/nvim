@@ -1,10 +1,10 @@
--- https://github.com/someone-stole-my-name/yaml-companion.nvim/issues/12#issuecomment-1367850121
+-- https://github.com/someone-stole-my-name/schema-companion.nvim/issues/12#issuecomment-1367850121
 return {
   override = function(config)
-    return require("yaml-companion").setup_client(config.settings["helm-ls"].yamlls.config)
+    return require("schema-companion").setup_client(config.settings["helm-ls"].yamlls.config)
   end,
   -- override = function(config)
-  --   local companion = require("yaml-companion").setup(vim.tbl_extend("force", require("modules.lsp.overrides.yamlls"), {
+  --   local companion = require("schema-companion").setup(vim.tbl_extend("force", require("modules.lsp.overrides.yamlls"), {
   --     -- log_level = "debug",
   --     formatting = false,
   --     lspconfig = {

@@ -1,6 +1,6 @@
 return {
   override = function(config)
-    return require("yaml-companion").setup_client(config)
+    return require("schema-companion").setup_client(config)
   end,
   filetypes = {
     "yaml",

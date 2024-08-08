@@ -92,7 +92,7 @@ local extensions = {
   "browse-nvim",
   "edgy-nvim",
   "typescript-tools-nvim",
-  "yaml-companion-nvim",
+  "schema-companion-nvim",
   "uuid-nvim",
   "hurl-nvim",
   "dadbod",

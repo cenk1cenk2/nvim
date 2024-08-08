@@ -1,4 +1,4 @@
--- https://github.com/cenk1cenk2/yaml-companion.nvim
+-- https://github.com/cenk1cenk2/schema-companion.nvim
 local M = {}
 
 local extension_name = "yaml_companion_nvim"
@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       return {
         "cenk1cenk2/schema-companion.nvim",
-        -- dir = "~/development/yaml-companion.nvim",
+        -- dir = "~/development/schema-companion.nvim",
         ft = { "yaml", "helm" },
       }
     end,
@@ -19,7 +19,7 @@ function M.config()
         enable_telescope = true,
         -- Built in file matchers
         matchers = {
-          require("yaml-companion.matchers.kubernetes").setup({ version = "master" }),
+          require("schema-companion.matchers.kubernetes").setup({ version = "master" }),
         },
         schemas = {
           {
@@ -50,7 +50,7 @@ function M.config()
       }
     end,
     on_setup = function(config)
-      require("yaml-companion").setup(config.setup)
+      require("schema-companion").setup(config.setup)
     end,
     autocmds = function(_, fn)
       return {
@@ -67,7 +67,7 @@ function M.config()
               {
                 fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "f" }),
                 function()
-                  return require("telescope").extensions.yaml_schema.select_schema()
+                  return require("telescope").extensions.schema_companion.select_schema()
                 end,
                 desc = "select yaml schema",
                 buffer = event.buf,
@@ -75,7 +75,7 @@ function M.config()
               {
                 fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "p" }),
                 function()
-                  local result = require("yaml-companion").get_buffer_schema(0)
+                  local result = require("schema-companion").get_buffer_schema(0)
 
                   if not result then
                     require("lvim.core.log"):warn("No schema found.")
@@ -90,7 +90,7 @@ function M.config()
               {
                 fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "k" }),
                 function()
-                  require("yaml-companion.matchers.kubernetes").change_version()
+                  require("schema-companion.matchers.kubernetes").change_version()
                 end,
                 desc = "set kubernetes version",
                 buffer = event.buf,

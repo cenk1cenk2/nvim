@@ -51,7 +51,7 @@ function M.config()
             components.dap,
             components.diagnostics,
             components.treesitter,
-            components.yaml_schema,
+            components.schema_companion,
             components.lsp,
           },
           lualine_z = { components.scrollbar },
@@ -188,16 +188,16 @@ function M.components()
       },
       cond = conditions.hide_in_width,
     },
-    yaml_schema = {
+    schema_companion = {
       function()
-        return ("%s %s"):format(lvim.ui.icons.ui.Table, require("yaml-companion").get_buffer_schema(0).name)
+        return ("%s %s"):format(lvim.ui.icons.ui.Table, require("schema-companion").get_buffer_schema(0).name)
       end,
       color = {
         fg = lvim.ui.colors.purple[600],
         bg = lvim.ui.colors.bg[300],
       },
       cond = function()
-        return conditions.hide_in_width() and vim.tbl_contains({ "yaml", "helm" }, vim.api.nvim_get_option_value("ft", { buf = 0 })) and package_is_loaded("yaml-companion")
+        return conditions.hide_in_width() and vim.tbl_contains({ "yaml", "helm" }, vim.api.nvim_get_option_value("ft", { buf = 0 })) and package_is_loaded("schema-companion")
       end,
     },
     arrow = {
