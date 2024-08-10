@@ -3,6 +3,15 @@ local M = {}
 local uv = vim.uv
 local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
 
+function _G.get_extension_name(module)
+  local ok, m = pcall(require, module)
+  if not ok then
+    return nil
+  end
+
+  return m.name
+end
+
 function _G.is_headless()
   return #vim.api.nvim_list_uis() == 0 and #vim.tbl_filter(function(argv)
     if argv:find("sk.lua$") then

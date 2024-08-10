@@ -24,7 +24,7 @@ function M.config()
       require("hlslens").setup(config.setup)
     end,
     on_done = function(_, fn)
-      if fn.is_extension_enabled(require("extensions.nvim-scrollbar").name) then
+      if fn.is_extension_enabled(get_extension_name("extensions.nvim-scrollbar")) then
         vim.cmd([[
         augroup scrollbar_search_hide
           autocmd!

@@ -110,7 +110,7 @@ lvim.lsp.automatic_configuration.skipped_servers = {
   "zeta_note",
 }
 
-require("utils.setup").fn.append_to_setup(require("extensions.treesitter").name, {
+require("utils.setup").fn.append_to_setup(get_extension_name("extensions.treesitter"), {
   indent = {
     -- TSBufDisable indent
     disable = { "yaml" },
