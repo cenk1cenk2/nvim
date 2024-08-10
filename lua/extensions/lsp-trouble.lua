@@ -101,6 +101,18 @@ function M.config()
     on_setup = function(config)
       require("trouble").setup(config.setup)
     end,
+    autocmds = function()
+      return {
+        -- https://github.com/folke/trouble.nvim/blob/main/docs/examples.md
+        -- {
+        --   event = { "QuickFixCmdPost" },
+        --   group = "__extensions",
+        --   callback = function()
+        --     vim.cmd([[Trouble qflist open]])
+        --   end,
+        -- },
+      }
+    end,
   })
 end
 
