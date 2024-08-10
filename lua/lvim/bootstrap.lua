@@ -6,6 +6,8 @@ local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
 function _G.get_extension_name(module)
   local ok, m = pcall(require, module)
   if not ok then
+    require("lvim.log").error(("Failed to load extension: "):format(module))
+
     return nil
   end
 
