@@ -1,10 +1,10 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter-context
 local M = {}
 
-local extension_name = "nvim-treesitter/nvim-treesitter-context"
+M.name = "nvim-treesitter/nvim-treesitter-context"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvim-treesitter/nvim-treesitter-context",

@@ -1,10 +1,10 @@
 -- https://github.com/axieax/urlview.nvim
 local M = {}
 
-local extension_name = "axieax/urlview.nvim"
+M.name = "axieax/urlview.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "axieax/urlview.nvim",

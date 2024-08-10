@@ -1,10 +1,10 @@
 -- https://github.com/akinsho/bufferline.nvim
 local M = {}
 
-local extension_name = "bufferline_nvim"
+M.name = "akinsho/bufferline.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "akinsho/bufferline.nvim",

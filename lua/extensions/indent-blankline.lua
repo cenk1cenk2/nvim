@@ -1,10 +1,10 @@
 -- https://github.com/lukas-reineke/indent-blankline.nvim
 local M = {}
 
-local extension_name = "indent_blankline"
+M.name = "lukas-reineke/indent-blankline.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "lukas-reineke/indent-blankline.nvim",

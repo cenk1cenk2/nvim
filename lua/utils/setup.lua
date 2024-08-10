@@ -81,13 +81,13 @@ end
 ---@alias config table
 
 ---
----@param extension_name string
+---@param name string
 ---@param enabled boolean
 ---@param config config
-function M.define_extension(extension_name, enabled, config)
+function M.define_extension(name, enabled, config)
   vim.validate({
     enabled = { enabled, "b" },
-    extension_name = { extension_name, "s" },
+    name = { name, "s" },
     config = { config, "t" },
     on_init = { config.on_init, "f", true },
     plugin = { config.plugin, "f", true },
@@ -104,11 +104,11 @@ function M.define_extension(extension_name, enabled, config)
   })
 
   config = vim.tbl_extend("force", config, {
-    name = extension_name,
+    name = name,
     enabled = enabled,
     store = {},
     to_setup = {},
-  }, lvim.extensions[extension_name] or {})
+  }, lvim.extensions[name] or {})
 
   if config ~= nil and config.plugin ~= nil then
     local plugins = {}
@@ -126,10 +126,10 @@ function M.define_extension(extension_name, enabled, config)
     config.extensions = plugins
   end
 
-  if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[extension_name]) == false then
-    lvim.extensions[extension_name] = config
+  if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[name]) == false then
+    lvim.extensions[name] = config
 
-    Log:debug(string.format("Extension config stopped due to failed condition: %s", extension_name))
+    Log:debug(string.format("Extension config stopped due to failed condition: %s", name))
 
     return
   end
@@ -140,7 +140,7 @@ function M.define_extension(extension_name, enabled, config)
     config.configure = nil
   end
 
-  lvim.extensions[extension_name] = config
+  lvim.extensions[name] = config
 end
 
 ---@param definitions table contains a tuple of event, opts, see `:h nvim_create_autocmd`
@@ -172,22 +172,22 @@ function M.clear_augroup(name)
 end
 
 ---
----@param extension_name string
+---@param name string
 ---@return table
-function M.get_config(extension_name)
-  return lvim.extensions[extension_name]
+function M.get_config(name)
+  return lvim.extensions[name]
 end
 
 ---
----@param extension_name string
-function M.plugin_init(extension_name)
-  return M.init(M.get_config(extension_name))
+---@param name string
+function M.plugin_init(name)
+  return M.init(M.get_config(name))
 end
 
 ---
----@param extension_name string
-function M.plugin_configure(extension_name)
-  return M.configure(M.get_config(extension_name))
+---@param name string
+function M.plugin_configure(name)
+  return M.configure(M.get_config(name))
 end
 
 ---
@@ -349,14 +349,14 @@ function M.fn.is_extension_enabled(extension)
   return (M.get_config(extension) or {}).enabled
 end
 
-function M.fn.append_to_setup(extension_name, to_setup)
-  if lvim.extensions[extension_name] == nil then
-    lvim.extensions[extension_name] = {
+function M.fn.append_to_setup(name, to_setup)
+  if lvim.extensions[name] == nil then
+    lvim.extensions[name] = {
       to_setup = {},
     }
   end
 
-  table.insert(lvim.extensions[extension_name].to_setup, to_setup)
+  table.insert(lvim.extensions[name].to_setup, to_setup)
 end
 
 function M.fn.get_wk_categories()
@@ -367,14 +367,14 @@ function M.fn.get_wk_category(category)
   return M.fn.get_wk_categories()[category]
 end
 
-function M.fn.get_current_setup_wrapper(extension_name)
+function M.fn.get_current_setup_wrapper(name)
   return function()
-    return M.fn.get_current_setup(extension_name)
+    return M.fn.get_current_setup(name)
   end
 end
 
-function M.fn.get_current_setup(extension_name)
-  return lvim.extensions[extension_name].current_setup
+function M.fn.get_current_setup(name)
+  return lvim.extensions[name].current_setup
 end
 
 function M.fn.get_highlight(name)

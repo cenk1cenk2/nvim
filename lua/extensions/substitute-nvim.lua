@@ -1,10 +1,10 @@
 -- https://github.com/gbprod/substitute.nvim
 local M = {}
 
-local extension_name = "substitute_nvim"
+M.name = "gbprod/substitute.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "gbprod/substitute.nvim",

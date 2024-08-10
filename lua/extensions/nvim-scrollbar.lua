@@ -1,10 +1,10 @@
 -- https://github.com/petertriho/nvim-scrollbar
 local M = {}
 
-local extension_name = "nvim_scrollbar"
+M.name = "petertriho/nvim-scrollbar"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "petertriho/nvim-scrollbar",

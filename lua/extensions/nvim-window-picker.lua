@@ -1,10 +1,10 @@
 -- https://github.com/s1n7ax/nvim-window-picker
 local M = {}
 
-local extension_name = "nvim_window_picker"
+M.name = "s1n7ax/nvim-window-picker"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "s1n7ax/nvim-window-picker",

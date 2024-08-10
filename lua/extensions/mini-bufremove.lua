@@ -3,10 +3,10 @@ local Log = require("lvim.core.log")
 
 local M = {}
 
-local extension_name = "echasnovski/mini.bufremove"
+M.name = "echasnovski/mini.bufremove"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "echasnovski/mini.bufremove",

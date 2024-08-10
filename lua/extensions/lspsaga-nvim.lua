@@ -1,10 +1,10 @@
 -- https://github.com/nvimdev/lspsaga.nvim
 local M = {}
 
-local extension_name = "lspsaga_nvim"
+M.name = "nvimdev/lspsaga.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvimdev/lspsaga.nvim",
@@ -27,7 +27,7 @@ function M.config()
         require("lspsaga.codeaction").pending_request = false
       end
       lvim.lsp.wrapper.hover = function()
-        if fn.is_extension_enabled("nvim_ufo") then
+        if fn.is_extension_enabled(require("extensions.nvim-ufo").name) then
           local winid = require("ufo").peekFoldedLinesUnderCursor()
           if not winid then
             vim.cmd("Lspsaga hover_doc")

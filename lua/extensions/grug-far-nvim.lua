@@ -1,10 +1,10 @@
 -- https://github.com/MagicDuck/grug-far.nvim
 local M = {}
 
-local extension_name = "MagicDuck/grug-far.nvim"
+M.name = "MagicDuck/grug-far.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "MagicDuck/grug-far.nvim",

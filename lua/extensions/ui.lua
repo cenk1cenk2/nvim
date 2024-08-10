@@ -1,10 +1,10 @@
 --
 local M = {}
 
-local extension_name = "ui"
+M.name = "ui"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     opts = {
       multiple_packages = true,
     },

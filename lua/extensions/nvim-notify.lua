@@ -1,10 +1,10 @@
 -- https://github.com/rcarriga/nvim-notify
 local M = {}
 
-local extension_name = "nvim_notify"
+M.name = "rcarriga/nvim-notify"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "rcarriga/nvim-notify",

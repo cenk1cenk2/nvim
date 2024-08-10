@@ -1,10 +1,10 @@
---
+-- https://github.com/theHamsta/nvim-dap-virtual-text
 local M = {}
 
-local extension_name = "nvim_dap_virtual_text"
+M.name = "theHamsta/nvim-dap-virtual-text"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "theHamsta/nvim-dap-virtual-text",

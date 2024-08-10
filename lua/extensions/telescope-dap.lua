@@ -1,10 +1,10 @@
 -- https://github.com/nvim-telescope/telescope-dap.nvim
 local M = {}
 
-local extension_name = "telescope_dap"
+M.name = "nvim-telescope/telescope-dap.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvim-telescope/telescope-dap.nvim",

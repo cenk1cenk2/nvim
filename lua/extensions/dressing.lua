@@ -1,10 +1,10 @@
 -- https://github.com/stevearc/dressing.nvim
 local M = {}
 
-local extension_name = "dressing"
+M.name = "stevearc/dressing.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "stevearc/dressing.nvim",

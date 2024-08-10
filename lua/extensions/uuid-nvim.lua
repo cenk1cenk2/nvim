@@ -2,10 +2,10 @@
 local M = {}
 local Log = require("lvim.core.log")
 
-local extension_name = "TrevorS/uuid-nvim"
+M.name = "TrevorS/uuid-nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "TrevorS/uuid-nvim",

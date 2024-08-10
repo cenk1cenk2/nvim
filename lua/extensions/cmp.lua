@@ -1,10 +1,10 @@
 -- https://github.com/hrsh7th/nvim-cmp
 local M = {}
 
-local extension_name = "cmp"
+M.name = "hrsh7th/nvim-cmp"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "hrsh7th/nvim-cmp",
@@ -334,6 +334,6 @@ function M.has_words_before()
   return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
-M.current_setup = require("utils.setup").fn.get_current_setup_wrapper(extension_name)
+M.current_setup = require("utils.setup").fn.get_current_setup_wrapper(M.name)
 
 return M

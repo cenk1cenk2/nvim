@@ -5,8 +5,8 @@ return {
   -- Needed for inlayHints. Merge this table with your settings or copy
   -- it from the source if you want to add your own init_options.
   on_init = function(client, bufnr)
-    -- local extension_name = "rust_tools_nvim"
-    -- local config = lvim.extensions[extension_name]
+    -- local name = "rust_tools_nvim"
+    -- local config = lvim.extensions[name]
     --
     -- if config.active then
     -- Log:debug "Setup additional rust-tools."

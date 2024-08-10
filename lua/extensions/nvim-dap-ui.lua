@@ -1,10 +1,10 @@
 -- https://github.com/rcarriga/nvim-dap-ui
 local M = {}
 
-local extension_name = "nvim_dap_ui"
+M.name = "rcarriga/nvim-dap-ui"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "rcarriga/nvim-dap-ui",

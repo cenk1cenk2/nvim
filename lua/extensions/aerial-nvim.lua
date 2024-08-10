@@ -1,10 +1,10 @@
 -- https://github.com/stevearc/aerial.nvim
 local M = {}
 
-local extension_name = "stevearc/aerial.nvim"
+M.name = "stevearc/aerial.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "stevearc/aerial.nvim",

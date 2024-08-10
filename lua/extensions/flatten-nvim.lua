@@ -1,10 +1,10 @@
 -- https://github.com/willothy/flatten.nvim
 local M = {}
 
-local extension_name = "flatten_nvim"
+M.name = "willothy/flatten.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "willothy/flatten.nvim",

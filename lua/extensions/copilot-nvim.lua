@@ -1,10 +1,10 @@
 -- https://github.com/zbirenbaum/copilot.lua
 local M = {}
 
-local extension_name = "zbirenbaum/copilot.lua"
+M.name = "zbirenbaum/copilot.lua"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "zbirenbaum/copilot.lua",

@@ -1,10 +1,10 @@
 -- https://github.com/wallpants/github-preview.nvim
 local M = {}
 
-local extension_name = "wallpants/github-preview.nvim"
+M.name = "wallpants/github-preview.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "wallpants/github-preview.nvim",

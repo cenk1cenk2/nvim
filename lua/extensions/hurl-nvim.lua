@@ -1,10 +1,10 @@
 -- https://github.com/jellydn/hurl.nvim
 local M = {}
 
-local extension_name = "jellydn/hurl.nvim"
+M.name = "jellydn/hurl.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "jellydn/hurl.nvim",

@@ -1,10 +1,10 @@
 -- https://github.com/Wansmer/symbol-usage.nvim
 local M = {}
 
-local extension_name = "Wansmer/symbol-usage.nvim"
+M.name = "Wansmer/symbol-usage.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "Wansmer/symbol-usage.nvim",

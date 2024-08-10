@@ -1,10 +1,10 @@
 -- https://github.com/epwalsh/obsidian.nvim
 local M = {}
 
-local extension_name = "epwalsh/obsidian.nvim"
+M.name = "epwalsh/obsidian.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "epwalsh/obsidian.nvim",

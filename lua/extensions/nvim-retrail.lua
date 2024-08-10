@@ -1,10 +1,10 @@
 -- https://github.com/zakharykaplan/nvim-retrail
 local M = {}
 
-local extension_name = "nvim_retrail"
+M.name = "zakharykaplan/nvim-retrail"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "zakharykaplan/nvim-retrail",

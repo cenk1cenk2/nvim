@@ -1,10 +1,10 @@
 -- https://github.com/tpope/vim-repeat
 local M = {}
 
-local extension_name = "vim_repeat"
+M.name = "tpope/vim-repeat"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "tpope/vim-repeat",

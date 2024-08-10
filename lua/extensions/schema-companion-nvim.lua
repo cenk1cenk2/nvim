@@ -1,10 +1,10 @@
 -- https://github.com/cenk1cenk2/schema-companion.nvim
 local M = {}
 
-local extension_name = "cenk1cenk2/schema-companion.nvim"
+M.name = "cenk1cenk2/schema-companion.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "cenk1cenk2/schema-companion.nvim",

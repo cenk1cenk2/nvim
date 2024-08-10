@@ -1,10 +1,10 @@
 -- https://github.com/wintermute-cell/gitignore.nvim
 local M = {}
 
-local extension_name = "gitignore_nvim"
+M.name = "wintermute-cell/gitignore.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "wintermute-cell/gitignore.nvim",

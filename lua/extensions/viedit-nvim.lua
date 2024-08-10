@@ -1,10 +1,10 @@
 -- https://github.com/viocost/viedit
 local M = {}
 
-local extension_name = "viocost/viedit"
+M.name = "viocost/viedit"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, false, {
+  require("utils.setup").define_extension(M.name, false, {
     plugin = function()
       return {
         "viocost/viedit",

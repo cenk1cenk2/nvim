@@ -1,10 +1,10 @@
 -- https://github.com/stevearc/conform.nvim
 local M = {}
 
-local extension_name = "conform_nvim"
+M.name = "stevearc/conform.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "stevearc/conform.nvim",

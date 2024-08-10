@@ -1,7 +1,7 @@
 -- https://github.com/folke/which-key.nvim
 local M = {}
 
-local extension_name = "wk"
+M.name = "folke/which-key.nvim"
 
 M.opts = {
   mode = "n", -- NORMAL mode
@@ -13,7 +13,7 @@ M.opts = {
 }
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "folke/which-key.nvim",

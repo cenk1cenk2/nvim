@@ -1,10 +1,10 @@
 -- https://github.com/williamboman/mason.nvim
 local M = {}
 
-local extension_name = "mason"
+M.name = "williamboman/mason.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "williamboman/mason.nvim",

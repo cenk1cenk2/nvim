@@ -1,10 +1,10 @@
 -- https://github.com/anuvyklack/windows.nvim
 local M = {}
 
-local extension_name = "windows_nvim"
+M.name = "anuvyklack/windows.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "anuvyklack/windows.nvim",

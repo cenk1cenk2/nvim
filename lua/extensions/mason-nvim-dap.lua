@@ -1,10 +1,10 @@
 -- https://github.com/jay-babu/mason-nvim-dap.nvim
 local M = {}
 
-local extension_name = "mason_nvim_dap"
+M.name = "jay-babu/mason-nvim-dap.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "jay-babu/mason-nvim-dap.nvim",

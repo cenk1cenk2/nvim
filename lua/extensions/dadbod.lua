@@ -1,10 +1,10 @@
---
+--https://github.com/tpope/vim-dadbod
 local M = {}
 
-local extension_name = "dadbod"
+M.name = "tpope/vim-dadbod"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     opts = {
       multiple_packages = true,
     },

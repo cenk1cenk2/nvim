@@ -1,10 +1,10 @@
 -- https://github.com/stevearc/stickybuf.nvim
 local M = {}
 
-local extension_name = "stickybuf_nvim"
+M.name = "stevearc/stickybuf.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "stevearc/stickybuf.nvim",

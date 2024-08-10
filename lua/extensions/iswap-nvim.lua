@@ -1,10 +1,10 @@
 -- https://github.com/mizlan/iswap.nvim
 local M = {}
 
-local extension_name = "mizlan/iswap.nvim"
+M.name = "mizlan/iswap.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "mizlan/iswap.nvim",

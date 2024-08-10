@@ -1,10 +1,10 @@
 -- https://github.com/mfussenegger/nvim-lint
 local M = {}
 
-local extension_name = "nvim_lint"
+M.name = "mfussenegger/nvim-lint"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "mfussenegger/nvim-lint",

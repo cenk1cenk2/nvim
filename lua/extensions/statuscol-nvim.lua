@@ -1,10 +1,10 @@
 -- https://github.com/luukvbaal/statuscol.nvim
 local M = {}
 
-local extension_name = "statuscol_nvim"
+M.name = "luukvbaal/statuscol.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "luukvbaal/statuscol.nvim",

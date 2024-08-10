@@ -1,10 +1,10 @@
 -- https://github.com/folke/noice.nvim
 local M = {}
 
-local extension_name = "noice_nvim"
+M.name = "folke/noice.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "folke/noice.nvim",

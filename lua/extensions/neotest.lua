@@ -4,10 +4,10 @@
 -- https://github.com/haydenmeade/neotest-jest
 local M = {}
 
-local extension_name = "neotest"
+M.name = "nvim-neotest/neotest"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvim-neotest/neotest",

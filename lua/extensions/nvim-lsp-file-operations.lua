@@ -1,10 +1,10 @@
 -- https://github.com/antosha417/nvim-lsp-file-operations
 local M = {}
 
-local extension_name = "nvim_lsp_file_operations"
+M.name = "antosha417/nvim-lsp-file-operations"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, false, {
+  require("utils.setup").define_extension(M.name, false, {
     plugin = function()
       return {
         "antosha417/nvim-lsp-file-operations",

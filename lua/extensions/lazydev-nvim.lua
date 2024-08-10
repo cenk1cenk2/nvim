@@ -1,10 +1,10 @@
 -- https://github.com/folke/lazydev.nvim
 local M = {}
 
-local extension_name = "folke/lazydev.nvim"
+M.name = "folke/lazydev.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "folke/lazydev.nvim",

@@ -1,10 +1,10 @@
 -- https://github.com/danymat/neogen
 local M = {}
 
-local extension_name = "neogen"
+M.name = "danymat/neogen"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "danymat/neogen",

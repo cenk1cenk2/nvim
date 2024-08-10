@@ -1,10 +1,10 @@
 -- https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-ai.md
 local M = {}
 
-local extension_name = "mini_nvim_ai"
+M.name = "echasnovski/mini.ai"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "echasnovski/mini.ai",

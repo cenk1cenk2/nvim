@@ -1,10 +1,10 @@
 -- https://github.com/MisanthropicBit/decipher.nvim
 local M = {}
 
-local extension_name = "MisanthropicBit/decipher.nvim"
+M.name = "MisanthropicBit/decipher.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "MisanthropicBit/decipher.nvim",

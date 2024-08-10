@@ -1,10 +1,10 @@
 -- https://github.com/sindrets/winshift.nvim
 local M = {}
 
-local extension_name = "winshift_nvim"
+M.name = "sindrets/winshift.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "sindrets/winshift.nvim",

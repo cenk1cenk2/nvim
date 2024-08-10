@@ -1,10 +1,10 @@
 -- https://github.com/OXY2DEV/markview.nvim
 local M = {}
 
-local extension_name = "OXY2DEV/markview.nvim"
+M.name = "OXY2DEV/markview.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "OXY2DEV/markview.nvim",

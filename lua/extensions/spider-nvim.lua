@@ -1,10 +1,10 @@
 -- https://github.com/chrisgrieser/nvim-spider
 local M = {}
 
-local extension_name = "spider_nvim"
+M.name = "chrisgrieser/nvim-spider"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "chrisgrieser/nvim-spider",

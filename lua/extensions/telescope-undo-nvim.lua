@@ -1,10 +1,10 @@
 -- https://github.com/debugloop/telescope-undo.nvim
 local M = {}
 
-local extension_name = "telescope_undo_nvim"
+M.name = "debugloop/telescope-undo.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "debugloop/telescope-undo.nvim",

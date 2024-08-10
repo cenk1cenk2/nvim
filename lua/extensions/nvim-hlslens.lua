@@ -1,10 +1,10 @@
 -- https://github.com/kevinhwang91/nvim-hlslens
 local M = {}
 
-local extension_name = "nvim_hlslens"
+M.name = "kevinhwang91/nvim-hlslens"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "kevinhwang91/nvim-hlslens",
@@ -24,7 +24,7 @@ function M.config()
       require("hlslens").setup(config.setup)
     end,
     on_done = function(_, fn)
-      if fn.is_extension_enabled("nvim_scrollbar") then
+      if fn.is_extension_enabled(require("extensions.nvim-scrollbar").name) then
         vim.cmd([[
         augroup scrollbar_search_hide
           autocmd!

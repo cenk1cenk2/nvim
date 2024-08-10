@@ -1,10 +1,10 @@
 -- https://github.com/Wansmer/treesj
 local M = {}
 
-local extension_name = "treesj"
+M.name = "Wansmer/treesj"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "Wansmer/treesj",

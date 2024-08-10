@@ -1,10 +1,10 @@
 -- https://github.com/ThePrimeagen/git-worktree.nvim
 local M = {}
 
-local extension_name = "ThePrimeagen/git-worktree.nvim"
+M.name = "ThePrimeagen/git-worktree.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "ThePrimeagen/git-worktree.nvim",

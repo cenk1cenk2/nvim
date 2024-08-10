@@ -1,10 +1,10 @@
 -- https://github.com/mg979/vim-visual-multi
 local M = {}
 
-local extension_name = "vim_visual_multi"
+M.name = "mg979/vim-visual-multi"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, false, {
+  require("utils.setup").define_extension(M.name, false, {
     plugin = function()
       return {
         "mg979/vim-visual-multi",

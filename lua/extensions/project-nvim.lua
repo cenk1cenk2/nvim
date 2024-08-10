@@ -1,10 +1,10 @@
 -- https://github.com/ahmedkhalf/project.nvim
 local M = {}
 
-local extension_name = "project_nvim"
+M.name = "ahmedkhalf/project.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "ahmedkhalf/project.nvim",

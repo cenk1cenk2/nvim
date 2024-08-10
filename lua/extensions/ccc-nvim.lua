@@ -1,10 +1,10 @@
 -- https://github.com/uga-rosa/ccc.nvim
 local M = {}
 
-local extension_name = "ccc_nvim"
+M.name = "uga-rosa/ccc.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "uga-rosa/ccc.nvim",

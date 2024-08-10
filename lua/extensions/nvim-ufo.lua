@@ -1,10 +1,10 @@
 -- https://github.com/kevinhwang91/nvim-ufo
 local M = {}
 
-local extension_name = "nvim_ufo"
+M.name = "kevinhwang91/nvim-ufo"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "kevinhwang91/nvim-ufo",

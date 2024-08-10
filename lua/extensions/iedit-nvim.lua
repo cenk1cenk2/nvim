@@ -3,10 +3,10 @@ local M = {}
 
 local Log = require("lvim.core.log")
 
-local extension_name = "altermo/iedit.nvim"
+M.name = "altermo/iedit.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "altermo/iedit.nvim",

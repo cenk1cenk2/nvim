@@ -1,12 +1,12 @@
 -- https://github.com/akinsho/toggleterm.nvim
 local M = {}
 
-local extension_name = "toggleterm_nvim"
+M.name = "akinsho/toggleterm.nvim"
 
 local Log = require("lvim.core.log")
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "akinsho/toggleterm.nvim",
@@ -552,6 +552,6 @@ function M.toggle_log_view(logfile)
   log_view:toggle()
 end
 
-M.current_setup = require("utils.setup").fn.get_current_setup_wrapper(extension_name)
+M.current_setup = require("utils.setup").fn.get_current_setup_wrapper(M.name)
 
 return M

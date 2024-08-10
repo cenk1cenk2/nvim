@@ -1,10 +1,10 @@
 -- https://github.com/lewis6991/gitsigns.nvim
 local M = {}
 
-local extension_name = "gitsigns_nvim"
+M.name = "lewis6991/gitsigns.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "lewis6991/gitsigns.nvim",

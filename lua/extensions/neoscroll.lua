@@ -1,10 +1,10 @@
 -- https://github.com/karb94/neoscroll.nvim
 local M = {}
 
-local extension_name = "neoscroll"
+M.name = "karb94/neoscroll.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "karb94/neoscroll.nvim",

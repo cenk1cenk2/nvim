@@ -1,10 +1,10 @@
 -- https://github.com/folke/trouble.nvim
 local M = {}
 
-local extension_name = "lsp_trouble"
+M.name = "folke/trouble.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "folke/lsp-trouble.nvim",

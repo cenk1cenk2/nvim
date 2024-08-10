@@ -1,10 +1,10 @@
 -- https://github.com/nvim-neo-tree/neo-tree.nvim
 local M = {}
 
-local extension_name = "neotree_nvim"
+M.name = "nvim-neo-tree/neo-tree.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvim-neo-tree/neo-tree.nvim",
@@ -457,7 +457,7 @@ function M.config()
       }
 
       -- add external sources
-      if fn.is_extension_enabled("miversen33/netman.nvim") then
+      if fn.is_extension_enabled(require("extensions.netman-nvim").name) then
         table.insert(setup.sources, "netman.ui.neo-tree")
         table.insert(setup.source_selector.sources, { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(lvim.ui.icons.kind.Struct) })
       end

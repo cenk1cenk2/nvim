@@ -1,10 +1,10 @@
 -- https://github.com/amrbashir/nvim-docs-view
 local M = {}
 
-local extension_name = "nvim_docs_view"
+M.name = "amrbashir/nvim-docs-view"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "amrbashir/nvim-docs-view",

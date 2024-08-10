@@ -1,10 +1,10 @@
 -- https://github.com/miversen33/netman.nvim
 local M = {}
 
-local extension_name = "miversen33/netman.nvim"
+M.name = "miversen33/netman.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "miversen33/netman.nvim",

@@ -1,10 +1,10 @@
 -- https://github.com/harrisoncramer/gitlab.nvim
 local M = {}
 
-local extension_name = "harrisoncramer/gitlab.nvim"
+M.name = "harrisoncramer/gitlab.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "harrisoncramer/gitlab.nvim",

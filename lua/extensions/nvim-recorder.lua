@@ -1,10 +1,10 @@
 -- https://github.com/chrisgrieser/nvim-recorder
 local M = {}
 
-local extension_name = "nvim_recorder"
+M.name = "chrisgrieser/nvim-recorder"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "chrisgrieser/nvim-recorder",

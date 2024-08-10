@@ -1,10 +1,10 @@
 -- https://github.com/RRethy/vim-illuminate
 local M = {}
 
-local extension_name = "vim_illuminate"
+M.name = "RRethy/vim-illuminate"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "RRethy/vim-illuminate",

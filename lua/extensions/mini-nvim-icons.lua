@@ -1,10 +1,10 @@
---
+--https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-icons.md
 local M = {}
 
-local extension_name = "template"
+M.name = "echasnovski/mini.icons"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "echasnovski/mini.icons",

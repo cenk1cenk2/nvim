@@ -1,14 +1,14 @@
 -- https://github.com/nvim-treesitter/nvim-treesitter
 local M = {}
 
-local extension_name = "treesitter"
+M.name = "nvim-treesitter/nvim-treesitter"
 
 -- local Log = require("lvim.core.log")
 
 M.parsers_dir = join_paths(get_data_dir(), "parsers")
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvim-treesitter/nvim-treesitter",
@@ -225,7 +225,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TREESITTER, "R" }),
           function()
-            for _, parser in pairs(fn.get_current_setup(extension_name).ensure_installed) do
+            for _, parser in pairs(fn.get_current_setup(M.name).ensure_installed) do
               vim.cmd(("TSInstall %s"):format(parser))
             end
           end,

@@ -1,10 +1,10 @@
 -- https://github.com/folke/todo-comments.nvim
 local M = {}
 
-local extension_name = "todo_comments"
+M.name = "folke/todo-comments.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "folke/todo-comments.nvim",

@@ -1,10 +1,10 @@
 -- https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-bracketed.md
 local M = {}
 
-local extension_name = "mini_nvim_bracketed"
+M.name = "echasnovski/mini.bracketed"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "echasnovski/mini.bracketed",

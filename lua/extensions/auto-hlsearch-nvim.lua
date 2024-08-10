@@ -1,10 +1,10 @@
 -- https://github.com/asiryk/auto-hlsearch.nvim
 local M = {}
 
-local extension_name = "auto_hlsearch_nvim"
+M.name = "asiryk/auto-hlsearch.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "asiryk/auto-hlsearch.nvim",

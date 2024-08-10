@@ -1,12 +1,12 @@
 -- https://github.com/mfussenegger/nvim-dap
 local M = {}
 
-local extension_name = "dap"
+M.name = "mfussenegger/nvim-dap"
 
 -- local log = require "lvim.core.log"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "mfussenegger/nvim-dap",

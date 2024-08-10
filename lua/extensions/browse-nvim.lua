@@ -1,10 +1,10 @@
 -- https://github.com/lalitmee/browse.nvim
 local M = {}
 
-local extension_name = "browse_nvim"
+M.name = "lalitmee/browse.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "lalitmee/browse.nvim",

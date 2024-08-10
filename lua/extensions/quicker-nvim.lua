@@ -1,10 +1,10 @@
 -- https://github.com/stevearc/quicker.nvim
 local M = {}
 
-local extension_name = "stevearc/quicker.nvim"
+M.name = "stevearc/quicker.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "stevearc/quicker.nvim",

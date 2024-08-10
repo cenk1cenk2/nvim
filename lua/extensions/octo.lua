@@ -1,10 +1,10 @@
 -- https://github.com/pwntester/octo.nvim
 local M = {}
 
-local extension_name = "octo"
+M.name = "pwntester/octo.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "pwntester/octo.nvim",

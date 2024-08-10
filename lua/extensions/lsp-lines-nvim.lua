@@ -1,12 +1,12 @@
 -- https://git.sr.ht/~whynothugo/lsp_lines.nvim
 local M = {}
 
-local extension_name = "lsp_lines_nvim"
+M.name = "~whynothugo/lsp_lines.nvim"
 
 M.loaded = false
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",

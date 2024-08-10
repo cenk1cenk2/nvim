@@ -1,10 +1,10 @@
 -- https://github.com/gbprod/yanky.nvim
 local M = {}
 
-local extension_name = "yanky_nvim"
+M.name = "gbprod/yanky.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "gbprod/yanky.nvim",
