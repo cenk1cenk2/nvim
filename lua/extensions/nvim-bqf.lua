@@ -10,7 +10,7 @@ function M.config()
     plugin = function()
       return {
         "kevinhwang91/nvim-bqf",
-        event = "VeryLazy",
+        ft = { "qf" },
       }
     end,
     setup = function()
