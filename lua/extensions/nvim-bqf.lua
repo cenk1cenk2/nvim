@@ -1,10 +1,12 @@
 -- https://github.com/kevinhwang91/nvim-bqf
 local M = {}
 
+-- TODO: maybe obsolute, if quicker-nvim is good enough need to check the development, then remove this
+
 local extension_name = "nvim_bqf"
 
 function M.config()
-  require("utils.setup").define_extension(extension_name, true, {
+  require("utils.setup").define_extension(extension_name, false, {
     plugin = function()
       return {
         "kevinhwang91/nvim-bqf",

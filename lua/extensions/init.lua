@@ -52,7 +52,7 @@ local extensions = {
   "windows-nvim",
   "telescope-undo-nvim",
   "nvim-ufo",
-  "nvim-bqf",
+  "quicker-nvim",
   "lsp-trouble",
   "nvim-lsp-file-operations",
   "todo-comments",

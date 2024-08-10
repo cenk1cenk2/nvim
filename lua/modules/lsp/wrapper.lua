@@ -129,8 +129,8 @@ function M.code_lens()
   vim.lsp.codelens.run()
 end
 
-function M.diagonistics_set_list()
-  vim.diagnostic.set_loclist()
+function M.diagonistics_set_loclist()
+  vim.diagnostic.setloclist()
 end
 
 function M.reset_diagnostics()
@@ -512,9 +512,9 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LSP, "q" }),
           function()
-            lvim.lsp.wrapper.diagonistics_set_list()
+            lvim.lsp.wrapper.diagonistics_set_loclist()
           end,
-          desc = "set quickfix list",
+          desc = "set location list",
         },
         {
           fn.wk_keystroke({ categories.LSP, "s" }),
