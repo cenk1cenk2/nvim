@@ -131,7 +131,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.SESSION, "f" }),
           function()
-            require("telescope").extensions.possession.list()
+            require("telescope").extensions.possession.list(require("telescope.themes").get_dropdown({}))
           end,
           desc = "list sessions",
         },
