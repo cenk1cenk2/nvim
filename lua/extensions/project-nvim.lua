@@ -4,7 +4,7 @@ local M = {}
 M.name = "ahmedkhalf/project.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("utils.setup").define_extension(M.name, false, {
     plugin = function()
       return {
         "ahmedkhalf/project.nvim",

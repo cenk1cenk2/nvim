@@ -29,14 +29,14 @@ function M.config()
         {
           fn.wk_keystroke({ categories.GIT, "W", "f" }),
           function()
-            require("telescope").extensions.git_worktree.git_worktrees()
+            require("telescope").extensions.git_worktree.git_worktrees(require("telescope.themes").get_dropdown({}))
           end,
           desc = "git worktrees",
         },
         {
           fn.wk_keystroke({ categories.GIT, "W", "c" }),
           function()
-            require("telescope").extensions.git_worktree.create_git_worktree()
+            require("telescope").extensions.git_worktree.create_git_worktree(require("telescope.themes").get_dropdown({}))
           end,
           desc = "create git worktree",
         },

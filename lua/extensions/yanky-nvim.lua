@@ -130,7 +130,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.FIND, "y" }),
           function()
-            require("telescope").extensions.yank_history.yank_history()
+            require("telescope").extensions.yank_history.yank_history(require("telescope.themes").get_dropdown({}))
           end,
           desc = "list yanky.nvim registers",
         },

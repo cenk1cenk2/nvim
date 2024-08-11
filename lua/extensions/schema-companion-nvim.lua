@@ -75,7 +75,7 @@ function M.config()
               {
                 fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "f" }),
                 function()
-                  return require("telescope").extensions.schema_companion.select_schema()
+                  require("telescope").extensions.schema_companion.select_schema()
                 end,
                 desc = "select yaml schema",
                 buffer = event.buf,

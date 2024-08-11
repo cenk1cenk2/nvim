@@ -183,7 +183,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "f" }),
           function()
-            require("telescope").extensions.find_terminals.list()
+            require("telescope").extensions.find_terminals.list(require("telescope.themes").get_dropdown({}))
           end,
           desc = "list terminals",
         },

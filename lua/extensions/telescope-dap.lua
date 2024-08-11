@@ -20,7 +20,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.DEBUG, "f" }),
           function()
-            require("telescope").extensions.dap.configurations()
+            require("telescope").extensions.dap.configurations(require("telescope.themes").get_dropdown({})
           end,
           desc = "configurations",
           mode = { "v" },
