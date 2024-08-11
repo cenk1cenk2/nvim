@@ -1,5 +1,7 @@
 local M = {}
 
+local log = require("lvim.core.log")
+
 function M.q_close_autocmd(pattern)
   return {
     event = "FileType",
@@ -97,6 +99,33 @@ function M.setup()
           pattern = "gitcommit",
           callback = function(event)
             vim.opt_local.wrap = false
+          end,
+        },
+        {
+          event = "BufReadCmd",
+          group = "_filetype_settings",
+          pattern = {
+            "*.pdf",
+            "*.jpg",
+            "*.jpeg",
+            "*.png",
+            "*.gif",
+            "*.svg",
+            "*.webm",
+          },
+          callback = function(event)
+            local bufnr = vim.fn.bufnr("%")
+            local file = vim.fn.expand("%:p")
+
+            if vim.fn.buflisted(bufnr) == 1 then
+              vim.api.nvim_set_current_buf(bufnr)
+            end
+
+            vim.api.nvim_buf_delete(event.buf, { force = true })
+
+            log:info("Opening file in system: %s", file)
+
+            vim.ui.open(file)
           end,
         },
         -- NOTE: Telescope opens file in insert mode after neovim commit: d52cc66
