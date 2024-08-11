@@ -115,15 +115,15 @@ function M.setup()
           },
           callback = function(event)
             local bufnr = vim.fn.bufnr("%")
-            local file = vim.fn.expand("%:p")
+            local file = require("utils").get_buffer_filepath(event.buf)
 
             if vim.fn.buflisted(bufnr) == 1 then
               vim.api.nvim_set_current_buf(bufnr)
             end
 
-            vim.api.nvim_buf_delete(event.buf, { force = true })
+            log:info("Opening file in system: %s", require("utils").get_project_buffer_filepath(event.buf))
 
-            log:info("Opening file in system: %s", file)
+            vim.api.nvim_buf_delete(event.buf, { force = true })
 
             vim.ui.open(file)
           end,
