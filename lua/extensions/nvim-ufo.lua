@@ -46,17 +46,18 @@ function M.config()
 
           local end_text = ctx.get_fold_virt_text(end_lnum)
           for index, value in ipairs(end_text) do
+            -- strip the indentations of the first encounter then break out for the next spaces
             if type(value) == "table" and vim.trim(value[1]) == "" then
               table.remove(end_text, index)
             elseif type(value) == "string" and vim.trim(value) == "" then
               table.remove(end_text, index)
+            else
+              break
             end
           end
 
           vim.list_extend(result, M.chunker(end_text, width, truncate))
           table.insert(result, { (" %s %d "):format(lvim.ui.icons.ui.Expand, end_lnum - lnum), "MoreMsg" })
-
-          vim.notify(vim.inspect(result))
 
           return result
         end,
