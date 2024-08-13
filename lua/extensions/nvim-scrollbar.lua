@@ -49,9 +49,6 @@ function M.config()
     on_setup = function(config)
       require("scrollbar").setup(config.setup)
     end,
-    on_done = function()
-      vim.opt.virtualedit = "onemore"
-    end,
   })
 end
 
