@@ -287,9 +287,9 @@ function M.configure(config)
     if config.to_setup ~= nil then
       for _, to_setup in pairs(config.to_setup) do
         if to_setup.overwrite then
-          config.setup = vim.tbl_deep_extend("force", config.setup, M.evaluate_property(to_setup.cb, config, M.fn))
-        else
           config.setup = vim.tbl_extend("force", config.setup, M.evaluate_property(to_setup.cb, config, M.fn))
+        else
+          config.setup = vim.tbl_deep_extend("force", config.setup, M.evaluate_property(to_setup.cb, config, M.fn))
         end
       end
     end
