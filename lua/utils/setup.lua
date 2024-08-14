@@ -286,7 +286,11 @@ function M.configure(config)
 
     if config.to_setup ~= nil then
       for _, to_setup in pairs(config.to_setup) do
-        config.setup = vim.tbl_deep_extend("force", config.setup, M.evaluate_property(to_setup, config, M.fn))
+        if to_setup.overwrite then
+          config.setup = vim.tbl_deep_extend("force", config.setup, M.evaluate_property(to_setup.cb, config, M.fn))
+        else
+          config.setup = vim.tbl_extend("force", config.setup, M.evaluate_property(to_setup.cb, config, M.fn))
+        end
       end
     end
 
@@ -349,14 +353,16 @@ function M.fn.is_extension_enabled(extension)
   return (M.get_config(extension) or {}).enabled
 end
 
-function M.fn.append_to_setup(name, to_setup)
+function M.fn.append_to_setup(name, to_setup, opts)
+  opts = vim.tbl_extend("force", { overwrite = false }, opts or {})
+
   if lvim.extensions[name] == nil then
     lvim.extensions[name] = {
       to_setup = {},
     }
   end
 
-  table.insert(lvim.extensions[name].to_setup, to_setup)
+  table.insert(lvim.extensions[name].to_setup, vim.tbl_extend("force", opts, { cb = to_setup }))
 end
 
 function M.fn.get_wk_categories()
