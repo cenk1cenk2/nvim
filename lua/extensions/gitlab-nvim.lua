@@ -32,28 +32,30 @@ function M.config()
         config_path = nil, -- Custom path for `.gitlab.nvim` file, please read the "Connecting to Gitlab" section
         debug = { go_request = false, go_response = false }, -- Which values to log
         attachment_dir = nil, -- The local directory for files (see the "summary" section)
-        popup = { -- The popup for comment creation, editing, and replying
-          exit = "<Esc>",
-          perform_action = "<C-s>", -- Once in normal mode, does action (like saving comment or editing description, etc)
-          perform_linewise_action = "<C-l>", -- Once in normal mode, does the linewise action (see logs for this job, etc)
-        },
-        discussion_tree = { -- The discussion tree that holds all comments
-          switch_view = "T", -- Toggles between the notes and discussions views
-          default_view = "discussions", -- Show "discussions" or "notes" by default
-          blacklist = {}, -- List of usernames to remove from tree (bots, CI, etc)
-          jump_to_file = "f", -- Jump to comment location in file
-          jump_to_reviewer = "g", -- Jump to the location in the reviewer window
-          edit_comment = "e", -- Edit comment
-          delete_comment = "dd", -- Delete comment
-          reply = "r", -- Reply to comment
-          toggle_node = "o", -- Opens or closes the discussion
-          toggle_resolved = "R", -- Toggles the resolved status of the whole discussion
-          position = "bottom", -- "top", "right", "bottom" or "left"
-          size = "30%", -- Size of split
-          relative = "editor", -- Position of tree split relative to "editor" or "window"
-          resolved = lvim.ui.icons.ui.Check, -- Symbol to show next to resolved discussions
-          unresolved = lvim.ui.icons.ui.Close, -- Symbol to show next to unresolved discussions
-          tree_type = "by_file_name", -- Type of discussion tree - "simple" means just list of discussions, "by_file_name" means file tree with discussions under file
+        keymaps = {
+          popup = { -- The popup for comment creation, editing, and replying
+            exit = "<Esc>",
+            perform_action = "<C-s>", -- Once in normal mode, does action (like saving comment or editing description, etc)
+            perform_linewise_action = "<C-l>", -- Once in normal mode, does the linewise action (see logs for this job, etc)
+          },
+          discussion_tree = { -- The discussion tree that holds all comments
+            switch_view = "T", -- Toggles between the notes and discussions views
+            default_view = "discussions", -- Show "discussions" or "notes" by default
+            blacklist = {}, -- List of usernames to remove from tree (bots, CI, etc)
+            jump_to_file = "f", -- Jump to comment location in file
+            jump_to_reviewer = "g", -- Jump to the location in the reviewer window
+            edit_comment = "e", -- Edit comment
+            delete_comment = "dd", -- Delete comment
+            reply = "r", -- Reply to comment
+            toggle_node = "o", -- Opens or closes the discussion
+            toggle_resolved = "R", -- Toggles the resolved status of the whole discussion
+            position = "bottom", -- "top", "right", "bottom" or "left"
+            size = "30%", -- Size of split
+            relative = "editor", -- Position of tree split relative to "editor" or "window"
+            resolved = lvim.ui.icons.ui.Check, -- Symbol to show next to resolved discussions
+            unresolved = lvim.ui.icons.ui.Close, -- Symbol to show next to unresolved discussions
+            tree_type = "by_file_name", -- Type of discussion tree - "simple" means just list of discussions, "by_file_name" means file tree with discussions under file
+          },
         },
         info = { -- Show additional fields in the summary pane
           enabled = true,
