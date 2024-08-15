@@ -286,7 +286,7 @@ function M.setup(fn)
     {
       fn.wk_keystroke({ categories.SESSION, "r" }),
       function()
-        vim.api.nvim_set_current_dir(vim.fn.fnamemodify(vim.fn.finddir(".git", ".;"), ":h"))
+        vim.api.nvim_set_current_dir(vim.fs.root(0, { ".git" }))
       end,
       desc = "cwd as git root",
       mode = { "n", "v" },
