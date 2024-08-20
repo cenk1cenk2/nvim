@@ -46,11 +46,11 @@ function M.config()
             click = "v:lua.ScSa",
           },
           {
-            sign = { name = { "Diagnostic" }, colwidth = 1, maxwidth = 1, auto = false },
+            sign = { namespace = { "diagnostic/signs" }, maxwidth = 1, auto = true },
             click = "v:lua.ScSa",
           },
           {
-            sign = { name = { ".*" }, maxwidth = 1, colwidth = 1, auto = true },
+            sign = { name = { ".*" }, maxwidth = 1, colwidth = 1, auto = true, wrap = true },
             click = "v:lua.ScSa",
           },
           { text = { builtin.lnumfunc, " " }, click = "v:lua.ScLa" },
