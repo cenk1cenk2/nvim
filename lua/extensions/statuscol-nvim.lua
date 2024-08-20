@@ -46,7 +46,7 @@ function M.config()
             click = "v:lua.ScSa",
           },
           {
-            sign = { namespace = { "diagnostic/signs" }, maxwidth = 1, auto = true },
+            sign = { namespace = { "diagnostic/signs" }, maxwidth = 1, auto = false },
             click = "v:lua.ScSa",
           },
           {
