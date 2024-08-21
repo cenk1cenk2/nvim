@@ -144,6 +144,7 @@ function M.setup()
           end,
         },
 
+        -- tmux update the pane renaming on cwd change
         {
           event = "VimEnter",
           group = "_tmux",
@@ -155,7 +156,6 @@ function M.setup()
             end
           end,
         },
-
         {
           event = { "DirChanged" },
           group = "_tmux",
@@ -166,7 +166,6 @@ function M.setup()
             end
           end,
         },
-
         {
           event = { "VimLeave" },
           group = "_tmux",
