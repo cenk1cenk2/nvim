@@ -143,6 +143,40 @@ function M.setup()
             end
           end,
         },
+
+        {
+          event = "VimEnter",
+          group = "_tmux",
+          pattern = "*",
+          callback = function()
+            if vim.env["TMUX_PANE"] then
+              os.execute("tmux set-window-option automatic-rename off 2>&1 &")
+              os.execute("tmux rename-window 'nvim' 2>&1 &")
+            end
+          end,
+        },
+
+        {
+          event = { "DirChanged" },
+          group = "_tmux",
+          pattern = "*",
+          callback = function()
+            if vim.env["TMUX_PANE"] then
+              os.execute(("tmux rename-window 'nvim@%s' 2>&1 &"):format(vim.fs.basename(require("utils").get_cwd())))
+            end
+          end,
+        },
+
+        {
+          event = { "VimLeave" },
+          group = "_tmux",
+          pattern = "*",
+          callback = function()
+            if vim.env["TMUX_PANE"] then
+              os.execute("tmux set-window-option automatic-rename on 2>&1 &")
+            end
+          end,
+        },
       }
     end,
   })
