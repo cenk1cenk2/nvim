@@ -133,6 +133,13 @@ function M.config()
           desc = "pick buffer to close",
         },
         {
+          fn.wk_keystroke({ categories.BUFFER, "x" }),
+          function()
+            lvim.fn.close_buffer()
+          end,
+          desc = "close current buffer",
+        },
+        {
           fn.wk_keystroke({ categories.BUFFER, "X" }),
           function()
             -- require("bufferline").close_others()
