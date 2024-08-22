@@ -179,27 +179,28 @@ function M.config()
             c = function(fallback)
               if cmp.visible() and M.has_words_before() then
                 cmp.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = false })
+              else
+                fallback()
               end
-              fallback()
             end,
           }),
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-              vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-expand-or-jump", true, true, true), "")
+            elseif luasnip.locally_jumpable(1) then
+              luasnip.jump(1)
+            else
+              fallback()
             end
-
-            fallback()
           end, { "i", "s" }),
           ["<S-Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-              vim.fn.feedkeys(vim.api.nvim_replace_termcodes("<Plug>luasnip-jump-prev", true, true, true), "")
+            elseif luasnip.locally_jumpable(-1) then
+              luasnip.jump(-1)
+            else
+              fallback()
             end
-
-            fallback()
           end, { "i", "s" }),
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-e>"] = cmp.mapping.abort(),
@@ -215,14 +216,16 @@ function M.config()
               if cmp.confirm(confirm_opts) then
                 return -- success, exit early
               end
+            else
+              fallback() -- if not exited early, always fallback
             end
-            fallback() -- if not exited early, always fallback
           end),
           ["<C-l>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
-              return cmp.complete_common_string()
+              cmp.complete_common_string()
+            else
+              fallback()
             end
-            fallback()
           end, { "i", "c" }),
         }),
       }
@@ -264,7 +267,7 @@ function M.config()
         table.insert(paths, user_snippets)
       end
 
-      require("luasnip.loaders.from_lua").lazy_load()
+      require("luasnip.loaders.from_lua").lazy_load({ paths = paths })
       require("luasnip.loaders.from_vscode").lazy_load({ paths = paths })
       require("luasnip.loaders.from_snipmate").lazy_load()
     end,

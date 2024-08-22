@@ -37,6 +37,7 @@ function M.config()
             components.noice_message,
           },
           lualine_x = {
+            components.snippet,
             components.noice_mode,
             components.noice_command,
           },
@@ -301,6 +302,23 @@ function M.components()
       end,
       color = { fg = lvim.ui.colors.fg, bg = lvim.ui.colors.bg[300] },
       cond = conditions.hide_in_width,
+    },
+    snippet = {
+      function()
+        return ("%s%s%s"):format(
+          lvim.ui.icons.kind.Snippet,
+          require("luasnip").locally_jumpable(1) and lvim.ui.icons.ui.ChevronShortRight or "",
+          require("luasnip").locally_jumpable(-1) and lvim.ui.icons.ui.ChevronShortLeft or ""
+        )
+      end,
+      color = { fg = lvim.ui.colors.yellow[900], bg = lvim.ui.colors.orange[300] },
+      cond = function()
+        if not package_is_loaded("luasnip") then
+          return false
+        end
+
+        return conditions.hide_in_width() and (require("luasnip").locally_jumpable(1) or require("luasnip").locally_jumpable(-1))
+      end,
     },
     progress = {
       "progress",
