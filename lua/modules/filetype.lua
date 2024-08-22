@@ -22,7 +22,7 @@ function M.setup()
       end,
     },
     filename = {
-      [".editorconfig"] = "toml",
+      -- [".editorconfig"] = "toml",
       [".rgignore"] = "gitignore",
       [".npmignore"] = "gitignore",
       [".prettierignore"] = "gitignore",
