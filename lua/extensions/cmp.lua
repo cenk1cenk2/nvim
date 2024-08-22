@@ -216,9 +216,10 @@ function M.config()
               if cmp.confirm(confirm_opts) then
                 return -- success, exit early
               end
-            else
-              fallback() -- if not exited early, always fallback
             end
+
+            -- if not exited early, always fallback
+            fallback()
           end),
           ["<C-l>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
