@@ -12,6 +12,7 @@ function M.config()
       }
     end,
     setup = function()
+      -- builtin textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects?tab=readme-ov-file#built-in-textobjects
       return {
         textobjects = {
           select = {
@@ -48,6 +49,18 @@ function M.config()
             enable = true,
             set_jumps = true, -- whether to set jumps in the jumplist
             goto_next_start = {
+              ["L"] = {
+                query = {
+                  "@field",
+                  "@pair",
+                  "@array",
+                  "@element",
+                  "@parameter.inner",
+                  "@attribute.inner",
+                  "@iswap-list",
+                },
+                desc = "jump to next sibling",
+              },
               ["]m"] = { query = "@function.outer", des = "jump to next method start" },
               ["]c"] = { query = "@class.outer", desc = "jump to next class start" },
               ["]s"] = { query = "@scope", query_group = "locals", desc = "jump to next scope start" },
@@ -55,6 +68,18 @@ function M.config()
               ["]a"] = { query = "@parameter.inner", desc = "jump to next parameter start" },
             },
             goto_previous_start = {
+              ["H"] = {
+                query = {
+                  "@field",
+                  "@pair",
+                  "@array",
+                  "@element",
+                  "@parameter.inner",
+                  "@attribute.inner",
+                  "@iswap-list",
+                },
+                desc = "jump to previous sibling",
+              },
               ["[m"] = { query = "@function.outer", des = "jump to previous method start" },
               ["[c"] = { query = "@class.outer", desc = "jump to previous class start" },
               ["[s"] = { query = "@scope", query_group = "locals", desc = "jump to previous scope start" },
