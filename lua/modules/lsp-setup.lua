@@ -14,7 +14,7 @@ function M.lsp_setup()
       return
     end
 
-    require("core.lsp.manager").setup(server)
+    require("core.lsp.loader").setup(server)
     log:info(("Started LSP server: %s"):format(server))
   end)
 end

@@ -435,7 +435,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LSP, "i" }),
           function()
-            require("core.lsp.info").toggle(vim.bo.filetype)
+            vim.cmd([[LspInfo]])
           end,
           desc = "lsp info",
         },

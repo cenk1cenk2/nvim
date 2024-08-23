@@ -141,7 +141,7 @@ function M.setup(force)
           return
         end
 
-        require("core.lsp.manager").setup(server_name)
+        require("core.lsp.loader").setup(server_name)
       end,
     })
 

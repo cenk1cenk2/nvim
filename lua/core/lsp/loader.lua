@@ -53,31 +53,6 @@ local function resolve_config(server_name, ...)
   return defaults
 end
 
--- manually start the server and don't wait for the usual filetype trigger from lspconfig
--- local function buf_try_add(server_name, bufnr)
---   bufnr = bufnr or vim.api.nvim_get_current_buf()
---
---   require("lspconfig")[server_name].manager.try_add_wrapper(bufnr)
--- end
-
--- check if the manager autocomd has already been configured since some servers can take a while to initialize
--- this helps guarding against a data-race condition where a server can get configured twice
--- which seems to occur only when attaching to single-files
--- local function client_is_configured(server_name, ft)
---   ft = ft or vim.bo.filetype
---
---   local active_autocmds = vim.api.nvim_get_autocmds({ event = "FileType", pattern = ft })
---   for _, result in pairs(active_autocmds) do
---     if result.group_name:match("lspconfig") then
---       log:debug(("[%q] is already configured"):format(server_name))
---
---       return true
---     end
---   end
---
---   return false
--- end
-
 local function launch_server(server_name, config)
   local ft = config.filetypes or require("core.lsp.utils").get_supported_filetypes(server_name)
   log:trace(("%s is hooked for fts: %s"):format(server_name, vim.inspect(ft)))
