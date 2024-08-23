@@ -198,7 +198,7 @@ function M.components()
         bg = lvim.ui.colors.bg[300],
       },
       cond = function()
-        return conditions.hide_in_width() and vim.tbl_contains({ "yaml", "helm" }, vim.api.nvim_get_option_value("ft", { buf = 0 })) and package_is_loaded("schema-companion")
+        return conditions.hide_in_width() and vim.tbl_contains({ "yaml", "helm" }, vim.api.nvim_get_option_value("ft", { buf = 0 })) and is_package_loaded("schema-companion")
       end,
     },
     arrow = {
@@ -210,7 +210,7 @@ function M.components()
         bg = lvim.ui.colors.bg[300],
       },
       cond = function()
-        return conditions.hide_in_width() and package_is_loaded("arrow")
+        return conditions.hide_in_width() and is_package_loaded("arrow")
       end,
     },
     diagnostics = {
@@ -235,7 +235,7 @@ function M.components()
         }
       end,
       cond = function()
-        if not package_is_loaded("possession") or require("possession").session_name == "" then
+        if not is_package_loaded("possession") or require("possession").session_name == "" then
           return false
         end
 
@@ -253,7 +253,7 @@ function M.components()
         }
       end,
       cond = function()
-        if not package_is_loaded("dap") or require("dap").status() == "" then
+        if not is_package_loaded("dap") or require("dap").status() == "" then
           return false
         end
 
@@ -313,7 +313,7 @@ function M.components()
       end,
       color = { fg = lvim.ui.colors.white, bg = lvim.ui.colors.orange[300] },
       cond = function()
-        if not package_is_loaded("luasnip") then
+        if not is_package_loaded("luasnip") then
           return false
         end
 
@@ -375,7 +375,7 @@ function M.components()
       end,
       color = { fg = lvim.ui.colors.black, bg = lvim.ui.colors.orange[600] },
       cond = function()
-        return package_is_loaded("iedit") and require("extensions.iedit-nvim").is_active()
+        return is_package_loaded("iedit") and require("extensions.iedit-nvim").is_active()
       end,
     },
     lazy_updates = {
@@ -383,7 +383,7 @@ function M.components()
         return require("lazy.status").updates()
       end,
       cond = function()
-        return package_is_loaded("lazy") and require("lazy.status").has_updates()
+        return is_package_loaded("lazy") and require("lazy.status").has_updates()
       end,
       color = { fg = lvim.ui.colors.yellow[900] },
     },
@@ -392,7 +392,7 @@ function M.components()
         return require("noice").api.statusline.message.get_hl()
       end,
       cond = function()
-        return package_is_loaded("noice") and require("noice").api.statusline.message.has()
+        return is_package_loaded("noice") and require("noice").api.statusline.message.has()
       end,
     },
     noice_search = {
@@ -401,7 +401,7 @@ function M.components()
       end,
       color = { fg = lvim.ui.colors.cyan[600] },
       cond = function()
-        return package_is_loaded("noice") and require("noice").api.statusline.search.has()
+        return is_package_loaded("noice") and require("noice").api.statusline.search.has()
       end,
     },
     noice_mode = {
@@ -410,7 +410,7 @@ function M.components()
       end,
       color = { fg = lvim.ui.colors.yellow[600] },
       cond = function()
-        return package_is_loaded("noice") and require("noice").api.statusline.mode.has()
+        return is_package_loaded("noice") and require("noice").api.statusline.mode.has()
       end,
     },
     noice_command = {
@@ -419,7 +419,7 @@ function M.components()
       end,
       color = { fg = lvim.ui.colors.blue[600] },
       cond = function()
-        return package_is_loaded("noice") and require("noice").api.statusline.command.has()
+        return is_package_loaded("noice") and require("noice").api.statusline.command.has()
       end,
     },
   }

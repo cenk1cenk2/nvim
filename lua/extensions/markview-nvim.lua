@@ -14,7 +14,14 @@ function M.config()
     setup = function()
       local defaults = require("markview").configuration
       return {
+        modes = { "n", "no", "c" }, -- Change these modes
         hybrid_modes = { "n", "v", "x" },
+        callbacks = {
+          on_enable = function(_, win)
+            vim.wo[win].conceallevel = 2
+            vim.wo[win].concealcursor = "c"
+          end,
+        },
         headings = vim.tbl_deep_extend("force", vim.deepcopy(defaults.headings), {
           enable = true,
           shift_width = 0,

@@ -1,7 +1,7 @@
 -- https://github.com/altermo/iedit.nvim
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 M.name = "altermo/iedit.nvim"
 
@@ -51,12 +51,12 @@ function M.config()
           fn.wk_keystroke({ categories.TASKS, "i" }),
           function()
             if M.is_active() then
-              Log:info("Editing stopped.")
+              log:info("Editing stopped.")
 
               return require("iedit").stop()
             end
 
-            Log:info("Editing started.")
+            log:info("Editing started.")
             require("iedit").select()
           end,
           desc = "start iedit",
@@ -65,7 +65,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TASKS, "I" }),
           function()
-            Log:info("Editing started with selection.")
+            log:info("Editing started with selection.")
 
             require("iedit").select_all()
           end,

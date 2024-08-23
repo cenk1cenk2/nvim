@@ -1,38 +1,40 @@
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
-function M.spawn(opts)
+---
+---@param opts Job
+---@return Job
+function M.create(opts)
   local Job = require("plenary.job")
 
-  Log:debug(("Will run job: %s %s"):format(opts.command, table.concat(opts.args or {}, " ")))
+  local cmd = vim.trim(("%s %s"):format(opts.command, table.concat(opts.args or {}, " "):gsub("%%", "%%%%")))
+  log:debug(("Will run job: %s"):format(cmd))
 
   local job = Job:new(vim.tbl_extend("force", opts, {
     env = vim.tbl_extend("force", vim.fn.environ(), opts.env or {}),
     enabled_recording = true,
     detached = true,
     on_exit = function(j, code)
-      if code ~= 0 then
-        Log:error(("Command %s exited with exit code %s: %s"):format(opts.command, code, vim.inspect(j:stderr_result())))
+      vim.schedule(function()
+        if code == 0 then
+          log:info("Command executed: %s", cmd)
 
-        return
-      end
+          log:debug("%s -> %s", cmd, vim.inspect(j:result()))
 
-      Log:info(("Command %s executed."):format(opts.command))
+          if opts.on_success then
+            opts.on_success(j)
+          end
+        else
+          log:error(("Command failed with exit code %d: %s -> %s"):format(code, cmd, vim.inspect(j:result())))
 
-      Log:debug(vim.inspect(j:result()))
+          if opts.on_failure then
+            opts.on_failure(j)
+          end
+        end
+      end)
     end,
   }))
-
-  job:sync(5000)
-
-  if job.code == 0 and opts.on_success then
-    opts.on_success(job)
-  end
-
-  if job.code ~= 0 and opts.on_failure then
-    opts.on_failure(job)
-  end
 
   return job
 end

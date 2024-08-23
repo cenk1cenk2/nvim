@@ -1,6 +1,6 @@
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 function M.rebuild_latest_neovim()
   local term_opts = require("extensions.toggleterm-nvim").generate_defaults_float_terminal({
@@ -19,10 +19,10 @@ function M.update()
 end
 
 function M.update_sync()
-  Log:warn("Triggered the special update method.")
+  log:warn("Triggered the special update method.")
 
   local _, err = pcall(function()
-    require("lvim.bootstrap"):update()
+    require("lvim"):update()
 
     vim.cmd([[Lazy! sync]])
 
@@ -39,12 +39,12 @@ function M.update_sync()
   if err then
     vim.cmd([[qa!]])
 
-    Log:error(err)
+    log:error(err)
   end
 end
 
 function M.rebuild_and_update()
-  require("lvim.bootstrap"):update()
+  require("lvim"):update()
   M.rebuild_latest_neovim()
   M.update()
 end
@@ -105,7 +105,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.NEOVIM, "p" }),
           function()
-            require("lvim.bootstrap"):update()
+            require("lvim"):update()
           end,
           desc = "git update config repository",
         },

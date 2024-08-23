@@ -1,5 +1,5 @@
 local M = {}
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 local lsp_utils = require("utils.lsp")
 
 function M.add_to_workspace_folder()
@@ -160,9 +160,9 @@ function M.reset_buffer_lsp()
     end)
   end
 
-  Log:warn(("Killed LSPs for buffer: %s -> %s"):format(
-    require("utils").get_project_buffer_filepath(bufnr),
-    vim.fn.join(
+  log:warn(("Killed LSPs for buffer: %s -> %s"):format(
+    require("utils.fs").get_project_buffer_filepath(bufnr),
+    table.concat(
       vim.tbl_map(function(client)
         return client.name
       end, clients),
@@ -188,7 +188,7 @@ function M.fix_current()
     end
 
     if #fixes == 0 then
-      Log:warn(("[QUICKFIX] Not found: %s -> %s"):format(
+      log:warn(("[QUICKFIX] Not found: %s -> %s"):format(
         vim.inspect(vim.tbl_map(function(client)
           return client.name
         end, vim.lsp.get_clients({ bufnr = bufnr }))),
@@ -230,7 +230,7 @@ function M.fix_current()
 
     lsp_utils.apply_lsp_edit(fix)
 
-    Log:info(("[QUICKFIX] %s: %s"):format((client or {}).name, fix.title or ""))
+    log:info(("[QUICKFIX] %s: %s"):format((client or {}).name, fix.title or ""))
   end)
 end
 
@@ -243,17 +243,17 @@ function M.organize_imports()
 
   vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
     if not responses or vim.tbl_isempty(responses) then
-      Log:warn("No response from language servers.")
+      log:warn("No response from language servers.")
       return
     end
 
     if vim.tbl_count(responses) == 0 then
-      Log:warn("No language server has answered the organize imports call.")
+      log:warn("No language server has answered the organize imports call.")
     end
 
     for _, response in pairs(responses) do
       if response.error then
-        Log:warn(response.error.message)
+        log:warn(response.error.message)
       end
 
       for _, result in pairs(response.result or {}) do
@@ -298,11 +298,11 @@ function M.rename_file()
       },
     }, function(error, result, _context, _config)
       if error then
-        Log:warn(error.message)
+        log:warn(error.message)
       end
 
       if result == nil or #vim.tbl_keys(result) == nil then
-        Log:warn("No language server has answered the rename call.")
+        log:warn("No language server has answered the rename call.")
 
         return
       end
@@ -315,7 +315,7 @@ function M.rename_file()
 
       local ok, err = vim.uv.fs_rename(current, rename)
       if not ok then
-        Log:error(string.format("Failed to move file %s to %s: %s", current, rename, err))
+        log:error(string.format("Failed to move file %s to %s: %s", current, rename, err))
       end
 
       for _, b in ipairs(vim.api.nvim_list_bufs()) do

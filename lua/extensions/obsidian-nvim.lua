@@ -346,7 +346,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "P" }),
           function()
-            vim.cmd(("ObsidianPasteImg %s"):format(join_paths(require("utils").get_project_buffer_filepath(), "assets/")))
+            vim.cmd(("ObsidianPasteImg %s"):format(join_paths(require("utils.fs").get_project_buffer_filepath(), "assets/")))
           end,
           desc = "paste image from clipboard",
         },
@@ -393,7 +393,7 @@ function M.note_from_template(root, title, template)
   local matches = client:resolve_note(file)
 
   if matches then
-    require("lvim.core.log"):info("Opening note: %s", file)
+    require("lvim.log"):info("Opening note: %s", file)
     vim.cmd(([[ObsidianQuickSwitch %s]]):format(file))
   else
     vim.cmd(([[ObsidianNew %s]]):format(file))
@@ -401,7 +401,7 @@ function M.note_from_template(root, title, template)
     local bufnr = vim.api.nvim_get_current_buf()
     local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
     if #lines == 2 and lines[1] == ("# %s"):format(title) then
-      require("lvim.core.log"):info("Templating note: %s -> %s", file, template)
+      require("lvim.log"):info("Templating note: %s -> %s", file, template)
       vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, {})
       vim.cmd(([[ObsidianTemplate %s]]):format(template))
     end

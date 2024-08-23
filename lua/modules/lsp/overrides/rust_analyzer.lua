@@ -1,5 +1,5 @@
 -- local rust_tools_ok, rust_tools = pcall(require, "rust-tools")
--- local Log = require "lvim.core.log"
+-- local log = require "lvim.log"
 
 return {
   -- Needed for inlayHints. Merge this table with your settings or copy
@@ -9,7 +9,7 @@ return {
     -- local config = lvim.extensions[name]
     --
     -- if config.active then
-    -- Log:debug "Setup additional rust-tools."
+    -- log:debug "Setup additional rust-tools."
     --
     -- rust_tools_config.setup(config.setup)
     --
@@ -28,7 +28,7 @@ return {
     -- if pcall(require, "dap") then
     --   rt_dap.setup_adapter()
     --
-    --   Log:debug "Setup additional rust-tools dap."
+    --   log:debug "Setup additional rust-tools dap."
     -- end
     -- end
 

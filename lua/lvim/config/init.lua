@@ -1,5 +1,4 @@
-local utils = require("lvim.utils")
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 local M = {}
 
@@ -7,9 +6,11 @@ local M = {}
 function M:init()
   lvim = vim.deepcopy(require("lvim.config.defaults"))
 
+  vim.cmd(("colorscheme %s"):format(lvim.colorscheme))
+
   require("lvim.config.settings").load_defaults()
 
-  require("lvim.keymappings").load_defaults()
+  require("keys").load_defaults()
 
   lvim.lsp = vim.deepcopy(require("lvim.config.lsp"))
 end
@@ -17,7 +18,7 @@ end
 --- Override the configuration with a user provided one
 -- @param config_path The path to the configuration overrides
 function M:load()
-  Log:debug("Loading configuration...")
+  log:debug("Loading configuration...")
 
   require("config")
 
@@ -47,24 +48,20 @@ function M:load()
     vim.opt.fillchars = "eob: "
   end
 
-  require("lvim.keymappings").setup()
+  require("keys").setup()
 end
 
 --- Override the configuration with a user provided one
 -- @param config_path The path to the configuration overrides
 function M:reload()
   vim.schedule(function()
-    require_clean("lvim.utils.hooks").run_pre_reload()
-
     M:load()
 
     require("lvim.lsp.format").configure_format_on_save()
 
-    local plugin_loader = require("lvim.plugin-loader")
+    local loader = require("lvim.loader")
 
-    plugin_loader.reload({ lvim.plugins })
-
-    require_clean("lvim.utils.hooks").run_post_reload()
+    loader.reload({ lvim.plugins })
   end)
 end
 

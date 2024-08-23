@@ -1,4 +1,4 @@
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 local M = {}
 
@@ -164,7 +164,7 @@ function M.register_tools(method, configs, filetypes)
     vim.list_extend(lvim.lsp.tools.by_ft[method][ft], configs)
   end
 
-  Log:debug(("Registered the following method %s for %s: %s"):format(
+  log:debug(("Registered the following method %s for %s: %s"):format(
     method,
     vim.inspect(vim.tbl_map(function(config)
       if type(config) == "string" then

@@ -60,7 +60,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TASKS, "r", "e" }),
           function()
-            local Log = require("lvim.core.log")
+            local log = require("lvim.log")
             local store_key = "HURL_ENVIRONMENT"
             local shada = require("modules.shada")
             local stored_value = shada.get(store_key)
@@ -70,12 +70,12 @@ function M.config()
               default = stored_value,
             }, function(env)
               if env == nil then
-                Log:warn("Nothing to select.")
+                log:warn("Nothing to select.")
 
                 return
               end
 
-              Log:info(("Hurl environment file switched: %s"):format(env))
+              log:info(("Hurl environment file switched: %s"):format(env))
               shada.set(store_key, env)
 
               vim.cmd(":HurlSetEnvFile " .. env)
@@ -136,35 +136,39 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TASKS, "r", "c" }),
           function()
-            local Log = require("lvim.core.log")
+            local log = require("lvim.log")
             local job = require("utils.job")
 
-            job.spawn({
-              command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
-              -- writer = vim.fn.getreg(vim.v.register or lvim.system_register),
-              on_success = function(j)
-                local generated = table.concat(j:result(), "\n")
+            job
+              .create({
+                command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
+                -- writer = vim.fn.getreg(vim.v.register or lvim.system_register),
+                on_success = function(j)
+                  local generated = table.concat(j:result(), "\n")
 
-                Log:info("Copied generated hurl to clipboard.")
-                vim.fn.setreg(vim.v.register or lvim.system_register, generated)
-              end,
-            })
+                  log:info("Copied generated hurl to clipboard.")
+                  vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+                end,
+              })
+              :start()
           end,
           desc = "curl to hurl",
         },
         {
           fn.wk_keystroke({ categories.TASKS, "r", "q" }),
           function()
-            local Log = require("lvim.core.log")
+            local log = require("lvim.log")
             local job = require("utils.job")
 
-            job.spawn({
-              command = "pkill",
-              args = { "hurl" },
-              on_success = function()
-                Log:info("Killed running hurl instance.")
-              end,
-            })
+            job
+              .create({
+                command = "pkill",
+                args = { "hurl" },
+                on_success = function()
+                  log:info("Killed running hurl instance.")
+                end,
+              })
+              :start()
           end,
           desc = "kill running hurl instance",
         },

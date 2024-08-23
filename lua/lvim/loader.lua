@@ -1,6 +1,6 @@
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 M.plugins_dir = get_data_dir() .. "/lazy"
 M.plugin_manager_dir = M.plugins_dir .. "/lazy.nvim"
@@ -27,12 +27,12 @@ function M.init()
 end
 
 function M.load()
-  Log:debug("Loading plugins configurations...")
+  log:debug("Loading plugins configurations...")
 
   local manager_ok, manager = pcall(require, "lazy")
 
   if not manager_ok then
-    Log:warn("Skipping loading plugins until plugin manager is installed.")
+    log:warn("Skipping loading plugins until plugin manager is installed.")
 
     return
   end
@@ -53,7 +53,7 @@ function M.load()
       -- install missing plugins on startup. This doesn't increase startup time.
       missing = true,
       -- try to load one of these colorscheme when starting an installation during startup
-      colorscheme = { lvim.colorscheme, "habamax" },
+      colorscheme = {},
     },
     checker = {
       -- automatically check for plugin updates
@@ -101,12 +101,10 @@ function M.load()
   end, debug.traceback)
 
   if not status_ok then
-    Log:warn("Can not load plugin configurations.")
+    log:warn("Can not load plugin configurations.")
 
-    Log:trace(debug.traceback())
+    log:trace(debug.traceback())
   end
-
-  require("lvim.utils.hooks").on_plugin_manager_complete()
 end
 
 function M.reload(spec)

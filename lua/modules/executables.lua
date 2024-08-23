@@ -1,4 +1,4 @@
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 local job = require("utils.job")
 local utils = require("utils")
 
@@ -16,41 +16,49 @@ function M.run_genpass()
   }, function(arguments)
     shada.set(store_key, arguments)
 
-    job.spawn({
-      command = "genpass",
-      args = vim.split(arguments or {}, " "),
-      on_success = function(j)
-        local generated = j:result()[1]
+    job
+      .create({
+        command = "genpass",
+        args = vim.split(arguments or {}, " "),
+        on_success = function(j)
+          local generated = j:result()[1]
 
-        Log:info(("Copied generated code to clipboard: %s"):format(generated))
-        vim.fn.setreg(vim.v.register or lvim.system_register, generated)
-      end,
-    })
+          log:info(("Copied generated code to clipboard: %s"):format(generated))
+          vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+        end,
+      })
+      :start()
   end)
 end
 
 function M.run_ansible_vault_decrypt()
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-  job.spawn({
-    command = "ansible-vault",
-    writer = lines,
-    args = { "decrypt" },
-    on_success = function(j)
-      vim.api.nvim_buf_set_lines(0, 0, -1, false, j:result())
-    end,
-  })
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  job
+    .create({
+      command = "ansible-vault",
+      writer = lines,
+      args = { "decrypt" },
+      on_success = function(j)
+        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
+      end,
+    })
+    :start()
 end
 
 function M.run_ansible_vault_encrypt()
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-  job.spawn({
-    command = "ansible-vault",
-    writer = lines,
-    args = { "encrypt" },
-    on_success = function(j)
-      vim.api.nvim_buf_set_lines(0, 0, -1, false, j:result())
-    end,
-  })
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  job
+    .create({
+      command = "ansible-vault",
+      writer = lines,
+      args = { "encrypt" },
+      on_success = function(j)
+        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
+      end,
+    })
+    :start()
 end
 
 function M.run_sd()
@@ -64,24 +72,27 @@ function M.run_sd()
     default = stored_value,
   }, function(arguments)
     if arguments == nil then
-      Log:warn("No arguments provided")
+      log:warn("No arguments provided")
 
       return
     end
 
     arguments = vim.split(arguments, " ")
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+    local bufnr = vim.api.nvim_get_current_buf()
+    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
-    job.spawn({
-      command = "sd",
-      args = arguments,
-      writer = lines,
-      on_success = function(j)
-        shada.set(store_key, table.concat(arguments, " "))
+    job
+      .create({
+        command = "sd",
+        args = arguments,
+        writer = lines,
+        on_success = function(j)
+          shada.set(store_key, table.concat(arguments, " "))
 
-        vim.api.nvim_buf_set_lines(0, 0, -1, false, j:result())
-      end,
-    })
+          vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
+        end,
+      })
+      :start()
   end)
 end
 
@@ -102,19 +113,21 @@ function M.run_jq()
     arguments = vim.split(arguments, " ")
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
-    job.spawn({
-      command = "jq",
-      args = arguments,
-      writer = lines,
-      on_success = function(j)
-        shada.set(store_key, table.concat(arguments, " "))
+    job
+      .create({
+        command = "jq",
+        args = arguments,
+        writer = lines,
+        on_success = function(j)
+          shada.set(store_key, table.concat(arguments, " "))
 
-        local result = table.concat(j:result(), "\n")
+          local result = table.concat(j:result(), "\n")
 
-        Log:info(("Copied result to clipboard: %s"):format(result))
-        vim.fn.setreg(vim.v.register or lvim.system_register, result)
-      end,
-    })
+          log:info(("Copied result to clipboard: %s"):format(result))
+          vim.fn.setreg(vim.v.register or lvim.system_register, result)
+        end,
+      })
+      :start()
   end)
 end
 
@@ -144,19 +157,21 @@ function M.run_yq()
     arguments = vim.split(arguments, " ") or { "." }
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
-    job.spawn({
-      command = "yq",
-      args = arguments,
-      writer = lines,
-      on_success = function(j)
-        shada.set(store_key, table.concat(arguments, " "))
+    job
+      .create({
+        command = "yq",
+        args = arguments,
+        writer = lines,
+        on_success = function(j)
+          shada.set(store_key, table.concat(arguments, " "))
 
-        local result = table.concat(j:result(), "\n")
+          local result = table.concat(j:result(), "\n")
 
-        Log:info(("Copied result to clipboard: %s"):format(result))
-        vim.fn.setreg(vim.v.register or lvim.system_register, result)
-      end,
-    })
+          log:info(("Copied result to clipboard: %s"):format(result))
+          vim.fn.setreg(vim.v.register or lvim.system_register, result)
+        end,
+      })
+      :start()
   end)
 end
 
@@ -171,7 +186,7 @@ function M.set_env()
     completion = "environment",
   }, function(env)
     if env == nil then
-      Log:warn("Nothing to do.")
+      log:warn("Nothing to do.")
 
       return
     end
@@ -184,7 +199,7 @@ function M.set_env()
       completion = "file",
     }, function(val)
       if val == nil then
-        Log:warn("Nothing to do.")
+        log:warn("Nothing to do.")
 
         return
       end
@@ -205,15 +220,15 @@ function M.set_kubeconfig()
     completion = "file",
   }, function(arguments)
     if arguments == nil then
-      Log:warn("Nothing to do.")
+      log:warn("Nothing to do.")
 
       return
     end
 
     local kubeconfig = vim.fn.expand(arguments)
 
-    if not require("lvim.utils").is_file(kubeconfig) then
-      Log:warn(("Kubeconfig file not found: %s"):format(kubeconfig))
+    if not is_file(kubeconfig) then
+      log:warn(("Kubeconfig file not found: %s"):format(kubeconfig))
 
       return
     end

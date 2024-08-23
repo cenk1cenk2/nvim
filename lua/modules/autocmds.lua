@@ -1,6 +1,6 @@
 local M = {}
 
-local log = require("lvim.core.log")
+local log = require("lvim.log")
 
 function M.q_close_autocmd(pattern)
   return {
@@ -115,13 +115,13 @@ function M.setup()
           },
           callback = function(event)
             local bufnr = vim.fn.bufnr("%")
-            local file = require("utils").get_buffer_filepath(event.buf)
+            local file = require("utils.fs").get_buffer_filepath(event.buf)
 
             if vim.fn.buflisted(bufnr) == 1 then
               vim.api.nvim_set_current_buf(bufnr)
             end
 
-            log:info("Opening file in system: %s", require("utils").get_project_buffer_filepath(event.buf))
+            log:info("Opening file in system: %s", require("utils.fs").get_project_buffer_filepath(event.buf))
 
             vim.api.nvim_buf_delete(event.buf, { force = true })
 
@@ -161,7 +161,7 @@ function M.setup()
           pattern = "*",
           callback = function()
             if vim.env["TMUX_PANE"] then
-              os.execute(("tmux rename-window 'nvim@%s' 2>&1 &"):format(vim.fs.basename(require("utils").get_cwd())))
+              os.execute(("tmux rename-window 'nvim@%s' 2>&1 &"):format(vim.fs.basename(require("utils.fs").get_cwd())))
             end
           end,
         },

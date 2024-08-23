@@ -1,6 +1,6 @@
-local Log = {}
+local M = {}
 
-Log.levels = {
+M.levels = {
   [1] = "TRACE",
   [2] = "DEBUG",
   [3] = "INFO",
@@ -15,9 +15,9 @@ Log.levels = {
 
 local queue = {}
 
-function Log:set_level(level)
+function M:set_level(level)
   local logger_ok, _ = xpcall(function()
-    local log_level = Log.levels[level:upper()]
+    local log_level = M.levels[level:upper()]
     local structlog = require("structlog")
     if structlog then
       local logger = structlog.get_logger("lvim")
@@ -28,11 +28,11 @@ function Log:set_level(level)
   end, debug.traceback)
 
   if not logger_ok then
-    Log:warn("Unable to set logger's level: " .. debug.traceback())
+    M:warn("Unable to set logger's level: " .. debug.traceback())
   end
 end
 
-function Log:init()
+function M:init()
   local status_ok, structlog = pcall(require, "structlog")
   if not status_ok then
     return nil
@@ -44,7 +44,7 @@ function Log:init()
     vim.notify(log.msg, log.level)
   end
 
-  local log_level = Log.levels[(lvim.log.level):upper() or "WARN"]
+  local log_level = M.levels[(lvim.log.level):upper() or "WARN"]
   local logger = {
     lvim = {
       pipelines = {
@@ -77,7 +77,7 @@ function Log:init()
           ),
         },
         {
-          level = Log.levels.INFO,
+          level = M.levels.INFO,
           sink = SinkAdapter(notify),
           processors = {},
           formatter = structlog.formatters.Format( --
@@ -98,7 +98,7 @@ end
 --- Adds a log entry using Plenary.log
 ---@param msg any
 ---@param level string [same as vim.log.log_levels]
-function Log:add_entry(level, msg, ...)
+function M:add_entry(level, msg, ...)
   local logger = self:get_logger()
   if not logger then
     table.insert(queue, { level or vim.log.levels.DEBUG, msg, { ... } })
@@ -111,7 +111,7 @@ end
 
 ---Retrieves the handle of the logger object
 ---@return table|nil logger handle if found
-function Log:get_logger()
+function M:get_logger()
   if self.__handle then
     return self.__handle
   end
@@ -125,64 +125,64 @@ function Log:get_logger()
 
   for _, entry in ipairs(queue) do
     if #entry == 3 then
-      Log:log(entry[1], entry[2], unpack(entry[3]))
+      M:log(entry[1], entry[2], unpack(entry[3]))
     else
-      Log:log(entry[1], entry[2])
+      M:log(entry[1], entry[2])
     end
   end
-  queue = nil
+  queue = {}
 
   return logger
 end
 
 ---Retrieves the path of the logfile
 ---@return string path of the logfile
-function Log:get_path()
+function M:get_path()
   return string.format("%s/%s.log", get_cache_dir(), "lvim")
 end
 
 ---Add a log entry at TRACE level
 ---@param msg any
 ---@param ... any
-function Log:log(level, msg, ...)
+function M:log(level, msg, ...)
   self:add_entry(level, msg, ...)
 end
 
 ---Add a log entry at TRACE level
 ---@param msg any
 ---@param ... any
-function Log:trace(msg, ...)
+function M:trace(msg, ...)
   self:add_entry(self.levels.TRACE, msg, ...)
 end
 
 ---Add a log entry at DEBUG level
 ---@param msg any
 ---@param ... any
-function Log:debug(msg, ...)
+function M:debug(msg, ...)
   self:add_entry(self.levels.DEBUG, msg, ...)
 end
 
 ---Add a log entry at INFO level
 ---@param msg any
 ---@param ... any
-function Log:info(msg, ...)
+function M:info(msg, ...)
   self:add_entry(self.levels.INFO, msg, ...)
 end
 
 ---Add a log entry at WARN level
 ---@param msg any
 ---@param ... any
-function Log:warn(msg, ...)
+function M:warn(msg, ...)
   self:add_entry(self.levels.WARN, msg, ...)
 end
 
 ---Add a log entry at ERROR level
 ---@param msg any
 ---@param ... any
-function Log:error(msg, ...)
+function M:error(msg, ...)
   self:add_entry(self.levels.ERROR, msg, ...)
 end
 
-setmetatable({}, Log)
+setmetatable({}, M)
 
-return Log
+return M

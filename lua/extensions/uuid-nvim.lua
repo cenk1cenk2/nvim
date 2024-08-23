@@ -1,6 +1,6 @@
 -- https://github.com/TrevorS/uuid-nvim
 local M = {}
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 M.name = "TrevorS/uuid-nvim"
 
@@ -28,7 +28,7 @@ function M.config()
             local uuid = require("uuid-nvim").get_v4({ quotes = "none" })
 
             vim.fn.setreg(vim.v.register or lvim.system_register, uuid)
-            Log:info(("Copied generated uuid to clipboard: %s"):format(uuid))
+            log:info(("Copied generated uuid to clipboard: %s"):format(uuid))
           end,
           desc = "generate uuid",
         },

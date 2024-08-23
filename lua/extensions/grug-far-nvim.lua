@@ -91,7 +91,7 @@ function M.config()
               prefills = {
                 search = "",
                 replacement = "",
-                filesFilter = string.format("%s/**", require("utils").get_project_buffer_dirpath()),
+                filesFilter = string.format("%s/**", require("utils.fs").get_project_buffer_dirpath()),
                 flags = generate_rg_flags({ "--no-ignore-dot" }),
               },
             }
@@ -107,7 +107,7 @@ function M.config()
               prefills = {
                 search = "",
                 replacement = "",
-                filesFilter = require("utils").get_project_buffer_filepath(),
+                filesFilter = require("utils.fs").get_project_buffer_filepath(),
                 flags = generate_rg_flags({ "--no-ignore-dot" }),
               },
             }
@@ -141,7 +141,7 @@ function M.config()
                 prefills = {
                   search = "",
                   replacement = "",
-                  filesFilter = string.format("%s/**", require("utils").get_project_buffer_dirpath()),
+                  filesFilter = string.format("%s/**", require("utils.fs").get_project_buffer_dirpath()),
                   flags = generate_rg_flags({ "--no-ignore-dot" }),
                 },
               }
@@ -157,7 +157,7 @@ function M.config()
                 prefills = {
                   search = "",
                   replacement = "",
-                  filesFilter = require("utils").get_project_buffer_filepath(),
+                  filesFilter = require("utils.fs").get_project_buffer_filepath(),
                   flags = generate_rg_flags({ "--no-ignore-dot" }),
                 },
               }

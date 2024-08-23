@@ -3,7 +3,7 @@ local M = {}
 
 M.name = "nvim-treesitter/nvim-treesitter"
 
--- local Log = require("lvim.core.log")
+-- local log = require("lvim.log")
 
 M.parsers_dir = join_paths(get_data_dir(), "parsers")
 
@@ -19,7 +19,7 @@ function M.config()
         cmd = { "TSInstall", "TSUninstall", "TSUpdate", "TSUpdateSync" },
         -- cond = function()
         --   if is_headless() then
-        --     Log:debug("Headless mode detected, skipping running setup for treesitter.")
+        --     log:debug("Headless mode detected, skipping running setup for treesitter.")
         --
         --     return false
         --   end

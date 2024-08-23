@@ -60,6 +60,7 @@ local extensions = {
   "octo",
   "diffview",
   "markview-nvim",
+  "helpview-nvim",
   "github-preview-nvim",
   "neogen",
   "coc",
@@ -110,12 +111,12 @@ local extensions = {
 }
 
 function M.config(config)
-  local Log = require("lvim.core.log")
+  local log = require("lvim.log")
 
   for _, extension_path in ipairs(extensions) do
     local extension_ok, extension = pcall(require, "extensions." .. extension_path)
     if not extension_ok then
-      Log:warn(("Extension config can not be loaded: %s"):format(extension_path))
+      log:warn(("Extension config can not be loaded: %s"):format(extension_path))
     else
       extension.config(config)
     end

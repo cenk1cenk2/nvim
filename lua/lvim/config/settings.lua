@@ -1,11 +1,9 @@
 local M = {}
 
 M.load_default_options = function()
-  local utils = require("lvim.utils")
-
   local undodir = join_paths(get_cache_dir(), "undo")
 
-  if not utils.is_directory(undodir) then
+  if not is_directory(undodir) then
     vim.fn.mkdir(undodir, "p")
   end
 

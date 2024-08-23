@@ -1,8 +1,8 @@
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 local M = { fn = {} }
 
 function M.load_wk(mappings)
-  if not package_is_loaded("which-key") then
+  if not is_package_loaded("which-key") then
     lvim.wk = vim.list_extend(lvim.wk, mappings)
 
     return
@@ -27,7 +27,7 @@ function M.load_mappings(mappings, opts)
     local ok, result = pcall(vim.keymap.set, mode, lhs, rhs, m)
 
     if not ok then
-      Log:error(("Can not map keybind: %s > %s"):format(result, vim.inspect(mapping)))
+      log:error(("Can not map keybind: %s > %s"):format(result, vim.inspect(mapping)))
     end
   end
 end
@@ -55,7 +55,7 @@ end
 
 local function define_manager_plugin(config, plugin)
   if plugin.init ~= false and type(plugin.init) ~= "function" then
-    Log:trace(string.format("Defining default init command for plugin: %s", config.name))
+    log:trace(string.format("Defining default init command for plugin: %s", config.name))
 
     plugin.init = function()
       require("utils.setup").plugin_init(config.name)
@@ -63,7 +63,7 @@ local function define_manager_plugin(config, plugin)
   end
 
   if plugin.config ~= false and type(plugin.config) ~= "function" then
-    Log:trace(string.format("Defining default config command for plugin: %s", config.name))
+    log:trace(string.format("Defining default config command for plugin: %s", config.name))
 
     plugin.config = function()
       require("utils.setup").plugin_configure(config.name)
@@ -129,7 +129,7 @@ function M.define_extension(name, enabled, config)
   if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[name]) == false then
     lvim.extensions[name] = config
 
-    Log:debug(string.format("Extension config stopped due to failed condition: %s", name))
+    log:debug(string.format("Extension config stopped due to failed condition: %s", name))
 
     return
   end
@@ -163,7 +163,7 @@ end
 ---@param name string the augroup name
 function M.clear_augroup(name)
   -- defer the function in case the autocommand is still in-use
-  Log:trace("request to clear autocmds  " .. name)
+  log:trace("request to clear autocmds  " .. name)
   vim.schedule(function()
     pcall(function()
       vim.api.nvim_clear_autocmds({ group = name })

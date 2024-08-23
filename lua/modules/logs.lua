@@ -14,14 +14,14 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LOGS, "d" }),
           function()
-            lvim.fn.toggle_log_view(require("lvim.core.log").get_path())
+            lvim.fn.toggle_log_view(require("lvim.log").get_path())
           end,
           desc = "view default log",
         },
         {
           fn.wk_keystroke({ categories.LOGS, "D" }),
           function()
-            vim.fn.execute("edit " .. require("lvim.core.log").get_path())
+            vim.fn.execute("edit " .. require("lvim.log").get_path())
           end,
           desc = "open the default logfile",
         },

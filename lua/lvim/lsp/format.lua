@@ -1,5 +1,5 @@
 local M = {}
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 function M.enable_format_on_save()
   vim.api.nvim_create_augroup("lsp_format_on_save", {})
@@ -10,12 +10,12 @@ function M.enable_format_on_save()
       lvim.lsp.wrapper.format({ bufnr = args.bufnr })
     end,
   })
-  Log:debug("enabled format-on-save")
+  log:debug("enabled format-on-save")
 end
 
 function M.disable_format_on_save()
   require("utils.setup").clear_augroup("lsp_format_on_save")
-  Log:debug("disabled format-on-save")
+  log:debug("disabled format-on-save")
 end
 
 function M.configure_format_on_save()

@@ -160,7 +160,7 @@ function M.setup(fn)
       fn.wk_keystroke({ categories.BUFFER, "S" }),
       function()
         vim.cmd("w!")
-        require("lvim.core.log"):warn("File overwritten.")
+        require("lvim.log"):warn("File overwritten.")
       end,
       desc = "overwrite - force save",
       mode = { "n", "v" },
@@ -177,7 +177,7 @@ function M.setup(fn)
       fn.wk_keystroke({ categories.BUFFER, "W" }),
       function()
         vim.cmd("wa")
-        require("lvim.core.log"):warn("Wrote all files.")
+        require("lvim.log"):warn("Wrote all files.")
       end,
       desc = "write all",
       mode = { "n", "v" },

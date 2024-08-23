@@ -1,5 +1,5 @@
 local M = {}
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 function M.setup()
   require("utils.setup").init({
@@ -32,7 +32,7 @@ function M.setup()
       {
         name = "LvimCacheReset",
         fn = function()
-          require("lvim.plugin-loader").reset_cache()
+          require("lvim.loader").reset_cache()
         end,
       },
       {
@@ -44,19 +44,19 @@ function M.setup()
       {
         name = "LvimUpdate",
         fn = function()
-          require("lvim.bootstrap"):update()
+          require("lvim"):update()
         end,
       },
       {
         name = "LvimVersion",
         fn = function()
-          print(require("lvim.utils.git").get_lvim_version())
+          print(require("lvim.version").get_lvim_version())
         end,
       },
       {
         name = "LvimOpenlog",
         fn = function()
-          vim.fn.execute("edit " .. require("lvim.core.log").get_path())
+          vim.fn.execute("edit " .. require("lvim.log").get_path())
         end,
       },
     },

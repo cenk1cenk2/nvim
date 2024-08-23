@@ -1,6 +1,6 @@
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 function M.lsp_setup()
   local servers = require("lspconfig.util").available_servers()
@@ -9,13 +9,13 @@ function M.lsp_setup()
     prompt = "LSP server to start:",
   }, function(server)
     if server == nil then
-      Log:warn("Nothing to compare.")
+      log:warn("Nothing to compare.")
 
       return
     end
 
     require("lvim.lsp.manager").setup(server)
-    Log:info(("Started LSP server: %s"):format(server))
+    log:info(("Started LSP server: %s"):format(server))
   end)
 end
 

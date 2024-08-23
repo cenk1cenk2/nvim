@@ -1,7 +1,7 @@
 -- https://github.com/nvim-telescope/telescope.nvim
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 M.name = "nvim-telescope/telescope.nvim"
 

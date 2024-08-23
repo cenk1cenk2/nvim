@@ -1,7 +1,7 @@
 -- https://github.com/sindrets/diffview.nvim
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 M.name = "sindrets/diffview.nvim"
 
@@ -202,12 +202,12 @@ function M.compare_with_branch()
     default = stored_value,
   }, function(branch)
     if branch == nil then
-      Log:warn("Nothing to compare.")
+      log:warn("Nothing to compare.")
 
       return
     end
 
-    Log:info(("Comparing with branch: %s"):format(branch))
+    log:info(("Comparing with branch: %s"):format(branch))
     shada.set(store_key, branch)
 
     vim.cmd(":DiffviewOpen " .. branch)

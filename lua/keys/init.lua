@@ -1,6 +1,6 @@
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 -- Load the default keymappings
 function M.load_defaults()
@@ -10,7 +10,7 @@ function M.load_defaults()
 end
 
 function M.setup()
-  Log:debug("Initializing keybindings.")
+  log:debug("Initializing keybindings.")
 
   vim.g.mapleader = lvim.leader
   vim.g.maplocalleader = lvim.localleader

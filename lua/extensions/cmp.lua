@@ -157,7 +157,7 @@ function M.config()
           comparators = {
             compare.offset,
             compare.exact,
-            -- compare.scopes,
+            compare.scopes,
             compare.score,
             compare.recently_used,
             compare.locality,
@@ -258,13 +258,12 @@ function M.config()
       end
 
       -- setup lua snip
-      local utils = require("lvim.utils")
       local paths = {}
 
-      table.insert(paths, join_paths(require("lvim.plugin-loader").plugins_dir, "friendly-snippets"))
+      table.insert(paths, join_paths(require("lvim.loader").plugins_dir, "friendly-snippets"))
 
       local user_snippets = join_paths(get_config_dir(), "snippets")
-      if utils.is_directory(user_snippets) then
+      if is_directory(user_snippets) then
         table.insert(paths, user_snippets)
       end
 

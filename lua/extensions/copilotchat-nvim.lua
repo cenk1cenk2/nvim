@@ -2,7 +2,7 @@
 local M = {}
 
 M.name = "CopilotC-Nvim/CopilotChat.nvim"
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 function M.config()
   require("utils.setup").define_extension(M.name, true, {
@@ -103,7 +103,7 @@ function M.config()
               prompt = "ask chatgpt:",
             }, function(question)
               if question == nil then
-                Log:warn("Nothing to do.")
+                log:warn("Nothing to do.")
 
                 return
               end
@@ -158,7 +158,7 @@ function M.config()
                 prompt = "ask chatgpt:",
               }, function(question)
                 if question == nil then
-                  Log:warn("Nothing to do.")
+                  log:warn("Nothing to do.")
 
                   return
                 end

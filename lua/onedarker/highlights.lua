@@ -677,50 +677,26 @@ hl.plugins.symbol_usage_nvim = {
   ["SymbolUsageRef"] = { fg = c.yellow[300], bold = true },
 }
 
-function M.load_highlights(ns, highlights, loaded)
+function M.load_highlights(ns, highlights)
   for group_name, group_settings in pairs(highlights) do
-    -- table.insert(loaded, group_name)
     vim.api.nvim_set_hl(ns, group_name, group_settings)
   end
 end
 
 function M.setup()
-  local loaded = {}
-  -- local ns = vim.api.nvim_create_namespace("onedarker")
-
-  M.load_highlights(0, hl.common, loaded)
-  M.load_highlights(0, hl.syntax, loaded)
-  M.load_highlights(0, hl.lsp, loaded)
+  M.load_highlights(0, hl.common)
+  M.load_highlights(0, hl.syntax)
+  M.load_highlights(0, hl.lsp)
 
   for _, group in pairs(hl.langs) do
-    M.load_highlights(0, group, loaded)
+    M.load_highlights(0, group)
   end
 
   for _, group in pairs(hl.plugins) do
-    M.load_highlights(0, group, loaded)
+    M.load_highlights(0, group)
   end
 
-  M.load_highlights(0, hl.treesitter, loaded)
-  -- vim.api.nvim_set_hl_ns(ns)
-
-  -- setup
-  -- local function find_duplicates(t)
-  --   local Log = require "lvim.core.log"
-  --
-  --   local seen = {} --keep record of elements we've seen
-  --   local duplicated = {} --keep a record of duplicated elements
-  --   for i = 1, #t do
-  --     local element = t[i]
-  --     if seen[element] then --check if we've seen the element before
-  --       duplicated[element] = true --if we have then it must be a duplicate! add to a table to keep track of this
-  --     else
-  --       seen[element] = true -- set the element to seen
-  --     end
-  --   end
-  --   Log:warn(string.format("Duplicated highlights: %s", vim.inspect(duplicated)))
-  -- end
-
-  -- find_duplicates(loaded)
+  M.load_highlights(0, hl.treesitter)
 end
 
 return M

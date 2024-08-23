@@ -3,26 +3,6 @@ local M = {}
 local uv = vim.uv
 local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
 
-function _G.get_extension_name(module)
-  local ok, m = pcall(require, module)
-  if not ok then
-    require("lvim.log").error(("Failed to load extension: %s"):format(module))
-
-    return nil
-  end
-
-  return m.name
-end
-
-function _G.is_extension_enabled(module)
-  local extension = require("utils.setup").get_config(module) or {}
-  if extension.enabled == nil then
-    require("lvim.core.log"):error("Extension is not defined: %s", module)
-  end
-
-  return extension.enabled
-end
-
 function _G.is_headless()
   return #vim.api.nvim_list_uis() == 0 and #vim.tbl_filter(function(argv)
     if argv:find("sk.lua$") then
@@ -38,16 +18,6 @@ end
 function _G.join_paths(...)
   local result = table.concat({ ... }, path_sep)
   return result
-end
-
----Require a module in protected mode without relying on its cached value
----@param module string
----@return any
-function _G.require_clean(module)
-  package.loaded[module] = nil
-  _G[module] = nil
-  local _, requested = pcall(require, module)
-  return requested
 end
 
 ---Get the full path to `$LUNARVIM_RUNTIME_DIR`
@@ -75,10 +45,42 @@ function _G.get_cache_dir()
   return vim.fn.stdpath("cache")
 end
 
+function _G.is_file(path)
+  local stat = vim.uv.fs_stat(path)
+
+  return stat and stat.type == "file" or false
+end
+
+function _G.is_directory(path)
+  local stat = vim.uv.fs_stat(path)
+
+  return stat and stat.type == "directory" or false
+end
+
 _G.OS_UNAME = string.lower(vim.loop.os_uname().sysname)
 
-function _G.package_is_loaded(name)
+function _G.is_package_loaded(name)
   return package.loaded[name] ~= nil
+end
+
+function _G.get_extension_name(module)
+  local ok, m = pcall(require, module)
+  if not ok then
+    require("lvim.log").error(("Failed to load extension: %s"):format(module))
+
+    return nil
+  end
+
+  return m.name
+end
+
+function _G.is_extension_enabled(module)
+  local extension = require("utils.setup").get_config(module) or {}
+  if extension.enabled == nil then
+    require("lvim.log"):error("Extension is not defined: %s", module)
+  end
+
+  return extension.enabled
 end
 
 ---Initialize the `&runtimepath` variables and prepare for startup
@@ -94,7 +96,7 @@ function M:init()
     _G.PLENARY_DEBUG = false
   end
 
-  require("lvim.plugin-loader").init()
+  require("lvim.loader").init()
 
   require("lvim.config"):init()
 
@@ -104,13 +106,7 @@ end
 ---Update LunarVim
 ---pulls the latest changes from github and, resets the startup cache
 function M:update()
-  require_clean("lvim.utils.hooks").run_pre_update()
-
-  local ret = require_clean("lvim.utils.git").update_repository()
-
-  if ret then
-    require_clean("lvim.utils.hooks").run_post_update()
-  end
+  require("lvim.version").update_repository()
 end
 
 return M

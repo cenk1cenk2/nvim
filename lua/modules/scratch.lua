@@ -1,6 +1,6 @@
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 local random = math.random
 local function uuid()
@@ -18,7 +18,7 @@ function M.create_scratch_buffer()
     prompt = "Select a filetype",
   }, function(filetype)
     if filetype == nil then
-      Log:warn("Nothing to create.")
+      log:warn("Nothing to create.")
 
       return
     end
@@ -28,7 +28,7 @@ function M.create_scratch_buffer()
     vim.api.nvim_buf_set_name(bufnr, filename)
     vim.api.nvim_set_option_value("filetype", filetype, { buf = bufnr })
     vim.api.nvim_win_set_buf(0, bufnr)
-    Log:info(("Created temporary file: %s"):format(filename))
+    log:info(("Created temporary file: %s"):format(filename))
 
     require("utils.setup").define_autocmds({
       {
@@ -38,7 +38,7 @@ function M.create_scratch_buffer()
         callback = function()
           os.remove(filename)
 
-          Log:info(("Removed temporary file: %s"):format(filename))
+          log:info(("Removed temporary file: %s"):format(filename))
         end,
       },
     })
@@ -58,7 +58,7 @@ function M.execute_scratch_buffer()
     default = stored_value,
   }, function(command)
     if command == nil then
-      Log:warn("Nothing to execute.")
+      log:warn("Nothing to execute.")
 
       return
     end
@@ -69,10 +69,10 @@ function M.execute_scratch_buffer()
     --
     -- local filename = string.format("%s.tmp", uuid())
     -- local temp = io.open(filename, "w")
-    -- Log:debug(string.format("Created temporary file: %s", filename))
+    -- log:debug(string.format("Created temporary file: %s", filename))
     --
     -- if temp == nil then
-    --   Log:error "Can not create temporary file."
+    --   log:error "Can not create temporary file."
     --   return
     -- end
     --
@@ -82,13 +82,13 @@ function M.execute_scratch_buffer()
     local terminal = Terminal.create_terminal(Terminal.generate_defaults_float_terminal({
       cmd = string.format("%s -c '%s %s'", vim.o.shell, command, vim.fn.expand("%")),
       close_on_exit = false,
-      dir = require("utils").get_cwd(),
+      dir = require("utils.fs").get_cwd(),
       on_exit = function()
         -- temp:close()
-        -- Log:debug(string.format("Closing temporary file: %s", filename))
+        -- log:debug(string.format("Closing temporary file: %s", filename))
         --
         -- os.remove(filename)
-        -- Log:debug(string.format("Removed temporary file: %s", filename))
+        -- log:debug(string.format("Removed temporary file: %s", filename))
       end,
     }))
 

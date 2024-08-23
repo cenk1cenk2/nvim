@@ -102,7 +102,7 @@ function M.config()
           { type = "padding", val = 0 },
           -- {
           --   type = "text",
-          --   val = { ("%s %s#%s"):format(lvim.ui.icons.git.Branch, require("lvim.utils.git").get_lvim_branch(), require("lvim.utils.git").get_lvim_current_sha()) },
+          --   val = { ("%s %s#%s"):format(lvim.ui.icons.git.Branch, require("lvim.version").get_lvim_branch(), require("lvim.version").get_lvim_current_sha()) },
           --   opts = {
           --     redraw = false,
           --     position = "center",
@@ -112,7 +112,7 @@ function M.config()
           -- { type = "padding", val = 0 },
           -- {
           --   type = "text",
-          --   val = { ("%s %s"):format(lvim.ui.icons.ui.Gear, require("lvim.utils.git").get_nvim_version()) },
+          --   val = { ("%s %s"):format(lvim.ui.icons.ui.Gear, require("lvim.version").get_nvim_version()) },
           --   opts = {
           --     redraw = false,
           --     position = "center",

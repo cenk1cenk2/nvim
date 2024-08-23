@@ -39,7 +39,7 @@ function M.config()
       end
     end,
     setup = function(_, fn)
-      local Log = require("lvim.core.log")
+      local log = require("lvim.log")
       local system_register = lvim.system_register
 
       local function get_telescope_options(state, opts)
@@ -78,7 +78,7 @@ function M.config()
         if node.type == "file" or node.type == "directory" then
           path = node:get_parent_id()
         else
-          Log:warn("Finding in node only works for files and directories.")
+          log:warn("Finding in node only works for files and directories.")
           return
         end
 
@@ -468,7 +468,7 @@ function M.config()
       require("neo-tree").setup(config.setup)
     end,
     wk = function(_, categories, fn)
-      local Log = require("lvim.core.log")
+      local log = require("lvim.log")
 
       return {
         {
@@ -520,7 +520,7 @@ function M.config()
                 return
               end
 
-              Log:info(("Source switched for tree: %s"):format(source))
+              log:info(("Source switched for tree: %s"):format(source))
 
               M.source = source
             end)
@@ -550,7 +550,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "f", "c" }),
           function()
-            require("neo-tree.sources.filesystem.lib.fs_actions").create_node(require("utils").get_buffer_dirpath())
+            require("neo-tree.sources.filesystem.lib.fs_actions").create_node(require("utils.fs").get_buffer_dirpath())
           end,
           desc = "create file relative to current buffer in filesystem",
         },
@@ -558,7 +558,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "f", "d" }),
           function()
-            require("neo-tree.sources.filesystem.lib.fs_actions").delete_node(require("utils").get_buffer_filepath())
+            require("neo-tree.sources.filesystem.lib.fs_actions").delete_node(require("utils.fs").get_buffer_filepath())
           end,
           desc = "delete current buffer from filesystem",
         },
@@ -566,7 +566,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "f", "m" }),
           function()
-            require("neo-tree.sources.filesystem.lib.fs_actions").move_node(require("utils").get_buffer_filepath())
+            require("neo-tree.sources.filesystem.lib.fs_actions").move_node(require("utils.fs").get_buffer_filepath())
           end,
           desc = "move current buffer in filesystem",
         },
@@ -574,7 +574,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "f", "r" }),
           function()
-            require("neo-tree.sources.filesystem.lib.fs_actions").rename_node(require("utils").get_buffer_filepath())
+            require("neo-tree.sources.filesystem.lib.fs_actions").rename_node(require("utils.fs").get_buffer_filepath())
           end,
           desc = "rename current buffer in filesystem",
         },
@@ -582,7 +582,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "f", "y" }),
           function()
-            require("neo-tree.sources.filesystem.lib.fs_actions").copy_node(require("utils").get_buffer_filepath())
+            require("neo-tree.sources.filesystem.lib.fs_actions").copy_node(require("utils.fs").get_buffer_filepath())
           end,
           desc = "copy current buffer in filesystem",
         },

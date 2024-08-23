@@ -1,6 +1,6 @@
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 local setup = require("utils.setup")
 
 local function add_lsp_buffer_options(bufnr)
@@ -37,7 +37,7 @@ function M.common_on_exit(client, bufnr)
     for _, cb in pairs(lvim.lsp.on_exit) do
       cb(client, bufnr)
     end
-    Log:trace("Called lsp.on_exit")
+    log:trace("Called lsp.on_exit")
   end
 end
 
@@ -46,7 +46,7 @@ function M.common_on_init(client, bufnr)
     for _, cb in pairs(lvim.lsp.on_init_callbacks) do
       cb(client, bufnr)
     end
-    Log:trace("Called lsp.on_init_callbacks")
+    log:trace("Called lsp.on_init_callbacks")
   end
 end
 
@@ -55,7 +55,7 @@ function M.common_on_attach(client, bufnr)
     for _, cb in pairs(lvim.lsp.on_attach_callbacks) do
       cb(client, bufnr)
     end
-    Log:trace("Called lsp.on_attach_callbacks")
+    log:trace("Called lsp.on_attach_callbacks")
   end
 
   local lu = require("lvim.lsp.utils")
@@ -83,13 +83,13 @@ end
 
 function M.setup(force)
   if is_headless() and not force then
-    Log:debug("headless mode detected, skipping setting lsp support")
+    log:debug("headless mode detected, skipping setting lsp support")
     return
   end
 
-  Log:debug("Setting up LSP support")
+  log:debug("Setting up LSP support")
 
-  Log:debug("Installing LSP servers.")
+  log:debug("Installing LSP servers.")
 
   local installer_ok, installer = pcall(require, "mason-tool-installer")
 
@@ -114,7 +114,7 @@ function M.setup(force)
       start_delay = 1000, -- 3 second delay
     })
   else
-    Log:warn("LSP installer not available.")
+    log:warn("LSP installer not available.")
   end
 
   local lsp_status_ok, _ = pcall(require, "lspconfig")
@@ -136,7 +136,7 @@ function M.setup(force)
     require("mason-lspconfig").setup_handlers({
       function(server_name)
         if not require("lvim.lsp.attach").should_configure(server_name) then
-          Log:debug(("Skipping configuring LSP: %s"):format(server_name))
+          log:debug(("Skipping configuring LSP: %s"):format(server_name))
 
           return
         end

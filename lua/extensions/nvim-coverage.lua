@@ -18,7 +18,7 @@ function M.config()
         auto_reload = true,
         commands = true, -- create commands
         load_coverage_cb = function(ftype)
-          require("lvim.core.log"):info(("Loaded test coverage: %s"):format(ftype))
+          require("lvim.log"):info(("Loaded test coverage: %s"):format(ftype))
         end,
         highlights = {
           -- customize highlight groups created by the plugin

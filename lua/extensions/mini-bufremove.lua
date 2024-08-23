@@ -1,5 +1,5 @@
 -- https://github.com/echasnovski/mini.bufremove
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 local M = {}
 
@@ -48,8 +48,8 @@ function M.close_buffer(bufnr, force)
     bufnr = vim.api.nvim_get_current_buf()
   end
 
-  if not force and package_is_loaded("bufferline") and require("bufferline.groups")._is_pinned({ id = bufnr }) then
-    Log:warn("Buffer is pinned!")
+  if not force and is_package_loaded("bufferline") and require("bufferline.groups")._is_pinned({ id = bufnr }) then
+    log:warn("Buffer is pinned!")
 
     return
   end

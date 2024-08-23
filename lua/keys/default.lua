@@ -1,4 +1,4 @@
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 return {
   -- disable help
@@ -11,27 +11,27 @@ return {
   {
     "c",
     [["_c]],
-    mode = { "n", "v", "x" },
+    mode = { "n", "v", "x", "o" },
   },
   {
     "C",
     [["_C]],
-    mode = { "n", "v", "x" },
+    mode = { "n", "v", "x", "o" },
   },
   {
     "x",
     [["_x]],
-    mode = { "n", "v", "x" },
+    mode = { "n", "v", "x", "o" },
   },
   {
     "P",
     [["_dp]],
-    mode = { "v", "x" },
+    mode = { "v", "x", "o" },
   },
   {
     "p",
     [["_dP]],
-    mode = { "v", "x" },
+    mode = { "v", "x", "o" },
   },
   -- tab control
   {
@@ -108,7 +108,7 @@ return {
     "<C-x>",
     function()
       vim.cmd("noa w!")
-      Log:warn("File saved. No autocommands had run!")
+      log:warn("File saved. No autocommands had run!")
     end,
     mode = { "n" },
   },

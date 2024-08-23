@@ -1,6 +1,6 @@
 local M = {}
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 local lvim_lsp_utils = require("lvim.lsp.utils")
 local is_windows = vim.uv.os_uname().version:match("Windows")
 
@@ -22,8 +22,8 @@ local function resolve_mason_config(server_name)
     end
   end
 
-  Log:debug(("resolved mason configuration: %s"):format(server_name))
-  -- Log:trace(vim.inspect(conf))
+  log:debug(("resolved mason configuration: %s"):format(server_name))
+  -- log:trace(vim.inspect(conf))
 
   return conf or {}
 end
@@ -42,10 +42,10 @@ local function resolve_config(server_name, ...)
 
   local has_custom_provider, custom_config = pcall(require, "modules.lsp.overrides." .. server_name)
   if has_custom_provider then
-    Log:trace("Using custom configuration for requested server: " .. server_name)
+    log:trace("Using custom configuration for requested server: " .. server_name)
     defaults = vim.tbl_deep_extend("force", defaults, custom_config)
   else
-    Log:trace("Using default configuration for requested server: " .. server_name)
+    log:trace("Using default configuration for requested server: " .. server_name)
   end
 
   defaults = vim.tbl_deep_extend("force", defaults, ...)
@@ -69,7 +69,7 @@ end
 --   local active_autocmds = vim.api.nvim_get_autocmds({ event = "FileType", pattern = ft })
 --   for _, result in pairs(active_autocmds) do
 --     if result.group_name:match("lspconfig") then
---       Log:debug(("[%q] is already configured"):format(server_name))
+--       log:debug(("[%q] is already configured"):format(server_name))
 --
 --       return true
 --     end
@@ -80,7 +80,7 @@ end
 
 local function launch_server(server_name, config)
   local ft = config.filetypes or require("lvim.lsp.utils").get_supported_filetypes(server_name)
-  Log:trace(("%s is hooked for fts: %s"):format(server_name, vim.inspect(ft)))
+  log:trace(("%s is hooked for fts: %s"):format(server_name, vim.inspect(ft)))
 
   xpcall(function()
     if M.has_setup(server_name) then
@@ -157,7 +157,7 @@ function M.setup(server_name, user_config)
 
   if not registry.is_installed(pkg_name) then
     if should_auto_install(server_name) then
-      Log:debug("Automatic server installation detected")
+      log:debug("Automatic server installation detected")
       vim.notify_once(string.format("Installation in progress for [%s]", server_name), vim.log.levels.INFO)
 
       local pkg = registry.get_package(pkg_name)
@@ -175,7 +175,7 @@ function M.setup(server_name, user_config)
 
       return
     else
-      Log:debug(server_name .. " is not managed by the automatic installer")
+      log:debug(server_name .. " is not managed by the automatic installer")
     end
   end
 

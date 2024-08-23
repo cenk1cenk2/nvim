@@ -3,7 +3,7 @@ local M = {}
 
 M.name = "mfussenegger/nvim-dap"
 
--- local log = require "lvim.core.log"
+-- local log = require "lvim.log"
 
 function M.config()
   require("utils.setup").define_extension(M.name, true, {
@@ -83,7 +83,7 @@ function M.config()
           fn.wk_keystroke({ categories.DEBUG, "l" }),
           function()
             vim.ui.input({
-              prompt = "Log: ",
+              prompt = "log: ",
               highlight = require("utils").treesitter_highlight(vim.bo.filetype),
             }, function(value)
               require("dap").set_breakpoint(nil, nil, value)
@@ -214,7 +214,7 @@ function M.config()
           callback = function()
             require("dap.ext.vscode").load_launchjs()
 
-            require("lvim.core.log"):info("Reloaded launch.json for dap.")
+            require("lvim.log"):info("Reloaded launch.json for dap.")
           end,
         },
       }

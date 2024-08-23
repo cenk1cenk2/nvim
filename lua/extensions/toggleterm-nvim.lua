@@ -3,7 +3,7 @@ local M = {}
 
 M.name = "akinsho/toggleterm.nvim"
 
-local Log = require("lvim.core.log")
+local log = require("lvim.log")
 
 function M.config()
   require("utils.setup").define_extension(M.name, true, {
@@ -248,7 +248,7 @@ function M.on_exit(terminal) end
 function M.create_toggle_term(opts)
   local binary = opts.cmd:match("(%S+)")
   if vim.fn.executable(binary) ~= 1 then
-    Log:debug(("Skipping configuring executable %s. Please make sure it is installed properly.").format(binary))
+    log:debug(("Skipping configuring executable %s. Please make sure it is installed properly.").format(binary))
     return
   end
 
@@ -292,7 +292,7 @@ function M.get_current_float_terminal()
     terminal = M.float_terminals[M.float_terminal_current]
   end
 
-  Log:trace(("Terminal switched: %s -> %s -> %s"):format(M.float_terminal_current, terminal.cmd, terminal.dir))
+  log:trace(("Terminal switched: %s -> %s -> %s"):format(M.float_terminal_current, terminal.cmd, terminal.dir))
 
   return terminal
 end
@@ -311,7 +311,7 @@ function M.float_terminal_on_open(terminal)
 
   M.float_terminal_current = index
 
-  Log:debug(("Terminal created: %s -> %s -> %s"):format(M.float_terminal_current, terminal.cmd, terminal.dir))
+  log:debug(("Terminal created: %s -> %s -> %s"):format(M.float_terminal_current, terminal.cmd, terminal.dir))
 
   M.on_open(terminal)
 end
@@ -340,7 +340,7 @@ function M.float_terminal_on_exit(terminal)
       terminal:shutdown()
       cb()
 
-      Log:debug(("Shutdown current terminal manually: %s"):format(terminal.cmd))
+      log:debug(("Shutdown current terminal manually: %s"):format(terminal.cmd))
     end
 
     vim.keymap.set({ "n", "t", "i" }, "q", keymap_cb, { silent = true, buffer = terminal.bufnr })
@@ -529,7 +529,7 @@ function M.toggle_log_view(logfile)
   local ok = pcall(require, "toggleterm")
 
   if not ok then
-    Log:debug("Terminal not ready.")
+    log:debug("Terminal not ready.")
     return
   end
 
@@ -537,7 +537,7 @@ function M.toggle_log_view(logfile)
   if vim.fn.executable(log_viewer) ~= 1 then
     log_viewer = "less +F"
   end
-  Log:debug("attempting to open: " .. logfile)
+  log:debug("attempting to open: " .. logfile)
   log_viewer = log_viewer .. " " .. logfile
   local term_opts = vim.tbl_deep_extend("force", M.current_setup(), {
     cmd = log_viewer,

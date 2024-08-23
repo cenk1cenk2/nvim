@@ -86,7 +86,7 @@ function M.config()
                   local result = require("schema-companion.context").get_buffer_schema(0)
 
                   if not result then
-                    require("lvim.core.log"):warn("No schema found.")
+                    require("lvim.log"):warn("No schema found.")
                     return
                   end
 
