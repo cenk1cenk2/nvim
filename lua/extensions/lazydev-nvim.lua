@@ -15,7 +15,11 @@ function M.config()
       }
     end,
     setup = function()
-      return {}
+      return {
+        library = {
+          "lazy.nvim",
+        },
+      }
     end,
     on_setup = function(c)
       require("lazydev").setup(c)

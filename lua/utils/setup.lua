@@ -119,7 +119,7 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias Plugin LazyPlugin | LazyPlugin[]
+---@alias Plugin LazyPluginSpec
 
 ---Define the extension in the plugin manager.
 ---@param config Config
@@ -156,7 +156,7 @@ end
 ---@field configure? fun(config: Config, fn: SetupFn): nil
 ---@field on_init? fun(config: Config): nil
 ---@field setup? (fun(config: Config, fn: SetupFn): table) | table
----@field on_setup? fun(current: any, config: Config, fn: SetupFn): nil
+---@field on_setup? fun(c: any, config: Config, fn: SetupFn): nil
 ---@field legacy_setup? table
 ---@field on_done? fun(config: Config, fn: SetupFn): nil
 ---@field keymaps? (fun(config: Config): KeymapMappings) | KeymapMappings
