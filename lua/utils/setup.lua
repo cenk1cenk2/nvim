@@ -446,7 +446,7 @@ function M.fn.append_to_setup(name, config, opts)
   table.insert(lvim.extensions[name].to_setup, vim.tbl_extend("force", opts, { cb = config }))
 end
 
----@alias SetupFnGetWkCategories fun(): table<WkCategories, string>
+---@alias SetupFnGetWkCategories fun(): table<WKCategories, string>
 
 --- Returns which-key categories.
 ---@type SetupFnGetWkCategories
