@@ -67,8 +67,8 @@ function M.config()
         symbol_request_pos = "end", -- Recommended redifine only in `filetypes` override table)
       }
     end,
-    on_setup = function(config)
-      require("symbol-usage").setup(config.setup)
+    on_setup = function(c)
+      require("symbol-usage").setup(c)
     end,
     hl = function(_, fn)
       local h = fn.get_highlight

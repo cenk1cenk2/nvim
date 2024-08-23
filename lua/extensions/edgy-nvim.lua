@@ -394,8 +394,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("edgy").setup(config.setup)
+    on_setup = function(c)
+      require("edgy").setup(c)
     end,
   })
 end

@@ -67,8 +67,8 @@ function M.config()
         post_hook = nil,
       }
     end,
-    on_setup = function(config)
-      require("Comment").setup(config.setup)
+    on_setup = function(c)
+      require("Comment").setup(c)
     end,
     on_done = function(config)
       local ft = require("Comment.ft")

@@ -203,8 +203,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("flash").setup(config.setup)
+    on_setup = function(c)
+      require("flash").setup(c)
     end,
     on_done = function()
       -- to use this, make sure to set `opts.modes.char.enabled = false`

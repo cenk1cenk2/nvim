@@ -37,8 +37,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("retrail").setup(config.setup)
+    on_setup = function(c)
+      require("retrail").setup(c)
     end,
   })
 end

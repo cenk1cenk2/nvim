@@ -59,8 +59,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("grug-far").setup(config.setup)
+    on_setup = function(c)
+      require("grug-far").setup(c)
     end,
     wk = function(_, categories, fn)
       local function generate_rg_flags(f)
@@ -182,7 +182,7 @@ function M.config()
           group = "__grug_far",
           pattern = { "grug-far" },
           callback = function(event)
-            require("utils.setup").load_mappings({
+            require("utils.setup").load_keymaps({
               {
                 "<localleader>w",
                 function()

@@ -63,8 +63,8 @@ function M.config()
         end,
       }
     end,
-    on_setup = function(config)
-      require("ufo").setup(config.setup)
+    on_setup = function(c)
+      require("ufo").setup(c)
     end,
     on_done = function()
       -- vim.o.foldcolumn = "1"

@@ -40,8 +40,8 @@ function M.config()
         buftypes = {},
       }
     end,
-    on_setup = function(config)
-      require("colorizer").setup(config.setup)
+    on_setup = function(c)
+      require("colorizer").setup(c)
     end,
   })
 end

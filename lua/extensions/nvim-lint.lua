@@ -21,8 +21,8 @@ function M.config()
 
       return lsp_utils.read_tools(METHOD)
     end,
-    on_setup = function(config)
-      require("lint").linters_by_ft = config.setup
+    on_setup = function(c)
+      require("lint").linters_by_ft = c
     end,
     on_done = function()
       lvim.lsp.tools.list_registered.linters = function(bufnr)

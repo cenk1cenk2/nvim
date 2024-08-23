@@ -30,8 +30,8 @@ function M.config()
         virt_text_win_col = nil,
       }
     end,
-    on_setup = function(config)
-      require("nvim-dap-virtual-text").setup(config.setup)
+    on_setup = function(c)
+      require("nvim-dap-virtual-text").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

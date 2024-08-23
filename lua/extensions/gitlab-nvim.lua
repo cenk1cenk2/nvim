@@ -131,8 +131,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("gitlab").setup(config.setup)
+    on_setup = function(c)
+      require("gitlab").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

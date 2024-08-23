@@ -40,8 +40,8 @@ function M.config()
         dapSharedKeymaps = true,
       }
     end,
-    on_setup = function(config)
-      require("recorder").setup(config.setup)
+    on_setup = function(c)
+      require("recorder").setup(c)
     end,
     keymaps = function()
       return {

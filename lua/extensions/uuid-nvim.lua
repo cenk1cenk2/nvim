@@ -17,8 +17,8 @@ function M.config()
         quotes = "none",
       }
     end,
-    on_setup = function(config)
-      require("uuid-nvim").setup(config.setup)
+    on_setup = function(c)
+      require("uuid-nvim").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

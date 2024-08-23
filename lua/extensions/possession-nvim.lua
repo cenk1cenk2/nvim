@@ -99,8 +99,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("possession").setup(config.setup)
+    on_setup = function(c)
+      require("possession").setup(c)
     end,
     on_done = function()
       require("telescope").load_extension("possession")

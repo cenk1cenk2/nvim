@@ -43,8 +43,8 @@ function M.config()
         search_method = "cover",
       }
     end,
-    on_setup = function(config)
-      require("mini.ai").setup(config.setup)
+    on_setup = function(c)
+      require("mini.ai").setup(c)
     end,
   })
 end

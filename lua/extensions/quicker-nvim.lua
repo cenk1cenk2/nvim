@@ -41,8 +41,8 @@ function M.config()
         end,
       }
     end,
-    on_setup = function(config)
-      require("quicker").setup(config.setup)
+    on_setup = function(c)
+      require("quicker").setup(c)
     end,
     keys = function()
       return {

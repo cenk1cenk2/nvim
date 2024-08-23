@@ -27,8 +27,8 @@ function M.config()
         on_attach = nil, -- (fun(buf: integer): boolean) return false to disable attaching
       }
     end,
-    on_setup = function(config)
-      require("treesitter-context").setup(config.setup)
+    on_setup = function(c)
+      require("treesitter-context").setup(c)
     end,
   })
 end

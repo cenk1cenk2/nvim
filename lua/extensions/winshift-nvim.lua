@@ -53,8 +53,8 @@ function M.config()
         window_picker = lvim.fn.pick_window,
       }
     end,
-    on_setup = function(config)
-      require("winshift").setup(config.setup)
+    on_setup = function(c)
+      require("winshift").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

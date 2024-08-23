@@ -40,8 +40,8 @@ function M.config()
         end,
       }
     end,
-    on_setup = function(config)
-      require("stickybuf").setup(config.setup)
+    on_setup = function(c)
+      require("stickybuf").setup(c)
     end,
   })
 end

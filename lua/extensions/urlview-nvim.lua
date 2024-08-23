@@ -23,8 +23,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("urlview").setup(config.setup)
+    on_setup = function(c)
+      require("urlview").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

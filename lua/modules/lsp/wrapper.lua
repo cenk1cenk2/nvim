@@ -342,26 +342,26 @@ function M.setup()
     name = "lsp-wrapper",
     commands = {
       {
-        name = "LspLogLevelDebug",
-        callback = function()
+        "LspLogLevelDebug",
+        function()
           M.lsp_logging_level("debug")
         end,
       },
       {
-        name = "LspLogLevelInfo",
-        callback = function()
+        "LspLogLevelInfo",
+        function()
           M.lsp_logging_level("info")
         end,
       },
       {
-        name = "LspOrganizeImports",
-        callback = function()
+        "LspOrganizeImports",
+        function()
           M.organize_imports()
         end,
       },
       {
-        name = "LspRenameFile",
-        callback = function()
+        "LspRenameFile",
+        function()
           M.rename_file()
         end,
       },

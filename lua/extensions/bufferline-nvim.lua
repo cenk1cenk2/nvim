@@ -77,8 +77,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("bufferline").setup(config.setup)
+    on_setup = function(c)
+      require("bufferline").setup(c)
     end,
     keymaps = function()
       return {

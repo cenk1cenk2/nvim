@@ -5,8 +5,8 @@ function M.setup()
     name = "commands",
     commands = {
       {
-        name = "QuickFixToggle",
-        callback = function()
+        "QuickFixToggle",
+        function()
           local qf = vim.tbl_filter(function(win)
             if win.quickfix == 1 then
               return true
@@ -23,38 +23,38 @@ function M.setup()
         end,
       },
       {
-        name = "LvimToggleFormatOnSave",
-        callback = function()
+        "LvimToggleFormatOnSave",
+        function()
           require("lvim.lsp.format").toggle_format_on_save()
         end,
       },
       {
-        name = "LvimCacheReset",
-        callback = function()
+        "LvimCacheReset",
+        function()
           require("lvim.loader").reset_cache()
         end,
       },
       {
-        name = "LvimReload",
-        callback = function()
+        "LvimReload",
+        function()
           require("lvim.config"):reload()
         end,
       },
       {
-        name = "LvimUpdate",
-        callback = function()
+        "LvimUpdate",
+        function()
           require("lvim"):update()
         end,
       },
       {
-        name = "LvimVersion",
-        callback = function()
+        "LvimVersion",
+        function()
           print(require("lvim.version").get_lvim_version())
         end,
       },
       {
-        name = "LvimOpenlog",
-        callback = function()
+        "LvimOpenlog",
+        function()
           vim.fn.execute("edit " .. require("lvim.log").get_path())
         end,
       },

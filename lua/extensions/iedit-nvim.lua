@@ -42,8 +42,8 @@ function M.config()
         highlight = "IncSearch",
       }
     end,
-    on_setup = function(config)
-      -- require("iedit").setup(config.setup)
+    on_setup = function(c)
+      -- require("iedit").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

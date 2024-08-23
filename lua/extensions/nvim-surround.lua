@@ -37,8 +37,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("nvim-surround").setup(config.setup)
+    on_setup = function(c)
+      require("nvim-surround").setup(c)
     end,
   })
 end

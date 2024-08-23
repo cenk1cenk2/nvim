@@ -548,7 +548,7 @@ end
 --   },
 -- })
 
-require("utils.setup").define_autocmds({
+require("utils.setup").create_autocmds({
   {
     event = "BufWriteCmd",
     group = "_surfingkeys",

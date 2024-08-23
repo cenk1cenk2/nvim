@@ -98,8 +98,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("trouble").setup(config.setup)
+    on_setup = function(c)
+      require("trouble").setup(c)
     end,
     autocmds = function()
       return {

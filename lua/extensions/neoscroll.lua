@@ -21,8 +21,8 @@ function M.config()
         cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
       }
     end,
-    on_setup = function(config)
-      require("neoscroll").setup(config.setup)
+    on_setup = function(c)
+      require("neoscroll").setup(c)
     end,
   })
 end

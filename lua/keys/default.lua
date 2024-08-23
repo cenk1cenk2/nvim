@@ -1,5 +1,6 @@
 local log = require("lvim.log")
 
+---@type KeymapMappings
 return {
   -- disable help
   {
@@ -11,27 +12,27 @@ return {
   {
     "c",
     [["_c]],
-    mode = { "n", "v", "x", "o" },
+    mode = { "n", "v", "x" },
   },
   {
     "C",
     [["_C]],
-    mode = { "n", "v", "x", "o" },
+    mode = { "n", "v", "x" },
   },
   {
     "x",
     [["_x]],
-    mode = { "n", "v", "x", "o" },
+    mode = { "n", "v", "x" },
   },
   {
     "P",
     [["_dp]],
-    mode = { "v", "x", "o" },
+    mode = { "v", "x" },
   },
   {
     "p",
     [["_dP]],
-    mode = { "v", "x", "o" },
+    mode = { "v", "x" },
   },
   -- tab control
   {

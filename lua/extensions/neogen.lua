@@ -14,8 +14,8 @@ function M.config()
     setup = function()
       return {}
     end,
-    on_setup = function(config)
-      require("neogen").setup(config.setup)
+    on_setup = function(c)
+      require("neogen").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

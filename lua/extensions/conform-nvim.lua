@@ -45,8 +45,8 @@ function M.config()
         notify_on_error = true,
       }
     end,
-    on_setup = function(config)
-      require("conform").setup(config.setup)
+    on_setup = function(c)
+      require("conform").setup(c)
     end,
     on_done = function()
       lvim.lsp.buffer_options.formatexpr = "v:lua.require'conform'.formatexpr()"

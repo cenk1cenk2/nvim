@@ -66,8 +66,8 @@ function M.setup()
     name = "rebuild",
     commands = {
       {
-        name = "LvimHeadlessUpdate",
-        callback = function()
+        "LvimHeadlessUpdate",
+        function()
           M.update_sync()
         end,
       },

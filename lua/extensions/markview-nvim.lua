@@ -51,8 +51,8 @@ function M.config()
         }),
       }
     end,
-    on_setup = function(config)
-      require("markview").setup(config.setup)
+    on_setup = function(c)
+      require("markview").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

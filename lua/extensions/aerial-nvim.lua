@@ -171,8 +171,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("aerial").setup(config.setup)
+    on_setup = function(c)
+      require("aerial").setup(c)
     end,
     on_done = function()
       local telescope = require("telescope")

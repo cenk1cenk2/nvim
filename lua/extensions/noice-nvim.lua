@@ -279,8 +279,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("noice").setup(config.setup)
+    on_setup = function(c)
+      require("noice").setup(c)
       vim.o.cmdheight = 0
     end,
     on_done = function(config)

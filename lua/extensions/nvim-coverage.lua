@@ -41,8 +41,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("coverage").setup(config.setup)
+    on_setup = function(c)
+      require("coverage").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

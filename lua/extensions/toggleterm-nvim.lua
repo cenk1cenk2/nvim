@@ -97,8 +97,8 @@ function M.config()
         on_exit = M.on_exit,
       }
     end,
-    on_setup = function(config)
-      require("toggleterm").setup(config.setup)
+    on_setup = function(c)
+      require("toggleterm").setup(c)
     end,
     on_done = function()
       local editor = "nvim -b"

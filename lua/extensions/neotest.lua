@@ -60,8 +60,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("neotest").setup(config.setup)
+    on_setup = function(c)
+      require("neotest").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

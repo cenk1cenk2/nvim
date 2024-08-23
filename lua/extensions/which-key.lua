@@ -88,10 +88,10 @@ function M.config()
         show_keys = false, -- show the currently pressed key and its label as a message in the command line
       }
     end,
-    on_setup = function(config)
+    on_setup = function(c)
       local which_key = require("which-key")
 
-      which_key.setup(config.setup)
+      which_key.setup(c)
 
       which_key.add(lvim.wk)
     end,

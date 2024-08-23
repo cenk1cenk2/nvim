@@ -16,8 +16,8 @@ function M.config()
         provider = "google", -- default
       }
     end,
-    on_setup = function(config)
-      require("browse").setup(config.setup)
+    on_setup = function(c)
+      require("browse").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

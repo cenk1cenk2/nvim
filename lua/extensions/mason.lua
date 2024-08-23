@@ -31,8 +31,8 @@ function M.config()
         max_concurrent_installers = 10,
       }
     end,
-    on_setup = function(config)
-      require("mason").setup(config.setup)
+    on_setup = function(c)
+      require("mason").setup(c)
       require("mason-update-all").setup()
     end,
   })

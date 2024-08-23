@@ -23,8 +23,8 @@ function M.config()
         height = 18,
       }
     end,
-    on_setup = function(config)
-      require("docs-view").setup(config.setup)
+    on_setup = function(c)
+      require("docs-view").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

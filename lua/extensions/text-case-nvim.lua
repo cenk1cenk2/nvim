@@ -15,9 +15,9 @@ function M.config()
     -- setup = {
     --   prefix = "gs",
     -- },
-    -- on_setup = function(config)
+    -- on_setup = function(c)
     -- subs command comes from here!
-    -- require("textcase").setup(config.setup)
+    -- require("textcase").setup(c)
     -- end,
     keymaps = function()
       return {

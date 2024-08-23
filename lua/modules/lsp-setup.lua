@@ -23,8 +23,8 @@ function M.setup()
   require("utils.setup").init({
     commands = {
       {
-        name = "LspSetup",
-        callback = function()
+        "LspSetup",
+        function()
           M.lsp_setup()
         end,
       },

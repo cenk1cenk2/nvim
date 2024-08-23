@@ -50,8 +50,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("viedit").setup(config.setup)
+    on_setup = function(c)
+      require("viedit").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

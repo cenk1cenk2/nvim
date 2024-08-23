@@ -2,6 +2,9 @@ local log = require("lvim.log")
 
 local M = {}
 
+--- Checks whether given lsp client is active.
+---@param name string
+---@return vim.lsp.Client | nil
 function M.is_client_active(name)
   local clients = vim.lsp.get_clients()
 
@@ -12,6 +15,9 @@ function M.is_client_active(name)
   end
 end
 
+--- Returns the matching LSP servers for filetype.
+---@param filetype string
+---@return vim.lsp.Client[]
 function M.get_clients_by_ft(filetype)
   local matches = {}
   local clients = vim.lsp.get_clients()
@@ -24,11 +30,14 @@ function M.get_clients_by_ft(filetype)
   return matches
 end
 
+--- Returns the LSP client capabilities.
+---@param client_id integer
+---@return lsp.ServerCapabilities | nil
 function M.get_client_capabilities(client_id)
   local client = vim.lsp.get_client_by_id(tonumber(client_id))
 
   if not client then
-    error("Unable to determine client_id")
+    error("Unable to find given LSP client.")
     return
   end
 

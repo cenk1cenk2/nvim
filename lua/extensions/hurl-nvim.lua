@@ -48,8 +48,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("hurl").setup(config.setup)
+    on_setup = function(c)
+      require("hurl").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

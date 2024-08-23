@@ -464,8 +464,8 @@ function M.config()
 
       return setup
     end,
-    on_setup = function(config)
-      require("neo-tree").setup(config.setup)
+    on_setup = function(c)
+      require("neo-tree").setup(c)
     end,
     wk = function(_, categories, fn)
       local log = require("lvim.log")

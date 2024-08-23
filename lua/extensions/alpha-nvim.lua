@@ -16,7 +16,7 @@ function M.config()
         "alpha",
       })
     end,
-    on_setup = function(config)
+    on_setup = function(_, config)
       local button = require("alpha.themes.dashboard").button
 
       local function cb_button(key, name, cb)

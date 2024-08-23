@@ -57,8 +57,8 @@ function M.config()
         server_opts_overrides = {},
       }
     end,
-    on_setup = function(config)
-      require("copilot").setup(config.setup)
+    on_setup = function(c)
+      require("copilot").setup(c)
     end,
     on_done = function()
       local autopairs = require("nvim-autopairs")

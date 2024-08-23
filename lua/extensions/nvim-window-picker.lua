@@ -45,8 +45,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("window-picker").setup(config.setup)
+    on_setup = function(c)
+      require("window-picker").setup(c)
     end,
     define_global_fn = function()
       return {

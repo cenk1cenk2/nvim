@@ -18,8 +18,8 @@ function M.config()
     setup = function()
       return {}
     end,
-    on_setup = function(config)
-      require("lsp-file-operations").setup(config.setup)
+    on_setup = function(c)
+      require("lsp-file-operations").setup(c)
     end,
   })
 end

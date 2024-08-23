@@ -203,8 +203,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("obsidian").setup(config.setup)
+    on_setup = function(c)
+      require("obsidian").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

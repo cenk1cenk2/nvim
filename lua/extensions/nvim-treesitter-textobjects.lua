@@ -107,8 +107,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("nvim-treesitter.configs").setup(config.setup)
+    on_setup = function(c)
+      require("nvim-treesitter.configs").setup(c)
     end,
   })
 end

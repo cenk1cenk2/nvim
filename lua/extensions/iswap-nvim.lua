@@ -25,8 +25,8 @@ function M.config()
         autoswap = true,
       }
     end,
-    on_setup = function(config)
-      require("iswap").setup(config.setup)
+    on_setup = function(c)
+      require("iswap").setup(c)
     end,
     keymaps = function()
       return {

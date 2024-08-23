@@ -189,8 +189,8 @@ function M.config()
         generic_sorter = sorters.get_generic_fuzzy_sorter,
       }
     end,
-    on_setup = function(config)
-      require("telescope").setup(config.setup)
+    on_setup = function(c)
+      require("telescope").setup(c)
     end,
     on_done = function(config)
       local telescope = require("telescope")

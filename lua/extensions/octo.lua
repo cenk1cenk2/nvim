@@ -14,8 +14,8 @@ function M.config()
     setup = function()
       return {}
     end,
-    on_setup = function(config)
-      require("octo").setup(config.setup)
+    on_setup = function(c)
+      require("octo").setup(c)
     end,
   })
 end

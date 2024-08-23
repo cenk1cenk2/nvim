@@ -86,10 +86,10 @@ function M.list(opts)
       entry_maker = M.entry_maker,
     }),
     attach_mappings = function(_, map)
-      map("i", "<esc>", actions._close)
-      map("n", "<esc>", actions._close)
-      map("n", "q", actions._close)
-      map("n", "q", actions._close)
+      map("i", "<esc>", actions.close)
+      map("n", "<esc>", actions.close)
+      map("n", "q", actions.close)
+      map("n", "q", actions.close)
 
       map("n", "<C-d>", M.handle_delete)
       map("i", "<C-d>", M.handle_delete)

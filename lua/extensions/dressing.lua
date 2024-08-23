@@ -60,8 +60,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("dressing").setup(config.setup)
+    on_setup = function(c)
+      require("dressing").setup(c)
     end,
   })
 end

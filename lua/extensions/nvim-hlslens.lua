@@ -20,8 +20,8 @@ function M.config()
         end,
       }
     end,
-    on_setup = function(config)
-      require("hlslens").setup(config.setup)
+    on_setup = function(c)
+      require("hlslens").setup(c)
     end,
     on_done = function()
       if is_extension_enabled(get_extension_name("extensions.nvim-scrollbar")) then

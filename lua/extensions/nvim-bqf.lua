@@ -31,8 +31,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("bqf").setup(config.setup)
+    on_setup = function(c)
+      require("bqf").setup(c)
     end,
   })
 end

@@ -37,8 +37,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("rainbow-delimiters.setup").setup(config.setup)
+    on_setup = function(c)
+      require("rainbow-delimiters.setup").setup(c)
     end,
   })
 end

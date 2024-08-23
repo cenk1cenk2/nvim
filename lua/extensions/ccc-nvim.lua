@@ -14,8 +14,8 @@ function M.config()
     setup = function()
       return {}
     end,
-    on_setup = function(config)
-      require("ccc").setup(config.setup)
+    on_setup = function(c)
+      require("ccc").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

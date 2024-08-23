@@ -17,8 +17,8 @@ function M.config()
     setup = function()
       return {}
     end,
-    on_setup = function(config)
-      require("lazydev").setup(config.setup)
+    on_setup = function(c)
+      require("lazydev").setup(c)
     end,
   })
 end

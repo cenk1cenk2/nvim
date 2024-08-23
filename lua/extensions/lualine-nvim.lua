@@ -85,8 +85,8 @@ function M.config()
         extensions = { "nvim-tree", "aerial", "quickfix", "nvim-dap-ui", "toggleterm" },
       }
     end,
-    on_setup = function(config)
-      require("lualine").setup(config.setup)
+    on_setup = function(c)
+      require("lualine").setup(c)
     end,
   })
 end

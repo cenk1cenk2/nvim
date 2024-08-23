@@ -231,9 +231,11 @@ function M.config()
         }),
       }
     end,
-    extended_setup = {
-      per_ft = {},
-      extensions = {
+    on_setup = function(c)
+      require("cmp").setup(c)
+
+      -- extensions
+      local extensions = {
         ["cmp_git"] = {
           name = "git",
           -- defaults
@@ -244,14 +246,8 @@ function M.config()
           name = "npm",
           filetypes = { "json" },
         },
-        -- ["copilot_cmp"] = {},
-      },
-    },
-    on_setup = function(config)
-      require("cmp").setup(config.setup)
-
-      -- extensions
-      for name, e in pairs(config.extended_setup.extensions) do
+      }
+      for name, e in pairs(extensions) do
         local extension = require(name)
 
         extension.setup(e)
@@ -275,8 +271,9 @@ function M.config()
       local cmp = require("cmp")
       local setup = require("utils.setup")
 
-      for key, value in pairs(setup.evaluate_property(config.extended_setup.per_ft, config)) do
-        setup.define_autocmds({
+      local per_ft = {}
+      for key, value in pairs(per_ft) do
+        setup.create_autocmds({
           {
             event = "FileType",
             group = "_cmp_per_ft",

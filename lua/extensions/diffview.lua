@@ -150,8 +150,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("diffview").setup(config.setup)
+    on_setup = function(c)
+      require("diffview").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

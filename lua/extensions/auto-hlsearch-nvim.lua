@@ -16,8 +16,8 @@ function M.config()
         remap_keys = { "/", "?", "*", "#", "n", "N" },
       }
     end,
-    on_setup = function(config)
-      require("auto-hlsearch").setup(config.setup)
+    on_setup = function(c)
+      require("auto-hlsearch").setup(c)
     end,
   })
 end

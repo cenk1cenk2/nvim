@@ -88,8 +88,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("flatten").setup(config.setup)
+    on_setup = function(c)
+      require("flatten").setup(c)
     end,
   })
 end

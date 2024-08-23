@@ -56,8 +56,8 @@ function M.config()
         log_level = nil,
       }
     end,
-    on_setup = function(config)
-      require("github-preview").setup(config.setup)
+    on_setup = function(c)
+      require("github-preview").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

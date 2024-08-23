@@ -15,7 +15,7 @@ function M.setup()
   vim.g.mapleader = lvim.leader
   vim.g.maplocalleader = lvim.localleader
 
-  require("utils.setup").load_mappings(lvim.keys)
+  require("utils.setup").load_keymaps(lvim.keys)
 end
 
 return M

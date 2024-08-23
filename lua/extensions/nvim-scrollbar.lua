@@ -46,8 +46,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("scrollbar").setup(config.setup)
+    on_setup = function(c)
+      require("scrollbar").setup(c)
     end,
   })
 end

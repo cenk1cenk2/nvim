@@ -61,8 +61,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("yanky").setup(config.setup)
+    on_setup = function(c)
+      require("yanky").setup(c)
     end,
     on_done = function()
       require("telescope").load_extension("yank_history")

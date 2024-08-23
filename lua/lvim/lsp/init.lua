@@ -10,7 +10,7 @@ local function add_lsp_buffer_options(bufnr)
 end
 
 local function add_lsp_buffer_keybindings(bufnr)
-  setup.load_mappings(lvim.lsp.buffer_mappings, { buffer = bufnr })
+  setup.load_keymaps(lvim.lsp.buffer_mappings, { buffer = bufnr })
 end
 
 function M.common_capabilities()
@@ -149,7 +149,7 @@ function M.setup(force)
     util.on_setup = nil
   end, debug.traceback)
 
-  require("lvim.lsp.format").configure_format_on_save()
+  require("lvim.lsp.format").setup()
 end
 
 return M

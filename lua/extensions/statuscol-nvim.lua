@@ -57,8 +57,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("statuscol").setup(config.setup)
+    on_setup = function(c)
+      require("statuscol").setup(c)
     end,
   })
 end

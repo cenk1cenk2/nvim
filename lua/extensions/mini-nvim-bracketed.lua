@@ -29,8 +29,8 @@ function M.config()
         yank = { suffix = "y", options = {} },
       }
     end,
-    on_setup = function(config)
-      require("mini.bracketed").setup(config.setup)
+    on_setup = function(c)
+      require("mini.bracketed").setup(c)
     end,
   })
 end

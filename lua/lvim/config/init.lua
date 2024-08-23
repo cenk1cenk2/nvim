@@ -26,7 +26,7 @@ function M:load()
 
   require("modules").config(self)
 
-  require("utils.setup").define_autocmds(lvim.autocommands)
+  require("utils.setup").create_autocmds(lvim.autocommands)
 
   if lvim.ui.transparent_window then
     vim.api.nvim_create_autocmd("ColorScheme", {
@@ -57,7 +57,7 @@ function M:reload()
   vim.schedule(function()
     M:load()
 
-    require("lvim.lsp.format").configure_format_on_save()
+    require("lvim.lsp.format").setup()
 
     local loader = require("lvim.loader")
 

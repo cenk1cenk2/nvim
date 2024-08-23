@@ -49,8 +49,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("schema-companion").setup(config.setup)
+    on_setup = function(c)
+      require("schema-companion").setup(c)
     end,
     autocmds = function(_, fn)
       return {

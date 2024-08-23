@@ -27,8 +27,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("substitute").setup(config.setup)
+    on_setup = function(c)
+      require("substitute").setup(c)
     end,
     keymaps = function()
       return {

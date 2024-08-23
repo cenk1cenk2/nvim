@@ -46,8 +46,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("mason-nvim-dap").setup(config.setup)
+    on_setup = function(c)
+      require("mason-nvim-dap").setup(c)
     end,
   })
 end

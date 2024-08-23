@@ -44,8 +44,8 @@ function M.config()
         langs = langs,
       }
     end,
-    on_setup = function(config)
-      require("treesj").setup(config.setup)
+    on_setup = function(c)
+      require("treesj").setup(c)
     end,
     keymaps = function()
       return {

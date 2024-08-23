@@ -88,11 +88,11 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
+    on_setup = function(c)
       if is_extension_enabled(get_extension_name("extensions.cmp")) then
         require("CopilotChat.integrations.cmp").setup()
       end
-      require("CopilotChat").setup(config.setup)
+      require("CopilotChat").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

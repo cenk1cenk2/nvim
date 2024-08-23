@@ -60,9 +60,9 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
+    on_setup = function(c)
       local notify = require("notify")
-      notify.setup(config.setup)
+      notify.setup(c)
       -- vim.notify = notify
     end,
     on_done = function()

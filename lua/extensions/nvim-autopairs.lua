@@ -56,8 +56,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("nvim-autopairs").setup(config.setup)
+    on_setup = function(c)
+      require("nvim-autopairs").setup(c)
 
       local npairs = require("nvim-autopairs")
       local Rule = require("nvim-autopairs.rule")

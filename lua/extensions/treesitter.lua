@@ -165,8 +165,8 @@ function M.config()
       ["yaml"] = { "yaml.ansible" },
       ["gotmpl"] = { "helm" },
     },
-    on_setup = function(config)
-      require("nvim-treesitter.configs").setup(config.setup)
+    on_setup = function(c)
+      require("nvim-treesitter.configs").setup(c)
       require("ts_context_commentstring").setup({
         enable_autocmd = false,
       })

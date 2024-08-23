@@ -15,8 +15,8 @@ function M.config()
         skipInsignificantPunctuation = true,
       }
     end,
-    on_setup = function(config)
-      require("spider").setup(config.setup)
+    on_setup = function(c)
+      require("spider").setup(c)
     end,
     keymaps = function()
       return {

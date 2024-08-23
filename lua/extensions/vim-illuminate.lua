@@ -48,8 +48,8 @@ function M.config()
         under_cursor = true,
       }
     end,
-    on_setup = function(config)
-      require("illuminate").configure(config.setup)
+    on_setup = function(c)
+      require("illuminate").configure(c)
     end,
   })
 end

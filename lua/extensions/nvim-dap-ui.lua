@@ -92,8 +92,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("dapui").setup(config.setup)
+    on_setup = function(c)
+      require("dapui").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

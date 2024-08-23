@@ -1,6 +1,13 @@
 local log = require("lvim.log")
-local M = { fn = {} }
+local M = {
+  fn = {},
+}
 
+---@alias WKMappings wk.Spec[]
+---@alias LoadWkFn fun(mappings: WKMappings): nil
+
+--- Loads which-key mappings.
+---@type LoadWkFn
 function M.load_wk(mappings)
   if not is_package_loaded("which-key") then
     lvim.wk = vim.list_extend(lvim.wk, mappings)
@@ -11,9 +18,23 @@ function M.load_wk(mappings)
   require("which-key").add(mappings)
 end
 
----
----@param mappings table
-function M.load_mappings(mappings, opts)
+---@alias KeymapMappings KeymapMapping[]
+---@class KeymapMapping
+---@field [1]? string
+---@field [2]? string|fun()
+---@field lhs? string
+---@field group? string|fun():string
+---@field desc? string|fun():string
+---@field icon? wk.Icon|string|fun():(wk.Icon|string)
+---@field buffer? number|boolean
+---@field mode? string|string[]
+---@field cond? boolean|fun():boolean?
+---@alias KeymapOpts vim.keymap.set.Opts?
+---@alias LoadKeymapsFn fun(mappings: KeymapMappings, opts: KeymapOpts): nil
+
+--- Loads keymaps.
+---@type LoadKeymapsFn
+function M.load_keymaps(mappings, opts)
   opts = opts or {}
 
   for _, mapping in pairs(mappings) do
@@ -27,16 +48,64 @@ function M.load_mappings(mappings, opts)
     local ok, result = pcall(vim.keymap.set, mode, lhs, rhs, m)
 
     if not ok then
-      log:error(("Can not map keybind: %s > %s"):format(result, vim.inspect(mapping)))
+      log:error("Can not map keybind: %s > %s", result, vim.inspect(mapping))
     end
   end
 end
 
-function M.create_commands(collection)
-  for _, cmd in pairs(collection) do
-    local opts = vim.tbl_deep_extend("force", { force = true }, cmd.opts or {})
-    vim.api.nvim_create_user_command(cmd.name, cmd.callback, opts)
+---@alias Commands Command[]
+---@class Command: vim.api.keyset.user_command
+---@field [1] string
+---@field [2] fun() | string
+
+---@alias CreateCommandsFn fun(commands: Commands): nil
+
+--- Creates commands.
+---@type CreateCommandsFn
+function M.create_commands(commands)
+  for _, cmd in pairs(commands) do
+    local name = table.remove(cmd, 1)
+    local callback = table.remove(cmd, 1)
+    local opts = vim.tbl_deep_extend("force", { force = true }, cmd)
+
+    vim.api.nvim_create_user_command(name, callback, opts)
   end
+end
+
+---@alias Autocmds Autocmd[]
+---@class Autocmd: vim.api.keyset.create_autocmd
+---@field group string
+---@field event string | string[]
+---@field pattern? string | string[]
+
+---@alias CreateAutocmdsFn fun(autocmds: Autocmds): nil
+
+--- Define autocommands.
+---@type CreateAutocmdsFn
+function M.create_autocmds(autocmds)
+  for _, entry in ipairs(autocmds) do
+    if type(entry.group) == "string" and entry.group ~= "" then
+      local exists, _ = pcall(vim.api.nvim_get_autocmds, { group = entry.group })
+      if not exists then
+        vim.api.nvim_create_augroup(entry.group, {})
+      end
+    end
+    local opts = vim.deepcopy(entry)
+    opts.event = nil
+    vim.api.nvim_create_autocmd(entry.event, opts)
+  end
+end
+
+--- Clears an autocommand group.
+---@param name string
+function M.clear_augroup(name)
+  log:trace("Trying to clear augroup: %s", name)
+
+  vim.schedule(function()
+    pcall(function()
+      vim.api.nvim_clear_autocmds({ group = name })
+    end)
+  end)
 end
 
 function M.set_option(arr)
@@ -53,6 +122,12 @@ function M.legacy_setup(opts)
   end
 end
 
+---@alias Plugin LazyPlugin | LazyPlugin[]
+
+---Define the extension in the plugin manager.
+---@param config Config
+---@param plugin Plugin
+---@return Plugin
 local function define_manager_plugin(config, plugin)
   if plugin.init ~= false and type(plugin.init) ~= "function" then
     log:trace(string.format("Defining default init command for plugin: %s", config.name))
@@ -77,30 +152,49 @@ local function define_manager_plugin(config, plugin)
   return plugin
 end
 
----@alias fn { add_disabled_filetypes: (fun(ft: table<string>): nil), is_extension_enabled: (fun(extension: string): boolean), get_current_setup_wrapper: (fun(extension: string): (fun(): table)), get_current_setup: (fun(extension:string): table), append_to_setup: (fun(extension:string): table | (fun(config: config): table)) }
----@alias config table
+---@class Config
+---@field plugin? fun(config: Config): Plugin
+---@field name? string
+---@field enabled? boolean
+---@field configure? fun(config: Config, fn: SetupFn): nil
+---@field on_init? fun(config: Config): nil
+---@field setup? (fun(config: Config, fn: SetupFn): table) | table
+---@field on_setup? fun(current: any, config: Config, fn: SetupFn): nil
+---@field legacy_setup? table
+---@field on_done? fun(config: Config, fn: SetupFn): nil
+---@field keymaps? (fun(config: Config): KeymapMappings) | KeymapMappings
+---@field wk? (fun(config: Config, categories: WKCategories[], fn: SetupFn): WKMappings) | WKMappings
+---@field autocmds? fun(config: Config, fn: SetupFn): Autocmds[]
+---@field commands? (fun(config: Config): Commands[]) | Commands[]
+---@field hl? fun(config: Config, fn: SetupFn): table
+---@field signs? fun(config: Config, fn: SetupFn): table
+---@field define_global_fn? fun(config: Config): table<function>
+---@field nvim_opts? table
+---@field to_setup? table
 
----
----@param name string
----@param enabled boolean
----@param config config
+---@alias DefineExtensionFn fun(name: string, enabled: boolean, config: Config): nil
+
+--- Define a new extension.
+---@type DefineExtensionFn
 function M.define_extension(name, enabled, config)
   vim.validate({
     enabled = { enabled, "b" },
     name = { name, "s" },
     config = { config, "t" },
-    on_init = { config.on_init, "f", true },
     plugin = { config.plugin, "f", true },
-    autocmds = { config.autocmds, { "t", "f" }, true },
+    configure = { config.configure, "f", true },
+    on_init = { config.on_init, "f", true },
+    setup = { config.setup, { "t", "f" }, true },
+    on_setup = { config.on_setup, "f", true },
+    legacy_setup = { config.legacy_setup, { "t", "f" }, true },
+    on_done = { config.on_done, "f", true },
     keymaps = { config.keymaps, { "t", "f" }, true },
     wk = { config.wk, { "t", "f" }, true },
-    legacy_setup = { config.legacy_setup, { "t", "f" }, true },
-    setup = { config.setup, { "t", "f" }, true },
-    extended_setup = { config.extended_setup, { "t", "f" }, true },
-    on_setup = { config.on_setup, "f", true },
+    autocmds = { config.autocmds, { "t", "f" }, true },
+    commands = { config.commands, { "t", "f" }, true },
     hl = { config.hl, { "f", "t" }, true },
     signs = { config.signs, { "f", "t" }, true },
-    on_complete = { config.on_complete, "f", true },
+    nvim_opts = { config.nvim_opts, "t", true },
   })
 
   config = vim.tbl_extend("force", config, {
@@ -143,56 +237,28 @@ function M.define_extension(name, enabled, config)
   lvim.extensions[name] = config
 end
 
----@param definitions table contains a tuple of event, opts, see `:h nvim_create_autocmd`
-function M.define_autocmds(definitions)
-  for _, entry in ipairs(definitions) do
-    if type(entry.group) == "string" and entry.group ~= "" then
-      local exists, _ = pcall(vim.api.nvim_get_autocmds, { group = entry.group })
-      if not exists then
-        vim.api.nvim_create_augroup(entry.group, {})
-      end
-    end
-    local opts = vim.deepcopy(entry)
-    opts.event = nil
-    vim.api.nvim_create_autocmd(entry.event, opts)
-  end
-end
-
---- Clean autocommand in a group if it exists
---- This is safer than trying to delete the augroup itself
----@param name string the augroup name
-function M.clear_augroup(name)
-  -- defer the function in case the autocommand is still in-use
-  log:trace("request to clear autocmds  " .. name)
-  vim.schedule(function()
-    pcall(function()
-      vim.api.nvim_clear_autocmds({ group = name })
-    end)
-  end)
-end
-
----
+--- Returns the current configuration.
 ---@param name string
----@return table
+---@return Config
 function M.get_config(name)
   return lvim.extensions[name]
 end
 
----
+--- Initialize the extension with the current setup.
 ---@param name string
 function M.plugin_init(name)
   return M.init(M.get_config(name))
 end
 
----
+--- Configure the extension with the current setup.
 ---@param name string
 function M.plugin_configure(name)
   return M.configure(M.get_config(name))
 end
 
----
----@param property function | table
----@return table
+--- Evalautes the property and returns the result.
+---@param property function | any
+---@return any
 function M.evaluate_property(property, ...)
   if type(property) == "function" then
     return property(...)
@@ -201,8 +267,8 @@ function M.evaluate_property(property, ...)
   return property
 end
 
----
----@param config config
+--- Initializes the extension.
+---@param config Config
 function M.init(config)
   if config ~= nil and config.on_init ~= nil then
     config.on_init(config)
@@ -211,13 +277,13 @@ function M.init(config)
   end
 
   if config ~= nil and config.autocmds ~= nil then
-    M.define_autocmds(M.evaluate_property(config.autocmds, config, M.fn))
+    M.create_autocmds(M.evaluate_property(config.autocmds, config, M.fn))
 
     config.autocmds = nil
   end
 
   if config ~= nil and config.keymaps ~= nil then
-    M.load_mappings(M.evaluate_property(config.keymaps, config))
+    M.load_keymaps(M.evaluate_property(config.keymaps, config))
 
     config.keymaps = nil
   end
@@ -278,33 +344,26 @@ function M.init(config)
   end
 end
 
----
----@param config config
+--- Configures the extension.
+---@param config Config
 function M.configure(config)
   if config ~= nil and config.setup ~= nil then
-    config.setup = M.evaluate_property(config.setup, config, M.fn)
+    lvim.extensions[config.name].current_setup = nil
+    lvim.extensions[config.name].current_setup = M.evaluate_property(config.setup, config, M.fn)
 
     if config.to_setup ~= nil then
       for _, to_setup in pairs(config.to_setup) do
         if to_setup.overwrite then
-          config.setup = vim.tbl_extend("force", config.setup, M.evaluate_property(to_setup.cb, config, M.fn))
+          lvim.extensions[config.name].current_setup = vim.tbl_extend("force", lvim.extensions[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
         else
-          config.setup = vim.tbl_deep_extend("force", config.setup, M.evaluate_property(to_setup.cb, config, M.fn))
+          lvim.extensions[config.name].current_setup = vim.tbl_deep_extend("force", lvim.extensions[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
         end
       end
     end
-
-    lvim.extensions[config.name].current_setup = vim.deepcopy(config.setup)
-  end
-
-  if config ~= nil and config.extended_setup ~= nil then
-    config.extended_setup = M.evaluate_property(config.extended_setup, config, M.fn)
-
-    lvim.extensions[config.name].current_extended_setup = vim.deepcopy(config.extended_setup)
   end
 
   if config ~= nil and config.on_setup ~= nil then
-    config.on_setup(config, M.fn)
+    config.on_setup(M.fn.get_current_setup(config.name), config, M.fn)
 
     config.on_setup = nil
   end
@@ -314,17 +373,9 @@ function M.configure(config)
 
     config.on_done = nil
   end
-
-  if config ~= nil and config.on_complete ~= nil then
-    config.on_complete(config, M.fn)
-
-    config.on_complete = nil
-  end
-
-  config.setup = nil
-  config.extended_setup = nil
 end
 
+--- Sets the plugins for the plugin manager to consume.
 function M.set_plugins()
   local plugins = {}
 
@@ -341,14 +392,35 @@ end
 
 -- fn functions
 
----@param ft table<string>
+---@class SetupFn
+---@field add_disabled_filetypes SetupFnAddDisabledFiletypes
+---@field append_to_setup SetupFnAppendToSetup
+---@field get_wk_categories SetupFnGetWkCategories
+---@field get_wk_category SetupFnGetWkCategory
+---@field get_current_setup_wrapper SetupFnGetCurrentSetupWrapper
+---@field get_current_setup SetupFnGetCurrentSetup
+---@field get_highlight SetupFnGetHighlight
+---@field add_global_function SetupFnAddGlobalFunction
+---@field keystroke SetupFnKeystore
+---@field wk_keystroke SetupFnWkKeystroke
+
+---@alias SetupFnAddDisabledFiletypes fun(ft: string[]): nil
+
+-- Adds disabled filetypes to the global list.
+---@type SetupFnAddDisabledFiletypes
 function M.fn.add_disabled_filetypes(ft)
   for _, value in pairs(ft) do
     table.insert(lvim.disabled_filetypes, value)
   end
 end
 
-function M.fn.append_to_setup(name, to_setup, opts)
+---@alias SetupFnAppendToSetup fun(name: string, config: Config, opts?: SetupFnAppendToSetupOpts): nil
+---@class SetupFnAppendToSetupOpts
+---@field overwrite? boolean
+
+-- Appends to setup of an extension with the intend of changing the original configuration.
+---@type SetupFnAppendToSetup
+function M.fn.append_to_setup(name, config, opts)
   opts = vim.tbl_extend("force", { overwrite = false }, opts or {})
 
   if lvim.extensions[name] == nil then
@@ -357,47 +429,73 @@ function M.fn.append_to_setup(name, to_setup, opts)
     }
   end
 
-  table.insert(lvim.extensions[name].to_setup, vim.tbl_extend("force", opts, { cb = to_setup }))
+  table.insert(lvim.extensions[name].to_setup, vim.tbl_extend("force", opts, { cb = config }))
 end
 
+---@alias SetupFnGetWkCategories fun(): WKCategories[]
+
+--- Returns which-key categories.
+---@type SetupFnGetWkCategories
 function M.fn.get_wk_categories()
   return require("keys.wk").CATEGORIES
 end
 
+---@alias SetupFnGetWkCategory fun(category: string): WKCategories
+
+--- Returns a which-key category.
+---@type SetupFnGetWkCategory
 function M.fn.get_wk_category(category)
   return M.fn.get_wk_categories()[category]
 end
 
+---@alias SetupFnGetCurrentSetupWrapper fun(name: string): SetupFnGetCurrentSetup
+
+--- Returns the current setup of an extension.
+---@type SetupFnGetCurrentSetupWrapper
 function M.fn.get_current_setup_wrapper(name)
   return function()
     return M.fn.get_current_setup(name)
   end
 end
 
+---@alias SetupFnGetCurrentSetup fun(name: string): table
+
+--- Returns the current setup of an extension.
+---@type SetupFnGetCurrentSetup
 function M.fn.get_current_setup(name)
   return lvim.extensions[name].current_setup
 end
 
+---@alias SetupFnGetHighlight fun(name: string): vim.api.keyset.get_hl_info
+
+--- Returns a highlight group.
+---@type SetupFnGetHighlight
 function M.fn.get_highlight(name)
   return vim.api.nvim_get_hl(0, { name = name })
 end
 
+---@alias SetupFnAddGlobalFunction fun(name: string, fn: function): function
+
+--- Adds a global function.
+---@type SetupFnAddGlobalFunction
 function M.fn.add_global_function(name, fn)
   lvim.fn[name] = fn
 
   return fn
 end
 
---- Builds a WK mapping location with leader.
----@param keystrokes table
----@return string
+---@alias SetupFnKeystore fun(keystrokes: table<string>): string
+
+--- Builds a keystroke string.
+---@type SetupFnKeystore
 function M.fn.keystroke(keystrokes)
   return table.concat(keystrokes, "")
 end
 
---- Builds a WK mapping location with leader.
----@param keystrokes table
----@return string
+---@alias SetupFnWkKeystroke fun(keystrokes: table<string>): string
+
+--- Builds a which-key keystroke string.
+---@type SetupFnWkKeystroke
 function M.fn.wk_keystroke(keystrokes)
   return M.fn.keystroke(vim.list_extend({ "<Leader>" }, keystrokes))
 end

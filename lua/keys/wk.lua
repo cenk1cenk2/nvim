@@ -1,5 +1,6 @@
 local M = {}
 
+---@enum WKCategories
 M.CATEGORIES = {
   ACTIONS = "a",
   BUFFER = "b",
@@ -25,6 +26,7 @@ M.CATEGORIES = {
 function M.setup(fn)
   local categories = M.CATEGORIES
 
+  ---@type WKMappings
   return {
     {
       fn.wk_keystroke({ "x" }),

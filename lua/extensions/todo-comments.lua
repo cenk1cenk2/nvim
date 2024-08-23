@@ -56,8 +56,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("todo-comments").setup(config.setup)
+    on_setup = function(c)
+      require("todo-comments").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

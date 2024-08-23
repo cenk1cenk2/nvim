@@ -11,7 +11,7 @@ return {
     -- if config.active then
     -- log:debug "Setup additional rust-tools."
     --
-    -- rust_tools_config.setup(config.setup)
+    -- rust_tools_config.setup(c)
     --
     -- rust_tools.setup_capabilities()
     -- -- setup on_init

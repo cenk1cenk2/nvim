@@ -26,8 +26,8 @@ function M.config()
         os = {},
       }
     end,
-    on_setup = function(config)
-      require("mini.icons").setup(config.setup)
+    on_setup = function(c)
+      require("mini.icons").setup(c)
       require("mini.icons").mock_nvim_web_devicons()
     end,
     on_done = function()

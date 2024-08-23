@@ -14,8 +14,8 @@ function M.config()
     setup = function()
       return {}
     end,
-    on_setup = function(config)
-      require("git-worktree").setup(config.setup)
+    on_setup = function(c)
+      require("git-worktree").setup(c)
     end,
     on_done = function()
       require("telescope").load_extension("git_worktree")

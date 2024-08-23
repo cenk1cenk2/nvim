@@ -64,8 +64,8 @@ function M.config()
         status_formatter = nil, -- Use default
       }
     end,
-    on_setup = function(config)
-      require("gitsigns").setup(config.setup)
+    on_setup = function(c)
+      require("gitsigns").setup(c)
     end,
     keymaps = function()
       return {

@@ -2,6 +2,8 @@ local M = {}
 
 local log = require("lvim.log")
 
+---@param pattern string | string[]
+---@return Autocmd
 function M.q_close_autocmd(pattern)
   return {
     event = "FileType",
@@ -15,6 +17,8 @@ function M.q_close_autocmd(pattern)
   }
 end
 
+---@param pattern string | string[]
+---@return Autocmd
 function M.set_view_buffer(pattern)
   return {
     event = { "FileType", "BufEnter" },

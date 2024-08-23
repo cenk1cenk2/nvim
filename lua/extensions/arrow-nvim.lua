@@ -59,8 +59,8 @@ function M.config()
         full_path_list = { "update_stuff" }, -- filenames on this list will ALWAYS show the file path too.
       }
     end,
-    on_setup = function(config)
-      require("arrow").setup(config.setup)
+    on_setup = function(c)
+      require("arrow").setup(c)
     end,
     wk = function(_, categories, fn)
       return {

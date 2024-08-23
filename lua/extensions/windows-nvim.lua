@@ -37,8 +37,8 @@ function M.config()
         },
       }
     end,
-    on_setup = function(config)
-      require("windows").setup(config.setup)
+    on_setup = function(c)
+      require("windows").setup(c)
     end,
     nvim_opts = {
       winwidth = 10,
