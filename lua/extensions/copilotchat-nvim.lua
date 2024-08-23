@@ -58,7 +58,7 @@ function M.config()
           },
           close = {
             normal = "q",
-            insert = "<C-c>",
+            -- insert = "<C-c>",
           },
           reset = {
             normal = "<m-l>",
