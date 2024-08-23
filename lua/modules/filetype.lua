@@ -43,7 +43,7 @@ function M.setup()
       end,
       ["*.dockerignore"] = "gitignore",
       [".*%.yml"] = function(path)
-        if path:find("docker%-compose.*$") then
+        if path:find(".*compose.*$") then
           return "yaml.docker-compose"
         end
 
