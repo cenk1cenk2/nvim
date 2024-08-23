@@ -18,15 +18,19 @@ function M.create(opts)
     on_exit = function(j, code)
       vim.schedule(function()
         if code == 0 then
-          log:info("Command executed: %s", cmd)
+          if not opts.no_log_success then
+            log:info("Command executed: %s", cmd)
 
-          log:debug("%s -> %s", cmd, vim.inspect(j:result()))
+            log:debug("%s -> %s", cmd, vim.inspect(j:result()))
+          end
 
           if opts.on_success then
             opts.on_success(j)
           end
         else
-          log:error(("Command failed with exit code %d: %s -> %s"):format(code, cmd, vim.inspect(j:result())))
+          if not opts.no_log_failure then
+            log:error(("Command failed with exit code %d: %s -> %s"):format(code, cmd, vim.inspect(j:result())))
+          end
 
           if opts.on_failure then
             opts.on_failure(j)
