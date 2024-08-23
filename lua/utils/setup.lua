@@ -3,7 +3,27 @@ local M = {
   fn = {},
 }
 
----@alias WKMappings wk.Spec
+---@class WKMapping: wk.Keymap
+---@field plugin? string
+---@field group? boolean
+---@field remap? boolean
+---@field hidden? boolean
+---@field preset? boolean
+---@field icon? wk.Icon|string
+---@field proxy? string
+---@field expand? fun():wk.Spec
+
+---@class WKSpec: {[number]: WKSpec} , WKMapping
+---@field [1]? string
+---@field [2]? string|fun()
+---@field group? string|fun():string
+---@field desc? string|fun():string
+---@field icon? wk.Icon|string|fun():(wk.Icon|string)
+---@field buffer? number|boolean
+---@field mode? string|string[]
+---@field cond? boolean|fun():boolean?
+
+---@alias WKMappings WKSpec
 ---@alias LoadWkFn fun(mappings: WKMappings): nil
 
 --- Loads which-key mappings.
@@ -22,7 +42,6 @@ end
 ---@class KeymapMapping
 ---@field [1]? string
 ---@field [2]? string|fun()
----@field lhs? string
 ---@field desc? string|fun():string
 ---@field buffer? number|boolean
 ---@field mode? string|string[]
@@ -111,7 +130,6 @@ function M.set_option(arr)
   end
 end
 
----
 ---@param opts table
 function M.legacy_setup(opts)
   for opt, val in pairs(opts) do
