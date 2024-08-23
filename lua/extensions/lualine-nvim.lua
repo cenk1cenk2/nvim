@@ -311,7 +311,7 @@ function M.components()
           require("luasnip").locally_jumpable(-1) and lvim.ui.icons.ui.BoxRight or ""
         )
       end,
-      color = { fg = lvim.ui.colors.yellow[900], bg = lvim.ui.colors.orange[300] },
+      color = { fg = lvim.ui.colors.white, bg = lvim.ui.colors.orange[300] },
       cond = function()
         if not package_is_loaded("luasnip") then
           return false
