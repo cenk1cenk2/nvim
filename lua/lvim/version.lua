@@ -6,6 +6,17 @@ local job = require("utils.job")
 function M.update_repository()
   log:info("Checking for updates...")
 
+  job
+    .create({
+      command = "git",
+      args = {
+        "fetch",
+        "--all",
+      },
+      cwd = get_config_dir(),
+    })
+    :sync(5000)
+
   local _, code = job
     .create({
       command = "git",
