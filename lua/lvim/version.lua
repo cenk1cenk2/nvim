@@ -12,6 +12,7 @@ function M.update_repository()
       args = {
         "diff",
         "@{upstream}",
+        "--quiet",
       },
       cwd = get_config_dir(),
     })
