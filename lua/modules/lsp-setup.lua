@@ -24,7 +24,7 @@ function M.setup()
     commands = {
       {
         name = "LspSetup",
-        fn = function()
+        callback = function()
           M.lsp_setup()
         end,
       },

@@ -18,7 +18,7 @@ function M.config()
     commands = {
       {
         name = "BufferClose",
-        fn = function()
+        callback = function()
           M.close_buffer()
         end,
       },

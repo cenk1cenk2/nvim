@@ -35,7 +35,7 @@ end
 function M.create_commands(collection)
   for _, cmd in pairs(collection) do
     local opts = vim.tbl_deep_extend("force", { force = true }, cmd.opts or {})
-    vim.api.nvim_create_user_command(cmd.name, cmd.fn, opts)
+    vim.api.nvim_create_user_command(cmd.name, cmd.callback, opts)
   end
 end
 

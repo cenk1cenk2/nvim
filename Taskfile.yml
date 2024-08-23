@@ -30,7 +30,6 @@ tasks:
     desc: Lints the repository.
     deps:
       - lint:lua
-      - lint:sh
 
   lint:lua:
     cmds:

@@ -67,7 +67,7 @@ function M.setup()
     commands = {
       {
         name = "LvimHeadlessUpdate",
-        fn = function()
+        callback = function()
           M.update_sync()
         end,
       },

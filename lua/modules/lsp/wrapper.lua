@@ -343,25 +343,25 @@ function M.setup()
     commands = {
       {
         name = "LspLogLevelDebug",
-        fn = function()
+        callback = function()
           M.lsp_logging_level("debug")
         end,
       },
       {
         name = "LspLogLevelInfo",
-        fn = function()
+        callback = function()
           M.lsp_logging_level("info")
         end,
       },
       {
         name = "LspOrganizeImports",
-        fn = function()
+        callback = function()
           M.organize_imports()
         end,
       },
       {
         name = "LspRenameFile",
-        fn = function()
+        callback = function()
           M.rename_file()
         end,
       },
