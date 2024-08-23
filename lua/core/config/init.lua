@@ -6,11 +6,9 @@ local M = {}
 function M:init()
   nvim = vim.deepcopy(require("core.config.defaults"))
 
-  vim.cmd(("colorscheme %s"):format(nvim.colorscheme))
-
   require("core.config.settings").load_defaults()
 
-  require("core.keys").load_defaults()
+  M.load_colorscheme()
 
   nvim.lsp = vim.deepcopy(require("core.config.lsp"))
 end
@@ -22,12 +20,28 @@ function M:load()
 
   require("config")
 
-  require("extensions").config(self)
+  require("core.keys").setup()
 
-  require("modules").config(self)
+  require("extensions").config()
 
-  require("setup").create_autocmds(nvim.autocommands)
+  require("modules").config()
+end
 
+--- Override the configuration with a user provided one
+-- @param config_path The path to the configuration overrides
+function M:reload()
+  vim.schedule(function()
+    M:load()
+
+    require("core.lsp.format").setup()
+
+    local loader = require("core.loader")
+
+    loader.reload({ nvim.plugins })
+  end)
+end
+
+function M.load_colorscheme()
   if nvim.ui.transparent_window then
     vim.api.nvim_create_autocmd("ColorScheme", {
       pattern = "*",
@@ -48,21 +62,7 @@ function M:load()
     vim.opt.fillchars = "eob: "
   end
 
-  require("core.keys").setup()
-end
-
---- Override the configuration with a user provided one
--- @param config_path The path to the configuration overrides
-function M:reload()
-  vim.schedule(function()
-    M:load()
-
-    require("core.lsp.format").setup()
-
-    local loader = require("core.loader")
-
-    loader.reload({ nvim.plugins })
-  end)
+  vim.cmd(("colorscheme %s"):format(nvim.colorscheme))
 end
 
 return M

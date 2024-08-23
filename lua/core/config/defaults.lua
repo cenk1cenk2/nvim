@@ -19,13 +19,6 @@ nvim = {
     viewer = {
       ---@usage this will fallback on "less +F" if not found
       cmd = "lnav",
-      layout_config = {
-        ---@usage direction = 'vertical' | 'horizontal' | 'window' | 'float',
-        direction = "float",
-        open_mapping = "",
-        size = 40,
-        float_opts = {},
-      },
     },
   },
 
@@ -51,10 +44,9 @@ nvim = {
     "quickfix",
   },
 
-  keys = {},
   extensions = {},
   plugins = {},
-  autocommands = {},
+
   fn = {},
   wk = {},
 }

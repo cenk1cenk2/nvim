@@ -107,7 +107,7 @@ local extensions = {
   "urlview-nvim",
 }
 
-function M.config(config)
+function M.config()
   local log = require("core.log")
 
   for _, extension_path in ipairs(extensions) do
@@ -115,7 +115,7 @@ function M.config(config)
     if not extension_ok then
       log:warn(("Extension config can not be loaded: %s"):format(extension_path))
     else
-      extension.config(config)
+      extension.config()
     end
   end
 end

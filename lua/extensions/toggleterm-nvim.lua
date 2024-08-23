@@ -541,11 +541,9 @@ function M.toggle_log_view(logfile)
   log_viewer = log_viewer .. " " .. logfile
   local term_opts = vim.tbl_deep_extend("force", M.current_setup(), {
     cmd = log_viewer,
-    -- Open_mapping = nvim.log.viewer.layout_config.open_mapping,
-    direction = nvim.log.viewer.layout_config.direction,
-    -- TODO: this might not be working as expected
-    size = nvim.log.viewer.layout_config.size,
-    float_opts = nvim.log.viewer.layout_config.float_opts,
+    direction = "float",
+    open_mapping = "",
+    float_opts = {},
   })
 
   local log_view = M.create_terminal(term_opts)
