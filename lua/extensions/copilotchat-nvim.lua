@@ -9,7 +9,6 @@ function M.config()
     plugin = function()
       return {
         "CopilotC-Nvim/CopilotChat.nvim",
-        branch = "canary",
         dependencies = {
           { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
           { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
@@ -37,6 +36,9 @@ function M.config()
     configure = function(_, fn)
       fn.add_disabled_filetypes({
         "copilot-chat",
+        "copilot-diff",
+        "copilot-system-prompt",
+        "copliot-user-selection",
       })
     end,
     setup = function()
@@ -201,7 +203,12 @@ function M.config()
     end,
     autocmds = function()
       return {
-        require("modules.autocmds").set_view_buffer({ "copilot-chat" }),
+        require("modules.autocmds").set_view_buffer({
+          "copilot-chat",
+          "copilot-diff",
+          "copilot-system-prompt",
+          "copliot-user-selection",
+        }),
       }
     end,
   })

@@ -17,7 +17,7 @@ end
 
 function M.set_view_buffer(pattern)
   return {
-    event = "FileType",
+    event = { "FileType", "BufEnter" },
     group = "_view",
     pattern = pattern,
     callback = function(event)
