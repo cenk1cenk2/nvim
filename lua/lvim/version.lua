@@ -46,7 +46,7 @@ function M.update_repository()
       },
       cwd = get_config_dir(),
       on_success = function(j)
-        log:info("Finished update: %s", table.concat(j:result(), "\n"))
+        log:info("Finished update:\n%s", table.concat(j:result(), "\n"))
       end,
     })
     :sync(5000)
