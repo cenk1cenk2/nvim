@@ -3,7 +3,7 @@ local M = {
   fn = {},
 }
 
----@alias WKMappings wk.Spec[]
+---@alias WKMappings wk.Spec
 ---@alias LoadWkFn fun(mappings: WKMappings): nil
 
 --- Loads which-key mappings.
@@ -23,12 +23,9 @@ end
 ---@field [1]? string
 ---@field [2]? string|fun()
 ---@field lhs? string
----@field group? string|fun():string
 ---@field desc? string|fun():string
----@field icon? wk.Icon|string|fun():(wk.Icon|string)
 ---@field buffer? number|boolean
 ---@field mode? string|string[]
----@field cond? boolean|fun():boolean?
 ---@alias KeymapOpts vim.keymap.set.Opts?
 ---@alias LoadKeymapsFn fun(mappings: KeymapMappings, opts: KeymapOpts): nil
 
