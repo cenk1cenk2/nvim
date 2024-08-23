@@ -31,3 +31,5 @@ lua/lv-user-config/
 .luacheckcache
 .task
 .gitlab.nvim
+
+/testingsmt
