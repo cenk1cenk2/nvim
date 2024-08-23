@@ -21,26 +21,26 @@ function _G.join_paths(...)
 end
 
 ---Get the full path to `$LUNARVIM_RUNTIME_DIR`
----@return string
+---@return string | string[]
 function _G.get_data_dir()
   -- when nvim is used directly
   return vim.fn.stdpath("data")
 end
 
 ---Get the full path to `$LUNARVIM_CONFIG_DIR`
----@return string
+---@return string | string[]
 function _G.get_config_dir()
   return vim.fn.stdpath("config")
 end
 
 ---Get the full path to `$LUNARVIM_CONFIG_DIR`
----@return string
+---@return string | string[]
 function _G.get_state_dir()
   return vim.fn.stdpath("state")
 end
 
 ---Get the full path to `$LUNARVIM_CACHE_DIR`
----@return string
+---@return string | string[]
 function _G.get_cache_dir()
   return vim.fn.stdpath("cache")
 end
@@ -66,7 +66,7 @@ end
 function _G.get_extension_name(module)
   local ok, m = pcall(require, module)
   if not ok then
-    require("lvim.log").error(("Failed to load extension: %s"):format(module))
+    require("lvim.log"):error("Failed to load extension: %s", module)
 
     return nil
   end
@@ -74,10 +74,15 @@ function _G.get_extension_name(module)
   return m.name
 end
 
+--- Checks if an extension is enabled.
+---@param module string
+---@return boolean
 function _G.is_extension_enabled(module)
   local extension = require("utils.setup").get_config(module) or {}
   if extension.enabled == nil then
     require("lvim.log"):error("Extension is not defined: %s", module)
+
+    return false
   end
 
   return extension.enabled
