@@ -457,7 +457,7 @@ function M.config()
       }
 
       -- add external sources
-      if fn.is_extension_enabled(get_extension_name("extensions.netman-nvim")) then
+      if is_extension_enabled(get_extension_name("extensions.netman-nvim")) then
         table.insert(setup.sources, "netman.ui.neo-tree")
         table.insert(setup.source_selector.sources, { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(lvim.ui.icons.kind.Struct) })
       end

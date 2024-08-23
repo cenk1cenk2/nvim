@@ -42,10 +42,17 @@ function M.config()
     setup = function()
       return {
         -- default mappings
+        show_help = false,
+        show_folds = false,
+        clear_chat_on_new_prompt = false,
+        context = "buffer",
         mappings = {
+          -- complete = {
+          --   detail = "Use @<Tab> or /<Tab> for options.",
+          --   insert = "<Tab>",
+          -- },
           complete = {
-            detail = "Use @<Tab> or /<Tab> for options.",
-            insert = "<Tab>",
+            insert = "",
           },
           close = {
             normal = "q",
@@ -79,6 +86,9 @@ function M.config()
       }
     end,
     on_setup = function(config)
+      if is_extension_enabled(get_extension_name("extensions.cmp")) then
+        require("CopilotChat.integrations.cmp").setup()
+      end
       require("CopilotChat").setup(config.setup)
     end,
     wk = function(_, categories, fn)
@@ -110,7 +120,7 @@ function M.config()
           desc = "toggle copilot chat",
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "P" }),
+          fn.wk_keystroke({ categories.COPILOT, "p" }),
           function()
             local actions = require("CopilotChat.actions")
             actions.pick(actions.prompt_actions({

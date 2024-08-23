@@ -348,11 +348,6 @@ function M.fn.add_disabled_filetypes(ft)
   end
 end
 
----@param extension string
-function M.fn.is_extension_enabled(extension)
-  return (M.get_config(extension) or {}).enabled
-end
-
 function M.fn.append_to_setup(name, to_setup, opts)
   opts = vim.tbl_extend("force", { overwrite = false }, opts or {})
 

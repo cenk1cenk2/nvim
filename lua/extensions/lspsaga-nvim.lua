@@ -27,7 +27,7 @@ function M.config()
         require("lspsaga.codeaction").pending_request = false
       end
       lvim.lsp.wrapper.hover = function()
-        if fn.is_extension_enabled(get_extension_name("extensions.nvim-ufo")) then
+        if is_extension_enabled(get_extension_name("extensions.nvim-ufo")) then
           local winid = require("ufo").peekFoldedLinesUnderCursor()
           if not winid then
             vim.cmd("Lspsaga hover_doc")

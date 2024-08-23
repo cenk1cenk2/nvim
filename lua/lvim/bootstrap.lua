@@ -14,6 +14,15 @@ function _G.get_extension_name(module)
   return m.name
 end
 
+function _G.is_extension_enabled(module)
+  local extension = require("utils.setup").get_config(module) or {}
+  if extension.enabled == nil then
+    require("lvim.core.log"):error("Extension is not defined: %s", module)
+  end
+
+  return extension.enabled
+end
+
 function _G.is_headless()
   return #vim.api.nvim_list_uis() == 0 and #vim.tbl_filter(function(argv)
     if argv:find("sk.lua$") then

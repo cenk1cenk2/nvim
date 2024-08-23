@@ -80,6 +80,19 @@ function M.config()
             },
           },
           {
+            title = "Copilot Chat",
+            ft = "copilot-chat",
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.5
+                end
+
+                return 120
+              end,
+            },
+          },
+          {
             title = "Neo-Tree Git",
             ft = "neo-tree",
             filter = function(buf)
@@ -182,13 +195,22 @@ function M.config()
           {
             ft = "nvim-docs-view",
             title = "LSP Documentation",
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.2
+                end
+
+                return 25
+              end,
+            },
           },
           {
             ft = "help",
             size = {
               height = function()
                 if vim.o.lines < 60 then
-                  return 0.5
+                  return 0.35
                 end
 
                 return 35

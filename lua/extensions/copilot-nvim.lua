@@ -72,7 +72,7 @@ function M.config()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.COPILOT, "p" }),
+          fn.wk_keystroke({ categories.COPILOT, "P" }),
           function()
             vim.cmd([[Copilot panel]])
           end,
