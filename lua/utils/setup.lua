@@ -163,7 +163,7 @@ end
 ---@field legacy_setup? table
 ---@field on_done? fun(config: Config, fn: SetupFn): nil
 ---@field keymaps? (fun(config: Config): KeymapMappings) | KeymapMappings
----@field wk? (fun(config: Config, categories: WKCategories[], fn: SetupFn): WKMappings) | WKMappings
+---@field wk? (fun(config: Config, categories: table<WKCategories, string>, fn: SetupFn): WKMappings) | WKMappings
 ---@field autocmds? fun(config: Config, fn: SetupFn): Autocmds[]
 ---@field commands? (fun(config: Config): Commands[]) | Commands[]
 ---@field hl? fun(config: Config, fn: SetupFn): table
@@ -289,7 +289,7 @@ function M.init(config)
   end
 
   if config ~= nil and config.wk ~= nil then
-    M.load_wk(M.evaluate_property(config.wk, config, require("keys.wk").CATEGORIES, M.fn))
+    M.load_wk(M.evaluate_property(config.wk, config, M.fn.get_wk_categories(), M.fn))
 
     config.wk = nil
   end
@@ -432,7 +432,7 @@ function M.fn.append_to_setup(name, config, opts)
   table.insert(lvim.extensions[name].to_setup, vim.tbl_extend("force", opts, { cb = config }))
 end
 
----@alias SetupFnGetWkCategories fun(): WKCategories[]
+---@alias SetupFnGetWkCategories fun(): table<WkCategories, string>
 
 --- Returns which-key categories.
 ---@type SetupFnGetWkCategories
@@ -440,7 +440,7 @@ function M.fn.get_wk_categories()
   return require("keys.wk").CATEGORIES
 end
 
----@alias SetupFnGetWkCategory fun(category: string): WKCategories
+---@alias SetupFnGetWkCategory fun(category: string): string
 
 --- Returns a which-key category.
 ---@type SetupFnGetWkCategory
