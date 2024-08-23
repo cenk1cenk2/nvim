@@ -1,4 +1,4 @@
-lvim = {
+nvim = {
   leader = " ",
   localleader = ",",
   colorscheme = "onedarker",
@@ -59,4 +59,4 @@ lvim = {
   wk = {},
 }
 
-return lvim
+return nvim

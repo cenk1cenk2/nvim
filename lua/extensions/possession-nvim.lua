@@ -65,8 +65,8 @@ function M.config()
             preserve_layout = false, -- or fun(win): boolean
             match = {
               floating = true,
-              buftype = lvim.disabled_buffer_types,
-              filetype = lvim.disabled_filetypes,
+              buftype = nvim.disabled_buffer_types,
+              filetype = nvim.disabled_filetypes,
               custom = false, -- or fun(win): boolean
             },
           },

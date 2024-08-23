@@ -33,7 +33,7 @@ function M.config()
     on_done = function()
       local icons = require("mini.icons")
 
-      lvim.ui.icons = vim.tbl_deep_extend("force", lvim.ui.icons, {
+      nvim.ui.icons = vim.tbl_deep_extend("force", nvim.ui.icons, {
         kind = {
           Array = icons.get("lsp", "array"),
           Boolean = icons.get("lsp", "boolean"),

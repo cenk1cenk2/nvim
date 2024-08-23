@@ -6,7 +6,7 @@ return {
   -- it from the source if you want to add your own init_options.
   on_init = function(client, bufnr)
     -- local name = "rust_tools_nvim"
-    -- local config = lvim.extensions[name]
+    -- local config = nvim.extensions[name]
     --
     -- if config.active then
     -- log:debug "Setup additional rust-tools."

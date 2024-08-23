@@ -49,7 +49,7 @@ function M.setup()
       {
         "NvimVersion",
         function()
-          print(require("core.version").get_lvim_version())
+          print(require("core.version").get_nvim_version())
         end,
       },
       {

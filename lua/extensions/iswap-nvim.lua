@@ -15,7 +15,7 @@ function M.config()
       return {
         -- The keys that will be used as a selection, in order
         -- ('asdfghjklqwertyuiopzxcvbnm' by default)
-        keys = lvim.selection_chars,
+        keys = nvim.selection_chars,
         -- Move cursor to the other element in ISwap*With commands
         -- default false
         move_cursor = true,

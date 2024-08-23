@@ -97,7 +97,7 @@ function M.load()
   local status_ok, _ = xpcall(function()
     require("setup").set_plugins()
 
-    manager.setup(lvim.plugins, lazy_setup)
+    manager.setup(nvim.plugins, lazy_setup)
   end, debug.traceback)
 
   if not status_ok then

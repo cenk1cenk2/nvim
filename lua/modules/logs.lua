@@ -14,7 +14,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LOGS, "d" }),
           function()
-            lvim.fn.toggle_log_view(require("core.log").get_path())
+            nvim.fn.toggle_log_view(require("core.log").get_path())
           end,
           desc = "view default log",
         },
@@ -28,7 +28,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LOGS, "l" }),
           function()
-            lvim.fn.toggle_log_view(vim.lsp.get_log_path())
+            nvim.fn.toggle_log_view(vim.lsp.get_log_path())
           end,
           desc = "view lsp log",
         },
@@ -42,7 +42,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LOGS, "n" }),
           function()
-            lvim.fn.toggle_log_view(os.getenv("NVIM_LOG_FILE"))
+            nvim.fn.toggle_log_view(os.getenv("NVIM_LOG_FILE"))
           end,
           desc = "view neovim log",
         },

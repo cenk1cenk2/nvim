@@ -15,7 +15,7 @@ function M.config()
     setup = function()
       return {
         -- labels = "abcdefghijklmnopqrstuvwxyz",
-        labels = lvim.selection_chars,
+        labels = nvim.selection_chars,
         search = {
           -- search/jump in all windows
           multi_window = false,
@@ -163,7 +163,7 @@ function M.config()
           -- options used for treesitter selections
           -- `require("flash").treesitter()`
           treesitter = {
-            labels = lvim.selection_chars,
+            labels = nvim.selection_chars,
             jump = { pos = "range" },
             label = { before = true, after = true, style = "inline" },
             highlight = {

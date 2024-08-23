@@ -22,8 +22,8 @@ end
 function M.format(opts)
   opts = vim.tbl_extend("force", {
     bufnr = vim.api.nvim_get_current_buf(),
-    timeout_ms = lvim.lsp.format_on_save.timeout_ms,
-    filter = lvim.lsp.format_on_save.filter,
+    timeout_ms = nvim.lsp.format_on_save.timeout_ms,
+    filter = nvim.lsp.format_on_save.filter,
   }, opts or {})
 
   vim.lsp.buf.format(opts)
@@ -98,7 +98,7 @@ end
 function M.diagnostics_goto_next(opts)
   opts = opts or {}
 
-  vim.tbl_extend("force", opts, { popup_opts = { border = lvim.lsp.popup_border } })
+  vim.tbl_extend("force", opts, { popup_opts = { border = nvim.lsp.popup_border } })
 
   vim.diagnostic.goto_next(opts)
 end
@@ -106,13 +106,13 @@ end
 function M.diagnostics_goto_prev(opts)
   opts = opts or {}
 
-  vim.tbl_extend("force", opts, { popup_opts = { border = lvim.lsp.popup_border } })
+  vim.tbl_extend("force", opts, { popup_opts = { border = nvim.lsp.popup_border } })
 
   vim.diagnostic.goto_prev(opts)
 end
 
 function M.show_line_diagnostics()
-  local config = lvim.lsp.diagnostics.float
+  local config = nvim.lsp.diagnostics.float
   config.scope = "line"
   vim.diagnostic.open_float(0, config)
 end
@@ -198,7 +198,7 @@ function M.fix_current()
       return
     end
 
-    local tools_client_id = (vim.lsp.get_clients({ name = lvim.lsp.tools.clients.linters })[1] or {}).id
+    local tools_client_id = (vim.lsp.get_clients({ name = nvim.lsp.tools.clients.linters })[1] or {}).id
 
     local lsp_fixes = vim.tbl_filter(function(fix)
       if not fix.edit and not fix.command then
@@ -335,7 +335,7 @@ end
 
 function M.setup()
   for key, value in pairs(M) do
-    lvim.lsp.wrapper[key] = value
+    nvim.lsp.wrapper[key] = value
   end
 
   require("setup").init({
@@ -371,42 +371,42 @@ function M.setup()
         {
           fn.wk_keystroke({ "q" }),
           function()
-            lvim.lsp.wrapper.fix_current()
+            nvim.lsp.wrapper.fix_current()
           end,
           desc = "fix current",
         },
         {
           fn.wk_keystroke({ categories.LSP, "c" }),
           function()
-            lvim.lsp.wrapper.incoming_calls()
+            nvim.lsp.wrapper.incoming_calls()
           end,
           desc = "incoming calls",
         },
         {
           fn.wk_keystroke({ categories.LSP, "C" }),
           function()
-            lvim.lsp.wrapper.outgoing_calls()
+            nvim.lsp.wrapper.outgoing_calls()
           end,
           desc = "outgoing calls",
         },
         {
           fn.wk_keystroke({ categories.LSP, "d" }),
           function()
-            lvim.lsp.wrapper.document_diagnostics()
+            nvim.lsp.wrapper.document_diagnostics()
           end,
           desc = "document diagnostics",
         },
         {
           fn.wk_keystroke({ categories.LSP, "D" }),
           function()
-            lvim.lsp.wrapper.workspace_diagnostics()
+            nvim.lsp.wrapper.workspace_diagnostics()
           end,
           desc = "workspace diagnostics",
         },
         {
           fn.wk_keystroke({ categories.LSP, "f" }),
           function()
-            lvim.lsp.wrapper.format()
+            nvim.lsp.wrapper.format()
           end,
           desc = "format buffer",
           mode = { "n", "v" },
@@ -470,84 +470,84 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LSP, "n" }),
           function()
-            lvim.lsp.wrapper.diagnostics_goto_next({ severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
+            nvim.lsp.wrapper.diagnostics_goto_next({ severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
           end,
           desc = "next diagnostic (error, warn)",
         },
         {
           fn.wk_keystroke({ categories.LSP, "N" }),
           function()
-            lvim.lsp.wrapper.diagnostics_goto_next({ severity = { vim.diagnostic.severity.INFO, vim.diagnostic.severity.HINT } })
+            nvim.lsp.wrapper.diagnostics_goto_next({ severity = { vim.diagnostic.severity.INFO, vim.diagnostic.severity.HINT } })
           end,
           desc = "next diagnostic (info, hint)",
         },
         {
           fn.wk_keystroke({ categories.LSP, "p" }),
           function()
-            lvim.lsp.wrapper.diagnostics_goto_prev({ severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
+            nvim.lsp.wrapper.diagnostics_goto_prev({ severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
           end,
           desc = "prev diagnostic (error, warn)",
         },
         {
           fn.wk_keystroke({ categories.LSP, "P" }),
           function()
-            lvim.lsp.wrapper.diagnostics_goto_prev({ severity = { vim.diagnostic.severity.INFO, vim.diagnostic.severity.HINT } })
+            nvim.lsp.wrapper.diagnostics_goto_prev({ severity = { vim.diagnostic.severity.INFO, vim.diagnostic.severity.HINT } })
           end,
           desc = "prev diagnostic (info, hint)",
         },
         {
           fn.wk_keystroke({ categories.LSP, "l" }),
           function()
-            lvim.lsp.wrapper.code_lens()
+            nvim.lsp.wrapper.code_lens()
           end,
           desc = "codelens",
         },
         {
           fn.wk_keystroke({ categories.LSP, "r" }),
           function()
-            lvim.lsp.wrapper.rename()
+            nvim.lsp.wrapper.rename()
           end,
           desc = "rename item under cursor",
         },
         {
           fn.wk_keystroke({ categories.LSP, "q" }),
           function()
-            lvim.lsp.wrapper.diagonistics_set_loclist()
+            nvim.lsp.wrapper.diagonistics_set_loclist()
           end,
           desc = "set location list",
         },
         {
           fn.wk_keystroke({ categories.LSP, "s" }),
           function()
-            lvim.lsp.wrapper.document_symbols()
+            nvim.lsp.wrapper.document_symbols()
           end,
           desc = "document symbols",
         },
         {
           fn.wk_keystroke({ categories.LSP, "S" }),
           function()
-            lvim.lsp.wrapper.workspace_symbols()
+            nvim.lsp.wrapper.workspace_symbols()
           end,
           desc = "workspace symbols",
         },
         {
           fn.wk_keystroke({ categories.LSP, "t" }),
           function()
-            lvim.lsp.wrapper.toggle_inlay_hints()
+            nvim.lsp.wrapper.toggle_inlay_hints()
           end,
           desc = "toggle inlay hints",
         },
         {
           fn.wk_keystroke({ categories.LSP, "R" }),
           function()
-            lvim.lsp.wrapper.reset_diagnostics()
+            nvim.lsp.wrapper.reset_diagnostics()
           end,
           desc = "reset diagnostics",
         },
         {
           fn.wk_keystroke({ categories.LSP, "Q" }),
           function()
-            lvim.lsp.wrapper.reset_buffer_lsp()
+            nvim.lsp.wrapper.reset_buffer_lsp()
           end,
           desc = "restart currently active LSPs for this buffer",
         },

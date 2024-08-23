@@ -48,7 +48,7 @@ function M.config()
           concurrent = 1,
         },
         floating = {
-          border = lvim.ui.border,
+          border = nvim.ui.border,
         },
         adapters = {
           require("neotest-go"),
@@ -131,7 +131,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TESTS, "L" }),
           function()
-            lvim.fn.toggle_log_view(join_paths(get_state_dir(), "neotest.log"))
+            nvim.fn.toggle_log_view(join_paths(get_state_dir(), "neotest.log"))
           end,
           desc = "open the default logfile",
         },

@@ -17,7 +17,7 @@ M.load_default_options = function()
   vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
   vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
   vim.opt.indentexpr = "nvim_treesitter#indent()"
-  vim.opt.fillchars = { foldclose = lvim.ui.icons.ArrowCircleRight }
+  vim.opt.fillchars = { foldclose = nvim.ui.icons.ArrowCircleRight }
   vim.opt.sessionoptions = { "blank", "buffers", "curdir", "help", "tabpages", "winsize", "terminal", "globals" }
   vim.opt.foldenable = false
   vim.opt.foldlevel = 99

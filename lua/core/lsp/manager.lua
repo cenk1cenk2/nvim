@@ -1,7 +1,7 @@
 local M = {}
 
 local log = require("core.log")
-local lvim_lsp_utils = require("core.lsp.utils")
+local nvim_lsp_utils = require("core.lsp.utils")
 local is_windows = vim.uv.os_uname().version:match("Windows")
 
 local function resolve_mason_config(server_name)
@@ -119,7 +119,7 @@ local function launch_server(server_name, config)
 end
 
 function M.has_setup(server_name)
-  if lvim_lsp_utils.is_client_active(server_name) then
+  if nvim_lsp_utils.is_client_active(server_name) then
     return true
   end
 
@@ -150,7 +150,7 @@ function M.setup(server_name, user_config)
   end
 
   local should_auto_install = function(name)
-    local installer_settings = lvim.lsp.installer.setup
+    local installer_settings = nvim.lsp.installer.setup
 
     return installer_settings.automatic_installation and not vim.tbl_contains(installer_settings.automatic_installation.exclude, name)
   end

@@ -106,8 +106,8 @@ function M.config()
           color_devicons = true,
           use_less = true,
           set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
-          prompt_prefix = lvim.ui.icons.ui.Telescope .. " ",
-          selection_caret = lvim.ui.icons.ui.Forward .. " ",
+          prompt_prefix = nvim.ui.icons.ui.Telescope .. " ",
+          selection_caret = nvim.ui.icons.ui.Forward .. " ",
           entry_prefix = "  ",
           get_selection_window = function()
             local wins = vim.api.nvim_list_wins()

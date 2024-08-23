@@ -14,6 +14,7 @@ function _G.is_headless()
 end
 
 ---Join path segments that were passed as input
+---@vararg string
 ---@return string
 function _G.join_paths(...)
   local result = table.concat({ ... }, path_sep)
@@ -21,26 +22,26 @@ function _G.join_paths(...)
 end
 
 ---Get the full path to `$LUNARVIM_RUNTIME_DIR`
----@return string | string[]
+---@return string
 function _G.get_data_dir()
   -- when nvim is used directly
   return vim.fn.stdpath("data")
 end
 
 ---Get the full path to `$LUNARVIM_CONFIG_DIR`
----@return string | string[]
+---@return string
 function _G.get_config_dir()
   return vim.fn.stdpath("config")
 end
 
 ---Get the full path to `$LUNARVIM_CONFIG_DIR`
----@return string | string[]
+---@return string
 function _G.get_state_dir()
   return vim.fn.stdpath("state")
 end
 
 ---Get the full path to `$LUNARVIM_CACHE_DIR`
----@return string | string[]
+---@return string
 function _G.get_cache_dir()
   return vim.fn.stdpath("cache")
 end

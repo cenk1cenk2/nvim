@@ -21,7 +21,7 @@ function M.config()
           icons_enabled = true,
           component_separators = { left = "", right = "" },
           section_separators = { left = "", right = "" },
-          disabled_filetypes = lvim.disabled_filetypes,
+          disabled_filetypes = nvim.disabled_filetypes,
         },
         sections = {
           lualine_a = { components.mode },
@@ -129,27 +129,27 @@ function M.components()
         return mode_name[vim.fn.mode()]
       end,
       padding = { left = 1, right = 1 },
-      color = { fg = lvim.ui.colors.black },
+      color = { fg = nvim.ui.colors.black },
     },
     branch = {
       "b:gitsigns_head",
-      icon = lvim.ui.icons.git.Branch,
-      color = { fg = lvim.ui.colors.black, bg = lvim.ui.colors.yellow[300] },
+      icon = nvim.ui.icons.git.Branch,
+      color = { fg = nvim.ui.colors.black, bg = nvim.ui.colors.yellow[300] },
       cond = conditions.hide_in_width,
     },
     filetype = {
       "filetype",
       cond = conditions.hide_in_width,
       color = {
-        fg = lvim.ui.colors.fg,
-        bg = lvim.ui.colors.bg[300],
+        fg = nvim.ui.colors.fg,
+        bg = nvim.ui.colors.bg[300],
       },
     },
     filename = {
       "filename",
       color = {
-        fg = lvim.ui.colors.fg,
-        bg = lvim.ui.colors.bg[300],
+        fg = nvim.ui.colors.fg,
+        bg = nvim.ui.colors.bg[300],
       },
     },
     diff = {
@@ -161,14 +161,14 @@ function M.components()
           return { added = gitsigns.added, modified = gitsigns.changed, removed = gitsigns.removed }
         end
       end,
-      symbols = { added = lvim.ui.icons.git.LineAdded .. " ", modified = lvim.ui.icons.git.LineModified .. " ", removed = lvim.ui.icons.git.LineModified .. " " },
+      symbols = { added = nvim.ui.icons.git.LineAdded .. " ", modified = nvim.ui.icons.git.LineModified .. " ", removed = nvim.ui.icons.git.LineModified .. " " },
       diff_color = {
-        added = { fg = lvim.ui.colors.green[600] },
-        modified = { fg = lvim.ui.colors.blue[600] },
-        removed = { fg = lvim.ui.colors.red[600] },
+        added = { fg = nvim.ui.colors.green[600] },
+        modified = { fg = nvim.ui.colors.blue[600] },
+        removed = { fg = nvim.ui.colors.red[600] },
       },
       color = {
-        bg = lvim.ui.colors.bg[300],
+        bg = nvim.ui.colors.bg[300],
       },
       cond = conditions.hide_in_width,
     },
@@ -184,18 +184,18 @@ function M.components()
         return ""
       end,
       color = {
-        fg = lvim.ui.colors.green[300],
-        bg = lvim.ui.colors.bg[300],
+        fg = nvim.ui.colors.green[300],
+        bg = nvim.ui.colors.bg[300],
       },
       cond = conditions.hide_in_width,
     },
     schema_companion = {
       function()
-        return ("%s %s"):format(lvim.ui.icons.ui.Table, require("schema-companion.context").get_buffer_schema(0).name)
+        return ("%s %s"):format(nvim.ui.icons.ui.Table, require("schema-companion.context").get_buffer_schema(0).name)
       end,
       color = {
-        fg = lvim.ui.colors.purple[600],
-        bg = lvim.ui.colors.bg[300],
+        fg = nvim.ui.colors.purple[600],
+        bg = nvim.ui.colors.bg[300],
       },
       cond = function()
         return conditions.hide_in_width() and vim.tbl_contains({ "yaml", "helm" }, vim.api.nvim_get_option_value("ft", { buf = 0 })) and is_package_loaded("schema-companion")
@@ -206,8 +206,8 @@ function M.components()
         return require("arrow.statusline").text_for_statusline_with_icons()
       end,
       color = {
-        fg = lvim.ui.colors.green[600],
-        bg = lvim.ui.colors.bg[300],
+        fg = nvim.ui.colors.green[600],
+        bg = nvim.ui.colors.bg[300],
       },
       cond = function()
         return conditions.hide_in_width() and is_package_loaded("arrow")
@@ -217,21 +217,21 @@ function M.components()
       "diagnostics",
       sources = { "nvim_diagnostic" },
       symbols = {
-        error = lvim.ui.icons.diagnostics.Error .. " ",
-        warn = lvim.ui.icons.diagnostics.Warning .. " ",
-        info = lvim.ui.icons.diagnostics.Information .. " ",
-        hint = lvim.ui.icons.diagnostics.Hint .. " ",
+        error = nvim.ui.icons.diagnostics.Error .. " ",
+        warn = nvim.ui.icons.diagnostics.Warning .. " ",
+        info = nvim.ui.icons.diagnostics.Information .. " ",
+        hint = nvim.ui.icons.diagnostics.Hint .. " ",
       },
       cond = conditions.hide_in_width,
     },
     session = {
       function()
-        return ("%s"):format(lvim.ui.icons.ui.History)
+        return ("%s"):format(nvim.ui.icons.ui.History)
       end,
       color = function()
         return {
-          fg = lvim.ui.colors.green[300],
-          bg = lvim.ui.colors.bg[300],
+          fg = nvim.ui.colors.green[300],
+          bg = nvim.ui.colors.bg[300],
         }
       end,
       cond = function()
@@ -244,12 +244,12 @@ function M.components()
     },
     dap = {
       function()
-        return ("%s - %s"):format(lvim.ui.icons.ui.Bug, require("dap").status())
+        return ("%s - %s"):format(nvim.ui.icons.ui.Bug, require("dap").status())
       end,
       color = function()
         return {
-          fg = lvim.ui.colors.yellow[300],
-          bg = lvim.ui.colors.bg[300],
+          fg = nvim.ui.colors.yellow[300],
+          bg = nvim.ui.colors.bg[300],
         }
       end,
       cond = function()
@@ -262,15 +262,15 @@ function M.components()
     },
     treesitter = {
       function()
-        return lvim.ui.icons.ui.Tree
+        return nvim.ui.icons.ui.Tree
       end,
       color = function()
         local buf = vim.api.nvim_get_current_buf()
         local ts = vim.treesitter.highlighter.active[buf]
 
         return {
-          fg = ts and not vim.tbl_isempty(ts) and lvim.ui.colors.green[300] or lvim.ui.colors.red[300],
-          bg = lvim.ui.colors.bg[300],
+          fg = ts and not vim.tbl_isempty(ts) and nvim.ui.colors.green[300] or nvim.ui.colors.red[300],
+          bg = nvim.ui.colors.bg[300],
         }
       end,
       cond = conditions.hide_in_width,
@@ -284,34 +284,34 @@ function M.components()
         end, vim.lsp.get_clients({ bufnr = bufnr }))
 
         -- add formatter
-        local message = { table.concat(buf_clients or { lvim.ui.icons.ui.Close }, ", ") }
+        local message = { table.concat(buf_clients or { nvim.ui.icons.ui.Close }, ", ") }
 
-        local supported_linters = lvim.lsp.tools.list_registered.linters(bufnr)
+        local supported_linters = nvim.lsp.tools.list_registered.linters(bufnr)
 
         if supported_linters and not vim.tbl_isempty(supported_linters) then
-          vim.list_extend(message, { ("%s %s"):format(lvim.ui.icons.ui.DoubleChevronRight, table.concat(supported_linters, ", ")) })
+          vim.list_extend(message, { ("%s %s"):format(nvim.ui.icons.ui.DoubleChevronRight, table.concat(supported_linters, ", ")) })
         end
 
-        local supported_formatters = lvim.lsp.tools.list_registered.formatters(bufnr)
+        local supported_formatters = nvim.lsp.tools.list_registered.formatters(bufnr)
 
         if supported_formatters and not vim.tbl_isempty(supported_formatters) then
-          vim.list_extend(message, { ("%s %s"):format(lvim.ui.icons.ui.DoubleChevronRight, table.concat(supported_formatters, ", ")) })
+          vim.list_extend(message, { ("%s %s"):format(nvim.ui.icons.ui.DoubleChevronRight, table.concat(supported_formatters, ", ")) })
         end
 
         return table.concat(message, " ")
       end,
-      color = { fg = lvim.ui.colors.fg, bg = lvim.ui.colors.bg[300] },
+      color = { fg = nvim.ui.colors.fg, bg = nvim.ui.colors.bg[300] },
       cond = conditions.hide_in_width,
     },
     snippet = {
       function()
         return ("%s%s%s"):format(
-          require("luasnip").locally_jumpable(1) and lvim.ui.icons.ui.BoxLeft or "",
-          lvim.ui.icons.kind.Snippet,
-          require("luasnip").locally_jumpable(-1) and lvim.ui.icons.ui.BoxRight or ""
+          require("luasnip").locally_jumpable(1) and nvim.ui.icons.ui.BoxLeft or "",
+          nvim.ui.icons.kind.Snippet,
+          require("luasnip").locally_jumpable(-1) and nvim.ui.icons.ui.BoxRight or ""
         )
       end,
-      color = { fg = lvim.ui.colors.white, bg = lvim.ui.colors.orange[300] },
+      color = { fg = nvim.ui.colors.white, bg = nvim.ui.colors.orange[300] },
       cond = function()
         if not is_package_loaded("luasnip") then
           return false
@@ -327,33 +327,33 @@ function M.components()
     },
     location = {
       "location",
-      color = { fg = lvim.ui.colors.blue[300], bg = lvim.ui.colors.bg[300] },
+      color = { fg = nvim.ui.colors.blue[300], bg = nvim.ui.colors.bg[300] },
     },
     ff = {
       "fileformat",
       cond = conditions.hide_in_width,
-      color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
+      color = { fg = nvim.ui.colors.bg[600], bg = nvim.ui.colors.bg[300] },
     },
     spaces = {
       function()
         if not vim.bo.expandtab then
-          return ("%s %s"):format(lvim.ui.icons.ui.Tab, vim.bo.tabstop)
+          return ("%s %s"):format(nvim.ui.icons.ui.Tab, vim.bo.tabstop)
         end
         local size = vim.bo.shiftwidth
         if size == 0 then
           size = vim.bo.tabstop
         end
 
-        return ("%s %s"):format(lvim.ui.icons.ui.Space, size)
+        return ("%s %s"):format(nvim.ui.icons.ui.Space, size)
       end,
       cond = conditions.hide_in_width,
       fmt = string.upper,
-      color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
+      color = { fg = nvim.ui.colors.bg[600], bg = nvim.ui.colors.bg[300] },
     },
     encoding = {
       "encoding",
       fmt = string.upper,
-      color = { fg = lvim.ui.colors.bg[600], bg = lvim.ui.colors.bg[300] },
+      color = { fg = nvim.ui.colors.bg[600], bg = nvim.ui.colors.bg[300] },
       cond = conditions.hide_in_width,
     },
     scrollbar = {
@@ -366,14 +366,14 @@ function M.components()
         return chars[index]
       end,
       padding = { left = 0, right = 0 },
-      color = { fg = lvim.ui.colors.yellow[300], bg = lvim.ui.colors.gray[300] },
+      color = { fg = nvim.ui.colors.yellow[300], bg = nvim.ui.colors.gray[300] },
       cond = nil,
     },
     iedit = {
       function()
-        return lvim.ui.icons.ui.Pencil
+        return nvim.ui.icons.ui.Pencil
       end,
-      color = { fg = lvim.ui.colors.black, bg = lvim.ui.colors.orange[600] },
+      color = { fg = nvim.ui.colors.black, bg = nvim.ui.colors.orange[600] },
       cond = function()
         return is_package_loaded("iedit") and require("extensions.iedit-nvim").is_active()
       end,
@@ -385,7 +385,7 @@ function M.components()
       cond = function()
         return is_package_loaded("lazy") and require("lazy.status").has_updates()
       end,
-      color = { fg = lvim.ui.colors.yellow[900] },
+      color = { fg = nvim.ui.colors.yellow[900] },
     },
     noice_message = {
       function()
@@ -399,7 +399,7 @@ function M.components()
       function()
         return require("noice").api.statusline.search.get()
       end,
-      color = { fg = lvim.ui.colors.cyan[600] },
+      color = { fg = nvim.ui.colors.cyan[600] },
       cond = function()
         return is_package_loaded("noice") and require("noice").api.statusline.search.has()
       end,
@@ -408,7 +408,7 @@ function M.components()
       function()
         return require("noice").api.statusline.mode.get()
       end,
-      color = { fg = lvim.ui.colors.yellow[600] },
+      color = { fg = nvim.ui.colors.yellow[600] },
       cond = function()
         return is_package_loaded("noice") and require("noice").api.statusline.mode.has()
       end,
@@ -417,7 +417,7 @@ function M.components()
       function()
         return require("noice").api.statusline.command.get()
       end,
-      color = { fg = lvim.ui.colors.blue[600] },
+      color = { fg = nvim.ui.colors.blue[600] },
       cond = function()
         return is_package_loaded("noice") and require("noice").api.statusline.command.has()
       end,

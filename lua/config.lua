@@ -1,10 +1,10 @@
-lvim.log.level = "info"
+nvim.log.level = "info"
 
 if is_headless() then
-  lvim.log.level = "trace"
+  nvim.log.level = "trace"
 end
 
-lvim.lsp.ensure_installed = {
+nvim.lsp.ensure_installed = {
   ---- language servers
   "json-lsp",
   "lua-language-server",
@@ -75,9 +75,9 @@ lvim.lsp.ensure_installed = {
   "checkmake",
 }
 
-lvim.lsp.automatic_configuration.skipped_filetypes = {}
+nvim.lsp.automatic_configuration.skipped_filetypes = {}
 
-lvim.lsp.automatic_configuration.skipped_servers = {
+nvim.lsp.automatic_configuration.skipped_servers = {
   "angularls",
   -- "ansiblels",
   "denols",

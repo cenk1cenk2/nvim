@@ -50,7 +50,7 @@ function M.config()
         ---`:WinShift swap`.
         ---@return integer? winid # Either the selected window ID, or `nil` to
         ---   indicate that the user cancelled / gave an invalid selection.
-        window_picker = lvim.fn.pick_window,
+        window_picker = nvim.fn.pick_window,
       }
     end,
     on_setup = function(c)

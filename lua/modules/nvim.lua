@@ -71,6 +71,12 @@ function M.setup()
           M.update_sync()
         end,
       },
+      {
+        "NvimHeadlessUpdate",
+        function()
+          M.update_sync()
+        end,
+      },
     },
     wk = function(_, categories, fn)
       return {

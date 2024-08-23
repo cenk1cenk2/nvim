@@ -22,11 +22,11 @@ function M.config()
       })
     end,
     on_done = function(_, fn)
-      lvim.lsp.wrapper.code_action = function()
+      nvim.lsp.wrapper.code_action = function()
         vim.cmd("Lspsaga code_action")
         require("lspsaga.codeaction").pending_request = false
       end
-      lvim.lsp.wrapper.hover = function()
+      nvim.lsp.wrapper.hover = function()
         if is_extension_enabled(get_extension_name("extensions.nvim-ufo")) then
           local winid = require("ufo").peekFoldedLinesUnderCursor()
           if not winid then
@@ -37,27 +37,27 @@ function M.config()
         end
         require("lspsaga.hover").pending_request = false
       end
-      lvim.lsp.wrapper.rename = function()
+      nvim.lsp.wrapper.rename = function()
         vim.cmd("Lspsaga rename")
       end
-      lvim.lsp.wrapper.diagnostics_goto_next = function(opts)
+      nvim.lsp.wrapper.diagnostics_goto_next = function(opts)
         opts = opts or {}
 
         require("lspsaga.diagnostic"):goto_next(opts)
       end
-      lvim.lsp.wrapper.diagnostics_goto_prev = function(opts)
+      nvim.lsp.wrapper.diagnostics_goto_prev = function(opts)
         opts = opts or {}
 
         require("lspsaga.diagnostic"):goto_prev(opts)
       end
-      lvim.lsp.wrapper.show_line_diagnostics = function()
+      nvim.lsp.wrapper.show_line_diagnostics = function()
         vim.cmd("Lspsaga show_line_diagnostics")
       end
-      lvim.lsp.wrapper.incoming_calls = function()
+      nvim.lsp.wrapper.incoming_calls = function()
         vim.cmd("Lspsaga incoming_calls")
         require("lspsaga.callhierarchy").pending_request = false
       end
-      lvim.lsp.wrapper.outgoing_calls = function()
+      nvim.lsp.wrapper.outgoing_calls = function()
         vim.cmd("Lspsaga outgoing_calls")
         require("lspsaga.callhierarchy").pending_request = false
       end
@@ -122,7 +122,7 @@ function M.config()
         symbol_in_winbar = {
           in_custom = false,
           enable = true,
-          separator = (" %s "):format(lvim.ui.icons.ui.ChevronShortRight),
+          separator = (" %s "):format(nvim.ui.icons.ui.ChevronShortRight),
           show_file = true,
           folder_level = 1,
           respect_root = true,
@@ -131,30 +131,30 @@ function M.config()
           -- currently only round theme
           theme = "round",
           -- border type can be single,double,rounded,solid,shadow.
-          border = lvim.ui.border,
+          border = nvim.ui.border,
           winblend = 0,
-          expand = lvim.ui.icons.ui.ChevronShortLeft,
-          collaspe = lvim.ui.icons.ui.ChevronShortDown,
-          preview = lvim.ui.icons.ui.FindFile,
+          expand = nvim.ui.icons.ui.ChevronShortLeft,
+          collaspe = nvim.ui.icons.ui.ChevronShortDown,
+          preview = nvim.ui.icons.ui.FindFile,
           code_action = "💡",
-          diagnostic = lvim.ui.icons.ui.Bug,
+          diagnostic = nvim.ui.icons.ui.Bug,
           incoming = " ",
           outgoing = " ",
           colors = {
             --float window normal bakcground color
-            normal_bg = lvim.ui.colors.bg[200],
+            normal_bg = nvim.ui.colors.bg[200],
             --title background color
-            title_bg = lvim.ui.colors.yellow[300],
-            red = lvim.ui.colors.red[600],
-            magenta = lvim.ui.colors.magenta[600],
-            orange = lvim.ui.colors.orange[600],
-            yellow = lvim.ui.colors.yellow[600],
-            green = lvim.ui.colors.green[600],
-            cyan = lvim.ui.colors.cyan[600],
-            blue = lvim.ui.colors.blue[600],
-            purple = lvim.ui.colors.purple[600],
-            white = lvim.ui.colors.white,
-            black = lvim.ui.colors.black,
+            title_bg = nvim.ui.colors.yellow[300],
+            red = nvim.ui.colors.red[600],
+            magenta = nvim.ui.colors.magenta[600],
+            orange = nvim.ui.colors.orange[600],
+            yellow = nvim.ui.colors.yellow[600],
+            green = nvim.ui.colors.green[600],
+            cyan = nvim.ui.colors.cyan[600],
+            blue = nvim.ui.colors.blue[600],
+            purple = nvim.ui.colors.purple[600],
+            white = nvim.ui.colors.white,
+            black = nvim.ui.colors.black,
           },
           kind = {},
         },

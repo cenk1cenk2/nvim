@@ -43,7 +43,7 @@ function M.config()
         ---vt_position to avoid "jumping lines".
         ---@type string|table|false
         request_pending_text = false,
-        -- request_pending_text = lvim.ui.icons.misc.Watch,
+        -- request_pending_text = nvim.ui.icons.misc.Watch,
         ---The function can return a string to which the highlighting group from `opts.hl` is applied.
         ---Alternatively, it can return a table of tuples of the form `{ { text, hl_group }, ... }`` - in this case the specified groups will be applied.
         ---See `#format-text-examples`
@@ -89,21 +89,21 @@ function M.text_format(symbol)
   local res = {}
 
   if symbol.references then
-    table.insert(res, { ("%s %s"):format(lvim.ui.icons.kind.Reference, tostring(symbol.references)), "SymbolUsageRef" })
+    table.insert(res, { ("%s %s"):format(nvim.ui.icons.kind.Reference, tostring(symbol.references)), "SymbolUsageRef" })
   end
 
   if symbol.definition then
     if #res > 0 then
       table.insert(res, { " ", "NonText" })
     end
-    table.insert(res, { ("%s %s"):format(lvim.ui.icons.kind.Interface, tostring(symbol.definition)), "SymbolUsageDef" })
+    table.insert(res, { ("%s %s"):format(nvim.ui.icons.kind.Interface, tostring(symbol.definition)), "SymbolUsageDef" })
   end
 
   if symbol.implementation then
     if #res > 0 then
       table.insert(res, { " ", "NonText" })
     end
-    table.insert(res, { ("%s %s"):format(lvim.ui.icons.kind.Function, tostring(symbol.implementation)), "SymbolUsageImpl" })
+    table.insert(res, { ("%s %s"):format(nvim.ui.icons.kind.Function, tostring(symbol.implementation)), "SymbolUsageImpl" })
   end
 
   return res

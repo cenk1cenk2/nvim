@@ -140,10 +140,10 @@ end
 ---@param client table client attached to a buffer
 ---@return boolean if client matches
 function M.format_filter(client)
-  -- local available_formatters = lvim.lsp.tools.list_registered.formatters(0)
+  -- local available_formatters = nvim.lsp.tools.list_registered.formatters(0)
 
   -- if #available_formatters > 0 then
-  --   return client.name == lvim.lsp.tools.clients[M.METHODS.FORMATTER]
+  --   return client.name == nvim.lsp.tools.clients[M.METHODS.FORMATTER]
   if client.supports_method("textDocument/formatting") then
     return true
   end
@@ -157,7 +157,7 @@ M.METHODS = {
 }
 
 function M.read_tools(method)
-  return lvim.lsp.tools.by_ft[method]
+  return nvim.lsp.tools.by_ft[method]
 end
 
 function M.register_tools(method, configs, filetypes)
@@ -166,11 +166,11 @@ function M.register_tools(method, configs, filetypes)
   end
 
   for _, ft in pairs(filetypes) do
-    if lvim.lsp.tools.by_ft[method][ft] == nil then
-      lvim.lsp.tools.by_ft[method][ft] = {}
+    if nvim.lsp.tools.by_ft[method][ft] == nil then
+      nvim.lsp.tools.by_ft[method][ft] = {}
     end
 
-    vim.list_extend(lvim.lsp.tools.by_ft[method][ft], configs)
+    vim.list_extend(nvim.lsp.tools.by_ft[method][ft], configs)
   end
 
   log:debug(("Registered the following method %s for %s: %s"):format(

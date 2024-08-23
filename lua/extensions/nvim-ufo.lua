@@ -21,7 +21,7 @@ function M.config()
         -- close_fold_kinds = { "imports", "comment" },
         preview = {
           win_config = {
-            border = lvim.ui.border,
+            border = nvim.ui.border,
             winhighlight = "Normal:Normal",
             winblend = 0,
           },
@@ -42,7 +42,7 @@ function M.config()
           local result = {}
           vim.list_extend(result, M.chunker(virt_text, width, truncate))
 
-          table.insert(result, { (" %s "):format(lvim.ui.icons.ui.Ellipsis), "MoreMsg" })
+          table.insert(result, { (" %s "):format(nvim.ui.icons.ui.Ellipsis), "MoreMsg" })
 
           local end_text = ctx.get_fold_virt_text(end_lnum)
           for index, value in ipairs(end_text) do
@@ -57,7 +57,7 @@ function M.config()
           end
 
           vim.list_extend(result, M.chunker(end_text, width, truncate))
-          table.insert(result, { (" %s %d "):format(lvim.ui.icons.ui.Expand, end_lnum - lnum), "MoreMsg" })
+          table.insert(result, { (" %s %d "):format(nvim.ui.icons.ui.Expand, end_lnum - lnum), "MoreMsg" })
 
           return result
         end,
@@ -73,9 +73,9 @@ function M.config()
       vim.opt.foldenable = true
       vim.opt.foldmethod = "manual"
 
-      -- local original = lvim.lsp.wrapper.hover
+      -- local original = nvim.lsp.wrapper.hover
       --
-      -- lvim.lsp.wrapper.hover = function()
+      -- nvim.lsp.wrapper.hover = function()
       --   local winid = require("ufo").peekFoldedLinesUnderCursor()
       --
       --   if not winid then

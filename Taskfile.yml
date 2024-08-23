@@ -9,7 +9,7 @@ env: {}
 
 tasks:
   format:
-    desc: Lints the repository.
+    desc: Format the repository.
     deps:
       - format:lua
       - format:sh

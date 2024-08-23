@@ -91,7 +91,7 @@ function M.config()
             val = function()
               local stats = require("lazy").stats()
 
-              return { ("%s %d/%d plugins in %s %.0fms"):format(lvim.ui.icons.ui.Package, stats.loaded, stats.count, lvim.ui.icons.misc.Watch, stats.startuptime) }
+              return { ("%s %d/%d plugins in %s %.0fms"):format(nvim.ui.icons.ui.Package, stats.loaded, stats.count, nvim.ui.icons.misc.Watch, stats.startuptime) }
             end,
             opts = {
               redraw = true,
@@ -102,7 +102,7 @@ function M.config()
           { type = "padding", val = 0 },
           -- {
           --   type = "text",
-          --   val = { ("%s %s#%s"):format(lvim.ui.icons.git.Branch, require("core.version").get_lvim_branch(), require("core.version").get_lvim_current_sha()) },
+          --   val = { ("%s %s#%s"):format(nvim.ui.icons.git.Branch, require("core.version").get_nvim_branch(), require("core.version").get_nvim_current_sha()) },
           --   opts = {
           --     redraw = false,
           --     position = "center",
@@ -112,7 +112,7 @@ function M.config()
           -- { type = "padding", val = 0 },
           -- {
           --   type = "text",
-          --   val = { ("%s %s"):format(lvim.ui.icons.ui.Gear, require("core.version").get_nvim_version()) },
+          --   val = { ("%s %s"):format(nvim.ui.icons.ui.Gear, require("core.version").get_nvim_version()) },
           --   opts = {
           --     redraw = false,
           --     position = "center",
@@ -174,12 +174,12 @@ M.layout = {
     [[                                                                                        ]],
   },
   buttons = {
-    { key = "SPC w l", name = "Load Last Session", icon = lvim.ui.icons.ui.History },
-    { key = "SPC w f", name = "Sessions", icon = lvim.ui.icons.ui.Project },
-    { key = "SPC p", name = "Find File", icon = lvim.ui.icons.ui.File },
-    { key = "c", name = "~Config", path = join_paths(vim.env.HOME, ".config/nvim/"), icon = lvim.ui.icons.misc.Neovim },
-    { key = "n", name = "~Notes", path = join_paths(vim.env.HOME, "notes/"), icon = lvim.ui.icons.misc.Obsidian },
-    { key = "SPC w q", name = "Quit", icon = lvim.ui.icons.ui.SignOut },
+    { key = "SPC w l", name = "Load Last Session", icon = nvim.ui.icons.ui.History },
+    { key = "SPC w f", name = "Sessions", icon = nvim.ui.icons.ui.Project },
+    { key = "SPC p", name = "Find File", icon = nvim.ui.icons.ui.File },
+    { key = "c", name = "~Config", path = join_paths(vim.env.HOME, ".config/nvim/"), icon = nvim.ui.icons.misc.Neovim },
+    { key = "n", name = "~Notes", path = join_paths(vim.env.HOME, "notes/"), icon = nvim.ui.icons.misc.Obsidian },
+    { key = "SPC w q", name = "Quit", icon = nvim.ui.icons.ui.SignOut },
   },
 }
 

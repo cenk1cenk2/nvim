@@ -29,7 +29,7 @@ function M.config()
           javascript = { "string", "template_string" },
           java = false,
         },
-        disable_filetype = lvim.disabled_filetypes,
+        disable_filetype = nvim.disabled_filetypes,
         ignored_next_char = string.gsub([[ [%w%%%'%[%"%.] ]], "%s+", ""),
         enable_moveright = false,
         ---@usage disable when recording or executing a macro
@@ -49,7 +49,7 @@ function M.config()
           pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
           offset = 0, -- Offset from pattern match
           end_key = "$",
-          keys = lvim.selection_chars,
+          keys = nvim.selection_chars,
           check_comma = true,
           highlight = "AutoPairsFastWrap",
           highlight_grey = "",

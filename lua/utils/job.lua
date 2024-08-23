@@ -2,14 +2,14 @@ local M = {}
 
 local log = require("core.log")
 
----@class Command: Job
+---@class CommandJob: Job
 ---@field on_success? function (j: Job): nil
 ---@field on_failure? function (j: Job): nil
 ---@field no_log_success? boolean
 ---@field no_log_failure? boolean
 
 --- Creates a command job through plenary.
----@param command Command
+---@param command CommandJob
 ---@return Job
 function M.create(command)
   local Job = require("plenary.job")

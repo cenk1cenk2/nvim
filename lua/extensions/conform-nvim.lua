@@ -28,7 +28,7 @@ function M.config()
         format_on_save = function(bufnr)
           return {
             lsp_fallback = M.get_lsp_fallback(bufnr),
-            timeout_ms = lvim.lsp.format_on_save.timeout,
+            timeout_ms = nvim.lsp.format_on_save.timeout,
           }
         end,
         -- If this is set, Conform will run the formatter asynchronously after save.
@@ -49,10 +49,10 @@ function M.config()
       require("conform").setup(c)
     end,
     on_done = function()
-      lvim.lsp.buffer_options.formatexpr = "v:lua.require'conform'.formatexpr()"
+      nvim.lsp.buffer_options.formatexpr = "v:lua.require'conform'.formatexpr()"
 
-      lvim.lsp.tools.list_registered.formatters = function(bufnr)
-        local formatters = lvim.lsp.tools.list_registered.default.formatters(bufnr)
+      nvim.lsp.tools.list_registered.formatters = function(bufnr)
+        local formatters = nvim.lsp.tools.list_registered.default.formatters(bufnr)
 
         local lsp_fallback = M.get_lsp_fallback(bufnr)
         if #formatters == 0 and lsp_fallback == true or lsp_fallback == "always" then
@@ -75,11 +75,11 @@ function M.config()
         return M.filter_default_formatters(formatters)
       end
 
-      lvim.lsp.wrapper.format = function(opts)
+      nvim.lsp.wrapper.format = function(opts)
         opts = vim.tbl_extend("force", {
           bufnr = vim.api.nvim_get_current_buf(),
-          timeout_ms = lvim.lsp.format_on_save.timeout_ms,
-          filter = lvim.lsp.format_on_save.filter,
+          timeout_ms = nvim.lsp.format_on_save.timeout_ms,
+          filter = nvim.lsp.format_on_save.filter,
         }, opts or {})
 
         require("conform").format(opts)

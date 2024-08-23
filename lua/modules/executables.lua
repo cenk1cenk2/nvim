@@ -24,7 +24,7 @@ function M.run_genpass()
           local generated = j:result()[1]
 
           log:info(("Copied generated code to clipboard: %s"):format(generated))
-          vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+          vim.fn.setreg(vim.v.register or nvim.system_register, generated)
         end,
       })
       :start()
@@ -124,7 +124,7 @@ function M.run_jq()
           local result = table.concat(j:result(), "\n")
 
           log:info(("Copied result to clipboard: %s"):format(result))
-          vim.fn.setreg(vim.v.register or lvim.system_register, result)
+          vim.fn.setreg(vim.v.register or nvim.system_register, result)
         end,
       })
       :start()
@@ -168,7 +168,7 @@ function M.run_yq()
           local result = table.concat(j:result(), "\n")
 
           log:info(("Copied result to clipboard: %s"):format(result))
-          vim.fn.setreg(vim.v.register or lvim.system_register, result)
+          vim.fn.setreg(vim.v.register or nvim.system_register, result)
         end,
       })
       :start()

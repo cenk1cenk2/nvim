@@ -12,7 +12,7 @@ function M.config()
     end,
     setup = function()
       return {
-        selection_chars = lvim.selection_chars:upper(),
+        selection_chars = nvim.selection_chars:upper(),
         picker_config = {
           statusline_winbar_picker = {
             use_winbar = "always",
@@ -26,19 +26,19 @@ function M.config()
               end
 
               return true
-            end, lvim.disabled_filetypes),
+            end, nvim.disabled_filetypes),
           },
         },
         highlights = {
           winbar = {
             focused = {
-              fg = lvim.ui.colors.fg,
-              bg = lvim.ui.colors.yellow[300],
+              fg = nvim.ui.colors.fg,
+              bg = nvim.ui.colors.yellow[300],
               bold = true,
             },
             unfocused = {
-              fg = lvim.ui.colors.fg,
-              bg = lvim.ui.colors.orange[300],
+              fg = nvim.ui.colors.fg,
+              bg = nvim.ui.colors.orange[300],
               bold = true,
             },
           },

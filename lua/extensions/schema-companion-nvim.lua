@@ -14,7 +14,7 @@ function M.config()
     end,
     setup = function()
       return {
-        log_level = lvim.log.level,
+        log_level = nvim.log.level,
         formatting = false,
         enable_telescope = true,
         -- Built in file matchers

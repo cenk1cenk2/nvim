@@ -29,7 +29,7 @@ local M = {
 ---@type LoadWkFn
 function M.load_wk(mappings)
   if not is_package_loaded("which-key") then
-    lvim.wk = vim.list_extend(lvim.wk, mappings)
+    nvim.wk = vim.list_extend(nvim.wk, mappings)
 
     return
   end
@@ -215,7 +215,7 @@ function M.define_extension(name, enabled, config)
     enabled = enabled,
     store = {},
     to_setup = {},
-  }, lvim.extensions[name] or {})
+  }, nvim.extensions[name] or {})
 
   if config ~= nil and config.plugin ~= nil then
     local plugins = {}
@@ -233,8 +233,8 @@ function M.define_extension(name, enabled, config)
     config.extensions = plugins
   end
 
-  if config ~= nil and config.condition ~= nil and config.condition(lvim.extensions[name]) == false then
-    lvim.extensions[name] = config
+  if config ~= nil and config.condition ~= nil and config.condition(nvim.extensions[name]) == false then
+    nvim.extensions[name] = config
 
     log:debug(string.format("Extension config stopped due to failed condition: %s", name))
 
@@ -247,14 +247,14 @@ function M.define_extension(name, enabled, config)
     config.configure = nil
   end
 
-  lvim.extensions[name] = config
+  nvim.extensions[name] = config
 end
 
 --- Returns the current configuration.
 ---@param name string
 ---@return Config
 function M.get_config(name)
-  return lvim.extensions[name]
+  return nvim.extensions[name]
 end
 
 --- Initialize the extension with the current setup.
@@ -344,7 +344,7 @@ function M.init(config)
     local functions = config.define_global_fn(config)
 
     for key, value in pairs(functions) do
-      lvim.fn[key] = value
+      nvim.fn[key] = value
     end
 
     config.define_global_fn = nil
@@ -361,15 +361,15 @@ end
 ---@param config Config
 function M.configure(config)
   if config ~= nil and config.setup ~= nil then
-    lvim.extensions[config.name].current_setup = nil
-    lvim.extensions[config.name].current_setup = M.evaluate_property(config.setup, config, M.fn)
+    nvim.extensions[config.name].current_setup = nil
+    nvim.extensions[config.name].current_setup = M.evaluate_property(config.setup, config, M.fn)
 
     if config.to_setup ~= nil then
       for _, to_setup in pairs(config.to_setup) do
         if to_setup.overwrite then
-          lvim.extensions[config.name].current_setup = vim.tbl_extend("force", lvim.extensions[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
+          nvim.extensions[config.name].current_setup = vim.tbl_extend("force", nvim.extensions[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
         else
-          lvim.extensions[config.name].current_setup = vim.tbl_deep_extend("force", lvim.extensions[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
+          nvim.extensions[config.name].current_setup = vim.tbl_deep_extend("force", nvim.extensions[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
         end
       end
     end
@@ -392,7 +392,7 @@ end
 function M.set_plugins()
   local plugins = {}
 
-  for _, extension in pairs(lvim.extensions) do
+  for _, extension in pairs(nvim.extensions) do
     if extension.extensions ~= nil then
       for _, e in pairs(extension.extensions) do
         table.insert(plugins, e)
@@ -400,7 +400,7 @@ function M.set_plugins()
     end
   end
 
-  lvim.plugins = plugins
+  nvim.plugins = plugins
 end
 
 -- fn functions
@@ -423,7 +423,7 @@ end
 ---@type SetupFnAddDisabledFiletypes
 function M.fn.add_disabled_filetypes(ft)
   for _, value in pairs(ft) do
-    table.insert(lvim.disabled_filetypes, value)
+    table.insert(nvim.disabled_filetypes, value)
   end
 end
 
@@ -436,13 +436,13 @@ end
 function M.fn.append_to_setup(name, config, opts)
   opts = vim.tbl_extend("force", { overwrite = false }, opts or {})
 
-  if lvim.extensions[name] == nil then
-    lvim.extensions[name] = {
+  if nvim.extensions[name] == nil then
+    nvim.extensions[name] = {
       to_setup = {},
     }
   end
 
-  table.insert(lvim.extensions[name].to_setup, vim.tbl_extend("force", opts, { cb = config }))
+  table.insert(nvim.extensions[name].to_setup, vim.tbl_extend("force", opts, { cb = config }))
 end
 
 ---@alias SetupFnGetWkCategories fun(): table<WKCategories, string>
@@ -476,7 +476,7 @@ end
 --- Returns the current setup of an extension.
 ---@type SetupFnGetCurrentSetup
 function M.fn.get_current_setup(name)
-  return lvim.extensions[name].current_setup
+  return nvim.extensions[name].current_setup
 end
 
 ---@alias SetupFnGetHighlight fun(name: string): vim.api.keyset.get_hl_info
@@ -492,7 +492,7 @@ end
 --- Adds a global function.
 ---@type SetupFnAddGlobalFunction
 function M.fn.add_global_function(name, fn)
-  lvim.fn[name] = fn
+  nvim.fn[name] = fn
 
   return fn
 end

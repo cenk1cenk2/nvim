@@ -52,8 +52,8 @@ function M.config()
             position = "bottom", -- "top", "right", "bottom" or "left"
             size = "30%", -- Size of split
             relative = "editor", -- Position of tree split relative to "editor" or "window"
-            resolved = lvim.ui.icons.ui.Check, -- Symbol to show next to resolved discussions
-            unresolved = lvim.ui.icons.ui.Close, -- Symbol to show next to unresolved discussions
+            resolved = nvim.ui.icons.ui.Check, -- Symbol to show next to resolved discussions
+            unresolved = nvim.ui.icons.ui.Close, -- Symbol to show next to unresolved discussions
             tree_type = "by_file_name", -- Type of discussion tree - "simple" means just list of discussions, "by_file_name" means file tree with discussions under file
           },
         },
@@ -78,7 +78,7 @@ function M.config()
           enabled = true,
           severity = vim.diagnostic.severity.WARN,
           skip_resolved_discussion = false,
-          text = lvim.ui.icons.ui.Comment,
+          text = nvim.ui.icons.ui.Comment,
           linehl = nil,
           texthl = nil,
           culhl = nil,
@@ -87,15 +87,15 @@ function M.config()
             -- For multiline comments the helper signs are used to indicate the whole context
             -- Priority of helper signs is lower than the main sign (-1).
             enabled = true,
-            start = lvim.ui.icons.ui.ChevronShortUp,
-            mid = lvim.ui.icons.borderchars[1],
-            ["end"] = lvim.ui.icons.ui.ChevronShortDown,
+            start = nvim.ui.icons.ui.ChevronShortUp,
+            mid = nvim.ui.icons.borderchars[1],
+            ["end"] = nvim.ui.icons.ui.ChevronShortDown,
           },
           virtual_text = false, -- Whether to show the comment text inline as floating virtual text
           priority = 100, -- Higher will override LSP warnings, etc
           icons = {
-            comment = lvim.ui.icons.ui.Tab,
-            range = lvim.ui.icons.ui.LineMiddle,
+            comment = nvim.ui.icons.ui.Tab,
+            range = nvim.ui.icons.ui.LineMiddle,
           },
         },
         pipeline = {
@@ -126,7 +126,7 @@ function M.config()
           squash = false, -- Whether the commits will be marked for squashing
           title_input = { -- Default settings for MR title input window
             width = 40,
-            border = lvim.ui.border,
+            border = nvim.ui.border,
           },
         },
       }

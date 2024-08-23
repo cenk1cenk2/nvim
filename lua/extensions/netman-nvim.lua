@@ -16,7 +16,7 @@ function M.config()
     --     sources = { "netman.ui.neo-tree" },
     --     source_selector = {
     --       sources = {
-    --         { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(lvim.ui.icons.kind.Struct) },
+    --         { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(nvim.ui.icons.kind.Struct) },
     --       },
     --     },
     --   })

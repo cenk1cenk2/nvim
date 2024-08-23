@@ -27,7 +27,7 @@ function M.config()
         },
         ignore = { --			|windows.ignore|
           buftype = { "quickfix", "nofile" },
-          filetype = lvim.disabled_filetypes,
+          filetype = nvim.disabled_filetypes,
         },
         animation = {
           enable = false,

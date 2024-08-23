@@ -69,7 +69,7 @@ function M.config()
           -- the 'curved' border is a custom border type
           -- not natively supported but implemented in this plugin.
           -- border = 'single' | 'double' | 'shadow' | 'curved' | ... other options supported by win open
-          border = lvim.ui.border,
+          border = nvim.ui.border,
           width = function()
             if vim.o.columns < 180 then
               return math.floor(vim.o.columns * 0.975)
@@ -533,7 +533,7 @@ function M.toggle_log_view(logfile)
     return
   end
 
-  local log_viewer = lvim.log.viewer.cmd
+  local log_viewer = nvim.log.viewer.cmd
   if vim.fn.executable(log_viewer) ~= 1 then
     log_viewer = "less +F"
   end
@@ -541,11 +541,11 @@ function M.toggle_log_view(logfile)
   log_viewer = log_viewer .. " " .. logfile
   local term_opts = vim.tbl_deep_extend("force", M.current_setup(), {
     cmd = log_viewer,
-    -- Open_mapping = lvim.log.viewer.layout_config.open_mapping,
-    direction = lvim.log.viewer.layout_config.direction,
+    -- Open_mapping = nvim.log.viewer.layout_config.open_mapping,
+    direction = nvim.log.viewer.layout_config.direction,
     -- TODO: this might not be working as expected
-    size = lvim.log.viewer.layout_config.size,
-    float_opts = lvim.log.viewer.layout_config.float_opts,
+    size = nvim.log.viewer.layout_config.size,
+    float_opts = nvim.log.viewer.layout_config.float_opts,
   })
 
   local log_view = M.create_terminal(term_opts)

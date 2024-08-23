@@ -39,7 +39,7 @@ function M.config()
 
           -- CSS color
           -- if you provide an invalid value, cursorline will be invisible
-          color = lvim.ui.colors.gray[300],
+          color = nvim.ui.colors.gray[300],
           opacity = 0.2,
         },
 

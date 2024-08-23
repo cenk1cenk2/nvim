@@ -12,7 +12,7 @@ function M.generate_popup(opts)
     enter = true,
     focusable = false,
     border = {
-      style = lvim.ui.border,
+      style = nvim.ui.border,
       text = {
         -- top = "LSP Info",
         top_align = "center",
@@ -313,8 +313,8 @@ function M.generate_current_buffer_tools_info(popup, bufnr)
       },
     },
     data = {
-      { type = "Linter", value = lvim.lsp.tools.list_registered.linters(bufnr) },
-      { type = "Formatter", value = lvim.lsp.tools.list_registered.formatters(bufnr) },
+      { type = "Linter", value = nvim.lsp.tools.list_registered.linters(bufnr) },
+      { type = "Formatter", value = nvim.lsp.tools.list_registered.formatters(bufnr) },
     },
   }):render()
 end

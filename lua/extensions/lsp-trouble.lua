@@ -16,7 +16,7 @@ function M.config()
         "trouble",
       })
 
-      lvim.lsp.wrapper.document_diagnostics = function()
+      nvim.lsp.wrapper.document_diagnostics = function()
         require("trouble").toggle({
           mode = "diagnostics",
           filter = {
@@ -26,7 +26,7 @@ function M.config()
         })
       end
 
-      lvim.lsp.wrapper.workspace_diagnostics = function()
+      nvim.lsp.wrapper.workspace_diagnostics = function()
         require("trouble").toggle({
           mode = "diagnostics",
           filter = {

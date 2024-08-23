@@ -37,7 +37,7 @@ function M.config()
           height = "auto",
           row = "auto",
           col = "auto",
-          border = lvim.ui.border,
+          border = nvim.ui.border,
         },
         per_buffer_config = {
           lines = 4, -- Number of lines showed on preview.

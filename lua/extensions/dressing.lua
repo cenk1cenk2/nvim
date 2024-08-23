@@ -15,14 +15,14 @@ function M.config()
       return {
         input = {
           -- Default prompt string
-          default_prompt = lvim.ui.icons.ui.ChevronRight .. " ",
+          default_prompt = nvim.ui.icons.ui.ChevronRight .. " ",
 
           -- When true, <Esc> will close the modal
           insert_only = false,
 
           -- These are passed to nvim_open_win
           relative = "editor",
-          border = lvim.ui.border,
+          border = nvim.ui.border,
 
           -- These can be integers or a float between 0 and 1 (e.g. 0.4 for 40%)
           prefer_width = 60,

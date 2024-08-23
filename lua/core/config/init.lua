@@ -2,17 +2,17 @@ local log = require("core.log")
 
 local M = {}
 
---- Initialize lvim default configuration and variables
+--- Initialize nvim default configuration and variables
 function M:init()
-  lvim = vim.deepcopy(require("core.config.defaults"))
+  nvim = vim.deepcopy(require("core.config.defaults"))
 
-  vim.cmd(("colorscheme %s"):format(lvim.colorscheme))
+  vim.cmd(("colorscheme %s"):format(nvim.colorscheme))
 
   require("core.config.settings").load_defaults()
 
   require("core.keys").load_defaults()
 
-  lvim.lsp = vim.deepcopy(require("core.config.lsp"))
+  nvim.lsp = vim.deepcopy(require("core.config.lsp"))
 end
 
 --- Override the configuration with a user provided one
@@ -26,9 +26,9 @@ function M:load()
 
   require("modules").config(self)
 
-  require("setup").create_autocmds(lvim.autocommands)
+  require("setup").create_autocmds(nvim.autocommands)
 
-  if lvim.ui.transparent_window then
+  if nvim.ui.transparent_window then
     vim.api.nvim_create_autocmd("ColorScheme", {
       pattern = "*",
       callback = function()
@@ -61,7 +61,7 @@ function M:reload()
 
     local loader = require("core.loader")
 
-    loader.reload({ lvim.plugins })
+    loader.reload({ nvim.plugins })
   end)
 end
 

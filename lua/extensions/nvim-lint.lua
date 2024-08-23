@@ -25,7 +25,7 @@ function M.config()
       require("lint").linters_by_ft = c
     end,
     on_done = function()
-      lvim.lsp.tools.list_registered.linters = function(bufnr)
+      nvim.lsp.tools.list_registered.linters = function(bufnr)
         return require("lint").linters_by_ft[vim.bo[bufnr].ft] or {}
       end
     end,

@@ -70,7 +70,7 @@ function M.config()
         formatting = {
           fields = { "kind", "abbr", "menu" },
           max_width = 80,
-          kind_icons = lvim.ui.icons.kind,
+          kind_icons = nvim.ui.icons.kind,
           source_names = {
             nvim_lsp = "LSP",
             lazydev = "LD",
@@ -104,7 +104,7 @@ function M.config()
 
             local max_width = current_setup.formatting.max_width
             if max_width ~= 0 and #vim_item.abbr > max_width then
-              vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. " " .. lvim.ui.icons.ui.Ellipsis
+              vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. " " .. nvim.ui.icons.ui.Ellipsis
             end
 
             vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind] or vim_item.kind
@@ -122,8 +122,8 @@ function M.config()
           end,
         },
         window = {
-          completion = cmp.config.window.bordered({ border = lvim.ui.border }),
-          documentation = cmp.config.window.bordered({ border = lvim.ui.border }),
+          completion = cmp.config.window.bordered({ border = nvim.ui.border }),
+          documentation = cmp.config.window.bordered({ border = nvim.ui.border }),
         },
         sources = cmp.config.sources({
           { name = "nvim_lsp" },

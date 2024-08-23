@@ -54,7 +54,7 @@ end
 
 ---Get the current Lunarvim development branch
 ---@return string|nil
-function M.get_lvim_branch()
+function M.get_nvim_branch()
   local stdout, code = job
     .create({
       command = "git",
@@ -76,7 +76,7 @@ end
 
 ---Get currently checked-out tag of Lunarvim
 ---@return string
-function M.get_lvim_tag()
+function M.get_nvim_tag()
   local stdout, code = job
     .create({
       command = "git",
@@ -98,19 +98,19 @@ end
 
 ---Get currently running version of Lunarvim
 ---@return string
-function M.get_lvim_version()
-  local current_branch = M.get_lvim_branch()
+function M.get_nvim_version()
+  local current_branch = M.get_nvim_branch()
 
   if current_branch ~= "HEAD" or "" then
-    return ("%s-%s"):format(current_branch, M.get_lvim_current_sha())
+    return ("%s-%s"):format(current_branch, M.get_nvim_current_sha())
   else
-    return ("v%s"):format(M.get_lvim_tag())
+    return ("v%s"):format(M.get_nvim_tag())
   end
 end
 
 ---Get the commit hash of currently checked-out commit of Lunarvim
 ---@return string|nil
-function M.get_lvim_current_sha()
+function M.get_nvim_current_sha()
   local stdout, code = job
     .create({
       command = "git",

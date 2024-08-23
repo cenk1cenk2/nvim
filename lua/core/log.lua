@@ -44,9 +44,9 @@ function M:init()
     vim.notify(log.msg, log.level)
   end
 
-  local log_level = M.levels[(lvim.log.level):upper() or "WARN"]
+  local log_level = M.levels[(nvim.log.level):upper() or "WARN"]
   local logger = {
-    lvim = {
+    nvim = {
       pipelines = {
         {
           level = log_level,

@@ -22,7 +22,7 @@ function M.config()
       }
     end,
     configure = function(_, fn)
-      lvim.wk = vim.list_extend(lvim.wk, require("core.keys.wk").setup(fn))
+      nvim.wk = vim.list_extend(nvim.wk, require("core.keys.wk").setup(fn))
 
       fn.add_disabled_filetypes({ "which_key" })
     end,
@@ -44,9 +44,9 @@ function M.config()
         },
         icons = {
           rules = false,
-          breadcrumb = lvim.ui.icons.ui.DoubleChevronRight, -- symbol used in the command line area that shows your active key combo
-          separator = lvim.ui.icons.ui.DoubleChevronRight .. " ", -- symbol used between a key and it's label
-          group = lvim.ui.icons.ui.Plus, -- symbol prepended to a group
+          breadcrumb = nvim.ui.icons.ui.DoubleChevronRight, -- symbol used in the command line area that shows your active key combo
+          separator = nvim.ui.icons.ui.DoubleChevronRight .. " ", -- symbol used between a key and it's label
+          group = nvim.ui.icons.ui.Plus, -- symbol prepended to a group
         },
         win = {
           -- don't allow the popup to overlap with the cursor
@@ -55,7 +55,7 @@ function M.config()
           -- height = { min = 4, max = 25 },
           -- col = 0,
           -- row = math.huge,
-          border = lvim.ui.border,
+          border = nvim.ui.border,
           padding = { 0, 2 }, -- extra window padding [top/bottom, right/left]
           title = true,
           title_pos = "center",
@@ -93,7 +93,7 @@ function M.config()
 
       which_key.setup(c)
 
-      which_key.add(lvim.wk)
+      which_key.add(nvim.wk)
     end,
     autocmds = function()
       return {

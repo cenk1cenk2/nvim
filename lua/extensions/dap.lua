@@ -28,31 +28,31 @@ function M.config()
     end,
     signs = {
       DapBreakpoint = {
-        text = lvim.ui.icons.ui.Bug,
+        text = nvim.ui.icons.ui.Bug,
         texthl = "DiagnosticWarning",
         linehl = "",
         numhl = "",
       },
       DapBreakpointCondition = {
-        text = lvim.ui.icons.ui.Scopes,
+        text = nvim.ui.icons.ui.Scopes,
         texthl = "DiagnosticWarning",
         linehl = "",
         numhl = "",
       },
       DapLogPoint = {
-        text = lvim.ui.icons.ui.Watches,
+        text = nvim.ui.icons.ui.Watches,
         texthl = "DiagnosticWarning",
         linehl = "",
         numhl = "",
       },
       DapStopped = {
-        text = lvim.ui.icons.ui.BoldArrowRight,
+        text = nvim.ui.icons.ui.BoldArrowRight,
         texthl = "DiagnosticWarning",
         linehl = "",
         numhl = "",
       },
       DapBreakpointRejected = {
-        text = lvim.ui.icons.ui.Bug,
+        text = nvim.ui.icons.ui.Bug,
         texthl = "DiagnosticError",
         linehl = "",
         numhl = "",

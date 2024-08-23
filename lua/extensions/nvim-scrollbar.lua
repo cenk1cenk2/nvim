@@ -16,18 +16,18 @@ function M.config()
         show = true,
         handle = {
           text = " ",
-          color = lvim.ui.colors.bg[500],
+          color = nvim.ui.colors.bg[500],
           hide_if_all_visible = true, -- Hides handle if all lines are visible
         },
         marks = {
-          Search = { text = { lvim.ui.icons.ui.SquareCentered }, priority = 0, color = lvim.ui.colors.magenta[900] },
-          Error = { text = { lvim.ui.icons.ui.SquareCentered }, priority = 1, color = lvim.ui.colors.red[900] },
-          Warn = { text = { lvim.ui.icons.ui.SquareCentered }, priority = 2, color = lvim.ui.colors.yellow[900] },
-          Info = { text = { lvim.ui.icons.ui.SquareCentered }, priority = 3, color = lvim.ui.colors.blue[600] },
-          Hint = { text = { lvim.ui.icons.ui.SquareCentered }, priority = 4, color = lvim.ui.colors.cyan[600] },
-          Misc = { text = { lvim.ui.icons.ui.SquareCentered }, priority = 5, color = lvim.ui.colors.purple[600] },
+          Search = { text = { nvim.ui.icons.ui.SquareCentered }, priority = 0, color = nvim.ui.colors.magenta[900] },
+          Error = { text = { nvim.ui.icons.ui.SquareCentered }, priority = 1, color = nvim.ui.colors.red[900] },
+          Warn = { text = { nvim.ui.icons.ui.SquareCentered }, priority = 2, color = nvim.ui.colors.yellow[900] },
+          Info = { text = { nvim.ui.icons.ui.SquareCentered }, priority = 3, color = nvim.ui.colors.blue[600] },
+          Hint = { text = { nvim.ui.icons.ui.SquareCentered }, priority = 4, color = nvim.ui.colors.cyan[600] },
+          Misc = { text = { nvim.ui.icons.ui.SquareCentered }, priority = 5, color = nvim.ui.colors.purple[600] },
         },
-        excluded_filetypes = lvim.disabled_filetypes,
+        excluded_filetypes = nvim.disabled_filetypes,
         autocmd = {
           render = {
             "BufWinEnter",

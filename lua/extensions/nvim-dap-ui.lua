@@ -25,7 +25,7 @@ function M.config()
     end,
     setup = function()
       return {
-        icons = { expanded = lvim.ui.icons.ui.ChevronShortDown, collapsed = lvim.ui.icons.ui.ChevronShortRight },
+        icons = { expanded = nvim.ui.icons.ui.ChevronShortDown, collapsed = nvim.ui.icons.ui.ChevronShortRight },
         mappings = {
           -- Use a table to apply multiple mappings
           expand = { "<CR>", "<2-LeftMouse>", "O" },
@@ -81,7 +81,7 @@ function M.config()
         floating = {
           max_height = nil, -- These can be integers or a float between 0 and 1.
           max_width = nil, -- Floats will be treated as percentage of your screen.
-          border = lvim.ui.border, -- Border style. Can be lvim.ui.border, "double" or "rounded"
+          border = nvim.ui.border, -- Border style. Can be nvim.ui.border, "double" or "rounded"
           mappings = {
             close = { "q", "<Esc>" },
           },

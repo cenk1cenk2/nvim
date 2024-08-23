@@ -39,20 +39,20 @@ function M.config()
           -- whether to show icons
           enabled = true,
 
-          actionEntryBullet = ("%s "):format(lvim.ui.icons.ui.DoubleChevronRight),
+          actionEntryBullet = ("%s "):format(nvim.ui.icons.ui.DoubleChevronRight),
 
-          searchInput = ("%s "):format(lvim.ui.icons.ui.Search),
-          replaceInput = ("%s "):format(lvim.ui.icons.ui.Files),
-          filesFilterInput = ("%s "):format(lvim.ui.icons.ui.Filter),
+          searchInput = ("%s "):format(nvim.ui.icons.ui.Search),
+          replaceInput = ("%s "):format(nvim.ui.icons.ui.Files),
+          filesFilterInput = ("%s "):format(nvim.ui.icons.ui.Filter),
           flagsInput = ("%s "):format("󰮚"),
 
           resultsStatusReady = ("%s "):format("󱩾"),
-          resultsStatusError = ("%s "):format(lvim.ui.icons.diagnostics.Error),
-          resultsStatusSuccess = ("%s "):format(lvim.ui.icons.diagnostics.Success),
-          resultsActionMessage = ("%s "):format(lvim.ui.icons.diagnostics.Information),
-          resultsChangeIndicator = ("%s "):format(lvim.ui.icons.ui.LineMiddle),
+          resultsStatusError = ("%s "):format(nvim.ui.icons.diagnostics.Error),
+          resultsStatusSuccess = ("%s "):format(nvim.ui.icons.diagnostics.Success),
+          resultsActionMessage = ("%s "):format(nvim.ui.icons.diagnostics.Information),
+          resultsChangeIndicator = ("%s "):format(nvim.ui.icons.ui.LineMiddle),
 
-          historyTitle = ("%s "):format(lvim.ui.icons.ui.History),
+          historyTitle = ("%s "):format(nvim.ui.icons.ui.History),
         },
         history = {
           historyDir = join_paths(get_state_dir(), "grug-far"),
@@ -64,7 +64,7 @@ function M.config()
     end,
     wk = function(_, categories, fn)
       local function generate_rg_flags(f)
-        return table.concat(vim.list_extend(lvim.fn.get_telescope_rg_arguments(true), f or {}), " ")
+        return table.concat(vim.list_extend(nvim.fn.get_telescope_rg_arguments(true), f or {}), " ")
       end
 
       return {

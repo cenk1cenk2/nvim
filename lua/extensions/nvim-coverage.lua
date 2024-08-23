@@ -22,15 +22,15 @@ function M.config()
         end,
         highlights = {
           -- customize highlight groups created by the plugin
-          covered = { fg = lvim.ui.colors.green[300] }, -- supports style, fg, bg, sp (see :h highlight-gui)
-          partial = { fg = lvim.ui.colors.yellow[300] },
-          uncovered = { fg = lvim.ui.colors.red[300] },
+          covered = { fg = nvim.ui.colors.green[300] }, -- supports style, fg, bg, sp (see :h highlight-gui)
+          partial = { fg = nvim.ui.colors.yellow[300] },
+          uncovered = { fg = nvim.ui.colors.red[300] },
         },
         signs = {
           -- use your own highlight groups or text markers
-          covered = { hl = "CoverageCovered", text = lvim.ui.icons.ui.TriangleShortArrowRight },
-          partial = { hl = "CoveragePartial", text = lvim.ui.icons.ui.TriangleShortArrowRight },
-          uncovered = { hl = "CoverageUncovered", text = lvim.ui.icons.ui.TriangleShortArrowRight },
+          covered = { hl = "CoverageCovered", text = nvim.ui.icons.ui.TriangleShortArrowRight },
+          partial = { hl = "CoveragePartial", text = nvim.ui.icons.ui.TriangleShortArrowRight },
+          uncovered = { hl = "CoverageUncovered", text = nvim.ui.icons.ui.TriangleShortArrowRight },
         },
         summary = {
           -- customize the summary pop-up

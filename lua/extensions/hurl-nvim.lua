@@ -142,12 +142,12 @@ function M.config()
             job
               .create({
                 command = join_paths(get_config_dir(), "utils", "scripts", "curl-to-hurl.sh"),
-                -- writer = vim.fn.getreg(vim.v.register or lvim.system_register),
+                -- writer = vim.fn.getreg(vim.v.register or nvim.system_register),
                 on_success = function(j)
                   local generated = table.concat(j:result(), "\n")
 
                   log:info("Copied generated hurl to clipboard.")
-                  vim.fn.setreg(vim.v.register or lvim.system_register, generated)
+                  vim.fn.setreg(vim.v.register or nvim.system_register, generated)
                 end,
               })
               :start()

@@ -27,7 +27,7 @@ function M.config()
         ---@usage Function called when a new window is opened, use for changing win settings/config
         on_open = function(win)
           if vim.api.nvim_win_is_valid(win) then
-            vim.api.nvim_win_set_config(win, { border = lvim.ui.border })
+            vim.api.nvim_win_set_config(win, { border = nvim.ui.border })
           end
         end,
 
@@ -52,11 +52,11 @@ function M.config()
 
         ---@usage Icons for the different levels
         icons = {
-          ERROR = lvim.ui.icons.diagnostics.Error .. " ",
-          WARN = lvim.ui.icons.diagnostics.Warning .. " ",
-          INFO = lvim.ui.icons.diagnostics.Information .. " ",
-          DEBUG = lvim.ui.icons.diagnostics.Debug .. " ",
-          TRACE = lvim.ui.icons.diagnostics.Trace .. " ",
+          ERROR = nvim.ui.icons.diagnostics.Error .. " ",
+          WARN = nvim.ui.icons.diagnostics.Warning .. " ",
+          INFO = nvim.ui.icons.diagnostics.Information .. " ",
+          DEBUG = nvim.ui.icons.diagnostics.Debug .. " ",
+          TRACE = nvim.ui.icons.diagnostics.Trace .. " ",
         },
       }
     end,

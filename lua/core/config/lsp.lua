@@ -19,10 +19,10 @@ return {
         [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
       },
       text = {
-        [vim.diagnostic.severity.ERROR] = lvim.ui.icons.diagnostics.Error,
-        [vim.diagnostic.severity.WARN] = lvim.ui.icons.diagnostics.Warning,
-        [vim.diagnostic.severity.INFO] = lvim.ui.icons.diagnostics.Information,
-        [vim.diagnostic.severity.HINT] = lvim.ui.icons.diagnostics.Hint,
+        [vim.diagnostic.severity.ERROR] = nvim.ui.icons.diagnostics.Error,
+        [vim.diagnostic.severity.WARN] = nvim.ui.icons.diagnostics.Warning,
+        [vim.diagnostic.severity.INFO] = nvim.ui.icons.diagnostics.Information,
+        [vim.diagnostic.severity.HINT] = nvim.ui.icons.diagnostics.Hint,
       },
     },
     virtual_text = {
@@ -38,7 +38,7 @@ return {
     float = {
       focusable = true,
       style = "minimal",
-      border = lvim.ui.border,
+      border = nvim.ui.border,
       source = true,
       header = "",
       prefix = "",
@@ -63,7 +63,7 @@ return {
   float = {
     focusable = true,
     style = "minimal",
-    border = lvim.ui.border,
+    border = nvim.ui.border,
   },
   buffer_mappings = require("core.keys.lsp"),
   automatic_configuration = {
@@ -102,14 +102,14 @@ return {
           local ft = vim.bo[bufnr].ft
           local tools = {}
 
-          if lvim.lsp.tools.by_ft.formatters["*"] then
-            vim.list_extend(tools, lvim.lsp.tools.by_ft.formatters["*"])
+          if nvim.lsp.tools.by_ft.formatters["*"] then
+            vim.list_extend(tools, nvim.lsp.tools.by_ft.formatters["*"])
           end
 
-          if lvim.lsp.tools.by_ft.formatters[ft] ~= nil then
-            vim.list_extend(tools, lvim.lsp.tools.by_ft.formatters[ft])
-          elseif lvim.lsp.tools.by_ft.formatters["_"] ~= nil then
-            vim.list_extend(tools, lvim.lsp.tools.by_ft.formatters["_"])
+          if nvim.lsp.tools.by_ft.formatters[ft] ~= nil then
+            vim.list_extend(tools, nvim.lsp.tools.by_ft.formatters[ft])
+          elseif nvim.lsp.tools.by_ft.formatters["_"] ~= nil then
+            vim.list_extend(tools, nvim.lsp.tools.by_ft.formatters["_"])
           end
 
           return tools
@@ -118,24 +118,24 @@ return {
           local ft = vim.bo[bufnr].ft
           local tools = {}
 
-          if lvim.lsp.tools.by_ft.linters["*"] then
-            vim.list_extend(tools, lvim.lsp.tools.by_ft.linters["*"])
+          if nvim.lsp.tools.by_ft.linters["*"] then
+            vim.list_extend(tools, nvim.lsp.tools.by_ft.linters["*"])
           end
 
-          if lvim.lsp.tools.by_ft.linters[ft] ~= nil then
-            vim.list_extend(tools, lvim.lsp.tools.by_ft.linters[ft])
+          if nvim.lsp.tools.by_ft.linters[ft] ~= nil then
+            vim.list_extend(tools, nvim.lsp.tools.by_ft.linters[ft])
           else
-            vim.list_extend(tools, lvim.lsp.tools.by_ft.linters["_"])
+            vim.list_extend(tools, nvim.lsp.tools.by_ft.linters["_"])
           end
 
           return tools
         end,
       },
       formatters = function(bufnr)
-        return lvim.lsp.tools.list_registered.default.formatters(bufnr)
+        return nvim.lsp.tools.list_registered.default.formatters(bufnr)
       end,
       linters = function(bufnr)
-        return lvim.lsp.tools.list_registered.default.linters(bufnr)
+        return nvim.lsp.tools.list_registered.default.linters(bufnr)
       end,
     },
   },

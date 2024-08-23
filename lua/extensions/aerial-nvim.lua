@@ -197,7 +197,7 @@ function M.config()
         },
       })
 
-      lvim.lsp.wrapper.lsp_document_symbols = function()
+      nvim.lsp.wrapper.lsp_document_symbols = function()
         require("telescope").extensions.aerial.aerial()
       end
     end,

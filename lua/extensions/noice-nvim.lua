@@ -39,15 +39,15 @@ function M.config()
             -- view: (default is cmdline view)
             -- opts: any options passed to the view
             -- icon_hl_group: optional hl_group for the icon
-            cmdline = { pattern = "^:", icon = lvim.ui.icons.ui.Command },
-            search_down = { kind = "search", pattern = "^/", icon = ("%s %s"):format(lvim.ui.icons.ui.Search, lvim.ui.icons.ui.DoubleChevronDown), lang = "regex" },
-            search_up = { kind = "search", pattern = "^%?", icon = ("%s %s"):format(lvim.ui.icons.ui.Search, lvim.ui.icons.ui.DoubleChevronUp), lang = "regex" },
+            cmdline = { pattern = "^:", icon = nvim.ui.icons.ui.Command },
+            search_down = { kind = "search", pattern = "^/", icon = ("%s %s"):format(nvim.ui.icons.ui.Search, nvim.ui.icons.ui.DoubleChevronDown), lang = "regex" },
+            search_up = { kind = "search", pattern = "^%?", icon = ("%s %s"):format(nvim.ui.icons.ui.Search, nvim.ui.icons.ui.DoubleChevronUp), lang = "regex" },
             filter = { pattern = "^:%s*!", icon = "$", lang = "bash" },
             shell = { pattern = "^:%s*!", icon = "$", lang = "bash" },
             read = { pattern = "^:%s*r!", icon = "$", lang = "bash" },
             -- lua = false, -- to disable a format, set to `false`
             lua = { pattern = "^:%s*lua%s+", icon = "", lang = "lua" },
-            help = { pattern = "^:%s*he?l?p?%s+", icon = lvim.ui.icons.ui.CircleQuestion },
+            help = { pattern = "^:%s*he?l?p?%s+", icon = nvim.ui.icons.ui.CircleQuestion },
             input = {}, -- Used by input()
           },
         },
@@ -87,7 +87,7 @@ function M.config()
           },
           cmdline_popup = {
             border = {
-              style = lvim.ui.border,
+              style = nvim.ui.border,
               padding = { 0, 1 },
             },
             filter_options = {},
@@ -106,7 +106,7 @@ function M.config()
               row = "97%",
             },
             border = {
-              style = lvim.ui.border,
+              style = nvim.ui.border,
             },
             win_options = {
               winblend = 30,
@@ -130,7 +130,7 @@ function M.config()
               row = "75%",
             },
             border = {
-              style = lvim.ui.border,
+              style = nvim.ui.border,
               padding = { 0, 1 },
               text = {
                 top = " Confirm ",
@@ -151,7 +151,7 @@ function M.config()
             },
             enter = true,
             border = {
-              style = lvim.ui.border,
+              style = nvim.ui.border,
             },
             position = {
               row = "75%",
@@ -182,7 +182,7 @@ function M.config()
               max_width = 120,
             },
             border = {
-              style = lvim.ui.border,
+              style = nvim.ui.border,
               padding = { 0, 0 },
             },
             position = { row = 2, col = 0 },
@@ -218,7 +218,7 @@ function M.config()
           documentation = {
             opts = {
               border = {
-                style = lvim.ui.border,
+                style = nvim.ui.border,
                 padding = { 0, 0 },
               },
             },

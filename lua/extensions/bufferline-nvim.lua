@@ -24,25 +24,25 @@ function M.config()
           mode = "buffers", -- set to "tabs" to only show tabpages instead
           numbers = "none", -- can be "none" | "ordinal" | "buffer_id" | "both" | function
           close_command = function(bufnr, force)
-            lvim.fn.close_buffer(bufnr, force)
+            nvim.fn.close_buffer(bufnr, force)
           end, -- can be a string | function, see "Mouse actions"
           right_mouse_command = "vert sbuffer %d", -- can be a string | function, see "Mouse actions"
           left_mouse_command = "buffer %d", -- can be a string | function, see "Mouse actions"
           middle_mouse_command = function(bufnr)
-            lvim.fn.close_buffer(bufnr)
+            nvim.fn.close_buffer(bufnr)
           end, -- can be a string | function, see "Mouse actions"
           -- NOTE: this plugin is designed with this icon in mind,
           -- and so changing this is NOT recommended, this is intended
           -- as an escape hatch for people who cannot bear it for whatever reason
           indicator = {
-            icon = lvim.ui.icons.ui.BoldLineLeft,
+            icon = nvim.ui.icons.ui.BoldLineLeft,
             style = "icon", -- can also be 'underline'|'none',
           },
-          buffer_close_icon = lvim.ui.icons.ui.Close,
-          modified_icon = lvim.ui.icons.git.FileModified,
-          close_icon = lvim.ui.icons.ui.Close,
-          left_trunc_marker = lvim.ui.icons.ui.ArrowCircleLeft,
-          right_trunc_marker = lvim.ui.icons.ui.ArrowCircleRight,
+          buffer_close_icon = nvim.ui.icons.ui.Close,
+          modified_icon = nvim.ui.icons.git.FileModified,
+          close_icon = nvim.ui.icons.ui.Close,
+          left_trunc_marker = nvim.ui.icons.ui.ArrowCircleLeft,
+          right_trunc_marker = nvim.ui.icons.ui.ArrowCircleRight,
           --- name_formatter can be used to change the buffer's label in the bufferline.
           --- Please note some names can/will break the
           --- bufferline so use this at your discretion knowing that it has
@@ -135,7 +135,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "x" }),
           function()
-            lvim.fn.close_buffer()
+            nvim.fn.close_buffer()
           end,
           desc = "close current buffer",
         },
@@ -148,7 +148,7 @@ function M.config()
             for _, e in ipairs(require("bufferline").get_elements().elements) do
               if current ~= e.id and not require("bufferline.groups")._is_pinned(e) then
                 vim.schedule(function()
-                  lvim.fn.close_buffer(e.id)
+                  nvim.fn.close_buffer(e.id)
                 end)
               end
             end
@@ -199,7 +199,7 @@ end
 
 function M.diagnostics_indicator(_, _, diagnostics, _)
   local result = {}
-  local symbols = { error = lvim.ui.icons.diagnostics.Error, warning = lvim.ui.icons.diagnostics.Warning, info = lvim.ui.icons.diagnostics.Information }
+  local symbols = { error = nvim.ui.icons.diagnostics.Error, warning = nvim.ui.icons.diagnostics.Warning, info = nvim.ui.icons.diagnostics.Information }
 
   for name, count in pairs(diagnostics) do
     if symbols[name] and count > 0 then

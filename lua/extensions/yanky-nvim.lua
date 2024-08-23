@@ -14,7 +14,7 @@ function M.config()
     end,
     setup = function()
       local mapping = require("yanky.telescope.mapping")
-      local system_register = lvim.system_register
+      local system_register = nvim.system_register
       -- local default_register = require("yanky.utils").get_default_register()
 
       return {

@@ -389,8 +389,8 @@ function M.config()
           end,
         },
         icons = {
-          closed = lvim.ui.icons.ui.ChevronShortRight,
-          open = lvim.ui.icons.ui.ChevronShortDown,
+          closed = nvim.ui.icons.ui.ChevronShortRight,
+          open = nvim.ui.icons.ui.ChevronShortDown,
         },
       }
     end,

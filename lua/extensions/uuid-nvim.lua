@@ -27,7 +27,7 @@ function M.config()
           function()
             local uuid = require("uuid-nvim").get_v4({ quotes = "none" })
 
-            vim.fn.setreg(vim.v.register or lvim.system_register, uuid)
+            vim.fn.setreg(vim.v.register or nvim.system_register, uuid)
             log:info(("Copied generated uuid to clipboard: %s"):format(uuid))
           end,
           desc = "generate uuid",

@@ -13,14 +13,14 @@ function M.config()
     end,
     setup = function()
       return {
-        indent = { highlight = "IndentBlankLineChar", char = lvim.ui.icons.LineLeft },
+        indent = { highlight = "IndentBlankLineChar", char = nvim.ui.icons.LineLeft },
         whitespace = {
           highlight = "IndentBlankLineChar",
           remove_blankline_trail = false,
         },
         scope = {
           enabled = true,
-          char = lvim.ui.icons.LineLeft,
+          char = nvim.ui.icons.LineLeft,
           show_start = false,
           show_end = false,
           injected_languages = true,
@@ -67,7 +67,7 @@ function M.config()
           },
         },
         exclude = {
-          filetypes = lvim.disabled_filetypes,
+          filetypes = nvim.disabled_filetypes,
         },
       }
     end,

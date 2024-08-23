@@ -16,21 +16,21 @@ function M.config()
       return {
         signs = {
           add = {
-            text = lvim.ui.icons.ui.BoldLineLeft,
+            text = nvim.ui.icons.ui.BoldLineLeft,
           },
           change = {
-            text = lvim.ui.icons.ui.BoldLineLeft,
+            text = nvim.ui.icons.ui.BoldLineLeft,
           },
           delete = {
-            -- text = lvim.ui.icons.ui.BoldLineLeft,
-            text = lvim.ui.icons.ui.BoldDividerRight,
+            -- text = nvim.ui.icons.ui.BoldLineLeft,
+            text = nvim.ui.icons.ui.BoldDividerRight,
           },
           topdelete = {
-            -- text = lvim.ui.icons.ui.BoldLineLeft,
-            text = lvim.ui.icons.ui.BoldDividerRight,
+            -- text = nvim.ui.icons.ui.BoldLineLeft,
+            text = nvim.ui.icons.ui.BoldDividerRight,
           },
           changedelete = {
-            text = lvim.ui.icons.ui.BoldLineLeft,
+            text = nvim.ui.icons.ui.BoldLineLeft,
           },
         },
         numhl = false,
@@ -49,7 +49,7 @@ function M.config()
         max_file_length = 40000,
         preview_config = {
           -- Options passed to nvim_open_win
-          border = lvim.ui.border,
+          border = nvim.ui.border,
           style = "minimal",
           relative = "cursor",
           row = 0,

@@ -15,7 +15,7 @@ function M.config()
         active_codecs = "all", -- Set all codecs as active and useable
         float = { -- Floating window options
           padding = 0, -- Zero padding (does not apply to title if any)
-          -- border = lvim.ui.border,
+          -- border = nvim.ui.border,
           mappings = {
             close = "q", -- Key to press to close the floating window
             apply = "a", -- Key to press to apply the encoding/decoding

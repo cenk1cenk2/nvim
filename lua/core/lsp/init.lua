@@ -4,13 +4,13 @@ local log = require("core.log")
 local setup = require("setup")
 
 local function add_lsp_buffer_options(bufnr)
-  for k, v in pairs(lvim.lsp.buffer_options) do
+  for k, v in pairs(nvim.lsp.buffer_options) do
     vim.api.nvim_set_option_value(k, v, { buf = bufnr })
   end
 end
 
 local function add_lsp_buffer_keybindings(bufnr)
-  setup.load_keymaps(lvim.lsp.buffer_mappings, { buffer = bufnr })
+  setup.load_keymaps(nvim.lsp.buffer_mappings, { buffer = bufnr })
 end
 
 function M.common_capabilities()
@@ -33,8 +33,8 @@ function M.common_capabilities()
 end
 
 function M.common_on_exit(client, bufnr)
-  if #lvim.lsp.on_exit_callbacks > 0 then
-    for _, cb in pairs(lvim.lsp.on_exit) do
+  if #nvim.lsp.on_exit_callbacks > 0 then
+    for _, cb in pairs(nvim.lsp.on_exit) do
       cb(client, bufnr)
     end
     log:trace("Called lsp.on_exit")
@@ -42,8 +42,8 @@ function M.common_on_exit(client, bufnr)
 end
 
 function M.common_on_init(client, bufnr)
-  if #lvim.lsp.on_init_callbacks > 0 then
-    for _, cb in pairs(lvim.lsp.on_init_callbacks) do
+  if #nvim.lsp.on_init_callbacks > 0 then
+    for _, cb in pairs(nvim.lsp.on_init_callbacks) do
       cb(client, bufnr)
     end
     log:trace("Called lsp.on_init_callbacks")
@@ -51,8 +51,8 @@ function M.common_on_init(client, bufnr)
 end
 
 function M.common_on_attach(client, bufnr)
-  if #lvim.lsp.on_attach_callbacks > 0 then
-    for _, cb in pairs(lvim.lsp.on_attach_callbacks) do
+  if #nvim.lsp.on_attach_callbacks > 0 then
+    for _, cb in pairs(nvim.lsp.on_attach_callbacks) do
       cb(client, bufnr)
     end
     log:trace("Called lsp.on_attach_callbacks")
@@ -60,11 +60,11 @@ function M.common_on_attach(client, bufnr)
 
   local lu = require("core.lsp.utils")
 
-  if lvim.lsp.code_lens.refresh then
+  if nvim.lsp.code_lens.refresh then
     lu.setup_codelens_refresh(client, bufnr)
   end
 
-  if lvim.lsp.inlay_hints.enabled then
+  if nvim.lsp.inlay_hints.enabled then
     lu.setup_inlay_hints(client, bufnr)
   end
 
@@ -97,7 +97,7 @@ function M.setup(force)
     installer.setup({
       -- a list of all tools you want to ensure are installed upon
       -- start; they should be the names Mason uses for each tool
-      ensure_installed = lvim.lsp.ensure_installed,
+      ensure_installed = nvim.lsp.ensure_installed,
 
       -- if set to true this will check each tool for updates. If updates
       -- are available the tool will be updated. This setting does not
@@ -132,7 +132,7 @@ function M.setup(force)
         configured_servers_only = false,
       },
     })
-    require("mason-lspconfig").setup(lvim.lsp.installer.setup)
+    require("mason-lspconfig").setup(nvim.lsp.installer.setup)
     require("mason-lspconfig").setup_handlers({
       function(server_name)
         if not require("core.lsp.attach").should_configure(server_name) then

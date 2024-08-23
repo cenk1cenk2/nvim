@@ -25,7 +25,7 @@ function M.config()
     setup = function()
       return {
         ui = {
-          border = lvim.ui.border,
+          border = nvim.ui.border,
         },
         log_level = vim.log.levels.INFO,
         max_concurrent_installers = 10,

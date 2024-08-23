@@ -15,7 +15,7 @@ function M.config()
       local rainbow_delimiters = require("rainbow-delimiters")
 
       return {
-        disable = lvim.disabled_filetypes,
+        disable = nvim.disabled_filetypes,
         -- Which query to use for finding delimiters
         query = {
           [""] = "rainbow-delimiters",

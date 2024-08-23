@@ -1,4 +1,4 @@
-local languages = lvim.lsp.efm.languages
+local languages = nvim.lsp.efm.languages
 
 return {
   filetypes = vim.tbl_keys(languages),

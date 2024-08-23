@@ -40,7 +40,7 @@ function M.config()
     end,
     setup = function(_, fn)
       local log = require("core.log")
-      local system_register = lvim.system_register
+      local system_register = nvim.system_register
 
       local function get_telescope_options(state, opts)
         return vim.tbl_extend("force", opts, {
@@ -109,21 +109,21 @@ function M.config()
           winbar = false,
           statusline = false,
           sources = {
-            { source = "filesystem", display_name = (" %s Files "):format(lvim.ui.icons.ui.Folder) },
-            -- { source = "buffers", display_name = (" %s Buffers "):format(lvim.ui.icons.ui.File) },
-            -- { source = "git_status", display_name = (" %s Git "):format(lvim.ui.icons.ui.Git) },
-            -- { source = "document_symbols", display_name = (" %s Symbols "):format(lvim.ui.icons.kind.Function) },
+            { source = "filesystem", display_name = (" %s Files "):format(nvim.ui.icons.ui.Folder) },
+            -- { source = "buffers", display_name = (" %s Buffers "):format(nvim.ui.icons.ui.File) },
+            -- { source = "git_status", display_name = (" %s Git "):format(nvim.ui.icons.ui.Git) },
+            -- { source = "document_symbols", display_name = (" %s Symbols "):format(nvim.ui.icons.kind.Function) },
           },
         },
         close_if_last_window = false, -- Close Neo-tree if it is the last window left in the tab
         enable_cursor_hijack = false, -- If enabled neotree will keep the cursor on the first letter of the filename when moving in the tree.
-        popup_border_style = lvim.ui.border,
+        popup_border_style = nvim.ui.border,
         -- https://github.com/nvim-neo-tree/neo-tree.nvim/issues/338
         enable_diagnostics = false,
         enable_git_status = true,
         enable_modified_markers = true, -- Show markers for files with unsaved changes.sort_case_insensitive = true, -- used when sorting files and directories in the tree
         enable_opened_markers = true,
-        open_files_do_not_replace_types = lvim.disabled_filetypes, -- when opening files, do not use windows containing these filetypes or buftypes
+        open_files_do_not_replace_types = nvim.disabled_filetypes, -- when opening files, do not use windows containing these filetypes or buftypes
         sort_function = nil, -- use a custom function for sorting files and directories in the tree
         -- sort_function = function (a,b)
         --       if a.type == b.type then
@@ -141,24 +141,24 @@ function M.config()
             padding = 0, -- extra padding on left hand side
             -- indent guides
             with_markers = true,
-            indent_marker = lvim.ui.icons.ui.LineMiddle,
-            last_indent_marker = lvim.ui.icons.ui.LineMiddleEnd,
+            indent_marker = nvim.ui.icons.ui.LineMiddle,
+            last_indent_marker = nvim.ui.icons.ui.LineMiddleEnd,
             highlight = "NeoTreeIndentMarker",
             -- expander config, needed for nesting files
             with_expanders = nil, -- if nil and file nesting is enabled, will enable expanders
-            expander_collapsed = lvim.ui.icons.ui.ChevronShortRight,
-            expander_expanded = lvim.ui.icons.ui.ChevronShortDown,
+            expander_collapsed = nvim.ui.icons.ui.ChevronShortRight,
+            expander_expanded = nvim.ui.icons.ui.ChevronShortDown,
             expander_highlight = "NeoTreeExpander",
           },
           icon = {
-            -- folder_closed = lvim.ui.icons.ui.Folder,
-            -- folder_open = lvim.ui.icons.ui.FolderOpen,
-            -- folder_empty = lvim.ui.icons.ui.EmptyFolder,
-            -- default = lvim.ui.icons.ui.File,
+            -- folder_closed = nvim.ui.icons.ui.Folder,
+            -- folder_open = nvim.ui.icons.ui.FolderOpen,
+            -- folder_empty = nvim.ui.icons.ui.EmptyFolder,
+            -- default = nvim.ui.icons.ui.File,
             -- highlight = "NeoTreeFileIcon",
           },
           modified = {
-            symbol = lvim.ui.icons.git.LineModified,
+            symbol = nvim.ui.icons.git.LineModified,
             highlight = "NeoTreeModified",
           },
           name = {
@@ -169,38 +169,38 @@ function M.config()
           git_status = {
             symbols = {
               -- Change type
-              added = lvim.ui.icons.git.FileAdded,
-              deleted = lvim.ui.icons.git.FileDeleted,
-              modified = lvim.ui.icons.git.FileModified,
-              renamed = lvim.ui.icons.git.FileRenamed,
+              added = nvim.ui.icons.git.FileAdded,
+              deleted = nvim.ui.icons.git.FileDeleted,
+              modified = nvim.ui.icons.git.FileModified,
+              renamed = nvim.ui.icons.git.FileRenamed,
               -- Status type
-              untracked = lvim.ui.icons.git.FileUntracked,
-              ignored = lvim.ui.icons.git.FileIgnored,
-              unstaged = lvim.ui.icons.git.FileUnstaged,
-              staged = lvim.ui.icons.git.FileStaged,
-              conflict = lvim.ui.icons.git.FileConflict,
+              untracked = nvim.ui.icons.git.FileUntracked,
+              ignored = nvim.ui.icons.git.FileIgnored,
+              unstaged = nvim.ui.icons.git.FileUnstaged,
+              staged = nvim.ui.icons.git.FileStaged,
+              conflict = nvim.ui.icons.git.FileConflict,
             },
           },
         },
         document_symbols = {
           follow_cursor = true,
           kinds = {
-            File = { icon = lvim.ui.icons.kind.File, hl = "Tag" },
-            Namespace = { icon = lvim.ui.icons.kind.Namespace, hl = "Include" },
-            Package = { icon = lvim.ui.icons.kind.Package, hl = "Label" },
-            Class = { icon = lvim.ui.icons.kind.Class, hl = "Include" },
-            Property = { icon = lvim.ui.icons.kind.Property, hl = "@property" },
-            Enum = { icon = lvim.ui.icons.kind.Enum, hl = "@number" },
-            Function = { icon = lvim.ui.icons.kind.Function, hl = "Function" },
-            String = { icon = lvim.ui.icons.kind.String, hl = "String" },
-            Number = { icon = lvim.ui.icons.kind.Number, hl = "Number" },
-            Array = { icon = lvim.ui.icons.kind.Array, hl = "Type" },
-            Object = { icon = lvim.ui.icons.kind.Object, hl = "Type" },
-            Key = { icon = lvim.ui.icons.kind.Key, hl = "" },
-            Struct = { icon = lvim.ui.icons.kind.Struct, hl = "Type" },
-            Operator = { icon = lvim.ui.icons.kind.Operator, hl = "Operator" },
-            TypeParameter = { icon = lvim.ui.icons.kind.TypeParameter, hl = "Type" },
-            StaticMethod = { icon = lvim.ui.icons.kind.Method, hl = "Function" },
+            File = { icon = nvim.ui.icons.kind.File, hl = "Tag" },
+            Namespace = { icon = nvim.ui.icons.kind.Namespace, hl = "Include" },
+            Package = { icon = nvim.ui.icons.kind.Package, hl = "Label" },
+            Class = { icon = nvim.ui.icons.kind.Class, hl = "Include" },
+            Property = { icon = nvim.ui.icons.kind.Property, hl = "@property" },
+            Enum = { icon = nvim.ui.icons.kind.Enum, hl = "@number" },
+            Function = { icon = nvim.ui.icons.kind.Function, hl = "Function" },
+            String = { icon = nvim.ui.icons.kind.String, hl = "String" },
+            Number = { icon = nvim.ui.icons.kind.Number, hl = "Number" },
+            Array = { icon = nvim.ui.icons.kind.Array, hl = "Type" },
+            Object = { icon = nvim.ui.icons.kind.Object, hl = "Type" },
+            Key = { icon = nvim.ui.icons.kind.Key, hl = "" },
+            Struct = { icon = nvim.ui.icons.kind.Struct, hl = "Type" },
+            Operator = { icon = nvim.ui.icons.kind.Operator, hl = "Operator" },
+            TypeParameter = { icon = nvim.ui.icons.kind.TypeParameter, hl = "Type" },
+            StaticMethod = { icon = nvim.ui.icons.kind.Method, hl = "Function" },
           },
         },
         window = {
@@ -459,7 +459,7 @@ function M.config()
       -- add external sources
       if is_extension_enabled(get_extension_name("extensions.netman-nvim")) then
         table.insert(setup.sources, "netman.ui.neo-tree")
-        table.insert(setup.source_selector.sources, { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(lvim.ui.icons.kind.Struct) })
+        table.insert(setup.source_selector.sources, { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(nvim.ui.icons.kind.Struct) })
       end
 
       return setup
