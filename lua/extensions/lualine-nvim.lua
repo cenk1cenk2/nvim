@@ -306,9 +306,9 @@ function M.components()
     snippet = {
       function()
         return ("%s%s%s"):format(
+          require("luasnip").locally_jumpable(1) and lvim.ui.icons.ui.BoxLeft or "",
           lvim.ui.icons.kind.Snippet,
-          require("luasnip").locally_jumpable(1) and lvim.ui.icons.ui.ChevronShortRight or "",
-          require("luasnip").locally_jumpable(-1) and lvim.ui.icons.ui.ChevronShortLeft or ""
+          require("luasnip").locally_jumpable(-1) and lvim.ui.icons.ui.BoxRight or ""
         )
       end,
       color = { fg = lvim.ui.colors.yellow[900], bg = lvim.ui.colors.orange[300] },
