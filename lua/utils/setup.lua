@@ -13,7 +13,7 @@ local M = {
 ---@field proxy? string
 ---@field expand? fun():wk.Spec
 
----@class WKSpec: {[number]: WKSpec} , WKMapping
+---@class WKMappings: {[number]: WKMappings} , WKMapping
 ---@field [1]? string
 ---@field [2]? string|fun()
 ---@field group? string|fun():string
@@ -23,7 +23,6 @@ local M = {
 ---@field mode? string|string[]
 ---@field cond? boolean|fun():boolean?
 
----@alias WKMappings WKSpec
 ---@alias LoadWkFn fun(mappings: WKMappings): nil
 
 --- Loads which-key mappings.
