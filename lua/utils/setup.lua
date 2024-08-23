@@ -166,7 +166,7 @@ local function define_manager_plugin(config, plugin)
   return plugin
 end
 
----@class Config
+---@class Config: table
 ---@field plugin? fun(config: Config): Plugin
 ---@field name? string
 ---@field enabled? boolean

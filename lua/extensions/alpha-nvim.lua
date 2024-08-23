@@ -43,7 +43,7 @@ function M.config()
       end
 
       local buttons = {}
-      for _, b in ipairs(config.layout.buttons) do
+      for _, b in ipairs(M.layout.buttons) do
         if b.cb then
           table.insert(buttons, cb_button(b.key, button_text(b.icon, b.name), b.cb))
         elseif b.path then
@@ -58,7 +58,7 @@ function M.config()
           { type = "padding", val = 1 },
           {
             type = "text",
-            val = config.layout.header,
+            val = M.layout.header,
             opts = {
               position = "center",
               hl = "DashboardHeader",
@@ -143,43 +143,44 @@ function M.config()
         require("modules.autocmds").q_close_autocmd({ "alpha" }),
       }
     end,
-    layout = {
-      header = {
-        [[                                                                                        ]],
-        [[                                      ████▒▒▒▒██████                                    ]],
-        [[                                    ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                                  ]],
-        [[                                  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                                ]],
-        [[                                  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                              ]],
-        [[                                ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                              ]],
-        [[                                ██▒▒▒▒▒▒    ▒▒    ▒▒▒▒▒▒██                              ]],
-        [[                                ██▒▒▒▒▒▒  ██▒▒██  ▒▒▒▒▒▒██                              ]],
-        [[                                ██▒▒▒▒▒▒  ██▒▒██  ▒▒▒▒▒▒██                              ]],
-        [[                                  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                                ]],
-        [[                          ██████  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██    ██                            ]],
-        [[                          ██▒▒▒▒██  ██▒▒██▒▒▒▒▒▒██▒▒██████▒▒██  ██                      ]],
-        [[                        ██████▒▒▒▒██▒▒▒▒▒▒██████▒▒▒▒██▒▒▒▒██  ██▒▒██                    ]],
-        [[                      ██▒▒▒▒▒▒████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██████  ██▒▒██                      ]],
-        [[                        ██████▒▒▒▒▒▒▒▒██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒████▒▒██                        ]],
-        [[                              ██████████▒▒▒▒▒▒██▒▒▒▒██▒▒▒▒▒▒██                          ]],
-        [[                                    ██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒██████████                        ]],
-        [[                              ██████▒▒▒▒▒▒██▒▒██  ██▒▒▒▒▒▒▒▒▒▒▒▒██                      ]],
-        [[                            ██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒▒▒██  ████████████                        ]],
-        [[                          ██▒▒██████████  ██▒▒▒▒▒▒██                                    ]],
-        [[                          ████              ██████▒▒██                                  ]],
-        [[                                                  ████                                  ]],
-        [[                                                      ██                                ]],
-        [[                                                                                        ]],
-      },
-      buttons = {
-        { key = "SPC w l", name = "Load Last Session", icon = lvim.ui.icons.ui.History },
-        { key = "SPC w f", name = "Sessions", icon = lvim.ui.icons.ui.Project },
-        { key = "SPC p", name = "Find File", icon = lvim.ui.icons.ui.File },
-        { key = "c", name = "~Config", path = join_paths(vim.env.HOME, ".config/nvim/"), icon = lvim.ui.icons.misc.Neovim },
-        { key = "n", name = "~Notes", path = join_paths(vim.env.HOME, "notes/"), icon = lvim.ui.icons.misc.Obsidian },
-        { key = "SPC w q", name = "Quit", icon = lvim.ui.icons.ui.SignOut },
-      },
-    },
   })
 end
+
+M.layout = {
+  header = {
+    [[                                                                                        ]],
+    [[                                      ████▒▒▒▒██████                                    ]],
+    [[                                    ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                                  ]],
+    [[                                  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                                ]],
+    [[                                  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                              ]],
+    [[                                ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                              ]],
+    [[                                ██▒▒▒▒▒▒    ▒▒    ▒▒▒▒▒▒██                              ]],
+    [[                                ██▒▒▒▒▒▒  ██▒▒██  ▒▒▒▒▒▒██                              ]],
+    [[                                ██▒▒▒▒▒▒  ██▒▒██  ▒▒▒▒▒▒██                              ]],
+    [[                                  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██                                ]],
+    [[                          ██████  ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██    ██                            ]],
+    [[                          ██▒▒▒▒██  ██▒▒██▒▒▒▒▒▒██▒▒██████▒▒██  ██                      ]],
+    [[                        ██████▒▒▒▒██▒▒▒▒▒▒██████▒▒▒▒██▒▒▒▒██  ██▒▒██                    ]],
+    [[                      ██▒▒▒▒▒▒████▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒██████  ██▒▒██                      ]],
+    [[                        ██████▒▒▒▒▒▒▒▒██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒████▒▒██                        ]],
+    [[                              ██████████▒▒▒▒▒▒██▒▒▒▒██▒▒▒▒▒▒██                          ]],
+    [[                                    ██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒██████████                        ]],
+    [[                              ██████▒▒▒▒▒▒██▒▒██  ██▒▒▒▒▒▒▒▒▒▒▒▒██                      ]],
+    [[                            ██▒▒▒▒▒▒▒▒▒▒██▒▒▒▒▒▒██  ████████████                        ]],
+    [[                          ██▒▒██████████  ██▒▒▒▒▒▒██                                    ]],
+    [[                          ████              ██████▒▒██                                  ]],
+    [[                                                  ████                                  ]],
+    [[                                                      ██                                ]],
+    [[                                                                                        ]],
+  },
+  buttons = {
+    { key = "SPC w l", name = "Load Last Session", icon = lvim.ui.icons.ui.History },
+    { key = "SPC w f", name = "Sessions", icon = lvim.ui.icons.ui.Project },
+    { key = "SPC p", name = "Find File", icon = lvim.ui.icons.ui.File },
+    { key = "c", name = "~Config", path = join_paths(vim.env.HOME, ".config/nvim/"), icon = lvim.ui.icons.misc.Neovim },
+    { key = "n", name = "~Notes", path = join_paths(vim.env.HOME, "notes/"), icon = lvim.ui.icons.misc.Obsidian },
+    { key = "SPC w q", name = "Quit", icon = lvim.ui.icons.ui.SignOut },
+  },
+}
 
 return M
