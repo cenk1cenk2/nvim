@@ -81,9 +81,34 @@ function M.get_common_opts()
   }
 end
 
+---Generates an ftplugin file based on the server_name in the selected directory
+---@param server_name string name of a valid language server, e.g. pyright, gopls, tsserver, etc.
+---@return boolean
+function M.should_configure(server_name)
+  local skipped_filetypes = nvim.lsp.automatic_configuration.skipped_filetypes
+  local skipped_servers = nvim.lsp.automatic_configuration.skipped_servers
+  local ensure_installed_servers = nvim.lsp.installer.setup.ensure_installed
+
+  if vim.tbl_contains(skipped_servers, server_name) and not vim.tbl_contains(ensure_installed_servers, server_name) then
+    return false
+  end
+
+  -- get the supported filetypes and remove any ignored ones
+  local filetypes = vim.tbl_filter(function(ft)
+    return not vim.tbl_contains(skipped_filetypes, ft)
+  end, require("core.lsp.utils").get_supported_filetypes(server_name) or {})
+
+  if not filetypes or #filetypes == 0 then
+    return false
+  end
+
+  return true
+end
+
 function M.setup(force)
   if is_headless() and not force then
-    log:debug("headless mode detected, skipping setting lsp support")
+    log:debug("Headless mode detected, skipping setting lsp support.")
+
     return
   end
 
@@ -135,7 +160,7 @@ function M.setup(force)
     require("mason-lspconfig").setup(nvim.lsp.installer.setup)
     require("mason-lspconfig").setup_handlers({
       function(server_name)
-        if not require("core.lsp.attach").should_configure(server_name) then
+        if not M.should_configure(server_name) then
           log:debug(("Skipping configuring LSP: %s"):format(server_name))
 
           return
