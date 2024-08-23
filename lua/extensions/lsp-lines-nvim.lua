@@ -6,7 +6,7 @@ M.name = "~whynothugo/lsp_lines.nvim"
 M.loaded = false
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",

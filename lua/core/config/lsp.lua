@@ -7,7 +7,7 @@ return {
     ---@usage timeout number timeout in ms for the format request (Default: 1000)
     timeout = 5000,
     ---@usage filter func to select client
-    filter = require("lvim.lsp.utils").format_filter,
+    filter = require("core.lsp.utils").format_filter,
   },
   --- @type vim.diagnostic.Opts
   diagnostics = {
@@ -65,7 +65,7 @@ return {
     style = "minimal",
     border = lvim.ui.border,
   },
-  buffer_mappings = require("keys.lsp"),
+  buffer_mappings = require("core.keys.lsp"),
   automatic_configuration = {
     ---@usage list of servers that the automatic installer will skip
     skipped_servers = {},

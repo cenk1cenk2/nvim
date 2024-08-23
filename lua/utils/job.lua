@@ -1,6 +1,6 @@
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 ---@class Command: Job
 ---@field on_success? function (j: Job): nil

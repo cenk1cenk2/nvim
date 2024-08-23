@@ -1,4 +1,4 @@
-local log = require("lvim.log")
+local log = require("core.log")
 
 local M = {}
 

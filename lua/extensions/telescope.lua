@@ -1,12 +1,12 @@
 -- https://github.com/nvim-telescope/telescope.nvim
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 M.name = "nvim-telescope/telescope.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvim-telescope/telescope.nvim",

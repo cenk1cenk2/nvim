@@ -1,6 +1,6 @@
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 ---@param pattern string | string[]
 ---@return Autocmd
@@ -43,7 +43,7 @@ function M.set_view_buffer(pattern)
 end
 
 function M.setup()
-  require("utils.setup").init({
+  require("setup").init({
     autocmds = function()
       return {
         M.q_close_autocmd({

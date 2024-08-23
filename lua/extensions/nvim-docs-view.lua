@@ -4,7 +4,7 @@ local M = {}
 M.name = "amrbashir/nvim-docs-view"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "amrbashir/nvim-docs-view",

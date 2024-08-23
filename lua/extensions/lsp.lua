@@ -4,7 +4,7 @@ local M = {}
 M.name = "lsp"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     opts = {
       multiple_packages = true,
     },
@@ -20,7 +20,7 @@ function M.config()
           event = "BufReadPre",
           init = false,
           config = function()
-            require("lvim.lsp").setup()
+            require("core.lsp").setup()
           end,
         },
         {

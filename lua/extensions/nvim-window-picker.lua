@@ -4,7 +4,7 @@ local M = {}
 M.name = "s1n7ax/nvim-window-picker"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "s1n7ax/nvim-window-picker",

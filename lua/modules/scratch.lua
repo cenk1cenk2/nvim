@@ -1,6 +1,6 @@
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 local random = math.random
 local function uuid()
@@ -30,7 +30,7 @@ function M.create_scratch_buffer()
     vim.api.nvim_win_set_buf(0, bufnr)
     log:info(("Created temporary file: %s"):format(filename))
 
-    require("utils.setup").create_autocmds({
+    require("setup").create_autocmds({
       {
         event = { "BufDelete", "VimLeavePre" },
         group = "_scratch",
@@ -97,7 +97,7 @@ function M.execute_scratch_buffer()
 end
 
 function M.setup()
-  require("utils.setup").init({
+  require("setup").init({
     name = "scratch",
     wk = function(_, categories, fn)
       return {

@@ -4,7 +4,7 @@ local M = {}
 M.name = "nvim-lualine/lualine.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvim-lualine/lualine.nvim",
@@ -174,7 +174,7 @@ function M.components()
     },
     python_env = {
       function()
-        local utils = require("lvim.core.lualine.utils")
+        local utils = require("core.core.lualine.utils")
         if vim.bo.filetype == "python" then
           local venv = os.getenv("CONDA_DEFAULT_ENV") or os.getenv("VIRTUAL_ENV")
           if venv then

@@ -1,12 +1,12 @@
 -- https://github.com/sindrets/diffview.nvim
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 M.name = "sindrets/diffview.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "sindrets/diffview.nvim",

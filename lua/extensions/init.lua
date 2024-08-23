@@ -108,7 +108,7 @@ local extensions = {
 }
 
 function M.config(config)
-  local log = require("lvim.log")
+  local log = require("core.log")
 
   for _, extension_path in ipairs(extensions) do
     local extension_ok, extension = pcall(require, "extensions." .. extension_path)

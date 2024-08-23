@@ -13,7 +13,7 @@ M.opts = {
 }
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "folke/which-key.nvim",
@@ -22,7 +22,7 @@ function M.config()
       }
     end,
     configure = function(_, fn)
-      lvim.wk = vim.list_extend(lvim.wk, require("keys.wk").setup(fn))
+      lvim.wk = vim.list_extend(lvim.wk, require("core.keys.wk").setup(fn))
 
       fn.add_disabled_filetypes({ "which_key" })
     end,

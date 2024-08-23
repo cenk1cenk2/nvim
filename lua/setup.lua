@@ -1,4 +1,4 @@
-local log = require("lvim.log")
+local log = require("core.log")
 local M = {
   fn = {},
 }
@@ -68,10 +68,9 @@ function M.load_keymaps(mappings, opts)
   end
 end
 
----@alias Commands Command[]
----@class Command: vim.api.keyset.user_command
----@field [1] string
----@field [2] fun() | string
+---@class Commands: vim.api.keyset.user_command
+---@field [1]? string
+---@field [2]? fun() | string
 
 ---@alias CreateCommandsFn fun(commands: Commands): nil
 
@@ -147,7 +146,7 @@ local function define_manager_plugin(config, plugin)
     log:trace(string.format("Defining default init command for plugin: %s", config.name))
 
     plugin.init = function()
-      require("utils.setup").plugin_init(config.name)
+      require("setup").plugin_init(config.name)
     end
   end
 
@@ -155,7 +154,7 @@ local function define_manager_plugin(config, plugin)
     log:trace(string.format("Defining default config command for plugin: %s", config.name))
 
     plugin.config = function()
-      require("utils.setup").plugin_configure(config.name)
+      require("setup").plugin_configure(config.name)
     end
   end
 
@@ -451,7 +450,7 @@ end
 --- Returns which-key categories.
 ---@type SetupFnGetWkCategories
 function M.fn.get_wk_categories()
-  return require("keys.wk").CATEGORIES
+  return require("core.keys.wk").CATEGORIES
 end
 
 ---@alias SetupFnGetWkCategory fun(category: string): string

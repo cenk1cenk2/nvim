@@ -6,7 +6,7 @@ local M = {}
 M.name = "kevinhwang91/nvim-bqf"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, false, {
+  require("setup").define_extension(M.name, false, {
     plugin = function()
       return {
         "kevinhwang91/nvim-bqf",

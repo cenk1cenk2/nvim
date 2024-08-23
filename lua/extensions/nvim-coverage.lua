@@ -4,7 +4,7 @@ local M = {}
 M.name = "andythigpen/nvim-coverage"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "andythigpen/nvim-coverage",
@@ -18,7 +18,7 @@ function M.config()
         auto_reload = true,
         commands = true, -- create commands
         load_coverage_cb = function(ftype)
-          require("lvim.log"):info(("Loaded test coverage: %s"):format(ftype))
+          require("core.log"):info(("Loaded test coverage: %s"):format(ftype))
         end,
         highlights = {
           -- customize highlight groups created by the plugin

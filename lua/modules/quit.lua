@@ -23,7 +23,7 @@ function M.workspace_quit()
 end
 
 function M.setup()
-  require("utils.setup").init({
+  require("setup").init({
     name = "quit",
     wk = function(_, categories, fn)
       return {

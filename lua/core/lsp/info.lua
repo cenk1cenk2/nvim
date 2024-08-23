@@ -1,6 +1,6 @@
 local M = {}
 
-local lsp_utils = require("lvim.lsp.utils")
+local lsp_utils = require("core.lsp.utils")
 M.is_open = false
 M.instance = nil
 

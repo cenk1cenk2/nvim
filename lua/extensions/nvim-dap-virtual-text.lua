@@ -4,7 +4,7 @@ local M = {}
 M.name = "theHamsta/nvim-dap-virtual-text"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "theHamsta/nvim-dap-virtual-text",

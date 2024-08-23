@@ -5,7 +5,7 @@ local M = {}
 M.name = "kylechui/nvim-surround"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "kylechui/nvim-surround",

@@ -1,5 +1,5 @@
-require("lvim"):init()
+require("core"):init()
 
-require("lvim.config"):load()
+require("core.config"):load()
 
-require("lvim.loader").load()
+require("core.loader").load()

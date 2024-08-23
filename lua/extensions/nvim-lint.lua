@@ -4,7 +4,7 @@ local M = {}
 M.name = "mfussenegger/nvim-lint"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "mfussenegger/nvim-lint",
@@ -13,7 +13,7 @@ function M.config()
     end,
     setup = function()
       local lint = require("lint")
-      local lsp_utils = require("lvim.lsp.utils")
+      local lsp_utils = require("core.lsp.utils")
       local METHOD = lsp_utils.METHODS.LINTER
 
       M.extend_tools(lint)

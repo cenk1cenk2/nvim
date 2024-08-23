@@ -1,7 +1,7 @@
 local M = {}
 
-local log = require("lvim.log")
-local lvim_lsp_utils = require("lvim.lsp.utils")
+local log = require("core.log")
+local lvim_lsp_utils = require("core.lsp.utils")
 local is_windows = vim.uv.os_uname().version:match("Windows")
 
 local function resolve_mason_config(server_name)
@@ -34,10 +34,10 @@ end
 ---@return table
 local function resolve_config(server_name, ...)
   local defaults = {
-    on_attach = require("lvim.lsp").common_on_attach,
-    on_init = require("lvim.lsp").common_on_init,
-    on_exit = require("lvim.lsp").common_on_exit,
-    capabilities = require("lvim.lsp").common_capabilities(),
+    on_attach = require("core.lsp").common_on_attach,
+    on_init = require("core.lsp").common_on_init,
+    on_exit = require("core.lsp").common_on_exit,
+    capabilities = require("core.lsp").common_capabilities(),
   }
 
   local has_custom_provider, custom_config = pcall(require, "modules.lsp.overrides." .. server_name)
@@ -79,7 +79,7 @@ end
 -- end
 
 local function launch_server(server_name, config)
-  local ft = config.filetypes or require("lvim.lsp.utils").get_supported_filetypes(server_name)
+  local ft = config.filetypes or require("core.lsp.utils").get_supported_filetypes(server_name)
   log:trace(("%s is hooked for fts: %s"):format(server_name, vim.inspect(ft)))
 
   xpcall(function()
@@ -100,7 +100,7 @@ local function launch_server(server_name, config)
     require("lspconfig")[server_name].setup(config)
   end, debug.traceback)
 
-  -- require("utils.setup").define_autocmds({
+  -- require("setup").define_autocmds({
   --   {
   --     "FileType",
   --     {

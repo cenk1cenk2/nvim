@@ -4,7 +4,7 @@ local M = {}
 M.name = "jellydn/hurl.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "jellydn/hurl.nvim",
@@ -60,7 +60,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TASKS, "r", "e" }),
           function()
-            local log = require("lvim.log")
+            local log = require("core.log")
             local store_key = "HURL_ENVIRONMENT"
             local shada = require("modules.shada")
             local stored_value = shada.get(store_key)
@@ -136,7 +136,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TASKS, "r", "c" }),
           function()
-            local log = require("lvim.log")
+            local log = require("core.log")
             local job = require("utils.job")
 
             job
@@ -157,7 +157,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TASKS, "r", "q" }),
           function()
-            local log = require("lvim.log")
+            local log = require("core.log")
             local job = require("utils.job")
 
             job

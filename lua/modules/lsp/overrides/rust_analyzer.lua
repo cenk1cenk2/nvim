@@ -1,5 +1,5 @@
 -- local rust_tools_ok, rust_tools = pcall(require, "rust-tools")
--- local log = require "lvim.log"
+-- local log = require "core.log"
 
 return {
   -- Needed for inlayHints. Merge this table with your settings or copy
@@ -32,7 +32,7 @@ return {
     -- end
     -- end
 
-    require("lvim.lsp").common_on_init(client, bufnr)
+    require("core.lsp").common_on_init(client, bufnr)
   end,
   settings = {
     ["rust-analyzer"] = {

@@ -4,7 +4,7 @@ local M = {}
 M.name = "stevearc/conform.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "stevearc/conform.nvim",
@@ -13,7 +13,7 @@ function M.config()
     end,
     setup = function()
       local conform = require("conform")
-      local lsp_utils = require("lvim.lsp.utils")
+      local lsp_utils = require("core.lsp.utils")
       local METHOD = lsp_utils.METHODS.FORMATTER
 
       M.extend_tools(conform)

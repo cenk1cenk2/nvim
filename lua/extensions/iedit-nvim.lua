@@ -1,12 +1,12 @@
 -- https://github.com/altermo/iedit.nvim
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 M.name = "altermo/iedit.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "altermo/iedit.nvim",

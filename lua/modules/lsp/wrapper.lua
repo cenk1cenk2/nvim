@@ -1,5 +1,5 @@
 local M = {}
-local log = require("lvim.log")
+local log = require("core.log")
 local lsp_utils = require("utils.lsp")
 
 function M.add_to_workspace_folder()
@@ -338,7 +338,7 @@ function M.setup()
     lvim.lsp.wrapper[key] = value
   end
 
-  require("utils.setup").init({
+  require("setup").init({
     name = "lsp-wrapper",
     commands = {
       {
@@ -414,7 +414,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LSP, "F" }),
           function()
-            require("lvim.lsp.format").toggle_format_on_save()
+            require("core.lsp.format").toggle_format_on_save()
           end,
           desc = "toggle autoformat",
         },
@@ -435,7 +435,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LSP, "i" }),
           function()
-            require("lvim.lsp.info").toggle(vim.bo.filetype)
+            require("core.lsp.info").toggle(vim.bo.filetype)
           end,
           desc = "lsp info",
         },

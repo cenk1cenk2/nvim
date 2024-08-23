@@ -3,10 +3,10 @@ local M = {}
 
 M.name = "mfussenegger/nvim-dap"
 
--- local log = require "lvim.log"
+-- local log = require "core.log"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "mfussenegger/nvim-dap",
@@ -214,7 +214,7 @@ function M.config()
           callback = function()
             require("dap.ext.vscode").load_launchjs()
 
-            require("lvim.log"):info("Reloaded launch.json for dap.")
+            require("core.log"):info("Reloaded launch.json for dap.")
           end,
         },
       }

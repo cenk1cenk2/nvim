@@ -4,7 +4,7 @@ local M = {}
 M.name = "neoclide/coc.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, false, {
+  require("setup").define_extension(M.name, false, {
     plugin = function()
       return {
         "neoclide/coc.nvim",

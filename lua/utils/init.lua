@@ -1,6 +1,6 @@
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 function M.treesitter_highlight(ft)
   return function(input)

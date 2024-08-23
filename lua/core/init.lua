@@ -66,7 +66,7 @@ end
 function _G.get_extension_name(module)
   local ok, m = pcall(require, module)
   if not ok then
-    require("lvim.log"):error("Failed to load extension: %s", module)
+    require("core.log"):error("Failed to load extension: %s", module)
 
     return nil
   end
@@ -78,9 +78,9 @@ end
 ---@param module string
 ---@return boolean
 function _G.is_extension_enabled(module)
-  local extension = require("utils.setup").get_config(module) or {}
+  local extension = require("setup").get_config(module) or {}
   if extension.enabled == nil then
-    require("lvim.log"):error("Extension is not defined: %s", module)
+    require("core.log"):error("Extension is not defined: %s", module)
 
     return false
   end
@@ -101,9 +101,9 @@ function M:init()
     _G.PLENARY_DEBUG = false
   end
 
-  require("lvim.loader").init()
+  require("core.loader").init()
 
-  require("lvim.config"):init()
+  require("core.config"):init()
 
   return self
 end
@@ -111,7 +111,7 @@ end
 ---Update LunarVim
 ---pulls the latest changes from github and, resets the startup cache
 function M:update()
-  require("lvim.version").update_repository()
+  require("core.version").update_repository()
 end
 
 return M

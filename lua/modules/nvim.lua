@@ -1,6 +1,6 @@
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 function M.rebuild_latest_neovim()
   local term_opts = require("extensions.toggleterm-nvim").generate_defaults_float_terminal({
@@ -22,7 +22,7 @@ function M.update_sync()
   log:warn("Triggered the special update method.")
 
   local _, err = pcall(function()
-    require("lvim"):update()
+    require("core"):update()
 
     vim.cmd([[Lazy! sync]])
 
@@ -44,25 +44,25 @@ function M.update_sync()
 end
 
 function M.rebuild_and_update()
-  require("lvim"):update()
+  require("core"):update()
   M.rebuild_latest_neovim()
   M.update()
 end
 
 function M.update_language_servers()
-  require("lvim.lsp").setup(true)
+  require("core.lsp").setup(true)
   vim.cmd([[MasonUpdate]])
   require("mason-update-all").update_all()
 end
 
 function M.update_language_servers_sync()
-  require("lvim.lsp").setup(true)
+  require("core.lsp").setup(true)
   M.update_language_servers()
   vim.cmd([[TSUpdateSync]])
 end
 
 function M.setup()
-  require("utils.setup").init({
+  require("setup").init({
     name = "rebuild",
     commands = {
       {
@@ -105,7 +105,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.NEOVIM, "p" }),
           function()
-            require("lvim"):update()
+            require("core"):update()
           end,
           desc = "git update config repository",
         },

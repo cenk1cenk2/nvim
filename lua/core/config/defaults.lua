@@ -4,7 +4,7 @@ lvim = {
   colorscheme = "onedarker",
 
   ui = {
-    icons = require("lvim.config.icons"),
+    icons = require("core.config.icons"),
     colors = require("onedarker.colors"),
     border = "single",
     transparent_window = false,

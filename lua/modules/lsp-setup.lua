@@ -1,6 +1,6 @@
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 function M.lsp_setup()
   local servers = require("lspconfig.util").available_servers()
@@ -14,13 +14,13 @@ function M.lsp_setup()
       return
     end
 
-    require("lvim.lsp.manager").setup(server)
+    require("core.lsp.manager").setup(server)
     log:info(("Started LSP server: %s"):format(server))
   end)
 end
 
 function M.setup()
-  require("utils.setup").init({
+  require("setup").init({
     commands = {
       {
         "LspSetup",

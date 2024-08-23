@@ -1,6 +1,6 @@
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 M.plugins_dir = get_data_dir() .. "/lazy"
 M.plugin_manager_dir = M.plugins_dir .. "/lazy.nvim"
@@ -95,7 +95,7 @@ function M.load()
   }
 
   local status_ok, _ = xpcall(function()
-    require("utils.setup").set_plugins()
+    require("setup").set_plugins()
 
     manager.setup(lvim.plugins, lazy_setup)
   end, debug.traceback)

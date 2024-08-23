@@ -4,7 +4,7 @@ local M = {}
 M.name = "nvim-neo-tree/neo-tree.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvim-neo-tree/neo-tree.nvim",
@@ -39,7 +39,7 @@ function M.config()
       end
     end,
     setup = function(_, fn)
-      local log = require("lvim.log")
+      local log = require("core.log")
       local system_register = lvim.system_register
 
       local function get_telescope_options(state, opts)
@@ -468,7 +468,7 @@ function M.config()
       require("neo-tree").setup(c)
     end,
     wk = function(_, categories, fn)
-      local log = require("lvim.log")
+      local log = require("core.log")
 
       return {
         {

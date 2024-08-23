@@ -4,7 +4,7 @@ local M = {}
 M.name = "jedrzejboczar/possession.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "jedrzejboczar/possession.nvim",
@@ -140,6 +140,6 @@ function M.config()
   })
 end
 
-M.current_setup = require("utils.setup").fn.get_current_setup_wrapper(M.name)
+M.current_setup = require("setup").fn.get_current_setup_wrapper(M.name)
 
 return M

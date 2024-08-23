@@ -4,7 +4,7 @@ local M = {}
 M.name = "Glench/Vim-Jinja2-Syntax"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "glench/vim-jinja2-syntax",

@@ -4,7 +4,7 @@ local M = {}
 M.name = "cenk1cenk2/schema-companion.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "cenk1cenk2/schema-companion.nvim",
@@ -59,7 +59,7 @@ function M.config()
           group = "__extensions",
           pattern = { "yaml", "helm" },
           callback = function(event)
-            require("utils.setup").load_wk({
+            require("setup").load_wk({
               {
                 fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F" }),
                 group = "schema",
@@ -86,7 +86,7 @@ function M.config()
                   local result = require("schema-companion.context").get_buffer_schema(0)
 
                   if not result then
-                    require("lvim.log"):warn("No schema found.")
+                    require("core.log"):warn("No schema found.")
                     return
                   end
 

@@ -4,7 +4,7 @@ local M = {}
 M.name = "hrsh7th/nvim-cmp"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "hrsh7th/nvim-cmp",
@@ -256,7 +256,7 @@ function M.config()
       -- setup lua snip
       local paths = {}
 
-      table.insert(paths, join_paths(require("lvim.loader").plugins_dir, "friendly-snippets"))
+      table.insert(paths, join_paths(require("core.loader").plugins_dir, "friendly-snippets"))
 
       local user_snippets = join_paths(get_config_dir(), "snippets")
       if is_directory(user_snippets) then
@@ -269,7 +269,7 @@ function M.config()
     end,
     on_done = function(config)
       local cmp = require("cmp")
-      local setup = require("utils.setup")
+      local setup = require("setup")
 
       local per_ft = {}
       for key, value in pairs(per_ft) do
@@ -334,6 +334,6 @@ function M.has_words_before()
   return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
 
-M.current_setup = require("utils.setup").fn.get_current_setup_wrapper(M.name)
+M.current_setup = require("setup").fn.get_current_setup_wrapper(M.name)
 
 return M

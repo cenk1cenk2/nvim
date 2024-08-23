@@ -1,11 +1,11 @@
 -- https://github.com/TrevorS/uuid-nvim
 local M = {}
-local log = require("lvim.log")
+local log = require("core.log")
 
 M.name = "TrevorS/uuid-nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "TrevorS/uuid-nvim",

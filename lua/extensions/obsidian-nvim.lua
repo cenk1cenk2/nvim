@@ -4,7 +4,7 @@ local M = {}
 M.name = "epwalsh/obsidian.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "epwalsh/obsidian.nvim",
@@ -393,7 +393,7 @@ function M.note_from_template(root, title, template)
   local matches = client:resolve_note(file)
 
   if matches then
-    require("lvim.log"):info("Opening note: %s", file)
+    require("core.log"):info("Opening note: %s", file)
     vim.cmd(([[ObsidianQuickSwitch %s]]):format(file))
   else
     vim.cmd(([[ObsidianNew %s]]):format(file))
@@ -401,7 +401,7 @@ function M.note_from_template(root, title, template)
     local bufnr = vim.api.nvim_get_current_buf()
     local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
     if #lines == 2 and lines[1] == ("# %s"):format(title) then
-      require("lvim.log"):info("Templating note: %s -> %s", file, template)
+      require("core.log"):info("Templating note: %s -> %s", file, template)
       vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, {})
       vim.cmd(([[ObsidianTemplate %s]]):format(template))
     end

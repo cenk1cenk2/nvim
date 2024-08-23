@@ -1,7 +1,7 @@
 local M = {}
 
-local log = require("lvim.log")
-local setup = require("utils.setup")
+local log = require("core.log")
+local setup = require("setup")
 
 local function add_lsp_buffer_options(bufnr)
   for k, v in pairs(lvim.lsp.buffer_options) do
@@ -58,7 +58,7 @@ function M.common_on_attach(client, bufnr)
     log:trace("Called lsp.on_attach_callbacks")
   end
 
-  local lu = require("lvim.lsp.utils")
+  local lu = require("core.lsp.utils")
 
   if lvim.lsp.code_lens.refresh then
     lu.setup_codelens_refresh(client, bufnr)
@@ -124,7 +124,7 @@ function M.setup(force)
 
   require("modules.lsp").setup()
 
-  require("lvim.lsp.handlers").setup()
+  require("core.lsp.handlers").setup()
 
   xpcall(function()
     require("neoconf").setup({
@@ -135,13 +135,13 @@ function M.setup(force)
     require("mason-lspconfig").setup(lvim.lsp.installer.setup)
     require("mason-lspconfig").setup_handlers({
       function(server_name)
-        if not require("lvim.lsp.attach").should_configure(server_name) then
+        if not require("core.lsp.attach").should_configure(server_name) then
           log:debug(("Skipping configuring LSP: %s"):format(server_name))
 
           return
         end
 
-        require("lvim.lsp.manager").setup(server_name)
+        require("core.lsp.manager").setup(server_name)
       end,
     })
 
@@ -149,7 +149,7 @@ function M.setup(force)
     util.on_setup = nil
   end, debug.traceback)
 
-  require("lvim.lsp.format").setup()
+  require("core.lsp.format").setup()
 end
 
 return M

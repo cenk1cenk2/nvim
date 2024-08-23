@@ -4,7 +4,7 @@ local M = {}
 M.name = "ui"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     opts = {
       multiple_packages = true,
     },
@@ -19,7 +19,7 @@ function M.config()
           "Tastyep/structlog.nvim",
           lazy = false,
           config = function()
-            require("lvim.log"):get_logger()
+            require("core.log"):get_logger()
           end,
         },
         -- {

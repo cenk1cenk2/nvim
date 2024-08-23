@@ -20,7 +20,7 @@ function M:set_level(level)
     local log_level = M.levels[level:upper()]
     local structlog = require("structlog")
     if structlog then
-      local logger = structlog.get_logger("lvim")
+      local logger = structlog.get_logger("core")
       for _, s in ipairs(logger.sinks) do
         s.level = log_level
       end
@@ -92,7 +92,7 @@ function M:init()
 
   structlog.configure(logger)
 
-  return structlog.get_logger("lvim")
+  return structlog.get_logger("core")
 end
 
 --- Adds a log entry using Plenary.log
@@ -138,7 +138,7 @@ end
 ---Retrieves the path of the logfile
 ---@return string path of the logfile
 function M:get_path()
-  return string.format("%s/%s.log", get_cache_dir(), "lvim")
+  return string.format("%s/%s.log", get_cache_dir(), "core")
 end
 
 ---Add a log entry at TRACE level

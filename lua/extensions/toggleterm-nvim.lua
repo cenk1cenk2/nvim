@@ -3,10 +3,10 @@ local M = {}
 
 M.name = "akinsho/toggleterm.nvim"
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "akinsho/toggleterm.nvim",
@@ -252,9 +252,9 @@ function M.create_toggle_term(opts)
     return
   end
 
-  require("utils.setup").load_wk({
+  require("setup").load_wk({
     {
-      require("utils.setup").fn.wk_keystroke({ require("utils.setup").fn.get_wk_category("TERMINAL"), opts.keymap }),
+      require("setup").fn.wk_keystroke({ require("setup").fn.get_wk_category("TERMINAL"), opts.keymap }),
 
       function()
         M.toggle_toggle_term({ cmd = opts.cmd, count = opts.count, direction = opts.direction })
@@ -552,6 +552,6 @@ function M.toggle_log_view(logfile)
   log_view:toggle()
 end
 
-M.current_setup = require("utils.setup").fn.get_current_setup_wrapper(M.name)
+M.current_setup = require("setup").fn.get_current_setup_wrapper(M.name)
 
 return M

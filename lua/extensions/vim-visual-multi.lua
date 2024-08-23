@@ -4,7 +4,7 @@ local M = {}
 M.name = "mg979/vim-visual-multi"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, false, {
+  require("setup").define_extension(M.name, false, {
     plugin = function()
       return {
         "mg979/vim-visual-multi",

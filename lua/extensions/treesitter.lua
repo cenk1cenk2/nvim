@@ -3,12 +3,12 @@ local M = {}
 
 M.name = "nvim-treesitter/nvim-treesitter"
 
--- local log = require("lvim.log")
+-- local log = require("core.log")
 
 M.parsers_dir = join_paths(get_data_dir(), "parsers")
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvim-treesitter/nvim-treesitter",

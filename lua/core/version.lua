@@ -1,6 +1,6 @@
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 local job = require("utils.job")
 
 function M.update_repository()

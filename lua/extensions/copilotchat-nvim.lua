@@ -2,10 +2,10 @@
 local M = {}
 
 M.name = "CopilotC-Nvim/CopilotChat.nvim"
-local log = require("lvim.log")
+local log = require("core.log")
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "CopilotC-Nvim/CopilotChat.nvim",

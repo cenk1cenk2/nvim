@@ -1,12 +1,12 @@
 -- https://github.com/echasnovski/mini.bufremove
-local log = require("lvim.log")
+local log = require("core.log")
 
 local M = {}
 
 M.name = "echasnovski/mini.bufremove"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "echasnovski/mini.bufremove",

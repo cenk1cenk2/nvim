@@ -1,4 +1,4 @@
-require("utils.setup").init({
+require("setup").init({
   autocmds = function(_, fn)
     return {
       {
@@ -6,13 +6,13 @@ require("utils.setup").init({
         group = "__lsp",
         pattern = { "terraform", "tfvars" },
         callback = function(event)
-          require("utils.setup").load_wk({
+          require("setup").load_wk({
             {
               fn.wk_keystroke({ fn.get_wk_category("LSP"), "Q" }),
               function()
                 require("modules.lsp.wrapper").reset_buffer_lsp()
 
-                require("lvim.log"):warn("terraform-ls will be killed.")
+                require("core.log"):warn("terraform-ls will be killed.")
                 vim.fn.system({ "pkill", "-9", "terraform-ls" })
               end,
               desc = "lsp restart (terraform-ls)",

@@ -1,4 +1,4 @@
-local log = require("lvim.log")
+local log = require("core.log")
 local job = require("utils.job")
 local utils = require("utils")
 
@@ -176,7 +176,7 @@ function M.run_yq()
 end
 
 function M.set_env()
-  local store_key = "LVIM_SET_ENV_VAR"
+  local store_key = "core_SET_ENV_VAR"
   local shada = require("modules.shada")
   local stored_value = shada.get(store_key)
 
@@ -240,7 +240,7 @@ function M.set_kubeconfig()
 end
 
 function M.setup()
-  require("utils.setup").init({
+  require("setup").init({
     name = "executables",
     wk = function(_, categories, fn)
       return {

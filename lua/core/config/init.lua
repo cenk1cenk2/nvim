@@ -1,18 +1,18 @@
-local log = require("lvim.log")
+local log = require("core.log")
 
 local M = {}
 
 --- Initialize lvim default configuration and variables
 function M:init()
-  lvim = vim.deepcopy(require("lvim.config.defaults"))
+  lvim = vim.deepcopy(require("core.config.defaults"))
 
   vim.cmd(("colorscheme %s"):format(lvim.colorscheme))
 
-  require("lvim.config.settings").load_defaults()
+  require("core.config.settings").load_defaults()
 
-  require("keys").load_defaults()
+  require("core.keys").load_defaults()
 
-  lvim.lsp = vim.deepcopy(require("lvim.config.lsp"))
+  lvim.lsp = vim.deepcopy(require("core.config.lsp"))
 end
 
 --- Override the configuration with a user provided one
@@ -26,7 +26,7 @@ function M:load()
 
   require("modules").config(self)
 
-  require("utils.setup").create_autocmds(lvim.autocommands)
+  require("setup").create_autocmds(lvim.autocommands)
 
   if lvim.ui.transparent_window then
     vim.api.nvim_create_autocmd("ColorScheme", {
@@ -48,7 +48,7 @@ function M:load()
     vim.opt.fillchars = "eob: "
   end
 
-  require("keys").setup()
+  require("core.keys").setup()
 end
 
 --- Override the configuration with a user provided one
@@ -57,9 +57,9 @@ function M:reload()
   vim.schedule(function()
     M:load()
 
-    require("lvim.lsp.format").setup()
+    require("core.lsp.format").setup()
 
-    local loader = require("lvim.loader")
+    local loader = require("core.loader")
 
     loader.reload({ lvim.plugins })
   end)

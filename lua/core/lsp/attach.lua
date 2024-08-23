@@ -1,6 +1,6 @@
 local M = {}
 
-local lvim_lsp_utils = require("lvim.lsp.utils")
+local lvim_lsp_utils = require("core.lsp.utils")
 
 local skipped_filetypes = lvim.lsp.automatic_configuration.skipped_filetypes
 local skipped_servers = lvim.lsp.automatic_configuration.skipped_servers

@@ -4,7 +4,7 @@ local M = {}
 M.name = "karb94/neoscroll.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "karb94/neoscroll.nvim",

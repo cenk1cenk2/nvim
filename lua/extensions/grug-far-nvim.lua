@@ -4,7 +4,7 @@ local M = {}
 M.name = "MagicDuck/grug-far.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "MagicDuck/grug-far.nvim",
@@ -182,7 +182,7 @@ function M.config()
           group = "__grug_far",
           pattern = { "grug-far" },
           callback = function(event)
-            require("utils.setup").load_keymaps({
+            require("setup").load_keymaps({
               {
                 "<localleader>w",
                 function()

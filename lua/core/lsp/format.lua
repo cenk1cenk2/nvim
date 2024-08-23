@@ -1,5 +1,5 @@
 local M = {}
-local log = require("lvim.log")
+local log = require("core.log")
 
 --- Creates the autocommand for format on save.
 function M.enable_format_on_save()
@@ -16,7 +16,7 @@ end
 
 --- Removes the autocommand for format on save.
 function M.disable_format_on_save()
-  require("utils.setup").clear_augroup("lsp_format_on_save")
+  require("setup").clear_augroup("lsp_format_on_save")
   log:debug("disabled format-on-save")
 end
 

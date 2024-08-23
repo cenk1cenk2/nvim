@@ -1,7 +1,7 @@
 local M = {}
 
 function M.setup()
-  require("utils.setup").init({
+  require("setup").init({
     name = "commands",
     commands = {
       {
@@ -23,39 +23,39 @@ function M.setup()
         end,
       },
       {
-        "LvimToggleFormatOnSave",
+        "NvimToggleFormatOnSave",
         function()
-          require("lvim.lsp.format").toggle_format_on_save()
+          require("core.lsp.format").toggle_format_on_save()
         end,
       },
       {
-        "LvimCacheReset",
+        "NvimCacheReset",
         function()
-          require("lvim.loader").reset_cache()
+          require("core.loader").reset_cache()
         end,
       },
       {
-        "LvimReload",
+        "NvimReload",
         function()
-          require("lvim.config"):reload()
+          require("core.config"):reload()
         end,
       },
       {
-        "LvimUpdate",
+        "NvimUpdate",
         function()
-          require("lvim"):update()
+          require("core"):update()
         end,
       },
       {
-        "LvimVersion",
+        "NvimVersion",
         function()
-          print(require("lvim.version").get_lvim_version())
+          print(require("core.version").get_lvim_version())
         end,
       },
       {
-        "LvimOpenlog",
+        "NvimOpenlog",
         function()
-          vim.fn.execute("edit " .. require("lvim.log").get_path())
+          vim.fn.execute("edit " .. require("core.log").get_path())
         end,
       },
     },

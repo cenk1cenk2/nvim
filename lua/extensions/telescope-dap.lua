@@ -4,7 +4,7 @@ local M = {}
 M.name = "nvim-telescope/telescope-dap.nvim"
 
 function M.config()
-  require("utils.setup").define_extension(M.name, true, {
+  require("setup").define_extension(M.name, true, {
     plugin = function()
       return {
         "nvim-telescope/telescope-dap.nvim",

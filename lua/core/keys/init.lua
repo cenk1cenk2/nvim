@@ -1,10 +1,10 @@
 local M = {}
 
-local log = require("lvim.log")
+local log = require("core.log")
 
 -- Load the default keymappings
 function M.load_defaults()
-  lvim.keys = require("keys.default")
+  lvim.keys = require("core.keys.default")
 
   return lvim.keys
 end
@@ -15,7 +15,7 @@ function M.setup()
   vim.g.mapleader = lvim.leader
   vim.g.maplocalleader = lvim.localleader
 
-  require("utils.setup").load_keymaps(lvim.keys)
+  require("setup").load_keymaps(lvim.keys)
 end
 
 return M

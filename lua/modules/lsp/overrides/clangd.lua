@@ -1,4 +1,4 @@
-local capabilities = require("lvim.lsp").common_capabilities()
+local capabilities = require("core.lsp").common_capabilities()
 capabilities.offsetEncoding = { "utf-16" }
 
 return {
