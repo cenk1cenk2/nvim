@@ -105,6 +105,40 @@ return {
     }, { delimiters = "<>" })
   ),
   s.s(
+    "ifnok",
+    s.fmt(
+      [[
+      if !<> {
+        return <>
+      }
+      ]],
+      {
+        s.i(1, { "ok" }),
+        s.d(2, go_ret_vals, { 1 }),
+      },
+      { delimiters = "<>" }
+    )
+  ),
+  s.s(
+    "ifnoki",
+    s.fmt(
+      [[
+      if <>, <> := <>(<>); !<> {
+        return <>
+      }
+      ]],
+      {
+        s.i(1, { "val" }),
+        s.i(2, { "ok" }),
+        s.i(3, { "fn" }),
+        s.i(4),
+        s.same(2),
+        s.d(5, go_ret_vals, { 1 }),
+      },
+      { delimiters = "<>" }
+    )
+  ),
+  s.s(
     "iferr",
     s.fmt(
       [[
