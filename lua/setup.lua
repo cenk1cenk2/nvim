@@ -122,12 +122,6 @@ function M.clear_augroup(name)
   end)
 end
 
-function M.set_option(arr)
-  for k, v in pairs(arr) do
-    vim.o[k] = v
-  end
-end
-
 ---@param opts table
 function M.legacy_setup(opts)
   for opt, val in pairs(opts) do
@@ -181,7 +175,11 @@ end
 ---@field commands? (fun(config: Config): Commands[]) | Commands[]
 ---@field hl? (fun(config: Config, fn: SetupFn): table<string, vim.api.keyset.highlight>) | table<string, vim.api.keyset.highlight>
 ---@field signs? (fun(config: Config, fn: SetupFn): table<string, vim.fn.sign_define.dict>) | table<string, vim.fn.sign_define.dict>
----@field to_setup? table
+---@field to_setup? ConfigToSetup[]
+
+---@class ConfigToSetup
+---@field cb fun(config: Config): any
+---@field overwrite boolean
 
 ---@alias DefineExtensionFn fun(name: string, enabled: boolean, config: Config): nil
 
