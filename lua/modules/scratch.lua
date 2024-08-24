@@ -101,7 +101,7 @@ function M.setup()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "s" }),
+          fn.wk_keystroke({ categories.TASKS, "o" }),
           function()
             M.create_scratch_buffer()
           end,
