@@ -12,7 +12,7 @@ function M.load_default_options()
   vim.opt.cmdheight = 2
   vim.opt.completeopt = { "menuone", "noselect" }
   vim.opt.conceallevel = 0
-  vim.opt.fileencoding = "utf-8"
+  -- vim.opt.fileencoding = "utf-8"
   vim.opt.foldmethod = "expr"
   vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
   vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"

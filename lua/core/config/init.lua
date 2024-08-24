@@ -2,20 +2,17 @@ local log = require("core.log")
 
 local M = {}
 
---- Initialize nvim default configuration and variables
-function M:init()
+--- Override the configuration with a user provided one
+-- @param config_path The path to the configuration overrides
+function M:load()
+  log:debug("Loading configuration...")
+
   _G.nvim = require("core.config.defaults")
   _G.nvim.lsp = require("core.config.lsp")
 
   require("core.config.settings").setup()
 
   M.load_colorscheme()
-end
-
---- Override the configuration with a user provided one
--- @param config_path The path to the configuration overrides
-function M:load()
-  log:debug("Loading configuration...")
 
   require("config")
 
@@ -36,7 +33,9 @@ function M:reload()
 
     local loader = require_clean("core.loader")
 
-    loader.reload({ nvim.plugins })
+    loader.reload(nvim.plugins)
+
+    log:info("Configuration reloaded!")
   end)
 end
 

@@ -9,12 +9,11 @@ function M.q_close_autocmd(pattern)
     return {
       keymaps = {
         {
-          mode = "n",
-          keys = "q",
-          callback = function()
+          "q",
+          function()
             nvim.fn.close_buffer(event.buf, true)
           end,
-          options = { noremap = true, silent = true },
+          mode = "n",
         },
       },
     }

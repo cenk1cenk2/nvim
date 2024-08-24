@@ -18,9 +18,9 @@ local queue = {}
 function M:set_level(level)
   local logger_ok, _ = xpcall(function()
     local log_level = M.levels[level:upper()]
-    local structlog = require("structlog")
-    if structlog then
-      local logger = structlog.get_logger("core")
+    local sl = require("structlog")
+    if sl then
+      local logger = sl.get_logger("core")
       for _, s in ipairs(logger.sinks) do
         s.level = log_level
       end
@@ -33,12 +33,12 @@ function M:set_level(level)
 end
 
 function M:init()
-  local status_ok, structlog = pcall(require, "structlog")
+  local status_ok, sl = pcall(require, "structlog")
   if not status_ok then
     return nil
   end
 
-  local SinkAdapter = require("structlog.sinks.adapter")
+  local adapter = require("structlog.sinks.adapter")
 
   local function notify(log)
     vim.notify(log.msg, log.level)
@@ -50,12 +50,12 @@ function M:init()
       pipelines = {
         {
           level = log_level,
-          sink = structlog.sinks.RotatingFile(self:get_path(), { max_size = 1048576 * 10 }),
+          sink = sl.sinks.RotatingFile(self:get_path(), { max_size = 1048576 * 10 }),
           processors = {
-            structlog.processors.StackWriter({ "line", "file" }, { max_parents = 3, stack_level = 2 }),
-            structlog.processors.Timestamper("%F %H:%M:%S"),
+            sl.processors.StackWriter({ "line", "file" }, { max_parents = 3, stack_level = 2 }),
+            sl.processors.Timestamper("%F %H:%M:%S"),
           },
-          formatter = structlog.formatters.Format( --
+          formatter = sl.formatters.Format( --
             "%s [%-5s] %s",
             { "timestamp", "level", "msg" },
             {
@@ -65,22 +65,22 @@ function M:init()
         },
         {
           level = log_level,
-          sink = structlog.sinks.Console(),
+          sink = sl.sinks.Console(),
           processors = {},
-          formatter = structlog.formatters.FormatColorizer( --
+          formatter = sl.formatters.FormatColorizer( --
             "[%-5s] %s",
             { "level", "msg" },
             {
               blacklist = { "logger_name" },
-              level = structlog.formatters.FormatColorizer.color_level(),
+              level = sl.formatters.FormatColorizer.color_level(),
             }
           ),
         },
         {
           level = M.levels.INFO,
-          sink = SinkAdapter(notify),
+          sink = adapter(notify),
           processors = {},
-          formatter = structlog.formatters.Format( --
+          formatter = sl.formatters.Format( --
             "%s",
             { "msg" },
             { blacklist_all = true }
@@ -90,9 +90,9 @@ function M:init()
     },
   }
 
-  structlog.configure(logger)
+  sl.configure(logger)
 
-  return structlog.get_logger("core")
+  return sl.get_logger("nvim")
 end
 
 --- Adds a log entry using Plenary.log

@@ -48,7 +48,7 @@ function M.setup()
       {
         "NvimVersion",
         function()
-          print(require("core.version").get_nvim_version())
+          require("core.log"):info(require("core.version").get_nvim_version())
         end,
       },
       {

@@ -83,7 +83,7 @@ function _G.require_clean(m)
   _G[m] = nil
   local ok, module = pcall(require, m)
   if not ok then
-    error(("Failed to load module: %s"):format(m))
+    error(("Failed to load module: %s"):foramt(m))
   end
 
   return module
@@ -129,8 +129,6 @@ function M:init()
   end
 
   require("core.loader").init()
-
-  require("core.config"):init()
 
   return self
 end

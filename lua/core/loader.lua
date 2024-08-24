@@ -101,36 +101,33 @@ function M.load()
   end, debug.traceback)
 
   if not status_ok then
-    log:warn("Can not load plugin configurations.")
+    log:error("Can not load plugin configurations.")
 
-    log:trace(debug.traceback())
+    log:error(debug.traceback())
   end
 end
 
-function M.reload(spec)
-  local Config = require("lazy.core.config")
-  local lazy = require("lazy")
+function M.reload()
+  local manager = require("lazy")
 
-  -- TODO: reset cache? and unload plugins?
+  require("setup").set_plugins()
 
-  Config.spec = spec
+  manager.reload()
 
-  require("lazy.core.plugin").load(true)
   require("lazy.core.plugin").update_state()
+
+  local plugins = manager.plugins()
 
   local not_installed_plugins = vim.tbl_filter(function(plugin)
     return not plugin._.installed
-  end, Config.plugins)
+  end, plugins)
 
   require("lazy.manage").clear()
 
   if #not_installed_plugins > 0 then
-    lazy.install({ wait = true })
+    manager.install({ wait = true })
   end
-
-  if #Config.to_clean > 0 then
-    lazy.clean({ wait = true, show = false })
-  end
+  manager.clean({ wait = true })
 end
 
 function M.reset_cache()
