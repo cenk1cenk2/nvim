@@ -32,7 +32,7 @@ function M.config()
         suggestion = {
           enabled = true,
           auto_trigger = true,
-          debounce = 100,
+          debounce = 50,
           keymap = {
             accept = "<M-l>",
             next = "<M-j>",

@@ -16,7 +16,9 @@ function M.config()
     end,
     setup = function()
       return {
-        library = {},
+        library = {
+          "lazy.nvim",
+        },
       }
     end,
     on_setup = function(c)

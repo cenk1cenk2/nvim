@@ -3,7 +3,14 @@ local M = {
   fn = {},
 }
 
----@class WKMapping: wk.Keymap
+---@class WKKeymap: vim.api.keyset.keymap
+---@field lhs string
+---@field mode string
+---@field rhs? string|fun()
+---@field lhsraw? string
+---@field buffer? number
+
+---@class WKMapping: WKKeymap
 ---@field plugin? string
 ---@field group? boolean
 ---@field remap? boolean
@@ -129,7 +136,7 @@ function M.legacy_setup(opts)
   end
 end
 
----@alias Plugin LazyPluginSpec
+---@alias Plugin LazyPlugin
 
 ---Define the extension in the plugin manager.
 ---@param config Config
@@ -170,7 +177,7 @@ end
 ---@field legacy_setup? table
 ---@field on_done? fun(config: Config, fn: SetupFn): nil
 ---@field keymaps? (fun(config: Config): KeymapMappings) | KeymapMappings
----@field wk? (fun(config: Config, categories: WkCategories, fn: SetupFn): WKMappings) | WKMappings
+---@field wk? (fun(config: Config, categories: WKCategories, fn: SetupFn): WKMappings) | WKMappings
 ---@field autocmds? fun(config: Config, fn: SetupFn): Autocmds[]
 ---@field commands? (fun(config: Config): Commands[]) | Commands[]
 ---@field hl? (fun(config: Config, fn: SetupFn): table<string, vim.api.keyset.highlight>) | table<string, vim.api.keyset.highlight>
@@ -436,7 +443,7 @@ function M.fn.append_to_setup(name, config, opts)
   table.insert(nvim.extensions[name].to_setup, vim.tbl_extend("force", opts, { cb = config }))
 end
 
----@alias SetupFnGetWkCategories fun(): WkCategories
+---@alias SetupFnGetWkCategories fun(): WKCategories
 
 --- Returns which-key categories.
 ---@type SetupFnGetWkCategories

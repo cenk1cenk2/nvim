@@ -1,6 +1,27 @@
 local M = {}
 
----@enum WKCategories
+---@class WKCategories
+---@field ACTIONS string
+---@field BUFFER string
+---@field COPILOT string
+---@field DEBUG string
+---@field DEPENDENCIES string
+---@field FIND string
+---@field SEARCH string
+---@field GIT string
+---@field LSP string
+---@field LOGS string
+---@field BOOKMARKS string
+---@field NOTES string
+---@field TESTS string
+---@field TERMINAL string
+---@field SESSION string
+---@field NEOVIM string
+---@field PLUGINS string
+---@field TASKS string
+---@field TREESITTER string
+
+---@type WKCategories
 M.CATEGORIES = {
   ACTIONS = "a",
   BUFFER = "b",
