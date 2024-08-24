@@ -177,12 +177,10 @@ function M.config()
       end
       return {
         require("modules.autocmds").q_close_autocmd({ "grug-far-history" }),
-        {
-          event = "FileType",
-          group = "__grug_far",
-          pattern = { "grug-far" },
-          callback = function(event)
-            require("setup").load_keymaps({
+        require("modules.autocmds").filetype_setup_autocmd({ "grug-far" }, function(init, event)
+          init({
+            keymaps = {
+
               {
                 "<localleader>w",
                 function()
@@ -201,9 +199,18 @@ function M.config()
                 desc = "Grug Far: toggle --no-ignore-dot",
                 buffer = event.buf,
               },
-            })
-          end,
-        },
+              {
+                "<localleader>x",
+                function()
+                  return grug_far_toggle_flags({ "--replace=" })
+                end,
+                mode = { "n" },
+                desc = "Grug Far: toggle replace empty",
+                buffer = event.buf,
+              },
+            },
+          })
+        end),
       }
     end,
   })

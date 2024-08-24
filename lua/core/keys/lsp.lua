@@ -3,7 +3,7 @@ return {
   {
     "K",
     function()
-      nvim.lsp.wrapper.hover()
+      nvim.lsp.fn.hover()
     end,
     desc = "hover",
     mode = { "n", "v", "x" },
@@ -11,7 +11,7 @@ return {
   {
     "gd",
     function()
-      nvim.lsp.wrapper.definition()
+      nvim.lsp.fn.definition()
     end,
     desc = "go to definition",
     mode = { "n", "v", "x" },
@@ -19,7 +19,7 @@ return {
   {
     "gD",
     function()
-      nvim.lsp.wrapper.declaration()
+      nvim.lsp.fn.declaration()
     end,
     desc = "go to declaration",
     mode = { "n", "v", "x" },
@@ -27,7 +27,7 @@ return {
   {
     "gr",
     function()
-      nvim.lsp.wrapper.references()
+      nvim.lsp.fn.references()
     end,
     desc = "go to references",
     mode = { "n", "v", "x" },
@@ -35,7 +35,7 @@ return {
   {
     "gt",
     function()
-      nvim.lsp.wrapper.implementation()
+      nvim.lsp.fn.implementation()
     end,
     desc = "go to implementation",
     mode = { "n", "v", "x" },
@@ -43,7 +43,7 @@ return {
   {
     "go",
     function()
-      nvim.lsp.wrapper.signature_help()
+      nvim.lsp.fn.signature_help()
     end,
     desc = "show signature help",
     mode = { "n", "v", "x" },
@@ -51,7 +51,7 @@ return {
   {
     "gl",
     function()
-      nvim.lsp.wrapper.show_line_diagnostics()
+      nvim.lsp.fn.show_line_diagnostics()
     end,
     desc = "show line diagnostics",
     mode = { "n", "v", "x" },
@@ -59,7 +59,7 @@ return {
   {
     "gh",
     function()
-      nvim.lsp.wrapper.code_action()
+      nvim.lsp.fn.code_action()
     end,
     desc = "code action",
     mode = { "n", "v", "x" },

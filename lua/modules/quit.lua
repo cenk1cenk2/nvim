@@ -24,7 +24,6 @@ end
 
 function M.setup()
   require("setup").init({
-    name = "quit",
     wk = function(_, categories, fn)
       return {
         {

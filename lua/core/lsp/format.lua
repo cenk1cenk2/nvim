@@ -8,7 +8,7 @@ function M.enable_format_on_save()
     group = "lsp_format_on_save",
     pattern = nvim.lsp.format_on_save.pattern,
     callback = function(args)
-      nvim.lsp.wrapper.format({ bufnr = args.bufnr })
+      nvim.lsp.fn.format({ bufnr = args.bufnr })
     end,
   })
   log:debug("enabled format-on-save")
@@ -31,6 +31,21 @@ function M.toggle_format_on_save()
   else
     M.disable_format_on_save()
   end
+end
+
+---filter passed to vim.lsp.buf.format
+---@param client vim.lsp.Client client attached to a buffer
+---@return boolean if client matches
+function M.format_filter(client)
+  -- local available_formatters = nvim.lsp.tools.list_registered.formatters(0)
+
+  -- if #available_formatters > 0 then
+  --   return client.name == nvim.lsp.tools.clients[M.METHODS.FORMATTER]
+  if client.supports_method("textDocument/formatting") then
+    return true
+  end
+
+  return false
 end
 
 function M.setup()

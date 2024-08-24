@@ -4,13 +4,12 @@ local M = {}
 
 --- Initialize nvim default configuration and variables
 function M:init()
-  nvim = vim.deepcopy(require("core.config.defaults"))
+  _G.nvim = require("core.config.defaults")
+  _G.nvim.lsp = require("core.config.lsp")
 
-  require("core.config.settings").load_defaults()
+  require("core.config.settings").setup()
 
   M.load_colorscheme()
-
-  nvim.lsp = vim.deepcopy(require("core.config.lsp"))
 end
 
 --- Override the configuration with a user provided one

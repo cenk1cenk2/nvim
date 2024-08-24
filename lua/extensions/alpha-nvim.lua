@@ -102,7 +102,7 @@ function M.config()
           { type = "padding", val = 0 },
           -- {
           --   type = "text",
-          --   val = { ("%s %s#%s"):format(nvim.ui.icons.git.Branch, require("core.version").get_nvim_branch(), require("core.version").get_nvim_current_sha()) },
+          --   val = { ("%s %s#%s"):format(nvim.ui.icons.git.Branch, require("core.version").get_config_branch(), require("core.version").get_config_sha()) },
           --   opts = {
           --     redraw = false,
           --     position = "center",

@@ -63,7 +63,6 @@ end
 
 function M.setup()
   require("setup").init({
-    name = "rebuild",
     commands = {
       {
         "LvimHeadlessUpdate",

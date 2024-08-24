@@ -151,14 +151,14 @@ return {
         -- })
 
         vim.cmd([[TSToolsOrganizeImports]])
-        -- nvim.lsp.wrapper.format()
+        -- nvim.lsp.fn.format()
       end,
     },
     LspAddMissingImports = {
       function()
         vim.cmd([[TSToolsAddMissingImports]])
         -- vim.cmd([[LspOrganizeImports]])
-        -- nvim.lsp.wrapper.format()
+        -- nvim.lsp.fn.format()
       end,
     },
   },

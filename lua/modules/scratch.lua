@@ -98,7 +98,6 @@ end
 
 function M.setup()
   require("setup").init({
-    name = "scratch",
     wk = function(_, categories, fn)
       return {
         {

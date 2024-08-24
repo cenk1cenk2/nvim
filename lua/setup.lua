@@ -176,7 +176,7 @@ end
 ---@field legacy_setup? table
 ---@field on_done? fun(config: Config, fn: SetupFn): nil
 ---@field keymaps? (fun(config: Config): KeymapMappings) | KeymapMappings
----@field wk? (fun(config: Config, categories: table<WKCategories, string>, fn: SetupFn): WKMappings) | WKMappings
+---@field wk? (fun(config: Config, categories: WkCategories, fn: SetupFn): WKMappings) | WKMappings
 ---@field autocmds? fun(config: Config, fn: SetupFn): Autocmds[]
 ---@field commands? (fun(config: Config): Commands[]) | Commands[]
 ---@field hl? fun(config: Config, fn: SetupFn): table
@@ -280,8 +280,10 @@ function M.evaluate_property(property, ...)
   return property
 end
 
+---@alias SetupInitFn fun(config: Config): nil
+
 --- Initializes the extension.
----@param config Config
+---@type SetupInitFn
 function M.init(config)
   if config ~= nil and config.on_init ~= nil then
     config.on_init(config)
@@ -445,7 +447,7 @@ function M.fn.append_to_setup(name, config, opts)
   table.insert(nvim.extensions[name].to_setup, vim.tbl_extend("force", opts, { cb = config }))
 end
 
----@alias SetupFnGetWkCategories fun(): table<WKCategories, string>
+---@alias SetupFnGetWkCategories fun(): WkCategories
 
 --- Returns which-key categories.
 ---@type SetupFnGetWkCategories

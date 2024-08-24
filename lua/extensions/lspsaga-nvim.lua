@@ -22,11 +22,11 @@ function M.config()
       })
     end,
     on_done = function(_, fn)
-      nvim.lsp.wrapper.code_action = function()
+      nvim.lsp.fn.code_action = function()
         vim.cmd("Lspsaga code_action")
         require("lspsaga.codeaction").pending_request = false
       end
-      nvim.lsp.wrapper.hover = function()
+      nvim.lsp.fn.hover = function()
         if is_extension_enabled(get_extension_name("extensions.nvim-ufo")) then
           local winid = require("ufo").peekFoldedLinesUnderCursor()
           if not winid then
@@ -37,27 +37,27 @@ function M.config()
         end
         require("lspsaga.hover").pending_request = false
       end
-      nvim.lsp.wrapper.rename = function()
+      nvim.lsp.fn.rename = function()
         vim.cmd("Lspsaga rename")
       end
-      nvim.lsp.wrapper.diagnostics_goto_next = function(opts)
+      nvim.lsp.fn.diagnostics_goto_next = function(opts)
         opts = opts or {}
 
         require("lspsaga.diagnostic"):goto_next(opts)
       end
-      nvim.lsp.wrapper.diagnostics_goto_prev = function(opts)
+      nvim.lsp.fn.diagnostics_goto_prev = function(opts)
         opts = opts or {}
 
         require("lspsaga.diagnostic"):goto_prev(opts)
       end
-      nvim.lsp.wrapper.show_line_diagnostics = function()
+      nvim.lsp.fn.show_line_diagnostics = function()
         vim.cmd("Lspsaga show_line_diagnostics")
       end
-      nvim.lsp.wrapper.incoming_calls = function()
+      nvim.lsp.fn.incoming_calls = function()
         vim.cmd("Lspsaga incoming_calls")
         require("lspsaga.callhierarchy").pending_request = false
       end
-      nvim.lsp.wrapper.outgoing_calls = function()
+      nvim.lsp.fn.outgoing_calls = function()
         vim.cmd("Lspsaga outgoing_calls")
         require("lspsaga.callhierarchy").pending_request = false
       end

@@ -241,7 +241,6 @@ end
 
 function M.setup()
   require("setup").init({
-    name = "executables",
     wk = function(_, categories, fn)
       return {
         {

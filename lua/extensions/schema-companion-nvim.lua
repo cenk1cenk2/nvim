@@ -54,12 +54,9 @@ function M.config()
     end,
     autocmds = function(_, fn)
       return {
-        {
-          event = "FileType",
-          group = "__extensions",
-          pattern = { "yaml", "helm" },
-          callback = function(event)
-            require("setup").load_wk({
+        require("modules.autocmds").filetype_setup_autocmd({ "yaml", "helm" }, function(init, event)
+          init({
+            wk = {
               {
                 fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F" }),
                 group = "schema",
@@ -103,9 +100,9 @@ function M.config()
                 desc = "set kubernetes version",
                 buffer = event.buf,
               },
-            })
-          end,
-        },
+            },
+          })
+        end),
       }
     end,
   })

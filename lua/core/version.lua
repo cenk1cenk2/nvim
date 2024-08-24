@@ -52,9 +52,9 @@ function M.update_repository()
     :sync(5000)
 end
 
----Get the current Lunarvim development branch
+---Get the current neovim development branch
 ---@return string|nil
-function M.get_nvim_branch()
+function M.get_config_branch()
   local stdout, code = job
     .create({
       command = "git",
@@ -74,9 +74,9 @@ function M.get_nvim_branch()
   return unpack(stdout)
 end
 
----Get currently checked-out tag of Lunarvim
+---Get currently checked-out tag of neovim
 ---@return string
-function M.get_nvim_tag()
+function M.get_config_tag()
   local stdout, code = job
     .create({
       command = "git",
@@ -96,21 +96,9 @@ function M.get_nvim_tag()
   return unpack(stdout)
 end
 
----Get currently running version of Lunarvim
----@return string
-function M.get_nvim_version()
-  local current_branch = M.get_nvim_branch()
-
-  if current_branch ~= "HEAD" or "" then
-    return ("%s-%s"):format(current_branch, M.get_nvim_current_sha())
-  else
-    return ("v%s"):format(M.get_nvim_tag())
-  end
-end
-
----Get the commit hash of currently checked-out commit of Lunarvim
+---Get the commit hash of currently checked-out commit of neovim
 ---@return string|nil
-function M.get_nvim_current_sha()
+function M.get_config_sha()
   local stdout, code = job
     .create({
       command = "git",
@@ -130,7 +118,19 @@ function M.get_nvim_current_sha()
   return unpack(stdout)
 end
 
----Get currently installed version of LunarVim
+---Get currently running version of neovim
+---@return string
+function M.get_config_version()
+  local current_branch = M.get_config_branch()
+
+  if current_branch ~= "HEAD" or "" then
+    return ("%s-%s"):format(current_branch, M.get_config_sha())
+  else
+    return ("v%s"):format(M.get_config_tag())
+  end
+end
+
+---Get currently installed version of neovim
 ---@return string
 function M.get_nvim_version()
   local stdout, code = job

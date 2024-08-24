@@ -23,7 +23,6 @@ end
 
 function M.setup()
   require("setup").init({
-    name = "unimpaired",
     keymaps = function()
       return {
         {

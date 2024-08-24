@@ -75,9 +75,9 @@ nvim.lsp.ensure_installed = {
   "checkmake",
 }
 
-nvim.lsp.automatic_configuration.skipped_filetypes = {}
+nvim.lsp.skipped_filetypes = {}
 
-nvim.lsp.automatic_configuration.skipped_servers = {
+nvim.lsp.skipped_servers = {
   "angularls",
   -- "ansiblels",
   "denols",

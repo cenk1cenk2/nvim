@@ -1,6 +1,6 @@
 local M = {}
 
-M.load_default_options = function()
+function M.load_default_options()
   local undodir = join_paths(get_cache_dir(), "undo")
 
   if not is_directory(undodir) then
@@ -77,14 +77,12 @@ M.load_headless_options = function()
   vim.opt.swapfile = false -- don't use a swap file
 end
 
-M.load_defaults = function()
-  -- if is_headless() then
-  --   M.load_headless_options()
-  --
-  --   return
-  -- end
-
+function M.setup()
   M.load_default_options()
+
+  if is_headless() then
+    M.load_headless_options()
+  end
 end
 
 return M

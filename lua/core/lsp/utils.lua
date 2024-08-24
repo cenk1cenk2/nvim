@@ -83,74 +83,7 @@ function M.get_all_supported_filetypes()
   return vim.tbl_keys(filetype_server_map or {})
 end
 
-function M.setup_codelens_refresh(client, bufnr)
-  local method = "textDocument/codeLens"
-  local status_ok, codelens_supported = pcall(function()
-    return client.supports_method(method)
-  end)
-
-  if not status_ok or not codelens_supported then
-    return
-  end
-
-  local group = "lsp_code_lens_refresh"
-  local events = { "LspAttach", "InsertLeave", "BufReadPost" }
-
-  local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
-    group = group,
-    buffer = bufnr,
-    event = events,
-  })
-
-  if ok and #autocmds > 0 then
-    return
-  end
-
-  local augroup = vim.api.nvim_create_augroup(group, { clear = false })
-  vim.api.nvim_create_autocmd(events, {
-    group = group,
-    buffer = bufnr,
-    callback = function()
-      vim.schedule(function()
-        if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
-          pcall(vim.lsp.codelens.refresh)
-        end
-      end)
-    end,
-  })
-
-  vim.api.nvim_create_autocmd({ "BufDelete" }, {
-    group = group,
-    buffer = bufnr,
-    callback = function()
-      if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
-        vim.api.nvim_del_augroup_by_id(augroup)
-      end
-    end,
-  })
-end
-
-function M.setup_inlay_hints(client, bufnr)
-  if client.server_capabilities.inlayHintProvider then
-    vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
-  end
-end
-
----filter passed to vim.lsp.buf.format
----@param client table client attached to a buffer
----@return boolean if client matches
-function M.format_filter(client)
-  -- local available_formatters = nvim.lsp.tools.list_registered.formatters(0)
-
-  -- if #available_formatters > 0 then
-  --   return client.name == nvim.lsp.tools.clients[M.METHODS.FORMATTER]
-  if client.supports_method("textDocument/formatting") then
-    return true
-  end
-
-  return false
-end
-
+---@enum LspToolMethods
 M.METHODS = {
   FORMATTER = "formatters",
   LINTER = "linters",

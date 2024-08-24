@@ -2,7 +2,6 @@ local M = {}
 
 function M.setup()
   require("setup").init({
-    name = "commands",
     commands = {
       {
         "QuickFixToggle",

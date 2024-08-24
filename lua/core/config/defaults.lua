@@ -1,10 +1,10 @@
-nvim = {
+return {
   leader = " ",
   localleader = ",",
   colorscheme = "onedarker",
 
   ui = {
-    icons = require("core.config.icons"),
+    icons = require("core.config.icons"):load(),
     colors = require("onedarker.colors"),
     border = "single",
     transparent_window = false,
@@ -50,5 +50,3 @@ nvim = {
   fn = {},
   wk = {},
 }
-
-return nvim

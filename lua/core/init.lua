@@ -21,26 +21,26 @@ function _G.join_paths(...)
   return result
 end
 
----Get the full path to `$LUNARVIM_RUNTIME_DIR`
+---Get the full path to `$neovim_RUNTIME_DIR`
 ---@return string
 function _G.get_data_dir()
   -- when nvim is used directly
   return vim.fn.stdpath("data")
 end
 
----Get the full path to `$LUNARVIM_CONFIG_DIR`
+---Get the full path to `$neovim_CONFIG_DIR`
 ---@return string
 function _G.get_config_dir()
   return vim.fn.stdpath("config")
 end
 
----Get the full path to `$LUNARVIM_CONFIG_DIR`
+---Get the full path to `$neovim_CONFIG_DIR`
 ---@return string
 function _G.get_state_dir()
   return vim.fn.stdpath("state")
 end
 
----Get the full path to `$LUNARVIM_CACHE_DIR`
+---Get the full path to `$neovim_CACHE_DIR`
 ---@return string
 function _G.get_cache_dir()
   return vim.fn.stdpath("cache")
@@ -96,7 +96,7 @@ function M:init()
   self.config_dir = get_config_dir()
   self.cache_dir = get_cache_dir()
 
-  ---Get the full path to LunarVim's base directory
+  ---Get the full path to neovim's base directory
   -- FIXME: currently unreliable in unit-tests
   if not is_headless() then
     _G.PLENARY_DEBUG = false
@@ -109,7 +109,7 @@ function M:init()
   return self
 end
 
----Update LunarVim
+---Update neovim
 ---pulls the latest changes from github and, resets the startup cache
 function M:update()
   require("core.version").update_repository()

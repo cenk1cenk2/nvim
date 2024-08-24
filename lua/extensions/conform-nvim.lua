@@ -75,7 +75,7 @@ function M.config()
         return M.filter_default_formatters(formatters)
       end
 
-      nvim.lsp.wrapper.format = function(opts)
+      nvim.lsp.fn.format = function(opts)
         opts = vim.tbl_extend("force", {
           bufnr = vim.api.nvim_get_current_buf(),
           timeout_ms = nvim.lsp.format_on_save.timeout_ms,

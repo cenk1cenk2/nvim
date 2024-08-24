@@ -61,11 +61,56 @@ function M.common_on_attach(client, bufnr)
   local lu = require("core.lsp.utils")
 
   if nvim.lsp.code_lens.refresh then
-    lu.setup_codelens_refresh(client, bufnr)
+    local method = "textDocument/codeLens"
+    local status_ok, codelens_supported = pcall(function()
+      return client.supports_method(method)
+    end)
+
+    if not status_ok or not codelens_supported then
+      return
+    end
+
+    local group = "lsp_code_lens_refresh"
+    local events = { "LspAttach", "InsertLeave", "BufReadPost" }
+
+    local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
+      group = group,
+      buffer = bufnr,
+      event = events,
+    })
+
+    if ok and #autocmds > 0 then
+      return
+    end
+
+    local augroup = vim.api.nvim_create_augroup(group, { clear = false })
+    vim.api.nvim_create_autocmd(events, {
+      group = group,
+      buffer = bufnr,
+      callback = function()
+        vim.schedule(function()
+          if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
+            pcall(vim.lsp.codelens.refresh)
+          end
+        end)
+      end,
+    })
+
+    vim.api.nvim_create_autocmd({ "BufDelete" }, {
+      group = group,
+      buffer = bufnr,
+      callback = function()
+        if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
+          vim.api.nvim_del_augroup_by_id(augroup)
+        end
+      end,
+    })
   end
 
   if nvim.lsp.inlay_hints.enabled then
-    lu.setup_inlay_hints(client, bufnr)
+    if client.server_capabilities.inlayHintProvider then
+      vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+    end
   end
 
   add_lsp_buffer_keybindings(bufnr)
@@ -85,8 +130,8 @@ end
 ---@param server_name string name of a valid language server, e.g. pyright, gopls, tsserver, etc.
 ---@return boolean
 function M.should_configure(server_name)
-  local skipped_filetypes = nvim.lsp.automatic_configuration.skipped_filetypes
-  local skipped_servers = nvim.lsp.automatic_configuration.skipped_servers
+  local skipped_filetypes = nvim.lsp.skipped_filetypes
+  local skipped_servers = nvim.lsp.skipped_servers
   local ensure_installed_servers = nvim.lsp.installer.setup.ensure_installed
 
   if vim.tbl_contains(skipped_servers, server_name) and not vim.tbl_contains(ensure_installed_servers, server_name) then

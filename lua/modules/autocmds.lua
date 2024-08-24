@@ -5,16 +5,20 @@ local log = require("core.log")
 ---@param pattern string | string[]
 ---@return Autocmd
 function M.q_close_autocmd(pattern)
-  return {
-    event = "FileType",
-    group = "_buffer_mappings",
-    pattern = pattern,
-    callback = function(event)
-      vim.keymap.set("n", "q", function()
-        vim.api.nvim_buf_delete(event.buf, { force = true })
-      end, { silent = true, buffer = event.buf })
-    end,
-  }
+  return M.filetype_setup_autocmd(pattern, function(init, event)
+    init({
+      keymaps = {
+        {
+          mode = "n",
+          keys = "q",
+          callback = function()
+            nvim.fn.close_buffer(event.buf, true)
+          end,
+          options = { noremap = true, silent = true },
+        },
+      },
+    })
+  end)
 end
 
 ---@param pattern string | string[]
@@ -38,6 +42,20 @@ function M.set_view_buffer(pattern)
       vim.opt_local.relativenumber = false
       vim.opt_local.signcolumn = "no"
       vim.opt_local.spell = false
+    end,
+  }
+end
+
+---@param pattern string | string[]
+---@param callback fun(init: SetupInitFn,event: table)
+---@return Autocmd
+function M.filetype_setup_autocmd(pattern, callback)
+  return {
+    event = { "FileType" },
+    group = "_filetype_settings",
+    pattern = pattern,
+    callback = function(event)
+      return callback(require("setup").init, event)
     end,
   }
 end
