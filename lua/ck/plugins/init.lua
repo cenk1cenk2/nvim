@@ -114,7 +114,7 @@ function M.config()
     local ok, m = pcall(require, "ck.plugins." .. path)
 
     if not ok then
-      log:warn(("Extension config can not be loaded: %s"):format(path))
+      log:warn(("Plugin configuration can not be loaded: %s"):format(path))
     else
       m.config()
     end
