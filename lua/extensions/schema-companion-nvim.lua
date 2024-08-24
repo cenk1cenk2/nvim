@@ -52,55 +52,53 @@ function M.config()
     on_setup = function(c)
       require("schema-companion").setup(c)
     end,
-    autocmds = function(_, fn)
+    autocmds = function()
       return {
         require("modules.autocmds").setup_init_for_filetype({ "yaml", "helm" }, function(event)
           return {
-            wk = {
-              {
-                fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F" }),
-                group = "schema",
-              },
-              {
-                fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "s" }),
-                function()
-                  return require("telescope").extensions.schema_companion.select_from_matching_schemas()
-                end,
-                desc = "select from matching schema",
-                buffer = event.buf,
-              },
-              {
-                fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "f" }),
-                function()
-                  require("telescope").extensions.schema_companion.select_schema()
-                end,
-                desc = "select schema",
-                buffer = event.buf,
-              },
-              {
-                fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "p" }),
-                function()
-                  local result = require("schema-companion.context").get_buffer_schema(0)
+            keymaps = function(_, fn)
+              return {
+                {
+                  fn.local_keystroke({ "s" }),
+                  function()
+                    return require("telescope").extensions.schema_companion.select_from_matching_schemas()
+                  end,
+                  desc = "select from matching schema",
+                  buffer = event.buf,
+                },
+                {
+                  fn.local_keystroke({ "f" }),
+                  function()
+                    require("telescope").extensions.schema_companion.select_schema()
+                  end,
+                  desc = "select schema",
+                  buffer = event.buf,
+                },
+                {
+                  fn.local_keystroke({ "p" }),
+                  function()
+                    local result = require("schema-companion.context").get_buffer_schema(0)
 
-                  if not result then
-                    require("core.log"):warn("No schema found.")
-                    return
-                  end
+                    if not result then
+                      require("core.log"):warn("No schema found.")
+                      return
+                    end
 
-                  vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result.uri) }, "l", false, true)
-                end,
-                desc = "print schema",
-                buffer = event.buf,
-              },
-              {
-                fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F", "k" }),
-                function()
-                  require("schema-companion.matchers.kubernetes").change_version()
-                end,
-                desc = "set kubernetes version",
-                buffer = event.buf,
-              },
-            },
+                    vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result.uri) }, "l", false, true)
+                  end,
+                  desc = "print schema",
+                  buffer = event.buf,
+                },
+                {
+                  fn.local_keystroke({ "k" }),
+                  function()
+                    require("schema-companion.matchers.kubernetes").change_version()
+                  end,
+                  desc = "set kubernetes version",
+                  buffer = event.buf,
+                },
+              }
+            end,
           }
         end),
       }

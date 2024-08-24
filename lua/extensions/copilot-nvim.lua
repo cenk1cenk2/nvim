@@ -16,7 +16,7 @@ function M.config()
       return {
         panel = {
           enabled = true,
-          auto_refresh = false,
+          auto_refresh = true,
           keymap = {
             jump_prev = "[[",
             jump_next = "]]",
@@ -34,12 +34,12 @@ function M.config()
           auto_trigger = true,
           debounce = 50,
           keymap = {
-            accept = "<M-l>",
+            accept = false,
             next = "<M-j>",
             prev = "<M-k>",
             dismiss = "<M-h>",
             accept_word = false,
-            accept_line = false,
+            accept_line = "<M-l>",
           },
         },
         filetypes = {
@@ -60,24 +60,21 @@ function M.config()
     on_setup = function(c)
       require("copilot").setup(c)
     end,
-    on_done = function()
-      -- override this keymap after plugin initiation
+    keymaps = function()
       local autopairs = require("nvim-autopairs")
       local suggestion = require("copilot.suggestion")
-      require("setup").init({
-        keymaps = {
-          {
-            "<M-l>",
-            function()
-              autopairs.disable()
-              suggestion.accept()
-              autopairs.enable()
-            end,
-            desc = "Accept Copilot suggestion",
-            mode = "n",
-          },
+      return {
+        {
+          "<M-l>",
+          function()
+            autopairs.disable()
+            suggestion.accept_line()
+            autopairs.enable()
+          end,
+          desc = "accept copilot suggestion",
+          mode = "n",
         },
-      })
+      }
     end,
     wk = function(_, categories, fn)
       return {

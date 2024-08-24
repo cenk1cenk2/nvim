@@ -15,7 +15,7 @@ function _G.is_headless()
 end
 
 ---Join path segments that were passed as input
----@vararg string
+---@param ... string
 ---@return string
 function _G.join_paths(...)
   return table.concat({ ... }, path_sep)
@@ -25,24 +25,28 @@ end
 ---@return string
 function _G.get_data_dir()
   -- when nvim is used directly
+  ---@diagnostic disable-next-line: return-type-mismatch
   return vim.fn.stdpath("data")
 end
 
 ---Get the full path to `$neovim_CONFIG_DIR`
 ---@return string
 function _G.get_config_dir()
+  ---@diagnostic disable-next-line: return-type-mismatch
   return vim.fn.stdpath("config")
 end
 
 ---Get the full path to `$neovim_CONFIG_DIR`
 ---@return string
 function _G.get_state_dir()
+  ---@diagnostic disable-next-line: return-type-mismatch
   return vim.fn.stdpath("state")
 end
 
 ---Get the full path to `$neovim_CACHE_DIR`
 ---@return string
 function _G.get_cache_dir()
+  ---@diagnostic disable-next-line: return-type-mismatch
   return vim.fn.stdpath("cache")
 end
 
@@ -52,6 +56,7 @@ end
 function _G.is_file(path)
   local stat = vim.uv.fs_stat(path)
 
+  ---@diagnostic disable-next-line: return-type-mismatch
   return stat and stat.type == "file" or false
 end
 
@@ -61,6 +66,7 @@ end
 function _G.is_directory(path)
   local stat = vim.uv.fs_stat(path)
 
+  ---@diagnostic disable-next-line: return-type-mismatch
   return stat and stat.type == "directory" or false
 end
 
@@ -81,7 +87,7 @@ function _G.require_clean(m)
   _G[m] = nil
   local ok, module = pcall(require, m)
   if not ok then
-    error(("Failed to load module: %s"):foramt(m))
+    error(("Failed to load module: %s"):format(m))
   end
 
   return module

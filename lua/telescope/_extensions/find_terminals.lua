@@ -14,7 +14,7 @@ M.terminal_previewer = previewers.new_buffer_previewer({
   get_buffer_by_name = function(_, selection)
     return selection.entry.name
   end,
-  define_preview = function(self, selection, status)
+  define_preview = function(self, selection, _)
     local buf = vim.F.npcall(function()
       return selection.entry.bufnr
     end)
@@ -56,7 +56,7 @@ function M.entry_maker(entry)
 end
 
 function M.handle_select(prompt_bufnr)
-  local selection = action_state.get_selected_entry(prompt_bufnr)
+  local selection = action_state.get_selected_entry()
 
   actions.close(prompt_bufnr)
 

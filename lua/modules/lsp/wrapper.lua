@@ -2,23 +2,39 @@ local M = {}
 local log = require("core.log")
 local lsp_utils = require("utils.lsp")
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.add_to_workspace_folder()
   vim.lsp.buf.add_workspace_folder()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
+function nvim.lsp.fn.remove_workspace_folder()
+  vim.lsp.buf.remove_workspace_folder()
+end
+
+---@diagnostic disable-next-line: duplicate-set-field
+function nvim.lsp.fn.list_workspace_folders()
+  vim.lsp.buf.list_workspace_folders()
+end
+
+---@param ... vim.lsp.buf.code_action.Opts
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.code_action(...)
   vim.lsp.buf.code_action(...)
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.document_highlight()
   vim.lsp.buf.document_highlight()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.document_symbols()
-  -- vim.lsp.buf.document_symbol()
   require("telescope.builtin").lsp_document_symbols()
 end
 
+---@param opts vim.lsp.buf.format.Opts
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.format(opts)
   opts = vim.tbl_extend("force", {
     bufnr = vim.api.nvim_get_current_buf(),
@@ -29,64 +45,68 @@ function nvim.lsp.fn.format(opts)
   vim.lsp.buf.format(opts)
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.hover()
   vim.lsp.buf.hover()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.declaration()
   vim.lsp.buf.declaration()
   vim.lsp.buf.clear_references()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.definition()
   vim.lsp.buf.definition()
   vim.lsp.buf.clear_references()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.implementation()
   require("telescope.builtin").lsp_implementations()
   -- vim.lsp.buf.implementation()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.incoming_calls()
   require("telescope.builtin").lsp_incoming_calls()
   -- vim.lsp.buf.incoming_calls()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.outgoing_calls()
   require("telescope.builtin").lsp_outgoing_calls()
   -- vim.lsp.buf.outgoing_calls()
 end
 
-function nvim.lsp.fn.list_workspace_folders()
-  vim.lsp.buf.list_workspace_folders()
-end
-
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.references()
   -- vim.lsp.buf.references()
   require("telescope.builtin").lsp_references()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.clear_references()
   vim.lsp.buf.clear_references()
 end
 
-function nvim.lsp.fn.remove_workspace_folder()
-  vim.lsp.buf.remove_workspace_folder()
-end
-
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.rename()
   vim.lsp.buf.rename()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.signature_help()
   vim.lsp.buf.signature_help()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.type_definition()
   vim.lsp.buf.type_definition()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.workspace_symbols()
   -- vim.lsp.buf.workspace_symbol()
 
@@ -95,63 +115,67 @@ end
 
 -- diagnostic
 
-function nvim.lsp.fn.diagnostics_goto_next(opts)
+---@param opts vim.diagnostic.JumpOpts
+---@diagnostic disable-next-line: duplicate-set-field
+function nvim.lsp.fn.jump(opts)
   opts = opts or {}
 
-  vim.tbl_extend("force", opts, { popup_opts = { border = nvim.lsp.popup_border } })
+  opts = vim.tbl_deep_extend("force", opts, { float = { border = nvim.lsp.popup_border } })
 
-  vim.diagnostic.goto_next(opts)
+  vim.diagnostic.jump(opts)
 end
 
-function nvim.lsp.fn.diagnostics_goto_prev(opts)
-  opts = opts or {}
-
-  vim.tbl_extend("force", opts, { popup_opts = { border = nvim.lsp.popup_border } })
-
-  vim.diagnostic.goto_prev(opts)
-end
-
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.show_line_diagnostics()
   local config = nvim.lsp.diagnostics.float
   config.scope = "line"
   vim.diagnostic.open_float(0, config)
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.document_diagonistics()
   require("telescope.builtin").lsp_document_diagnostics()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.workspace_diagonistics()
   require("telescope.builtin").lsp_workspace_diagnostics()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.code_lens()
   vim.lsp.codelens.run()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.diagonistics_set_loclist()
   vim.diagnostic.setloclist()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.reset_diagnostics()
   vim.diagnostic.reset()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.toggle_inlay_hints()
   local bufnr = vim.api.nvim_get_current_buf()
   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(bufnr), { bufnr = bufnr })
 end
 
-function nvim.lsp.fn.reset_buffer_lsp()
-  -- vim.cmd("LspRestart")
-  local bufnr = vim.api.nvim_get_current_buf()
+---Reset LSP on given filter.
+---@param filter? vim.lsp.get_clients.Filter
+---@diagnostic disable-next-line: duplicate-set-field
+function nvim.lsp.fn.restart_lsp(filter)
+  filter = filter or { bufnr = vim.api.nvim_get_current_buf() }
+
   local clients = vim.tbl_filter(function(client)
     if vim.tbl_contains({ "copilot", "typos_lsp" }, client.name) then
       return false
     end
 
     return true
-  end, vim.lsp.get_clients({ bufnr = bufnr }))
+  end, vim.lsp.get_clients(filter))
 
   for _, client in pairs(clients) do
     vim.schedule(function()
@@ -160,19 +184,28 @@ function nvim.lsp.fn.reset_buffer_lsp()
     end)
   end
 
-  log:warn(("Killed LSPs for buffer: %s -> %s"):format(
-    require("utils.fs").get_project_buffer_filepath(bufnr),
+  ---@type table
+  local readable = vim.deepcopy(filter)
+
+  if filter.bufnr then
+    readable.bufnr = nil
+    readable.filename = require("utils.fs").get_project_buffer_filepath(filter.bufnr)
+  end
+
+  log:warn(("Killed LSPs: %s -> %s"):format(
     table.concat(
       vim.tbl_map(function(client)
         return client.name
       end, clients),
       ", "
-    )
+    ),
+    vim.inspect(readable)
   ))
 
   -- require("utils").reload_file()
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.fix_current()
   local params = vim.lsp.util.make_range_params()
   params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
@@ -234,6 +267,7 @@ function nvim.lsp.fn.fix_current()
   end)
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.organize_imports()
   local params = vim.lsp.util.make_range_params()
   params.context = {
@@ -263,6 +297,7 @@ function nvim.lsp.fn.organize_imports()
   end)
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.rename_file()
   local win = vim.api.nvim_get_current_win()
   local bufnr = vim.api.nvim_get_current_buf()
@@ -329,6 +364,7 @@ function nvim.lsp.fn.rename_file()
   end)
 end
 
+---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.lsp_logging_level(level)
   vim.lsp.set_log_level(level)
 end
@@ -465,28 +501,28 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LSP, "n" }),
           function()
-            nvim.lsp.fn.diagnostics_goto_next({ severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
+            nvim.lsp.fn.jump({ count = 1, severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
           end,
           desc = "next diagnostic (error, warn)",
         },
         {
           fn.wk_keystroke({ categories.LSP, "N" }),
           function()
-            nvim.lsp.fn.diagnostics_goto_next({ severity = { vim.diagnostic.severity.INFO, vim.diagnostic.severity.HINT } })
+            nvim.lsp.fn.jump({ count = 1, severity = { vim.diagnostic.severity.INFO, vim.diagnostic.severity.HINT } })
           end,
           desc = "next diagnostic (info, hint)",
         },
         {
           fn.wk_keystroke({ categories.LSP, "p" }),
           function()
-            nvim.lsp.fn.diagnostics_goto_prev({ severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
+            nvim.lsp.fn.jump({ count = -1, severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
           end,
           desc = "prev diagnostic (error, warn)",
         },
         {
           fn.wk_keystroke({ categories.LSP, "P" }),
           function()
-            nvim.lsp.fn.diagnostics_goto_prev({ severity = { vim.diagnostic.severity.INFO, vim.diagnostic.severity.HINT } })
+            nvim.lsp.fn.jump({ count = -1, severity = { vim.diagnostic.severity.INFO, vim.diagnostic.severity.HINT } })
           end,
           desc = "prev diagnostic (info, hint)",
         },
@@ -541,10 +577,21 @@ function M.setup()
         },
         {
           fn.wk_keystroke({ categories.LSP, "Q" }),
+          group = "restart",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, "Q", "Q" }),
           function()
-            nvim.lsp.fn.reset_buffer_lsp()
+            nvim.lsp.fn.restart_lsp()
           end,
           desc = "restart currently active LSPs for this buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, "Q", "q" }),
+          function()
+            nvim.lsp.fn.restart_lsp({})
+          end,
+          desc = "restart currently active LSPs",
         },
       }
     end,

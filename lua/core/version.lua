@@ -75,7 +75,7 @@ function M.get_config_branch()
 end
 
 ---Get currently checked-out tag of neovim
----@return string
+---@return string?
 function M.get_config_tag()
   local stdout, code = job
     .create({
@@ -125,13 +125,13 @@ function M.get_config_version()
 
   if current_branch ~= "HEAD" or "" then
     return ("%s-%s"):format(current_branch, M.get_config_sha())
-  else
-    return ("v%s"):format(M.get_config_tag())
   end
+
+  return ("v%s"):format(M.get_config_tag())
 end
 
 ---Get currently installed version of neovim
----@return string
+---@return string?
 function M.get_nvim_version()
   local stdout, code = job
     .create({

@@ -21,6 +21,9 @@ function M:set_level(level)
     local sl = require("structlog")
     if sl then
       local logger = sl.get_logger("core")
+      if logger == nil then
+        error("No logger available.")
+      end
       for _, s in ipairs(logger.sinks) do
         s.level = log_level
       end

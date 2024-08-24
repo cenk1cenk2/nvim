@@ -1,5 +1,7 @@
 local M = {}
 
+---@module "plenary.path"
+
 --- Returns the cwd for the project.
 ---@return string
 function M.get_cwd()

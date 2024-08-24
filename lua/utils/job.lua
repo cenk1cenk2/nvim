@@ -1,5 +1,7 @@
 local M = {}
 
+---@module "plenary.job"
+
 local log = require("core.log")
 
 ---@class CommandJob: Job

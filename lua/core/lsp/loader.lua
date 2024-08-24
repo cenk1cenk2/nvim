@@ -28,7 +28,7 @@ end
 
 ---Resolve the configuration for a server by merging with the default config
 ---@param server_name string
----@vararg any config table [optional]
+---@param ... any config table [optional]
 ---@return table
 local function resolve_config(server_name, ...)
   local defaults = {

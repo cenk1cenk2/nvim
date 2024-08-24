@@ -22,10 +22,13 @@ function M.config()
       })
     end,
     on_done = function(_, fn)
+      ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.code_action = function()
         vim.cmd("Lspsaga code_action")
         require("lspsaga.codeaction").pending_request = false
       end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.hover = function()
         if is_extension_enabled(get_extension_name("extensions.nvim-ufo")) then
           local winid = require("ufo").peekFoldedLinesUnderCursor()
@@ -37,26 +40,35 @@ function M.config()
         end
         require("lspsaga.hover").pending_request = false
       end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.rename = function()
         vim.cmd("Lspsaga rename")
       end
-      nvim.lsp.fn.diagnostics_goto_next = function(opts)
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      nvim.lsp.fn.jump = function(opts)
         opts = opts or {}
 
-        require("lspsaga.diagnostic"):goto_next(opts)
+        if opts.count == -1 then
+          require("lspsaga.diagnostic"):goto_prev(opts)
+        else
+          require("lspsaga.diagnostic"):goto_next(opts)
+        end
       end
-      nvim.lsp.fn.diagnostics_goto_prev = function(opts)
-        opts = opts or {}
 
-        require("lspsaga.diagnostic"):goto_prev(opts)
-      end
+      ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.show_line_diagnostics = function()
         vim.cmd("Lspsaga show_line_diagnostics")
       end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.incoming_calls = function()
         vim.cmd("Lspsaga incoming_calls")
         require("lspsaga.callhierarchy").pending_request = false
       end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.outgoing_calls = function()
         vim.cmd("Lspsaga outgoing_calls")
         require("lspsaga.callhierarchy").pending_request = false

@@ -68,6 +68,13 @@ function M.setup(fn)
       mode = { "n", "v" },
     },
 
+    -- localleader
+
+    {
+      fn.wk_keystroke({ nvim.localleader }),
+      group = "local",
+    },
+
     -- actions
 
     {

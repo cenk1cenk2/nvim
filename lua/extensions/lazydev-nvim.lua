@@ -9,6 +9,9 @@ function M.config()
       return {
         "folke/lazydev.nvim",
         ft = { "lua" },
+        dependencies = {
+          -- "Bilal2453/luvit-meta",
+        },
         cmd = {
           "LazyDev",
         },
@@ -17,7 +20,7 @@ function M.config()
     setup = function()
       return {
         library = {
-          "lazy.nvim",
+          -- { path = "luvit-meta/library", words = { "vim%.uv" } },
         },
       }
     end,

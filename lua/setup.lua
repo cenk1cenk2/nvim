@@ -3,33 +3,8 @@ local M = {
   fn = {},
 }
 
----@class WKKeymap: vim.api.keyset.keymap
----@field lhs string
----@field mode string
----@field rhs? string|fun()
----@field lhsraw? string
----@field buffer? number
-
----@class WKMapping: WKKeymap
----@field plugin? string
----@field group? boolean
----@field remap? boolean
----@field hidden? boolean
----@field preset? boolean
----@field icon? wk.Icon|string
----@field proxy? string
----@field expand? fun():wk.Spec
-
----@class WKMappings: {[number]: WKMappings} , WKMapping
----@field [1]? string
----@field [2]? string|fun()
----@field group? string|fun():string
----@field desc? string|fun():string
----@field icon? wk.Icon|string|fun():(wk.Icon|string)
----@field buffer? number|boolean
----@field mode? string|string[]
----@field cond? boolean|fun():boolean?
-
+---@module "which-key"
+---@alias WKMappings wk.Mapping
 ---@alias LoadWkFn fun(mappings: WKMappings): nil
 
 --- Loads which-key mappings.
@@ -63,7 +38,7 @@ function M.load_keymaps(mappings, opts)
     local m = vim.tbl_extend("force", { silent = true }, mapping)
     local lhs = table.remove(m, 1)
     local rhs = table.remove(m, 1)
-    local mode = m.mode
+    local mode = m.mode or "n"
     m.mode = nil
     m = vim.tbl_extend("force", m, opts)
 
@@ -136,6 +111,7 @@ function M.legacy_setup(opts)
   end
 end
 
+---@module "lazy"
 ---@alias Plugin LazyPlugin
 
 ---Define the extension in the plugin manager.
@@ -171,15 +147,15 @@ end
 ---@field name? string
 ---@field enabled? boolean
 ---@field configure? fun(config: Config, fn: SetupFn): nil
----@field on_init? fun(config: Config): nil
+---@field on_init? fun(config: Config, fn: SetupFn): nil
 ---@field setup? (fun(config: Config, fn: SetupFn): table) | table
 ---@field on_setup? fun(c: any, config: Config, fn: SetupFn): nil
 ---@field legacy_setup? table
 ---@field on_done? fun(config: Config, fn: SetupFn): nil
----@field keymaps? (fun(config: Config): KeymapMappings) | KeymapMappings
+---@field keymaps? (fun(config: Config, fn: SetupFn): KeymapMappings) | KeymapMappings
 ---@field wk? (fun(config: Config, categories: WKCategories, fn: SetupFn): WKMappings) | WKMappings
 ---@field autocmds? fun(config: Config, fn: SetupFn): Autocmds[]
----@field commands? (fun(config: Config): Commands[]) | Commands[]
+---@field commands? (fun(config: Config, fn: SetupFn): Commands[]) | Commands[]
 ---@field hl? (fun(config: Config, fn: SetupFn): table<string, vim.api.keyset.highlight>) | table<string, vim.api.keyset.highlight>
 ---@field signs? (fun(config: Config, fn: SetupFn): table<string, vim.fn.sign_define.dict>) | table<string, vim.fn.sign_define.dict>
 ---@field to_setup? ConfigToSetup[]
@@ -288,7 +264,7 @@ end
 ---@type SetupInitFn
 function M.init(config)
   if config ~= nil and config.on_init ~= nil then
-    config.on_init(config)
+    config.on_init(config, M.fn)
 
     config.on_init = nil
   end
@@ -300,7 +276,7 @@ function M.init(config)
   end
 
   if config ~= nil and config.keymaps ~= nil then
-    M.load_keymaps(M.evaluate_property(config.keymaps, config))
+    M.load_keymaps(M.evaluate_property(config.keymaps, config, M.fn))
 
     config.keymaps = nil
   end
@@ -322,7 +298,7 @@ function M.init(config)
   end
 
   if config ~= nil and config.signs ~= nil then
-    local signs = M.evaluate_property(config.signs, config)
+    local signs = M.evaluate_property(config.signs, config, M.fn)
 
     for key, value in pairs(signs) do
       -- this should be removed at some point since deprecated
@@ -333,7 +309,7 @@ function M.init(config)
   end
 
   if config ~= nil and config.commands ~= nil then
-    M.create_commands(M.evaluate_property(config.commands, config))
+    M.create_commands(M.evaluate_property(config.commands, config, M.fn))
 
     config.commands = nil
   end
@@ -402,7 +378,8 @@ end
 ---@field get_current_setup_wrapper SetupFnGetCurrentSetupWrapper
 ---@field get_current_setup SetupFnGetCurrentSetup
 ---@field get_highlight SetupFnGetHighlight
----@field keystroke SetupFnKeystore
+---@field keystroke SetupFnKeystroke
+---@field local_keystroke SetupFnLocalKeystroke
 ---@field wk_keystroke SetupFnWkKeystroke
 
 ---@alias SetupFnAddDisabledFiletypes fun(ft: string[]): nil
@@ -487,12 +464,20 @@ end
 
 ---@alias SetupFnAddGlobalFunction fun(name: string, fn: function): function
 
----@alias SetupFnKeystore fun(keystrokes: table<string>): string
+---@alias SetupFnKeystroke fun(keystrokes: table<string>): string
 
 --- Builds a keystroke string.
----@type SetupFnKeystore
+---@type SetupFnKeystroke
 function M.fn.keystroke(keystrokes)
   return table.concat(keystrokes, "")
+end
+
+---@alias SetupFnLocalKeystroke fun(keystrokes: table<string>): string
+
+--- Builds a which-key keystroke string.
+---@type SetupFnLocalKeystroke
+function M.fn.local_keystroke(keystrokes)
+  return M.fn.keystroke(vim.list_extend({ "<localleader>" }, keystrokes))
 end
 
 ---@alias SetupFnWkKeystroke fun(keystrokes: table<string>): string

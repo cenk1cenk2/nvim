@@ -89,10 +89,6 @@ function M.config()
           additional_vim_regex_highlighting = false,
           disable = { "latex" },
         },
-        context_commentstring = {
-          enable = true,
-          enable_autocmd = false,
-        },
         indent = {
           enable = true,
           -- TSBufDisable indent
@@ -142,46 +138,20 @@ function M.config()
         },
       }
     end,
-    parser_config = {
-      gotmpl = {
-        install_info = {
-          url = "https://github.com/ngalaiko/tree-sitter-go-template",
-          files = { "src/parser.c" },
-        },
-        filetype = "gotmpl",
-        used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl", "yaml" },
-      },
-      -- jinja = {
-      --   install_info = {
-      --     url = "https://github.com/theHamsta/tree-sitter-jinja2.git",
-      --     files = { "src/parser.c" },
-      --     generate_requires_npm = false,
-      --     requires_generate_from_grammar = false,
-      --   },
-      --   filetype = "jinja",
-      -- },
-    },
-    ft_to_parser = {
-      ["yaml"] = { "yaml.ansible" },
-      ["gotmpl"] = { "helm" },
-    },
     on_setup = function(c)
       require("nvim-treesitter.configs").setup(c)
       require("ts_context_commentstring").setup({
         enable_autocmd = false,
       })
     end,
-    legacy_setup = {
-      skip_ts_context_commentstring_module = true,
-    },
-    on_done = function(config)
+    on_done = function()
       local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
 
-      for key, value in pairs(config.parser_config) do
+      for key, value in pairs(M.parsers) do
         parser_config[key] = value
       end
 
-      for key, value in pairs(config.ft_to_parser) do
+      for key, value in pairs(M.ft_parsers) do
         vim.treesitter.language.register(key, value)
       end
     end,
@@ -256,5 +226,30 @@ function M.config()
     -- end,
   })
 end
+
+M.parsers = {
+  gotmpl = {
+    install_info = {
+      url = "https://github.com/ngalaiko/tree-sitter-go-template",
+      files = { "src/parser.c" },
+    },
+    filetype = "gotmpl",
+    used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl", "yaml" },
+  },
+  -- jinja = {
+  --   install_info = {
+  --     url = "https://github.com/theHamsta/tree-sitter-jinja2.git",
+  --     files = { "src/parser.c" },
+  --     generate_requires_npm = false,
+  --     requires_generate_from_grammar = false,
+  --   },
+  --   filetype = "jinja",
+  -- },
+}
+
+M.ft_parsers = {
+  ["yaml"] = { "yaml.ansible" },
+  ["gotmpl"] = { "helm" },
+}
 
 return M
