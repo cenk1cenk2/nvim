@@ -53,7 +53,7 @@ function M.load()
       -- install missing plugins on startup. This doesn't increase startup time.
       missing = true,
       -- try to load one of these colorscheme when starting an installation during startup
-      colorscheme = {},
+      colorscheme = { nvim.colorscheme },
     },
     checker = {
       -- automatically check for plugin updates
