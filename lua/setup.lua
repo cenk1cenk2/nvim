@@ -436,7 +436,7 @@ function M.fn.get_wk_category(category)
   return M.fn.get_wk_categories()[category]
 end
 
----@alias SetupFnGetCurrentSetupWrapper fun(name: string): SetupFnGetCurrentSetup
+---@alias SetupFnGetCurrentSetupWrapper fun(name: string): fun(): table
 
 --- Returns the current setup of an extension.
 ---@type SetupFnGetCurrentSetupWrapper

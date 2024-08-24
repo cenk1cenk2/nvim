@@ -85,7 +85,6 @@ function M.config()
             },
           },
           { type = "padding", val = 1 },
-
           {
             type = "text",
             val = function()

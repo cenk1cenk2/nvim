@@ -44,9 +44,9 @@ function M.config()
     setup = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
-      local types = require("cmp.types")
       local compare = cmp.config.compare
 
+      ---@type cmp.ConfigSchema
       return {
         -- required for https://github.com/rcarriga/cmp-dap
         enabled = function()
@@ -151,20 +151,29 @@ function M.config()
           disallow_partial_fuzzy_matching = true,
           disallow_partial_matching = false,
           disallow_prefix_unmatching = false,
+          disallow_same_order_fuzzy_matching = false,
         },
         sorting = {
           priority_weight = 1.0,
           comparators = {
-            compare.offset,
-            compare.exact,
-            compare.scopes,
-            compare.score,
-            compare.recently_used,
-            compare.locality,
-            compare.kind,
-            -- compare.sort_text,
-            compare.order,
-            compare.length,
+            cmp.config.compare.offset,
+            cmp.config.compare.exact,
+            cmp.config.compare.score,
+            function(entry1, entry2)
+              local _, entry1_under = entry1.completion_item.label:find("^_+")
+              local _, entry2_under = entry2.completion_item.label:find("^_+")
+              entry1_under = entry1_under or 0
+              entry2_under = entry2_under or 0
+              if entry1_under > entry2_under then
+                return false
+              elseif entry1_under < entry2_under then
+                return true
+              end
+            end,
+            cmp.config.compare.kind,
+            cmp.config.compare.sort_text,
+            cmp.config.compare.length,
+            cmp.config.compare.order,
           },
         },
         mapping = cmp.mapping.preset.insert({
@@ -235,19 +244,7 @@ function M.config()
       require("cmp").setup(c)
 
       -- extensions
-      local extensions = {
-        ["cmp_git"] = {
-          name = "git",
-          -- defaults
-          filetypes = { "gitcommit" },
-          remotes = { "upstream", "origin" },
-        },
-        ["cmp-npm"] = {
-          name = "npm",
-          filetypes = { "json" },
-        },
-      }
-      for name, e in pairs(extensions) do
+      for name, e in pairs(M.per_extension) do
         local extension = require(name)
 
         extension.setup(e)
@@ -267,12 +264,11 @@ function M.config()
       require("luasnip.loaders.from_vscode").lazy_load({ paths = paths })
       require("luasnip.loaders.from_snipmate").lazy_load()
     end,
-    on_done = function(config)
+    on_done = function()
       local cmp = require("cmp")
       local setup = require("setup")
 
-      local per_ft = {}
-      for key, value in pairs(per_ft) do
+      for key, value in pairs(M.per_ft) do
         setup.create_autocmds({
           {
             event = "FileType",
@@ -327,12 +323,29 @@ function M.config()
 end
 
 function M.has_words_before()
-  if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
+  if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "prompt" then
     return false
   end
+
   local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+
   return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
+
+M.per_ft = {}
+
+M.per_extension = {
+  ["cmp_git"] = {
+    name = "git",
+    -- defaults
+    filetypes = { "gitcommit" },
+    remotes = { "upstream", "origin" },
+  },
+  ["cmp-npm"] = {
+    name = "npm",
+    filetypes = { "json" },
+  },
+}
 
 M.current_setup = require("setup").fn.get_current_setup_wrapper(M.name)
 
