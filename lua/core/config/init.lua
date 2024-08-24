@@ -33,7 +33,7 @@ function M:reload()
 
     local loader = require_clean("core.loader")
 
-    loader.reload(nvim.plugins)
+    loader.reload()
 
     log:info("Configuration reloaded!")
   end)

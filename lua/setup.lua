@@ -370,7 +370,7 @@ function M.configure(config)
 end
 
 --- Sets the plugins for the plugin manager to consume.
-function M.set_plugins()
+function M.into_plugin_spec()
   local plugins = {}
 
   for _, extension in pairs(nvim.extensions) do
@@ -381,7 +381,7 @@ function M.set_plugins()
     end
   end
 
-  nvim.plugins = plugins
+  return plugins
 end
 
 -- fn functions

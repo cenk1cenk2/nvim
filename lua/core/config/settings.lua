@@ -1,5 +1,8 @@
 local M = {}
 
+M._ = {}
+M._.setup = false
+
 function M.load_default_options()
   local undodir = join_paths(get_cache_dir(), "undo")
 
@@ -12,7 +15,7 @@ function M.load_default_options()
   vim.opt.cmdheight = 2
   vim.opt.completeopt = { "menuone", "noselect" }
   vim.opt.conceallevel = 0
-  -- vim.opt.fileencoding = "utf-8"
+  vim.opt.fileencoding = "utf-8"
   vim.opt.foldmethod = "expr"
   vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
   vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
@@ -78,11 +81,18 @@ M.load_headless_options = function()
 end
 
 function M.setup()
+  if M._.setup then
+    require("core.log"):warn("Already set default settings.")
+    return
+  end
+
   M.load_default_options()
 
   if is_headless() then
     M.load_headless_options()
   end
+
+  M._.setup = true
 end
 
 return M

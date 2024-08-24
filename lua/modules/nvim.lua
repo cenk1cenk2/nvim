@@ -114,6 +114,13 @@ function M.setup()
           end,
           desc = "git update config repository",
         },
+        {
+          fn.wk_keystroke({ categories.NEOVIM, "Q" }),
+          function()
+            require("core.config"):reload()
+          end,
+          desc = "reload configuration",
+        },
       }
     end,
   })

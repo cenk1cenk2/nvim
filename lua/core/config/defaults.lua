@@ -45,7 +45,6 @@ return {
   },
 
   extensions = {},
-  plugins = {},
 
   fn = {},
   wk = {},

@@ -95,13 +95,11 @@ function M.load()
   }
 
   local status_ok, _ = xpcall(function()
-    require("setup").set_plugins()
-
-    manager.setup(nvim.plugins, lazy_setup)
+    manager.setup(require("setup").into_plugin_spec(), lazy_setup)
   end, debug.traceback)
 
   if not status_ok then
-    log:error("Can not load plugin configurations.")
+    log:error("Can not load plugin configurations. Pretending to run.")
 
     log:error(debug.traceback())
   end
@@ -110,24 +108,52 @@ end
 function M.reload()
   local manager = require("lazy")
 
-  require("setup").set_plugins()
+  local Config = require("lazy.core.config")
 
-  manager.reload()
-
+  Config.spec = require("setup").into_plugin_spec()
+  require("lazy.core.plugin").load()
   require("lazy.core.plugin").update_state()
 
-  local plugins = manager.plugins()
-
-  local not_installed_plugins = vim.tbl_filter(function(plugin)
-    return not plugin._.installed
-  end, plugins)
+  local loaded = vim.tbl_filter(function(plugin)
+    return not plugin._.loaded
+  end, Config.plugins)
 
   require("lazy.manage").clear()
+  manager.reload({ plugins = loaded })
 
-  if #not_installed_plugins > 0 then
-    manager.install({ wait = true })
+  local to_install = vim.tbl_filter(function(plugin)
+    return not plugin._.installed
+  end, Config.plugins)
+
+  if #to_install > 0 then
+    log:info(
+      "Installing missing plugins: %s",
+      table.concat(
+        vim.tbl_map(function(plugin)
+          return plugin.name
+        end, to_install),
+        ", "
+      )
+    )
+
+    manager.install({ wait = true, show = true })
   end
-  manager.clean({ wait = true })
+
+  local to_clean = Config.to_clean
+
+  if #to_clean > 0 then
+    log:info(
+      "Cleaning obsolute plugins: %s",
+      table.concat(
+        vim.tbl_map(function(plugin)
+          return plugin.name
+        end, to_install),
+        ", "
+      )
+    )
+
+    manager.clean({ wait = true, show = true })
+  end
 end
 
 function M.reset_cache()
