@@ -64,7 +64,7 @@ function M.config()
     end,
     wk = function(_, categories, fn)
       local function generate_rg_flags(f)
-        return table.concat(vim.list_extend(nvim.fn.get_telescope_rg_arguments(true), f or {}), " ")
+        return table.concat(vim.list_extend(nvim.fn.get_telescope_args(true), f or {}), " ")
       end
 
       return {

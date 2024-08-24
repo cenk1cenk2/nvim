@@ -10,6 +10,9 @@ function M.config()
         "s1n7ax/nvim-window-picker",
       }
     end,
+    configure = function()
+      nvim.fn.pick_window = M.pick_window
+    end,
     setup = function()
       return {
         selection_chars = nvim.selection_chars:upper(),
@@ -48,14 +51,11 @@ function M.config()
     on_setup = function(c)
       require("window-picker").setup(c)
     end,
-    define_global_fn = function()
-      return {
-        pick_window = function()
-          return require("window-picker").pick_window()
-        end,
-      }
-    end,
   })
+end
+
+function M.pick_window()
+  return require("window-picker").pick_window()
 end
 
 return M

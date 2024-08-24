@@ -17,6 +17,8 @@ function M.config()
       fn.add_disabled_filetypes({
         "toggleterm",
       })
+
+      nvim.fn.toggle_log_view = M.toggle_log_view
     end,
     on_init = function()
       local togglers = {
@@ -114,9 +116,6 @@ function M.config()
       vim.env.GIT_EDITOR = editor
 
       require("telescope").load_extension("find_terminals")
-    end,
-    define_global_fn = function()
-      return { toggle_log_view = M.toggle_log_view }
     end,
     keymaps = function()
       return {

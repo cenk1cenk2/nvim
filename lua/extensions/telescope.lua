@@ -28,6 +28,8 @@ function M.config()
         "TelescopePrompt",
         "TelescopeResults",
       })
+
+      nvim.fn.get_telescope_args = M.get_telescope_args
     end,
     setup = function()
       local actions = require("telescope.actions")
@@ -198,23 +200,6 @@ function M.config()
       if config.current_setup.extensions and config.current_setup.extensions.fzf then
         telescope.load_extension("fzf")
       end
-    end,
-    define_global_fn = function()
-      return {
-        get_telescope_rg_arguments = function(flags_only, extend)
-          local rg_arguments = vim.deepcopy(M.default_rg_arguments)
-
-          if flags_only then
-            table.remove(rg_arguments, 1)
-          end
-
-          if extend then
-            rg_arguments = M.extend_rg_arguments(rg_arguments)
-          end
-
-          return rg_arguments
-        end,
-      }
     end,
     wk = function(_, categories, fn)
       return {
@@ -521,6 +506,24 @@ function M.find_project_files(options)
   -- if not ok then
   require("telescope.builtin").find_files(vim.tbl_extend("force", options, { previewer = true }))
   -- end
+end
+
+--- Returns the arguments to be passed to telescope.
+---@param flags_only boolean Without the first element.
+---@param extend table<string>
+---@return table<string>
+function M.get_telescope_args(flags_only, extend)
+  local rg_arguments = vim.deepcopy(M.default_rg_arguments)
+
+  if flags_only then
+    table.remove(rg_arguments, 1)
+  end
+
+  if extend then
+    rg_arguments = M.extend_rg_arguments(rg_arguments)
+  end
+
+  return rg_arguments
 end
 
 return M

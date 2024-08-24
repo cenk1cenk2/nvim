@@ -2,24 +2,24 @@ local M = {}
 local log = require("core.log")
 local lsp_utils = require("utils.lsp")
 
-function M.add_to_workspace_folder()
+function nvim.lsp.fn.add_to_workspace_folder()
   vim.lsp.buf.add_workspace_folder()
 end
 
-function M.code_action(...)
+function nvim.lsp.fn.code_action(...)
   vim.lsp.buf.code_action(...)
 end
 
-function M.document_highlight()
+function nvim.lsp.fn.document_highlight()
   vim.lsp.buf.document_highlight()
 end
 
-function M.document_symbols()
+function nvim.lsp.fn.document_symbols()
   -- vim.lsp.buf.document_symbol()
   require("telescope.builtin").lsp_document_symbols()
 end
 
-function M.format(opts)
+function nvim.lsp.fn.format(opts)
   opts = vim.tbl_extend("force", {
     bufnr = vim.api.nvim_get_current_buf(),
     timeout_ms = nvim.lsp.format_on_save.timeout_ms,
@@ -29,65 +29,65 @@ function M.format(opts)
   vim.lsp.buf.format(opts)
 end
 
-function M.hover()
+function nvim.lsp.fn.hover()
   vim.lsp.buf.hover()
 end
 
-function M.declaration()
+function nvim.lsp.fn.declaration()
   vim.lsp.buf.declaration()
   vim.lsp.buf.clear_references()
 end
 
-function M.definition()
+function nvim.lsp.fn.definition()
   vim.lsp.buf.definition()
   vim.lsp.buf.clear_references()
 end
 
-function M.implementation()
+function nvim.lsp.fn.implementation()
   require("telescope.builtin").lsp_implementations()
   -- vim.lsp.buf.implementation()
 end
 
-function M.incoming_calls()
+function nvim.lsp.fn.incoming_calls()
   require("telescope.builtin").lsp_incoming_calls()
   -- vim.lsp.buf.incoming_calls()
 end
 
-function M.outgoing_calls()
+function nvim.lsp.fn.outgoing_calls()
   require("telescope.builtin").lsp_outgoing_calls()
   -- vim.lsp.buf.outgoing_calls()
 end
 
-function M.list_workspace_folders()
+function nvim.lsp.fn.list_workspace_folders()
   vim.lsp.buf.list_workspace_folders()
 end
 
-function M.references()
+function nvim.lsp.fn.references()
   -- vim.lsp.buf.references()
   require("telescope.builtin").lsp_references()
 end
 
-function M.clear_references()
+function nvim.lsp.fn.clear_references()
   vim.lsp.buf.clear_references()
 end
 
-function M.remove_workspace_folder()
+function nvim.lsp.fn.remove_workspace_folder()
   vim.lsp.buf.remove_workspace_folder()
 end
 
-function M.rename()
+function nvim.lsp.fn.rename()
   vim.lsp.buf.rename()
 end
 
-function M.signature_help()
+function nvim.lsp.fn.signature_help()
   vim.lsp.buf.signature_help()
 end
 
-function M.type_definition()
+function nvim.lsp.fn.type_definition()
   vim.lsp.buf.type_definition()
 end
 
-function M.workspace_symbols()
+function nvim.lsp.fn.workspace_symbols()
   -- vim.lsp.buf.workspace_symbol()
 
   require("telescope.builtin").lsp_dynamic_workspace_symbols()
@@ -95,7 +95,7 @@ end
 
 -- diagnostic
 
-function M.diagnostics_goto_next(opts)
+function nvim.lsp.fn.diagnostics_goto_next(opts)
   opts = opts or {}
 
   vim.tbl_extend("force", opts, { popup_opts = { border = nvim.lsp.popup_border } })
@@ -103,7 +103,7 @@ function M.diagnostics_goto_next(opts)
   vim.diagnostic.goto_next(opts)
 end
 
-function M.diagnostics_goto_prev(opts)
+function nvim.lsp.fn.diagnostics_goto_prev(opts)
   opts = opts or {}
 
   vim.tbl_extend("force", opts, { popup_opts = { border = nvim.lsp.popup_border } })
@@ -111,38 +111,38 @@ function M.diagnostics_goto_prev(opts)
   vim.diagnostic.goto_prev(opts)
 end
 
-function M.show_line_diagnostics()
+function nvim.lsp.fn.show_line_diagnostics()
   local config = nvim.lsp.diagnostics.float
   config.scope = "line"
   vim.diagnostic.open_float(0, config)
 end
 
-function M.document_diagonistics()
+function nvim.lsp.fn.document_diagonistics()
   require("telescope.builtin").lsp_document_diagnostics()
 end
 
-function M.workspace_diagonistics()
+function nvim.lsp.fn.workspace_diagonistics()
   require("telescope.builtin").lsp_workspace_diagnostics()
 end
 
-function M.code_lens()
+function nvim.lsp.fn.code_lens()
   vim.lsp.codelens.run()
 end
 
-function M.diagonistics_set_loclist()
+function nvim.lsp.fn.diagonistics_set_loclist()
   vim.diagnostic.setloclist()
 end
 
-function M.reset_diagnostics()
+function nvim.lsp.fn.reset_diagnostics()
   vim.diagnostic.reset()
 end
 
-function M.toggle_inlay_hints()
+function nvim.lsp.fn.toggle_inlay_hints()
   local bufnr = vim.api.nvim_get_current_buf()
   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(bufnr), { bufnr = bufnr })
 end
 
-function M.reset_buffer_lsp()
+function nvim.lsp.fn.reset_buffer_lsp()
   -- vim.cmd("LspRestart")
   local bufnr = vim.api.nvim_get_current_buf()
   local clients = vim.tbl_filter(function(client)
@@ -173,7 +173,7 @@ function M.reset_buffer_lsp()
   -- require("utils").reload_file()
 end
 
-function M.fix_current()
+function nvim.lsp.fn.fix_current()
   local params = vim.lsp.util.make_range_params()
   params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
   local bufnr = vim.api.nvim_get_current_buf()
@@ -234,7 +234,7 @@ function M.fix_current()
   end)
 end
 
-function M.organize_imports()
+function nvim.lsp.fn.organize_imports()
   local params = vim.lsp.util.make_range_params()
   params.context = {
     diagnostics = {},
@@ -263,7 +263,7 @@ function M.organize_imports()
   end)
 end
 
-function M.rename_file()
+function nvim.lsp.fn.rename_file()
   local win = vim.api.nvim_get_current_win()
   local bufnr = vim.api.nvim_get_current_buf()
   local source = vim.api.nvim_buf_get_name(bufnr)
@@ -329,17 +329,12 @@ function M.rename_file()
   end)
 end
 
-function M.lsp_logging_level(level)
+function nvim.lsp.fn.lsp_logging_level(level)
   vim.lsp.set_log_level(level)
 end
 
 function M.setup()
-  for key, value in pairs(M) do
-    nvim.lsp.fn[key] = value
-  end
-
   require("setup").init({
-    name = "lsp.fn",
     commands = {
       {
         "LspLogLevelDebug",

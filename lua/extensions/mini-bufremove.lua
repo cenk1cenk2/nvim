@@ -12,8 +12,8 @@ function M.config()
         "echasnovski/mini.bufremove",
       }
     end,
-    configure = function(_, fn)
-      fn.add_global_function("close_buffer", M.close_buffer)
+    configure = function()
+      nvim.fn.close_buffer = M.close_buffer
     end,
     commands = {
       {

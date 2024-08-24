@@ -181,7 +181,6 @@ end
 ---@field commands? (fun(config: Config): Commands[]) | Commands[]
 ---@field hl? fun(config: Config, fn: SetupFn): table
 ---@field signs? fun(config: Config, fn: SetupFn): table
----@field define_global_fn? fun(config: Config): table<function>
 ---@field nvim_opts? table
 ---@field to_setup? table
 
@@ -342,16 +341,6 @@ function M.init(config)
     config.nvim_opts = nil
   end
 
-  if config ~= nil and config.define_global_fn ~= nil then
-    local functions = config.define_global_fn(config)
-
-    for key, value in pairs(functions) do
-      nvim.fn[key] = value
-    end
-
-    config.define_global_fn = nil
-  end
-
   if config ~= nil and config.legacy_setup ~= nil then
     M.legacy_setup(M.evaluate_property(config.legacy_setup, config))
 
@@ -409,13 +398,13 @@ end
 
 ---@class SetupFn
 ---@field add_disabled_filetypes SetupFnAddDisabledFiletypes
+---@field add_disabled_buffertypes SetupFnAddDisabledBuffertypes
 ---@field append_to_setup SetupFnAppendToSetup
 ---@field get_wk_categories SetupFnGetWkCategories
 ---@field get_wk_category SetupFnGetWkCategory
 ---@field get_current_setup_wrapper SetupFnGetCurrentSetupWrapper
 ---@field get_current_setup SetupFnGetCurrentSetup
 ---@field get_highlight SetupFnGetHighlight
----@field add_global_function SetupFnAddGlobalFunction
 ---@field keystroke SetupFnKeystore
 ---@field wk_keystroke SetupFnWkKeystroke
 
@@ -426,6 +415,16 @@ end
 function M.fn.add_disabled_filetypes(ft)
   for _, value in pairs(ft) do
     table.insert(nvim.disabled_filetypes, value)
+  end
+end
+
+---@alias SetupFnAddDisabledBuffertypes fun(ft: string[]): nil
+
+-- Adds disabled filetypes to the global list.
+---@type SetupFnAddDisabledFiletypes
+function M.fn.add_disabled_buffertypes(t)
+  for _, value in pairs(t) do
+    table.insert(nvim.disabled_buffer_types, value)
   end
 end
 
@@ -490,14 +489,6 @@ function M.fn.get_highlight(name)
 end
 
 ---@alias SetupFnAddGlobalFunction fun(name: string, fn: function): function
-
---- Adds a global function.
----@type SetupFnAddGlobalFunction
-function M.fn.add_global_function(name, fn)
-  nvim.fn[name] = fn
-
-  return fn
-end
 
 ---@alias SetupFnKeystore fun(keystrokes: table<string>): string
 
