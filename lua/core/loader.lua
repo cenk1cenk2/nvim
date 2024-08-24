@@ -102,6 +102,24 @@ function M.load()
     log:error("Can not load plugin configurations. Pretending to run.")
 
     log:error(debug.traceback())
+
+    return
+  end
+
+  local to_clean = require("lazy.core.config").to_clean
+
+  if #to_clean > 0 then
+    log:info(
+      "Cleaning obsolute plugins: %s",
+      table.concat(
+        vim.tbl_map(function(plugin)
+          return plugin.name
+        end, to_clean),
+        ", "
+      )
+    )
+
+    manager.clean({ wait = true, show = true })
   end
 end
 
