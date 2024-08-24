@@ -1,11 +1,11 @@
-local _, finders = pcall(require, "telescope.finders")
-local _, pickers = pcall(require, "telescope.pickers")
-local _, sorters = pcall(require, "telescope.sorters")
-local _, themes = pcall(require, "telescope.themes")
-local _, previewers = pcall(require, "telescope.previewers")
-local _, actions = pcall(require, "telescope.actions")
-local _, entry_display = pcall(require, "telescope.pickers.entry_display")
-local _, action_state = pcall(require, "telescope.actions.state")
+local finders = require("telescope.finders")
+local pickers = require("telescope.pickers")
+local sorters = require("telescope.sorters")
+local themes = require("telescope.themes")
+local previewers = require("telescope.previewers")
+local actions = require("telescope.actions")
+local entry_display = require("telescope.pickers.entry_display")
+local action_state = require("telescope.actions.state")
 
 local M = {}
 
