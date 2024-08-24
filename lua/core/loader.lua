@@ -129,7 +129,6 @@ function M.reload(spec)
   end
 
   if #Config.to_clean > 0 then
-    -- TODO: set show to true when lazy shows something useful on clean
     lazy.clean({ wait = true, show = false })
   end
 end

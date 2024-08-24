@@ -28,7 +28,7 @@ function M:set_level(level)
   end, debug.traceback)
 
   if not logger_ok then
-    M:warn("Unable to set logger's level: " .. debug.traceback())
+    M:warn("Unable to set logger's level: %s", debug.traceback())
   end
 end
 
@@ -98,8 +98,8 @@ end
 --- Adds a log entry using Plenary.log
 ---@param msg any
 ---@param level string [same as vim.log.log_levels]
-function M:add_entry(level, msg, ...)
-  local logger = self:get_logger()
+function M:write(level, msg, ...)
+  local logger = self:get()
   if not logger then
     table.insert(queue, { level or vim.log.levels.DEBUG, msg, { ... } })
 
@@ -111,7 +111,7 @@ end
 
 ---Retrieves the handle of the logger object
 ---@return table|nil logger handle if found
-function M:get_logger()
+function M:get()
   if self.__handle then
     return self.__handle
   end
@@ -145,42 +145,42 @@ end
 ---@param msg any
 ---@param ... any
 function M:log(level, msg, ...)
-  self:add_entry(level, msg, ...)
+  self:write(level, msg, ...)
 end
 
 ---Add a log entry at TRACE level
 ---@param msg any
 ---@param ... any
 function M:trace(msg, ...)
-  self:add_entry(self.levels.TRACE, msg, ...)
+  self:write(self.levels.TRACE, msg, ...)
 end
 
 ---Add a log entry at DEBUG level
 ---@param msg any
 ---@param ... any
 function M:debug(msg, ...)
-  self:add_entry(self.levels.DEBUG, msg, ...)
+  self:write(self.levels.DEBUG, msg, ...)
 end
 
 ---Add a log entry at INFO level
 ---@param msg any
 ---@param ... any
 function M:info(msg, ...)
-  self:add_entry(self.levels.INFO, msg, ...)
+  self:write(self.levels.INFO, msg, ...)
 end
 
 ---Add a log entry at WARN level
 ---@param msg any
 ---@param ... any
 function M:warn(msg, ...)
-  self:add_entry(self.levels.WARN, msg, ...)
+  self:write(self.levels.WARN, msg, ...)
 end
 
 ---Add a log entry at ERROR level
 ---@param msg any
 ---@param ... any
 function M:error(msg, ...)
-  self:add_entry(self.levels.ERROR, msg, ...)
+  self:write(self.levels.ERROR, msg, ...)
 end
 
 setmetatable({}, M)

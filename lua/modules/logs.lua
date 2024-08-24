@@ -20,7 +20,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LOGS, "D" }),
           function()
-            vim.fn.execute("edit " .. require("core.log").get_path())
+            vim.cmd(("edit %s"):format(require("core.log").get_path()))
           end,
           desc = "open the default logfile",
         },
@@ -34,7 +34,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LOGS, "L" }),
           function()
-            vim.fn.execute("edit " .. vim.lsp.get_log_path())
+            vim.cmd(("edit %s"):format(vim.lsp.get_log_path()))
           end,
           desc = "open the lsp logfile",
         },

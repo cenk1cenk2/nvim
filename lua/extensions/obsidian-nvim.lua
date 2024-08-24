@@ -9,8 +9,8 @@ function M.config()
       return {
         "epwalsh/obsidian.nvim",
         event = {
-          "BufReadPre " .. vim.fn.expand("~") .. "/notes/**.md",
-          "BufNewFile " .. vim.fn.expand("~") .. "/notes/**.md",
+          ("BufReadPre %s  /notes/**.md"):format(vim.fn.expand("~")),
+          ("BufNewFile %s  /notes/**.md"):format(vim.fn.expand("~")),
         },
         dependencies = { "nvim-lua/plenary.nvim" },
         cmd = {

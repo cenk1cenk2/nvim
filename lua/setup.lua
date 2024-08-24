@@ -179,9 +179,8 @@ end
 ---@field wk? (fun(config: Config, categories: WkCategories, fn: SetupFn): WKMappings) | WKMappings
 ---@field autocmds? fun(config: Config, fn: SetupFn): Autocmds[]
 ---@field commands? (fun(config: Config): Commands[]) | Commands[]
----@field hl? fun(config: Config, fn: SetupFn): table
----@field signs? fun(config: Config, fn: SetupFn): table
----@field nvim_opts? table
+---@field hl? (fun(config: Config, fn: SetupFn): table<string, vim.api.keyset.highlight>) | table<string, vim.api.keyset.highlight>
+---@field signs? (fun(config: Config, fn: SetupFn): table<string, vim.fn.sign_define.dict>) | table<string, vim.fn.sign_define.dict>
 ---@field to_setup? table
 
 ---@alias DefineExtensionFn fun(name: string, enabled: boolean, config: Config): nil
@@ -206,7 +205,6 @@ function M.define_extension(name, enabled, config)
     commands = { config.commands, { "t", "f" }, true },
     hl = { config.hl, { "f", "t" }, true },
     signs = { config.signs, { "f", "t" }, true },
-    nvim_opts = { config.nvim_opts, "t", true },
   })
 
   config = vim.tbl_extend("force", config, {
@@ -333,12 +331,6 @@ function M.init(config)
     M.create_commands(M.evaluate_property(config.commands, config))
 
     config.commands = nil
-  end
-
-  if config ~= nil and config.nvim_opts ~= nil then
-    M.set_option(config.nvim_opts)
-
-    config.nvim_opts = nil
   end
 
   if config ~= nil and config.legacy_setup ~= nil then

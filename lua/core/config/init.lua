@@ -30,11 +30,11 @@ end
 -- @param config_path The path to the configuration overrides
 function M:reload()
   vim.schedule(function()
-    M:load()
+    log:info("Reloading configuration...")
 
-    require("core.lsp.format").setup()
+    require_clean("core.config"):load()
 
-    local loader = require("core.loader")
+    local loader = require_clean("core.loader")
 
     loader.reload({ nvim.plugins })
   end)

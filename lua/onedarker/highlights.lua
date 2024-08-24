@@ -3,6 +3,7 @@ local c = require("onedarker.colors")
 local M = {}
 local hl = { langs = {}, plugins = {} }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.common = {
   Bold = { bold = true },
   Italic = { italic = true },
@@ -102,6 +103,7 @@ hl.common = {
   debugPC = { fg = c.bg[200], bg = c.cyan[600] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.syntax = {
   Boolean = { link = "@boolean" },
   Character = { link = "@character" },
@@ -140,6 +142,7 @@ hl.syntax = {
   Variable = { link = "@variable" },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.treesitter = {
   -- ["@readonly"] = { fg = c.yellow[300] },
   ["@annotation"] = { fg = c.fg },
@@ -276,6 +279,7 @@ hl.treesitter = {
   ["text.uri"] = { link = "@markup.link.uri" },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.lsp = {
   DiagnosticError = { fg = c.red[600] },
   DiagnosticFloatingError = { link = "DiagnosticError" },
@@ -330,19 +334,24 @@ hl.lsp = {
 }
 
 -- langs
+
+---@type table<string, vim.api.keyset.highlight>
 hl.langs.bash = {
   ["@lsp.type.parameter.bash"] = { fg = c.fg },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.langs.dockerfile = {
   ["@lsp.type.parameter.dockerfile"] = { fg = c.fg },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.langs.terraform = {
   ["@lsp.type.type.terraform"] = { fg = c.purple[600] },
   ["@lsp.type.keyword.terraform"] = { fg = c.yellow[600] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.langs.jinja = {
   jinjaFilter = { fg = c.blue[600] },
   jinjaOperator = { fg = c.yellow[600] },
@@ -353,26 +362,31 @@ hl.langs.jinja = {
   jinjaVariable = { fg = c.red[600] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.langs.typescript = {
   -- ["@decorator.typescript"] = { fg = c.fg },
   ["@lsp.type.parameter.typescript"] = { fg = c.red[900] },
   ["@lsp.typemod.variable.readonly.typescript"] = { fg = c.red[300] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.langs.typescriptreact = {
   ["@tag.tsx"] = { fg = c.yellow[600] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.langs.c = {
   ["@lsp.type.comment.c"] = {},
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.langs.markdown = {
   ["@nospell.markdown_inline"] = {},
   ["@spell.markdown"] = {},
   ["@markup.raw.markdown_inline"] = { link = "@string" },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.langs.gitignore = {
   ["@string.special.path.gitignore"] = {},
   ["@character.special.gitignore"] = { fg = c.cyan[600] },
@@ -380,6 +394,7 @@ hl.langs.gitignore = {
 
 -- plugins
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.whichkey = {
   WhichKey = { fg = c.red[600] },
   WhichKeyDesc = { fg = c.blue[600] },
@@ -388,12 +403,14 @@ hl.plugins.whichkey = {
   WhichKeySeperator = { fg = c.green[300] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.gitgutter = {
   GitGutterAdd = { fg = c.green[300] },
   GitGutterChange = { fg = c.cyan[900] },
   GitGutterDelete = { fg = c.red[900] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.hop = {
   HopNextKey = { fg = c.bg[100], bg = c.yellow[600], bold = true },
   HopNextKey1 = { fg = c.bg[200], bg = c.red[600], bold = true },
@@ -401,6 +418,7 @@ hl.plugins.hop = {
   HopUnmatched = { fg = c.none, bg = c.none },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.leap = {
   -- LeapBackdrop = { link = "Comment" },
   LeapLabelPrimary = { fg = c.bg[200], bg = c.red[600], bold = true },
@@ -409,6 +427,7 @@ hl.plugins.leap = {
   LeapMatch = { fg = c.bg[200], bg = c.cyan[600], bold = true },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.flash = {
   -- FlashBackdrop = { link = "Comment" },
   FlashCurrent = { fg = c.bg[200], bg = c.blue[900], bold = true },
@@ -416,17 +435,20 @@ hl.plugins.flash = {
   FlashMatch = { fg = c.bg[200], bg = c.cyan[600], bold = true },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.vim_illuminate = {
   IlluminatedWordRead = { bg = c.bg[300] },
   IlluminatedWordText = { bg = c.bg[300] },
   IlluminatedWordWrite = { bg = c.bg[300] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.indentblankline = {
   IndentBlankLineChar = { fg = c.bg[500] },
   IndentBlanklineContextChar = { fg = c.cursor },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.diffview = {
   DiffviewCursorLine = hl.common.CursorLine,
   DiffviewEndOfBuffer = hl.common.EndOfBuffer,
@@ -454,6 +476,7 @@ hl.plugins.diffview = {
   DiffviewVertSplit = hl.common.VertSplit,
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.gitsigns = {
   GitSignsAdd = { fg = c.green[300] },
   GitSignsAddLn = { fg = c.green[300] },
@@ -472,6 +495,7 @@ hl.plugins.gitsigns = {
   GitSignsChangedeleteNr = { fg = c.red[900] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.nvim_tree = {
   NvimTreeEndOfBuffer = { fg = c.bg[200], bg = c.bg[200] },
   NvimTreeFolderName = { fg = c.blue[600] },
@@ -486,6 +510,7 @@ hl.plugins.nvim_tree = {
   NvimTreeSymlink = { fg = c.purple[600] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.neotree_nvim = {
   NeoTreeBufferNumber = {},
   NeoTreeCursorLine = {},
@@ -519,6 +544,7 @@ hl.plugins.neotree_nvim = {
   NeoTreeTitleBar = {},
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.telescope = {
   -- TelescopePreviewBorder = { fg = c.grey[100], bg = c.grey[100] },
   Prompt = { bg = c.bg[200] },
@@ -539,6 +565,7 @@ hl.plugins.telescope = {
   TelescopeSelectionCaret = { fg = c.yellow[600] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.dashboard = {
   DashboardCenter = { fg = c.yellow[600] },
   DashboardFooter = { fg = c.gray[600], bold = true },
@@ -546,11 +573,13 @@ hl.plugins.dashboard = {
   DashboardShortcut = { fg = c.fg },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.spectre = {
   SpectreChange = { fg = c.yellow[600] },
   SpectreDelete = { fg = c.green[300] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.nvim_cmp = {
   CmpDocumentation = { fg = c.fg },
   CmpDocumentationBorder = { fg = c.bg[500] },
@@ -565,11 +594,13 @@ hl.plugins.nvim_cmp = {
   CmpItemMenuDefault = { fg = c.fg },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.fidget = {
   FidgetTask = { fg = c.orange[300] },
   FidgetTitle = { fg = c.green[300] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.noice = {
   NoiceLspProgressClient = { fg = c.orange[300] },
   NoiceLspProgressSpinner = { fg = c.yellow[300] },
@@ -577,6 +608,7 @@ hl.plugins.noice = {
   NoiceMini = { link = "NormalFloat" },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.notify = {
   NotifyDEBUGBody = { fg = c.fg },
   NotifyDEBUGBorder = { fg = c.cyan[600] },
@@ -600,6 +632,7 @@ hl.plugins.notify = {
   NotifyWARNTitle = { fg = c.orange[600] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.vim_visual_multi = {
   VM_Cursor = { bg = c.blue[900] },
   VM_Extend = { bg = c.blue[300] },
@@ -607,15 +640,18 @@ hl.plugins.vim_visual_multi = {
   VM_Mono = { fg = c.none, bg = c.blue[600] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.symbols_outline = {
   FocusedSymbol = { bg = c.bg[300] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.aerojump = {
   SearchHighlight = { bg = c.green[300] },
   SearchResult = { bg = c.yellow[600] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.hlslens = {
   HlSearchFloat = { link = "IncSearch" },
   HlSearchLens = { link = "WildMenu" },
@@ -623,6 +659,7 @@ hl.plugins.hlslens = {
   HlSearchNear = { link = "IncSearch" },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.lspsaga = {
   ActionPreviewBorder = { fg = c.yellow[600] },
   CodeActionBorder = { fg = c.yellow[300] },
@@ -641,10 +678,12 @@ hl.plugins.lspsaga = {
   SagaFolderName = { fg = c.gray[900] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.autopairs = {
   AutoPairsFastWrap = { bg = c.orange[600] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.treesitter_rainbow = {
   TSRainbow1 = { fg = c.yellow[900] },
   TSRainbow2 = { fg = c.cyan[900] },
@@ -652,6 +691,7 @@ hl.plugins.treesitter_rainbow = {
   TSRainbow4 = { fg = c.blue[900] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.treesitter_context = {
   TreesitterContext = { bg = c.bg[300] },
   TreesitterContextBottom = { bg = c.bg[300] },
@@ -659,6 +699,7 @@ hl.plugins.treesitter_context = {
   TreesitterContextSeparator = { fg = c.bg[400], bg = c.bg[300] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.mini_icons = {
   MiniIconsAzure = { fg = c.blue[600] },
   MiniIconsBlue = { fg = c.blue[300] },
@@ -671,6 +712,7 @@ hl.plugins.mini_icons = {
   MiniIconsYellow = { fg = c.yellow[300] },
 }
 
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.symbol_usage_nvim = {
   ["SymbolUsageDef"] = { fg = c.purple[300], bold = true },
   ["SymbolUsageImpl"] = { fg = c.red[300], bold = true },

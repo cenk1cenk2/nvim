@@ -269,7 +269,7 @@ function nvim.lsp.fn.rename_file()
   local source = vim.api.nvim_buf_get_name(bufnr)
 
   local current = vim.api.nvim_buf_get_name(bufnr)
-  vim.ui.input({ prompt = "Set the path to rename to" .. " ➜  ", default = current }, function(rename)
+  vim.ui.input({ prompt = "Rename", default = current }, function(rename)
     if not rename then
       vim.notify("File name can not be empty.", vim.log.levels.ERROR)
 
@@ -279,7 +279,7 @@ function nvim.lsp.fn.rename_file()
     local stat = vim.uv.fs_stat(rename)
 
     if stat and stat.type then
-      vim.notify("File already exists: " .. rename, vim.log.levels.ERROR)
+      vim.notify(("File already exists: %s"):format(rename), vim.log.levels.ERROR)
 
       return
     end
@@ -324,7 +324,7 @@ function nvim.lsp.fn.rename_file()
         end
       end
 
-      vim.notify(current .. " ➜  " .. rename)
+      vim.notify(("%s %s %s"):format(current, nvim.ui.icons.ui.BoldArrowRight, rename))
     end)
   end)
 end

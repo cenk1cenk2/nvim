@@ -19,7 +19,7 @@ function M.config()
           "Tastyep/structlog.nvim",
           lazy = false,
           config = function()
-            require("core.log"):get_logger()
+            require("core.log"):get()
           end,
         },
         -- {

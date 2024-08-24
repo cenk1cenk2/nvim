@@ -192,9 +192,9 @@ function M.setup(force)
     return
   end
 
-  require("modules.lsp").setup()
-
   require("core.lsp.handlers").setup()
+
+  require("modules.lsp").setup()
 
   xpcall(function()
     require("neoconf").setup({

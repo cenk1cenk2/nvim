@@ -54,7 +54,7 @@ function M.setup()
       {
         "NvimOpenlog",
         function()
-          vim.fn.execute("edit " .. require("core.log").get_path())
+          vim.cmd(("edit %s"):format(require("core.log").get_path()))
         end,
       },
     },

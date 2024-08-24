@@ -40,11 +40,11 @@ function M.config()
     on_setup = function(c)
       require("windows").setup(c)
     end,
-    nvim_opts = {
-      winwidth = 10,
-      winminwidth = 0,
-      equalalways = false,
-    },
+    on_done = function()
+      vim.opt.winwidth = 10
+      vim.opt.winminwidth = 0
+      vim.opt.equalalways = false
+    end,
     wk = function(_, categories, fn)
       return {
         {

@@ -42,10 +42,10 @@ local function resolve_config(server_name, ...)
 
   local has_custom_provider, custom_config = pcall(require, "modules.lsp.overrides." .. server_name)
   if has_custom_provider then
-    log:trace("Using custom configuration for requested server: " .. server_name)
+    log:trace("Using custom configuration for requested server: %s", server_name)
     defaults = vim.tbl_deep_extend("force", defaults, custom_config)
   else
-    log:trace("Using default configuration for requested server: " .. server_name)
+    log:trace("Using default configuration for requested server: %s", server_name)
   end
 
   defaults = vim.tbl_deep_extend("force", defaults, ...)
@@ -150,7 +150,7 @@ function M.setup(server_name, user_config)
 
       return
     else
-      log:debug(server_name .. " is not managed by the automatic installer")
+      log:debug("%s will not be automatically installed.", server_name)
     end
   end
 

@@ -3,6 +3,8 @@ local M = {}
 local uv = vim.uv
 local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
 
+--- Checks if currently running in headless mode.
+---@return boolean
 function _G.is_headless()
   return #vim.api.nvim_list_uis() == 0 and #vim.tbl_filter(function(argv)
     if argv:find("sk.lua$") then
@@ -46,12 +48,18 @@ function _G.get_cache_dir()
   return vim.fn.stdpath("cache")
 end
 
+--- Checks if given path is a file.
+---@param path string
+---@return boolean
 function _G.is_file(path)
   local stat = vim.uv.fs_stat(path)
 
   return stat and stat.type == "file" or false
 end
 
+--- Checks if given path is a directory.
+---@param path string
+---@return boolean
 function _G.is_directory(path)
   local stat = vim.uv.fs_stat(path)
 
@@ -60,16 +68,34 @@ end
 
 _G.OS_UNAME = string.lower(vim.loop.os_uname().sysname)
 
+--- Checks if package is loaded.
+---@param name string
+---@return boolean
 function _G.is_package_loaded(name)
   return package.loaded[name] ~= nil
 end
 
+--- Requires a module and returns it.
+---@param m string
+---@return any
+function _G.require_clean(m)
+  package.loaded[m] = nil
+  _G[m] = nil
+  local ok, module = pcall(require, m)
+  if not ok then
+    error(("Failed to load module: %s"):format(m))
+  end
+
+  return module
+end
+
+--- Gets the extension defined name in the extension module.
+---@param module string
+---@return string
 function _G.get_extension_name(module)
   local ok, m = pcall(require, module)
   if not ok then
-    require("core.log"):error("Failed to load extension: %s", module)
-
-    return nil
+    error(("Failed to load extension: %s"):format(module))
   end
 
   return m.name
@@ -109,8 +135,7 @@ function M:init()
   return self
 end
 
----Update neovim
----pulls the latest changes from github and, resets the startup cache
+--- Update the configuration repository.
 function M:update()
   require("core.version").update_repository()
 end
