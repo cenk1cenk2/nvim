@@ -74,7 +74,7 @@ function M.config()
                 function()
                   require("telescope").extensions.schema_companion.select_schema()
                 end,
-                desc = "select yaml schema",
+                desc = "select schema",
                 buffer = event.buf,
               },
               {
@@ -89,7 +89,7 @@ function M.config()
 
                   vim.api.nvim_put({ ("# yaml-language-server: $schema=%s"):format(result.uri) }, "l", false, true)
                 end,
-                desc = "print yaml schema",
+                desc = "print schema",
                 buffer = event.buf,
               },
               {
