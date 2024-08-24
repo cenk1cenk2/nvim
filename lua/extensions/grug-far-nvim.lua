@@ -177,8 +177,8 @@ function M.config()
       end
       return {
         require("modules.autocmds").q_close_autocmd({ "grug-far-history" }),
-        require("modules.autocmds").filetype_setup_autocmd({ "grug-far" }, function(init, event)
-          init({
+        require("modules.autocmds").setup_init_for_filetype({ "grug-far" }, function(event)
+          return {
             keymaps = {
 
               {
@@ -209,7 +209,7 @@ function M.config()
                 buffer = event.buf,
               },
             },
-          })
+          }
         end),
       }
     end,

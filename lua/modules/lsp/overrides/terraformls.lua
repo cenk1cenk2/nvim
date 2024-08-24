@@ -1,8 +1,8 @@
 require("setup").init({
   autocmds = function(_, fn)
     return {
-      require("modules.autocmds").filetype_setup_autocmd({ "terraform", "tfvars" }, function(init, event)
-        init({
+      require("modules.autocmds").setup_init_for_filetype({ "terraform", "tfvars" }, function(event)
+        return {
           wk = {
             {
               fn.wk_keystroke({ fn.get_wk_category("LSP"), "Q" }),
@@ -16,7 +16,7 @@ require("setup").init({
               buffer = event.buf,
             },
           },
-        })
+        }
       end),
     }
   end,

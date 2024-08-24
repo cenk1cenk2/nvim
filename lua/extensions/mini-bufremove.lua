@@ -38,8 +38,6 @@ function M.config()
   })
 end
 
--- Common kill function for bdelete and bwipeout
--- credits: based on bbye and nvim-bufdel
 ---@param bufnr? number defaults to the current buffer
 ---@param force? boolean defaults to false
 function M.close_buffer(bufnr, force)

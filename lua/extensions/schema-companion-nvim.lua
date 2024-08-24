@@ -54,8 +54,8 @@ function M.config()
     end,
     autocmds = function(_, fn)
       return {
-        require("modules.autocmds").filetype_setup_autocmd({ "yaml", "helm" }, function(init, event)
-          init({
+        require("modules.autocmds").setup_init_for_filetype({ "yaml", "helm" }, function(event)
+          return {
             wk = {
               {
                 fn.wk_keystroke({ fn.get_wk_category("ACTIONS"), "F" }),
@@ -101,7 +101,7 @@ function M.config()
                 buffer = event.buf,
               },
             },
-          })
+          }
         end),
       }
     end,

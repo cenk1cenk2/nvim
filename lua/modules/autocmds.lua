@@ -5,8 +5,8 @@ local log = require("core.log")
 ---@param pattern string | string[]
 ---@return Autocmd
 function M.q_close_autocmd(pattern)
-  return M.filetype_setup_autocmd(pattern, function(init, event)
-    init({
+  return M.setup_init_for_filetype(pattern, function(event)
+    return {
       keymaps = {
         {
           mode = "n",
@@ -17,7 +17,7 @@ function M.q_close_autocmd(pattern)
           options = { noremap = true, silent = true },
         },
       },
-    })
+    }
   end)
 end
 
@@ -47,15 +47,15 @@ function M.set_view_buffer(pattern)
 end
 
 ---@param pattern string | string[]
----@param callback fun(init: SetupInitFn,event: table)
+---@param callback fun(event: table): Config
 ---@return Autocmd
-function M.filetype_setup_autocmd(pattern, callback)
+function M.setup_init_for_filetype(pattern, callback)
   return {
     event = { "FileType" },
     group = "_filetype_settings",
     pattern = pattern,
     callback = function(event)
-      return callback(require("setup").init, event)
+      return require("setup").init(callback(event))
     end,
   }
 end
