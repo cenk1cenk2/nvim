@@ -1,6 +1,10 @@
 local log = require("ck.log")
 local M = {
   fn = {},
+  _ = {
+    ---@type WKMappings
+    wk = {},
+  },
 }
 
 ---@module "which-key"
@@ -11,7 +15,7 @@ local M = {
 ---@type LoadWkFn
 function M.load_wk(mappings)
   if not is_package_loaded("which-key") then
-    nvim.wk = vim.list_extend(nvim.wk, mappings)
+    M._.wk = vim.list_extend(M._.wk, mappings)
 
     return
   end
@@ -120,7 +124,7 @@ end
 ---@return Plugin
 local function define_manager_plugin(config, plugin)
   if plugin.init ~= false and type(plugin.init) ~= "function" then
-    log:trace(string.format("Defining default init command for plugin: %s", config.name))
+    log:trace("Defining default init command for plugin: %s", config.name)
 
     plugin.init = function()
       require("ck.setup").plugin_init(config.name)

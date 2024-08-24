@@ -22,7 +22,7 @@ function M.config()
       }
     end,
     configure = function(_, fn)
-      nvim.wk = vim.list_extend(nvim.wk, require("ck.keys.wk").setup(fn))
+      require("ck.setup")._.wk = vim.list_extend(require("ck.setup")._.wk, require("ck.keys.wk").setup(fn))
 
       fn.add_disabled_filetypes({ "which_key" })
     end,
@@ -93,7 +93,7 @@ function M.config()
 
       which_key.setup(c)
 
-      which_key.add(nvim.wk)
+      which_key.add(require("ck.setup")._.wk)
     end,
     autocmds = function()
       return {

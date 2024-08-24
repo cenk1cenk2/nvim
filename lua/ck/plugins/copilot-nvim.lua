@@ -61,12 +61,12 @@ function M.config()
       require("copilot").setup(c)
     end,
     keymaps = function()
-      local autopairs = require("nvim-autopairs")
-      local suggestion = require("copilot.suggestion")
       return {
         {
           "<M-l>",
           function()
+            local autopairs = require("nvim-autopairs")
+            local suggestion = require("copilot.suggestion")
             autopairs.disable()
             suggestion.accept_line()
             autopairs.enable()

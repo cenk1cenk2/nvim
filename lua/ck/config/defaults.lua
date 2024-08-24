@@ -47,5 +47,4 @@ return {
   plugins = {},
 
   fn = {},
-  wk = {},
 }
