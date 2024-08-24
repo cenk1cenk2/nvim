@@ -14,6 +14,7 @@ function M.config()
           "nvim-lua/plenary.nvim",
           init = false,
           config = false,
+          deactivate = function() end,
         },
         {
           "Tastyep/structlog.nvim",

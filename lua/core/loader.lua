@@ -32,7 +32,7 @@ function M.load()
   local manager_ok, manager = pcall(require, "lazy")
 
   if not manager_ok then
-    log:warn("Skipping loading plugins until plugin manager is installed.")
+    log:warn("Plugin manager not available. Pretending to run.")
 
     return
   end
@@ -109,8 +109,8 @@ function M.reload()
   local manager = require("lazy")
 
   local Config = require("lazy.core.config")
+  Config.options.spec = require("setup").into_plugin_spec()
 
-  Config.spec = require("setup").into_plugin_spec()
   require("lazy.core.plugin").load()
   require("lazy.core.plugin").update_state()
 
@@ -145,7 +145,7 @@ function M.reload()
       table.concat(
         vim.tbl_map(function(plugin)
           return plugin.name
-        end, to_install),
+        end, to_clean),
         ", "
       )
     )
