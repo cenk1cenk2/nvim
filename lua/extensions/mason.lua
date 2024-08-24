@@ -13,7 +13,6 @@ function M.config()
         dependencies = {
           { "williamboman/mason-lspconfig.nvim" },
           { "WhoIsSethDaniel/mason-tool-installer.nvim" },
-          { "RubixDev/mason-update-all" },
         },
       }
     end,
@@ -33,7 +32,6 @@ function M.config()
     end,
     on_setup = function(c)
       require("mason").setup(c)
-      require("mason-update-all").setup()
     end,
   })
 end
