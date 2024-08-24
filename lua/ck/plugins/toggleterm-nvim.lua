@@ -115,7 +115,7 @@ function M.config()
       vim.env.EDITOR = editor
       vim.env.GIT_EDITOR = editor
 
-      require("telescope").load_extension("find_terminals")
+      require("telescope").load_extension("toggleterm")
     end,
     keymaps = function()
       return {
@@ -182,7 +182,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "f" }),
           function()
-            require("telescope").extensions.find_terminals.list(require("telescope.themes").get_dropdown({}))
+            require("telescope").extensions.toggleterm.list(require("telescope.themes").get_dropdown({}))
           end,
           desc = "list terminals",
         },
