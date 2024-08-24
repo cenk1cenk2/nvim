@@ -1,4 +1,4 @@
-local s = require("utils.snippets")
+local s = require("ck.utils.snippets")
 
 return {
   s.s(

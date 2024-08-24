@@ -1,5 +1,5 @@
-require("core"):init()
+require("ck"):init()
 
-require("core.config"):load()
+require("ck.config"):load()
 
-require("core.loader").load()
+require("ck.loader").load()

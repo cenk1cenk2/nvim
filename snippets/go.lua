@@ -1,4 +1,4 @@
-local s = require("utils.snippets")
+local s = require("ck.utils.snippets")
 
 local ts_locals = require("nvim-treesitter.locals")
 local ts_utils = require("nvim-treesitter.ts_utils")
