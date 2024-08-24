@@ -52,7 +52,7 @@ function M.config()
       nvim.lsp.buffer_options.formatexpr = "v:lua.require'conform'.formatexpr()"
 
       nvim.lsp.tools.list_registered.formatters = function(bufnr)
-        local formatters = nvim.lsp.tools.list_registered.default.formatters(bufnr)
+        local formatters = require("ck.lsp.tools").list_registered(require("ck.lsp.tools").METHODS.FORMATTER, bufnr)
 
         local lsp_fallback = M.get_lsp_fallback(bufnr)
         if #formatters == 0 and lsp_fallback == true or lsp_fallback == "always" then

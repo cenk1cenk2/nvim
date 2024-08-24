@@ -85,49 +85,15 @@ return {
       linters = {},
     },
     list_registered = {
-      default = {
-        ---@param bufnr number
-        ---@return string[]
-        formatters = function(bufnr)
-          local ft = vim.bo[bufnr].ft
-          local tools = {}
-
-          if nvim.lsp.tools.by_ft.formatters["*"] then
-            vim.list_extend(tools, nvim.lsp.tools.by_ft.formatters["*"])
-          end
-
-          if nvim.lsp.tools.by_ft.formatters[ft] ~= nil then
-            vim.list_extend(tools, nvim.lsp.tools.by_ft.formatters[ft])
-          elseif nvim.lsp.tools.by_ft.formatters["_"] ~= nil then
-            vim.list_extend(tools, nvim.lsp.tools.by_ft.formatters["_"])
-          end
-
-          return tools
-        end,
-        ---@param bufnr number
-        ---@return string[]
-        linters = function(bufnr)
-          local ft = vim.bo[bufnr].ft
-          local tools = {}
-
-          if nvim.lsp.tools.by_ft.linters["*"] then
-            vim.list_extend(tools, nvim.lsp.tools.by_ft.linters["*"])
-          end
-
-          if nvim.lsp.tools.by_ft.linters[ft] ~= nil then
-            vim.list_extend(tools, nvim.lsp.tools.by_ft.linters[ft])
-          else
-            vim.list_extend(tools, nvim.lsp.tools.by_ft.linters["_"])
-          end
-
-          return tools
-        end,
-      },
+      ---@param bufnr number
+      ---@return string[]
       formatters = function(bufnr)
-        return nvim.lsp.tools.list_registered.default.formatters(bufnr)
+        return require("ck.lsp.tools").list_registered(require("ck.lsp.tools").METHODS.FORMATTER, bufnr)
       end,
+      ---@param bufnr number
+      ---@return string[]
       linters = function(bufnr)
-        return nvim.lsp.tools.list_registered.default.linters(bufnr)
+        return require("ck.lsp.tools").list_registered(require("ck.lsp.tools").METHODS.LINTER, bufnr)
       end,
     },
   },

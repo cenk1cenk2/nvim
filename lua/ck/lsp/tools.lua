@@ -40,4 +40,26 @@ function M.register_tools(method, configs, filetypes)
   ))
 end
 
+---@param method LspToolMethods
+---@param bufnr? number
+---@return string[]
+function M.list_registered(method, bufnr)
+  bufnr = bufnr or 0
+
+  local ft = vim.bo[bufnr].ft
+  local tools = {}
+
+  if nvim.lsp.tools.by_ft[method]["*"] then
+    vim.list_extend(tools, nvim.lsp.tools.by_ft[method]["*"])
+  end
+
+  if nvim.lsp.tools.by_ft[method][ft] ~= nil then
+    vim.list_extend(tools, nvim.lsp.tools.by_ft[method][ft])
+  elseif nvim.lsp.tools.by_ft[method]["_"] ~= nil then
+    vim.list_extend(tools, nvim.lsp.tools.by_ft[method]["_"])
+  end
+
+  return tools
+end
+
 return M
