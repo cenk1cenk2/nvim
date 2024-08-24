@@ -1,7 +1,6 @@
 local M = {}
 
-local uv = vim.uv
-local path_sep = uv.os_uname().version:match("Windows") and "\\" or "/"
+local path_sep = OS_UNAME == "windows" and "\\" or "/"
 
 --- Checks if currently running in headless mode.
 ---@return boolean
@@ -19,8 +18,7 @@ end
 ---@vararg string
 ---@return string
 function _G.join_paths(...)
-  local result = table.concat({ ... }, path_sep)
-  return result
+  return table.concat({ ... }, path_sep)
 end
 
 ---Get the full path to `$neovim_RUNTIME_DIR`

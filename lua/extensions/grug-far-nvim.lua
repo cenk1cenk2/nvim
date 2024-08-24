@@ -175,6 +175,7 @@ function M.config()
         local state = unpack(status) and "ON" or "OFF"
         vim.notify(("Grug Far: toggled %s: %s"):format(table.concat(flags, " "), state))
       end
+
       return {
         require("modules.autocmds").q_close_autocmd({ "grug-far-history" }),
         require("modules.autocmds").setup_init_for_filetype({ "grug-far" }, function(event)

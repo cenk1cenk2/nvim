@@ -32,7 +32,7 @@ function M.config()
         suggestion = {
           enabled = true,
           auto_trigger = true,
-          debounce = 75,
+          debounce = 100,
           keymap = {
             accept = "<M-l>",
             next = "<M-j>",
@@ -61,13 +61,23 @@ function M.config()
       require("copilot").setup(c)
     end,
     on_done = function()
+      -- override this keymap after plugin initiation
       local autopairs = require("nvim-autopairs")
       local suggestion = require("copilot.suggestion")
-      vim.keymap.set("i", "<M-l>", function()
-        autopairs.disable()
-        suggestion.accept()
-        autopairs.enable()
-      end, { desc = "Accept Copilot suggestion" })
+      require("setup").init({
+        keymaps = {
+          {
+            "<M-l>",
+            function()
+              autopairs.disable()
+              suggestion.accept()
+              autopairs.enable()
+            end,
+            desc = "Accept Copilot suggestion",
+            mode = "n",
+          },
+        },
+      })
     end,
     wk = function(_, categories, fn)
       return {

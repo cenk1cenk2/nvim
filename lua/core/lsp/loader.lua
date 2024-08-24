@@ -2,7 +2,6 @@ local M = {}
 
 local log = require("core.log")
 local nvim_lsp_utils = require("core.lsp.utils")
-local is_windows = vim.uv.os_uname().version:match("Windows")
 
 local function resolve_mason_config(server_name)
   local found, mason_config = pcall(require, "mason-lspconfig.server_configurations." .. server_name)
@@ -15,15 +14,14 @@ local function resolve_mason_config(server_name)
   local pkg_name = server_mapping.lspconfig_to_package[server_name]
   local install_dir = path.package_prefix(pkg_name)
   local conf = mason_config(install_dir)
-  if is_windows and conf.cmd and conf.cmd[1] then
+  if OS_UNAME == "windows" and conf.cmd and conf.cmd[1] then
     local exepath = vim.fn.exepath(conf.cmd[1])
     if exepath ~= "" then
       conf.cmd[1] = exepath
     end
   end
 
-  log:debug(("resolved mason configuration: %s"):format(server_name))
-  -- log:trace(vim.inspect(conf))
+  log:debug("Resolved mason configuration: %s", server_name)
 
   return conf or {}
 end
@@ -74,23 +72,6 @@ local function launch_server(server_name, config)
 
     require("lspconfig")[server_name].setup(config)
   end, debug.traceback)
-
-  -- require("setup").define_autocmds({
-  --   {
-  --     "FileType",
-  --     {
-  --       group = "lsp_launch_server",
-  --       pattern = ft,
-  --       callback = function(event)
-  --         callback()
-  --
-  --         pcall(function()
-  --           buf_try_add(server_name, event.buf)
-  --         end)
-  --       end,
-  --     },
-  --   },
-  -- })
 end
 
 function M.has_setup(server_name)
@@ -124,15 +105,9 @@ function M.setup(server_name, user_config)
     return
   end
 
-  local should_auto_install = function(name)
-    local installer_settings = nvim.lsp.installer.setup
-
-    return installer_settings.automatic_installation and not vim.tbl_contains(installer_settings.automatic_installation.exclude, name)
-  end
-
   if not registry.is_installed(pkg_name) then
-    if should_auto_install(server_name) then
-      log:debug("Automatic server installation detected")
+    if not vim.tbl_contains(nvim.lsp.skipped_servers, server_name) then
+      log:debug("Language server should be automatically installed: %s", server_name)
       vim.notify_once(string.format("Installation in progress for [%s]", server_name), vim.log.levels.INFO)
 
       local pkg = registry.get_package(pkg_name)
@@ -150,7 +125,7 @@ function M.setup(server_name, user_config)
 
       return
     else
-      log:debug("%s will not be automatically installed.", server_name)
+      log:debug("Language server will not be automatically installed: %s", server_name)
     end
   end
 

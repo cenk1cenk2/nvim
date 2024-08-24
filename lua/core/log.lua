@@ -123,7 +123,7 @@ function M:get()
 
   self.__handle = logger
 
-  for _, entry in ipairs(queue) do
+  for _, entry in pairs(queue) do
     if #entry == 3 then
       M:log(entry[1], entry[2], unpack(entry[3]))
     else

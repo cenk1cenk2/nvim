@@ -3,16 +3,6 @@ local M = {}
 local log = require("core.log")
 local setup = require("setup")
 
-local function add_lsp_buffer_options(bufnr)
-  for k, v in pairs(nvim.lsp.buffer_options) do
-    vim.api.nvim_set_option_value(k, v, { buf = bufnr })
-  end
-end
-
-local function add_lsp_buffer_keybindings(bufnr)
-  setup.load_keymaps(nvim.lsp.buffer_mappings, { buffer = bufnr })
-end
-
 function M.common_capabilities()
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -32,6 +22,9 @@ function M.common_capabilities()
   return capabilities
 end
 
+---@alias LspOnCallback fun(client: vim.lsp.Client, bufnr: number)
+
+---@type LspOnCallback
 function M.common_on_exit(client, bufnr)
   if #nvim.lsp.on_exit_callbacks > 0 then
     for _, cb in pairs(nvim.lsp.on_exit) do
@@ -41,6 +34,7 @@ function M.common_on_exit(client, bufnr)
   end
 end
 
+---@type LspOnCallback
 function M.common_on_init(client, bufnr)
   if #nvim.lsp.on_init_callbacks > 0 then
     for _, cb in pairs(nvim.lsp.on_init_callbacks) do
@@ -50,6 +44,7 @@ function M.common_on_init(client, bufnr)
   end
 end
 
+---@type LspOnCallback
 function M.common_on_attach(client, bufnr)
   if #nvim.lsp.on_attach_callbacks > 0 then
     for _, cb in pairs(nvim.lsp.on_attach_callbacks) do
@@ -57,8 +52,6 @@ function M.common_on_attach(client, bufnr)
     end
     log:trace("Called lsp.on_attach_callbacks")
   end
-
-  local lu = require("core.lsp.utils")
 
   if nvim.lsp.code_lens.refresh then
     local method = "textDocument/codeLens"
@@ -113,8 +106,10 @@ function M.common_on_attach(client, bufnr)
     end
   end
 
-  add_lsp_buffer_keybindings(bufnr)
-  add_lsp_buffer_options(bufnr)
+  setup.load_keymaps(nvim.lsp.buffer_mappings, { buffer = bufnr })
+  for k, v in pairs(nvim.lsp.buffer_options) do
+    vim.api.nvim_set_option_value(k, v, { buf = bufnr })
+  end
 end
 
 function M.get_common_opts()
@@ -132,9 +127,8 @@ end
 function M.should_configure(server_name)
   local skipped_filetypes = nvim.lsp.skipped_filetypes
   local skipped_servers = nvim.lsp.skipped_servers
-  local ensure_installed_servers = nvim.lsp.installer.setup.ensure_installed
 
-  if vim.tbl_contains(skipped_servers, server_name) and not vim.tbl_contains(ensure_installed_servers, server_name) then
+  if vim.tbl_contains(skipped_servers, server_name) then
     return false
   end
 
@@ -161,6 +155,47 @@ function M.setup(force)
 
   log:debug("Installing LSP servers.")
 
+  local lsp_status_ok, _ = pcall(require, "lspconfig")
+  if not lsp_status_ok then
+    log:warn("lspconfig not available.")
+
+    return
+  end
+
+  require("core.lsp.handlers").setup()
+
+  require("modules.lsp").setup()
+
+  xpcall(function()
+    require("neoconf").setup({
+      jsonls = {
+        configured_servers_only = false,
+      },
+    })
+
+    require("mason-lspconfig").setup({
+      -- ensure_installed = nvim.lsp.ensure_installed,
+      automatic_installation = {
+        exclude = nvim.lsp.skipped_servers,
+      },
+    })
+
+    require("mason-lspconfig").setup_handlers({
+      function(server_name)
+        if not M.should_configure(server_name) then
+          log:debug(("Skipping configuring LSP: %s"):format(server_name))
+
+          return
+        end
+
+        require("core.lsp.loader").setup(server_name)
+      end,
+    })
+
+    local util = require("lspconfig.util")
+    util.on_setup = nil
+  end, debug.traceback)
+
   local installer_ok, installer = pcall(require, "mason-tool-installer")
 
   if installer_ok then
@@ -186,38 +221,6 @@ function M.setup(force)
   else
     log:warn("LSP installer not available.")
   end
-
-  local lsp_status_ok, _ = pcall(require, "lspconfig")
-  if not lsp_status_ok then
-    return
-  end
-
-  require("core.lsp.handlers").setup()
-
-  require("modules.lsp").setup()
-
-  xpcall(function()
-    require("neoconf").setup({
-      jsonls = {
-        configured_servers_only = false,
-      },
-    })
-    require("mason-lspconfig").setup(nvim.lsp.installer.setup)
-    require("mason-lspconfig").setup_handlers({
-      function(server_name)
-        if not M.should_configure(server_name) then
-          log:debug(("Skipping configuring LSP: %s"):format(server_name))
-
-          return
-        end
-
-        require("core.lsp.loader").setup(server_name)
-      end,
-    })
-
-    local util = require("lspconfig.util")
-    util.on_setup = nil
-  end, debug.traceback)
 
   require("core.lsp.format").setup()
 end

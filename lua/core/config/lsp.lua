@@ -54,36 +54,22 @@ return {
   code_lens = {
     refresh = true,
   },
-  -- Enable this to enable the builtin LSP inlay hints on Neovim >= 0.10.0
-  -- Be aware that you also will need to properly configure your LSP server to
-  -- provide the inlay hints.
   inlay_hints = {
     enabled = true,
   },
-  float = {
-    focusable = true,
-    style = "minimal",
-    border = nvim.ui.border,
-  },
   buffer_mappings = require("core.keys.lsp"),
-  ---@usage list of servers that the automatic installer will skip
+  ---@type string[]
+  ensure_installed = {},
+  ---@type string[]
   skipped_servers = {},
-  ---@usage list of filetypes that the automatic installer will skip
+  ---@type string[]
   skipped_filetypes = {},
+  ---@type table<string, string>
   buffer_options = {
     --- enable completion triggered by <c-x><c-o>
     omnifunc = "v:lua.vim.lsp.omnifunc",
     --- use gq for formatting
     formatexpr = "v:lua.vim.lsp.formatexpr(#{timeout_ms:500})",
-  },
-  ---@usage list of settings of nvim-lsp-installer
-  installer = {
-    setup = {
-      ensure_installed = {},
-      automatic_installation = {
-        exclude = {},
-      },
-    },
   },
   tools = {
     clients = {
@@ -91,11 +77,15 @@ return {
       linters = "",
     },
     by_ft = {
+      ---@type table<LspToolMethods, table<string, string[]>>
       formatters = {},
+      ---@type table<LspToolMethods, table<string, string[]>>
       linters = {},
     },
     list_registered = {
       default = {
+        ---@param bufnr number
+        ---@return string[]
         formatters = function(bufnr)
           local ft = vim.bo[bufnr].ft
           local tools = {}
@@ -112,6 +102,8 @@ return {
 
           return tools
         end,
+        ---@param bufnr number
+        ---@return string[]
         linters = function(bufnr)
           local ft = vim.bo[bufnr].ft
           local tools = {}
@@ -138,7 +130,10 @@ return {
     },
   },
   fn = {},
+  ---@type LspOnCallback[]
   on_init_callbacks = {},
+  ---@type LspOnCallback[]
   on_attach_callbacks = {},
+  ---@type LspOnCallback[]
   on_exit_callbacks = {},
 }
