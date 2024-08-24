@@ -114,13 +114,9 @@ function M.reload()
   require("lazy.core.plugin").load()
   require("lazy.core.plugin").update_state()
 
-  local loaded = vim.tbl_filter(function(plugin)
-    return plugin._.loaded
-  end, Config.plugins)
-
   require("lazy.manage").clear()
   xpcall(function()
-    manager.reload({ plugins = loaded })
+    manager.reload({ plugins = Config.plugins })
   end, debug.traceback)
 
   local to_install = vim.tbl_filter(function(plugin)
