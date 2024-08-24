@@ -10,7 +10,7 @@ local _, action_state = pcall(require, "telescope.actions.state")
 local M = {}
 
 M.terminal_previewer = previewers.new_buffer_previewer({
-  title = "Terminal Preview",
+  title = "Toggleterm Preview",
   get_buffer_by_name = function(_, selection)
     return selection.entry.name
   end,
