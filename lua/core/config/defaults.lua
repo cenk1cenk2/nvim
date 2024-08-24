@@ -7,7 +7,7 @@ return {
     icons = require("core.config.icons"):load(),
     colors = require("onedarker.colors"),
     border = "single",
-    transparent_window = false,
+    transparent = false,
   },
 
   selection_chars = "asdfghjklqwertyuiopzxcvbnmASDFGHJKLQWERTYUIOPZXCVBNM",

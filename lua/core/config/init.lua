@@ -40,7 +40,7 @@ function M:reload()
 end
 
 function M.load_colorscheme()
-  if nvim.ui.transparent_window then
+  if nvim.ui.transparent then
     vim.api.nvim_create_autocmd("ColorScheme", {
       pattern = "*",
       callback = function()
