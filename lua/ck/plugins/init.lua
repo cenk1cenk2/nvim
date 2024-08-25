@@ -111,7 +111,7 @@ function M.config()
   local log = require("ck.log")
 
   for _, path in ipairs(plugins) do
-    local ok, m = pcall(require, "ck.plugins." .. path)
+    local ok, m = pcall(require, ("ck.plugins.%s"):format(path))
 
     if not ok then
       log:warn(("Plugin configuration can not be loaded: %s"):format(path))

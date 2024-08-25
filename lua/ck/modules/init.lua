@@ -18,7 +18,7 @@ function M.config()
   local log = require("ck.log")
 
   for _, path in ipairs(modules) do
-    local ok, m = pcall(require, "ck.modules." .. path)
+    local ok, m = pcall(require, ("ck.modules.%s"):format(path))
     if not ok then
       log:warn("Module can not be loaded: %s", path)
     elseif m.setup ~= nil then
