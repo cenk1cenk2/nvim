@@ -19,8 +19,8 @@ end
 ---@param server_name string can be any server supported by nvim-lsp-installer
 ---@return string[] supported filestypes as a list of strings
 function M.get_supported_filetypes(server_name)
-  local status_ok, config = pcall(require, ("lspconfig.server_configurations.%s"):format(server_name))
-  if not status_ok then
+  local ok, config = pcall(require, ("lspconfig.server_configurations.%s"):format(server_name))
+  if not ok then
     return {}
   end
 

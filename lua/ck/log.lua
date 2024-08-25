@@ -36,8 +36,8 @@ function M:set_level(level)
 end
 
 function M:init()
-  local status_ok, sl = pcall(require, "structlog")
-  if not status_ok then
+  local ok, sl = pcall(require, "structlog")
+  if not ok then
     return nil
   end
 

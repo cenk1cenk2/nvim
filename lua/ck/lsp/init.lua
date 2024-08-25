@@ -14,8 +14,8 @@ function M.common_capabilities()
     lineFoldingOnly = true,
   }
 
-  local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-  if status_ok then
+  local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+  if ok then
     capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
   end
 
@@ -55,11 +55,11 @@ function M.common_on_attach(client, bufnr)
 
   if nvim.lsp.code_lens.refresh then
     local method = "textDocument/codeLens"
-    local status_ok, codelens_supported = pcall(function()
+    local ok, codelens_supported = pcall(function()
       return client.supports_method(method)
     end)
 
-    if not status_ok or not codelens_supported then
+    if not ok or not codelens_supported then
       return
     end
 
@@ -155,8 +155,8 @@ function M.setup(force)
 
   log:debug("Installing LSP servers.")
 
-  local lsp_status_ok, _ = pcall(require, "lspconfig")
-  if not lsp_status_ok then
+  local ok, _ = pcall(require, "lspconfig")
+  if not ok then
     log:warn("lspconfig not available.")
 
     return
