@@ -538,7 +538,7 @@ function M.toggle_log_view(logfile)
   end
   log:debug("attempting to open: " .. logfile)
   log_viewer = log_viewer .. " " .. logfile
-  local term_opts = vim.tbl_deep_extend("force", M.current_setup(), {
+  local term_opts = vim.tbl_deep_extend("force", M.get_setup(), {
     cmd = log_viewer,
     direction = "float",
     open_mapping = "",
@@ -549,6 +549,6 @@ function M.toggle_log_view(logfile)
   log_view:toggle()
 end
 
-M.current_setup = require("ck.setup").fn.get_current_setup_wrapper(M.name)
+M.get_setup = require("ck.setup").fn.get_setup_wrapper(M.name)
 
 return M

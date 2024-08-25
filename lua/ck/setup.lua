@@ -152,7 +152,7 @@ end
 ---@field enabled? boolean
 ---@field configure? fun(config: Config, fn: SetupFn): nil
 ---@field on_init? fun(config: Config, fn: SetupFn): nil
----@field setup? (fun(config: Config, fn: SetupFn): table) | table
+---@field setup? (fun(config: Config, fn: SetupFn): any) | any
 ---@field on_setup? fun(c: any, config: Config, fn: SetupFn): nil
 ---@field legacy_setup? table
 ---@field on_done? fun(config: Config, fn: SetupFn): nil
@@ -164,6 +164,7 @@ end
 ---@field signs? (fun(config: Config, fn: SetupFn): table<string, vim.fn.sign_define.dict>) | table<string, vim.fn.sign_define.dict>
 ---@field plugins? Plugin[]
 ---@field to_setup? ConfigToSetup[]
+---@field current_setup any
 
 ---@class ConfigToSetup
 ---@field cb fun(config: Config): any
@@ -226,8 +227,6 @@ function M.define_plugin(name, enabled, config)
 
   if config ~= nil and config.configure ~= nil then
     config.configure(config, M.fn)
-
-    config.configure = nil
   end
 
   nvim.plugins[name] = config
@@ -270,26 +269,18 @@ end
 function M.init(config)
   if config ~= nil and config.on_init ~= nil then
     config.on_init(config, M.fn)
-
-    config.on_init = nil
   end
 
   if config ~= nil and config.autocmds ~= nil then
     M.create_autocmds(M.evaluate_property(config.autocmds, config, M.fn))
-
-    config.autocmds = nil
   end
 
   if config ~= nil and config.keymaps ~= nil then
     M.load_keymaps(M.evaluate_property(config.keymaps, config, M.fn))
-
-    config.keymaps = nil
   end
 
   if config ~= nil and config.wk ~= nil then
     M.load_wk(M.evaluate_property(config.wk, config, M.fn.get_wk_categories(), M.fn))
-
-    config.wk = nil
   end
 
   if config ~= nil and config.hl ~= nil then
@@ -298,8 +289,6 @@ function M.init(config)
     for key, value in pairs(highlights) do
       vim.api.nvim_set_hl(0, key, value)
     end
-
-    config.hl = nil
   end
 
   if config ~= nil and config.signs ~= nil then
@@ -309,20 +298,14 @@ function M.init(config)
       -- this should be removed at some point since deprecated
       vim.fn.sign_define(key, value)
     end
-
-    config.signs = nil
   end
 
   if config ~= nil and config.commands ~= nil then
     M.create_commands(M.evaluate_property(config.commands, config, M.fn))
-
-    config.commands = nil
   end
 
   if config ~= nil and config.legacy_setup ~= nil then
     M.legacy_setup(M.evaluate_property(config.legacy_setup, config))
-
-    config.legacy_setup = nil
   end
 end
 
@@ -345,15 +328,11 @@ function M.configure(config)
   end
 
   if config ~= nil and config.on_setup ~= nil then
-    config.on_setup(M.fn.get_current_setup(config.name), config, M.fn)
-
-    config.on_setup = nil
+    config.on_setup(M.fn.get_setup(config.name), config, M.fn)
   end
 
   if config ~= nil and config.on_done ~= nil then
     config.on_done(config, M.fn)
-
-    config.on_done = nil
   end
 end
 
@@ -380,8 +359,8 @@ end
 ---@field append_to_setup SetupFnAppendToSetup
 ---@field get_wk_categories SetupFnGetWkCategories
 ---@field get_wk_category SetupFnGetWkCategory
----@field get_current_setup_wrapper SetupFnGetCurrentSetupWrapper
----@field get_current_setup SetupFnGetCurrentSetup
+---@field get_setup_wrapper SetupFnGetSetupWrapper
+---@field get_setup SetupFnGetSetup
 ---@field get_highlight SetupFnGetHighlight
 ---@field keystroke SetupFnKeystroke
 ---@field local_keystroke SetupFnLocalKeystroke
@@ -441,21 +420,21 @@ function M.fn.get_wk_category(category)
   return M.fn.get_wk_categories()[category]
 end
 
----@alias SetupFnGetCurrentSetupWrapper fun(name: string): fun(): table
+---@alias SetupFnGetSetupWrapper fun(name: string): fun(): table
 
 --- Returns the current setup of an plugin.
----@type SetupFnGetCurrentSetupWrapper
-function M.fn.get_current_setup_wrapper(name)
+---@type SetupFnGetSetupWrapper
+function M.fn.get_setup_wrapper(name)
   return function()
-    return M.fn.get_current_setup(name)
+    return M.fn.get_setup(name)
   end
 end
 
----@alias SetupFnGetCurrentSetup fun(name: string): table
+---@alias SetupFnGetSetup fun(name: string): table
 
 --- Returns the current setup of an plugin.
----@type SetupFnGetCurrentSetup
-function M.fn.get_current_setup(name)
+---@type SetupFnGetSetup
+function M.fn.get_setup(name)
   return nvim.plugins[name].current_setup
 end
 

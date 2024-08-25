@@ -197,7 +197,7 @@ function M.config()
     on_done = function(_, fn)
       local telescope = require("telescope")
 
-      local c = fn.get_current_setup(M.name)
+      local c = fn.get_setup(M.name)
 
       if c.extensions and c.extensions.fzf then
         telescope.load_extension("fzf")

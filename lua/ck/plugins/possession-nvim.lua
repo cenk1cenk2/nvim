@@ -140,6 +140,6 @@ function M.config()
   })
 end
 
-M.current_setup = require("ck.setup").fn.get_current_setup_wrapper(M.name)
+M.get_setup = require("ck.setup").fn.get_setup_wrapper(M.name)
 
 return M

@@ -21,17 +21,13 @@ end
 function M.update_sync()
   log:warn("Triggered the special update method.")
 
-  local _, err = pcall(function()
+  xpcall(function()
     require("ck"):update()
 
     vim.cmd([[Lazy! sync]])
 
     M.update_language_servers_sync()
-  end)
-
-  if err then
-    log:error(err)
-  end
+  end, debug.traceback)
 
   vim.cmd([[qa!]])
 end

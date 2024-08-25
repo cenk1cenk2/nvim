@@ -44,6 +44,7 @@ return {
     "quickfix",
   },
 
+  ---@type table<string, Config>
   plugins = {},
 
   fn = {},

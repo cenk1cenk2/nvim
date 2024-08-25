@@ -100,18 +100,18 @@ function M.config()
           },
           duplicates_default = 0,
           format = function(entry, vim_item)
-            local current_setup = M.current_setup()
+            local c = M.get_setup()
 
-            local max_width = current_setup.formatting.max_width
+            local max_width = c.formatting.max_width
             if max_width ~= 0 and #vim_item.abbr > max_width then
               vim_item.abbr = string.sub(vim_item.abbr, 1, max_width - 1) .. " " .. nvim.ui.icons.ui.Ellipsis
             end
 
-            vim_item.kind = current_setup.formatting.kind_icons[vim_item.kind] or vim_item.kind
+            vim_item.kind = c.formatting.kind_icons[vim_item.kind] or vim_item.kind
 
-            vim_item.menu = ("[%s]"):format(current_setup.formatting.source_names[entry.source.name] or entry.source.name)
+            vim_item.menu = ("[%s]"):format(c.formatting.source_names[entry.source.name] or entry.source.name)
 
-            vim_item.dup = current_setup.formatting.duplicates[entry.source.name] or current_setup.formatting.duplicates_default
+            vim_item.dup = c.formatting.duplicates[entry.source.name] or c.formatting.duplicates_default
 
             return vim_item
           end,
@@ -215,7 +215,7 @@ function M.config()
           ["<C-e>"] = cmp.mapping.abort(),
           ["<CR>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
-              local confirm_opts = vim.deepcopy(M.current_setup().confirm_opts) -- avoid mutating the original opts below
+              local confirm_opts = vim.deepcopy(M.get_setup().confirm_opts) -- avoid mutating the original opts below
               local is_insert_mode = function()
                 return vim.api.nvim_get_mode().mode:sub(1, 1) == "i"
               end
@@ -347,6 +347,6 @@ M.per_extension = {
   },
 }
 
-M.current_setup = require("ck.setup").fn.get_current_setup_wrapper(M.name)
+M.get_setup = require("ck.setup").fn.get_setup_wrapper(M.name)
 
 return M

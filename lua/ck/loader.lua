@@ -37,7 +37,8 @@ function M.load()
     return
   end
 
-  local lazy_setup = {
+  ---@type LazyConfig
+  local config = {
     root = M.plugins_dir, -- directory where plugins will be installed
     defaults = {
       lazy = true, -- should plugins be lazy-loaded?
@@ -95,7 +96,7 @@ function M.load()
   }
 
   local status_ok, _ = xpcall(function()
-    manager.setup(require("ck.setup").into_plugin_spec(), lazy_setup)
+    manager.setup(require("ck.setup").into_plugin_spec(), config)
   end, debug.traceback)
 
   if not status_ok then

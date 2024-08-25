@@ -8,7 +8,6 @@ function M.config()
     plugin = function()
       return {
         "folke/lazy.nvim",
-        deactivate = function() end,
       }
     end,
     wk = function(_, categories, fn)
