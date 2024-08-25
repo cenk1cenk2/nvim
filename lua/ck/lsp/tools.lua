@@ -27,17 +27,18 @@ function M.register_tools(method, configs, filetypes)
     vim.list_extend(nvim.lsp.tools.by_ft[method][ft], configs)
   end
 
-  log:debug(("Registered the following method %s for %s: %s"):format(
+  log:debug(
+    "Registered the following method %s for %s: %s",
     method,
-    vim.inspect(vim.tbl_map(function(config)
+    vim.tbl_map(function(config)
       if type(config) == "string" then
         return config
       end
 
       return config.name
-    end, configs)),
+    end, configs),
     table.concat(filetypes, ", ")
-  ))
+  )
 end
 
 ---@param method LspToolMethods

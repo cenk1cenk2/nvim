@@ -29,7 +29,7 @@ function M.create(command)
           if not command.no_log_success then
             log:info("Command executed: %s", cmd)
 
-            log:debug("%s -> %s", cmd, vim.inspect(j:result()))
+            log:debug("%s -> %s", cmd, j:result())
           end
 
           if command.on_success then
@@ -37,7 +37,7 @@ function M.create(command)
           end
         else
           if not command.no_log_failure then
-            log:error(("Command failed with exit code %d: %s -> %s"):format(code, cmd, vim.inspect(j:result())))
+            log:error("Command failed with exit code %d: %s -> %s", code, cmd, j:result())
           end
 
           if command.on_failure then

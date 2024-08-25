@@ -1,5 +1,6 @@
 local M = {}
 
+---@enum LogLevel
 M.levels = {
   [1] = "TRACE",
   [2] = "DEBUG",
@@ -13,6 +14,12 @@ M.levels = {
   ERROR = 5,
 }
 
+---@class LogQueueEntry
+---@field level LogLevel
+---@field message any
+---@field sprintf table
+
+---@type LogQueueEntry[]
 local queue = {}
 
 function M:set_level(level)
@@ -98,18 +105,46 @@ function M:init()
   return sl.get_logger("nvim")
 end
 
---- Adds a log entry using Plenary.log
 ---@param msg any
+---@param sprintf? any[]
+function M:splat(msg, sprintf)
+  sprintf = sprintf or {}
+
+  if type(msg) ~= "string" then
+    msg = vim.inspect(msg, { newline = "\n", indent = "  " })
+  end
+
+  if #sprintf == 0 then
+    return msg
+  end
+
+  return msg:format(unpack(vim.tbl_map(function(v)
+    if type(v) ~= "string" then
+      return vim.inspect(v, { newline = "\n", indent = "  " })
+    end
+
+    return v
+  end, sprintf)))
+end
+
+--- Adds a log entry using Plenary.log
 ---@param level string [same as vim.log.log_levels]
-function M:write(level, msg, ...)
+---@param msg any
+---@param sprintf? any[]
+function M:write(level, msg, sprintf)
   local logger = self:get()
+
   if not logger then
-    table.insert(queue, { level or vim.log.levels.DEBUG, msg, { ... } })
+    table.insert(queue, {
+      level = level or vim.log.levels.DEBUG,
+      message = msg,
+      sprintf = sprintf,
+    })
 
     return
   end
 
-  logger:log(level, vim.inspect(msg):format(...))
+  return logger:log(level, M:splat(msg, sprintf))
 end
 
 ---Retrieves the handle of the logger object
@@ -127,11 +162,7 @@ function M:get()
   self.__handle = logger
 
   for _, entry in pairs(queue) do
-    if #entry == 3 then
-      M:log(entry[1], entry[2], unpack(entry[3]))
-    else
-      M:log(entry[1], entry[2])
-    end
+    logger:log(entry.level, M:splat(entry.message, entry.sprintf))
   end
   queue = {}
 
@@ -148,42 +179,42 @@ end
 ---@param msg any
 ---@param ... any
 function M:log(level, msg, ...)
-  self:write(level, msg, ...)
+  self:write(level, msg, { ... })
 end
 
 ---Add a log entry at TRACE level
 ---@param msg any
 ---@param ... any
 function M:trace(msg, ...)
-  self:write(self.levels.TRACE, msg, ...)
+  self:write(self.levels.TRACE, msg, { ... })
 end
 
 ---Add a log entry at DEBUG level
 ---@param msg any
 ---@param ... any
 function M:debug(msg, ...)
-  self:write(self.levels.DEBUG, msg, ...)
+  self:write(self.levels.DEBUG, msg, { ... })
 end
 
 ---Add a log entry at INFO level
 ---@param msg any
 ---@param ... any
 function M:info(msg, ...)
-  self:write(self.levels.INFO, msg, ...)
+  self:write(self.levels.INFO, msg, { ... })
 end
 
 ---Add a log entry at WARN level
 ---@param msg any
 ---@param ... any
 function M:warn(msg, ...)
-  self:write(self.levels.WARN, msg, ...)
+  self:write(self.levels.WARN, msg, { ... })
 end
 
 ---Add a log entry at ERROR level
 ---@param msg any
 ---@param ... any
 function M:error(msg, ...)
-  self:write(self.levels.ERROR, msg, ...)
+  self:write(self.levels.ERROR, msg, { ... })
 end
 
 setmetatable({}, M)

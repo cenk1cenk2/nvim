@@ -193,15 +193,16 @@ function nvim.lsp.fn.restart_lsp(filter)
     readable.filename = require("ck.utils.fs").get_project_buffer_filepath(filter.bufnr)
   end
 
-  log:warn(("Killed LSPs: %s -> %s"):format(
+  log:warn(
+    "Killed LSPs: %s -> %s",
     table.concat(
       vim.tbl_map(function(client)
         return client.name
       end, clients),
       ", "
     ),
-    vim.inspect(readable)
-  ))
+    readable
+  )
 
   -- require("ck.utils").reload_file()
 end
@@ -223,10 +224,10 @@ function nvim.lsp.fn.fix_current()
 
     if #fixes == 0 then
       log:warn(("[QUICKFIX] Not found: %s -> %s"):format(
-        vim.inspect(vim.tbl_map(function(client)
+        vim.tbl_map(function(client)
           return client.name
-        end, vim.lsp.get_clients({ bufnr = bufnr }))),
-        vim.inspect(responses)
+        end, vim.lsp.get_clients({ bufnr = bufnr })),
+        responses
       ))
 
       return

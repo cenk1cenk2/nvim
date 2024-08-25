@@ -28,7 +28,7 @@ function M.create_scratch_buffer()
     vim.api.nvim_buf_set_name(bufnr, filename)
     vim.api.nvim_set_option_value("filetype", filetype, { buf = bufnr })
     vim.api.nvim_win_set_buf(0, bufnr)
-    log:info(("Created temporary file: %s"):format(filename))
+    log:info("Created temporary file: %s", filename)
 
     require("ck.setup").create_autocmds({
       {
@@ -38,7 +38,7 @@ function M.create_scratch_buffer()
         callback = function()
           os.remove(filename)
 
-          log:info(("Removed temporary file: %s"):format(filename))
+          log:info("Removed temporary file: %s", filename)
         end,
       },
     })

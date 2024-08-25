@@ -5,7 +5,7 @@ local M = {}
 --- Override the configuration with a user provided one
 -- @param config_path The path to the configuration overrides
 function M:load()
-  log:debug("Loading configuration...")
+  log:debug("Starting to load configuration...")
 
   _G.nvim = require("ck.config.defaults")
   _G.nvim.lsp = require("ck.config.lsp")

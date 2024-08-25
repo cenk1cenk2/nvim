@@ -23,7 +23,7 @@ function M.run_genpass()
         on_success = function(j)
           local generated = j:result()[1]
 
-          log:info(("Copied generated code to clipboard: %s"):format(generated))
+          log:info("Copied generated code to clipboard: %s", generated)
           vim.fn.setreg(vim.v.register or nvim.system_register, generated)
         end,
       })
@@ -123,7 +123,7 @@ function M.run_jq()
 
           local result = table.concat(j:result(), "\n")
 
-          log:info(("Copied result to clipboard: %s"):format(result))
+          log:info("Copied generated code to clipboard: %s", generated)
           vim.fn.setreg(vim.v.register or nvim.system_register, result)
         end,
       })
@@ -167,7 +167,7 @@ function M.run_yq()
 
           local result = table.concat(j:result(), "\n")
 
-          log:info(("Copied result to clipboard: %s"):format(result))
+          log:info("Copied result to clipboard: %s", result)
           vim.fn.setreg(vim.v.register or nvim.system_register, result)
         end,
       })
@@ -228,7 +228,7 @@ function M.set_kubeconfig()
     local kubeconfig = vim.fn.expand(arguments)
 
     if not is_file(kubeconfig) then
-      log:warn(("Kubeconfig file not found: %s"):format(kubeconfig))
+      log:warn("Kubeconfig file not found: %s", kubeconfig)
 
       return
     end

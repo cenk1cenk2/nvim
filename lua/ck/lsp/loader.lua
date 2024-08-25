@@ -53,7 +53,7 @@ end
 
 local function launch_server(server_name, config)
   local ft = config.filetypes or require("ck.lsp.utils").get_supported_filetypes(server_name)
-  log:trace(("%s is hooked for fts: %s"):format(server_name, vim.inspect(ft)))
+  log:trace("%s is hooked for fts: %s", server_name, ft)
 
   xpcall(function()
     if M.has_setup(server_name) then

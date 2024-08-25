@@ -20,7 +20,7 @@ function M.config()
   for _, path in ipairs(modules) do
     local ok, m = pcall(require, "ck.modules." .. path)
     if not ok then
-      log:warn(("Module can not be loaded: %s"):format(path))
+      log:warn("Module can not be loaded: %s", path)
     elseif m.setup ~= nil then
       m.setup()
     end

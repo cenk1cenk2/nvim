@@ -49,7 +49,7 @@ function M.load_keymaps(mappings, opts)
     local ok, result = pcall(vim.keymap.set, mode, lhs, rhs, m)
 
     if not ok then
-      log:error("Can not map keybind: %s > %s", result, vim.inspect(mapping))
+      log:error("Can not map keybind: %s > %s", result, mapping)
     end
   end
 end
@@ -132,7 +132,7 @@ local function define_manager_plugin(config, plugin)
   end
 
   if plugin.config ~= false and type(plugin.config) ~= "function" then
-    log:trace(string.format("Defining default config command for plugin: %s", config.name))
+    log:trace("Defining default config command for plugin: %s", config.name)
 
     plugin.config = function()
       require("ck.setup").plugin_configure(config.name)

@@ -207,7 +207,7 @@ function M.compare_with_branch()
       return
     end
 
-    log:info(("Comparing with branch: %s"):format(branch))
+    log:info("Comparing with branch: %s", branch)
     shada.set(store_key, branch)
 
     vim.cmd(":DiffviewOpen " .. branch)
