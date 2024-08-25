@@ -83,62 +83,72 @@ function M.on_attach(client, bufnr)
     log:trace("Called lsp.on_attach_callbacks")
   end
 
-  if nvim.lsp.code_lens.refresh then
-    local method = "textDocument/codeLens"
-    local ok, codelens_supported = pcall(function()
-      return client.supports_method(method)
-    end)
-
-    if not ok or not codelens_supported then
-      return
-    end
-
-    local group = "lsp_code_lens_refresh"
-    local events = { "LspAttach", "InsertLeave", "BufReadPost" }
-
-    local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
-      group = group,
-      buffer = bufnr,
-      event = events,
-    })
-
-    if ok and #autocmds > 0 then
-      return
-    end
-
-    local augroup = vim.api.nvim_create_augroup(group, { clear = false })
-    vim.api.nvim_create_autocmd(events, {
-      group = group,
-      buffer = bufnr,
-      callback = function()
-        vim.schedule(function()
-          if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
-            pcall(vim.lsp.codelens.refresh)
-          end
-        end)
-      end,
-    })
-
-    vim.api.nvim_create_autocmd({ "BufDelete" }, {
-      group = group,
-      buffer = bufnr,
-      callback = function()
-        if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
-          vim.api.nvim_del_augroup_by_id(augroup)
-        end
-      end,
-    })
+  if nvim.lsp.codelens.refresh then
+    M.attach_codelens(client, bufnr)
   end
 
   if nvim.lsp.inlay_hints.enabled then
-    if client.server_capabilities.inlayHintProvider then
-      vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
-    end
+    M.attach_inlay_hints(client, bufnr)
   end
 
   setup.load_keymaps(nvim.lsp.keymaps, { buffer = bufnr })
   for k, v in pairs(nvim.lsp.buffer_options) do
     vim.api.nvim_set_option_value(k, v, { buf = bufnr })
+  end
+end
+
+---@type LspOnCallback
+function M.attach_codelens(client, bufnr)
+  local method = "textDocument/codeLens"
+  local ok, codelens_supported = pcall(function()
+    return client.supports_method(method)
+  end)
+
+  if not ok or not codelens_supported then
+    return
+  end
+
+  local group = "lsp_codelens_refresh"
+  local events = { "LspAttach", "InsertLeave", "BufReadPost" }
+
+  local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
+    group = group,
+    buffer = bufnr,
+    event = events,
+  })
+
+  if ok and #autocmds > 0 then
+    return
+  end
+
+  local augroup = vim.api.nvim_create_augroup(group, { clear = false })
+  vim.api.nvim_create_autocmd(events, {
+    group = group,
+    buffer = bufnr,
+    callback = function()
+      vim.schedule(function()
+        if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
+          pcall(vim.lsp.codelens.refresh)
+        end
+      end)
+    end,
+  })
+
+  vim.api.nvim_create_autocmd({ "BufDelete" }, {
+    group = group,
+    buffer = bufnr,
+    callback = function()
+      if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
+        vim.api.nvim_del_augroup_by_id(augroup)
+      end
+    end,
+  })
+end
+
+---@type LspOnCallback
+function M.attach_inlay_hints(client, bufnr)
+  if client.server_capabilities.inlayHintProvider then
+    vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
   end
 end
 

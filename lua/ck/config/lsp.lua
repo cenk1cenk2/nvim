@@ -53,7 +53,7 @@ return {
       end,
     },
   },
-  code_lens = {
+  codelens = {
     refresh = true,
   },
   inlay_hints = {

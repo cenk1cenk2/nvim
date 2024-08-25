@@ -4,13 +4,15 @@ local log = require("ck.log")
 local utils = require("ck.lsp.utils")
 
 ---@diagnostic disable-next-line: duplicate-set-field
-function nvim.lsp.fn.add_to_workspace_folder()
-  vim.lsp.buf.add_workspace_folder()
+---@param folder string
+function nvim.lsp.fn.add_to_workspace_folder(folder)
+  vim.lsp.buf.add_workspace_folder(folder)
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
-function nvim.lsp.fn.remove_workspace_folder()
-  vim.lsp.buf.remove_workspace_folder()
+---@param folder string
+function nvim.lsp.fn.remove_workspace_folder(folder)
+  vim.lsp.buf.remove_workspace_folder(folder)
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -18,10 +20,10 @@ function nvim.lsp.fn.list_workspace_folders()
   vim.lsp.buf.list_workspace_folders()
 end
 
----@param ... vim.lsp.buf.code_action.Opts
+---@param opts? vim.lsp.buf.code_action.Opts
 ---@diagnostic disable-next-line: duplicate-set-field
-function nvim.lsp.fn.code_action(...)
-  vim.lsp.buf.code_action(...)
+function nvim.lsp.fn.code_action(opts)
+  vim.lsp.buf.code_action(opts)
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -34,7 +36,7 @@ function nvim.lsp.fn.document_symbols()
   require("telescope.builtin").lsp_document_symbols()
 end
 
----@param opts vim.lsp.buf.format.Opts
+---@param opts? vim.lsp.buf.format.Opts
 ---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.format(opts)
   opts = vim.tbl_extend("force", {
@@ -51,15 +53,17 @@ function nvim.lsp.fn.hover()
   vim.lsp.buf.hover()
 end
 
+---@param opts? vim.lsp.LocationOpts
 ---@diagnostic disable-next-line: duplicate-set-field
-function nvim.lsp.fn.declaration()
-  vim.lsp.buf.declaration()
+function nvim.lsp.fn.declaration(opts)
+  vim.lsp.buf.declaration(opts)
   vim.lsp.buf.clear_references()
 end
 
+---@param opts? vim.lsp.LocationOpts
 ---@diagnostic disable-next-line: duplicate-set-field
-function nvim.lsp.fn.definition()
-  vim.lsp.buf.definition()
+function nvim.lsp.fn.definition(opts)
+  vim.lsp.buf.definition(opts)
   vim.lsp.buf.clear_references()
 end
 
@@ -92,9 +96,10 @@ function nvim.lsp.fn.clear_references()
   vim.lsp.buf.clear_references()
 end
 
+---@param opts? vim.lsp.buf.rename.Opts
 ---@diagnostic disable-next-line: duplicate-set-field
-function nvim.lsp.fn.rename()
-  vim.lsp.buf.rename()
+function nvim.lsp.fn.rename(opts)
+  vim.lsp.buf.rename(nil, opts)
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -102,9 +107,10 @@ function nvim.lsp.fn.signature_help()
   vim.lsp.buf.signature_help()
 end
 
+---@param opts? vim.lsp.LocationOpts
 ---@diagnostic disable-next-line: duplicate-set-field
-function nvim.lsp.fn.type_definition()
-  vim.lsp.buf.type_definition()
+function nvim.lsp.fn.type_definition(opts)
+  vim.lsp.buf.type_definition(opts)
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -119,8 +125,6 @@ end
 ---@param opts vim.diagnostic.JumpOpts
 ---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.jump(opts)
-  opts = opts or {}
-
   opts = vim.tbl_deep_extend("force", opts, { float = { border = nvim.lsp.popup_border } })
 
   vim.diagnostic.jump(opts)
@@ -144,13 +148,14 @@ function nvim.lsp.fn.workspace_diagonistics()
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
-function nvim.lsp.fn.code_lens()
+function nvim.lsp.fn.codelens()
   vim.lsp.codelens.run()
 end
 
+---@param opts? vim.diagnostic.setloclist.Opts
 ---@diagnostic disable-next-line: duplicate-set-field
-function nvim.lsp.fn.diagonistics_set_loclist()
-  vim.diagnostic.setloclist()
+function nvim.lsp.fn.diagonistics_set_loclist(opts)
+  vim.diagnostic.setloclist(opts)
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -159,9 +164,10 @@ function nvim.lsp.fn.reset_diagnostics()
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field
-function nvim.lsp.fn.toggle_inlay_hints()
-  local bufnr = vim.api.nvim_get_current_buf()
-  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(bufnr), { bufnr = bufnr })
+---@param filter vim.lsp.inlay_hint.enable.Filter
+function nvim.lsp.fn.toggle_inlay_hints(filter)
+  filter = filter or {}
+  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter.bufnr), filter)
 end
 
 ---Reset LSP on given filter.
@@ -536,7 +542,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LSP, "l" }),
           function()
-            nvim.lsp.fn.code_lens()
+            nvim.lsp.fn.codelens()
           end,
           desc = "codelens",
         },
