@@ -2,7 +2,11 @@ local s = require("ck.utils.snippets")
 
 return {
   s.s(
-    "defaults",
+    {
+      trig = "ddq",
+      name = "defaults [double-quote]",
+      desc = { "Defaults with double quoutes." },
+    },
     s.fmt(
       [[
       root = true

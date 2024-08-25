@@ -50,7 +50,7 @@ function M.config()
         {
           "LL",
           function()
-            require("tree-climber").swap_prev()
+            require("tree-climber").swap_next()
           end,
           desc = "treesitter swap with next sibling",
         },

@@ -98,14 +98,21 @@ end
 
 return {
   s.s(
-    "implements",
+    {
+      trig = "implements",
+      desc = "Implement an interface into a struct.",
+    },
     s.fmt("var _ <> = (*<>)(nil)", {
       s.i(1, { "interface" }),
       s.i(2, { "struct" }),
     }, { delimiters = "<>" })
   ),
   s.s(
-    "ifnok",
+    {
+      trig = "ifnok",
+      name = "if not ok",
+      desc = "if not ok, return.",
+    },
     s.fmt(
       [[
       if !<> {
@@ -120,7 +127,11 @@ return {
     )
   ),
   s.s(
-    "ifnoki",
+    {
+      trig = "ifnoki",
+      name = "if not ok inline",
+      desc = "if not ok with inline variable, return.",
+    },
     s.fmt(
       [[
       if <>, <> := <>(<>); !<> {
@@ -139,7 +150,11 @@ return {
     )
   ),
   s.s(
-    "iferr",
+    {
+      trig = "iferr",
+      name = "if err",
+      desc = "if err, return",
+    },
     s.fmt(
       [[
       if <> != nil {
@@ -154,7 +169,11 @@ return {
     )
   ),
   s.s(
-    "iferri",
+    {
+      trig = "iferri",
+      name = "if err inline",
+      desc = "if err with inline variable, return",
+    },
     s.fmt(
       [[
       if <> := <>(<>); <> != nil {
@@ -172,7 +191,11 @@ return {
     )
   ),
   s.s(
-    "iferrc",
+    {
+      trig = "iferrc",
+      name = "if err with call",
+      desc = "if err with calling function, return",
+    },
     s.fmt(
       [[
       <>, <> := <>(<>)
@@ -193,7 +216,11 @@ return {
     )
   ),
   s.s(
-    "ginkgo",
+    {
+      trig = "ginkgo",
+      name = "import ginkgo",
+      desc = "imports ginkgo and gomega for testing.",
+    },
     s.fmt(
       [[
       . "github.com/onsi/ginkgo/v2"

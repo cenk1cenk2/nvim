@@ -1,8 +1,0 @@
-{
-  "$schema": "https://raw.githubusercontent.com/Yash-Singh1/vscode-snippets-json-schema/main/schema.json",
-  "frontmatter": {
-    "prefix": "-f",
-    "description": "Frontmatter seperator.",
-    "body": ["---"]
-  }
-}

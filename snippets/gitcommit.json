@@ -1,8 +1,0 @@
-{
-  "$schema": "https://raw.githubusercontent.com/Yash-Singh1/vscode-snippets-json-schema/main/schema.json",
-  "skip_ci": {
-    "prefix": "sci",
-    "description": "Skip CI actions on common pipeline executors.",
-    "body": ["[skip-ci]"]
-  }
-}
