@@ -184,7 +184,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          "gw",
+          "gW",
           ":Lspsaga peek_definition<CR>",
           desc = "peek",
           mode = { "n" },

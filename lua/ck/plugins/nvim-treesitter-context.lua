@@ -30,6 +30,17 @@ function M.config()
     on_setup = function(c)
       require("treesitter-context").setup(c)
     end,
+    wk = function(config, categories, fn)
+      return {
+        {
+          fn.wk_keystroke({ categories.TREESITTER, "t" }),
+          function()
+            require("treesitter-context").toggle()
+          end,
+          desc = "toggle treesitter context",
+        },
+      }
+    end,
   })
 end
 

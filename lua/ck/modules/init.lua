@@ -9,7 +9,6 @@ local modules = {
   "executables",
   "quit",
   -- rest
-  "lsp-setup",
   "unimpaired",
   "scratch",
 }

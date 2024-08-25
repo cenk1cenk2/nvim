@@ -139,7 +139,6 @@ require("ck.setup").fn.append_to_setup(get_plugin_name("treesitter"), {
     "javascript",
     "jsdoc",
     "json",
-    "json6",
     "jsonc",
     "jsonnet",
     "lua",

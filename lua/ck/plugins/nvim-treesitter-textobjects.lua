@@ -11,10 +11,30 @@ function M.config()
         event = "BufReadPost",
       }
     end,
-    setup = function()
+    setup = function(_, fn)
+      local a = "b"
       -- builtin textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects?tab=readme-ov-file#built-in-textobjects
       return {
         textobjects = {
+          swap = {
+            enable = false,
+            swap_previous = {
+              ["H"] = { query = { "@field", "@pair", "@array", "@element", "@parameter.inner" }, desc = "" },
+            },
+            swap_next = {
+              ["L"] = { query = { "@field", "@pair", "@array", "@element", "@parameter.inner" }, desc = "" },
+            },
+          },
+          lsp_interop = {
+            enable = true,
+            border = "rounded",
+            floating_preview_opts = {},
+            peek_definition_code = {
+              ["gwc"] = { query = "@class.outer", desc = "Peek class", silent = true },
+              ["gwm"] = { query = "@function.outer", desc = "Peek function", silent = true },
+              ["gwa"] = { query = "@assignment.outer", desc = "Peek assignment", silent = true },
+            },
+          },
           select = {
             enable = true,
             lookahead = false,
@@ -25,8 +45,10 @@ function M.config()
               ["am"] = { query = "@function.outer", desc = "select outer part of a method" },
               ["ic"] = { query = "@class.inner", desc = "select inner part of a class region" },
               ["ac"] = { query = "@class.outer", desc = "select outer part of a class region" },
-              ["as"] = { query = "@scope", query_group = "locals", desc = "select language scope" },
-              ["is"] = { query = "@scope.inner", query_group = "locals", desc = "select language scope" },
+              ["iv"] = { query = "@assignment.rhs", desc = "select rhs of assignment" },
+              ["av"] = { query = "@assignment.lhs", desc = "select lfs of assignment" },
+              ["if"] = { query = "@call.inner", desc = "select inner part of the call" },
+              ["af"] = { query = "@call.outer", desc = "select outer part of the call" },
             },
             selection_modes = {
               ["@parameter.outer"] = "v",
@@ -36,60 +58,29 @@ function M.config()
             },
             include_surrounding_whitespace = false,
           },
-          swap = {
-            enable = false,
-            swap_previous = {
-              ["HH"] = { query = { "@field", "@pair", "@array", "@element", "@parameter.inner" }, desc = "" },
-            },
-            swap_next = {
-              ["LL"] = { query = { "@field", "@pair", "@array", "@element", "@parameter.inner" }, desc = "" },
-            },
-          },
           move = {
             enable = true,
             set_jumps = true, -- whether to set jumps in the jumplist
             goto_next_start = {
-              ["L"] = {
-                query = {
-                  "@field",
-                  "@pair",
-                  "@array",
-                  "@element",
-                  "@parameter.inner",
-                  "@attribute.inner",
-                  "@iswap-list",
-                },
-                desc = "jump to next sibling",
-              },
               ["]m"] = { query = "@function.outer", des = "jump to next method start" },
               ["]c"] = { query = "@class.outer", desc = "jump to next class start" },
               ["]s"] = { query = "@scope", query_group = "locals", desc = "jump to next scope start" },
               ["]z"] = { query = "@fold", query_group = "folds", desc = "jump to next fold start" },
               ["]a"] = { query = "@parameter.inner", desc = "jump to next parameter start" },
+              ["]p"] = { query = "@attribute.inner", desc = "jump to next attribute start" },
             },
             goto_previous_start = {
-              ["H"] = {
-                query = {
-                  "@field",
-                  "@pair",
-                  "@array",
-                  "@element",
-                  "@parameter.inner",
-                  "@attribute.inner",
-                  "@iswap-list",
-                },
-                desc = "jump to previous sibling",
-              },
               ["[m"] = { query = "@function.outer", des = "jump to previous method start" },
               ["[c"] = { query = "@class.outer", desc = "jump to previous class start" },
               ["[s"] = { query = "@scope", query_group = "locals", desc = "jump to previous scope start" },
+              ["[Z"] = { query = "@fold", query_group = "folds", desc = "jump to previous fold start" },
               ["[a"] = { query = "@parameter.inner", desc = "jump to previous parameter start" },
+              ["[p"] = { query = "@attribute.inner", desc = "jump to previous attribute start" },
             },
             goto_next_end = {
               ["]M"] = { query = "@function.outer", des = "jump to next method end" },
               ["]C"] = { query = "@class.outer", desc = "jump to next class end" },
               ["]S"] = { query = "@scope", query_group = "locals", desc = "jump to next scope end" },
-              ["[Z"] = { query = "@fold", query_group = "folds", desc = "jump to next fold start" },
               ["]A"] = { query = "@parameter.inner", desc = "jump to next parameter start" },
             },
             goto_previous_end = {

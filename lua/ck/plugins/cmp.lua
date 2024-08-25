@@ -26,9 +26,8 @@ function M.config()
           -- https://github.com/tzachar/cmp-fuzzy-buffer
           { "tzachar/cmp-fuzzy-buffer" },
           { "lukas-reineke/cmp-rg" },
-          -- -- https://github.com/hrsh7th/cmp-omni
-          --         { "hrsh7th/cmp-omni" },
-          -- { "tzachar/cmp-tabnine", build = "./install.sh" },
+          -- https://github.com/hrsh7th/cmp-omni
+          { "hrsh7th/cmp-omni" },
           { "rafamadriz/friendly-snippets" },
           { "L3MON4D3/LuaSnip" },
           { "hrsh7th/cmp-nvim-lsp-signature-help" },
@@ -126,7 +125,7 @@ function M.config()
           documentation = cmp.config.window.bordered({ border = nvim.ui.border }),
         },
         sources = cmp.config.sources({
-          { name = "nvim_lsp" },
+          { name = "nvim_lsp", group_index = 0, keyword_length = 0 },
           { name = "lazydev", group_index = 0 },
           { name = "vim-dadbod-completion" },
           -- { name = "nvim_lsp_signature_help" },
@@ -134,8 +133,8 @@ function M.config()
           { name = "calc" },
           -- { name = "copilot" },
           { name = "path" },
-          -- { name = "omni" },
-          { name = "buffer" },
+          { name = "omni", option = { disable_omnifuncs = { "v:lua.vim.lsp.omnifunc" } } },
+          { name = "buffer", keyword_length = 3 },
           -- { name = "fuzzy_buffer" },
 
           -- { name = "env" },
@@ -152,13 +151,14 @@ function M.config()
           disallow_partial_matching = false,
           disallow_prefix_unmatching = false,
           disallow_same_order_fuzzy_matching = false,
+          disallow_symbol_nonprefix_matching = false,
         },
         sorting = {
           priority_weight = 1.0,
           comparators = {
-            cmp.config.compare.offset,
-            cmp.config.compare.exact,
-            cmp.config.compare.score,
+            compare.offset,
+            compare.exact,
+            compare.score,
             function(entry1, entry2)
               local _, entry1_under = entry1.completion_item.label:find("^_+")
               local _, entry2_under = entry2.completion_item.label:find("^_+")
@@ -170,10 +170,10 @@ function M.config()
                 return true
               end
             end,
-            cmp.config.compare.kind,
-            cmp.config.compare.sort_text,
-            cmp.config.compare.length,
-            cmp.config.compare.order,
+            compare.kind,
+            compare.sort_text,
+            compare.length,
+            compare.order,
           },
         },
         mapping = cmp.mapping.preset.insert({

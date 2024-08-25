@@ -31,19 +31,19 @@ function M.config()
     keymaps = function()
       return {
         {
-          "HH",
+          "H",
           ":ISwapNodeWithLeft<CR>",
           desc = "swap with left node",
           mode = { "n" },
         },
         {
-          "LL",
+          "L",
           ":ISwapNodeWithRight<CR>",
           desc = "swap with left node",
           mode = { "n" },
         },
         {
-          "HL",
+          "gH",
           ":ISwapWith<CR>",
           desc = "swap with selected node",
           mode = { "n" },

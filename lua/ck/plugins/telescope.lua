@@ -230,7 +230,7 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.TREESITTER, ":" }),
+          fn.wk_keystroke({ categories.FIND, ":" }),
           function()
             require("telescope.builtin").command_history()
           end,
