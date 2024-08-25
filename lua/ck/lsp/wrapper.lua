@@ -269,7 +269,7 @@ function nvim.lsp.fn.fix_current()
 
     local client = vim.lsp.get_client_by_id(fix.client_id)
 
-    utils.apply_lsp_edit(fix)
+    vim.lsp.buf_request_sync(bufnr, "workspace/executeCommand", fix.command)
 
     log:info(("[QUICKFIX] %s: %s"):format((client or {}).name, fix.title or ""))
   end)
@@ -299,7 +299,7 @@ function nvim.lsp.fn.organize_imports()
       end
 
       for _, result in pairs(response.result or {}) do
-        utils.apply_lsp_edit(result)
+        vim.lsp.buf_request_sync(0, "workspace/executeCommand", result.command)
       end
     end
   end)

@@ -69,7 +69,7 @@ local function launch_server(server_name, config)
   log:trace("LSP server is hooked for fts: %s -> %s", server_name, config.filetypes)
 
   xpcall(function()
-    if M.is_already_setup(server_name) then
+    if require("ck.lsp.utils").is_client_active(server_name) then
       return
     end
 
@@ -93,17 +93,6 @@ function M.to_package_name(server_name)
   return require("mason-lspconfig.mappings.server").lspconfig_to_package[server_name] or server_name
 end
 
----
----@param server_name string
----@return boolean
-function M.is_already_setup(server_name)
-  if utils.is_client_active(server_name) then
-    return true
-  end
-
-  return false
-end
-
 ---Setup a language server by providing a name
 ---@param server_name string name of the language server
 ---@param user_config table? when available it will take predence over any default configurations
@@ -111,7 +100,7 @@ function M.setup(server_name, user_config)
   vim.validate({ name = { server_name, "string" } })
   user_config = user_config or {}
 
-  if M.is_already_setup(server_name) then
+  if require("ck.lsp.utils").is_client_active(server_name) then
     return
   end
 
