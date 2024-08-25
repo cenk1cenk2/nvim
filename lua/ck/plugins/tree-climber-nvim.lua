@@ -20,6 +20,13 @@ function M.config()
           desc = "treesitter goto parent node",
         },
         {
+          "<CR>",
+          function()
+            require("tree-climber").goto_child()
+          end,
+          desc = "treesitter goto child node",
+        },
+        {
           "H",
           function()
             require("tree-climber").goto_prev()
