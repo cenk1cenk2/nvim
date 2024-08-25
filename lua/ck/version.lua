@@ -28,7 +28,7 @@ function M.update_repository()
       cwd = get_config_dir(),
       no_log_failure = true,
     })
-    :sync(5000)
+    :sync(10000)
 
   if code == 0 then
     log:info("Configuration is already up-to-date.")
