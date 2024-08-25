@@ -59,13 +59,8 @@ return {
   inlay_hints = {
     enabled = true,
   },
-  buffer_mappings = require("ck.keys.lsp"),
-  ---@type string[]
-  ensure_installed = {},
-  ---@type string[]
-  skipped_servers = {},
-  ---@type string[]
-  skipped_filetypes = {},
+
+  keymaps = require("ck.keys.lsp"),
   ---@type table<string, string>
   buffer_options = {
     --- enable completion triggered by <c-x><c-o>
@@ -73,6 +68,13 @@ return {
     --- use gq for formatting
     formatexpr = "v:lua.vim.lsp.formatexpr(#{timeout_ms:500})",
   },
+
+  ---@type string[]
+  ensure_installed = {},
+  ---@type string[]
+  skipped_servers = {},
+  ---@type string[]
+  skipped_filetypes = {},
   tools = {
     clients = {
       formatters = "",
@@ -97,6 +99,7 @@ return {
       end,
     },
   },
+
   fn = {},
   ---@type LspOnCallback[]
   on_init_callbacks = {},

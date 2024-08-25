@@ -106,7 +106,7 @@ function M.common_on_attach(client, bufnr)
     end
   end
 
-  setup.load_keymaps(nvim.lsp.buffer_mappings, { buffer = bufnr })
+  setup.load_keymaps(nvim.lsp.keymaps, { buffer = bufnr })
   for k, v in pairs(nvim.lsp.buffer_options) do
     vim.api.nvim_set_option_value(k, v, { buf = bufnr })
   end
