@@ -4,14 +4,12 @@ local configs = require("lspconfig.configs")
 
 --- Checks whether given lsp client is active.
 ---@param name string
----@return vim.lsp.Client | nil
+---@return vim.lsp.Client[] | nil
 function M.is_client_active(name)
-  local clients = vim.lsp.get_clients()
+  local clients = vim.lsp.get_clients({ name = name })
 
-  for _, client in pairs(clients) do
-    if client.name == name then
-      return client
-    end
+  if #clients > 0 then
+    return unpack(clients)
   end
 end
 
@@ -25,16 +23,6 @@ function M.get_supported_filetypes(server_name)
   end
 
   return config.default_config.filetypes or {}
-end
-
-function M.set_lsp_default_config(server_name, config)
-  configs[server_name] = {
-    default_config = config,
-  }
-end
-
-function M.get_lsp_default_config(server_name)
-  return configs[server_name].document_config.default_config
 end
 
 --- Executes LSP command synchronylousy against the given buffer.

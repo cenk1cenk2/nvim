@@ -6,19 +6,7 @@ local log = require("ck.log")
 ---@param server_name string name of a valid language server, e.g. pyright, gopls, tsserver, etc.
 ---@return boolean
 function M.should_configure(server_name)
-  local skipped_filetypes = nvim.lsp.skipped_filetypes
-  local skipped_servers = nvim.lsp.skipped_servers
-
-  if vim.tbl_contains(skipped_servers, server_name) then
-    return false
-  end
-
-  -- get the supported filetypes and remove any ignored ones
-  local filetypes = vim.tbl_filter(function(ft)
-    return not vim.tbl_contains(skipped_filetypes, ft)
-  end, require("ck.lsp.utils").get_supported_filetypes(server_name) or {})
-
-  if not filetypes or #filetypes == 0 then
+  if vim.tbl_contains(nvim.lsp.skipped_servers, server_name) then
     return false
   end
 
@@ -66,7 +54,7 @@ function M.setup(force)
     require("mason-lspconfig").setup_handlers({
       function(server_name)
         if not M.should_configure(server_name) then
-          log:debug(("Skipping configuring LSP: %s"):format(server_name))
+          log:warn(("Skipping configuring LSP: %s"):format(server_name))
 
           return
         end
@@ -78,9 +66,9 @@ function M.setup(force)
     require("lspconfig.util").on_setup = nil
   end, debug.traceback)
 
-  local installer_ok, installer = pcall(require, "mason-tool-installer")
+  local ok, installer = pcall(require, "mason-tool-installer")
 
-  if installer_ok then
+  if ok then
     installer.setup({
       -- a list of all tools you want to ensure are installed upon
       -- start; they should be the names Mason uses for each tool
@@ -103,6 +91,29 @@ function M.setup(force)
   else
     log:warn("LSP installer not available.")
   end
+
+  local registry = require("mason-registry")
+  -- Ensure packages are installed and up to date
+  registry.refresh(function()
+    for _, server_name in pairs(nvim.lsp.ensure_installed) do
+      local package_name = require("ck.lsp.loader").to_package_name(server_name)
+      local package = registry.get_package(package_name)
+
+      if not registry.is_installed(package_name) then
+        log:info("Installing Mason package: %s", package_name)
+        package:install()
+      else
+        package:check_new_version(function(success, result)
+          if success then
+            local version = result.latest_version
+
+            log:info("Updating Mason package: %s@%s", package_name, version)
+            package:install({ version = version })
+          end
+        end)
+      end
+    end
+  end)
 
   require("ck.lsp.format").setup()
 end

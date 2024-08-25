@@ -72,6 +72,9 @@ return {
   skipped_servers = {},
   ---@type string[]
   skipped_filetypes = {},
+  ---@usage Automatic update of the language servers on startup.
+  automatic_update = true,
+
   tools = {
     clients = {
       formatters = "",

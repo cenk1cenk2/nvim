@@ -1,4 +1,6 @@
 -- https://github.com/williamboman/mason.nvim
+-- https://github.com/williamboman/mason-lspconfig.nvim
+-- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim
 local M = {}
 
 M.name = "williamboman/mason.nvim"
