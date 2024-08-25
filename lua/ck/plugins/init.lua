@@ -46,6 +46,7 @@ local plugins = {
   -- "vim-visual-multi",
   "nvim-treesitter-textobjects",
   "nvim-treesitter-context",
+  "indent-tools-nvim",
   "rainbow-delimiters-nvim",
   "nvim-recorder",
   "windows-nvim",
