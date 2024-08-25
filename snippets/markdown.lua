@@ -63,7 +63,7 @@ return {
       ]],
       {
         s.i(1, {
-          require("textcase").api.to_title_case(string.gsub(vim.fn.expand("%:t"), "%.md$", "")),
+          require("textcase").api.to_title_case(require("ck.utils.fs").get_buffer_basename()),
         }),
       }
     )
