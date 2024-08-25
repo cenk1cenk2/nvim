@@ -203,53 +203,26 @@ function M.config()
         },
       }
     end,
-    -- keymaps = function()
-    --   return {
-    --     {
-    --       { "n" },
-    --       ["<F10>"] = {
-    --         function()
-    --           vim.cmd([[call <SID>SynStack()]])
-    --           vim.cmd([[
-    --           function! <SID>SynStack()
-    --           if !exists("*synstack")
-    --           return
-    --           endif
-    --           echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
-    --           endfunc
-    --           ]])
-    --         end,
-    --         { desc = "show highlight" },
-    --       },
-    --     },
-    --   }
-    -- end,
+    keymaps = function()
+      return {
+        {
+          "<F10>",
+          function()
+            vim.cmd([[Inspect]])
+          end,
+          desc = "show highlight",
+        },
+      }
+    end,
   })
 end
 
-M.parsers = {
-  gotmpl = {
-    install_info = {
-      url = "https://github.com/ngalaiko/tree-sitter-go-template",
-      files = { "src/parser.c" },
-    },
-    filetype = "gotmpl",
-    used_by = { "gohtmltmpl", "gotexttmpl", "gotmpl", "yaml" },
-  },
-  -- jinja = {
-  --   install_info = {
-  --     url = "https://github.com/theHamsta/tree-sitter-jinja2.git",
-  --     files = { "src/parser.c" },
-  --     generate_requires_npm = false,
-  --     requires_generate_from_grammar = false,
-  --   },
-  --   filetype = "jinja",
-  -- },
-}
+M.parsers = {}
 
 M.ft_parsers = {
   ["yaml"] = { "yaml.ansible" },
   ["gotmpl"] = { "helm" },
+  ["htmldjango"] = { "jinja" },
 }
 
 return M

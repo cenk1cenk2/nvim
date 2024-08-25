@@ -65,7 +65,6 @@ local plugins = {
   "lspsaga-nvim",
   "nvim-dap-ui",
   "nvim-dap-virtual-text",
-  "vim-jinja2-syntax",
   "dressing",
   "nvim-hlslens",
   "nvim-scrollbar",
