@@ -128,7 +128,7 @@ function M.config()
           --   opts = { buffer = true },
           -- },
           -- Smart action depending on context, either follow link or toggle checkbox.
-          ["<cr>"] = {
+          ["<C-CR>"] = {
             action = function()
               return require("obsidian").util.smart_action()
             end,

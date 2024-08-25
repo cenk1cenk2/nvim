@@ -17,9 +17,27 @@ return {
   ),
   s.s(
     {
-      trig = "o",
+      trig = "f",
       name = "double frontmatter seperator",
       desc = { "Adds double frontmatter seperator." },
+    },
+    s.fmt(
+      [[
+      ---
+      {}
+      ---
+
+      ]],
+      {
+        s.i(1),
+      }
+    )
+  ),
+  s.s(
+    {
+      trig = "o",
+      name = "obsidian labels",
+      desc = { "Adds obsidian labels seperator." },
     },
     s.fmt(
       [[
@@ -45,7 +63,7 @@ return {
       ]],
       {
         s.i(1, {
-          require("textcase").api.to_title_case(string.gsub(vim.api.nvim_buf_get_name(0), "%.md$", "")),
+          require("textcase").api.to_title_case(string.gsub(vim.fn.expand("%:t"), "%.md$", "")),
         }),
       }
     )
