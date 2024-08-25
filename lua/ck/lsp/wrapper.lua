@@ -377,25 +377,25 @@ function M.setup()
       {
         "LspLogLevelDebug",
         function()
-          M.lsp_logging_level("debug")
+          nvim.lsp.fn.lsp_logging_level("debug")
         end,
       },
       {
         "LspLogLevelInfo",
         function()
-          M.lsp_logging_level("info")
+          nvim.lsp.fn.lsp_logging_level("info")
         end,
       },
       {
         "LspOrganizeImports",
         function()
-          M.organize_imports()
+          nvim.lsp.fn.organize_imports()
         end,
       },
       {
         "LspRenameFile",
         function()
-          M.rename_file()
+          nvim.lsp.fn.rename_file()
         end,
       },
     },
