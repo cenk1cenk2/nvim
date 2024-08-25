@@ -1,6 +1,8 @@
 -- https://github.com/mfussenegger/nvim-lint
 local M = {}
 
+local tools = require("ck.lsp.tools")
+
 M.name = "mfussenegger/nvim-lint"
 
 function M.config()
@@ -13,13 +15,12 @@ function M.config()
     end,
     setup = function()
       local lint = require("lint")
-      local tools = require("ck.lsp.tools")
       local METHOD = tools.METHODS.LINTER
 
       M.extend_tools(lint)
-      M.register_tools(tools, METHOD)
+      M.register(METHOD)
 
-      return tools.read_tools(METHOD)
+      return tools.read(METHOD)
     end,
     on_setup = function(c)
       require("lint").linters_by_ft = c
@@ -44,16 +45,16 @@ function M.config()
   })
 end
 
-function M.register_tools(tools, METHOD)
-  tools.register_tools(METHOD, "shellcheck", { "sh", "bash", "zsh" })
-  tools.register_tools(METHOD, "hadolint", { "dockerfile" })
-  tools.register_tools(METHOD, "proto", { "protolint" })
-  tools.register_tools(METHOD, "tfvalidate", { "terraform", "tfvars" })
-  -- lsp_utils.register_tools(METHOD, "tfsec", { "terraform" })
-  -- lsp_utils.register_tools(METHOD, "tflint", { "terraform" })
-  tools.register_tools(METHOD, "protolint", { "proto" })
-  -- lsp_utils.register_tools(METHOD, "cspell", { "markdown", "text", "gitcommit" })
-  tools.register_tools(METHOD, "checkmake", { "make" })
+function M.register(METHOD)
+  tools.register(METHOD, "shellcheck", { "sh", "bash", "zsh" })
+  tools.register(METHOD, "hadolint", { "dockerfile" })
+  tools.register(METHOD, "proto", { "protolint" })
+  tools.register(METHOD, "tfvalidate", { "terraform", "tfvars" })
+  -- lsp_utils.register(METHOD, "tfsec", { "terraform" })
+  -- lsp_utils.register(METHOD, "tflint", { "terraform" })
+  tools.register(METHOD, "protolint", { "proto" })
+  -- lsp_utils.register(METHOD, "cspell", { "markdown", "text", "gitcommit" })
+  tools.register(METHOD, "checkmake", { "make" })
 end
 
 function M.extend_tools(lint)

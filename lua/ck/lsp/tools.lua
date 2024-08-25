@@ -10,11 +10,18 @@ M.METHODS = {
   LINTER = "linters",
 }
 
-function M.read_tools(method)
+--- Reads the registered tools for a given method.
+---@param method LspToolMethods
+---@return any
+function M.read(method)
   return nvim.lsp.tools.by_ft[method]
 end
 
-function M.register_tools(method, configs, filetypes)
+--- Registers a tool for a given method.
+---@param method LspToolMethods
+---@param configs any
+---@param filetypes string[]
+function M.register(method, configs, filetypes)
   if type(configs) == "string" then
     configs = { configs }
   end

@@ -1,5 +1,6 @@
 -- https://github.com/stevearc/conform.nvim
 local M = {}
+local tools = require("ck.lsp.tools")
 
 M.name = "stevearc/conform.nvim"
 
@@ -13,15 +14,14 @@ function M.config()
     end,
     setup = function()
       local conform = require("conform")
-      local tools = require("ck.lsp.tools")
       local METHOD = tools.METHODS.FORMATTER
 
       M.extend_tools(conform)
-      M.register_tools(tools, METHOD)
+      M.register(METHOD)
 
       return {
         -- Map of filetype to formatters
-        formatters_by_ft = tools.read_tools(METHOD),
+        formatters_by_ft = tools.read(METHOD),
         -- If this is set, Conform will run the formatter on save.
         -- It will pass the table to conform.format().
         -- This can also be a function that returns the table.
@@ -135,30 +135,30 @@ function M.get_lsp_fallback(bufnr)
   return true
 end
 
-function M.register_tools(tools, METHOD)
-  tools.register_tools(METHOD, "trim_whitespace", {
+function M.register(METHOD)
+  tools.register(METHOD, "trim_whitespace", {
     "*",
   })
 
-  -- lsp_utils.register_tools(METHOD, "trim_multiple_whitespace", {
+  -- lsp_utils.register(METHOD, "trim_multiple_whitespace", {
   --   "*",
   -- })
 
-  tools.register_tools(METHOD, "trim_newlines", {
+  tools.register(METHOD, "trim_newlines", {
     "*",
   })
 
-  tools.register_tools(METHOD, "trim_multiple_newlines", {
+  tools.register(METHOD, "trim_multiple_newlines", {
     "*",
   })
 
-  tools.register_tools(METHOD, "injected", {
+  tools.register(METHOD, "injected", {
     "hurl",
     "markdown",
     "gotmpl",
   })
 
-  tools.register_tools(METHOD, "prettierd", {
+  tools.register(METHOD, "prettierd", {
     "javascript",
     "typescript",
     "javascriptreact",
@@ -177,7 +177,7 @@ function M.register_tools(tools, METHOD)
     "graphql",
   })
 
-  -- lsp_utils.register_tools(METHOD, "eslint_d", {
+  -- lsp_utils.register(METHOD, "eslint_d", {
   --   "javascript",
   --   "typescript",
   --   "javascriptreact",
@@ -186,30 +186,30 @@ function M.register_tools(tools, METHOD)
   --   "svelte",
   -- })
 
-  tools.register_tools(METHOD, "stylua", {
+  tools.register(METHOD, "stylua", {
     "markdown-toc",
   })
 
-  tools.register_tools(METHOD, "stylua", {
+  tools.register(METHOD, "stylua", {
     "lua",
   })
 
-  tools.register_tools(METHOD, { "golines", "goimports" }, {
+  tools.register(METHOD, { "golines", "goimports" }, {
     "go",
   })
 
-  tools.register_tools(METHOD, "shfmt", {
+  tools.register(METHOD, "shfmt", {
     "sh",
     "bash",
     "zsh",
   })
-  -- lsp_utils.register_tools(METHOD, "beautysh", {
+  -- lsp_utils.register(METHOD, "beautysh", {
   --   "sh",
   --   "bash",
   --   "zsh",
   -- })
 
-  -- lsp_utils.register_tools(METHOD, "terraform_fmt", {
+  -- lsp_utils.register(METHOD, "terraform_fmt", {
   --   "terraform",
   --   "tfvars",
   -- })

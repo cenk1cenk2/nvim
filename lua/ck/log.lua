@@ -1,6 +1,14 @@
 local M = {}
 
----@enum LogLevel
+---@module 'structlog'
+
+---@class LogLevel
+---@field TRACE number
+---@field DEBUG number
+---@field INFO number
+---@field WARN number
+---@field ERROR number
+---@field levels table<number, string>
 M.levels = {
   [1] = "TRACE",
   [2] = "DEBUG",
@@ -22,24 +30,24 @@ M.levels = {
 ---@type LogQueueEntry[]
 local queue = {}
 
+--- Sets the log level.
+---@param level LogLevel
 function M:set_level(level)
-  local logger_ok, _ = xpcall(function()
-    local log_level = M.levels[level:upper()]
+  xpcall(function()
+    local log_level = M.levels[tostring(level):upper()]
     local sl = require("structlog")
+
     if sl then
-      local logger = sl.get_logger("core")
+      local logger = sl.get_logger("nvim")
       if logger == nil then
         error("No logger available.")
       end
+
       for _, s in ipairs(logger.sinks) do
         s.level = log_level
       end
     end
   end, debug.traceback)
-
-  if not logger_ok then
-    M:warn("Unable to set logger's level: %s", debug.traceback())
-  end
 end
 
 function M:init()
@@ -54,13 +62,15 @@ function M:init()
     vim.notify(log.msg, log.level)
   end
 
-  local log_level = M.levels[(nvim.log.level):upper() or "WARN"]
+  local log_level = M.levels[tostring(nvim.log.level):upper() or "WARN"]
   local logger = {
     nvim = {
       pipelines = {
         {
           level = log_level,
-          sink = sl.sinks.RotatingFile(self:get_path(), { max_size = 1048576 * 10 }),
+          sink = sl.sinks.RotatingFile(self:get_path(), {
+            max_size = 1048576 * 10,
+          }),
           processors = {
             sl.processors.StackWriter({ "line", "file" }, { max_parents = 3, stack_level = 2 }),
             sl.processors.Timestamper("%F %H:%M:%S"),
@@ -93,7 +103,10 @@ function M:init()
           formatter = sl.formatters.Format( --
             "%s",
             { "msg" },
-            { blacklist_all = true }
+            {
+              blacklist = { "logger_name" },
+              blacklist_all = true,
+            }
           ),
         },
       },
