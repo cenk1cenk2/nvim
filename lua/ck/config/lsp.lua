@@ -63,7 +63,6 @@ return {
   keymaps = require("ck.keys.lsp"),
   ---@type table<string, string>
   buffer_options = {
-    --- use gq for formatting
     formatexpr = "v:lua.vim.lsp.formatexpr(#{timeout_ms:500})",
   },
 

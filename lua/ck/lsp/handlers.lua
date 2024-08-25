@@ -35,6 +35,7 @@ function M.capabilities()
     dynamicRegistration = false,
     lineFoldingOnly = true,
   }
+  -- comes from LspRename custom function
   capabilities.workspace.fileOperations = {
     willRename = true,
   }
