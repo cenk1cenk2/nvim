@@ -102,8 +102,6 @@ function M.load()
   if not ok then
     log:error("Can not load plugin configurations. Pretending to run.")
 
-    log:error(debug.traceback())
-
     return
   end
 
