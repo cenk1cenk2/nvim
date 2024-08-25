@@ -11,18 +11,17 @@ function M.config()
         event = "BufReadPost",
       }
     end,
-    setup = function(_, fn)
-      local a = "b"
+    setup = function()
       -- builtin textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects?tab=readme-ov-file#built-in-textobjects
       return {
         textobjects = {
           swap = {
             enable = false,
             swap_previous = {
-              ["H"] = { query = { "@field", "@pair", "@array", "@element", "@parameter.inner" }, desc = "" },
+              ["H"] = { query = { "@field", "@pair", "@array", "@element", "@property" }, query_group = "locals", desc = "" },
             },
             swap_next = {
-              ["L"] = { query = { "@field", "@pair", "@array", "@element", "@parameter.inner" }, desc = "" },
+              ["L"] = { query = { "@field", "@pair", "@array", "@element", "@property" }, query_group = "locals", desc = "" },
             },
           },
           lsp_interop = {
@@ -43,6 +42,7 @@ function M.config()
               -- ["aa"] = { query = "@parameter.outer", desc = "select outer part of a parameter/argument" },
               ["im"] = { query = "@function.inner", desc = "select inner part of a method" },
               ["am"] = { query = "@function.outer", desc = "select outer part of a method" },
+              ["ig"] = { query = { "@scope", "@local.scope" }, query_group = "locals", desc = "select innper part of the scope" },
               ["ic"] = { query = "@class.inner", desc = "select inner part of a class region" },
               ["ac"] = { query = "@class.outer", desc = "select outer part of a class region" },
               ["iv"] = { query = "@assignment.rhs", desc = "select rhs of assignment" },
@@ -64,18 +64,20 @@ function M.config()
             goto_next_start = {
               ["]m"] = { query = "@function.outer", des = "jump to next method start" },
               ["]c"] = { query = "@class.outer", desc = "jump to next class start" },
-              ["]s"] = { query = "@scope", query_group = "locals", desc = "jump to next scope start" },
+              ["]s"] = { query = { "@scope", "@local.scope" }, query_group = "locals", desc = "jump to next scope start" },
               ["]z"] = { query = "@fold", query_group = "folds", desc = "jump to next fold start" },
               ["]a"] = { query = "@parameter.inner", desc = "jump to next parameter start" },
               ["]p"] = { query = "@attribute.inner", desc = "jump to next attribute start" },
+              ["]v"] = { query = "@assignment.outer", desc = "jump to next assignment start" },
             },
             goto_previous_start = {
               ["[m"] = { query = "@function.outer", des = "jump to previous method start" },
               ["[c"] = { query = "@class.outer", desc = "jump to previous class start" },
-              ["[s"] = { query = "@scope", query_group = "locals", desc = "jump to previous scope start" },
+              ["[s"] = { query = { "@scope", "@local.scope" }, query_group = "locals", desc = "jump to previous scope start" },
               ["[Z"] = { query = "@fold", query_group = "folds", desc = "jump to previous fold start" },
               ["[a"] = { query = "@parameter.inner", desc = "jump to previous parameter start" },
               ["[p"] = { query = "@attribute.inner", desc = "jump to previous attribute start" },
+              ["[v"] = { query = "@assignment.outer", desc = "jump to previous assignment start" },
             },
             goto_next_end = {
               ["]M"] = { query = "@function.outer", des = "jump to next method end" },
