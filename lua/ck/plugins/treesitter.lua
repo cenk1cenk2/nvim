@@ -62,36 +62,6 @@ function M.config()
           disable = {},
         },
         autotag = { enable = true },
-        textobjects = {
-          swap = {
-            enable = false,
-            -- swap_next = textobj_swap_keymaps,
-          },
-          -- move = textobj_move_keymaps,
-          select = {
-            enable = false,
-            -- keymaps = textobj_sel_keymaps,
-          },
-        },
-        textsubjects = { enable = false, keymaps = { ["."] = "textsubjects-smart", [";"] = "textsubjects-big" } },
-        playground = {
-          enable = true,
-          disable = {},
-          updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-          persist_queries = false, -- Whether the query persists across vim sessions
-          keybindings = {
-            toggle_query_editor = "o",
-            toggle_hl_groups = "i",
-            toggle_injected_languages = "t",
-            toggle_anonymous_nodes = "a",
-            toggle_language_display = "I",
-            focus_language = "f",
-            unfocus_language = "F",
-            update = "R",
-            goto_node = "<cr>",
-            show_help = "?",
-          },
-        },
         refactor = { highlight_current_scope = { enable = false } },
         -- https://github.com/nvim-treesitter/nvim-treesitter/issues/4000
         incremental_selection = {
@@ -173,11 +143,9 @@ function M.config()
     keymaps = function()
       return {
         {
-          "<F10>",
-          function()
-            vim.cmd([[Inspect]])
-          end,
-          desc = "show highlight",
+          "<BS>",
+          function() end,
+          desc = "treesitter goto parent node",
         },
       }
     end,
