@@ -1,8 +1,7 @@
 return {
-  root_dir = function(fname)
-    local util = require("lspconfig/util")
-
-    return util.root_pattern({ "ansible.cfg", ".git" })(fname) or util.root_pattern({ "group_vars", "host_vars" })(fname)
+  filetypes = { "yaml.ansible" },
+  root_dir = function(filename)
+    return vim.fs.root(filename, { "ansible.cfg", ".git" }) or vim.fs.root(filename, { "group_vars", "host_vars" })
   end,
   settings = {
     ansible = {
@@ -13,5 +12,4 @@ return {
       },
     },
   },
-  filetypes = { "yaml.ansible" },
 }

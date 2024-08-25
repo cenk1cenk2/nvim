@@ -98,11 +98,12 @@ return {
     },
   },
 
-  fn = {},
   ---@type LspOnCallback[]
   on_init_callbacks = {},
   ---@type LspOnCallback[]
   on_attach_callbacks = {},
   ---@type LspOnCallback[]
   on_exit_callbacks = {},
+
+  fn = {},
 }

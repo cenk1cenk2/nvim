@@ -39,6 +39,8 @@ function M:reload()
 end
 
 function M.load_colorscheme()
+  vim.cmd(("colorscheme %s"):format(nvim.colorscheme))
+
   if nvim.ui.transparent then
     vim.api.nvim_create_autocmd("ColorScheme", {
       pattern = "*",
@@ -58,8 +60,6 @@ function M.load_colorscheme()
     })
     vim.opt.fillchars = "eob: "
   end
-
-  vim.cmd(("colorscheme %s"):format(nvim.colorscheme))
 end
 
 return M

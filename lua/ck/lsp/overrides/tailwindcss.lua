@@ -50,8 +50,8 @@ return {
     "vue",
     "svelte",
   },
-  root_dir = function(fname)
-    return require("lspconfig/util").root_pattern("tailwind.config.js", "tailwind.config.cjs", "tailwind.js", "tailwind.cjs")(fname)
+  root_dir = function(filename)
+    return vim.fs.root(filename, { "tailwind.config.js", "tailwind.config.cjs", "tailwind.js", "tailwind.cjs" })
   end,
   settings = {
     tailwindCSS = {
