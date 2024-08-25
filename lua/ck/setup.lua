@@ -317,11 +317,15 @@ function M.configure(config)
     nvim.plugins[config.name].current_setup = M.evaluate_property(config.setup, config, M.fn)
 
     if config.to_setup ~= nil then
-      for _, to_setup in pairs(config.to_setup) do
-        if to_setup.overwrite then
-          nvim.plugins[config.name].current_setup = vim.tbl_extend("force", nvim.plugins[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
-        else
-          nvim.plugins[config.name].current_setup = vim.tbl_deep_extend("force", nvim.plugins[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
+      if type(nvim.plugins[config.name].current_setup) ~= "table" then
+        log:error("Can not extend setup of plugin: %s -> current value: %s", config.name, type(nvim.plugins[config.name].current_setup))
+      else
+        for _, to_setup in pairs(config.to_setup) do
+          if to_setup.overwrite then
+            nvim.plugins[config.name].current_setup = vim.tbl_extend("force", nvim.plugins[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
+          else
+            nvim.plugins[config.name].current_setup = vim.tbl_deep_extend("force", nvim.plugins[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
+          end
         end
       end
     end
