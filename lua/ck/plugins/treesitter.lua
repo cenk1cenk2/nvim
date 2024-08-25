@@ -70,7 +70,7 @@ function M.config()
             init_selection = "<CR>",
             node_incremental = "<CR>",
             scope_incremental = "<S-CR>",
-            node_decremental = "<BS>",
+            node_decremental = "<BS><BS>",
           },
         },
       }
@@ -137,15 +137,6 @@ function M.config()
             end
           end,
           desc = "reinstall all treesitter packages",
-        },
-      }
-    end,
-    keymaps = function()
-      return {
-        {
-          "<BS>",
-          function() end,
-          desc = "treesitter goto parent node",
         },
       }
     end,

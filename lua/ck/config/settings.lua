@@ -10,6 +10,7 @@ function M.load_default_options()
     vim.fn.mkdir(undodir, "p")
   end
 
+  vim.opt.timeoutlen = 200
   vim.opt.backup = false
   vim.opt.clipboard = "unnamedplus"
   vim.opt.cmdheight = 2
@@ -39,7 +40,6 @@ function M.load_default_options()
   vim.opt.splitright = true
   vim.opt.swapfile = false
   vim.opt.termguicolors = true
-  vim.opt.timeoutlen = 250
   vim.opt.title = true
   vim.opt.titlestring = "%<%F%=%l/%L - nvim"
   vim.opt.grepprg = "rg --vimgrep --no-heading --smart-case"
