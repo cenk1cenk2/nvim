@@ -63,8 +63,6 @@ return {
   keymaps = require("ck.keys.lsp"),
   ---@type table<string, string>
   buffer_options = {
-    --- enable completion triggered by <c-x><c-o>
-    omnifunc = "v:lua.vim.lsp.omnifunc",
     --- use gq for formatting
     formatexpr = "v:lua.vim.lsp.formatexpr(#{timeout_ms:500})",
   },

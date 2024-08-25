@@ -27,7 +27,8 @@ function M.config()
           { "tzachar/cmp-fuzzy-buffer" },
           { "lukas-reineke/cmp-rg" },
           -- https://github.com/hrsh7th/cmp-omni
-          { "hrsh7th/cmp-omni" },
+          -- { "hrsh7th/cmp-omni" },
+          { "https://github.com/wookayin/cmp-omni", branch = "fix-return" },
           { "rafamadriz/friendly-snippets" },
           { "L3MON4D3/LuaSnip" },
           { "hrsh7th/cmp-nvim-lsp-signature-help" },
