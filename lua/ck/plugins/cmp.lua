@@ -37,7 +37,8 @@ function M.config()
           -- { "bydlw98/cmp-env" },
           -- https://github.com/hrsh7th/cmp-calc
           { "hrsh7th/cmp-calc" },
-          -- { "zbirenbaum/copilot-cmp" },
+          -- https://github.com/zbirenbaum/copilot-cmp
+          { "zbirenbaum/copilot-cmp" },
         },
       }
     end,
@@ -77,7 +78,6 @@ function M.config()
             emoji = "Emoji",
             path = "Path",
             calc = "Calc",
-            cmp_tabnine = "T9",
             vsnip = "Snip",
             luasnip = "Snip",
             buffer = "Buff",
@@ -126,13 +126,13 @@ function M.config()
           documentation = cmp.config.window.bordered({ border = nvim.ui.border }),
         },
         sources = cmp.config.sources({
+          { name = "copilot", priority_weight = 2, group_index = 0 },
           { name = "nvim_lsp", group_index = 0, keyword_length = 0 },
           { name = "lazydev", group_index = 0 },
           { name = "vim-dadbod-completion" },
           -- { name = "nvim_lsp_signature_help" },
           { name = "luasnip" },
           { name = "calc" },
-          -- { name = "copilot" },
           { name = "path" },
           { name = "omni", option = { disable_omnifuncs = { "v:lua.vim.lsp.omnifunc" } } },
           { name = "buffer", keyword_length = 3 },
@@ -346,6 +346,7 @@ M.per_extension = {
     name = "npm",
     filetypes = { "json" },
   },
+  ["copilot_cmp"] = {},
 }
 
 M.get_setup = require("ck.setup").fn.get_setup_wrapper(M.name)

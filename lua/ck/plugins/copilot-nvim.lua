@@ -31,7 +31,8 @@ function M.config()
         },
         suggestion = {
           enabled = true,
-          auto_trigger = true,
+          -- BUG: temporarily disable this since it is going crazy with the ghost text
+          auto_trigger = false,
           debounce = 50,
           keymap = {
             accept = false,
