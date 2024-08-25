@@ -201,7 +201,7 @@ function M.define_plugin(name, enabled, config)
     to_setup = {},
   }, nvim.plugins[name] or {})
 
-  if config ~= nil and config.plugin ~= nil then
+  if config.plugin ~= nil then
     local plugins = {}
 
     local plugin = config.plugin(config)
@@ -217,7 +217,7 @@ function M.define_plugin(name, enabled, config)
     config.plugins = plugins
   end
 
-  if config ~= nil and config.condition ~= nil and config.condition(nvim.plugins[name]) == false then
+  if config.condition ~= nil and config.condition(nvim.plugins[name]) == false then
     nvim.plugins[name] = config
 
     log:debug(string.format("Plugin config stopped due to failed condition: %s", name))
@@ -225,7 +225,7 @@ function M.define_plugin(name, enabled, config)
     return
   end
 
-  if config ~= nil and config.configure ~= nil then
+  if config.configure ~= nil then
     config.configure(config, M.fn)
   end
 
@@ -267,23 +267,23 @@ end
 --- Initializes the plugin.
 ---@type SetupInitFn
 function M.init(config)
-  if config ~= nil and config.on_init ~= nil then
+  if config.on_init ~= nil then
     config.on_init(config, M.fn)
   end
 
-  if config ~= nil and config.autocmds ~= nil then
+  if config.autocmds ~= nil then
     M.create_autocmds(M.evaluate_property(config.autocmds, config, M.fn))
   end
 
-  if config ~= nil and config.keymaps ~= nil then
+  if config.keymaps ~= nil then
     M.load_keymaps(M.evaluate_property(config.keymaps, config, M.fn))
   end
 
-  if config ~= nil and config.wk ~= nil then
+  if config.wk ~= nil then
     M.load_wk(M.evaluate_property(config.wk, config, M.fn.get_wk_categories(), M.fn))
   end
 
-  if config ~= nil and config.hl ~= nil then
+  if config.hl ~= nil then
     local highlights = M.evaluate_property(config.hl, config, M.fn)
 
     for key, value in pairs(highlights) do
@@ -291,7 +291,7 @@ function M.init(config)
     end
   end
 
-  if config ~= nil and config.signs ~= nil then
+  if config.signs ~= nil then
     local signs = M.evaluate_property(config.signs, config, M.fn)
 
     for key, value in pairs(signs) do
@@ -300,11 +300,11 @@ function M.init(config)
     end
   end
 
-  if config ~= nil and config.commands ~= nil then
+  if config.commands ~= nil then
     M.create_commands(M.evaluate_property(config.commands, config, M.fn))
   end
 
-  if config ~= nil and config.legacy_setup ~= nil then
+  if config.legacy_setup ~= nil then
     M.legacy_setup(M.evaluate_property(config.legacy_setup, config))
   end
 end
@@ -312,7 +312,7 @@ end
 --- Configures the plugin.
 ---@param config Config
 function M.configure(config)
-  if config ~= nil and config.setup ~= nil then
+  if config.setup ~= nil then
     nvim.plugins[config.name].current_setup = nil
     nvim.plugins[config.name].current_setup = M.evaluate_property(config.setup, config, M.fn)
 
@@ -327,11 +327,11 @@ function M.configure(config)
     end
   end
 
-  if config ~= nil and config.on_setup ~= nil then
+  if config.on_setup ~= nil then
     config.on_setup(M.fn.get_setup(config.name), config, M.fn)
   end
 
-  if config ~= nil and config.on_done ~= nil then
+  if config.on_done ~= nil then
     config.on_done(config, M.fn)
   end
 end
