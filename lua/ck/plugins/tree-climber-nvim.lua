@@ -34,18 +34,18 @@ function M.config()
           desc = "treesitter swap with previous sibling",
         },
         {
-          "LL",
-          function()
-            require("tree-climber").swap_prev()
-          end,
-          desc = "treesitter swap with next sibling",
-        },
-        {
           "L",
           function()
             require("tree-climber").goto_next()
           end,
           desc = "treesitter goto next sibling",
+        },
+        {
+          "LL",
+          function()
+            require("tree-climber").swap_prev()
+          end,
+          desc = "treesitter swap with next sibling",
         },
       }
     end,
