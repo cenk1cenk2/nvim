@@ -28,7 +28,7 @@ function M.setup(force)
 
   local ok, _ = pcall(require, "lspconfig")
   if not ok then
-    log:warn("lspconfig not available.")
+    log:error("lspconfig not available.")
 
     return
   end
@@ -89,7 +89,7 @@ function M.setup(force)
       start_delay = 1000, -- 3 second delay
     })
   else
-    log:warn("LSP installer not available.")
+    log:error("LSP installer not available.")
   end
 
   local registry = require("mason-registry")
