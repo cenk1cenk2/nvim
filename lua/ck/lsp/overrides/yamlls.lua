@@ -1,3 +1,5 @@
+---@module 'lspconfig'
+---@type lspconfig.options.yamlls
 return {
   override = function(config)
     return require("schema-companion").setup_client(config)

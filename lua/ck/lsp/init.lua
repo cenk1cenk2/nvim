@@ -1,125 +1,6 @@
 local M = {}
 
 local log = require("ck.log")
-local setup = require("ck.setup")
-
-function M.common_capabilities()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities.textDocument.completion.completionItem.snippetSupport = true
-  capabilities.textDocument.completion.completionItem.resolveSupport = {
-    properties = { "documentation", "detail", "additionalTextEdits" },
-  }
-  capabilities.textDocument.foldingRange = {
-    dynamicRegistration = false,
-    lineFoldingOnly = true,
-  }
-
-  local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-  if ok then
-    capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
-  end
-
-  return capabilities
-end
-
----@alias LspOnCallback fun(client: vim.lsp.Client, bufnr: number)
-
----@type LspOnCallback
-function M.common_on_exit(client, bufnr)
-  if #nvim.lsp.on_exit_callbacks > 0 then
-    for _, cb in pairs(nvim.lsp.on_exit) do
-      cb(client, bufnr)
-    end
-    log:trace("Called lsp.on_exit")
-  end
-end
-
----@type LspOnCallback
-function M.common_on_init(client, bufnr)
-  if #nvim.lsp.on_init_callbacks > 0 then
-    for _, cb in pairs(nvim.lsp.on_init_callbacks) do
-      cb(client, bufnr)
-    end
-    log:trace("Called lsp.on_init_callbacks")
-  end
-end
-
----@type LspOnCallback
-function M.common_on_attach(client, bufnr)
-  if #nvim.lsp.on_attach_callbacks > 0 then
-    for _, cb in pairs(nvim.lsp.on_attach_callbacks) do
-      cb(client, bufnr)
-    end
-    log:trace("Called lsp.on_attach_callbacks")
-  end
-
-  if nvim.lsp.code_lens.refresh then
-    local method = "textDocument/codeLens"
-    local ok, codelens_supported = pcall(function()
-      return client.supports_method(method)
-    end)
-
-    if not ok or not codelens_supported then
-      return
-    end
-
-    local group = "lsp_code_lens_refresh"
-    local events = { "LspAttach", "InsertLeave", "BufReadPost" }
-
-    local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
-      group = group,
-      buffer = bufnr,
-      event = events,
-    })
-
-    if ok and #autocmds > 0 then
-      return
-    end
-
-    local augroup = vim.api.nvim_create_augroup(group, { clear = false })
-    vim.api.nvim_create_autocmd(events, {
-      group = group,
-      buffer = bufnr,
-      callback = function()
-        vim.schedule(function()
-          if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
-            pcall(vim.lsp.codelens.refresh)
-          end
-        end)
-      end,
-    })
-
-    vim.api.nvim_create_autocmd({ "BufDelete" }, {
-      group = group,
-      buffer = bufnr,
-      callback = function()
-        if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
-          vim.api.nvim_del_augroup_by_id(augroup)
-        end
-      end,
-    })
-  end
-
-  if nvim.lsp.inlay_hints.enabled then
-    if client.server_capabilities.inlayHintProvider then
-      vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
-    end
-  end
-
-  setup.load_keymaps(nvim.lsp.keymaps, { buffer = bufnr })
-  for k, v in pairs(nvim.lsp.buffer_options) do
-    vim.api.nvim_set_option_value(k, v, { buf = bufnr })
-  end
-end
-
-function M.get_common_opts()
-  return {
-    on_attach = M.common_on_attach,
-    on_init = M.common_on_init,
-    on_exit = M.common_on_exit,
-    capabilities = M.common_capabilities(),
-  }
-end
 
 ---Generates an ftplugin file based on the server_name in the selected directory
 ---@param server_name string name of a valid language server, e.g. pyright, gopls, tsserver, etc.
@@ -144,6 +25,8 @@ function M.should_configure(server_name)
   return true
 end
 
+---
+---@param force? boolean Always run this.
 function M.setup(force)
   if is_headless() and not force then
     log:debug("Headless mode detected, skipping setting lsp support.")
@@ -192,8 +75,7 @@ function M.setup(force)
       end,
     })
 
-    local util = require("lspconfig.util")
-    util.on_setup = nil
+    require("lspconfig.util").on_setup = nil
   end, debug.traceback)
 
   local installer_ok, installer = pcall(require, "mason-tool-installer")

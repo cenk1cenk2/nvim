@@ -1,3 +1,5 @@
+---@module 'lspconfig'
+---@type lspconfig.options.typos_lsp
 return {
   handlers = {
     ["textDocument/publishDiagnostics"] = function(err, result, ctx, config)

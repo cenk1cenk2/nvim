@@ -1,3 +1,5 @@
+---@module 'lspconfig'
+---@type lspconfig.options.ansiblels
 return {
   filetypes = { "yaml.ansible" },
   root_dir = function(filename)

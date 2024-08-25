@@ -1,3 +1,5 @@
+---@module 'lspconfig'
+---@type lspconfig.options.tailwindcss
 return {
   filetypes = {
     -- html

@@ -47,7 +47,7 @@ function M.setup()
           return "yaml.docker-compose"
         end
 
-        local ansible_root = require("lspconfig/util").root_pattern("ansible.cfg", ".ansible-lint", ".vault-password")(path)
+        local ansible_root = vim.fs.root(path, { "ansible.cfg", ".ansible-lint", ".vault-password" })
 
         if
           ansible_root
@@ -60,7 +60,7 @@ function M.setup()
         return "yaml"
       end,
       [".*%.yaml"] = function(path)
-        if require("lspconfig/util").root_pattern("Chart.yaml")(path) and path:find("templates/") then
+        if vim.fs.root(path, { "Chart.yaml" }) and path:find("templates/") then
           return "helm"
         end
 

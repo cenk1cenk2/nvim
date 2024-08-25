@@ -1,3 +1,5 @@
+---@module 'lspconfig'
+---@type lspconfig.options.jsonls
 return {
   settings = {
     json = {

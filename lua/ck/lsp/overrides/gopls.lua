@@ -1,3 +1,5 @@
+---@module 'lspconfig'
+---@type lspconfig.options.gopls
 return {
   settings = {
     gopls = {

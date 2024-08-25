@@ -14,12 +14,12 @@ return {
   --
   --   config = vim.tbl_extend("force", config, {
   --     on_attach = function(client, bufnr)
-  --       require("ck.lsp").common_on_attach(client, bufnr)
+  --       require("ck.lsp.handlers").common_on_attach(client, bufnr)
   --       companion.on_attach(client, bufnr)
   --       companion.handlers["yaml/schema/store/initialized"](nil, nil, { client_id = client.id })
   --     end,
   --     on_init = function(client, bufnr)
-  --       require("ck.lsp").common_on_init(client, bufnr)
+  --       require("ck.lsp.handlers").common_on_init(client, bufnr)
   --       companion.on_init(client, bufnr)
   --     end,
   --     handlers = {

@@ -1,8 +1,9 @@
+---@module 'lspconfig'
+---@type lspconfig.options.eslint
 return {
   on_attach = function(client, bufnr)
-    require("ck.lsp").common_on_attach(client, bufnr)
-    client.server_capabilities.documentFormattingProvider = true
-    client.server_capabilities.documentRangeFormattingProvider = true
+    require("ck.lsp.handlers").on_attach(client, bufnr)
+    require("ck.lsp.handlers").overwrite_capabilities_with_no_formatting(client, bufnr)
   end,
   settings = {
     eslint = {

@@ -1,3 +1,5 @@
+---@module 'lspconfig'
+---@type lspconfig.options.grammarly
 return {
   cmd = { "fnm", "exec", "--using=16", "--", "grammarly-languageserver", "--stdio" },
   filetypes = { "markdown", "plaintext", "text", "gitcommit" },

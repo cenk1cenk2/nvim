@@ -301,7 +301,6 @@ end
 
 ---@diagnostic disable-next-line: duplicate-set-field
 function nvim.lsp.fn.rename_file()
-  local win = vim.api.nvim_get_current_win()
   local bufnr = vim.api.nvim_get_current_buf()
   local source = vim.api.nvim_buf_get_name(bufnr)
 
@@ -322,8 +321,8 @@ function nvim.lsp.fn.rename_file()
     end
 
     local files = {
-      current = ("file://%s"):format(current),
-      rename = ("file://%s"):format(rename),
+      current = vim.uri_from_fname(current),
+      rename = vim.uri_from_fname(rename),
     }
 
     vim.lsp.buf_request(bufnr, "workspace/willRenameFiles", {
@@ -333,9 +332,19 @@ function nvim.lsp.fn.rename_file()
           newUri = files.rename,
         },
       },
-    }, function(error, result, _context, _config)
+    }, function(error, result, context, _config)
+      local client = vim.lsp.get_client_by_id(context.client_id)
+
+      if client == nil then
+        log:error("LSP client can not be found: %d", context.client_id)
+
+        return
+      end
+
       if error then
-        log:warn(error.message)
+        log:warn("[%s] %s", client.name, error.message)
+
+        return
       end
 
       if result == nil or #vim.tbl_keys(result) == nil then
@@ -344,11 +353,7 @@ function nvim.lsp.fn.rename_file()
         return
       end
 
-      utils.apply_lsp_edit(result)
-
-      if vim.fn.getbufvar(bufnr, "&modified") then
-        vim.cmd("silent noautocmd w")
-      end
+      vim.lsp.util.apply_workspace_edit(result, client.offset_encoding or "utf-8")
 
       local ok, err = vim.uv.fs_rename(current, rename)
       if not ok then
@@ -361,7 +366,7 @@ function nvim.lsp.fn.rename_file()
         end
       end
 
-      vim.notify(("%s %s %s"):format(current, nvim.ui.icons.ui.BoldArrowRight, rename))
+      vim.notify(("[%s] renamed: %s %s %s"):format(client.name, current, nvim.ui.icons.ui.DoubleChevronRight, rename))
     end)
   end)
 end

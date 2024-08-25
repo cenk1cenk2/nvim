@@ -1,3 +1,5 @@
+---@module 'lspconfig'
+---@type lspconfig.options.taplo
 return {
   settings = {
     settings = {

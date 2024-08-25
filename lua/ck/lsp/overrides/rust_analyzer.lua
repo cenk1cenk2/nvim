@@ -1,6 +1,8 @@
 -- local rust_tools_ok, rust_tools = pcall(require, "rust-tools")
 -- local log = require "core.log"
 
+---@module 'lspconfig'
+---@type lspconfig.options.rust_analyzer
 return {
   -- Needed for inlayHints. Merge this table with your settings or copy
   -- it from the source if you want to add your own init_options.
@@ -32,7 +34,7 @@ return {
     -- end
     -- end
 
-    require("ck.lsp").common_on_init(client, bufnr)
+    require("ck.lsp.handlers").on_init(client, bufnr)
   end,
   settings = {
     ["rust-analyzer"] = {

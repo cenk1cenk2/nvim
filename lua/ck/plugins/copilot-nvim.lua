@@ -40,7 +40,7 @@ function M.config()
             prev = "<M-k>",
             dismiss = "<M-h>",
             accept_word = false,
-            accept_line = "<M-l>",
+            accept_line = false,
           },
         },
         filetypes = {
@@ -73,7 +73,7 @@ function M.config()
             autopairs.enable()
           end,
           desc = "accept copilot suggestion",
-          mode = "n",
+          mode = "i",
         },
       }
     end,

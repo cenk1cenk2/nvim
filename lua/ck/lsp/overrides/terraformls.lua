@@ -24,11 +24,11 @@ require("ck.setup").init({
   end,
 })
 
+---@module 'lspconfig'
+---@type lspconfig.options.terraformls
 return {
   root_dir = function(fname)
-    local util = require("lspconfig/util")
-
-    return util.root_pattern({ ".terraform", ".terraform.lock.hcl", ".git" })(fname)
+    return vim.fs.root(fname, { ".terraform", ".terraform.lock.hcl", ".git" })
   end,
   settings = {
     terraform = {

@@ -1,8 +1,11 @@
 local M = {}
 
 local log = require("ck.log")
-local nvim_lsp_utils = require("ck.lsp.utils")
+local utils = require("ck.lsp.utils")
 
+---
+---@param server_name string
+---@return table
 local function resolve_mason_config(server_name)
   local found, mason_config = pcall(require, "mason-lspconfig.server_configurations." .. server_name)
   if not found then
@@ -31,12 +34,7 @@ end
 ---@param ... any config table [optional]
 ---@return table
 local function resolve_config(server_name, ...)
-  local defaults = {
-    on_attach = require("ck.lsp").common_on_attach,
-    on_init = require("ck.lsp").common_on_init,
-    on_exit = require("ck.lsp").common_on_exit,
-    capabilities = require("ck.lsp").common_capabilities(),
-  }
+  local defaults = require("ck.lsp.handlers").get()
 
   local has_custom_provider, custom_config = pcall(require, "ck.lsp.overrides." .. server_name)
   if has_custom_provider then
@@ -51,6 +49,9 @@ local function resolve_config(server_name, ...)
   return defaults
 end
 
+---
+---@param server_name string
+---@param config table
 local function launch_server(server_name, config)
   local ft = config.filetypes or require("ck.lsp.utils").get_supported_filetypes(server_name)
   log:trace("%s is hooked for fts: %s", server_name, ft)
@@ -74,8 +75,11 @@ local function launch_server(server_name, config)
   end, debug.traceback)
 end
 
+---
+---@param server_name string
+---@return boolean
 function M.has_setup(server_name)
-  if nvim_lsp_utils.is_client_active(server_name) then
+  if utils.is_client_active(server_name) then
     return true
   end
 

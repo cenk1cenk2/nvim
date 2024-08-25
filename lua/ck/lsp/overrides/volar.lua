@@ -1,7 +1,8 @@
+---@module 'lspconfig'
+---@type lspconfig.options.volar
 return {
   on_attach = function(client, bufnr)
-    require("ck.lsp").common_on_attach(client, bufnr)
-    client.server_capabilities.documentFormattingProvider = false
-    client.server_capabilities.documentRangeFormattingProvider = false
+    require("ck.lsp.handlers").on_attach(client, bufnr)
+    require("ck.lsp.handlers").overwrite_capabilities_with_no_formatting(client, bufnr)
   end,
 }
