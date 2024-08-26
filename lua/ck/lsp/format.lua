@@ -5,7 +5,7 @@ local group = "lsp_format_on_save"
 
 --- Creates the autocommand for format on save.
 function M.enable_format_on_save()
-  vim.api.nvim_create_augroup("lsp_format_on_save", { clear = true })
+  vim.api.nvim_create_augroup(group, { clear = true })
   vim.api.nvim_create_autocmd("BufWritePre", {
     group = group,
     pattern = nvim.lsp.format_on_save.pattern,
@@ -19,22 +19,14 @@ end
 
 --- Removes the autocommand for format on save.
 function M.disable_format_on_save()
-  require("ck.setup").clear_augroup("lsp_format_on_save")
+  require("ck.setup").clear_augroup(group)
 
   log:debug("Disabled format on save.")
 end
 
 ---@return boolean
 function M.should_format_on_save()
-  local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
-    group = group,
-  })
-
-  if ok and #autocmds > 0 then
-    return true
-  end
-
-  return false
+  return require("ck.setup").get_augroup(group) ~= nil
 end
 
 --- Toggles the autocommand for format on save.

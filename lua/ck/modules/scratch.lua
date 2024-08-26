@@ -30,8 +30,8 @@ function M.create_scratch_buffer()
     vim.api.nvim_win_set_buf(0, bufnr)
     log:info("Created temporary file: %s", filename)
 
-    require("ck.setup").create_autocmds({
-      {
+    require("ck.setup").init({
+      autocmds = {
         event = { "BufDelete", "VimLeavePre" },
         group = "_scratch",
         buffer = bufnr,

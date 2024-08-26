@@ -93,6 +93,19 @@ function M.create_autocmds(autocmds)
   end
 end
 
+--- Gets an autocommand group.
+---@param name string
+---@return vim.api.keyset.get_autocmds.ret[] | nil
+function M.get_augroup(name)
+  local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
+    group = name,
+  })
+
+  if ok and #autocmds > 0 then
+    return autocmds
+  end
+end
+
 --- Clears an autocommand group.
 ---@param name string
 function M.clear_augroup(name)
@@ -156,7 +169,7 @@ end
 ---@field on_done? fun(config: Config, fn: SetupFn): nil
 ---@field keymaps? (fun(config: Config, fn: SetupFn): KeymapMappings) | KeymapMappings
 ---@field wk? (fun(config: Config, categories: WKCategories, fn: SetupFn): WKMappings) | WKMappings
----@field autocmds? fun(config: Config, fn: SetupFn): Autocmds[]
+---@field autocmds? (fun(config: Config, fn: SetupFn): Autocmds[]) | Autocmds[]
 ---@field commands? (fun(config: Config, fn: SetupFn): Commands[]) | Commands[]
 ---@field hl? (fun(config: Config, fn: SetupFn): table<string, vim.api.keyset.highlight>) | table<string, vim.api.keyset.highlight>
 ---@field signs? (fun(config: Config, fn: SetupFn): table<string, vim.fn.sign_define.dict>) | table<string, vim.fn.sign_define.dict>

@@ -267,17 +267,18 @@ function M.config()
     end,
     on_done = function()
       local cmp = require("cmp")
-      local setup = require("ck.setup")
 
       for key, value in pairs(M.per_ft) do
-        setup.create_autocmds({
-          {
-            event = "FileType",
-            group = "_cmp_per_ft",
-            pattern = key,
-            callback = function()
-              cmp.setup.buffer(value)
-            end,
+        require("ck.setup").init({
+          autocmds = {
+            {
+              event = "FileType",
+              group = "_cmp_per_ft",
+              pattern = key,
+              callback = function()
+                cmp.setup.buffer(value)
+              end,
+            },
           },
         })
       end
@@ -310,13 +311,6 @@ function M.config()
         sources = {
           { name = "cmdline" },
           { name = "path" },
-        },
-      })
-
-      -- dap
-      cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-        sources = {
-          { name = "dap" },
         },
       })
     end,

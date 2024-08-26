@@ -251,15 +251,17 @@ function M.create_toggle_term(opts)
     return
   end
 
-  require("ck.setup").load_wk({
-    {
-      require("ck.setup").fn.wk_keystroke({ require("ck.setup").fn.get_wk_category("TERMINAL"), opts.keymap }),
+  require("ck.setup").init({
+    wk = function(_, categories, fn)
+      return {
+        fn.wk_keystroke({ categories.TERMINAL, opts.keymap }),
 
-      function()
-        M.toggle_toggle_term({ cmd = opts.cmd, count = opts.count, direction = opts.direction })
-      end,
-      desc = opts.label,
-    },
+        function()
+          M.toggle_toggle_term({ cmd = opts.cmd, count = opts.count, direction = opts.direction })
+        end,
+        desc = opts.label,
+      }
+    end,
   })
 end
 
