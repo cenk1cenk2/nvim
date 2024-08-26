@@ -1,7 +1,7 @@
 local M = {}
 
 M._ = {}
-M._.setup = false
+M._.has_setup = false
 
 function M.load_default_options()
   local undodir = join_paths(get_cache_dir(), "undo")
@@ -81,7 +81,7 @@ M.load_headless_options = function()
 end
 
 function M.setup()
-  if M._.setup then
+  if M._.has_setup then
     require("ck.log"):warn("Already set default settings.")
     return
   end
@@ -92,7 +92,7 @@ function M.setup()
     M.load_headless_options()
   end
 
-  M._.setup = true
+  M._.has_setup = true
 end
 
 return M
