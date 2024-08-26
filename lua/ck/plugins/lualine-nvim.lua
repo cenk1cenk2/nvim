@@ -390,7 +390,7 @@ function M.components()
     },
     searchcount = {
       function()
-        local searchcount = vim.fn.searchcount({ recompute = true })
+        local searchcount = vim.fn.searchcount({ recompute = 1 })
         return ("%s %s/%s"):format(nvim.ui.icons.ui.Search, searchcount.current, searchcount.total)
       end,
       cond = function()
