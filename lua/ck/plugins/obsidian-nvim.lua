@@ -387,7 +387,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.NOTES, "r" }),
+          fn.wk_keystroke({ categories.NOTES, "m" }),
           function()
             vim.cmd([[ObsidianRename]])
           end,
@@ -395,7 +395,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.NOTES, "R" }),
+          fn.wk_keystroke({ categories.NOTES, "M" }),
           function()
             vim.cmd([[ObsidianRename --dry-run]])
           end,
