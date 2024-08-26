@@ -131,7 +131,7 @@ function M.setup()
           event = "FileType",
           group = "_filetype_settings",
           pattern = "gitcommit",
-          callback = function(event)
+          callback = function()
             vim.opt_local.wrap = false
           end,
         },

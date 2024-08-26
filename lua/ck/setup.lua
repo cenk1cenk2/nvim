@@ -83,17 +83,9 @@ end
 function M.create_autocmds(autocmds)
   for _, entry in ipairs(autocmds) do
     if type(entry.group) == "string" and entry.group ~= "" then
-      if entry.clear then
-        M.clear_augroup(entry.group)
-        entry.clear = nil
-      end
-
-      local exists, _ = pcall(vim.api.nvim_get_autocmds, { group = entry.group })
-
-      if not exists then
-        vim.api.nvim_create_augroup(entry.group, {})
-      end
+      M.create_augroup(entry.group, { clear = entry.clear })
     end
+    entry.clear = nil
 
     local opts = vim.deepcopy(entry)
     opts.event = nil
@@ -112,6 +104,17 @@ function M.get_augroup(name)
   if ok and #autocmds > 0 then
     return autocmds
   end
+end
+
+--- Clears an autocommand group.
+---@param name string
+---@param opts vim.api.keyset.create_augroup
+function M.create_augroup(name, opts)
+  if M.get_augroup(name) and not opts.clear then
+    return
+  end
+
+  vim.api.nvim_create_augroup(name, opts)
 end
 
 --- Clears an autocommand group.
