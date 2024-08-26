@@ -56,7 +56,9 @@ function M.config()
       require("conform").setup(c)
     end,
     on_done = function()
-      nvim.lsp.buffer_options.formatexpr = "v:lua.require'conform'.formatexpr()"
+      table.insert(nvim.lsp.buffer_options, function(_, bufnr)
+        vim.api.nvim_set_option_value("formatexpr", "v:lua.require'conform'.formatexpr()", { buf = bufnr })
+      end)
 
       ---@type ToolListFn
       nvim.lsp.tools.list_registered.formatters = function(bufnr)

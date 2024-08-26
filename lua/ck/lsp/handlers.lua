@@ -97,10 +97,9 @@ function M.on_attach(client, bufnr)
     M.attach_inlay_hints(client, bufnr)
   end
 
-  setup.load_keymaps(nvim.lsp.keymaps, { buffer = bufnr })
-  for k, v in pairs(nvim.lsp.buffer_options) do
-    vim.api.nvim_set_option_value(k, v, { buf = bufnr })
-  end
+  require("ck.keys.lsp").load(bufnr)
+
+  M.load_buffer_options(client, bufnr)
 end
 
 ---@type LspOnCallback
@@ -155,6 +154,17 @@ end
 function M.attach_inlay_hints(client, bufnr)
   if client.server_capabilities.inlayHintProvider then
     vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+  end
+end
+
+---@type LspOnCallback
+function M.load_buffer_options(client, bufnr)
+  for k, v in ipairs(nvim.lsp.buffer_options) do
+    if type(v) == "string" then
+      vim.api.nvim_set_option_value(k, v, { buf = bufnr })
+    elseif type(v) == "function" then
+      v(client, bufnr)
+    end
   end
 end
 

@@ -1,5 +1,7 @@
 -- https://github.com/folke/which-key.nvim
-local M = {}
+local M = {
+  _ = {},
+}
 
 M.name = "folke/which-key.nvim"
 
@@ -12,6 +14,11 @@ M.opts = {
   nowait = true, -- use `nowait` when creating keymaps
 }
 
+M._ = {
+  ---@type WKMappings
+  wk = {},
+}
+
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
@@ -22,7 +29,7 @@ function M.config()
       }
     end,
     configure = function(_, fn)
-      require("ck.setup")._.wk = vim.list_extend(require("ck.setup")._.wk, require("ck.keys.wk").setup(fn))
+      require("ck.keys.wk").setup()
 
       fn.add_disabled_filetypes({ "which_key" })
     end,
@@ -94,7 +101,7 @@ function M.config()
 
       which_key.setup(c)
 
-      which_key.add(require("ck.setup")._.wk)
+      which_key.add(M._.wk)
     end,
     autocmds = function()
       return {

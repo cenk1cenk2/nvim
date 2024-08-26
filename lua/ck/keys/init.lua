@@ -8,7 +8,7 @@ function M.setup()
   vim.g.mapleader = nvim.leader
   vim.g.maplocalleader = nvim.localleader
 
-  require("ck.setup").load_keymaps(require("ck.keys.default"))
+  require("ck.keys.default").load()
 end
 
 return M

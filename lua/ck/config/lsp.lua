@@ -57,8 +57,7 @@ return {
     enabled = true,
   },
 
-  keymaps = require("ck.keys.lsp"),
-  ---@type table<string, string>
+  ---@type table<string, string | LspOnCallback>
   buffer_options = {
     formatexpr = "v:lua.vim.lsp.formatexpr(#{timeout_ms:500})",
   },

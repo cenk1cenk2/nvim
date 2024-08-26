@@ -1,10 +1,6 @@
 local log = require("ck.log")
 local M = {
   fn = {},
-  _ = {
-    ---@type WKMappings
-    wk = {},
-  },
 }
 
 ---@module "which-key"
@@ -15,7 +11,8 @@ local M = {
 ---@type LoadWkFn
 function M.load_wk(mappings)
   if not is_package_loaded("which-key") then
-    M._.wk = vim.list_extend(M._.wk, mappings)
+    local plugin = require("ck.plugins.which-key")
+    plugin._.wk = vim.list_extend(plugin._.wk, mappings)
 
     return
   end
