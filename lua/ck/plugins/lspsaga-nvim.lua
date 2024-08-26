@@ -29,7 +29,7 @@ function M.config()
 
       ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.hover = function()
-        if is_plugin_enabled(get_plugin_name("nvim-ufo")) then
+        if is_enabled(get_plugin_name("nvim-ufo")) then
           local winid = require("ufo").peekFoldedLinesUnderCursor()
           if not winid then
             vim.cmd("Lspsaga hover_doc")

@@ -26,7 +26,7 @@ function M.config()
     on_done = function()
       require("dap.ext.vscode").load_launchjs()
 
-      if is_plugin_enabled("dap") then
+      if is_enabled(get_plugin_name("cmp")) then
         require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
           sources = {
             { name = "dap" },

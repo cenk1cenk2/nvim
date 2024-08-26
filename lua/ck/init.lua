@@ -93,32 +93,46 @@ function _G.require_clean(m)
   return module
 end
 
+--- Checks if an plugin is enabled.
+---@param name string
+---@return boolean
+function _G.is_enabled(name)
+  local m = require("ck.setup").get_config(name) or {}
+  if m.enabled == nil then
+    require("ck.log"):error("Module is not defined: %s", name)
+
+    return false
+  end
+
+  return m.enabled
+end
+
 --- Gets the plugin defined name in the plugin module.
----@param module string
+---@param path string
 ---@return string
-function _G.get_plugin_name(module)
-  local ok, m = pcall(require, ("ck.plugins.%s"):format(module))
+function _G.get_plugin_name(path)
+  local ok, m = pcall(require, ("ck.plugins.%s"):format(path))
   if not ok then
-    error(("Failed to load plugin: %s"):format(module))
+    error(("Failed to load plugin: %s"):format(path))
   elseif not m.name then
-    error(("Plugin name is not defined: %s"):format(module))
+    error(("Plugin name is not defined: %s"):format(path))
   end
 
   return m.name
 end
 
---- Checks if an plugin is enabled.
----@param module string
----@return boolean
-function _G.is_plugin_enabled(module)
-  local plugin = require("ck.setup").get_config(module) or {}
-  if plugin.enabled == nil then
-    require("ck.log"):error("Plugin is not defined: %s", module)
-
-    return false
+--- Gets the plugin defined name in the plugin module.
+---@param path string
+---@return string
+function _G.get_module_name(path)
+  local ok, m = pcall(require, ("ck.module.%s"):format(path))
+  if not ok then
+    error(("Failed to load module: %s"):format(path))
+  elseif not m.name then
+    error(("Module name is not defined: %s"):format(path))
   end
 
-  return plugin.enabled
+  return m.name
 end
 
 ---Initialize the `&runtimepath` variables and prepare for startup

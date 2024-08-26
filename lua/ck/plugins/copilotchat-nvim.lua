@@ -90,7 +90,7 @@ function M.config()
       }
     end,
     on_setup = function(c)
-      if is_plugin_enabled(get_plugin_name("cmp")) then
+      if is_enabled(get_plugin_name("cmp")) then
         require("CopilotChat.integrations.cmp").setup()
       end
       require("CopilotChat").setup(c)
