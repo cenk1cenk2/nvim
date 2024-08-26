@@ -48,7 +48,7 @@ function M.setup()
       {
         "NvimOpenlog",
         function()
-          vim.cmd(("edit %s"):format(require("ck.log").get_path()))
+          vim.cmd(("edit %s"):format(require("ck.log"):get_log_filepath()))
         end,
       },
     },

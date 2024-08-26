@@ -78,7 +78,7 @@ function M:init()
         {
           name = "file",
           level = log_level,
-          sink = sl.sinks.RotatingFile(self:get_path(), {
+          sink = sl.sinks.RotatingFile(self:get_log_filepath(), {
             max_size = 1048576 * 10,
           }),
           processors = {
@@ -195,12 +195,34 @@ function M:setup()
 end
 
 ---Retrieves the path of the logfile
----@return string path of the logfile
-function M:get_path()
+---@return string
+function M:get_log_filepath()
   return string.format("%s/%s.log", get_cache_dir(), "core")
 end
 
+---Retrieves the path of the neovim logfile.
+---@return string
+function M:get_nvim_logfile_path()
+  return os.getenv("NVIM_LOG_FILE") or "/tmp/nvim-session.log"
+end
+
+---Truncates a logfile.
+---@param path string
+function M:truncate_logfile(path)
+  local fd, _, err = vim.uv.fs_open(path, "w+", 644)
+
+  if err then
+    M:error("Failed to truncate log file: %s", err)
+
+    return
+  end
+
+  vim.uv.fs_close(fd)
+  M:info("Truncated log file: %s", require("ck.utils.fs").get_relative_to_home(path))
+end
+
 ---Add a log entry at TRACE level
+---@param level LogLevel
 ---@param msg any
 ---@param ... any
 function M:log(level, msg, ...)

@@ -1,5 +1,7 @@
 local M = {}
 
+local log = require("ck.log")
+
 ---@param bufnr number
 function M.load(bufnr)
   require("ck.setup").init({
@@ -294,25 +296,32 @@ function M.load(bufnr)
           buffer = bufnr,
         },
         {
-          fn.wk_keystroke({ categories.LSP, "?" }),
+          fn.wk_keystroke({ categories.LSP, categories.LOGS }),
           group = "logs",
         },
         {
-          fn.wk_keystroke({ categories.LSP, "?", "o" }),
+          fn.wk_keystroke({ categories.LSP, categories.LOGS, "o" }),
           function()
             nvim.fn.toggle_log_view(vim.lsp.get_log_path())
           end,
           desc = "view lsp log",
         },
         {
-          fn.wk_keystroke({ categories.LSP, "?", "e" }),
+          fn.wk_keystroke({ categories.LSP, categories.LOGS, "e" }),
           function()
             vim.cmd(("edit %s"):format(vim.lsp.get_log_path()))
           end,
           desc = "open the lsp logfile",
         },
         {
-          fn.wk_keystroke({ categories.LSP, "?", "l" }),
+          fn.wk_keystroke({ categories.LSP, categories.LOGS, "X" }),
+          function()
+            require("ck.log"):truncate_logfile(vim.lsp.get_log_path())
+          end,
+          desc = "delete lsp logfile",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, categories.LOGS, "l" }),
           function()
             vim.ui.select(require("ck.log").levels, {
               prompt = "LSP Log Level",

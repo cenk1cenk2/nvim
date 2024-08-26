@@ -4,7 +4,7 @@ if is_headless() then
   nvim.log.level = "trace"
 end
 
-if vim.tbl_contains({ "emanet", "fanboy" }, vim.fn.hostname()) then
+if vim.tbl_contains({ "emanet", "fanboy" }, vim.uv.os_gethostname()) then
   nvim.lsp.automatic_update = false
 end
 

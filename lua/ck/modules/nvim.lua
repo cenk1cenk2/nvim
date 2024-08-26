@@ -114,35 +114,43 @@ function M.setup()
         },
 
         {
-          fn.wk_keystroke({ categories.NEOVIM, "?" }),
+          fn.wk_keystroke({ categories.NEOVIM, categories.LOGS }),
           group = "logs",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.NEOVIM, "?", "o" }),
+          fn.wk_keystroke({ categories.NEOVIM, categories.LOGS, "o" }),
           function()
-            nvim.fn.toggle_log_view(require("ck.log").get_path())
+            nvim.fn.toggle_log_view(require("ck.log"):get_log_filepath())
           end,
           desc = "view log",
         },
         {
-          fn.wk_keystroke({ categories.NEOVIM, "?", "e" }),
+          fn.wk_keystroke({ categories.NEOVIM, categories.LOGS, "e" }),
           function()
-            vim.cmd(("edit %s"):format(require("ck.log").get_path()))
+            vim.cmd(("edit %s"):format(require("ck.log"):get_log_filepath()))
           end,
           desc = "open the logfile",
         },
         {
-          fn.wk_keystroke({ categories.NEOVIM, "?", "n" }),
+          fn.wk_keystroke({ categories.NEOVIM, categories.LOGS, "X" }),
           function()
-            nvim.fn.toggle_log_view(os.getenv("NVIM_LOG_FILE"))
+            require("ck.log"):truncate_logfile(require("ck.log"):get_log_filepath())
+            require("ck.log"):truncate_logfile(require("ck.log"):get_nvim_logfile_path())
+          end,
+          desc = "delete the logfiles",
+        },
+        {
+          fn.wk_keystroke({ categories.NEOVIM, categories.LOGS, "n" }),
+          function()
+            nvim.fn.toggle_log_view(require("ck.log"):get_nvim_logfile_path())
           end,
           desc = "view neovim log",
         },
         {
-          fn.wk_keystroke({ categories.NEOVIM, "?", "N" }),
+          fn.wk_keystroke({ categories.NEOVIM, categories.LOGS, "N" }),
           function()
-            vim.cmd(("edit %s"):format(os.getenv("NVIM_LOG_FILE")))
+            vim.cmd(("edit %s"):format(require("ck.log"):get_nvim_logfile_path()))
           end,
           desc = "open the neovim logfile",
         },

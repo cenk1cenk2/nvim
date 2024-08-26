@@ -13,7 +13,14 @@ end
 --- Returns relative to user home directory cwd for the project.
 ---@return string
 function M.get_relative_cwd()
-  return vim.fn.fnamemodify(M.get_cwd(), ":~")
+  return M.get_relative_to_home(M.get_cwd())
+end
+
+--- Returns relative to user home directory cwd for the project.
+---@param path string
+---@return string
+function M.get_relative_to_home(path)
+  return vim.fn.fnamemodify(path, ":~")
 end
 
 --- Returns the buffer absolute file path.

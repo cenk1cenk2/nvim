@@ -17,7 +17,7 @@ function M.config()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.NEOVIM, "?", "l" }),
+          fn.wk_keystroke({ categories.NEOVIM, categories.LOGS, "l" }),
           function()
             vim.ui.select(require("ck.log").levels, {
               prompt = "Log Level",
