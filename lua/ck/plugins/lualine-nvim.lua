@@ -396,7 +396,7 @@ function M.components()
       cond = function()
         return conditions.hide_in_width() and vim.o.hlsearch
       end,
-      color = { fg = nvim.ui.colors.yellow[900], bg = nvim.ui.colors.magenta[300] },
+      color = { fg = nvim.ui.colors.white, bg = nvim.ui.colors.magenta[300] },
     },
     noice_message = {
       function()
