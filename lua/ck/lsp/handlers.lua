@@ -88,6 +88,8 @@ function M.on_attach(client, bufnr)
     log:trace("Called lsp.on_attach_callbacks")
   end
 
+  require("ck.keys.lsp").load(client, bufnr)
+
   if nvim.lsp.codelens.refresh then
     M.attach_codelens(client, bufnr)
   end

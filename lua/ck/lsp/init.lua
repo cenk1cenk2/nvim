@@ -114,8 +114,6 @@ function M.setup(force)
   end)
 
   require("ck.lsp.format").setup()
-
-  require("ck.keys.lsp").load()
 end
 
 return M
