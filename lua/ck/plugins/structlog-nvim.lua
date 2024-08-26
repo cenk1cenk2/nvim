@@ -14,6 +14,21 @@ function M.config()
     setup = function()
       require("ck.log"):get()
     end,
+    wk = function(_, categories, fn)
+      return {
+        {
+          fn.wk_keystroke({ categories.LOGS, "s" }),
+          function()
+            vim.ui.select(require("ck.log").levels, {
+              prompt = "Log Level",
+            }, function(level)
+              require("ck.log"):set_level(level)
+            end)
+          end,
+          desc = "set log level",
+        },
+      }
+    end,
   })
 end
 

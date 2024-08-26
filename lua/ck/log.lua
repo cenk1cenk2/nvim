@@ -2,14 +2,7 @@ local M = {}
 
 ---@module 'structlog'
 
----@class LogLevel
----@field TRACE number
----@field DEBUG number
----@field INFO number
----@field WARN number
----@field ERROR number
----@field levels table<number, string>
-M.levels = {
+M.map = {
   [1] = "TRACE",
   [2] = "DEBUG",
   [3] = "INFO",
@@ -20,6 +13,15 @@ M.levels = {
   INFO = 3,
   WARN = 4,
   ERROR = 5,
+}
+
+---@enum LogLevel
+M.levels = {
+  "TRACE",
+  "DEBUG",
+  "INFO",
+  "WARN",
+  "ERROR",
 }
 
 ---@class LogQueueEntry
@@ -34,19 +36,23 @@ local queue = {}
 ---@param level LogLevel
 function M:set_level(level)
   xpcall(function()
-    local log_level = M.levels[tostring(level):upper()]
+    local log_level = M.map[tostring(level):upper()]
     local sl = require("structlog")
 
-    if sl then
-      local logger = sl.get_logger("nvim")
-      if logger == nil then
-        error("No logger available.")
-      end
+    local logger = sl.get_logger("nvim")
+    if logger == nil then
+      M:error("No logger available.")
 
-      for _, s in ipairs(logger.sinks) do
+      return
+    end
+
+    for _, s in ipairs(logger.pipelines) do
+      if not vim.tbl_contains({ "notify" }, s.name) then
         s.level = log_level
       end
     end
+
+    M:info("Set log level: %s", level)
   end, debug.traceback)
 end
 
@@ -58,15 +64,12 @@ function M:init()
 
   local adapter = require("structlog.sinks.adapter")
 
-  local function notify(log)
-    vim.notify(log.msg, log.level)
-  end
-
-  local log_level = M.levels[tostring(nvim.log.level):upper() or "WARN"]
+  local log_level = M.map[tostring(nvim.log.level):upper() or "WARN"]
   local logger = {
     nvim = {
       pipelines = {
         {
+          name = "file",
           level = log_level,
           sink = sl.sinks.RotatingFile(self:get_path(), {
             max_size = 1048576 * 10,
@@ -84,6 +87,7 @@ function M:init()
           ),
         },
         {
+          name = "console",
           level = log_level,
           sink = sl.sinks.Console(),
           processors = {},
@@ -97,8 +101,11 @@ function M:init()
           ),
         },
         {
-          level = M.levels.INFO,
-          sink = adapter(notify),
+          name = "notify",
+          level = M.map.INFO,
+          sink = adapter(function(log)
+            vim.notify(log.msg, log.level)
+          end),
           processors = {},
           formatter = sl.formatters.Format( --
             "%s",
@@ -199,35 +206,35 @@ end
 ---@param msg any
 ---@param ... any
 function M:trace(msg, ...)
-  self:write(self.levels.TRACE, msg, { ... })
+  self:write(self.map.TRACE, msg, { ... })
 end
 
 ---Add a log entry at DEBUG level
 ---@param msg any
 ---@param ... any
 function M:debug(msg, ...)
-  self:write(self.levels.DEBUG, msg, { ... })
+  self:write(self.map.DEBUG, msg, { ... })
 end
 
 ---Add a log entry at INFO level
 ---@param msg any
 ---@param ... any
 function M:info(msg, ...)
-  self:write(self.levels.INFO, msg, { ... })
+  self:write(self.map.INFO, msg, { ... })
 end
 
 ---Add a log entry at WARN level
 ---@param msg any
 ---@param ... any
 function M:warn(msg, ...)
-  self:write(self.levels.WARN, msg, { ... })
+  self:write(self.map.WARN, msg, { ... })
 end
 
 ---Add a log entry at ERROR level
 ---@param msg any
 ---@param ... any
 function M:error(msg, ...)
-  self:write(self.levels.ERROR, msg, { ... })
+  self:write(self.map.ERROR, msg, { ... })
 end
 
 setmetatable({}, M)

@@ -349,6 +349,7 @@ end
 
 function M.lsp_logging_level(level)
   vim.lsp.set_log_level(level)
+  log:info("Set LSP log level: %s", level)
 end
 
 --- Some commands need to be defined, so they can be overriden per LSP server for that buffer.
@@ -363,16 +364,15 @@ require("ck.setup").init({
       end,
     },
     {
-      "LspLogLevelDebug",
-      function()
-        nvim.lsp.fn.lsp_logging_level("debug")
+      "LspLogLevel",
+      function(nargs)
+        local level = table.remove(nargs.fargs, 1)
+        nvim.lsp.fn.lsp_logging_level(level)
       end,
-    },
-    {
-      "LspLogLevelInfo",
-      function()
-        nvim.lsp.fn.lsp_logging_level("info")
+      complete = function()
+        return require("ck.log").levels
       end,
+      nargs = 1,
     },
     {
       "LspOrganizeImports",
