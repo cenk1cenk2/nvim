@@ -132,7 +132,7 @@ function M.config()
         {
           fn.wk_keystroke({ "y" }),
           function()
-            require("telescope").extensions.yank_history.yank_history(require("telescope.themes").get_dropdown({}))
+            require("telescope").extensions.yank_history.yank_history(require("telescope.themes").get_ivy({}))
           end,
           desc = "list yanky.nvim registers",
         },
