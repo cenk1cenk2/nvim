@@ -58,6 +58,9 @@ function M.config()
     end,
     on_setup = function(c)
       require("nvim-autopairs").setup(c)
+    end,
+    on_done = function()
+      -- https://github.com/windwp/nvim-autopairs/wiki/Custom-rules
 
       local npairs = require("nvim-autopairs")
       local Rule = require("nvim-autopairs.rule")
@@ -149,8 +152,7 @@ function M.config()
           :with_move(cond.none())
           :with_del(cond.none()),
       })
-    end,
-    on_done = function()
+
       require("nvim-treesitter.configs").setup({ autopairs = { enable = true } })
 
       if is_package_loaded("cmp") then
