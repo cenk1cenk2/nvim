@@ -20,8 +20,7 @@ function M.config()
         "sagaoutline",
         "sagafinder",
       })
-    end,
-    on_done = function(_, fn)
+
       ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.code_action = function()
         vim.cmd("Lspsaga code_action")

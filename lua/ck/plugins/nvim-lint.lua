@@ -14,10 +14,9 @@ function M.config()
       }
     end,
     setup = function()
-      local lint = require("lint")
       local METHOD = tools.METHODS.LINTER
 
-      M.extend_tools(lint)
+      M.extend_tools()
       M.register(METHOD)
 
       return tools.read(METHOD)
@@ -26,6 +25,7 @@ function M.config()
       require("lint").linters_by_ft = c
     end,
     on_done = function()
+      ---@type ToolListFn
       nvim.lsp.tools.list_registered.linters = function(bufnr)
         return require("lint").linters_by_ft[vim.bo[bufnr].ft] or {}
       end
@@ -57,8 +57,11 @@ function M.register(METHOD)
   tools.register(METHOD, "checkmake", { "make" })
 end
 
-function M.extend_tools(lint)
+function M.extend_tools()
+  local lint = require("lint")
+
   lint.linters.protolint = {
+    name = "protolint",
     cmd = "protolint",
     stdin = false, -- or false if it doesn't support content input via stdin. In that case the filename is automatically added to the arguments.
     append_fname = true, -- Automatically append the file name to `args` if `stdin = false` (default: true)
@@ -92,6 +95,7 @@ function M.extend_tools(lint)
   }
 
   lint.linters.tfvalidate = {
+    name = "tfvalidate",
     cmd = "terraform",
     stdin = false, -- or false if it doesn't support content input via stdin. In that case the filename is automatically added to the arguments.
     append_fname = false, -- Automatically append the file name to `args` if `stdin = false` (default: true)

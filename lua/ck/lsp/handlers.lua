@@ -55,6 +55,12 @@ function M.overwrite_capabilities_with_no_formatting(client, _)
 end
 
 ---@type LspOnCallback
+function M.overwrite_capabilities_with_formatting(client, _)
+  client.server_capabilities.documentFormattingProvider = true
+  client.server_capabilities.documentRangeFormattingProvider = true
+end
+
+---@type LspOnCallback
 function M.on_exit(client, bufnr)
   if #nvim.lsp.on_exit_callbacks > 0 then
     for _, cb in pairs(nvim.lsp.on_exit) do

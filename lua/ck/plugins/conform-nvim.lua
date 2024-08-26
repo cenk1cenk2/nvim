@@ -19,6 +19,7 @@ function M.config()
       M.extend_tools(conform)
       M.register(METHOD)
 
+      ---@type conform.setupOpts
       return {
         -- Map of filetype to formatters
         formatters_by_ft = tools.read(METHOD),
@@ -26,6 +27,12 @@ function M.config()
         -- It will pass the table to conform.format().
         -- This can also be a function that returns the table.
         format_on_save = function(bufnr)
+          if not require("ck.lsp.format").should_format_on_save() then
+            return {
+              formatters = {},
+            }
+          end
+
           return {
             lsp_fallback = M.get_lsp_fallback(bufnr),
             timeout_ms = nvim.lsp.format_on_save.timeout,
@@ -51,6 +58,7 @@ function M.config()
     on_done = function()
       nvim.lsp.buffer_options.formatexpr = "v:lua.require'conform'.formatexpr()"
 
+      ---@type ToolListFn
       nvim.lsp.tools.list_registered.formatters = function(bufnr)
         local formatters = require("ck.lsp.tools").list_registered(require("ck.lsp.tools").METHODS.FORMATTER, bufnr)
 
@@ -75,6 +83,17 @@ function M.config()
         return M.filter_default_formatters(formatters)
       end
 
+      ---@type FormatFilterFn
+      nvim.lsp.format_on_save.filter = function(client)
+        if client.supports_method("textDocument/formatting") then
+          return true
+        end
+
+        return false
+      end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      ---@param opts? vim.lsp.buf.format.Opts
       nvim.lsp.fn.format = function(opts)
         opts = vim.tbl_extend("force", {
           bufnr = vim.api.nvim_get_current_buf(),
@@ -82,7 +101,7 @@ function M.config()
           filter = nvim.lsp.format_on_save.filter,
         }, opts or {})
 
-        require("conform").format(opts)
+        return require("conform").format(opts)
       end
     end,
     wk = function(_, categories, fn)
@@ -106,6 +125,8 @@ M.default_formatters = {
   "trim_multiple_newlines",
 }
 
+---@param formatters string[]
+---@return string[]
 function M.filter_default_formatters(formatters)
   return vim.tbl_filter(function(formatter)
     if type(formatter) == "string" and vim.list_contains(M.default_formatters, formatter) then

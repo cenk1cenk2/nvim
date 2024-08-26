@@ -1,8 +1,6 @@
 -- https://github.com/nvim-telescope/telescope.nvim
 local M = {}
 
-local log = require("ck.log")
-
 M.name = "nvim-telescope/telescope.nvim"
 
 function M.config()
@@ -30,6 +28,36 @@ function M.config()
       })
 
       nvim.fn.get_telescope_args = M.get_telescope_args
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      nvim.lsp.fn.document_symbols = function()
+        require("telescope.builtin").lsp_document_symbols()
+      end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      nvim.lsp.fn.implementation = function()
+        require("telescope.builtin").lsp_implementations()
+      end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      nvim.lsp.fn.incoming_calls = function()
+        require("telescope.builtin").lsp_incoming_calls()
+      end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      nvim.lsp.fn.outgoing_calls = function()
+        require("telescope.builtin").lsp_outgoing_calls()
+      end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      nvim.lsp.fn.references = function()
+        require("telescope.builtin").lsp_references()
+      end
+
+      ---@diagnostic disable-next-line: duplicate-set-field
+      nvim.lsp.fn.workspace_symbols = function()
+        require("telescope.builtin").lsp_dynamic_workspace_symbols()
+      end
     end,
     setup = function()
       local actions = require("telescope.actions")

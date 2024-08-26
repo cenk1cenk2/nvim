@@ -35,8 +35,6 @@ function M.setup(force)
 
   require("ck.lsp.handlers").setup()
 
-  require("ck.lsp.wrapper").setup()
-
   xpcall(function()
     require("neoconf").setup({
       jsonls = {

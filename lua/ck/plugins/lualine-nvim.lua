@@ -301,7 +301,6 @@ function M.components()
         return table.concat(message, " ")
       end,
       color = { fg = nvim.ui.colors.fg, bg = nvim.ui.colors.bg[300] },
-      cond = conditions.hide_in_width,
     },
     snippet = {
       function()

@@ -22,12 +22,6 @@ function M.setup()
         end,
       },
       {
-        "NvimToggleFormatOnSave",
-        function()
-          require("ck.lsp.format").toggle_format_on_save()
-        end,
-      },
-      {
         "NvimCacheReset",
         function()
           require("ck.loader").reset_cache()

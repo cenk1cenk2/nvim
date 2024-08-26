@@ -2,11 +2,8 @@ return {
   templates_dir = join_paths(get_data_dir(), "site", "after", "ftplugin"),
   format_on_save = {
     enable = true,
-    ---@usage pattern string pattern used for the autocommand (Default: '*')
     pattern = "*",
-    ---@usage timeout number timeout in ms for the format request (Default: 1000)
     timeout = 5000,
-    ---@usage filter func to select client
     filter = require("ck.lsp.format").filter,
   },
   --- @type vim.diagnostic.Opts
@@ -80,20 +77,20 @@ return {
       formatters = "",
       linters = "",
     },
+    ---@alias ToolByFt table<LspToolMethods, table<string, string[]>>
     by_ft = {
-      ---@type table<LspToolMethods, table<string, string[]>>
+      ---@type ToolByFt
       formatters = {},
-      ---@type table<LspToolMethods, table<string, string[]>>
+      ---@type ToolByFt
       linters = {},
     },
+    ---@alias ToolListFn fun(bufnr: number): string[]
     list_registered = {
-      ---@param bufnr number
-      ---@return string[]
+      ---@type ToolListFn
       formatters = function(bufnr)
         return require("ck.lsp.tools").list_registered(require("ck.lsp.tools").METHODS.FORMATTER, bufnr)
       end,
-      ---@param bufnr number
-      ---@return string[]
+      ---@type ToolListFn
       linters = function(bufnr)
         return require("ck.lsp.tools").list_registered(require("ck.lsp.tools").METHODS.LINTER, bufnr)
       end,
@@ -107,5 +104,5 @@ return {
   ---@type LspOnCallback[]
   on_exit_callbacks = {},
 
-  fn = {},
+  fn = require("ck.lsp.fn"),
 }

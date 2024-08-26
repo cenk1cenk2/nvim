@@ -27,6 +27,7 @@ function M.config()
       fn.add_disabled_filetypes({ "which_key" })
     end,
     setup = function()
+      ---@type wk.Opts
       return {
         preset = "helix",
         plugins = {
@@ -52,7 +53,7 @@ function M.config()
           -- don't allow the popup to overlap with the cursor
           no_overlap = true,
           -- width = 1,
-          -- height = { min = 4, max = 25 },
+          height = { min = 4, max = math.huge },
           -- col = 0,
           -- row = math.huge,
           border = nvim.ui.border,
