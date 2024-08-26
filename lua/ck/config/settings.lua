@@ -1,7 +1,7 @@
 local M = {}
 
 M._ = {}
-M._.has_setup = false
+M._.has_loaded = false
 
 function M.load_default_options()
   local undodir = join_paths(get_cache_dir(), "undo")
@@ -80,8 +80,8 @@ M.load_headless_options = function()
   vim.opt.swapfile = false -- don't use a swap file
 end
 
-function M.setup()
-  if M._.has_setup then
+function M.load()
+  if M._.has_loaded then
     require("ck.log"):warn("Already set default settings.")
     return
   end
@@ -92,7 +92,7 @@ function M.setup()
     M.load_headless_options()
   end
 
-  M._.has_setup = true
+  M._.has_loaded = true
 end
 
 return M

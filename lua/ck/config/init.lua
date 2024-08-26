@@ -9,7 +9,7 @@ function M:load()
   _G.nvim = require("ck.config.defaults")
   _G.nvim.lsp = require("ck.config.lsp")
 
-  require("ck.config.settings").setup()
+  require("ck.config.settings").load()
 
   require("ck.override")
 
