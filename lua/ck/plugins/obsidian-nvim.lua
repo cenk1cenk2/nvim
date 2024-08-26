@@ -259,7 +259,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "d", "D" }),
           function()
-            M.note_from_template("Todok", os.date("%Y-%m-%d-%H:%M:%S"), "Draft.md")
+            M.note_from_template("Todo", os.date("%Y-%m-%d-%H:%M:%S"), "Draft.md")
           end,
           desc = "quick todo",
         },
