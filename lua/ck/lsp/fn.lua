@@ -347,7 +347,7 @@ function M.rename_file()
   end)
 end
 
-function M.lsp_logging_level(level)
+function M.set_log_level(level)
   vim.lsp.set_log_level(level)
   log:info("Set LSP log level: %s", level)
 end
@@ -364,10 +364,10 @@ require("ck.setup").init({
       end,
     },
     {
-      "LspLogLevel",
+      "LspSetLogLevel",
       function(nargs)
         local level = table.remove(nargs.fargs, 1)
-        nvim.lsp.fn.lsp_logging_level(level)
+        nvim.lsp.fn.set_log_level(level)
       end,
       complete = function()
         return require("ck.log").levels

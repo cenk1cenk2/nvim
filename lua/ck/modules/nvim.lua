@@ -112,6 +112,40 @@ function M.setup()
           end,
           desc = "reload configuration",
         },
+
+        {
+          fn.wk_keystroke({ categories.NEOVIM, "?" }),
+          group = "logs",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.NEOVIM, "?", "o" }),
+          function()
+            nvim.fn.toggle_log_view(require("ck.log").get_path())
+          end,
+          desc = "view log",
+        },
+        {
+          fn.wk_keystroke({ categories.NEOVIM, "?", "e" }),
+          function()
+            vim.cmd(("edit %s"):format(require("ck.log").get_path()))
+          end,
+          desc = "open the logfile",
+        },
+        {
+          fn.wk_keystroke({ categories.NEOVIM, "?", "n" }),
+          function()
+            nvim.fn.toggle_log_view(os.getenv("NVIM_LOG_FILE"))
+          end,
+          desc = "view neovim log",
+        },
+        {
+          fn.wk_keystroke({ categories.NEOVIM, "?", "N" }),
+          function()
+            vim.cmd(("edit %s"):format(os.getenv("NVIM_LOG_FILE")))
+          end,
+          desc = "open the neovim logfile",
+        },
       }
     end,
   })

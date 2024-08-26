@@ -109,7 +109,7 @@ function M.config()
     wk = function(_, categories, fn)
       return {
         {
-          fn.wk_keystroke({ categories.LOGS, "f" }),
+          fn.wk_keystroke({ categories.LSP, "?", "f" }),
           function()
             vim.cmd([[ConformInfo]])
           end,

@@ -293,6 +293,39 @@ function M.load(bufnr)
           desc = "restart currently active LSPs",
           buffer = bufnr,
         },
+        {
+          fn.wk_keystroke({ categories.LSP, "?" }),
+          group = "logs",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, "?", "o" }),
+          function()
+            nvim.fn.toggle_log_view(vim.lsp.get_log_path())
+          end,
+          desc = "view lsp log",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, "?", "e" }),
+          function()
+            vim.cmd(("edit %s"):format(vim.lsp.get_log_path()))
+          end,
+          desc = "open the lsp logfile",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, "?", "l" }),
+          function()
+            vim.ui.select(require("ck.log").levels, {
+              prompt = "LSP Log Level",
+            }, function(level)
+              if not level then
+                return
+              end
+
+              nvim.lsp.fn.set_log_level(level)
+            end)
+          end,
+          desc = "set lsp log level",
+        },
       }
     end,
   })

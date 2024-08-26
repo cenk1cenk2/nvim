@@ -24,6 +24,8 @@ M.levels = {
   "ERROR",
 }
 
+M.name = "nvim"
+
 ---@class LogQueueEntry
 ---@field level LogLevel
 ---@field message any
@@ -34,12 +36,12 @@ local queue = {}
 
 --- Sets the log level.
 ---@param level LogLevel
-function M:set_level(level)
+function M:set_log_level(level)
   xpcall(function()
-    local log_level = M.map[tostring(level):upper()]
+    local log_level = M:to_level(level)
     local sl = require("structlog")
 
-    local logger = sl.get_logger("nvim")
+    local logger = sl.get_logger(M.name)
     if logger == nil then
       M:error("No logger available.")
 
@@ -56,6 +58,11 @@ function M:set_level(level)
   end, debug.traceback)
 end
 
+---@param level LogLevel
+function M:to_level(level)
+  return M.map[tostring(level):upper()]
+end
+
 function M:init()
   local ok, sl = pcall(require, "structlog")
   if not ok then
@@ -64,9 +71,9 @@ function M:init()
 
   local adapter = require("structlog.sinks.adapter")
 
-  local log_level = M.map[tostring(nvim.log.level):upper() or "WARN"]
-  local logger = {
-    nvim = {
+  local log_level = M:to_level(nvim.log.level)
+  sl.configure({
+    [M.name] = {
       pipelines = {
         {
           name = "file",
@@ -118,11 +125,9 @@ function M:init()
         },
       },
     },
-  }
+  })
 
-  sl.configure(logger)
-
-  return sl.get_logger("nvim")
+  return sl.get_logger(M.name)
 end
 
 ---@param msg any
@@ -152,7 +157,7 @@ end
 ---@param msg any
 ---@param sprintf? any[]
 function M:write(level, msg, sprintf)
-  local logger = self:get()
+  local logger = self:setup()
 
   if not logger then
     table.insert(queue, {
@@ -168,8 +173,8 @@ function M:write(level, msg, sprintf)
 end
 
 ---Retrieves the handle of the logger object
----@return table|nil logger handle if found
-function M:get()
+---@return self | nil
+function M:setup()
   if self.__handle then
     return self.__handle
   end
@@ -186,7 +191,7 @@ function M:get()
   end
   queue = {}
 
-  return logger
+  return M
 end
 
 ---Retrieves the path of the logfile

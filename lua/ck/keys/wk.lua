@@ -10,7 +10,7 @@ local M = {}
 ---@field SEARCH string
 ---@field GIT string
 ---@field LSP string
----@field LOGS string
+---@field LOGS string Subcategory.
 ---@field BOOKMARKS string
 ---@field NOTES string
 ---@field TESTS string
@@ -32,7 +32,7 @@ M.CATEGORIES = {
   SEARCH = "s",
   GIT = "g",
   LSP = "l",
-  LOGS = "L",
+  LOGS = "?",
   BOOKMARKS = "m",
   NOTES = "n",
   TESTS = "j",
@@ -323,12 +323,6 @@ function M.setup()
           },
 
           -- neovim
-
-          {
-            fn.wk_keystroke({ categories.LOGS }),
-            group = "logs",
-            mode = { "n", "v" },
-          },
 
           {
             fn.wk_keystroke({ categories.PLUGINS }),
