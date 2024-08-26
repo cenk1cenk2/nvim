@@ -36,6 +36,7 @@ function M.config()
       require("nvim-dap-virtual-text").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.DEBUG, "v" }),

@@ -28,6 +28,7 @@ function M.config()
       require("urlview").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.FIND, "u" }),

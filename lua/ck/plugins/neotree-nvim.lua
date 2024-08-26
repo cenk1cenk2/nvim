@@ -459,6 +459,7 @@ function M.config()
     wk = function(_, categories, fn)
       local log = require("ck.log")
 
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ "e" }),

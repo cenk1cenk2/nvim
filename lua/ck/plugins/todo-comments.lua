@@ -61,6 +61,7 @@ function M.config()
       require("todo-comments").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.FIND, "c" }),

@@ -23,6 +23,9 @@ function M.config()
       return {
         library = {
           { path = "luvit-meta/library", words = { "vim%.uv" } },
+          { path = "lazy.nvim" },
+          { path = "plenary.nvim" },
+          { path = "which-key.nvim" },
         },
       }
     end,

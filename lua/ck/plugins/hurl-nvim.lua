@@ -53,6 +53,7 @@ function M.config()
       require("hurl").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.TASKS, "r" }),

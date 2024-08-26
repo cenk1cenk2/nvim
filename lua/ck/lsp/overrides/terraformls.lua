@@ -4,6 +4,7 @@ require("ck.setup").init({
       require("ck.modules.autocmds").setup_init_for_filetype({ "terraform", "tfvars" }, function(event)
         return {
           wk = function(_, categories, fn)
+            ---@type WKMappings
             return {
               {
                 fn.wk_keystroke({ categories.LSP, "Q" }),

@@ -24,6 +24,7 @@ function M.config()
       },
     },
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.GIT, "g", "f" }),

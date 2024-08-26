@@ -97,6 +97,7 @@ function M.config()
       require("CopilotChat").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.COPILOT, "a" }),

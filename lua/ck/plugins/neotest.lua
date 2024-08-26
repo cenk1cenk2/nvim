@@ -66,6 +66,7 @@ function M.config()
       require("neotest").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.TESTS, "r" }),

@@ -16,6 +16,7 @@ function M.config()
       require("ck.log"):setup()
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.NEOVIM, categories.LOGS, "l" }),

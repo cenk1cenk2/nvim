@@ -4,7 +4,7 @@ local M = {
 }
 
 ---@module "which-key"
----@alias WKMappings wk.Mapping
+---@alias WKMappings wk.Spec
 ---@alias LoadWkFn fun(mappings: WKMappings): nil
 
 --- Loads which-key mappings.

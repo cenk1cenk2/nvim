@@ -69,6 +69,7 @@ function M.config()
         return table.concat(vim.list_extend(nvim.fn.get_telescope_args(true), f or {}), " ")
       end
 
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.SEARCH, "s" }),

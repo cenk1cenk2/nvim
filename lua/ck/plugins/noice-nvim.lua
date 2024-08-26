@@ -287,6 +287,7 @@ function M.config()
       -- require("telescope").load_extension("noice")
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ "M" }),

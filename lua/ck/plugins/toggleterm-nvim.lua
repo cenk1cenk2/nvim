@@ -179,6 +179,7 @@ function M.config()
       }
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.TERMINAL, "f" }),
@@ -254,6 +255,7 @@ function M.create_toggle_term(opts)
 
   require("ck.setup").init({
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.TERMINAL, opts.keymap }),

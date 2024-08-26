@@ -192,6 +192,7 @@ function M.config()
       }
     end,
     -- wk = function(_, categories)
+    --  ---@type WKMappings
     --   return {
     --     [categories.LSP] = {
     --       ["o"] = { ":LSoutlineToggle<CR>", "file outline" },

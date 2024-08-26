@@ -78,6 +78,7 @@ function M.load(_, bufnr)
       },
     },
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ "q" }),

@@ -112,6 +112,7 @@ function M.config()
         require("ck.modules.autocmds").on_lspattach(function(bufnr)
           return {
             wk = function(_, categories, fn)
+              ---@type WKMappings
               return {
                 {
                   fn.wk_keystroke({ categories.LSP, categories.LOGS, "f" }),

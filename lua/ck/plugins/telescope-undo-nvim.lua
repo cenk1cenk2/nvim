@@ -42,6 +42,7 @@ function M.config()
       })
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.ACTIONS, "u" }),

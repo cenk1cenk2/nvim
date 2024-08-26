@@ -2,7 +2,6 @@ local M = {}
 
 local modules = {
   "nvim",
-  "logs",
   "commands",
   "autocmds",
   "filetype",

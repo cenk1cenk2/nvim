@@ -22,6 +22,7 @@ function M.config()
       require("telescope").load_extension("git_worktree")
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.GIT, "W" }),

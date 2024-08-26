@@ -69,6 +69,7 @@ function M.setup()
       },
     },
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.NEOVIM, "r" }),

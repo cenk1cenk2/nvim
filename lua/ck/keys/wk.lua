@@ -45,6 +45,7 @@ M.CATEGORIES = {
 function M.setup()
   require("ck.setup").init({
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           {

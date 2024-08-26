@@ -127,6 +127,7 @@ function M.config()
       }
     end,
     wk = function(_, _, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ "y" }),

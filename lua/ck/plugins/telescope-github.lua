@@ -17,6 +17,7 @@ function M.config()
       require("telescope").load_extension("gh")
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.GIT, "g", "I" }),

@@ -62,6 +62,7 @@ function M.config()
       require("github-preview").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.TASKS, "M" }),

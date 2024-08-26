@@ -58,6 +58,7 @@ function M.config()
       require("winshift").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.ACTIONS, "W" }),

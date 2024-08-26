@@ -56,6 +56,7 @@ function M.config()
       require("markview").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.TASKS, "m" }),

@@ -38,6 +38,7 @@ function M.config()
       require("decipher").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           mode = { "v" },

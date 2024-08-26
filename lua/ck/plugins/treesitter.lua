@@ -95,6 +95,7 @@ function M.config()
       end
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.TREESITTER, "i" }),

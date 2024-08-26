@@ -98,6 +98,7 @@ function M.config()
       require("dapui").setup(c)
     end,
     wk = function(_, categories, fn)
+      ---@type WKMappings
       return {
         {
           fn.wk_keystroke({ categories.DEBUG, "u" }),
