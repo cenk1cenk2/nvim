@@ -4,6 +4,10 @@ return {
   override = function(config)
     return require("schema-companion").setup_client(config)
   end,
+  on_attach = function(client, bufnr)
+    require("ck.lsp.handlers").on_attach(client, bufnr)
+    require("ck.lsp.handlers").overwrite_capabilities_with_no_formatting(client, bufnr)
+  end,
   filetypes = {
     "yaml",
     "!yaml.ansible",
