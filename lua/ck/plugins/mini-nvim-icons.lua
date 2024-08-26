@@ -6,6 +6,7 @@ M.name = "echasnovski/mini.icons"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "echasnovski/mini.icons",
         event = "UIEnter",

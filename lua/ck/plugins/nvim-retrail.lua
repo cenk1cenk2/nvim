@@ -6,6 +6,7 @@ M.name = "zakharykaplan/nvim-retrail"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "zakharykaplan/nvim-retrail",
         event = "BufReadPost",

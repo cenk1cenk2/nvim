@@ -6,6 +6,7 @@ M.name = "MunifTanjim/nui.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "MunifTanjim/nui.nvim",
         event = "VeryLazy",

@@ -6,6 +6,7 @@ M.name = "petertriho/nvim-scrollbar"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "petertriho/nvim-scrollbar",
         event = "BufReadPre",

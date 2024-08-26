@@ -6,6 +6,7 @@ M.name = "miversen33/netman.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "miversen33/netman.nvim",
         cmd = { "Neotree source=remote" },

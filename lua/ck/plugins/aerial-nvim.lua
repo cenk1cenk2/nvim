@@ -6,6 +6,7 @@ M.name = "stevearc/aerial.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "stevearc/aerial.nvim",
         cmd = { "AerialToggle" },

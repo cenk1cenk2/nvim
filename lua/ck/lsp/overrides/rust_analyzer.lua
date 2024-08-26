@@ -1,7 +1,7 @@
 -- local rust_tools_ok, rust_tools = pcall(require, "rust-tools")
 -- local log = require "core.log"
 
----@module 'lspconfig'
+---@module "lspconfig"
 ---@type lspconfig.options.rust_analyzer
 return {
   -- Needed for inlayHints. Merge this table with your settings or copy

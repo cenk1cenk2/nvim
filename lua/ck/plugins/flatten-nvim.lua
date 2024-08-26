@@ -6,6 +6,7 @@ M.name = "willothy/flatten.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "willothy/flatten.nvim",
         lazy = false,

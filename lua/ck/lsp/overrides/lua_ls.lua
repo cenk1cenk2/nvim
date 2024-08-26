@@ -1,4 +1,4 @@
----@module 'lspconfig'
+---@module "lspconfig"
 ---@type lspconfig.options.lua_ls
 local options = {
   on_attach = function(client, bufnr)

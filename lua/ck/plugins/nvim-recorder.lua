@@ -6,6 +6,7 @@ M.name = "chrisgrieser/nvim-recorder"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "chrisgrieser/nvim-recorder",
         keys = { "q", "Q", "@", "cq", "yq", "dq", "cq" },

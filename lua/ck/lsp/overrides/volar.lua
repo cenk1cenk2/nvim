@@ -1,4 +1,4 @@
----@module 'lspconfig'
+---@module "lspconfig"
 ---@type lspconfig.options.volar
 return {
   on_attach = function(client, bufnr)

@@ -6,6 +6,7 @@ M.name = "folke/flash.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "folke/flash.nvim",
         keys = { "f", "F", "t", "T", "r", "dr", "yr" },

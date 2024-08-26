@@ -6,6 +6,7 @@ M.name = "lukas-reineke/indent-blankline.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "lukas-reineke/indent-blankline.nvim",
         event = "BufReadPost",

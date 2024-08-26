@@ -1,6 +1,6 @@
 local M = {}
 
----@module 'structlog'
+---@module "structlog"
 
 M.map = {
   [1] = "TRACE",

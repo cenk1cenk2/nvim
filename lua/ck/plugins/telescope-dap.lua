@@ -6,6 +6,7 @@ M.name = "nvim-telescope/telescope-dap.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "nvim-telescope/telescope-dap.nvim",
         dependencies = { "nvim-telescope/telescope.nvim" },

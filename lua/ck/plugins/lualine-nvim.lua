@@ -6,6 +6,7 @@ M.name = "nvim-lualine/lualine.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "nvim-lualine/lualine.nvim",
         event = "UIEnter",

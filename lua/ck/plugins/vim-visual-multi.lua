@@ -6,6 +6,7 @@ M.name = "mg979/vim-visual-multi"
 function M.config()
   require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
+      ---@type Plugin
       return {
         "mg979/vim-visual-multi",
         event = "BufReadPost",

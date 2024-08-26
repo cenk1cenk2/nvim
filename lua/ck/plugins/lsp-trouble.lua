@@ -6,6 +6,7 @@ M.name = "folke/trouble.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "folke/lsp-trouble.nvim",
         cmd = { "Trouble" },

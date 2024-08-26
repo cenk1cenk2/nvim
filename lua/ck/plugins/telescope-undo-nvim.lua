@@ -6,6 +6,7 @@ M.name = "debugloop/telescope-undo.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "debugloop/telescope-undo.nvim",
         dependencies = { "nvim-telescope/telescope.nvim" },

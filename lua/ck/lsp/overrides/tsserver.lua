@@ -1,4 +1,4 @@
----@module 'lspconfig'
+---@module "lspconfig"
 ---@type lspconfig.options.tsserver
 return {
   override = function(config)

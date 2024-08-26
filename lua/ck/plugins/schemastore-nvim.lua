@@ -6,6 +6,7 @@ M.name = "b0o/schemastore.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "b0o/schemastore.nvim",
         init = false,

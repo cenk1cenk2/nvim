@@ -6,6 +6,7 @@ M.name = "NvChad/nvim-colorizer.lua"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "NvChad/nvim-colorizer.lua",
         ft = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },

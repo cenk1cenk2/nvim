@@ -7,6 +7,7 @@ M.name = "windwp/nvim-autopairs"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "windwp/nvim-autopairs",
         dependencies = { "hrsh7th/nvim-cmp" },

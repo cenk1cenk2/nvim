@@ -1,7 +1,7 @@
 local capabilities = require("ck.lsp.handlers").capabilities()
 capabilities.offsetEncoding = { "utf-16" }
 
----@module 'lspconfig'
+---@module "lspconfig"
 ---@type lspconfig.options.clangd
 return {
   filetypes = {

@@ -6,6 +6,7 @@ M.name = "gbprod/yanky.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "gbprod/yanky.nvim",
         -- cmd = { "Telescope yanky" },

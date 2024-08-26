@@ -6,6 +6,7 @@ M.name = "danymat/neogen"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "danymat/neogen",
         dependencies = { "nvim-treesitter/nvim-treesitter" },

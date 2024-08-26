@@ -6,6 +6,7 @@ M.name = "arsham/indent-tools.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "arsham/indent-tools.nvim",
         dependencies = {

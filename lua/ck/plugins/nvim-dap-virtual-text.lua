@@ -6,6 +6,7 @@ M.name = "theHamsta/nvim-dap-virtual-text"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "theHamsta/nvim-dap-virtual-text",
         cmd = { "DapVirtualTextToggle" },

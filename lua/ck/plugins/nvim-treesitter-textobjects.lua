@@ -6,6 +6,7 @@ M.name = "nvim-treesitter/nvim-treesitter-textobjects"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "nvim-treesitter/nvim-treesitter-textobjects",
         event = "BufReadPost",

@@ -6,6 +6,7 @@ M.name = "folke/todo-comments.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "folke/todo-comments.nvim",
         event = "BufReadPost",

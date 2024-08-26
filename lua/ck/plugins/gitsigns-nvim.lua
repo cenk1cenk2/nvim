@@ -6,6 +6,7 @@ M.name = "lewis6991/gitsigns.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "lewis6991/gitsigns.nvim",
         event = "BufReadPost",

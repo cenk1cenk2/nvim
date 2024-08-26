@@ -8,6 +8,7 @@ M.name = "echasnovski/mini.bufremove"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "echasnovski/mini.bufremove",
       }

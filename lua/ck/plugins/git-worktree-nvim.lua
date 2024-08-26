@@ -6,6 +6,7 @@ M.name = "ThePrimeagen/git-worktree.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "ThePrimeagen/git-worktree.nvim",
         dependencies = { "nvim-telescope/telescope.nvim" },

@@ -6,6 +6,7 @@ M.name = "neoclide/coc.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
+      ---@type Plugin
       return {
         "neoclide/coc.nvim",
         branch = "release",

@@ -6,6 +6,7 @@ M.name = "johmsalas/text-case.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "johmsalas/text-case.nvim",
         cmd = { "Subs" },

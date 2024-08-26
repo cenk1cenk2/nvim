@@ -10,6 +10,7 @@ M.parsers_dir = join_paths(get_data_dir(), "parsers")
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "nvim-treesitter/nvim-treesitter",
         build = function()

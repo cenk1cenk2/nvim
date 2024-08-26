@@ -7,6 +7,7 @@ M.name = "TrevorS/uuid-nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "TrevorS/uuid-nvim",
       }

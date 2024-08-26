@@ -6,6 +6,7 @@ M.name = "s1n7ax/nvim-window-picker"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "s1n7ax/nvim-window-picker",
       }

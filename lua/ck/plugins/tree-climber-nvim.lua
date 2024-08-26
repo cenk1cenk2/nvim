@@ -6,6 +6,7 @@ M.name = "drybalka/tree-climber.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "drybalka/tree-climber.nvim",
       }

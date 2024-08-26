@@ -6,6 +6,7 @@ M.name = "lalitmee/browse.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "lalitmee/browse.nvim",
       }

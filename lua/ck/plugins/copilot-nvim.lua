@@ -6,10 +6,18 @@ M.name = "zbirenbaum/copilot.lua"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "zbirenbaum/copilot.lua",
         event = "InsertEnter",
         cmd = { "Copilot" },
+        dependencies = {
+          {
+            -- https://github.com/zbirenbaum/copilot-cmp
+            "zbirenbaum/copilot-cmp",
+            cond = nvim.lsp.copilot.completion == "cmp",
+          },
+        },
       }
     end,
     setup = function()
@@ -43,17 +51,7 @@ function M.config()
             accept_line = false,
           },
         },
-        filetypes = {
-          yaml = false,
-          markdown = true,
-          help = false,
-          gitcommit = true,
-          gitrebase = false,
-          hgcommit = false,
-          svn = false,
-          cvs = false,
-          ["."] = false,
-        },
+        filetypes = nvim.lsp.copilot.filetypes,
         copilot_node_command = "node", -- Node.js version must be > 18.x
         server_opts_overrides = {},
       }

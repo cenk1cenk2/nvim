@@ -9,6 +9,7 @@ M.name = "nvim-neotest/neotest"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "nvim-neotest/neotest",
         dependencies = {

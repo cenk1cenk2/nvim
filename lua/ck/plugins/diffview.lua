@@ -8,6 +8,7 @@ M.name = "sindrets/diffview.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "sindrets/diffview.nvim",
         cmd = { "DiffviewFileHistory", "DiffviewOpen", "DiffviewClose" },

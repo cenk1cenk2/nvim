@@ -6,6 +6,7 @@ M.name = "uga-rosa/ccc.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "uga-rosa/ccc.nvim",
         cmd = { "CccPick", "CccHighlighterToggle" },

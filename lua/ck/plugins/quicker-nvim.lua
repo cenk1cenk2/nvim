@@ -6,6 +6,7 @@ M.name = "stevearc/quicker.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "stevearc/quicker.nvim",
         ft = { "qf" },

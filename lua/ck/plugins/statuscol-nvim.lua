@@ -6,6 +6,7 @@ M.name = "luukvbaal/statuscol.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "luukvbaal/statuscol.nvim",
         event = "BufReadPre",

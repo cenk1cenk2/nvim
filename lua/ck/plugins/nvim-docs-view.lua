@@ -6,6 +6,7 @@ M.name = "amrbashir/nvim-docs-view"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "amrbashir/nvim-docs-view",
         cmd = { "DocsViewToggle" },

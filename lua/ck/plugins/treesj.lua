@@ -6,6 +6,7 @@ M.name = "Wansmer/treesj"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "Wansmer/treesj",
         dependencies = { "nvim-treesitter" },

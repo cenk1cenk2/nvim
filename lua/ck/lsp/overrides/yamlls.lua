@@ -1,4 +1,4 @@
----@module 'lspconfig'
+---@module "lspconfig"
 ---@type lspconfig.options.yamlls
 return {
   override = function(config)

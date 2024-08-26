@@ -6,6 +6,7 @@ M.name = "antosha417/nvim-lsp-file-operations"
 function M.config()
   require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
+      ---@type Plugin
       return {
         "antosha417/nvim-lsp-file-operations",
         requires = {

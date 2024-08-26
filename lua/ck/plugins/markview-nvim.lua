@@ -6,6 +6,7 @@ M.name = "OXY2DEV/markview.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "OXY2DEV/markview.nvim",
         ft = { "markdown" },

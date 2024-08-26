@@ -6,6 +6,7 @@ M.name = "RRethy/vim-illuminate"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "RRethy/vim-illuminate",
         event = "LspAttach",

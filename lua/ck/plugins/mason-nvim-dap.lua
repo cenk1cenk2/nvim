@@ -6,6 +6,7 @@ M.name = "jay-babu/mason-nvim-dap.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "jay-babu/mason-nvim-dap.nvim",
         keys = { { "<Space>d" } },

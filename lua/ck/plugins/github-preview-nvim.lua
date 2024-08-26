@@ -6,6 +6,7 @@ M.name = "wallpants/github-preview.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "wallpants/github-preview.nvim",
         cmd = { "GithubPreviewToggle" },

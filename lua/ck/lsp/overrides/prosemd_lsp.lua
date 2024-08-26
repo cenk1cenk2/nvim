@@ -1,4 +1,4 @@
----@module 'lspconfig'
+---@module "lspconfig"
 ---@type lspconfig.options.prosemd_lsp
 return {
   filetypes = { "markdown", "plaintext", "text", "gitcommit", "" },

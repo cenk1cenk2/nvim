@@ -6,6 +6,7 @@ M.name = "neovim/nvim-lspconfig"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "neovim/nvim-lspconfig",
         event = "BufReadPre",

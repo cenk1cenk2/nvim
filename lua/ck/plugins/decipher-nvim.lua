@@ -6,6 +6,7 @@ M.name = "MisanthropicBit/decipher.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "MisanthropicBit/decipher.nvim",
       }

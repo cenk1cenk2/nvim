@@ -55,6 +55,12 @@ return {
   inlay_hints = {
     enabled = true,
   },
+  copilot = {
+    ---@type "inline" | "cmp"
+    completion = "inline",
+    ---@type table<string, boolean>
+    filetypes = {},
+  },
 
   ---@type table<string, string | LspOnCallback>
   buffer_options = {

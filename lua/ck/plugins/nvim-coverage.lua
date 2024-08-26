@@ -6,6 +6,7 @@ M.name = "andythigpen/nvim-coverage"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "andythigpen/nvim-coverage",
         dependencies = {

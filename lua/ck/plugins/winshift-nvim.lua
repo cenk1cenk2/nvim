@@ -6,6 +6,7 @@ M.name = "sindrets/winshift.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "sindrets/winshift.nvim",
         cmd = { "WinShift" },

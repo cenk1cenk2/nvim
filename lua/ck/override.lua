@@ -8,6 +8,20 @@ if vim.tbl_contains({ "emanet", "fanboy" }, vim.uv.os_gethostname()) then
   nvim.lsp.automatic_update = false
 end
 
+nvim.lsp.copilot.completion = "cmp"
+
+nvim.lsp.copilot.filetypes = {
+  yaml = false,
+  markdown = true,
+  help = false,
+  gitcommit = true,
+  gitrebase = false,
+  hgcommit = false,
+  svn = false,
+  cvs = false,
+  ["."] = false,
+}
+
 nvim.lsp.ensure_installed = {
   ---- language servers
   "jsonls",

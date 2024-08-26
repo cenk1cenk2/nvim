@@ -8,6 +8,7 @@ M.name = "kevinhwang91/nvim-bqf"
 function M.config()
   require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
+      ---@type Plugin
       return {
         "kevinhwang91/nvim-bqf",
         ft = { "qf" },

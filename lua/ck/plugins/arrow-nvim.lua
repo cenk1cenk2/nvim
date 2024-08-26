@@ -6,6 +6,7 @@ M.name = "otavioschwanck/arrow.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "otavioschwanck/arrow.nvim",
         keys = { "m", ";" },

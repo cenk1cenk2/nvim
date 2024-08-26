@@ -6,6 +6,7 @@ M.name = "jedrzejboczar/possession.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "jedrzejboczar/possession.nvim",
         cmd = {

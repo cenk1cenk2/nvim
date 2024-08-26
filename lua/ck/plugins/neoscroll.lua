@@ -6,6 +6,7 @@ M.name = "karb94/neoscroll.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "karb94/neoscroll.nvim",
         event = "VeryLazy",

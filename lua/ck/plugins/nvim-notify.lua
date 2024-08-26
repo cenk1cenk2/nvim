@@ -6,6 +6,7 @@ M.name = "rcarriga/nvim-notify"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "rcarriga/nvim-notify",
         event = "VeryLazy",

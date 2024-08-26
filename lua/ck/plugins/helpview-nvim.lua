@@ -6,6 +6,7 @@ M.name = "OXY2DEV/helpview.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "OXY2DEV/helpview.nvim",
         ft = { "help" },

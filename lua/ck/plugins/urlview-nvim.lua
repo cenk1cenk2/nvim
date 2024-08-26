@@ -6,6 +6,7 @@ M.name = "axieax/urlview.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "axieax/urlview.nvim",
         cmd = {

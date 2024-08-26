@@ -6,6 +6,7 @@ M.name = "mizlan/iswap.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
+      ---@type Plugin
       return {
         "mizlan/iswap.nvim",
         event = "BufReadPre",

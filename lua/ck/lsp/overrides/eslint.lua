@@ -1,4 +1,4 @@
----@module 'lspconfig'
+---@module "lspconfig"
 ---@type lspconfig.options.eslint
 return {
   on_attach = function(client, bufnr)

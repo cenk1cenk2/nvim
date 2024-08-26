@@ -8,6 +8,7 @@ M.loaded = false
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "https://git.sr.ht/~whynothugo/lsp_lines.nvim",
       }

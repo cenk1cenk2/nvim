@@ -6,6 +6,7 @@ M.name = "numToStr/Comment.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "numToStr/Comment.nvim",
         keys = {

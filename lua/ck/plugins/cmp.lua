@@ -6,6 +6,7 @@ M.name = "hrsh7th/nvim-cmp"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "hrsh7th/nvim-cmp",
         lazy = { "InsertEnter", "CmdlineEnter" },
@@ -37,8 +38,6 @@ function M.config()
           -- { "bydlw98/cmp-env" },
           -- https://github.com/hrsh7th/cmp-calc
           { "hrsh7th/cmp-calc" },
-          -- https://github.com/zbirenbaum/copilot-cmp
-          { "zbirenbaum/copilot-cmp" },
         },
       }
     end,

@@ -6,6 +6,7 @@ M.name = "tpope/vim-repeat"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "tpope/vim-repeat",
         lazy = false,

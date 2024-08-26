@@ -6,6 +6,7 @@ M.name = "HiPhish/rainbow-delimiters.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "HiPhish/rainbow-delimiters.nvim",
         event = "BufReadPost",

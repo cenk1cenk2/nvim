@@ -8,6 +8,7 @@ local log = require("ck.log")
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "akinsho/toggleterm.nvim",
         -- event = "VeryLazy",

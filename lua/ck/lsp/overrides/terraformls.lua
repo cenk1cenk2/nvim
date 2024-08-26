@@ -24,7 +24,7 @@ require("ck.setup").init({
   end,
 })
 
----@module 'lspconfig'
+---@module "lspconfig"
 ---@type lspconfig.options.terraformls
 return {
   root_dir = function(fname)

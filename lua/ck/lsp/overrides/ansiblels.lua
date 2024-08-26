@@ -1,4 +1,4 @@
----@module 'lspconfig'
+---@module "lspconfig"
 ---@type lspconfig.options.ansiblels
 return {
   filetypes = { "yaml.ansible" },

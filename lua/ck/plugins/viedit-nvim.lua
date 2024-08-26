@@ -6,6 +6,7 @@ M.name = "viocost/viedit"
 function M.config()
   require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
+      ---@type Plugin
       return {
         "viocost/viedit",
       }

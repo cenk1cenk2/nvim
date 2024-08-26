@@ -6,6 +6,7 @@ M.name = "stevearc/dressing.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "stevearc/dressing.nvim",
         event = "VeryLazy",

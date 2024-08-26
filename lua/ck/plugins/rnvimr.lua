@@ -7,6 +7,7 @@ M.name = "kevinhwang91/rnvimr"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "kevinhwang91/rnvimr",
         -- toggleterm still uses this

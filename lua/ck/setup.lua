@@ -153,7 +153,9 @@ function M.set_sign(name, value)
 end
 
 ---@module "lazy"
----@alias Plugin LazyPlugin
+---@class Plugin: LazyPluginSpec
+---@field init? (fun(self:LazyPlugin)) | boolean
+---@field config? fun(self:LazyPlugin, opts:table) | boolean
 
 ---Define the plugin in the plugin manager.
 ---@param config Config

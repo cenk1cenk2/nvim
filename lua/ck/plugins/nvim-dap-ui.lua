@@ -6,6 +6,7 @@ M.name = "rcarriga/nvim-dap-ui"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "rcarriga/nvim-dap-ui",
         dependencies = {

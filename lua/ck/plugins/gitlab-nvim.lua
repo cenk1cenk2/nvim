@@ -6,6 +6,7 @@ M.name = "harrisoncramer/gitlab.nvim"
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
+      ---@type Plugin
       return {
         "harrisoncramer/gitlab.nvim",
         dependencies = {
