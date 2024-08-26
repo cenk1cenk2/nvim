@@ -1,12 +1,10 @@
 -- https://github.com/kevinhwang91/nvim-bqf
 local M = {}
 
--- TODO: maybe obsolute, if quicker-nvim is good enough need to check the development, then remove this
-
 M.name = "kevinhwang91/nvim-bqf"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, false, {
+  require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
       ---@type Plugin
       return {

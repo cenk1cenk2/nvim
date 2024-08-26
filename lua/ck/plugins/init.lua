@@ -58,6 +58,7 @@ local plugins = {
   "telescope-undo-nvim",
   "nvim-ufo",
   "quicker-nvim",
+  "nvim-bqf",
   "lsp-trouble",
   "todo-comments",
   "indent-blankline",
