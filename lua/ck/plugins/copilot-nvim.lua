@@ -15,7 +15,7 @@ function M.config()
           {
             -- https://github.com/zbirenbaum/copilot-cmp
             "zbirenbaum/copilot-cmp",
-            enabled = vim.tbl_contains(nvim.lsp.copilot.completion, "cmp"),
+            enabled = is_enabled(require("ck.plugins.cmp").name) and vim.tbl_contains(nvim.lsp.copilot.completion, "cmp"),
             init = function()
               local cmp = require("ck.plugins.cmp")
               table.insert(cmp.sources, 1, {

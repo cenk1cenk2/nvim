@@ -15,7 +15,10 @@ function M.config()
           "jay-babu/mason-nvim-dap.nvim",
           "rcarriga/nvim-dap-ui",
           "theHamsta/nvim-dap-virtual-text",
-          "rcarriga/cmp-dap",
+          {
+            "rcarriga/cmp-dap",
+            enabled = is_enabled(require("ck.plugins.cmp").name),
+          },
         },
       }
     end,
