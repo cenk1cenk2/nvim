@@ -163,12 +163,8 @@ end
 ---@field hl? (fun(config: Config, fn: SetupFn): table<string, vim.api.keyset.highlight>) | table<string, vim.api.keyset.highlight>
 ---@field signs? (fun(config: Config, fn: SetupFn): table<string, vim.fn.sign_define.dict>) | table<string, vim.fn.sign_define.dict>
 ---@field plugins? Plugin[]
----@field to_setup? ConfigToSetup[]
+---@field to_setup? SetupCallback[]
 ---@field current_setup any
-
----@class ConfigToSetup
----@field cb fun(config: Config): any
----@field overwrite boolean
 
 ---@alias DefinePluginFn fun(name: string, enabled: boolean, config: Config): nil
 
@@ -236,7 +232,13 @@ end
 ---@param name string
 ---@return Config
 function M.get_config(name)
-  return nvim.plugins[name]
+  local config = nvim.plugins[name]
+
+  if not config then
+    error(("Can not get config of plugin: %s"):format(name))
+  end
+
+  return config
 end
 
 --- Initialize the plugin with the current setup.
@@ -321,11 +323,7 @@ function M.configure(config)
         log:error("Can not extend setup of plugin: %s -> current value: %s", config.name, type(nvim.plugins[config.name].current_setup))
       else
         for _, to_setup in pairs(config.to_setup) do
-          if to_setup.overwrite then
-            nvim.plugins[config.name].current_setup = vim.tbl_extend("force", nvim.plugins[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
-          else
-            nvim.plugins[config.name].current_setup = vim.tbl_deep_extend("force", nvim.plugins[config.name].current_setup, M.evaluate_property(to_setup.cb, config, M.fn))
-          end
+          nvim.plugins[config.name].current_setup = to_setup(nvim.plugins[config.name].current_setup, config, M.fn)
         end
       end
     end
@@ -360,7 +358,7 @@ end
 ---@class SetupFn
 ---@field add_disabled_filetypes SetupFnAddDisabledFiletypes
 ---@field add_disabled_buffertypes SetupFnAddDisabledBuffertypes
----@field append_to_setup SetupFnAppendToSetup
+---@field setup_callback SetupFnSetupCallback
 ---@field get_wk_categories SetupFnGetWkCategories
 ---@field get_wk_category SetupFnGetWkCategory
 ---@field get_setup_wrapper SetupFnGetSetupWrapper
@@ -390,23 +388,23 @@ function M.fn.add_disabled_buffertypes(t)
   end
 end
 
----@alias SetupFnAppendToSetup fun(name: string, config: Config, opts?: SetupFnAppendToSetupOpts): nil
----@class SetupFnAppendToSetupOpts
----@field overwrite? boolean
+---@alias SetupCallback fun(c: any, config: Config, fn: SetupFn): any
+---@alias SetupFnSetupCallback fun(name: string, cb: SetupCallback)
 
 -- Appends to setup of an plugin with the intend of changing the original configuration.
----@type SetupFnAppendToSetup
-function M.fn.append_to_setup(name, config, opts)
-  opts = vim.tbl_extend("force", { overwrite = false }, opts or {})
-
+---@type SetupFnSetupCallback
+function M.fn.setup_callback(name, config)
   if nvim.plugins[name] == nil then
     nvim.plugins[name] = {
       to_setup = {},
     }
   end
 
-  table.insert(nvim.plugins[name].to_setup, vim.tbl_extend("force", opts, { cb = config }))
+  table.insert(nvim.plugins[name].to_setup, config)
 end
+
+---@type SetupFnSetupCallback
+M.setup_callback = M.fn.setup_callback
 
 ---@alias SetupFnGetWkCategories fun(): WKCategories
 

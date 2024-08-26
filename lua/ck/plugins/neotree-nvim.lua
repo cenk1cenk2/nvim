@@ -37,7 +37,7 @@ function M.config()
         end
       end
     end,
-    setup = function(_, fn)
+    setup = function()
       local log = require("ck.log")
       local system_register = nvim.system_register
 
@@ -454,12 +454,6 @@ function M.config()
           },
         },
       }
-
-      -- add external sources
-      if is_plugin_enabled(get_plugin_name("netman-nvim")) then
-        table.insert(setup.sources, "netman.ui.neo-tree")
-        table.insert(setup.source_selector.sources, { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(nvim.ui.icons.kind.Struct) })
-      end
 
       return setup
     end,

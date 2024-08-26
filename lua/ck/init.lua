@@ -100,6 +100,8 @@ function _G.get_plugin_name(module)
   local ok, m = pcall(require, ("ck.plugins.%s"):format(module))
   if not ok then
     error(("Failed to load plugin: %s"):format(module))
+  elseif not m.name then
+    error(("Plugin name is not defined: %s"):format(module))
   end
 
   return m.name

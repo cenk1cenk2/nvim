@@ -11,16 +11,14 @@ function M.config()
         cmd = { "Neotree source=remote" },
       }
     end,
-    -- configure = function(_, fn)
-    --   fn.append_to_setup("neotree_nvim", {
-    --     sources = { "netman.ui.neo-tree" },
-    --     source_selector = {
-    --       sources = {
-    --         { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(nvim.ui.icons.kind.Struct) },
-    --       },
-    --     },
-    --   })
-    -- end,
+    configure = function(_, fn)
+      fn.setup_callback(get_plugin_name("neotree-nvim"), function(c)
+        table.insert(c.sources, "netman.ui.neo-tree")
+        table.insert(c.source_selector.sources, { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(nvim.ui.icons.kind.Struct) })
+
+        return c
+      end)
+    end,
     on_setup = function()
       require("netman").setup()
     end,
