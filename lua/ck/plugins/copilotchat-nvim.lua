@@ -64,7 +64,7 @@ function M.config()
             -- insert = "<C-c>",
           },
           reset = {
-            normal = "<m-l>",
+            normal = "<localleader>R",
             insert = "<m-l>",
           },
           submit_prompt = {
@@ -72,20 +72,20 @@ function M.config()
             insert = "<m-m>",
           },
           accept_diff = {
-            normal = "<m-y>",
-            insert = "<m-y>",
+            normal = "<localleader>a",
+            insert = "<m-a>",
           },
           yank_diff = {
-            normal = "gy",
+            normal = "<localleader>y",
           },
           show_diff = {
-            normal = "gd",
+            normal = "<localleader>d",
           },
           show_system_prompt = {
-            normal = "gp",
+            normal = "<localleader>p",
           },
           show_user_selection = {
-            normal = "gs",
+            normal = "<localleader>s",
           },
         },
       }
