@@ -17,7 +17,7 @@ return {
   ),
   s.s(
     {
-      trig = "f",
+      trig = "ff",
       name = "double frontmatter seperator",
       desc = { "Adds double frontmatter seperator." },
     },
@@ -85,22 +85,7 @@ return {
   ),
   s.s(
     {
-      trig = "ot",
-      name = "obsidian label tags.",
-    },
-    s.fmt(
-      [[
-      tags:
-        - {}
-      ]],
-      {
-        s.i(1),
-      }
-    )
-  ),
-  s.s(
-    {
-      trig = "ot",
+      trig = "ob",
       name = "obsidian label bookmarks.",
     },
     s.fmt(
