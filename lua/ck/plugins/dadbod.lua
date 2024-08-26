@@ -38,17 +38,10 @@ function M.config()
         },
       },
     },
-    autocmds = function()
-      return {
-        {
-          event = "FileType",
-          group = "__dadbod",
-          pattern = { "sql", "mysql", "plsql" },
-          callback = function()
-            require("cmp").setup.buffer({ sources = { { name = "vim-dadbod-completion" } } })
-          end,
-        },
-      }
+    on_done = function()
+      if is_enabled(require("ck.plugins.cmp").name) then
+        require("cmp").setup.filetype({ "sql", "mysql", "plsql", "psql" }, { sources = { { name = "vim-dadbod-completion" } } })
+      end
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
