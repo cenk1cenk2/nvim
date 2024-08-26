@@ -12,6 +12,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type configObj
       return {
         -- Named registers where macros are saved. The first register is the default
         -- register/macro-slot used after startup.

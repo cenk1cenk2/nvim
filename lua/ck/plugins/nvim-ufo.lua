@@ -15,6 +15,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type UfoConfig
       return {
         open_fold_hl_timeout = 100,
         close_fold_kinds = {},

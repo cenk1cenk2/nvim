@@ -540,7 +540,7 @@ end
 
 --- Returns the arguments to be passed to telescope.
 ---@param flags_only boolean Without the first element.
----@param extend table<string>
+---@param extend? table<string>
 ---@return table<string>
 function M.get_telescope_args(flags_only, extend)
   local rg_arguments = vim.deepcopy(M.default_rg_arguments)

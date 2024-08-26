@@ -13,6 +13,7 @@ function M.config()
     end,
     setup = function()
       -- builtin textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects?tab=readme-ov-file#built-in-textobjects
+      ---@type TSConfig
       return {
         textobjects = {
           swap = {

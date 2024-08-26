@@ -27,34 +27,28 @@ function M.config()
         SymbolKind.TypeParameter,
       }
 
+      ---@type UserOpts
       return {
-        ---@type lsp.SymbolKind[] Symbol kinds what need to be count (see `lsp.SymbolKind`)
         kinds = kinds,
         ---Additional filter for kinds. Recommended use in the filetypes override table.
         ---fiterKind: function(data: { symbol:table, parent:table, bufnr:integer }): boolean
         ---`symbol` and `parent` is an item from `textDocument/documentSymbol` request
         ---See: #filter-kinds
-        ---@type table<lsp.SymbolKind, filterKind[]>
         kinds_filter = {},
-        ---@type 'above'|'end_of_line'|'textwidth' above by default
         vt_position = "end_of_line",
         ---Text to display when request is pending. If `false`, extmark will not be
         ---created until the request is finished. Recommended to use with `above`
         ---vt_position to avoid "jumping lines".
-        ---@type string|table|false
         request_pending_text = false,
         -- request_pending_text = nvim.ui.icons.misc.Watch,
         ---The function can return a string to which the highlighting group from `opts.hl` is applied.
         ---Alternatively, it can return a table of tuples of the form `{ { text, hl_group }, ... }`` - in this case the specified groups will be applied.
         ---See `#format-text-examples`
-        ---@type function(symbol: Symbol): string|table Symbol{ definition = integer|nil, implementation = integer|nil, references = integer|nil }
         text_format = M.text_format,
         references = { enabled = true, include_declaration = false },
         definition = { enabled = false },
         implementation = { enabled = true },
-        ---@type { lsp?: string[], filetypes?: string[] } Disables `symbol-usage.nvim' on certain LSPs or file types.
         disable = { lsp = { "yamlls", "lua_ls", "dockerls" }, filetypes = {} },
-        ---@type UserOpts[] See default overridings in `lua/symbol-usage/langs.lua`
         filetypes = {
           typescript = {
             kinds = kinds,
@@ -63,7 +57,6 @@ function M.config()
             kinds = kinds,
           },
         },
-        ---@type 'start'|'end' At which position of `symbol.selectionRange` the request to the lsp server should start. Default is `end` (try changing it to `start` if the symbol counting is not correct).
         symbol_request_pos = "end", -- Recommended redifine only in `filetypes` override table)
       }
     end,

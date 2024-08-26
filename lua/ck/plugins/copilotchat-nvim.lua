@@ -42,6 +42,7 @@ function M.config()
       })
     end,
     setup = function()
+      ---@type CopilotChat.config
       return {
         -- default mappings
         show_help = false,

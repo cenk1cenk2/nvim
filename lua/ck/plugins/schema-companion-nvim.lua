@@ -13,6 +13,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type schema_companion.Config
       return {
         log_level = nvim.log.level,
         formatting = false,

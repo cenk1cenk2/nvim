@@ -20,6 +20,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type notify.Config
       return {
         ---@usage Animation style one of { "fade", "slide", "fade_in_slide_out", "static" }
         stages = "slide",

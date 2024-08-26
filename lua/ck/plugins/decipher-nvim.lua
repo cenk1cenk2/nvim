@@ -11,6 +11,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type decipher.Config
       return {
         active_codecs = "all", -- Set all codecs as active and useable
         float = { -- Floating window options

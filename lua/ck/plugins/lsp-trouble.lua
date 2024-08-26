@@ -36,6 +36,7 @@ function M.config()
       end
     end,
     setup = function()
+      ---@type trouble.Config
       return {
         debug = false,
         auto_close = false, -- auto close when there are no items

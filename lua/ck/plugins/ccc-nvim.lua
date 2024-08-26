@@ -12,6 +12,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type ccc.Options.P
       return {}
     end,
     on_setup = function(c)

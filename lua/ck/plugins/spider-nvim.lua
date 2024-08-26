@@ -11,6 +11,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type optsObj
       return {
         skipInsignificantPunctuation = true,
       }

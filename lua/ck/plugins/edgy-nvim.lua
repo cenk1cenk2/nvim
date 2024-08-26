@@ -17,6 +17,7 @@ function M.config()
       })
     end,
     setup = function()
+      ---@type Edgy.Config
       return {
         left = {
           -- Neo-tree filesystem always takes half the screen height

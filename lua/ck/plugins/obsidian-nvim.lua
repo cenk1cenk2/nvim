@@ -42,6 +42,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type obsidian.config.ClientOpts
       return {
         workspaces = {
           {

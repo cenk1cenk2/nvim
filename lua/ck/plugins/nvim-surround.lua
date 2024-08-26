@@ -13,6 +13,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type user_options
       return {
         keymaps = {
           insert = "<C-g>s",

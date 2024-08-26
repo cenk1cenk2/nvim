@@ -43,6 +43,7 @@ function M.config()
     setup = function()
       vim.opt.runtimepath:prepend(M.parsers_dir)
 
+      ---@type TSConfig
       return {
         parser_install_dir = M.parsers_dir,
         ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages

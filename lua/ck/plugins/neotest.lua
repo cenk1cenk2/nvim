@@ -42,8 +42,9 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type neotest.Config
       return {
-        -- log_level = vim.log.levels.TRACE,
+        log_level = vim.log.levels.INFO,
         discover = {
           concurrent = 1,
         },
@@ -51,12 +52,12 @@ function M.config()
           border = nvim.ui.border,
         },
         adapters = {
+          require("nvim-ginkgo"),
           require("neotest-go"),
           require("neotest-rust"),
           require("neotest-jest")({
             jestCommand = "pnpm run test",
           }),
-          require("nvim-ginkgo"),
         },
       }
     end,

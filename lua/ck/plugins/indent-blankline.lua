@@ -12,6 +12,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type ibl.config
       return {
         indent = { highlight = "IndentBlankLineChar", char = nvim.ui.icons.LineLeft },
         whitespace = {

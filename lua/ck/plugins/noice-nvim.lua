@@ -21,9 +21,8 @@ function M.config()
         "noice",
       })
     end,
-    setup = function(config)
-      local noice_util = require("noice.util")
-
+    setup = function()
+      ---@type NoiceConfig
       return {
         presets = {
           bottom_search = false, -- use a classic bottom cmdline for search

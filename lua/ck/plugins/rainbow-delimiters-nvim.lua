@@ -14,6 +14,7 @@ function M.config()
     setup = function()
       local rainbow_delimiters = require("rainbow-delimiters")
 
+      ---@type rainbow_delimiters.config
       return {
         disable = nvim.disabled_filetypes,
         -- Which query to use for finding delimiters

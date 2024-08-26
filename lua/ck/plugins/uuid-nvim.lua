@@ -12,6 +12,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type UuidNvimSetup
       return {
         case = "lower",
         quotes = "none",

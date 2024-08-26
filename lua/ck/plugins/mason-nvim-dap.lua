@@ -12,6 +12,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type MasonNvimDapSettings
       return {
         -- A list of adapters to install if they're not already installed.
         -- This setting has no relation with the `automatic_installation` setting.

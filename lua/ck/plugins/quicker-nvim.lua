@@ -12,6 +12,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type quicker.SetupOptions
       return {
         keys = {
           {

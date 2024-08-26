@@ -24,6 +24,7 @@ function M.config()
       })
     end,
     setup = function()
+      ---@type MasonSettings
       return {
         ui = {
           border = nvim.ui.border,

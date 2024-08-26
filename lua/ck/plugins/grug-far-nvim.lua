@@ -17,6 +17,7 @@ function M.config()
       })
     end,
     setup = function()
+      ---@type GrugFarOptionsOverride
       return {
         debounceMs = 500,
         minSearchChars = 2,

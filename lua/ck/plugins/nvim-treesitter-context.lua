@@ -12,6 +12,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type TSContext.UserConfig
       return {
         enable = true, -- Enable this plugin (Can be enabled/disabled later via commands)
         max_lines = 20, -- How many lines the window should span. Values <= 0 mean no limit.
@@ -30,7 +31,7 @@ function M.config()
     on_setup = function(c)
       require("treesitter-context").setup(c)
     end,
-    wk = function(config, categories, fn)
+    wk = function(_, categories, fn)
       return {
         {
           fn.wk_keystroke({ categories.TREESITTER, "t" }),

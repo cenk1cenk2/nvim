@@ -15,6 +15,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type CommentConfig
       return {
         ---Add a space b/w comment and the line
         ---@type boolean

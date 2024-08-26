@@ -13,6 +13,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type Flash.Config
       return {
         -- labels = "abcdefghijklmnopqrstuvwxyz",
         labels = nvim.selection_chars,
@@ -23,7 +24,6 @@ function M.config()
           forward = true,
           -- when `false`, find only matches in the given direction
           wrap = true,
-          ---@type Flash.Pattern.Mode
           -- Each mode will take ignorecase and smartcase into account.
           -- * exact: exact match
           -- * search: regular search
@@ -37,7 +37,6 @@ function M.config()
           -- behave like `incsearch`
           incremental = false,
           -- Excluded filetypes and custom window filters
-          ---@type (string|fun(win:window))[]
           exclude = {
             "notify",
             "cmp_menu",
@@ -55,13 +54,13 @@ function M.config()
           -- max pattern length. If the pattern length is equal to this
           -- labels will no longer be skipped. When it exceeds this length
           -- it will either end in a jump or terminate the search
-          max_length = nil, ---@type number?
+          max_length = nil,
         },
         jump = {
           -- save location in the jumplist
           jumplist = true,
           -- jump position
-          pos = "start", ---@type "start" | "end" | "range"
+          pos = "start",
           -- add pattern to search history
           history = false,
           -- add pattern to search register
@@ -73,11 +72,11 @@ function M.config()
           -- You can force inclusive/exclusive jumps by setting the
           -- `inclusive` option. By default it will be automatically
           -- set based on the mode.
-          inclusive = nil, ---@type boolean?
+          inclusive = nil,
           -- jump position offset. Not used for range jumps.
           -- 0: default
           -- 1: when pos == "end" and pos < current position
-          offset = nil, ---@type number
+          offset = nil,
         },
         label = {
           -- allow uppercase labels
@@ -86,14 +85,14 @@ function M.config()
           -- you can always jump to the first match with `<CR>`
           current = true,
           -- show the label after the match
-          after = true, ---@type boolean|number[]
+          after = true,
           -- show the label before the match
-          before = false, ---@type boolean|number[]
+          before = false,
           -- position of the label extmark
-          style = "overlay", ---@type "eol" | "overlay" | "right_align" | "inline"
+          style = "overlay",
           -- flash tries to re-use labels that were already assigned to a position,
           -- when typing more characters. By default only lower-case labels are re-used.
-          reuse = "lowercase", ---@type "lowercase" | "all"
+          reuse = "lowercase",
           -- for the current window, label targets closer to the cursor first
           distance = true,
         },
@@ -113,7 +112,6 @@ function M.config()
         },
         -- action to perform when picking a label.
         -- defaults to the jumping logic depending on the mode.
-        ---@type fun(match:Flash.Match, state:Flash.State)|nil
         action = nil,
         -- initial pattern to use when opening flash
         pattern = "",
@@ -121,7 +119,6 @@ function M.config()
         continue = false,
         -- You can override the default options for a specific mode.
         -- Use it with `require("flash").jump({mode = "forward"})`
-        ---@type table<string, Flash.Config>
         modes = {
           -- options used when flash is activated through
           -- a regular search with `/` or `?`

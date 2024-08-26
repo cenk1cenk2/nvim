@@ -12,6 +12,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type github_preview_config
       return {
         -- these are the default values,
         -- any values you specify will be merged with this dictionary

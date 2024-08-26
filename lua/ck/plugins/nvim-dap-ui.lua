@@ -24,6 +24,7 @@ function M.config()
       })
     end,
     setup = function()
+      ---@type dapui.Config
       return {
         icons = { expanded = nvim.ui.icons.ui.ChevronShortDown, collapsed = nvim.ui.icons.ui.ChevronShortRight },
         mappings = {

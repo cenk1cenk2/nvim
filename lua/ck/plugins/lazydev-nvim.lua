@@ -18,6 +18,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type lazydev.Config
       return {
         library = {
           { path = "luvit-meta/library", words = { "vim%.uv" } },

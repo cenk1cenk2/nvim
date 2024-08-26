@@ -13,6 +13,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type bufferline.UserConfig
       return {
         highlights = {
           background = {},
@@ -181,7 +182,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "p" }),
           function()
-            require("bufferline.groups").toggle_pin(0)
+            require("bufferline.groups").toggle_pin()
           end,
           desc = "pin current buffer",
         },
