@@ -5,22 +5,19 @@ M.name = "tpope/vim-dadbod"
 
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
-    opts = {
-      multiple_packages = true,
-    },
     plugin = function()
       return {
-        {
-          "tpope/vim-dadbod",
-          cmd = { "DB" },
-        },
-        {
-          "kristijanhusak/vim-dadbod-ui",
-          cmd = { "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer" },
-        },
-        {
-          "kristijanhusak/vim-dadbod-completion",
-          ft = { "sql", "mysql", "plsql" },
+        "tpope/vim-dadbod",
+        cmd = { "DB" },
+        dependencies = {
+          {
+            "kristijanhusak/vim-dadbod-ui",
+            cmd = { "DBUI", "DBUIToggle", "DBUIAddConnection", "DBUIFindBuffer" },
+          },
+          {
+            "kristijanhusak/vim-dadbod-completion",
+            ft = { "sql", "mysql", "plsql" },
+          },
         },
       }
     end,
@@ -29,8 +26,6 @@ function M.config()
         "dbout",
         "dbui",
       })
-
-      require("ck.modules.autocmds").q_close_autocmd({ "dbout" })
     end,
     legacy_setup = {
       db_ui_use_nerd_fonts = 1,
@@ -69,6 +64,11 @@ function M.config()
           "<Plug>(DBUI_JumpToForeignKey)",
           desc = "dadbod - jump to foreign key",
         },
+      }
+    end,
+    autocmds = function()
+      return {
+        require("ck.modules.autocmds").q_close_autocmd({ "dbout" }),
       }
     end,
   })

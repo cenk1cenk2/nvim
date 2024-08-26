@@ -23,11 +23,6 @@ function M.config()
         "neo-tree-preview",
         "neo-tree-popup",
       })
-
-      require("ck.modules.autocmds").q_close_autocmd({
-        "neo-tree-preview",
-        "neo-tree-popup",
-      })
     end,
     on_init = function()
       if vim.fn.argc() == 1 then
@@ -579,6 +574,14 @@ function M.config()
           end,
           desc = "copy current buffer in filesystem",
         },
+      }
+    end,
+    autocmds = function()
+      return {
+        require("ck.modules.autocmds").q_close_autocmd({
+          "neo-tree-preview",
+          "neo-tree-popup",
+        }),
       }
     end,
   })

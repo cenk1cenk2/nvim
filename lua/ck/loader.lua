@@ -95,12 +95,12 @@ function M.load()
     },
   }
 
-  local ok, _ = xpcall(function()
+  local ok, err = xpcall(function()
     manager.setup(require("ck.setup").into_plugin_spec(), config)
   end, debug.traceback)
 
   if not ok then
-    log:error("Can not load plugin configurations. Pretending to run.")
+    log:error("Can not load plugin configurations. Pretending to run: %s", err)
 
     return
   end

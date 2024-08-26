@@ -1,9 +1,10 @@
 local M = {}
 
 local plugins = {
+  "plenary-nvim",
   "lazy-nvim",
   "nvim-notify",
-  "ui",
+  "structlog-nvim",
   "mini-nvim-icons",
   -- core
   "which-key",
@@ -14,7 +15,9 @@ local plugins = {
   "telescope",
   "cmp",
   "treesitter",
-  "lsp",
+  "neoconf-nvim",
+  "nvim-lspconfig",
+  "schemastore-nvim",
   "lazydev-nvim",
   "mason",
   "mason-nvim-dap",
@@ -28,6 +31,7 @@ local plugins = {
   "possession-nvim",
   "stickybuf-nvim",
   "noice-nvim",
+  "nui-nvim",
   "nvim-lint",
   "conform-nvim",
   -- extensions
@@ -115,9 +119,13 @@ function M.config()
     local ok, m = pcall(require, ("ck.plugins.%s"):format(path))
 
     if not ok then
-      log:error(("Plugin configuration can not be loaded: %s"):format(path))
+      log:error("Plugin configuration does not exists: %s", path)
     else
-      m.config()
+      local ok, err = pcall(m.config)
+
+      if not ok then
+        log:error("Plugin configuration can not be loaded: %s -> %s", path, err)
+      end
     end
   end
 end

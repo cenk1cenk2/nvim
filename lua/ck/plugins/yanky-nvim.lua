@@ -125,10 +125,10 @@ function M.config()
         },
       }
     end,
-    wk = function(_, categories, fn)
+    wk = function(_, _, fn)
       return {
         {
-          fn.wk_keystroke({ categories.FIND, "y" }),
+          fn.wk_keystroke({ "y" }),
           function()
             require("telescope").extensions.yank_history.yank_history(require("telescope.themes").get_dropdown({}))
           end,

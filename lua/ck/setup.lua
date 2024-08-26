@@ -147,6 +147,7 @@ end
 ---@field plugin? fun(config: Config): Plugin
 ---@field name? string
 ---@field enabled? boolean
+---@field condition? fun(config: Config, fn: SetupFn): boolean
 ---@field configure? fun(config: Config, fn: SetupFn): nil
 ---@field on_init? fun(config: Config, fn: SetupFn): nil
 ---@field setup? (fun(config: Config, fn: SetupFn): any) | any
@@ -159,7 +160,7 @@ end
 ---@field commands? (fun(config: Config, fn: SetupFn): Commands[]) | Commands[]
 ---@field hl? (fun(config: Config, fn: SetupFn): table<string, vim.api.keyset.highlight>) | table<string, vim.api.keyset.highlight>
 ---@field signs? (fun(config: Config, fn: SetupFn): table<string, vim.fn.sign_define.dict>) | table<string, vim.fn.sign_define.dict>
----@field plugins? Plugin[]
+---@field plugin_spec? Plugin
 ---@field to_setup? SetupCallback[]
 ---@field current_setup any
 
@@ -172,6 +173,7 @@ function M.define_plugin(name, enabled, config)
     enabled = { enabled, "b" },
     name = { name, "s" },
     config = { config, "t" },
+    condition = { config.condition, "f", true },
     plugin = { config.plugin, "f", true },
     configure = { config.configure, "f", true },
     on_init = { config.on_init, "f", true },
@@ -195,22 +197,10 @@ function M.define_plugin(name, enabled, config)
   }, nvim.plugins[name] or {})
 
   if config.plugin ~= nil then
-    local plugins = {}
-
-    local plugin = config.plugin(config)
-
-    if config.opts ~= nil and config.opts.multiple_packages then
-      for _, e in pairs(plugin) do
-        table.insert(plugins, define_manager_plugin(config, e))
-      end
-    else
-      table.insert(plugins, define_manager_plugin(config, plugin))
-    end
-
-    config.plugins = plugins
+    config.plugin_spec = define_manager_plugin(config, config.plugin(config))
   end
 
-  if config.condition ~= nil and config.condition(nvim.plugins[name]) == false then
+  if config.condition ~= nil and config.condition(config, M.fn) == false then
     nvim.plugins[name] = config
 
     log:debug(string.format("Plugin config stopped due to failed condition: %s", name))
@@ -316,12 +306,8 @@ function M.configure(config)
     nvim.plugins[config.name].current_setup = M.evaluate_property(config.setup, config, M.fn)
 
     if config.to_setup ~= nil then
-      if type(nvim.plugins[config.name].current_setup) ~= "table" then
-        log:error("Can not extend setup of plugin: %s -> current value: %s", config.name, type(nvim.plugins[config.name].current_setup))
-      else
-        for _, to_setup in pairs(config.to_setup) do
-          nvim.plugins[config.name].current_setup = to_setup(nvim.plugins[config.name].current_setup, config, M.fn)
-        end
+      for _, to_setup in pairs(config.to_setup) do
+        nvim.plugins[config.name].current_setup = to_setup(nvim.plugins[config.name].current_setup, config, M.fn)
       end
     end
   end
@@ -340,10 +326,8 @@ function M.into_plugin_spec()
   local plugins = {}
 
   for _, plugin in pairs(nvim.plugins) do
-    if plugin.plugins ~= nil then
-      for _, e in pairs(plugin.plugins) do
-        table.insert(plugins, e)
-      end
+    if plugin.plugin_spec ~= nil then
+      table.insert(plugins, plugin.plugin_spec)
     end
   end
 
