@@ -27,7 +27,7 @@ function M.set_view_buffer(pattern)
     event = { "FileType", "BufEnter" },
     group = "_view",
     pattern = pattern,
-    callback = function(event)
+    callback = function()
       vim.bo.bufhidden = "wipe"
       -- vim.bo.matchpairs = ""
       vim.bo.swapfile = false
@@ -53,6 +53,19 @@ function M.setup_init_for_filetype(pattern, callback)
     event = { "FileType" },
     group = "_filetype_settings",
     pattern = pattern,
+    callback = function(event)
+      return require("ck.setup").init(callback(event))
+    end,
+  }
+end
+
+---@param callback fun(event: table): Config
+---@return Autocmd
+function M.on_lspattach(callback)
+  return {
+    event = { "LspAttach" },
+    group = "_on_lspattach",
+    pattern = "*",
     callback = function(event)
       return require("ck.setup").init(callback(event))
     end,

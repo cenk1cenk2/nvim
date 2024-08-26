@@ -201,15 +201,24 @@ function M.config()
         require("telescope").extensions.aerial.aerial()
       end
     end,
-    wk = function(_, categories, fn)
+    autocmds = function()
       return {
-        {
-          fn.wk_keystroke({ categories.LSP, "o" }),
-          function()
-            vim.cmd([[AerialToggle!]])
-          end,
-          desc = "toggle outline",
-        },
+        require("ck.modules.autocmds").on_lspattach(function(event)
+          return {
+            wk = function(_, categories, fn)
+              return {
+                {
+                  fn.wk_keystroke({ categories.LSP, "o" }),
+                  function()
+                    vim.cmd([[AerialToggle!]])
+                  end,
+                  desc = "toggle outline",
+                  buffer = event.buf,
+                },
+              }
+            end,
+          }
+        end),
       }
     end,
   })

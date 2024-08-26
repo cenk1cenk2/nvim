@@ -106,15 +106,24 @@ function M.config()
         return require("conform").format(opts)
       end
     end,
-    wk = function(_, categories, fn)
+    autocmds = function()
       return {
-        {
-          fn.wk_keystroke({ categories.LSP, "?", "f" }),
-          function()
-            vim.cmd([[ConformInfo]])
-          end,
-          desc = "formatter logs",
-        },
+        require("ck.modules.autocmds").on_lspattach(function(event)
+          return {
+            wk = function(_, categories, fn)
+              return {
+                {
+                  fn.wk_keystroke({ categories.LSP, "?", "f" }),
+                  function()
+                    vim.cmd([[ConformInfo]])
+                  end,
+                  desc = "formatter logs",
+                  buffer = event.buf,
+                },
+              }
+            end,
+          }
+        end),
       }
     end,
   })

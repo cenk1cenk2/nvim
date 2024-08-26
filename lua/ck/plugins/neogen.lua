@@ -17,15 +17,24 @@ function M.config()
     on_setup = function(c)
       require("neogen").setup(c)
     end,
-    wk = function(_, categories, fn)
+    autocmds = function()
       return {
-        {
-          fn.wk_keystroke({ categories.LSP, "j" }),
-          function()
-            require("neogen").generate()
-          end,
-          desc = "generate documentation",
-        },
+        require("ck.modules.autocmds").on_lspattach(function(event)
+          return {
+            wk = function(_, categories, fn)
+              return {
+                {
+                  fn.wk_keystroke({ categories.LSP, "j" }),
+                  function()
+                    require("neogen").generate()
+                  end,
+                  desc = "generate documentation",
+                  buffer = event.buf,
+                },
+              }
+            end,
+          }
+        end),
       }
     end,
   })

@@ -74,6 +74,7 @@ end
 ---@field group string
 ---@field event string | string[]
 ---@field pattern? string | string[]
+---@field clear? boolean
 
 ---@alias CreateAutocmdsFn fun(autocmds: Autocmds): nil
 
@@ -82,11 +83,18 @@ end
 function M.create_autocmds(autocmds)
   for _, entry in ipairs(autocmds) do
     if type(entry.group) == "string" and entry.group ~= "" then
+      if entry.clear then
+        M.clear_augroup(entry.group)
+        entry.clear = nil
+      end
+
       local exists, _ = pcall(vim.api.nvim_get_autocmds, { group = entry.group })
+
       if not exists then
         vim.api.nvim_create_augroup(entry.group, {})
       end
     end
+
     local opts = vim.deepcopy(entry)
     opts.event = nil
     vim.api.nvim_create_autocmd(entry.event, opts)
@@ -123,6 +131,22 @@ function M.legacy_setup(opts)
   for opt, val in pairs(opts) do
     vim.g[opt] = val
   end
+end
+
+---@alias SetHighlightFn fun(name: string, value: vim.api.keyset.highlight): nil
+
+--- Sets an highlight.
+---@type SetHighlightFn
+function M.set_highlight(name, value)
+  vim.api.nvim_set_hl(0, name, value)
+end
+
+---@alias SetSignFn fun(name: string, value: vim.fn.sign_define.dict): nil
+
+--- Define a sign.
+---@type SetSignFn
+function M.set_sign(name, value)
+  vim.fn.sign_define(name, value)
 end
 
 ---@module "lazy"
@@ -288,8 +312,8 @@ function M.init(config)
   if config.hl ~= nil then
     local highlights = M.evaluate_property(config.hl, config, M.fn)
 
-    for key, value in pairs(highlights) do
-      vim.api.nvim_set_hl(0, key, value)
+    for name, value in pairs(highlights) do
+      M.set_highlight(name, value)
     end
   end
 
@@ -297,8 +321,7 @@ function M.init(config)
     local signs = M.evaluate_property(config.signs, config, M.fn)
 
     for key, value in pairs(signs) do
-      -- this should be removed at some point since deprecated
-      vim.fn.sign_define(key, value)
+      M.set_sign(key, value)
     end
   end
 

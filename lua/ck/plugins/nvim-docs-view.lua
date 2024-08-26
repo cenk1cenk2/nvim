@@ -26,19 +26,25 @@ function M.config()
     on_setup = function(c)
       require("docs-view").setup(c)
     end,
-    wk = function(_, categories, fn)
-      return {
-        {
-          fn.wk_keystroke({ categories.LSP, "v" }),
-          function()
-            vim.cmd([[DocsViewToggle]])
-          end,
-          desc = "toggle documentation",
-        },
-      }
-    end,
     autocmds = function()
       return {
+        require("ck.modules.autocmds").on_lspattach(function(event)
+          return {
+            wk = function(_, categories, fn)
+              return {
+                {
+                  fn.wk_keystroke({ categories.LSP, "v" }),
+                  function()
+                    vim.cmd([[DocsViewToggle]])
+                  end,
+                  desc = "toggle documentation",
+                  buffer = event.buf,
+                },
+              }
+            end,
+          }
+        end),
+
         require("ck.modules.autocmds").set_view_buffer({ "nvim-docs-view" }),
         require("ck.modules.autocmds").q_close_autocmd({ "nvim-docs-view" }),
       }

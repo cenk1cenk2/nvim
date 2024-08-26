@@ -36,15 +36,24 @@ function M.config()
     on_setup = function(c)
       require("mason").setup(c)
     end,
-    wk = function(_, categories, fn)
+    autocmds = function()
       return {
-        {
-          fn.wk_keystroke({ categories.LSP, "I" }),
-          function()
-            vim.cmd([[Mason]])
-          end,
-          desc = "lsp installer [mason]",
-        },
+        require("ck.modules.autocmds").on_lspattach(function(event)
+          return {
+            wk = function(_, categories, fn)
+              return {
+                {
+                  fn.wk_keystroke({ categories.LSP, "I" }),
+                  function()
+                    vim.cmd([[Mason]])
+                  end,
+                  desc = "lsp installer [mason]",
+                  buffer = event.buf,
+                },
+              }
+            end,
+          }
+        end),
       }
     end,
   })
