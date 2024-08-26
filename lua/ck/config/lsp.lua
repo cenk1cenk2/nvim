@@ -1,8 +1,7 @@
 return {
-  templates_dir = join_paths(get_data_dir(), "site", "after", "ftplugin"),
   format_on_save = {
     enable = true,
-    pattern = "*",
+    pattern = { "*" },
     timeout = 5000,
     filter = require("ck.lsp.format").filter,
   },

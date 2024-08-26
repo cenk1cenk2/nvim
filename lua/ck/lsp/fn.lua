@@ -351,6 +351,7 @@ function M.lsp_logging_level(level)
   vim.lsp.set_log_level(level)
 end
 
+--- Some commands need to be defined, so they can be overriden per LSP server for that buffer.
 -- will be called with import
 -- function M.setup()
 require("ck.setup").init({
