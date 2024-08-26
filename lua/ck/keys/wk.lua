@@ -5,7 +5,6 @@ local M = {}
 ---@field BUFFER string
 ---@field COPILOT string
 ---@field DEBUG string
----@field DEPENDENCIES string
 ---@field FIND string
 ---@field SEARCH string
 ---@field GIT string
@@ -27,7 +26,6 @@ M.CATEGORIES = {
   BUFFER = "b",
   COPILOT = "c",
   DEBUG = "d",
-  DEPENDENCIES = "D",
   FIND = "f",
   SEARCH = "s",
   GIT = "g",
@@ -38,7 +36,7 @@ M.CATEGORIES = {
   TESTS = "j",
   TERMINAL = "t",
   SESSION = "w",
-  NEOVIM = "R",
+  NEOVIM = "N",
   PLUGINS = "P",
   TASKS = "r",
   TREESITTER = "T",
@@ -62,7 +60,7 @@ function M.setup()
             mode = { "n", "v" },
           },
           {
-            fn.wk_keystroke({ "N" }),
+            fn.wk_keystroke({ "'" }),
             ":nohlsearch<CR>",
             desc = "no highlight",
             mode = { "n", "v" },
