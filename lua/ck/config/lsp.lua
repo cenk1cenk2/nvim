@@ -56,8 +56,11 @@ return {
     enabled = true,
   },
   copilot = {
-    ---@type "inline" | "cmp"
-    completion = "inline",
+    ---@alias NvimCopilotCompletion
+    ---| "inline"
+    ---| "cmp"
+    ---@type NvimCopilotCompletion[]
+    completion = { "inline" },
     ---@type table<string, boolean>
     filetypes = {},
     debounce = 50,

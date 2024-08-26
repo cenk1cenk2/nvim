@@ -15,7 +15,7 @@ function M.config()
           {
             -- https://github.com/zbirenbaum/copilot-cmp
             "zbirenbaum/copilot-cmp",
-            enabled = nvim.lsp.copilot.completion == "cmp",
+            enabled = vim.tbl_contains(nvim.lsp.copilot.completion, "cmp"),
             init = function()
               local cmp = require("ck.plugins.cmp")
               table.insert(cmp.sources, 1, {
@@ -54,7 +54,7 @@ function M.config()
         },
         suggestion = {
           enabled = true,
-          auto_trigger = nvim.lsp.copilot.completion == "inline",
+          auto_trigger = vim.tbl_contains(nvim.lsp.copilot.completion, "inline"),
           debounce = nvim.lsp.copilot.debounce,
           keymap = {
             accept = false,
