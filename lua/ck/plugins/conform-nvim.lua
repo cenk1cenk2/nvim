@@ -109,7 +109,7 @@ function M.config()
     end,
     autocmds = function()
       return {
-        require("ck.modules.autocmds").on_lspattach(function(event)
+        require("ck.modules.autocmds").on_lspattach(function(bufnr)
           return {
             wk = function(_, categories, fn)
               return {
@@ -119,7 +119,7 @@ function M.config()
                     vim.cmd([[ConformInfo]])
                   end,
                   desc = "formatter logs",
-                  buffer = event.buf,
+                  buffer = bufnr,
                 },
               }
             end,

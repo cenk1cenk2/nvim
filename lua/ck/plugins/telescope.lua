@@ -274,9 +274,9 @@ function M.config()
           desc = "search available commands",
         },
         {
-          fn.wk_keystroke({ categories.FIND, "A" }),
+          fn.wk_keystroke({ categories.FIND, "F" }),
           function()
-            require("telescope.builtin").builtin()
+            require("telescope.builtin").builtin(require("telescope.themes").get_dropdown({ previewer = false }))
           end,
           desc = "telescope list builtin finders",
         },

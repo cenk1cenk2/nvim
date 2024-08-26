@@ -59,7 +59,7 @@ function M.setup_init_for_filetype(pattern, callback)
   }
 end
 
----@param callback fun(event: table): Config
+---@param callback fun(bufnr: number, client: vim.lsp.Client): Config
 ---@return Autocmd
 function M.on_lspattach(callback)
   return {
@@ -67,7 +67,7 @@ function M.on_lspattach(callback)
     group = "_on_lspattach",
     pattern = "*",
     callback = function(event)
-      return require("ck.setup").init(callback(event))
+      return require("ck.setup").init(callback(event.buf, vim.lsp.get_client_by_id(event.data.client_id)))
     end,
   }
 end

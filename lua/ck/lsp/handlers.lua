@@ -1,6 +1,5 @@
 local M = {}
 
-local setup = require("ck.setup")
 local log = require("ck.log")
 
 ---@alias LspOnCallback fun(client: vim.lsp.Client, bufnr: number)
@@ -96,10 +95,6 @@ function M.on_attach(client, bufnr)
   if nvim.lsp.inlay_hints.enabled then
     M.attach_inlay_hints(client, bufnr)
   end
-
-  require("ck.keys.lsp").load(bufnr)
-
-  M.load_buffer_options(client, bufnr)
 end
 
 ---@type LspOnCallback
