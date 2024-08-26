@@ -257,6 +257,22 @@ function M.config()
         },
 
         {
+          fn.wk_keystroke({ categories.NOTES, "d", "D" }),
+          function()
+            M.note_from_template("Todok", os.date("%Y-%m-%d-%H:%M:%S"), "Draft.md")
+          end,
+          desc = "quick todo",
+        },
+
+        {
+          fn.wk_keystroke({ categories.NOTES, "d", "d" }),
+          function()
+            M.note_from_template("Drafts", os.date("%Y-%m-%d-%H:%M:%S"), "Draft.md")
+          end,
+          desc = "quick draft",
+        },
+
+        {
           fn.wk_keystroke({ categories.NOTES, "d", "t" }),
           function()
             vim.cmd([[ObsidianToday]])
