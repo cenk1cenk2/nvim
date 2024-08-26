@@ -5,6 +5,8 @@ local tools = require("ck.lsp.tools")
 
 M.name = "mfussenegger/nvim-lint"
 
+local METHOD = tools.METHODS.LINTER
+
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
@@ -15,10 +17,8 @@ function M.config()
       }
     end,
     setup = function()
-      local METHOD = tools.METHODS.LINTER
-
       M.extend_tools()
-      M.register(METHOD)
+      M.register()
 
       return tools.read(METHOD)
     end,
@@ -46,7 +46,7 @@ function M.config()
   })
 end
 
-function M.register(METHOD)
+function M.register()
   tools.register(METHOD, "shellcheck", { "sh", "bash", "zsh" })
   tools.register(METHOD, "hadolint", { "dockerfile" })
   tools.register(METHOD, "proto", { "protolint" })

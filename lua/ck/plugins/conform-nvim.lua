@@ -4,6 +4,8 @@ local tools = require("ck.lsp.tools")
 
 M.name = "stevearc/conform.nvim"
 
+local METHOD = tools.METHODS.FORMATTER
+
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
@@ -14,11 +16,8 @@ function M.config()
       }
     end,
     setup = function()
-      local conform = require("conform")
-      local METHOD = tools.METHODS.FORMATTER
-
-      M.extend_tools(conform)
-      M.register(METHOD)
+      M.extend_tools()
+      M.register()
 
       ---@type conform.setupOpts
       return {
@@ -95,8 +94,8 @@ function M.config()
         return false
       end
 
-      ---@diagnostic disable-next-line: duplicate-set-field
       ---@param opts? vim.lsp.buf.format.Opts
+      ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.format = function(opts)
         opts = vim.tbl_extend("force", {
           bufnr = vim.api.nvim_get_current_buf(),
@@ -169,7 +168,7 @@ function M.get_lsp_fallback(bufnr)
   return true
 end
 
-function M.register(METHOD)
+function M.register()
   tools.register(METHOD, "trim_whitespace", {
     "*",
   })
@@ -249,7 +248,9 @@ function M.register(METHOD)
   -- })
 end
 
-function M.extend_tools(conform)
+function M.extend_tools()
+  local conform = require("conform")
+
   conform.formatters["prettierd"] = vim.tbl_deep_extend("force", require("conform.formatters.prettierd"), {
     env = {
       ["PRETTIERD_DEFAULT_CONFIG"] = vim.fn.expand("~/.config/nvim/utils/linter-config/.prettierrc.json"),
