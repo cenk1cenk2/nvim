@@ -38,6 +38,7 @@ function M.config()
             components.noice_message,
           },
           lualine_x = {
+            components.searchcount,
             components.snippet,
             components.noice_mode,
             components.noice_command,
@@ -387,30 +388,40 @@ function M.components()
       end,
       color = { fg = nvim.ui.colors.yellow[900] },
     },
-    noice_message = {
+    searchcount = {
       function()
-        return require("noice").api.statusline.message.get_hl()
+        local searchcount = vim.fn.searchcount({ recompute = true })
+        return ("%s %s/%s"):format(nvim.ui.icons.ui.Search, searchcount.current, searchcount.total)
       end,
       cond = function()
-        return is_package_loaded("noice") and require("noice").api.statusline.message.has()
+        return conditions.hide_in_width() and vim.o.hlsearch
+      end,
+      color = { fg = nvim.ui.colors.yellow[900], bg = nvim.ui.colors.magenta[300] },
+    },
+    noice_message = {
+      function()
+        return require("noice").api.status.message.get_hl()
+      end,
+      cond = function()
+        return is_package_loaded("noice") and require("noice").api.status.message.has()
       end,
     },
     noice_search = {
       function()
-        return require("noice").api.statusline.search.get()
+        return require("noice").api.status.search.get()
       end,
       color = { fg = nvim.ui.colors.cyan[600] },
       cond = function()
-        return is_package_loaded("noice") and require("noice").api.statusline.search.has()
+        return is_package_loaded("noice") and require("noice").api.status.search.has()
       end,
     },
     noice_mode = {
       function()
-        return require("noice").api.statusline.mode.get()
+        return require("noice").api.status.mode.get()
       end,
       color = { fg = nvim.ui.colors.yellow[600] },
       cond = function()
-        return is_package_loaded("noice") and require("noice").api.statusline.mode.has()
+        return is_package_loaded("noice") and require("noice").api.status.mode.has()
       end,
     },
     noice_command = {

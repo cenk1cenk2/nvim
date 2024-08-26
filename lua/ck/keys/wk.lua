@@ -62,7 +62,9 @@ function M.setup()
           },
           {
             fn.wk_keystroke({ "'" }),
-            ":nohlsearch<CR>",
+            function()
+              vim.o.hlsearch = false
+            end,
             desc = "no highlight",
             mode = { "n", "v" },
           },
