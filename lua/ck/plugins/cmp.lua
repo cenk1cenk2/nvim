@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "hrsh7th/nvim-cmp",
-        lazy = { "InsertEnter", "CmdlineEnter" },
+        event = { "InsertEnter", "CmdlineEnter" },
         dependencies = {
           { "hrsh7th/cmp-nvim-lsp" },
           { "hrsh7th/cmp-buffer" },
@@ -18,9 +18,30 @@ function M.config()
           { "hrsh7th/cmp-nvim-lua" },
           { "hrsh7th/cmp-vsnip" },
           -- https://github.com/petertriho/cmp-git
-          { "petertriho/cmp-git" },
+          {
+            "petertriho/cmp-git",
+            config = function()
+              require("cmp_git").setup({
+                filetypes = { "gitcommit" },
+                remotes = { "upstream", "origin" },
+                gitlab = {
+                  hosts = {
+                    "gitlab.kilic.dev",
+                    "gitlab.common.riag.digital",
+                  },
+                },
+              })
+            end,
+          },
           -- https://github.com/David-Kunz/cmp-npm
-          { "David-Kunz/cmp-npm" },
+          {
+            "David-Kunz/cmp-npm",
+            config = function()
+              require("cmp-npm").setup({
+                filetypes = { "json" },
+              })
+            end,
+          },
           -- https://github.com/hrsh7th/cmp-cmdline
           { "hrsh7th/cmp-cmdline" },
           { "davidsierradz/cmp-conventionalcommits" },
@@ -33,7 +54,6 @@ function M.config()
           { "rafamadriz/friendly-snippets" },
           { "L3MON4D3/LuaSnip" },
           { "hrsh7th/cmp-nvim-lsp-signature-help" },
-          { "rcarriga/cmp-dap" },
           -- https://github.com/bydlw98/cmp-env
           -- { "bydlw98/cmp-env" },
           -- https://github.com/hrsh7th/cmp-calc
@@ -86,7 +106,6 @@ function M.config()
             npm = "NPM",
             rg = "RG",
             tmux = "TMUX",
-            copilot = "CoPi",
             cmdline = "CMD",
             noice_popupmenu = "CMD",
             ["vim-dadbod-completion"] = "DB",
@@ -124,26 +143,7 @@ function M.config()
           completion = cmp.config.window.bordered({ border = nvim.ui.border }),
           documentation = cmp.config.window.bordered({ border = nvim.ui.border }),
         },
-        sources = cmp.config.sources({
-          { name = "copilot", priority_weight = 2, group_index = 0 },
-          { name = "nvim_lsp", group_index = 0, keyword_length = 0 },
-          { name = "lazydev", group_index = 0 },
-          { name = "vim-dadbod-completion" },
-          -- { name = "nvim_lsp_signature_help" },
-          { name = "luasnip" },
-          { name = "calc" },
-          { name = "path" },
-          { name = "omni", option = { disable_omnifuncs = { "v:lua.vim.lsp.omnifunc" } } },
-          { name = "buffer", keyword_length = 3 },
-          -- { name = "fuzzy_buffer" },
-
-          -- { name = "env" },
-
-          { name = "git" },
-          { name = "npm" },
-
-          { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
-        }),
+        sources = cmp.config.sources(M.sources),
         matching = {
           disallow_fuzzy_matching = false,
           disallow_fullfuzzy_matching = false,
@@ -243,13 +243,6 @@ function M.config()
     on_setup = function(c)
       require("cmp").setup(c)
 
-      -- extensions
-      for name, e in pairs(M.per_extension) do
-        local extension = require(name)
-
-        extension.setup(e)
-      end
-
       -- setup lua snip
       local paths = {}
 
@@ -266,21 +259,6 @@ function M.config()
     end,
     on_done = function()
       local cmp = require("cmp")
-
-      for key, value in pairs(M.per_ft) do
-        require("ck.setup").init({
-          autocmds = {
-            {
-              event = "FileType",
-              group = "_cmp_per_ft",
-              pattern = key,
-              callback = function()
-                cmp.setup.buffer(value)
-              end,
-            },
-          },
-        })
-      end
 
       -- command line
       cmp.setup.cmdline(":", {
@@ -316,6 +294,27 @@ function M.config()
   })
 end
 
+---@type cmp.SourceConfig[]
+M.sources = {
+  { name = "nvim_lsp", keyword_length = 0 },
+  { name = "lazydev" },
+  { name = "vim-dadbod-completion" },
+  -- { name = "nvim_lsp_signature_help" },
+  { name = "luasnip" },
+  { name = "calc" },
+  { name = "path" },
+  { name = "omni", option = { disable_omnifuncs = { "v:lua.vim.lsp.omnifunc" } } },
+  { name = "buffer", keyword_length = 3 },
+  -- { name = "fuzzy_buffer" },
+
+  -- { name = "env" },
+
+  { name = "git" },
+  { name = "npm" },
+
+  { name = "rg", option = { additional_arguments = "--ignore-case" }, keyword_length = 3 },
+}
+
 function M.has_words_before()
   if vim.api.nvim_get_option_value("buftype", { buf = 0 }) == "prompt" then
     return false
@@ -325,22 +324,6 @@ function M.has_words_before()
 
   return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match("^%s*$") == nil
 end
-
-M.per_ft = {}
-
-M.per_extension = {
-  ["cmp_git"] = {
-    name = "git",
-    -- defaults
-    filetypes = { "gitcommit" },
-    remotes = { "upstream", "origin" },
-  },
-  ["cmp-npm"] = {
-    name = "npm",
-    filetypes = { "json" },
-  },
-  ["copilot_cmp"] = {},
-}
 
 M.get_setup = require("ck.setup").fn.get_setup_wrapper(M.name)
 

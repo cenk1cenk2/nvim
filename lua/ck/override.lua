@@ -8,8 +8,8 @@ if vim.tbl_contains({ "emanet", "fanboy" }, vim.uv.os_gethostname()) then
   nvim.lsp.automatic_update = false
 end
 
-nvim.lsp.copilot.completion = "cmp"
-
+nvim.lsp.copilot.debounce = 50
+nvim.lsp.copilot.completion = "inline"
 nvim.lsp.copilot.filetypes = {
   yaml = false,
   markdown = true,
@@ -124,7 +124,7 @@ nvim.lsp.skipped_servers = {
 
 nvim.lsp.skipped_filetypes = {}
 
-require("ck.setup").setup_callback(get_plugin_name("treesitter"), function(c)
+require("ck.setup").setup_callback(require("ck.plugins.treesitter").name, function(c)
   return vim.tbl_extend("force", c, {
     indent = {
       -- TSBufDisable indent

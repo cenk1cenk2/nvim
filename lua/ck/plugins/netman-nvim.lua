@@ -13,7 +13,7 @@ function M.config()
       }
     end,
     configure = function(_, fn)
-      fn.setup_callback(get_plugin_name("neotree-nvim"), function(c)
+      fn.setup_callback(require("ck.plugins.neotree-nvim").name, function(c)
         table.insert(c.sources, "netman.ui.neo-tree")
         table.insert(c.source_selector.sources, { source = "netman.ui.neo-tree", display_name = (" %s Remote "):format(nvim.ui.icons.kind.Struct) })
 

@@ -15,7 +15,22 @@ function M.config()
           {
             -- https://github.com/zbirenbaum/copilot-cmp
             "zbirenbaum/copilot-cmp",
-            cond = nvim.lsp.copilot.completion == "cmp",
+            enabled = nvim.lsp.copilot.completion == "cmp",
+            init = function()
+              local cmp = require("ck.plugins.cmp")
+              table.insert(cmp.sources, 1, {
+                name = "copilot",
+              })
+
+              require("ck.setup").setup_callback(cmp.name, function(c)
+                c.formatting.source_names["copilot"] = "CoPi"
+
+                return c
+              end)
+            end,
+            config = function()
+              require("copilot_cmp").setup()
+            end,
           },
         },
       }
@@ -39,9 +54,8 @@ function M.config()
         },
         suggestion = {
           enabled = true,
-          -- BUG: temporarily disable this since it is going crazy with the ghost text
-          auto_trigger = false,
-          debounce = 50,
+          auto_trigger = nvim.lsp.copilot.completion == "inline",
+          debounce = nvim.lsp.copilot.debounce,
           keymap = {
             accept = false,
             next = "<M-j>",

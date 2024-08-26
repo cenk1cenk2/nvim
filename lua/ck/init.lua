@@ -107,34 +107,6 @@ function _G.is_enabled(name)
   return m.enabled
 end
 
---- Gets the plugin defined name in the plugin module.
----@param path string
----@return string
-function _G.get_plugin_name(path)
-  local ok, m = pcall(require, ("ck.plugins.%s"):format(path))
-  if not ok then
-    error(("Failed to load plugin: %s"):format(path))
-  elseif not m.name then
-    error(("Plugin name is not defined: %s"):format(path))
-  end
-
-  return m.name
-end
-
---- Gets the plugin defined name in the plugin module.
----@param path string
----@return string
-function _G.get_module_name(path)
-  local ok, m = pcall(require, ("ck.module.%s"):format(path))
-  if not ok then
-    error(("Failed to load module: %s"):format(path))
-  elseif not m.name then
-    error(("Module name is not defined: %s"):format(path))
-  end
-
-  return m.name
-end
-
 ---Initialize the `&runtimepath` variables and prepare for startup
 ---@return table
 function M:init()

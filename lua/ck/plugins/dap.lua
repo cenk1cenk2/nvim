@@ -15,6 +15,7 @@ function M.config()
           "jay-babu/mason-nvim-dap.nvim",
           "rcarriga/nvim-dap-ui",
           "theHamsta/nvim-dap-virtual-text",
+          "rcarriga/cmp-dap",
         },
       }
     end,
@@ -27,7 +28,7 @@ function M.config()
     on_done = function()
       require("dap.ext.vscode").load_launchjs()
 
-      if is_enabled(get_plugin_name("cmp")) then
+      if is_enabled(require("ck.plugins.cmp").name) then
         require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
           sources = {
             { name = "dap" },
