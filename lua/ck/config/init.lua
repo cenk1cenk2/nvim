@@ -2,16 +2,16 @@ local log = require("ck.log")
 
 local M = {}
 
---- Override the configuration with a user provided one
--- @param config_path The path to the configuration overrides
+--- Load configuration.
 function M:load()
   log:debug("Starting to load configuration...")
 
   _G.nvim = require("ck.config.defaults")
   _G.nvim.lsp = require("ck.config.lsp")
-  require("ck.override")
 
   require("ck.config.settings").setup()
+
+  require("ck.override")
 
   M.load_colorscheme()
 
@@ -22,8 +22,7 @@ function M:load()
   require("ck.modules").config()
 end
 
---- Override the configuration with a user provided one
--- @param config_path The path to the configuration overrides
+--- Reload configuration.
 function M:reload()
   vim.schedule(function()
     log:info("Reloading configuration...")
@@ -54,7 +53,7 @@ function M.load_colorscheme()
           "MsgArea",
         }
         for _, name in ipairs(hl_groups) do
-          vim.cmd(string.format("highlight %s ctermbg=none guibg=none", name))
+          vim.api.nvim_set_hl(0, name, {})
         end
       end,
     })
