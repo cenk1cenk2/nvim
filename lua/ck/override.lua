@@ -9,7 +9,7 @@ if vim.tbl_contains({ "emanet", "fanboy" }, vim.uv.os_gethostname()) then
 end
 
 nvim.lsp.copilot.debounce = 50
-nvim.lsp.copilot.completion = "inline"
+nvim.lsp.copilot.completion = "cmp"
 nvim.lsp.copilot.filetypes = {
   yaml = false,
   markdown = true,
