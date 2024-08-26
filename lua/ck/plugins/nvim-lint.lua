@@ -61,7 +61,7 @@ end
 function M.extend_tools()
   local lint = require("lint")
 
-  lint.linters.protolint = {
+  lint.linters["protolint"] = {
     name = "protolint",
     cmd = "protolint",
     stdin = false, -- or false if it doesn't support content input via stdin. In that case the filename is automatically added to the arguments.
@@ -95,7 +95,7 @@ function M.extend_tools()
     end,
   }
 
-  lint.linters.tfvalidate = {
+  lint.linters["tfvalidate"] = {
     name = "tfvalidate",
     cmd = "terraform",
     stdin = false, -- or false if it doesn't support content input via stdin. In that case the filename is automatically added to the arguments.
