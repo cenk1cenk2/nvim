@@ -10,6 +10,7 @@ end
 
 nvim.lsp.copilot.debounce = 50
 nvim.lsp.copilot.completion = "cmp"
+nvim.lsp.copilot.accept_type = "accept"
 nvim.lsp.copilot.filetypes = {
   yaml = false,
   markdown = true,
