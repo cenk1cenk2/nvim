@@ -4,7 +4,7 @@ return {
   colorscheme = "onedarker",
 
   ui = {
-    icons = require("ck.config.icons"):load(),
+    icons = require("ck.config.icons"),
     colors = require("onedarker.colors"),
     border = "single",
     transparent = false,
