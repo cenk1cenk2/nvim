@@ -14,6 +14,7 @@ function M.rebuild_latest_neovim()
 end
 
 function M.update()
+  vim.cmd([[Lazy update]])
   vim.cmd([[Lazy sync]])
   M.update_language_servers()
 end
@@ -24,6 +25,7 @@ function M.update_sync()
   xpcall(function()
     require("ck"):update()
 
+    vim.cmd([[Lazy! update]])
     vim.cmd([[Lazy! sync]])
 
     M.update_language_servers_sync()
