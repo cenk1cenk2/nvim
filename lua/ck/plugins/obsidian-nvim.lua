@@ -51,12 +51,6 @@ function M.config()
             path = "~/notes",
           },
         },
-        -- Alternatively - and for backwards compatibility - you can set 'dir' to a single path instead of
-        -- 'workspaces'. For example:
-        -- dir = "~/vaults/work",
-
-        -- Optional, set the log level for obsidian.nvim. This is an integer corresponding to one of the log
-        -- levels defined by "vim.log.levels.*".
         log_level = vim.log.levels.INFO,
 
         daily_notes = {
@@ -87,12 +81,15 @@ function M.config()
           return out
         end,
 
-        -- Optional, customize how note IDs are generated given an optional title.
-        ---@param title string|?
-        ---@return string
         note_id_func = function(title)
-          return title or os.time("%Y%m%dT%H%M%S")
+          return title or os.date("%Y%m%dT%H%M%S")
         end,
+
+        wiki_link_func = function(opts)
+          return require("obsidian.util").use_path_only(opts)
+        end,
+
+        preferred_link_style = "wiki",
 
         new_notes_location = "current_dir",
 
@@ -257,19 +254,11 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.NOTES, "d", "D" }),
+          fn.wk_keystroke({ categories.NOTES, "q" }),
           function()
-            M.note_from_template("Todo", os.date("%Y-%m-%d-%H:%M:%S"), "Draft.md")
+            M.note_from_template("Todo", os.date("%Y%m%dT%H%M%S"), "Draft.md")
           end,
           desc = "quick todo",
-        },
-
-        {
-          fn.wk_keystroke({ categories.NOTES, "d", "d" }),
-          function()
-            M.note_from_template("Drafts", os.date("%Y-%m-%d-%H:%M:%S"), "Draft.md")
-          end,
-          desc = "quick draft",
         },
 
         {
