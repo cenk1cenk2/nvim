@@ -7,11 +7,11 @@ local log = require("ck.log")
 ---@class CommandJob: Job
 ---@field on_success? function (j: Job): nil
 ---@field on_failure? function (j: Job): nil
----@field log_callback? log_callback
+---@field log? CommandJobLogCallback
 
----@class log_callback
----@field no_success? boolean
----@field no_failure? boolean
+---@class CommandJobLogCallback
+---@field on_success? boolean
+---@field on_failure? boolean
 
 --- Creates a command job through plenary.
 ---@param command CommandJob
@@ -37,7 +37,7 @@ function M.create(command)
     on_exit = function(j, code)
       vim.schedule(function()
         if code == 0 then
-          if not command.log_callback.no_success then
+          if not command.log.on_success then
             log:info("Command executed: %s", cmd)
 
             log:debug("%s -> %s", cmd, j:result())
@@ -47,7 +47,7 @@ function M.create(command)
             command.on_success(j)
           end
         else
-          if not command.log_callback.no_failure then
+          if not command.log.on_failure then
             log:error("Command failed with exit code %d: %s -> %s", code, cmd, j:result())
           end
 
