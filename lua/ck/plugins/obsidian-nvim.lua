@@ -10,8 +10,8 @@ function M.config()
       return {
         "epwalsh/obsidian.nvim",
         event = {
-          ("BufReadPre %s /notes/**.md"):format(vim.fn.expand("~")),
-          ("BufNewFile %s /notes/**.md"):format(vim.fn.expand("~")),
+          ("BufReadPre %s/notes/**.md"):format(vim.fn.expand("~")),
+          ("BufNewFile %s/notes/**.md"):format(vim.fn.expand("~")),
         },
         dependencies = { "nvim-lua/plenary.nvim" },
         cmd = {
@@ -85,29 +85,28 @@ function M.config()
           return title or os.date("%Y%m%dT%H%M%S")
         end,
 
-        wiki_link_func = function(opts)
-          return require("obsidian.util").use_path_only(opts)
-        end,
-
         preferred_link_style = "wiki",
 
         new_notes_location = "current_dir",
 
-        -- Optional, completion of wiki links, local markdown links, and tags using nvim-cmp.
         completion = {
-          -- Set to false to disable completion.
           nvim_cmp = true,
-
-          -- Trigger completion at 2 chars.
           min_chars = 2,
-
-          -- Where to put new notes created from completion. Valid options are
-          --  * "current_dir" - put new notes in same directory as the current buffer.
-          --  * "notes_subdir" - put new notes in the default notes subdirectory.
-
-          -- Control how wiki links are completed with these (mutually exclusive) options:
-          --
         },
+
+        -- Optional, customize how wiki links are formatted. You can set this to one of:
+        --  * "use_alias_only", e.g. '[[Foo Bar]]'
+        --  * "prepend_note_id", e.g. '[[foo-bar|Foo Bar]]'
+        --  * "prepend_note_path", e.g. '[[foo-bar.md|Foo Bar]]'
+        --  * "use_path_only", e.g. '[[foo-bar.md]]'
+        wiki_link_func = function(opts)
+          return require("obsidian.util").wiki_link_id_prefix(opts)
+        end,
+
+        -- Optional, customize how markdown links are formatted.
+        markdown_link_func = function(opts)
+          return require("obsidian.util").markdown_link(opts)
+        end,
 
         -- Optional, configure key mappings. These are the defaults. If you don't want to set any keymappings this
         -- way then set 'mappings = {}'.
@@ -151,6 +150,17 @@ function M.config()
             vim.fn.jobstart({ "open", url }) -- Mac OS
           else
             vim.fn.jobstart({ "xdg-open", url }) -- linux
+          end
+        end,
+
+        -- Optional, by default when you use `:ObsidianFollowLink` on a link to an external
+        -- URL it will be ignored but you can customize this behavior here.
+        follow_img_func = function(img)
+          -- Open the URL in the default web browser.
+          if OS_UNAME == "darwin" then
+            vim.fn.jobstart({ "open", img }) -- Mac OS
+          else
+            vim.fn.jobstart({ "xdg-open", img }) -- linux
           end
         end,
 
