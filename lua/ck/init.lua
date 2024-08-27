@@ -75,7 +75,7 @@ _G.OS_UNAME = string.lower(vim.loop.os_uname().sysname)
 --- Checks if package is loaded.
 ---@param name string
 ---@return boolean
-function _G.is_package_loaded(name)
+function _G.is_loaded(name)
   return package.loaded[name] ~= nil
 end
 

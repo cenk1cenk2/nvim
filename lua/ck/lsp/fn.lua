@@ -308,7 +308,7 @@ function M.rename_file()
           newUri = files.rename,
         },
       },
-    }, function(error, result, context, _config)
+    }, function(error, result, context)
       local client = vim.lsp.get_client_by_id(context.client_id)
 
       if client == nil then
@@ -351,43 +351,5 @@ function M.set_log_level(level)
   vim.lsp.set_log_level(level)
   log:info("Set LSP log level: %s", level)
 end
-
---- Some commands need to be defined, so they can be overriden per LSP server for that buffer.
--- will be called with import
--- function M.setup()
-require("ck.setup").init({
-  commands = {
-    {
-      "LspToggleFormatOnSave",
-      function()
-        require("ck.lsp.format").toggle_format_on_save()
-      end,
-    },
-    {
-      "LspSetLogLevel",
-      function(nargs)
-        local level = table.remove(nargs.fargs, 1)
-        nvim.lsp.fn.set_log_level(level)
-      end,
-      complete = function()
-        return require("ck.log").levels
-      end,
-      nargs = 1,
-    },
-    {
-      "LspOrganizeImports",
-      function()
-        nvim.lsp.fn.organize_imports()
-      end,
-    },
-    {
-      "LspRenameFile",
-      function()
-        nvim.lsp.fn.rename_file()
-      end,
-    },
-  },
-})
--- end
 
 return M

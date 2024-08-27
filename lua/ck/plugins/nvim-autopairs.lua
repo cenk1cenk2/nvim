@@ -156,7 +156,7 @@ function M.config()
 
       require("nvim-treesitter.configs").setup({ autopairs = { enable = true } })
 
-      if is_package_loaded("cmp") then
+      if is_loaded("cmp") then
         require("cmp").event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())
 
         -- require("cmp").event:on("confirm_done", function(evt)

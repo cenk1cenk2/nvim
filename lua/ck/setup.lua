@@ -10,7 +10,7 @@ local M = {
 --- Loads which-key mappings.
 ---@type LoadWkFn
 function M.load_wk(mappings)
-  if not is_package_loaded("which-key") then
+  if not is_loaded("which-key") then
     local plugin = require("ck.plugins.which-key")
     plugin._.wk = vim.list_extend(plugin._.wk, mappings)
 

@@ -90,29 +90,34 @@ function M.setup(force)
     log:error("LSP installer not available.")
   end
 
-  local registry = require("mason-registry")
-  -- Ensure packages are installed and up to date
-  registry.refresh(function()
-    for _, server_name in pairs(nvim.lsp.ensure_installed) do
-      local package_name = require("ck.lsp.loader").to_package_name(server_name)
-      local package = registry.get_package(package_name)
+  if not is_headless() then
+    local registry = require("mason-registry")
+    -- Ensure packages are installed and up to date
+    registry.refresh(function()
+      for _, server_name in pairs(nvim.lsp.ensure_installed) do
+        local package_name = require("ck.lsp.loader").to_package_name(server_name)
+        local package = registry.get_package(package_name)
 
-      if not registry.is_installed(package_name) then
-        log:info("Installing Mason package: %s", package_name)
-        package:install()
-      else
-        package:check_new_version(function(success, result)
-          if success then
-            local version = result.latest_version
+        if not registry.is_installed(package_name) then
+          log:info("Installing Mason package: %s", package_name)
+          package:install()
+        else
+          package:check_new_version(function(success, result)
+            if success then
+              local version = result.latest_version
 
-            log:info("Updating Mason package: %s@%s", package_name, version)
-            package:install({ version = version })
-          end
-        end)
+              log:info("Updating Mason package: %s@%s", package_name, version)
+              package:install({ version = version })
+            end
+          end)
+        end
       end
-    end
-  end)
+    end)
+  else
+    log:debug("Skipping automatic LSP installation on headless mode.")
+  end
 
+  require("ck.lsp.commands").setup()
   require("ck.lsp.format").setup()
 end
 
