@@ -26,7 +26,9 @@ function M.update_repository()
         "--quiet",
       },
       cwd = get_config_dir(),
-      no_log_failure = true,
+      log = {
+        on_failure = false,
+      },
     })
     :sync(10000)
 
