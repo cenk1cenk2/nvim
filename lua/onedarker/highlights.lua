@@ -680,7 +680,7 @@ hl.plugins.lspsaga = {
 
 ---@type table<string, vim.api.keyset.highlight>
 hl.plugins.autopairs = {
-  AutoPairsFastWrap = { bg = c.orange[600] },
+  AutoPairsFastWrap = { bg = c.orange[600], fg = c.black },
 }
 
 ---@type table<string, vim.api.keyset.highlight>
