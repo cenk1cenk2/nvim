@@ -10,7 +10,6 @@ function M.config()
       ---@type Plugin
       return {
         "windwp/nvim-autopairs",
-        dependencies = { "hrsh7th/nvim-cmp" },
         event = "InsertEnter",
       }
     end,
