@@ -62,32 +62,25 @@ end
 ---@type LspOnCallback
 function M.on_exit(client, bufnr)
   if #nvim.lsp.on_exit_callbacks > 0 then
-    for _, cb in pairs(nvim.lsp.on_exit) do
+    for _, cb in pairs(nvim.lsp.on_exit_callbacks) do
       cb(client, bufnr)
     end
-    log:trace("Called lsp.on_exit")
+    log:trace("Called lsp.on_exit_callbacks.")
   end
 end
 
 ---@type LspOnCallback
 function M.on_init(client, bufnr)
-  if #nvim.lsp.on_init > 0 then
-    for _, cb in pairs(nvim.lsp.on_init) do
+  if #nvim.lsp.on_init_callbacks > 0 then
+    for _, cb in pairs(nvim.lsp.on_init_callbacks) do
       cb(client, bufnr)
     end
-    log:trace("Called lsp.on_init_callbacks")
+    log:trace("Called lsp.on_init_callbacks.")
   end
 end
 
 ---@type LspOnCallback
 function M.on_attach(client, bufnr)
-  if #nvim.lsp.on_attach_callbacks > 0 then
-    for _, cb in pairs(nvim.lsp.on_attach_callbacks) do
-      cb(client, bufnr)
-    end
-    log:trace("Called lsp.on_attach_callbacks")
-  end
-
   require("ck.keys.lsp").load(client, bufnr)
 
   if nvim.lsp.codelens.refresh then
@@ -96,6 +89,13 @@ function M.on_attach(client, bufnr)
 
   if nvim.lsp.inlay_hints.enabled then
     M.attach_inlay_hints(client, bufnr)
+  end
+
+  if #nvim.lsp.on_attach_callbacks > 0 then
+    for _, cb in pairs(nvim.lsp.on_attach_callbacks) do
+      cb(client, bufnr)
+    end
+    log:trace("Called lsp.on_attach_callbacks.")
   end
 end
 

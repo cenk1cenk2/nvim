@@ -19,9 +19,9 @@ local log = require("ck.log")
 function M.create(command)
   ---@type CommandJob
   command = vim.tbl_deep_extend("force", {
-    log_callback = {
-      no_success = true,
-      no_failure = false,
+    log = {
+      on_success = false,
+      on_failure = true,
     },
   }, command)
 

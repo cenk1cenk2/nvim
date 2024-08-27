@@ -108,7 +108,7 @@ return {
   },
 
   ---@type LspOnCallback[]
-  on_init = {},
+  on_init_callbacks = {},
   ---@type LspOnCallback[]
   on_attach_callbacks = {},
   ---@type LspOnCallback[]
