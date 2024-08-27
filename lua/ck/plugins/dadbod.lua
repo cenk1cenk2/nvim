@@ -40,7 +40,16 @@ function M.config()
     },
     on_done = function()
       if is_enabled(require("ck.plugins.cmp").name) then
-        require("cmp").setup.filetype({ "sql", "mysql", "plsql", "psql" }, { sources = { { name = "vim-dadbod-completion" } } })
+        require("cmp").setup.filetype({
+          "sql",
+          "mysql",
+          "plsql",
+          "psql",
+        }, {
+          sources = {
+            { name = "vim-dadbod-completion" },
+          },
+        })
       end
     end,
     wk = function(_, categories, fn)

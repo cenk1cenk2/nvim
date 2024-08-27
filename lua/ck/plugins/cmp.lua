@@ -8,7 +8,9 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        "hrsh7th/nvim-cmp",
+        -- "hrsh7th/nvim-cmp",
+        "yioneko/nvim-cmp",
+        branch = "perf-up",
         event = { "InsertEnter", "CmdlineEnter" },
         dependencies = {
           { "hrsh7th/cmp-nvim-lsp" },
@@ -70,8 +72,10 @@ function M.config()
       return {
         -- required for https://github.com/rcarriga/cmp-dap
         enabled = function()
-          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt" or require("cmp_dap").is_dap_buffer()
+          return vim.api.nvim_get_option_value("buftype", { buf = 0 }) ~= "prompt"
         end,
+        debounce = 0,
+        throttle = 0,
         confirm_opts = { behavior = cmp.ConfirmBehavior.Insert, select = false },
         completion = {
           ---@usage The minimum length of a word to complete on.
@@ -145,12 +149,11 @@ function M.config()
         },
         sources = cmp.config.sources(M.sources),
         matching = {
-          disallow_fuzzy_matching = false,
-          disallow_fullfuzzy_matching = false,
+          disallow_fuzzy_matching = true,
+          disallow_fullfuzzy_matching = true,
           disallow_partial_fuzzy_matching = true,
           disallow_partial_matching = false,
-          disallow_prefix_unmatching = false,
-          disallow_same_order_fuzzy_matching = false,
+          disallow_prefix_unmatching = true,
           disallow_symbol_nonprefix_matching = false,
         },
         sorting = {

@@ -27,6 +27,15 @@ function M.config()
         "dap-repl",
         "dap-float",
       })
+
+      fn.setup_callback(require("ck.plugins.cmp").name, function(c)
+        local enabled = vim.deepcopy(c.enabled)
+        c.enabled = function()
+          return enabled() or require("cmp_dap").is_dap_buffer()
+        end
+
+        return c
+      end)
     end,
     on_done = function()
       require("dap.ext.vscode").load_launchjs()
