@@ -101,7 +101,7 @@ function M.setup(force)
         if not registry.is_installed(package_name) then
           log:info("Installing Mason package: %s", package_name)
           package:install()
-        else
+        elseif nvim.lsp.automatic_update then
           package:check_new_version(function(success, result)
             if success then
               local version = result.latest_version
