@@ -50,31 +50,27 @@ function M.config()
       return {
         {
           fn.wk_keystroke({ categories.TESTS, "c" }),
-          group = "coverage",
-        },
-        {
-          fn.wk_keystroke({ categories.TESTS, "c", "c" }),
           function()
             require("coverage").clear()
           end,
           desc = "clear coverage",
         },
         {
-          fn.wk_keystroke({ categories.TESTS, "c", "l" }),
+          fn.wk_keystroke({ categories.TESTS, "l" }),
           function()
             require("coverage").load(true)
           end,
           desc = "load coverage file",
         },
         {
-          fn.wk_keystroke({ categories.TESTS, "c", "t" }),
+          fn.wk_keystroke({ categories.TESTS, "t" }),
           function()
             require("coverage").toggle()
           end,
           desc = "toggle coverage",
         },
         {
-          fn.wk_keystroke({ categories.TESTS, "c", "s" }),
+          fn.wk_keystroke({ categories.TESTS, "S" }),
 
           function()
             require("coverage").summary()
