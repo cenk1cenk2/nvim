@@ -54,6 +54,12 @@ return {
   },
   inlay_hints = {
     enabled = true,
+    toggled = false,
+    ---@alias NvimInlayHintsMode
+    ---| "eol"
+    ---| "right_align"
+    ---| "inline"
+    mode = "inline",
   },
   copilot = {
     ---@alias NvimCopilotCompletion

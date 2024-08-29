@@ -140,7 +140,7 @@ end
 ---@param filter? vim.lsp.inlay_hint.enable.Filter
 function M.toggle_inlay_hints(filter)
   filter = filter or {}
-  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter.bufnr), filter)
+  vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter), filter)
 end
 
 ---Reset LSP on given filter.

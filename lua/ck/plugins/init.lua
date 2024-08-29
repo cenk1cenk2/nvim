@@ -17,6 +17,7 @@ local plugins = {
   "treesitter",
   "neoconf-nvim",
   "nvim-lspconfig",
+  "inlay-hint-nvim",
   "schemastore-nvim",
   "lazydev-nvim",
   "mason",

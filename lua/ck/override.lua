@@ -8,6 +8,12 @@ if vim.tbl_contains({ "emanet", "fanboy" }, vim.uv.os_gethostname()) then
   nvim.lsp.automatic_update = false
 end
 
+nvim.lsp.codelens.refresh = true
+
+nvim.lsp.inlay_hints.enabled = true
+nvim.lsp.inlay_hints.toggled = true
+nvim.lsp.inlay_hints.mode = "eol"
+
 nvim.lsp.copilot.debounce = 50
 nvim.lsp.copilot.completion = { "inline" }
 nvim.lsp.copilot.accept_type = "accept"

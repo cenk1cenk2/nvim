@@ -150,7 +150,7 @@ end
 ---@type LspOnCallback
 function M.attach_inlay_hints(client, bufnr)
   if client.server_capabilities.inlayHintProvider then
-    vim.lsp.inlay_hint.enable(false, { bufnr = bufnr })
+    vim.lsp.inlay_hint.enable(nvim.lsp.inlay_hints.toggled, { bufnr = bufnr })
   end
 end
 

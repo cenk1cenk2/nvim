@@ -102,7 +102,7 @@ function M.setup()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "o" }),
+          fn.wk_keystroke({ categories.TASKS, "s" }),
           function()
             M.create_scratch_buffer()
           end,

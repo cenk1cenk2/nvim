@@ -341,15 +341,14 @@ end
 
 --- Configures the plugin.
 ---@param config Config
-function M.configure(config)
+---@param callbacks? SetupCallback[]
+function M.configure(config, callbacks)
   if config.setup ~= nil then
     nvim.plugins[config.name].current_setup = nil
     nvim.plugins[config.name].current_setup = M.evaluate_property(config.setup, config, M.fn)
 
-    if config.to_setup ~= nil then
-      for _, to_setup in pairs(config.to_setup) do
-        nvim.plugins[config.name].current_setup = to_setup(nvim.plugins[config.name].current_setup, config, M.fn)
-      end
+    for _, to_setup in pairs(vim.list_extend(vim.deepcopy(config.to_setup or {}), callbacks or {})) do
+      nvim.plugins[config.name].current_setup = to_setup(nvim.plugins[config.name].current_setup, config, M.fn)
     end
   end
 
@@ -454,7 +453,7 @@ function M.fn.get_setup_wrapper(name)
   end
 end
 
----@alias SetupFnGetSetup fun(name: string): table
+---@alias SetupFnGetSetup fun(name: string): any
 
 --- Returns the current setup of an plugin.
 ---@type SetupFnGetSetup
