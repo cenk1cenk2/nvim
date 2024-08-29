@@ -533,12 +533,7 @@ function M.config()
         -- },
 
         {
-          fn.wk_keystroke({ categories.BUFFER, "f" }),
-          group = "filesystem",
-        },
-
-        {
-          fn.wk_keystroke({ categories.BUFFER, "f", "c" }),
+          fn.wk_keystroke({ categories.BUFFER, "c" }),
           function()
             require("neo-tree.sources.filesystem.lib.fs_actions").create_node(require("ck.utils.fs").get_buffer_dirpath())
           end,
@@ -546,7 +541,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.BUFFER, "f", "d" }),
+          fn.wk_keystroke({ categories.BUFFER, "d" }),
           function()
             require("neo-tree.sources.filesystem.lib.fs_actions").delete_node(require("ck.utils.fs").get_buffer_filepath())
           end,
@@ -554,7 +549,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.BUFFER, "f", "m" }),
+          fn.wk_keystroke({ categories.BUFFER, "m" }),
           function()
             require("neo-tree.sources.filesystem.lib.fs_actions").move_node(require("ck.utils.fs").get_buffer_filepath())
           end,
@@ -562,7 +557,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.BUFFER, "f", "r" }),
+          fn.wk_keystroke({ categories.BUFFER, "r" }),
           function()
             require("neo-tree.sources.filesystem.lib.fs_actions").rename_node(require("ck.utils.fs").get_buffer_filepath())
           end,
@@ -570,7 +565,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.BUFFER, "f", "y" }),
+          fn.wk_keystroke({ categories.BUFFER, "y" }),
           function()
             require("neo-tree.sources.filesystem.lib.fs_actions").copy_node(require("ck.utils.fs").get_buffer_filepath())
           end,
