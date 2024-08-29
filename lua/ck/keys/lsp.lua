@@ -170,22 +170,6 @@ function M.load(_, bufnr)
           buffer = bufnr,
         },
         {
-          fn.wk_keystroke({ categories.LSP, "h" }),
-          function()
-            vim.cmd([[LspImportAll]])
-          end,
-          desc = "import all missing",
-          buffer = bufnr,
-        },
-        {
-          fn.wk_keystroke({ categories.LSP, "H" }),
-          function()
-            vim.cmd([[LspImportCurrent]])
-          end,
-          desc = "import current missing",
-          buffer = bufnr,
-        },
-        {
           fn.wk_keystroke({ categories.LSP, "n" }),
           function()
             nvim.lsp.fn.jump({ count = 1, severity = { vim.diagnostic.severity.ERROR, vim.diagnostic.severity.WARN } })
