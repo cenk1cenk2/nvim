@@ -487,6 +487,10 @@ function M.set_rg_arguments()
     prompt = "Ripgrep arguments:",
     default = vim.env[M.RG_ARGS_ENV_VAR],
   }, function(val)
+    if val == nil then
+      val = ""
+    end
+
     vim.env["RG_ARGS"] = vim.fn.expand(tostring(val))
   end)
 end
