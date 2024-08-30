@@ -41,7 +41,9 @@ function M.config()
       --   return c
       -- end)
     end,
-    setup = function()
+    setup = function(_, fn)
+      local categories = fn.get_wk_categories()
+
       ---@type avante.Config
       return {
         provider = "copilot",
@@ -50,6 +52,15 @@ function M.config()
           width = 50, -- default % based on available width
           sidebar_header = {
             rounded = false,
+          },
+        },
+        mappings = {
+          ask = fn.wk_keystroke({ categories.COPILOT, "c" }),
+          edit = fn.wk_keystroke({ categories.COPILOT, "e" }),
+          refresh = fn.wk_keystroke({ categories.COPILOT, "r" }),
+          toggle = {
+            debug = fn.wk_keystroke({ categories.COPILOT, "A" }),
+            hint = fn.wk_keystroke({ categories.COPILOT, "a" }),
           },
         },
       }
