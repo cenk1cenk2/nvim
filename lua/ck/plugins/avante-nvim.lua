@@ -45,6 +45,13 @@ function M.config()
       ---@type avante.Config
       return {
         provider = "copilot",
+        windows = {
+          wrap = true, -- similar to vim.o.wrap
+          width = 50, -- default % based on available width
+          sidebar_header = {
+            rounded = false,
+          },
+        },
       }
     end,
     on_setup = function(c)
