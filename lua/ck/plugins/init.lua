@@ -114,6 +114,7 @@ local plugins = {
   "arrow-nvim",
   "urlview-nvim",
   "img-clip-nvim",
+  -- "youtrack-nvim",
 }
 
 function M.config()
