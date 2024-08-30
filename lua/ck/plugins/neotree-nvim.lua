@@ -24,6 +24,53 @@ function M.config()
         "neo-tree-preview",
         "neo-tree-popup",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.left, {
+          {
+            title = "Neo-Tree",
+            ft = "neo-tree",
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.25
+                end
+
+                return 50
+              end,
+            },
+            filter = function(buf)
+              return vim.b[buf].neo_tree_source == "filesystem" or vim.b[buf].neo_tree_source == "remote"
+            end,
+          },
+        })
+
+        vim.list_extend(c.right, {
+          {
+            title = "Neo-Tree Git",
+            ft = "neo-tree",
+            filter = function(buf)
+              return vim.b[buf].neo_tree_source == "git_status"
+            end,
+          },
+          {
+            title = "Neo-Tree Buffers",
+            ft = "neo-tree",
+            filter = function(buf)
+              return vim.b[buf].neo_tree_source == "buffers"
+            end,
+          },
+          {
+            title = "Neo-Tree LSP Outline",
+            ft = "neo-tree",
+            filter = function(buf)
+              return vim.b[buf].neo_tree_source == "document_symbols"
+            end,
+          },
+        })
+
+        return c
+      end)
     end,
     on_init = function()
       if vim.fn.argc() == 1 then

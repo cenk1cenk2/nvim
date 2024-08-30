@@ -25,6 +25,17 @@ function M.config()
       fn.add_disabled_filetypes({
         "gitlab",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.bottom, {
+          {
+            ft = "gitlab",
+            title = "Gitlab",
+          },
+        })
+
+        return c
+      end)
     end,
     setup = function()
       ---@type settings

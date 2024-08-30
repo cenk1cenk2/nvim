@@ -16,6 +16,26 @@ function M.config()
       fn.add_disabled_filetypes({
         "nvim-docs-view",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.bottom, {
+          {
+            ft = "nvim-docs-view",
+            title = "LSP Documentation",
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.2
+                end
+
+                return 25
+              end,
+            },
+          },
+        })
+
+        return c
+      end)
     end,
     setup = function()
       return {

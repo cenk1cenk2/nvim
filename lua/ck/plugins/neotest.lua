@@ -33,6 +33,17 @@ function M.config()
         "neotest-summary",
         "neotest-output",
       })
+
+      -- fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+      --   vim.list_extend(c.bottom, {
+      --     {
+      --       ft = "neotest-summary",
+      --       title = "Neotest Summary",
+      --     },
+      --   })
+      --
+      --   return c
+      -- end)
     end,
     autocmds = function()
       return {

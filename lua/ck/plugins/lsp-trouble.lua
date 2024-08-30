@@ -17,6 +17,17 @@ function M.config()
         "trouble",
       })
 
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.bottom, {
+          {
+            ft = "trouble",
+            title = "LSP Trouble",
+          },
+        })
+
+        return c
+      end)
+
       nvim.lsp.fn.document_diagnostics = function()
         require("trouble").toggle({
           mode = "diagnostics",

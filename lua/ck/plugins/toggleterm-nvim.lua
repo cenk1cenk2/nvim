@@ -20,6 +20,29 @@ function M.config()
       })
 
       nvim.fn.toggle_log_view = M.toggle_log_view
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.bottom, {
+          {
+            ft = "toggleterm",
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.25
+                end
+
+                return 20
+              end,
+            },
+            -- exclude floating windows
+            filter = function(_, win)
+              return vim.api.nvim_win_get_config(win).relative == ""
+            end,
+          },
+        })
+
+        return c
+      end)
     end,
     on_init = function()
       local togglers = {

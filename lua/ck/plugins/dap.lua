@@ -36,6 +36,26 @@ function M.config()
 
         return c
       end)
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.bottom, {
+          {
+            ft = "dap-repl",
+            title = "Dap Replication",
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.25
+                end
+
+                return 20
+              end,
+            },
+          },
+        })
+
+        return c
+      end)
     end,
     on_done = function()
       require("dap.ext.vscode").load_launchjs()

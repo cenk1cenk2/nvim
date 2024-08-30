@@ -21,6 +21,18 @@ function M.config()
         "cmdline_popup",
         "noice",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.bottom, {
+          {
+            ft = "noice",
+            title = "Noice",
+            size = { height = 35 },
+          },
+        })
+
+        return c
+      end)
     end,
     setup = function()
       ---@type NoiceConfig

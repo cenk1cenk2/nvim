@@ -16,6 +16,17 @@ function M.config()
       fn.add_disabled_filetypes({
         "aerial",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.right, {
+          {
+            title = "LSP Outline",
+            ft = "aerial",
+          },
+        })
+
+        return c
+      end)
     end,
     setup = function()
       return {

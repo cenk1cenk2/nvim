@@ -5,7 +5,7 @@ M.name = "CopilotC-Nvim/CopilotChat.nvim"
 local log = require("ck.log")
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, true, {
+  require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
       ---@type Plugin
       return {
@@ -41,6 +41,26 @@ function M.config()
         "copilot-system-prompt",
         "copliot-user-selection",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.right, {
+          {
+            title = "Copilot Chat",
+            ft = "copilot-chat",
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.5
+                end
+
+                return 120
+              end,
+            },
+          },
+        })
+
+        return c
+      end)
     end,
     setup = function()
       ---@type CopilotChat.config

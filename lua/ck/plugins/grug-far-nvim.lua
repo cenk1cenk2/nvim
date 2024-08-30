@@ -16,6 +16,24 @@ function M.config()
         "grug-far",
         "grug-far-history",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.right, {
+          {
+            ft = "grug-far",
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.5
+                end
+
+                return 120
+              end,
+            },
+          },
+        })
+        return c
+      end)
     end,
     setup = function()
       ---@type GrugFarOptionsOverride

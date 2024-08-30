@@ -18,6 +18,26 @@ function M.config()
       fn.add_disabled_filetypes({
         "DiffviewFiles",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.left, {
+          {
+            ft = "DiffviewFiles",
+            title = "Diffview",
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.25
+                end
+
+                return 50
+              end,
+            },
+          },
+        })
+
+        return c
+      end)
     end,
     setup = function()
       local actions = require("diffview.actions")

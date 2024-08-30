@@ -23,6 +23,68 @@ function M.config()
         "dapui_scopes",
         "dapui_repl",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.right, {
+          {
+            title = "Dap Watches",
+            ft = "dapui_watches",
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.25
+                end
+
+                return 75
+              end,
+            },
+          },
+          {
+            title = "Dap Stacks",
+            ft = "dapui_stacks",
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.25
+                end
+
+                return 75
+              end,
+            },
+          },
+          {
+            title = "Dap Breakpoints",
+            ft = "dapui_breakpoints",
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.25
+                end
+
+                return 75
+              end,
+            },
+          },
+        })
+
+        vim.list_extend(c.bottom, {
+          {
+            ft = "dapui_scopes",
+            title = "Dap Scopes",
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.25
+                end
+
+                return 20
+              end,
+            },
+          },
+        })
+
+        return c
+      end)
     end,
     setup = function()
       ---@type dapui.Config

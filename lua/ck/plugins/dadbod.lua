@@ -27,6 +27,24 @@ function M.config()
         "dbout",
         "dbui",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.left, {
+          {
+            ft = "dbui",
+            title = "DadBod-UI",
+          },
+        })
+
+        vim.list_extend(c.bottom, {
+          {
+            ft = "dbout",
+            title = "DadBod-Out",
+          },
+        })
+
+        return c
+      end)
     end,
     legacy_setup = {
       db_ui_use_nerd_fonts = 1,

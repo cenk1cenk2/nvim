@@ -462,7 +462,7 @@ function M.extend_rg_arguments(...)
           args = { args }
         end
 
-        target = vim.list_extend(target, args)
+        vim.list_extend(target, args)
       end
     end
   end

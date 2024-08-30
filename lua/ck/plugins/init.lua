@@ -46,6 +46,7 @@ local plugins = {
   "grug-far-nvim",
   "copilot-nvim",
   "copilotchat-nvim",
+  "avante-nvim",
   "aerial-nvim",
   "rnvimr",
   -- "vim-visual-multi",
