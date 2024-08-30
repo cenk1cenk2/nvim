@@ -113,6 +113,7 @@ local plugins = {
   "decipher-nvim",
   "arrow-nvim",
   "urlview-nvim",
+  "img-clip-nvim",
 }
 
 function M.config()

@@ -42,6 +42,7 @@ function M.config()
       -- end)
     end,
     setup = function()
+      ---@type avante.Config
       return {
         provider = "copilot",
       }
