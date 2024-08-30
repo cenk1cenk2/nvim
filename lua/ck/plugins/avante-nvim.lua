@@ -12,13 +12,6 @@ function M.config()
         dependencies = {
           { "zbirenbaum/copilot.lua" }, -- or github/copilot.vim
           { "nvim-lua/plenary.nvim" }, -- for curl, log wrapper
-          {
-            "MeanderingProgrammer/render-markdown.nvim",
-            opts = {
-              file_types = { "Avante" },
-            },
-            ft = { "Avante" },
-          },
         },
       }
     end,

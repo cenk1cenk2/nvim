@@ -9,12 +9,13 @@ function M.config()
       ---@type Plugin
       return {
         "OXY2DEV/markview.nvim",
-        ft = { "markdown" },
+        ft = { "markdown", "rmd", "norg", "org", "vimwiki", "Avante" },
       }
     end,
     setup = function()
       local defaults = require("markview").configuration
       return {
+        filetypes = { "markdown", "rmd", "norg", "org", "vimwiki", "Avante" },
         modes = { "n", "no", "c" }, -- Change these modes
         hybrid_modes = { "n", "v", "x" },
         callbacks = {
