@@ -15,7 +15,7 @@ function M.config()
     setup = function()
       ---@type youtrack.Config
       return {
-        url = ("%s/api"):format(vim.env["YOUTRACK_URL"]),
+        url = vim.env["YOUTRACK_URL"],
         token = vim.env["YOUTRACK_TOKEN"],
       }
     end,
