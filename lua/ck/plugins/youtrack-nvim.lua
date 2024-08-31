@@ -12,8 +12,15 @@ function M.config()
         lazy = false,
       }
     end,
-    on_setup = function()
-      require("youtrack").setup({})
+    setup = function()
+      ---@type youtrack.Config
+      return {
+        url = ("%s/api"):format(vim.env["YOUTRACK_URL"]),
+        token = vim.env["YOUTRACK_TOKEN"],
+      }
+    end,
+    on_setup = function(c)
+      require("youtrack").setup(c)
     end,
   })
 end
