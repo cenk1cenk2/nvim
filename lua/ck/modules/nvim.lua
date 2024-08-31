@@ -15,7 +15,7 @@ end
 
 function M.update()
   vim.cmd([[Lazy update]])
-  vim.cmd([[Lazy sync]])
+  -- vim.cmd([[Lazy sync]])
   M.update_language_servers()
 end
 
@@ -26,7 +26,7 @@ function M.update_sync()
     require("ck"):update()
 
     vim.cmd([[Lazy! update]])
-    vim.cmd([[Lazy! sync]])
+    -- vim.cmd([[Lazy! sync]])
 
     M.update_language_servers_sync()
   end, debug.traceback)
