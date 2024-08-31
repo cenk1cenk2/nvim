@@ -65,15 +65,15 @@ function M.config()
       require("symbol-usage").setup(c)
     end,
     hl = function(_, fn)
-      local h = fn.get_highlight
+      -- local h = fn.get_highlight
 
       return {
-        ["SymbolUsageRef"] = { bg = h("Type").fg, fg = h("Normal").bg, bold = true },
-        ["SymbolUsageRefRound"] = { fg = h("Type").fg },
-        ["SymbolUsageDef"] = { bg = h("Function").fg, fg = h("Normal").bg, bold = true },
-        ["SymbolUsageDefRound"] = { fg = h("Function").fg },
-        ["SymbolUsageImpl"] = { bg = h("@parameter").fg, fg = h("Normal").bg, bold = true },
-        ["SymbolUsageImplRound"] = { fg = h("@parameter").fg },
+        -- ["SymbolUsageRef"] = { bg = h("Type").fg, fg = h("Normal").bg, bold = true },
+        -- ["SymbolUsageRefRound"] = { fg = h("Type").fg },
+        -- ["SymbolUsageDef"] = { bg = h("Function").fg, fg = h("Normal").bg, bold = true },
+        -- ["SymbolUsageDefRound"] = { fg = h("Function").fg },
+        -- ["SymbolUsageImpl"] = { bg = h("@parameter").fg, fg = h("Normal").bg, bold = true },
+        -- ["SymbolUsageImplRound"] = { fg = h("@parameter").fg },
       }
     end,
   })
