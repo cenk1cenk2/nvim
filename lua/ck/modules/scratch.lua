@@ -32,14 +32,16 @@ function M.create_scratch_buffer()
 
     require("ck.setup").init({
       autocmds = {
-        event = { "BufDelete", "VimLeavePre" },
-        group = "_scratch",
-        buffer = bufnr,
-        callback = function()
-          os.remove(filename)
+        {
+          event = { "BufDelete", "VimLeavePre" },
+          group = "_scratch",
+          buffer = bufnr,
+          callback = function()
+            os.remove(filename)
 
-          log:info("Removed temporary file: %s", filename)
-        end,
+            log:info("Removed temporary file: %s", filename)
+          end,
+        },
       },
     })
   end)
