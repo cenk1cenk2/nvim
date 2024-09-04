@@ -16,7 +16,6 @@ function M.config()
     setup = function()
       ---@type schema_companion.Config
       return {
-        log_level = nvim.log.level,
         enable_telescope = true,
         -- Built in file matchers
         matchers = {
