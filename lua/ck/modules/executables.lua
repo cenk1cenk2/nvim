@@ -123,7 +123,7 @@ function M.run_jq()
 
           local result = table.concat(j:result(), "\n")
 
-          log:info("Copied generated code to clipboard: %s", generated)
+          log:info("Copied result to clipboard.")
           vim.fn.setreg(vim.v.register or nvim.system_register, result)
         end,
       })
@@ -131,14 +131,14 @@ function M.run_jq()
   end)
 end
 
--- function M.run_jqp()
---   local terminal = require("ck.plugins.toggleterm-nvim")
---   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
---
---   local t = terminal.create_float_terminal({ cmd = ("echo '%s' | jqp"):format(table.concat(lines, "\\n")) })
---
---   t:toggle()
--- end
+function M.run_otree()
+  local terminal = require("ck.plugins.toggleterm-nvim")
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+
+  local t = terminal.create_float_terminal({ cmd = ("echo '%s' | otree -t %s"):format(table.concat(lines, "\\n"), vim.o.ft) })
+
+  t:toggle()
+end
 
 function M.run_yq()
   local store_key = "YQ_INPUT"
@@ -293,6 +293,13 @@ function M.setup()
             M.run_yq()
           end,
           desc = "run yq",
+        },
+        {
+          fn.wk_keystroke({ categories.TASKS, "o" }),
+          function()
+            M.run_otree()
+          end,
+          desc = "run otree",
         },
         {
           fn.wk_keystroke({ categories.TASKS, "k" }),
