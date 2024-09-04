@@ -398,6 +398,9 @@ function M.get_mark(terminal, key)
   return terminal[M.marks.MARK][key]
 end
 
+---Create a new terminal.
+---@param opts TermCreateArgs
+---@return Terminal
 function M.create_terminal(opts)
   local Terminal = require("toggleterm.terminal").Terminal
 
@@ -406,6 +409,9 @@ function M.create_terminal(opts)
   return terminal
 end
 
+---Create a new terminal.
+---@param opts? TermCreateArgs
+---@return TermCreateArgs
 function M.generate_defaults_float_terminal(opts)
   opts = opts or {}
 
@@ -429,6 +435,9 @@ function M.generate_defaults_float_terminal(opts)
   })
 end
 
+---Create a new terminal.
+---@param opts? TermCreateArgs
+---@return Terminal
 function M.create_float_terminal(opts)
   local terminal = M.create_terminal(M.generate_defaults_float_terminal(vim.tbl_extend("force", {
     cmd = vim.o.shell,
