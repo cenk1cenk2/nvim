@@ -8,8 +8,15 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        dir = "~/development/youtrack.nvim",
-        lazy = false,
+        "cenk1cenk2/youtrack.nvim",
+        build = { "make" },
+        -- dir = "~/development/youtrack-nvim",
+        dependencies = {
+          -- https://github.com/MunifTanjim/nui.nvim
+          "MunifTanjim/nui.nvim",
+          -- "grapp-dev/nui-components.nvim",
+          "grapp-dev/nui-components.nvim",
+        },
       }
     end,
     setup = function()
@@ -17,10 +24,29 @@ function M.config()
       return {
         url = vim.env["YOUTRACK_URL"],
         token = vim.env["YOUTRACK_TOKEN"],
+        issues = {
+          queries = {
+            {
+              name = "assigned to me",
+              query = "for: me #Unresolved",
+            },
+          },
+        },
       }
     end,
     on_setup = function(c)
       require("youtrack").setup(c)
+    end,
+    wk = function(config, categories, fn)
+      return {
+        {
+          fn.wk_keystroke({ "i" }),
+          function()
+            require("youtrack").get_issues()
+          end,
+          desc = "get youtrack issues",
+        },
+      }
     end,
   })
 end

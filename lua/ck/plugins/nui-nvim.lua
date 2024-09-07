@@ -12,10 +12,6 @@ function M.config()
         event = "VeryLazy",
         init = false,
         config = false,
-        dependencies = {
-          -- https://github.com/grapp-dev/nui-components.nvim
-          "grapp-dev/nui-components.nvim",
-        },
       }
     end,
   })
