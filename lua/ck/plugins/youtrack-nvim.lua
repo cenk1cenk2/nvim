@@ -28,7 +28,35 @@ function M.config()
           queries = {
             {
               name = "assigned to me",
-              query = "for: me #Unresolved",
+              query = "for: me State: Unresolved order by: updated",
+            },
+            {
+              name = "unresolved",
+              query = "State: Unresolved order by: updated",
+            },
+            {
+              name = "board: infrastructure",
+              query = "#{Unresolved} has: {Board Infrastructure}",
+            },
+            {
+              name = "board: personal",
+              query = "#{Unresolved} has: {Board Personal}",
+            },
+            {
+              name = "board: sorwe",
+              query = "#{Unresolved} has: {Board Sorwe}",
+            },
+            {
+              name = "Open",
+              query = "State: Open organization: -kilic.dev order by: updated",
+            },
+            {
+              name = "In Progress",
+              query = "State: {In Progress}  organization: -kilic.dev order by: updated",
+            },
+            {
+              name = "Verify",
+              query = "State: {Verify}  organization: -kilic.dev order by: updated",
             },
           },
         },
