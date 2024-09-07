@@ -50,6 +50,14 @@ function M.config()
           get_config = nil,
         },
         select = {
+          builtin = {
+            border = nvim.ui.border,
+          },
+
+          nui = {
+            border = nvim.ui.border,
+          },
+
           -- Priority list of preferred vim.select implementations
           backend = { "telescope", "fzf", "builtin", "nui" },
 
