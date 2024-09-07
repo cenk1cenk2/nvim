@@ -10,6 +10,8 @@ local M = {
   c = ls.choice_node,
   sn = ls.sn,
   postfix = require("luasnip.extras.postfix").postfix,
+  treesitter_postfix = require("luasnip.extras.treesitter_postfix").treesitter_postfix,
+  treesitter_postfix_builtin = require("luasnip.extras.treesitter_postfix").builtin,
   fmt = require("luasnip.extras.fmt").fmt,
 }
 
