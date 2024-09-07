@@ -9,6 +9,7 @@ local M = {
   d = ls.dynamic_node,
   c = ls.choice_node,
   sn = ls.sn,
+  postfix = require("luasnip.extras.postfix").postfix,
   fmt = require("luasnip.extras.fmt").fmt,
 }
 
