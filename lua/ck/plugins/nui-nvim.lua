@@ -14,11 +14,7 @@ function M.config()
         config = false,
         dependencies = {
           -- https://github.com/grapp-dev/nui-components.nvim
-          -- "grapp-dev/nui-components.nvim",
-          -- "cenk1cenk2/nui-components.nvim",
-          {
-            dir = "~/development/nui-components.nvim",
-          },
+          "grapp-dev/nui-components.nvim",
         },
       }
     end,
