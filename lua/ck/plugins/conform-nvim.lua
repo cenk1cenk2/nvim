@@ -21,6 +21,10 @@ function M.config()
 
       ---@type conform.setupOpts
       return {
+        default_format_opts = {
+          lsp_format = "fallback",
+        },
+
         -- Map of filetype to formatters
         formatters_by_ft = tools.read(METHOD),
         -- If this is set, Conform will run the formatter on save.
@@ -34,7 +38,6 @@ function M.config()
           end
 
           return {
-            lsp_fallback = M.get_lsp_fallback(bufnr),
             timeout_ms = nvim.lsp.format_on_save.timeout,
           }
         end,
@@ -43,7 +46,6 @@ function M.config()
         -- This can also be a function that returns the table.
         -- format_after_save = function(bufnr)
         --   return {
-        --     lsp_fallback = M.get_lsp_fallback(bufnr),
         --   }
         -- end,
         -- Set the log level. Use `:ConformInfo` to see the location of the log file.
@@ -64,8 +66,7 @@ function M.config()
       nvim.lsp.tools.list_registered.formatters = function(bufnr)
         local formatters = require("ck.lsp.tools").list_registered(require("ck.lsp.tools").METHODS.FORMATTER, bufnr)
 
-        local lsp_fallback = M.get_lsp_fallback(bufnr)
-        if #formatters == 0 and lsp_fallback == true or lsp_fallback == "always" then
+        if not formatters.lsp_format and formatters.lsp_format ~= "never" then
           local lsp = vim.tbl_filter(function(client)
             if client.server_capabilities.documentFormattingProvider == true then
               return true
@@ -190,6 +191,22 @@ function M.register()
     "markdown",
     "gotmpl",
   })
+
+  tools.configure(
+    METHOD,
+    ---@type conform.FormatOpts
+    {
+      lsp_format = "first",
+    },
+    {
+      "javascript",
+      "typescript",
+      "javascriptreact",
+      "typescriptreact",
+      "vue",
+      "svelte",
+    }
+  )
 
   tools.register(METHOD, "prettierd", {
     "javascript",

@@ -17,6 +17,20 @@ function M.read(method)
   return nvim.lsp.tools.by_ft[method]
 end
 
+--- Write a configuration for given language.
+---@param method LspToolMethods
+---@param config any
+---@param filetypes string[]
+function M.configure(method, config, filetypes)
+  for _, ft in pairs(filetypes) do
+    if nvim.lsp.tools.by_ft[method][ft] == nil then
+      nvim.lsp.tools.by_ft[method][ft] = {}
+    end
+
+    vim.tbl_extend("force", nvim.lsp.tools.by_ft[method][ft], config)
+  end
+end
+
 --- Registers a tool for a given method.
 ---@param method LspToolMethods
 ---@param configs any
@@ -50,7 +64,7 @@ end
 
 ---@param method LspToolMethods
 ---@param bufnr? number
----@return string[]
+---@return table
 function M.list_registered(method, bufnr)
   bufnr = bufnr or 0
 
