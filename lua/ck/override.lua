@@ -34,7 +34,7 @@ nvim.lsp.ensure_installed = {
   "jsonls",
   "lua_ls",
   "yamlls",
-  "tsserver",
+  "ts_ls",
   "bashls",
   "pyright",
   "graphql",
