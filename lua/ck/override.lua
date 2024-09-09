@@ -167,6 +167,7 @@ require("ck.setup").setup_callback(require("ck.plugins.treesitter").name, functi
       "json",
       "jsonc",
       "jsonnet",
+      "latex",
       "lua",
       "make",
       "markdown",
