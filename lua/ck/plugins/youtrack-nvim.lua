@@ -10,7 +10,7 @@ function M.config()
       return {
         "cenk1cenk2/youtrack.nvim",
         build = { "make" },
-        -- dir = "~/development/youtrack-nvim",
+        -- dir = "~/development/youtrack.nvim",
         dependencies = {
           -- https://github.com/MunifTanjim/nui.nvim
           "MunifTanjim/nui.nvim",
