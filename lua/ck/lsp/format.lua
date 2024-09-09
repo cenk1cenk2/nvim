@@ -2,6 +2,7 @@ local M = {}
 local log = require("ck.log")
 
 local group = "lsp_format_on_save"
+local METHODS = require("ck.lsp.tools").METHODS
 
 --- Creates the autocommand for format on save.
 function M.enable_format_on_save()
@@ -48,7 +49,7 @@ function M.filter(client)
   local registered = nvim.lsp.tools.list_registered.formatters(0)
 
   if #registered > 0 then
-    return client.name == nvim.lsp.tools.clients[M.METHODS.FORMATTER]
+    return client.name == nvim.lsp.tools.clients[METHODS.FORMATTER]
   elseif client.supports_method("textDocument/formatting") then
     return true
   end
