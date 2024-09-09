@@ -1,10 +1,4 @@
 return {
-  format_on_save = {
-    enable = true,
-    pattern = { "*" },
-    timeout = 5000,
-    filter = require("ck.lsp.format").filter,
-  },
   --- @type vim.diagnostic.Opts
   diagnostics = {
     signs = {
@@ -89,6 +83,16 @@ return {
   automatic_update = true,
 
   tools = {
+    format = {
+      enable = true,
+      pattern = { "*" },
+      timeout = 5000,
+      filter = require("ck.lsp.format").filter,
+      ---@module "conform"
+      ---@type conform.LspFormatOpts
+      lsp_format = "first",
+    },
+
     clients = {
       formatters = "",
       linters = "",

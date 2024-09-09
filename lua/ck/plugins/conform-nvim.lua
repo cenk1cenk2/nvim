@@ -22,7 +22,7 @@ function M.config()
       ---@type conform.setupOpts
       return {
         default_format_opts = {
-          lsp_format = "fallback",
+          lsp_format = nvim.lsp.tools.format.lsp_format,
         },
 
         -- Map of filetype to formatters
@@ -38,7 +38,7 @@ function M.config()
           end
 
           return {
-            timeout_ms = nvim.lsp.format_on_save.timeout,
+            timeout_ms = nvim.lsp.tools.format.timeout,
           }
         end,
         -- If this is set, Conform will run the formatter asynchronously after save.
@@ -64,9 +64,21 @@ function M.config()
 
       ---@type ToolListFn
       nvim.lsp.tools.list_registered.formatters = function(bufnr)
-        local formatters = require("ck.lsp.tools").list_registered(require("ck.lsp.tools").METHODS.FORMATTER, bufnr)
+        local registered = vim.tbl_extend("force", {
+          lsp_format = nvim.lsp.tools.format.lsp_format,
+        }, require("ck.lsp.tools").list_registered(require("ck.lsp.tools").METHODS.FORMATTER, bufnr))
 
-        if not formatters.lsp_format and formatters.lsp_format ~= "never" then
+        local formatters = {}
+
+        if registered.lsp_format ~= "prefer" then
+          for key, value in ipairs(registered) do
+            if type(key) == "number" then
+              table.insert(formatters, value)
+            end
+          end
+        end
+
+        if registered.lsp_format ~= "never" and not (registered.lsp_format == "fallback" and #formatters > 0) then
           local lsp = vim.tbl_filter(function(client)
             if client.server_capabilities.documentFormattingProvider == true then
               return true
@@ -75,24 +87,24 @@ function M.config()
             return false
           end, vim.lsp.get_clients({ bufnr = bufnr }))
 
-          vim.list_extend(
-            formatters,
-            vim.tbl_map(function(client)
-              return ("%s [lsp]"):format(client.name)
-            end, lsp)
-          )
+          if registered.lsp_format == "first" then
+            formatters = vim.list_extend(
+              vim.tbl_map(function(client)
+                return ("%s [lsp]"):format(client.name)
+              end, lsp),
+              formatters
+            )
+          else
+            formatters = vim.list_extend(
+              formatters,
+              vim.tbl_map(function(client)
+                return ("%s [lsp]"):format(client.name)
+              end, lsp)
+            )
+          end
         end
 
         return M.filter_default_formatters(formatters)
-      end
-
-      ---@type FormatFilterFn
-      nvim.lsp.format_on_save.filter = function(client)
-        if client.supports_method("textDocument/formatting") then
-          return true
-        end
-
-        return false
       end
 
       ---@param opts? vim.lsp.buf.format.Opts
@@ -100,10 +112,9 @@ function M.config()
       nvim.lsp.fn.format = function(opts)
         opts = vim.tbl_extend("force", {
           bufnr = vim.api.nvim_get_current_buf(),
-          timeout_ms = nvim.lsp.format_on_save.timeout_ms,
-          filter = nvim.lsp.format_on_save.filter,
+          timeout_ms = nvim.lsp.tools.format.timeout_ms,
+          filter = nvim.lsp.tools.format.filter,
         }, opts or {})
-
         return require("conform").format(opts)
       end
     end,
@@ -152,23 +163,6 @@ function M.filter_default_formatters(formatters)
   end, formatters)
 end
 
-function M.get_lsp_fallback(bufnr)
-  if vim.tbl_contains({
-    "javascript",
-    "typescript",
-    "javascriptreact",
-    "typescriptreact",
-    "vue",
-    "svelte",
-  }, vim.bo[bufnr].filetype) then
-    return "always"
-  elseif #M.filter_default_formatters(require("conform").list_formatters(bufnr)) == 0 then
-    return "always"
-  end
-
-  return true
-end
-
 function M.register()
   tools.register(METHOD, "trim_whitespace", {
     "*",
@@ -192,11 +186,11 @@ function M.register()
     "gotmpl",
   })
 
-  tools.configure(
+  tools.register(
     METHOD,
     ---@type conform.FormatOpts
     {
-      lsp_format = "first",
+      lsp_format = "last",
     },
     {
       "javascript",
@@ -236,8 +230,8 @@ function M.register()
   --   "svelte",
   -- })
 
-  tools.register(METHOD, "stylua", {
-    "markdown-toc",
+  tools.register(METHOD, "rustfmt", {
+    "rust",
   })
 
   tools.register(METHOD, "stylua", {

@@ -8,7 +8,7 @@ function M.enable_format_on_save()
   vim.api.nvim_create_augroup(group, { clear = true })
   vim.api.nvim_create_autocmd("BufWritePre", {
     group = group,
-    pattern = nvim.lsp.format_on_save.pattern,
+    pattern = nvim.lsp.tools.format.pattern,
     callback = function(args)
       nvim.lsp.fn.format({ bufnr = args.bufnr })
     end,
@@ -57,7 +57,7 @@ function M.filter(client)
 end
 
 function M.setup()
-  if nvim.lsp.format_on_save.enable then
+  if nvim.lsp.tools.format.enable then
     M.enable_format_on_save()
   else
     M.disable_format_on_save()

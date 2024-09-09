@@ -17,27 +17,13 @@ function M.read(method)
   return nvim.lsp.tools.by_ft[method]
 end
 
---- Write a configuration for given language.
+--- Registers a tool for a given method.
 ---@param method LspToolMethods
 ---@param config any
 ---@param filetypes string[]
-function M.configure(method, config, filetypes)
-  for _, ft in pairs(filetypes) do
-    if nvim.lsp.tools.by_ft[method][ft] == nil then
-      nvim.lsp.tools.by_ft[method][ft] = {}
-    end
-
-    vim.tbl_extend("force", nvim.lsp.tools.by_ft[method][ft], config)
-  end
-end
-
---- Registers a tool for a given method.
----@param method LspToolMethods
----@param configs any
----@param filetypes string[]
-function M.register(method, configs, filetypes)
-  if type(configs) == "string" then
-    configs = { configs }
+function M.register(method, config, filetypes)
+  if type(config) == "string" then
+    config = { config }
   end
 
   for _, ft in pairs(filetypes) do
@@ -45,19 +31,19 @@ function M.register(method, configs, filetypes)
       nvim.lsp.tools.by_ft[method][ft] = {}
     end
 
-    vim.list_extend(nvim.lsp.tools.by_ft[method][ft], configs)
+    nvim.lsp.tools.by_ft[method][ft] = vim.tbl_extend("force", nvim.lsp.tools.by_ft[method][ft], config)
   end
 
   log:debug(
     "Registered the following method %s for %s: %s",
     method,
-    vim.tbl_map(function(config)
-      if type(config) == "string" then
-        return config
+    vim.tbl_map(function(c)
+      if type(c) == "string" then
+        return c
       end
 
       return config.name
-    end, configs),
+    end, config),
     table.concat(filetypes, ", ")
   )
 end
@@ -72,13 +58,13 @@ function M.list_registered(method, bufnr)
   local tools = {}
 
   if nvim.lsp.tools.by_ft[method]["*"] then
-    vim.list_extend(tools, nvim.lsp.tools.by_ft[method]["*"])
+    tools = vim.tbl_extend("force", tools, nvim.lsp.tools.by_ft[method]["*"])
   end
 
   if nvim.lsp.tools.by_ft[method][ft] ~= nil then
-    vim.list_extend(tools, nvim.lsp.tools.by_ft[method][ft])
+    tools = vim.tbl_extend("force", tools, nvim.lsp.tools.by_ft[method][ft])
   elseif nvim.lsp.tools.by_ft[method]["_"] ~= nil then
-    vim.list_extend(tools, nvim.lsp.tools.by_ft[method]["_"])
+    tools = vim.tbl_extend("force", tools, nvim.lsp.tools.by_ft[method]["_"])
   end
 
   return tools
