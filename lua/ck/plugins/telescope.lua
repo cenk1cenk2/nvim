@@ -197,7 +197,6 @@ function M.config()
             only_sort_text = true,
           },
           current_buffer_fuzzy_find = {
-            theme = "ivy",
             layout_config = {
               width = 0.75,
               height = 0.5,
@@ -517,7 +516,6 @@ function M.rg_grep_buffer(options)
   return require("telescope.builtin").live_grep(vim.tbl_extend("force", options or {}, {
     additional_args = { "--no-ignore" },
     search_dirs = { "%:p" },
-    theme = "ivy",
     layout_config = {
       width = 0.75,
       height = 0.5,
