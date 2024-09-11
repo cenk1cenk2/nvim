@@ -48,6 +48,7 @@ return {
       },
       checkOnSave = {
         command = "clippy",
+        extraArgs = { "--fix", "--allow-staged", "--allow-dirty" },
       },
       server = {
         extraEnv = {
