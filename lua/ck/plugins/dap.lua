@@ -250,6 +250,10 @@ function M.config()
     end,
     autocmds = function()
       return {
+        require("ck.modules.autocmds").q_close_autocmd({
+          "dap-float",
+        }),
+
         {
           event = "BufWritePost",
           group = "_dap",
