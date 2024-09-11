@@ -198,8 +198,6 @@ function M.config()
           },
           current_buffer_fuzzy_find = {
             layout_config = {
-              width = 0.75,
-              height = 0.5,
               prompt_position = "bottom",
             },
           },
@@ -517,8 +515,6 @@ function M.rg_grep_buffer(options)
     additional_args = { "--no-ignore" },
     search_dirs = { "%:p" },
     layout_config = {
-      width = 0.75,
-      height = 0.5,
       prompt_position = "bottom",
     },
   }))
