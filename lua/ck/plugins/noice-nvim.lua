@@ -78,6 +78,39 @@ function M.config()
         popupmenu = {
           backend = "cmp", -- backend to use to show regular cmdline completions
         },
+        routes = {
+          {
+            filter = {
+              event = "msg_show",
+              kind = { "search_count" },
+            },
+            opts = { skip = true },
+          },
+          {
+            filter = {
+              event = "msg_show",
+              kind = "",
+              -- find = "written",
+            },
+            opts = { skip = true },
+          },
+          {
+            view = "notify",
+            filter = {
+              event = "msg_show",
+              kind = { "echomsg" },
+            },
+            opts = { skip = true },
+          },
+          {
+            view = "notify",
+            filter = {
+              event = "noice",
+              kind = { "stats", "debug" },
+            },
+            opts = { replace = true },
+          },
+        },
         views = {
           split = {
             backend = "split",
@@ -92,10 +125,6 @@ function M.config()
               winhighlight = { Normal = "NoiceSplit", FloatBorder = "NoiceSplitBorder" },
               wrap = true,
             },
-          },
-          vsplit = {
-            view = "split",
-            position = "right",
           },
           cmdline_popup = {
             border = {
@@ -132,11 +161,7 @@ function M.config()
           confirm = {
             backend = "popup",
             relative = "editor",
-            focusable = false,
             align = "center",
-            enter = false,
-            zindex = 60,
-            format = { "{confirm}" },
             position = {
               col = "50%",
               row = "75%",
@@ -161,7 +186,6 @@ function M.config()
               events = { "BufLeave" },
               keys = { "q" },
             },
-            enter = true,
             border = {
               style = nvim.ui.border,
             },
@@ -185,14 +209,6 @@ function M.config()
           hover = {
             view = "popup",
             relative = "cursor",
-            enter = false,
-            anchor = "auto",
-            size = {
-              width = "auto",
-              height = "auto",
-              max_height = 20,
-              max_width = 120,
-            },
             border = {
               style = nvim.ui.border,
               padding = { 0, 0 },
@@ -241,53 +257,6 @@ function M.config()
           enabled = true, -- you can disable this behaviour here
           -- add any filetypes here, that shouldn't trigger smart move.
           excluded_filetypes = { "cmp_menu", "cmp_docs", "notify" },
-        },
-        routes = {
-          {
-            filter = {
-              event = "msg_show",
-              kind = { "search_count" },
-            },
-            opts = { skip = true },
-          },
-          {
-            filter = {
-              event = "msg_show",
-              kind = "",
-              -- find = "written",
-            },
-            opts = { skip = true },
-          },
-          {
-            view = "notify",
-            filter = {
-              find = "Format request failed, no matching language servers.",
-            },
-            opts = { skip = true },
-          },
-          -- {
-          --   view = "notify",
-          --   filter = {
-          --     event = "msg_showmode",
-          --   },
-          --   opts = { timeout = 10000 },
-          -- },
-          {
-            view = "notify",
-            filter = {
-              event = "msg_show",
-              kind = { "echomsg" },
-            },
-            opts = { skip = true },
-          },
-          {
-            view = "notify",
-            filter = {
-              event = "noice",
-              kind = { "stats", "debug" },
-            },
-            opts = { replace = true },
-          },
         },
       }
     end,
