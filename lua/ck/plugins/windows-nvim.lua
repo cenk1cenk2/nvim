@@ -11,7 +11,6 @@ function M.config()
         "anuvyklack/windows.nvim",
         dependencies = {
           "anuvyklack/middleclass",
-          "anuvyklack/animation.nvim",
         },
         event = "BufReadPost",
         cmd = { "WindowsEqualize" },
@@ -21,7 +20,7 @@ function M.config()
       return {
         autowidth = { --		     |windows.autowidth|
           enable = true,
-          winwidth = 10, --		      |windows.winwidth|
+          winwidth = 0.5, --		      |windows.winwidth|
           filetype = { --	    |windows.autowidth.filetype|
             help = 2,
           },
@@ -39,12 +38,10 @@ function M.config()
       }
     end,
     on_setup = function(c)
-      require("windows").setup(c)
-    end,
-    on_done = function()
-      vim.opt.winwidth = 10
+      vim.opt.winwidth = 5
       vim.opt.winminwidth = 0
       vim.opt.equalalways = false
+      require("windows").setup(c)
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
