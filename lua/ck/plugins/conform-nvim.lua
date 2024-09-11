@@ -230,10 +230,6 @@ function M.register()
   --   "svelte",
   -- })
 
-  tools.register(METHOD, "rustfmt", {
-    "rust",
-  })
-
   tools.register(METHOD, "stylua", {
     "lua",
   })

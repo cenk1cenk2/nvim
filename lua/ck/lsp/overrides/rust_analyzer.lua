@@ -49,15 +49,6 @@ return {
       checkOnSave = {
         command = "clippy",
         -- extraArgs = { "--fix", "--allow-staged", "--allow-dirty" },
-        -- overrideCommand = {
-        --   "cargo",
-        --   "clippy",
-        --   "--fix",
-        --   "--workspace",
-        --   "--message-format=json",
-        --   "--all-targets",
-        --   "--allow-dirty",
-        -- },
       },
       server = {
         extraEnv = {
