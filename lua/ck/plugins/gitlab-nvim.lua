@@ -155,7 +155,7 @@ function M.config()
           group = "gitlab",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "r" }),
+          fn.wk_keystroke({ categories.GIT, "G", "d" }),
           function()
             require("gitlab").review()
           end,
@@ -169,14 +169,14 @@ function M.config()
           desc = "gitlab summary",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "a" }),
+          fn.wk_keystroke({ categories.GIT, "G", "A" }),
           function()
             require("gitlab").approve()
           end,
           desc = "gitlab mr approve",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "A" }),
+          fn.wk_keystroke({ categories.GIT, "G", "R" }),
           function()
             require("gitlab").revoke()
           end,
@@ -191,17 +191,13 @@ function M.config()
         },
         {
           fn.wk_keystroke({ categories.GIT, "G", "m" }),
-          group = "merge request",
-        },
-        {
-          fn.wk_keystroke({ categories.GIT, "G", "m", "c" }),
           function()
-            require("gitlab").create_mr()
+            require("gitlab").create_mr({ delete_branch = true })
           end,
           desc = "gitlab create mr",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "m", "a" }),
+          fn.wk_keystroke({ categories.GIT, "G", "M" }),
           function()
             require("gitlab").merge({ delete_branch = true })
           end,
@@ -215,21 +211,21 @@ function M.config()
           desc = "gitlab mr create note",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "d" }),
+          fn.wk_keystroke({ categories.GIT, "G", "t" }),
           function()
             require("gitlab").toggle_discussions()
           end,
           desc = "gitlab mr toggle discussions",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "D" }),
+          fn.wk_keystroke({ categories.GIT, "G", "T" }),
           function()
             require("gitlab").move_to_discussion_tree_from_diagnostic()
           end,
           desc = "gitlab mr move to discussion tree",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "f" }),
+          fn.wk_keystroke({ categories.GIT, "G", "o" }),
           function()
             require("gitlab").open_in_browser()
           end,
