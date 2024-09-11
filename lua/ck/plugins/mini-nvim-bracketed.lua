@@ -16,7 +16,7 @@ function M.config()
       return {
         buffer = { suffix = "b", options = {} },
         comment = { suffix = "c", options = {} },
-        conflict = { suffix = "n", options = {} },
+        conflict = { suffix = "x", options = {} },
         diagnostic = { suffix = "d", options = {} },
         file = { suffix = "f", options = {} },
         indent = { suffix = "i", options = {} },
