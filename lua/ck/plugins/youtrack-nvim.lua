@@ -9,8 +9,8 @@ function M.config()
       ---@type Plugin
       return {
         "cenk1cenk2/youtrack.nvim",
-        build = { "make" },
         -- dir = "~/development/youtrack.nvim",
+        build = { "make" },
         dependencies = {
           -- https://github.com/MunifTanjim/nui.nvim
           "MunifTanjim/nui.nvim",
@@ -24,7 +24,9 @@ function M.config()
       return {
         url = vim.env["YOUTRACK_URL"],
         token = vim.env["YOUTRACK_TOKEN"],
+        queries = {},
         issues = {},
+        issue = {},
       }
     end,
     on_setup = function(c)
