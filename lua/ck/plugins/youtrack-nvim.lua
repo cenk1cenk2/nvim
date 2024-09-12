@@ -27,7 +27,7 @@ function M.config()
         queries = {},
         issues = {
           size = {},
-          fields = { "Priority", "Subsystem", "Type", "State", "Estimation", "Spent time", "Timer" },
+          fields = { "State", "Priority", "Subsystem", "Type", "Estimation", "Spent time", "Timer" },
         },
         issue = {},
       }
