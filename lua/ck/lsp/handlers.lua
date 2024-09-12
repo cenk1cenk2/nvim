@@ -111,7 +111,7 @@ function M.attach_codelens(client, bufnr)
   end
 
   local group = "lsp_codelens_refresh"
-  local events = { "LspAttach", "InsertLeave", "BufReadPost" }
+  local events = { "LspAttach", "InsertLeave", "BufEnter", "CursorHold" }
 
   local autocmd_ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
     group = group,
@@ -140,9 +140,7 @@ function M.attach_codelens(client, bufnr)
     group = group,
     buffer = bufnr,
     callback = function()
-      if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
-        vim.api.nvim_del_augroup_by_id(augroup)
-      end
+      vim.api.nvim_del_augroup_by_id(augroup)
     end,
   })
 end
