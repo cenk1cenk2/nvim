@@ -25,7 +25,10 @@ function M.config()
         url = vim.env["YOUTRACK_URL"],
         token = vim.env["YOUTRACK_TOKEN"],
         queries = {},
-        issues = {},
+        issues = {
+          size = {},
+          fields = { "Priority", "Subsystem", "Type", "State", "Estimation", "Spent time", "Timer" },
+        },
         issue = {},
       }
     end,
