@@ -70,6 +70,16 @@ function M.config()
 
         local formatters = {}
 
+        formatters = vim.tbl_filter(function(formatter)
+          if type(formatter) == "string" and vim.list_contains(M.default_formatters, formatter) then
+            return false
+          elseif type(formatter) == "table" and formatter.name and vim.list_contains(M.default_formatters, formatter.name) then
+            return false
+          end
+
+          return true
+        end, formatters)
+
         if registered.lsp_format ~= "prefer" then
           for key, value in ipairs(registered) do
             if type(key) == "number" then
@@ -104,7 +114,7 @@ function M.config()
           end
         end
 
-        return M.filter_default_formatters(formatters)
+        return formatters
       end
 
       ---@param opts? vim.lsp.buf.format.Opts
@@ -148,20 +158,6 @@ M.default_formatters = {
   "trim_newlines",
   "trim_multiple_newlines",
 }
-
----@param formatters string[]
----@return string[]
-function M.filter_default_formatters(formatters)
-  return vim.tbl_filter(function(formatter)
-    if type(formatter) == "string" and vim.list_contains(M.default_formatters, formatter) then
-      return false
-    elseif type(formatter) == "table" and formatter.name and vim.list_contains(M.default_formatters, formatter.name) then
-      return false
-    end
-
-    return true
-  end, formatters)
-end
 
 function M.register()
   tools.register(METHOD, "trim_whitespace", {
