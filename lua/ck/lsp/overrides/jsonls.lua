@@ -1,6 +1,10 @@
 ---@module "lspconfig"
 ---@type lspconfig.options.jsonls
 return {
+  on_attach = function(client, bufnr)
+    require("ck.lsp.handlers").on_attach(client, bufnr)
+    require("ck.lsp.handlers").overwrite_capabilities_with_no_formatting(client, bufnr)
+  end,
   settings = {
     json = {
       schemas = vim.tbl_deep_extend("force", require("schemastore").json.schemas(), {

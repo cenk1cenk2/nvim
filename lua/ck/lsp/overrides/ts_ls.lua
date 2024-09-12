@@ -21,10 +21,6 @@ return {
   flags = {
     debounce_text_changes = 500,
   },
-  on_init = function(client, bufnr)
-    require("ck.lsp.handlers").on_init(client, bufnr)
-    require("ck.lsp.handlers").overwrite_capabilities_with_no_formatting(client, bufnr)
-  end,
   on_attach = function(client, bufnr)
     require("ck.lsp.handlers").on_attach(client, bufnr)
     require("ck.lsp.handlers").overwrite_capabilities_with_no_formatting(client, bufnr)
