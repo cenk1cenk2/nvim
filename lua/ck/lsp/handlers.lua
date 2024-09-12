@@ -113,13 +113,13 @@ function M.attach_codelens(client, bufnr)
   local group = "lsp_codelens_refresh"
   local events = { "LspAttach", "InsertLeave", "BufReadPost" }
 
-  local ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
+  local autocmd_ok, autocmds = pcall(vim.api.nvim_get_autocmds, {
     group = group,
     buffer = bufnr,
     event = events,
   })
 
-  if ok and #autocmds > 0 then
+  if autocmd_ok and #autocmds > 0 then
     return
   end
 
@@ -130,7 +130,7 @@ function M.attach_codelens(client, bufnr)
     callback = function()
       vim.schedule(function()
         if #vim.lsp.get_clients({ bufnr = bufnr, method = method }) == 0 then
-          pcall(vim.lsp.codelens.refresh)
+          pcall(vim.lsp.codelens.refresh, { bufnr = bufnr })
         end
       end)
     end,
