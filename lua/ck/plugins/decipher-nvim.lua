@@ -16,7 +16,7 @@ function M.config()
       return {
         active_codecs = "all", -- Set all codecs as active and useable
         float = { -- Floating window options
-          padding = 0, -- Zero padding (does not apply to title if any)
+          padding = 1, -- Zero padding (does not apply to title if any)
           -- border = nvim.ui.border,
           mappings = {
             close = "q", -- Key to press to close the floating window

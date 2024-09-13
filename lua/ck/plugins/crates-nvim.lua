@@ -19,7 +19,7 @@ function M.config()
     end,
     configure = function(_, fn)
       fn.setup_callback(require("ck.plugins.cmp").name, function(c)
-        c.formatting.source_names["crates"] = "pkg"
+        c.formatting.source_names["crates"] = "PKG"
 
         return c
       end)
