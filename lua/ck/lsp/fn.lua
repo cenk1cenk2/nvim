@@ -1,6 +1,7 @@
 local M = {}
 
 local log = require("ck.log")
+local fs = require("ck.utils.fs")
 
 ---@param folder string
 function M.add_to_workspace_folder(folder)
@@ -341,11 +342,13 @@ function M.rename_file()
         return
       end
 
-      vim.lsp.util.apply_workspace_edit(result.edit, client.offset_encoding or "utf-8")
+      vim.lsp.util.apply_workspace_edit(result, client.offset_encoding or "utf-8")
 
       local ok, err = vim.uv.fs_rename(current, rename)
       if not ok then
-        log:error(string.format("Failed to move file %s to %s: %s", current, rename, err))
+        log:error(
+          string.format("Failed to move file : %s %s %s -> %s", fs.get_project_filepath(current), nvim.ui.icons.ui.DoubleChevronRight, fs.get_project_filepath(rename), err)
+        )
       end
 
       for _, b in ipairs(vim.api.nvim_list_bufs()) do
@@ -354,7 +357,7 @@ function M.rename_file()
         end
       end
 
-      vim.notify(("[RENAME] %s: %s %s %s"):format(client.name, current, nvim.ui.icons.ui.DoubleChevronRight, rename))
+      vim.notify(("[RENAME] %s: %s %s %s"):format(client.name, fs.get_project_filepath(current), nvim.ui.icons.ui.DoubleChevronRight, fs.get_project_filepath(rename)))
     end)
   end)
 end

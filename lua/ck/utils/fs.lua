@@ -41,14 +41,28 @@ end
 ---@param bufnr? number
 ---@return string
 function M.get_project_buffer_filepath(bufnr)
-  return require("plenary.path").new(vim.api.nvim_buf_get_name(bufnr or 0)):make_relative()
+  return M.get_project_filepath(vim.api.nvim_buf_get_name(bufnr or 0))
+end
+
+--- Returns the buffer relative file path in the project.
+---@param path? string
+---@return string
+function M.get_project_filepath(path)
+  return require("plenary.path").new(path):make_relative()
 end
 
 --- Returns the buffer relative dir path in the project.
 ---@param bufnr? number
 ---@return string
 function M.get_project_buffer_dirpath(bufnr)
-  return vim.fs.dirname(M.get_project_buffer_filepath(bufnr))
+  return M.get_project_dirpath(vim.api.nvim_buf_get_name(bufnr or 0))
+end
+
+--- Returns the buffer relative file path in the project.
+---@param path? string
+---@return string
+function M.get_project_dirpath(path)
+  return vim.fs.dirname(M.get_project_filepath(path))
 end
 
 --- Returns the buffer relative dir path in the project.
