@@ -439,9 +439,14 @@ end
 ---@param opts? TermCreateArgs
 ---@return Terminal
 function M.create_float_terminal(opts)
-  local terminal = M.create_terminal(M.generate_defaults_float_terminal(vim.tbl_extend("force", {
-    cmd = vim.o.shell,
-  }, opts or {})))
+  local terminal = M.create_terminal(M.generate_defaults_float_terminal(vim.tbl_extend(
+    "force",
+    ---@type TermCreateArgs
+    {
+      cmd = vim.o.shell,
+    },
+    opts or {}
+  )))
 
   return terminal
 end

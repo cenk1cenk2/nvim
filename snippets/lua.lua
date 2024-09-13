@@ -2,11 +2,19 @@ local s = require("ck.utils.snippets")
 
 return {
   s.postfix({
-    trig = ".viminspect",
+    trig = ".vimnotify",
     desc = "Vim notify and inspect the given object.",
   }, {
     s.f(function(_, parent)
       return "vim.notify(vim.inspect(" .. parent.snippet.env.POSTFIX_MATCH .. "))"
+    end, {}),
+  }),
+  s.postfix({
+    trig = ".viminspect",
+    desc = "Vim inspect the given object.",
+  }, {
+    s.f(function(_, parent)
+      return "vim.inspect(" .. parent.snippet.env.POSTFIX_MATCH .. ")"
     end, {}),
   }),
   s.postfix({

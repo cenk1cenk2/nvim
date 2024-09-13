@@ -65,11 +65,18 @@ function M.get_project_dirpath(path)
   return vim.fs.dirname(M.get_project_filepath(path))
 end
 
---- Returns the buffer relative dir path in the project.
+--- Returns the buffer name.
+---@param bufnr? number
+---@return string
+function M.get_buffer_name(bufnr)
+  return vim.fn.expand("%:t")
+end
+
+--- Returns the buffer basename.
 ---@param bufnr? number
 ---@return string
 function M.get_buffer_basename(bufnr)
-  local basename = string.gsub(vim.fn.expand("%:t"), "%..*$", "")
+  local basename = string.gsub(M.get_buffer_name(bufnr), "%..*$", "")
 
   return basename
 end

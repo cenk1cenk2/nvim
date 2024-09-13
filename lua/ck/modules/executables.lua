@@ -133,11 +133,31 @@ end
 
 function M.run_otree()
   local terminal = require("ck.plugins.toggleterm-nvim")
-  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
 
-  local t = terminal.create_float_terminal({ cmd = ("echo '%s' | otree -t %s"):format(table.concat(lines, "\\n"), vim.o.ft) })
+  -- macos piping does not work properly
+
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+  local path = os.tmpname()
+
+  local fd, err = io.open(path, "w+")
+
+  if fd == nil or err then
+    log:error("Failed to open temporary file: %s", err)
+
+    return
+  end
+
+  fd:write(table.concat(lines, "\n"))
+  fd:flush()
+  fd:close()
+
+  local t = terminal.create_float_terminal({ cmd = ("otree -t %s %s && rm %s"):format(vim.o.ft, path, path) })
 
   t:toggle()
+
+  -- os.remove(path)
 end
 
 function M.run_yq()
