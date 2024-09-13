@@ -104,14 +104,14 @@ function M.setup()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "s" }),
+          fn.wk_keystroke({ categories.RUN, "s" }),
           function()
             M.create_scratch_buffer()
           end,
           desc = "create scratch buffer",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "S" }),
+          fn.wk_keystroke({ categories.RUN, "S" }),
           function()
             M.execute_scratch_buffer()
           end,

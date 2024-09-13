@@ -58,7 +58,7 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "i" }),
+          fn.wk_keystroke({ categories.RUN, "i" }),
           function()
             require("viedit").toggle_single()
           end,
@@ -66,7 +66,7 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "I" }),
+          fn.wk_keystroke({ categories.RUN, "I" }),
           function()
             require("viedit").toggle_all()
           end,

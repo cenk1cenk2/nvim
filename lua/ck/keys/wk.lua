@@ -17,7 +17,7 @@ local M = {}
 ---@field SESSION string
 ---@field NEOVIM string
 ---@field PLUGINS string
----@field TASKS string
+---@field RUN string
 ---@field TREESITTER string
 
 ---@type WKCategories
@@ -30,7 +30,6 @@ M.CATEGORIES = {
   SEARCH = "s",
   GIT = "g",
   LSP = "l",
-  LOGS = "?",
   BOOKMARKS = "m",
   NOTES = "n",
   TESTS = "j",
@@ -38,8 +37,10 @@ M.CATEGORIES = {
   SESSION = "w",
   NEOVIM = "N",
   PLUGINS = "P",
-  TASKS = "r",
+  RUN = "r",
   TREESITTER = "T",
+  --- subcategories
+  LOGS = "?",
 }
 
 function M.setup()
@@ -340,8 +341,8 @@ function M.setup()
           -- tasks
 
           {
-            fn.wk_keystroke({ categories.TASKS }),
-            group = "tasks",
+            fn.wk_keystroke({ categories.RUN }),
+            group = "run",
           },
 
           -- neovim

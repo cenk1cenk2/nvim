@@ -27,7 +27,7 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "p" }),
+          fn.wk_keystroke({ categories.RUN, "p" }),
           function()
             require("img-clip").paste_image()
           end,

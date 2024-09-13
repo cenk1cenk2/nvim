@@ -252,21 +252,21 @@ function M.setup()
           desc = "sd",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "d" }),
+          fn.wk_keystroke({ categories.RUN, "d" }),
           function()
             M.run_ansible_vault_decrypt()
           end,
           desc = "ansible-vault decrypt",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "D" }),
+          fn.wk_keystroke({ categories.RUN, "D" }),
           function()
             M.run_ansible_vault_encrypt()
           end,
           desc = "ansible-vault encrypt",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "e" }),
+          fn.wk_keystroke({ categories.RUN, "e" }),
           function()
             M.set_env()
           end,
@@ -274,35 +274,35 @@ function M.setup()
         },
 
         {
-          fn.wk_keystroke({ categories.TASKS, "g" }),
+          fn.wk_keystroke({ categories.RUN, "g" }),
           function()
             M.run_genpass()
           end,
           desc = "run genpass",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "j" }),
+          fn.wk_keystroke({ categories.RUN, "j" }),
           function()
             M.run_jq()
           end,
           desc = "run jq",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "J" }),
+          fn.wk_keystroke({ categories.RUN, "J" }),
           function()
             M.run_yq()
           end,
           desc = "run yq",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "o" }),
+          fn.wk_keystroke({ categories.RUN, "o" }),
           function()
             M.run_otree()
           end,
           desc = "run otree",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "k" }),
+          fn.wk_keystroke({ categories.RUN, "k" }),
           function()
             M.set_kubeconfig()
           end,

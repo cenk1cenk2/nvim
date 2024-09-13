@@ -56,11 +56,11 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "r" }),
+          fn.wk_keystroke({ categories.RUN, "r" }),
           group = "hurl",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "r", "e" }),
+          fn.wk_keystroke({ categories.RUN, "r", "e" }),
           function()
             local log = require("ck.log")
             local store_key = "HURL_ENVIRONMENT"
@@ -86,21 +86,21 @@ function M.config()
           desc = "select hurl environment",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "r", "t" }),
+          fn.wk_keystroke({ categories.RUN, "r", "t" }),
           function()
             vim.cmd([[HurlRunnerToEntry]])
           end,
           desc = "run hurl to entry",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "r", "r" }),
+          fn.wk_keystroke({ categories.RUN, "r", "r" }),
           function()
             vim.cmd([[HurlRunnerAt]])
           end,
           desc = "run hurl under cursor",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "r", "f" }),
+          fn.wk_keystroke({ categories.RUN, "r", "f" }),
           function()
             vim.cmd([[HurlRunner]])
           end,
@@ -108,35 +108,35 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "r", "m" }),
+          fn.wk_keystroke({ categories.RUN, "r", "m" }),
           function()
             vim.cmd([[HurlToggleMode]])
           end,
           desc = "toggle hurl mode",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "r", "v" }),
+          fn.wk_keystroke({ categories.RUN, "r", "v" }),
           function()
             vim.cmd([[HurlVerbose]])
           end,
           desc = "run hurl for file with verbose mode",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "r", "m" }),
+          fn.wk_keystroke({ categories.RUN, "r", "m" }),
           function()
             vim.cmd([[HurlManageVariables]])
           end,
           desc = "manage hurl variables",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "r", "o" }),
+          fn.wk_keystroke({ categories.RUN, "r", "o" }),
           function()
             vim.cmd([[HurlShowLastResponse]])
           end,
           desc = "show last response",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "r", "c" }),
+          fn.wk_keystroke({ categories.RUN, "r", "c" }),
           function()
             local log = require("ck.log")
             local job = require("ck.utils.job")
@@ -157,7 +157,7 @@ function M.config()
           desc = "curl to hurl",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "r", "q" }),
+          fn.wk_keystroke({ categories.RUN, "r", "q" }),
           function()
             local log = require("ck.log")
             local job = require("ck.utils.job")

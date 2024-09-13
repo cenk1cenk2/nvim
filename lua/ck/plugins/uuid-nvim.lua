@@ -26,7 +26,7 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "u" }),
+          fn.wk_keystroke({ categories.RUN, "u" }),
           function()
             local uuid = require("uuid-nvim").get_v4({ quotes = "none" })
 
@@ -36,7 +36,7 @@ function M.config()
           desc = "generate uuid",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "U" }),
+          fn.wk_keystroke({ categories.RUN, "U" }),
           function()
             require("uuid-nvim").insert_v4()
           end,

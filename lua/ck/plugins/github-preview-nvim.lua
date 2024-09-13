@@ -65,7 +65,7 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "M" }),
+          fn.wk_keystroke({ categories.RUN, "M" }),
           function()
             vim.cmd([[GithubPreviewToggle]])
           end,

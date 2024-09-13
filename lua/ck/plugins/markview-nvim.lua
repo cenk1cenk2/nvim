@@ -60,7 +60,7 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "m" }),
+          fn.wk_keystroke({ categories.RUN, "m" }),
           function()
             require("markview").commands.toggle()
           end,

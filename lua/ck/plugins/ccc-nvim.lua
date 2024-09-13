@@ -23,14 +23,14 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "c" }),
+          fn.wk_keystroke({ categories.RUN, "c" }),
           function()
             vim.cmd([[CccPick]])
           end,
           desc = "color picker",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "C" }),
+          fn.wk_keystroke({ categories.RUN, "C" }),
           function()
             vim.cmd([[CccHighlighterToggle]])
           end,

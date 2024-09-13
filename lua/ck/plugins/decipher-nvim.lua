@@ -43,39 +43,39 @@ function M.config()
         {
           mode = { "v" },
           {
-            fn.wk_keystroke({ categories.TASKS, "d" }),
+            fn.wk_keystroke({ categories.RUN, "d" }),
             group = "decode",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "d", "b" }),
+            fn.wk_keystroke({ categories.RUN, "d", "b" }),
             function()
               require("decipher").decode_selection("base64", { preview = true })
             end,
             desc = "base64",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "d", "B" }),
+            fn.wk_keystroke({ categories.RUN, "d", "B" }),
             function()
               require("decipher").decode_selection("base64-url-safe", { preview = true })
             end,
             desc = "base64-url-safe",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "d", "c" }),
+            fn.wk_keystroke({ categories.RUN, "d", "c" }),
             function()
               require("decipher").decode_selection("crockford", { preview = true })
             end,
             desc = "crockford",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "d", "u" }),
+            fn.wk_keystroke({ categories.RUN, "d", "u" }),
             function()
               require("decipher").decode_selection("url", { preview = true })
             end,
             desc = "url",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "d", "U" }),
+            fn.wk_keystroke({ categories.RUN, "d", "U" }),
             function()
               require("decipher").decode_selection("base64-url", { preview = true })
             end,
@@ -83,39 +83,39 @@ function M.config()
           },
 
           {
-            fn.wk_keystroke({ categories.TASKS, "D" }),
+            fn.wk_keystroke({ categories.RUN, "D" }),
             group = "encode",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "D", "b" }),
+            fn.wk_keystroke({ categories.RUN, "D", "b" }),
             function()
               require("decipher").encode_selection("base64", { preview = true })
             end,
             desc = "base64",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "D", "B" }),
+            fn.wk_keystroke({ categories.RUN, "D", "B" }),
             function()
               require("decipher").encode_selection("base64-url-safe", { preview = true })
             end,
             desc = "base64-url-safe",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "D", "c" }),
+            fn.wk_keystroke({ categories.RUN, "D", "c" }),
             function()
               require("decipher").encode_selection("crockford", { preview = true })
             end,
             desc = "crockford",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "D", "u" }),
+            fn.wk_keystroke({ categories.RUN, "D", "u" }),
             function()
               require("decipher").encode_selection("url", { preview = true })
             end,
             desc = "url",
           },
           {
-            fn.wk_keystroke({ categories.TASKS, "D", "U" }),
+            fn.wk_keystroke({ categories.RUN, "D", "U" }),
             function()
               require("decipher").encode_selection("base64-url", { preview = true })
             end,

@@ -74,7 +74,7 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.TASKS, "b" }),
+          fn.wk_keystroke({ categories.RUN, "b" }),
           function()
             require("lazy").load({ plugins = { "vim-dadbod" } })
             vim.cmd([[DBUIToggle]])
@@ -82,7 +82,7 @@ function M.config()
           desc = "dadbod",
         },
         {
-          fn.wk_keystroke({ categories.TASKS, "B" }),
+          fn.wk_keystroke({ categories.RUN, "B" }),
           "<Plug>(DBUI_JumpToForeignKey)",
           desc = "dadbod - jump to foreign key",
         },
