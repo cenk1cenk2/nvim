@@ -239,11 +239,15 @@ function M.fix_current()
 
     local fix = lsp_fixes[1] or tool_fixes[1]
 
-    local client = vim.lsp.get_client_by_id(fix.client_id)
+    local client = vim.lsp.get_client_by_id(fix.client_id) or {}
 
-    vim.lsp.buf_request_sync(bufnr, "workspace/executeCommand", fix.command)
+    if fix.edit then
+      vim.lsp.util.apply_workspace_edit(fix.edit, client.offset_encoding or "utf-8")
+    elseif fix.command then
+      vim.lsp.buf_request_sync(bufnr, "workspace/executeCommand", fix.command)
+    end
 
-    log:info(("[QUICKFIX] %s: %s"):format((client or {}).name, fix.title or ""))
+    log:info(("[QUICKFIX] %s: %s"):format(client.name, fix.title or ""))
   end)
 end
 
@@ -264,13 +268,21 @@ function M.organize_imports()
       log:warn("No language server has answered the organize imports call.")
     end
 
-    for _, response in pairs(responses) do
+    for client_id, response in pairs(responses) do
       if response.error then
         log:warn(response.error.message)
       end
 
       for _, result in pairs(response.result or {}) do
-        vim.lsp.buf_request_sync(0, "workspace/executeCommand", result.command)
+        local client = vim.lsp.get_client_by_id(client_id) or {}
+
+        if result.command then
+          vim.lsp.buf_request_sync(0, "workspace/executeCommand", result.command)
+        elseif result.edit then
+          vim.lsp.util.apply_workspace_edit(result.edit, client.offset_encoding or "utf-8")
+        end
+
+        log:info(("[ORGANIZE-IMPORTS]: %s"):format(client.name))
       end
     end
   end)
@@ -318,7 +330,7 @@ function M.rename_file()
       end
 
       if error then
-        log:warn("[%s] %s", client.name, error.message)
+        log:warn("[RENAME] %s: %s", client.name, error.message)
 
         return
       end
@@ -329,7 +341,7 @@ function M.rename_file()
         return
       end
 
-      vim.lsp.util.apply_workspace_edit(result, client.offset_encoding or "utf-8")
+      vim.lsp.util.apply_workspace_edit(result.edit, client.offset_encoding or "utf-8")
 
       local ok, err = vim.uv.fs_rename(current, rename)
       if not ok then
@@ -342,7 +354,7 @@ function M.rename_file()
         end
       end
 
-      vim.notify(("[%s] renamed: %s %s %s"):format(client.name, current, nvim.ui.icons.ui.DoubleChevronRight, rename))
+      vim.notify(("[RENAME] %s: %s %s %s"):format(client.name, current, nvim.ui.icons.ui.DoubleChevronRight, rename))
     end)
   end)
 end
