@@ -14,7 +14,7 @@ function M.config()
         dependencies = {
           -- https://github.com/MunifTanjim/nui.nvim
           "MunifTanjim/nui.nvim",
-          -- "grapp-dev/nui-components.nvim",
+          -- https://github.com/grapp-dev/nui-components.nvim
           "grapp-dev/nui-components.nvim",
         },
       }
