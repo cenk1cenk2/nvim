@@ -139,7 +139,7 @@ function M.run_otree()
   local bufnr = vim.api.nvim_get_current_buf()
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
-  local path = os.tmpname()
+  local path = table.concat({ os.tmpname(), require("ck.utils.fs").get_buffer_extension(bufnr) }, ".")
 
   local fd, err = io.open(path, "w+")
 
@@ -153,11 +153,22 @@ function M.run_otree()
   fd:flush()
   fd:close()
 
-  local t = terminal.create_float_terminal({ cmd = ("otree -t %s %s && rm %s"):format(vim.o.ft, path, path) })
+  local t = terminal.create_float_terminal({
+    cmd = ("otree '%s'"):format(path),
+    on_close = function()
+      local ok = os.remove(path)
+
+      if not ok then
+        log:error("Failed to remove temporary path: %s", path)
+
+        return
+      end
+
+      log:info("Temporary path removed: %s", path)
+    end,
+  })
 
   t:toggle()
-
-  -- os.remove(path)
 end
 
 function M.run_yq()

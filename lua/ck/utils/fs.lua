@@ -81,4 +81,13 @@ function M.get_buffer_basename(bufnr)
   return basename
 end
 
+--- Returns the buffer basename.
+---@param bufnr? number
+---@return string
+function M.get_buffer_extension(bufnr)
+  local extension = string.match(M.get_buffer_name(bufnr), ".*%.(.*)$")
+
+  return extension
+end
+
 return M
