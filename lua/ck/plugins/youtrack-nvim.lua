@@ -40,7 +40,7 @@ function M.config()
         {
           fn.wk_keystroke({ "i" }),
           function()
-            require("youtrack").get_issues()
+            require("youtrack").get_issues({ toggle = true })
           end,
           desc = "get youtrack issues",
         },
