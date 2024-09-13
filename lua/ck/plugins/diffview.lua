@@ -38,6 +38,21 @@ function M.config()
 
         return c
       end)
+
+      fn.setup_callback(require("ck.plugins.possession-nvim").name, function(c)
+        local before_save = c.hooks.before_save
+        c.hooks.before_save = function(name)
+          pcall(function()
+            if next(require("diffview.lib").views) ~= nil then
+              vim.cmd("DiffviewClose")
+            end
+          end)
+
+          return before_save(name)
+        end
+
+        return c
+      end)
     end,
     setup = function()
       local actions = require("diffview.actions")
