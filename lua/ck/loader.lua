@@ -108,7 +108,7 @@ function M.load()
   local to_clean = require("lazy.core.config").to_clean
 
   if #to_clean > 0 then
-    log:info(
+    log:warn(
       "Cleaning obsolute plugins: %s",
       table.concat(
         vim.tbl_map(function(plugin)
@@ -157,7 +157,7 @@ function M.reload()
   local to_clean = Config.to_clean
 
   if #to_clean > 0 then
-    log:info(
+    log:warn(
       "Cleaning obsolute plugins: %s",
       table.concat(
         vim.tbl_map(function(plugin)
