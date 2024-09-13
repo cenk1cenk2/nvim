@@ -238,6 +238,7 @@ function M.config()
             require("flash").jump({
               pattern = ".", -- initialize pattern with any char
               search = {
+                multi_window = false,
                 wrap = true,
                 mode = function(str)
                   return "\\<" .. str
@@ -246,7 +247,7 @@ function M.config()
             })
           end,
           desc = "flash to word.",
-          mode = { "n", "o", "x" },
+          mode = { "n", "o", "x", "v" },
         },
         {
           "S",
