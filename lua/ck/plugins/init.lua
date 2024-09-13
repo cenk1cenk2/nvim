@@ -115,6 +115,7 @@ local plugins = {
   "urlview-nvim",
   "img-clip-nvim",
   "youtrack-nvim",
+  "crates-nvim",
 }
 
 function M.config()

@@ -5,7 +5,7 @@ local log = require("ck.log")
 ---@param pattern string | string[]
 ---@return Autocmd
 function M.q_close_autocmd(pattern)
-  return M.setup_init_for_filetype(pattern, function(event)
+  return M.init_with({ "FileType" }, pattern, function(event)
     return {
       keymaps = {
         {
@@ -45,18 +45,20 @@ function M.set_view_buffer(pattern)
   }
 end
 
+---@param event string | string[]
 ---@param pattern string | string[]
 ---@param callback fun(event: table): Config
+---@param options? Autocmd
 ---@return Autocmd
-function M.setup_init_for_filetype(pattern, callback)
-  return {
-    event = { "FileType" },
-    group = "_filetype_settings",
+function M.init_with(event, pattern, callback, options)
+  return vim.tbl_extend("force", options or {}, {
+    event = event,
+    group = "_init_with",
     pattern = pattern,
-    callback = function(event)
-      return require("ck.setup").init(callback(event))
+    callback = function(e)
+      return require("ck.setup").init(callback(e))
     end,
-  }
+  })
 end
 
 ---@param callback fun(bufnr: number, client: vim.lsp.Client): Config

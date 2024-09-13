@@ -12,7 +12,7 @@ function M.config()
         event = {
           {
             event = { "BufReadPre", "BufNewFile" },
-            pattern = ("%s/notes/**.md"):format(vim.fn.expand("~")),
+            pattern = { ("%s/notes/**.md"):format(vim.fn.expand("~")) },
           },
         },
         dependencies = { "nvim-lua/plenary.nvim" },

@@ -1,7 +1,7 @@
 require("ck.setup").init({
   autocmds = function()
     return {
-      require("ck.modules.autocmds").setup_init_for_filetype({ "terraform", "tfvars" }, function(event)
+      require("ck.modules.autocmds").init_with({ "FileType" }, { "terraform", "tfvars" }, function(event)
         return {
           wk = function(_, categories, fn)
             ---@type WKMappings

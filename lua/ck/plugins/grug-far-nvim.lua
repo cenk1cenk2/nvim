@@ -199,7 +199,7 @@ function M.config()
 
       return {
         require("ck.modules.autocmds").q_close_autocmd({ "grug-far-history" }),
-        require("ck.modules.autocmds").setup_init_for_filetype({ "grug-far" }, function(event)
+        require("ck.modules.autocmds").init_with({ "FileType" }, { "grug-far" }, function(event)
           return {
             keymaps = {
 

@@ -54,7 +54,7 @@ function M.config()
     end,
     autocmds = function()
       return {
-        require("ck.modules.autocmds").setup_init_for_filetype({ "yaml", "helm" }, function(event)
+        require("ck.modules.autocmds").init_with({ "FileType" }, { "yaml", "helm" }, function(event)
           return {
             keymaps = function(_, fn)
               return {
