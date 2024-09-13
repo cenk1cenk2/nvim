@@ -43,7 +43,7 @@ function M.config()
         local before_save = c.hooks.before_save
         c.hooks.before_save = function(name)
           pcall(function()
-            if next(require("diffview.lib").views) ~= nil then
+            if is_loaded("diffview") and next(require("diffview.lib").views) ~= nil then
               vim.cmd("DiffviewClose")
             end
           end)

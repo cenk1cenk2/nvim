@@ -130,7 +130,7 @@ function M.config()
           desc = "preview hunk",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "r" }),
+          fn.wk_keystroke({ categories.GIT, "Q" }),
           function()
             vim.cmd([[Gitsigns refresh]])
           end,

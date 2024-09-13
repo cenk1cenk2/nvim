@@ -102,6 +102,7 @@ local plugins = {
   "uuid-nvim",
   "hurl-nvim",
   "dadbod",
+  "nvim-dbee",
   "git-worktree-nvim",
   "netman-nvim",
   "gitlab-nvim",
