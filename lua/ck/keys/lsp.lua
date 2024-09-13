@@ -1,7 +1,68 @@
 local M = {}
 
+function M.setup()
+  require("ck.setup").init({
+    wk = function(_, categories, fn)
+      ---@type WKMappings
+      return {
+        {
+          fn.wk_keystroke({ categories.LSP, "Q" }),
+          group = "restart",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, "Q", "q" }),
+          function()
+            nvim.lsp.fn.restart_lsp({})
+          end,
+          desc = "restart currently active LSPs",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, categories.LOGS }),
+          group = "logs",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, categories.LOGS, "o" }),
+          function()
+            nvim.fn.toggle_log_view(vim.lsp.get_log_path())
+          end,
+          desc = "view lsp log",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, categories.LOGS, "e" }),
+          function()
+            vim.cmd(("edit %s"):format(vim.lsp.get_log_path()))
+          end,
+          desc = "open the lsp logfile",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, categories.LOGS, "X" }),
+          function()
+            require("ck.log"):truncate_logfile(vim.lsp.get_log_path())
+          end,
+          desc = "delete lsp logfile",
+        },
+        {
+          fn.wk_keystroke({ categories.LSP, categories.LOGS, "l" }),
+          function()
+            vim.ui.select(require("ck.log").levels, {
+              prompt = "LSP Log Level",
+            }, function(level)
+              if not level then
+                return
+              end
+
+              nvim.lsp.fn.set_log_level(level)
+            end)
+          end,
+          desc = "set lsp log level",
+        },
+      }
+    end,
+  })
+end
+
 ---@type LspOnCallback
-function M.load(_, bufnr)
+function M.on_attach(_, bufnr)
   require("ck.setup").init({
     keymaps = {
       {
@@ -258,69 +319,11 @@ function M.load(_, bufnr)
           buffer = bufnr,
         },
         {
-          fn.wk_keystroke({ categories.LSP, "Q" }),
-          group = "restart",
-          buffer = bufnr,
-        },
-        {
           fn.wk_keystroke({ categories.LSP, "Q", "Q" }),
           function()
             nvim.lsp.fn.restart_lsp()
           end,
           desc = "restart currently active LSPs for this buffer",
-          buffer = bufnr,
-        },
-        {
-          fn.wk_keystroke({ categories.LSP, "Q", "q" }),
-          function()
-            nvim.lsp.fn.restart_lsp({})
-          end,
-          desc = "restart currently active LSPs",
-          buffer = bufnr,
-        },
-        {
-          fn.wk_keystroke({ categories.LSP, categories.LOGS }),
-          group = "logs",
-          buffer = bufnr,
-        },
-        {
-          fn.wk_keystroke({ categories.LSP, categories.LOGS, "o" }),
-          function()
-            nvim.fn.toggle_log_view(vim.lsp.get_log_path())
-          end,
-          desc = "view lsp log",
-          buffer = bufnr,
-        },
-        {
-          fn.wk_keystroke({ categories.LSP, categories.LOGS, "e" }),
-          function()
-            vim.cmd(("edit %s"):format(vim.lsp.get_log_path()))
-          end,
-          desc = "open the lsp logfile",
-          buffer = bufnr,
-        },
-        {
-          fn.wk_keystroke({ categories.LSP, categories.LOGS, "X" }),
-          function()
-            require("ck.log"):truncate_logfile(vim.lsp.get_log_path())
-          end,
-          desc = "delete lsp logfile",
-          buffer = bufnr,
-        },
-        {
-          fn.wk_keystroke({ categories.LSP, categories.LOGS, "l" }),
-          function()
-            vim.ui.select(require("ck.log").levels, {
-              prompt = "LSP Log Level",
-            }, function(level)
-              if not level then
-                return
-              end
-
-              nvim.lsp.fn.set_log_level(level)
-            end)
-          end,
-          desc = "set lsp log level",
           buffer = bufnr,
         },
       }

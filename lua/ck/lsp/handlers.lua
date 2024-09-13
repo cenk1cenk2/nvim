@@ -81,7 +81,7 @@ end
 
 ---@type LspOnCallback
 function M.on_attach(client, bufnr)
-  require("ck.keys.lsp").load(client, bufnr)
+  require("ck.keys.lsp").on_attach(client, bufnr)
 
   if nvim.lsp.codelens.refresh then
     M.attach_codelens(client, bufnr)

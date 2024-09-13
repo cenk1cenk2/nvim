@@ -117,6 +117,7 @@ function M.setup(force)
     log:debug("Skipping automatic LSP installation on headless mode.")
   end
 
+  require("ck.keys.lsp").setup()
   require("ck.lsp.commands").setup()
   require("ck.lsp.format").setup()
 end
