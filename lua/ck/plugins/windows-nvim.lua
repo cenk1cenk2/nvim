@@ -20,7 +20,7 @@ function M.config()
       return {
         autowidth = { --		     |windows.autowidth|
           enable = true,
-          winwidth = 0.5, --		      |windows.winwidth|
+          winwidth = 0.25, --		      |windows.winwidth|
           filetype = { --	    |windows.autowidth.filetype|
             help = 2,
           },
