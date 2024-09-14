@@ -42,7 +42,7 @@ function M.config()
         minSearchChars = 2,
         maxWorkers = 10,
         startInInsertMode = false,
-        windowCreationCommand = "vsplit",
+        windowCreationCommand = "tabnew %",
         keymaps = {
           replace = { n = "<localleader>r" },
           qflist = { n = "Q" },
@@ -54,6 +54,7 @@ function M.config()
           refresh = { n = "R" },
           gotoLocation = { n = "<enter>" },
           pickHistoryEntry = { n = "<enter>" },
+          abort = { n = "<localleader>x" },
         },
         icons = {
           -- whether to show icons
