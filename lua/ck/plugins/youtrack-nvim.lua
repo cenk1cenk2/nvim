@@ -20,36 +20,21 @@ function M.config()
       }
     end,
     setup = function()
-      local size = {}
-      if vim.o.columns < 180 then
-        size.width = 0.95
-      end
-      if vim.o.lines < 60 then
-        size.height = 0.95
-      end
-
       ---@type youtrack.Config
       return {
         url = vim.env["YOUTRACK_URL"],
         token = vim.env["YOUTRACK_TOKEN"],
         queries = {},
-        ui = {
-          height = size.height,
-          width = size.width,
-        },
         issues = {
-          size = size,
           fields = { "State", "Priority", "Subsystem", "Type", "Estimation", "Spent time", "Timer" },
         },
-        issue = {
-          size = size,
-        },
+        issue = {},
       }
     end,
     on_setup = function(c)
       require("youtrack").setup(c)
     end,
-    wk = function(config, categories, fn)
+    wk = function(_, _, fn)
       return {
         {
           fn.wk_keystroke({ "i" }),

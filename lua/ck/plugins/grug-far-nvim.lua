@@ -42,7 +42,7 @@ function M.config()
         minSearchChars = 2,
         maxWorkers = 10,
         startInInsertMode = false,
-        windowCreationCommand = "tabnew %",
+        -- windowCreationCommand = "tabnew %",
         keymaps = {
           replace = { n = "<localleader>r" },
           qflist = { n = "Q" },

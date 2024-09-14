@@ -21,20 +21,7 @@ function M.config()
       }
     end,
     setup = function()
-      local size = {}
-      if vim.o.columns < 180 then
-        size.width = 0.95
-      end
-      if vim.o.lines < 60 then
-        size.height = 0.95
-      end
-
-      return {
-        ui = {
-          width = size.width,
-          height = size.height,
-        },
-      }
+      return {}
     end,
     on_setup = function(c)
       require("jq").setup(c)
