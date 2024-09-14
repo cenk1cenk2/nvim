@@ -37,6 +37,7 @@ function M.config()
               commands = {
                 { command = "jq", filetype = "json" },
               },
+              arguments = "-r",
             })
           end,
           desc = "run jq",
@@ -49,6 +50,7 @@ function M.config()
               commands = {
                 { command = "yq", filetype = "json" },
               },
+              arguments = "-r",
             })
           end,
           desc = "run yq",
