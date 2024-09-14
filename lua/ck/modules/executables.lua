@@ -96,41 +96,6 @@ function M.run_sd()
   end)
 end
 
-function M.run_jq()
-  local store_key = "JQ_INPUT"
-  local shada = require("ck.modules.shada")
-  local stored_value = shada.get(store_key)
-
-  vim.ui.input({
-    prompt = "jq: ",
-    highlight = utils.treesitter_highlight("bash"),
-    default = stored_value,
-  }, function(arguments)
-    if arguments == nil then
-      arguments = "."
-    end
-
-    arguments = vim.split(arguments, " ")
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-    job
-      .create({
-        command = "jq",
-        args = arguments,
-        writer = lines,
-        on_success = function(j)
-          shada.set(store_key, table.concat(arguments, " "))
-
-          local result = table.concat(j:result(), "\n")
-
-          log:info("Copied result to clipboard.")
-          vim.fn.setreg(vim.v.register or nvim.system_register, result)
-        end,
-      })
-      :start()
-  end)
-end
-
 function M.run_otree()
   local terminal = require("ck.plugins.toggleterm-nvim")
 
@@ -207,7 +172,7 @@ function M.run_yq()
 end
 
 function M.set_env()
-  local store_key = "core_SET_ENV_VAR"
+  local store_key = "SET_ENV_VAR"
   local shada = require("ck.modules.shada")
   local stored_value = shada.get(store_key)
 
@@ -310,20 +275,6 @@ function M.setup()
             M.run_genpass()
           end,
           desc = "run genpass",
-        },
-        {
-          fn.wk_keystroke({ categories.RUN, "j" }),
-          function()
-            M.run_jq()
-          end,
-          desc = "run jq",
-        },
-        {
-          fn.wk_keystroke({ categories.RUN, "J" }),
-          function()
-            M.run_yq()
-          end,
-          desc = "run yq",
         },
         {
           fn.wk_keystroke({ categories.RUN, "o" }),

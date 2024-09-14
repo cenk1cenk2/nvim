@@ -117,6 +117,7 @@ local plugins = {
   "img-clip-nvim",
   "youtrack-nvim",
   "crates-nvim",
+  "jq-nvim",
 }
 
 function M.config()
