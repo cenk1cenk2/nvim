@@ -23,14 +23,17 @@ function M.config()
     setup = function()
       local size = {}
       if vim.o.columns < 180 then
-        size.width = math.floor(vim.o.columns * 0.95)
+        size.width = 0.95
       end
       if vim.o.lines < 60 then
-        size.height = math.floor(vim.o.lines * 0.95)
+        size.height = 0.95
       end
 
       return {
-        size = size,
+        ui = {
+          width = size.width,
+          height = size.height,
+        },
       }
     end,
     on_setup = function(c)
