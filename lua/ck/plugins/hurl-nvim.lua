@@ -27,6 +27,7 @@ function M.config()
       return {
         -- Show debugging info
         debug = false,
+        auto_close = false,
         -- Show response in popup or split
         mode = "popup",
         -- Split settings
@@ -46,6 +47,11 @@ function M.config()
           -- json = { "prettierd", "result.json" },
           json = { "jq" },
           html = { "prettierd", "result.html" },
+        },
+        mappings = {
+          close = "q", -- Close the response popup or split view
+          next_panel = "<C-n>", -- Move to the next response popup window
+          prev_panel = "<C-p>", -- Move to the previous response popup window
         },
       }
     end,
