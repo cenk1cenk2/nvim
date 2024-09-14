@@ -31,6 +31,7 @@ function M.config()
           fn.wk_keystroke({ categories.RUN, "j" }),
           function()
             require("jq").run({
+              toggle = true,
               commands = {
                 { command = "jq", filetype = "json" },
               },
@@ -42,6 +43,7 @@ function M.config()
           fn.wk_keystroke({ categories.RUN, "J" }),
           function()
             require("jq").run({
+              toggle = true,
               commands = {
                 { command = "yq", filetype = "json" },
               },
