@@ -16,6 +16,7 @@ function M.config()
     setup = function()
       ---@type schema_companion.Config
       return {
+        log_level = require("ck.log"):to_nvim_level(),
         enable_telescope = true,
         -- Built in file matchers
         matchers = {

@@ -2,42 +2,44 @@ local M = {}
 
 ---@class WKCategories
 ---@field ACTIONS string
+---@field BOOKMARKS string
 ---@field BUFFER string
 ---@field COPILOT string
 ---@field DEBUG string
 ---@field FIND string
----@field SEARCH string
 ---@field GIT string
+---@field ISSUES string
 ---@field LSP string
----@field LOGS string Subcategory.
----@field BOOKMARKS string
----@field NOTES string
----@field TESTS string
----@field TERMINAL string
----@field SESSION string
 ---@field NEOVIM string
+---@field NOTES string
 ---@field PLUGINS string
 ---@field RUN string
+---@field SEARCH string
+---@field SESSION string
+---@field TERMINAL string
+---@field TESTS string
 ---@field TREESITTER string
+---@field LOGS string Subcategory.
 
 ---@type WKCategories
 M.CATEGORIES = {
   ACTIONS = "a",
+  BOOKMARKS = "m",
   BUFFER = "b",
   COPILOT = "c",
   DEBUG = "d",
   FIND = "f",
-  SEARCH = "s",
   GIT = "g",
+  ISSUES = "i",
   LSP = "l",
-  BOOKMARKS = "m",
-  NOTES = "n",
-  TESTS = "j",
-  TERMINAL = "t",
-  SESSION = "w",
   NEOVIM = "N",
+  NOTES = "n",
   PLUGINS = "P",
   RUN = "r",
+  SEARCH = "s",
+  SESSION = "w",
+  TERMINAL = "t",
+  TESTS = "j",
   TREESITTER = "T",
   --- subcategories
   LOGS = "?",
@@ -252,6 +254,14 @@ function M.setup()
           {
             fn.wk_keystroke({ categories.SEARCH }),
             group = "search",
+            mode = { "n", "v" },
+          },
+
+          -- issues
+
+          {
+            fn.wk_keystroke({ categories.ISSUES }),
+            group = "issues",
             mode = { "n", "v" },
           },
 

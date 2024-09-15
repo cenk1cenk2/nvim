@@ -21,7 +21,9 @@ function M.config()
       }
     end,
     setup = function()
-      return {}
+      return {
+        log_level = require("ck.log"):to_nvim_level(),
+      }
     end,
     on_setup = function(c)
       require("jq").setup(c)

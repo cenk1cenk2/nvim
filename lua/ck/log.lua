@@ -53,14 +53,27 @@ function M:set_log_level(level)
         s.level = log_level
       end
     end
+    nvim.log.level = level
 
     M:info("Set log level: %s", level)
   end, debug.traceback)
 end
 
 ---@param level LogLevel
+---@return integer | string
 function M:to_level(level)
   return M.map[tostring(level):upper()]
+end
+
+---@return integer
+function M:to_nvim_level()
+  if type(nvim.log.level) == "string" then
+    ---@diagnostic disable-next-line: return-type-mismatch
+    return M:to_level(nvim.log.level)
+  end
+
+  ---@diagnostic disable-next-line: return-type-mismatch
+  return nvim.log.level
 end
 
 function M:init()
