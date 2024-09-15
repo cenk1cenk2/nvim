@@ -3,16 +3,11 @@ local M = {}
 ---@module "structlog"
 
 M.map = {
-  [1] = "TRACE",
-  [2] = "DEBUG",
-  [3] = "INFO",
-  [4] = "WARN",
-  [5] = "ERROR",
-  TRACE = 1,
-  DEBUG = 2,
-  INFO = 3,
-  WARN = 4,
-  ERROR = 5,
+  TRACE = vim.log.levels.TRACE,
+  DEBUG = vim.log.levels.DEBUG,
+  INFO = vim.log.levels.INFO,
+  WARN = vim.log.levels.WARN,
+  ERROR = vim.log.levels.ERROR,
 }
 
 ---@enum LogLevel
@@ -60,20 +55,14 @@ function M:set_log_level(level)
 end
 
 ---@param level LogLevel
----@return integer | string
+---@return integer
 function M:to_level(level)
   return M.map[tostring(level):upper()]
 end
 
 ---@return integer
 function M:to_nvim_level()
-  if type(nvim.log.level) == "string" then
-    ---@diagnostic disable-next-line: return-type-mismatch
-    return M:to_level(nvim.log.level)
-  end
-
-  ---@diagnostic disable-next-line: return-type-mismatch
-  return nvim.log.level
+  return M:to_level(nvim.log.level)
 end
 
 function M:init()
