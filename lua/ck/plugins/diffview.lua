@@ -115,15 +115,19 @@ function M.config()
             { "n", "]x", actions.next_conflict, { desc = "in the merge_tool: jump to the next conflict" } },
           },
           diff1 = { --[[ Mappings in single window diff layouts ]]
+            { "n", "g?", actions.help, { desc = "help" } },
           },
           diff2 = { --[[ Mappings in 2-way diff layouts ]]
+            { "n", "g?", actions.help, { desc = "help" } },
           },
           diff3 = {
+            { "n", "g?", actions.help, { desc = "help" } },
             -- Mappings in 3-way diff layouts
             { { "n", "x" }, "2do", actions.diffget("ours") }, -- Obtain the diff hunk from the OURS version of the file
             { { "n", "x" }, "3do", actions.diffget("theirs") }, -- Obtain the diff hunk from the THEIRS version of the file
           },
           diff4 = {
+            { "n", "g?", actions.help, { desc = "help" } },
             -- Mappings in 4-way diff layouts
             { { "n", "x" }, "1do", actions.diffget("base") }, -- Obtain the diff hunk from the BASE version of the file
             { { "n", "x" }, "2do", actions.diffget("ours") }, -- Obtain the diff hunk from the OURS version of the file
@@ -162,15 +166,16 @@ function M.config()
             { "n", "]x", actions.next_conflict, { desc = "next conflict" } },
           },
           file_history_panel = {
-            { "n", "g?", actions.help, { desc = "help" } },
+            { "n", "g!", actions.options, { desc = "open the option panel" } },
+            { "n", "g?", actions.help("file_history_panel"), { desc = "Open the help panel" } },
             { "n", "<localleader>e", actions.toggle_files, { desc = "toggle the file panel." } },
             { "n", "<localleader>E", actions.focus_files, { desc = "bring focus to the file panel" } },
+            { "n", "<localleader>w", actions.cycle_layout, { desc = "cycle through available layouts." } },
             { "n", "gf", actions.goto_file, { desc = "goto file" } },
             { "n", "<localleader>o", actions.goto_file_edit, { desc = "open file" } },
             { "n", "<localleader>v", actions.goto_file_split, { desc = "goto file in split" } },
             { "n", "<localleader>n", actions.goto_file_tab, { desc = "goto file in tab" } },
-            { "n", "g!", actions.options, { desc = "open the option panel" } },
-            { "n", "<C-A-d>", actions.open_in_diffview, { desc = "open the entry under the cursor in a diffview" } },
+            { "n", "<localleader>o", actions.open_in_diffview, { desc = "open the entry under the cursor in a diffview" } },
             { "n", "y", actions.copy_hash, { desc = "copy the commit hash of the entry under the cursor" } },
             { "n", "L", actions.open_commit_log, { desc = "commit log" } },
             { "n", "zR", actions.open_all_folds, { desc = "open all folds" } },
@@ -189,6 +194,7 @@ function M.config()
             { "n", "<s-tab>", actions.select_prev_entry, { desc = "previous entry" } },
           },
           option_panel = {
+            { "n", "g?", actions.help, { desc = "help" } },
             { "n", "<tab>", actions.select_entry, { desc = "select entry" } },
             { "n", "q", actions.close, { desc = "close" } },
           },
@@ -210,6 +216,14 @@ function M.config()
           mode = { "n", "v" },
         },
         {
+          fn.wk_keystroke({ categories.GIT, "A" }),
+          function()
+            vim.cmd([[DiffviewFileHistory --base=LOCAL %]])
+          end,
+          desc = "buffer commits [HEAD]",
+          mode = { "n", "v" },
+        },
+        {
           fn.wk_keystroke({ categories.GIT, "d" }),
           function()
             if next(require("diffview.lib").views) == nil then
@@ -226,6 +240,13 @@ function M.config()
             vim.cmd([[DiffviewFileHistory]])
           end,
           desc = "workspace commits",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "W" }),
+          function()
+            vim.cmd([[DiffviewFileHistory --base=HEAD]])
+          end,
+          desc = "workspace commits [HEAD]",
         },
         {
           fn.wk_keystroke({ categories.GIT, "c" }),

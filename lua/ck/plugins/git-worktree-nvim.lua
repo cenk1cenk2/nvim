@@ -25,18 +25,18 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.GIT, "W" }),
+          fn.wk_keystroke({ categories.GIT, "t" }),
           group = "worktree",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "W", "f" }),
+          fn.wk_keystroke({ categories.GIT, "t", "f" }),
           function()
             require("telescope").extensions.git_worktree.git_worktrees(require("telescope.themes").get_dropdown({}))
           end,
           desc = "git worktrees",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "W", "c" }),
+          fn.wk_keystroke({ categories.GIT, "t", "c" }),
           function()
             require("telescope").extensions.git_worktree.create_git_worktree(require("telescope.themes").get_dropdown({}))
           end,
