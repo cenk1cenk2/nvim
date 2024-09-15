@@ -207,6 +207,7 @@ function M.config()
             vim.cmd([[DiffviewFileHistory %]])
           end,
           desc = "buffer commits",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.GIT, "d" }),
