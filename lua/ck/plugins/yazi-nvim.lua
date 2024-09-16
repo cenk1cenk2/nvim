@@ -16,6 +16,7 @@ function M.config()
       ---@type YaziConfig
       return {
         yazi_floating_window_border = nvim.ui.border,
+        highlight_hovered_buffers_in_same_directory = false,
         keymaps = {
           show_help = "<f1>",
           open_file_in_vertical_split = "<c-v>",
