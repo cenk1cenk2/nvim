@@ -136,41 +136,6 @@ function M.run_otree()
   t:toggle()
 end
 
-function M.run_yq()
-  local store_key = "YQ_INPUT"
-  local shada = require("ck.modules.shada")
-  local stored_value = shada.get(store_key)
-
-  vim.ui.input({
-    prompt = "yq: ",
-    highlight = utils.treesitter_highlight("bash"),
-    default = stored_value,
-  }, function(arguments)
-    if arguments == nil then
-      arguments = "."
-    end
-
-    arguments = vim.split(arguments, " ") or { "." }
-    local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
-
-    job
-      .create({
-        command = "yq",
-        args = arguments,
-        writer = lines,
-        on_success = function(j)
-          shada.set(store_key, table.concat(arguments, " "))
-
-          local result = table.concat(j:result(), "\n")
-
-          log:info("Copied result to clipboard: %s", result)
-          vim.fn.setreg(vim.v.register or nvim.system_register, result)
-        end,
-      })
-      :start()
-  end)
-end
-
 function M.set_env()
   local store_key = "SET_ENV_VAR"
   local shada = require("ck.modules.shada")

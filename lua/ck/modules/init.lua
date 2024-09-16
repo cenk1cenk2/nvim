@@ -9,7 +9,6 @@ local modules = {
   "quit",
   -- rest
   "unimpaired",
-  "scratch",
 }
 
 function M.config()

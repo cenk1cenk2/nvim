@@ -118,6 +118,7 @@ local plugins = {
   "youtrack-nvim",
   "crates-nvim",
   "jq-nvim",
+  "scratch-nvim",
 }
 
 function M.config()

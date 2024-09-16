@@ -1,6 +1,6 @@
 local M = {}
 
-M.prefix = "SHADA_user_store_"
+M.prefix = "SHADA_USER_STORE_"
 
 function M.set(key, value)
   vim.g[M.prefix .. key] = value
