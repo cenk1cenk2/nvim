@@ -81,10 +81,52 @@ function M.config()
           end))
       end
 
-      local brackets = { { "(", ")" }, { "[", "]" }, { "{", "}" } }
+      local get_closing_for_line = function(line)
+        local i = -1
+        local clo = ""
 
+        while true do
+          i, _ = string.find(line, "[%(%)%{%}%[%]]", i + 1)
+          if i == nil then
+            break
+          end
+          local ch = string.sub(line, i, i)
+          local st = string.sub(clo, 1, 1)
+
+          if ch == "{" then
+            clo = "}" .. clo
+          elseif ch == "}" then
+            if st ~= "}" then
+              return ""
+            end
+            clo = string.sub(clo, 2)
+          elseif ch == "(" then
+            clo = ")" .. clo
+          elseif ch == ")" then
+            if st ~= ")" then
+              return ""
+            end
+            clo = string.sub(clo, 2)
+          elseif ch == "[" then
+            clo = "]" .. clo
+          elseif ch == "]" then
+            if st ~= "]" then
+              return ""
+            end
+            clo = string.sub(clo, 2)
+          end
+        end
+
+        return clo
+      end
+
+      npairs.remove_rule("(")
+      npairs.remove_rule("{")
+      npairs.remove_rule("[")
+
+      local brackets = { { "(", ")" }, { "[", "]" }, { "{", "}" } }
       npairs.add_rules({
-        -- Add spaces between parentheses
+        -- Rule for a pair with left-side ' ' and right side ' '
         Rule(" ", " ")
           -- Pair will only occur if the conditional function returns true
           :with_pair(function(opts)
@@ -108,9 +150,52 @@ function M.config()
               brackets[3][1] .. "  " .. brackets[3][2],
             }, context)
           end),
+      })
+      -- For each pair of brackets we will add another rule
+      for _, bracket in pairs(brackets) do
+        npairs.add_rules({
+          -- Each of these rules is for a pair with left-side '( ' and right-side ' )' for each bracket type
+          Rule(bracket[1] .. " ", " " .. bracket[2])
+            :with_pair(cond.none())
+            :with_move(function(opts)
+              return opts.char == bracket[2]
+            end)
+            :with_del(cond.none())
+            :use_key(bracket[2])
+            -- Removes the trailing whitespace that can occur without this
+            :replace_map_cr(function(_)
+              return "<C-c>2xi<CR><C-c>O"
+            end),
+        })
+      end
 
-        -- angle brackets
-        Rule("<", ">"):with_pair(cond.before_regex("%a+")),
+      npairs.add_rules({
+        npairs.add_rule(Rule("[%(%{%[]", "")
+          :use_regex(true)
+          :replace_endpair(function(opts)
+            return get_closing_for_line(opts.line)
+          end)
+          :end_wise(function(opts)
+            -- Do not endwise if there is no closing
+            return get_closing_for_line(opts.line) ~= ""
+          end)),
+
+        -- auto-pair <> for generics but not as greater-than/less-than operators
+        npairs.add_rule(Rule("<", ">", {
+          -- if you use nvim-ts-autotag, you may want to exclude these filetypes from this rule
+          -- so that it doesn't conflict with nvim-ts-autotag
+          "-html",
+          "-javascriptreact",
+          "-typescriptreact",
+        }):with_pair(
+          -- regex will make it so that it will auto-pair on
+          -- `a<` but not `a <`
+          -- The `:?:?` part makes it also
+          -- work on Rust generics like `some_func::<T>()`
+          cond.before_regex("%a+:?:?$", 3)
+        ):with_move(function(opts)
+          return opts.char == ">"
+        end)),
 
         rule_context_aware_expand("{{", " ", "}}", "jinja"),
         rule_context_aware_expand("{%", " ", "%}", "jinja"),
