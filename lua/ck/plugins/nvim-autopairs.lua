@@ -120,10 +120,6 @@ function M.config()
         return clo
       end
 
-      npairs.remove_rule("(")
-      npairs.remove_rule("{")
-      npairs.remove_rule("[")
-
       local brackets = { { "(", ")" }, { "[", "]" }, { "{", "}" } }
       npairs.add_rules({
         -- Rule for a pair with left-side ' ' and right side ' '
