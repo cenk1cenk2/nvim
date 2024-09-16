@@ -166,15 +166,15 @@ function M.config()
       end
 
       npairs.add_rules({
-        npairs.add_rule(Rule("[%(%{%[]", "")
-          :use_regex(true)
-          :replace_endpair(function(opts)
-            return get_closing_for_line(opts.line)
-          end)
-          :end_wise(function(opts)
-            -- Do not endwise if there is no closing
-            return get_closing_for_line(opts.line) ~= ""
-          end)),
+        -- npairs.add_rule(Rule("[%(%{%[]", "")
+        --   :use_regex(true)
+        --   :replace_endpair(function(opts)
+        --     return get_closing_for_line(opts.line)
+        --   end)
+        --   :end_wise(function(opts)
+        --     -- Do not endwise if there is no closing
+        --     return get_closing_for_line(opts.line) ~= ""
+        --   end)),
 
         -- auto-pair <> for generics but not as greater-than/less-than operators
         npairs.add_rule(Rule("<", ">", {

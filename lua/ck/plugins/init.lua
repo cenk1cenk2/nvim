@@ -49,6 +49,7 @@ local plugins = {
   "avante-nvim",
   "aerial-nvim",
   "rnvimr",
+  "yazi-nvim",
   -- "vim-visual-multi",
   "nvim-treesitter-textobjects",
   "nvim-treesitter-context",
