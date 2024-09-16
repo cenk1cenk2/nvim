@@ -66,6 +66,8 @@ function M.config()
       local Rule = require("nvim-autopairs.rule")
       local cond = require("nvim-autopairs.conds")
 
+      npairs.add_rule(Rule("|", "|", "rust"))
+
       local rule_context_aware_expand = function(a1, ins, a2, lang)
         npairs.add_rule(Rule(ins, ins, lang)
           :with_pair(function(opts)
