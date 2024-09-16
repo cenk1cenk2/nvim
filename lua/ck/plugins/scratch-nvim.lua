@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "cenk1cenk2/scratch.nvim",
-        dir = "~/development/scratch.nvim",
+        -- dir = "~/development/scratch.nvim",
       }
     end,
     setup = function()
