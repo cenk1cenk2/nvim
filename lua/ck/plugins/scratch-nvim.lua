@@ -26,14 +26,14 @@ function M.config()
         {
           fn.wk_keystroke({ categories.RUN, "s" }),
           function()
-            require("scratch").create_scratch_buffer()
+            require("scratch").create()
           end,
           desc = "create scratch buffer",
         },
         {
           fn.wk_keystroke({ categories.RUN, "S" }),
           function()
-            require("scratch").execute_scratch_buffer(function(opts)
+            require("scratch").execute(function(opts)
               local Terminal = require("ck.plugins.toggleterm-nvim")
 
               local terminal = Terminal.create_terminal(Terminal.generate_defaults_float_terminal({
