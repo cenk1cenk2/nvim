@@ -35,6 +35,9 @@ function M.config()
         },
       }
     end,
+    configure = function()
+      vim.g.copilot_status = "NotLoaded"
+    end,
     setup = function()
       return {
         panel = {
@@ -72,6 +75,12 @@ function M.config()
     end,
     on_setup = function(c)
       require("copilot").setup(c)
+    end,
+    on_done = function()
+      local api = require("copilot.api")
+      api.register_status_notification_handler(function(data)
+        vim.g.copilot_status = data.status
+      end)
     end,
     keymaps = function()
       return {

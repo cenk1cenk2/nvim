@@ -39,6 +39,7 @@ function M.config()
           },
           lualine_x = {
             components.searchcount,
+            components.copilot,
             components.snippet,
             components.noice_mode,
             components.noice_command,
@@ -139,6 +140,28 @@ function M.components()
       icon = nvim.ui.icons.git.Branch,
       color = { fg = nvim.ui.colors.black, bg = nvim.ui.colors.yellow[300] },
       cond = conditions.hide_in_width,
+    },
+    copilot = {
+      function()
+        local status = vim.g.copilot_status
+
+        if status == "Normal" then
+          return nvim.ui.icons.misc.Robot
+        elseif status == "InProgress" then
+          return nvim.ui.icons.ui.Lightbulb
+        elseif status == "Warning" then
+          return nvim.ui.icons.diagnostics.Warning
+        end
+
+        return nvim.ui.icons.ui.Close
+      end,
+      cond = function()
+        return conditions.hide_in_width() and is_loaded("copilot")
+      end,
+      color = {
+        fg = nvim.ui.colors.white,
+        bg = nvim.ui.colors.blue[300],
+      },
     },
     filetype = {
       "filetype",
