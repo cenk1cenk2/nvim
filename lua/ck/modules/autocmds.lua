@@ -202,7 +202,7 @@ function M.setup()
           end,
         },
         {
-          event = { "VimLeave" },
+          event = { "VimLeavePre" },
           group = "_tmux",
           pattern = "*",
           callback = function()
