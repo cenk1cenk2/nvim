@@ -33,3 +33,4 @@ lua/lv-user-config/
 .gitlab.nvim
 
 /testingsmt
+.DS_Store
