@@ -44,6 +44,7 @@ function M.config()
             components.noice_command,
           },
           lualine_y = {
+            components.yazi,
             components.lazy_updates,
             components.location,
             components.ff,
@@ -431,6 +432,16 @@ function M.components()
       color = { fg = nvim.ui.colors.blue[600] },
       cond = function()
         return is_loaded("noice") and require("noice").api.statusline.command.has()
+      end,
+    },
+    yazi = {
+      function()
+        return nvim.ui.icons.ui.FolderOpen
+      end,
+      color = { bg = nvim.ui.colors.yellow[600], fg = nvim.ui.colors.black },
+      cond = function()
+        local env = vim.env["YAZI_LEVEL"]
+        return conditions.hide_in_width() and env and env ~= ""
       end,
     },
   }
