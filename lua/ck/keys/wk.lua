@@ -328,7 +328,16 @@ function M.setup()
           {
             fn.wk_keystroke({ categories.GIT, "r" }),
             function()
-              vim.api.nvim_set_current_dir(vim.fs.root(0, { ".git" }))
+              local root = vim.fs.root(0, { ".git" })
+
+              if not root then
+                require("ck.log"):warn("Can not find git root.")
+                return
+              end
+
+              require("ck.log"):info("Changing cwd to git root: %s", root)
+
+              vim.api.nvim_set_current_dir(root)
             end,
             desc = "cwd as git root",
             mode = { "n", "v" },
