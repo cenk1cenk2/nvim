@@ -16,6 +16,12 @@ function M.config()
       ---@type YaziConfig
       return {
         yazi_floating_window_border = nvim.ui.border,
+        highlight_groups = {
+          -- See https://github.com/mikavilpas/yazi.nvim/pull/180
+          hovered_buffer = {},
+          -- See https://github.com/mikavilpas/yazi.nvim/pull/351
+          hovered_buffer_in_same_directory = {},
+        },
         highlight_hovered_buffers_in_same_directory = false,
         keymaps = {
           show_help = "<f1>",
