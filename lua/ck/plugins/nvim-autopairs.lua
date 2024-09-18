@@ -66,21 +66,6 @@ function M.config()
       local Rule = require("nvim-autopairs.rule")
       local cond = require("nvim-autopairs.conds")
 
-      npairs.add_rule(Rule("|", "|", "rust"))
-
-      local rule_context_aware_expand = function(a1, ins, a2, lang)
-        npairs.add_rule(Rule(ins, ins, lang)
-          :with_pair(function(opts)
-            return a1 .. a2 == opts.line:sub(opts.col - #a1, opts.col + #a2 - 1)
-          end)
-          :with_move(cond.none())
-          :with_cr(cond.none())
-          :with_del(function(opts)
-            local col = vim.api.nvim_win_get_cursor(0)[2]
-            return a1 .. ins .. ins .. a2 == opts.line:sub(col - #a1 - #ins + 1, col + #ins + #a2) -- insert only works for #ins == 1 anyway
-          end))
-      end
-
       local get_closing_for_line = function(line)
         local i = -1
         local clo = ""
@@ -120,6 +105,23 @@ function M.config()
         return clo
       end
 
+      local rule_context_aware_expand = function(a1, ins, a2, lang)
+        return Rule(ins, ins, lang)
+          :with_pair(function(opts)
+            return a1 .. a2 == opts.line:sub(opts.col - #a1, opts.col + #a2 - 1)
+          end)
+          :with_move(cond.none())
+          :with_cr(cond.none())
+          :with_del(function(opts)
+            local col = vim.api.nvim_win_get_cursor(0)[2]
+            return a1 .. ins .. ins .. a2 == opts.line:sub(col - #a1 - #ins + 1, col + #ins + #a2) -- insert only works for #ins == 1 anyway
+          end)
+      end
+
+      npairs.add_rules({
+        Rule("|", "|", "rust"),
+      })
+
       local brackets = {
         { "(", ")" },
         { "[", "]" },
@@ -156,37 +158,13 @@ function M.config()
       })
 
       -- For each pair of brackets we will add another rule
-      for _, bracket in pairs(brackets) do
-        npairs.add_rules({
-          -- Each of these rules is for a pair with left-side '( ' and right-side ' )' for each bracket type
-          Rule(bracket[1] .. " ", " " .. bracket[2])
-            :with_pair(cond.none())
-            :with_move(function(opts)
-              return opts.char == bracket[2]
-            end)
-            :with_del(cond.none())
-            :use_key(bracket[2])
-            -- Removes the trailing whitespace that can occur without this
-            :replace_map_cr(function(_)
-              return "<C-c>2xi<CR><C-c>O"
-            end),
-        })
-      end
+      npairs.add_rules(vim.tbl_map(function(bracket)
+        return Rule(bracket[1], bracket[2]):with_pair(cond.not_filetypes({ "markdown", "jinja", "gotmpl" })):with_move(cond.none()):with_cr(cond.none()):with_del(cond.none())
+      end, brackets))
 
       npairs.add_rules({
-        npairs.add_rule,
-        -- npairs.add_rule(Rule("[%(%{%[]", "")
-        --   :use_regex(true)
-        --   :replace_endpair(function(opts)
-        --     return get_closing_for_line(opts.line)
-        --   end)
-        --   :end_wise(function(opts)
-        --     -- Do not endwise if there is no closing
-        --     return get_closing_for_line(opts.line) ~= ""
-        --   end)),
-
         -- auto-pair <> for generics but not as greater-than/less-than operators
-        npairs.add_rule(Rule("<", ">", {
+        Rule("<", ">", {
           -- if you use nvim-ts-autotag, you may want to exclude these filetypes from this rule
           -- so that it doesn't conflict with nvim-ts-autotag
           "-html",
@@ -200,11 +178,15 @@ function M.config()
           cond.before_regex("%a+:?:?$", 3)
         ):with_move(function(opts)
           return opts.char == ">"
-        end)),
+        end),
+      })
 
+      npairs.add_rules({
         rule_context_aware_expand("{{", " ", "}}", "jinja"),
         rule_context_aware_expand("{%", " ", "%}", "jinja"),
+      })
 
+      npairs.add_rules({
         -- arrow key on javascript
         Rule("%(.*%)%s*%=>$", " {}", {
           "javascript",
@@ -214,7 +196,9 @@ function M.config()
           "vue",
           "svelte",
         }):use_regex(true):set_end_pair_length(2),
+      })
 
+      npairs.add_rules({
         -- auto addspace on =
         Rule("=", "", {
             "javascript",
@@ -253,6 +237,18 @@ function M.config()
           :with_move(cond.none())
           :with_del(cond.none()),
       })
+
+      -- npairs.add_rules({
+      --   Rule("[%(%{%[]", "")
+      --     :use_regex(true)
+      --     :replace_endpair(function(opts)
+      --       return get_closing_for_line(opts.line)
+      --     end)
+      --     :end_wise(function(opts)
+      --       -- Do not endwise if there is no closing
+      --       return get_closing_for_line(opts.line) ~= ""
+      --     end),
+      -- })
 
       require("nvim-treesitter.configs").setup({ autopairs = { enable = true } })
 
