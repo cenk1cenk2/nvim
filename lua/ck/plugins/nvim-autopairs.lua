@@ -120,36 +120,61 @@ function M.config()
         return clo
       end
 
-      local brackets = { { "(", ")" }, { "[", "]" }, { "{", "}" } }
+      local brackets = {
+        { "(", ")" },
+        { "[", "]" },
+        { "{", "}" },
+      }
+      npairs.add_rules({
+        -- Rule for a pair with left-side ' ' and right side ' '
+        Rule(" ", " ")
+          -- Pair will only occur if the conditional function returns true
+          :with_pair(function(opts)
+            -- We are checking if we are inserting a space in (), [], or {}
+            local pair = opts.line:sub(opts.col - 1, opts.col)
+            return vim.tbl_contains(
+              vim.tbl_map(function(bracket)
+                return bracket[1] .. bracket[2]
+              end, brackets),
+              pair
+            )
+          end)
+          :with_move(cond.none())
+          :with_cr(cond.none())
+          -- We only want to delete the pair of spaces when the cursor is as such: ( | )
+          :with_del(function(opts)
+            local col = vim.api.nvim_win_get_cursor(0)[2]
+            local context = opts.line:sub(col - 1, col + 2)
+            return cond.not_filetypes({ "markdown", "jinja", "gotmpl" })
+              and vim.tbl_contains(
+                vim.tbl_map(function(bracket)
+                  return bracket[1] .. bracket[2]
+                end, brackets),
+                context
+              )
+          end),
+      })
+
+      -- For each pair of brackets we will add another rule
+      for _, bracket in pairs(brackets) do
+        npairs.add_rules({
+          -- Each of these rules is for a pair with left-side '( ' and right-side ' )' for each bracket type
+          Rule(bracket[1] .. " ", " " .. bracket[2])
+            :with_pair(cond.none())
+            :with_move(function(opts)
+              return opts.char == bracket[2]
+            end)
+            :with_del(cond.none())
+            :use_key(bracket[2])
+            -- Removes the trailing whitespace that can occur without this
+            :replace_map_cr(function(_)
+              return "<C-c>2xi<CR><C-c>O"
+            end),
+        })
+      end
 
       npairs.add_rules({
-        npairs.add_rule(
-          -- Rule for a pair with left-side ' ' and right side ' '
-          Rule(" ", " ")
-            -- Pair will only occur if the conditional function returns true
-            :with_pair(function(opts)
-              -- We are checking if we are inserting a space in (), [], or {}
-              return cond.not_filetypes({ "markdown", "jinja", "gotmpl" })
-                and vim.tbl_contains({
-                  brackets[1][1] .. brackets[1][2],
-                  brackets[2][1] .. brackets[2][2],
-                  brackets[3][1] .. brackets[3][2],
-                }, opts.line:sub(opts.col - 1, opts.col))
-            end)
-            :with_move(cond.none())
-            :with_cr(cond.none())
-            -- We only want to delete the pair of spaces when the cursor is as such: ( | )
-            :with_del(function(opts)
-              local col = vim.api.nvim_win_get_cursor(0)[2]
-              local context = opts.line:sub(col - 1, col + 2)
-              return vim.tbl_contains({
-                brackets[1][1] .. "  " .. brackets[1][2],
-                brackets[2][1] .. "  " .. brackets[2][2],
-                brackets[3][1] .. "  " .. brackets[3][2],
-              }, context)
-            end)
-        ),
-
+        npairs.add_rule,
         -- npairs.add_rule(Rule("[%(%{%[]", "")
         --   :use_regex(true)
         --   :replace_endpair(function(opts)
@@ -181,7 +206,7 @@ function M.config()
         rule_context_aware_expand("{%", " ", "%}", "jinja"),
 
         -- arrow key on javascript
-        Rule("%(.*%)%s*%=>$", " {  }", {
+        Rule("%(.*%)%s*%=>$", " {}", {
           "javascript",
           "typescript",
           "javascriptreact",
@@ -199,6 +224,7 @@ function M.config()
             "svelte",
             "vue",
             "go",
+            "lua",
           })
           :with_pair(cond.not_inside_quote)
           :with_pair(function(opts)
@@ -232,14 +258,6 @@ function M.config()
 
       if is_loaded("cmp") then
         require("cmp").event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())
-
-        -- require("cmp").event:on("confirm_done", function(evt)
-        --   if evt.entry.completion_item then
-        --     require("nvim-autopairs.completion.cmp").on_confirm_done()(evt)
-        --
-        --     vim.api.nvim_exec_autocmds("CompleteChanged", {})
-        --   end
-        -- end)
       end
     end,
   })
