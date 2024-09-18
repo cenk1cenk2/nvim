@@ -143,7 +143,7 @@ function M.components()
     },
     copilot = {
       function()
-        local status = vim.g.copilot_status
+        local status = require("copilot.api").status.data.status
 
         if status == "Normal" then
           return nvim.ui.icons.misc.Robot
