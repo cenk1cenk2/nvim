@@ -62,7 +62,7 @@ function M.config()
           backend = { "telescope", "fzf", "builtin", "nui" },
 
           -- Options for telescope selector
-          telescope = require("telescope.themes").get_dropdown({}),
+          telescope = require("telescope.themes").get_dropdown({ preview = true }),
 
           -- see :help dressing_get_config
           get_config = nil,
