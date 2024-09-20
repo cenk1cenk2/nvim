@@ -18,14 +18,17 @@ function M.run_buffer_command(opts)
     on_success = function(j)
       vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
     end,
+    on_failure = function(j)
+      log:error("Error running command: %s", j:result_stderr())
+    end,
   }))
   j:start()
 
   return j
 end
 
----@class Executables.RunTemporaryBufferToTerminalCommandOptions: CommandJob
----@field command (fun(path: string, filetype: string): string) | string
+---@class Executables.RunTemporaryBufferToTerminalCommandOptions: TermCreateArgs
+---@field cmd (fun(path: string, filetype: string): string) | string
 
 ---
 ---@param opts Executables.RunTemporaryBufferToTerminalCommandOptions
@@ -37,6 +40,7 @@ function M.run_temporary_buffer_to_terminal_command(opts)
   local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
   local path = table.concat({ os.tmpname(), require("ck.utils.fs").get_buffer_extension(bufnr) }, ".")
+  local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
 
   local fd, err = io.open(path, "w+")
 
@@ -50,8 +54,8 @@ function M.run_temporary_buffer_to_terminal_command(opts)
   fd:flush()
   fd:close()
 
-  if type(opts.command) == "function" then
-    opts.command = opts.command(path, vim.api.nvim_get_option_value("filetype", { buf = bufnr }))
+  if type(opts.cmd) == "function" then
+    opts.cmd = opts.cmd(path, filetype)
   end
 
   return terminal
@@ -66,6 +70,9 @@ function M.run_temporary_buffer_to_terminal_command(opts)
         end
 
         log:info("Temporary path removed: %s", path)
+      end,
+      on_failure = function(j)
+        log:error("Error running command: %s", j:result_stderr())
       end,
     }))
     :toggle()
@@ -238,7 +245,7 @@ function M.setup()
           fn.wk_keystroke({ categories.RUN, "o" }),
           function()
             M.run_temporary_buffer_to_terminal_command({
-              command = function(path)
+              cmd = function(path)
                 return ("otree '%s'"):format(path)
               end,
             })
