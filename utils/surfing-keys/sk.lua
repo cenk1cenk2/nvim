@@ -548,17 +548,19 @@ end
 --   },
 -- })
 
-require("utils.setup").create_autocmds({
-  {
-    event = "BufWriteCmd",
-    group = "_surfingkeys",
-    pattern = ("%s/*"):format(surfingkeys_tempdir),
-    callback = function(event)
-      vim.cmd([[call SurfingkeysWrite()]])
+require("ck.setup").init({
+  autocmds = {
+    {
+      event = "BufWriteCmd",
+      group = "_surfingkeys",
+      pattern = ("%s/*"):format(surfingkeys_tempdir),
+      callback = function(event)
+        vim.cmd([[call SurfingkeysWrite()]])
 
-      -- surfingkeys_notify("WriteData", vim.api.nvim_buf_get_lines(event.buf, 0, -1, false))
-      -- vim.api.nvim_set_option_value("modified", false, { buf = event.buf })
-    end,
+        -- surfingkeys_notify("WriteData", vim.api.nvim_buf_get_lines(event.buf, 0, -1, false))
+        -- vim.api.nvim_set_option_value("modified", false, { buf = event.buf })
+      end,
+    },
   },
 })
 
