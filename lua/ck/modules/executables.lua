@@ -5,13 +5,14 @@ local utils = require("ck.utils")
 local M = {}
 
 ---@module "plenary.job"
+---@module "toggleterm"
 
 ---
 ---@param opts CommandJob
 ---@return Job
 function M.run_buffer_command(opts)
   local bufnr = vim.api.nvim_get_current_buf()
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local lines = utils.get_visual_selection() or vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
   local j = job.create(vim.tbl_extend("force", opts, {
     writer = lines,
@@ -50,7 +51,7 @@ end
 ---@return Job
 function M.run_buffer_clipboard_command(opts)
   local bufnr = vim.api.nvim_get_current_buf()
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local lines = utils.get_visual_selection() or vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
   local j = job.create(vim.tbl_extend("force", opts, {
     writer = lines,
@@ -106,7 +107,7 @@ function M.run_buffer_to_temporary_terminal_command(opts)
   local terminal = require("ck.plugins.toggleterm-nvim")
 
   local bufnr = vim.api.nvim_get_current_buf()
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+  local lines = utils.get_visual_selection() or vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
   local path = table.concat({ os.tmpname(), require("ck.utils.fs").get_buffer_extension(bufnr) }, ".")
   local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })

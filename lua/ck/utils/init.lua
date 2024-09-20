@@ -30,6 +30,7 @@ function M.reload_file()
   end
 end
 
+---@return string[]?
 function M.get_visual_selection()
   -- this will exit visual mode
   -- use 'gv' to reselect the text
@@ -46,10 +47,9 @@ function M.get_visual_selection()
     -- exit visual mode
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
   else
-    -- otherwise, use the last known visual position
-    _, csrow, cscol, _ = unpack(vim.fn.getpos("'<"))
-    _, cerow, cecol, _ = unpack(vim.fn.getpos("'>"))
+    return
   end
+
   -- swap vars if needed
   if cerow < csrow then
     csrow, cerow = cerow, csrow
@@ -61,12 +61,13 @@ function M.get_visual_selection()
   -- local n = cerow-csrow+1
   local n = #lines
   if n <= 0 then
-    return ""
+    return { "" }
   end
   lines[n] = string.sub(lines[n], 1, cecol)
   lines[1] = string.sub(lines[1], cscol)
 
-  return table.concat(lines, "\n")
+  ---@diag disable-next-line: return-type-mismatch
+  return lines
 end
 
 return M
