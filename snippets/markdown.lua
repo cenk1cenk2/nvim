@@ -141,4 +141,20 @@ return {
       }
     )
   ),
+  s.postfix({
+    trig = ".linkme",
+    desc = "Creates a link out of it.",
+  }, {
+    s.f(function(_, parent)
+      return "[" .. parent.snippet.env.POSTFIX_MATCH .. "]()"
+    end, {}),
+  }),
+  s.postfix({
+    trig = ".linkit",
+    desc = "Creates a link out of it.",
+  }, {
+    s.f(function(_, parent)
+      return "[](" .. parent.snippet.env.POSTFIX_MATCH .. ")"
+    end, {}),
+  }),
 }
