@@ -203,7 +203,15 @@ function M.config()
         require("ck.modules.autocmds").init_with({ "FileType" }, { "grug-far" }, function(event)
           return {
             keymaps = {
-
+              {
+                "<localleader>m",
+                function()
+                  return grug_far_toggle_flags({ "--multiline" })
+                end,
+                desc = "Grug Far: toggle --multiline",
+                mode = { "n" },
+                buffer = event.buf,
+              },
               {
                 "<localleader>w",
                 function()
