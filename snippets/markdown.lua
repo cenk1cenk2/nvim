@@ -149,6 +149,22 @@ return {
       return "[" .. parent.snippet.env.POSTFIX_MATCH .. "]()"
     end, {}),
   }),
+  -- s.treesitter_postfix({
+  --   trig = ".linkme",
+  --   matchTSNode = {
+  --     query = [[
+  --           [
+  --             (inline)
+  --           ] @prefix
+  --       ]],
+  --     query_lang = "markdown",
+  --   },
+  -- }, {
+  --   s.f(function(_, parent)
+  --     local node_content = table.concat(parent.snippet.env.LS_TSMATCH or {}, "\n")
+  --     return vim.split(("[%s]())"):format(node_content), "\n", { trimempty = false })
+  --   end),
+  -- }),
   s.postfix({
     trig = ".linkit",
     desc = "Creates a link out of it.",
