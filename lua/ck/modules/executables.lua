@@ -207,6 +207,26 @@ function M.setup()
           desc = "sd",
         },
         {
+          fn.wk_keystroke({ categories.ISSUES, "m" }),
+          function()
+            M.run_buffer_command({
+              command = "jira-printer",
+              args = { "-i", "markdown", "-o", "jira" },
+            })
+          end,
+          desc = "convert markdown to jira",
+        },
+        {
+          fn.wk_keystroke({ categories.ISSUES, "M" }),
+          function()
+            M.run_buffer_command({
+              command = "jira-printer",
+              args = { "-i", "jira", "-o", "markdown" },
+            })
+          end,
+          desc = "convert jira to markdown",
+        },
+        {
           fn.wk_keystroke({ categories.RUN, "d" }),
           function()
             M.run_buffer_command({
