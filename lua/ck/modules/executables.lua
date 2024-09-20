@@ -4,6 +4,73 @@ local utils = require("ck.utils")
 
 local M = {}
 
+---@module "plenary.job"
+
+---
+---@param opts CommandJob
+---@return Job
+function M.run_buffer_command(opts)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+  local j = job.create(vim.tbl_extend("force", opts, {
+    writer = lines,
+    on_success = function(j)
+      vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
+    end,
+  }))
+  j:start()
+
+  return j
+end
+
+---@class Executables.RunTemporaryBufferToTerminalCommandOptions: CommandJob
+---@field command (fun(path: string, filetype: string): string) | string
+
+---
+---@param opts Executables.RunTemporaryBufferToTerminalCommandOptions
+---@return Terminal?
+function M.run_temporary_buffer_to_terminal_command(opts)
+  local terminal = require("ck.plugins.toggleterm-nvim")
+
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+  local path = table.concat({ os.tmpname(), require("ck.utils.fs").get_buffer_extension(bufnr) }, ".")
+
+  local fd, err = io.open(path, "w+")
+
+  if fd == nil or err then
+    log:error("Failed to open temporary file: %s", err)
+
+    return
+  end
+
+  fd:write(table.concat(lines, "\n"))
+  fd:flush()
+  fd:close()
+
+  if type(opts.command) == "function" then
+    opts.command = opts.command(path, vim.api.nvim_get_option_value("filetype", { buf = bufnr }))
+  end
+
+  return terminal
+    .create_float_terminal(vim.tbl_extend("force", opts, {
+      on_close = function()
+        local ok = os.remove(path)
+
+        if not ok then
+          log:error("Failed to remove temporary path: %s", path)
+
+          return
+        end
+
+        log:info("Temporary path removed: %s", path)
+      end,
+    }))
+    :toggle()
+end
+
 function M.run_genpass()
   local shada = require("ck.modules.shada")
   local store_key = "RUN_GENPASS_ARGS"
@@ -31,36 +98,6 @@ function M.run_genpass()
   end)
 end
 
-function M.run_ansible_vault_decrypt()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  job
-    .create({
-      command = "ansible-vault",
-      writer = lines,
-      args = { "decrypt" },
-      on_success = function(j)
-        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
-      end,
-    })
-    :start()
-end
-
-function M.run_ansible_vault_encrypt()
-  local bufnr = vim.api.nvim_get_current_buf()
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-  job
-    .create({
-      command = "ansible-vault",
-      writer = lines,
-      args = { "encrypt" },
-      on_success = function(j)
-        vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
-      end,
-    })
-    :start()
-end
-
 function M.run_sd()
   local store_key = "SD_INPUT"
   local shada = require("ck.modules.shada")
@@ -78,62 +115,12 @@ function M.run_sd()
     end
 
     arguments = vim.split(arguments, " ")
-    local bufnr = vim.api.nvim_get_current_buf()
-    local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
 
-    job
-      .create({
-        command = "sd",
-        args = arguments,
-        writer = lines,
-        on_success = function(j)
-          shada.set(store_key, table.concat(arguments, " "))
-
-          vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
-        end,
-      })
-      :start()
+    M.run_buffer_command({
+      command = "sd",
+      args = arguments,
+    })
   end)
-end
-
-function M.run_otree()
-  local terminal = require("ck.plugins.toggleterm-nvim")
-
-  -- macos piping does not work properly
-
-  local bufnr = vim.api.nvim_get_current_buf()
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
-
-  local path = table.concat({ os.tmpname(), require("ck.utils.fs").get_buffer_extension(bufnr) }, ".")
-
-  local fd, err = io.open(path, "w+")
-
-  if fd == nil or err then
-    log:error("Failed to open temporary file: %s", err)
-
-    return
-  end
-
-  fd:write(table.concat(lines, "\n"))
-  fd:flush()
-  fd:close()
-
-  local t = terminal.create_float_terminal({
-    cmd = ("otree '%s'"):format(path),
-    on_close = function()
-      local ok = os.remove(path)
-
-      if not ok then
-        log:error("Failed to remove temporary path: %s", path)
-
-        return
-      end
-
-      log:info("Temporary path removed: %s", path)
-    end,
-  })
-
-  t:toggle()
 end
 
 function M.set_env()
@@ -215,14 +202,20 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.RUN, "d" }),
           function()
-            M.run_ansible_vault_decrypt()
+            M.run_buffer_command({
+              command = "ansible-vault",
+              args = { "decrypt" },
+            })
           end,
           desc = "ansible-vault decrypt",
         },
         {
           fn.wk_keystroke({ categories.RUN, "D" }),
           function()
-            M.run_ansible_vault_encrypt()
+            M.run_buffer_command({
+              command = "ansible-vault",
+              args = { "encrypt" },
+            })
           end,
           desc = "ansible-vault encrypt",
         },
@@ -244,7 +237,11 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.RUN, "o" }),
           function()
-            M.run_otree()
+            M.run_temporary_buffer_to_terminal_command({
+              command = function(path)
+                return ("otree '%s'"):format(path)
+              end,
+            })
           end,
           desc = "run otree",
         },
