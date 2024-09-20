@@ -75,7 +75,7 @@ end
 ---
 ---@param opts Executables.RunTemporaryBufferToTerminalCommandOptions
 ---@return Terminal?
-function M.run_temporary_buffer_to_terminal_command(opts)
+function M.run_buffer_to_temporary_terminal_command(opts)
   local terminal = require("ck.plugins.toggleterm-nvim")
 
   local bufnr = vim.api.nvim_get_current_buf()
@@ -297,7 +297,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.RUN, "o" }),
           function()
-            M.run_temporary_buffer_to_terminal_command({
+            M.run_buffer_to_temporary_terminal_command({
               cmd = function(path)
                 return ("otree '%s'"):format(path)
               end,
