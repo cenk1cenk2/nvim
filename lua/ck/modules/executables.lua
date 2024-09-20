@@ -277,6 +277,7 @@ function M.setup()
             })
           end,
           desc = "convert markdown to jira",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.ISSUES, "M" }),
@@ -287,6 +288,7 @@ function M.setup()
             })
           end,
           desc = "convert jira to markdown",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.RUN, "d" }),
