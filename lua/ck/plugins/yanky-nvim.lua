@@ -10,7 +10,7 @@ function M.config()
       return {
         "gbprod/yanky.nvim",
         -- cmd = { "Telescope yanky" },
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufEnter", "BufNew" },
       }
     end,
     setup = function()
