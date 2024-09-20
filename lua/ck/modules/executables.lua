@@ -19,7 +19,49 @@ function M.run_buffer_command(opts)
       vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
     end,
     on_failure = function(j)
-      log:error("Error running command: %s", j:result_stderr())
+      log:error("Error running command: %s", j:stderr_result())
+    end,
+  }))
+  j:start()
+
+  return j
+end
+
+---
+---@param opts CommandJob
+---@return Job
+function M.run_clipboard_command(opts)
+  local j = job.create(vim.tbl_extend("force", opts, {
+    on_success = function(j)
+      local generated = j:result()
+
+      log:info("Copied generated code to clipboard: %s", generated)
+      vim.fn.setreg(vim.v.register or nvim.system_register, generated)
+    end,
+  }))
+
+  j:start()
+
+  return j
+end
+
+---
+---@param opts CommandJob
+---@return Job
+function M.run_buffer_clipboard_command(opts)
+  local bufnr = vim.api.nvim_get_current_buf()
+  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+  local j = job.create(vim.tbl_extend("force", opts, {
+    writer = lines,
+    on_success = function(j)
+      local generated = j:result()
+
+      log:info("Copied generated code to clipboard: %s", generated)
+      vim.fn.setreg(vim.v.register or nvim.system_register, generated)
+    end,
+    on_failure = function(j)
+      log:error("Error running command: %s", j:stderr_result())
     end,
   }))
   j:start()
@@ -72,7 +114,7 @@ function M.run_temporary_buffer_to_terminal_command(opts)
         log:info("Temporary path removed: %s", path)
       end,
       on_failure = function(j)
-        log:error("Error running command: %s", j:result_stderr())
+        log:error("Error running command: %s", j:stderr_result())
       end,
     }))
     :toggle()
@@ -90,18 +132,10 @@ function M.run_genpass()
   }, function(arguments)
     shada.set(store_key, arguments)
 
-    job
-      .create({
-        command = "genpass",
-        args = vim.split(arguments or {}, " "),
-        on_success = function(j)
-          local generated = j:result()[1]
-
-          log:info("Copied generated code to clipboard: %s", generated)
-          vim.fn.setreg(vim.v.register or nvim.system_register, generated)
-        end,
-      })
-      :start()
+    M.run_clipboard_command({
+      command = "genpass",
+      args = vim.split(arguments or {}, " "),
+    })
   end)
 end
 
@@ -209,7 +243,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.ISSUES, "m" }),
           function()
-            M.run_buffer_command({
+            M.run_buffer_clipboard_command({
               command = "jira-printer",
               args = { "-i", "markdown", "-o", "jira" },
             })
@@ -219,7 +253,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.ISSUES, "M" }),
           function()
-            M.run_buffer_command({
+            M.run_buffer_clipboard_command({
               command = "jira-printer",
               args = { "-i", "jira", "-o", "markdown" },
             })
@@ -253,7 +287,6 @@ function M.setup()
           end,
           desc = "set environment variable",
         },
-
         {
           fn.wk_keystroke({ categories.RUN, "g" }),
           function()
