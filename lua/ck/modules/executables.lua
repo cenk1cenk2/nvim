@@ -75,6 +75,33 @@ end
 ---
 ---@param opts Executables.RunTemporaryBufferToTerminalCommandOptions
 ---@return Terminal?
+function M.run_buffer_to_terminal_command(opts)
+  local terminal = require("ck.plugins.toggleterm-nvim")
+
+  local bufnr = vim.api.nvim_get_current_buf()
+
+  local path = require("ck.utils.fs").get_buffer_filepath(bufnr)
+  local filetype = vim.api.nvim_get_option_value("filetype", { buf = bufnr })
+
+  if type(opts.cmd) == "function" then
+    opts.cmd = opts.cmd(path, filetype)
+  end
+
+  return terminal
+    .create_float_terminal(vim.tbl_extend("force", opts, {
+      on_failure = function(j)
+        log:error("Error running command: %s", vim.fn.join(j:stderr_result(), "\n"))
+      end,
+    }))
+    :toggle()
+end
+
+---@class Executables.RunTemporaryBufferToTerminalCommandOptions: TermCreateArgs
+---@field cmd (fun(path: string, filetype: string): string) | string
+
+---
+---@param opts Executables.RunTemporaryBufferToTerminalCommandOptions
+---@return Terminal?
 function M.run_buffer_to_temporary_terminal_command(opts)
   local terminal = require("ck.plugins.toggleterm-nvim")
 
