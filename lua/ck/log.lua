@@ -2,24 +2,35 @@ local M = {}
 
 ---@module "structlog"
 
-M.map = {
+M.name = "nvim"
+
+---@enum LogLevel
+M.levels = {
+  TRACE = 1,
+  DEBUG = 2,
+  INFO = 3,
+  WARN = 4,
+  ERROR = 5,
+  [vim.log.levels.TRACE] = 1,
+  [vim.log.levels.DEBUG] = 2,
+  [vim.log.levels.INFO] = 3,
+  [vim.log.levels.WARN] = 4,
+  [vim.log.levels.ERROR] = 5,
+}
+
+---@enum NvimLogLevel
+M.nvim_levels = {
   TRACE = vim.log.levels.TRACE,
   DEBUG = vim.log.levels.DEBUG,
   INFO = vim.log.levels.INFO,
   WARN = vim.log.levels.WARN,
   ERROR = vim.log.levels.ERROR,
+  [M.levels.TRACE] = vim.log.levels.TRACE,
+  [M.levels.DEBUG] = vim.log.levels.DEBUG,
+  [M.levels.INFO] = vim.log.levels.INFO,
+  [M.levels.WARN] = vim.log.levels.WARN,
+  [M.levels.ERROR] = vim.log.levels.ERROR,
 }
-
----@enum LogLevel
-M.levels = {
-  "TRACE",
-  "DEBUG",
-  "INFO",
-  "WARN",
-  "ERROR",
-}
-
-M.name = "nvim"
 
 ---@class LogQueueEntry
 ---@field level LogLevel
@@ -33,12 +44,12 @@ local queue = {}
 ---@param level LogLevel
 function M:set_log_level(level)
   xpcall(function()
-    local log_level = M:to_level(level)
+    local log_level = self:to_level(level)
     local sl = require("structlog")
 
     local logger = sl.get_logger(M.name)
     if logger == nil then
-      M:error("No logger available.")
+      self:error("No logger available.")
 
       return
     end
@@ -50,19 +61,19 @@ function M:set_log_level(level)
     end
     nvim.log.level = level
 
-    M:info("Set log level: %s", level)
+    self:info("Set log level: %s", level)
   end, debug.traceback)
 end
 
 ---@param level LogLevel
 ---@return integer
 function M:to_level(level)
-  return M.map[tostring(level):upper()]
+  return self.levels[tostring(level):upper()]
 end
 
 ---@return integer
 function M:to_nvim_level()
-  return M:to_level(nvim.log.level)
+  return self.nvim_levels[tostring(nvim.log.level):upper()]
 end
 
 function M:init()
@@ -73,7 +84,7 @@ function M:init()
 
   local adapter = require("structlog.sinks.adapter")
 
-  local log_level = M:to_level(nvim.log.level)
+  local log_level = self:to_level(nvim.log.level)
   sl.configure({
     [M.name] = {
       pipelines = {
@@ -111,7 +122,7 @@ function M:init()
         },
         {
           name = "notify",
-          level = M.map.INFO,
+          level = M.levels.INFO,
           sink = adapter(function(log)
             vim.notify(log.msg, log.level)
           end),
@@ -134,6 +145,7 @@ end
 
 ---@param msg any
 ---@param sprintf? any[]
+---@return string
 function M:splat(msg, sprintf)
   sprintf = sprintf or {}
 
@@ -156,22 +168,22 @@ end
 
 --- Adds a log entry using Plenary.log
 ---@param level string [same as vim.log.log_levels]
----@param msg any
+---@param message any
 ---@param sprintf? any[]
-function M:write(level, msg, sprintf)
+function M:write(level, message, sprintf)
   local logger = self:setup()
 
   if not logger then
     table.insert(queue, {
-      level = level or vim.log.levels.DEBUG,
-      message = msg,
+      level = level,
+      message = message,
       sprintf = sprintf,
     })
 
     return
   end
 
-  return logger:log(level, M:splat(msg, sprintf))
+  return logger:log(level, self:splat(message, sprintf))
 end
 
 ---Retrieves the handle of the logger object
@@ -189,7 +201,7 @@ function M:setup()
   self.__handle = logger
 
   for _, entry in pairs(queue) do
-    logger:log(entry.level, M:splat(entry.message, entry.sprintf))
+    self:log(entry.level or self.levels.DEBUG, self:splat(entry.message, entry.sprintf))
   end
   queue = {}
 
@@ -214,56 +226,56 @@ function M:truncate_logfile(path)
   local fd, _, err = vim.uv.fs_open(path, "w+", 644)
 
   if err then
-    M:error("Failed to truncate log file: %s", err)
+    self:error("Failed to truncate log file: %s", err)
 
     return
   end
 
   vim.uv.fs_close(fd)
-  M:info("Truncated log file: %s", require("ck.utils.fs").get_relative_to_home(path))
+  self:info("Truncated log file: %s", require("ck.utils.fs").get_relative_to_home(path))
 end
 
----Add a log entry at TRACE level
+---Add a log entry at given level.
 ---@param level LogLevel
----@param msg any
+---@param message any
 ---@param ... any
-function M:log(level, msg, ...)
-  self:write(level, msg, { ... })
+function M:log(level, message, ...)
+  self:write(level, message, { ... })
 end
 
----Add a log entry at TRACE level
----@param msg any
+---Add a log entry at TRACE level.
+---@param message any
 ---@param ... any
-function M:trace(msg, ...)
-  self:write(self.map.TRACE, msg, { ... })
+function M:trace(message, ...)
+  self:write(self.levels.TRACE, message, { ... })
 end
 
----Add a log entry at DEBUG level
----@param msg any
+---Add a log entry at DEBUG level.
+---@param message any
 ---@param ... any
-function M:debug(msg, ...)
-  self:write(self.map.DEBUG, msg, { ... })
+function M:debug(message, ...)
+  self:write(self.levels.DEBUG, message, { ... })
 end
 
----Add a log entry at INFO level
----@param msg any
+---Add a log entry at INFO level.
+---@param message any
 ---@param ... any
-function M:info(msg, ...)
-  self:write(self.map.INFO, msg, { ... })
+function M:info(message, ...)
+  self:write(self.levels.INFO, message, { ... })
 end
 
----Add a log entry at WARN level
----@param msg any
+---Add a log entry at WARN level.
+---@param message any
 ---@param ... any
-function M:warn(msg, ...)
-  self:write(self.map.WARN, msg, { ... })
+function M:warn(message, ...)
+  self:write(self.levels.WARN, message, { ... })
 end
 
----Add a log entry at ERROR level
----@param msg any
+---Add a log entry at ERROR level.
+---@param message any
 ---@param ... any
-function M:error(msg, ...)
-  self:write(self.map.ERROR, msg, { ... })
+function M:error(message, ...)
+  self:write(self.levels.ERROR, message, { ... })
 end
 
 setmetatable({}, M)
