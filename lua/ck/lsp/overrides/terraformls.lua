@@ -7,7 +7,7 @@ require("ck.setup").init({
             ---@type WKMappings
             return {
               {
-                fn.wk_keystroke({ categories.LSP, "Q" }),
+                fn.wk_keystroke({ categories.LSP, "Q", "q" }),
                 function()
                   nvim.lsp.fn.restart_lsp()
 
