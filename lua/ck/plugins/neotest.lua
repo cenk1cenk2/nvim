@@ -59,9 +59,6 @@ function M.config()
       ---@type neotest.Config
       return {
         log_level = vim.log.levels.INFO,
-        discover = {
-          concurrent = 1,
-        },
         floating = {
           border = nvim.ui.border,
         },
