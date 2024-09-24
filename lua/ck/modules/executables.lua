@@ -17,6 +17,8 @@ function M.run_buffer_command(opts)
   local j = job.create(vim.tbl_extend("force", opts, {
     writer = lines,
     on_success = function(j)
+      log:info("Ran command: %s", opts.command)
+
       vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
     end,
     on_failure = function(j)
@@ -36,7 +38,7 @@ function M.run_clipboard_command(opts)
     on_success = function(j)
       local generated = j:result()
 
-      log:info("Copied generated code to clipboard: %s", generated)
+      log:info("Copied result of command to clipboard: %s", opts.command)
       vim.fn.setreg(vim.v.register or nvim.system_register, generated)
     end,
   }))
@@ -58,7 +60,7 @@ function M.run_buffer_clipboard_command(opts)
     on_success = function(j)
       local generated = j:result()
 
-      log:info("Copied generated code to clipboard: %s", generated)
+      log:info("Copied result of command to clipboard: %s", opts.command)
       vim.fn.setreg(vim.v.register or nvim.system_register, generated)
     end,
     on_failure = function(j)
