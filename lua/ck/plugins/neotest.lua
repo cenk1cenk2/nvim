@@ -1,7 +1,4 @@
 -- https://github.com/nvim-neotest/neotest
--- https://github.com/nvim-neotest/neotest-go
--- https://github.com/rouge8/neotest-rust
--- https://github.com/haydenmeade/neotest-jest
 local M = {}
 
 M.name = "nvim-neotest/neotest"
@@ -14,9 +11,14 @@ function M.config()
         "nvim-neotest/neotest",
         dependencies = {
           "nvim-neotest/nvim-nio",
-          "nvim-neotest/neotest-go",
+          -- https://github.com/nvim-neotest/neotest-go [dead]
+          -- https://github.com/fredrikaverpil/neotest-golang
+          "fredrikaverpil/neotest-golang",
+          -- https://github.com/rouge8/neotest-rust
           "rouge8/neotest-rust",
+          -- https://github.com/haydenmeade/neotest-jest
           "haydenmeade/neotest-jest",
+          -- https://github.com/nvim-extensions/nvim-ginkgo
           "nvim-extensions/nvim-ginkgo",
           "nvim-treesitter/nvim-treesitter",
           {
@@ -65,7 +67,7 @@ function M.config()
         },
         adapters = {
           require("nvim-ginkgo"),
-          require("neotest-go"),
+          require("neotest-golang"),
           require("neotest-rust"),
           require("neotest-jest")({
             jestCommand = "pnpm run test",
