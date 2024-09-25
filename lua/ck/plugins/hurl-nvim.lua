@@ -27,7 +27,7 @@ function M.config()
       return {
         -- Show debugging info
         debug = false,
-        auto_close = false,
+        auto_close = true,
         -- Show response in popup or split
         mode = "popup",
         -- Split settings
