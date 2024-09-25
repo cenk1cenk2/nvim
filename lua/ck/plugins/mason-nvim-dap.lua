@@ -39,11 +39,11 @@ function M.config()
         -- 	- {adapters: {ADAPTER: {}, }, configurations: {ADAPTER: {}, }}. Allows overriding default configuration.
         automatic_setup = true,
         handlers = {
-          function(source_name)
+          function(config)
             -- all sources with no handler get passed here
 
             -- Keep original functionality of `automatic_setup = true`
-            require("mason-nvim-dap.automatic_setup")(source_name)
+            require("mason-nvim-dap").default_setup(config)
           end,
         },
       }
