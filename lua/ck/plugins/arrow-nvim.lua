@@ -24,12 +24,12 @@ function M.config()
         mappings = {
           edit = "e",
           delete_mode = "d",
-          clear_all_items = "D",
+          clear_all_items = "X",
           toggle = "s", -- used as save if separate_save_and_remove is true
           open_vertical = "v",
           open_horizontal = "x",
           quit = "q",
-          remove = "X", -- only used if separate_save_and_remove is true
+          remove = "D", -- only used if separate_save_and_remove is true
           next_item = "]",
           prev_item = "[",
         },
@@ -70,6 +70,7 @@ function M.config()
           fn.wk_keystroke({ categories.BOOKMARKS, "m" }),
           function()
             require("arrow.persist").toggle()
+            require("ck.log"):info("Arrow: %s", require("ck.utils.fs").get_project_buffer_filepath())
           end,
           desc = "toggle arrow",
         },
@@ -78,6 +79,7 @@ function M.config()
           fn.wk_keystroke({ categories.BOOKMARKS, "l" }),
           function()
             require("arrow.commands").commands.toggle_current_line_for_buffer()
+            require("ck.log"):info("Arrow on line: %s:%s", require("ck.utils.fs").get_project_buffer_filepath(), vim.api.nvim_win_get_cursor(0)[1])
           end,
           desc = "buffer toggle arrow",
         },
