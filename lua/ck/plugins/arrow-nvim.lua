@@ -54,7 +54,7 @@ function M.config()
         separate_save_and_remove = false, -- if true, will remove the toggle and create the save/remove keymaps.
         leader_key = ";",
         buffer_leader_key = "m", -- Per Buffer Mappings
-        save_key = "cwd", -- what will be used as root to save the bookmarks. Can be also `git_root`.
+        save_key = "git_root", -- what will be used as root to save the bookmarks. Can be also `git_root`.
         global_bookmarks = false, -- if true, arrow will save files globally (ignores separate_by_branch)
         -- index_keys = "1234567890!@#$%^&*()", -- keys mapped to bookmark index, i.e. 1st bookmark will be accessible by 1, and 12th - by c
         full_path_list = { "update_stuff" }, -- filenames on this list will ALWAYS show the file path too.
@@ -75,7 +75,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.BOOKMARKS, "M" }),
+          fn.wk_keystroke({ categories.BOOKMARKS, "l" }),
           function()
             require("arrow.commands").commands.toggle_current_line_for_buffer()
           end,
@@ -91,7 +91,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.BOOKMARKS, "N" }),
+          fn.wk_keystroke({ categories.BOOKMARKS, "f" }),
           function()
             require("arrow.commands").commands.next_buffer_bookmark()
           end,
@@ -107,7 +107,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.BOOKMARKS, "P" }),
+          fn.wk_keystroke({ categories.BOOKMARKS, "b" }),
           function()
             require("arrow.commands").commands.prev_buffer_bookmark()
           end,
