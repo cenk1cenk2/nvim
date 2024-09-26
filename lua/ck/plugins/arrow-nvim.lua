@@ -75,6 +75,14 @@ function M.config()
         },
 
         {
+          fn.wk_keystroke({ categories.BOOKMARKS, "M" }),
+          function()
+            require("arrow.commands").commands.toggle_current_line_for_buffer()
+          end,
+          desc = "buffer toggle arrow",
+        },
+
+        {
           fn.wk_keystroke({ categories.BOOKMARKS, "n" }),
           function()
             require("arrow.persist").next()
@@ -83,11 +91,27 @@ function M.config()
         },
 
         {
+          fn.wk_keystroke({ categories.BOOKMARKS, "N" }),
+          function()
+            require("arrow.commands").commands.next_buffer_bookmark()
+          end,
+          desc = "buffer next arrow",
+        },
+
+        {
           fn.wk_keystroke({ categories.BOOKMARKS, "p" }),
           function()
             require("arrow.persist").previous()
           end,
           desc = "previous arrow",
+        },
+
+        {
+          fn.wk_keystroke({ categories.BOOKMARKS, "P" }),
+          function()
+            require("arrow.commands").commands.prev_buffer_bookmark()
+          end,
+          desc = "buffer next arrow",
         },
       }
     end,
