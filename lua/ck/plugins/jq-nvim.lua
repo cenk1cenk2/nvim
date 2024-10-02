@@ -50,9 +50,9 @@ function M.config()
             require("jq").run({
               toggle = true,
               commands = {
-                { command = "yq", filetype = "json" },
+                { command = "yq", filetype = "yaml" },
               },
-              arguments = "-r",
+              arguments = "-P -o yaml -r",
             })
           end,
           desc = "run yq",
