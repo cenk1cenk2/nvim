@@ -120,6 +120,7 @@ local plugins = {
   "crates-nvim",
   "jq-nvim",
   "scratch-nvim",
+  "kitty-scrollback-nvim",
 }
 
 function M.config()
