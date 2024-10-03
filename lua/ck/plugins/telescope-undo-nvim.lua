@@ -13,9 +13,12 @@ function M.config()
         cmd = { "Telescope undo" },
       }
     end,
-    configure = function(_, fn)
-      fn.setup_callback(require("ck.plugins.telescope").name, function(c)
-        c.extensions = vim.tbl_deep_extend("force", c.extensions, {
+    on_setup = function()
+      local telescope = require("telescope")
+      telescope.load_extension("undo")
+
+      telescope.setup({
+        extensions = {
           undo = {
             use_delta = true,
             use_custom_command = nil, -- setting this implies `use_delta = false`. Accepted format is: { "bash", "-c", "echo '$DIFF' | delta" }
@@ -45,13 +48,8 @@ function M.config()
               },
             },
           },
-        })
-
-        return c
-      end)
-    end,
-    on_setup = function()
-      require("telescope").load_extension("undo")
+        },
+      })
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
