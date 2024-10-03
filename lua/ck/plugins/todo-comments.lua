@@ -10,7 +10,7 @@ function M.config()
       return {
         "folke/todo-comments.nvim",
         event = "BufReadPost",
-        -- cmd = { "TodoTelescope" },
+        cmd = { "TodoTelescope" },
       }
     end,
     setup = function()
