@@ -13,12 +13,9 @@ function M.config()
         cmd = { "Telescope undo" },
       }
     end,
-    on_setup = function()
-      local telescope = require("telescope")
-      telescope.load_extension("undo")
-
-      telescope.setup({
-        extensions = {
+    configure = function(_, fn)
+      fn.setup_callback(require("ck.plugins.telescope").name, function(c)
+        c.extensions = vim.tbl_deep_extend("force", c.extensions, {
           undo = {
             use_delta = true,
             use_custom_command = nil, -- setting this implies `use_delta = false`. Accepted format is: { "bash", "-c", "echo '$DIFF' | delta" }
@@ -36,10 +33,25 @@ function M.config()
                 ["<S-CR>"] = require("telescope-undo.actions").yank_deletions,
                 ["<CR>"] = require("telescope-undo.actions").restore,
               },
+              n = {
+                -- IMPORTANT: Note that telescope-undo must be available when telescope is configured if
+                -- you want to replicate these defaults and use the following actions. This means
+                -- installing as a dependency of telescope in it's `requirements` and loading this
+                -- extension from there instead of having the separate plugin definition as outlined
+                -- above.
+                ["<C-CR>"] = require("telescope-undo.actions").yank_additions,
+                ["<S-CR>"] = require("telescope-undo.actions").yank_deletions,
+                ["<CR>"] = require("telescope-undo.actions").restore,
+              },
             },
           },
-        },
-      })
+        })
+
+        return c
+      end)
+    end,
+    on_setup = function()
+      require("telescope").load_extension("undo")
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
