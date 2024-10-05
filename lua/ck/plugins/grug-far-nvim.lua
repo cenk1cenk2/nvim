@@ -204,7 +204,7 @@ function M.config()
           return {
             keymaps = {
               {
-                "<localleader>m",
+                "<localleader>M",
                 function()
                   return grug_far_toggle_flags({ "--multiline" })
                 end,
@@ -213,7 +213,7 @@ function M.config()
                 buffer = event.buf,
               },
               {
-                "<localleader>w",
+                "<localleader>S",
                 function()
                   return grug_far_toggle_flags({ "--fixed-strings" })
                 end,
@@ -222,7 +222,7 @@ function M.config()
                 buffer = event.buf,
               },
               {
-                "<localleader>i",
+                "<localleader>I",
                 function()
                   return grug_far_toggle_flags({ "--no-ignore-dot" })
                 end,
@@ -231,7 +231,7 @@ function M.config()
                 buffer = event.buf,
               },
               {
-                "<localleader>x",
+                "<localleader>X",
                 function()
                   return grug_far_toggle_flags({ "--replace=" })
                 end,
