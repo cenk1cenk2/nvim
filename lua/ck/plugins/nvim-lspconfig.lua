@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "neovim/nvim-lspconfig",
-        event = "BufReadPre",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
         init = false,
         config = function()
           require("ck.lsp").setup()
