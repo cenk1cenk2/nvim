@@ -163,26 +163,26 @@ function M.config()
         },
         sorting = {
           priority_weight = 1.0,
-          comparators = {
-            compare.offset,
-            compare.exact,
-            compare.score,
-            function(entry1, entry2)
-              local _, entry1_under = entry1.completion_item.label:find("^_+")
-              local _, entry2_under = entry2.completion_item.label:find("^_+")
-              entry1_under = entry1_under or 0
-              entry2_under = entry2_under or 0
-              if entry1_under > entry2_under then
-                return false
-              elseif entry1_under < entry2_under then
-                return true
-              end
-            end,
-            compare.kind,
-            compare.sort_text,
-            compare.length,
-            compare.order,
-          },
+          -- comparators = {
+          --   compare.offset,
+          --   compare.exact,
+          --   compare.score,
+          --   function(entry1, entry2)
+          --     local _, entry1_under = entry1.completion_item.label:find("^_+")
+          --     local _, entry2_under = entry2.completion_item.label:find("^_+")
+          --     entry1_under = entry1_under or 0
+          --     entry2_under = entry2_under or 0
+          --     if entry1_under > entry2_under then
+          --       return false
+          --     elseif entry1_under < entry2_under then
+          --       return true
+          --     end
+          --   end,
+          --   compare.kind,
+          --   compare.sort_text,
+          --   compare.length,
+          --   compare.order,
+          -- },
         },
         mapping = cmp.mapping.preset.insert({
           ["<C-k>"] = cmp.mapping.select_prev_item(),
