@@ -11,7 +11,7 @@ function M.config()
         "MisanthropicBit/decipher.nvim",
       }
     end,
-    setup = function()
+    setup = function(_, fn)
       ---@type decipher.Config
       return {
         active_codecs = "all", -- Set all codecs as active and useable
@@ -20,9 +20,9 @@ function M.config()
           -- border = nvim.ui.border,
           mappings = {
             close = "q", -- Key to press to close the floating window
-            apply = "a", -- Key to press to apply the encoding/decoding
-            jsonpp = "J", -- Key to prettily format contents as json if possbile
-            help = "?", -- Toggle help
+            apply = fn.local_keystroke({ "a" }), -- Key to press to apply the encoding/decoding
+            jsonpp = fn.local_keystroke({ "J" }), -- Key to prettily format contents as json if possbile
+            help = "g?", -- Toggle help
           },
           title = true, -- Display a title with the codec name
           title_pos = "left", -- Position of the title
@@ -45,7 +45,7 @@ function M.config()
             require("decipher").decode_motion_prompt({ preview = true })
           end,
           desc = "decode",
-          mode = { "n", "o" },
+          mode = { "n", "o", "v" },
         },
         {
           fn.keystroke({ "g", "Z" }),
@@ -53,7 +53,7 @@ function M.config()
             require("decipher").encode_motion_prompt({ preview = true })
           end,
           desc = "encode",
-          mode = { "n", "o" },
+          mode = { "n", "o", "v" },
         },
       }
     end,
