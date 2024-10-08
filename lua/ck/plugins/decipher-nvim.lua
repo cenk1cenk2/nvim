@@ -16,7 +16,7 @@ function M.config()
       return {
         active_codecs = "all", -- Set all codecs as active and useable
         float = { -- Floating window options
-          padding = 1, -- Zero padding (does not apply to title if any)
+          padding = 0, -- Zero padding (does not apply to title if any)
           -- border = nvim.ui.border,
           mappings = {
             close = "q", -- Key to press to close the floating window
@@ -37,90 +37,23 @@ function M.config()
     on_setup = function(c)
       require("decipher").setup(c)
     end,
-    wk = function(_, categories, fn)
-      ---@type WKMappings
+    keymaps = function(_, fn)
       return {
         {
-          mode = { "v" },
-          {
-            fn.wk_keystroke({ categories.RUN, "d" }),
-            group = "decode",
-          },
-          {
-            fn.wk_keystroke({ categories.RUN, "d", "b" }),
-            function()
-              require("decipher").decode_selection("base64", { preview = true })
-            end,
-            desc = "base64",
-          },
-          {
-            fn.wk_keystroke({ categories.RUN, "d", "B" }),
-            function()
-              require("decipher").decode_selection("base64-url-safe", { preview = true })
-            end,
-            desc = "base64-url-safe",
-          },
-          {
-            fn.wk_keystroke({ categories.RUN, "d", "c" }),
-            function()
-              require("decipher").decode_selection("crockford", { preview = true })
-            end,
-            desc = "crockford",
-          },
-          {
-            fn.wk_keystroke({ categories.RUN, "d", "u" }),
-            function()
-              require("decipher").decode_selection("url", { preview = true })
-            end,
-            desc = "url",
-          },
-          {
-            fn.wk_keystroke({ categories.RUN, "d", "U" }),
-            function()
-              require("decipher").decode_selection("base64-url", { preview = true })
-            end,
-            desc = "base64+url",
-          },
-
-          {
-            fn.wk_keystroke({ categories.RUN, "D" }),
-            group = "encode",
-          },
-          {
-            fn.wk_keystroke({ categories.RUN, "D", "b" }),
-            function()
-              require("decipher").encode_selection("base64", { preview = true })
-            end,
-            desc = "base64",
-          },
-          {
-            fn.wk_keystroke({ categories.RUN, "D", "B" }),
-            function()
-              require("decipher").encode_selection("base64-url-safe", { preview = true })
-            end,
-            desc = "base64-url-safe",
-          },
-          {
-            fn.wk_keystroke({ categories.RUN, "D", "c" }),
-            function()
-              require("decipher").encode_selection("crockford", { preview = true })
-            end,
-            desc = "crockford",
-          },
-          {
-            fn.wk_keystroke({ categories.RUN, "D", "u" }),
-            function()
-              require("decipher").encode_selection("url", { preview = true })
-            end,
-            desc = "url",
-          },
-          {
-            fn.wk_keystroke({ categories.RUN, "D", "U" }),
-            function()
-              require("decipher").encode_selection("base64-url", { preview = true })
-            end,
-            desc = "base64+url",
-          },
+          fn.keystroke({ "g", "z" }),
+          function()
+            require("decipher").decode_motion_prompt({ preview = true })
+          end,
+          desc = "decode",
+          mode = { "n", "o" },
+        },
+        {
+          fn.keystroke({ "g", "Z" }),
+          function()
+            require("decipher").encode_motion_prompt({ preview = true })
+          end,
+          desc = "encode",
+          mode = { "n", "o" },
         },
       }
     end,
