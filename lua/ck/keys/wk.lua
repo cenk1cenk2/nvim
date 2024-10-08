@@ -129,9 +129,31 @@ function M.setup()
             mode = { "n", "v" },
           },
           {
-            fn.wk_keystroke({ categories.ACTIONS, "b" }),
-            ":wincmd p | q<CR>",
+            fn.wk_keystroke({ categories.ACTIONS, "p" }),
+            ":wincmd p<CR>",
             desc = "previous window",
+          },
+          {
+            fn.wk_keystroke({ categories.ACTIONS, "b" }),
+            function()
+              local editor = "nvim -b"
+
+              vim.env.VISUAL = editor
+              vim.env.EDITOR = editor
+              vim.env.GIT_EDITOR = editor
+            end,
+            desc = "editor [block]",
+          },
+          {
+            fn.wk_keystroke({ categories.ACTIONS, "b" }),
+            function()
+              local editor = "nvim"
+
+              vim.env.VISUAL = editor
+              vim.env.EDITOR = editor
+              vim.env.GIT_EDITOR = editor
+            end,
+            desc = "editor [async]",
           },
           {
             fn.wk_keystroke({ categories.ACTIONS, "s" }),
