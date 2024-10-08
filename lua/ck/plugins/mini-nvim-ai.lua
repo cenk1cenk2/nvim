@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "echasnovski/mini.ai",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
     setup = function()

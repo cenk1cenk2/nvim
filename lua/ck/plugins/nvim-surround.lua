@@ -10,7 +10,7 @@ function M.config()
       ---@type Plugin
       return {
         "kylechui/nvim-surround",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
     setup = function()

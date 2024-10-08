@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "kevinhwang91/nvim-hlslens",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
     setup = function()

@@ -13,7 +13,7 @@ function M.config()
       ---@type Plugin
       return {
         "mfussenegger/nvim-lint",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
     setup = function()

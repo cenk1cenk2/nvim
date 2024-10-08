@@ -13,7 +13,7 @@ function M.config()
           "arsham/arshlib.nvim",
           "nvim-treesitter/nvim-treesitter-textobjects",
         },
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
     setup = function()

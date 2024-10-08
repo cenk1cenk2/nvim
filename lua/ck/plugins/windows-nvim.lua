@@ -12,7 +12,7 @@ function M.config()
         dependencies = {
           "anuvyklack/middleclass",
         },
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
         cmd = { "WindowsEqualize" },
       }
     end,

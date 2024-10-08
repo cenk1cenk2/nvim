@@ -12,7 +12,7 @@ function M.config()
       ---@type Plugin
       return {
         "stevearc/conform.nvim",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
     setup = function()

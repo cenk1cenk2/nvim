@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "folke/todo-comments.nvim",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
         cmd = { "TodoTelescope" },
       }
     end,

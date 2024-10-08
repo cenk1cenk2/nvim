@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "nvim-treesitter/nvim-treesitter-textobjects",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
     setup = function()

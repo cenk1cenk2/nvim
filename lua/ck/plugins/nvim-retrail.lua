@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "zakharykaplan/nvim-retrail",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
     setup = function()

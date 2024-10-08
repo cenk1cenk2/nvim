@@ -31,7 +31,7 @@ function M.config()
           {
             "JoosepAlviste/nvim-ts-context-commentstring",
             dependencies = { "nvim-treesitter/nvim-treesitter" },
-            event = "BufReadPost",
+            event = { "BufReadPost", "BufNewFile", "BufNew" },
           },
           {
             "windwp/nvim-ts-autotag",

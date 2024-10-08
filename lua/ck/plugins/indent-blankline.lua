@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "lukas-reineke/indent-blankline.nvim",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
     setup = function()

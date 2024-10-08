@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "HiPhish/rainbow-delimiters.nvim",
-        event = "BufReadPost",
+        event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
     setup = function()
