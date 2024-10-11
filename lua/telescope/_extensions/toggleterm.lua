@@ -91,8 +91,8 @@ function M.list(opts)
       map("n", "q", actions.close)
       map("n", "q", actions.close)
 
-      map("n", "<C-d>", M.handle_delete)
-      map("i", "<C-d>", M.handle_delete)
+      map("n", "<C-x>", M.handle_delete)
+      map("i", "<C-x>", M.handle_delete)
 
       actions.select_default:replace(M.handle_select)
 

@@ -49,6 +49,7 @@ function M.config()
             nav = true, -- misc bindings to work with windows
             z = true, -- bindings for folds, spelling and others prefixed with z
             g = true, -- bindings for prefixed with g,
+            m = true,
           },
         },
         icons = {
@@ -83,12 +84,12 @@ function M.config()
         },
         triggers = {
           { "<auto>", mode = { "n", "i", "x", "s", "o", "t", "c" } },
+          { "m", mode = { "n" } },
           -- { "<leader>" },
           -- { "g" },
           -- { "z" },
           -- { '"' },
           -- { "<C-r>" },
-          -- { "m" },
           -- { "]" },
           -- { "[" },
           -- { "r" },

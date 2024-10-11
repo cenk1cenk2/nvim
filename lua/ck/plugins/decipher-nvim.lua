@@ -42,10 +42,26 @@ function M.config()
         {
           fn.keystroke({ "g", "z" }),
           function()
+            require("decipher").decode_selection_prompt({ preview = true })
+          end,
+          desc = "decode",
+          mode = { "n", "v" },
+        },
+        {
+          fn.keystroke({ "g", "Z" }),
+          function()
+            require("decipher").encode_selection_prompt({ preview = true })
+          end,
+          desc = "encode",
+          mode = { "n", "v" },
+        },
+        {
+          fn.keystroke({ "g", "z" }),
+          function()
             require("decipher").decode_motion_prompt({ preview = true })
           end,
           desc = "decode",
-          mode = { "n", "o", "v" },
+          mode = { "o" },
         },
         {
           fn.keystroke({ "g", "Z" }),
@@ -53,7 +69,7 @@ function M.config()
             require("decipher").encode_motion_prompt({ preview = true })
           end,
           desc = "encode",
-          mode = { "n", "o", "v" },
+          mode = { "o" },
         },
       }
     end,
