@@ -101,6 +101,8 @@ hl.common = {
 
   debugBreakpoint = { fg = c.bg[200], bg = c.red[600] },
   debugPC = { fg = c.bg[200], bg = c.cyan[600] },
+
+  Bookmark = { fg = c.orange[600] },
 }
 
 ---@type table<string, vim.api.keyset.highlight>

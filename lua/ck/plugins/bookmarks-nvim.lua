@@ -19,11 +19,12 @@ function M.config()
       return {
         sign_priority = 10, --set bookmark sign priority to cover other sign
         save_file = join_paths(get_cache_dir(), "bookmarks"), -- bookmarks save file path
-        linehl = true,
+        linehl = false,
         signcolumn = true,
+        numhl = false,
         signs = {
-          add = { hl = "BookMarksAdd", text = nvim.ui.icons.ui.BookMark, numhl = "BookMarksAddNr", linehl = "BookMarksAddLn" },
-          ann = { hl = "BookMarksAnn", text = nvim.ui.icons.ui.Flag, numhl = "BookMarksAnnNr", linehl = "BookMarksAnnLn" },
+          add = { hl = "Bookmark", text = nvim.ui.icons.ui.BookMark, numhl = "BookMarksAddNr", linehl = "BookMarksAddLn" },
+          ann = { hl = "Bookmark", text = nvim.ui.icons.ui.Flag, numhl = "BookMarksAnnNr", linehl = "BookMarksAnnLn" },
         },
       }
     end,
