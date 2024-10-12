@@ -76,9 +76,7 @@ end
 ---@param bufnr? number
 ---@return string
 function M.get_buffer_basename(bufnr)
-  local basename = string.gsub(M.get_buffer_name(bufnr), "%..*$", "")
-
-  return basename
+  return vim.fs.basename(M.get_buffer_name(bufnr))
 end
 
 --- Returns the buffer basename.
