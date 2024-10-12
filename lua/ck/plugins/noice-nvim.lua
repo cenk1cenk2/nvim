@@ -141,10 +141,15 @@ function M.config()
             relative = "editor",
             align = "message-left",
             timeout = 1500,
-            reverse = true,
+            -- reverse = true,
+            -- position = {
+            --   col = "50%",
+            --   row = "97%",
+            -- },
+            reverse = false,
             position = {
-              col = "50%",
-              row = "97%",
+              row = 2,
+              col = "100%",
             },
             border = {
               style = nvim.ui.border,
