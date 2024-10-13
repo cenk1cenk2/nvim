@@ -265,11 +265,18 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.FIND, ":" }),
+          fn.wk_keystroke({ categories.FIND, ";" }),
           function()
             require("telescope.builtin").commands()
           end,
           desc = "search available commands",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "A" }),
+          function()
+            require("telescope.builtin").builtin()
+          end,
+          desc = "telescope builtins",
         },
         {
           fn.wk_keystroke({ categories.FIND, "F" }),
