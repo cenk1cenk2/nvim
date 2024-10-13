@@ -13,9 +13,9 @@ function M.config()
       }
     end,
     configure = function(_, fn)
-      fn.add_disabled_filetypes({
-        "alpha",
-      })
+      -- fn.add_disabled_filetypes({
+      --   "alpha",
+      -- })
     end,
     on_setup = function(_, config)
       local button = require("alpha.themes.dashboard").button
