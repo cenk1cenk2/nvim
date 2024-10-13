@@ -1,6 +1,7 @@
 local M = {}
 
-function M.workspace_quit()
+--- Safely quits the workspace.
+function nvim.fn.workspace_quit()
   local buffers = vim.api.nvim_list_bufs()
   local modified = false
   for _, bufnr in ipairs(buffers) do
@@ -32,7 +33,7 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.SESSION, "q" }),
           function()
-            M.workspace_quit()
+            nvim.fn.workspace_quit()
           end,
           desc = "quit",
         },
