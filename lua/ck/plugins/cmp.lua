@@ -48,8 +48,7 @@ function M.config()
           { "hrsh7th/cmp-cmdline" },
           -- https://github.com/tamago324/cmp-zsh
           {
-            "ArtAndreev/cmp-zsh",
-            branch = "compinit_once",
+            "tamago324/cmp-zsh",
             config = function()
               require("cmp_zsh").setup({
                 zshrc = true,
