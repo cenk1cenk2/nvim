@@ -48,11 +48,14 @@ function M.config()
           { "hrsh7th/cmp-cmdline" },
           -- https://github.com/tamago324/cmp-zsh
           {
-            "tamago324/cmp-zsh",
+            "cenk1cenk2/cmp-zsh",
             config = function()
               require("cmp_zsh").setup({
-                zshrc = false,
+                zshrc = true,
                 filetypes = { "zsh", "bash", "sh" },
+                env = {
+                  ZNAP_HEADLESS = "1",
+                },
               })
             end,
           },
@@ -316,9 +319,9 @@ end
 
 ---@type cmp.SourceConfig[]
 M.sources = {
+  { name = "zsh" },
   { name = "nvim_lsp", keyword_length = 0 },
   { name = "lazydev" },
-  { name = "zsh" },
   { name = "vim-dadbod-completion" },
   { name = "go_pkgs" },
   -- { name = "nvim_lsp_signature_help" },

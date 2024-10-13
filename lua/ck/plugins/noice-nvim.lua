@@ -148,7 +148,7 @@ function M.config()
             reverse = false,
             position = {
               row = 2,
-              col = "100%",
+              col = -2,
             },
             border = {
               style = nvim.ui.border,
