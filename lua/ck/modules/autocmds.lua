@@ -216,7 +216,7 @@ function M.setup()
           group = "_zsh",
           pattern = { "/tmp/zsh*.zsh" },
           callback = function()
-            require("ck.modules.quit").workspace_quit()
+            nvim.fn.workspace_quit()
           end,
         },
       }
