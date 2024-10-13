@@ -21,14 +21,14 @@ function M.config()
       return {
         backend = "delta",
         telescope_opts = {
-          layout_strategy = "horizontal",
+          layout_strategy = "vertical",
           layout_config = {
             width = function()
               if vim.o.columns < 180 then
-                return math.floor(vim.o.columns * 0.975)
+                return math.floor(vim.o.columns * 0.90)
               end
 
-              return math.floor(vim.o.columns * 0.75)
+              return math.floor(vim.o.columns * 0.5)
             end,
             height = function()
               if vim.o.lines < 60 then
@@ -37,11 +37,11 @@ function M.config()
 
               return math.floor(vim.o.lines * 0.75)
             end,
-            preview_cutoff = 1,
-            -- preview_height = function(_, _, max_lines)
-            --   local h = math.floor(max_lines * 0.2)
-            --   return math.max(h, 10)
-            -- end,
+            preview_height = function(_, _, max_lines)
+              local h = math.floor(max_lines * 0.5)
+              return math.max(h, 10)
+            end,
+            mirror = true,
           },
         },
         signs = {
