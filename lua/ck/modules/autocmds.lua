@@ -211,14 +211,14 @@ function M.setup()
             end
           end,
         },
-        {
-          event = { "BufWritePost" },
-          group = "_zsh",
-          pattern = { "/tmp/zsh*.zsh" },
-          callback = function()
-            nvim.fn.workspace_quit()
-          end,
-        },
+        -- {
+        --   event = { "BufWritePost" },
+        --   group = "_zsh",
+        --   pattern = { "/tmp/zsh*.zsh" },
+        --   callback = function()
+        --     nvim.fn.workspace_quit()
+        --   end,
+        -- },
       }
     end,
   })
