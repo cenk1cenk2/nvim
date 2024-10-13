@@ -51,7 +51,7 @@ function M.config()
             "tamago324/cmp-zsh",
             config = function()
               require("cmp_zsh").setup({
-                zshrc = true,
+                zshrc = false,
                 filetypes = { "zsh", "bash", "sh" },
               })
             end,
@@ -283,8 +283,8 @@ function M.config()
       cmp.setup.cmdline(":", {
         mapping = cmp.mapping.preset.cmdline({}),
         sources = {
-          { name = "cmdline" },
           { name = "zsh" },
+          { name = "cmdline" },
         },
       })
 
