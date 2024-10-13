@@ -211,6 +211,14 @@ function M.setup()
             end
           end,
         },
+        {
+          event = { "BufWritePost" },
+          group = "_zsh",
+          pattern = { "/tmp/zsh*.zsh" },
+          callback = function()
+            require("ck.modules.quit").workspace_quit()
+          end,
+        },
       }
     end,
   })

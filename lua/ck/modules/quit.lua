@@ -10,12 +10,14 @@ function M.workspace_quit()
   end
 
   if modified then
-    vim.ui.input({
+    vim.ui.select({ "yes", "no" }, {
       prompt = "You have unsaved changes. Quit anyway? (y/n) ",
     }, function(input)
-      if input == "y" then
-        vim.cmd("qa!")
+      if not input or input == "no" then
+        return
       end
+
+      vim.cmd("qa!")
     end)
   else
     vim.cmd("qa!")
