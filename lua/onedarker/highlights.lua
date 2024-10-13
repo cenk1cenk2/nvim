@@ -18,6 +18,7 @@ hl.common = {
   SignColumn = { fg = c.fg, bg = c.bg[200] },
   Terminal = { fg = c.fg, bg = c.bg[200] },
   WinBar = { fg = c.gray[900] },
+  WinBarNc = { link = "WinBar" },
   WinSeparator = { fg = c.bg[300] },
 
   Cursor = { reverse = true },
