@@ -145,9 +145,9 @@ function M.config()
             --   col = "50%",
             --   row = "97%",
             -- },
-            reverse = false,
+            reverse = true,
             position = {
-              row = 2,
+              row = -2,
               col = -2,
             },
             border = {
