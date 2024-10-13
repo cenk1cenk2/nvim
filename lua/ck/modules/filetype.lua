@@ -8,7 +8,6 @@ function M.setup()
       end,
       ["tf"] = "terraform",
       ["tfvars"] = "terraform",
-      ["zsh"] = "sh",
       ["go.tmpl"] = "gotmpl",
       ["gotmpl"] = "gotmpl",
       ["tmpl"] = "gotmpl",

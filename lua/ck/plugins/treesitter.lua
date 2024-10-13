@@ -152,6 +152,7 @@ M.ft_parsers = {
   ["yaml"] = { "yaml.ansible" },
   ["gotmpl"] = { "helm" },
   ["htmldjango"] = { "jinja" },
+  ["bash"] = { "zsh" },
 }
 
 return M

@@ -54,7 +54,6 @@ function M.config()
             cmdline = { pattern = "^:", icon = nvim.ui.icons.ui.Command },
             search_down = { kind = "search", pattern = "^/", icon = ("%s %s"):format(nvim.ui.icons.ui.Search, nvim.ui.icons.ui.DoubleChevronDown), lang = "regex" },
             search_up = { kind = "search", pattern = "^%?", icon = ("%s %s"):format(nvim.ui.icons.ui.Search, nvim.ui.icons.ui.DoubleChevronUp), lang = "regex" },
-            filter = { pattern = "^:%s*!", icon = "$", lang = "bash" },
             shell = { pattern = "^:%s*!", icon = "$", lang = "bash" },
             read = { pattern = "^:%s*r!", icon = "$", lang = "bash" },
             -- lua = false, -- to disable a format, set to `false`

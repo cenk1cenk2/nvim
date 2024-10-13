@@ -46,6 +46,18 @@ function M.config()
           },
           -- https://github.com/hrsh7th/cmp-cmdline
           { "hrsh7th/cmp-cmdline" },
+          -- https://github.com/tamago324/cmp-zsh
+          {
+            "ArtAndreev/cmp-zsh",
+            branch = "compinit_once",
+            config = function()
+              require("cmp_zsh").setup({
+                zshrc = true,
+                filetypes = { "zsh", "bash", "sh" },
+              })
+            end,
+          },
+          -- https://github.com/davidsierradz/cmp-conventionalcommits
           { "davidsierradz/cmp-conventionalcommits" },
           -- https://github.com/tzachar/cmp-fuzzy-buffer
           { "tzachar/cmp-fuzzy-buffer" },
@@ -273,6 +285,7 @@ function M.config()
         mapping = cmp.mapping.preset.cmdline({}),
         sources = {
           { name = "cmdline" },
+          { name = "zsh" },
         },
       })
 
@@ -306,6 +319,7 @@ end
 M.sources = {
   { name = "nvim_lsp", keyword_length = 0 },
   { name = "lazydev" },
+  { name = "zsh" },
   { name = "vim-dadbod-completion" },
   { name = "go_pkgs" },
   -- { name = "nvim_lsp_signature_help" },

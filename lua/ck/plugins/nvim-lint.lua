@@ -61,6 +61,16 @@ end
 function M.extend_tools()
   local lint = require("lint")
 
+  lint.linters["shellcheck"] = vim.tbl_deep_extend("force", require("lint.linters.shellcheck"), {
+    args = {
+      "--format",
+      "json",
+      "-s",
+      "bash",
+      "-",
+    },
+  })
+
   lint.linters["protolint"] = {
     name = "protolint",
     cmd = "protolint",
