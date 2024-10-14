@@ -28,8 +28,6 @@ function M.config()
         "TelescopeResults",
       })
 
-      nvim.fn.get_telescope_args = M.get_telescope_args
-
       ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.document_symbols = function()
         require("telescope.builtin").lsp_document_symbols()
@@ -237,7 +235,17 @@ function M.config()
           function()
             M.find_project_files()
           end,
-          desc = "find file",
+          desc = "find file [project]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ "P" }),
+          function()
+            M.find_project_files({
+              no_ignore = true,
+            })
+          end,
+          desc = "find file [all]",
           mode = { "n", "v" },
         },
         {
@@ -499,6 +507,10 @@ function M.set_rg_arguments()
   end)
 end
 
+---@module telescope.builtin
+---Rip greps with fixed-strings.
+---@param options livegrep
+---@return unknown
 function M.rg_string(options)
   options = options or {}
   return require("telescope.builtin").live_grep(vim.tbl_extend("force", options, {
@@ -549,7 +561,7 @@ end
 ---@param flags_only boolean Without the first element.
 ---@param extend? table<string>
 ---@return table<string>
-function M.get_telescope_args(flags_only, extend)
+function nvim.fn.get_telescope_args(flags_only, extend)
   local rg_arguments = vim.deepcopy(M.default_rg_arguments)
 
   if flags_only then

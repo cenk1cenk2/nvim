@@ -12,13 +12,13 @@ local M = {}
 ---@field LSP string
 ---@field NEOVIM string
 ---@field NOTES string
----@field PLUGINS string
 ---@field RUN string
 ---@field SEARCH string
 ---@field SESSION string
 ---@field TERMINAL string
 ---@field TESTS string
----@field TREESITTER string
+---@field PLUGINS string Subcategory > neovim
+---@field TREESITTER string Subcategory > neovim
 ---@field LOGS string Subcategory.
 
 ---@type WKCategories
@@ -34,13 +34,13 @@ M.CATEGORIES = {
   LSP = "l",
   NEOVIM = "N",
   NOTES = "n",
-  PLUGINS = "P",
+  PLUGINS = "Np",
   RUN = "r",
   SEARCH = "s",
   SESSION = "w",
   TERMINAL = "t",
   TESTS = "j",
-  TREESITTER = "T",
+  TREESITTER = "Nt",
   --- subcategories
   LOGS = "?",
 }

@@ -102,7 +102,7 @@ function M.setup()
           desc = "rebuild and update everything",
         },
         {
-          fn.wk_keystroke({ categories.NEOVIM, "p" }),
+          fn.wk_keystroke({ categories.NEOVIM, "g" }),
           function()
             require("ck"):update()
           end,
