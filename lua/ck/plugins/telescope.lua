@@ -555,7 +555,7 @@ function M.find_project_files(options)
   -- local ok = pcall(builtin.git_files)
 
   -- if not ok then
-  require("telescope.builtin").find_files(vim.tbl_extend("force", options, { previewer = true }))
+  require("telescope.builtin").find_files(vim.tbl_extend("force", options, { hidden = true, previewer = true }))
   -- end
 end
 
