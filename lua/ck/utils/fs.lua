@@ -69,23 +69,26 @@ end
 ---@param bufnr? number
 ---@return string
 function M.get_buffer_name(bufnr)
-  return vim.fn.expand("%:t")
+  return vim.fs.basename(vim.api.nvim_buf_get_name(bufnr or 0))
 end
 
 --- Returns the buffer basename.
 ---@param bufnr? number
 ---@return string
 function M.get_buffer_basename(bufnr)
-  return vim.fs.basename(M.get_buffer_name(bufnr))
+  local name = M.get_buffer_name(bufnr)
+  local match = string.match(name, "^(.*)%..*$")
+
+  return match or name
 end
 
 --- Returns the buffer basename.
 ---@param bufnr? number
 ---@return string
 function M.get_buffer_extension(bufnr)
-  local extension = string.match(M.get_buffer_name(bufnr), ".*%.(.*)$")
+  local match = string.match(M.get_buffer_name(bufnr), ".*%.(.*)$")
 
-  return extension
+  return match
 end
 
 return M

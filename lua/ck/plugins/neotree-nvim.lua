@@ -145,7 +145,7 @@ function M.config()
 
       local renderer = require("neo-tree.ui.renderer")
 
-      local setup = {
+      return {
         sources = { "filesystem", "buffers", "git_status", "document_symbols" },
         source_selector = {
           winbar = false,
@@ -493,13 +493,11 @@ function M.config()
           },
         },
       }
-
-      return setup
     end,
     on_setup = function(c)
       require("neo-tree").setup(c)
     end,
-    wk = function(_, categories, fn)
+    wk = function(config, categories, fn)
       local log = require("ck.log")
 
       ---@type WKMappings
@@ -576,7 +574,7 @@ function M.config()
         -- },
 
         {
-          fn.wk_keystroke({ categories.BUFFER, "c" }),
+          fn.wk_keystroke({ categories.BUFFER, "n" }),
           function()
             require("neo-tree.sources.filesystem.lib.fs_actions").create_node(require("ck.utils.fs").get_buffer_dirpath())
           end,

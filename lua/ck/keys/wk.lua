@@ -194,6 +194,21 @@ function M.setup()
             group = "buffer",
             mode = { "n", "v" },
           },
+
+          {
+            fn.wk_keystroke({ categories.BUFFER, "c" }),
+            function()
+              vim.fn.setreg(vim.v.register or nvim.system_register, require("ck.utils.fs").get_buffer_name())
+            end,
+            desc = "copy filename to clipboard",
+          },
+          {
+            fn.wk_keystroke({ categories.BUFFER, "C" }),
+            function()
+              vim.fn.setreg(vim.v.register or nvim.system_register, require("ck.utils.fs").get_project_buffer_filepath())
+            end,
+            desc = "copy buffer project path to clipboard",
+          },
           {
             fn.wk_keystroke({ categories.BUFFER, "e" }),
             ":e<CR>",
