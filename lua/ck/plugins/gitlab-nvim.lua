@@ -38,36 +38,22 @@ function M.config()
       end)
     end,
     setup = function()
-      ---@type settings
+      ---@type Settings
       return {
         port = nil, -- The port of the Go server, which runs in the background, if omitted or `nil` the port will be chosen automatically
         log_path = vim.fn.stdpath("cache") .. "/gitlab.nvim.log", -- Log path for the Go server
         config_path = nil, -- Custom path for `.gitlab.nvim` file, please read the "Connecting to Gitlab" section
         debug = { go_request = false, go_response = false }, -- Which values to log
         attachment_dir = nil, -- The local directory for files (see the "summary" section)
+        -- https://github.com/harrisoncramer/gitlab.nvim/blob/main/lua/gitlab/state.lua#L69
         keymaps = {
           popup = { -- The popup for comment creation, editing, and replying
-            exit = "<Esc>",
-            perform_action = "<C-s>", -- Once in normal mode, does action (like saving comment or editing description, etc)
-            perform_linewise_action = "<C-l>", -- Once in normal mode, does the linewise action (see logs for this job, etc)
-          },
-          discussion_tree = { -- The discussion tree that holds all comments
-            switch_view = "T", -- Toggles between the notes and discussions views
-            default_view = "discussions", -- Show "discussions" or "notes" by default
-            blacklist = {}, -- List of usernames to remove from tree (bots, CI, etc)
-            jump_to_file = "f", -- Jump to comment location in file
-            jump_to_reviewer = "g", -- Jump to the location in the reviewer window
-            edit_comment = "e", -- Edit comment
-            delete_comment = "dd", -- Delete comment
-            reply = "r", -- Reply to comment
-            toggle_node = "o", -- Opens or closes the discussion
-            toggle_resolved = "R", -- Toggles the resolved status of the whole discussion
-            position = "bottom", -- "top", "right", "bottom" or "left"
-            size = "30%", -- Size of split
-            relative = "editor", -- Position of tree split relative to "editor" or "window"
-            resolved = nvim.ui.icons.ui.Check, -- Symbol to show next to resolved discussions
-            unresolved = nvim.ui.icons.ui.Close, -- Symbol to show next to unresolved discussions
-            tree_type = "by_file_name", -- Type of discussion tree - "simple" means just list of discussions, "by_file_name" means file tree with discussions under file
+            disable_all = false,
+            next_field = "<Tab>",
+            prev_field = "<S-Tab>",
+            perform_action = "<C-s>",
+            perform_linewise_action = "<C-l>",
+            discard_changes = "<C-c>",
           },
         },
         info = { -- Show additional fields in the summary pane
@@ -151,134 +137,134 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.GIT, "G" }),
+          fn.wk_keystroke({ categories.GIT, "l" }),
           group = "gitlab",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "d" }),
+          fn.wk_keystroke({ categories.GIT, "l", "d" }),
           function()
             require("gitlab").review()
           end,
           desc = "gitlab review",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "s" }),
+          fn.wk_keystroke({ categories.GIT, "l", "s" }),
           function()
             require("gitlab").summary()
           end,
           desc = "gitlab summary",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "A" }),
+          fn.wk_keystroke({ categories.GIT, "l", "A" }),
           function()
             require("gitlab").approve()
           end,
           desc = "gitlab mr approve",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "R" }),
+          fn.wk_keystroke({ categories.GIT, "l", "R" }),
           function()
             require("gitlab").revoke()
           end,
           desc = "gitlab mr revoke",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "c" }),
+          fn.wk_keystroke({ categories.GIT, "l", "c" }),
           function()
             require("gitlab").create_comment()
           end,
           desc = "gitlab mr create comment",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "m" }),
+          fn.wk_keystroke({ categories.GIT, "l", "m" }),
           function()
             require("gitlab").create_mr({ delete_branch = true })
           end,
           desc = "gitlab create mr",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "M" }),
+          fn.wk_keystroke({ categories.GIT, "l", "M" }),
           function()
             require("gitlab").merge({ delete_branch = true })
           end,
           desc = "gitlab merge branch through mr",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "n" }),
+          fn.wk_keystroke({ categories.GIT, "l", "n" }),
           function()
             require("gitlab").create_note()
           end,
           desc = "gitlab mr create note",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "t" }),
+          fn.wk_keystroke({ categories.GIT, "l", "t" }),
           function()
             require("gitlab").toggle_discussions()
           end,
           desc = "gitlab mr toggle discussions",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "T" }),
+          fn.wk_keystroke({ categories.GIT, "l", "T" }),
           function()
             require("gitlab").move_to_discussion_tree_from_diagnostic()
           end,
           desc = "gitlab mr move to discussion tree",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "o" }),
+          fn.wk_keystroke({ categories.GIT, "l", "o" }),
           function()
             require("gitlab").open_in_browser()
           end,
           desc = "gitlab mr open in browser",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "p" }),
+          fn.wk_keystroke({ categories.GIT, "l", "p" }),
           group = "people",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "p", "a" }),
+          fn.wk_keystroke({ categories.GIT, "l", "p", "a" }),
           function()
             require("gitlab").add_assignee()
           end,
           desc = "add assignee",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "p", "A" }),
+          fn.wk_keystroke({ categories.GIT, "l", "p", "A" }),
           function()
             require("gitlab").remove_assignee()
           end,
           desc = "remove assignee",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "p", "r" }),
+          fn.wk_keystroke({ categories.GIT, "l", "p", "r" }),
           function()
             require("gitlab").add_reviewer()
           end,
           desc = "add reviewer",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "p", "R" }),
+          fn.wk_keystroke({ categories.GIT, "l", "p", "R" }),
           function()
             require("gitlab").remove_reviewer()
           end,
           desc = "remove reviewer",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "P" }),
+          fn.wk_keystroke({ categories.GIT, "l", "P" }),
           function()
             require("gitlab").pipeline()
           end,
           desc = "gitlab mr pipeline",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "Q" }),
+          fn.wk_keystroke({ categories.GIT, "l", "Q" }),
           function()
             require("gitlab.server").restart()
           end,
           desc = "gitlab restart server",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "c" }),
+          fn.wk_keystroke({ categories.GIT, "l", "c" }),
           function()
             require("gitlab").create_multiline_comment()
           end,
@@ -286,7 +272,7 @@ function M.config()
           mode = { "v" },
         },
         {
-          fn.wk_keystroke({ categories.GIT, "G", "P" }),
+          fn.wk_keystroke({ categories.GIT, "l", "P" }),
           function()
             require("gitlab").create_comment_suggestions()
           end,

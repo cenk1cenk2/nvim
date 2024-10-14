@@ -310,7 +310,7 @@ function M.setup()
           },
 
           {
-            fn.wk_keystroke({ categories.DEBUG, "G" }),
+            fn.wk_keystroke({ categories.GIT, "l" }),
             group = "gitlab",
             mode = { "n", "v" },
           },
