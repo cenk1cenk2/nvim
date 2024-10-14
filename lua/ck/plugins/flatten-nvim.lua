@@ -15,14 +15,18 @@ function M.config()
     end,
     setup = function()
       return {
+        one_per = {
+          kitty = false, -- Flatten all instance in the current Kitty session
+          wezterm = false, -- Flatten all instance in the current Wezterm session
+        },
         callbacks = {
           should_block = function(argv)
             return vim.tbl_contains(argv, "-b")
           end,
-          pre_open = function()
-            -- Close toggleterm when an external open request is received
-            -- require("toggleterm").toggle(0)
+          should_nest = function(host)
+            return require("flatten").default_should_nest(host)
           end,
+          pre_open = function() end,
           post_open = function(bufnr, winnr, ft, is_blocking)
             if is_blocking then
               -- If the file is a git commit, create one-shot autocmd to delete it on write
@@ -48,10 +52,7 @@ function M.config()
               -- vim.api.nvim_set_current_win(winnr)
             end
           end,
-          block_end = function()
-            -- After blocking ends (for a git commit, etc), reopen the terminal
-            -- require("toggleterm").toggle(0)
-          end,
+          block_end = function() end,
         },
         block_for = {
           gitcommit = true,
@@ -83,10 +84,6 @@ function M.config()
         pipe_path = require("flatten").default_pipe_path,
         -- The `default_pipe_path` will treat the first nvim instance within a single kitty/wezterm session as the host
         -- You can configure this behaviour using the following:
-        one_per = {
-          kitty = false, -- Flatten all instance in the current Kitty session
-          wezterm = false, -- Flatten all instance in the current Wezterm session
-        },
       }
     end,
     on_setup = function(c)
