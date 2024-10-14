@@ -216,7 +216,7 @@ function M.components()
     },
     schema_companion = {
       function()
-        return ("%s %s"):format(nvim.ui.icons.ui.Table, require("schema-companion.context").get_buffer_schema(0).name):sub(0, 64)
+        return ("%s %s"):format(nvim.ui.icons.ui.Table, require("schema-companion.context").get_buffer_schema(0).name):sub(0, 128)
       end,
       color = {
         fg = nvim.ui.colors.purple[600],
