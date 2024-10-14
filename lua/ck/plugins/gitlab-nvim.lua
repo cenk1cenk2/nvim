@@ -31,6 +31,15 @@ function M.config()
           {
             ft = "gitlab",
             title = "Gitlab",
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.3
+                end
+
+                return 40
+              end,
+            },
           },
         })
 
