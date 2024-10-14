@@ -126,7 +126,7 @@ function M.config()
           desc = "update installed treesitter packages",
         },
         {
-          fn.wk_keystroke({ categories.TREESITTER, "U" }),
+          fn.wk_keystroke({ categories.TREESITTER, "X" }),
           function()
             vim.cmd([[TSUninstall all]])
           end,

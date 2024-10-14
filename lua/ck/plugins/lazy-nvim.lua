@@ -35,7 +35,7 @@ function M.config()
           desc = "sync",
         },
         {
-          fn.wk_keystroke({ categories.PLUGINS, "S" }),
+          fn.wk_keystroke({ categories.PLUGINS, "o" }),
           ":Lazy<CR>",
           desc = "status",
         },
