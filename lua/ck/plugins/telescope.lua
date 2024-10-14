@@ -234,6 +234,7 @@ function M.config()
           fn.wk_keystroke({ "p" }),
           function()
             M.find_project_files({
+              prompt_title = "Find Files",
               no_ignore = false,
             })
           end,
@@ -244,6 +245,7 @@ function M.config()
           fn.wk_keystroke({ "P" }),
           function()
             M.find_project_files({
+              prompt_title = "Find Files [all]",
               no_ignore = true,
             })
           end,
@@ -253,7 +255,9 @@ function M.config()
         {
           fn.wk_keystroke({ "o" }),
           function()
-            require("telescope.builtin").buffers()
+            require("telescope.builtin").buffers({
+              prompt_title = "Open Buffers",
+            })
           end,
           desc = "open buffers",
           mode = { "n", "v" },
@@ -261,7 +265,9 @@ function M.config()
         {
           fn.wk_keystroke({ "O" }),
           function()
-            require("telescope.builtin").oldfiles()
+            require("telescope.builtin").oldfiles({
+              prompt_title = "Old Files",
+            })
           end,
           desc = "search file history",
           mode = { "n", "v" },
@@ -280,13 +286,6 @@ function M.config()
             require("telescope.builtin").commands()
           end,
           desc = "search available commands",
-        },
-        {
-          fn.wk_keystroke({ categories.FIND, "A" }),
-          function()
-            require("telescope.builtin").builtin()
-          end,
-          desc = "telescope builtins",
         },
         {
           fn.wk_keystroke({ categories.FIND, "F" }),
@@ -363,23 +362,36 @@ function M.config()
           desc = "set ripgrep arguments",
         },
         {
+          fn.wk_keystroke({ categories.FIND, "A" }),
+          function()
+            M.set_fd_arguments()
+          end,
+          desc = "set fd arguments",
+        },
+        {
           fn.wk_keystroke({ categories.FIND, "b" }),
           function()
-            M.rg_grep_buffer_fuzzy()
+            M.rg_grep_buffer_fuzzy({
+              prompt_title = "Find in Buffer with fuzzy",
+            })
           end,
           desc = "grep fuzzy current buffer",
         },
         {
           fn.wk_keystroke({ categories.FIND, "B" }),
           function()
-            M.rg_grep_buffer()
+            M.rg_grep_buffer({
+              prompt_title = "Find in Buffer",
+            })
           end,
           desc = "grep current buffer",
         },
         {
           fn.wk_keystroke({ categories.FIND, "d" }),
           function()
-            M.rg_dirty()
+            M.rg_dirty({
+              prompt_title = "Find Dirty",
+            })
           end,
           desc = "grep dirty",
         },
@@ -387,6 +399,7 @@ function M.config()
           fn.wk_keystroke({ categories.FIND, "D" }),
           function()
             M.rg_dirty({
+              prompt_title = "Find Dirty in open buffers",
               grep_open_files = true,
             })
           end,
@@ -416,6 +429,7 @@ function M.config()
           function()
             require("telescope.builtin").live_grep({
               additional_args = M.extend_rg_arguments(),
+              prompt_title = "Find with regexp",
             })
           end,
           desc = "grep with regexp",
@@ -426,6 +440,7 @@ function M.config()
             require("telescope.builtin").live_grep({
               grep_open_files = true,
               additional_args = M.extend_rg_arguments(),
+              prompt_title = "Find with regexp in open buffers",
             })
           end,
           desc = "grep regexp open buffers",
@@ -433,7 +448,9 @@ function M.config()
         {
           fn.wk_keystroke({ categories.FIND, "t" }),
           function()
-            M.rg_string()
+            M.rg_string({
+              prompt_title = "Find with fixed-strings",
+            })
           end,
           desc = "grep string",
         },
@@ -441,6 +458,7 @@ function M.config()
           fn.wk_keystroke({ categories.FIND, "T" }),
           function()
             M.rg_string({
+              prompt_title = "Find with fixed-strings in open files",
               grep_open_files = true,
               additional_args = M.extend_rg_arguments(),
             })
@@ -464,9 +482,24 @@ M.default_rg_arguments = {
   "--glob=!.git/",
 }
 
-M.RG_ARGS_ENV_VAR = "RG_ARGS"
+M.default_fd_arguments = {
+  "fd",
+  "--type",
+  "f",
+  "--color",
+  "never",
+  "-E=.git/",
+  "-E=vendor/",
+  "-E=node_modules/",
+}
 
-function M.extend_rg_arguments(...)
+M.RG_ARGS_ENV_VAR = "RG_ARGS"
+M.RG_ARGS_ENV_VAR = "FD_ARGS"
+
+---Extends the arguments.
+---@param env string
+---@param ... table<string>
+function M.extend_args(env, ...)
   local target = {}
 
   if ... and vim.tbl_count(...) > 0 then
@@ -481,7 +514,7 @@ function M.extend_rg_arguments(...)
     end
   end
 
-  local args = vim.env[M.RG_ARGS_ENV_VAR]
+  local args = vim.env[env]
 
   if args == nil or args == "" then
     return target
@@ -496,85 +529,142 @@ function M.extend_rg_arguments(...)
   return vim.list_extend(target, chunks)
 end
 
-function M.set_rg_arguments()
+---Extends the arguments of rg command.
+---@param ... table<string>
+function M.extend_rg_arguments(...)
+  return M.extend_args(M.RG_ARGS_ENV_VAR, ...)
+end
+
+---Extends the arguments of rg command.
+---@param ... table<string>
+function M.extend_fd_arguments(...)
+  return M.extend_args(M.FD_ARGS_ENV_VAR, ...)
+end
+
+---Set the arguments.
+---@param command string
+---@param env string
+function M.set_arguments(command, env)
   vim.ui.input({
-    prompt = "Ripgrep arguments:",
-    default = vim.env[M.RG_ARGS_ENV_VAR],
+    prompt = ("%s arguments:"):format(command),
+    default = vim.env[env],
   }, function(val)
     if val == nil then
       val = ""
     end
 
-    vim.env["RG_ARGS"] = vim.fn.expand(tostring(val))
+    vim.env[env] = vim.fn.expand(tostring(val))
   end)
 end
 
----@module telescope.builtin
----Rip greps with fixed-strings.
----@param options livegrep
----@return unknown
-function M.rg_string(options)
-  options = options or {}
-  return require("telescope.builtin").live_grep(vim.tbl_extend("force", options, {
-    additional_args = M.extend_rg_arguments({ "--fixed-strings" }, options.additional_args),
-  }))
+---Set the rg arguments from outside.
+function M.set_rg_arguments()
+  return M.set_arguments("rg", M.RG_ARGS_ENV_VAR)
 end
 
+---Set the fd arguments from outside.
+function M.set_fd_arguments()
+  return M.set_arguments("fd", M.FD_ARGS_ENV_VAR)
+end
+
+---Ripgreps with fixed-strings.
+---@param options table
+function M.rg_string(options)
+  options = options or {}
+  options = vim.tbl_extend("force", options, {
+    additional_args = M.extend_rg_arguments({ "--fixed-strings" }, options.additional_args),
+  })
+
+  require("telescope.builtin").live_grep(options)
+end
+
+---Ripgreps with dirty fuzzy searching.
+---@param options table
 function M.rg_dirty(options)
   options = options or {}
-  require("telescope.builtin").grep_string(vim.tbl_extend("force", options or {}, {
+  options = vim.tbl_extend("force", options, {
     shorten_path = true,
     word_match = "-w",
     search = "",
     additional_args = M.extend_rg_arguments(options.additional_args),
-  }))
+  })
+
+  require("telescope.builtin").grep_string(options)
 end
 
+---Ripgreps current buffer.
+---@param options table
 function M.rg_grep_buffer(options)
   options = options or {}
-  return require("telescope.builtin").live_grep(vim.tbl_extend("force", options or {}, {
+  options = vim.tbl_extend("force", options, {
     additional_args = { "--no-ignore" },
     search_dirs = { "%:p" },
     layout_config = {
       prompt_position = "bottom",
     },
-  }))
+  })
+
+  require("telescope.builtin").live_grep(options)
 end
 
+---Ripgreps current buffer with fuzzy.
+---@param options table
 function M.rg_grep_buffer_fuzzy(options)
   options = options or {}
-  return require("telescope.builtin").current_buffer_fuzzy_find(vim.tbl_extend("force", options or {}, {
+  options = vim.tbl_extend("force", options, {
     additional_args = { "--no-ignore" },
-  }))
+  })
+
+  require("telescope.builtin").current_buffer_fuzzy_find(options)
 end
 
--- Smartly opens either git_files or find_files, depending on whether the working directory is
--- contained in a Git repo.
+---Find in project files.
+---@param options table
 function M.find_project_files(options)
   options = options or {}
-  -- local ok = pcall(builtin.git_files)
+  options = vim.tbl_deep_extend("force", {
+    find_command = nvim.fn.get_fd_args(),
+    hidden = true,
+    previewer = true,
+  }, options)
 
-  -- if not ok then
-  require("telescope.builtin").find_files(vim.tbl_extend("force", options, { hidden = true, previewer = true }))
-  -- end
+  require("telescope.builtin").find_files(options)
+end
+
+---Returns the arguments.
+---@param defaults table The target for default arguments.
+---@param extend_fn? function(...: table<string>): table<string>
+---@param flags_only? boolean Without the first element.
+---@param extend? table<string>
+---@return table<string>
+function M.get_args(defaults, extend_fn, flags_only, extend)
+  local args = vim.deepcopy(defaults)
+
+  if flags_only then
+    table.remove(args, 1)
+  end
+
+  if extend_fn and extend then
+    args = extend_fn(args)
+  end
+
+  return args
 end
 
 --- Returns the arguments to be passed to telescope.
----@param flags_only boolean Without the first element.
+---@param flags_only? boolean Without the first element.
 ---@param extend? table<string>
 ---@return table<string>
 function nvim.fn.get_telescope_args(flags_only, extend)
-  local rg_arguments = vim.deepcopy(M.default_rg_arguments)
+  return M.get_args(M.default_rg_arguments, M.extend_rg_arguments, flags_only, extend)
+end
 
-  if flags_only then
-    table.remove(rg_arguments, 1)
-  end
-
-  if extend then
-    rg_arguments = M.extend_rg_arguments(rg_arguments)
-  end
-
-  return rg_arguments
+--- Returns the arguments to be passed to telescope.
+---@param flags_only? boolean Without the first element.
+---@param extend? table<string>
+---@return table<string>
+function nvim.fn.get_fd_args(flags_only, extend)
+  return M.get_args(M.default_fd_arguments, M.extend_fd_arguments, flags_only, extend)
 end
 
 return M
