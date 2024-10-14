@@ -117,6 +117,7 @@ local plugins = {
   "youtrack-nvim",
   "crates-nvim",
   "jq-nvim",
+  -- "tmux-toggle-popup-nvim",
   "scratch-nvim",
   "kitty-scrollback-nvim",
 }

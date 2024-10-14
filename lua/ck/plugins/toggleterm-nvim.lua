@@ -11,6 +11,7 @@ function M.config()
       ---@type Plugin
       return {
         "akinsho/toggleterm.nvim",
+        -- cond = vim.env["TMUX"] == "",
         -- event = "VeryLazy",
       }
     end,
@@ -48,10 +49,8 @@ function M.config()
       local togglers = {
         { cmd = "lazygit", keymap = "g", label = "LazyGit" },
         { cmd = "lazydocker", keymap = "d", label = "LazyDocker" },
-        { cmd = "htop", keymap = "h", label = "htop" },
-        { cmd = "ncdu", keymap = "n", label = "ncdu" },
+        { cmd = "dust", keymap = "n", label = "dust" },
         { cmd = "k9s", keymap = "k", label = "k9s" },
-        { cmd = "termscp", keymap = "s", label = "termscp" },
       }
 
       for i, exec in pairs(togglers) do
