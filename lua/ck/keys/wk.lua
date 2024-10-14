@@ -255,14 +255,6 @@ function M.setup()
             mode = { "n", "v" },
           },
 
-          -- dependencies
-
-          {
-            fn.wk_keystroke({ categories.DEPENDENCIES }),
-            group = "dependencies",
-            mode = { "n", "v" },
-          },
-
           -- find
 
           {
