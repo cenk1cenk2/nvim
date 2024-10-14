@@ -233,7 +233,9 @@ function M.config()
         {
           fn.wk_keystroke({ "p" }),
           function()
-            M.find_project_files()
+            M.find_project_files({
+              no_ignore = false,
+            })
           end,
           desc = "find file [project]",
           mode = { "n", "v" },
