@@ -22,7 +22,7 @@ function M.run_buffer_command(opts)
       vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, j:result())
     end,
     on_failure = function(j)
-      log:error("Error running command:\n%s", vim.fn.join(j:stderr_result(), "\n"))
+      log:error("Error running command:\n%s", table.concat(j:stderr_result(), "\n"))
     end,
   }))
   j:start()
@@ -64,7 +64,7 @@ function M.run_buffer_clipboard_command(opts)
       vim.fn.setreg(vim.v.register or nvim.system_register, generated)
     end,
     on_failure = function(j)
-      log:error("Error running command:\n%s", vim.fn.join(j:stderr_result(), "\n"))
+      log:error("Error running command:\n%s", table.concat(j:stderr_result(), "\n"))
     end,
   }))
   j:start()
@@ -93,7 +93,7 @@ function M.run_buffer_to_terminal_command(opts)
   return terminal
     .create_float_terminal(vim.tbl_extend("force", opts, {
       on_failure = function(j)
-        log:error("Error running command:\n%s", vim.fn.join(j:stderr_result(), "\n"))
+        log:error("Error running command:\n%s", table.concat(j:stderr_result(), "\n"))
       end,
     }))
     :toggle()
@@ -144,7 +144,7 @@ function M.run_buffer_to_temporary_terminal_command(opts)
         log:info("Temporary path removed: %s", path)
       end,
       on_failure = function(j)
-        log:error("Error running command:\n%s", vim.fn.join(j:stderr_result(), "\n"))
+        log:error("Error running command:\n%s", table.concat(j:stderr_result(), "\n"))
       end,
     }))
     :toggle()
