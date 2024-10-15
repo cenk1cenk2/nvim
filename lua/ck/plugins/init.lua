@@ -23,6 +23,7 @@ local plugins = {
   "mason",
   "mason-nvim-dap",
   "toggleterm-nvim",
+  -- "tmux-toggle-popup-nvim",
   "flatten-nvim",
   "nvim-window-picker",
   "neotree-nvim",
@@ -117,7 +118,6 @@ local plugins = {
   "youtrack-nvim",
   "crates-nvim",
   "jq-nvim",
-  -- "tmux-toggle-popup-nvim",
   "scratch-nvim",
   "kitty-scrollback-nvim",
 }

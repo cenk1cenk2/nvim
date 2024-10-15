@@ -45,28 +45,28 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "g" }),
           function()
-            require("tmux-toggle-popup").toggle({ name = "lazygit", command = "lazygit", on_init = { "set status off" } })
+            require("tmux-toggle-popup").toggle({ name = "lazygit", command = { "lazygit" }, on_init = { "set status off" }, kill_on_vim_leave = true })
           end,
           desc = "lazygit",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "d" }),
           function()
-            require("tmux-toggle-popup").toggle({ name = "lazydocker", command = "lazydocker", on_init = { "set status off" } })
+            require("tmux-toggle-popup").toggle({ name = "lazydocker", command = { "lazydocker" }, on_init = { "set status off" }, kill_on_vim_leave = true })
           end,
           desc = "lazydocker",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "k" }),
           function()
-            require("tmux-toggle-popup").toggle({ name = "k9s", command = "k9s", on_init = { "set status off" } })
+            require("tmux-toggle-popup").toggle({ name = "k9s", command = { "k9s" }, on_init = { "set status off" }, kill_on_vim_leave = true })
           end,
           desc = "k9s",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "n" }),
           function()
-            require("tmux-toggle-popup").toggle({ name = "dust", command = "dust", on_init = { "set status off" } })
+            require("tmux-toggle-popup").toggle({ name = "dust", command = { "dust" }, on_init = { "set status off" }, kill_on_vim_leave = true })
           end,
           desc = "dust",
         },

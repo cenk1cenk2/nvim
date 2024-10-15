@@ -66,101 +66,49 @@ function M.config()
       local Rule = require("nvim-autopairs.rule")
       local cond = require("nvim-autopairs.conds")
 
-      local get_closing_for_line = function(line)
-        local i = -1
-        local clo = ""
-
-        while true do
-          i, _ = string.find(line, "[%(%)%{%}%[%]]", i + 1)
-          if i == nil then
-            break
-          end
-          local ch = string.sub(line, i, i)
-          local st = string.sub(clo, 1, 1)
-
-          if ch == "{" then
-            clo = "}" .. clo
-          elseif ch == "}" then
-            if st ~= "}" then
-              return ""
-            end
-            clo = string.sub(clo, 2)
-          elseif ch == "(" then
-            clo = ")" .. clo
-          elseif ch == ")" then
-            if st ~= ")" then
-              return ""
-            end
-            clo = string.sub(clo, 2)
-          elseif ch == "[" then
-            clo = "]" .. clo
-          elseif ch == "]" then
-            if st ~= "]" then
-              return ""
-            end
-            clo = string.sub(clo, 2)
-          end
-        end
-
-        return clo
-      end
-
-      local rule_context_aware_expand = function(a1, ins, a2, lang)
-        return Rule(ins, ins, lang)
-          :with_pair(function(opts)
-            return a1 .. a2 == opts.line:sub(opts.col - #a1, opts.col + #a2 - 1)
-          end)
-          :with_move(cond.none())
-          :with_cr(cond.none())
-          :with_del(function(opts)
-            local col = vim.api.nvim_win_get_cursor(0)[2]
-            return a1 .. ins .. ins .. a2 == opts.line:sub(col - #a1 - #ins + 1, col + #ins + #a2) -- insert only works for #ins == 1 anyway
-          end)
-      end
-
       npairs.add_rules({
         Rule("|", "|", "rust"),
       })
 
-      local brackets = {
-        { "(", ")" },
-        { "[", "]" },
-        { "{", "}" },
-      }
-      npairs.add_rules({
-        -- Rule for a pair with left-side ' ' and right side ' '
-        Rule(" ", " ")
-          -- Pair will only occur if the conditional function returns true
-          :with_pair(function(opts)
-            -- We are checking if we are inserting a space in (), [], or {}
-            local pair = opts.line:sub(opts.col - 1, opts.col)
-            return vim.tbl_contains(
-              vim.tbl_map(function(bracket)
-                return bracket[1] .. bracket[2]
-              end, brackets),
-              pair
-            )
-          end)
-          :with_move(cond.none())
-          :with_cr(cond.none())
-          -- We only want to delete the pair of spaces when the cursor is as such: ( | )
-          :with_del(function(opts)
-            local col = vim.api.nvim_win_get_cursor(0)[2]
-            local context = opts.line:sub(col - 1, col + 2)
-            return cond.not_filetypes({ "markdown", "jinja", "gotmpl" })
-              and vim.tbl_contains(
-                vim.tbl_map(function(bracket)
-                  return bracket[1] .. bracket[2]
-                end, brackets),
-                context
-              )
-          end),
-      })
+      -- local brackets = {
+      --   { "(", ")" },
+      --   { "[", "]" },
+      --   { "{", "}" },
+      -- }
+      -- npairs.add_rules({
+      --   -- Rule for a pair with left-side ' ' and right side ' '
+      --   Rule(" ", " ")
+      --     -- Pair will only occur if the conditional function returns true
+      --     :with_pair(function(opts)
+      --       -- We are checking if we are inserting a space in (), [], or {}
+      --       local pair = opts.line:sub(opts.col - 1, opts.col)
+      --       return vim.tbl_contains(
+      --         vim.tbl_map(function(bracket)
+      --           return bracket[1] .. bracket[2]
+      --         end, brackets),
+      --         pair
+      --       )
+      --     end)
+      --     :with_move(cond.none())
+      --     :with_cr(cond.none())
+      --     -- We only want to delete the pair of spaces when the cursor is as such: ( | )
+      --     :with_del(function(opts)
+      --       local col = vim.api.nvim_win_get_cursor(0)[2]
+      --       local context = opts.line:sub(col - 1, col + 2)
+      --       return cond.not_filetypes({ "markdown", "jinja", "gotmpl" })
+      --         and vim.tbl_contains(
+      --           vim.tbl_map(function(bracket)
+      --             return bracket[1] .. bracket[2]
+      --           end, brackets),
+      --           context
+      --         )
+      --     end),
+      -- })
 
       -- For each pair of brackets we will add another rule
-      npairs.add_rules(vim.tbl_map(function(bracket)
-        return Rule(bracket[1], bracket[2]):with_pair(cond.not_filetypes({ "markdown", "jinja", "gotmpl" })):with_move(cond.none()):with_cr(cond.none()):with_del(cond.none())
-      end, brackets))
+      -- npairs.add_rules(vim.tbl_map(function(bracket)
+      --   return Rule(bracket[1], bracket[2]):with_pair(cond.not_filetypes({ "markdown", "jinja", "gotmpl" })):with_move(cond.none()):with_cr(cond.none()):with_del(cond.none())
+      -- end, brackets))
 
       npairs.add_rules({
         -- auto-pair <> for generics but not as greater-than/less-than operators
@@ -180,75 +128,6 @@ function M.config()
           return opts.char == ">"
         end),
       })
-
-      npairs.add_rules({
-        rule_context_aware_expand("{{", " ", "}}", "jinja"),
-        rule_context_aware_expand("{%", " ", "%}", "jinja"),
-      })
-
-      npairs.add_rules({
-        -- arrow key on javascript
-        Rule("%(.*%)%s*%=>$", " {}", {
-          "javascript",
-          "typescript",
-          "javascriptreact",
-          "typescriptreact",
-          "vue",
-          "svelte",
-        }):use_regex(true):set_end_pair_length(2),
-      })
-
-      npairs.add_rules({
-        -- auto addspace on =
-        Rule("=", "", {
-            "javascript",
-            "javascriptreact",
-            "typescript",
-            "typescriptreact",
-            "svelte",
-            "vue",
-            "go",
-            "lua",
-          })
-          :with_pair(cond.not_inside_quote)
-          :with_pair(function(opts)
-            local last_char = opts.line:sub(opts.col - 1, opts.col - 1)
-            if last_char:match("[%w%=%s]") then
-              return true
-            end
-            return false
-          end)
-          :replace_endpair(function(opts)
-            local prev_2char = opts.line:sub(opts.col - 2, opts.col - 1)
-            local next_char = opts.line:sub(opts.col, opts.col)
-            next_char = next_char == " " and "" or " "
-            if prev_2char:match("%w$") then
-              return "<bs> =" .. next_char
-            end
-            if prev_2char:match("%=$") then
-              return next_char
-            end
-            if prev_2char:match("=") then
-              return "<bs><bs>=" .. next_char
-            end
-            return ""
-          end)
-          :set_end_pair_length(0)
-          :with_move(cond.none())
-          :with_del(cond.none()),
-      })
-
-      -- npairs.add_rules({
-      --   Rule("[%(%{%[]", "")
-      --     :use_regex(true)
-      --     :replace_endpair(function(opts)
-      --       return get_closing_for_line(opts.line)
-      --     end)
-      --     :end_wise(function(opts)
-      --       -- Do not endwise if there is no closing
-      --       return get_closing_for_line(opts.line) ~= ""
-      --     end),
-      -- })
 
       require("nvim-treesitter.configs").setup({ autopairs = { enable = true } })
 
