@@ -4,7 +4,7 @@ local M = {}
 M.name = "rachartier/tiny-inline-diagnostic.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, false, {
+  require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
       ---@type Plugin
       return {
@@ -12,9 +12,6 @@ function M.config()
         -- event = { "LspAttach" },
         event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
-    end,
-    configure = function()
-      nvim.lsp.diagnostics.virtual_text = false
     end,
     setup = function()
       return {
@@ -31,6 +28,7 @@ function M.config()
       }
     end,
     on_setup = function(c)
+      nvim.lsp.diagnostics.virtual_text = false
       require("tiny-inline-diagnostic").setup(c)
     end,
   })
