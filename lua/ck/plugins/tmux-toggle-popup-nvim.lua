@@ -13,22 +13,21 @@ function M.config()
       }
     end,
     setup = function()
+      local editor = "nvim -b"
+      local editor_split = ([[%s -cc split]]):format(editor)
+
       ---@type tmux-toggle-popup.Config
       return {
         log_level = vim.log.levels.DEBUG,
+        env = {
+          VISUAL = editor,
+          EDITOR = editor,
+          GIT_EDITOR = editor,
+        },
       }
     end,
     on_setup = function(c)
       require("tmux-toggle-popup").setup(c)
-    end,
-
-    on_done = function()
-      local editor = "nvim -b"
-      local editor_split = ([[%s -cc split]]):format(editor)
-
-      vim.env.VISUAL = editor
-      vim.env.EDITOR = editor
-      vim.env.GIT_EDITOR = editor
     end,
     keymaps = function()
       if not vim.env["TMUX"] then
