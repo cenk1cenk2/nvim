@@ -109,11 +109,6 @@ function M.config()
     on_done = function()
       local editor = "nvim -b"
       local editor_split = ([[%s -cc split]]):format(editor)
-      --
-      -- if vim.fn.has("nvim") and vim.fn.executable("nvr") then
-      --   vim.env.NVIM_LISTEN_ADDRESS = vim.v.servername
-      --   vim.env.GIT_EDITOR = editor_split
-      -- end
 
       vim.env.VISUAL = editor
       vim.env.EDITOR = editor

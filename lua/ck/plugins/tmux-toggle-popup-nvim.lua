@@ -14,7 +14,10 @@ function M.config()
     end,
     setup = function()
       local editor = "nvim -b"
-      local editor_split = ([[%s -cc split]]):format(editor)
+
+      vim.env.VISUAL = editor
+      vim.env.EDITOR = editor
+      vim.env.GIT_EDITOR = editor
 
       ---@type tmux-toggle-popup.Config
       return {
