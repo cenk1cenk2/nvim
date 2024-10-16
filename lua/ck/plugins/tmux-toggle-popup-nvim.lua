@@ -55,10 +55,6 @@ function M.config()
         return {}
       end
 
-      local on_init_single = {
-        "set status off",
-      }
-
       ---@type WKMappings
       return {
         {
@@ -99,41 +95,46 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "g" }),
           function()
-            require("tmux-toggle-popup").open({ name = "lazygit", command = { "lazygit" }, on_init = on_init_single })
+            M.create_single_toggle({ name = "lazygit", command = { "lazygit" } })
           end,
           desc = "lazygit",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "d" }),
           function()
-            require("tmux-toggle-popup").open({ name = "lazydocker", command = { "lazydocker" }, on_init = on_init_single })
+            M.create_single_toggle({ name = "lazydocker", command = { "lazydocker" } })
           end,
           desc = "lazydocker",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "k" }),
           function()
-            require("tmux-toggle-popup").open({ name = "k9s", command = { "k9s" }, on_init = on_init_single })
+            M.create_single_toggle({ name = "k9s", command = { "k9s" } })
           end,
           desc = "k9s",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "n" }),
           function()
-            require("tmux-toggle-popup").open({ name = "dust", command = { "dust" }, on_init = on_init_single })
+            M.create_single_toggle({ name = "dust", command = { "dust" } })
           end,
           desc = "dust",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "y" }),
           function()
-            require("tmux-toggle-popup").open({ name = "yazi", command = { "yazi" }, on_init = on_init_single })
+            M.create_single_toggle({ name = "yazi", command = { "yazi" } })
           end,
           desc = "yazi",
         },
       }
     end,
   })
+end
+
+---@param opts tmux-toggle-popup.Session
+function M.create_single_toggle(opts)
+  return require("tmux-toggle-popup").open(vim.tbl_extend("keep", opts, { on_init = { "set status off" } }))
 end
 
 return M
