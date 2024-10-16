@@ -20,7 +20,9 @@ function M.config()
         "toggleterm",
       })
 
-      nvim.fn.toggle_log_view = M.toggle_log_view
+      if not vim.env["TMUX"] then
+        nvim.fn.toggle_log_view = M.toggle_log_view
+      end
 
       fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
         vim.list_extend(c.bottom, {
@@ -567,9 +569,8 @@ function M.kill_all()
   M.float_terminal_current = 0
 end
 
----Toggles a log viewer according to log.viewer.layout_config
----@param logfile string the fullpath to the logfile
-function M.toggle_log_view(logfile)
+---@param file string the fullpath to the logfile
+function M.toggle_log_view(file)
   local ok = pcall(require, "toggleterm")
 
   if not ok then
@@ -577,14 +578,14 @@ function M.toggle_log_view(logfile)
     return
   end
 
-  local log_viewer = nvim.log.viewer.cmd
-  if vim.fn.executable(log_viewer) ~= 1 then
-    log_viewer = "less +F"
+  local cmd = nvim.log.viewer.cmd
+  if vim.fn.executable(cmd) ~= 1 then
+    cmd = "less +F"
   end
-  log:debug("attempting to open: " .. logfile)
-  log_viewer = log_viewer .. " " .. logfile
+  log:debug("attempting to open: " .. file)
+  cmd = cmd .. " " .. file
   local term_opts = vim.tbl_deep_extend("force", M.get_setup(), {
-    cmd = log_viewer,
+    cmd = cmd,
     direction = "float",
     open_mapping = "",
     float_opts = {},

@@ -3,6 +3,8 @@ local M = {}
 
 M.name = "cenk1cenk2/tmux-toggle-popup.nvim"
 
+local log = require("ck.log")
+
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
@@ -11,6 +13,11 @@ function M.config()
         "cenk1cenk2/tmux-toggle-popup.nvim",
         -- dir = "~/development/tmux-toggle-popup.nvim",
       }
+    end,
+    configure = function()
+      if vim.env["TMUX"] then
+        nvim.fn.toggle_log_view = M.toggle_log_view
+      end
     end,
     setup = function()
       local editor = "nvim -b"
@@ -138,6 +145,19 @@ end
 ---@param opts tmux-toggle-popup.Session
 function M.create_single_toggle(opts)
   return require("tmux-toggle-popup").open(vim.tbl_extend("keep", opts, { on_init = { "set status off" } }))
+end
+
+---@param file string the fullpath to the logfile
+function M.toggle_log_view(file)
+  local cmd = nvim.log.viewer.cmd
+
+  if vim.fn.executable(cmd) ~= 1 then
+    cmd = "less +F"
+  end
+
+  log:debug("attempting to open: %s", file)
+
+  return M.create_single_toggle({ name = "log", command = { cmd, file } })
 end
 
 return M
