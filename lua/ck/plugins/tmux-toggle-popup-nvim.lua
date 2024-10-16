@@ -24,6 +24,7 @@ function M.config()
           -- VISUAL = editor,
           -- EDITOR = editor,
           -- GIT_EDITOR = editor,
+          EDITOR_BLOCK = "1",
         },
         toggle = {
           key = "F1",
@@ -53,6 +54,10 @@ function M.config()
       if not vim.env["TMUX"] then
         return {}
       end
+
+      local on_init_single = {
+        "set status off",
+      }
 
       ---@type WKMappings
       return {
@@ -94,35 +99,35 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "g" }),
           function()
-            require("tmux-toggle-popup").open({ name = "lazygit", command = { "lazygit" }, on_init = { "set status off" } })
+            require("tmux-toggle-popup").open({ name = "lazygit", command = { "lazygit" }, on_init = on_init_single })
           end,
           desc = "lazygit",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "d" }),
           function()
-            require("tmux-toggle-popup").open({ name = "lazydocker", command = { "lazydocker" }, on_init = { "set status off" } })
+            require("tmux-toggle-popup").open({ name = "lazydocker", command = { "lazydocker" }, on_init = on_init_single })
           end,
           desc = "lazydocker",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "k" }),
           function()
-            require("tmux-toggle-popup").open({ name = "k9s", command = { "k9s" }, on_init = { "set status off" } })
+            require("tmux-toggle-popup").open({ name = "k9s", command = { "k9s" }, on_init = on_init_single })
           end,
           desc = "k9s",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "n" }),
           function()
-            require("tmux-toggle-popup").open({ name = "dust", command = { "dust" }, on_init = { "set status off" } })
+            require("tmux-toggle-popup").open({ name = "dust", command = { "dust" }, on_init = on_init_single })
           end,
           desc = "dust",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "y" }),
           function()
-            require("tmux-toggle-popup").open({ name = "yazi", command = { "yazi" }, on_init = { "set status off" } })
+            require("tmux-toggle-popup").open({ name = "yazi", command = { "yazi" }, on_init = on_init_single })
           end,
           desc = "yazi",
         },
