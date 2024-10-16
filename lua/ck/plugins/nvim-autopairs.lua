@@ -70,45 +70,45 @@ function M.config()
         Rule("|", "|", "rust"),
       })
 
-      -- local brackets = {
-      --   { "(", ")" },
-      --   { "[", "]" },
-      --   { "{", "}" },
-      -- }
-      -- npairs.add_rules({
-      --   -- Rule for a pair with left-side ' ' and right side ' '
-      --   Rule(" ", " ")
-      --     -- Pair will only occur if the conditional function returns true
-      --     :with_pair(function(opts)
-      --       -- We are checking if we are inserting a space in (), [], or {}
-      --       local pair = opts.line:sub(opts.col - 1, opts.col)
-      --       return vim.tbl_contains(
-      --         vim.tbl_map(function(bracket)
-      --           return bracket[1] .. bracket[2]
-      --         end, brackets),
-      --         pair
-      --       )
-      --     end)
-      --     :with_move(cond.none())
-      --     :with_cr(cond.none())
-      --     -- We only want to delete the pair of spaces when the cursor is as such: ( | )
-      --     :with_del(function(opts)
-      --       local col = vim.api.nvim_win_get_cursor(0)[2]
-      --       local context = opts.line:sub(col - 1, col + 2)
-      --       return cond.not_filetypes({ "markdown", "jinja", "gotmpl" })
-      --         and vim.tbl_contains(
-      --           vim.tbl_map(function(bracket)
-      --             return bracket[1] .. bracket[2]
-      --           end, brackets),
-      --           context
-      --         )
-      --     end),
-      -- })
+      local brackets = {
+        { "(", ")" },
+        { "[", "]" },
+        { "{", "}" },
+      }
+      npairs.add_rules({
+        -- Rule for a pair with left-side ' ' and right side ' '
+        Rule(" ", " ")
+          -- Pair will only occur if the conditional function returns true
+          :with_pair(function(opts)
+            -- We are checking if we are inserting a space in (), [], or {}
+            local pair = opts.line:sub(opts.col - 1, opts.col)
+            return vim.tbl_contains(
+              vim.tbl_map(function(bracket)
+                return bracket[1] .. bracket[2]
+              end, brackets),
+              pair
+            )
+          end)
+          :with_move(cond.none())
+          :with_cr(cond.none())
+          -- We only want to delete the pair of spaces when the cursor is as such: ( | )
+          :with_del(function(opts)
+            local col = vim.api.nvim_win_get_cursor(0)[2]
+            local context = opts.line:sub(col - 1, col + 2)
+            return cond.not_filetypes({ "markdown", "jinja", "gotmpl" })
+              and vim.tbl_contains(
+                vim.tbl_map(function(bracket)
+                  return bracket[1] .. bracket[2]
+                end, brackets),
+                context
+              )
+          end),
+      })
 
       -- For each pair of brackets we will add another rule
-      -- npairs.add_rules(vim.tbl_map(function(bracket)
-      --   return Rule(bracket[1], bracket[2]):with_pair(cond.not_filetypes({ "markdown", "jinja", "gotmpl" })):with_move(cond.none()):with_cr(cond.none()):with_del(cond.none())
-      -- end, brackets))
+      npairs.add_rules(vim.tbl_map(function(bracket)
+        return Rule(bracket[1], bracket[2]):with_pair(cond.not_filetypes({ "markdown", "jinja", "gotmpl" })):with_move(cond.none()):with_cr(cond.none()):with_del(cond.none())
+      end, brackets))
 
       npairs.add_rules({
         -- auto-pair <> for generics but not as greater-than/less-than operators
