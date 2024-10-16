@@ -18,11 +18,16 @@ function M.config()
 
       ---@type tmux-toggle-popup.Config
       return {
-        log_level = vim.log.levels.DEBUG,
+        -- log_level = vim.log.levels.DEBUG,
+        log_level = require("ck.log"):to_nvim_level(),
         env = {
-          VISUAL = editor,
-          EDITOR = editor,
-          GIT_EDITOR = editor,
+          -- VISUAL = editor,
+          -- EDITOR = editor,
+          -- GIT_EDITOR = editor,
+        },
+        toggle = {
+          key = "F1",
+          global = true,
         },
       }
     end,
