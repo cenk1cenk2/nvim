@@ -45,25 +45,6 @@ function M.config()
         return c
       end)
     end,
-    on_init = function()
-      local togglers = {
-        { cmd = "lazygit", keymap = "g", label = "LazyGit" },
-        { cmd = "lazydocker", keymap = "d", label = "LazyDocker" },
-        { cmd = "dust", keymap = "n", label = "dust" },
-        { cmd = "k9s", keymap = "k", label = "k9s" },
-      }
-
-      for i, exec in pairs(togglers) do
-        M.create_toggle_term({
-          cmd = exec.cmd,
-          keymap = exec.keymap,
-          label = exec.label,
-          -- NOTE: unable to consistently bind id/count <= 9, see #2146
-          count = i + 100,
-          direction = exec.direction,
-        })
-      end
-    end,
     setup = function()
       return {
         -- size can be a number or function which is passed the current terminal
@@ -141,6 +122,10 @@ function M.config()
       require("telescope").load_extension("toggleterm")
     end,
     keymaps = function()
+      if vim.env["TMUX"] then
+        return {}
+      end
+
       return {
         {
           "<F1>",
@@ -201,6 +186,28 @@ function M.config()
       }
     end,
     wk = function(_, categories, fn)
+      if vim.env["TMUX"] then
+        return {}
+      end
+
+      local togglers = {
+        { cmd = "lazygit", keymap = "g", label = "LazyGit" },
+        { cmd = "lazydocker", keymap = "d", label = "LazyDocker" },
+        { cmd = "dust", keymap = "n", label = "dust" },
+        { cmd = "k9s", keymap = "k", label = "k9s" },
+      }
+
+      for i, exec in pairs(togglers) do
+        M.create_toggle_term({
+          cmd = exec.cmd,
+          keymap = exec.keymap,
+          label = exec.label,
+          -- NOTE: unable to consistently bind id/count <= 9, see #2146
+          count = i + 100,
+          direction = exec.direction,
+        })
+      end
+
       ---@type WKMappings
       return {
         {

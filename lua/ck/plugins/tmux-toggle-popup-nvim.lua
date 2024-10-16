@@ -8,11 +8,12 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        -- "cenk1cenk2/tmux-toggle-popup.nvim",
-        dir = "~/development/tmux-toggle-popup.nvim",
+        "cenk1cenk2/tmux-toggle-popup.nvim",
+        -- dir = "~/development/tmux-toggle-popup.nvim",
       }
     end,
     setup = function()
+      ---@type tmux-toggle-popup.Config
       return {
         log_level = vim.log.levels.DEBUG,
       }
@@ -29,7 +30,7 @@ function M.config()
         {
           "<F1>",
           function()
-            require("tmux-toggle-popup").toggle({ kill_on_vim_leave = true })
+            require("tmux-toggle-popup").open()
           end,
           desc = "toggle tmux popup",
         },
@@ -45,7 +46,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "s" }),
           function()
-            require("tmux-toggle-popup").save_session()
+            require("tmux-toggle-popup").save()
           end,
           desc = "save session for main terminal",
         },
@@ -57,53 +58,60 @@ function M.config()
           desc = "save session for all terminals",
         },
         {
+          fn.wk_keystroke({ categories.TERMINAL, "x" }),
+          function()
+            require("tmux-toggle-popup").kill()
+          end,
+          desc = "kill session for main terminal",
+        },
+        {
+          fn.wk_keystroke({ categories.TERMINAL, "X" }),
+          function()
+            require("tmux-toggle-popup").kill_all()
+          end,
+          desc = "kill session for all terminals",
+        },
+        {
           fn.wk_keystroke({ categories.TERMINAL, "t" }),
           function()
-            require("tmux-toggle-popup").toggle()
+            require("tmux-toggle-popup").open()
           end,
           desc = "toggle tmux popup",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "g" }),
           function()
-            require("tmux-toggle-popup").toggle({ name = "lazygit", command = { "lazygit" }, on_init = { "set status off" } })
-          end,
-          desc = "lazygit",
-        },
-        {
-          fn.wk_keystroke({ categories.TERMINAL, "g" }),
-          function()
-            require("tmux-toggle-popup").toggle({ name = "lazygit", command = { "lazygit" }, on_init = { "set status off" } })
-          end,
-          desc = "lazygit",
-        },
-        {
-          fn.wk_keystroke({ categories.TERMINAL, "g" }),
-          function()
-            require("tmux-toggle-popup").toggle({ name = "lazygit", command = { "lazygit" }, on_init = { "set status off" } })
+            require("tmux-toggle-popup").open({ name = "lazygit", command = { "lazygit" }, on_init = { "set status off" } })
           end,
           desc = "lazygit",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "d" }),
           function()
-            require("tmux-toggle-popup").toggle({ name = "lazydocker", command = { "lazydocker" }, on_init = { "set status off" } })
+            require("tmux-toggle-popup").open({ name = "lazydocker", command = { "lazydocker" }, on_init = { "set status off" } })
           end,
           desc = "lazydocker",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "k" }),
           function()
-            require("tmux-toggle-popup").toggle({ name = "k9s", command = { "k9s" }, on_init = { "set status off" } })
+            require("tmux-toggle-popup").open({ name = "k9s", command = { "k9s" }, on_init = { "set status off" } })
           end,
           desc = "k9s",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "n" }),
           function()
-            require("tmux-toggle-popup").toggle({ name = "dust", command = { "dust" }, on_init = { "set status off" } })
+            require("tmux-toggle-popup").open({ name = "dust", command = { "dust" }, on_init = { "set status off" } })
           end,
           desc = "dust",
+        },
+        {
+          fn.wk_keystroke({ categories.TERMINAL, "y" }),
+          function()
+            require("tmux-toggle-popup").open({ name = "yazi", command = { "yazi" }, on_init = { "set status off" } })
+          end,
+          desc = "yazi",
         },
       }
     end,
