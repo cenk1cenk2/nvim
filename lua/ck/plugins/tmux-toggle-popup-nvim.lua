@@ -151,13 +151,17 @@ end
 function M.toggle_log_view(file)
   local cmd = nvim.log.viewer.cmd
 
-  if vim.fn.executable(cmd) ~= 1 then
-    cmd = "less +F"
-  end
+  log:debug("Attempting to open log file: %s", file)
 
-  log:debug("attempting to open: %s", file)
-
-  return M.create_single_toggle({ name = "log", command = { cmd, file } })
+  return M.create_single_toggle({
+    name = "log",
+    command = { cmd, file },
+    toggle = {
+      action = function(_, name)
+        return "kill-session -t " .. name
+      end,
+    },
+  })
 end
 
 return M

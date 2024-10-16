@@ -579,10 +579,9 @@ function M.toggle_log_view(file)
   end
 
   local cmd = nvim.log.viewer.cmd
-  if vim.fn.executable(cmd) ~= 1 then
-    cmd = "less +F"
-  end
-  log:debug("attempting to open: " .. file)
+
+  log:debug("Attempting to open log file: %s", file)
+
   cmd = cmd .. " " .. file
   local term_opts = vim.tbl_deep_extend("force", M.get_setup(), {
     cmd = cmd,
