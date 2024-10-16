@@ -85,6 +85,7 @@ function M.config()
         triggers = {
           { "<auto>", mode = { "n", "i", "x", "s", "o", "t", "c" } },
           { "m", mode = { "n" } },
+          { "<localleader>", mode = { "n" } },
           -- { "<leader>" },
           -- { "g" },
           -- { "z" },
