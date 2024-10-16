@@ -39,7 +39,7 @@ function M.config()
       require("tmux-toggle-popup").setup(c)
     end,
     keymaps = function()
-      if not vim.env["TMUX"] then
+      if not require("tmux-toggle-popup").is_tmux() then
         return {}
       end
 
@@ -54,7 +54,7 @@ function M.config()
       }
     end,
     wk = function(_, categories, fn)
-      if not vim.env["TMUX"] then
+      if not require("tmux-toggle-popup").is_tmux() then
         return {}
       end
 
