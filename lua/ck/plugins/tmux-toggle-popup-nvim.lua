@@ -25,16 +25,25 @@ function M.config()
       vim.env.VISUAL = editor
       vim.env.EDITOR = editor
       vim.env.GIT_EDITOR = editor
+      vim.env.EDITOR_BLOCK = "1"
 
       ---@type tmux-toggle-popup.Config
       return {
         -- log_level = vim.log.levels.DEBUG,
         log_level = require("ck.log"):to_nvim_level(),
         env = {
-          -- VISUAL = editor,
-          -- EDITOR = editor,
-          -- GIT_EDITOR = editor,
-          EDITOR_BLOCK = "1",
+          VISUAL = function()
+            return vim.env.VISUAL
+          end,
+          EDITOR = function()
+            return vim.env.EDITOR
+          end,
+          GIT_EDITOR = function()
+            return vim.env.GIT_EDITOR
+          end,
+          EDITOR_BLOCK = function()
+            return vim.env.EDITOR_BLOCK
+          end,
         },
         toggle = {
           key = "F1",

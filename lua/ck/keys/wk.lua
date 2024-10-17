@@ -141,6 +141,7 @@ function M.setup()
               vim.env.VISUAL = editor
               vim.env.EDITOR = editor
               vim.env.GIT_EDITOR = editor
+              vim.env.EDITOR_BLOCK = "1"
             end,
             desc = "editor [block]",
           },
@@ -152,6 +153,7 @@ function M.setup()
               vim.env.VISUAL = editor
               vim.env.EDITOR = editor
               vim.env.GIT_EDITOR = editor
+              vim.env.EDITOR_BLOCK = nil
             end,
             desc = "editor [async]",
           },
