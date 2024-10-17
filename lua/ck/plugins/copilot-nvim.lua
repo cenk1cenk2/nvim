@@ -58,11 +58,11 @@ function M.config()
           debounce = nvim.lsp.copilot.debounce,
           keymap = {
             accept = false,
+            accept_line = false,
             next = "<M-j>",
             prev = "<M-k>",
             dismiss = "<M-h>",
             accept_word = false,
-            accept_line = false,
           },
         },
         filetypes = nvim.lsp.copilot.filetypes,
@@ -81,10 +81,22 @@ function M.config()
             local autopairs = require("nvim-autopairs")
             local suggestion = require("copilot.suggestion")
             autopairs.disable()
-            suggestion[nvim.lsp.copilot.accept_type]()
+            suggestion.accept()
             autopairs.enable()
           end,
           desc = "accept copilot suggestion",
+          mode = "i",
+        },
+        {
+          "<M-s-l>",
+          function()
+            local autopairs = require("nvim-autopairs")
+            local suggestion = require("copilot.suggestion")
+            autopairs.disable()
+            suggestion.accept_line()
+            autopairs.enable()
+          end,
+          desc = "accept copilot suggestion for line",
           mode = "i",
         },
       }
