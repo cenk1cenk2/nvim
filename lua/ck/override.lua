@@ -16,7 +16,6 @@ nvim.lsp.inlay_hints.mode = "eol"
 
 nvim.lsp.copilot.debounce = 50
 nvim.lsp.copilot.completion = { "inline" }
-nvim.lsp.copilot.accept_type = "accept"
 nvim.lsp.copilot.filetypes = {
   yaml = false,
   markdown = true,

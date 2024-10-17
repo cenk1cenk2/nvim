@@ -64,8 +64,6 @@ return {
     ---@type table<string, boolean>
     filetypes = {},
     debounce = 50,
-    ---@type "accept" | "accept_line" | "accept_word"
-    accept_type = "accept",
   },
 
   ---@type table<string, string | LspOnCallback>
