@@ -11,7 +11,6 @@ function M.config()
       ---@type Plugin
       return {
         "cenk1cenk2/tmux-toggle-popup.nvim",
-        branch = "upstream/improve-hook-syntax",
         -- dir = "~/development/tmux-toggle-popup.nvim",
       }
     end,
