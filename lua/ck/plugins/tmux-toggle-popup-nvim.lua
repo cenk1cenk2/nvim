@@ -106,13 +106,6 @@ function M.config()
           desc = "kill session for all terminals",
         },
         {
-          fn.wk_keystroke({ categories.TERMINAL, "t" }),
-          function()
-            require("tmux-toggle-popup").open()
-          end,
-          desc = "toggle tmux popup",
-        },
-        {
           fn.wk_keystroke({ categories.TERMINAL, "g" }),
           function()
             M.create_single_toggle({ name = "lazygit", command = { "lazygit" } })
