@@ -8,9 +8,9 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        -- "hrsh7th/nvim-cmp",
+        "hrsh7th/nvim-cmp",
         -- https://github.com/iguanacucumber/magazine.nvim
-        "iguanacucumber/magazine.nvim",
+        -- "iguanacucumber/magazine.nvim",
         event = { "InsertEnter", "CmdlineEnter" },
         dependencies = {
           { "hrsh7th/cmp-nvim-lsp" },
