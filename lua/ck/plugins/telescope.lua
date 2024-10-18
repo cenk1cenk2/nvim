@@ -503,8 +503,8 @@ M.default_fd_arguments = {
   ".cache",
 }
 
-M.RG_ARGS_ENV_VAR = "RG_ARGS"
-M.FD_ARGS_ENV_VAR = "FD_ARGS"
+M.RG_ARGS_ENV_VAR = "NVIM_RG_ARGS"
+M.FD_ARGS_ENV_VAR = "NVIM_FD_ARGS"
 
 ---Extends the arguments.
 ---@param env string
