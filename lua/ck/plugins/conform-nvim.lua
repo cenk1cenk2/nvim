@@ -22,7 +22,7 @@ function M.config()
       ---@type conform.setupOpts
       return {
         default_format_opts = {
-          lsp_format = nvim.lsp.tools.format.lsp_format,
+          -- lsp_format = nvim.lsp.tools.format.lsp_format,
         },
 
         -- Map of filetype to formatters
@@ -117,14 +117,20 @@ function M.config()
         return formatters
       end
 
-      ---@param opts? vim.lsp.buf.format.Opts
+      ---@param opts? conform.FormatOpts
       ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.format = function(opts)
-        opts = vim.tbl_extend("force", {
-          bufnr = vim.api.nvim_get_current_buf(),
-          timeout_ms = nvim.lsp.tools.format.timeout_ms,
-          filter = nvim.lsp.tools.format.filter,
-        }, opts or {})
+        opts = vim.tbl_extend(
+          "force",
+          ---@type conform.FormatOpts
+          {
+            bufnr = vim.api.nvim_get_current_buf(),
+            timeout_ms = nvim.lsp.tools.format.timeout_ms,
+            filter = nvim.lsp.tools.format.filter,
+            undojoin = true,
+          },
+          opts or {}
+        )
         return require("conform").format(opts)
       end
     end,

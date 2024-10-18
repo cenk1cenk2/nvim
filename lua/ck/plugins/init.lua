@@ -72,7 +72,7 @@ local plugins = {
   "neogen",
   "gitignore-nvim",
   "lspsaga-nvim",
-  "tiny-code-action-nvim",
+  -- "tiny-code-action-nvim",
   -- "tiny-inline-diagnostic-nvim",
   "nvim-dap-ui",
   "nvim-dap-virtual-text",

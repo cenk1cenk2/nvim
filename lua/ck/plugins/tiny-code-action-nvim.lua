@@ -4,7 +4,7 @@ local M = {}
 M.name = "rachartier/tiny-code-action.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, true, {
+  require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
       ---@type Plugin
       return {
