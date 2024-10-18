@@ -11,9 +11,6 @@ function M.config()
         "s1n7ax/nvim-window-picker",
       }
     end,
-    configure = function()
-      nvim.fn.pick_window = M.pick_window
-    end,
     setup = function()
       return {
         selection_chars = nvim.selection_chars:upper(),
@@ -32,6 +29,8 @@ function M.config()
               return true
             end, nvim.disabled_filetypes),
           },
+          autoselect_one = true,
+          include_current_win = true,
         },
         highlights = {
           winbar = {
@@ -55,7 +54,7 @@ function M.config()
   })
 end
 
-function M.pick_window()
+function nvim.fn.pick_window()
   return require("window-picker").pick_window()
 end
 
