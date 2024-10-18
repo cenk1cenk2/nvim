@@ -523,7 +523,7 @@ function M.extend_args(env, ...)
     table.insert(chunks, substring)
   end
 
-  return vim.list_extend(target, chunks)
+  return vim.list_extend(chunks, target)
 end
 
 ---Extends the arguments of rg command.
