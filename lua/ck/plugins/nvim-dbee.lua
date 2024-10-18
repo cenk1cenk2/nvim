@@ -23,15 +23,11 @@ function M.config()
                 return c
               end)
 
-              require("ck.modules.autocmds").init_with({ "FileType" }, { "sql", "mysql", "plsql" }, function()
-                require("cmp").setup.buffer({
-                  sources = {
-                    { name = "cmp-dbee" },
-                  },
-                })
-
-                return {}
-              end)
+              require("cmp").setup.filetype({ "sql", "mysql", "plsql" }, {
+                sources = {
+                  { name = "cmp-dbee" },
+                },
+              })
             end,
             config = function()
               require("cmp-dbee").setup({})
