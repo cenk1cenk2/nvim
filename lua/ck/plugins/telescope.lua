@@ -629,19 +629,19 @@ end
 
 ---Returns the arguments.
 ---@param defaults table The target for default arguments.
----@param extend_fn? function(...: table<string>): table<string>
+---@param fn? function(...: table<string>): table<string>
 ---@param flags_only? boolean Without the first element.
 ---@param extend? table<string>
 ---@return table<string>
-function M.get_args(defaults, extend_fn, flags_only, extend)
+function M.get_args(defaults, fn, flags_only, extend)
   local args = vim.deepcopy(defaults)
 
   if flags_only then
     table.remove(args, 1)
   end
 
-  if extend_fn and extend then
-    args = extend_fn(args)
+  if fn then
+    vim.list_extend(args, fn(unpack(extend or {})))
   end
 
   return args
