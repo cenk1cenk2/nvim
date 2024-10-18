@@ -22,7 +22,7 @@ function M.config()
       ---@type conform.setupOpts
       return {
         default_format_opts = {
-          -- lsp_format = nvim.lsp.tools.format.lsp_format,
+          lsp_format = nvim.lsp.tools.format.lsp_format,
         },
 
         -- Map of filetype to formatters
