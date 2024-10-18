@@ -490,7 +490,7 @@ M.default_fd_arguments = {
 }
 
 M.RG_ARGS_ENV_VAR = "RG_ARGS"
-M.RG_ARGS_ENV_VAR = "FD_ARGS"
+M.FD_ARGS_ENV_VAR = "FD_ARGS"
 
 ---Extends the arguments.
 ---@param env string
@@ -546,7 +546,7 @@ function M.set_arguments(command, env)
     default = vim.env[env],
   }, function(val)
     if val == nil then
-      val = ""
+      return
     end
 
     vim.env[env] = vim.fn.expand(tostring(val))
