@@ -487,6 +487,7 @@ M.default_fd_arguments = {
   "f",
   "--color",
   "never",
+  "--hidden",
 }
 
 M.RG_ARGS_ENV_VAR = "RG_ARGS"
