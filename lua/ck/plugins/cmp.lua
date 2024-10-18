@@ -328,7 +328,7 @@ M.sources = {
   { name = "luasnip" },
   { name = "calc" },
   { name = "path" },
-  { name = "omni", option = { disable_omnifuncs = { "v:lua.vim.lsp.omnifunc" } } },
+  { name = "omni", option = { disable_omnifuncs = { "v:lua.vim.lsp.omnifunc", "sqlcomplete#Complete" } } },
   { name = "buffer", keyword_length = 3 },
   -- { name = "fuzzy_buffer" },
 
