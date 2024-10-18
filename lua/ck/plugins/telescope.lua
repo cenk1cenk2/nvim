@@ -479,6 +479,7 @@ M.default_rg_arguments = {
   "--column",
   "--smart-case",
   "--hidden",
+  "--glob=!.git/",
 }
 
 M.default_fd_arguments = {
@@ -488,6 +489,18 @@ M.default_fd_arguments = {
   "--color",
   "never",
   "--hidden",
+  "-E",
+  ".git",
+  "-E",
+  "node_modules",
+  "-E",
+  "vendor",
+  "-E",
+  "virtualenvs",
+  "-E",
+  ".venv",
+  "-E",
+  ".cache",
 }
 
 M.RG_ARGS_ENV_VAR = "RG_ARGS"
