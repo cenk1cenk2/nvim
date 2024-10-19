@@ -509,7 +509,7 @@ function M.create_bottom_terminal()
 end
 
 function M.create_buffer_terminal()
-  local current = vim.fn.expand("%:p:h")
+  local current = require("ck.utils.fs").get_buffer_dirpath()
 
   local t = M.create_float_terminal()
 

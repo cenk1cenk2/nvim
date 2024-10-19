@@ -3,14 +3,23 @@ local M = {}
 local log = require("ck.log")
 
 function M.rebuild_latest_neovim()
-  local term_opts = require("ck.plugins.toggleterm-nvim").generate_defaults_float_terminal({
-    cmd = join_paths(get_config_dir(), "/utils/install-latest-neovim.sh"),
-    close_on_exit = false,
-  })
+  if not vim.env["TMUX"] then
+    return require("ck.plugins.toggleterm-nvim")
+      .create_terminal(require("ck.plugins.toggleterm-nvim").generate_defaults_float_terminal({
+        cmd = join_paths(get_config_dir(), "/utils/install-latest-neovim.sh"),
+        close_on_exit = false,
+      }))
+      :toggle()
+  end
 
-  local Terminal = require("toggleterm.terminal").Terminal
-  local log_view = Terminal:new(term_opts)
-  log_view:toggle()
+  require("ck.plugins.tmux-toggle-popup-nvim").create_terminal({
+    command = { "./utils/install-latest-neovim.sh" },
+    name = "rebuild",
+    flags = {
+      close_on_exit = false,
+      start_directory = get_config_dir(),
+    },
+  })
 end
 
 function M.update()

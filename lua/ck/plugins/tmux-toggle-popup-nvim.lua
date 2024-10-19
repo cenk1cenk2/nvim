@@ -55,7 +55,7 @@ function M.config()
       require("tmux-toggle-popup").setup(c)
     end,
     keymaps = function()
-      if not require("tmux-toggle-popup").is_tmux() then
+      if not vim.env["TMUX"] then
         return {}
       end
 
@@ -67,10 +67,21 @@ function M.config()
           end,
           desc = "toggle tmux popup",
         },
+        {
+          "<F6>",
+          function()
+            require("tmux-toggle-popup").open({
+              flags = {
+                start_directory = require("ck.utils.fs").get_buffer_dirpath(),
+              },
+            })
+          end,
+          desc = "create buffer terminal",
+        },
       }
     end,
     wk = function(_, categories, fn)
-      if not require("tmux-toggle-popup").is_tmux() then
+      if not vim.env["TMUX"] then
         return {}
       end
 
@@ -107,35 +118,35 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "g" }),
           function()
-            M.create_single_toggle({ name = "lazygit", command = { "lazygit" } })
+            M.create_terminal({ name = "lazygit", command = { "lazygit" } })
           end,
           desc = "lazygit",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "d" }),
           function()
-            M.create_single_toggle({ name = "lazydocker", command = { "lazydocker" } })
+            M.create_terminal({ name = "lazydocker", command = { "lazydocker" } })
           end,
           desc = "lazydocker",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "k" }),
           function()
-            M.create_single_toggle({ name = "k9s", command = { "k9s" } })
+            M.create_terminal({ name = "k9s", command = { "k9s" } })
           end,
           desc = "k9s",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "n" }),
           function()
-            M.create_single_toggle({ name = "dust", command = { "dust" } })
+            M.create_terminal({ name = "dust", command = { "dust" } })
           end,
           desc = "dust",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "y" }),
           function()
-            M.create_single_toggle({ name = "yazi", command = { "yazi" } })
+            M.create_terminal({ name = "yazi", command = { "yazi" } })
           end,
           desc = "yazi",
         },
@@ -145,7 +156,7 @@ function M.config()
 end
 
 ---@param opts tmux-toggle-popup.Session
-function M.create_single_toggle(opts)
+function M.create_terminal(opts)
   return require("tmux-toggle-popup").open(vim.tbl_extend("keep", opts, { on_init = { "set status off" } }))
 end
 
@@ -155,7 +166,7 @@ function M.toggle_log_view(file)
 
   log:debug("Attempting to open log file: %s", file)
 
-  return M.create_single_toggle({
+  return M.create_terminal({
     name = "log",
     command = { cmd, file },
     toggle = {
