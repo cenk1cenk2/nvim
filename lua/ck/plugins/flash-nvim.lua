@@ -247,7 +247,7 @@ function M.config()
             })
           end,
           desc = "flash to word.",
-          mode = { "n", "o", "x", "v" },
+          mode = { "n" },
         },
         {
           "S",
