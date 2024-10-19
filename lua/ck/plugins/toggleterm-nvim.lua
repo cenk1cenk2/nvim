@@ -160,7 +160,7 @@ function M.config()
           mode = { "n", "t" },
         },
         {
-          "<F6>",
+          "<F5>",
           function()
             M.create_buffer_terminal()
           end,

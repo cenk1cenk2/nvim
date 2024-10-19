@@ -68,7 +68,7 @@ function M.config()
           desc = "toggle tmux popup",
         },
         {
-          "<F6>",
+          "<F5>",
           function()
             require("tmux-toggle-popup").open({
               flags = {
