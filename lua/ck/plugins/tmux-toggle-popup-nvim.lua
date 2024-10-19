@@ -70,9 +70,12 @@ function M.config()
         {
           "<F5>",
           function()
-            require("tmux-toggle-popup").open({
+            local dir = require("ck.utils.fs").get_buffer_dirpath()
+
+            M.create_terminal({
+              name = dir,
               flags = {
-                start_directory = require("ck.utils.fs").get_buffer_dirpath(),
+                start_directory = dir,
               },
             })
           end,
