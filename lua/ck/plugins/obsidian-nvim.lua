@@ -389,7 +389,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "P" }),
           function()
-            vim.cmd(("ObsidianPasteImg %s"):format(join_paths(require("ck.utils.fs").get_project_buffer_filepath(), "assets/")))
+            vim.cmd(("ObsidianPasteImg %s"):format(join_paths(require("ck.utils.fs").get_project_buffer_dirpath(), "assets/")))
           end,
           desc = "paste image from clipboard",
         },
