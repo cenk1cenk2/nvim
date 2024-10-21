@@ -163,16 +163,12 @@ end
 ---@return Plugin
 local function define_manager_plugin(config, plugin)
   if plugin.init ~= false and type(plugin.init) ~= "function" then
-    log:trace("Defining default init command for plugin: %s", config.name)
-
     plugin.init = function()
       require("ck.setup").plugin_init(config.name)
     end
   end
 
   if plugin.config ~= false and type(plugin.config) ~= "function" then
-    log:trace("Defining default config command for plugin: %s", config.name)
-
     plugin.config = function()
       require("ck.setup").plugin_configure(config.name)
     end
@@ -240,6 +236,8 @@ function M.define_plugin(name, enabled, config)
 
   if config.plugin ~= nil then
     config.plugin_spec = define_manager_plugin(config, config.plugin(config))
+
+    log:trace("Defining plugin: %s", config.name)
   end
 
   if config.condition ~= nil and config.condition(config, M.fn) == false then
