@@ -237,7 +237,7 @@ function M.define_plugin(name, enabled, config)
   if config.plugin ~= nil then
     config.plugin_spec = define_manager_plugin(config, config.plugin(config))
 
-    log:trace("Defining plugin: %s", config.name)
+    log:trace("Defining plugin: %s as %s", config.plugin_spec[1], config.name)
   end
 
   if config.condition ~= nil and config.condition(config, M.fn) == false then
