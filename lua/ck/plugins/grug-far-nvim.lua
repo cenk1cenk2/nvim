@@ -93,48 +93,41 @@ function M.config()
         {
           fn.wk_keystroke({ categories.SEARCH, "s" }),
           function()
-            local opts = {
+            require("grug-far").open({
               prefills = {
                 search = "",
                 replacement = "",
-                filesFilter = "",
                 flags = generate_rg_flags({}),
               },
-            }
-
-            require("grug-far").grug_far(opts)
+            })
           end,
           desc = "[grug-far] find and replace",
         },
         {
           fn.wk_keystroke({ categories.SEARCH, "w" }),
           function()
-            local opts = {
+            require("grug-far").open({
               prefills = {
                 search = "",
                 replacement = "",
-                filesFilter = string.format("%s/**", require("ck.utils.fs").get_project_buffer_dirpath()),
+                paths = require("ck.utils.fs").get_project_buffer_dirpath(),
                 flags = generate_rg_flags({ "--no-ignore-dot" }),
               },
-            }
-
-            require("grug-far").grug_far(opts)
+            })
           end,
           desc = "[grug-far] find and replace in current folder",
         },
         {
           fn.wk_keystroke({ categories.SEARCH, "b" }),
           function()
-            local opts = {
+            require("grug-far").open({
               prefills = {
                 search = "",
                 replacement = "",
-                filesFilter = require("ck.utils.fs").get_project_buffer_filepath(),
+                paths = require("ck.utils.fs").get_project_buffer_filepath(),
                 flags = generate_rg_flags({ "--no-ignore-dot" }),
               },
-            }
-
-            require("grug-far").grug_far(opts)
+            })
           end,
           desc = "[grug-far] find and replace in current buffer",
         },
@@ -143,48 +136,42 @@ function M.config()
           {
             fn.wk_keystroke({ categories.SEARCH, "s" }),
             function()
-              local opts = {
+              require("grug-far").with_visual_selection({
                 prefills = {
                   search = "",
                   replacement = "",
                   filesFilter = "",
                   flags = generate_rg_flags({}),
                 },
-              }
-
-              require("grug-far").with_visual_selection(opts)
+              })
             end,
             desc = "[grug-far] find and replace",
           },
           {
             fn.wk_keystroke({ categories.SEARCH, "w" }),
             function()
-              local opts = {
+              require("grug-far").with_visual_selection({
                 prefills = {
                   search = "",
                   replacement = "",
-                  filesFilter = string.format("%s/**", require("ck.utils.fs").get_project_buffer_dirpath()),
+                  paths = require("ck.utils.fs").get_project_buffer_dirpath(),
                   flags = generate_rg_flags({ "--no-ignore-dot" }),
                 },
-              }
-
-              require("grug-far").with_visual_selection(opts)
+              })
             end,
             desc = "[grug-far] find and replace in current folder",
           },
           {
             fn.wk_keystroke({ categories.SEARCH, "b" }),
             function()
-              local opts = {
+              require("grug-far").with_visual_selection({
                 prefills = {
                   search = "",
                   replacement = "",
-                  filesFilter = require("ck.utils.fs").get_project_buffer_filepath(),
+                  paths = require("ck.utils.fs").get_project_buffer_filepath(),
                   flags = generate_rg_flags({ "--no-ignore-dot" }),
                 },
-              }
-
-              require("grug-far").with_visual_selection(opts)
+              })
             end,
             desc = "[grug-far] find and replace in current buffer",
           },
