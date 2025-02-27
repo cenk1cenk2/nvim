@@ -10,6 +10,7 @@ return {
   end,
   filetypes = {
     "yaml",
+    "yaml.gitlab-ci",
     "!yaml.ansible",
     "!yaml.docker-compose",
   },

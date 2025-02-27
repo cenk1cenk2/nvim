@@ -63,6 +63,7 @@ nvim.lsp.ensure_installed = {
   "dockerls",
   "emmet_ls",
   "eslint",
+  "gitlab_ci_ls",
   "golangci_lint_ls",
   "gopls",
   "graphql",

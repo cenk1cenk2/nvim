@@ -41,25 +41,18 @@ function M.setup()
         return "dockerfile"
       end,
       ["*.dockerignore"] = "gitignore",
-      [".*%.yml"] = function(path)
-        if path:find(".*compose.*$") then
+      [".*%.ya?ml"] = function(path)
+        if path:find(".*%.gitlab-ci.*$") then
+          return "yaml.gitlab-ci"
+        elseif path:find(".*compose.*$") then
           return "yaml.docker-compose"
-        end
-
-        local ansible_root = vim.fs.root(path, { "ansible.cfg", ".ansible-lint", ".vault-password" })
-
-        if
-          ansible_root
+        elseif
+          vim.fs.root(path, { "ansible.cfg", ".ansible-lint", ".vault-password" })
           and not (path:find("environments/") or path:find("vars/") or path:find("group_vars/") or path:find("host_vars/"))
-          and vim.fs.dirname(path) ~= ansible_root
+          and vim.fs.dirname(path) ~= vim.fs.root(path, { "ansible.cfg", ".ansible-lint", ".vault-password" })
         then
           return "yaml.ansible"
-        end
-
-        return "yaml"
-      end,
-      [".*%.yaml"] = function(path)
-        if vim.fs.root(path, { "Chart.yaml" }) and path:find("templates/") then
+        elseif vim.fs.root(path, { "Chart.yaml" }) and path:find("templates/") then
           return "helm"
         end
 

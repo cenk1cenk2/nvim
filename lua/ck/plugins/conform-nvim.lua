@@ -201,6 +201,7 @@ function M.register()
     "yaml",
     "yaml.ansible",
     "yaml.docker-compose",
+    "yaml.gitlab-ci",
     "json",
     "jsonc",
     "html",
