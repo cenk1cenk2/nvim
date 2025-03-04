@@ -136,7 +136,7 @@ function M.config()
           fn.wk_keystroke({ categories.TREESITTER, "R" }),
           function()
             for _, parser in pairs(fn.get_setup(M.name).ensure_installed) do
-              vim.cmd(("TSInstall %s"):format(parser))
+              vim.cmd(("TSInstall! %s"):format(parser))
             end
           end,
           desc = "reinstall all treesitter packages",
