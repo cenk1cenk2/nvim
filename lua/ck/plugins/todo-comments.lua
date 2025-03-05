@@ -49,6 +49,10 @@ function M.config()
             hint = { "LspDiagnosticsDefaultHint" },
             default = { "Identifier" },
           },
+          search = {
+            command = "rg",
+            args = nvim.fn.get_telescope_args(true, { "--no-ignore-dot" }),
+          },
           -- regex that will be used to match keywords.
           -- don't replace the (KEYWORDS) placeholder
           pattern = "@?(KEYWORDS):",
