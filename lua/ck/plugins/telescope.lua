@@ -655,7 +655,7 @@ function M.get_args(defaults, fn, flags_only, extend)
   end
 
   if fn then
-    vim.list_extend(args, fn(unpack(extend or {})))
+    vim.list_extend(args, fn((extend or {})))
   end
 
   return args
