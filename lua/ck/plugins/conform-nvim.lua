@@ -263,6 +263,19 @@ function M.extend_tools()
     prepend_args = { "-m", "180" },
   })
 
+  conform.formatters["golangci-lint"] = {
+    meta = {
+      url = "https://github.com/golangci/golangci-lint",
+      description = "Format Go code with golangci-lint.",
+    },
+    command = "golangci-lint",
+    args = {
+      "run",
+      "--fix",
+    },
+    stdin = true,
+  }
+
   conform.formatters["trim_multiple_newlines"] = {
     meta = {
       url = "https://www.gnu.org/software/gawk/manual/gawk.html",
