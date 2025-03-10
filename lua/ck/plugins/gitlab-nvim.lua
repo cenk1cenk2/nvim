@@ -249,6 +249,7 @@ function M.config()
             require("gitlab").create_note()
           end,
           desc = "gitlab mr create note",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.GIT, "l", "t" }),
