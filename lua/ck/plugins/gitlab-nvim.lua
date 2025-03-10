@@ -49,9 +49,14 @@ function M.config()
       ---@type Settings
       return {
         port = nil, -- The port of the Go server, which runs in the background, if omitted or `nil` the port will be chosen automatically
-        log_path = vim.fn.stdpath("cache") .. "/gitlab.nvim.log", -- Log path for the Go server
+        log_path = join_paths(vim.fn.stdpath("cache"), "gitlab.nvim.log"), -- Log path for the Go server
         config_path = nil, -- Custom path for `.gitlab.nvim` file, please read the "Connecting to Gitlab" section
-        debug = { go_request = false, go_response = false }, -- Which values to log
+        debug = {
+          go_request = require("ck.log"):to_nvim_level() == vim.log.levels.DEBUG,
+          go_response = require("ck.log"):to_nvim_level() == vim.log.levels.DEBUG,
+          request = require("ck.log"):to_nvim_level() == vim.log.levels.DEBUG,
+          response = require("ck.log"):to_nvim_level() == vim.log.levels.DEBUG,
+        }, -- Which values to log
         attachment_dir = nil, -- The local directory for files (see the "summary" section)
         -- https://github.com/harrisoncramer/gitlab.nvim/blob/main/lua/gitlab/state.lua#L69
         keymaps = {
@@ -361,6 +366,13 @@ function M.config()
           end,
           desc = "gitlab mr create suggestion",
           mode = { "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "l", categories.LOGS }),
+          function()
+            nvim.fn.toggle_log_view(join_paths(vim.fn.stdpath("cache"), "gitlab.nvim.log"))
+          end,
+          desc = "view log",
         },
       }
     end,
