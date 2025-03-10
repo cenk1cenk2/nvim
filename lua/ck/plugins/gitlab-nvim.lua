@@ -223,6 +223,13 @@ function M.config()
           desc = "gitlab mr create comment",
         },
         {
+          fn.wk_keystroke({ categories.GIT, "l", "f" }),
+          function()
+            require("gitlab").choose_merge_request()
+          end,
+          desc = "choose merge request",
+        },
+        {
           fn.wk_keystroke({ categories.GIT, "l", "m" }),
           function()
             require("gitlab").create_mr({ delete_branch = true })
