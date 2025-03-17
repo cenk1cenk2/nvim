@@ -13,6 +13,8 @@ function M.config()
         "willothy/flatten.nvim",
         lazy = false,
         priority = 1100,
+        -- https://github.com/willothy/flatten.nvim/issues/106
+        commit = "d3e3529c23740a5411da3614e1ca3f35eb968fc9",
       }
     end,
     setup = function()
