@@ -48,7 +48,7 @@ function M.setup()
           return "yaml.docker-compose"
         elseif
           vim.fs.root(path, { "ansible.cfg", ".ansible-lint", ".vault-password" })
-          and not (path:find("environments/") or path:find("vars/") or path:find("group_vars/") or path:find("host_vars/"))
+          and not (path:find("environments/") or path:find("vars/") or path:find("group_vars/") or path:find("host_vars/") or path:find("files/") or path:find("templates/"))
           and vim.fs.dirname(path) ~= vim.fs.root(path, { "ansible.cfg", ".ansible-lint", ".vault-password" })
         then
           return "yaml.ansible"
