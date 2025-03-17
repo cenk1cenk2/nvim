@@ -20,8 +20,10 @@ function M.config()
           "haydenmeade/neotest-jest",
           -- https://github.com/nvim-contrib/nvim-ginkgo
           {
-            "nvim-contrib/nvim-ginkgo",
+            -- "nvim-contrib/nvim-ginkgo",
             -- dir = "/Users/cenk/development/nvim-ginkgo",
+            "cenk1cenk2/nvim-ginkgo",
+            branch = "patch-1",
           },
           "nvim-treesitter/nvim-treesitter",
           -- {
@@ -65,7 +67,7 @@ function M.config()
 
       ---@type neotest.Config
       return {
-        log_level = vim.log.levels.INFO,
+        log_level = require("ck.log"):to_nvim_level(),
         floating = {
           border = nvim.ui.border,
         },
@@ -202,7 +204,7 @@ function M.config()
           group = "logs",
         },
         {
-          fn.wk_keystroke({ categories.TESTS, categories.LOGS, "l" }),
+          fn.wk_keystroke({ categories.TESTS, categories.LOGS, "o" }),
           function()
             nvim.fn.toggle_log_view(join_paths(get_state_dir(), "neotest.log"))
           end,

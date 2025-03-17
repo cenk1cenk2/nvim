@@ -247,6 +247,32 @@ function M.config()
           end,
           desc = "disconnect",
         },
+        {
+          fn.wk_keystroke({ categories.DEBUG, categories.LOGS }),
+          group = "logs",
+        },
+        {
+          fn.wk_keystroke({ categories.DEBUG, categories.LOGS, "o" }),
+          function()
+            require("dap._cmds").show_logs()
+          end,
+          desc = "open logs",
+        },
+        {
+          fn.wk_keystroke({ categories.DEBUG, categories.LOGS, "l" }),
+          function()
+            vim.ui.select(vim.tbl_keys(require("ck.log").nvim_levels), {
+              prompt = "DAP Log Level",
+            }, function(level)
+              if not level then
+                return
+              end
+
+              require("dap").set_log_level(level)
+            end)
+          end,
+          desc = "set dap log level",
+        },
       }
     end,
     autocmds = function()
