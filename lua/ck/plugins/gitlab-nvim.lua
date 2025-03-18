@@ -56,6 +56,8 @@ function M.config()
           go_response = require("ck.log"):to_nvim_level() == vim.log.levels.DEBUG,
           request = require("ck.log"):to_nvim_level() == vim.log.levels.DEBUG,
           response = require("ck.log"):to_nvim_level() == vim.log.levels.DEBUG,
+          gitlab_request = require("ck.log"):to_nvim_level() == vim.log.levels.DEBUG,
+          gitlab_response = require("ck.log"):to_nvim_level() == vim.log.levels.DEBUG,
         }, -- Which values to log
         attachment_dir = nil, -- The local directory for files (see the "summary" section)
         -- https://github.com/harrisoncramer/gitlab.nvim/blob/main/lua/gitlab/state.lua#L69
