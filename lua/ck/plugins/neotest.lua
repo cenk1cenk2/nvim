@@ -172,6 +172,20 @@ function M.config()
           desc = "show test output in short form",
         },
         {
+          fn.wk_keystroke({ categories.TESTS, "o" }),
+          function()
+            require("neotest").output_panel.toggle()
+          end,
+          desc = "toggle test output panel",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "K" }),
+          function()
+            require("neotest").output_panel.clear()
+          end,
+          desc = "clear test output panel",
+        },
+        {
           fn.wk_keystroke({ categories.TESTS, "s" }),
           function()
             require("neotest").summary.toggle()
