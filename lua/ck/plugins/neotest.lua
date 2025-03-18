@@ -274,6 +274,14 @@ function M.config()
           mode = { "n", "v" },
         },
         {
+          fn.wk_keystroke({ categories.TESTS, "W" }),
+          function()
+            require("neotest").watch.stop()
+          end,
+          desc = "remove watching all tests",
+          mode = { "n", "v" },
+        },
+        {
           fn.wk_keystroke({ categories.TESTS, categories.LOGS }),
           group = "logs",
         },
