@@ -143,6 +143,7 @@ function M.config()
             require("neotest").run.run()
           end,
           desc = "run nearest test",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TESTS, "R" }),
@@ -157,6 +158,7 @@ function M.config()
             require("neotest").run.run({ strategy = "dap" })
           end,
           desc = "debug nearest test",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TESTS, "D" }),
@@ -171,6 +173,7 @@ function M.config()
             require("neotest").output.open({ enter = true, short = false, auto_close = true })
           end,
           desc = "show test output",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TESTS, "K" }),
@@ -178,6 +181,7 @@ function M.config()
             require("neotest").output.open({ enter = true, short = true, auto_close = true })
           end,
           desc = "show test output in short form",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TESTS, "o" }),
@@ -185,6 +189,7 @@ function M.config()
             require("neotest").output_panel.toggle()
           end,
           desc = "toggle test output panel",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TESTS, "O" }),
@@ -192,6 +197,7 @@ function M.config()
             require("neotest").output_panel.clear()
           end,
           desc = "clear test output panel",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TESTS, "s" }),
@@ -199,6 +205,7 @@ function M.config()
             require("neotest").summary.toggle()
           end,
           desc = "toggle test summary",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TESTS, "S" }),
@@ -206,6 +213,7 @@ function M.config()
             require("neotest").summary.open()
           end,
           desc = "open test summary",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TESTS, "n" }),
@@ -255,6 +263,7 @@ function M.config()
             require("neotest").run.attach()
           end,
           desc = "attach to nearest test",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TESTS, "w" }),
@@ -262,6 +271,7 @@ function M.config()
             require("neotest").watch.toggle()
           end,
           desc = "toggle watching test",
+          mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.TESTS, categories.LOGS }),
