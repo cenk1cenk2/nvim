@@ -39,18 +39,26 @@ function M.config()
       fn.add_disabled_filetypes({
         "neotest-summary",
         "neotest-output",
+        "neotest-output-panel",
       })
 
-      -- fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
-      --   vim.list_extend(c.bottom, {
-      --     {
-      --       ft = "neotest-summary",
-      --       title = "Neotest Summary",
-      --     },
-      --   })
-      --
-      --   return c
-      -- end)
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.right, {
+          {
+            ft = "neotest-summary",
+            title = "Neotest Summary",
+          },
+        })
+
+        vim.list_extend(c.bottom, {
+          {
+            ft = "neotest-output-panel",
+            title = "Neotest Output Panel",
+          },
+        })
+
+        return c
+      end)
     end,
     autocmds = function()
       return {
@@ -190,7 +198,42 @@ function M.config()
           function()
             require("neotest").summary.toggle()
           end,
-          desc = "show test summary",
+          desc = "toggle test summary",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "S" }),
+          function()
+            require("neotest").summary.open()
+          end,
+          desc = "open test summary",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "n" }),
+          function()
+            require("neotest").jump.next()
+          end,
+          desc = "next test",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "N" }),
+          function()
+            require("neotest").jump.next({ status = "failed" })
+          end,
+          desc = "next failed test",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "p" }),
+          function()
+            require("neotest").jump.prev()
+          end,
+          desc = "previous test",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "P" }),
+          function()
+            require("neotest").jump.prev({ status = "failed" })
+          end,
+          desc = "previous failed test",
         },
         {
           fn.wk_keystroke({ categories.TESTS, "q" }),
@@ -212,6 +255,13 @@ function M.config()
             require("neotest").run.attach()
           end,
           desc = "attach to nearest test",
+        },
+        {
+          fn.wk_keystroke({ categories.TESTS, "w" }),
+          function()
+            require("neotest").watch.toggle()
+          end,
+          desc = "toggle watching test",
         },
         {
           fn.wk_keystroke({ categories.TESTS, categories.LOGS }),
