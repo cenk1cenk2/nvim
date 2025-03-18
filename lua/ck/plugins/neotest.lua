@@ -187,7 +187,7 @@ function M.config()
           desc = "toggle test output panel",
         },
         {
-          fn.wk_keystroke({ categories.TESTS, "K" }),
+          fn.wk_keystroke({ categories.TESTS, "O" }),
           function()
             require("neotest").output_panel.clear()
           end,
