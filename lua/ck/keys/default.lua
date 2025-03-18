@@ -171,22 +171,22 @@ function M.load()
       },
       -- resize with arrows
       {
-        "<C-M-k>",
+        "<C-M-j>",
         ":resize +4<CR>",
         mode = { "n" },
       },
       {
-        "<C-M-j>",
+        "<C-M-k>",
         ":resize -4<CR>",
         mode = { "n" },
       },
       {
-        "<C-M-l>",
+        "<C-M-h>",
         ":vertical resize -8<CR>",
         mode = { "n" },
       },
       {
-        "<C-M-h>",
+        "<C-M-l>",
         ":vertical resize +8<CR>",
         mode = { "n" },
       },
