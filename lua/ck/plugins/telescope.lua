@@ -116,7 +116,11 @@ function M.config()
               ["<C-j>"] = actions.cycle_history_next,
               ["<C-k>"] = actions.cycle_history_prev,
               ["<C-q>"] = actions.smart_send_to_qflist + actions.open_qflist,
+              ["<M-q>"] = actions.send_selected_to_loclist + actions.open_loclist,
+              ["<C-/>"] = actions.which_key,
               ["<CR>"] = actions.select_default,
+              ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
+              ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
             },
             n = {
               ["<C-n>"] = actions.move_selection_next,
