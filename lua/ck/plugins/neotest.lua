@@ -54,6 +54,15 @@ function M.config()
           {
             ft = "neotest-output-panel",
             title = "Neotest Output Panel",
+            size = {
+              height = function()
+                if vim.o.lines < 60 then
+                  return 0.35
+                end
+
+                return 35
+              end,
+            },
           },
         })
 
