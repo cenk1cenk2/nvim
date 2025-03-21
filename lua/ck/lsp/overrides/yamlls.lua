@@ -66,6 +66,9 @@ return {
         ["https://raw.githubusercontent.com/cenk1cenk2/docker-vizier/main/schema.json"] = {
           "vizier.{yml,yaml}",
         },
+        ["https://json.schemastore.org/json-patch.json"] = {
+          "patch-*.{yml,yaml}",
+        },
       },
     },
   },
