@@ -86,6 +86,14 @@ function M.setup()
             group = "actions",
           },
           {
+            fn.wk_keystroke({ categories.ACTIONS, "n" }),
+            function()
+              vim.cmd([[dofile .nvim.lua]])
+            end,
+            desc = "reload .nvim.lua exrc",
+            mode = { "n", "v" },
+          },
+          {
             fn.wk_keystroke({ categories.ACTIONS, "a" }),
             "ggVG",
             desc = "select all",
