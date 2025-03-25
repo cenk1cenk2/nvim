@@ -9,6 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "harrisoncramer/gitlab.nvim",
+        tag = "v3.3.11",
         dependencies = {
           "MunifTanjim/nui.nvim",
           "nvim-lua/plenary.nvim",
