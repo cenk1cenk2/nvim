@@ -162,6 +162,13 @@ function M.config()
           desc = "run current file",
         },
         {
+          fn.wk_keystroke({ categories.TESTS, "l" }),
+          function()
+            require("neotest").run.run_last()
+          end,
+          desc = "run last",
+        },
+        {
           fn.wk_keystroke({ categories.TESTS, "d" }),
           function()
             require("neotest").run.run({ strategy = "dap" })
