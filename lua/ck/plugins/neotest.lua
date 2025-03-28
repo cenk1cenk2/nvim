@@ -162,7 +162,7 @@ function M.config()
           desc = "run current file",
         },
         {
-          fn.wk_keystroke({ categories.TESTS, "M" }),
+          fn.wk_keystroke({ categories.TESTS, "j" }),
           function()
             require("neotest").run.run_last()
           end,
