@@ -49,7 +49,24 @@ function M.config()
           model = "gemini-2.0-flash",
         },
         vendors = {
-          ["ai.kilic.dev"] = M.ai_kilic_dev,
+          -- Ollama API Documentation https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
+          ["ai.kilic.dev"] = {
+            __inherited_from = "ollama",
+            api_key_name = "AI_KILIC_DEV_API_KEY",
+            endpoint = "https://api.ai.kilic.dev",
+            parse_curl_args = function(self, prompt)
+              local Ollama = require("avante.providers").ollama
+              local args = Ollama.parse_curl_args(self, prompt)
+
+              args.headers["Authorization"] = "Bearer " .. os.getenv(self.api_key_name)
+
+              return args
+            end,
+            model = nvim.lsp.ai.model.chat,
+            stream = true, -- Optional
+            -- https://github.com/ollama/ollama/blob/main/docs/modelfile.md#parameter
+            options = nvim.lsp.ai.chat.options,
+          },
         },
         windows = {
           wrap = true, -- similar to vim.o.wrap
@@ -157,141 +174,5 @@ function M.config()
     end,
   })
 end
-
----@param opts AvantePromptOptions
-local parse_messages = function(_, opts)
-  local role_map = {
-    user = "user",
-    assistant = "assistant",
-    system = "system",
-    tool = "tool",
-  }
-
-  local messages = {}
-  local has_images = opts.image_paths and #opts.image_paths > 0
-  -- Ensure opts.messages is always a table
-  local msg_list = opts.messages or {}
-
-  -- Convert Avante messages to Ollama format
-  for _, msg in ipairs(msg_list) do
-    local role = role_map[msg.role] or "assistant"
-    local content = msg.content or "" -- Default content to empty string
-    -- Handle multimodal content if images are present
-    -- *Experimental* not tested
-    if has_images and role == "user" then
-      local message_content = {
-        role = role,
-        content = content,
-        images = {},
-      }
-      for _, image_path in ipairs(opts.image_paths) do
-        local base64_content = vim.fn.system(string.format("base64 -w 0 %s", image_path)):gsub("\n", "")
-        table.insert(message_content.images, "data:image/png;base64," .. base64_content)
-      end
-      table.insert(messages, message_content)
-    else
-      table.insert(messages, {
-        role = role,
-        content = content,
-      })
-    end
-  end
-  return messages
-end
-
-local function parse_curl_args(self, prompt)
-  -- Create the messages array starting with the system message
-  local messages = {
-    { role = "system", content = prompt.system_prompt },
-  }
-  -- Extend messages with the parsed conversation messages
-  vim.list_extend(messages, self:parse_messages(prompt))
-
-  local OpenAI = require("avante.providers").openai
-  local tools = {}
-  if prompt.tools then
-    for _, tool in ipairs(prompt.tools) do
-      table.insert(tools, OpenAI.transform_tool(tool))
-    end
-  end
-
-  return {
-    url = self.endpoint .. "/api/chat",
-    headers = {
-      ["Content-Type"] = "application/json",
-      ["Accept"] = "application/json",
-      ["Authorization"] = "Bearer " .. os.getenv(self.api_key_name),
-    },
-    body = {
-      model = self.model,
-      messages = messages,
-      options = self.options,
-      -- tools = tools,
-      stream = self.stream,
-    },
-  }
-end
-
-local function parse_stream_data(data, handler)
-  local json_data = vim.fn.json_decode(data)
-  if json_data then
-    if json_data.done then
-      handler.on_stop({ reason = json_data.done_reason or "stop" })
-      return
-    end
-    if json_data.message then
-      local content = json_data.message.content
-      if content and content ~= "" then
-        handler.on_chunk(content)
-      end
-    end
-    -- Handle tool calls if present
-    if json_data.tool_calls then
-      for _, tool in ipairs(json_data.tool_calls) do
-        handler.on_tool(tool)
-      end
-    end
-  end
-end
-
----@param result table
-local function on_error(result)
-  local Utils = require("avante.utils")
-
-  local error_msg = "Ollama API error"
-
-  if result.body then
-    local ok, body = pcall(vim.json.decode, result.body)
-
-    if ok and body.error then
-      error_msg = body.error
-    end
-  end
-
-  Utils.error(error_msg, { title = "Ollama" })
-end
-
--- Ollama API Documentation https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
--- https://github.com/yetone/avante.nvim/issues/1149
-M.ai_kilic_dev = {
-  api_key_name = "AI_KILIC_DEV_API_KEY",
-  endpoint = "https://api.ai.kilic.dev",
-  parse_messages = parse_messages,
-  parse_stream_data = parse_stream_data,
-  parse_curl_args = parse_curl_args,
-  on_error = on_error,
-  model = nvim.lsp.ai.model.chat,
-  stream = true, -- Optional
-  -- https://github.com/ollama/ollama/blob/main/docs/modelfile.md#parameter
-  options = {
-    num_ctx = nvim.lsp.ai.chat.context_window,
-    top_p = 0.95,
-    top_k = 10,
-    -- num_predict = 8,
-  },
-  -- for open ai compatible api
-  -- endpoint = "https://api.ai.kilic.dev/v1",
-  -- __inherited_from = "openai",
-}
 
 return M

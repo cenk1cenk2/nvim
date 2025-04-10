@@ -2,7 +2,8 @@ return {
   ai = {
     debug = false,
     chat = {
-      context_window = 2048,
+      ---@type table<string, any>
+      options = {},
     },
     completion = {
       number_of_completions = 1,
@@ -12,6 +13,15 @@ return {
         enabled = false,
         number_of_files = 1,
       },
+      prompt = "",
+      fim = {
+        prefix = "",
+        suffix = "",
+        middle = "",
+        file = "",
+      },
+      ---@type table<string, any>
+      options = {},
     },
     provider = {
       ---@type 'copilot' | 'ai.kilic.dev' | 'gemini'

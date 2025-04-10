@@ -18,7 +18,15 @@ function M.config()
         preview = {
           modes = { "n", "no", "c" }, -- Change these modes
           hybrid_modes = { "n", "v", "x" },
-          filetypes = { "markdown", "rmd", "norg", "org", "vimwiki", "Avante", "codecompanion" },
+          filetypes = {
+            "markdown",
+            "rmd",
+            "norg",
+            "org",
+            "vimwiki",
+            "Avante",
+            "codecompanion",
+          },
           callbacks = {
             -- on_enable = function(_, win)
             --   vim.wo[win].conceallevel = 2

@@ -219,6 +219,9 @@ function M.config()
           },
         },
         completion = {
+          ghost_text = {
+            enabled = false,
+          },
           accept = {
             create_undo_point = true,
             auto_brackets = {
