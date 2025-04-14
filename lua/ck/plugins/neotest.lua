@@ -194,9 +194,9 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TESTS, "K" }),
           function()
-            require("neotest").output.open({ enter = true, short = true, auto_close = true })
+            require("neotest").output.open({ last_run = true, enter = true, short = true, auto_close = true })
           end,
-          desc = "show test output in short form",
+          desc = "show test output for last run",
           mode = { "n", "v" },
         },
         {
