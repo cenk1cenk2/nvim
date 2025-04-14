@@ -92,7 +92,8 @@ local function launch_server(server_name, config)
       end
     end
 
-    require("lspconfig")[server_name].setup(config)
+    vim.lsp.config(server_name, config)
+    vim.lsp.enable(server_name)
   end, debug.traceback)
 end
 
