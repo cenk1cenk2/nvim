@@ -96,6 +96,7 @@ function M.setup(force)
 
   if not is_headless() then
     local registry = require("mason-registry")
+
     -- Ensure packages are installed and up to date
     registry.refresh(function()
       for _, server_name in pairs(nvim.lsp.ensure_installed) do

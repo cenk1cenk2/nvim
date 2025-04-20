@@ -1,12 +1,10 @@
 local M = {}
 
 local log = require("ck.log")
-local utils = require("ck.lsp.utils")
 
 ---@param server_name string
 ---@return table
 local function resolve_mason_config(server_name)
-  -- TODO: this might be changed in the future if break since lsp-config has changed this
   local found, mason_config = pcall(require, "mason-lspconfig.server_configurations." .. server_name)
   if not found then
     return {}
