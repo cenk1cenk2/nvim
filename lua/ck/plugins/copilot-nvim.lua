@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "zbirenbaum/copilot.lua",
-        event = "InsertEnter",
+        event = { "InsertEnter" },
         cmd = { "Copilot" },
         dependencies = {
           {
