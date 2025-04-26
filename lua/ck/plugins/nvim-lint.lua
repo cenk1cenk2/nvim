@@ -34,7 +34,7 @@ function M.config()
     autocmds = function()
       return {
         {
-          event = { "TextChanged", "BufReadPost" },
+          event = { "TextChanged", "TextChangedI", "BufReadPost" },
           group = "__linter",
           pattern = "*",
           callback = function()
@@ -61,6 +61,7 @@ end
 function M.extend_tools()
   local lint = require("lint")
 
+  ---@type lint.Linter
   lint.linters["shellcheck"] = vim.tbl_deep_extend("force", require("lint.linters.shellcheck"), {
     args = {
       "--format",
@@ -71,6 +72,7 @@ function M.extend_tools()
     },
   })
 
+  ---@type lint.Linter
   lint.linters["protolint"] = {
     name = "protolint",
     cmd = "protolint",
@@ -105,6 +107,7 @@ function M.extend_tools()
     end,
   }
 
+  ---@type lint.Linter
   lint.linters["tfvalidate"] = {
     name = "tfvalidate",
     cmd = "terraform",

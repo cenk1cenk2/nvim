@@ -107,6 +107,10 @@ return {
     ---@type table<string, boolean>
     filetypes = {},
     debounce = 50,
+    nes = {
+      debounce = 50,
+      auto_suggest = true,
+    },
   },
 
   ---@type table<string, string | LspOnCallback>

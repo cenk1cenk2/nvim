@@ -178,13 +178,6 @@ function M.clear_augroup(name)
   end)
 end
 
----@param opts table
-function M.legacy_setup(opts)
-  for opt, val in pairs(opts) do
-    vim.g[opt] = val
-  end
-end
-
 ---@alias SetHighlightFn fun(name: string, value: vim.api.keyset.highlight): nil
 
 --- Sets an highlight.
@@ -239,7 +232,6 @@ end
 ---@field on_init? fun(config: Config, fn: SetupFn): nil
 ---@field setup? (fun(config: Config, fn: SetupFn): any) | any
 ---@field on_setup? fun(c: any, config: Config, fn: SetupFn): nil
----@field legacy_setup? table
 ---@field on_done? fun(config: Config, fn: SetupFn): nil
 ---@field keymaps? (fun(config: Config, fn: SetupFn): KeymapMappings) | KeymapMappings
 ---@field wk? (fun(config: Config, categories: WKCategories, fn: SetupFn): WKMappings) | WKMappings
@@ -268,7 +260,6 @@ function M.define_plugin(name, enabled, config)
     on_init = { config.on_init, "f", true },
     setup = { config.setup, { "t", "f" }, true },
     on_setup = { config.on_setup, "f", true },
-    legacy_setup = { config.legacy_setup, { "t", "f" }, true },
     on_done = { config.on_done, "f", true },
     keymaps = { config.keymaps, { "t", "f" }, true },
     wk = { config.wk, { "t", "f" }, true },
@@ -393,10 +384,6 @@ function M.init(config)
 
   if config.commands ~= nil then
     M.create_commands(M.evaluate_property(config.commands, config, M.fn))
-  end
-
-  if config.legacy_setup ~= nil then
-    M.legacy_setup(M.evaluate_property(config.legacy_setup, config))
   end
 end
 

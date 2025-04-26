@@ -15,6 +15,8 @@ nvim.lsp.inlay_hints.toggled = false
 nvim.lsp.inlay_hints.mode = "eol"
 
 nvim.lsp.copilot.debounce = 50
+nvim.lsp.copilot.nes.debounce = 50
+nvim.lsp.copilot.nes.auto_suggest = true
 nvim.lsp.copilot.completion = { "inline" }
 nvim.lsp.copilot.filetypes = {
   yaml = true,
@@ -95,6 +97,7 @@ nvim.lsp.servers = {
   "rust_analyzer",
   "svelte",
   "tailwindcss",
+  "terraformls",
   "taplo",
   "ts_ls",
   "typos_lsp",
@@ -105,7 +108,10 @@ nvim.lsp.servers = {
 }
 
 nvim.lsp.packages = vim.list_extend({
-  ---- formatters/linters
+  --- language servers
+  "copilot-language-server",
+
+  --- formatters/linters
   "beautysh",
   "black",
   "flake8",
@@ -122,14 +128,13 @@ nvim.lsp.packages = vim.list_extend({
   "shellharden",
   "shfmt",
   "stylua",
-  "terraform-ls",
   "tfsec",
   -- "djlint",
   -- "eslint_d",
   -- "mypy",
   -- "tflint",
 
-  ---- debugers
+  --- debugers
   "chrome-debug-adapter",
   "delve",
   "node-debug2-adapter",

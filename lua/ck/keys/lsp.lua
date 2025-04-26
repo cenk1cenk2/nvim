@@ -6,6 +6,13 @@ function M.setup()
       ---@type WKMappings
       return {
         {
+          fn.wk_keystroke({ categories.LSP, "i" }),
+          function()
+            vim.cmd([[LspInfo]])
+          end,
+          desc = "lsp info",
+        },
+        {
           fn.wk_keystroke({ categories.LSP, "l" }),
           function()
             nvim.lsp.fn.codelens()
@@ -218,14 +225,6 @@ function M.on_attach(_, bufnr)
             vim.cmd([[LspAddMissingImports]])
           end,
           desc = "add all missing imports",
-          buffer = bufnr,
-        },
-        {
-          fn.wk_keystroke({ categories.LSP, "i" }),
-          function()
-            vim.cmd([[LspInfo]])
-          end,
-          desc = "lsp info",
           buffer = bufnr,
         },
         {
