@@ -16,6 +16,7 @@ function M.config()
       }
     end,
     setup = function(_, fn)
+      ---@type Bookmarks.Config
       return {
         backup = {
           enabled = false,
@@ -73,12 +74,28 @@ function M.config()
           function()
             local Service = require("bookmarks.domain.service")
             local Sign = require("bookmarks.sign")
-            local Tree = require("bookmarks.tree.operate")
+
             Service.toggle_mark("")
             Sign.safe_refresh_signs()
-            pcall(Tree.refresh)
           end,
           desc = "toggle bookmark",
+        },
+
+        {
+          fn.keystroke({ "m", "X" }),
+          function()
+            local Repo = require("bookmarks.domain.repo")
+            local Service = require("bookmarks.domain.service")
+            local Sign = require("bookmarks.sign")
+
+            local node = Repo.ensure_and_get_active_list()
+            for _, bookmark in ipairs(node.children) do
+              Service.delete_node(bookmark.id)
+            end
+
+            Sign.safe_refresh_signs()
+          end,
+          desc = "remove all bookmarks",
         },
 
         {
