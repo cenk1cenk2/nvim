@@ -37,6 +37,7 @@ function M.config()
             "WinEnter",
             "CmdwinLeave",
             "TextChanged",
+            "TextChangedI",
             "VimResized",
             "WinScrolled",
           },
