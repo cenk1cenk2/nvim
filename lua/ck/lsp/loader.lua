@@ -13,7 +13,6 @@ local function launch_server(server_name)
   if type(config.override) == "function" then
     config = config.override(config) or {}
 
-    dd(server_name, config)
     vim.lsp.config(server_name, config)
 
     log:trace("Server has a override function: %s", server_name)

@@ -1,4 +1,4 @@
-nvim.log.level = "debug"
+nvim.log.level = "info"
 
 if is_headless() then
   nvim.log.level = "trace"
