@@ -1,5 +1,4 @@
----@module "lspconfig"
----@type lspconfig.options.tailwindcss
+---@type vim.lsp.ClientConfig
 return {
   filetypes = {
     -- html
@@ -52,8 +51,9 @@ return {
     "vue",
     "svelte",
   },
-  root_dir = function(filename)
-    return vim.fs.root(filename, { "tailwind.config.js", "tailwind.config.cjs", "tailwind.js", "tailwind.cjs" })
+  root_dir = function(bufnr, on_dir)
+    local filename = vim.api.nvim_buf_get_name(bufnr)
+    on_dir(vim.fs.root(filename, { "tailwind.config.js", "tailwind.config.cjs", "tailwind.js", "tailwind.cjs" }))
   end,
   settings = {
     tailwindCSS = {

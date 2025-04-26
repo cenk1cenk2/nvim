@@ -115,11 +115,9 @@ return {
   },
 
   ---@type string[]
-  ensure_installed = {},
+  servers = {},
   ---@type string[]
-  skipped_servers = {},
-  ---@type string[]
-  skipped_filetypes = {},
+  packages = {},
   ---@usage Automatic update of the language servers on startup.
   automatic_update = true,
 

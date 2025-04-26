@@ -2,15 +2,8 @@ local M = {}
 
 local log = require("ck.log")
 
----Generates an ftplugin file based on the server_name in the selected directory
----@param server_name string name of a valid language server, e.g. pyright, gopls, tsserver, etc.
----@return boolean
-function M.should_configure(server_name)
-  if vim.tbl_contains(nvim.lsp.skipped_servers, server_name) then
-    return false
-  end
-
-  return true
+local function to_package_name(server_name)
+  return require("mason-lspconfig.mappings.server").lspconfig_to_package[server_name] or server_name
 end
 
 ---
@@ -24,43 +17,18 @@ function M.setup(force)
 
   log:debug("Setting up LSP support")
 
-  log:debug("Installing LSP servers.")
-
-  local ok, _ = pcall(require, "lspconfig")
-  if not ok then
-    log:error("lspconfig not available.")
-
-    return
-  end
-
-  require("ck.lsp.handlers").setup()
-
   require("neoconf").setup({
     jsonls = {
       configured_servers_only = false,
     },
   })
 
-  require("mason-lspconfig").setup({
-    -- ensure_installed = nvim.lsp.ensure_installed,
-    automatic_installation = {
-      exclude = nvim.lsp.skipped_servers,
-    },
-  })
+  require("lspconfig")
 
-  require("mason-lspconfig").setup_handlers({
-    function(server_name)
-      if not M.should_configure(server_name) then
-        log:warn(("Skipping configuring LSP: %s"):format(server_name))
+  require("ck.lsp.handlers").setup()
+  require("ck.lsp.loader").setup()
 
-        return
-      end
-
-      require("ck.lsp.loader").setup(server_name)
-    end,
-  })
-
-  require("lspconfig.util").on_setup = nil
+  log:debug("Installing LSP servers.")
 
   local ok, installer = pcall(require, "mason-tool-installer")
 
@@ -68,7 +36,7 @@ function M.setup(force)
     installer.setup({
       -- a list of all tools you want to ensure are installed upon
       -- start; they should be the names Mason uses for each tool
-      ensure_installed = nvim.lsp.ensure_installed,
+      ensure_installed = nvim.lsp.packages,
 
       -- if set to true this will check each tool for updates. If updates
       -- are available the tool will be updated. This setting does not
@@ -87,7 +55,7 @@ function M.setup(force)
       integrations = {
         ["mason-lspconfig"] = true,
         ["mason-null-ls"] = false,
-        ["mason-nvim-dap"] = is_headless(),
+        ["mason-nvim-dap"] = true,
       },
     })
   else
@@ -99,8 +67,8 @@ function M.setup(force)
 
     -- Ensure packages are installed and up to date
     registry.refresh(function()
-      for _, server_name in pairs(nvim.lsp.ensure_installed) do
-        local package_name = require("ck.lsp.loader").to_package_name(server_name)
+      for _, server_name in pairs(nvim.lsp.packages) do
+        local package_name = to_package_name(server_name)
         local package = registry.get_package(package_name)
 
         if not registry.is_installed(package_name) then

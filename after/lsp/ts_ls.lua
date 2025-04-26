@@ -1,9 +1,14 @@
----@module "lspconfig"
----@type lspconfig.options.ts_ls
+---@type vim.lsp.ClientConfig
 return {
   override = function(config)
     -- typescript-tools if this is enabled it will override it
     require("typescript-tools").setup(config)
+
+    return {
+      condition = function()
+        return false
+      end,
+    }
   end,
   filetypes = {
     "javascript",
@@ -25,7 +30,6 @@ return {
     require("ck.lsp.handlers").on_attach(client, bufnr)
     require("ck.lsp.handlers").overwrite_capabilities_with_no_formatting(client, bufnr)
   end,
-  single_file_support = false,
   settings = {
     -- https://github.com/pmizio/typescript-tools.nvim#%EF%B8%8F-configuration
     -- spawn additional tsserver instance to calculate diagnostics on it

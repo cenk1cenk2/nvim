@@ -6,9 +6,7 @@ local log = require("ck.log")
 
 function M.setup()
   vim.diagnostic.config(nvim.lsp.diagnostics)
-
-  -- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, nvim.lsp.float)
-  -- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, nvim.lsp.float)
+  vim.lsp.config("*", M.get())
 end
 
 ---
@@ -40,12 +38,12 @@ function M.capabilities()
     willRename = true,
   }
 
-  local ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-  if ok then
+  local cok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+  if cok then
     capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
   end
-  local ok, blink = pcall(require, "blink-cmp")
-  if ok then
+  local bok, blink = pcall(require, "blink-cmp")
+  if bok then
     capabilities = blink.get_lsp_capabilities(capabilities)
   end
 
@@ -154,17 +152,6 @@ end
 function M.attach_inlay_hints(client, bufnr)
   if client.server_capabilities.inlayHintProvider then
     vim.lsp.inlay_hint.enable(nvim.lsp.inlay_hints.toggled, { bufnr = bufnr })
-  end
-end
-
----@type LspOnCallback
-function M.load_buffer_options(client, bufnr)
-  for k, v in ipairs(nvim.lsp.buffer_options) do
-    if type(v) == "string" then
-      vim.api.nvim_set_option_value(k, v, { buf = bufnr })
-    elseif type(v) == "function" then
-      v(client, bufnr)
-    end
   end
 end
 

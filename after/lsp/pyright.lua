@@ -1,5 +1,4 @@
----@module "lspconfig"
----@type lspconfig.options.pyright
+---@type vim.lsp.ClientConfig
 return {
   on_new_config = function(new_config, root_dir)
     local pipfile = vim.fs.root(root_dir, { "Pipfile" })

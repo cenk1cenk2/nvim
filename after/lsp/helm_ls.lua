@@ -1,6 +1,5 @@
 -- https://github.com/someone-stole-my-name/schema-companion.nvim/issues/12#issuecomment-1367850121
----@module "lspconfig"
----@type lspconfig.Config
+---@type vim.lsp.ClientConfig
 return {
   override = function(config)
     return require("schema-companion").setup_client(config.settings["helm-ls"].yamlls.config)

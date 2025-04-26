@@ -1,4 +1,4 @@
-nvim.log.level = "info"
+nvim.log.level = "debug"
 
 if is_headless() then
   nvim.log.level = "trace"
@@ -70,7 +70,7 @@ nvim.lsp.ai.filetypes.ignored = {
   "AvanteInput",
 }
 
-nvim.lsp.ensure_installed = {
+nvim.lsp.servers = {
   ---- language servers
   "ansiblels",
   "bashls",
@@ -102,7 +102,9 @@ nvim.lsp.ensure_installed = {
   "vale_ls",
   "volar",
   "yamlls",
+}
 
+nvim.lsp.packages = vim.list_extend({
   ---- formatters/linters
   "beautysh",
   "black",
@@ -137,49 +139,13 @@ nvim.lsp.ensure_installed = {
   "markdown-toc",
   -- "md-printer",
   -- "rustywind",
-}
-
-nvim.lsp.skipped_servers = {
-  "angularls",
-  "csharp_ls",
-  "cssmodules_ls",
-  "denols",
-  "ember",
-  "eslintls",
-  "glint",
-  "grammarly",
-  "jedi_language_server",
-  "ltex",
-  "phpactor",
-  "prosemd_lsp",
-  "pylsp",
-  "quick_lint_js",
-  "remark_ls",
-  "rome",
-  "sourcery",
-  "spectral",
-  "sqlls",
-  "sqls",
-  "stylelint_lsp",
-  "tflint",
-  "vuels",
-  "zeta_note",
-  "zk",
-  -- "ansiblels",
-  -- "emmet_ls",
-  -- "eslint",
-  -- "graphql",
-  -- "tailwindcss",
-  -- "volar",
-}
-
-nvim.lsp.skipped_filetypes = {}
+}, nvim.lsp.servers)
 
 require("ck.setup").setup_callback(require("ck.plugins.treesitter").name, function(c)
   return vim.tbl_extend("force", c, {
     indent = {
       -- TSBufDisable indent
-      disable = { "yaml" },
+      -- disable = { "yaml" },
     },
     ensure_installed = {
       "bash",

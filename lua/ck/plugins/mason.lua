@@ -12,10 +12,24 @@ function M.config()
       return {
         "williamboman/mason.nvim",
         build = ":MasonUpdate", -- :MasonUpdate updates registry contents
-        cmd = { "Mason", "MasonUpdate", "MasonUpdateAll", "MasonInstall", "MasonUninstall", "MasonUninstallAll", "MasonLog" },
+        cmd = {
+          "Mason",
+          "MasonUpdate",
+          "MasonUpdateAll",
+          "MasonInstall",
+          "MasonUninstall",
+          "MasonUninstallAll",
+          "MasonLog",
+        },
         dependencies = {
           { "williamboman/mason-lspconfig.nvim" },
-          { "WhoIsSethDaniel/mason-tool-installer.nvim" },
+          {
+            "WhoIsSethDaniel/mason-tool-installer.nvim",
+            cmd = {
+              "MasonToolsUpdate",
+              "MasonToolsUpdateSync",
+            },
+          },
         },
       }
     end,

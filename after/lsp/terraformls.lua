@@ -25,11 +25,11 @@
 --   end,
 -- })
 --
----@module "lspconfig"
----@type lspconfig.options.terraformls
+---@type vim.lsp.ClientConfig
 return {
-  root_dir = function(fname)
-    return vim.fs.root(fname, { ".terraform", ".terraform.lock.hcl", ".git" })
+  root_dir = function(bufnr, on_dir)
+    local filename = vim.api.nvim_buf_get_name(bufnr)
+    on_dir(vim.fs.root(fname, { ".terraform", ".terraform.lock.hcl", ".git" }))
   end,
   settings = {
     terraform = {
