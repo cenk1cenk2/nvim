@@ -57,7 +57,6 @@ local plugins = {
   "nvim-recorder",
   "windows-nvim",
   "telescope-undo-nvim",
-  "nvim-ufo",
   "quicker-nvim",
   "nvim-bqf",
   "lsp-trouble",
@@ -70,8 +69,8 @@ local plugins = {
   "neogen",
   "gitignore-nvim",
   "lspsaga-nvim",
-  -- "tiny-code-action-nvim",
-  -- "tiny-inline-diagnostic-nvim",
+  "tiny-code-action-nvim",
+  "tiny-inline-diagnostic-nvim",
   "nvim-dap-ui",
   "nvim-dap-virtual-text",
   "dressing",
@@ -91,7 +90,6 @@ local plugins = {
   "telescope-dap",
   "nvim-docs-view",
   "mini-nvim-ai",
-  "mini-nvim-bracketed",
   "treesj",
   "winshift-nvim",
   "browse-nvim",
@@ -101,7 +99,6 @@ local plugins = {
   "uuid-nvim",
   "hurl-nvim",
   "nvim-dbee",
-  "git-worktree-nvim",
   "netman-nvim",
   "gitlab-nvim",
   "symbol-usage-nvim",
@@ -115,7 +112,6 @@ local plugins = {
   "crates-nvim",
   "jq-nvim",
   "scratch-nvim",
-  "kitty-scrollback-nvim",
 }
 
 function M.config()

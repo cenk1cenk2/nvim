@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "Wansmer/symbol-usage.nvim",
-        event = "LspAttach",
+        event = { "LspAttach" },
       }
     end,
     setup = function()

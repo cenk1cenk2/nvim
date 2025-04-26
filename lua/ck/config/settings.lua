@@ -18,11 +18,16 @@ function M.load_default_options()
   vim.opt.conceallevel = 0
   vim.opt.fileencoding = "utf-8"
   vim.opt.foldmethod = "expr"
-  vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
-  vim.opt.foldtext = "v:lua.vim.treesitter.foldtext()"
+  vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+  vim.opt.foldtext = ""
   vim.opt.indentexpr = "nvim_treesitter#indent()"
-  vim.opt.fillchars = { foldclose = nvim.ui.icons.ArrowCircleRight }
-  vim.opt.sessionoptions = { "blank", "buffers", "curdir", "help", "tabpages", "winsize", "terminal", "globals" }
+  vim.opt.fillchars = {
+    foldopen = nvim.ui.icons.ArrowCircleDown,
+    foldsep = nvim.ui.icons.BoldLineLeft,
+    foldclose = nvim.ui.icons.ArrowCircleRight,
+    fold = " ",
+  }
+  vim.opt.sessionoptions = { "blank", "buffers", "curdir", "help", "tabpages", "winsize", "terminal", "globals", "folds" }
   vim.opt.foldenable = false
   vim.opt.foldlevel = 99
   vim.opt.foldcolumn = "0"

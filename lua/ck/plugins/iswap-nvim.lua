@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "mizlan/iswap.nvim",
-        event = "BufReadPre",
+        event = { "BufReadPre" },
       }
     end,
     setup = function()
