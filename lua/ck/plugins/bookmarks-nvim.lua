@@ -15,30 +15,30 @@ function M.config()
         event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
-    setup = function()
+    setup = function(_, fn)
       return {
         backup = {
           enabled = false,
         },
         treeview = {
           keymap = {
-            copy = "c",
-            create_list = "a",
-            cut = "x",
-            delete = "dd",
-            ["goto"] = "g",
-            level_up = "u",
-            move_down = "<localleader>j",
-            move_up = "<localleader>k",
-            paste = "p",
+            copy = fn.local_keystroke({ "y" }),
+            create_list = fn.local_keystroke({ "A" }),
+            cut = fn.local_keystroke({ "x" }),
+            delete = fn.local_keystroke({ "d" }),
+            ["goto"] = fn.local_keystroke({ "o" }),
+            level_up = fn.local_keystroke({ "u" }),
+            move_down = fn.local_keystroke({ "j" }),
+            move_up = fn.local_keystroke({ "k" }),
+            paste = fn.local_keystroke({ "p" }),
             quit = { "q", "<ESC>" },
-            refresh = "R",
-            rename = "r",
-            reverse = "t",
-            set_active = "m",
-            set_root = ".",
-            show_info = "i",
-            toggle = "o",
+            refresh = fn.local_keystroke({ "R" }),
+            rename = fn.local_keystroke({ "r" }),
+            reverse = fn.local_keystroke({ "s" }),
+            set_active = fn.local_keystroke({ "m" }),
+            set_root = fn.local_keystroke({ "." }),
+            show_info = fn.local_keystroke({ "i" }),
+            toggle = fn.local_keystroke({ "t" }),
           },
           window_split_dimension = 30,
         },
@@ -57,6 +57,13 @@ function M.config()
     end,
     on_setup = function(c)
       require("bookmarks").setup(c)
+    end,
+    on_done = function()
+      local project_name = require("ck.utils.fs").get_cwd()
+      local Service = require("bookmarks.domain.service")
+      local new_list = Service.create_list(project_name)
+      Service.set_active_list(new_list.id)
+      require("bookmarks.sign").safe_refresh_signs()
     end,
     keymaps = function(_, fn)
       ---@type WKMappings
