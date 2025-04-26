@@ -1,5 +1,4 @@
----@module "lspconfig"
----@type lspconfig.options.yamlls
+---@type vim.lsp.ClientConfig
 return {
   override = function(config)
     return require("schema-companion").setup_client(config)

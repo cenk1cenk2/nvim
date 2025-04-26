@@ -1,8 +1,7 @@
 local capabilities = require("ck.lsp.handlers").capabilities()
 capabilities.offsetEncoding = { "utf-16" }
 
----@module "lspconfig"
----@type lspconfig.options.clangd
+---@type vim.lsp.ClientConfig
 return {
   filetypes = {
     "c",

@@ -58,9 +58,15 @@ end
 
 function M.update_language_servers_sync()
   require("ck.lsp").setup(true)
+  log:info("Updating language server registry...")
   vim.cmd([[MasonUpdate]])
+  log:info("Updating language server registry finished.")
+  log:info("Updating language servers...")
   vim.cmd([[MasonToolsUpdateSync]])
+  log:info("Updating language servers finished.")
+  log:info("Updating treesitter parsers...")
   vim.cmd([[TSUpdateSync]])
+  log:info("Updating treesitter parsers finished.")
 end
 
 function M.setup()

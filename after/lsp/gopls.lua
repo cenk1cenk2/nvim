@@ -1,5 +1,4 @@
----@module "lspconfig"
----@type lspconfig.Config
+---@type vim.lsp.ClientConfig
 return {
   settings = {
     gopls = {

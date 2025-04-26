@@ -1,5 +1,4 @@
----@module "lspconfig"
----@type lspconfig.options.eslint
+---@type vim.lsp.ClientConfig
 return {
   on_attach = function(client, bufnr)
     require("ck.lsp.handlers").on_attach(client, bufnr)

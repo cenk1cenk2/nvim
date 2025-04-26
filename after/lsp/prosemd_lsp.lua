@@ -1,6 +1,5 @@
----@module "lspconfig"
----@type lspconfig.Config
+---@type vim.lsp.ClientConfig
 return {
   filetypes = { "markdown", "plaintext", "text", "gitcommit", "" },
-  single_file_support = true,
+  workspace_required = false,
 }
