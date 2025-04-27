@@ -101,9 +101,7 @@ function M.config()
               "path",
               "buffer",
               "ripgrep",
-              "avante_commands",
-              "avante_mentions",
-              "avante_files",
+              "avante",
             }
           end,
           per_filetype = {},
@@ -157,22 +155,9 @@ function M.config()
               async = true,
               name = "fuzzy_buffer",
             },
-            avante_commands = {
-              name = "avante_commands",
-              module = "blink.compat.source",
-              score_offset = 90, -- show at a higher priority than lsp
-              opts = {},
-            },
-            avante_files = {
-              name = "avante_files",
-              module = "blink.compat.source",
-              score_offset = 100, -- show at a higher priority than lsp
-              opts = {},
-            },
-            avante_mentions = {
-              name = "avante_mentions",
-              module = "blink.compat.source",
-              score_offset = 1000, -- show at a higher priority than lsp
+            avante = {
+              module = "blink-cmp-avante",
+              name = "Avante",
               opts = {},
             },
           },

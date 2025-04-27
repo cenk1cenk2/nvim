@@ -10,6 +10,9 @@ function M.config()
       return {
         "yetone/avante.nvim",
         build = "make",
+        dependencies = {
+          { "Kaiser-Yang/blink-cmp-avante" },
+        },
       }
     end,
     configure = function(_, fn)
@@ -45,8 +48,8 @@ function M.config()
       return {
         debug = nvim.lsp.ai.debug,
         provider = nvim.lsp.ai.provider.chat,
-        gemini = {
-          model = "gemini-2.0-flash",
+        copilot = {
+          model = nvim.lsp.ai.copilot.chat.model,
         },
         vendors = {
           -- Ollama API Documentation https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
@@ -67,6 +70,22 @@ function M.config()
             -- https://github.com/ollama/ollama/blob/main/docs/modelfile.md#parameter
             options = nvim.lsp.ai.chat.options,
           },
+        },
+        web_search_engine = {},
+        rag_service = {
+          enabled = nvim.lsp.ai.chat.rag,
+          --- NOTE: api key is causing a problem so we are using the open ai client
+          provider = "openai",
+          endpoint = "https://api.ai.kilic.dev/v1",
+          llm_model = nvim.lsp.ai.model.completion,
+          --- NOTE: this should be an openai model matching cause of pydantic
+          embed_model = nvim.lsp.ai.model.embed,
+          docker_extra_args = table.concat({
+            "-e",
+            "OLLAMA_API_KEY=" .. os.getenv("AI_KILIC_DEV_API_KEY"),
+            "-e",
+            "OPENAI_API_KEY=" .. os.getenv("AI_KILIC_DEV_API_KEY"),
+          }, " "),
         },
         windows = {
           wrap = true, -- similar to vim.o.wrap

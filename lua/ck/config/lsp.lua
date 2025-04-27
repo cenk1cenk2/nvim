@@ -4,6 +4,7 @@ return {
     chat = {
       ---@type table<string, any>
       options = {},
+      rag = true,
     },
     completion = {
       number_of_completions = 1,
@@ -40,6 +41,28 @@ return {
       chat = nil,
       ---@type string?
       completion = nil,
+      ---@type string?
+      embed = nil,
+    },
+    copilot = {
+      chat = {
+        model = "gemini-2.5-pro",
+      },
+      completion = {
+        model = "gpt-4o-copilot-2025-04-03",
+        ---@alias NvimCopilotCompletion
+        ---| "inline"
+        ---| "cmp"
+        ---@type NvimCopilotCompletion[]
+        provider = { "inline" },
+      },
+      ---@type table<string, boolean>
+      filetypes = {},
+      debounce = 50,
+      nes = {
+        debounce = 50,
+        auto_suggest = true,
+      },
     },
   },
   --- @type vim.diagnostic.Opts
@@ -97,20 +120,6 @@ return {
     ---| "right_align"
     ---| "inline"
     mode = "inline",
-  },
-  copilot = {
-    ---@alias NvimCopilotCompletion
-    ---| "inline"
-    ---| "cmp"
-    ---@type NvimCopilotCompletion[]
-    completion = { "inline" },
-    ---@type table<string, boolean>
-    filetypes = {},
-    debounce = 50,
-    nes = {
-      debounce = 50,
-      auto_suggest = true,
-    },
   },
 
   ---@type table<string, string | LspOnCallback>

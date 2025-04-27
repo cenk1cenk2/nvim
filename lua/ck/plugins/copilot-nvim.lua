@@ -15,7 +15,7 @@ function M.config()
           {
             -- https://github.com/giuxtaposition/blink-cmp-copilot
             "giuxtaposition/blink-cmp-copilot",
-            enabled = is_enabled(require("ck.plugins.blink-cmp").name) and vim.tbl_contains(nvim.lsp.copilot.completion, "cmp"),
+            enabled = is_enabled(require("ck.plugins.blink-cmp").name) and vim.tbl_contains(nvim.lsp.ai.copilot.completion.provider, "cmp"),
             init = function()
               require("ck.setup").setup_callback(require("ck.plugins.blink-cmp").name, function(c)
                 c.sources.providers.copilot = {
@@ -40,6 +40,7 @@ function M.config()
     end,
     setup = function()
       return {
+        copilot_model = "",
         panel = {
           enabled = true,
           auto_refresh = true,
@@ -57,8 +58,8 @@ function M.config()
         },
         suggestion = {
           enabled = nvim.lsp.ai.provider.completion == "copilot",
-          auto_trigger = vim.tbl_contains(nvim.lsp.copilot.completion, "inline"),
-          debounce = nvim.lsp.copilot.debounce,
+          auto_trigger = vim.tbl_contains(nvim.lsp.ai.copilot.completion.provider, "inline"),
+          debounce = nvim.lsp.ai.copilot.debounce,
           keymap = {
             accept = false,
             accept_line = false,
@@ -68,7 +69,7 @@ function M.config()
             accept_word = false,
           },
         },
-        filetypes = nvim.lsp.copilot.filetypes,
+        filetypes = nvim.lsp.ai.copilot.filetypes,
         copilot_node_command = "node", -- Node.js version must be > 18.x
         server_opts_overrides = {},
       }

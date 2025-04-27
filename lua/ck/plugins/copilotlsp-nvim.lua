@@ -13,9 +13,18 @@ function M.config()
       }
     end,
     on_done = function()
-      vim.g.copilot_nes_debounce = nvim.lsp.copilot.nes.debounce
+      vim.g.copilot_nes_debounce = nvim.lsp.ai.copilot.nes.debounce
       -- https://github.com/copilotlsp-nvim/copilot-lsp/issues/8
-      vim.g.copilot_nes_auto_suggest = nvim.lsp.copilot.nes.auto_suggest
+      vim.g.copilot_nes_auto_suggest = nvim.lsp.ai.copilot.nes.auto_suggest
+      vim.lsp.config("copilot_ls", {
+        settings = {
+          github = {
+            copilot = {
+              selectedCompletionModel = nvim.lsp.ai.copilot.completion.model,
+            },
+          },
+        },
+      })
       vim.lsp.enable("copilot_ls")
     end,
     keymaps = function()

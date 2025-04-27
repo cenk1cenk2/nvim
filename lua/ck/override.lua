@@ -14,11 +14,16 @@ nvim.lsp.inlay_hints.enabled = true
 nvim.lsp.inlay_hints.toggled = false
 nvim.lsp.inlay_hints.mode = "eol"
 
-nvim.lsp.copilot.debounce = 50
-nvim.lsp.copilot.nes.debounce = 50
-nvim.lsp.copilot.nes.auto_suggest = true
-nvim.lsp.copilot.completion = { "inline" }
-nvim.lsp.copilot.filetypes = {
+nvim.lsp.ai.debug = false
+
+nvim.lsp.ai.provider.completion = "copilot"
+nvim.lsp.ai.provider.chat = "copilot"
+nvim.lsp.ai.chat.rag = true
+nvim.lsp.ai.copilot.debounce = 50
+nvim.lsp.ai.copilot.nes.debounce = 50
+nvim.lsp.ai.copilot.nes.auto_suggest = true
+nvim.lsp.ai.copilot.completion.provider = { "inline" }
+nvim.lsp.ai.copilot.filetypes = {
   yaml = true,
   markdown = true,
   help = false,
@@ -30,11 +35,8 @@ nvim.lsp.copilot.filetypes = {
   ["."] = false,
 }
 
-nvim.lsp.ai.debug = false
-
-nvim.lsp.ai.provider.completion = "copilot"
-nvim.lsp.ai.provider.chat = "copilot"
-
+-- nvim.lsp.ai.model.embed = "nomic-embed-text"
+nvim.lsp.ai.model.embed = "text-embedding-3-small"
 nvim.lsp.ai.model.completion = "deepseek-coder-v2:16b"
 nvim.lsp.ai.completion.number_of_completions = 2
 nvim.lsp.ai.completion.line_limit = -1
