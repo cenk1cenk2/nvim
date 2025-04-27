@@ -74,12 +74,16 @@ function M.config()
         web_search_engine = {},
         rag_service = {
           enabled = nvim.lsp.ai.chat.rag,
+          host_mount = os.getenv("HOME"),
           --- NOTE: api key is causing a problem so we are using the open ai client
           provider = "openai",
           endpoint = "https://api.ai.kilic.dev/v1",
-          llm_model = nvim.lsp.ai.model.completion,
+          -- llm_model = nvim.lsp.ai.model.completion,
           --- NOTE: this should be an openai model matching cause of pydantic
-          embed_model = nvim.lsp.ai.model.embed,
+          llm_model = "o1",
+          --- NOTE: this should be an openai model matching cause of pydantic
+          embed_model = "text-embedding-3-small",
+          -- embed_model = nvim.lsp.ai.model.embed,
           docker_extra_args = table.concat({
             "-e",
             "OLLAMA_API_KEY=" .. os.getenv("AI_KILIC_DEV_API_KEY"),

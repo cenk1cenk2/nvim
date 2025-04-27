@@ -18,7 +18,7 @@ nvim.lsp.ai.debug = false
 
 nvim.lsp.ai.provider.completion = "copilot"
 nvim.lsp.ai.provider.chat = "copilot"
-nvim.lsp.ai.chat.rag = true
+nvim.lsp.ai.chat.rag = false
 nvim.lsp.ai.copilot.debounce = 50
 nvim.lsp.ai.copilot.nes.debounce = 50
 nvim.lsp.ai.copilot.nes.auto_suggest = true

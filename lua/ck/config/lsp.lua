@@ -4,7 +4,7 @@ return {
     chat = {
       ---@type table<string, any>
       options = {},
-      rag = true,
+      rag = false,
     },
     completion = {
       number_of_completions = 1,
