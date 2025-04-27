@@ -122,28 +122,28 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "g" }),
           function()
-            M.create_terminal({ name = "lazygit", command = { "lazygit" } })
+            M.create_terminal({ name = "lazygit", command = { "zsh", "-ic", "lazygit" } })
           end,
           desc = "lazygit",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "d" }),
           function()
-            M.create_terminal({ name = "lazydocker", command = { "lazydocker" } })
+            M.create_terminal({ name = "lazydocker", command = { "zsh", "-ic", "lazydocker" } })
           end,
           desc = "lazydocker",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "k" }),
           function()
-            M.create_terminal({ name = "k9s", command = { "k9s" } })
+            M.create_terminal({ name = "k9s", command = { "zsh", "-ic", "k9s" } })
           end,
           desc = "k9s",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "n" }),
           function()
-            M.create_terminal({ name = "dust", command = { "dust" } })
+            M.create_terminal({ name = "dust", command = { "zsh", "-ic", "dust" } })
           end,
           desc = "dust",
         },

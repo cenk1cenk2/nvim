@@ -186,32 +186,6 @@ function M.run_genpass()
   end)
 end
 
-function M.run_sd()
-  local store_key = "SD_INPUT"
-  local shada = require("ck.modules.shada")
-  local stored_value = shada.get(store_key)
-  local lines = M.get_selection()
-
-  vim.ui.input({
-    prompt = "sd: ",
-    highlight = utils.treesitter_highlight("bash"),
-    default = stored_value,
-  }, function(arguments)
-    if arguments == nil then
-      log:warn("No arguments provided")
-
-      return
-    end
-
-    arguments = vim.split(arguments, " ")
-
-    M.run_buffer_command(lines, {
-      command = "sd",
-      args = arguments,
-    })
-  end)
-end
-
 function M.set_env()
   local store_key = "SET_ENV_VAR"
   local shada = require("ck.modules.shada")
@@ -281,13 +255,6 @@ function M.setup()
     wk = function(_, categories, fn)
       ---@type WKMappings
       return {
-        {
-          fn.wk_keystroke({ categories.SEARCH, "d" }),
-          function()
-            M.run_sd()
-          end,
-          desc = "sd",
-        },
         {
           fn.wk_keystroke({ categories.ISSUES, "m" }),
           function()
