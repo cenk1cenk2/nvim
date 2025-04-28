@@ -163,6 +163,11 @@ function M.config()
           },
         },
         cmdline = {
+          completion = {
+            ghost_text = {
+              enabled = false,
+            },
+          },
           sources = function()
             local type = vim.fn.getcmdtype()
 
