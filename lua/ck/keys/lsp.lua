@@ -214,9 +214,9 @@ function M.on_attach(_, bufnr)
         {
           fn.wk_keystroke({ categories.LSP, "g" }),
           function()
-            vim.cmd([[LspOrganizeImports]])
+            vim.cmd([[LspRemoveUnusedImports]])
           end,
-          desc = "organize imports",
+          desc = "remove unused imports",
           buffer = bufnr,
         },
         {
@@ -224,7 +224,7 @@ function M.on_attach(_, bufnr)
           function()
             vim.cmd([[LspAddMissingImports]])
           end,
-          desc = "add all missing imports",
+          desc = "add missing imports",
           buffer = bufnr,
         },
         {

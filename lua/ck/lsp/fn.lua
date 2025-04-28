@@ -255,11 +255,22 @@ function M.fix_current()
   end)
 end
 
-function M.organize_imports()
+function M.remove_unused_imports()
+  return M.call_clients_for_code_action({ "source.removeUnusedImports" })
+end
+
+function M.add_missing_imports()
+  return M.call_clients_for_code_action({ "source.addMissingImports" })
+end
+
+---
+---@param context: table<string>
+---@param cb? fun(): nil
+function M.call_clients_for_code_action(context, cb)
   local params = vim.lsp.util.make_range_params(vim.api.nvim_get_current_win(), "utf-8")
   params.context = {
-    diagnostics = {},
-    only = { "source.organizeImports" },
+    diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
+    only = context,
   }
 
   vim.lsp.buf_request_all(0, "textDocument/codeAction", params, function(responses)
@@ -269,7 +280,7 @@ function M.organize_imports()
     end
 
     if vim.tbl_count(responses) == 0 then
-      log:warn("No language server has answered the organize imports call.")
+      log:warn("No language server has answered: %s", context)
     end
 
     for client_id, response in pairs(responses) do
@@ -286,7 +297,11 @@ function M.organize_imports()
           vim.lsp.util.apply_workspace_edit(result.edit, client.offset_encoding or "utf-8")
         end
 
-        log:info(("[ORGANIZE-IMPORTS]: %s"):format(client.name))
+        log:info("[%s]: %s", client.name, context)
+
+        if cb then
+          cb()
+        end
       end
     end
   end)

@@ -21,9 +21,15 @@ function M.setup()
         nargs = 1,
       },
       {
-        "LspOrganizeImports",
+        "LspRemoveUnusedImports",
         function()
-          nvim.lsp.fn.organize_imports()
+          nvim.lsp.fn.remove_unused_imports()
+        end,
+      },
+      {
+        "LspAddMissingImports",
+        function()
+          nvim.lsp.fn.add_missing_imports()
         end,
       },
       {

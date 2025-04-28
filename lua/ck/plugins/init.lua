@@ -94,7 +94,7 @@ local plugins = {
   "winshift-nvim",
   "browse-nvim",
   "edgy-nvim",
-  "typescript-tools-nvim",
+  -- "typescript-tools-nvim",
   "schema-companion-nvim",
   "uuid-nvim",
   "hurl-nvim",
