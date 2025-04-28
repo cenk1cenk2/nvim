@@ -17,29 +17,30 @@ function M.config()
     end,
     configure = function(_, fn)
       fn.add_disabled_filetypes({
+        "AvanteSelectedFiles",
         "AvanteInput",
         "Avante",
       })
 
-      -- fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
-      --   vim.list_extend(c.right, {
-      --     {
-      --       title = "Avante",
-      --       ft = "Avante",
-      --       size = {
-      --         width = function()
-      --           if vim.o.columns < 180 then
-      --             return 0.5
-      --           end
-      --
-      --           return 120
-      --         end,
-      --       },
-      --     },
-      --   })
-      --
-      --   return c
-      -- end)
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.right, {
+          {
+            title = "Avante",
+            ft = { "Avante", "AvanteSelectedFiles", "AvanteInput" },
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.5
+                end
+
+                return 120
+              end,
+            },
+          },
+        })
+
+        return c
+      end)
     end,
     setup = function(_, fn)
       local categories = fn.get_wk_categories()
