@@ -30,10 +30,10 @@ function M.config()
             size = {
               width = function()
                 if vim.o.columns < 180 then
-                  return 0.5
+                  return 0.4
                 end
 
-                return 120
+                return 80
               end,
             },
           },
@@ -104,7 +104,7 @@ function M.config()
           },
         },
         behaviour = {
-          auto_set_highlight_group = false,
+          auto_set_highlight_group = true,
           auto_set_keymaps = false,
           enable_token_counting = true,
         },

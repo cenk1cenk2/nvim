@@ -751,6 +751,12 @@ hl.plugins.symbol_usage_nvim = {
   ["SymbolUsageRef"] = { fg = c.yellow[300], bold = true },
 }
 
+---@type table<string, vim.api.keyset.highlight>
+hl.plugins.avante = {
+  ["AvanteConflictIncoming"] = { link = "DiffChange" },
+  ["AvanteConflictCurrent"] = { link = "DiffRemoved" },
+}
+
 function M.load_highlights(ns, highlights)
   for group_name, group_settings in pairs(highlights) do
     vim.api.nvim_set_hl(ns, group_name, group_settings)
