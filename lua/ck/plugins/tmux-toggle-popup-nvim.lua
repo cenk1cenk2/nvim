@@ -122,35 +122,65 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "g" }),
           function()
-            M.create_terminal({ name = "lazygit", command = { "zsh", "-ic", "lazygit" } })
+            M.create_terminal({
+              name = "lazygit",
+              env = {
+                ZNAP_HEADLESS = "1",
+              },
+              command = { "zsh", "-ic", "lazygit" },
+            })
           end,
           desc = "lazygit",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "d" }),
           function()
-            M.create_terminal({ name = "lazydocker", command = { "zsh", "-ic", "lazydocker" } })
+            M.create_terminal({
+              name = "lazydocker",
+              env = {
+                ZNAP_HEADLESS = "1",
+              },
+              command = { "zsh", "-ic", "lazydocker" },
+            })
           end,
           desc = "lazydocker",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "k" }),
           function()
-            M.create_terminal({ name = "k9s", command = { "zsh", "-ic", "k9s" } })
+            M.create_terminal({
+              name = "k9s",
+              env = {
+                ZNAP_HEADLESS = "1",
+              },
+              command = { "zsh", "-ic", "k9s" },
+            })
           end,
           desc = "k9s",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "n" }),
           function()
-            M.create_terminal({ name = "dust", command = { "zsh", "-ic", "dust" } })
+            M.create_terminal({
+              name = "dust",
+              env = {
+                ZNAP_HEADLESS = "1",
+              },
+              command = { "zsh", "-ic", "dust" },
+            })
           end,
           desc = "dust",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "y" }),
           function()
-            M.create_terminal({ name = "yazi", command = { "yazi" }, env = M.editor_async() })
+            M.create_terminal({
+              name = "yazi",
+              env = vim.tbl_extend("force", {
+                ZNAP_HEADLESS = "1",
+              }, M.editor_async()),
+              command = { "zsh", "-ic", "yazi" },
+            })
           end,
           desc = "yazi",
         },
