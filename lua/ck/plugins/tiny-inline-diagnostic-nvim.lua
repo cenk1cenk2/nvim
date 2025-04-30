@@ -18,6 +18,7 @@ function M.config()
     end,
     setup = function()
       return {
+        preset = "powerline",
         signs = {
           diag = nvim.ui.icons.ui.SquareCentered,
         },
