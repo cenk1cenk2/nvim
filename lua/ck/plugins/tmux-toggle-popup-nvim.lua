@@ -125,7 +125,7 @@ function M.config()
             M.create_terminal({
               name = "lazygit",
               env = {
-                ZNAP_HEADLESS = "1",
+                PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
               },
               command = { "lazygit" },
             })
@@ -138,7 +138,7 @@ function M.config()
             M.create_terminal({
               name = "lazydocker",
               env = {
-                ZNAP_HEADLESS = "1",
+                PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
               },
               command = { "lazydocker" },
             })
@@ -151,9 +151,9 @@ function M.config()
             M.create_terminal({
               name = "k9s",
               env = {
-                ZNAP_HEADLESS = "1",
+                PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
               },
-              command = { "zsh", "-ic", "k9s" },
+              command = { "k9s" },
             })
           end,
           desc = "k9s",
@@ -163,9 +163,7 @@ function M.config()
           function()
             M.create_terminal({
               name = "yazi",
-              env = vim.tbl_extend("force", {
-                ZNAP_HEADLESS = "1",
-              }, M.editor_async()),
+              env = M.editor_async(),
               command = { "yazi" },
             })
           end,
