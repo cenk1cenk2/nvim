@@ -153,7 +153,7 @@ function M.config()
               env = {
                 ZNAP_HEADLESS = "1",
               },
-              command = { "k9s" },
+              command = { "zsh", "-ic", "k9s" },
             })
           end,
           desc = "k9s",
