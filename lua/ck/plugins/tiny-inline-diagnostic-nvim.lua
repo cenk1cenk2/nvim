@@ -23,13 +23,24 @@ function M.config()
         },
         options = {
           -- Show the source of the diagnostic.
-          show_source = false,
+          show_source = {
+            enabled = false,
+          },
           format = function(diagnostic)
+            if not diagnostic.source then
+              return diagnostic.message
+            end
+
             return "[" .. diagnostic.source .. "] " .. diagnostic.message
           end,
           throttle = 0,
-          multilines = true,
-          multiple_diag_under_cursor = true,
+          multilines = {
+            enabled = true,
+            always_show = true,
+          },
+          show_all_diags_on_cursorline = true,
+          use_icons_from_diagnostic = true,
+          set_arrow_to_diag_color = true,
         },
       }
     end,
