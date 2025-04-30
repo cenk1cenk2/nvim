@@ -127,7 +127,7 @@ function M.config()
               env = {
                 ZNAP_HEADLESS = "1",
               },
-              command = { "zsh", "-ic", "lazygit" },
+              command = { "lazygit" },
             })
           end,
           desc = "lazygit",
@@ -140,7 +140,7 @@ function M.config()
               env = {
                 ZNAP_HEADLESS = "1",
               },
-              command = { "zsh", "-ic", "lazydocker" },
+              command = { "lazydocker" },
             })
           end,
           desc = "lazydocker",
@@ -153,23 +153,10 @@ function M.config()
               env = {
                 ZNAP_HEADLESS = "1",
               },
-              command = { "zsh", "-ic", "k9s" },
+              command = { "k9s" },
             })
           end,
           desc = "k9s",
-        },
-        {
-          fn.wk_keystroke({ categories.TERMINAL, "n" }),
-          function()
-            M.create_terminal({
-              name = "dust",
-              env = {
-                ZNAP_HEADLESS = "1",
-              },
-              command = { "zsh", "-ic", "dust" },
-            })
-          end,
-          desc = "dust",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "y" }),
@@ -179,7 +166,7 @@ function M.config()
               env = vim.tbl_extend("force", {
                 ZNAP_HEADLESS = "1",
               }, M.editor_async()),
-              command = { "zsh", "-ic", "yazi" },
+              command = { "yazi" },
             })
           end,
           desc = "yazi",
