@@ -88,6 +88,7 @@ return {
       -- end,
       source = true,
     },
+    virtual_lines = false,
     update_in_insert = false,
     underline = false,
     severity_sort = true,
