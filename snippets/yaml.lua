@@ -61,4 +61,26 @@ return {
       {}
     )
   ),
+  s.s(
+    { trig = "m-es", name = "External Secret Manifest", desc = { "Adds the external-secrets.io/v1beta1 ExternalSecret manifest." } },
+    s.fmt(
+      [[
+      ---
+      apiVersion: external-secrets.io/v1beta1
+      kind: ExternalSecret
+      metadata:
+        name: {}
+      spec:
+        secretStoreRef: {}
+        target: {}
+        data: {}
+      ]],
+      {
+        s.i(1, { "" }),
+        s.i(2, { "{}" }),
+        s.i(3, { "{}" }),
+        s.i(4, { "[]" }),
+      }
+    )
+  ),
 }
