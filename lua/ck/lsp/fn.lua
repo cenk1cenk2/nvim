@@ -177,7 +177,7 @@ function M.restart_lsp(filter)
     "Killed LSPs: %s -> %s",
     table.concat(
       vim.tbl_map(function(client)
-        return client.name
+        return client.name or client.id
       end, clients),
       ", "
     ),
