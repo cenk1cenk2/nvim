@@ -219,6 +219,15 @@ function M.config()
                 buffer = event.buf,
               },
               {
+                "<localleader>C",
+                function()
+                  return grug_far_toggle_flags({ "--smart-case" })
+                end,
+                mode = { "n" },
+                desc = "Grug Far: toggle --smart-case",
+                buffer = event.buf,
+              },
+              {
                 "<localleader>X",
                 function()
                   return grug_far_toggle_flags({ "--replace=" })
