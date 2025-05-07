@@ -86,7 +86,12 @@ local function go_result_type(info)
   return { s.t("nil") }
 end
 
-local go_ret_vals = function(args)
+local go_return = function(args)
+  if not args or #args < 1 then
+    args = {}
+    args[1] = { "nil" }
+  end
+
   return s.sn(
     nil,
     go_result_type({
@@ -121,7 +126,7 @@ return {
       ]],
       {
         s.i(1, { "ok" }),
-        s.d(2, go_ret_vals, { 1 }),
+        s.d(2, go_return, { 1 }),
       },
       { delimiters = "<>" }
     )
@@ -144,7 +149,7 @@ return {
         s.i(3, { "fn" }),
         s.i(4),
         s.same(2),
-        s.d(5, go_ret_vals, { 1 }),
+        s.d(5, go_return, { 1 }),
       },
       { delimiters = "<>" }
     )
@@ -163,7 +168,7 @@ return {
       ]],
       {
         s.i(1, { "err" }),
-        s.d(2, go_ret_vals, { 1 }),
+        s.d(2, go_return, { 1 }),
       },
       { delimiters = "<>" }
     )
@@ -185,7 +190,7 @@ return {
         s.i(2, { "fn" }),
         s.i(3),
         s.same(1),
-        s.d(4, go_ret_vals, { 1 }),
+        s.d(4, go_return, { 1 }),
       },
       { delimiters = "<>" }
     )
@@ -210,7 +215,7 @@ return {
         s.i(3, { "fn" }),
         s.i(4),
         s.same(2),
-        s.d(5, go_ret_vals, { 2 }),
+        s.d(5, go_return, { 2 }),
       },
       { delimiters = "<>" }
     )
@@ -227,6 +232,22 @@ return {
       . "github.com/onsi/gomega"
       ]],
       {}
+    )
+  ),
+  s.s(
+    {
+      trig = "ret",
+      name = "return with types",
+      desc = "return with types",
+    },
+    s.fmt(
+      [[
+        return <>
+      ]],
+      {
+        s.d(1, go_return),
+      },
+      { delimiters = "<>" }
     )
   ),
 }
