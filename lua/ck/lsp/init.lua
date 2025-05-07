@@ -2,10 +2,6 @@ local M = {}
 
 local log = require("ck.log")
 
-local function to_package_name(server_name)
-  return require("mason-lspconfig.mappings.server").lspconfig_to_package[server_name] or server_name
-end
-
 ---
 ---@param force? boolean Always run this.
 function M.setup(force)
@@ -62,13 +58,15 @@ function M.setup(force)
     log:error("LSP installer not available.")
   end
 
+  local package_mappings = require("mason-lspconfig.mappings").get_mason_map()
+
   if not is_headless() then
     local registry = require("mason-registry")
 
     -- Ensure packages are installed and up to date
     registry.refresh(function()
       for _, server_name in pairs(nvim.lsp.packages) do
-        local package_name = to_package_name(server_name)
+        local package_name = package_mappings.lspconfig_to_package[server_name] or server_name
         local package = registry.get_package(package_name)
 
         if not registry.is_installed(package_name) then
