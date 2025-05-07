@@ -1,16 +1,16 @@
--- https://github.com/williamboman/mason.nvim
--- https://github.com/williamboman/mason-lspconfig.nvim
+-- https://github.com/mason-org/mason.nvim
+-- https://github.com/mason-org/mason-lspconfig.nvim
 -- https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim
 local M = {}
 
-M.name = "williamboman/mason.nvim"
+M.name = "mason-org/mason.nvim"
 
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
       ---@type Plugin
       return {
-        "williamboman/mason.nvim",
+        "mason-org/mason.nvim",
         build = ":MasonUpdate", -- :MasonUpdate updates registry contents
         cmd = {
           "Mason",
@@ -22,7 +22,7 @@ function M.config()
           "MasonLog",
         },
         dependencies = {
-          { "williamboman/mason-lspconfig.nvim" },
+          { "mason-org/mason-lspconfig.nvim" },
           {
             "WhoIsSethDaniel/mason-tool-installer.nvim",
             cmd = {
