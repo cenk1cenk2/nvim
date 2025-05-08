@@ -66,7 +66,7 @@ return {
           "vizier.{yml,yaml}",
         },
         ["https://json.schemastore.org/json-patch.json"] = {
-          "patch-*.{yml,yaml}",
+          "jsonpatch-*.{yml,yaml}",
         },
       },
     },
