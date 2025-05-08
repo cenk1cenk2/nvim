@@ -83,4 +83,35 @@ return {
       }
     )
   ),
+  s.s(
+    { trig = "m-netshoot", name = "Netshoot", desc = { "Adds the nicolaka/netshoot image." } },
+    s.fmt(
+      [[
+      ---
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: netshoot
+      spec:
+        replicas: 1
+        selector:
+          matchLabels:
+            app.kubernetes.io/name: netshoot
+        template:
+          metadata:
+            labels:
+              app.kubernetes.io/name: netshoot
+          spec:
+            containers:
+              - name: netshoot
+                image: nicolaka/netshoot
+                command:
+                  - /bin/bash
+                args:
+                  - -c
+                  - "while true; do ping localhost; sleep 60; done"
+      ]],
+      {}
+    )
+  ),
 }
