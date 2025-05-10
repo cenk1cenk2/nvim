@@ -73,14 +73,20 @@ function M.setup(force)
           log:info("Installing Mason package: %s", package_name)
           package:install()
         elseif nvim.lsp.automatic_update then
-          package:check_new_version(function(success, result)
-            if success then
-              local version = result.latest_version
+          local latest = package:get_latest_version()
+          local current = package:get_installed_version()
 
-              log:info("Updating Mason package: %s@%s", package_name, version)
-              package:install({ version = version })
-            end
-          end)
+          if latest ~= current then
+            package:install({ version = latest }, function(success, error)
+              if not success then
+                log:error("Updating Mason package failed: %s@%s -> %s", package_name, latest, error)
+
+                return
+              end
+
+              log:info("Updated Mason package failed: %s@%s", package_name, latest)
+            end)
+          end
         end
       end
     end)
