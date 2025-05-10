@@ -114,14 +114,12 @@ nvim.lsp.packages = vim.list_extend({
   "copilot-language-server",
 
   --- formatters/linters
+  "ansible-lint",
   "beautysh",
-  "black",
-  "flake8",
   "goimports",
   "golangci-lint",
   "golines",
   "hadolint",
-  "isort",
   "markdownlint",
   "prettierd",
   "proselint",
