@@ -84,6 +84,40 @@ return {
     )
   ),
   s.s(
+    { trig = "m-route-http", name = "Route HTTP", desc = { "Adds the route for http." } },
+    s.fmt(
+      [[
+    ---
+    apiVersion: gateway.networking.k8s.io/v1
+    kind: HTTPRoute
+    metadata:
+      name: {}
+    spec:
+      hostnames:
+        - {}
+      parentRefs:
+        - group: gateway.networking.k8s.io
+          kind: Gateway
+          name: kilic-dev
+          namespace: cluster-system
+      rules:
+        - backendRefs:
+            - kind: Service
+              name: {}
+              port: 80
+          matches:
+            - path:
+                type: PathPrefix
+                value: /
+          ]],
+      {
+        s.i(1, { "" }),
+        s.i(2, { "" }),
+        s.i(3, { "" }),
+      }
+    )
+  ),
+  s.s(
     { trig = "m-netshoot", name = "Netshoot", desc = { "Adds the nicolaka/netshoot image." } },
     s.fmt(
       [[

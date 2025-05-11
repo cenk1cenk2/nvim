@@ -757,6 +757,13 @@ hl.plugins.avante = {
   ["AvanteConflictCurrent"] = { link = "DiffRemoved" },
 }
 
+---@type table<string, vim.api.keyset.highlight>
+hl.plugins.copilot_lsp = {
+  ["NesAdd"] = { link = "DiffAdd" },
+  ["NesDelete"] = { link = "DiffDelete" },
+  ["NesApply"] = { link = "DiffText" },
+}
+
 function M.load_highlights(ns, highlights)
   for group_name, group_settings in pairs(highlights) do
     vim.api.nvim_set_hl(ns, group_name, group_settings)
