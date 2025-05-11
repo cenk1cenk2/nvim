@@ -71,15 +71,16 @@ return {
       metadata:
         name: {}
       spec:
-        secretStoreRef: {}
+        secretStoreRef:
+          kind: ClusterSecretStore
+          name: secret.vault.int.kilic.dev
         target: {}
         data: {}
       ]],
       {
         s.i(1, { "" }),
         s.i(2, { "{}" }),
-        s.i(3, { "{}" }),
-        s.i(4, { "[]" }),
+        s.i(3, { "[]" }),
       }
     )
   ),
