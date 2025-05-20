@@ -19,7 +19,7 @@ function M.load_default_options()
   vim.opt.fileencoding = "utf-8"
   vim.opt.foldmethod = "expr"
   vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-  vim.opt.foldtext = ""
+  vim.opt.foldtext = "v:lua.nvim.fold.text()"
   vim.opt.indentexpr = "nvim_treesitter#indent()"
   vim.opt.fillchars = {
     foldopen = nvim.ui.icons.ArrowCircleDown,

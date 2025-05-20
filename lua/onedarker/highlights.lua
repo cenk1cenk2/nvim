@@ -35,7 +35,7 @@ hl.common = {
   TermCursorNC = { bg = c.cursor },
   LineNr = { fg = c.gray[600] },
   Conceal = { fg = c.gray[600], bg = c.bg[300] },
-  Folded = { fg = c.fg, bg = c.cyan[100] },
+  Folded = { fg = c.cyan[900], bg = c.cyan[100] },
   NormalNC = { fg = c.fg, bg = c.bg[200] },
   NormalSB = { fg = c.fg, bg = c.bg[200] },
   BufferlineFill = { bg = c.bg[100] },
