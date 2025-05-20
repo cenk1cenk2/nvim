@@ -133,7 +133,7 @@ return {
         end
       end
 
-      table.insert(result, { (" %s %d lines"):format(nvim.ui.icons.ui.BoxDown, vim.v.foldend - vim.v.foldstart + 1) })
+      table.insert(result, { (" %s %d lines"):format(nvim.ui.icons.ui.BoxDown, vim.v.foldend - vim.v.foldstart) })
 
       return result
     end,
