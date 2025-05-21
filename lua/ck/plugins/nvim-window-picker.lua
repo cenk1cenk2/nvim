@@ -13,12 +13,9 @@ function M.config()
     end,
     setup = function()
       return {
+        hint = "floating-big-letter",
         selection_chars = nvim.selection_chars:upper(),
-        picker_config = {
-          statusline_winbar_picker = {
-            use_winbar = "always",
-          },
-        },
+        show_prompt = false,
         filter_rules = {
           bo = {
             filetype = vim.tbl_filter(function(ft)
