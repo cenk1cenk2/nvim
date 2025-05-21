@@ -148,15 +148,72 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "k" }),
           function()
+            local stdout, code = require("ck.utils.job")
+              .create({
+                command = "kubectl",
+                args = { "config", "current-context" },
+                env = {
+                  PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
+                },
+                log = {
+                  on_success = false,
+                },
+              })
+              :sync(3000)
+
+            if code > 0 then
+              error("Can not fetch current Kubernetes context.")
+            end
+
+            local context = table.concat(stdout, "")
+
             M.create_terminal({
               name = "k9s",
+              id_format = ("#{session_name}/k9s/%s"):format(context),
               env = {
                 PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
               },
-              command = { "k9s" },
+              command = { "k9s", "--context", context },
             })
           end,
           desc = "k9s",
+        },
+        {
+          fn.wk_keystroke({ categories.TERMINAL, "K" }),
+          function()
+            local stdout, code = require("ck.utils.job")
+              .create({
+                command = "kubectl",
+                args = { "config", "get-contexts", "-o", "name" },
+                env = {
+                  PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
+                },
+                log = {
+                  on_success = false,
+                },
+              })
+              :sync(3000)
+
+            if code > 0 then
+              error("Can not fetch availabe Kubernetes contexts.")
+            end
+
+            vim.ui.select(stdout, { prompt = "Select Kubernetes context:" }, function(context)
+              if not context then
+                return
+              end
+
+              M.create_terminal({
+                name = "k9s",
+                id_format = ("#{session_name}/k9s/%s"):format(context),
+                env = {
+                  PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
+                },
+                command = { "k9s", "--context", context },
+              })
+            end)
+          end,
+          desc = "k9s (with context)",
         },
         {
           fn.wk_keystroke({ categories.TERMINAL, "y" }),

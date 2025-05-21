@@ -37,7 +37,7 @@ function M.create(command)
     on_exit = function(j, code)
       vim.schedule(function()
         if code == 0 then
-          if not command.log.on_success then
+          if command.log.on_success then
             log:info("Command executed: %s", cmd)
 
             log:debug("%s -> %s", cmd, j:result())
@@ -47,7 +47,7 @@ function M.create(command)
             command.on_success(j)
           end
         else
-          if not command.log.on_failure then
+          if command.log.on_failure then
             log:error("Command failed with exit code %d: %s -> %s", code, cmd, j:result())
           end
 
