@@ -35,13 +35,13 @@ function M.config()
         highlights = {
           winbar = {
             focused = {
-              fg = nvim.ui.colors.black,
-              bg = nvim.ui.colors.green[300],
+              fg = nvim.ui.colors.white,
+              bg = nvim.ui.colors.green[100],
               bold = true,
             },
             unfocused = {
-              fg = nvim.ui.colors.black,
-              bg = nvim.ui.colors.yellow[300],
+              fg = nvim.ui.colors.white,
+              bg = nvim.ui.colors.yellow[100],
               bold = true,
             },
           },
