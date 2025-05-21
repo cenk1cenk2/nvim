@@ -106,7 +106,8 @@ nvim.lsp.servers = {
   "typos_lsp",
   "vale",
   "vale_ls",
-  "volar",
+  -- TODO: https://github.com/mason-org/mason-lspconfig.nvim/issues/371
+  -- "volar",
   "yamlls",
 }
 
