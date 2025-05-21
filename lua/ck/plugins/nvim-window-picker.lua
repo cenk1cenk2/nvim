@@ -35,13 +35,13 @@ function M.config()
         highlights = {
           winbar = {
             focused = {
-              fg = nvim.ui.colors.fg,
-              bg = nvim.ui.colors.yellow[300],
+              fg = nvim.ui.colors.black,
+              bg = nvim.ui.colors.green[300],
               bold = true,
             },
             unfocused = {
-              fg = nvim.ui.colors.fg,
-              bg = nvim.ui.colors.orange[300],
+              fg = nvim.ui.colors.black,
+              bg = nvim.ui.colors.yellow[300],
               bold = true,
             },
           },
@@ -51,11 +51,36 @@ function M.config()
     on_setup = function(c)
       require("window-picker").setup(c)
     end,
+    wk = function(_, _, fn)
+      ---@type WKMappings
+      return {
+        {
+          fn.wk_keystroke({ "<CR>" }),
+          function()
+            local id = nvim.fn.pick_window()
+
+            if id then
+              local win = vim.api.nvim_get_current_win()
+              local buf = vim.api.nvim_get_current_buf()
+
+              if id ~= win then
+                vim.api.nvim_set_current_win(id)
+                vim.api.nvim_set_current_buf(buf)
+              end
+            end
+          end,
+          desc = "pick window",
+        },
+      }
+    end,
   })
 end
 
-function nvim.fn.pick_window()
-  return require("window-picker").pick_window()
+---
+---@param config? table
+---@return integer | nil
+function nvim.fn.pick_window(config)
+  return require("window-picker").pick_window(config)
 end
 
 return M

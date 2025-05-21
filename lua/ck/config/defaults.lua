@@ -10,7 +10,7 @@ return {
     transparent = false,
   },
 
-  selection_chars = "asdfghjklqwertyuiopzxcvbnmASDFGHJKLQWERTYUIOPZXCVBNM",
+  selection_chars = "asdfhjkl;qwerytyuiopzxcvbnm,./ASDFHJKL:QWERYTYUIOPZXCVBNM<>>?",
   system_register = "+",
 
   log = {
