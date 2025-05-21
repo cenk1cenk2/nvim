@@ -62,7 +62,7 @@ function M.config()
               local Ollama = require("avante.providers").ollama
               local args = Ollama.parse_curl_args(self, prompt)
 
-              args.headers["Authorization"] = "Bearer " .. os.getenv(self.api_key_name)
+              args.headers["Authorization"] = "Bearer " .. (os.getenv(self.api_key_name) or "")
 
               return args
             end,
@@ -87,9 +87,9 @@ function M.config()
           -- embed_model = nvim.lsp.ai.model.embed,
           docker_extra_args = table.concat({
             "-e",
-            "OLLAMA_API_KEY=" .. os.getenv("AI_KILIC_DEV_API_KEY"),
+            "OLLAMA_API_KEY=" .. (os.getenv("AI_KILIC_DEV_API_KEY") or ""),
             "-e",
-            "OPENAI_API_KEY=" .. os.getenv("AI_KILIC_DEV_API_KEY"),
+            "OPENAI_API_KEY=" .. (os.getenv("AI_KILIC_DEV_API_KEY") or ""),
           }, " "),
         },
         windows = {
