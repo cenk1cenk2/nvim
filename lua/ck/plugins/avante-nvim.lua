@@ -73,7 +73,7 @@ function M.config()
           },
         },
         web_search_engine = {
-          provider = "brave",
+          provider = "google",
         },
         rag_service = {
           enabled = nvim.lsp.ai.chat.rag,
