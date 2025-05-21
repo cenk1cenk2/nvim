@@ -30,10 +30,10 @@ function M.config()
             size = {
               width = function()
                 if vim.o.columns < 180 then
-                  return 0.4
+                  return 0.3
                 end
 
-                return 80
+                return 60
               end,
             },
           },
@@ -73,7 +73,7 @@ function M.config()
           },
         },
         web_search_engine = {
-          provider = "duckduckgo",
+          provider = "brave",
         },
         rag_service = {
           enabled = nvim.lsp.ai.chat.rag,
