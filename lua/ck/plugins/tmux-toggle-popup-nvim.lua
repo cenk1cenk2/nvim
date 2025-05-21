@@ -4,6 +4,7 @@ local M = {}
 M.name = "cenk1cenk2/tmux-toggle-popup.nvim"
 
 local log = require("ck.log")
+local job = require("ck.utils.job")
 
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
@@ -148,7 +149,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "k" }),
           function()
-            local stdout, code = require("ck.utils.job")
+            local stdout, code = job
               .create({
                 command = "kubectl",
                 args = { "config", "current-context" },
@@ -181,7 +182,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "K" }),
           function()
-            local stdout, code = require("ck.utils.job")
+            local stdout, code = job
               .create({
                 command = "kubectl",
                 args = { "config", "get-contexts", "-o", "name" },

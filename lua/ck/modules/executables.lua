@@ -250,6 +250,93 @@ function M.set_kubeconfig()
   end)
 end
 
+function M.set_kubecontext()
+  local stdout, code = job
+    .create({
+      command = "kubectl",
+      args = { "config", "get-contexts", "-o", "name" },
+      env = {
+        PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
+      },
+      log = {
+        on_success = false,
+      },
+    })
+    :sync(3000)
+
+  if code > 0 then
+    error("Can not fetch availabe Kubernetes contexts.")
+  end
+
+  vim.ui.select(stdout, { prompt = "Select Kubernetes context:" }, function(context)
+    if not context then
+      return
+    end
+
+    job
+      .create({
+        command = "kubectx",
+        args = { context },
+        env = {
+          PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
+        },
+        log = {
+          on_success = false,
+        },
+        on_success = function()
+          log:info("Kubernetes context has been set: %s", context)
+        end,
+      })
+      :start()
+  end)
+end
+
+function M.set_kubens()
+  local stdout, code = job
+    .create({
+      command = "kubectl",
+      args = { "get", "ns", "-o", "name" },
+      env = {
+        PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
+      },
+      log = {
+        on_success = false,
+      },
+    })
+    :sync(3000)
+
+  if code > 0 then
+    error("Can not fetch available Kubernetes namespaces.")
+  end
+
+  vim.ui.select(stdout, {
+    prompt = "Select Kubernetes namespace:",
+    format_item = function(item)
+      return item:gsub("^.*/", "")
+    end,
+  }, function(namespace)
+    if not namespace then
+      return
+    end
+
+    job
+      .create({
+        command = "kubens",
+        args = { namespace:gsub("^.*/", "") },
+        env = {
+          PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
+        },
+        log = {
+          on_success = false,
+        },
+        on_success = function()
+          log:info("Kubernetes context has been set: %s", namespace)
+        end,
+      })
+      :start()
+  end)
+end
+
 function M.setup()
   require("ck.setup").init({
     wk = function(_, categories, fn)
@@ -435,7 +522,21 @@ function M.setup()
           desc = "run genpass",
         },
         {
+          fn.wk_keystroke({ categories.RUN, "n" }),
+          function()
+            M.set_kubens()
+          end,
+          desc = "set kubens",
+        },
+        {
           fn.wk_keystroke({ categories.RUN, "k" }),
+          function()
+            M.set_kubecontext()
+          end,
+          desc = "set kubecontext",
+        },
+        {
+          fn.wk_keystroke({ categories.RUN, "K" }),
           function()
             M.set_kubeconfig()
           end,
