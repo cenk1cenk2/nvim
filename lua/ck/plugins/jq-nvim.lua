@@ -21,6 +21,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type jq.Config
       return {
         log_level = require("ck.log"):to_nvim_level(),
       }
