@@ -72,7 +72,9 @@ function M.config()
             options = nvim.lsp.ai.chat.options,
           },
         },
-        web_search_engine = {},
+        web_search_engine = {
+          provider = "duckduckgo",
+        },
         rag_service = {
           enabled = nvim.lsp.ai.chat.rag,
           host_mount = os.getenv("HOME"),
