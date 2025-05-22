@@ -14,7 +14,7 @@ function M.config()
         lazy = false,
         priority = 1100,
         -- https://github.com/willothy/flatten.nvim/issues/106
-        commit = "d3e3529c23740a5411da3614e1ca3f35eb968fc9",
+        -- commit = "d3e3529c23740a5411da3614e1ca3f35eb968fc9",
       }
     end,
     setup = function()
@@ -25,7 +25,9 @@ function M.config()
         },
         hooks = {
           should_block = function(argv)
-            if vim.tbl_contains(argv, "-b") then
+            if vim.tbl_contains(argv, "--embed") or vim.tbl_contains(argv, "--headless") then
+              return false
+            elseif vim.tbl_contains(argv, "-b") then
               log:warn("Waiting for parent instance to return the file.")
 
               return true
