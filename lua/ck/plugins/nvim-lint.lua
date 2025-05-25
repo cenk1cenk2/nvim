@@ -132,6 +132,10 @@ function M.extend_tools()
         if message.range.filename == filename then
           local m = vim.split(message.detail, ":")
 
+          if message.severity == "warning" then
+            message.severity = vim.diagnostic.severity.WARN
+          end
+
           table.insert(diagnostics, {
             source = "tfvalidate",
             severity = message.severity,
