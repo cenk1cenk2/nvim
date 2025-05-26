@@ -25,7 +25,7 @@ function M.config()
         },
         hooks = {
           should_block = function(argv)
-            if vim.tbl_contains(argv, "--embed") or vim.tbl_contains(argv, "--headless") then
+            if vim.tbl_contains(argv, "--headless") then
               return false
             elseif vim.tbl_contains(argv, "-b") then
               log:warn("Waiting for parent instance to return the file.")
