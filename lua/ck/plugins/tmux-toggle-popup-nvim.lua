@@ -210,11 +210,14 @@ function M.config()
 
             vim.ui.select(stdout, { prompt = "Select Kubernetes context:" }, function(context)
               M._.kubecontext = context
-              log:info("Kubecontext set for current session: %s", context)
 
               if not context then
+                log:info("Kubecontext cleared for current session.")
+
                 return
               end
+
+              log:info("Kubecontext set for current session: %s", context)
 
               M.create_terminal({
                 name = "k9s",
