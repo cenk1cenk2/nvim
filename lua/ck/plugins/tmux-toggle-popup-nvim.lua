@@ -1,5 +1,7 @@
 -- https://github.com/cenk1cenk2/tmux-toggle-popup.nvim
-local M = {}
+local M = {
+  _ = {},
+}
 
 M.name = "cenk1cenk2/tmux-toggle-popup.nvim"
 
@@ -149,24 +151,29 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TERMINAL, "k" }),
           function()
-            local stdout, code = job
-              .create({
-                command = "kubectl",
-                args = { "config", "current-context" },
-                env = {
-                  PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
-                },
-                log = {
-                  on_success = false,
-                },
-              })
-              :sync(3000)
+            local context
+            if not M._.kubecontext then
+              local stdout, code = job
+                .create({
+                  command = "kubectl",
+                  args = { "config", "current-context" },
+                  env = {
+                    PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
+                  },
+                  log = {
+                    on_success = false,
+                  },
+                })
+                :sync(3000)
 
-            if code > 0 then
-              error("Can not fetch current Kubernetes context.")
+              if code > 0 then
+                error("Can not fetch current Kubernetes context.")
+              end
+
+              context = table.concat(stdout, "")
+            else
+              context = M._.kubecontext
             end
-
-            local context = table.concat(stdout, "")
 
             M.create_terminal({
               name = "k9s",
@@ -200,6 +207,8 @@ function M.config()
             end
 
             vim.ui.select(stdout, { prompt = "Select Kubernetes context:" }, function(context)
+              M._.kubecontext = context
+
               if not context then
                 return
               end
