@@ -71,7 +71,7 @@ function M.config()
                 return 0.2
               end
 
-              return 50
+              return 75
             end,
           },
           top = {
