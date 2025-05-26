@@ -23,6 +23,9 @@ function M.config()
                   module = "blink-copilot",
                   score_offset = 100,
                   async = true,
+                  opts = {
+                    kind_icon = nvim.ui.icons.misc.Robot,
+                  },
                 }
 
                 local cb = c.sources.default
