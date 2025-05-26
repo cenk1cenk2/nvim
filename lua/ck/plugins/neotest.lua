@@ -92,11 +92,11 @@ function M.config()
         discovery = {
           -- Drastically improve performance in ginormous projects by
           -- only AST-parsing the currently opened buffer.
-          enabled = true,
+          enabled = false,
           -- Number of workers to parse files concurrently.
           -- A value of 0 automatically assigns number based on CPU.
           -- Set to 1 if experiencing lag.
-          concurrent = 0,
+          concurrent = 1,
         },
         running = {
           -- Run tests concurrently when an adapter provides multiple commands to run.
@@ -106,8 +106,6 @@ function M.config()
           -- Enable/disable animation of icons.
           animated = true,
           follow = true,
-        },
-        summary = {
           mappings = {
             expand = { "<CR>", "<2-LeftMouse>" },
             expand_all = "zr",
@@ -260,14 +258,14 @@ function M.config()
           desc = "previous failed test",
         },
         {
-          fn.wk_keystroke({ categories.TESTS, "q" }),
+          fn.wk_keystroke({ categories.TESTS, "x" }),
           function()
             require("neotest").run.stop()
           end,
           desc = "stop nearest test",
         },
         {
-          fn.wk_keystroke({ categories.TESTS, "Q" }),
+          fn.wk_keystroke({ categories.TESTS, "X" }),
           function()
             require("neotest").run.stop({ vim.fn.expand("%") })
           end,
@@ -298,9 +296,17 @@ function M.config()
           mode = { "n", "v" },
         },
         {
+          fn.wk_keystroke({ categories.TESTS, "Q" }),
+          function()
+            vim.cmd([[Lazy reload neotest]])
+          end,
+          desc = "reload plugin",
+        },
+        {
           fn.wk_keystroke({ categories.TESTS, categories.LOGS }),
           group = "logs",
         },
+
         {
           fn.wk_keystroke({ categories.TESTS, categories.LOGS, "o" }),
           function()
