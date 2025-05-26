@@ -173,6 +173,8 @@ function M.config()
               context = table.concat(stdout, "")
             else
               context = M._.kubecontext
+
+              log:info("Overwriting kubecontext with local state: %s", context)
             end
 
             M.create_terminal({
@@ -208,6 +210,7 @@ function M.config()
 
             vim.ui.select(stdout, { prompt = "Select Kubernetes context:" }, function(context)
               M._.kubecontext = context
+              log:info("Kubecontext set for current session: %s", context)
 
               if not context then
                 return
