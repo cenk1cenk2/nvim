@@ -256,7 +256,7 @@ function M.fix_current()
 end
 
 function M.remove_unused_imports()
-  return M.call_clients_for_code_action({ "source.removeUnusedImports" })
+  return M.call_clients_for_code_action({ "source.removeUnusedImports", "source.removeUnused.ts" })
 end
 
 function M.add_missing_imports()
