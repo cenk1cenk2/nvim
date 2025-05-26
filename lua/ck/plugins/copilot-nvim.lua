@@ -13,14 +13,14 @@ function M.config()
         cmd = { "Copilot" },
         dependencies = {
           {
-            -- https://github.com/giuxtaposition/blink-cmp-copilot
-            "giuxtaposition/blink-cmp-copilot",
+            -- https://github.com/fang2hou/blink-copilot
+            "fang2hou/blink-copilot",
             enabled = is_enabled(require("ck.plugins.blink-cmp").name) and vim.tbl_contains(nvim.lsp.ai.copilot.completion.provider, "cmp"),
             init = function()
               require("ck.setup").setup_callback(require("ck.plugins.blink-cmp").name, function(c)
                 c.sources.providers.copilot = {
                   name = "copilot",
-                  module = "blink-cmp-copilot",
+                  module = "blink-copilot",
                   score_offset = 100,
                   async = true,
                 }
