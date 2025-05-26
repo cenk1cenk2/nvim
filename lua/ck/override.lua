@@ -101,7 +101,7 @@ nvim.lsp.servers = {
   "tailwindcss",
   "terraformls",
   "taplo",
-  "ts_ls",
+  "vtsls",
   "typos_lsp",
   "vale",
   "vale_ls",
