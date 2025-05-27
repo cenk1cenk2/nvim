@@ -15,6 +15,12 @@ function M.config()
         event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
+    setup = function()
+      return {}
+    end,
+    on_setup = function(config)
+      require("copilot-lsp").setup(config)
+    end,
     on_done = function()
       vim.g.copilot_nes_debounce = nvim.lsp.ai.copilot.nes.debounce
       -- https://github.com/copilotlsp-nvim/copilot-lsp/issues/8
