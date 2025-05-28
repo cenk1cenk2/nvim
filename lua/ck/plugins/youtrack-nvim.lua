@@ -23,6 +23,7 @@ function M.config()
       ---@type youtrack.Config
       return {
         log_level = require("ck.log"):to_nvim_level(),
+        -- log_level = vim.log.levels.DEBUG,
         url = vim.env["YOUTRACK_URL"],
         token = vim.env["YOUTRACK_TOKEN"],
         queries = {
@@ -48,6 +49,13 @@ function M.config()
             require("youtrack").get_issues()
           end,
           desc = "get youtrack issues",
+        },
+        {
+          fn.wk_keystroke({ categories.ISSUES, "o" }),
+          function()
+            require("youtrack").get_issue()
+          end,
+          desc = "get last opened issue",
         },
         {
           fn.wk_keystroke({ categories.ISSUES, "l" }),
