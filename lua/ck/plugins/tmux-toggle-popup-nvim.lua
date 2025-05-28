@@ -205,13 +205,13 @@ function M.config()
               :sync(3000)
 
             if code > 0 then
-              error("Can not fetch availabe Kubernetes contexts.")
+              error("Can not fetch available Kubernetes contexts.")
             end
 
-            vim.ui.select(vim.list_extend({ "_reset" }, stdout), { prompt = "Select Kubernetes context:" }, function(context)
+            vim.ui.select(vim.list_extend({ "reset" }, stdout), { prompt = "Select Kubernetes context:" }, function(context)
               M._.kubecontext = context
 
-              if not context or context == "_reset" then
+              if not context or context == "reset" then
                 M._.kubecontext = nil
                 log:info("Kubecontext cleared for current session.")
 
