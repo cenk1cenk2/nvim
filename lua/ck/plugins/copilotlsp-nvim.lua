@@ -19,12 +19,13 @@ function M.config()
       return {}
     end,
     on_setup = function(config)
-      require("copilot-lsp").setup(config)
-    end,
-    on_done = function()
       vim.g.copilot_nes_debounce = nvim.lsp.ai.copilot.nes.debounce
       -- https://github.com/copilotlsp-nvim/copilot-lsp/issues/8
       vim.g.copilot_nes_auto_suggest = nvim.lsp.ai.copilot.nes.auto_suggest
+
+      require("copilot-lsp").setup(config)
+    end,
+    on_done = function()
       vim.lsp.config("copilot_ls", {
         settings = {
           github = {
