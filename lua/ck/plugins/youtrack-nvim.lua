@@ -33,7 +33,7 @@ function M.config()
           },
         },
         issues = {
-          fields = { "State", "Priority", "Subsystem", "Type", "Estimation", "Spent time", "Timer" },
+          fields = { "State", "Type", "Priority", "Subsystem", "Estimation", "Spent time", "Timer" },
         },
         issue = {},
       }
