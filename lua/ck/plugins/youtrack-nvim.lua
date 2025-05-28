@@ -58,6 +58,13 @@ function M.config()
           desc = "toggle last opened issue",
         },
         {
+          fn.wk_keystroke({ categories.ISSUES, "Q" }),
+          function()
+            require("youtrack").reset_last_issue()
+          end,
+          desc = "reset last issue",
+        },
+        {
           fn.wk_keystroke({ categories.ISSUES, "l" }),
           function()
             require("youtrack").get_issues({ query = "#Unresolved sort by: updated" })
