@@ -46,6 +46,13 @@ function M.config()
         {
           fn.wk_keystroke({ categories.ISSUES, "f" }),
           function()
+            require("youtrack").get_queries()
+          end,
+          desc = "get youtrack saved queries",
+        },
+        {
+          fn.wk_keystroke({ categories.ISSUES, "i" }),
+          function()
             require("youtrack").get_issues()
           end,
           desc = "get youtrack issues",
