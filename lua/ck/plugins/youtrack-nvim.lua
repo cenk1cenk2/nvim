@@ -51,11 +51,11 @@ function M.config()
           desc = "get youtrack issues",
         },
         {
-          fn.wk_keystroke({ categories.ISSUES, "o" }),
+          fn.wk_keystroke({ categories.ISSUES, "t" }),
           function()
             require("youtrack").get_issue()
           end,
-          desc = "get last opened issue",
+          desc = "toggle last opened issue",
         },
         {
           fn.wk_keystroke({ categories.ISSUES, "l" }),
