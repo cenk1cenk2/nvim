@@ -38,7 +38,7 @@ function M.config()
         issue = {},
       }
     end,
-    on_setup = function(c, categories)
+    on_setup = function(c)
       require("youtrack").setup(c)
     end,
     wk = function(_, categories, fn)
