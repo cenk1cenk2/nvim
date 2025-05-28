@@ -26,12 +26,7 @@ function M.config()
         -- log_level = vim.log.levels.DEBUG,
         url = vim.env["YOUTRACK_URL"],
         token = vim.env["YOUTRACK_TOKEN"],
-        queries = {
-          {
-            name = "latest",
-            query = "sort by: updated",
-          },
-        },
+        queries = {},
         issues = {
           fields = { "State", "Type", "Priority", "Subsystem", "Estimation", "Spent time", "Timer" },
         },
@@ -76,14 +71,14 @@ function M.config()
           function()
             require("youtrack").get_issues({ query = "#Unresolved sort by: updated" })
           end,
-          desc = "get latest youtrack issues [unresolved]",
+          desc = "youtrack query: Unresolved [#Unresolved sort by: updated]",
         },
         {
           fn.wk_keystroke({ categories.ISSUES, "L" }),
           function()
             require("youtrack").get_issues({ query = "sort by: updated" })
           end,
-          desc = "get latest youtrack issues [all]",
+          desc = "youtrack query: Recents [sort by: updated]",
         },
         {
           fn.wk_keystroke({ categories.ISSUES, "b" }),
