@@ -42,7 +42,7 @@ function M.config()
         {
           "<M-d>",
           function()
-            require("copilot-lsp.nes.ui")._clear_current_suggestion()
+            require("copilot-lsp.nes.ui").clear_suggestion()
           end,
           desc = "nes: abort",
           mode = { "i", "n", "v" },
