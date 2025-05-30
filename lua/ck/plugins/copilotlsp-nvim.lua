@@ -9,8 +9,6 @@ function M.config()
       ---@type Plugin
       return {
         "copilotlsp-nvim/copilot-lsp",
-        -- TODO: while the given merge request is open
-        -- https://github.com/copilotlsp-nvim/copilot-lsp/pull/37
         event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
