@@ -8,10 +8,9 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        -- "copilotlsp-nvim/copilot-lsp",
+        "copilotlsp-nvim/copilot-lsp",
         -- TODO: while the given merge request is open
         -- https://github.com/copilotlsp-nvim/copilot-lsp/pull/37
-        "bassamsdata/copilot-lsp",
         event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
