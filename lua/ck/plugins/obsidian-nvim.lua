@@ -164,10 +164,6 @@ function M.config()
           vim.ui.open(img)
         end,
 
-        -- Optional, set to true if you use the Obsidian Advanced URI plugin.
-        -- https://github.com/Vinzent03/obsidian-advanced-uri
-        use_advanced_uri = false,
-
         -- Optional, by default commands like `:ObsidianSearch` will attempt to use
         -- telescope.nvim, fzf-lua, fzf.vim, or mini.pick (in that order), and use the
         -- first one they find. You can set this option to tell obsidian.nvim to always use this
