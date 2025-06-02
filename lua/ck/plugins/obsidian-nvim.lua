@@ -168,9 +168,6 @@ function M.config()
         -- https://github.com/Vinzent03/obsidian-advanced-uri
         use_advanced_uri = false,
 
-        -- Optional, set to true to force ':ObsidianOpen' to bring the app to the foreground.
-        open_app_foreground = true,
-
         -- Optional, by default commands like `:ObsidianSearch` will attempt to use
         -- telescope.nvim, fzf-lua, fzf.vim, or mini.pick (in that order), and use the
         -- first one they find. You can set this option to tell obsidian.nvim to always use this
