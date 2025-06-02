@@ -8,7 +8,9 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        "copilotlsp-nvim/copilot-lsp",
+        -- "copilotlsp-nvim/copilot-lsp",
+        -- https://github.com/copilotlsp-nvim/copilot-lsp/pull/40
+        "bassamsdata/copilot-lsp",
         event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
@@ -60,6 +62,14 @@ function M.config()
             require("copilot-lsp.nes").apply_pending_nes()
           end,
           desc = "nes: apply",
+          mode = { "i", "n", "v" },
+        },
+        {
+          "<M-r>",
+          function()
+            require("copilot-lsp.nes.ui").restore_suggestion(vim.api.nvim_get_current_buf())
+          end,
+          desc = "nes: restore suggestion",
           mode = { "i", "n", "v" },
         },
       }
