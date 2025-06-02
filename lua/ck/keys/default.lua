@@ -5,13 +5,6 @@ local log = require("ck.log")
 function M.load()
   require("ck.setup").init({
     keymaps = {
-      -- get rid of marks and instead use registers there
-      {
-        "'",
-        '"',
-        mode = { "n", "v", "x" },
-      },
-
       -- disable help
       {
         "<F1>",
