@@ -41,7 +41,7 @@ function M.config()
         {
           "<M-d>",
           function()
-            require("copilot-lsp.nes.ui").clear_suggestion(vim.api.nvim_get_current_buf())
+            require("copilot-lsp.nes.ui").clear_suggestion(vim.api.nvim_get_current_buf(), 0)
           end,
           desc = "nes: abort",
           mode = { "i", "n", "v" },
@@ -67,7 +67,7 @@ function M.config()
         {
           "<M-r>",
           function()
-            require("copilot-lsp.nes.ui").restore_suggestion(vim.api.nvim_get_current_buf())
+            require("copilot-lsp.nes.ui").restore_suggestion(vim.api.nvim_get_current_buf(), 0)
           end,
           desc = "nes: restore suggestion",
           mode = { "i", "n", "v" },
