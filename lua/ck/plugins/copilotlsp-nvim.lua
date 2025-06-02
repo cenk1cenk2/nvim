@@ -39,7 +39,7 @@ function M.config()
         {
           "<M-d>",
           function()
-            require("copilot-lsp.nes.ui").clear_suggestion()
+            require("copilot-lsp.nes.ui").clear_suggestion(vim.api.nvim_get_current_buf())
           end,
           desc = "nes: abort",
           mode = { "i", "n", "v" },
