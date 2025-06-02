@@ -67,7 +67,7 @@ function M.config()
         {
           "<M-r>",
           function()
-            require("copilot-lsp.nes.ui").restore_suggestion(vim.api.nvim_get_current_buf(), 0)
+            require("copilot-lsp.nes").restore_suggestion()
           end,
           desc = "nes: restore suggestion",
           mode = { "i", "n", "v" },
