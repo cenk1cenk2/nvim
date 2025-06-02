@@ -1,4 +1,4 @@
--- https://github.com/epwalsh/obsidian.nvim
+-- https://github.com/obsidian-nvim/obsidian.nvim
 local M = {}
 
 M.name = "epwalsh/obsidian.nvim"
@@ -8,7 +8,7 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        "epwalsh/obsidian.nvim",
+        "obsidian-nvim/obsidian.nvim",
         event = {
           {
             event = { "BufReadPre", "BufNewFile" },
