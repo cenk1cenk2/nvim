@@ -8,10 +8,7 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        -- TODO: https://github.com/rachartier/tiny-inline-diagnostic.nvim/pull/121
-        -- "rachartier/tiny-inline-diagnostic.nvim",
-        "maor-orchid/tiny-inline-diagnostic.nvim",
-        branch = "patch-1",
+        "rachartier/tiny-inline-diagnostic.nvim",
         -- event = { "LspAttach" },
         event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
