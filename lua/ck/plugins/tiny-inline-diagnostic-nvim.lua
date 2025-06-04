@@ -10,7 +10,7 @@ function M.config()
       return {
         -- TODO: https://github.com/rachartier/tiny-inline-diagnostic.nvim/pull/121
         -- "rachartier/tiny-inline-diagnostic.nvim",
-        "moar-orchid/tiny-inline-diagnostic.nvim",
+        "maor-orchid/tiny-inline-diagnostic.nvim",
         branch = "patch-1",
         -- event = { "LspAttach" },
         event = { "BufReadPost", "BufNewFile", "BufNew" },
