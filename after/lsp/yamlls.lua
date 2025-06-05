@@ -25,7 +25,7 @@ return {
       format = { enable = false },
       schemaStore = { enable = true, url = "https://www.schemastore.org/api/json/catalog.json" },
       schemaDownload = { enable = true },
-      schemas = {
+      schemas = vim.tbl_extend("force", require("schemastore").yaml.schemas(), {
         -- kubernetes = {
         --   "templates/*!(.gitlab-ci).{yml,yaml}",
         --   "workloads/**/*!(kustomization).{yml,yaml}",
@@ -68,7 +68,7 @@ return {
         ["https://json.schemastore.org/json-patch.json"] = {
           "jsonpatch-*.{yml,yaml}",
         },
-      },
+      }),
     },
   },
 }
