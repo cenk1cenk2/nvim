@@ -49,10 +49,10 @@ function M.config()
       return {
         debug = nvim.lsp.ai.debug,
         provider = nvim.lsp.ai.provider.chat,
-        copilot = {
-          model = nvim.lsp.ai.copilot.chat.model,
-        },
         providers = {
+          copilot = {
+            model = nvim.lsp.ai.copilot.chat.model,
+          },
           -- Ollama API Documentation https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
           ["ai.kilic.dev"] = {
             __inherited_from = "ollama",
@@ -69,7 +69,9 @@ function M.config()
             model = nvim.lsp.ai.model.chat,
             stream = true, -- Optional
             -- https://github.com/ollama/ollama/blob/main/docs/modelfile.md#parameter
-            options = nvim.lsp.ai.chat.options,
+            extra_request_body = {
+              options = nvim.lsp.ai.chat.options,
+            },
           },
         },
         web_search_engine = {
