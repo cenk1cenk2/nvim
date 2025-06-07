@@ -52,7 +52,7 @@ function M.config()
         copilot = {
           model = nvim.lsp.ai.copilot.chat.model,
         },
-        vendors = {
+        providers = {
           -- Ollama API Documentation https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
           ["ai.kilic.dev"] = {
             __inherited_from = "ollama",
