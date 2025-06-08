@@ -19,6 +19,7 @@ function M.config()
       fn.add_disabled_filetypes({
         "AvanteSelectedFiles",
         "AvanteInput",
+        "AvanteConfirm",
         "Avante",
       })
 
