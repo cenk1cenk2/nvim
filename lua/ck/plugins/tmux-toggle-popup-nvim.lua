@@ -215,10 +215,27 @@ function M.config()
                 M._.kubecontext = nil
                 log:info("Kubecontext cleared for current session.")
 
-                return
-              end
+                local stdout, code = job
+                  .create({
+                    command = "kubectl",
+                    args = { "config", "current-context" },
+                    env = {
+                      PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
+                    },
+                    log = {
+                      on_success = false,
+                    },
+                  })
+                  :sync(3000)
 
-              log:info("Kubecontext set for current session: %s", context)
+                if code > 0 then
+                  error("Can not fetch current Kubernetes context.")
+                end
+
+                context = table.concat(stdout, "")
+              else
+                log:info("Kubecontext set for current session: %s", context)
+              end
 
               M.create_terminal({
                 name = "k9s",
