@@ -161,7 +161,7 @@ function M.restart_lsp(filter)
   for _, client in pairs(clients) do
     vim.schedule(function()
       -- vim.lsp.stop_client(client.id, true)
-      vim.cmd(("LspRestart %s"):format(client.id))
+      vim.cmd(("LspRestart %s"):format(client.name))
     end)
   end
 
@@ -177,7 +177,7 @@ function M.restart_lsp(filter)
     "Killed LSPs: %s -> %s",
     table.concat(
       vim.tbl_map(function(client)
-        return client.name or client.id
+        return client.name
       end, clients),
       ", "
     ),
