@@ -11,7 +11,7 @@ return {
     "yaml",
     "yaml.gitlab-ci",
     "!yaml.ansible",
-    "!yaml.docker-compose",
+    "!yaml.compose",
   },
   settings = {
     flags = {
@@ -46,8 +46,7 @@ return {
         ["https://raw.githubusercontent.com/argoproj/argo-workflows/master/api/jsonschema/schema.json"] = { "*argocd*.{yml,yaml}" },
         ["http://json.schemastore.org/chart"] = { "Chart.{yml,yaml}" },
         ["https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json"] = {
-          ".gitlab-ci.yml",
-          ".gitlab-ci.yaml",
+          ".gitlab-ci.{yml,yaml}",
         },
         ["https://json.schemastore.org/drone.json"] = { ".drone.yml" },
         ["https://raw.githubusercontent.com/ansible-community/schemas/main/f/ansible-playbook.json"] = {

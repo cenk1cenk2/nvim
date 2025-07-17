@@ -200,7 +200,7 @@ function M.register()
     "svelte",
     "yaml",
     "yaml.ansible",
-    "yaml.docker-compose",
+    "yaml.compose",
     "yaml.gitlab-ci",
     "json",
     "jsonc",

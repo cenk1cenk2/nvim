@@ -31,6 +31,7 @@ function M.setup()
       [".prettierrc"] = "json",
       [".eslintrc"] = "json",
       [".babelrc"] = "json",
+      [".gitlab-ci.yml"] = "yaml.gitlab-ci",
     },
     pattern = {
       ["Dockerfile.*"] = function(path)
@@ -45,7 +46,7 @@ function M.setup()
         if path:find(".*%.gitlab-ci.*$") then
           return "yaml.gitlab-ci"
         elseif path:find(".*compose.*$") then
-          return "yaml.docker-compose"
+          return "yaml.compose"
         elseif
           vim.fs.root(path, { "ansible.cfg", ".ansible-lint", ".vault-password" })
           and not (path:find("environments/") or path:find("vars/") or path:find("group_vars/") or path:find("host_vars/") or path:find("files/") or path:find("templates/"))

@@ -10,14 +10,14 @@ function M.config()
       return {
         "cenk1cenk2/schema-companion.nvim",
         -- dir = "~/development/schema-companion.nvim",
-        ft = { "yaml", "helm" },
+        ft = { "yaml", "helm", "yaml.*" },
       }
     end,
     setup = function()
       ---@type schema_companion.Config
       return {
-        -- log_level = vim.log.levels.DEBUG,
-        log_level = require("ck.log"):to_nvim_level(),
+        log_level = vim.log.levels.DEBUG,
+        -- log_level = require("ck.log"):to_nvim_level(),
         enable_telescope = true,
         -- Built in file matchers
         matchers = {
@@ -44,10 +44,6 @@ function M.config()
             name = "Kubernetes v1.30",
             uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.3-standalone-strict/all.json",
           },
-          {
-            name = "Gitlab CI",
-            uri = "https://gitlab.com/gitlab-org/gitlab/-/raw/master/app/assets/javascripts/editor/schema/ci.json",
-          },
         },
       }
     end,
@@ -56,7 +52,7 @@ function M.config()
     end,
     autocmds = function()
       return {
-        require("ck.modules.autocmds").init_with({ "FileType" }, { "yaml", "helm" }, function(event)
+        require("ck.modules.autocmds").init_with({ "FileType" }, { "yaml", "helm", "yaml.*" }, function(event)
           return {
             keymaps = function(_, fn)
               return {
