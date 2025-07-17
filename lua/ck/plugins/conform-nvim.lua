@@ -225,7 +225,11 @@ function M.register()
     "lua",
   })
 
-  tools.register(METHOD, { "golines", "goimports" }, {
+  -- tools.register(METHOD, { "golines", "goimports" }, {
+  --   "go",
+  -- })
+
+  tools.register(METHOD, { "golangci-lint" }, {
     "go",
   })
 
@@ -262,19 +266,6 @@ function M.extend_tools()
   conform.formatters["golines"] = vim.tbl_deep_extend("force", require("conform.formatters.golines"), {
     prepend_args = { "-m", "180" },
   })
-
-  conform.formatters["golangci-lint"] = {
-    meta = {
-      url = "https://github.com/golangci/golangci-lint",
-      description = "Format Go code with golangci-lint.",
-    },
-    command = "golangci-lint",
-    args = {
-      "run",
-      "--fix",
-    },
-    stdin = true,
-  }
 
   conform.formatters["trim_multiple_newlines"] = {
     meta = {

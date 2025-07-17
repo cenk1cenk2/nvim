@@ -118,9 +118,9 @@ nvim.lsp.packages = vim.list_extend({
   --- formatters/linters
   "ansible-lint",
   "beautysh",
-  "goimports",
+  -- "goimports",
   "golangci-lint",
-  "golines",
+  -- "golines",
   "hadolint",
   "markdownlint",
   "prettierd",
