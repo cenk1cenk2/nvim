@@ -201,7 +201,9 @@ function M.components()
         bg = nvim.ui.colors.bg[300],
       },
       cond = function()
-        return conditions.hide_in_width() and vim.tbl_contains({ "yaml", "helm" }, vim.api.nvim_get_option_value("ft", { buf = 0 })) and is_loaded("schema-companion")
+        return conditions.hide_in_width()
+          and vim.tbl_contains({ "yaml", "helm", "yaml.compose", "yaml.gitlab-ci" }, vim.api.nvim_get_option_value("ft", { buf = 0 }))
+          and is_loaded("schema-companion")
       end,
     },
     diagnostics = {
