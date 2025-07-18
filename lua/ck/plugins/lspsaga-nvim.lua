@@ -58,10 +58,10 @@ function M.config()
         end
       end
 
-      ---@diagnostic disable-next-line: duplicate-set-field
-      nvim.lsp.fn.show_line_diagnostics = function()
-        vim.cmd("Lspsaga show_line_diagnostics")
-      end
+      -- ---@diagnostic disable-next-line: duplicate-set-field
+      -- nvim.lsp.fn.show_line_diagnostics = function()
+      --   vim.cmd("Lspsaga show_line_diagnostics")
+      -- end
 
       ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.incoming_calls = function()
@@ -125,7 +125,9 @@ function M.config()
           twice_into = true,
           show_code_action = false,
           show_source = true,
-          max_width = 120,
+          extend_relatedInformation = true,
+          -- wrap_long_lines = true,
+          -- max_width = 120,
           keys = {
             exec_action = "o",
             quit = "q",
