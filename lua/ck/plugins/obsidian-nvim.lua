@@ -31,6 +31,7 @@ function M.config()
           },
         },
         log_level = vim.log.levels.INFO,
+        legacy_commands = false,
 
         daily_notes = {
           -- Optional, if you keep daily notes in a separate directory.
