@@ -17,30 +17,7 @@ function M.config()
         },
         dependencies = { "nvim-lua/plenary.nvim" },
         cmd = {
-          "ObsidianCheck",
-          "ObsidianToggleCheckbox",
-          "ObsidianToday",
-          "ObsidianYesterday",
-          "ObsidianTomorrow",
-          "ObsidianDailies",
-          "ObsidianNew",
-          "ObsidianOpen",
-          "ObsidianBacklinks",
-          "ObsidianSearch",
-          "ObsidianTags",
-          "ObsidianTemplate",
-          "ObsidianNewFromTemplate",
-          "ObsidianQuickSwitch",
-          "ObsidianLinkNew",
-          "ObsidianLink",
-          "ObsidianLinks",
-          "ObsidianFollowLink",
-          "ObsidianWorkspace",
-          "ObsidianRename",
-          "ObsidianPasteImg",
-          "ObsidianExtractNote",
-          "ObsidianDebug",
-          "ObsidianTOC",
+          "Obsidian",
         },
       }
     end,
@@ -119,29 +96,6 @@ function M.config()
 
         -- Optional, configure key mappings. These are the defaults. If you don't want to set any keymappings this
         -- way then set 'mappings = {}'.
-        mappings = {
-          -- Overrides the 'gf' mapping to work on markdown/wiki links within your vault.
-          ["gf"] = {
-            action = function()
-              return require("obsidian").util.gf_passthrough()
-            end,
-            opts = { noremap = false, expr = true, buffer = true },
-          },
-          -- Toggle check-boxes.
-          -- ["gc"] = {
-          --   action = function()
-          --     return require("obsidian").util.toggle_checkbox()
-          --   end,
-          --   opts = { buffer = true },
-          -- },
-          -- Smart action depending on context, either follow link or toggle checkbox.
-          ["<C-CR>"] = {
-            action = function()
-              return require("obsidian").util.smart_action()
-            end,
-            opts = { buffer = true, expr = true },
-          },
-        },
 
         templates = {
           subdir = "Templates",
@@ -246,7 +200,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "p" }),
           function()
-            vim.cmd([[ObsidianQuickSwitch]])
+            vim.cmd([[Obsidian quick_switch]])
           end,
           desc = "find notes",
         },
@@ -254,7 +208,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "s" }),
           function()
-            vim.cmd([[ObsidianTOC]])
+            vim.cmd([[Obsidian toc]])
           end,
           desc = "find in toc",
         },
@@ -262,7 +216,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "f" }),
           function()
-            vim.cmd([[ObsidianSearch]])
+            vim.cmd([[Obsidian search]])
           end,
           desc = "search",
         },
@@ -270,7 +224,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "F" }),
           function()
-            vim.cmd([[ObsidianTags]])
+            vim.cmd([[Obsidian tags]])
           end,
           desc = "search with tags",
         },
@@ -299,7 +253,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "d", "t" }),
           function()
-            vim.cmd([[ObsidianToday]])
+            vim.cmd([[Obsidian today]])
           end,
           desc = "today",
         },
@@ -307,7 +261,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "d", "n" }),
           function()
-            vim.cmd([[ObsidianTomorrow]])
+            vim.cmd([[Obsidian tomorrow]])
           end,
           desc = "tomorrow",
         },
@@ -315,7 +269,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "d", "p" }),
           function()
-            vim.cmd([[ObsidianYesterday]])
+            vim.cmd([[Obsidian yesterday]])
           end,
           desc = "yesterday",
         },
@@ -323,7 +277,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "d", "f" }),
           function()
-            vim.cmd([[ObsidianDailies]])
+            vim.cmd([[Obsidian dailies]])
           end,
           desc = "find",
         },
@@ -331,7 +285,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "o" }),
           function()
-            vim.cmd([[ObsidianOpen]])
+            vim.cmd([[Obsidian open]])
           end,
           desc = "open in gui",
         },
@@ -339,7 +293,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "l" }),
           function()
-            vim.cmd([[ObsidianLinks]])
+            vim.cmd([[Obsidian links]])
           end,
           desc = "links",
         },
@@ -347,7 +301,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "L" }),
           function()
-            vim.cmd([[ObsidianBacklinks]])
+            vim.cmd([[Obsidian backlinks]])
           end,
           desc = "backlinks",
         },
@@ -355,7 +309,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "l" }),
           function()
-            vim.cmd([[ObsidianLinkNew]])
+            vim.cmd([[Obsidian link_new]])
           end,
           desc = "link this with new",
           mode = { "v" },
@@ -364,7 +318,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "c" }),
           function()
-            vim.cmd([[ObsidianNew]])
+            vim.cmd([[Obsidian new]])
           end,
           desc = "create new note",
         },
@@ -372,7 +326,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "c" }),
           function()
-            vim.cmd([[ObsidianExtractNote]])
+            vim.cmd([[Obsidian extract_note]])
           end,
           desc = "extract note",
           mode = { "v" },
@@ -381,7 +335,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "w" }),
           function()
-            vim.cmd([[ObsidianWorkspace]])
+            vim.cmd([[Obsidian workspace]])
           end,
           desc = "select workspace",
         },
@@ -389,7 +343,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "P" }),
           function()
-            vim.cmd(("ObsidianPasteImg %s"):format(join_paths(require("ck.utils.fs").get_project_buffer_dirpath(), "assets/", ("%s.png"):format(os.date("%Y%m%dT%H%M%S")))))
+            vim.cmd(("Obsidian paste_img %s"):format(join_paths(require("ck.utils.fs").get_project_buffer_dirpath(), "assets/", ("%s.png"):format(os.date("%Y%m%dT%H%M%S")))))
           end,
           desc = "paste image from clipboard",
         },
@@ -397,7 +351,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "t" }),
           function()
-            vim.cmd([[ObsidianNewFromTemplate]])
+            vim.cmd([[Obsidian new_from_template]])
           end,
           desc = "new from template",
         },
@@ -405,7 +359,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "T" }),
           function()
-            vim.cmd([[ObsidianTemplate]])
+            vim.cmd([[Obsidian template]])
           end,
           desc = "paste from template",
         },
@@ -413,7 +367,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "m" }),
           function()
-            vim.cmd([[ObsidianRename]])
+            vim.cmd([[Obsidian rename]])
           end,
           desc = "rename note",
         },
@@ -421,10 +375,39 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "M" }),
           function()
-            vim.cmd([[ObsidianRename --dry-run]])
+            vim.cmd([[Obsidian rename --dry-run]])
           end,
           desc = "rename note [dry-run]",
         },
+      }
+    end,
+    autocmds = function()
+      return {
+        require("ck.modules.autocmds").init_with({ "FileType" }, { "markdown" }, function(event)
+          return {
+            keymaps = function(_, fn)
+              return {
+                {
+                  "gf",
+                  function()
+                    return require("obsidian").util.gf_passthrough()
+                  end,
+                  desc = "go to file",
+                  buffer = event.buf,
+                  expr = true,
+                },
+                {
+                  fn.local_keystroke({ "t" }),
+                  function()
+                    return require("obsidian").util.smart_action()
+                  end,
+                  desc = "obsidian smart action",
+                  buffer = event.buf,
+                },
+              }
+            end,
+          }
+        end),
       }
     end,
   })
@@ -436,13 +419,13 @@ function M.note_from_template(root, title, template)
 
   if client:resolve_note(file) then
     require("ck.log"):info("Opening note: %s", file)
-    vim.cmd(([[ObsidianQuickSwitch %s]]):format(file))
+    vim.cmd(([[Obsidian quick_switch %s]]):format(file))
 
     return
   end
 
   require("ck.log"):info("Creating note: %s", file)
-  vim.cmd(([[ObsidianNew %s]]):format(file))
+  vim.cmd(([[Obsidian new %s]]):format(file))
 
   local bufnr = vim.api.nvim_get_current_buf()
 
@@ -450,7 +433,7 @@ function M.note_from_template(root, title, template)
   if #lines == 2 and lines[1] == ("# %s"):format(title) then
     require("ck.log"):info("Templating note: %s from %s", file, template)
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, {})
-    vim.cmd(([[ObsidianTemplate %s]]):format(template))
+    vim.cmd(([[Obsidian template %s]]):format(template))
   end
 
   vim.api.nvim_buf_set_name(bufnr, file)
