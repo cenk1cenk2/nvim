@@ -297,32 +297,6 @@ function M.setup()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.ISSUES, "m" }),
-          function()
-            local lines = M.get_selection()
-
-            M.run_buffer_clipboard_command(lines, {
-              command = "jira-printer",
-              args = { "-i", "markdown", "-o", "jira" },
-            })
-          end,
-          desc = "convert markdown to jira",
-          mode = { "n", "v" },
-        },
-        {
-          fn.wk_keystroke({ categories.ISSUES, "M" }),
-          function()
-            local lines = M.get_selection()
-
-            M.run_buffer_clipboard_command(lines, {
-              command = "jira-printer",
-              args = { "-i", "jira", "-o", "markdown" },
-            })
-          end,
-          desc = "convert jira to markdown",
-          mode = { "n", "v" },
-        },
-        {
           fn.wk_keystroke({ categories.RUN, "d" }),
           function()
             local lines = M.get_selection()
