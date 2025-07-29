@@ -121,7 +121,11 @@ function M.config()
               async = true,
               opts = {
                 prefix_min_len = 3,
-                project_root_fallback = false,
+                backend = {
+                  ripgrep = {
+                    project_root_fallback = false,
+                  },
+                },
               },
             },
             zsh = {
