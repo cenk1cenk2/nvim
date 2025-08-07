@@ -115,7 +115,7 @@ function M.config()
           enabled = true,
         },
         scroll = {
-          enabled = true,
+          enabled = false,
           animate = {
             duration = { step = 7.5, total = 125 },
             easing = "linear",
