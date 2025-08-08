@@ -404,9 +404,17 @@ function M.config()
                 {
                   fn.local_keystroke({ "t" }),
                   function()
-                    return require("obsidian").util.smart_action()
+                    return require("obsidian.api").smart_action()
                   end,
                   desc = "obsidian smart action",
+                  buffer = event.buf,
+                },
+                {
+                  fn.local_keystroke({ "c" }),
+                  function()
+                    return require("obsidian.api").toggle_checkbox()
+                  end,
+                  desc = "obsidian toggle checkbox",
                   buffer = event.buf,
                 },
               }
