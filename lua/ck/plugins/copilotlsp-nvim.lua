@@ -4,7 +4,7 @@ local M = {}
 M.name = "copilotlsp-nvim/copilot-lsp"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, true, {
+  require("ck.setup").define_plugin(M.name, nvim.lsp.ai.nes.enabled, {
     plugin = function()
       ---@type Plugin
       return {
