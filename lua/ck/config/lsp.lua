@@ -6,9 +6,6 @@ return {
       options = {},
       rag = false,
     },
-    nes = {
-      enabled = false,
-    },
     completion = {
       number_of_completions = 1,
       context_window = 2048,
@@ -63,6 +60,7 @@ return {
       filetypes = {},
       debounce = 50,
       nes = {
+        enabled = false,
         debounce = 50,
         auto_suggest = true,
       },
