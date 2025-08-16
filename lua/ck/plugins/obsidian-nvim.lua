@@ -395,7 +395,7 @@ function M.config()
                 {
                   "gf",
                   function()
-                    return require("obsidian").util.gf_passthrough()
+                    return require("obsidian.api").follow_link({})
                   end,
                   desc = "go to file",
                   buffer = event.buf,
