@@ -20,6 +20,7 @@ function M.config()
         "AvanteSelectedFiles",
         "AvanteInput",
         "AvanteConfirm",
+        "AvanteTodos",
         "Avante",
       })
 
@@ -27,7 +28,7 @@ function M.config()
         vim.list_extend(c.right, {
           {
             title = "Avante",
-            ft = { "Avante", "AvanteSelectedFiles", "AvanteInput" },
+            ft = { "Avante", "AvanteSelectedFiles", "AvanteInput", "AvanteTodos" },
             size = {
               width = function()
                 if vim.o.columns < 180 then
