@@ -84,6 +84,12 @@ function M.config()
         },
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes({
+        "blink-cmp-menu",
+        "blink-cmp-documentation",
+      })
+    end,
     setup = function()
       ---@type blink.cmp.Config
       return {
