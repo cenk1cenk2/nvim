@@ -21,6 +21,8 @@ function M.config()
         "AvanteInput",
         "AvanteConfirm",
         "AvanteTodos",
+        "AvanteClear",
+        "AvanteStop",
         "Avante",
       })
 
@@ -168,6 +170,30 @@ function M.config()
     wk = function(_, categories, fn)
       ---@type WKMappings
       return {
+        {
+          fn.wk_keystroke({ categories.COPILOT, "q" }),
+          function()
+            vim.cmd("AvanteClear")
+          end,
+          desc = "clear [avante]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "Q" }),
+          function()
+            require("avante.api").stop()
+          end,
+          desc = "stop [avante]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "f" }),
+          function()
+            require("avante.api").select_history()
+          end,
+          desc = "select history [avante]",
+          mode = { "n", "v" },
+        },
         {
           fn.wk_keystroke({ categories.COPILOT, "c" }),
           function()
