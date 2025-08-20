@@ -56,6 +56,8 @@ function M.register()
   tools.register(METHOD, "protolint", { "proto" })
   -- lsp_utils.register(METHOD, "cspell", { "markdown", "text", "gitcommit" })
   tools.register(METHOD, "checkmake", { "make" })
+
+  tools.register(METHOD, "sqruff", { "sql", "mysql", "plsql" })
 end
 
 function M.extend_tools()

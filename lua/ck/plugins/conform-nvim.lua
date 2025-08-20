@@ -221,23 +221,17 @@ function M.register()
   --   "svelte",
   -- })
 
-  tools.register(METHOD, "stylua", {
-    "lua",
-  })
+  tools.register(METHOD, "stylua", { "lua" })
 
   -- tools.register(METHOD, { "golines", "goimports" }, {
   --   "go",
   -- })
 
-  tools.register(METHOD, { "golangci-lint" }, {
-    "go",
-  })
+  tools.register(METHOD, { "golangci-lint" }, { "go" })
 
-  tools.register(METHOD, "shfmt", {
-    "sh",
-    "bash",
-    "zsh",
-  })
+  tools.register(METHOD, "sqruff", { "sql", "mysql", "plsql" })
+
+  tools.register(METHOD, "shfmt", { "sh", "bash", "zsh" })
   -- lsp_utils.register(METHOD, "beautysh", {
   --   "sh",
   --   "bash",

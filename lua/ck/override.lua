@@ -120,9 +120,7 @@ nvim.lsp.packages = vim.list_extend({
   --- formatters/linters
   "ansible-lint",
   "beautysh",
-  -- "goimports",
   "golangci-lint",
-  -- "golines",
   "hadolint",
   "markdownlint",
   "prettierd",
@@ -131,10 +129,13 @@ nvim.lsp.packages = vim.list_extend({
   "shellcheck",
   "shellharden",
   "shfmt",
+  "sqruff",
   "stylua",
   "tfsec",
   -- "djlint",
   -- "eslint_d",
+  -- "goimports",
+  -- "golines",
   -- "mypy",
   -- "tflint",
 
