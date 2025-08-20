@@ -203,6 +203,14 @@ function M.config()
           mode = { "n", "v" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "C" }),
+          function()
+            require("avante.api").ask({ new_chat = true })
+          end,
+          desc = "toggle chat with new [avante]",
+          mode = { "n", "v" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "e" }),
           function()
             require("avante.api").edit()
