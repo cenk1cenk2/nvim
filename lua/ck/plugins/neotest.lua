@@ -109,7 +109,7 @@ function M.config()
           mappings = {
             expand = { "<CR>", "<2-LeftMouse>" },
             expand_all = "zr",
-            output = "K",
+            output = "O",
             short = "S",
             attach = "a",
             jumpto = "o",
