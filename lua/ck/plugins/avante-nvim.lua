@@ -4,7 +4,7 @@ local M = {}
 M.name = "yetone/avante.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, true, {
+  require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
       ---@type Plugin
       return {
@@ -42,6 +42,22 @@ function M.config()
             },
           },
         })
+
+        return c
+      end)
+
+      require("ck.setup").setup_callback(require("ck.plugins.blink-cmp").name, function(c)
+        c.sources.providers.avante = {
+          module = "blink-cmp-avante",
+          name = "Avante",
+          opts = {},
+        }
+
+        local cb = c.sources.default
+
+        c.sources.default = function(ctx)
+          return vim.list_extend({ "avante" }, cb(ctx))
+        end
 
         return c
       end)

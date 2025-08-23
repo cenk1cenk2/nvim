@@ -107,7 +107,6 @@ function M.config()
               "path",
               "buffer",
               "ripgrep",
-              "avante",
             }
           end,
           per_filetype = {},
@@ -164,11 +163,6 @@ function M.config()
               module = "blink.compat.source",
               async = true,
               name = "fuzzy_buffer",
-            },
-            avante = {
-              module = "blink-cmp-avante",
-              name = "Avante",
-              opts = {},
             },
           },
         },

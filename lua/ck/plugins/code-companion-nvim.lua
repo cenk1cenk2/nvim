@@ -4,7 +4,7 @@ local M = {}
 M.name = "olimorris/codecompanion.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, false, {
+  require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
       ---@type Plugin
       return {
@@ -25,7 +25,7 @@ function M.config()
             size = {
               width = function()
                 if vim.o.columns < 180 then
-                  return 0.5
+                  return 0.3
                 end
 
                 return 120
@@ -40,35 +40,121 @@ function M.config()
     setup = function(_, fn)
       return {
         opts = {
-          log_level = "DEBUG",
+          log_level = require("ck.log"):to_nvim_level(),
         },
         strategies = {
           chat = {
-            adapter = "copilot",
-            keymaps = {
-              send = {
-                modes = { n = "<C-s>", i = "<C-s>" },
-              },
-              close = {
-                modes = { n = "<C-c>", i = "<C-c>" },
-              },
+            adapter = {
+              name = "copilot",
+              model = nvim.lsp.ai.copilot.chat.model,
             },
             window = {
               border = nvim.ui.border,
+              numberwidth = 0,
             },
-            start_in_insert_mode = true,
-            show_settings = true,
+            show_context = true, -- Show context (from slash commands and variables) in the chat buffer?
+            fold_context = false, -- Fold context in the chat buffer?
+
+            show_settings = true, -- Show LLM settings at the top of the chat buffer?show_tools_processing = true, -- Show the loading message when tools are being executed?
+            show_token_count = true, -- Show the token count for each response?
+            start_in_insert_mode = true, -- Open the chat buffer in insert mode?
+            show_tools_processing = true, -- Show the loading message when tools are being executed?
+            tools = {
+              opts = {
+                auto_submit_errors = true, -- Send any errors to the LLM automatically?
+                auto_submit_success = true, -- Send any successful output to the LLM automatically?
+                default_tools = { "full_stack_dev" },
+              },
+            },
+            keymaps = {
+              options = {
+                modes = { n = "?" },
+              },
+              completion = {
+                modes = { i = "<C-_>" },
+              },
+              send = {
+                modes = {
+                  n = { "<CR>", "<C-s>" },
+                  i = "<C-s>",
+                },
+              },
+              close = {
+                modes = {
+                  n = "<C-c>",
+                  i = "<C-c>",
+                },
+              },
+              regenerate = {
+                modes = { n = fn.local_keystroke({ "r" }) },
+              },
+              stop = {
+                modes = { n = fn.local_keystroke({ "Q" }) },
+              },
+              clear = {
+                modes = { n = fn.local_keystroke({ "q" }) },
+              },
+              codeblock = {
+                modes = { n = fn.local_keystroke({ "C" }) },
+              },
+              yank_code = {
+                modes = { n = fn.local_keystroke({ "y" }) },
+              },
+              pin = {
+                modes = { n = fn.local_keystroke({ "p" }) },
+              },
+              watch = {
+                modes = { n = fn.local_keystroke({ "w" }) },
+              },
+              next_chat = {
+                modes = { n = "}" },
+              },
+              previous_chat = {
+                modes = { n = "{" },
+              },
+              next_header = {
+                modes = { n = "]]" },
+              },
+              previous_header = {
+                modes = { n = "[[" },
+              },
+              change_adapter = {
+                modes = { n = fn.local_keystroke({ "a" }) },
+              },
+              fold_code = {
+                modes = { n = fn.local_keystroke({ "z" }) },
+              },
+              debug = {
+                modes = { n = fn.local_keystroke({ "d" }) },
+              },
+              system_prompt = {
+                modes = { n = fn.local_keystroke({ "s" }) },
+              },
+              auto_tool_mode = {
+                modes = { n = fn.local_keystroke({ "T" }) },
+              },
+              goto_file_under_cursor = {
+                modes = { n = "gf" },
+              },
+              copilot_stats = {
+                modes = { n = fn.local_keystroke({ "S" }) },
+              },
+              super_diff = {
+                modes = { n = fn.local_keystroke({ "D" }) },
+              },
+            },
           },
           inline = {
-            adapter = "copilot",
+            adapter = {
+              name = "copilot",
+              model = nvim.lsp.ai.copilot.chat.model,
+            },
             keymaps = {
               accept_change = {
                 modes = { n = fn.local_keystroke({ "ca" }) },
-                description = "Accept the suggested change",
               },
               reject_change = {
                 modes = { n = fn.local_keystroke({ "cr" }) },
-                description = "Reject the suggested change",
               },
             },
           },
@@ -84,19 +170,32 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "c" }),
           function()
-            vim.cmd([[CodeCompanionChat toggle]])
+            require("codecompanion").toggle()
           end,
           desc = "toggle chat [codecompanion]",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "r" }),
+          fn.wk_keystroke({ categories.COPILOT, "l" }),
           function()
-            require("avante.api").refresh()
+            require("codecompanion").last_chat()
           end,
-          desc = "refresh [avante]",
-          mode = { "n" },
+          desc = "select history [codecompanion]",
+          mode = { "n", "v" },
         },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "e" }),
+          function()
+            require("codecompanion").add({})
+          end,
+          desc = "add selected code [codecompanion]",
+          mode = { "n", "v" },
+        },
+      }
+    end,
+    autocmds = function()
+      return {
+        require("ck.modules.autocmds").set_view_buffer({ "codecompanion" }),
       }
     end,
   })
