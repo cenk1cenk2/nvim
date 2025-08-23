@@ -31,20 +31,28 @@ function M.config()
       return {
         -- log_level = vim.log.levels.DEBUG,
         log_level = require("ck.log"):to_nvim_level(),
-        env = {
-          VISUAL = function()
-            return vim.env["VISUAL"]
-          end,
-          EDITOR = function()
-            return vim.env["EDITOR"]
-          end,
-          GIT_EDITOR = function()
-            return vim.env["GIT_EDITOR"]
-          end,
-          EDITOR_BLOCK = function()
-            return vim.env["EDITOR_BLOCK"]
-          end,
-        },
+        env = function()
+          local env = {}
+          for k, v in pairs(vim.fn.environ()) do
+            if
+              vim.tbl_contains({
+                "VISUAL",
+                "EDITOR",
+                "GIT_EDITOR",
+                "EDITOR_BLOCK",
+                "KUBECONFIG",
+                "KUBECONFIG_FILE",
+                "AWS_REGION",
+                "AWS_DEFAULT_REGION",
+                "AWS_PROFILE",
+              }, k)
+            then
+              env[k] = v
+            end
+          end
+
+          return env
+        end,
         on_init = {
           "set exit-empty on",
           "set -g status on",
