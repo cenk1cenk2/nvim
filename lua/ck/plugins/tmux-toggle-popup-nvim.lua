@@ -32,23 +32,20 @@ function M.config()
         -- log_level = vim.log.levels.DEBUG,
         log_level = require("ck.log"):to_nvim_level(),
         env = function()
+          local all = vim.fn.environ()
           local env = {}
-          for k, v in pairs(vim.fn.environ()) do
-            if
-              vim.tbl_contains({
-                "VISUAL",
-                "EDITOR",
-                "GIT_EDITOR",
-                "EDITOR_BLOCK",
-                "KUBECONFIG",
-                "KUBECONFIG_FILE",
-                "AWS_REGION",
-                "AWS_DEFAULT_REGION",
-                "AWS_PROFILE",
-              }, k)
-            then
-              env[k] = v
-            end
+          for _, k in pairs({
+            "VISUAL",
+            "EDITOR",
+            "GIT_EDITOR",
+            "EDITOR_BLOCK",
+            "KUBECONFIG",
+            "KUBECONFIG_FILE",
+            "AWS_REGION",
+            "AWS_DEFAULT_REGION",
+            "AWS_PROFILE",
+          }) do
+            env[k] = all[k]
           end
 
           return env
