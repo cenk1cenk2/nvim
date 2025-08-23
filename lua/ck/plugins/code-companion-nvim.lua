@@ -46,19 +46,14 @@ function M.config()
           chat = {
             adapter = {
               name = "copilot",
-              model = nvim.lsp.ai.copilot.chat.model,
+              model = "gpt-5",
+              -- TODO: wonder tools are not working with the other model?
+              -- model = nvim.lsp.ai.copilot.chat.model,
             },
             window = {
               border = nvim.ui.border,
               numberwidth = 0,
             },
-            show_context = true, -- Show context (from slash commands and variables) in the chat buffer?
-            fold_context = false, -- Fold context in the chat buffer?
-
-            show_settings = true, -- Show LLM settings at the top of the chat buffer?show_tools_processing = true, -- Show the loading message when tools are being executed?
-            show_token_count = true, -- Show the token count for each response?
-            start_in_insert_mode = true, -- Open the chat buffer in insert mode?
-            show_tools_processing = true, -- Show the loading message when tools are being executed?
             tools = {
               opts = {
                 auto_submit_errors = true, -- Send any errors to the LLM automatically?
@@ -156,7 +151,22 @@ function M.config()
               reject_change = {
                 modes = { n = fn.local_keystroke({ "cr" }) },
               },
+              always_accept = {
+                modes = { n = fn.local_keystroke({ "cA" }) },
+              },
             },
+          },
+        },
+        display = {
+          chat = {
+            show_header_separator = true,
+            show_context = true, -- Show context (from slash commands and variables) in the chat buffer?
+            fold_context = false, -- Fold context in the chat buffer?
+
+            show_settings = false, -- Show LLM settings at the top of the chat buffer?
+            show_tools_processing = true, -- Show the loading message when tools are being executed?
+            show_token_count = true, -- Show the token count for each response?
+            start_in_insert_mode = true, -- Open the chat buffer in insert mode?
           },
         },
       }
