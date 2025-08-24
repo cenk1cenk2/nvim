@@ -37,7 +37,7 @@ function M.config()
                   return 0.3
                 end
 
-                return 60
+                return 120
               end,
             },
           },
