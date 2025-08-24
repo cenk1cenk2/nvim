@@ -4,7 +4,7 @@ local M = {}
 M.name = "yetone/avante.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, false, {
+  require("ck.setup").define_plugin(M.name, nvim.lsp.ai.chat.provider == "avante", {
     plugin = function()
       ---@type Plugin
       return {

@@ -6,7 +6,7 @@ local log = require("ck.log")
 M.name = "milanglacier/minuet-ai.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, vim.tbl_contains(nvim.lsp.ai.copilot.completion.provider, "minuet"), {
+  require("ck.setup").define_plugin(M.name, vim.tbl_contains(nvim.lsp.ai.completion.provider, "minuet"), {
     plugin = function()
       ---@type Plugin
       return {

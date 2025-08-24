@@ -4,7 +4,7 @@ local M = {}
 M.name = "olimorris/codecompanion.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, true, {
+  require("ck.setup").define_plugin(M.name, nvim.lsp.ai.chat.provider == "codecompanion", {
     plugin = function()
       ---@type Plugin
       return {

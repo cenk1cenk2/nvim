@@ -15,7 +15,7 @@ function M.config()
           {
             -- https://github.com/fang2hou/blink-copilot
             "fang2hou/blink-copilot",
-            enabled = is_enabled(require("ck.plugins.blink-cmp").name) and vim.tbl_contains(nvim.lsp.ai.copilot.completion.provider, "cmp"),
+            enabled = is_enabled(require("ck.plugins.blink-cmp").name) and vim.tbl_contains(nvim.lsp.ai.completion.provider, "cmp"),
             init = function()
               require("ck.setup").setup_callback(require("ck.plugins.blink-cmp").name, function(c)
                 c.sources.providers.copilot = {
@@ -61,7 +61,7 @@ function M.config()
         },
         suggestion = {
           enabled = nvim.lsp.ai.provider.completion == "copilot",
-          auto_trigger = vim.tbl_contains(nvim.lsp.ai.copilot.completion.provider, "inline"),
+          auto_trigger = vim.tbl_contains(nvim.lsp.ai.completion.provider, "inline"),
           debounce = nvim.lsp.ai.copilot.debounce,
           keymap = {
             accept = false,

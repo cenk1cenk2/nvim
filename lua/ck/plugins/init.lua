@@ -47,6 +47,7 @@ local plugins = {
   "minuet-ai-nvim",
   "avante-nvim",
   "copilotlsp-nvim",
+  "claude-code-nvim",
   "code-companion-nvim",
   "aerial-nvim",
   "nvim-treesitter-textobjects",

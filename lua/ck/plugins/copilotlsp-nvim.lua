@@ -29,7 +29,7 @@ function M.config()
         settings = {
           github = {
             copilot = {
-              selectedCompletionModel = nvim.lsp.ai.copilot.completion.model,
+              selectedCompletionModel = nvim.lsp.ai.completion.model,
             },
           },
         },
