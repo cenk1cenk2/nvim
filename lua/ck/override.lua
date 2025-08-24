@@ -8,11 +8,14 @@ if vim.tbl_contains({ "emanet", "fanboy" }, vim.uv.os_gethostname()) then
   nvim.lsp.automatic_update = false
 end
 
-nvim.lsp.ai.provider.completion = "copilot"
-nvim.lsp.ai.provider.chat = "copilot"
-
-nvim.lsp.ai.chat.provider = "claude"
+nvim.lsp.ai.chat.provider = { "claude" }
 nvim.lsp.ai.completion.provider = { "inline" }
+-- nvim.lsp.ai.provider.chat = "copilot"
+-- nvim.lsp.ai.model.chat = "claude-opus-41"
+nvim.lsp.ai.provider.chat = "claude"
+nvim.lsp.ai.model.chat = "claude-sonnet-4-20250514"
+nvim.lsp.ai.provider.completion = "copilot"
+nvim.lsp.ai.model.completion = nil
 
 nvim.lsp.codelens.refresh = true
 
@@ -22,7 +25,6 @@ nvim.lsp.inlay_hints.mode = "eol"
 
 nvim.lsp.ai.debug = false
 
-nvim.lsp.ai.copilot.chat.model = "claude-opus-41"
 nvim.lsp.ai.copilot.debounce = 50
 nvim.lsp.ai.copilot.filetypes = {
   yaml = true,
@@ -41,33 +43,33 @@ nvim.lsp.ai.copilot.nes.debounce = 50
 nvim.lsp.ai.copilot.nes.auto_suggest = true
 -- nvim.lsp.ai.model.embed = "nomic-embed-text"
 
-nvim.lsp.ai.model.embed = "text-embedding-3-small"
-nvim.lsp.ai.model.completion = "deepseek-coder-v2:16b"
-nvim.lsp.ai.model.chat = "deepseek-coder-v2:16b"
+-- nvim.lsp.ai.model.embed = "text-embedding-3-small"
+-- nvim.lsp.ai.model.completion = "deepseek-coder-v2:16b"
+-- nvim.lsp.ai.model.chat = "deepseek-coder-v2:16b"
 
-nvim.lsp.ai.completion.number_of_completions = 2
-nvim.lsp.ai.completion.line_limit = -1
-nvim.lsp.ai.completion.context_window = 1024 * 4
-nvim.lsp.ai.completion.vectorcode.enabled = false
-nvim.lsp.ai.completion.vectorcode.number_of_files = 1
-nvim.lsp.ai.completion.fim.prefix = "<｜fim▁begin｜>"
-nvim.lsp.ai.completion.fim.suffix = "<｜fim▁end｜>"
-nvim.lsp.ai.completion.fim.middle = "<｜fim▁hole｜>"
-nvim.lsp.ai.completion.fim.file = "<｜file_sep｜>"
-nvim.lsp.ai.completion.prompt =
-  "Perform fill-in-middle from the following snippet of code. `<｜file_sep｜>` is used to give you additional context with files from the repository. Respond with only the filled-in code."
-nvim.lsp.ai.completion.options = {
-  max_tokens = 1024,
-  top_p = 0.95,
-  top_k = 10,
-}
-
-nvim.lsp.ai.chat.options = {
-  num_ctx = 1024 * 8,
-  top_p = 0.95,
-  top_k = 10,
-  -- num_predict = 8,
-}
+-- nvim.lsp.ai.completion.number_of_completions = 2
+-- nvim.lsp.ai.completion.line_limit = -1
+-- nvim.lsp.ai.completion.context_window = 1024 * 4
+-- nvim.lsp.ai.completion.vectorcode.enabled = false
+-- nvim.lsp.ai.completion.vectorcode.number_of_files = 1
+-- nvim.lsp.ai.completion.fim.prefix = "<｜fim▁begin｜>"
+-- nvim.lsp.ai.completion.fim.suffix = "<｜fim▁end｜>"
+-- nvim.lsp.ai.completion.fim.middle = "<｜fim▁hole｜>"
+-- nvim.lsp.ai.completion.fim.file = "<｜file_sep｜>"
+-- nvim.lsp.ai.completion.prompt =
+--   "Perform fill-in-middle from the following snippet of code. `<｜file_sep｜>` is used to give you additional context with files from the repository. Respond with only the filled-in code."
+-- nvim.lsp.ai.completion.options = {
+--   max_tokens = 1024,
+--   top_p = 0.95,
+--   top_k = 10,
+-- }
+--
+-- nvim.lsp.ai.chat.options = {
+--   num_ctx = 1024 * 8,
+--   top_p = 0.95,
+--   top_k = 10,
+--   -- num_predict = 8,
+-- }
 
 nvim.lsp.ai.filetypes.enabled = {
   "*",

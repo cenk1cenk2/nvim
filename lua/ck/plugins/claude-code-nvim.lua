@@ -4,7 +4,7 @@ local M = {}
 M.name = "greggh/claude-code.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, nvim.lsp.ai.chat.provider == "claude", {
+  require("ck.setup").define_plugin(M.name, vim.tbl_contains(nvim.lsp.ai.chat.provider, "claude"), {
     plugin = function()
       ---@type Plugin
       return {

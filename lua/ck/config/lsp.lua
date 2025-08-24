@@ -2,18 +2,14 @@ return {
   ai = {
     debug = false,
     chat = {
-      ---@type 'codecompanion' | 'claude' | 'avante'
-      provider = "avante",
+      ---@type ("codecompanion" | "claude" | "avante")[]
+      provider = { "claude" },
       ---@type table<string, any>
       options = {},
       rag = false,
     },
     completion = {
-      ---@alias NvimCopilotCompletion
-      ---| "inline"
-      ---| "cmp"
-      ---| "minuet"
-      ---@type NvimCopilotCompletion[]
+      ---@type ("inline" | "cmp" | "minuet")[]
       provider = { "inline" },
       number_of_completions = 1,
       context_window = 2048,
@@ -53,12 +49,6 @@ return {
       embed = nil,
     },
     copilot = {
-      chat = {
-        model = "gemini-2.5-pro",
-      },
-      completion = {
-        model = "gpt-4o-copilot-2025-04-03",
-      },
       ---@type table<string, boolean>
       filetypes = {},
       debounce = 50,

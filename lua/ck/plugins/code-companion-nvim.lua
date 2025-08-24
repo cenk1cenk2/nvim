@@ -4,7 +4,7 @@ local M = {}
 M.name = "olimorris/codecompanion.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, nvim.lsp.ai.chat.provider == "codecompanion", {
+  require("ck.setup").define_plugin(M.name, vim.tbl_contains(nvim.lsp.ai.chat.provider, "codecompanion"), {
     plugin = function()
       ---@type Plugin
       return {
@@ -42,13 +42,14 @@ function M.config()
         opts = {
           log_level = require("ck.log"):to_nvim_level(),
         },
+        adapters = {
+          claude = require("ck.plugins.code-companion-nvim-adapter-claude"),
+        },
         strategies = {
           chat = {
             adapter = {
-              name = "copilot",
-              model = "gpt-5",
-              -- TODO: wonder tools are not working with the other model?
-              -- model = nvim.lsp.ai.copilot.chat.model,
+              name = nvim.lsp.ai.provider.chat,
+              model = nvim.lsp.ai.model.chat,
             },
             window = {
               border = nvim.ui.border,
@@ -141,8 +142,8 @@ function M.config()
           },
           inline = {
             adapter = {
-              name = "copilot",
-              model = nvim.lsp.ai.copilot.chat.model,
+              name = nvim.lsp.ai.provider.chat,
+              model = nvim.lsp.ai.model.chat,
             },
             keymaps = {
               accept_change = {
@@ -161,7 +162,7 @@ function M.config()
           chat = {
             show_header_separator = true,
             show_context = true, -- Show context (from slash commands and variables) in the chat buffer?
-            fold_context = false, -- Fold context in the chat buffer?
+            fold_context = true, -- Fold context in the chat buffer?
 
             show_settings = true, -- Show LLM settings at the top of the chat buffer?
             show_tools_processing = true, -- Show the loading message when tools are being executed?

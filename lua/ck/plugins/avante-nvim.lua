@@ -4,7 +4,7 @@ local M = {}
 M.name = "yetone/avante.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, nvim.lsp.ai.chat.provider == "avante", {
+  require("ck.setup").define_plugin(M.name, vim.tbl_contains(nvim.lsp.ai.chat.provider, "avante"), {
     plugin = function()
       ---@type Plugin
       return {
@@ -71,7 +71,7 @@ function M.config()
         provider = nvim.lsp.ai.provider.chat,
         providers = {
           copilot = {
-            model = nvim.lsp.ai.copilot.chat.model,
+            model = nvim.lsp.ai.model.chat,
           },
           -- Ollama API Documentation https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
           ["ai.kilic.dev"] = {
