@@ -53,6 +53,7 @@ return {
         ---@alias NvimCopilotCompletion
         ---| "inline"
         ---| "cmp"
+        ---| "minuet"
         ---@type NvimCopilotCompletion[]
         provider = { "inline" },
       },

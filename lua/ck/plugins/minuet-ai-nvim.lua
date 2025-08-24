@@ -6,7 +6,7 @@ local log = require("ck.log")
 M.name = "milanglacier/minuet-ai.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, nvim.lsp.ai.provider.completion ~= "copilot", {
+  require("ck.setup").define_plugin(M.name, vim.tbl_contains(nvim.lsp.ai.copilot.completion.provider, "minuet"), {
     plugin = function()
       ---@type Plugin
       return {
@@ -35,8 +35,8 @@ function M.config()
         n_completions = nvim.lsp.ai.completion.number_of_completions,
         context_window = nvim.lsp.ai.completion.context_window,
         context_ratio = 0.75,
-        throttle = 750,
-        debounce = 250,
+        throttle = 500,
+        debounce = 100,
         request_timeout = 5,
         add_single_line_entry = false,
         after_cursor_filter_length = nvim.lsp.ai.completion.line_limit,
@@ -80,12 +80,6 @@ function M.config()
             },
             optional = nvim.lsp.ai.completion.options,
           },
-          gemini = {
-            model = "gemini-2.0-flash",
-            stream = true,
-            api_key = "GEMINI_API_KEY",
-            optional = {},
-          },
         },
         blink = {
           enable_auto_complete = false,
@@ -122,6 +116,7 @@ function M.config()
       require("minuet").setup(c)
     end,
     autocmds = function()
+      ---@type Autocmds
       return {
         {
           event = { "LspAttach" },
