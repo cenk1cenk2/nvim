@@ -22,7 +22,7 @@ end
 
 ---@module "snacks.toggle"
 ---@class WKToggleMapping: WKMappings
----@field [2]? (fun(): snacks.toggle) | snacks.toggle
+---@field [2]? (fun(): snacks.toggle) | snacks.toggle | (fun(): snacks.toggle.Class) | snacks.toggle.Class
 ---@alias WKToggleMappings WKToggleMapping[]
 ---@alias LoadWkTogglesFn fun(mappings: WKToggleMappings): nil
 

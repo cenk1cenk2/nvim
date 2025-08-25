@@ -43,7 +43,7 @@ function M.config()
     end,
     setup = function()
       return {
-        copilot_model = "",
+        copilot_model = nvim.lsp.ai.model.completion,
         panel = {
           enabled = true,
           auto_refresh = true,
@@ -61,14 +61,16 @@ function M.config()
         },
         suggestion = {
           enabled = nvim.lsp.ai.provider.completion == "copilot",
-          auto_trigger = vim.tbl_contains(nvim.lsp.ai.completion.provider, "inline"),
+          -- this is now handled by nvim.lsp.inline_completion
+          -- auto_trigger = vim.tbl_contains(nvim.lsp.ai.completion.provider, "inline"),
+          auto_trigger = false,
           debounce = nvim.lsp.ai.copilot.debounce,
           keymap = {
             accept = false,
             accept_line = false,
-            next = "<M-j>",
-            prev = "<M-k>",
-            dismiss = "<M-h>",
+            next = false,
+            prev = false,
+            dismiss = false,
             accept_word = false,
           },
         },
@@ -82,30 +84,30 @@ function M.config()
     end,
     keymaps = function()
       return {
-        {
-          "<M-l>",
-          function()
-            local autopairs = require("nvim-autopairs")
-            local suggestion = require("copilot.suggestion")
-            autopairs.disable()
-            suggestion.accept({})
-            autopairs.enable()
-          end,
-          desc = "accept copilot suggestion",
-          mode = "i",
-        },
-        {
-          "<M-s-l>",
-          function()
-            local autopairs = require("nvim-autopairs")
-            local suggestion = require("copilot.suggestion")
-            autopairs.disable()
-            suggestion.accept_line()
-            autopairs.enable()
-          end,
-          desc = "accept copilot suggestion for line",
-          mode = "i",
-        },
+        -- {
+        --   "<M-l>",
+        --   function()
+        --     local autopairs = require("nvim-autopairs")
+        --     local suggestion = require("copilot.suggestion")
+        --     autopairs.disable()
+        --     suggestion.accept({})
+        --     autopairs.enable()
+        --   end,
+        --   desc = "accept copilot suggestion",
+        --   mode = "i",
+        -- },
+        -- {
+        --   "<M-s-l>",
+        --   function()
+        --     local autopairs = require("nvim-autopairs")
+        --     local suggestion = require("copilot.suggestion")
+        --     autopairs.disable()
+        --     suggestion.accept_line()
+        --     autopairs.enable()
+        --   end,
+        --   desc = "accept copilot suggestion for line",
+        --   mode = "i",
+        -- },
       }
     end,
     wk = function(_, categories, fn)

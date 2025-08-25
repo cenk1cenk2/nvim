@@ -336,6 +336,8 @@ hl.lsp = {
   LspReferenceWrite = { bg = c.bg[300] },
   LspReferenceTarget = { bg = c.bg[300] },
   LspSignatureActiveParameter = { bg = c.bg[400], bold = true },
+  ComplHint = { link = "NonText" },
+  ComplHintMore = { link = "MoreMsg" },
 }
 
 -- langs

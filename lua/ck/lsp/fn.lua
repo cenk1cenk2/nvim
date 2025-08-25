@@ -138,10 +138,54 @@ function M.reset_diagnostics()
   vim.diagnostic.reset()
 end
 
----@param filter? vim.lsp.inlay_hint.enable.Filter
+---@param filter? vim.lsp.capability.enable.Filter
 function M.toggle_inlay_hints(filter)
   filter = filter or {}
   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter), filter)
+end
+
+---@param filter? vim.lsp.capability.enable.Filter
+function M.toggle_inline_completion(filter)
+  filter = filter or {}
+
+  vim.lsp.inline_completion.enable(not vim.lsp.inline_completion.is_enabled(filter), filter)
+end
+
+---@param bufnr? number
+function M.previous_inline_completion(bufnr)
+  vim.lsp.inline_completion.select({ bufnr = bufnr, count = -1, wrap = true })
+end
+
+---@param bufnr? number
+function M.next_inline_completion(bufnr)
+  vim.lsp.inline_completion.select({ bufnr = bufnr, count = 1, wrap = true })
+end
+
+---@param opts? vim.lsp.inline_completion.get.Opts
+function M.accept_inline_completion(opts)
+  opts = opts or { bufnr = vim.api.nvim_get_current_buf() }
+
+  vim.lsp.inline_completion.get(opts)
+
+  -- if not vim.lsp.inline_completion.get(opts) then
+  --   local params = vim.lsp.util.make_range_params(vim.api.nvim_get_current_win(), "utf-8")
+  --
+  --   vim.lsp.buf_request_all(opts.bufnr, "textDocument/inlineCompletion", params, function(responses)
+  --     for client_id, response in pairs(responses) do
+  --       local client = vim.lsp.get_client_by_id(client_id) or {}
+  --
+  --
+  --       if response.err then
+  --         log:warn("[%s]: %s", client.name or client.id, response.err.message)
+  --       end
+  --     end
+  --   end)
+  -- end
+end
+
+---@param bufnr? number
+function M.reject_inline_completion(bufnr)
+  log:warn("Not in the spec yet therefore not implemented.")
 end
 
 ---Reset LSP on given filter.

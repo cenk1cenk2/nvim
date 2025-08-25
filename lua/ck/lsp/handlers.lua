@@ -6,11 +6,15 @@ local log = require("ck.log")
 
 function M.setup()
   vim.diagnostic.config(nvim.lsp.diagnostics)
+
   vim.lsp.config("*", M.get())
+
+  vim.lsp.inline_completion.enable(vim.tbl_contains(nvim.lsp.ai.completion.provider, "inline"))
+
   vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
       local client = vim.lsp.get_client_by_id(args.data.client_id)
-      if client:supports_method("textDocument/foldingRange") then
+      if client and client:supports_method("textDocument/foldingRange") then
         local win = vim.api.nvim_get_current_win()
         vim.wo[win][0].foldexpr = "v:lua.vim.lsp.foldexpr()"
         -- vim.wo[win][0].foldtext = "v:lua.vim.lsp.foldtext()"
