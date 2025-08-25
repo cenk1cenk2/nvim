@@ -73,6 +73,10 @@ function M.config()
           copilot = {
             model = nvim.lsp.ai.model.chat,
           },
+          claude = {
+            endpoint = "https://api.anthropic.com",
+            model = nvim.lsp.ai.model.chat,
+          },
           -- Ollama API Documentation https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
           ["ai.kilic.dev"] = {
             __inherited_from = "ollama",
