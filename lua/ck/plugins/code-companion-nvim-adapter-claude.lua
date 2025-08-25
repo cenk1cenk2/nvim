@@ -268,8 +268,6 @@ local function create_api_key(access_token)
     return nil
   end
 
-  dd(api_key_data)
-
   log:debug("Anthropic OAuth: API key created successfully")
   return api_key_data.raw_key
 end
