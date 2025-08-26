@@ -72,6 +72,42 @@ function M.setup()
         },
       }
     end,
+    keymaps = function()
+      return {
+        {
+          "<M-h>",
+          function()
+            nvim.lsp.fn.reject_inline_suggestion()
+          end,
+          desc = "reject inline completion",
+          mode = { "i" },
+        },
+        {
+          "<M-j>",
+          function()
+            nvim.lsp.fn.previous_inline_completion()
+          end,
+          desc = "previous inline completion",
+          mode = { "i" },
+        },
+        {
+          "<M-k>",
+          function()
+            nvim.lsp.fn.next_inline_completion()
+          end,
+          desc = "next inline completion",
+          mode = { "i" },
+        },
+        {
+          "<M-l>",
+          function()
+            nvim.lsp.fn.accept_inline_completion()
+          end,
+          desc = "accept inline completion",
+          mode = { "i" },
+        },
+      }
+    end,
   })
 end
 
@@ -149,42 +185,6 @@ function M.on_attach(_, bufnr)
         end,
         desc = "code action",
         mode = { "n", "v", "x" },
-        buffer = bufnr,
-      },
-      {
-        "<M-h>",
-        function()
-          nvim.lsp.fn.reject_inline_suggestion(bufnr)
-        end,
-        desc = "reject inline completion",
-        mode = { "i" },
-        buffer = bufnr,
-      },
-      {
-        "<M-j>",
-        function()
-          nvim.lsp.fn.previous_inline_completion(bufnr)
-        end,
-        desc = "previous inline completion",
-        mode = { "i" },
-        buffer = bufnr,
-      },
-      {
-        "<M-k>",
-        function()
-          nvim.lsp.fn.next_inline_completion(bufnr)
-        end,
-        desc = "next inline completion",
-        mode = { "i" },
-        buffer = bufnr,
-      },
-      {
-        "<M-l>",
-        function()
-          nvim.lsp.fn.accept_inline_completion({ bufnr = bufnr })
-        end,
-        desc = "accept inline completion",
-        mode = { "i" },
         buffer = bufnr,
       },
     },
