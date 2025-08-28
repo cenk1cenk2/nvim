@@ -103,9 +103,9 @@ function M.config()
                   return vim.list_extend({ "copilot" }, cb(ctx))
                 end
 
+                -- TODO: this does not have a way to add it back to the default configuration which is wierd, if it had this it would have been more convient to use this
                 -- require("ck.setup").hook_callback(require("ck.plugins.blink-cmp").name, { require("ck.setup").HOOK_EVENTS.HAS_FINISHED_ON_DONE }, function(event)
                 --   require("blink-cmp").add_source_provider("copilot", {
-                --     enabled = true,
                 --     name = "copilot",
                 --     module = "blink-copilot",
                 --     score_offset = 100,
