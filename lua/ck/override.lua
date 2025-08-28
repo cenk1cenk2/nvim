@@ -4,11 +4,11 @@ if is_headless() then
   nvim.log.level = "trace"
 end
 
-if vim.tbl_contains({ "emanet", "fanboy" }, vim.uv.os_gethostname()) then
+if vim.tbl_contains({ "emanet" }, vim.uv.os_gethostname()) then
   nvim.lsp.automatic_update = false
 end
 
-nvim.lsp.ai.chat.provider = { "claude" }
+nvim.lsp.ai.chat.provider = { "codecompanion" }
 nvim.lsp.ai.completion.provider = { "inline" }
 -- nvim.lsp.ai.provider.chat = "copilot"
 -- nvim.lsp.ai.model.chat = "claude-opus-41"
@@ -87,6 +87,7 @@ nvim.lsp.servers = {
   "ansiblels",
   "bashls",
   "buf_ls",
+  "copilot",
   "cssls",
   "docker_compose_language_service",
   "dockerls",
@@ -108,21 +109,18 @@ nvim.lsp.servers = {
   "svelte",
   "systemd_ls",
   "tailwindcss",
-  "terraformls",
   "taplo",
-  "vtsls",
+  "terraformls",
   "typos_lsp",
   "vale",
   "vale_ls",
+  "vtsls",
   -- TODO: https://github.com/mason-org/mason-lspconfig.nvim/issues/371
   -- "volar",
   "yamlls",
 }
 
 nvim.lsp.packages = vim.list_extend({
-  --- language servers
-  "copilot-language-server",
-
   --- formatters/linters
   "ansible-lint",
   "beautysh",
@@ -146,9 +144,8 @@ nvim.lsp.packages = vim.list_extend({
   -- "tflint",
 
   --- debugers
-  "chrome-debug-adapter",
+  "js-debug-adapter",
   "delve",
-  "node-debug2-adapter",
 
   -- external
   "checkmake",

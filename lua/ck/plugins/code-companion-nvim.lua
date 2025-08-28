@@ -43,7 +43,9 @@ function M.config()
           log_level = require("ck.log"):to_nvim_level(),
         },
         adapters = {
-          claude = require("ck.plugins.code-companion-nvim-adapter-claude"),
+          http = {
+            claude = require("ck.plugins.code-companion-nvim-adapter-claude"),
+          },
         },
         strategies = {
           chat = {
