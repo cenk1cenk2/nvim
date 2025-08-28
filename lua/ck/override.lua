@@ -26,6 +26,7 @@ nvim.lsp.inlay_hints.mode = "eol"
 nvim.lsp.ai.debug = false
 
 nvim.lsp.ai.copilot.debounce = 50
+-- TODO: update me according to the copilot language server
 nvim.lsp.ai.copilot.filetypes = {
   yaml = true,
   markdown = true,
