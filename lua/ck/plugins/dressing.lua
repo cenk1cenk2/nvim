@@ -13,26 +13,20 @@ function M.config()
       }
     end,
     configure = function()
-      require("ck.setup").hook_callback(require("ck.plugins.telescope").name, function(event)
-        require("ck.setup").setup_callback(M.name, function(c)
-          if not vim.tbl_contains({ require("ck.setup").HOOK_EVENTS.HAS_FINISHED_SETUP }, event) then
-            return
-          end
+      require("ck.setup").setup_callback(M.name, function(c)
+        c.select.telescope.layout_config = require("telescope.themes").get_dropdown({
+          layout_config = {
+            preview_cutoff = 1,
 
-          c.select.telescope.layout_config = require("telescope.themes").get_dropdown({
-            layout_config = {
-              preview_cutoff = 1, -- Preview should always show (unless previewer = false)
+            width = function(_, max_columns, _)
+              return math.min(max_columns, 120)
+            end,
 
-              width = function(_, max_columns, _)
-                return math.min(max_columns, 120)
-              end,
-
-              height = function(_, _, max_lines)
-                return math.min(max_lines, 24)
-              end,
-            },
-          })
-        end)
+            height = function(_, _, max_lines)
+              return math.min(max_lines, 24)
+            end,
+          },
+        })
       end)
     end,
     setup = function()

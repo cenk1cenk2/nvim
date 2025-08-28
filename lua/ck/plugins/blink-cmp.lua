@@ -81,6 +81,44 @@ function M.config()
             "wookayin/cmp-omni",
             branch = "fix-return",
           },
+          {
+            -- https://github.com/fang2hou/blink-copilot
+            "fang2hou/blink-copilot",
+            enabled = vim.tbl_contains(nvim.lsp.ai.completion.provider, "cmp"),
+            init = function()
+              require("ck.setup").setup_callback(require("ck.plugins.blink-cmp").name, function(c)
+                c.sources.providers.copilot = {
+                  name = "copilot",
+                  module = "blink-copilot",
+                  score_offset = 100,
+                  async = true,
+                  opts = {
+                    kind_icon = nvim.ui.icons.misc.Robot,
+                  },
+                }
+
+                local cb = c.sources.default
+
+                c.sources.default = function(ctx)
+                  return vim.list_extend({ "copilot" }, cb(ctx))
+                end
+
+                -- require("ck.setup").hook_callback(require("ck.plugins.blink-cmp").name, { require("ck.setup").HOOK_EVENTS.HAS_FINISHED_ON_DONE }, function(event)
+                --   require("blink-cmp").add_source_provider("copilot", {
+                --     enabled = true,
+                --     name = "copilot",
+                --     module = "blink-copilot",
+                --     score_offset = 100,
+                --     async = true,
+                --     opts = {
+                --       kind_icon = nvim.ui.icons.misc.Robot,
+                --     },
+                --   })
+
+                return c
+              end)
+            end,
+          },
         },
       }
     end,

@@ -242,7 +242,7 @@ end
 ---@field signs? (fun(config: Config, fn: SetupFn): table<string, vim.fn.sign_define.dict>) | table<string, vim.fn.sign_define.dict>
 ---@field plugin_spec? Plugin
 ---@field to_setup? SetupCallback[]
----@field to_hook? HookCallback[]
+---@field to_hook? table<HookEvent, HookCallback[]>
 ---@field current_setup any
 
 ---@alias DefinePluginFn fun(name: string, enabled: boolean, config: Config): nil
@@ -399,9 +399,7 @@ function M.configure(config, callbacks)
       nvim.plugins[config.name].current_setup = to_setup(nvim.plugins[config.name].current_setup, config, M.fn)
     end
 
-    for _, to_hook in pairs(vim.deepcopy(config.to_hook or {})) do
-      to_hook(M.HOOK_EVENTS.HAS_FINISHED_SETUP, M.fn)
-    end
+    M.run_hook_callback(config, M.HOOK_EVENTS.HAS_FINISHED_SETUP)
   end
 
   if config.on_setup ~= nil then
@@ -411,6 +409,8 @@ function M.configure(config, callbacks)
   if config.on_done ~= nil then
     config.on_done(config, M.fn)
   end
+
+  M.run_hook_callback(config, M.HOOK_EVENTS.HAS_FINISHED_ON_DONE)
 end
 
 --- Sets the plugins for the plugin manager to consume.
@@ -482,25 +482,46 @@ M.setup_callback = M.fn.setup_callback
 ---@enum HookEvent
 M.HOOK_EVENTS = {
   HAS_FINISHED_SETUP = "has_finished_setup",
+  HAS_FINISHED_ON_DONE = "has_finished_on_done",
 }
 
----@alias HookCallback fun(event: HookEvent, fn: SetupFn): any
----@alias SetupFnHookCallback fun(name: string, cb: HookCallback)
+---@alias HookCallback fun(event: HookEvent, config: Config, fn: SetupFn): any
+---@alias SetupFnHookCallback fun(name: string, event: HookEvent, cb: HookCallback)
 
 -- Appends to setup of an plugin with the intend of changing the original configuration.
 ---@type SetupFnHookCallback
-function M.fn.hook_callback(name, cb)
+function M.fn.hook_callback(name, event, cb)
   if nvim.plugins[name] == nil then
     nvim.plugins[name] = {
       to_hook = {},
     }
   end
 
-  table.insert(nvim.plugins[name].to_hook, cb)
+  if nvim.plugins[name].to_hook[event] == nil then
+    nvim.plugins[name].to_hook[event] = {}
+  end
+
+  table.insert(nvim.plugins[name].to_hook[event], cb)
 end
 
 ---@type SetupFnHookCallback
 M.hook_callback = M.fn.hook_callback
+
+---@param config Config
+---@param event HookEvent
+function M.run_hook_callback(config, event)
+  local hooks = nvim.plugins[config.name].to_hook[event]
+
+  if not hooks then
+    log:debug("No hooks: %s -> %s", config.name, event)
+
+    return
+  end
+
+  for _, hook in pairs(hooks) do
+    hook(event, M.fn)
+  end
+end
 
 ---@alias SetupFnGetWkCategories fun(): WKCategories
 
