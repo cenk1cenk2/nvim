@@ -77,7 +77,7 @@ function M.setup()
         {
           "<M-h>",
           function()
-            nvim.lsp.fn.reject_inline_suggestion()
+            nvim.lsp.fn.reject_inline_completion()
           end,
           desc = "reject inline completion",
           mode = { "i" },
