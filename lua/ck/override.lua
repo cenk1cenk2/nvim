@@ -10,10 +10,10 @@ end
 
 nvim.lsp.ai.chat.provider = { "codecompanion" }
 nvim.lsp.ai.completion.provider = { "inline" }
--- nvim.lsp.ai.provider.chat = "copilot"
--- nvim.lsp.ai.model.chat = "claude-opus-41"
-nvim.lsp.ai.provider.chat = "claude"
-nvim.lsp.ai.model.chat = "claude-sonnet-4-20250514"
+nvim.lsp.ai.provider.chat = "copilot"
+nvim.lsp.ai.model.chat = "claude-sonnet-4"
+-- nvim.lsp.ai.provider.chat = "claude"
+-- nvim.lsp.ai.model.chat = "claude-sonnet-4-20250514"
 nvim.lsp.ai.provider.completion = "copilot"
 nvim.lsp.ai.model.completion = nil
 
