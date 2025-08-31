@@ -14,7 +14,7 @@ return {
     "typescript.tsx",
     "vue",
     -- TODO: here the CSS autocompletion does not work from svelte language server so it is enabled explicitly
-    "svelte",
+    -- "svelte",
   },
   on_attach = function(client, bufnr)
     require("ck.lsp.handlers").on_attach(client, bufnr)
