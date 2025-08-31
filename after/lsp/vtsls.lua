@@ -12,8 +12,9 @@ return {
     "typescript",
     "typescriptreact",
     "typescript.tsx",
-    "svelte",
     "vue",
+    -- TODO: here the CSS autocompletion does not work from svelte language server so it is enabled explicitly
+    "svelte",
   },
   on_attach = function(client, bufnr)
     require("ck.lsp.handlers").on_attach(client, bufnr)
@@ -44,12 +45,9 @@ return {
     vtsls = {
       autoUseWorkspaceTsdk = true,
       experimental = {
-        -- Inlay hint truncation.
         maxInlayHintLength = 30,
-        -- For completion performance.
         completion = {
           enableServerSideFuzzyMatch = true,
-          entriesLimit = 50,
         },
       },
       tsserver = {
