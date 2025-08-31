@@ -91,9 +91,7 @@ function M.setup(force)
       end
 
       for _, package_name in pairs(registry.get_installed_package_names()) do
-        local server_name = package_mappings.package_to_lspconfig[package_name] or package_name
-
-        if not vim.tbl_contains(nvim.lsp.packages, server_name) then
+        if not vim.tbl_contains(nvim.lsp.packages, package_mappings.package_to_lspconfig[package_name]) and not vim.tbl_contains(nvim.lsp.packages, package_name) then
           log:warn("Removing stale package: %s", package_name)
           local package = registry.get_package(package_name)
 

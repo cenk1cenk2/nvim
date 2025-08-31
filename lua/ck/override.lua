@@ -107,7 +107,6 @@ nvim.lsp.servers = {
   "pyright",
   "ruff",
   "rust_analyzer",
-  "svelte",
   "systemd_ls",
   "tailwindcss",
   "taplo",
@@ -116,12 +115,13 @@ nvim.lsp.servers = {
   "vale",
   "vale_ls",
   "vtsls",
-  -- TODO: https://github.com/mason-org/mason-lspconfig.nvim/issues/371
-  -- "volar",
   "yamlls",
 }
 
 nvim.lsp.packages = vim.list_extend({
+  --- lazyloaded language servers
+  "svelte-language-server",
+  "vue-language-server",
   --- formatters/linters
   "ansible-lint",
   "beautysh",
