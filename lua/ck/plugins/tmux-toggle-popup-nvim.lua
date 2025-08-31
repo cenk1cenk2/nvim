@@ -37,6 +37,7 @@ function M.config()
           local all = vim.fn.environ()
           local env = {}
           for _, k in pairs({
+            "PATH",
             "VISUAL",
             "EDITOR",
             "GIT_EDITOR",
@@ -46,7 +47,6 @@ function M.config()
             "AWS_REGION",
             "AWS_DEFAULT_REGION",
             "AWS_PROFILE",
-            "PATH",
           }) do
             env[k] = all[k]
           end
