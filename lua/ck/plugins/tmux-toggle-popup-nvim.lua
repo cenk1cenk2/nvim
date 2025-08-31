@@ -46,6 +46,7 @@ function M.config()
             "AWS_REGION",
             "AWS_DEFAULT_REGION",
             "AWS_PROFILE",
+            "PATH",
           }) do
             env[k] = all[k]
           end
@@ -134,9 +135,6 @@ function M.config()
           function()
             M.create_terminal({
               name = "lazygit",
-              env = {
-                PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
-              },
               command = { "lazygit" },
             })
           end,
@@ -147,9 +145,6 @@ function M.config()
           function()
             M.create_terminal({
               name = "lazydocker",
-              env = {
-                PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
-              },
               command = { "lazydocker" },
             })
           end,
@@ -164,9 +159,6 @@ function M.config()
                 .create({
                   command = "kubectl",
                   args = { "config", "current-context" },
-                  env = {
-                    PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
-                  },
                   log = {
                     on_success = false,
                   },
@@ -187,9 +179,6 @@ function M.config()
             M.create_terminal({
               name = "k9s",
               id_format = ("#{session_name}/k9s/%s"):format(context),
-              env = {
-                PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
-              },
               command = { "k9s", "--context", context },
             })
           end,
@@ -202,9 +191,6 @@ function M.config()
               .create({
                 command = "kubectl",
                 args = { "config", "get-contexts", "-o", "name" },
-                env = {
-                  PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
-                },
                 log = {
                   on_success = false,
                 },
@@ -226,9 +212,6 @@ function M.config()
                   .create({
                     command = "kubectl",
                     args = { "config", "current-context" },
-                    env = {
-                      PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
-                    },
                     log = {
                       on_success = false,
                     },
@@ -247,9 +230,6 @@ function M.config()
               M.create_terminal({
                 name = "k9s",
                 id_format = ("#{session_name}/k9s/%s"):format(context),
-                env = {
-                  PATH = ("%s:%s"):format(vim.fn.expand("~/.local/share/mise/shims"), vim.env["PATH"]),
-                },
                 command = { "k9s", "--context", context },
               })
             end)
