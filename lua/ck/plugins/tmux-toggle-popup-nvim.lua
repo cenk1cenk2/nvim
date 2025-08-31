@@ -31,6 +31,8 @@ function M.config()
       return {
         -- log_level = vim.log.levels.DEBUG,
         log_level = require("ck.log"):to_nvim_level(),
+        inherit_vim_env = false,
+        inherit_env = true,
         env = function()
           local all = vim.fn.environ()
           local env = {}
