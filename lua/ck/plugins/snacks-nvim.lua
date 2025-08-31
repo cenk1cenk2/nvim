@@ -34,7 +34,7 @@ function M.config()
       ---@type snacks.Config
       return {
         bigfile = {
-          enabled = true,
+          enabled = false,
           notify = true, -- show notification when big file detected
           size = 2 * 1024 * 1024,
           -- Enable or disable features when big file detected
