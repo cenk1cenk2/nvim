@@ -90,7 +90,7 @@ function M.config()
                 {
                   fn.local_keystroke({ "R" }),
                   function()
-                    require("schema-companion.context").match()
+                    require("schema-companion.context").match(0, true)
                   end,
                   desc = "rematch schema",
                   buffer = event.buf,
