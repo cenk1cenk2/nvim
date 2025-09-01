@@ -51,10 +51,10 @@ return {
     copilot = {
       ---@type table<string, boolean>
       filetypes = {},
-      debounce = 25,
+      debounce = 50,
       nes = {
         enabled = true,
-        debounce = 25,
+        debounce = 50,
         auto_suggest = true,
       },
     },
