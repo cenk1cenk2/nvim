@@ -1,7 +1,7 @@
 -- https://github.com/obsidian-nvim/obsidian.nvim
 local M = {}
 
-M.name = "epwalsh/obsidian.nvim"
+M.name = "obsidian-nvim/obsidian.nvim"
 
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
