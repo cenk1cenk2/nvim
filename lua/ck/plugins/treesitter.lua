@@ -162,8 +162,9 @@ M.parsers = {}
 
 M.ft_parsers = {
   ["yaml"] = { "yaml.ansible", "yaml.compose", "yaml.gitlab-ci" },
-  ["htmldjango"] = { "jinja" },
   ["bash"] = { "zsh" },
+  ["sway"] = { "swayconfig" },
+  ["ini"] = { "confini", "conf" },
 }
 
 return M
