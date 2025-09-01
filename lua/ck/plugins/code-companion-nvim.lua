@@ -72,16 +72,10 @@ function M.config()
                 modes = { i = "<C-_>" },
               },
               send = {
-                modes = {
-                  n = { "<CR>", "<C-s>" },
-                  i = "<C-s>",
-                },
+                modes = { n = { "<CR>", "<C-s>" }, i = "<C-s>" },
               },
               close = {
-                modes = {
-                  n = "<C-c>",
-                  i = "<C-c>",
-                },
+                modes = { n = "<C-c>", i = "<C-c>" },
               },
               regenerate = {
                 modes = { n = fn.local_keystroke({ "r" }) },
@@ -123,12 +117,12 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "z" }) },
               },
               debug = {
-                modes = { n = fn.local_keystroke({ "d" }) },
+                modes = { n = fn.local_keystroke({ "?" }) },
               },
               system_prompt = {
                 modes = { n = fn.local_keystroke({ "s" }) },
               },
-              auto_tool_mode = {
+              yolo_mode = {
                 modes = { n = fn.local_keystroke({ "T" }) },
               },
               goto_file_under_cursor = {
@@ -138,7 +132,7 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "S" }) },
               },
               super_diff = {
-                modes = { n = fn.local_keystroke({ "D" }) },
+                modes = { n = fn.local_keystroke({ "d" }) },
               },
             },
           },
