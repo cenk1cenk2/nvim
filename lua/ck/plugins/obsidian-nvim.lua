@@ -65,7 +65,7 @@ function M.config()
           return title or os.date("%Y%m%dT%H%M%S")
         end,
 
-        preferred_link_style = "wiki",
+        preferred_link_style = "markdown",
 
         new_notes_location = "current_dir",
 
