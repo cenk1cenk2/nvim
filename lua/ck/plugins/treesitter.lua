@@ -161,8 +161,7 @@ end
 M.parsers = {}
 
 M.ft_parsers = {
-  ["yaml"] = { "helm", "yaml.ansible", "yaml.compose", "yaml.gitlab-ci" },
-  -- ["gotmpl"] = { "helm" },
+  ["yaml"] = { "yaml.ansible", "yaml.compose", "yaml.gitlab-ci" },
   ["htmldjango"] = { "jinja" },
   ["bash"] = { "zsh" },
 }

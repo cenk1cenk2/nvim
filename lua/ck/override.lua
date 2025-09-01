@@ -182,6 +182,7 @@ require("ck.setup").setup_callback(require("ck.plugins.treesitter").name, functi
       "gowork",
       "graphql",
       "hcl",
+      "helm",
       "html",
       "htmldjango",
       "http",

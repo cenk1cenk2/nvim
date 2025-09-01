@@ -209,6 +209,7 @@ function M.register()
     "css",
     "markdown",
     "graphql",
+    "helm",
     -- "xml",
   })
 
