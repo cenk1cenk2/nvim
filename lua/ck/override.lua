@@ -39,7 +39,7 @@ nvim.lsp.ai.copilot.filetypes = {
   ["."] = false,
 }
 
-nvim.lsp.ai.copilot.nes.enabled = false
+nvim.lsp.ai.copilot.nes.enabled = true
 nvim.lsp.ai.copilot.nes.debounce = 50
 nvim.lsp.ai.copilot.nes.auto_suggest = true
 -- nvim.lsp.ai.model.embed = "nomic-embed-text"
