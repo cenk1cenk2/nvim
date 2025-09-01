@@ -235,6 +235,7 @@ function M.config()
             require("snacks").gitbrowse.open({ what = "branch" })
           end,
           desc = "open branch in browser",
+          mode = { "n", "v" },
         },
 
         {
@@ -243,6 +244,7 @@ function M.config()
             require("snacks").gitbrowse.open({ what = "file" })
           end,
           desc = "open file in browser",
+          mode = { "n", "v" },
         },
       }
     end,
