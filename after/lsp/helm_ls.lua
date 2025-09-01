@@ -2,7 +2,7 @@
 ---@type vim.lsp.ClientConfig
 return {
   override = function(config)
-    return require("schema-companion").setup_client(config, require("schema-companion.adapters").helmls_adapter())
+    return require("schema-companion").setup_client(require("schema-companion.adapters").helmls.setup({}), config)
   end,
   settings = {
     flags = {

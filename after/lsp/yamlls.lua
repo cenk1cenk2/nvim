@@ -1,7 +1,19 @@
 ---@type vim.lsp.ClientConfig
 return {
   override = function(config)
-    return require("schema-companion").setup_client(config)
+    return require("schema-companion").setup_client(
+      require("schema-companion.adapters").yamlls.setup({
+        matchers = {
+          require("schema-companion.matchers").kubernetes.setup({ version = "master" }),
+        },
+        sources = {
+          require("schema-companion.sources").config.setup(),
+          require("schema-companion.sources").lsp.setup(),
+          require("schema-companion.sources").matchers.setup(),
+        },
+      }),
+      config
+    )
   end,
   on_attach = function(client, bufnr)
     require("ck.lsp.handlers").on_attach(client, bufnr)

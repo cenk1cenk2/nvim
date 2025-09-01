@@ -8,8 +8,8 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        "cenk1cenk2/schema-companion.nvim",
-        -- dir = "~/development/schema-companion.nvim",
+        -- "cenk1cenk2/schema-companion.nvim",
+        dir = "~/development/schema-companion.nvim",
         ft = { "yaml", "helm", "yaml.*" },
       }
     end,
@@ -20,31 +20,31 @@ function M.config()
         -- log_level = require("ck.log"):to_nvim_level(),
         enable_telescope = true,
         -- Built in file matchers
-        matchers = {
-          require("schema-companion.matchers.kubernetes").setup({ version = "master" }),
-        },
-        schemas = {
-          {
-            name = "Kubernetes master",
-            uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/all.json",
-          },
-          {
-            name = "Kubernetes v1.27",
-            uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.16-standalone-strict/all.json",
-          },
-          {
-            name = "Kubernetes v1.28",
-            uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.28.12-standalone-strict/all.json",
-          },
-          {
-            name = "Kubernetes v1.29",
-            uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.7-standalone-strict/all.json",
-          },
-          {
-            name = "Kubernetes v1.30",
-            uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.3-standalone-strict/all.json",
-          },
-        },
+        -- matchers = {
+        --   require("schema-companion.matchers.kubernetes").setup({ version = "master" }),
+        -- },
+        -- schemas = {
+        --   {
+        --     name = "Kubernetes master",
+        --     uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/all.json",
+        --   },
+        --   {
+        --     name = "Kubernetes v1.27",
+        --     uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.16-standalone-strict/all.json",
+        --   },
+        --   {
+        --     name = "Kubernetes v1.28",
+        --     uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.28.12-standalone-strict/all.json",
+        --   },
+        --   {
+        --     name = "Kubernetes v1.29",
+        --     uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.7-standalone-strict/all.json",
+        --   },
+        --   {
+        --     name = "Kubernetes v1.30",
+        --     uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.3-standalone-strict/all.json",
+        --   },
+        -- },
       }
     end,
     on_setup = function(c)
