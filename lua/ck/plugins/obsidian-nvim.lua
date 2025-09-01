@@ -427,10 +427,10 @@ function M.config()
 end
 
 function M.note_from_template(root, title, template)
-  local client = require("obsidian"):get_client()
+  local search = require("obsidian.search")
   local file = ("%s/%s.md"):format(root, title)
 
-  if client:resolve_note(file) then
+  if search.resolve_note(file) then
     require("ck.log"):info("Opening note: %s", file)
     vim.cmd(([[Obsidian quick_switch %s]]):format(file))
 
