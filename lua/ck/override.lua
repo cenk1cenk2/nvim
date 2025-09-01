@@ -122,6 +122,7 @@ nvim.lsp.servers = {
 nvim.lsp.packages = vim.list_extend({
   --- lazyloaded language servers
   "vue-language-server",
+
   --- formatters/linters
   "ansible-lint",
   "beautysh",
@@ -131,6 +132,7 @@ nvim.lsp.packages = vim.list_extend({
   "prettierd",
   "proselint",
   "protolint",
+  "selene",
   "shellcheck",
   "shellharden",
   "shfmt",

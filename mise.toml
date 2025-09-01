@@ -1,0 +1,4 @@
+[tools]
+"aqua:Kampfkarren/selene" = "latest"
+shfmt = "latest"
+stylua = "latest"

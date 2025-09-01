@@ -1,0 +1,67 @@
+[selene]
+base = "lua51"
+name = "vim"
+
+[vim]
+any = true
+
+[jit]
+any = true
+
+[assert]
+any = true
+
+[describe]
+any = true
+
+[it]
+any = true
+
+[nvim]
+any = true
+
+[package]
+any = true
+
+[_G]
+property = true
+writable = "new-fields"
+
+[is_loaded]
+any = true
+
+[join_paths]
+any = true
+
+[is_enabled]
+any = true
+
+[get_config_dir]
+any = true
+
+[get_state_dir]
+any = true
+
+[get_data_dir]
+any = true
+
+[get_cache_dir]
+any = true
+
+[is_file]
+any = true
+
+[is_directory]
+any = true
+
+[is_headless]
+any = true
+
+[require_clean]
+any = true
+
+[OS_UNAME]
+any = true
+
+[math]
+any = true

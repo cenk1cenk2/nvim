@@ -49,7 +49,7 @@ function M.config()
           function()
             -- local _ = nes.walk_cursor_start_edit() or (nes.apply_pending_nes() and nes.walk_cursor_end_edit())
             -- local _ = nes.apply_pending_nes() and nes.walk_cursor_end_edit()
-            require("copilot-lsp.nes").apply_pending_nes()
+            local _ = require("copilot-lsp.nes").apply_pending_nes() or require("copilot-lsp.nes").request_nes()
           end,
           desc = "nes: apply",
           mode = { "i", "n", "v" },

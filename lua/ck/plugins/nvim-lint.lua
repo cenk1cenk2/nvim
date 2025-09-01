@@ -58,6 +58,7 @@ function M.register()
   tools.register(METHOD, "checkmake", { "make" })
 
   tools.register(METHOD, "sqruff", { "sql", "mysql", "plsql" })
+  tools.register(METHOD, "selene", { "lua" })
 end
 
 function M.extend_tools()

@@ -198,6 +198,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "fix current",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "c" }),
@@ -206,6 +207,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "incoming calls",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "C" }),
@@ -214,6 +216,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "outgoing calls",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "d" }),
@@ -222,6 +225,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "document diagnostics",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "D" }),
@@ -230,6 +234,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "workspace diagnostics",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "f" }),
@@ -237,7 +242,7 @@ function M.on_attach(_, bufnr)
             nvim.lsp.fn.format()
           end,
           desc = "format buffer",
-          mode = { "n", "v" },
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "F" }),
@@ -246,6 +251,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "toggle autoformat",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "g" }),
@@ -254,6 +260,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "remove unused imports",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "G" }),
@@ -262,6 +269,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "add missing imports",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "m" }),
@@ -270,6 +278,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "rename file with lsp",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "n" }),
@@ -278,6 +287,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "next diagnostic (error, warn)",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "N" }),
@@ -286,6 +296,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "next diagnostic (info, hint)",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "p" }),
@@ -294,6 +305,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "prev diagnostic (error, warn)",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "P" }),
@@ -302,6 +314,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "prev diagnostic (info, hint)",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "r" }),
@@ -310,6 +323,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "rename item under cursor",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "q" }),
@@ -318,6 +332,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "set location list",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "s" }),
@@ -326,6 +341,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "document symbols",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "S" }),
@@ -334,6 +350,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "workspace symbols",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "t" }),
@@ -342,6 +359,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "toggle inlay hints",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "T" }),
@@ -350,6 +368,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "toggle inline completion",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "R" }),
@@ -358,6 +377,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "reset diagnostics",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
         {
           fn.wk_keystroke({ categories.LSP, "Q", "q" }),
@@ -366,6 +386,7 @@ function M.on_attach(_, bufnr)
           end,
           desc = "restart currently active LSPs for this buffer",
           buffer = bufnr,
+          mode = { "n", "v", "x" },
         },
       }
     end,

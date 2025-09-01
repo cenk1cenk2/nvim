@@ -1,0 +1,7 @@
+std = "vim"
+
+exclude = ["utils/*"]
+
+[lints]
+mixed_table = "allow"
+global_usage = "allow"
