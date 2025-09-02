@@ -2,14 +2,32 @@
 return {
   override = function(config)
     return require("schema-companion").setup_client(
-      require("schema-companion.adapters").yamlls.setup({
-        matchers = {
-          require("schema-companion.matchers").kubernetes.setup({ version = "master" }),
-        },
+      require("schema-companion").adapters.yamlls.setup({
         sources = {
-          require("schema-companion.sources").config.setup(),
-          require("schema-companion.sources").lsp.setup(),
-          require("schema-companion.sources").matchers.setup(),
+          require("schema-companion").sources.matchers.kubernetes.setup({ version = "master" }),
+          require("schema-companion").sources.lsp.setup(),
+          require("schema-companion").sources.schemas.setup({
+            {
+              name = "Kubernetes master",
+              uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master-standalone-strict/all.json",
+            },
+            {
+              name = "Kubernetes v1.27",
+              uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.27.16-standalone-strict/all.json",
+            },
+            {
+              name = "Kubernetes v1.28",
+              uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.28.12-standalone-strict/all.json",
+            },
+            {
+              name = "Kubernetes v1.29",
+              uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.29.7-standalone-strict/all.json",
+            },
+            {
+              name = "Kubernetes v1.30",
+              uri = "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/v1.30.3-standalone-strict/all.json",
+            },
+          }),
         },
       }),
       config
