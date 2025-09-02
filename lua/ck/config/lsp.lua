@@ -1,4 +1,7 @@
 return {
+  features = {
+    on_type_formatting = true,
+  },
   ai = {
     debug = false,
     chat = {
