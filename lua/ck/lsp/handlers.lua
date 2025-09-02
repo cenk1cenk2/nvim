@@ -10,6 +10,7 @@ function M.setup()
   vim.lsp.config("*", M.get())
 
   vim.lsp.inline_completion.enable(vim.tbl_contains(nvim.lsp.ai.completion.provider, "inline"))
+  vim.lsp.on_type_formatting.enable(nvim.lsp.features.on_type_formatting)
 
   vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
