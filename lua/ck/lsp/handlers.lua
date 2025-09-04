@@ -102,15 +102,15 @@ end
 function M.on_attach(client, bufnr)
   require("ck.keys.lsp").on_attach(client, bufnr)
 
-  if M.is_lsp_feature_enabled(nvim.lsp.features.codelens.enabled) then
+  if M.is_lsp_feature_enabled(nvim.lsp.features.codelens.enabled, client, bufnr) then
     M.attach_codelens(client, bufnr)
   end
 
-  if M.is_lsp_feature_enabled(nvim.lsp.features.inlay_hints.enabled) then
+  if M.is_lsp_feature_enabled(nvim.lsp.features.inlay_hints.enabled, client, bufnr) then
     M.attach_inlay_hints(client, bufnr)
   end
 
-  if M.is_lsp_feature_enabled(nvim.lsp.features.on_type_formatting.enabled) then
+  if M.is_lsp_feature_enabled(nvim.lsp.features.on_type_formatting.enabled, client, bufnr) then
     vim.lsp.on_type_formatting.enable(true, { client_id = client.id })
   end
 
