@@ -1,12 +1,17 @@
 ---@type vim.lsp.ClientConfig
 return {
-  settings = {
-    settings = {
-      evenBetterToml = {
-        schema = {
-          catalogs = { "https://taplo.tamasfe.dev/schema_index.json" },
+  override = function(config)
+    return require("schema-companion").setup_client(
+      require("schema-companion").adapters.taplo.setup({
+        sources = {
+          require("schema-companion").sources.lsp.setup(),
+          require("schema-companion").sources.none.setup(),
         },
-      },
-    },
+      }),
+      config
+    )
+  end,
+  settings = {
+    settings = {},
   },
 }

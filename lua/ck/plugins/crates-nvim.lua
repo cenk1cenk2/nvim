@@ -45,11 +45,6 @@ function M.config()
           completion = true,
           hover = true,
         },
-        completion = {
-          cmp = {
-            enabled = true,
-          },
-        },
         neoconf = {
           enabled = true,
         },

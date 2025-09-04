@@ -10,7 +10,7 @@ function M.config()
       return {
         "cenk1cenk2/schema-companion.nvim",
         -- dir = "~/development/schema-companion.nvim",
-        ft = { "yaml", "helm", "yaml.*", "json*" },
+        ft = { "yaml", "helm", "yaml.*", "json*", "toml" },
       }
     end,
     setup = function()
@@ -25,7 +25,7 @@ function M.config()
     end,
     autocmds = function()
       return {
-        require("ck.modules.autocmds").init_with({ "FileType" }, { "yaml", "helm", "yaml.*", "json*" }, function(event)
+        require("ck.modules.autocmds").init_with({ "FileType" }, { "yaml", "helm", "yaml.*", "json*", "toml" }, function(event)
           return {
             keymaps = function(_, fn)
               return {
