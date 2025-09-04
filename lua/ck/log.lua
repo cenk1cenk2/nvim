@@ -61,7 +61,11 @@ function M:set_log_level(level)
     end
     nvim.log.level = level
 
-    self:info("Set log level: %s", level)
+    if self:to_level(level) ~= self:to_level(nvim.log.level) then
+      self:info("Set log level: %s", level)
+    else
+      self:debug("Set log level to default: %s", level)
+    end
   end, debug.traceback)
 end
 

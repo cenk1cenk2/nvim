@@ -1,4 +1,5 @@
 nvim.log.level = "info"
+nvim.lsp.log.level = "error"
 
 if is_headless() then
   nvim.log.level = "trace"

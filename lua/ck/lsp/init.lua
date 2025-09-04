@@ -106,6 +106,8 @@ function M.setup(force)
   require("ck.keys.lsp").setup()
   require("ck.lsp.commands").setup()
   require("ck.lsp.format").setup()
+
+  nvim.lsp.fn.set_log_level(log:to_level(nvim.lsp.log.level))
 end
 
 return M

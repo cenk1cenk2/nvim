@@ -424,9 +424,16 @@ function M.rename_file()
   end)
 end
 
+---
+---@param level number
 function M.set_log_level(level)
   vim.lsp.set_log_level(level)
-  log:info("Set LSP log level: %s", level)
+
+  if level ~= log:to_level(nvim.lsp.log.level) then
+    log:info("Set LSP log level: %s", level)
+  else
+    log:debug("Set LSP log level to default: %s", level)
+  end
 end
 
 return M

@@ -1,4 +1,7 @@
 return {
+  log = {
+    level = "error",
+  },
   features = {
     on_type_formatting = {
       ---@type NvimLspFeaturePredicate
