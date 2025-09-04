@@ -9,7 +9,6 @@ function M.config()
       ---@type Plugin
       return {
         "cenk1cenk2/schema-companion.nvim",
-        branch = "beta",
         -- dir = "~/development/schema-companion.nvim",
         ft = { "yaml", "helm", "yaml.*" },
       }

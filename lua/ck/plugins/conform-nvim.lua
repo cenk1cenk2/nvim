@@ -230,8 +230,8 @@ function M.register()
 
   tools.register(METHOD, { "golangci-lint" }, { "go" })
 
-  -- tools.register(METHOD, "sqruff", { "sql", "mysql", "plsql" })
-  tools.register(METHOD, "prettierd", { "sql", "mysql", "plsql" })
+  tools.register(METHOD, "sqruff", { "sql", "mysql", "plsql" })
+  -- tools.register(METHOD, "prettierd", { "sql", "mysql", "plsql" })
 
   tools.register(METHOD, "shfmt", { "sh", "bash", "zsh" })
   -- lsp_utils.register(METHOD, "beautysh", {
