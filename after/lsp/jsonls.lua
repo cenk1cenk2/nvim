@@ -5,6 +5,7 @@ return {
       require("schema-companion").adapters.jsonls.setup({
         sources = {
           require("schema-companion").sources.lsp.setup(),
+          require("schema-companion").sources.none.setup(),
         },
       }),
       config
