@@ -124,8 +124,8 @@ end
 
 ---
 ---@param enabled NvimLspFeaturePredicate
-function M.is_lsp_feature_enabled(enabled)
-  return (type(enabled) == "boolean" and enabled) or (type(enabled) == "function" and enabled()) or false
+function M.is_lsp_feature_enabled(enabled, ...)
+  return (type(enabled) == "boolean" and enabled) or (type(enabled) == "function" and enabled(...)) or false
 end
 
 ---@type LspOnCallback
