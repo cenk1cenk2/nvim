@@ -8,6 +8,20 @@ if vim.tbl_contains({ "emanet" }, vim.uv.os_gethostname()) then
   nvim.lsp.automatic_update = false
 end
 
+nvim.lsp.features.inline_completion.enabled = function()
+  return vim.tbl_contains(nvim.lsp.ai.completion.provider, "inline")
+end
+
+nvim.lsp.features.on_type_formatting.enabled = function(client)
+  return not vim.tbl_contains({ "lua_ls" }, client.name)
+end
+
+nvim.lsp.features.codelens.enabled = true
+
+nvim.lsp.features.inlay_hints.enabled = true
+nvim.lsp.features.inlay_hints.toggled = false
+nvim.lsp.features.inlay_hints.mode = "eol"
+
 nvim.lsp.ai.chat.provider = { "codecompanion" }
 nvim.lsp.ai.completion.provider = { "inline" }
 nvim.lsp.ai.provider.chat = "copilot"
@@ -17,15 +31,9 @@ nvim.lsp.ai.model.chat = "claude-sonnet-4"
 nvim.lsp.ai.provider.completion = "copilot"
 nvim.lsp.ai.model.completion = nil
 
-nvim.lsp.codelens.refresh = true
-
-nvim.lsp.inlay_hints.enabled = true
-nvim.lsp.inlay_hints.toggled = false
-nvim.lsp.inlay_hints.mode = "eol"
-
 nvim.lsp.ai.debug = false
 
-nvim.lsp.ai.copilot.debounce = 50
+nvim.lsp.ai.copilot.debounce = 75
 -- TODO: update me according to the copilot language server
 nvim.lsp.ai.copilot.filetypes = {
   yaml = true,
@@ -40,7 +48,7 @@ nvim.lsp.ai.copilot.filetypes = {
 }
 
 nvim.lsp.ai.copilot.nes.enabled = true
-nvim.lsp.ai.copilot.nes.debounce = 50
+nvim.lsp.ai.copilot.nes.debounce = 75
 nvim.lsp.ai.copilot.nes.auto_suggest = true
 -- nvim.lsp.ai.model.embed = "nomic-embed-text"
 

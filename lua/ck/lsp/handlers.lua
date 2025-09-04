@@ -3,14 +3,15 @@ local M = {}
 local log = require("ck.log")
 
 ---@alias LspOnCallback fun(client: vim.lsp.Client, bufnr: number)
+---@alias NvimLspFeaturePredicate boolean | fun(client: vim.lsp.Client, bufnr: number): boolean
 
 function M.setup()
   vim.diagnostic.config(nvim.lsp.diagnostics)
 
   vim.lsp.config("*", M.get())
 
-  vim.lsp.inline_completion.enable(vim.tbl_contains(nvim.lsp.ai.completion.provider, "inline"))
-  vim.lsp.on_type_formatting.enable(nvim.lsp.features.on_type_formatting)
+  --- TODO: make this configurable as well in the future? but this is not on attach this is more like a global
+  vim.lsp.inline_completion.enable(require("ck.setup").evaluate_property(nvim.lsp.features.inline_completion.enabled))
 
   vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
@@ -101,12 +102,16 @@ end
 function M.on_attach(client, bufnr)
   require("ck.keys.lsp").on_attach(client, bufnr)
 
-  if nvim.lsp.codelens.refresh then
+  if M.is_lsp_feature_enabled(nvim.lsp.features.codelens.enabled) then
     M.attach_codelens(client, bufnr)
   end
 
-  if nvim.lsp.inlay_hints.enabled then
+  if M.is_lsp_feature_enabled(nvim.lsp.features.inlay_hints.enabled) then
     M.attach_inlay_hints(client, bufnr)
+  end
+
+  if M.is_lsp_feature_enabled(nvim.lsp.features.on_type_formatting.enabled) then
+    vim.lsp.on_type_formatting.enable(true, { client_id = client.id })
   end
 
   if #nvim.lsp.on_attach_callbacks > 0 then
@@ -115,6 +120,12 @@ function M.on_attach(client, bufnr)
     end
     log:trace("Called lsp.on_attach_callbacks.")
   end
+end
+
+---
+---@param enabled NvimLspFeaturePredicate
+function M.is_lsp_feature_enabled(enabled)
+  return (type(enabled) == "boolean" and enabled) or (type(enabled) == "function" and enabled()) or false
 end
 
 ---@type LspOnCallback
@@ -166,8 +177,15 @@ end
 ---@type LspOnCallback
 function M.attach_inlay_hints(client, bufnr)
   if client.server_capabilities.inlayHintProvider then
-    vim.lsp.inlay_hint.enable(nvim.lsp.inlay_hints.toggled, { bufnr = bufnr })
+    vim.lsp.inlay_hint.enable(nvim.lsp.features.inlay_hints.toggled, { bufnr = bufnr })
   end
+end
+
+---@type LspOnCallback
+function M.attach_on_type_formatting(client, bufnr)
+  -- if client.server_capabilities.onTypeFormatting then
+  vim.lsp.on_type_formatting.enable(true, { client_id = client.id })
+  -- end
 end
 
 return M

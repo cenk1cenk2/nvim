@@ -53,6 +53,20 @@ return {
       tsserver = {
         globalPlugins = {},
       },
+      typescript = {
+        preferences = {
+          importModuleSpecifier = "relative",
+        },
+        inlayHints = {
+          includeInlayParameterNameHints = "all",
+          includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+          includeInlayFunctionParameterTypeHints = true,
+          includeInlayVariableTypeHints = true,
+          includeInlayPropertyDeclarationTypeHints = true,
+          includeInlayFunctionLikeReturnTypeHints = true,
+          includeInlayEnumMemberValueHints = true,
+        },
+      },
     },
   },
 }

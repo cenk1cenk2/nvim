@@ -338,7 +338,7 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.NOTES, "w" }),
+          fn.wk_keystroke({ categories.NOTES, "W" }),
           function()
             vim.cmd([[Obsidian workspace]])
           end,

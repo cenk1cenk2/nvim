@@ -1,6 +1,27 @@
 return {
   features = {
-    on_type_formatting = true,
+    on_type_formatting = {
+      ---@type NvimLspFeaturePredicate
+      enabled = false,
+    },
+    inline_completion = {
+      ---@type NvimLspFeaturePredicate
+      enabled = false,
+    },
+    codelens = {
+      ---@type NvimLspFeaturePredicate
+      enabled = false,
+    },
+    inlay_hints = {
+      ---@type NvimLspFeaturePredicate
+      enabled = true,
+      toggled = false,
+      ---@alias NvimInlayHintsMode
+      ---| "eol"
+      ---| "right_align"
+      ---| "inline"
+      mode = "inline",
+    },
   },
   ai = {
     debug = false,
@@ -107,18 +128,6 @@ return {
         return d.message
       end,
     },
-  },
-  codelens = {
-    refresh = true,
-  },
-  inlay_hints = {
-    enabled = true,
-    toggled = false,
-    ---@alias NvimInlayHintsMode
-    ---| "eol"
-    ---| "right_align"
-    ---| "inline"
-    mode = "inline",
   },
 
   ---@type table<string, string | LspOnCallback>
