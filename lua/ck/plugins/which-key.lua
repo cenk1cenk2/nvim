@@ -50,7 +50,8 @@ function M.config()
             z = true, -- bindings for folds, spelling and others prefixed with z
             g = true, -- bindings for prefixed with g,
             m = true,
-            ["<localleader>"] = true,
+            -- local leader
+            [","] = true,
           },
         },
         icons = {
