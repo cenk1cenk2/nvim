@@ -99,10 +99,10 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "w" }) },
               },
               next_chat = {
-                modes = { n = "}" },
+                modes = { n = "N" },
               },
               previous_chat = {
-                modes = { n = "{" },
+                modes = { n = "P" },
               },
               next_header = {
                 modes = { n = "]]" },
