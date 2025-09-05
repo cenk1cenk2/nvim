@@ -111,7 +111,7 @@ nvim.lsp.servers = {
   "html",
   "jsonls",
   "lua_ls",
-  "markdown_oxide",
+  "marksman",
   "prismals",
   "pyright",
   "ruff",
