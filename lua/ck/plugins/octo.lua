@@ -22,7 +22,7 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.GIT, "g", "h", "f" }),
+          fn.wk_keystroke({ categories.GIT, "h", "f" }),
           function()
             require("octo.commands").actions()
           end,
