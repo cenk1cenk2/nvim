@@ -122,7 +122,7 @@ nvim.lsp.servers = {
   "taplo",
   "terraformls",
   "typos_lsp",
-  "ltex",
+  "vale_lsp",
   "vtsls",
   "yamlls",
 }
