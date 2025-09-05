@@ -146,7 +146,7 @@ return {
     desc = "Creates a link out of it.",
   }, {
     s.f(function(_, parent)
-      return "[" .. parent.snippet.env.POSTFIX_MATCH .. "]()"
+      return "[" .. parent.env.POSTFIX_MATCH .. "]()"
     end, {}),
   }),
   -- s.treesitter_postfix({
@@ -170,7 +170,8 @@ return {
     desc = "Creates a link out of it.",
   }, {
     s.f(function(_, parent)
-      return "[](" .. parent.snippet.env.POSTFIX_MATCH .. ")"
+      dd(parent.env)
+      return "[](" .. parent.env.POSTFIX_MATCH .. ")"
     end, {}),
   }),
 }

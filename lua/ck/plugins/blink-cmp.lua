@@ -239,8 +239,9 @@ function M.config()
           end,
         },
         fuzzy = {
-          max_typos = function()
-            return 0
+          implementation = "rust",
+          max_typos = function(keyword)
+            return math.floor(#keyword / 4)
           end,
           sorts = {
             "exact",
@@ -256,8 +257,9 @@ function M.config()
           },
           accept = {
             create_undo_point = true,
+            ---TODO: enable this when cmp or this fixes it: https://github.com/windwp/nvim-autopairs/issues/477
             auto_brackets = {
-              enabled = true,
+              enabled = false,
             },
           },
           list = {
