@@ -25,7 +25,7 @@ function M.config()
       ---@type Plugin
       return {
         "folke/which-key.nvim",
-        keys = { "<leader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r", "d", "c", "r", "y", "p", "P" },
+        keys = { "<leader>", "<localleader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r", "d", "c", "r", "y", "p", "P" },
         event = "UIEnter",
       }
     end,
@@ -50,6 +50,7 @@ function M.config()
             z = true, -- bindings for folds, spelling and others prefixed with z
             g = true, -- bindings for prefixed with g,
             m = true,
+            ["<localleader>"] = true,
           },
         },
         icons = {
