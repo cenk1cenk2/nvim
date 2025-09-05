@@ -18,6 +18,18 @@ function M.config()
     on_setup = function(c)
       require("octo").setup(c)
     end,
+    wk = function(_, categories, fn)
+      ---@type WKMappings
+      return {
+        {
+          fn.wk_keystroke({ categories.GIT, "g", "h", "f" }),
+          function()
+            require("octo.commands").actions()
+          end,
+          desc = "actions",
+        },
+      }
+    end,
   })
 end
 

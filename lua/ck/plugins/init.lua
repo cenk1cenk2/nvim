@@ -86,7 +86,6 @@ local plugins = {
   "nvim-colorizer",
   "neotest",
   "nvim-coverage",
-  "telescope-github",
   "telescope-dap",
   "nvim-docs-view",
   "mini-nvim-ai",
