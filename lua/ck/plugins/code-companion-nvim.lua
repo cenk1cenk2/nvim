@@ -87,7 +87,7 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "q" }) },
               },
               codeblock = {
-                modes = { n = fn.local_keystroke({ "C" }) },
+                modes = { n = fn.local_keystroke({ "c" }) },
               },
               yank_code = {
                 modes = { n = fn.local_keystroke({ "y" }) },
@@ -149,7 +149,7 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "cr" }) },
               },
               always_accept = {
-                modes = { n = fn.local_keystroke({ "cA" }) },
+                modes = { n = fn.local_keystroke({ "aa" }) },
               },
             },
           },
