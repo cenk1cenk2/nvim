@@ -81,10 +81,10 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "r" }) },
               },
               stop = {
-                modes = { n = fn.local_keystroke({ "Q" }) },
+                modes = { n = fn.local_keystroke({ "q" }) },
               },
               clear = {
-                modes = { n = fn.local_keystroke({ "q" }) },
+                modes = { n = fn.local_keystroke({ "Q" }) },
               },
               codeblock = {
                 modes = { n = fn.local_keystroke({ "c" }) },
