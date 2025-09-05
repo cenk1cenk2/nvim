@@ -187,8 +187,8 @@ function M.config()
               chat_filter = nil, -- function(chat_data) return boolean end
               -- Customize picker keymaps (optional)
               picker_keymaps = {
-                rename = { n = "r", i = "<M-r>" },
-                delete = { n = "d", i = "<M-d>" },
+                rename = { n = "r", i = "<C-r>" },
+                delete = { n = "d", i = "<C-d>" },
                 duplicate = { n = "<C-y>", i = "<C-y>" },
               },
               ---Automatically generate titles for new chats
