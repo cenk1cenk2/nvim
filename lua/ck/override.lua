@@ -230,7 +230,6 @@ require("ck.setup").setup_callback(require("ck.plugins.treesitter").name, functi
       "scss",
       "sql",
       "svelte",
-      "sway",
       "terraform",
       "tmux",
       "toml",
