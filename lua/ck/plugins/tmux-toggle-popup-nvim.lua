@@ -73,7 +73,6 @@ function M.config()
 
       ---@type KeymapMappings
       return {
-
         {
           "<F1>",
           function()
