@@ -30,6 +30,7 @@ function M.config()
       require("iswap").setup(c)
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "H",

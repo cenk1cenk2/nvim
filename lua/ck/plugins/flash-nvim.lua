@@ -221,6 +221,7 @@ function M.config()
       end
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "ss",

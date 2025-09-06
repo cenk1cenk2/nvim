@@ -63,6 +63,7 @@ function M.config()
         require("ck.modules.autocmds").init_with({ "BufRead" }, { "Cargo.toml" }, function(event)
           return {
             keymaps = function(_, fn)
+              ---@type KeymapMappings
               return {
                 {
                   fn.local_keystroke({ "t" }),

@@ -83,6 +83,7 @@ function M.config()
       require("bufferline").setup(c)
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "<M-l>",

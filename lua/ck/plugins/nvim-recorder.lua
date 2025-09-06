@@ -46,6 +46,7 @@ function M.config()
       require("recorder").setup(c)
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "q",

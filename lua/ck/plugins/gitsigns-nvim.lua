@@ -69,6 +69,7 @@ function M.config()
       require("gitsigns").setup(c)
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "]h",

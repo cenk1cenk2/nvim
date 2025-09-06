@@ -67,7 +67,7 @@ function M.config()
       require("bookmarks.sign").safe_refresh_signs()
     end,
     keymaps = function(_, fn)
-      ---@type WKMappings
+      ---@type KeymapMappings
       return {
         {
           fn.keystroke({ "m", "m" }),

@@ -184,6 +184,7 @@ function M.config()
       require("lspsaga").setup(c)
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "ge",

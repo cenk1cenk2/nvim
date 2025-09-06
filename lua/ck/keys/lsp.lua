@@ -251,6 +251,7 @@ function M.setup()
       }
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "<M-h>",

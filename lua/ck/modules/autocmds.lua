@@ -7,11 +7,12 @@ local log = require("ck.log")
 function M.q_close_autocmd(pattern)
   return M.init_with({ "FileType" }, pattern, function(event)
     return {
+      ---@type KeymapMappings
       keymaps = {
         {
           "q",
           function()
-            nvim.fn.close_buffer(event.buf, true)
+            nvim.fn.close_buffer({ bufnr = event.buf, force = true })
           end,
           mode = "n",
         },

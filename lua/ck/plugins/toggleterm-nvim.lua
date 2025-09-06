@@ -123,6 +123,7 @@ function M.config()
         return {}
       end
 
+      ---@type KeymapMappings
       return {
         {
           "<F1>",

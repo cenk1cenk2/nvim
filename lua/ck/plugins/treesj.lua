@@ -49,6 +49,7 @@ function M.config()
       require("treesj").setup(c)
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "gJ",

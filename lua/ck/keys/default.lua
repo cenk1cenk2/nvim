@@ -5,6 +5,7 @@ local log = require("ck.log")
 function M.load()
   require("ck.setup").init({
     keymaps = function(_, fn)
+      ---@type KeymapMappings
       return {
         -- disable help
         {

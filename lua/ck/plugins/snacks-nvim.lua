@@ -199,6 +199,7 @@ function M.config()
       }
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "<M-n>",

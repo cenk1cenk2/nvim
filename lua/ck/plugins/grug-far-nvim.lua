@@ -190,6 +190,7 @@ function M.config()
         require("ck.modules.autocmds").q_close_autocmd({ "grug-far-history" }),
         require("ck.modules.autocmds").init_with({ "FileType" }, { "grug-far" }, function(event)
           return {
+            ---@type KeymapMappings
             keymaps = {
               {
                 "<localleader>M",

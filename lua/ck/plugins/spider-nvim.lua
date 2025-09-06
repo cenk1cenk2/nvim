@@ -21,6 +21,7 @@ function M.config()
       require("spider").setup(c)
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "w",

@@ -391,6 +391,7 @@ function M.config()
         require("ck.modules.autocmds").init_with({ "FileType" }, { "markdown" }, function(event)
           return {
             keymaps = function(_, fn)
+              ---@type KeymapMappings
               return {
                 {
                   "gf",

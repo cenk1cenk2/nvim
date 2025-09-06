@@ -32,6 +32,7 @@ function M.config()
       require("substitute").setup(c)
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "sd",

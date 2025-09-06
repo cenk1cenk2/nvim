@@ -24,6 +24,7 @@ end
 function M.setup()
   require("ck.setup").init({
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "oo",

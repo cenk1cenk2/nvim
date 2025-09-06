@@ -21,6 +21,7 @@ function M.config()
     -- require("textcase").setup(c)
     -- end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         -- subs
         {

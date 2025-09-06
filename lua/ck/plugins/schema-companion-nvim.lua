@@ -28,6 +28,7 @@ function M.config()
         require("ck.modules.autocmds").init_with({ "FileType" }, { "yaml", "helm", "yaml.*", "json*", "toml" }, function(event)
           return {
             keymaps = function(_, fn)
+              ---@type KeymapMappings
               return {
                 {
                   fn.local_keystroke({ "s" }),

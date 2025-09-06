@@ -27,6 +27,7 @@ function M.config()
       require("copilot-lsp").setup(config)
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "<M-d>",

@@ -70,6 +70,7 @@ function M.config()
 
       -- this stupid thing gets overwritten by something so it is here
       require("ck.setup").init({
+        ---@type KeymapMappings
         keymaps = {
           {
             "p",
@@ -87,6 +88,7 @@ function M.config()
       })
     end,
     keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "gq",
