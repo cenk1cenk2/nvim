@@ -13,8 +13,11 @@ nvim.lsp.features.inline_completion.enabled = function()
   return vim.tbl_contains(nvim.lsp.ai.completion.provider, "inline")
 end
 
-nvim.lsp.features.on_type_formatting.enabled = function(client)
-  return not vim.tbl_contains({ "lua_ls" }, client.name)
+nvim.lsp.features.on_type_formatting.enabled = function(client, bufnr)
+  return not vim.tbl_contains({
+    "lua",
+    "python",
+  }, vim.api.nvim_get_option_value("filetype", { buf = bufnr }))
 end
 
 nvim.lsp.features.codelens.enabled = true
