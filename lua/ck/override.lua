@@ -95,8 +95,8 @@ nvim.lsp.ai.filetypes.ignored = {
   "AvanteInput",
 }
 
+---- language servers
 nvim.lsp.servers = {
-  ---- language servers
   "ansiblels",
   "bashls",
   "buf_ls",
@@ -124,21 +124,28 @@ nvim.lsp.servers = {
   "tailwindcss",
   "taplo",
   "terraformls",
+  "ty",
   "typos_lsp",
   "vale_ls",
   "vtsls",
   "yamlls",
 }
 
-nvim.lsp.packages = vim.list_extend({
-  --- lazyloaded language servers
-  "vue-language-server",
+nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, nvim.lsp.servers)
 
-  --- formatters/linters
+--- lazyloaded language servers as plugins
+nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, {
+  "vue-language-server",
+})
+
+--- formatters/linters
+nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, {
   "ansible-lint",
   "beautysh",
+  "checkmake",
   "golangci-lint",
   "hadolint",
+  "markdown-toc",
   "markdownlint",
   "prettierd",
   "proselint",
@@ -156,16 +163,12 @@ nvim.lsp.packages = vim.list_extend({
   -- "golines",
   -- "mypy",
   -- "tflint",
+}, nvim.lsp.servers)
 
-  --- debugers
+--- debugers
+nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, {
   "js-debug-adapter",
   "delve",
-
-  -- external
-  "checkmake",
-  "markdown-toc",
-  -- "md-printer",
-  -- "rustywind",
 }, nvim.lsp.servers)
 
 require("ck.setup").setup_callback(require("ck.plugins.treesitter").name, function(c)
