@@ -163,13 +163,13 @@ nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, {
   -- "golines",
   -- "mypy",
   -- "tflint",
-}, nvim.lsp.servers)
+})
 
 --- debugers
 nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, {
   "js-debug-adapter",
   "delve",
-}, nvim.lsp.servers)
+})
 
 require("ck.setup").setup_callback(require("ck.plugins.treesitter").name, function(c)
   return vim.tbl_extend("force", c, {
