@@ -116,7 +116,7 @@ nvim.lsp.servers = {
   "lua_ls",
   "marksman",
   "prismals",
-  "pyright",
+  -- "pyright",
   "ruff",
   "rust_analyzer",
   "svelte",
