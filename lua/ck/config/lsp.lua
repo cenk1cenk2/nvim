@@ -153,7 +153,6 @@ return {
       filter = require("ck.lsp.format").filter,
       ---@module "conform"
       ---@type conform.LspFormatOpts
-      lsp_format = "first",
     },
 
     clients = {
