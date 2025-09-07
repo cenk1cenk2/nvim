@@ -41,7 +41,8 @@ function M.setup()
 
         return "dockerfile"
       end,
-      ["*.dockerignore"] = "gitignore",
+      [".*.dockerignore"] = "gitignore",
+      ["neomutt-.*"] = "markdown",
       [".*%.ya?ml"] = function(path)
         if path:find(".*%.gitlab-ci.*$") then
           return "yaml.gitlab-ci"
