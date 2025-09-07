@@ -205,6 +205,7 @@ function M.register()
     "json",
     "jsonc",
     "html",
+    "htmldjango",
     "scss",
     "css",
     "markdown",
