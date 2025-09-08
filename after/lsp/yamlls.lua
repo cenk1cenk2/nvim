@@ -40,8 +40,8 @@ return {
   filetypes = {
     "yaml",
     "yaml.gitlab-ci",
+    "yaml.compose",
     "!yaml.ansible",
-    "!yaml.compose",
   },
   settings = {
     flags = {

@@ -102,11 +102,9 @@ nvim.lsp.servers = {
   "buf_ls",
   "copilot",
   "cssls",
-  "docker_compose_language_service",
   "dockerls",
   "emmet_ls",
   "eslint",
-  "gitlab_ci_ls",
   "golangci_lint_ls",
   "gopls",
   "graphql",
@@ -116,7 +114,6 @@ nvim.lsp.servers = {
   "lua_ls",
   "marksman",
   "prismals",
-  -- "pyright",
   "ruff",
   "rust_analyzer",
   "svelte",
@@ -129,6 +126,9 @@ nvim.lsp.servers = {
   "vale_ls",
   "vtsls",
   "yamlls",
+  -- "docker_compose_language_service",
+  -- "gitlab_ci_ls",
+  -- "pyright",
 }
 
 nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, nvim.lsp.servers)
