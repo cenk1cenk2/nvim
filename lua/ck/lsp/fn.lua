@@ -165,22 +165,36 @@ end
 function M.accept_inline_completion(opts)
   opts = opts or { bufnr = vim.api.nvim_get_current_buf() }
 
-  vim.lsp.inline_completion.get(opts)
+  if vim.lsp.inline_completion.get(opts) then
+    return
+  end
 
-  -- if not vim.lsp.inline_completion.get(opts) then
-  --   local params = vim.lsp.util.make_range_params(vim.api.nvim_get_current_win(), "utf-8")
-  --
-  --   vim.lsp.buf_request_all(opts.bufnr, "textDocument/inlineCompletion", params, function(responses)
-  --     for client_id, response in pairs(responses) do
-  --       local client = vim.lsp.get_client_by_id(client_id) or {}
-  --
-  --
-  --       if response.err then
-  --         log:warn("[%s]: %s", client.name or client.id, response.err.message)
-  --       end
-  --     end
-  --   end)
-  -- end
+  M.trigger_inline_completion(opts)
+end
+
+---@param opts? vim.lsp.inline_completion.get.Opts
+function M.trigger_inline_completion(opts)
+  opts = opts or { bufnr = vim.api.nvim_get_current_buf() }
+
+  local params = vim.lsp.util.make_position_params(vim.api.nvim_get_current_win(), "utf-8")
+  params.context = {
+    triggerKind = 1,
+    triggerCharacter = nil,
+  }
+  params["formattingOptions"] = {
+    tabSize = vim.bo[opts.bufnr].shiftwidth,
+    insertSpaces = not vim.bo[opts.bufnr].expandtab,
+  }
+
+  vim.lsp.buf_request_all(opts.bufnr, "textDocument/inlineCompletion", params, function(responses)
+    for client_id, response in pairs(responses) do
+      local client = vim.lsp.get_client_by_id(client_id) or {}
+
+      if response.err then
+        log:warn("[%s]: %s", client.name or client.id, response.err.message)
+      end
+    end
+  end)
 end
 
 ---@param bufnr? number
