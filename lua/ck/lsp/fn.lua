@@ -314,17 +314,18 @@ function M.fix_current()
 end
 
 function M.remove_unused_imports()
-  return M.call_clients_for_code_action({ "source.removeUnusedImports", "source.removeUnused.ts" })
+  return M.call_clients_for_code_action({ "source.removeUnusedImports", "source.removeUnused.ts" }, nil, { "eslint" })
 end
 
 function M.add_missing_imports()
-  return M.call_clients_for_code_action({ "source.addMissingImports" })
+  return M.call_clients_for_code_action({ "source.addMissingImports" }, nil, { "eslint" })
 end
 
 ---
 ---@param context: table<string>
 ---@param cb? fun(): nil
-function M.call_clients_for_code_action(context, cb)
+---@param ignored? table<string>
+function M.call_clients_for_code_action(context, cb, ignored)
   local params = vim.lsp.util.make_range_params(vim.api.nvim_get_current_win(), "utf-8")
   params.context = {
     diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
@@ -349,17 +350,23 @@ function M.call_clients_for_code_action(context, cb)
       for _, result in pairs(response.result or {}) do
         local client = vim.lsp.get_client_by_id(client_id) or {}
 
+        if ignored and vim.tbl_contains(ignored, client.name) then
+          log:debug("Ignored client: %s -> %s", client.name, context)
+
+          return
+        end
+
         if result.command then
           vim.lsp.buf_request_sync(0, "workspace/executeCommand", result.command)
         elseif result.edit then
           vim.lsp.util.apply_workspace_edit(result.edit, client.offset_encoding or "utf-8")
         end
 
-        log:info("[%s]: %s", client.name, context)
-
         if cb then
           cb()
         end
+
+        log:info("[%s]: %s", client.name, context)
       end
     end
   end)
