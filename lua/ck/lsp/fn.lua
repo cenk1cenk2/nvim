@@ -195,7 +195,7 @@ function M.restart_lsp(filter)
   filter = filter or { bufnr = vim.api.nvim_get_current_buf() }
 
   local clients = vim.tbl_filter(function(client)
-    if vim.tbl_contains({ "copilot", "typos_lsp", "copilot_ls" }, client.name) then
+    if vim.tbl_contains({ "copilot", "typos_lsp" }, client.name) then
       return false
     end
 
