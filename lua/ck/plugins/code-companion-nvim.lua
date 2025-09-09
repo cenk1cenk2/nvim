@@ -28,10 +28,10 @@ function M.config()
             size = {
               width = function()
                 if vim.o.columns < 180 then
-                  return 0.3
+                  return 0.5
                 end
 
-                return 120
+                return 180
               end,
             },
           },

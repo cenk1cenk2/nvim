@@ -63,17 +63,17 @@ function M.config()
       end)
 
       fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
-        vim.list_extend(c.left, {
+        vim.list_extend(c.right, {
           {
             ft = "dbee",
             title = "Database",
             size = {
               width = function()
-                if vim.o.columns < 360 then
-                  return math.floor(vim.o.columns * 0.25)
+                if vim.o.columns > 360 then
+                  return math.floor(vim.o.columns * 0.5)
                 end
 
-                return 30
+                return 80
               end,
             },
           },
