@@ -69,13 +69,35 @@ function M.config()
             title = "Database",
             size = {
               width = function()
-                if vim.o.columns > 360 then
-                  return math.floor(vim.o.columns * 0.5)
+                if vim.o.columns < 180 then
+                  return math.floor(vim.o.columns * 0.3)
                 end
 
                 return 80
               end,
             },
+            filter = function(buf)
+              return not vim.api.nvim_buf_get_name(buf):find("^dbee-result.*")
+            end,
+          },
+        })
+
+        vim.list_extend(c.bottom, {
+          {
+            ft = "dbee-result",
+            title = "Database",
+            size = {
+              width = function()
+                if vim.o.rows < 60 then
+                  return math.floor(vim.o.columns * 0.25)
+                end
+
+                return 50
+              end,
+            },
+            filter = function(buf)
+              return vim.api.nvim_buf_get_name(buf):find("^dbee-result.*")
+            end,
           },
         })
 
@@ -84,6 +106,7 @@ function M.config()
 
       fn.add_disabled_filetypes({
         "dbee",
+        "dbee-result",
       })
     end,
     setup = function(_, fn)
@@ -132,6 +155,9 @@ function M.config()
 
             -- cancel current call execution
             { key = "<C-c>", mode = "", action = "cancel_call" },
+          },
+          buffer_options = {
+            filetype = "dbee-result",
           },
         },
         editor = {
