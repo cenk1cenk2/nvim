@@ -53,6 +53,10 @@ return {
       completion = true,
       validate = true,
       format = { enable = false },
+      customTags = {
+        "!reference sequence",
+        "!environment sequence",
+      },
       schemaStore = { enable = true, url = "https://www.schemastore.org/api/json/catalog.json" },
       schemaDownload = { enable = true },
       schemas = vim.tbl_extend("force", require("schemastore").yaml.schemas(), {
