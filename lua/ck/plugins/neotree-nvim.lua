@@ -88,6 +88,7 @@ function M.config()
       ---@param state table
       ---@param opts table
       ---@return table
+      ---@param state neotree.StateWithTree
       local function get_telescope_options(state, opts)
         return vim.tbl_extend("force", opts, {
           hidden = true,
@@ -116,19 +117,31 @@ function M.config()
         })
       end
 
+      ---@param state neotree.StateWithTree
       local function get_node_dir(state)
         local node = state.tree:get_node()
-        local path
         -- if node.type == "directory" then
         --   path = node:get_id()
-        if node.type == "file" or node.type == "directory" then
-          path = node:get_parent_id()
-        else
-          log:warn("Finding in node only works for files and directories.")
+        if not vim.tbl_contains({ "file", "directory" }, node.type) then
+          log:warn("Does not work for this type of node: %s", node.type)
+
           return
         end
 
-        return path
+        return node:get_parent_id()
+      end
+
+      ---@param state neotree.StateWithTree
+      local function get_node_path(state)
+        local node = state.tree:get_node()
+
+        if not vim.tbl_contains({ "file", "directory" }, node.type) then
+          log:warn("Does not work for this type of node: %s", node.type)
+
+          return
+        end
+
+        return node:get_id()
       end
 
       local function index_of(array, value)
@@ -140,6 +153,8 @@ function M.config()
         return nil
       end
 
+      ---@param state neotree.StateWithTree
+      ---@param node neotree.FileNode
       local function get_siblings(state, node)
         local parent = state.tree:get_node(node:get_parent_id())
         local siblings = parent:get_child_ids()
@@ -371,6 +386,7 @@ function M.config()
               ["H"] = "parent",
             },
           },
+          ---@type neotree.sources.Buffers.Commands
           commands = {
             system_open = function(state)
               local node = state.tree:get_node()
@@ -405,11 +421,11 @@ function M.config()
               }))
             end,
             telescope_grep = function(state)
-              require("ck.plugins.telescope").rg_string(get_telescope_options(state, {
-                -- cwd = path,
-                search_dirs = { get_node_dir(state) },
+              require("ck.plugins.telescope").rg_string({
+                cwd = get_node_dir(state),
+                search_dirs = { get_node_path(state) },
                 additional_args = { "--no-ignore-dot" },
-              }))
+              })
             end,
             next_sibling = function(state)
               local node = state.tree:get_node()
