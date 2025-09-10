@@ -378,6 +378,7 @@ function M.config()
               ["S"] = "run_command",
               ["K"] = "show_file_details2",
               ["gp"] = "telescope_find",
+              ["gF"] = "telescope_grep_folder",
               ["gf"] = "telescope_grep",
               ["c"] = "copy_filename",
               ["C"] = "copy_filepath",
@@ -424,6 +425,12 @@ function M.config()
               require("ck.plugins.telescope").rg_string({
                 cwd = get_node_dir(state),
                 search_dirs = { get_node_path(state) },
+                additional_args = { "--no-ignore-dot" },
+              })
+            end,
+            telescope_grep_folder = function(state)
+              require("ck.plugins.telescope").rg_string({
+                search_dirs = { get_node_dir(state) },
                 additional_args = { "--no-ignore-dot" },
               })
             end,
