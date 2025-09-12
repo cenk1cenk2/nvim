@@ -21,22 +21,16 @@ function M.config()
 
       ---@type conform.setupOpts
       return {
+        default_format_opts = {
+          lsp_format = nvim.lsp.tools.format.lsp_format,
+        },
+
         -- Map of filetype to formatters
         formatters_by_ft = tools.read(METHOD),
         -- If this is set, Conform will run the formatter on save.
         -- It will pass the table to conform.format().
         -- This can also be a function that returns the table.
-        format_on_save = function(bufnr)
-          if not require("ck.lsp.format").should_format_on_save() then
-            return {
-              formatters = {},
-            }
-          end
-
-          return {
-            timeout_ms = nvim.lsp.tools.format.timeout,
-          }
-        end,
+        format_on_save = nil,
         -- If this is set, Conform will run the formatter asynchronously after save.
         -- It will pass the table to conform.format().
         -- This can also be a function that returns the table.
@@ -75,13 +69,7 @@ function M.config()
         end
 
         if registered.lsp_format ~= "never" and not (registered.lsp_format == "fallback" and #formatters > 0) then
-          local lsp = vim.tbl_filter(function(client)
-            if client.server_capabilities.documentFormattingProvider == true then
-              return true
-            end
-
-            return false
-          end, vim.lsp.get_clients({ bufnr = bufnr }))
+          local lsp = vim.lsp.get_clients({ bufnr = bufnr, method = "textDocument/formatting" })
 
           if registered.lsp_format == "first" then
             formatters = vim.list_extend(
@@ -127,6 +115,7 @@ function M.config()
           },
           opts or {}
         )
+
         return require("conform").format(opts)
       end
     end,

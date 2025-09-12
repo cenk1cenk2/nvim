@@ -10,8 +10,8 @@ function M.enable_format_on_save()
   vim.api.nvim_create_autocmd("BufWritePre", {
     group = group,
     pattern = nvim.lsp.tools.format.pattern,
-    callback = function(args)
-      nvim.lsp.fn.format({ bufnr = args.bufnr })
+    callback = function(e)
+      nvim.lsp.fn.format({ bufnr = e.buf })
     end,
   })
 
@@ -46,15 +46,7 @@ end
 ---filter passed to vim.lsp.buf.format
 ---@type FormatFilterFn
 function M.filter(client)
-  local registered = nvim.lsp.tools.list_registered.formatters(0)
-
-  if #registered > 0 then
-    return client.name == nvim.lsp.tools.clients[METHODS.FORMATTER]
-  elseif client.supports_method("textDocument/formatting") then
-    return true
-  end
-
-  return false
+  return true
 end
 
 function M.setup()
