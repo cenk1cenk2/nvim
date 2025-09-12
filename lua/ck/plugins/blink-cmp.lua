@@ -386,24 +386,24 @@ function M.config()
     autocmds = function()
       ---@type Autocmds
       return {
-        {
-          event = "User",
-          pattern = "BlinkCmpMenuOpen",
-          group = "_blink",
-          callback = function(e)
-            if vim.lsp.inline_completion.is_enabled({ bufnr = e.buf }) then
-              vim.lsp.inline_completion.enable(false, { bufnr = e.buf })
-            end
-          end,
-        },
-        {
-          event = "User",
-          pattern = "BlinkCmpMenuClose",
-          group = "_blink",
-          callback = function(e)
-            vim.lsp.inline_completion.enable(require("ck.setup").evaluate_property(nvim.lsp.features.inline_completion.enabled), { bufnr = e.buf })
-          end,
-        },
+        -- {
+        --   event = "User",
+        --   pattern = "BlinkCmpMenuOpen",
+        --   group = "_blink",
+        --   callback = function(e)
+        --     if vim.lsp.inline_completion.is_enabled({ bufnr = e.buf }) then
+        --       vim.lsp.inline_completion.enable(false, { bufnr = e.buf })
+        --     end
+        --   end,
+        -- },
+        -- {
+        --   event = "User",
+        --   pattern = "BlinkCmpMenuClose",
+        --   group = "_blink",
+        --   callback = function(e)
+        --     vim.lsp.inline_completion.enable(require("ck.setup").evaluate_property(nvim.lsp.features.inline_completion.enabled), { bufnr = e.buf })
+        --   end,
+        -- },
       }
     end,
   })
