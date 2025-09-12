@@ -17,6 +17,7 @@ nvim.lsp.features.on_type_formatting.enabled = function(client, bufnr)
   return not vim.tbl_contains({
     "lua",
     "python",
+    "yaml",
   }, vim.api.nvim_get_option_value("filetype", { buf = bufnr }))
 end
 
