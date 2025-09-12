@@ -391,7 +391,7 @@ function M.config()
           pattern = "BlinkCmpMenuOpen",
           group = "_blink",
           callback = function(e)
-            if vim.lsp.inline_completion.is_enabled() then
+            if vim.lsp.inline_completion.is_enabled({ bufnr = e.buf }) then
               vim.lsp.inline_completion.enable(false, { bufnr = e.buf })
             end
           end,
