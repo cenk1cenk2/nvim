@@ -53,7 +53,7 @@ nvim.lsp.ai.copilot.filetypes = {
 
 nvim.lsp.ai.copilot.nes.enabled = true
 nvim.lsp.ai.copilot.nes.debounce = 75
-nvim.lsp.ai.copilot.nes.auto_suggest = true
+nvim.lsp.ai.copilot.nes.auto_suggest = false
 -- nvim.lsp.ai.model.embed = "nomic-embed-text"
 
 -- nvim.lsp.ai.model.embed = "text-embedding-3-small"

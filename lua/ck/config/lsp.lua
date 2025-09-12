@@ -82,7 +82,7 @@ return {
       nes = {
         enabled = true,
         debounce = 50,
-        auto_suggest = true,
+        auto_suggest = false,
       },
     },
   },
