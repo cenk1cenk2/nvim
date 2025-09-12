@@ -3,6 +3,8 @@ local M = {}
 
 M.name = "copilotlsp-nvim/copilot-lsp"
 
+local log = require("ck.log")
+
 function M.config()
   require("ck.setup").define_plugin(M.name, nvim.lsp.ai.copilot.nes.enabled, {
     plugin = function()
@@ -50,7 +52,11 @@ function M.config()
           function()
             -- local _ = nes.walk_cursor_start_edit() or (nes.apply_pending_nes() and nes.walk_cursor_end_edit())
             -- local _ = nes.apply_pending_nes() and nes.walk_cursor_end_edit()
-            local _ = require("copilot-lsp.nes").apply_pending_nes() or require("copilot-lsp.nes").request_nes("copilot")
+            local applied = require("copilot-lsp.nes").apply_pending_nes()
+            if not applied then
+              log:info("Requesting NES...")
+              require("copilot-lsp.nes").request_nes("copilot")
+            end
           end,
           desc = "nes: apply",
           mode = { "i", "n", "v" },
