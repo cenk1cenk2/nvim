@@ -382,6 +382,29 @@ function M.config()
       require("luasnip.loaders.from_vscode").lazy_load({ paths = paths })
       require("luasnip.loaders.from_snipmate").lazy_load()
     end,
+    autocmds = function()
+      ---@type Autocmds
+      return {
+        {
+          event = "User",
+          pattern = "BlinkCmpMenuOpen",
+          group = "_blink",
+          callback = function(e)
+            if vim.lsp.inline_completion.is_enabled() then
+              vim.lsp.inline_completion.enable(false, { bufnr = e.buf })
+            end
+          end,
+        },
+        {
+          event = "User",
+          pattern = "BlinkCmpMenuClose",
+          group = "_blink",
+          callback = function(e)
+            vim.lsp.inline_completion.enable(require("ck.setup").evaluate_property(nvim.lsp.features.inline_completion.enabled), { bufnr = e.buf })
+          end,
+        },
+      }
+    end,
   })
 end
 
