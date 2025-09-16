@@ -88,9 +88,18 @@ function M.setup()
           {
             fn.wk_keystroke({ categories.ACTIONS, "n" }),
             function()
+              vim.cmd([[trust .nvim.lua]])
               vim.cmd([[lua dofile(".nvim.lua")]])
             end,
             desc = "reload .nvim.lua exrc",
+            mode = { "n", "v" },
+          },
+          {
+            fn.wk_keystroke({ categories.ACTIONS, "N" }),
+            function()
+              vim.cmd([[trust %]])
+            end,
+            desc = "trust file",
             mode = { "n", "v" },
           },
           {
