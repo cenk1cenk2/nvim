@@ -240,10 +240,6 @@ function M.config()
         },
         fuzzy = {
           implementation = "rust",
-          max_typos = function(keyword)
-            -- return math.floor(#keyword / 4)
-            return 0
-          end,
           sorts = {
             "exact",
             "score",
