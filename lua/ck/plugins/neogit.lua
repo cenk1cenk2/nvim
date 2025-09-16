@@ -51,11 +51,11 @@ function M.config()
         mappings = {
           commit_editor = {
             ["q"] = "Close",
-            ["<c-c><c-q>"] = "Submit",
+            ["<c-c><c-s>"] = "Submit",
             ["<c-c><c-c>"] = "Abort",
           },
           commit_editor_I = {
-            ["<c-c><c-q>"] = "Submit",
+            ["<c-c><c-s>"] = "Submit",
             ["<c-c><c-c>"] = "Abort",
           },
         },
