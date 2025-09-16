@@ -88,7 +88,7 @@ function M.setup()
           {
             fn.wk_keystroke({ categories.ACTIONS, "n" }),
             function()
-              vim.cmd([[lua dofile .nvim.lua]])
+              vim.cmd([[lua dofile(".nvim.lua")]])
             end,
             desc = "reload .nvim.lua exrc",
             mode = { "n", "v" },
