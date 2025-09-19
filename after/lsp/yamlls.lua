@@ -57,6 +57,9 @@ return {
         "!reference sequence",
         "!environment sequence",
       },
+      editor = {
+        formatOnType = false,
+      },
       schemaStore = { enable = true, url = "https://www.schemastore.org/api/json/catalog.json" },
       schemaDownload = { enable = true },
       schemas = vim.tbl_extend("force", require("schemastore").yaml.schemas(), {
