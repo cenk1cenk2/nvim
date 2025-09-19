@@ -71,6 +71,9 @@ function M.config()
         return {}
       end
 
+      ---@type nil|tmux-toggle-popup.Session
+      local buffer_terminal = nil
+
       ---@type KeymapMappings
       return {
         {
@@ -83,14 +86,29 @@ function M.config()
         {
           "<F5>",
           function()
-            local dir = require("ck.utils.fs").get_buffer_dirpath()
+            if buffer_terminal then
+              if require("tmux-toggle-popup.api").has_session(buffer_terminal) then
+                log:info("Reusing existing buffer terminal: %s", buffer_terminal.name)
+              else
+                log:warn("No buffer terminal exists: %s", buffer_terminal.name)
+                buffer_terminal = nil
+              end
+            end
 
-            M.create_terminal({
-              name = dir,
-              flags = {
-                start_directory = dir,
-              },
-            })
+            if not buffer_terminal then
+              local dir = require("ck.utils.fs").get_buffer_dirpath()
+
+              log:info("Creating new buffer terminal for directory: %s", dir)
+
+              buffer_terminal = {
+                name = dir,
+                flags = {
+                  start_directory = dir,
+                },
+              }
+            end
+
+            M.create_terminal(buffer_terminal)
           end,
           desc = "create buffer terminal",
         },
@@ -278,6 +296,7 @@ function M.editor_async()
 end
 
 ---@param opts tmux-toggle-popup.Session
+---@return tmux-toggle-popup.Session
 function M.create_terminal(opts)
   return require("tmux-toggle-popup").open(vim.tbl_extend("keep", opts, { on_init = { "set status off" } }))
 end
