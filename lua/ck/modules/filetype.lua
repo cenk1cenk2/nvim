@@ -44,7 +44,7 @@ function M.setup()
       [".*.dockerignore"] = "gitignore",
       ["neomutt-.*"] = "markdown",
       [".*%.ya?ml"] = function(path)
-        if path:find(".*%.gitlab-ci.*$") then
+        if path:find(".*%.gitlab-ci%..*$") then
           return "yaml.gitlab-ci"
         elseif path:find(".*compose.*$") then
           return "yaml.compose"
