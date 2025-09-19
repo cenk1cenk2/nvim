@@ -160,6 +160,7 @@ nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, {
   "sqruff",
   "stylua",
   "tfsec",
+  "vale",
   -- "djlint",
   -- "eslint_d",
   -- "goimports",
