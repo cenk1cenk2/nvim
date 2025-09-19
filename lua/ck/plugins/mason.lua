@@ -41,6 +41,7 @@ function M.config()
     setup = function()
       ---@type MasonSettings
       return {
+        PATH = "prepend",
         ui = {
           border = nvim.ui.border,
         },
