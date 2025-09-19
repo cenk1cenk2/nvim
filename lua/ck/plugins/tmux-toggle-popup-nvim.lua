@@ -98,8 +98,6 @@ function M.config()
             if not buffer_terminal then
               local dir = require("ck.utils.fs").get_buffer_dirpath()
 
-              log:info("Creating new buffer terminal for directory: %s", dir)
-
               buffer_terminal = {
                 name = dir,
                 flags = {
