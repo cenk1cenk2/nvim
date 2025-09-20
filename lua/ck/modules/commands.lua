@@ -15,7 +15,8 @@ function M.setup()
           end, vim.fn.getwininfo())
 
           if vim.tbl_isempty(qf) then
-            vim.cmd("botright copen")
+            -- vim.cmd("botright copen")
+            vim.cmd("copen")
           else
             vim.cmd("cclose")
           end
