@@ -238,13 +238,19 @@ function M.config()
             return {}
           end,
         },
+
         fuzzy = {
           implementation = "rust",
+          max_typos = 0,
+          use_proximity = true,
+          frecency = {
+            enabled = false,
+          },
           sorts = {
             "exact",
             "score",
             -- "label",
-            -- "kind",
+            "kind",
             "sort_text",
           },
         },
