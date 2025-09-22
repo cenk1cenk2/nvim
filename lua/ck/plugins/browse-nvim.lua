@@ -24,11 +24,11 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.FIND, "s" }),
+          fn.wk_keystroke({ "S" }),
           function()
             require("browse").input_search()
           end,
-          desc = "search on google",
+          desc = "search on web",
         },
       }
     end,
