@@ -250,7 +250,7 @@ function M.config()
             "exact",
             "score",
             -- "label",
-            "kind",
+            -- "kind",
             "sort_text",
           },
         },
