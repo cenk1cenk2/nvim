@@ -241,7 +241,7 @@ function M.config()
 
         fuzzy = {
           implementation = "rust",
-          max_typos = 0,
+          -- max_typos = 0,
           use_proximity = true,
           frecency = {
             enabled = false,
