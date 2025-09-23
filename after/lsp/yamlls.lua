@@ -95,7 +95,7 @@ return {
           "bitbucket-pipelines.yml",
         },
         ["https://taskfile.dev/schema.json"] = {
-          "Taskfile*.{yml,yaml}",
+          "Taskfile.*.{yml,yaml}",
         },
         ["https://json.schemastore.org/pulumi.json"] = {
           "Pulumi.{yml,yaml}",
