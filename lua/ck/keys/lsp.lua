@@ -37,21 +37,21 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.LSP, categories.LOGS, "o" }),
           function()
-            nvim.fn.toggle_log_view(vim.lsp.get_log_path())
+            nvim.fn.toggle_log_view(vim.lsp.log.get_log_path())
           end,
           desc = "view lsp log",
         },
         {
           fn.wk_keystroke({ categories.LSP, categories.LOGS, "e" }),
           function()
-            vim.cmd(("edit %s"):format(vim.lsp.get_log_path()))
+            vim.cmd(("edit %s"):format(vim.lsp.log.get_log_path()))
           end,
           desc = "open the lsp logfile",
         },
         {
           fn.wk_keystroke({ categories.LSP, categories.LOGS, "X" }),
           function()
-            require("ck.log"):truncate_logfile(vim.lsp.get_log_path())
+            require("ck.log"):truncate_logfile(vim.lsp.log.get_log_path())
           end,
           desc = "delete lsp logfile",
         },

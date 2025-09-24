@@ -448,7 +448,7 @@ end
 ---
 ---@param level number
 function M.set_log_level(level)
-  vim.lsp.set_log_level(level)
+  vim.lsp.log.set_log_level(level)
 
   if level ~= log:to_level(nvim.lsp.log.level) then
     log:info("Set LSP log level: %s", level)
