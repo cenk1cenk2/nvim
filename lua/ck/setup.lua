@@ -250,43 +250,23 @@ end
 --- Define a new plugin.
 ---@type DefinePluginFn
 function M.define_plugin(name, enabled, config)
-  -- vim.validate("enabled", enabled, "boolean")
-  -- vim.validate("name", name, "string")
-  -- vim.validate("config", config, "table")
-  -- vim.validate("condition", config.condition, "function")
-  -- vim.validate("plugin", config.plugin, "function", true)
-  -- vim.validate("configure", config.configure, "function", true)
-  -- vim.validate("on_init", config.on_init, "function", true)
-  -- vim.validate("setup", config.setup, { "table", "function" }, true)
-  -- vim.validate("on_setup", config.on_setup, "function", true)
-  -- vim.validate("on_done", config.on_done, "function", true)
-  -- vim.validate("keymaps", config.keymaps, { "table", "function" }, true)
-  -- vim.validate("wk", config.wk, { "table", "function" }, true)
-  -- vim.validate("toggles", config.toggles, { "function" }, true)
-  -- vim.validate("autocmds", config.autocmds, { "table", "function" }, true)
-  -- vim.validate("commands", config.commands, { "table", "function" }, true)
-  -- vim.validate("hl", config.hl, { "table", "function" }, true)
-  -- vim.validate("signs", config.signs, { "table", "function" }, true)
-
-  vim.validate({
-    enabled = { enabled, "b" },
-    name = { name, "s" },
-    config = { config, "t" },
-    condition = { config.condition, "f", true },
-    plugin = { config.plugin, "f", true },
-    configure = { config.configure, "f", true },
-    on_init = { config.on_init, "f", true },
-    setup = { config.setup, { "t", "f" }, true },
-    on_setup = { config.on_setup, "f", true },
-    on_done = { config.on_done, "f", true },
-    keymaps = { config.keymaps, { "t", "f" }, true },
-    wk = { config.wk, { "t", "f" }, true },
-    toggles = { config.toggles, { "f" }, true },
-    autocmds = { config.autocmds, { "t", "f" }, true },
-    commands = { config.commands, { "t", "f" }, true },
-    hl = { config.hl, { "f", "t" }, true },
-    signs = { config.signs, { "f", "t" }, true },
-  })
+  vim.validate("enabled", enabled, "boolean")
+  vim.validate("name", name, "string")
+  vim.validate("config", config, "table")
+  vim.validate("condition", config.condition, "function", true)
+  vim.validate("plugin", config.plugin, "function", true)
+  vim.validate("configure", config.configure, "function", true)
+  vim.validate("on_init", config.on_init, "function", true)
+  vim.validate("setup", config.setup, { "table", "function" }, true)
+  vim.validate("on_setup", config.on_setup, "function", true)
+  vim.validate("on_done", config.on_done, "function", true)
+  vim.validate("keymaps", config.keymaps, { "table", "function" }, true)
+  vim.validate("wk", config.wk, { "table", "function" }, true)
+  vim.validate("toggles", config.toggles, { "function" }, true)
+  vim.validate("autocmds", config.autocmds, { "table", "function" }, true)
+  vim.validate("commands", config.commands, { "table", "function" }, true)
+  vim.validate("hl", config.hl, { "table", "function" }, true)
+  vim.validate("signs", config.signs, { "table", "function" }, true)
 
   config = vim.tbl_extend("force", config, {
     name = name,
