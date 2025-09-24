@@ -132,7 +132,7 @@ end
 function M.attach_codelens(client, bufnr)
   local method = "textDocument/codeLens"
   local ok, codelens_supported = pcall(function()
-    return client.supports_method(method)
+    return client:supports_method(method)
   end)
 
   if not ok or not codelens_supported then
