@@ -46,16 +46,22 @@ function M.config()
           log_level = require("ck.log"):to_nvim_level(),
         },
         adapters = {
-          http = {
-            claude = require("ck.plugins.code-companion-nvim-adapter-claude"),
+          acp = {
+            claude_code = function()
+              return require("codecompanion.adapters").extend("claude_code", {
+                env = {
+                  CLAUDE_CODE_OAUTH_TOKEN = vim.env["CLAUDE_CODE_OAUTH_TOKEN"],
+                },
+                commands = {
+                  default = { "claude-code-acp" },
+                },
+              })
+            end,
           },
         },
         strategies = {
           chat = {
-            adapter = {
-              name = nvim.lsp.ai.provider.chat,
-              model = nvim.lsp.ai.model.chat,
-            },
+            adapter = nvim.lsp.ai.provider.chat,
             window = {
               border = nvim.ui.border,
               numberwidth = 0,

@@ -56,9 +56,9 @@ return {
       options = {},
     },
     provider = {
-      ---@type 'copilot' | 'ai.kilic.dev' | 'gemini'
-      chat = "copilot",
-      ---@type 'copilot' | 'ai.kilic.dev' | 'gemini'
+      ---@type 'copilot' | 'ai.kilic.dev' | 'gemini' | string
+      chat = "claude_code",
+      ---@type 'copilot' | 'ai.kilic.dev' | 'gemini' | string
       completion = "copilot",
     },
     filetypes = {
