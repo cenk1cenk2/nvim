@@ -13,7 +13,6 @@ function M.config()
       }
     end,
     setup = function()
-      local defaults = require("markview.spec").default
       return {
         preview = {
           modes = { "n", "no", "c" }, -- Change these modes
@@ -36,7 +35,7 @@ function M.config()
           ignore_buftypes = {},
         },
         markdown = {
-          headings = vim.tbl_deep_extend("force", vim.deepcopy(defaults.markdown.headings), {
+          headings = {
             enable = true,
             shift_width = 0,
             shift_char = "",
@@ -58,11 +57,11 @@ function M.config()
             heading_6 = {
               hl = "@markup.heading.6.markdown",
             },
-          }),
-          list_items = vim.tbl_deep_extend("force", vim.deepcopy(defaults.markdown.list_items), {
+          },
+          list_items = {
             enable = true,
             shift_width = 2,
-          }),
+          },
         },
       }
     end,
