@@ -143,6 +143,18 @@ function M.config()
               super_diff = {
                 modes = { n = fn.local_keystroke({ "d" }) },
               },
+              _acp_allow_once = {
+                modes = { n = fn.local_keystroke({ "c", "a" }) },
+              },
+              _acp_reject_once = {
+                modes = { n = fn.local_keystroke({ "c", "r" }) },
+              },
+              _acp_allow_always = {
+                modes = { n = fn.local_keystroke({ "c", "A" }) },
+              },
+              _acp_reject_always = {
+                modes = { n = fn.local_keystroke({ "c", "R" }) },
+              },
             },
           },
           inline = {
