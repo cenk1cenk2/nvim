@@ -29,7 +29,7 @@ if nvim.lsp.ai.copilot.nes.enabled then
       local au = vim.api.nvim_create_augroup("copilotlsp.init", { clear = true })
 
       if nvim.lsp.ai.copilot.nes.auto_suggest then
-        local debounced_request = require("copilot-lsp.util").debounce(require("copilot-lsp.nes").request_nes, vim.g.copilot_nes_debounce or 500)
+        local debounced_request = require("copilot-lsp.util").debounce(require("copilot-lsp.nes").request_nes, nvim.lsp.ai.copilot.nes.debounce or 500)
         vim.api.nvim_create_autocmd({ "TextChangedI", "TextChanged" }, {
           callback = function()
             debounced_request(client)
