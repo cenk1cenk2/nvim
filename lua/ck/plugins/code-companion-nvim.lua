@@ -272,14 +272,6 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "l" }),
-          function()
-            require("codecompanion").last_chat()
-          end,
-          desc = "select history [codecompanion]",
-          mode = { "n", "v" },
-        },
-        {
           fn.wk_keystroke({ categories.COPILOT, "e" }),
           function()
             require("codecompanion").add({})
