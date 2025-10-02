@@ -299,12 +299,14 @@ function M.components()
     },
     nes = {
       function()
-        return string.format(" %s ", nvim.ui.icons.misc.Robot)
+        return string.format("%s ", nvim.ui.icons.misc.Robot)
       end,
       color = function()
         local status = require("sidekick.status").get()
         if status then
-          return status.kind == "Error" and "DiagnosticError" or status.busy and "DiagnosticWarn" or "Special"
+          return status.kind == "Error" and { fg = nvim.ui.colors.red[300], bg = nvim.ui.colors.bg[300] }
+            or status.busy and { fg = nvim.ui.colors.yellow[300], bg = nvim.ui.colors.bg[300] }
+            or { fg = nvim.ui.colors.green[300], bg = nvim.ui.colors.bg[300] }
         end
       end,
       cond = function()
