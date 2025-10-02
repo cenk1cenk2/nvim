@@ -31,11 +31,11 @@ function M.config()
           debounce = nvim.lsp.ai.copilot.nes.debounce,
           trigger = {
             -- events that trigger sidekick next edit suggestions
-            events = { "InsertLeave", "TextChanged", "User SidekickNesDone" },
+            events = nvim.lsp.ai.copilot.nes.events.suggest,
           },
           clear = {
             -- events that clear the current next edit suggestion
-            events = { "TextChangedI", "TextChanged", "BufWritePre", "InsertEnter" },
+            events = nvim.lsp.ai.copilot.nes.events.clear,
             esc = true, -- clear next edit suggestions when pressing <Esc>
           },
           ---@class sidekick.diff.Opts

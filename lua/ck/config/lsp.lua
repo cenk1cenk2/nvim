@@ -82,7 +82,10 @@ return {
       nes = {
         enabled = true,
         debounce = 50,
-        auto_suggest = false,
+        events = {
+          suggest = { "InsertLeave", "TextChanged", "User SidekickNesDone" },
+          clear = { "TextChangedI", "TextChanged", "BufWritePre", "InsertEnter" },
+        },
       },
     },
   },
