@@ -46,6 +46,9 @@ function M.config()
         },
       }
     end,
+    on_setup = function(config)
+      require("sidekick").setup(config)
+    end,
     keymaps = function()
       ---@type KeymapMappings
       return {
