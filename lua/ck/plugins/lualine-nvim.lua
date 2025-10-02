@@ -39,6 +39,7 @@ function M.config()
             components.noice_message,
           },
           lualine_x = {
+            components.nes,
             components.searchcount,
             components.snippet,
             components.noice_mode,
