@@ -299,7 +299,7 @@ function M.components()
     },
     nes = {
       function()
-        return nvim.ui.icons.misc.Robot
+        return string.format(" %s ", nvim.ui.icons.misc.Robot)
       end,
       color = function()
         local status = require("sidekick.status").get()
