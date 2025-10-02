@@ -296,6 +296,25 @@ function M.components()
       end,
       color = { fg = nvim.ui.colors.fg, bg = nvim.ui.colors.bg[300] },
     },
+    nes = {
+      function()
+        return nvim.ui.icons.misc.Robot
+      end,
+      color = function()
+        local status = require("sidekick.status").get()
+        if status then
+          return status.kind == "Error" and "DiagnosticError" or status.busy and "DiagnosticWarn" or "Special"
+        end
+      end,
+      cond = function()
+        if not is_loaded("sidekick") then
+          return false
+        end
+
+        local status = require("sidekick.status")
+        return status.get() ~= nil
+      end,
+    },
     snippet = {
       function()
         return ("%s%s%s"):format(

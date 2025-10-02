@@ -44,7 +44,7 @@ local plugins = {
   "grug-far-nvim",
   "bookmarks-nvim",
   "minuet-ai-nvim",
-  "copilotlsp-nvim",
+  "sidekick-nvim",
   "avante-nvim",
   "claude-code-nvim",
   "code-companion-nvim",
