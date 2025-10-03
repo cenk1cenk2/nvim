@@ -1,9 +1,5 @@
 local s = require("ck.utils.snippets")
 
-local ts_locals = require("nvim-treesitter.locals")
-local ts_utils = require("nvim-treesitter.ts_utils")
-local get_node_text = vim.treesitter.get_node_text
-
 local ts_lang = "go"
 local ts_query = {
   return_result = "LuaSnip_Result",
@@ -49,7 +45,7 @@ local handlers = {
 
     local count = node:named_child_count()
     for idx = 0, count - 1 do
-      table.insert(result, transform(get_node_text(node:named_child(idx), 0), info))
+      table.insert(result, transform(vim.treesitter.get_node_text(node:named_child(idx), 0), info))
       if idx ~= count - 1 then
         table.insert(result, s.t({ ", " }))
       end
@@ -59,14 +55,13 @@ local handlers = {
   end,
 
   ["type_identifier"] = function(node, info)
-    local text = get_node_text(node, 0)
+    local text = vim.treesitter.get_node_text(node, 0)
     return { transform(text, info) }
   end,
 }
 
 local function go_result_type(info)
-  local cursor_node = ts_utils.get_node_at_cursor()
-  local scope = ts_locals.get_scope_tree(cursor_node, 0)
+  local scope = vim.treesitter.is_ancestor(require("nvim-treesitter.locals").get_scope_tree(vim.treesitter.get_node(), 0))
 
   local function_node
   for _, v in ipairs(scope) do
