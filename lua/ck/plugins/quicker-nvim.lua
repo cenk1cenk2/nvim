@@ -56,7 +56,8 @@ function M.config()
     on_setup = function(c)
       require("quicker").setup(c)
     end,
-    keys = function()
+    keymaps = function()
+      ---@type KeymapMappings
       return {
         {
           "<C-y>",
@@ -68,7 +69,7 @@ function M.config()
         },
 
         {
-          "<C-S-y>",
+          "<C-S-Y>",
           function()
             require("quicker").toggle({ focus = true, loclist = true })
           end,

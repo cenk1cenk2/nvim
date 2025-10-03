@@ -218,11 +218,6 @@ function M.load()
           mode = { "n" },
         },
         {
-          "<C-a>",
-          ":QuickFixToggle<CR>",
-          mode = { "n" },
-        },
-        {
           "<C-y>",
           ":QuickFixToggle<CR>",
           mode = { "n" },
