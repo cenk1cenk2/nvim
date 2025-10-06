@@ -67,6 +67,11 @@ function M.capabilities()
 end
 
 ---@type LspOnCallback
+function M.overwrite_capabilities_with_no_on_type_formatting(client, _)
+  client.server_capabilities.documentOnTypeFormattingProvider = nil
+end
+
+---@type LspOnCallback
 function M.overwrite_capabilities_with_no_formatting(client, _)
   client.server_capabilities.documentFormattingProvider = false
   client.server_capabilities.documentRangeFormattingProvider = false

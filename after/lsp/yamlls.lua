@@ -36,6 +36,7 @@ return {
   on_attach = function(client, bufnr)
     require("ck.lsp.handlers").on_attach(client, bufnr)
     require("ck.lsp.handlers").overwrite_capabilities_with_no_formatting(client, bufnr)
+    require("ck.lsp.handlers").overwrite_capabilities_with_no_on_type_formatting(client, bufnr)
   end,
   filetypes = {
     "yaml",
@@ -53,10 +54,10 @@ return {
       completion = true,
       validate = true,
       format = { enable = false },
-      customTags = {
-        "!reference sequence",
-        "!environment sequence",
-      },
+      -- customTags = {
+      --   "!reference sequence",
+      --   "!environment sequence",
+      -- },
       editor = {
         formatOnType = false,
       },
