@@ -272,6 +272,8 @@ function M.config()
             },
           },
           menu = {
+            ---TODO: remove me when redraw is fixed
+            auto_show_delay_ms = 150,
             border = nvim.ui.border,
             min_width = 40,
             max_height = 10,
@@ -317,8 +319,8 @@ function M.config()
               max_width = 120,
             },
             auto_show = true,
-            auto_show_delay_ms = 150,
-            update_delay_ms = 150,
+            -- auto_show_delay_ms = 150,
+            -- update_delay_ms = 150,
             treesitter_highlighting = true,
           },
         },
