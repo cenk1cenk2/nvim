@@ -170,7 +170,6 @@ return {
     desc = "Creates a link out of it.",
   }, {
     s.f(function(_, parent)
-      dd(parent.env)
       return "[](" .. parent.env.POSTFIX_MATCH .. ")"
     end, {}),
   }),
