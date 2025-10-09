@@ -107,6 +107,7 @@ return {
         ["https://json.schemastore.org/json-patch.json"] = {
           "jsonpatch-*.{yml,yaml}",
           "*-jsonpatch.{yml,yaml}",
+          "*.jsonpatch.{yml,yaml}",
           "json-patch-*.{yml,yaml}",
           "*-json-patch.{yml,yaml}",
         },
