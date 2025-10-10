@@ -109,7 +109,7 @@ function M.config()
             tools = {
               groups = {
                 ["default"] = {
-                  prompt = [[I'm giving you access to the ${tools} to help you perform coding tasks. Please use neovim mcp adapter first for file operations wherever possible. Please use fetch for web searches.]],
+                  prompt = [[I'm giving you access to the ${tools} to help you perform coding tasks. Please use neovim mcp adapter first for any kind of file based operations. Please use fetch for web searches.]],
                   tools = {
                     "cmd_runner",
                     "create_file",
