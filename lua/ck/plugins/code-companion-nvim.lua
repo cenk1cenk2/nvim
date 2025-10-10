@@ -12,6 +12,7 @@ function M.config()
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         dependencies = {
           "ravitemer/codecompanion-history.nvim",
+          "ravitemer/mcphub.nvim",
         },
       }
     end,
@@ -59,19 +60,105 @@ function M.config()
             end,
           },
         },
+        memory = {
+          claude_code = {
+            description = "Memory files for Claude Code users",
+            files = {
+              "~/.claude/CLAUDE.md",
+              "CLAUDE.md",
+              "CLAUDE.local.md",
+            },
+          },
+          opts = {
+            chat = {
+              enabled = true,
+            },
+          },
+        },
         strategies = {
           chat = {
             adapter = nvim.lsp.ai.provider.chat,
             window = {
               border = nvim.ui.border,
               numberwidth = 0,
+              sticky = true,
+              opts = {
+                numberwidth = 0,
+              },
+            },
+            diff_window = {
+              ---@return number|fun(): number
+              width = function()
+                return math.min(120, vim.o.columns - 10)
+              end,
+              ---@return number|fun(): number
+              height = function()
+                return vim.o.lines - 4
+              end,
+              opts = {
+                number = true,
+              },
+            },
+            variables = {
+              ["buffer"] = {
+                opts = {
+                  --- https://codecompanion.olimorris.dev/usage/chat-buffer/variables#with-parameters
+                  default_params = "watch", -- or 'watch'
+                },
+              },
             },
             tools = {
+              ["search_web"] = {
+                opts = {
+                  requires_approval = false,
+                },
+              },
+              ["fetch_webpage"] = {
+                opts = {
+                  requires_approval = false,
+                },
+              },
+              ["file_search"] = {
+                opts = {
+                  requires_approval = false,
+                },
+              },
+              ["get_changed_files"] = {
+                opts = {
+                  requires_approval = false,
+                },
+              },
+              ["grep_search"] = {
+                opts = {
+                  requires_approval = false,
+                },
+              },
+              ["read_file"] = {
+                opts = {
+                  requires_approval = false,
+                },
+              },
+              ["list_code_usages"] = {
+                opts = {
+                  requires_approval = false,
+                },
+              },
               opts = {
                 auto_submit_errors = true, -- Send any errors to the LLM automatically?
                 auto_submit_success = true, -- Send any successful output to the LLM automatically?
                 default_tools = { "full_stack_dev" },
               },
+            },
+            roles = {
+              ---The header name for the LLM's messages
+              ---@type string|fun(adapter: CodeCompanion.Adapter): string
+              llm = function(adapter)
+                return ("AI Overlord [%s]"):format(adapter.formatted_name)
+              end,
+
+              ---The header name for your messages
+              ---@type string
+              user = "Retarded Peasant",
             },
             keymaps = {
               options = {
@@ -188,6 +275,14 @@ function M.config()
           },
         },
         extensions = {
+          mcphub = {
+            callback = "mcphub.extensions.codecompanion",
+            opts = {
+              make_vars = true,
+              make_slash_commands = true,
+              show_result_in_chat = true,
+            },
+          },
           history = {
             enabled = true,
             opts = {
