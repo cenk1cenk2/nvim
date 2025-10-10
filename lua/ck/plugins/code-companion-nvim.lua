@@ -107,6 +107,24 @@ function M.config()
               },
             },
             tools = {
+              groups = {
+                ["default"] = {
+                  prompt = [[I'm giving you access to the ${tools} to help you perform coding tasks. Please use neovim mcp adapter first for file operations wherever possible. Please use fetch for web searches.]],
+                  tools = {
+                    "cmd_runner",
+                    "create_file",
+                    "file_search",
+                    "get_changed_files",
+                    "grep_search",
+                    "insert_edit_into_file",
+                    "list_code_usages",
+                    "read_file",
+                    -- TODO: get me working
+                    -- "fetch",
+                    -- "neovim",
+                  },
+                },
+              },
               ["search_web"] = {
                 opts = {
                   requires_approval = false,
@@ -145,14 +163,14 @@ function M.config()
               opts = {
                 auto_submit_errors = true, -- Send any errors to the LLM automatically?
                 auto_submit_success = true, -- Send any successful output to the LLM automatically?
-                default_tools = { "full_stack_dev" },
+                default_tools = { "default" },
               },
             },
             roles = {
               ---The header name for the LLM's messages
               ---@type string|fun(adapter: CodeCompanion.Adapter): string
               llm = function(adapter)
-                return ("AI Overlord [%s]"):format(adapter.formatted_name)
+                return ("AI Overlord - %s"):format(adapter.formatted_name)
               end,
 
               ---The header name for your messages
@@ -280,7 +298,7 @@ function M.config()
               -- MCP Tools
               make_tools = true, -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
               show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
-              add_mcp_prefix_to_tool_names = true, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
+              add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
               show_result_in_chat = true, -- Show tool results directly in chat buffer
               format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
               -- MCP Resources
