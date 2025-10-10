@@ -1,9 +1,5 @@
 {
   "mcpServers": {
-    "fetch": {
-      "args": ["mcp-server-fetch"],
-      "command": "uvx"
-    },
     "github": {
       "headers": {
         "Authorization": "Bearer ${GH_TOKEN}"
@@ -11,16 +7,38 @@
       "url": "https://api.githubcopilot.com/mcp/"
     },
     "gitlab": {
-      "args": ["mcp-server-gitlab"],
+      "args": [
+        "mcp-server-gitlab"
+      ],
       "command": "uvx",
+      "disabled": true,
       "env": {
-        "GITLAB_API_URL": "https://${GL_HOST}/api/v4",
+        "GITLAB_API_URL": "https://gitlab.kilic.dev/api/v4/",
         "GITLAB_PERSONAL_ACCESS_TOKEN": "${GL_TOKEN}"
       }
     },
     "sequentialthinking": {
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
       "command": "bunx"
+    }
+  },
+  "nativeMCPServers": {
+    "mcphub": {
+      "autoApprove": [
+        "get_current_servers"
+      ]
+    },
+    "neovim": {
+      "autoApprove": [
+        "find_files",
+        "list_directory",
+        "read_file",
+        "read_multiple_files"
+      ],
+      "disabled": false
     }
   }
 }

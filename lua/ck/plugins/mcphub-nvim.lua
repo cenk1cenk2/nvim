@@ -17,6 +17,19 @@ function M.config()
       return {
         config = join_paths(get_config_dir(), "utils/mcphub/servers.json"),
         port = 37373,
+        ui = {
+          window = {
+            width = 0.8, -- 0-1 (ratio); "50%" (percentage); 50 (raw number)
+            height = 0.8, -- 0-1 (ratio); "50%" (percentage); 50 (raw number)
+            align = "center", -- "center", "top-left", "top-right", "bottom-left", "bottom-right", "top", "bottom", "left", "right"
+            relative = "editor",
+            zindex = 50,
+            border = nvim.ui.border, -- "none", "single", "double", "rounded", "solid", "shadow"
+          },
+          wo = { -- window-scoped options (vim.wo)
+            winhl = "Normal:MCPHubNormal,FloatBorder:MCPHubBorder",
+          },
+        },
       }
     end,
     on_setup = function(config)

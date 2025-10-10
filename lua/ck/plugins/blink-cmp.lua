@@ -241,7 +241,7 @@ function M.config()
 
         fuzzy = {
           implementation = "rust",
-          -- max_typos = 0,
+          max_typos = 0,
           use_proximity = true,
           frecency = {
             enabled = false,
@@ -273,7 +273,7 @@ function M.config()
           },
           menu = {
             ---TODO: remove me when redraw is fixed
-            auto_show_delay_ms = 150,
+            -- auto_show_delay_ms = 150,
             border = nvim.ui.border,
             min_width = 40,
             max_height = 10,
