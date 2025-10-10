@@ -1,0 +1,26 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "args": ["mcp-server-fetch"],
+      "command": "uvx"
+    },
+    "github": {
+      "headers": {
+        "Authorization": "Bearer ${GH_TOKEN}"
+      },
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+    "gitlab": {
+      "args": ["mcp-server-gitlab"],
+      "command": "uvx",
+      "env": {
+        "GITLAB_API_URL": "https://${GL_HOST}/api/v4",
+        "GITLAB_PERSONAL_ACCESS_TOKEN": "${GL_TOKEN}"
+      }
+    },
+    "sequentialthinking": {
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "command": "bunx"
+    }
+  }
+}

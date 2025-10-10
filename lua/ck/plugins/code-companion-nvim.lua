@@ -12,7 +12,6 @@ function M.config()
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         dependencies = {
           "ravitemer/codecompanion-history.nvim",
-          "ravitemer/mcphub.nvim",
         },
       }
     end,
