@@ -89,6 +89,7 @@ function M.setup()
           "dap-float",
           "lspsagaoutline",
           "neotest-summary",
+          "nvim-undotree",
         }),
         {
           event = { "BufWinEnter", "BufRead", "BufNewFile" },

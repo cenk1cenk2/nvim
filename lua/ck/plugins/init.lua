@@ -57,7 +57,6 @@ local plugins = {
   "rainbow-delimiters-nvim",
   "nvim-recorder",
   "windows-nvim",
-  "telescope-undo-nvim",
   "quicker-nvim",
   "nvim-bqf",
   "lsp-trouble",

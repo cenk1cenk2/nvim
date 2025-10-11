@@ -52,6 +52,19 @@ function M.config()
                 env = {
                   CLAUDE_CODE_OAUTH_TOKEN = vim.env["CLAUDE_CODE_OAUTH_TOKEN"],
                 },
+                defaults = {
+                  mcpServers = {
+                    {
+                      name = "mcphub.nvim",
+                      type = "sse",
+                      url = "http://localhost:37373/mcp",
+                      args = {},
+                      command = "",
+                      headers = {},
+                      env = {},
+                    },
+                  },
+                },
                 commands = {
                   default = { "claude-code-acp" },
                 },
@@ -119,20 +132,8 @@ function M.config()
                     "insert_edit_into_file",
                     "list_code_usages",
                     "read_file",
-                    -- TODO: get me working
                     -- "mcp",
-                    -- "fetch",
                     -- "neovim",
-                    -- "neovim__delete_items",
-                    -- "neovim__edit_file",
-                    -- "neovim__execute_command",
-                    -- "neovim__execute_lua",
-                    -- "neovim__find_files",
-                    -- "neovim__list_directory",
-                    -- "neovim__move_item",
-                    -- "neovim__read_file",
-                    -- "neovim__read_multiple_files",
-                    -- "neovim__write_file",
                   },
                 },
               },
@@ -295,7 +296,6 @@ function M.config()
             show_header_separator = true,
             show_context = true, -- Show context (from slash commands and variables) in the chat buffer?
             fold_context = true, -- Fold context in the chat buffer?
-
             show_settings = false, -- Show LLM settings at the top of the chat buffer?
             show_tools_processing = true, -- Show the loading message when tools are being executed?
             show_token_count = true, -- Show the token count for each response?
@@ -307,9 +307,9 @@ function M.config()
             callback = "mcphub.extensions.codecompanion",
             opts = {
               -- MCP Tools
-              -- make_tools = true, -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
-              -- show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
-              -- add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
+              make_tools = true, -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
+              show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
+              add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
               show_result_in_chat = true, -- Show tool results directly in chat buffer
               -- format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
               -- MCP Resources

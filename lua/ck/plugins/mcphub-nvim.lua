@@ -17,6 +17,9 @@ function M.config()
       return {
         config = join_paths(get_config_dir(), "utils/mcphub/servers.json"),
         port = 37373,
+        global_env = {
+          "DBUS_SESSION_BUS_ADDRESS",
+        },
         ui = {
           window = {
             width = 0.8, -- 0-1 (ratio); "50%" (percentage); 50 (raw number)

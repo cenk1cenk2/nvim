@@ -22,8 +22,6 @@ function M.init()
   end
 
   vim.opt.rtp:prepend(M.plugin_manager_dir)
-
-  vim.cmd.packadd("cfilter")
 end
 
 function M.load()
@@ -98,6 +96,9 @@ function M.load()
   local ok, err = xpcall(function()
     manager.setup(require("ck.setup").into_plugin_spec(), config)
   end, debug.traceback)
+
+  vim.cmd.packadd("cfilter")
+  vim.cmd.packadd("nvim.undotree")
 
   if not ok then
     log:error("Can not load plugin configurations. Pretending to run: %s", err)

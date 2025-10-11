@@ -22,6 +22,9 @@
         "-y",
         "@modelcontextprotocol/server-sequential-thinking"
       ],
+      "autoApprove": [
+        "sequentialthinking"
+      ],
       "command": "bunx"
     }
   },

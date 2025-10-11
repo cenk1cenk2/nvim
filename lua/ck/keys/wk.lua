@@ -71,6 +71,12 @@ function M.setup()
             desc = "no highlight",
             mode = { "n", "v" },
           },
+          {
+            fn.wk_keystroke({ "u" }),
+            ":Undotree<CR>",
+            desc = "undotree",
+            mode = { "n", "v" },
+          },
 
           -- localleader
 
