@@ -1,6 +1,7 @@
 {
   "mcpServers": {
     "github": {
+      "disabled": false,
       "headers": {
         "Authorization": "Bearer ${GH_TOKEN}"
       },
@@ -13,7 +14,7 @@
       "command": "uvx",
       "disabled": true,
       "env": {
-        "GITLAB_API_URL": "https://gitlab.kilic.dev/api/v4/",
+        "GITLAB_API_URL": "https://${GL_HOST}/api/v4",
         "GITLAB_PERSONAL_ACCESS_TOKEN": "${GL_TOKEN}"
       }
     },
