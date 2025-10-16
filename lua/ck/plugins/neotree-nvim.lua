@@ -593,7 +593,7 @@ function M.config()
           desc = "select tree source",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "e" }),
+          fn.wk_keystroke({ categories.GIT, "." }),
           function()
             vim.cmd([[Neotree position=right git_status toggle]])
           end,
