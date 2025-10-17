@@ -425,13 +425,13 @@ function M.config()
               require("ck.plugins.telescope").rg_string({
                 cwd = get_node_dir(state),
                 search_dirs = { get_node_path(state) },
-                additional_args = { "--no-ignore-dot" },
+                additional_args = {},
               })
             end,
             telescope_grep_folder = function(state)
               require("ck.plugins.telescope").rg_string({
                 search_dirs = { get_node_dir(state) },
-                additional_args = { "--no-ignore-dot" },
+                additional_args = {},
               })
             end,
             next_sibling = function(state)

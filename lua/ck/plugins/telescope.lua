@@ -307,7 +307,7 @@ function M.config()
           desc = "list jumps",
         },
         {
-          fn.wk_keystroke({ categories.FIND, "s" }),
+          fn.wk_keystroke({ categories.FIND, "." }),
           function()
             require("telescope.builtin").spell_suggest()
           end,
@@ -390,6 +390,63 @@ function M.config()
             })
           end,
           desc = "grep current buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "s" }),
+          function()
+            local dir = require("ck.utils.fs").get_buffer_dirpath()
+
+            M.rg_string({
+              prompt_title = ("Find with fixed-strings in: %s"):format(dir),
+              cwd = dir,
+              search_dirs = { dir },
+              additional_args = {},
+            })
+          end,
+          desc = "find in current subdirectory [fixed-strings]",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "S" }),
+          function()
+            local dir = require("ck.utils.fs").get_buffer_dirpath()
+
+            M.rg_dirty({
+              prompt_title = ("Find with dirty in: %s"):format(dir),
+              cwd = dir,
+              search_dirs = { dir },
+              additional_args = {},
+            })
+          end,
+          desc = "find in current subdirectory [dirty]",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "p" }),
+          function()
+            local dir = require("ck.utils.fs").get_buffer_dirpath()
+
+            M.find_project_files({
+              prompt_title = ("Find files in: %s"):format(dir),
+              cwd = dir,
+              search_dirs = { dir },
+              additional_args = {},
+            })
+          end,
+          desc = "find files in current subdirectory",
+        },
+        {
+          fn.wk_keystroke({ categories.FIND, "P" }),
+          function()
+            -- TODO: make this also work
+            local dir = require("ck.utils.fs").get_buffer_dirpath()
+
+            M.find_project_files({
+              prompt_title = ("Find files only in: %s"):format(dir),
+              cwd = dir,
+              search_files = { dir },
+              additional_args = {},
+            })
+          end,
+          desc = "find files in current subdirectory only",
         },
         {
           fn.wk_keystroke({ categories.FIND, "d" }),
