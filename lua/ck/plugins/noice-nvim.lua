@@ -308,7 +308,7 @@ function M.config()
     end,
     autocmds = function()
       return {
-        require("ck.modules.autocmds").set_view_buffer({ "noice" }),
+        -- require("ck.modules.autocmds").set_view_buffer({ "noice" }),
       }
     end,
   })
