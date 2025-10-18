@@ -411,11 +411,6 @@ function M.config()
         },
       }
     end,
-    autocmds = function()
-      return {
-        require("ck.modules.autocmds").set_view_buffer({ "codecompanion" }),
-      }
-    end,
   })
 end
 

@@ -29,7 +29,7 @@ function M.set_view_buffer(pattern)
     group = "_view",
     pattern = pattern,
     callback = function()
-      vim.bo.bufhidden = "wipe"
+      -- vim.bo.bufhidden = "wipe"
       -- vim.bo.matchpairs = ""
       vim.bo.swapfile = false
       vim.bo.synmaxcol = 0
