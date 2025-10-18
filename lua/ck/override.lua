@@ -113,6 +113,7 @@ nvim.lsp.servers = {
   "html",
   "intelephense",
   "jsonls",
+  "jsonnet_ls",
   "laravel_ls",
   "lua_ls",
   "marksman",
