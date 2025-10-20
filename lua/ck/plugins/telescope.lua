@@ -336,7 +336,7 @@ function M.config()
           desc = "git status",
         },
         {
-          fn.wk_keystroke({ categories.GIT, "." }),
+          fn.wk_keystroke({ categories.GIT, "e" }),
           function()
             require("telescope.builtin").git_files()
           end,
