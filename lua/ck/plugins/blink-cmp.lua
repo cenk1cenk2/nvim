@@ -241,7 +241,7 @@ function M.config()
 
         fuzzy = {
           implementation = "rust",
-          max_typos = 0,
+          -- max_typos = 0,
           use_proximity = true,
           frecency = {
             enabled = false,
@@ -268,7 +268,8 @@ function M.config()
           list = {
             selection = {
               auto_insert = true,
-              preselect = false,
+              -- TODO: https://github.com/Saghen/blink.cmp/issues/1932#issuecomment-3448419753
+              -- preselect = false,
             },
           },
           menu = {
