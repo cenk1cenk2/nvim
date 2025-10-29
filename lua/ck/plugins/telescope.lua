@@ -119,6 +119,7 @@ function M.config()
               ["<M-q>"] = actions.send_selected_to_loclist + actions.open_loclist,
               ["<C-/>"] = actions.which_key,
               ["<CR>"] = actions.select_default,
+              ["<C-Space>"] = actions.to_fuzzy_refine,
               ["<Tab>"] = actions.toggle_selection + actions.move_selection_worse,
               ["<S-Tab>"] = actions.toggle_selection + actions.move_selection_better,
             },
