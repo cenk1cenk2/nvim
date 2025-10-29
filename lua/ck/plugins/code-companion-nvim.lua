@@ -224,16 +224,16 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "w" }) },
               },
               next_chat = {
-                modes = { n = "N" },
+                modes = { n = fn.local_keystroke({ "}" }) },
               },
               previous_chat = {
-                modes = { n = "P" },
+                modes = { n = fn.local_keystroke({ "{" }) },
               },
               next_header = {
-                modes = { n = "]]" },
+                modes = { n = fn.local_keystroke({ "]" }) },
               },
               previous_header = {
-                modes = { n = "[[" },
+                modes = { n = fn.local_keystroke({ "[" }) },
               },
               change_adapter = {
                 modes = { n = fn.local_keystroke({ "a", "a" }) },
