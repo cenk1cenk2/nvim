@@ -92,8 +92,8 @@ function M.config()
             { "n", "g?", actions.help, { desc = "help" } },
             -- The `view` bindings are active in the diff buffers, only when the current
             -- tabpage is a Diffview.
-            { "n", "<tab>", actions.select_next_entry, { desc = "open the diff for the next file" } },
-            { "n", "<s-tab>", actions.select_prev_entry, { desc = "open the diff for the previous file" } },
+            { "n", "<C-n>", actions.select_next_entry, { desc = "open the diff for the next file" } },
+            { "n", "<C-p>", actions.select_prev_entry, { desc = "open the diff for the previous file" } },
             { "n", "gf", actions.goto_file, { desc = "goto file" } },
             { "n", "<localleader>o", actions.goto_file_edit, { desc = "open file" } },
             { "n", "<localleader>v", actions.goto_file_split, { desc = "goto file in split" } },
