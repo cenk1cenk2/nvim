@@ -260,7 +260,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "d", "t" }),
           function()
-            require("obsidian.commands.today")({})
+            require("obsidian.commands.today")({ args = "" })
           end,
           desc = "today",
         },
@@ -268,7 +268,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "d", "n" }),
           function()
-            require("obsidian.commands.tomorrow")({})
+            require("obsidian.commands.tomorrow")({ args = "" })
           end,
           desc = "tomorrow",
         },
@@ -276,7 +276,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "d", "p" }),
           function()
-            require("obsidian.commands.yesterday")(client, {})
+            require("obsidian.commands.yesterday")({ args = "" })
           end,
           desc = "yesterday",
         },
@@ -284,7 +284,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "d", "f" }),
           function()
-            require("obsidian.commands.dailies")({})
+            require("obsidian.commands.dailies")({ args = "" })
           end,
           desc = "find",
         },
