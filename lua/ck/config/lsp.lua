@@ -83,7 +83,7 @@ return {
         enabled = true,
         debounce = 50,
         events = {
-          suggest = { "InsertLeave", "TextChanged", "User SidekickNesDone" },
+          events = { "ModeChanged i:n", "TextChanged", "User SidekickNesDone" },
           clear = { "TextChangedI", "TextChanged", "BufWritePre", "InsertEnter" },
         },
       },
