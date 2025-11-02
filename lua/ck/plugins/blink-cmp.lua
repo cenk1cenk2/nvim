@@ -268,13 +268,10 @@ function M.config()
           list = {
             selection = {
               auto_insert = true,
-              -- TODO: https://github.com/Saghen/blink.cmp/issues/1932#issuecomment-3448419753
-              -- preselect = false,
+              preselect = false,
             },
           },
           menu = {
-            ---TODO: remove me when redraw is fixed
-            -- auto_show_delay_ms = 150,
             border = nvim.ui.border,
             min_width = 40,
             max_height = 10,
