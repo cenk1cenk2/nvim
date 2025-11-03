@@ -219,7 +219,9 @@ function M.restart_lsp(filter)
   for _, client in pairs(clients) do
     vim.schedule(function()
       vim.lsp.stop_client(client, true)
-      vim.lsp.start(client)
+      vim.schedule(function()
+        vim.lsp.start(client)
+      end)
     end)
   end
 
