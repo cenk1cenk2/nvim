@@ -152,6 +152,7 @@ M.default_formatters = {
 function M.register()
   tools.register(METHOD, { "trim_whitespace", "trim_newlines", "trim_multiple_newlines" }, {
     "*",
+    "!diff",
   })
 
   tools.register(METHOD, "injected", {
