@@ -137,7 +137,7 @@ function M.config()
                   },
                 },
               },
-              ["search_web"] = {
+              ["web_search"] = {
                 opts = {
                   requires_approval = false,
                 },
@@ -173,8 +173,8 @@ function M.config()
                 },
               },
               opts = {
-                auto_submit_errors = true, -- Send any errors to the LLM automatically?
-                auto_submit_success = true, -- Send any successful output to the LLM automatically?
+                auto_submit_errors = true,
+                auto_submit_success = true,
                 default_tools = { "default" },
               },
             },
