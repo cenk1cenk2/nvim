@@ -50,6 +50,19 @@ function M.config()
         win = {
           border = nvim.ui.border,
         },
+        gh = {},
+        picker = {
+          sources = {
+            gh_issue = {
+              -- your gh_issue picker configuration comes here
+              -- or leave it empty to use the default settings
+            },
+            gh_pr = {
+              -- your gh_pr picker configuration comes here
+              -- or leave it empty to use the default settings
+            },
+          },
+        },
         toggle = {
           icon = {
             enabled = nvim.ui.icons.ui.ToggleOn,
@@ -246,6 +259,58 @@ function M.config()
           end,
           desc = "open file in browser",
           mode = { "n", "v" },
+        },
+
+        {
+          fn.wk_keystroke({ categories.GIT, "h", "f" }),
+          function()
+            require("snacks").picker.gh_issue()
+          end,
+          desc = "github issues",
+          mode = { "n", "v" },
+        },
+
+        {
+          fn.wk_keystroke({ categories.GIT, "h", "F" }),
+          function()
+            require("snacks").picker.gh_issue({ state = "all" })
+          end,
+          desc = "github issues [all]",
+          mode = { "n", "v" },
+        },
+
+        {
+          fn.wk_keystroke({ categories.GIT, "h", "p" }),
+          function()
+            require("snacks").picker.gh_pr()
+          end,
+          desc = "github pull requests",
+          mode = { "n", "v" },
+        },
+
+        {
+          fn.wk_keystroke({ categories.GIT, "h", "P" }),
+          function()
+            require("snacks").picker.gh_pr({ state = "all" })
+          end,
+          desc = "github pull requests [all]",
+          mode = { "n", "v" },
+        },
+
+        {
+          fn.wk_keystroke({ categories.GIT, "h", "a" }),
+          function()
+            require("snacks").picker.gh_actions()
+          end,
+          desc = "github actions",
+        },
+
+        {
+          fn.wk_keystroke({ categories.GIT, "h", "A" }),
+          function()
+            require("snacks").picker.gh_actions({ state = "all" })
+          end,
+          desc = "github actions [all]",
         },
       }
     end,

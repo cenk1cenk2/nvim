@@ -61,7 +61,6 @@ local plugins = {
   "nvim-bqf",
   "lsp-trouble",
   "todo-comments",
-  "octo",
   "diffview",
   "markview-nvim",
   "helpview-nvim",
