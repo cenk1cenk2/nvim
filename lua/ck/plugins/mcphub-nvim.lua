@@ -33,6 +33,7 @@ function M.config()
             winhl = "Normal:MCPHubNormal,FloatBorder:MCPHubBorder",
           },
         },
+        builtin_tools = {},
       }
     end,
     on_setup = function(config)

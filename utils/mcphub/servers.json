@@ -1,5 +1,29 @@
 {
   "mcpServers": {
+    "context7": {
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "autoApprove": [
+        "get-library-docs",
+        "resolve-library-id"
+      ],
+      "command": "bunx",
+      "env": [],
+      "headers": {
+        "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+      }
+    },
+    "fetch": {
+      "args": [
+        "mcp-server-fetch"
+      ],
+      "autoApprove": [
+        "fetch"
+      ],
+      "command": "uvx"
+    },
     "github": {
       "disabled": false,
       "headers": {
@@ -17,6 +41,24 @@
         "GITLAB_API_URL": "https://${GL_HOST}/api/v4",
         "GITLAB_PERSONAL_ACCESS_TOKEN": "${GL_TOKEN}"
       }
+    },
+    "memory": {
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "autoApprove": [
+        "add_observations",
+        "create_entities",
+        "create_relations",
+        "delete_entities",
+        "delete_observations",
+        "delete_relations",
+        "open_nodes",
+        "read_graph",
+        "search_nodes"
+      ],
+      "command": "bunx"
     },
     "sequentialthinking": {
       "args": [
