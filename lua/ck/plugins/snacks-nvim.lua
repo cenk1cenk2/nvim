@@ -298,19 +298,11 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.GIT, "h", "a" }),
+          fn.wk_keystroke({ categories.GIT, "h", "r" }),
           function()
             require("snacks").picker.gh_actions()
           end,
-          desc = "github actions",
-        },
-
-        {
-          fn.wk_keystroke({ categories.GIT, "h", "A" }),
-          function()
-            require("snacks").picker.gh_actions({ state = "all" })
-          end,
-          desc = "github actions [all]",
+          desc = "github current commands",
         },
       }
     end,
