@@ -218,7 +218,12 @@ function M.restart_lsp(filter)
 
   for _, client in pairs(clients) do
     vim.schedule(function()
-      vim.cmd(([[LspRestart %s]]):format(client.id or client.name))
+      if not client.name then
+        log:warn("LSP client has no name: %d", client.id)
+
+        return
+      end
+      vim.cmd(([[LspRestart %s]]):format(client.name))
     end)
   end
 
