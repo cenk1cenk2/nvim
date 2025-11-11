@@ -90,6 +90,34 @@ function M.config()
         strategies = {
           chat = {
             adapter = nvim.lsp.ai.provider.chat,
+            opts = {
+              ---@param ctx CodeCompanion.SystemPrompt.Context
+              ---@return string
+              system_prompt = function(ctx)
+                return ctx.default_system_prompt
+                  .. [[
+- Always read your memory file from the repository before performing any operations. If substantial changes have happened during session, please ask to update the memory file accordingly.
+- Never write comments or explanations unless it is explicitly asked and required, please output these directly to the chat window.
+- You should use the web search tools instead of guessing answers for up-to-date information which are as follows.
+  - built-in search tool
+  - `web_search`
+  - `mcp__mcphub_nvim__fetch__fetch`
+- Use the memory tools provided to you through the MCP server to record milestones about this repository which are as follows.
+  - `mcp__mcphub_nvim__memory__create_entities`
+  - `mcp__mcphub_nvim__memory__create_relations`
+  - `mcp__mcphub_nvim__memory__add_observations`
+  - `mcp__mcphub_nvim__memory__delete_entities`
+  - `mcp__mcphub_nvim__memory__delete_observations`
+  - `mcp__mcphub_nvim__memory__delete_relations`
+  - `mcp__mcphub_nvim__memory__read_graph`
+  - `mcp__mcphub_nvim__memory__search_nodes`
+  - `mcp__mcphub_nvim__memory__open_nodes`
+- Please use context7 to fetch anytime you need to access documentation whenever it is possible which are as follows.
+  - `mcp__mcphub_nvim__context7__resolve-library-id`
+  - `mcp__mcphub_nvim__context7__get-library-docs`
+]]
+              end,
+            },
             window = {
               border = nvim.ui.border,
               numberwidth = 0,

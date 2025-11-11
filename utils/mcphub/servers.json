@@ -68,7 +68,8 @@
       "autoApprove": [
         "sequentialthinking"
       ],
-      "command": "bunx"
+      "command": "bunx",
+      "disabled": false
     }
   },
   "nativeMCPServers": {
