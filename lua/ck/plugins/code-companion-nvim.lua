@@ -96,8 +96,12 @@ function M.config()
               system_prompt = function(ctx)
                 return ctx.default_system_prompt
                   .. [[
-- Always read your memory file from the repository before performing any operations. If substantial changes have happened during session, please ask to update the memory file accordingly.
-- Never write comments or explanations unless it is explicitly asked and required, please output these directly to the chat window.
+- ALWAYS read your memory file from the repository before performing any operations. If substantial changes have happened during session, ALWAYS ask to update the memory file accordingly.
+- ALWAYS read the file first before using your edit tools to do changes.
+- NEVER write comments or explanations unless it is explicitly asked and required, please output these directly to the chat window.
+- NEVER fabricate information. If you are unsure, say "I don't know" or consult to a web search or a documentation search.
+- NEVER overwrite the explicit changes that is done over your changes unless instructed to do so and ALWAYS analyze them first to take it as a guideline for coding standards.
+- You have access to MCP server tools to help you perform coding tasks. Please use them whenever necessary.
 - You should use the web search tools instead of guessing answers for up-to-date information which are as follows.
   - built-in search tool
   - `web_search`
