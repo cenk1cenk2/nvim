@@ -55,7 +55,7 @@ function M.config()
                 defaults = {
                   mcpServers = {
                     {
-                      name = "mcphub.nvim",
+                      name = "mcphub",
                       type = "sse",
                       url = "http://localhost:37373/mcp",
                       args = {},
