@@ -325,7 +325,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "c" }),
           function()
-            require("obsidian.commands.new")({})
+            require("obsidian.commands.new")({ args = "" })
           end,
           desc = "create new note",
         },
@@ -360,7 +360,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "t" }),
           function()
-            require("obsidian.commands.new_from_template")({})
+            require("obsidian.commands.new_from_template")({ fargs = {} })
           end,
           desc = "new from template",
         },
