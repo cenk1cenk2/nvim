@@ -157,8 +157,10 @@ function M.config()
         -- Optional, sort search results by "path", "modified", "accessed", or "created".
         -- The recommend value is "modified" and `true` for `sort_reversed`, which means, for example,
         -- that `:ObsidianQuickSwitch` will show the notes sorted by latest modified time
-        sort_by = "modified",
-        sort_reversed = true,
+        search = {
+          sort_by = "modified",
+          sort_reversed = true,
+        },
 
         -- Optional, determines how certain commands open notes. The valid options are:
         -- 1. "current" (the default) - to always open in the current window
