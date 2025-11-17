@@ -78,6 +78,7 @@ function M.config()
               defaults = {
                 mcpServers = {
                   mcphub = {
+                    name = "mcphub",
                     type = "sse",
                     url = "http://localhost:37373/mcp",
                   },
