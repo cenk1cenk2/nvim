@@ -151,7 +151,7 @@ function M.config()
             diff_window = {
               ---@return number|fun(): number
               width = function()
-                return math.min(120, vim.o.columns - 10)
+                return math.min(180, vim.o.columns - 10)
               end,
               ---@return number|fun(): number
               height = function()
@@ -342,6 +342,10 @@ function M.config()
           },
         },
         display = {
+          -- diff = {
+          --   enabled = true,
+          --   layout = "split", -- mini_diff|split|inline
+          -- },
           chat = {
             show_header_separator = true,
             show_context = true, -- Show context (from slash commands and variables) in the chat buffer?
