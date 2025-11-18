@@ -26,7 +26,7 @@ function M.config()
         nes = {
           ---@type boolean|fun(buf:integer):boolean?
           enabled = function(buf)
-            return vim.g.sidekick_nes ~= false and vim.b.sidekick_nes ~= false
+            return vim.g.sidekick_nes ~= false and vim.b.sidekick_nes ~= false and nvim.lsp.ai.copilot.nes.enabled
           end,
           debounce = nvim.lsp.ai.copilot.nes.debounce,
           trigger = {
