@@ -342,10 +342,9 @@ function M.config()
           },
         },
         display = {
-          -- diff = {
-          --   enabled = true,
-          --   layout = "split", -- mini_diff|split|inline
-          -- },
+          diff = {
+            enabled = true,
+          },
           chat = {
             show_header_separator = true,
             show_context = true, -- Show context (from slash commands and variables) in the chat buffer?
