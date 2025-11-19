@@ -70,25 +70,25 @@ function M.config()
                 },
               })
             end,
-          },
-          cursor = function()
-            return require("codecompanion.adapters").extend("claude_code", {
-              name = "cursor",
-              formatted_name = "Cursor",
-              defaults = {
-                mcpServers = {
-                  mcphub = {
-                    name = "mcphub",
-                    type = "sse",
-                    url = "http://localhost:37373/mcp",
+            cursor = function()
+              return require("codecompanion.adapters").extend("claude_code", {
+                name = "cursor",
+                formatted_name = "Cursor",
+                defaults = {
+                  mcpServers = {
+                    mcphub = {
+                      name = "mcphub",
+                      type = "sse",
+                      url = "http://localhost:37373/mcp",
+                    },
                   },
                 },
-              },
-              commands = {
-                default = { "cursor-agent-acp" },
-              },
-            })
-          end,
+                commands = {
+                  default = { "cursor-agent-acp" },
+                },
+              })
+            end,
+          },
         },
         memory = {
           claude_code = {
