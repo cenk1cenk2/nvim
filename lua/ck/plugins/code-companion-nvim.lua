@@ -463,6 +463,14 @@ function M.config()
           mode = { "n", "v" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "Q" }),
+          function()
+            require("codecompanion").close_last_chat()
+          end,
+          desc = "close last chat [codecompanion]",
+          mode = { "n", "v" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "e" }),
           function()
             require("codecompanion").add({})
