@@ -79,28 +79,6 @@ function M.config()
                 },
               })
             end,
-            cursor = function()
-              return require("codecompanion.adapters").extend("claude_code", {
-                name = "cursor",
-                formatted_name = "Cursor",
-                defaults = {
-                  mcpServers = {
-                    {
-                      name = "mcphub",
-                      type = "sse",
-                      url = "http://localhost:37373/mcp",
-                      args = {},
-                      command = "",
-                      headers = {},
-                      env = {},
-                    },
-                  },
-                },
-                commands = {
-                  default = { "cursor-agent-acp" },
-                },
-              })
-            end,
             goose = function()
               return require("codecompanion.adapters").extend("goose", {
                 env = {
