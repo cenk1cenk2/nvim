@@ -86,6 +86,7 @@ function M.config()
                   GOOSE_MODEL = "composer-1",
                 },
                 defaults = {
+                  timeout = 60000,
                   mcpServers = {
                     {
                       name = "mcphub",
@@ -127,6 +128,7 @@ function M.config()
               system_prompt = function(ctx)
                 return ctx.default_system_prompt
                   .. [[
+
 - ALWAYS read your memory file from the repository before performing any operations. If substantial changes have happened during session, ALWAYS ask to update the memory file accordingly.
 - ALWAYS read the file first before using your edit tools to do changes.
 - NEVER write comments or explanations unless it is explicitly asked or required or the style of coding has comments to indicate links and other things already, please output these directly to the chat window.
