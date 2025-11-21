@@ -72,12 +72,8 @@ return {
       chat = nil,
       ---@type string?
       completion = nil,
-      ---@type string?
-      embed = nil,
     },
     copilot = {
-      ---@type table<string, boolean>
-      filetypes = {},
       debounce = 50,
       nes = {
         enabled = true,

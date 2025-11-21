@@ -39,51 +39,10 @@ nvim.lsp.ai.model.completion = nil
 nvim.lsp.ai.debug = false
 
 nvim.lsp.ai.copilot.debounce = 50
--- TODO: update me according to the copilot language server
-nvim.lsp.ai.copilot.filetypes = {
-  yaml = true,
-  markdown = true,
-  help = false,
-  gitcommit = true,
-  gitrebase = false,
-  hgcommit = false,
-  svn = false,
-  cvs = false,
-  ["."] = false,
-}
 
 nvim.lsp.ai.copilot.nes.enabled = true
 nvim.lsp.ai.copilot.nes.auto_suggest = false
 nvim.lsp.ai.copilot.nes.debounce = 50
--- nvim.lsp.ai.model.embed = "nomic-embed-text"
-
--- nvim.lsp.ai.model.embed = "text-embedding-3-small"
--- nvim.lsp.ai.model.completion = "deepseek-coder-v2:16b"
--- nvim.lsp.ai.model.chat = "deepseek-coder-v2:16b"
-
--- nvim.lsp.ai.completion.number_of_completions = 2
--- nvim.lsp.ai.completion.line_limit = -1
--- nvim.lsp.ai.completion.context_window = 1024 * 4
--- nvim.lsp.ai.completion.vectorcode.enabled = false
--- nvim.lsp.ai.completion.vectorcode.number_of_files = 1
--- nvim.lsp.ai.completion.fim.prefix = "<｜fim▁begin｜>"
--- nvim.lsp.ai.completion.fim.suffix = "<｜fim▁end｜>"
--- nvim.lsp.ai.completion.fim.middle = "<｜fim▁hole｜>"
--- nvim.lsp.ai.completion.fim.file = "<｜file_sep｜>"
--- nvim.lsp.ai.completion.prompt =
---   "Perform fill-in-middle from the following snippet of code. `<｜file_sep｜>` is used to give you additional context with files from the repository. Respond with only the filled-in code."
--- nvim.lsp.ai.completion.options = {
---   max_tokens = 1024,
---   top_p = 0.95,
---   top_k = 10,
--- }
---
--- nvim.lsp.ai.chat.options = {
---   num_ctx = 1024 * 8,
---   top_p = 0.95,
---   top_k = 10,
---   -- num_predict = 8,
--- }
 
 nvim.lsp.ai.filetypes.enabled = {
   "*",
