@@ -46,6 +46,15 @@ function M.config()
           log_level = require("ck.log"):to_nvim_level(),
         },
         adapters = {
+          http = {
+            anthropic = function()
+              return require("codecompanion.adapters").extend("anthropic", {
+                env = {
+                  api_key = "ANTHROPIC_API_KEY",
+                },
+              })
+            end,
+          },
           acp = {
             claude_code = function()
               return require("codecompanion.adapters").extend("claude_code", {
