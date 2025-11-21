@@ -117,6 +117,7 @@ function M.config()
         strategies = {
           chat = {
             adapter = nvim.lsp.ai.provider.chat,
+            model = nvim.lsp.ai.model.chat,
             opts = {
               ---@param ctx CodeCompanion.SystemPrompt.Context
               ---@return string

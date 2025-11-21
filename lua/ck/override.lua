@@ -32,7 +32,7 @@ nvim.lsp.ai.completion.provider = { "inline" }
 -- nvim.lsp.ai.provider.chat = "copilot"
 -- nvim.lsp.ai.model.chat = "claude-sonnet-4"
 nvim.lsp.ai.provider.chat = "anthropic"
-nvim.lsp.ai.model.chat = "default"
+nvim.lsp.ai.model.chat = "claude-sonnet-4-5-20250929"
 nvim.lsp.ai.provider.completion = "copilot"
 nvim.lsp.ai.model.completion = nil
 
