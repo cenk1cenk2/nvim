@@ -85,15 +85,40 @@ function M.config()
                 formatted_name = "Cursor",
                 defaults = {
                   mcpServers = {
-                    mcphub = {
+                    {
                       name = "mcphub",
                       type = "sse",
                       url = "http://localhost:37373/mcp",
+                      args = {},
+                      command = "",
+                      headers = {},
+                      env = {},
                     },
                   },
                 },
                 commands = {
                   default = { "cursor-agent-acp" },
+                },
+              })
+            end,
+            goose = function()
+              return require("codecompanion.adapters").extend("goose", {
+                env = {
+                  GOOSE_PROVIDER = "cursor-agent",
+                  GOOSE_MODEL = "composer-1",
+                },
+                defaults = {
+                  mcpServers = {
+                    {
+                      name = "mcphub",
+                      type = "sse",
+                      url = "http://localhost:37373/mcp",
+                      args = {},
+                      command = "",
+                      headers = {},
+                      env = {},
+                    },
+                  },
                 },
               })
             end,
