@@ -20,8 +20,8 @@ function M.config()
           "haydenmeade/neotest-jest",
           -- https://github.com/nvim-contrib/nvim-ginkgo
           {
-            -- "nvim-contrib/nvim-ginkgo",
-            -- dir = "/Users/cenk/development/nvim-ginkgo",
+            "nvim-contrib/nvim-ginkgo",
+            -- dir = "~/development/nvim-ginkgo",
             "cenk1cenk2/nvim-ginkgo",
             branch = "patch-1",
           },
