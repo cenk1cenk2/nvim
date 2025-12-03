@@ -182,8 +182,8 @@ function M.trigger_inline_completion(opts)
     triggerCharacter = nil,
   }
   params["formattingOptions"] = {
-    tabSize = vim.bo[opts.bufnr].shiftwidth,
-    insertSpaces = not vim.bo[opts.bufnr].expandtab,
+    tabSize = vim.bo[opts.bufnr].shiftwidth == 0 and vim.bo[opts.bufnr].tabstop or vim.bo[opts.bufnr].shiftwidth,
+    insertSpaces = vim.bo[opts.bufnr].expandtab,
   }
 
   vim.lsp.buf_request_all(opts.bufnr, "textDocument/inlineCompletion", params, function(responses)

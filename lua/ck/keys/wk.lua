@@ -154,7 +154,7 @@ function M.setup()
                   return
                 end
 
-                vim.api.nvim_set_option_value("shiftwidth", tonumber(value), { buf = 0 })
+                vim.api.nvim_set_option_value("shiftwidth", 0, { buf = 0 })
                 vim.api.nvim_set_option_value("tabstop", tonumber(value), { buf = 0 })
               end)
             end,
