@@ -107,7 +107,7 @@ function M.setup()
           pattern = "*",
           desc = "Highlight text on yank",
           callback = function()
-            require("vim.highlight").on_yank({ higroup = "Search", timeout = 500 })
+            vim.highlight.on_yank({ higroup = "Search", timeout = 500 })
           end,
         },
         {
