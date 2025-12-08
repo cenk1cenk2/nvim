@@ -13,7 +13,13 @@ function M.config()
           "nvim-neotest/nvim-nio",
           -- https://github.com/nvim-neotest/neotest-go [dead]
           -- https://github.com/fredrikaverpil/neotest-golang
-          "fredrikaverpil/neotest-golang",
+          {
+            "fredrikaverpil/neotest-golang",
+            -- done through mise
+            -- build = function()
+            -- vim.system({ "go", "install", "gotest.tools/gotestsum@latest" }):wait() -- Optional, but recommended
+            -- end,
+          },
           -- https://github.com/rouge8/neotest-rust
           "rouge8/neotest-rust",
           -- https://github.com/haydenmeade/neotest-jest
@@ -129,7 +135,9 @@ function M.config()
         },
         adapters = {
           require("nvim-ginkgo"),
-          require("neotest-golang"),
+          require("neotest-golang")({
+            runner = "gotestsum",
+          }),
           require("neotest-rust"),
           require("neotest-jest")({
             jestCommand = "pnpm run test",

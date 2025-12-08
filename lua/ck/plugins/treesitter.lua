@@ -16,6 +16,7 @@ function M.config()
         build = function()
           vim.cmd([[TSUpdate]])
         end,
+        branch = "master",
         event = "BufReadPre",
         cmd = { "TSInstall", "TSUninstall", "TSUpdate", "TSUpdateSync" },
         -- cond = function()

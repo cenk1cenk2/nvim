@@ -10,6 +10,7 @@ function M.config()
       return {
         "nvim-treesitter/nvim-treesitter-textobjects",
         event = { "BufReadPost", "BufNewFile", "BufNew" },
+        branch = "master",
       }
     end,
     setup = function()
