@@ -35,7 +35,7 @@ end
 function M.format(opts)
   opts = vim.tbl_extend("force", {
     bufnr = vim.api.nvim_get_current_buf(),
-    timeout_ms = nvim.lsp.tools.format.timeout_ms,
+    timeout_ms = nvim.lsp.tools.format.timeout,
     filter = nvim.lsp.tools.format.filter,
   }, opts or {})
 
