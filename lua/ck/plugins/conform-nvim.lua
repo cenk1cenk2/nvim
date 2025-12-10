@@ -104,7 +104,7 @@ function M.config()
       ---@param opts? conform.FormatOpts
       ---@diagnostic disable-next-line: duplicate-set-field
       nvim.lsp.fn.format = function(opts)
-        opts = vim.tbl_extend(
+        return require("conform").format(vim.tbl_extend(
           "force",
           ---@type conform.FormatOpts
           {
@@ -114,9 +114,7 @@ function M.config()
             undojoin = true,
           },
           opts or {}
-        )
-
-        return require("conform").format(opts)
+        ))
       end
     end,
     autocmds = function()
