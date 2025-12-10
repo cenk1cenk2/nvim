@@ -1,6 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
   "Lua.diagnostics.disable": ["param-type-mismatch",
-        "inject-field"],
+        "inject-field",
+        "missing-fields"],
   "Lua.workspace.checkThirdParty": false
 }
