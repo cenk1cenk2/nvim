@@ -5,9 +5,9 @@
 SECONDS=0
 set -o pipefail
 
-# COMMIT_TAG="nightly"
+COMMIT_TAG="nightly"
 # https://github.com/neovim/neovim/pull/36885
-COMMIT_SHA="3b6e8e484edfb5f60990def1d90c4d046b59dc7e"
+# COMMIT_SHA="3b6e8e484edfb5f60990def1d90c4d046b59dc7e"
 # PATCHES=("https://patch-diff.githubusercontent.com/raw/neovim/neovim/pull/20130.patch")
 
 REMOTE_API_URL="https://api.github.com/repos/neovim/neovim"
