@@ -28,7 +28,6 @@ function M.config()
           {
             -- dir = "~/development/nvim-ginkgo",
             "cenk1cenk2/nvim-ginkgo",
-            branch = "patch-1",
           },
           "nvim-treesitter/nvim-treesitter",
           -- {
@@ -90,6 +89,7 @@ function M.config()
       ---@type neotest.Config
       return {
         log_level = require("ck.log"):to_nvim_level(),
+        -- log_level = vim.log.levels.DEBUG,
         floating = {
           border = nvim.ui.border,
         },
