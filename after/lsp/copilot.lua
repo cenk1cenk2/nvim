@@ -3,6 +3,7 @@ local config = {
   condition = function()
     return nvim.lsp.ai.provider.completion == "copilot"
   end,
+  filetypes = { "!codecompanion" },
   flags = {
     debounce_text_changes = nvim.lsp.ai.copilot.debounce,
     allow_incremental_sync = true,
