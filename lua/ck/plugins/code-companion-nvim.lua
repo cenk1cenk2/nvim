@@ -103,9 +103,9 @@ function M.config()
             end,
           },
         },
-        memory = {
+        rules = {
           claude_code = {
-            description = "Memory files for Claude Code users",
+            description = "Rules files for Claude Code users",
             files = {
               "~/.claude/CLAUDE.md",
               "CLAUDE.md",
@@ -118,7 +118,7 @@ function M.config()
             },
           },
         },
-        strategies = {
+        interactions = {
           chat = {
             adapter = nvim.lsp.ai.provider.chat,
             model = nvim.lsp.ai.model.chat,
@@ -180,7 +180,7 @@ function M.config()
               ["buffer"] = {
                 opts = {
                   --- https://codecompanion.olimorris.dev/usage/chat-buffer/variables#with-parameters
-                  default_params = "watch", -- or 'watch'
+                  default_params = "diff", -- all|diff
                 },
               },
             },
@@ -204,37 +204,37 @@ function M.config()
               },
               ["web_search"] = {
                 opts = {
-                  requires_approval = false,
+                  require_approval_before = false,
                 },
               },
               ["fetch_webpage"] = {
                 opts = {
-                  requires_approval = false,
+                  require_approval_before = false,
                 },
               },
               ["file_search"] = {
                 opts = {
-                  requires_approval = false,
+                  require_approval_before = false,
                 },
               },
               ["get_changed_files"] = {
                 opts = {
-                  requires_approval = false,
+                  require_approval_before = false,
                 },
               },
               ["grep_search"] = {
                 opts = {
-                  requires_approval = false,
+                  require_approval_before = false,
                 },
               },
               ["read_file"] = {
                 opts = {
-                  requires_approval = false,
+                  require_approval_before = false,
                 },
               },
               ["list_code_usages"] = {
                 opts = {
-                  requires_approval = false,
+                  require_approval_before = false,
                 },
               },
               opts = {
@@ -282,10 +282,10 @@ function M.config()
               yank_code = {
                 modes = { n = fn.local_keystroke({ "y" }) },
               },
-              pin = {
+              buffer_sync_all = {
                 modes = { n = fn.local_keystroke({ "p" }) },
               },
-              watch = {
+              buffer_sync_diff = {
                 modes = { n = fn.local_keystroke({ "w" }) },
               },
               next_chat = {
@@ -311,6 +311,9 @@ function M.config()
               },
               system_prompt = {
                 modes = { n = fn.local_keystroke({ "a", "p" }) },
+              },
+              rules = {
+                modes = { n = fn.local_keystroke({ "D" }) },
               },
               yolo_mode = {
                 modes = { n = fn.local_keystroke({ "a", "t" }) },
