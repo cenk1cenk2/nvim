@@ -12,6 +12,7 @@ function M.config()
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         dependencies = {
           "ravitemer/codecompanion-history.nvim",
+          "ravitemer/mcphub.nvim",
         },
       }
     end,
@@ -75,16 +76,20 @@ function M.config()
                   },
                 },
                 commands = {
-                  default = { "claude-code-acp" },
+                  default = { "bunx", "claude-code-acp" },
                 },
               })
             end,
-            goose = function()
-              return require("codecompanion.adapters").extend("goose", {
-                env = {
-                  GOOSE_PROVIDER = "cursor-agent",
-                  GOOSE_MODEL = "composer-1",
+            ---@type fun (): CodeCompanion.ACPAdapter
+            cursor = function()
+              return require("codecompanion.adapters.acp").new({
+                name = "cursor",
+                type = "acp",
+                roles = {
+                  llm = "assistant",
+                  user = "user",
                 },
+                env = {},
                 defaults = {
                   timeout = 60000,
                   mcpServers = {
@@ -100,7 +105,56 @@ function M.config()
                   },
                 },
                 commands = {
-                  default = { "goose", "acp" },
+                  default = { "bunx", "@blowmage/cursor-agent-acp" },
+                },
+                parameters = {
+                  protocolVersion = 1,
+                  clientCapabilities = {
+                    fs = { readTextFile = true, writeTextFile = true },
+                  },
+                  clientInfo = {
+                    name = "CodeCompanion.nvim",
+                    version = "1.0.0",
+                  },
+                  mcpServers = {
+                    {
+                      name = "mcphub",
+                      type = "sse",
+                      url = "http://localhost:37373/mcp",
+                      args = {},
+                      command = "",
+                      headers = {},
+                      env = {},
+                    },
+                  },
+                },
+                handlers = {
+                  ---@param self CodeCompanion.ACPAdapter
+                  ---@return boolean
+                  setup = function(self)
+                    return true
+                  end,
+
+                  ---Manually handle authentication
+                  ---@param self CodeCompanion.ACPAdapter
+                  ---@return boolean
+                  auth = function(self)
+                    return false
+                  end,
+
+                  ---@param self CodeCompanion.ACPAdapter
+                  ---@param messages table
+                  ---@param capabilities table
+                  ---@return table
+                  form_messages = function(self, messages, capabilities)
+                    return require("codecompanion.adapters.acp.helpers").form_messages(self, messages, capabilities)
+                  end,
+
+                  ---Function to run when the request has completed. Useful to catch errors
+                  ---@param self CodeCompanion.ACPAdapter
+                  ---@param code number
+                  ---@return nil
+                  on_exit = function(self, code) end,
                 },
               })
             end,
