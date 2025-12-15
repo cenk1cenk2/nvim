@@ -99,6 +99,9 @@ function M.config()
                     },
                   },
                 },
+                commands = {
+                  default = { "goose", "acp" },
+                },
               })
             end,
           },
