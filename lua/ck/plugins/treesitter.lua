@@ -57,12 +57,12 @@ function M.config()
       })
     end,
     on_done = function()
-      if next(M.parsers) then
+      if next(nvim.treesitter.custom_parsers) then
         vim.api.nvim_create_autocmd("User", {
           pattern = "TSUpdate",
           callback = function()
             local parser_config = require("nvim-treesitter.parsers")
-            for key, value in pairs(M.parsers) do
+            for key, value in pairs(nvim.treesitter.custom_parsers) do
               parser_config[key] = vim.tbl_extend("force", value, {
                 tier = 2, -- Important: tier 2 for custom parsers (unstable)
               })
@@ -71,7 +71,7 @@ function M.config()
         })
       end
 
-      for parser, filetypes in pairs(M.ft_parsers) do
+      for parser, filetypes in pairs(nvim.treesitter.ft_parsers) do
         vim.treesitter.language.register(parser, filetypes)
       end
 
@@ -166,13 +166,5 @@ function M.config()
     end,
   })
 end
-
-M.parsers = {}
-
-M.ft_parsers = {
-  ["yaml"] = { "yaml.ansible", "yaml.compose", "yaml.gitlab-ci" },
-  ["bash"] = { "zsh" },
-  ["ini"] = { "confini", "conf" },
-}
 
 return M

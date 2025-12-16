@@ -45,6 +45,10 @@ return {
   treesitter = {
     ---@type string[]
     parsers = {},
+    ---@type table[]
+    custom_parsers = {},
+    ---@type table<string, string | string[]>
+    ft_parsers = {},
   },
 
   ---@type table<string, Config>

@@ -135,8 +135,8 @@ nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, {
   "delve",
 })
 
---- Treesitter parsers configuration
----@type string[]
+--- treesitter configuration
+
 nvim.treesitter.parsers = {
   "bash",
   "c",
@@ -206,4 +206,12 @@ nvim.treesitter.parsers = {
   "vue",
   "xml",
   "yaml",
+}
+
+nvim.treesitter.custom_parsers = {}
+
+nvim.treesitter.ft_parsers = {
+  ["yaml"] = { "yaml.ansible", "yaml.compose", "yaml.gitlab-ci" },
+  ["bash"] = { "zsh" },
+  ["ini"] = { "confini", "conf" },
 }
