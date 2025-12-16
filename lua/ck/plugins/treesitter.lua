@@ -71,8 +71,8 @@ function M.config()
         })
       end
 
-      for key, value in pairs(M.ft_parsers) do
-        vim.treesitter.language.register(key, value)
+      for parser, filetypes in pairs(M.ft_parsers) do
+        vim.treesitter.language.register(parser, filetypes)
       end
 
       vim.api.nvim_create_autocmd("FileType", {
@@ -87,8 +87,13 @@ function M.config()
             return
           end
 
-          -- Enable syntax highlighting
-          pcall(vim.treesitter.start, bufnr, ft)
+          -- Get the mapped language for this filetype
+          local lang = vim.treesitter.language.get_lang(ft)
+
+          -- Enable syntax highlighting with the correct language
+          if lang then
+            pcall(vim.treesitter.start, bufnr, vim.treesitter.language.get_lang(ft))
+          end
 
           vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
@@ -165,7 +170,7 @@ end
 M.parsers = {}
 
 M.ft_parsers = {
-  ["yaml"] = { "yaml.*", "yaml.ansible", "yaml.compose", "yaml.gitlab-ci" },
+  ["yaml"] = { "yaml.ansible", "yaml.compose", "yaml.gitlab-ci" },
   ["bash"] = { "zsh" },
   ["ini"] = { "confini", "conf" },
 }
