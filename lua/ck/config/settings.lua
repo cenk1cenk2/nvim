@@ -20,7 +20,7 @@ function M.load_default_options()
   vim.opt.foldmethod = "expr"
   vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
   vim.opt.foldtext = "v:lua.nvim.fold.text()"
-  vim.opt.indentexpr = "nvim_treesitter#indent()"
+  vim.opt.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
   vim.opt.fillchars = {
     foldopen = nvim.ui.icons.ArrowCircleDown,
     foldsep = nvim.ui.icons.BoldLineLeft,

@@ -42,6 +42,11 @@ return {
     "quickfix",
   },
 
+  treesitter = {
+    ---@type string[]
+    parsers = {},
+  },
+
   ---@type table<string, Config>
   plugins = {},
 

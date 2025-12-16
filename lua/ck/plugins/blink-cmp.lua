@@ -69,12 +69,6 @@ function M.config()
               })
             end,
           },
-          -- https://github.com/Snikimonkd/cmp-go-pkgs
-          {
-            -- "Snikimonkd/cmp-go-pkgs",
-            "cenk1cenk2/cmp-go-pkgs",
-            branch = "patch-1",
-          },
           -- https://github.com/wookayin/cmp-omni
           {
             "wookayin/cmp-omni",
@@ -139,7 +133,6 @@ function M.config()
               "omni",
               "npm",
               "git",
-              "go_pkgs",
               "snippets",
               "path",
               "buffer",
@@ -184,11 +177,6 @@ function M.config()
               module = "blink.compat.source",
               name = "npm",
               async = true,
-            },
-            go_pkgs = {
-              module = "blink.compat.source",
-              async = true,
-              name = "go_pkgs",
             },
             omni = {
               module = "blink.compat.source",

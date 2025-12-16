@@ -13,21 +13,10 @@ function M.config()
       ---@type Plugin
       return {
         "nvim-treesitter/nvim-treesitter",
-        build = function()
-          vim.cmd([[TSUpdate]])
-        end,
-        branch = "master",
+        build = ":TSUpdate",
+        branch = "main", -- Changed from "master" to "main"
         event = "BufReadPre",
         cmd = { "TSInstall", "TSUninstall", "TSUpdate", "TSUpdateSync" },
-        -- cond = function()
-        --   if is_headless() then
-        --     log:debug("Headless mode detected, skipping running setup for treesitter.")
-        --
-        --     return false
-        --   end
-        --
-        --   return true
-        -- end,
         dependencies = {
           {
             "JoosepAlviste/nvim-ts-context-commentstring",
@@ -45,50 +34,63 @@ function M.config()
     setup = function()
       vim.opt.runtimepath:prepend(M.parsers_dir)
 
-      ---@type TSConfig
+      -- Main branch uses a simplified setup
       return {
-        parser_install_dir = M.parsers_dir,
-        ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-        ignore_install = {},
-        matchup = {
-          enable = false, -- mandatory, false will disable the whole extension
-          -- disable = { "c", "ruby" },  -- optional, list of language that will be disabled
-        },
-        highlight = {
-          enable = true, -- false will disable the whole extension
-          additional_vim_regex_highlighting = false,
-          disable = { "latex" },
-        },
-        indent = {
-          enable = true,
-          -- TSBufDisable indent
-          disable = {},
-        },
-        autotag = { enable = true },
-        refactor = { highlight_current_scope = { enable = false } },
-        -- https://github.com/nvim-treesitter/nvim-treesitter/issues/4000
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<S-CR>",
-            node_incremental = "<CR>",
-            scope_incremental = "<S-CR>",
-            node_decremental = "<BS>",
-          },
-        },
+        install_dir = M.parsers_dir,
       }
     end,
     on_setup = function(c)
-      require("nvim-treesitter.configs").setup(c)
+      require("nvim-treesitter").setup(c)
+
+      local installed = require("nvim-treesitter.config").get_installed("parsers")
+      local not_installed = vim.tbl_filter(function(parser)
+        return not vim.tbl_contains(installed, parser)
+      end, nvim.treesitter.parsers)
+
+      if #not_installed > 0 then
+        require("nvim-treesitter").install(not_installed, { summary = false })
+      end
+
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("treesitter_enable_features", { clear = true }),
+        pattern = "*",
+        callback = function(event)
+          local buf = event.buf
+          local ft = event.match
+
+          -- skip if treesitter is not available for this filetype
+          if ft == "" then
+            return
+          end
+
+          -- Enable syntax highlighting
+          pcall(vim.treesitter.start, buf, ft)
+
+          vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+
+          vim.wo.foldmethod = "expr"
+          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+        end,
+      })
+
+      -- Setup context commentstring
       require("ts_context_commentstring").setup({
         enable_autocmd = false,
       })
     end,
     on_done = function()
-      local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
-
-      for key, value in pairs(M.parsers) do
-        parser_config[key] = value
+      if next(M.parsers) then
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "TSUpdate",
+          callback = function()
+            local parser_config = require("nvim-treesitter.parsers")
+            for key, value in pairs(M.parsers) do
+              parser_config[key] = vim.tbl_extend("force", value, {
+                tier = 2, -- Important: tier 2 for custom parsers (unstable)
+              })
+            end
+          end,
+        })
       end
 
       for key, value in pairs(M.ft_parsers) do
@@ -136,7 +138,8 @@ function M.config()
         {
           fn.wk_keystroke({ categories.TREESITTER, "R" }),
           function()
-            for _, parser in pairs(fn.get_setup(M.name).ensure_installed) do
+            local installed = require("nvim-treesitter.config").get_installed("parsers")
+            for _, parser in ipairs(installed) do
               vim.cmd(("TSInstall! %s"):format(parser))
             end
           end,

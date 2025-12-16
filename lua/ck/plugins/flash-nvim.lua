@@ -139,7 +139,8 @@ function M.config()
             enabled = true,
             -- by default all keymaps are enabled, but you can disable some of them,
             -- by removing them from the list.
-            keys = { "f", "F", "t", "T", ";", "," },
+            -- Removed ";" and "," to avoid treesitter-textobjects repeatable warning
+            keys = { "f", "F", "t", "T" },
             search = { wrap = false },
             highlight = { backdrop = false },
             jump = { register = false, autojump = true },

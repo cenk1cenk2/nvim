@@ -261,10 +261,10 @@ function M.components()
       end,
       color = function()
         local buf = vim.api.nvim_get_current_buf()
-        local ts = vim.treesitter.highlighter.active[buf]
+        local ok, parser = pcall(vim.treesitter.get_parser, buf)
 
         return {
-          fg = ts and not vim.tbl_isempty(ts) and nvim.ui.colors.green[300] or nvim.ui.colors.red[300],
+          fg = ok and parser and nvim.ui.colors.green[300] or nvim.ui.colors.red[300],
           bg = nvim.ui.colors.bg[300],
         }
       end,
