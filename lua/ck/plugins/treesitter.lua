@@ -51,28 +51,6 @@ function M.config()
         require("nvim-treesitter").install(not_installed, { summary = false })
       end
 
-      vim.api.nvim_create_autocmd("FileType", {
-        group = vim.api.nvim_create_augroup("treesitter_enable_features", { clear = true }),
-        pattern = "*",
-        callback = function(event)
-          local buf = event.buf
-          local ft = event.match
-
-          -- skip if treesitter is not available for this filetype
-          if ft == "" then
-            return
-          end
-
-          -- Enable syntax highlighting
-          pcall(vim.treesitter.start, buf, ft)
-
-          vim.bo[buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-
-          vim.wo.foldmethod = "expr"
-          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-        end,
-      })
-
       -- Setup context commentstring
       require("ts_context_commentstring").setup({
         enable_autocmd = false,
@@ -96,6 +74,28 @@ function M.config()
       for key, value in pairs(M.ft_parsers) do
         vim.treesitter.language.register(key, value)
       end
+
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("_treesitter", { clear = true }),
+        pattern = "*",
+        callback = function(event)
+          local bufnr = event.buf
+          local ft = event.match
+
+          -- skip if treesitter is not available for this filetype
+          if ft == "" then
+            return
+          end
+
+          -- Enable syntax highlighting
+          pcall(vim.treesitter.start, bufnr, ft)
+
+          vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+
+          vim.wo.foldmethod = "expr"
+          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+        end,
+      })
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
@@ -165,7 +165,7 @@ end
 M.parsers = {}
 
 M.ft_parsers = {
-  ["yaml"] = { "yaml.ansible", "yaml.compose", "yaml.gitlab-ci" },
+  ["yaml"] = { "yaml.*", "yaml.ansible", "yaml.compose", "yaml.gitlab-ci" },
   ["bash"] = { "zsh" },
   ["ini"] = { "confini", "conf" },
 }
