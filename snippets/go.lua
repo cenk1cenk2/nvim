@@ -61,20 +61,36 @@ local handlers = {
 }
 
 local function go_result_type(info)
-  local scope = vim.treesitter.is_ancestor(require("nvim-treesitter.locals").get_scope_tree(vim.treesitter.get_node(), 0))
+  -- Get current node at cursor using core Neovim treesitter API
+  local node = vim.treesitter.get_node()
+  if not node then
+    return { s.t("nil") }
+  end
 
+  -- Walk up the tree to find the enclosing function/method declaration
   local function_node
-  for _, v in ipairs(scope) do
-    if v:type() == "function_declaration" or v:type() == "method_declaration" or v:type() == "func_literal" then
-      function_node = v
+  local current = node
+  while current do
+    local node_type = current:type()
+    if node_type == "function_declaration" or node_type == "method_declaration" or node_type == "func_literal" then
+      function_node = current
       break
     end
+    current = current:parent()
+  end
+
+  if not function_node then
+    return { s.t("nil") }
   end
 
   local query = vim.treesitter.query.get(ts_lang, ts_query.return_result)
-  for _, node in query:iter_captures(function_node, 0) do
-    if handlers[node:type()] then
-      return handlers[node:type()](node, info)
+  if not query then
+    return { s.t("nil") }
+  end
+
+  for _, captured_node in query:iter_captures(function_node, 0) do
+    if handlers[captured_node:type()] then
+      return handlers[captured_node:type()](captured_node, info)
     end
   end
 

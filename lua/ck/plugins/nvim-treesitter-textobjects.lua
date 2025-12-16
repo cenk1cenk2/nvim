@@ -10,101 +10,305 @@ function M.config()
       return {
         "nvim-treesitter/nvim-treesitter-textobjects",
         event = { "BufReadPost", "BufNewFile", "BufNew" },
-        branch = "master",
+        branch = "main", -- Changed from "master" to "main"
       }
     end,
     setup = function()
-      -- builtin textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects?tab=readme-ov-file#built-in-textobjects
-      ---@type TSConfig
+      ---@type table
       return {
-        textobjects = {
-          swap = {
-            enable = false,
-            swap_previous = {
-              ["H"] = { query = { "@field", "@pair", "@array", "@element", "@property" }, query_group = "locals", desc = "" },
-            },
-            swap_next = {
-              ["L"] = { query = { "@field", "@pair", "@array", "@element", "@property" }, query_group = "locals", desc = "" },
-            },
+        select = {
+          lookahead = false,
+          selection_modes = {
+            ["@parameter.outer"] = "v",
+            ["@function.inner"] = "V",
+            ["@function.outer"] = "v",
+            ["@class.outer"] = "v",
           },
-          lsp_interop = {
-            enable = true,
-            border = "rounded",
-            floating_preview_opts = {},
-            peek_definition_code = {
-              ["gwc"] = { query = "@class.outer", desc = "Peek class", silent = true },
-              ["gwm"] = { query = "@function.outer", desc = "Peek function", silent = true },
-              ["gwa"] = { query = "@assignment.outer", desc = "Peek assignment", silent = true },
-            },
-          },
-          select = {
-            enable = true,
-            lookahead = false,
-            keymaps = {
-              -- ["ia"] = { query = "@parameter.inner", desc = "select inner part of a parameter/argument" },
-              -- ["aa"] = { query = "@parameter.outer", desc = "select outer part of a parameter/argument" },
-              ["im"] = { query = "@function.inner", desc = "select inner part of a method" },
-              ["am"] = { query = "@function.outer", desc = "select outer part of a method" },
-              ["ig"] = { query = { "@scope", "@local.scope" }, query_group = "locals", desc = "select innper part of the scope" },
-              ["ic"] = { query = "@class.inner", desc = "select inner part of a class region" },
-              ["ac"] = { query = "@class.outer", desc = "select outer part of a class region" },
-              ["iv"] = { query = "@assignment.rhs", desc = "select rhs of assignment" },
-              ["av"] = { query = "@assignment.lhs", desc = "select lfs of assignment" },
-              ["if"] = { query = "@call.inner", desc = "select inner part of the call" },
-              ["af"] = { query = "@call.outer", desc = "select outer part of the call" },
-            },
-            selection_modes = {
-              ["@parameter.outer"] = "v",
-              ["@function.inner"] = "V",
-              ["@function.outer"] = "v",
-              ["@class.outer"] = "v",
-            },
-            include_surrounding_whitespace = false,
-          },
-          move = {
-            enable = true,
-            set_jumps = true, -- whether to set jumps in the jumplist
-            goto_next_start = {
-              ["]]m"] = { query = "@function.outer", des = "jump to next method start" },
-              ["]]c"] = { query = "@class.outer", desc = "jump to next class start" },
-              ["]]s"] = { query = { "@scope", "@local.scope" }, query_group = "locals", desc = "jump to next scope start" },
-              ["]]z"] = { query = "@fold", query_group = "folds", desc = "jump to next fold start" },
-              ["]]a"] = { query = "@parameter.inner", desc = "jump to next parameter start" },
-              ["]]p"] = { query = "@attribute.inner", desc = "jump to next attribute start" },
-              ["]]v"] = { query = "@assignment.outer", desc = "jump to next assignment start" },
-            },
-            goto_previous_start = {
-              ["[[m"] = { query = "@function.outer", des = "jump to previous method start" },
-              ["[[c"] = { query = "@class.outer", desc = "jump to previous class start" },
-              ["[[s"] = { query = { "@scope", "@local.scope" }, query_group = "locals", desc = "jump to previous scope start" },
-              ["[[Z"] = { query = "@fold", query_group = "folds", desc = "jump to previous fold start" },
-              ["[[a"] = { query = "@parameter.inner", desc = "jump to previous parameter start" },
-              ["[[p"] = { query = "@attribute.inner", desc = "jump to previous attribute start" },
-              ["[[v"] = { query = "@assignment.outer", desc = "jump to previous assignment start" },
-            },
-            goto_previous_end = {
-              ["[[M"] = { query = "@function.outer", des = "jump to previous method end" },
-              ["[[C"] = { query = "@class.outer", desc = "jump to previous class end" },
-              ["[[S"] = { query = "@scope", query_group = "locals", desc = "jump to previous scope end" },
-              ["[[A"] = { query = "@parameter.inner", desc = "jump to next parameter start" },
-            },
-            goto_next_end = {
-              ["]]M"] = { query = "@function.outer", des = "jump to next method end" },
-              ["]]C"] = { query = "@class.outer", desc = "jump to next class end" },
-              ["]]S"] = { query = "@scope", query_group = "locals", desc = "jump to next scope end" },
-              ["]]A"] = { query = "@parameter.inner", desc = "jump to next parameter start" },
-            },
-            -- Below will go to either the start or the end, whichever is closer.
-            -- Use if you want more granular movements
-            -- Make it even more gradual by adding multiple queries and regex.
-            goto_next = {},
-            goto_previous = {},
-          },
+          include_surrounding_whitespace = false,
+        },
+        move = {
+          -- whether to set jumps in the jumplist
+          set_jumps = true,
         },
       }
     end,
     on_setup = function(c)
-      require("nvim-treesitter.configs").setup(c)
+      -- Main branch uses a different setup function
+      require("nvim-treesitter-textobjects").setup(c)
+    end,
+    keymaps = function()
+      ---@type KeymapMappings
+      return {
+        -- Select textobjects
+        {
+          "im",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@function.inner", "textobjects")
+          end,
+          desc = "select inner part of a method",
+          mode = { "x", "o" },
+        },
+        {
+          "am",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@function.outer", "textobjects")
+          end,
+          desc = "select outer part of a method",
+          mode = { "x", "o" },
+        },
+        {
+          "ig",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@local.scope", "locals")
+          end,
+          desc = "select inner part of the scope",
+          mode = { "x", "o" },
+        },
+        {
+          "ic",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@class.inner", "textobjects")
+          end,
+          desc = "select inner part of a class region",
+          mode = { "x", "o" },
+        },
+        {
+          "ac",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@class.outer", "textobjects")
+          end,
+          desc = "select outer part of a class region",
+          mode = { "x", "o" },
+        },
+        {
+          "iv",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@assignment.rhs", "textobjects")
+          end,
+          desc = "select rhs of assignment",
+          mode = { "x", "o" },
+        },
+        {
+          "av",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@assignment.lhs", "textobjects")
+          end,
+          desc = "select lhs of assignment",
+          mode = { "x", "o" },
+        },
+        {
+          "if",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@call.inner", "textobjects")
+          end,
+          desc = "select inner part of the call",
+          mode = { "x", "o" },
+        },
+        {
+          "af",
+          function()
+            require("nvim-treesitter-textobjects.select").select_textobject("@call.outer", "textobjects")
+          end,
+          desc = "select outer part of the call",
+          mode = { "x", "o" },
+        },
+
+        -- Move to next/previous textobjects
+        {
+          "]]m",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_start("@function.outer", "textobjects")
+          end,
+          desc = "jump to next method start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "]]c",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_start("@class.outer", "textobjects")
+          end,
+          desc = "jump to next class start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "]]s",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_start("@local.scope", "locals")
+          end,
+          desc = "jump to next scope start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "]]z",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_start("@fold", "folds")
+          end,
+          desc = "jump to next fold start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "]]a",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_start("@parameter.inner", "textobjects")
+          end,
+          desc = "jump to next parameter start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "]]p",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_start("@attribute.inner", "textobjects")
+          end,
+          desc = "jump to next attribute start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "]]v",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_start("@assignment.outer", "textobjects")
+          end,
+          desc = "jump to next assignment start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[m",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_start("@function.outer", "textobjects")
+          end,
+          desc = "jump to previous method start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[c",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_start("@class.outer", "textobjects")
+          end,
+          desc = "jump to previous class start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[s",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_start("@local.scope", "locals")
+          end,
+          desc = "jump to previous scope start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[Z",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_start("@fold", "folds")
+          end,
+          desc = "jump to previous fold start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[a",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_start("@parameter.inner", "textobjects")
+          end,
+          desc = "jump to previous parameter start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[p",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_start("@attribute.inner", "textobjects")
+          end,
+          desc = "jump to previous attribute start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[v",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_start("@assignment.outer", "textobjects")
+          end,
+          desc = "jump to previous assignment start",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[M",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_end("@function.outer", "textobjects")
+          end,
+          desc = "jump to previous method end",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[C",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_end("@class.outer", "textobjects")
+          end,
+          desc = "jump to previous class end",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[S",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_end("@local.scope", "locals")
+          end,
+          desc = "jump to previous scope end",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "[[A",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_previous_end("@parameter.inner", "textobjects")
+          end,
+          desc = "jump to previous parameter end",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "]]M",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_end("@function.outer", "textobjects")
+          end,
+          desc = "jump to next method end",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "]]C",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_end("@class.outer", "textobjects")
+          end,
+          desc = "jump to next class end",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "]]S",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_end("@local.scope", "locals")
+          end,
+          desc = "jump to next scope end",
+          mode = { "n", "x", "o" },
+        },
+        {
+          "]]A",
+          function()
+            require("nvim-treesitter-textobjects.move").goto_next_end("@parameter.inner", "textobjects")
+          end,
+          desc = "jump to next parameter end",
+          mode = { "n", "x", "o" },
+        },
+
+        -- Swap textobjects (keeping the existing functionality)
+        -- {
+        --   "H",
+        --   function()
+        --     require("nvim-treesitter-textobjects.swap").swap_previous("@field")
+        --   end,
+        --   desc = "swap with previous field",
+        --   mode = { "n" },
+        -- },
+        -- {
+        --   "L",
+        --   function()
+        --     require("nvim-treesitter-textobjects.swap").swap_next("@field")
+        --   end,
+        --   desc = "swap with next field",
+        --   mode = { "n" },
+        -- },
+      }
     end,
   })
 end
