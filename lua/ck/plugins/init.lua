@@ -46,7 +46,6 @@ local plugins = {
   "minuet-ai-nvim",
   "sidekick-nvim",
   "avante-nvim",
-  "claude-code-nvim",
   "mcphub-nvim",
   "code-companion-nvim",
   "aerial-nvim",
