@@ -223,7 +223,7 @@ function M.restart_lsp(filter)
 
         return
       end
-      vim.cmd(([[LspRestart %s]]):format(client.name))
+      vim.cmd(([[lsp restart %s]]):format(client.name))
     end)
   end
 
