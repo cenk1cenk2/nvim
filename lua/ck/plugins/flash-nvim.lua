@@ -10,7 +10,7 @@ function M.config()
       return {
         "folke/flash.nvim",
         keys = { "f", "F", "t", "T", "r", "dr", "yr" },
-        -- event = "BufReadPost",
+        event = { "BufReadPost" },
       }
     end,
     setup = function()
