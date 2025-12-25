@@ -191,6 +191,9 @@ function M.config()
 - NEVER write comments or explanations unless it is explicitly asked or required or the style of coding has comments to indicate links and other things already, please output these directly to the chat window.
 - NEVER fabricate information. If you are unsure, say "I don't know" or consult to a web search or a documentation search.
 - NEVER overwrite the explicit changes that is done over your changes unless instructed to do so and ALWAYS analyze them first to take it as a guideline for coding standards.
+- Follow the guidelines in coding style below.
+  - Always leave an empty line whenever you are returning from a function or a method.
+  - Never leave empty spaces at the end of the lines.
 - You have access to MCP server tools to help you perform coding tasks. Please use them whenever necessary.
 - You should use the web search tools instead of guessing answers for up-to-date information which are as follows.
   - built-in search tool
