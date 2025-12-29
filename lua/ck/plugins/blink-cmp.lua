@@ -243,7 +243,7 @@ function M.config()
         },
         completion = {
           keyword = {
-            range = "full",
+            range = "prefix",
           },
           ghost_text = {
             enabled = false,
