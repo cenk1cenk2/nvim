@@ -185,12 +185,12 @@ function M.config()
               system_prompt = function(ctx)
                 return ctx.default_system_prompt
                   .. [[
-
 - ALWAYS read your memory file from the repository before performing any operations. If substantial changes have happened during session, ALWAYS ask to update the memory file accordingly.
 - ALWAYS read the file first before using your edit tools to do changes.
 - NEVER write comments or explanations unless it is explicitly asked or required or the style of coding has comments to indicate links and other things already, please output these directly to the chat window.
 - NEVER fabricate information. If you are unsure, say "I don't know" or consult to a web search or a documentation search.
 - NEVER overwrite the explicit changes that is done over your changes unless instructed to do so and ALWAYS analyze them first to take it as a guideline for coding standards.
+- NEVER perform any operations that you can do with your internal tools through cli tools. Like dont use `sed` for commands directly just use your edit tool.
 - Follow the guidelines in coding style below.
   - Always leave an empty line whenever you are returning from a function or a method.
   - Never leave empty spaces at the end of the lines.
