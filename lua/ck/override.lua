@@ -80,7 +80,7 @@ nvim.lsp.servers = {
   "ruff",
   "rust_analyzer",
   "svelte",
-  "systemd_ls",
+  "systemd_lsp",
   "tailwindcss",
   "taplo",
   "terraformls",
