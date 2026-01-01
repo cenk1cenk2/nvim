@@ -62,6 +62,7 @@ nvim.lsp.servers = {
   "buf_ls",
   "copilot",
   "cssls",
+  "clangd",
   "dockerls",
   "emmet_ls",
   "eslint",
