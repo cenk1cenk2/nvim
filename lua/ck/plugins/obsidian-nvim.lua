@@ -108,19 +108,6 @@ function M.config()
           substitutions = {},
         },
 
-        -- Optional, by default when you use `:ObsidianFollowLink` on a link to an external
-        -- URL it will be ignored but you can customize this behavior here.
-        follow_url_func = function(url)
-          vim.ui.open(url)
-        end,
-
-        -- Optional, by default when you use `:ObsidianFollowLink` on a link to an external
-        -- URL it will be ignored but you can customize this behavior here.
-        follow_img_func = function(img)
-          -- Open the URL in the default web browser.
-          vim.ui.open(img)
-        end,
-
         -- Optional, by default commands like `:ObsidianSearch` will attempt to use
         -- telescope.nvim, fzf-lua, fzf.vim, or mini.pick (in that order), and use the
         -- first one they find. You can set this option to tell obsidian.nvim to always use this
@@ -173,7 +160,7 @@ function M.config()
           -- The default folder to place images in via `:ObsidianPasteImg`.
           -- If this is a relative path it will be interpreted as relative to the vault root.
           -- You can always override this per image by passing a full path to the command instead of just a filename.
-          img_folder = "", -- This is the default
+          folder = "", -- This is the default
         },
 
         checkbox = {
