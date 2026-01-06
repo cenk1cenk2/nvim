@@ -23,6 +23,19 @@ function M.config()
       ---@type WKMappings
       return {
         {
+          fn.wk_keystroke({ categories.SEARCH, "i" }),
+          group = "iedit",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "i", "r" }),
+          function()
+            require("iedit").restrict_visual()
+          end,
+          desc = "start iedit",
+          mode = { "v" },
+        },
+        {
           fn.wk_keystroke({ categories.SEARCH, "i", "i" }),
           function()
             require("iedit").toggle()
