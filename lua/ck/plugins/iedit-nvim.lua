@@ -1,8 +1,6 @@
 -- https://github.com/altermo/iedit.nvim
 local M = {}
 
-local log = require("ck.log")
-
 M.name = "altermo/iedit.nvim"
 
 function M.config()
@@ -15,89 +13,66 @@ function M.config()
     end,
     setup = function()
       return {
-        select = {
-          map = {
-            q = { "done" },
-            ["<Esc>"] = { "select", "done" },
-            ["<CR>"] = { "toggle" },
-            n = { "toggle", "next" },
-            p = { "toggle", "prev" },
-            N = { "next" },
-            P = { "prev" },
-            a = { "all" },
-            --Mapping to use while in selection-mode
-            --Possible values are:
-            -- • `done` Done with selection
-            -- • `next` Go to next occurrence
-            -- • `prev` Go to previous occurrence
-            -- • `select` Select current
-            -- • `unselect` Unselect current
-            -- • `toggle` Toggle current
-            -- • `all` Select all
-          },
-          highlight = {
-            current = "CurSearch",
-            selected = "Search",
-          },
-        },
         highlight = "IncSearch",
       }
     end,
     on_setup = function(c)
-      -- require("iedit").setup(c)
+      require("iedit").setup(c)
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.SEARCH, "i" }),
+          fn.wk_keystroke({ categories.SEARCH, "i", "i" }),
           function()
-            if M.is_active() then
-              log:info("Editing stopped.")
-
-              return require("iedit").stop()
-            end
-
-            log:info("Editing started.")
-            require("iedit").select()
+            require("iedit").toggle()
           end,
           desc = "start iedit",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.SEARCH, "a" }),
+          fn.wk_keystroke({ categories.SEARCH, "i", "n" }),
           function()
-            if M.is_active() then
-              log:info("Editing stopped.")
-
-              return require("iedit").stop()
-            end
-
-            log:info("Editing started with selection.")
-
-            require("iedit").select_all()
+            require("iedit").goto_next_occurrence(true)
           end,
-          desc = "start iedit select all",
+          desc = "[iedit] go to next occurrence",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "i", "N" }),
+          function()
+            require("iedit").goto_first_occurrence()
+          end,
+          desc = "[iedit] go to first occurrence",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "i", "p" }),
+          function()
+            require("iedit").goto_prev_occurrence(true)
+          end,
+          desc = "[iedit] go to previous occurrence",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "i", "P" }),
+          function()
+            require("iedit").goto_last_occurrence()
+          end,
+          desc = "[iedit] go to last occurrence",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SEARCH, "i", "t" }),
+          function()
+            require("iedit").toggle_current_occurrence()
+          end,
+          desc = "[iedit] toggle current occurrence",
           mode = { "n", "v" },
         },
       }
     end,
   })
-end
-
----@param bufnr? integer
----@return boolean
-function M.is_active(bufnr)
-  bufnr = bufnr or vim.api.nvim_get_current_buf()
-  local buf = vim.b[bufnr]
-
-  if not buf then
-    return false
-  end
-
-  local data = buf.iedit_data
-
-  return data ~= nil and (type(data) == "table" and vim.tbl_count(data) > 0)
 end
 
 return M
