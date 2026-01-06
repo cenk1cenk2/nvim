@@ -32,7 +32,7 @@ function M.config()
           function()
             require("iedit").restrict_visual()
           end,
-          desc = "start iedit",
+          desc = "[iedit] restrict visual",
           mode = { "v" },
         },
         {
