@@ -58,7 +58,7 @@ hl.common = {
   IncSearch = { bg = c.bg[400] },
   CurSearch = { bg = c.bg[500] },
   Search = { bg = c.bg[400] },
-  Substitute = { bg = c.yellow[300] },
+  Substitute = { bg = c.yellow[100] },
   MatchParen = { fg = c.blue[600], underline = true },
   MatchParenCur = { underline = true },
   MatchWord = { underline = true },
