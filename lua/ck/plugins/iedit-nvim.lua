@@ -13,7 +13,7 @@ function M.config()
     end,
     setup = function()
       return {
-        highlight = "CurSearch",
+        highlight = "Substitute",
       }
     end,
     on_setup = function(c)
