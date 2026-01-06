@@ -13,7 +13,7 @@ function M.config()
     end,
     setup = function()
       return {
-        highlight = "IncSearch",
+        highlight = "SearchResult",
       }
     end,
     on_setup = function(c)
