@@ -174,19 +174,37 @@ end
 
 ---@param opts? vim.lsp.inline_completion.get.Opts
 function M.trigger_inline_completion(opts)
-  opts = opts or { bufnr = vim.api.nvim_get_current_buf() }
+  opts = opts or {}
+  local bufnr = opts.bufnr or vim.api.nvim_get_current_buf()
+
+  -- Ensure buffer is valid
+  if not vim.api.nvim_buf_is_valid(bufnr) then
+    log:warn("Invalid buffer for inline completion: %d", bufnr)
+    return
+  end
 
   local params = vim.lsp.util.make_position_params(vim.api.nvim_get_current_win(), "utf-8")
+
+  -- Get buffer options for formatting
+  local shiftwidth = vim.bo[bufnr].shiftwidth
+  local tabstop = vim.bo[bufnr].tabstop
+  local expandtab = vim.bo[bufnr].expandtab
+
+  -- Use shiftwidth if set, otherwise fall back to tabstop
+  local tab_size = shiftwidth > 0 and shiftwidth or tabstop
+
   params.context = {
-    triggerKind = 1,
+    triggerKind = 1, -- InlineCompletionTriggerKind.Invoked
     triggerCharacter = nil,
   }
-  params["formattingOptions"] = {
-    tabSize = vim.bo[opts.bufnr].shiftwidth == 0 and vim.bo[opts.bufnr].tabstop or vim.bo[opts.bufnr].shiftwidth,
-    insertSpaces = vim.bo[opts.bufnr].expandtab,
+
+  -- Standard LSP FormattingOptions
+  params.formattingOptions = {
+    tabSize = tab_size,
+    insertSpaces = expandtab,
   }
 
-  vim.lsp.buf_request_all(opts.bufnr, "textDocument/inlineCompletion", params, function(responses)
+  vim.lsp.buf_request_all(bufnr, "textDocument/inlineCompletion", params, function(responses)
     for client_id, response in pairs(responses) do
       local client = vim.lsp.get_client_by_id(client_id) or {}
 

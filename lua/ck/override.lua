@@ -42,7 +42,7 @@ nvim.lsp.ai.copilot.debounce = 50
 
 nvim.lsp.ai.copilot.nes.enabled = true
 nvim.lsp.ai.copilot.nes.auto_suggest = false
-nvim.lsp.ai.copilot.nes.debounce = 50
+nvim.lsp.ai.copilot.nes.debounce = 100
 
 nvim.lsp.ai.filetypes.enabled = {
   "*",

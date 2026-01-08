@@ -77,10 +77,10 @@ return {
       debounce = 50,
       nes = {
         enabled = true,
-        debounce = 50,
+        debounce = 100,
         events = {
           suggest = { "ModeChanged i:n", "TextChanged", "User SidekickNesDone" },
-          clear = { "TextChangedI", "TextChanged", "BufWritePre", "InsertEnter" },
+          clear = { "TextChangedI", "InsertEnter" },
         },
       },
     },
