@@ -44,6 +44,7 @@ local plugins = {
   "grug-far-nvim",
   "bookmarks-nvim",
   "minuet-ai-nvim",
+  "vectorcode",
   "sidekick-nvim",
   "avante-nvim",
   "mcphub-nvim",

@@ -60,9 +60,9 @@ nvim.lsp.servers = {
   "ansiblels",
   "bashls",
   "buf_ls",
+  "clangd",
   "copilot",
   "cssls",
-  "clangd",
   "dockerls",
   "emmet_ls",
   "eslint",
@@ -93,6 +93,7 @@ nvim.lsp.servers = {
   -- "docker_compose_language_service",
   -- "gitlab_ci_ls",
   -- "pyright",
+  -- "vectorcode",
 }
 
 nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, nvim.lsp.servers)

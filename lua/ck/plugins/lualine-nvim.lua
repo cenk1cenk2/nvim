@@ -38,6 +38,7 @@ function M.config()
           },
           lualine_x = {
             components.nes,
+            components.vectorcode,
             components.searchcount,
             components.snippet,
             components.noice_mode,
@@ -315,6 +316,19 @@ function M.components()
         local status = require("sidekick.status")
         return status.get() ~= nil
       end,
+    },
+    vectorcode = {
+      function()
+        return require("vectorcode.integrations").lualine()[1]()
+      end,
+      cond = function()
+        if package.loaded["vectorcode"] == nil then
+          return false
+        else
+          return require("vectorcode.integrations").lualine().cond()
+        end
+      end,
+      color = { fg = nvim.ui.colors.fg, bg = nvim.ui.colors.bg[300] },
     },
     snippet = {
       function()
