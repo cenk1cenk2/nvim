@@ -50,6 +50,15 @@
       "autoApprove": ["sequentialthinking"],
       "command": "bunx",
       "disabled": false
+    },
+    "cclsp": {
+      "args": ["-y", "cclsp"],
+      "autoApprove": ["find_definition", "find_references", "get_diagnostics"],
+      "command": "bunx",
+      "disabled": false,
+      "env": {
+        "CCLSP_CONFIG_PATH": "${HOME}/.config/nvim/utils/claude/cclsp.json"
+      }
     }
   },
   "nativeMCPServers": {

@@ -212,6 +212,12 @@ function M.config()
 - Please use context7 to fetch anytime you need to access documentation whenever it is possible which are as follows.
   - `mcp__mcphub_nvim__context7__resolve-library-id`
   - `mcp__mcphub_nvim__context7__get-library-docs`
+- ALWAYS use the LSP tools provided through cclsp MCP server for code navigation and analysis tasks. These are MUCH faster (900x) than text search which are as follows.
+  - `mcp__mcphub_nvim__cclsp__find_definition` - Jump to symbol definitions, use this instead of text search when you need to find where a function/class/variable is defined
+  - `mcp__mcphub_nvim__cclsp__find_references` - Find all references to a symbol, use this to understand how code is used throughout the codebase
+  - `mcp__mcphub_nvim__cclsp__rename_symbol` - Safely rename symbols across the entire codebase
+  - `mcp__mcphub_nvim__cclsp__get_diagnostics` - Get LSP diagnostics and errors for files
+  - `mcp__mcphub_nvim__cclsp__restart_server` - Restart LSP server if needed
 ]]
               end,
             },
