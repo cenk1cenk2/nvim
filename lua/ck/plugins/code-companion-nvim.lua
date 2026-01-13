@@ -199,7 +199,7 @@ function M.config()
   - built-in search tool
   - `web_search`
   - `mcp__mcphub_nvim__fetch__fetch`
-- Use the memory tools provided to you through the MCP server to record milestones about this repository which are as follows.
+- Use the memory tools provided to you through the MCP server to record milestones about this repository which are as follows. ALWAYS keep your memory updated! ALWAYS read the memory to remind yourself about the repository and coding style.
   - `mcp__mcphub_nvim__memory__create_entities`
   - `mcp__mcphub_nvim__memory__create_relations`
   - `mcp__mcphub_nvim__memory__add_observations`
