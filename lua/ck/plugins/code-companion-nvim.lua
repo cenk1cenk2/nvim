@@ -59,7 +59,6 @@ function M.config()
           acp = {
             ---@type fun (): CodeCompanion.ACPAdapter
             claude_code = function()
-              dd(require("mcphub").get_state())
               return require("codecompanion.adapters").extend(
                 "claude_code",
                 ---@type CodeCompanion.ACPAdapter
