@@ -57,106 +57,33 @@ function M.config()
             end,
           },
           acp = {
-            claude_code = function()
-              return require("codecompanion.adapters").extend("claude_code", {
-                env = {
-                  CLAUDE_CODE_OAUTH_TOKEN = vim.env["CLAUDE_CODE_OAUTH_TOKEN"],
-                },
-                defaults = {
-                  mcpServers = {
-                    {
-                      name = "mcphub",
-                      type = "sse",
-                      url = "http://localhost:37373/mcp",
-                      args = {},
-                      command = "",
-                      headers = {},
-                      env = {},
-                    },
-                  },
-                },
-                commands = {
-                  default = { "bunx", "claude-code-acp" },
-                },
-              })
-            end,
             ---@type fun (): CodeCompanion.ACPAdapter
-            cursor = function()
-              return require("codecompanion.adapters.acp").new({
-                name = "cursor",
-                type = "acp",
-                roles = {
-                  llm = "assistant",
-                  user = "user",
-                },
-                env = {},
-                defaults = {
-                  timeout = 60000,
-                  mcpServers = {
-                    {
-                      name = "mcphub",
-                      type = "sse",
-                      url = "http://localhost:37373/mcp",
-                      args = {},
-                      command = "",
-                      headers = {},
-                      env = {},
+            claude_code = function()
+              return require("codecompanion.adapters").extend(
+                "claude_code",
+                ---@type CodeCompanion.ACPAdapter
+                {
+                  env = {
+                    CLAUDE_CODE_OAUTH_TOKEN = vim.env["CLAUDE_CODE_OAUTH_TOKEN"],
+                  },
+                  defaults = {
+                    mcpServers = {
+                      {
+                        name = "mcphub",
+                        type = "sse",
+                        url = "http://localhost:37373/mcp",
+                        args = {},
+                        command = "",
+                        headers = {},
+                        env = {},
+                      },
                     },
                   },
-                },
-                commands = {
-                  default = { "bunx", "@blowmage/cursor-agent-acp" },
-                },
-                parameters = {
-                  protocolVersion = 1,
-                  clientCapabilities = {
-                    fs = { readTextFile = true, writeTextFile = true },
+                  commands = {
+                    default = { "bunx", "claude-code-acp" },
                   },
-                  clientInfo = {
-                    name = "CodeCompanion.nvim",
-                    version = "1.0.0",
-                  },
-                  mcpServers = {
-                    {
-                      name = "mcphub",
-                      type = "sse",
-                      url = "http://localhost:37373/mcp",
-                      args = {},
-                      command = "",
-                      headers = {},
-                      env = {},
-                    },
-                  },
-                },
-                handlers = {
-                  ---@param self CodeCompanion.ACPAdapter
-                  ---@return boolean
-                  setup = function(self)
-                    return true
-                  end,
-
-                  ---Manually handle authentication
-                  ---@param self CodeCompanion.ACPAdapter
-                  ---@return boolean
-                  auth = function(self)
-                    return false
-                  end,
-
-                  ---@param self CodeCompanion.ACPAdapter
-                  ---@param messages table
-                  ---@param capabilities table
-                  ---@return table
-                  form_messages = function(self, messages, capabilities)
-                    return require("codecompanion.adapters.acp.helpers").form_messages(self, messages, capabilities)
-                  end,
-
-                  ---Function to run when the request has completed. Useful to catch errors
-                  ---@param self CodeCompanion.ACPAdapter
-                  ---@param code number
-                  ---@return nil
-                  on_exit = function(self, code) end,
-                },
-              })
+                }
+              )
             end,
           },
         },
@@ -166,6 +93,7 @@ function M.config()
             files = {
               "~/.claude/CLAUDE.md",
               "CLAUDE.md",
+              "AGENTS.md",
               "CLAUDE.local.md",
             },
           },

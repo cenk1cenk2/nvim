@@ -89,5 +89,9 @@
       "ALLOW_SHELL_COMMANDS": "true",
       "NVIM_SOCKET_PATH": "${NVIM}"
     }
+  },
+  "treesitter": {
+    "command": "uvx",
+    "args": ["mcp-server-tree-sitter"]
   }
 }
