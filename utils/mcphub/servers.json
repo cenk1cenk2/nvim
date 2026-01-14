@@ -25,10 +25,12 @@
     },
     "filesystem": {
       "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+      "autoApprove": ["directory_tree", "get_file_info", "list_allowed_directories", "list_directory", "list_directory_with_sizes", "search_files"],
       "command": "bunx"
     },
     "git": {
       "args": ["mcp-server-git"],
+      "autoApprove": ["git_diff", "git_diff_staged", "git_diff_unstaged", "git_log", "git_show", "git_status"],
       "command": "uvx"
     },
     "github": {
@@ -62,11 +64,28 @@
       ],
       "command": "bunx"
     },
+    "nvim": {
+      "args": ["-y", "mcp-neovim-server"],
+      "command": "bunx",
+      "disabled": false,
+      "env": {
+        "ALLOW_SHELL_COMMANDS": "true",
+        "NVIM_SOCKET_PATH": "${NVIM}"
+      }
+    },
     "sequentialthinking": {
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
       "autoApprove": ["sequentialthinking"],
       "command": "bunx",
       "disabled": false
+    },
+    "treesitter": {
+      "args": ["mcp-server-tree-sitter"],
+      "command": "uvx"
+    },
+    "vectorcode-mcp-server": {
+      "args": [],
+      "command": "vectorcode-mcp-server"
     }
   },
   "nativeMCPServers": {
@@ -77,21 +96,5 @@
       "autoApprove": ["find_files", "list_directory", "read_file", "read_multiple_files"],
       "disabled": false
     }
-  },
-  "vectorcode-mcp-server": {
-    "args": [],
-    "command": "vectorcode-mcp-server"
-  },
-  "neovim-mcp-server": {
-    "command": "bunx",
-    "args": ["-y", "mcp-neovim-server"],
-    "env": {
-      "ALLOW_SHELL_COMMANDS": "true",
-      "NVIM_SOCKET_PATH": "${NVIM}"
-    }
-  },
-  "treesitter": {
-    "command": "uvx",
-    "args": ["mcp-server-tree-sitter"]
   }
 }
