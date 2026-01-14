@@ -1,5 +1,14 @@
 {
   "mcpServers": {
+    "cclsp": {
+      "args": ["-y", "cclsp"],
+      "autoApprove": ["find_definition", "find_references", "get_diagnostics"],
+      "command": "bunx",
+      "disabled": false,
+      "env": {
+        "CCLSP_CONFIG_PATH": "${HOME}/.config/nvim/utils/claude/cclsp.json"
+      }
+    },
     "context7": {
       "args": ["-y", "@upstash/context7-mcp"],
       "autoApprove": ["get-library-docs", "resolve-library-id"],
@@ -12,6 +21,14 @@
     "fetch": {
       "args": ["mcp-server-fetch"],
       "autoApprove": ["fetch"],
+      "command": "uvx"
+    },
+    "filesystem": {
+      "args": ["-y", "@modelcontextprotocol/server-filesystem"],
+      "command": "bunx"
+    },
+    "git": {
+      "args": ["mcp-server-git"],
       "command": "uvx"
     },
     "github": {
@@ -50,15 +67,6 @@
       "autoApprove": ["sequentialthinking"],
       "command": "bunx",
       "disabled": false
-    },
-    "cclsp": {
-      "args": ["-y", "cclsp"],
-      "autoApprove": ["find_definition", "find_references", "get_diagnostics"],
-      "command": "bunx",
-      "disabled": false,
-      "env": {
-        "CCLSP_CONFIG_PATH": "${HOME}/.config/nvim/utils/claude/cclsp.json"
-      }
     }
   },
   "nativeMCPServers": {
@@ -71,7 +79,15 @@
     }
   },
   "vectorcode-mcp-server": {
-    "command": "vectorcode-mcp-server",
-    "args": []
+    "args": [],
+    "command": "vectorcode-mcp-server"
+  },
+  "neovim-mcp-server": {
+    "command": "bunx",
+    "args": ["-y", "mcp-neovim-server"],
+    "env": {
+      "ALLOW_SHELL_COMMANDS": "true",
+      "NVIM_SOCKET_PATH": "${NVIM}"
+    }
   }
 }

@@ -194,7 +194,7 @@ function M.config()
 - Follow the guidelines in coding style below.
   - Always leave an empty line whenever you are returning from a function or a method.
   - Never leave empty spaces at the end of the lines.
-- You have access to MCP server tools to help you perform coding tasks. Please use them whenever necessary.
+- You have access to MCP server tools to help you perform coding tasks. ALWAYS discover what tools are available to you through MCP server and use them as needed.
 - You should use the web search tools instead of guessing answers for up-to-date information which are as follows.
   - built-in search tool
   - `web_search`
