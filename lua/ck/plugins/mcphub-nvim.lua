@@ -10,8 +10,8 @@ function M.config()
       return {
         -- "ravitemer/mcphub.nvim",
         -- TODO: POINT TO ORIGINAL WHEN FORK MERGES OR IF MERGES?
-        -- "cenk1cenk2/mcphub.nvim",
-        dir = "~/development/mcphub.nvim",
+        "cenk1cenk2/mcphub.nvim",
+        -- dir = "~/development/mcphub.nvim",
         branch = "patch-1",
         build = { "bundled_scripts.lua" },
         cmd = { "MCPHub" },
