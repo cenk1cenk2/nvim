@@ -21,10 +21,12 @@ function M.config()
           local env = {
             "DBUS_SESSION_BUS_ADDRESS",
           }
-          if context.is_workspace_mode then
-            env.WORKSPACE_ROOT = context.workspace_root
-            env.WORKSPACE_PORT = tostring(context.port)
-          end
+
+          -- Always set workspace variables (even when not in workspace mode)
+          env.WORKSPACE_ROOT = context.workspace_root or vim.fn.getcwd()
+          vim.env.WORKSPACE_ROOT = env.WORKSPACE_ROOT
+          env.WORKSPACE_PORT = tostring(context.port)
+          vim.env.WORKSPACE_PORT = tostring(context.port)
 
           env.CONFIG_FILES = table.concat(context.config_files, ":")
           local sockets = vim.fn.serverlist()
@@ -49,11 +51,11 @@ function M.config()
         },
         builtin_tools = {},
         workspace = {
-          enabled = true, -- Default: true
+          enabled = true,
           look_for = { ".mcphub/servers.json", ".vscode/mcp.json", ".cursor/mcp.json" },
           reload_on_dir_changed = true, -- Auto-switch on directory change
           port_range = { min = 40000, max = 41000 }, -- Port range for workspace hubs
-          get_port = nil, -- Optional function for custom port assignment
+          -- Always assign a workspace port (force workspace mode)
         },
       }
     end,

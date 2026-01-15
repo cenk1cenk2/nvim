@@ -59,6 +59,8 @@ function M.config()
           acp = {
             ---@type fun (): CodeCompanion.ACPAdapter
             claude_code = function()
+              local port = vim.env.WORKSPACE_PORT or "37373"
+
               return require("codecompanion.adapters").extend(
                 "claude_code",
                 ---@type CodeCompanion.ACPAdapter
@@ -71,7 +73,7 @@ function M.config()
                       {
                         name = "mcphub",
                         type = "sse",
-                        url = "http://localhost:37373/mcp",
+                        url = string.format("http://localhost:%s/mcp", port),
                         args = {},
                         command = "",
                         headers = {},
