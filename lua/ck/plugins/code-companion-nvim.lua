@@ -65,10 +65,10 @@ function M.config()
             claude_code = function()
               ---@type MCPHub.Hub|nil
               local instance
-              local ok = vim.wait(15000, function()
+              local ok = vim.wait(10000, function()
                 instance = require("mcphub").get_hub_instance()
 
-                return instance ~= nil and instance:is_ready()
+                return instance ~= nil -- and instance:is_ready()
               end, 100)
               if not ok or not instance then
                 log:error("MCPHub instance not ready in time")
