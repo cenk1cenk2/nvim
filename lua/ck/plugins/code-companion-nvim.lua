@@ -1,6 +1,8 @@
 -- https://github.com/olimorris/codecompanion.nvim
 local M = {}
 
+local log = require("ck.log")
+
 M.name = "olimorris/codecompanion.nvim"
 
 function M.config()
@@ -59,7 +61,18 @@ function M.config()
           acp = {
             ---@type fun (): CodeCompanion.ACPAdapter
             claude_code = function()
-              local port = vim.env.WORKSPACE_PORT or "37373"
+              ---@type MCPHub.Hub
+              local instance
+              local ok = vim.wait(1000, function()
+                instance = require("mcphub").get_hub_instance()
+
+                return instance and instance:ensure_ready()
+              end, 100)
+              if not ok then
+                log:error("MCPHub instance not ready in time")
+                error("MCPHub instance not ready in time")
+              end
+              log:info("MCPHub instance ready: %d", instance.port)
 
               return require("codecompanion.adapters").extend(
                 "claude_code",
@@ -73,7 +86,7 @@ function M.config()
                       {
                         name = "mcphub",
                         type = "sse",
-                        url = string.format("http://localhost:%s/mcp", port),
+                        url = string.format("http://localhost:%d/mcp", instance.port),
                         args = {},
                         command = "",
                         headers = {},

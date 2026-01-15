@@ -1,15 +1,8 @@
 {
   "mcpServers": {
     "cclsp": {
-      "args": [
-        "-y",
-        "cclsp"
-      ],
-      "autoApprove": [
-        "find_definition",
-        "find_references",
-        "get_diagnostics"
-      ],
+      "args": ["-y", "cclsp"],
+      "autoApprove": ["find_definition", "find_references", "get_diagnostics"],
       "command": "bunx",
       "disabled": false,
       "env": {
@@ -17,14 +10,8 @@
       }
     },
     "context7": {
-      "args": [
-        "-y",
-        "@upstash/context7-mcp"
-      ],
-      "autoApprove": [
-        "get-library-docs",
-        "resolve-library-id"
-      ],
+      "args": ["-y", "@upstash/context7-mcp"],
+      "autoApprove": ["get-library-docs", "resolve-library-id"],
       "command": "bunx",
       "env": [],
       "headers": {
@@ -32,41 +19,18 @@
       }
     },
     "fetch": {
-      "args": [
-        "mcp-server-fetch"
-      ],
-      "autoApprove": [
-        "fetch"
-      ],
+      "args": ["mcp-server-fetch"],
+      "autoApprove": ["fetch"],
       "command": "uvx"
     },
     "filesystem": {
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem"
-      ],
-      "autoApprove": [
-        "directory_tree",
-        "get_file_info",
-        "list_allowed_directories",
-        "list_directory",
-        "list_directory_with_sizes",
-        "search_files"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${CWD}"],
+      "autoApprove": ["directory_tree", "get_file_info", "list_allowed_directories", "list_directory", "list_directory_with_sizes", "search_files"],
       "command": "bunx"
     },
     "git": {
-      "args": [
-        "mcp-server-git"
-      ],
-      "autoApprove": [
-        "git_diff",
-        "git_diff_staged",
-        "git_diff_unstaged",
-        "git_log",
-        "git_show",
-        "git_status"
-      ],
+      "args": ["mcp-server-git"],
+      "autoApprove": ["git_diff", "git_diff_staged", "git_diff_unstaged", "git_log", "git_show", "git_status"],
       "command": "uvx"
     },
     "github": {
@@ -77,9 +41,7 @@
       "url": "https://api.githubcopilot.com/mcp/"
     },
     "gitlab": {
-      "args": [
-        "mcp-server-gitlab"
-      ],
+      "args": ["mcp-server-gitlab"],
       "command": "uvx",
       "disabled": true,
       "env": {
@@ -88,10 +50,7 @@
       }
     },
     "memory": {
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-memory"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-memory"],
       "autoApprove": [
         "create_relations",
         "delete_entities",
@@ -106,20 +65,8 @@
       "command": "bunx"
     },
     "nvim": {
-      "args": [
-        "-y",
-        "mcp-neovim-server"
-      ],
-      "autoApprove": [
-        "vim_buffer",
-        "vim_buffer_switch",
-        "vim_file_open",
-        "vim_fold",
-        "vim_grep",
-        "vim_jump",
-        "vim_search",
-        "vim_status"
-      ],
+      "args": ["-y", "mcp-neovim-server"],
+      "autoApprove": ["vim_buffer", "vim_buffer_switch", "vim_file_open", "vim_fold", "vim_grep", "vim_jump", "vim_search", "vim_status"],
       "command": "bunx",
       "disabled": false,
       "env": {
@@ -128,20 +75,13 @@
       }
     },
     "sequentialthinking": {
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ],
-      "autoApprove": [
-        "sequentialthinking"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "autoApprove": ["sequentialthinking"],
       "command": "bunx",
       "disabled": false
     },
     "treesitter": {
-      "args": [
-        "mcp-server-tree-sitter"
-      ],
+      "args": ["mcp-server-tree-sitter"],
       "command": "uvx"
     },
     "vectorcode-mcp-server": {
@@ -151,17 +91,10 @@
   },
   "nativeMCPServers": {
     "mcphub": {
-      "autoApprove": [
-        "get_current_servers"
-      ]
+      "autoApprove": ["get_current_servers"]
     },
     "neovim": {
-      "autoApprove": [
-        "find_files",
-        "list_directory",
-        "read_file",
-        "read_multiple_files"
-      ],
+      "autoApprove": ["find_files", "list_directory", "read_file", "read_multiple_files"],
       "disabled": false
     }
   }
