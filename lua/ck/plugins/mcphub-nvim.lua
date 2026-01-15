@@ -24,15 +24,10 @@ function M.config()
 
           -- Always set workspace variables (even when not in workspace mode)
           env.WORKSPACE_ROOT = context.workspace_root or vim.fn.getcwd()
-          vim.env.WORKSPACE_ROOT = env.WORKSPACE_ROOT
           env.WORKSPACE_PORT = tostring(context.port)
-          vim.env.WORKSPACE_PORT = tostring(context.port)
+          env.NVIM = vim.v.servername
 
           env.CONFIG_FILES = table.concat(context.config_files, ":")
-          local sockets = vim.fn.serverlist()
-          if sockets and #sockets > 0 then
-            env.NVIM = sockets[1]
-          end
 
           return env
         end,
