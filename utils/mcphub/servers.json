@@ -41,12 +41,19 @@
       "url": "https://api.githubcopilot.com/mcp/"
     },
     "gitlab": {
-      "args": ["mcp-server-gitlab"],
-      "command": "uvx",
-      "disabled": true,
+      "command": "npx",
+      "args": ["-y", "@zereight/mcp-gitlab"],
       "env": {
-        "GITLAB_API_URL": "https://${GL_HOST}/api/v4",
-        "GITLAB_PERSONAL_ACCESS_TOKEN": "${GL_TOKEN}"
+        "GITLAB_PERSONAL_ACCESS_TOKEN": "${GL_TOKEN}",
+        "GITLAB_API_URL": "https://gitlab.kilic.dev/api/v4/",
+        "GITLAB_READ_ONLY_MODE": "true"
+      }
+    },
+    "linear": {
+      "command": "bunx",
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"],
+      "headers": {
+        "Authorization": "Bearer ${LINEAR_TOKEN}"
       }
     },
     "memory": {
