@@ -51,9 +51,9 @@
     },
     "linear": {
       "command": "bunx",
-      "args": ["-y", "mcp-remote", "https://mcp.linear.app/mcp"],
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/sse", "--header", "Authorization: Bearer ${LINEAR_TOKEN}"],
       "headers": {
-        "Authorization": "Bearer ${LINEAR_TOKEN}"
+        "LINEAR_TOKEN": "${LINEAR_TOKEN}"
       }
     },
     "memory": {
