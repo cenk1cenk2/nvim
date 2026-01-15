@@ -63,16 +63,15 @@ function M.config()
             claude_code = function()
               ---@type MCPHub.Hub
               local instance
-              local ok = vim.wait(1000, function()
+              local ok = vim.wait(5000, function()
                 instance = require("mcphub").get_hub_instance()
 
                 return instance and instance:ensure_ready()
               end, 100)
               if not ok then
-                log:error("MCPHub instance not ready in time")
                 error("MCPHub instance not ready in time")
               end
-              log:info("MCPHub instance ready: %d", instance.port)
+              log:info("Connected to MCPHub instance: :%d", instance.port)
 
               return require("codecompanion.adapters").extend(
                 "claude_code",
@@ -86,7 +85,7 @@ function M.config()
                       {
                         name = "mcphub",
                         type = "sse",
-                        url = string.format("http://localhost:%d/mcp", instance.port),
+                        url = ("http://localhost:%d/mcp"):format(instance.port),
                         args = {},
                         command = "",
                         headers = {},
@@ -95,7 +94,7 @@ function M.config()
                     },
                   },
                   commands = {
-                    default = { "bunx", "claude-code-acp" },
+                    default = { "bunx", "@zed-industries/claude-code-acp" },
                   },
                 }
               )
