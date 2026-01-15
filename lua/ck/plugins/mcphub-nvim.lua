@@ -10,20 +10,19 @@ function M.config()
       return {
         -- "ravitemer/mcphub.nvim",
         -- TODO: POINT TO ORIGINAL WHEN FORK MERGES OR IF MERGES?
-        "cenk1cenk2/mcphub.nvim",
+        -- "cenk1cenk2/mcphub.nvim",
+        dir = "~/development/mcphub.nvim",
         branch = "patch-1",
         build = { "bundled_scripts.lua" },
-        -- dir = "~/development/mcphub.nvim",
         cmd = { "MCPHub" },
       }
     end,
     setup = function()
       return {
-
         log = {
-          level = vim.log.levels.DEBUG,
-          to_file = true,
-          file_path = "/tmp/mcphub.log",
+          level = require("ck.log"):to_nvim_level(),
+          to_file = false,
+          file_path = join_paths(vim.fn.stdpath("cache"), "mcphub.log"),
           prefix = "MCPHub",
         },
         config = join_paths(get_config_dir(), "utils/mcphub/servers.json"),
@@ -56,7 +55,19 @@ function M.config()
             winhl = "Normal:MCPHubNormal,FloatBorder:MCPHubBorder",
           },
         },
-        builtin_tools = {},
+        builtin_tools = {
+          edit_file = {
+            go_to_origin_on_complete = true, -- Jump back to original file on completion
+            keybindings = {
+              accept = "<localleader>ca", -- Accept current change
+              reject = "<localleader>cr", -- Reject current change
+              next = "<localleader>n", -- Next diff
+              prev = "<localleader>p", -- Previous diff
+              accept_all = "<localleader>aa", -- Accept all remaining changes
+              reject_all = "<localleader>ar", -- Reject all remaining changes
+            },
+          },
+        },
         workspace = {
           enabled = "always",
           look_for = { ".mcphub/servers.json", ".vscode/mcp.json", ".cursor/mcp.json", "mcp.json" },

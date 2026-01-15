@@ -59,7 +59,10 @@
         "read_multiple_files",
         "read_text_file"
       ],
-      "command": "bunx"
+      "command": "bunx",
+      "disabled_tools": [
+        "write_file"
+      ]
     },
     "git": {
       "args": [
@@ -211,9 +214,7 @@
         "read_multiple_files"
       ],
       "disabled": false,
-      "disabled_tools": [
-        "write_file"
-      ]
+      "disabled_tools": []
     }
   }
 }

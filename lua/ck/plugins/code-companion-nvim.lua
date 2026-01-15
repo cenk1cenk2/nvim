@@ -122,39 +122,20 @@ function M.config()
               system_prompt = function(ctx)
                 return ctx.default_system_prompt
                   .. [[
-- ALWAYS read your memory file from the repository before performing any operations. If substantial changes have happened during session, ALWAYS ask to update the memory file accordingly.
+- IMPORTANT!!! You have access to MCP server tools to help you perform coding tasks. ALWAYS discover what tools are available to you through MCP server and use them as needed.
 - ALWAYS read the file first before using your edit tools to do changes.
-- NEVER write comments or explanations unless it is explicitly asked or required or the style of coding has comments to indicate links and other things already, please output these directly to the chat window.
+- NEVER write comments or explanations unless it is explicitly asked or required, or in the code there are similar comments, please output these directly to the chat window.
 - NEVER fabricate information. If you are unsure, say "I don't know" or consult to a web search or a documentation search.
 - NEVER overwrite the explicit changes that is done over your changes unless instructed to do so and ALWAYS analyze them first to take it as a guideline for coding standards.
-- NEVER perform any operations that you can do with your internal tools through cli tools. Like dont use `sed` for commands directly just use your edit tool.
+- NEVER perform any operations that you can do with your internal tools through cli tools. Like dont use `sed` for commands directly just use available editing tools.
 - Follow the guidelines in coding style below.
   - Always leave an empty line whenever you are returning from a function or a method.
   - Never leave empty spaces at the end of the lines.
-- You have access to MCP server tools to help you perform coding tasks. ALWAYS discover what tools are available to you through MCP server and use them as needed.
 - You should use the web search tools instead of guessing answers for up-to-date information which are as follows.
-  - built-in search tool
-  - `web_search`
-  - `mcp__mcphub_nvim__fetch__fetch`
-- Use the memory tools provided to you through the MCP server to record milestones about this repository which are as follows. ALWAYS keep your memory updated! ALWAYS read the memory to remind yourself about the repository and coding style.
-  - `mcp__mcphub_nvim__memory__create_entities`
-  - `mcp__mcphub_nvim__memory__create_relations`
-  - `mcp__mcphub_nvim__memory__add_observations`
-  - `mcp__mcphub_nvim__memory__delete_entities`
-  - `mcp__mcphub_nvim__memory__delete_observations`
-  - `mcp__mcphub_nvim__memory__delete_relations`
-  - `mcp__mcphub_nvim__memory__read_graph`
-  - `mcp__mcphub_nvim__memory__search_nodes`
-  - `mcp__mcphub_nvim__memory__open_nodes`
-- Please use context7 to fetch anytime you need to access documentation whenever it is possible which are as follows.
-  - `mcp__mcphub_nvim__context7__resolve-library-id`
-  - `mcp__mcphub_nvim__context7__get-library-docs`
-- ALWAYS use the LSP tools provided through cclsp MCP server for code navigation and analysis tasks. These are MUCH faster (900x) than text search which are as follows.
-  - `mcp__mcphub_nvim__cclsp__find_definition` - Jump to symbol definitions, use this instead of text search when you need to find where a function/class/variable is defined
-  - `mcp__mcphub_nvim__cclsp__find_references` - Find all references to a symbol, use this to understand how code is used throughout the codebase
-  - `mcp__mcphub_nvim__cclsp__rename_symbol` - Safely rename symbols across the entire codebase
-  - `mcp__mcphub_nvim__cclsp__get_diagnostics` - Get LSP diagnostics and errors for files
-  - `mcp__mcphub_nvim__cclsp__restart_server` - Restart LSP server if needed
+- ALWAYS use the memory mcp server to record milestones about this repository. ALWAYS keep your memory updated! ALWAYS read the memory to remind yourself about the repository and coding style.
+- Please use context7 mcp server to fetch anytime you need to access documentation whenever it is possible which are as follows.
+- ALWAYS use cclsp MCP server for code navigation and analysis tasks. These are MUCH faster (900x) than text search when lsp is available.
+- Please use treesitter MCP server for any kind of code structure analysis.
 ]]
               end,
             },
