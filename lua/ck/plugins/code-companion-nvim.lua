@@ -97,18 +97,20 @@ function M.config()
           },
         },
         rules = {
-          claude_code = {
+          claude = {
             description = "Rules files for Claude Code users",
             files = {
-              "~/.claude/CLAUDE.md",
-              "CLAUDE.md",
-              "AGENTS.md",
-              "CLAUDE.local.md",
+              { path = "~/.config/nvim/utils/claude/CLAUDE.md", parser = "claude" },
+              { path = "~/.claude/CLAUDE.md", parser = "claude" },
+              { path = "CLAUDE.md", parser = "claude" },
+              { path = "AGENTS.md" },
+              { path = "CLAUDE.local.md", parser = "claude" },
             },
           },
           opts = {
             chat = {
               enabled = true,
+              autoload = "claude",
             },
           },
         },
@@ -121,23 +123,6 @@ function M.config()
               ---@return string
               system_prompt = function(ctx)
                 return ctx.default_system_prompt
-                  .. [[
-- IMPORTANT!!! You have access to MCP server tools to help you perform coding tasks. ALWAYS discover what tools are available to you through MCP server and use them as needed.
-- ALWAYS read the file first before using your edit tools to do changes.
-- ALWAYS whenever neovim mcp adapter is available use it for edit_file and write_file operations.
-- NEVER write comments or explanations unless it is explicitly asked or required, or in the code there are similar comments, please output these directly to the chat window.
-- NEVER fabricate information. If you are unsure, say "I don't know" or consult to a web search or a documentation search.
-- NEVER overwrite the explicit changes that is done over your changes unless instructed to do so and ALWAYS analyze them first to take it as a guideline for coding standards.
-- NEVER perform any operations that you can do with your internal tools through cli tools. Like dont use `sed` for commands directly just use available editing tools.
-- Follow the guidelines in coding style below.
-  - Always leave an empty line whenever you are returning from a function or a method.
-  - Never leave empty spaces at the end of the lines.
-- You should use the web search tools instead of guessing answers for up-to-date information which are as follows.
-- ALWAYS use the memory mcp server to record milestones about this repository. ALWAYS keep your memory updated! ALWAYS read the memory to remind yourself about the repository and coding style.
-- Please use context7 mcp server to fetch anytime you need to access documentation whenever it is possible which are as follows.
-- ALWAYS use cclsp MCP server for code navigation and analysis tasks. These are MUCH faster (900x) than text search when lsp is available.
-- Please use treesitter MCP server for any kind of code structure analysis.
-]]
               end,
             },
             window = {
