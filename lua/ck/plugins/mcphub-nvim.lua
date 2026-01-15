@@ -12,6 +12,7 @@ function M.config()
         -- TODO: POINT TO ORIGINAL WHEN FORK MERGES OR IF MERGES?
         "cenk1cenk2/mcphub.nvim",
         branch = "patch-1",
+        build = { "bundled_scripts.lua" },
         -- dir = "~/development/mcphub.nvim",
         cmd = { "MCPHub" },
       }
