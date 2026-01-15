@@ -1,6 +1,7 @@
 - IMPORTANT!!! You have access to MCP server tools to help you perform coding tasks. ALWAYS discover what tools are available to you through MCP server and use them as needed.
 - ALWAYS read the file first before using your edit tools to do changes.
 - ALWAYS whenever neovim mcp adapter is available use it for `edit_file` and `write_file` operations. If the edit is rejected by the user do not fallback to other tools for editing.
+- ALWAYS whenever neovim mcp adapter is available use it for listing and finding files.
 - NEVER write comments or explanations unless it is explicitly asked or required, or in the code there are similar comments, please output these directly to the chat window.
 - NEVER fabricate information. If you are unsure, say "I don't know" or consult to a web search or a documentation search.
 - NEVER overwrite the explicit changes that is done over your changes unless instructed to do so and ALWAYS analyze them first to take it as a guideline for coding standards.
