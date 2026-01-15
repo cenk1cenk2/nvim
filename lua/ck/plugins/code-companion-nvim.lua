@@ -14,7 +14,9 @@ function M.config()
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         dependencies = {
           "ravitemer/codecompanion-history.nvim",
-          "ravitemer/mcphub.nvim",
+          -- "ravitemer/mcphub.nvim",
+          -- TODO: POINT TO ORIGINAL WHEN FORK MERGES OR IF MERGES?
+          "cenk1cenk2/mcphub.nvim",
         },
       }
     end,
@@ -61,17 +63,18 @@ function M.config()
           acp = {
             ---@type fun (): CodeCompanion.ACPAdapter
             claude_code = function()
-              ---@type MCPHub.Hub
+              ---@type MCPHub.Hub|nil
               local instance
               local ok = vim.wait(5000, function()
                 instance = require("mcphub").get_hub_instance()
 
-                return instance and instance:ensure_ready()
+                return instance ~= nil and instance:is_ready()
               end, 100)
-              if not ok then
+              if not ok or not instance then
                 error("MCPHub instance not ready in time")
               end
-              log:info("Connected to MCPHub instance: :%d", instance.port)
+              local proxy = require("mcphub.extensions.proxy").get()
+              log:info("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
 
               return require("codecompanion.adapters").extend(
                 "claude_code",
@@ -82,15 +85,7 @@ function M.config()
                   },
                   defaults = {
                     mcpServers = {
-                      {
-                        name = "mcphub",
-                        type = "sse",
-                        url = ("http://localhost:%d/mcp"):format(instance.port),
-                        args = {},
-                        command = "",
-                        headers = {},
-                        env = {},
-                      },
+                      vim.tbl_extend("force", { name = "mcphub" }, proxy),
                     },
                   },
                   commands = {

@@ -9,14 +9,25 @@ function M.config()
       ---@type Plugin
       return {
         -- "ravitemer/mcphub.nvim",
-        dir = "~/development/mcphub.nvim",
+        -- TODO: POINT TO ORIGINAL WHEN FORK MERGES OR IF MERGES?
+        "cenk1cenk2/mcphub.nvim",
+        branch = "patch-1",
+        -- dir = "~/development/mcphub.nvim",
         cmd = { "MCPHub" },
       }
     end,
     setup = function()
       return {
+
+        log = {
+          level = vim.log.levels.DEBUG,
+          to_file = true,
+          file_path = "/tmp/mcphub.log",
+          prefix = "MCPHub",
+        },
         config = join_paths(get_config_dir(), "utils/mcphub/servers.json"),
         port = 37373,
+        proxy = true,
         global_env = function(context)
           local env = {
             "DBUS_SESSION_BUS_ADDRESS",
