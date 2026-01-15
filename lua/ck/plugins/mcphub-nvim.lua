@@ -69,6 +69,41 @@ function M.config()
     on_setup = function(config)
       require("mcphub").setup(config)
     end,
+    on_done = function()
+      -- Add native browser tool
+      local mcphub = require("mcphub")
+      mcphub.add_tool("browser", {
+        name = "open_in_browser",
+        description = "Open a URL in the default web browser using vim.ui.open()",
+        inputSchema = {
+          type = "object",
+          properties = {
+            url = {
+              type = "string",
+              description = "The URL to open in the browser (must be a valid http:// or https:// URL)",
+            },
+          },
+          required = { "url" },
+        },
+        handler = function(req, res)
+          local url = req.params.url
+
+          -- Validate URL format
+          if not url:match("^https?://") then
+            return res:error("Invalid URL format. URL must start with http:// or https://")
+          end
+
+          -- Open the URL using vim.ui.open
+          local success, err = pcall(vim.ui.open, url)
+
+          if not success then
+            return res:error("Failed to open URL: " .. tostring(err))
+          end
+
+          return res:text("Successfully opened URL in browser: " .. url):send()
+        end,
+      })
+    end,
     wk = function(_, categories, fn)
       ---@type WKMappings
       return {
