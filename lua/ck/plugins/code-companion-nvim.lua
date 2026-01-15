@@ -506,6 +506,24 @@ function M.config()
           mode = { "n", "v" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "f" }),
+          function()
+            require("codecompanion").extensions.history.browse_chats(function(chat_data)
+              return chat_data.project_root == require("codecompanion._extensions.history.utils").find_project_root()
+            end)
+          end,
+          desc = "chat history [cwd]",
+          mode = { "n" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "F" }),
+          function()
+            require("codecompanion").extensions.history.browse_chats()
+          end,
+          desc = "chat history [all]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "Q" }),
           function()
             require("codecompanion").close_last_chat()
