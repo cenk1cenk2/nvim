@@ -17,9 +17,23 @@ function M.config()
       return {
         config = join_paths(get_config_dir(), "utils/mcphub/servers.json"),
         port = 37373,
-        global_env = {
-          "DBUS_SESSION_BUS_ADDRESS",
-        },
+        global_env = function(context)
+          local env = {
+            "DBUS_SESSION_BUS_ADDRESS",
+          }
+          if context.is_workspace_mode then
+            env.WORKSPACE_ROOT = context.workspace_root
+            env.WORKSPACE_PORT = tostring(context.port)
+          end
+
+          env.CONFIG_FILES = table.concat(context.config_files, ":")
+          local sockets = vim.fn.serverlist()
+          if sockets and #sockets > 0 then
+            env.NVIM = sockets[1]
+          end
+
+          return env
+        end,
         ui = {
           window = {
             width = 0.8, -- 0-1 (ratio); "50%" (percentage); 50 (raw number)
