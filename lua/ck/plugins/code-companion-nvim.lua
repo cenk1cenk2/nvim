@@ -67,7 +67,7 @@ function M.config()
               log:info("Setting up the AI Overlord...")
               ---@type MCPHub.Hub|nil
               local instance
-              local ok = vim.wait(30000, function()
+              local ok = vim.wait(15000, function()
                 instance = require("mcphub").get_hub_instance()
 
                 return instance ~= nil and instance:is_ready()
@@ -331,7 +331,7 @@ function M.config()
                 description = "Delete current chat from session",
               },
               browse_project_chats = {
-                modes = { n = fn.local_keystroke({ "f", "p" }) },
+                modes = { n = fn.local_keystroke({ "f" }) },
                 callback = function()
                   require("codecompanion").extensions.history.browse_chats(function(chat_data)
                     return chat_data.project_root == require("codecompanion._extensions.history.utils").find_project_root()
@@ -340,7 +340,7 @@ function M.config()
                 description = "Browse chats for current project",
               },
               browse_all_chats = {
-                modes = { n = fn.local_keystroke({ "f", "a" }) },
+                modes = { n = fn.local_keystroke({ "F" }) },
                 callback = function()
                   require("codecompanion").extensions.history.browse_chats()
                 end,
@@ -412,7 +412,8 @@ function M.config()
             enabled = true,
             opts = {
               -- Keymap to open history from chat buffer (default: gh)
-              keymap = fn.local_keystroke({ "f" }),
+              -- keymap = fn.local_keystroke({ "f" }),
+              keymap = nil,
               -- Keymap to save the current chat manually (when auto_save is disabled)
               save_chat_keymap = fn.local_keystroke({ "W" }),
               -- Save all chats by default (disable to save only manually using 'sc')
