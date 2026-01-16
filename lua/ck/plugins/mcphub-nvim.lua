@@ -20,6 +20,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type MCPHub.Config
       return {
         log = {
           level = require("ck.log"):to_nvim_level(),
@@ -29,7 +30,7 @@ function M.config()
         },
         config = join_paths(get_config_dir(), "utils/mcphub/servers.json"),
         port = 37373,
-        proxy = true,
+        mcp_request_timeout = 600000,
         global_env = function(context)
           local env = {
             "DBUS_SESSION_BUS_ADDRESS",
