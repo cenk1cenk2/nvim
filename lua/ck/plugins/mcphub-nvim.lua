@@ -169,13 +169,33 @@ function M.config()
 - Always keep track of the changes through `git` changes and utilizing your available tools to cross things of the initial plan and adjust the plan as we go along.
 - Refine your understanding as we go along and the changes evolve, by taking in the inputs about our discussions.
 - Use thinking whenever you feel like deviating from the current plan might cause problems and propose solutions.
-- Be understanding of the things of the replies but always feel free to question them.]]
+- Be understanding of the things of the replies but always feel free to question them.
+]]
 
           local response = res:system():text(system_prompt)
 
           response = response:user():text(string.format("Let us start by creating a plan: %s", topic))
 
           return response:llm():text(string.format("I will suck it up and wait in the sidelines while you do your thing.", topic)):send()
+        end,
+      })
+
+      mcphub.add_prompt("prompts", {
+        name = "evaluate",
+        description = "Evaluate the code changes as the assistant to determine the progress done so far.",
+        handler = function(req, res)
+          local system_prompt = [[
+- We are going through the changes we planned together with the assistant mode.
+- The user has updated the codebase according to the plan.
+- As the assistant, your task is to evaluate the current state of the codebase and determine the progress made so far.
+- You can use the git mcp tool to get the differences made to the codebase, unless specifically provided.
+- Provide feedback on the changes implemented, highlighting what has been accomplished and update the plan accordingly.
+- Fulfill all your assistant mode duties as required on providing feedback.
+]]
+
+          local response = res:system():text(system_prompt)
+
+          return response:llm():text("Understood master."):send()
         end,
       })
     end,
