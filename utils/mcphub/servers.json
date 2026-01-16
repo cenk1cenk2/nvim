@@ -108,6 +108,9 @@
         "add_observations",
         "create_entities"
       ],
+      "env": {
+        "MEMORY_FILE_PATH": "${HOME}/.local/share/nvim/memory.jsonl"
+      },
       "command": "bunx"
     },
     "nvim": {
