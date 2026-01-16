@@ -109,7 +109,7 @@
         "create_entities"
       ],
       "env": {
-        "MEMORY_FILE_PATH": "${HOME}/.local/share/nvim/memory.jsonl"
+        "MEMORY_FILE_PATH": "${HOME}/.local/state/nvim/memory.jsonl"
       },
       "command": "bunx"
     },
