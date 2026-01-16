@@ -298,6 +298,9 @@ function M.config()
               super_diff = {
                 modes = { n = fn.local_keystroke({ "d" }) },
               },
+              clear_approvals = {
+                modes = { n = fn.local_keystroke({ "a", "X" }) },
+              },
               _acp_allow_once = {
                 modes = { n = "." },
               },

@@ -62,12 +62,12 @@ function M.config()
           edit_file = {
             go_to_origin_on_complete = true, -- Jump back to original file on completion
             keybindings = {
-              accept = "<localleader>ca", -- Accept current change
-              reject = "<localleader>cr", -- Reject current change
-              next = "<localleader>n", -- Next diff
-              prev = "<localleader>p", -- Previous diff
-              accept_all = "<localleader>aa", -- Accept all remaining changes
-              reject_all = "<localleader>ar", -- Reject all remaining changes
+              accept = ".", -- Accept current change
+              reject = ",", -- Reject current change
+              next = "n", -- Next diff
+              prev = "p", -- Previous diff
+              accept_all = "ga", -- Accept all remaining changes
+              reject_all = "gr", -- Reject all remaining changes
             },
           },
         },
