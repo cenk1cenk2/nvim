@@ -63,6 +63,7 @@ function M.config()
           acp = {
             ---@type fun (): CodeCompanion.ACPAdapter
             claude_code = function()
+              log:info("Setting up the AI Overlord...")
               ---@type MCPHub.Hub|nil
               local instance
               local ok = vim.wait(10000, function()

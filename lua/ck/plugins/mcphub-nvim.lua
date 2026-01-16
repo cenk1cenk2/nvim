@@ -14,6 +14,7 @@ function M.config()
         -- dir = "~/development/mcphub.nvim",
         branch = "patch-1",
         build = { "bundled_scripts.lua" },
+        keys = { { "<Space>c" } },
         cmd = { "MCPHub" },
       }
     end,
@@ -114,6 +115,37 @@ function M.config()
           return res:text("Successfully opened URL in browser: " .. url):send()
         end,
       })
+      mcphub.add_tool("browser", {
+        name = "open_in_obsidian",
+        description = "Open Obsidian note using vim.ui.open()",
+        inputSchema = {
+          type = "object",
+          properties = {
+            url = {
+              type = "string",
+              description = "The URL to open in the obsidian (must be a valid obsidian://)",
+            },
+          },
+          required = { "url" },
+        },
+        handler = function(req, res)
+          local url = req.params.url
+
+          -- Validate URL format
+          if not url:match("^obsidian?://") then
+            return res:error("Invalid URL format. URL must start with obsidian://")
+          end
+
+          -- Open the URL using vim.ui.open
+          local success, err = pcall(vim.ui.open, url)
+
+          if not success then
+            return res:error("Failed to open in Obsidian: " .. tostring(err))
+          end
+
+          return res:text("Successfully opened in Obsidian: " .. url):send()
+        end,
+      })
 
       mcphub.add_prompt("prompts", {
         name = "assistant",
@@ -127,7 +159,6 @@ function M.config()
         },
         handler = function(req, res)
           local topic = req.params.topic
-          local context = req.params.context
 
           local system_prompt = [[
 - We will refine a plan together to do some changes, the implementation might not be exact so we will refine while doing.
