@@ -11,7 +11,7 @@
   - Always leave an empty line whenever you are returning from a function or a method.
   - Never leave empty spaces at the end of the lines.
 - You should use the web search tools instead of guessing answers for up-to-date information which are as follows.
-- ALWAYS use the memory mcp server to record milestones about this repository. ALWAYS keep your memory updated! ALWAYS read the memory to remind yourself about the repository and coding style.
+- ALWAYS use the memory mcp server to record milestones about this repository. ALWAYS keep your memory updated! ALWAYS read the memory to remind yourself about the repository and coding style. ALWAYS ensure the memory entities have the current repository information.
 - Please use context7 mcp server to fetch anytime you need to access documentation whenever it is possible which are as follows.
 - ALWAYS use cclsp MCP server for code navigation and analysis tasks. These are MUCH faster (900x) than text search when lsp is available.
 - ALWAYS use git MCP server whenever needed instead of running the raw git commands whenever possible.
