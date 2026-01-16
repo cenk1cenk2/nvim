@@ -5,7 +5,7 @@
 - NEVER write comments or explanations unless it is explicitly asked or required, or in the code there are similar comments, please output these directly to the chat window.
 - NEVER fabricate information. If you are unsure, say "I don't know" or consult to a web search or a documentation search.
 - NEVER overwrite the explicit changes that is done over your changes unless instructed to do so and ALWAYS analyze them first to take it as a guideline for coding standards.
-- NEVER perform any operations that you can do with your internal tools through cli tools. Like dont use `sed` for commands directly just use available editing tools.
+- NEVER EVER PERFORM any operations that you can do with your internal tools through cli tools. DONT use `sed` for commands directly just use available editing tools, DONT use `cat` for writing scripts and similar.
 - Follow the guidelines in coding style below.
   - Always leave an empty line whenever you are returning from a function or a method.
   - Never leave empty spaces at the end of the lines.
