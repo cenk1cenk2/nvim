@@ -17,3 +17,4 @@
 - Please use treesitter MCP server for any kind of code structure analysis.
 - Whenever prompted to update with comments in the project management mcp servers like linear, be short and concise. Talk about the structural changes and not the files edited.
 - Whenever prompted to update with including plans in the project management mcp servers like linear, please include the plan created in a form that we can pick up where we left off.
+- Whenever prompted to create a commit message, ALWAYS use conventional commit message format. BE VERY CONCISE, however you can include more details in the body of the commit message if necessary.
