@@ -114,6 +114,37 @@ function M.config()
           return res:text("Successfully opened URL in browser: " .. url):send()
         end,
       })
+
+      mcphub.add_prompt("prompts", {
+        name = "assistant",
+        description = "Plan and track changes through an assistant.",
+        arguments = {
+          {
+            name = "topic",
+            description = "Brief description of the topic or changes to be made to plan first.",
+            required = true,
+          },
+        },
+        handler = function(req, res)
+          local topic = req.params.topic
+          local context = req.params.context
+
+          local system_prompt = [[
+- We will refine a plan together to do some changes, the implementation might not be exact so we will refine while doing.
+- First we will go through what needs to be achieved and what changes we need to make that happen.
+- I want you the assistant to keep track of the changes we are doing and propose pitfalls and problems each time prompted.
+- Always keep track of the changes through `git` changes and utilizing your available tools to cross things of the initial plan and adjust the plan as we go along.
+- Refine your understanding as we go along and the changes evolve, by taking in the inputs about our discussions.
+- Use thinking whenever you feel like deviating from the current plan might cause problems and propose solutions.
+- Be understanding of the things of the replies but always feel free to question them.]]
+
+          local response = res:system():text(system_prompt)
+
+          response = response:user():text(string.format("Let us start by creating a plan: %s", topic))
+
+          return response:llm():text(string.format("I will suck it up and wait in the sidelines while you do your thing.", topic)):send()
+        end,
+      })
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
