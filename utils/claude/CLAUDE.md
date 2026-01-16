@@ -15,3 +15,5 @@
 - ALWAYS use cclsp MCP server for code navigation and analysis tasks. These are MUCH faster (900x) than text search when lsp is available.
 - ALWAYS use git MCP server whenever needed instead of running the raw git commands whenever possible.
 - Please use treesitter MCP server for any kind of code structure analysis.
+- Whenever prompted to update with comments in the project management mcp servers like linear, be short and concise. Talk about the structural changes and not the files edited.
+- Whenever prompted to update with including plans in the project management mcp servers like linear, please include the plan created in a form that we can pick up where we left off.
