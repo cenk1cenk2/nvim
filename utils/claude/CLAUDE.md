@@ -1,3 +1,4 @@
+- IMPORTANT!!! ALWAYS keep these rules in your mind while working and don't let any information to be forgotten over time.
 - IMPORTANT!!! You have access to MCP server tools to help you perform coding tasks. ALWAYS discover what tools are available to you through MCP server and use them as needed.
 - ALWAYS read the file first before using your edit tools to do changes.
 - ALWAYS whenever neovim mcp adapter is available use it for `edit_file` and `write_file` operations. If the edit is rejected by the user do not fallback to other tools for editing.

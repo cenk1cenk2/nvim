@@ -12,6 +12,7 @@ function M.config()
       return {
         "olimorris/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
+        keys = { "<Space>c" },
         dependencies = {
           "ravitemer/codecompanion-history.nvim",
           -- "ravitemer/mcphub.nvim",
@@ -66,11 +67,11 @@ function M.config()
               log:info("Setting up the AI Overlord...")
               ---@type MCPHub.Hub|nil
               local instance
-              local ok = vim.wait(10000, function()
+              local ok = vim.wait(30000, function()
                 instance = require("mcphub").get_hub_instance()
 
                 return instance ~= nil and instance:is_ready()
-              end, 100)
+              end, 250)
               if not ok or not instance then
                 log:error("MCPHub instance not ready in time")
               end
@@ -301,6 +302,50 @@ function M.config()
               clear_approvals = {
                 modes = { n = fn.local_keystroke({ "a", "X" }) },
               },
+              delete_chat = {
+                modes = { n = fn.local_keystroke({ "x" }) },
+                callback = function(chat)
+                  local chats = require("codecompanion").buf_get_chat()
+                  local chat_count = vim.tbl_count(chats)
+
+                  if chat_count == 1 then
+                    chat:close()
+                    return
+                  end
+
+                  local window_opts = chat.ui.window_opts or { default = true }
+
+                  local found_next = false
+                  for _, c in ipairs(chats) do
+                    if c.bufnr ~= chat.bufnr then
+                      c.ui:open({ window_opts = window_opts })
+                      found_next = true
+                      break
+                    end
+                  end
+
+                  if found_next then
+                    vim.api.nvim_buf_delete(chat.bufnr, { force = true })
+                  end
+                end,
+                description = "Delete current chat from session",
+              },
+              browse_project_chats = {
+                modes = { n = fn.local_keystroke({ "f", "p" }) },
+                callback = function()
+                  require("codecompanion").extensions.history.browse_chats(function(chat_data)
+                    return chat_data.project_root == require("codecompanion._extensions.history.utils").find_project_root()
+                  end)
+                end,
+                description = "Browse chats for current project",
+              },
+              browse_all_chats = {
+                modes = { n = fn.local_keystroke({ "f", "a" }) },
+                callback = function()
+                  require("codecompanion").extensions.history.browse_chats()
+                end,
+                description = "Browse all chats",
+              },
               _acp_allow_once = {
                 modes = { n = "." },
               },
@@ -373,7 +418,7 @@ function M.config()
               -- Save all chats by default (disable to save only manually using 'sc')
               auto_save = true,
               -- Number of days after which chats are automatically deleted (0 to disable)
-              expiration_days = 0,
+              expiration_days = 30,
               -- Picker interface (auto resolved to a valid picker)
               picker = "telescope", --- ("telescope", "snacks", "fzf-lua", or "default")
               ---Optional filter function to control which chats are shown when browsing
@@ -427,6 +472,22 @@ function M.config()
                   format_summary = nil, -- custom function to format generated summary e.g to remove <think/> tags from summary
                 },
               },
+              -- memory = {
+              --   -- Automatically index summaries when they are generated
+              --   auto_create_memories_on_summary_generation = true,
+              --   -- Path to the VectorCode executable
+              --   vectorcode_exe = "vectorcode",
+              --   -- Tool configuration
+              --   tool_opts = {
+              --     -- Default number of memories to retrieve
+              --     default_num = 10,
+              --   },
+              --   -- Enable notifications for indexing progress
+              --   notify = true,
+              --   -- Index all existing memories on startup
+              --   -- (requires VectorCode 0.6.12+ for efficient incremental indexing)
+              --   index_on_startup = false,
+              -- },
             },
           },
           -- vectorcode = {

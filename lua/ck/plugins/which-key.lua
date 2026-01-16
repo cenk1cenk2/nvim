@@ -25,7 +25,7 @@ function M.config()
       ---@type Plugin
       return {
         "folke/which-key.nvim",
-        keys = { "<leader>", "<localleader>", "g", "z", '"', "<C-r>", "m", "]", "[", "r", "d", "c", "r", "y", "p", "P" },
+        keys = { "<Space>", ",", "g", "z", '"', "<C-r>", "m", "]", "[", "r", "d", "c", "r", "y", "p", "P" },
         event = "UIEnter",
       }
     end,
