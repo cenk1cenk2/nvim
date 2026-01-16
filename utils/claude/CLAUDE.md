@@ -13,4 +13,5 @@
 - ALWAYS use the memory mcp server to record milestones about this repository. ALWAYS keep your memory updated! ALWAYS read the memory to remind yourself about the repository and coding style.
 - Please use context7 mcp server to fetch anytime you need to access documentation whenever it is possible which are as follows.
 - ALWAYS use cclsp MCP server for code navigation and analysis tasks. These are MUCH faster (900x) than text search when lsp is available.
+- Please use git MCP server whenever needed to diff between files and different versions and changes.
 - Please use treesitter MCP server for any kind of code structure analysis.
