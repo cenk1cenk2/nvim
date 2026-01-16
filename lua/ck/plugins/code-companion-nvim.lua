@@ -85,6 +85,9 @@ function M.config()
                   env = {
                     CLAUDE_CODE_OAUTH_TOKEN = vim.env["CLAUDE_CODE_OAUTH_TOKEN"],
                   },
+                  opts = {
+                    verbose_output = true,
+                  },
                   defaults = {
                     mcpServers = {
                       vim.tbl_extend("force", { name = "mcphub" }, proxy),
