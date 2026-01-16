@@ -14,8 +14,9 @@ function M.config()
         -- dir = "~/development/mcphub.nvim",
         branch = "patch-1",
         build = { "bundled_scripts.lua" },
-        keys = { { "<Space>c" } },
+        keys = { { "<leader>c" } },
         cmd = { "MCPHub" },
+        event = { "VeryLazy" },
       }
     end,
     setup = function()

@@ -83,16 +83,16 @@
         "get_document"
       ],
       "command": "bunx",
-      "headers": {
+      "env": {
         "LINEAR_TOKEN": "${LINEAR_TOKEN}"
       }
     },
     "linear-work": {
-      "args": ["-y", "mcp-remote", "https://mcp.linear.app/sse", "--header", "Authorization: Bearer ${LINEAR_TOKEN}"],
+      "args": ["-y", "mcp-remote", "https://mcp.linear.app/sse", "--header", "Authorization: Bearer ${LINEAR_WORK_TOKEN}"],
       "autoApprove": [],
       "command": "bunx",
-      "headers": {
-        "LINEAR_TOKEN": "${LINEAR_WORK_TOKEN}"
+      "env": {
+        "LINEAR_WORK_TOKEN": "${LINEAR_WORK_TOKEN}"
       }
     },
     "memory": {
