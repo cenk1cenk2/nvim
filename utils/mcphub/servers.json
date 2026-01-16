@@ -106,7 +106,23 @@
         "Authorization: Bearer ${LINEAR_TOKEN}"
       ],
       "autoApprove": [
-        "list_issues"
+        "list_issues",
+        "list_projects",
+        "list_project_labels",
+        "list_teams",
+        "list_users",
+        "search_documentation",
+        "list_issue_statuses",
+        "list_issue_labels",
+        "list_documents",
+        "list_cycles",
+        "list_comments",
+        "get_user",
+        "get_team",
+        "get_project",
+        "get_issue_status",
+        "get_issue",
+        "get_document"
       ],
       "command": "bunx",
       "headers": {
