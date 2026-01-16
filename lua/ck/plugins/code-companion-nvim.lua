@@ -299,16 +299,16 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "d" }) },
               },
               _acp_allow_once = {
-                modes = { n = fn.local_keystroke({ "c", "a" }) },
+                modes = { n = "." },
               },
               _acp_reject_once = {
-                modes = { n = fn.local_keystroke({ "c", "r" }) },
+                modes = { n = "," },
               },
               _acp_allow_always = {
-                modes = { n = fn.local_keystroke({ "c", "A" }) },
+                modes = { n = "ga" },
               },
               _acp_reject_always = {
-                modes = { n = fn.local_keystroke({ "c", "R" }) },
+                modes = { n = "gr" },
               },
             },
           },
@@ -319,13 +319,13 @@ function M.config()
             },
             keymaps = {
               accept_change = {
-                modes = { n = fn.local_keystroke({ "ca" }) },
+                modes = { n = "." },
               },
               reject_change = {
-                modes = { n = fn.local_keystroke({ "cr" }) },
+                modes = { n = "," },
               },
               always_accept = {
-                modes = { n = fn.local_keystroke({ "aa" }) },
+                modes = { n = "ga" },
               },
             },
           },
