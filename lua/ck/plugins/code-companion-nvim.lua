@@ -308,22 +308,27 @@ function M.config()
               delete_chat = {
                 modes = { n = fn.local_keystroke({ "x" }) },
                 callback = function(chat)
-                  local chats = require("codecompanion").buf_get_chat()
-                  local chat_count = vim.tbl_count(chats)
+                  local chat_metadata = _G.codecompanion_chat_metadata or {}
+                  local chat_buffers = vim.tbl_keys(chat_metadata)
+                  local chat_count = #chat_buffers
 
                   if chat_count == 1 then
                     chat:close()
+
                     return
                   end
 
                   local window_opts = chat.ui.window_opts or { default = true }
 
                   local found_next = false
-                  for _, c in ipairs(chats) do
-                    if c.bufnr ~= chat.bufnr then
-                      c.ui:open({ window_opts = window_opts })
-                      found_next = true
-                      break
+                  for _, bufnr in ipairs(chat_buffers) do
+                    if bufnr ~= chat.bufnr then
+                      local next_chat = require("codecompanion").buf_get_chat(bufnr)
+                      if next_chat then
+                        next_chat.ui:open({ window_opts = window_opts })
+                        found_next = true
+                        break
+                      end
                     end
                   end
 
