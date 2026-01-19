@@ -68,7 +68,7 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.GIT, "f" }),
+          fn.wk_keystroke({ categories.GIT, "g" }),
           function()
             require("neogit").open()
           end,
