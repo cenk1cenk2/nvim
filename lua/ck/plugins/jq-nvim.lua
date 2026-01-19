@@ -46,6 +46,20 @@ function M.config()
           desc = "run jq for buffer",
         },
         {
+          fn.wk_keystroke({ categories.RUN, "j", "j" }),
+          function()
+            require("jq").run_visual({
+              toggle = true,
+              commands = {
+                { command = "jq", filetype = "json" },
+              },
+              arguments = "-r",
+            })
+          end,
+          desc = "run jq for visual",
+          mode = { "v" },
+        },
+        {
           fn.wk_keystroke({ categories.RUN, "j", "J" }),
           function()
             require("jq").run({
@@ -71,6 +85,20 @@ function M.config()
             })
           end,
           desc = "run yq for buffer",
+        },
+        {
+          fn.wk_keystroke({ categories.RUN, "j", "y" }),
+          function()
+            require("jq").run_visual({
+              toggle = true,
+              commands = {
+                { command = "yq", filetype = "yaml" },
+              },
+              arguments = "-P -o yaml -r",
+            })
+          end,
+          desc = "run yq for visual",
+          mode = { "v" },
         },
         {
           fn.wk_keystroke({ categories.RUN, "j", "Y" }),
