@@ -306,7 +306,7 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "a", "X" }) },
               },
               delete_chat = {
-                modes = { n = fn.local_keystroke({ "x" }) },
+                modes = { n = fn.local_keystroke({ "X" }) },
                 callback = function(chat)
                   local chat_metadata = _G.codecompanion_chat_metadata or {}
                   local chat_buffers = vim.tbl_keys(chat_metadata)
