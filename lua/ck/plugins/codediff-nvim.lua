@@ -114,7 +114,7 @@ function M.config()
             accept_incoming = "<localleader>ct",
             accept_current = "<localleader>co",
             accept_both = "<localleader>cb",
-            discard = "<localleader>cn",
+            discard = "<localleader>cx",
             next_conflict = "]x",
             prev_conflict = "[x",
             diffget_incoming = "2do",
