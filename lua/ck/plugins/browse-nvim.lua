@@ -14,7 +14,7 @@ function M.config()
     setup = function()
       return {
         -- search provider you want to use
-        provider = "google", -- default
+        provider = "brave", -- default
       }
     end,
     on_setup = function(c)
