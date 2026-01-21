@@ -16,7 +16,7 @@ function M.config()
         build = { "bundled_scripts.lua" },
         keys = { "<Space>c" },
         cmd = { "MCPHub" },
-        event = { "VeryLazy" },
+        -- event = { "VeryLazy" },
       }
     end,
     setup = function()
