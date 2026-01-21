@@ -111,7 +111,7 @@
         "LINEAR_TOKEN": "${LINEAR_TOKEN}"
       }
     },
-    "linear-work": {
+    "linear-laravel": {
       "url": "https://mcp.linear.app/sse",
       "headers": {
         "Authorization": "Bearer ${LINEAR_WORK_TOKEN}"
