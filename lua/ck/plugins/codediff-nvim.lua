@@ -129,64 +129,64 @@ function M.config()
     wk = function(_, categories, fn)
       ---@type WKMappings
       return {
-        -- {
-        --   fn.wk_keystroke({ categories.GIT, "a" }),
-        --   function()
-        --     vim.cmd([[CodeDiff file HEAD]])
-        --   end,
-        --   desc = "buffer commits",
-        --   mode = { "n", "v" },
-        -- },
-        -- {
-        --   fn.wk_keystroke({ categories.GIT, "A" }),
-        --   function()
-        --     vim.cmd([[CodeDiff file HEAD]])
-        --   end,
-        --   desc = "buffer commits [HEAD]",
-        --   mode = { "n", "v" },
-        -- },
-        -- {
-        --   fn.wk_keystroke({ categories.GIT, "d" }),
-        --   function()
-        --     vim.cmd("CodeDiff")
-        --   end,
-        --   desc = "diff view toggle",
-        -- },
-        -- {
-        --   fn.wk_keystroke({ categories.GIT, "D" }),
-        --   function()
-        --     vim.cmd([[CodeDiff HEAD]])
-        --   end,
-        --   desc = "diff with head",
-        -- },
-        -- {
-        --   fn.wk_keystroke({ categories.GIT, "w" }),
-        --   function()
-        --     vim.cmd([[CodeDiff]])
-        --   end,
-        --   desc = "workspace commits",
-        -- },
-        -- {
-        --   fn.wk_keystroke({ categories.GIT, "W" }),
-        --   function()
-        --     vim.cmd([[CodeDiff HEAD]])
-        --   end,
-        --   desc = "workspace commits [HEAD]",
-        -- },
-        -- {
-        --   fn.wk_keystroke({ categories.GIT, "c" }),
-        --   function()
-        --     M.compare_with_branch()
-        --   end,
-        --   desc = "compare with branch",
-        -- },
-        -- {
-        --   fn.wk_keystroke({ categories.GIT, "C" }),
-        --   function()
-        --     M.compare_buffer_with_branch()
-        --   end,
-        --   desc = "compare buffer with branch",
-        -- },
+        {
+          fn.wk_keystroke({ categories.GIT, "a" }),
+          function()
+            vim.cmd([[CodeDiff history %]])
+          end,
+          desc = "buffer commits",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "A" }),
+          function()
+            vim.cmd([[CodeDiff history HEAD %]])
+          end,
+          desc = "buffer commits [HEAD]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "d" }),
+          function()
+            vim.cmd([[CodeDiff]])
+          end,
+          desc = "diff view toggle",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "D" }),
+          function()
+            vim.cmd([[CodeDiff HEAD]])
+          end,
+          desc = "diff with head",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "w" }),
+          function()
+            vim.cmd([[CodeDiff history]])
+          end,
+          desc = "workspace commits",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "W" }),
+          function()
+            vim.cmd([[CodeDiff history HEAD]])
+          end,
+          desc = "workspace commits [HEAD]",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "c" }),
+          function()
+            M.compare_with_branch()
+          end,
+          desc = "compare with branch",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "C" }),
+          function()
+            M.compare_buffer_with_branch()
+          end,
+          desc = "compare buffer with branch",
+        },
         {
           fn.wk_keystroke({ categories.GIT, "f" }),
           function()
