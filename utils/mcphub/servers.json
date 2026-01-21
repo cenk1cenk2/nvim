@@ -192,13 +192,14 @@
     },
     "vectorcode": {
       "args": [],
-      "command": "vectorcode-mcp-server"
+      "command": "vectorcode-mcp-server",
+      "disabled": true
     },
     "kubernetes": {
-      "args": ["-y", "kubernetes-mcp-server@latest"],
+      "args": ["-y", "kubernetes-mcp-server@latest", "--stateless"],
       "autoApprove": [],
       "command": "bunx",
-      "disabled": false
+      "disabled": true
     }
   },
   "nativeMCPServers": {

@@ -54,18 +54,6 @@
       "comment": "C/C++ LSP"
     },
     {
-      "extensions": ["java"],
-      "command": ["jdtls"],
-      "rootDir": ".",
-      "comment": "Java LSP"
-    },
-    {
-      "extensions": ["rb"],
-      "command": ["solargraph", "stdio"],
-      "rootDir": ".",
-      "comment": "Ruby LSP"
-    },
-    {
       "extensions": ["php"],
       "command": ["intelephense", "--stdio"],
       "rootDir": ".",
@@ -100,12 +88,6 @@
       "command": ["vscode-css-language-server", "--stdio"],
       "rootDir": ".",
       "comment": "CSS LSP"
-    },
-    {
-      "extensions": ["md", "markdown"],
-      "command": ["marksman"],
-      "rootDir": ".",
-      "comment": "Markdown LSP"
     }
   ]
 }

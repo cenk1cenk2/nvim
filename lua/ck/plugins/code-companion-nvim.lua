@@ -94,7 +94,7 @@ function M.config()
                     },
                   },
                   commands = {
-                    default = { "bunx", "@zed-industries/claude-code-acp" },
+                    default = { "bunx", "-y", "@zed-industries/claude-code-acp@latest" },
                   },
                 }
               )
