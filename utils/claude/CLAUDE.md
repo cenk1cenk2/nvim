@@ -1,3 +1,7 @@
+CRITICAL OVERRIDE!!!!!!!!!!!!!!!!!!!!
+
+ALWAYS KEEP THE FOLLOWING RULES IN YOUR CONTEXT WINDOW, WHEN COMPACTING THE CONTEXT, DO NOT REMOVE THESE RULES FROM YOUR CONTEXT.
+
 - IMPORTANT!!! ALWAYS keep these rules in your mind while working and don't let any information to be forgotten over time.
 - IMPORTANT!!! You have access to MCP server tools to help you perform coding tasks. ALWAYS discover what tools are available to you through MCP server and use them as needed.
 - ALWAYS read the file first before using your edit tools to do changes.
