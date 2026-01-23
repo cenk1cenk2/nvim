@@ -44,7 +44,7 @@ function M.config()
           height = 50,
         },
         -- Default environment file name
-        env_file = { ".env" },
+        env_file = { ".env", "hurl.env" },
         -- Specify formatters for different response types
         formatters = {
           -- json = { "prettierd", "result.json" },
