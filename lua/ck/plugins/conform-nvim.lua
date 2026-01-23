@@ -175,6 +175,18 @@ function M.register()
     }
   )
 
+  tools.register(
+    METHOD,
+    ---@type conform.FormatOpts
+    {
+      lsp_format = "first",
+      "pint",
+    },
+    {
+      "php",
+    }
+  )
+
   tools.register(METHOD, "prettierd", {
     "javascript",
     "typescript",

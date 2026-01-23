@@ -112,6 +112,7 @@ nvim.lsp.packages = vim.list_extend(nvim.lsp.packages, {
   "hadolint",
   "markdown-toc",
   "markdownlint",
+  "pint",
   "prettierd",
   "proselint",
   "protolint",
