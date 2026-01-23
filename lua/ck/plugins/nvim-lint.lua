@@ -59,6 +59,7 @@ function M.register()
 
   tools.register(METHOD, "sqruff", { "sql", "mysql", "plsql" })
   tools.register(METHOD, "selene", { "lua" })
+  tools.register(METHOD, "phpstan", { "php" })
 end
 
 function M.extend_tools()
