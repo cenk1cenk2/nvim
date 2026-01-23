@@ -73,7 +73,7 @@ function M.config()
         },
         workspace = {
           enabled = "always",
-          look_for = { ".mcphub/servers.json", ".vscode/mcp.json", ".cursor/mcp.json", "mcp.json" },
+          look_for = { ".mcphub/servers.json", ".vscode/mcp.json", ".cursor/mcp.json", "mcp.json", ".mcp.json" },
           reload_on_dir_changed = true, -- Auto-switch on directory change
           port_range = { min = 40000, max = 41000 }, -- Port range for workspace hubs
           -- Always assign a workspace port (force workspace mode)
