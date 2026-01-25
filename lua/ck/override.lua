@@ -71,6 +71,7 @@ nvim.lsp.servers = {
   "graphql",
   "helm_ls",
   "html",
+  "hyprls",
   "jsonls",
   "jsonnet_ls",
   "laravel_ls",
