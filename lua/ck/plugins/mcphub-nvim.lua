@@ -153,14 +153,14 @@ function M.config()
         name = "assistant",
         description = "Plan and track changes through an assistant.",
         arguments = {
-          {
-            name = "topic",
-            description = "Brief description of the topic or changes to be made to plan first.",
-            required = true,
-          },
+          -- {
+          --   name = "topic",
+          --   description = "Brief description of the topic or changes to be made to plan first.",
+          --   required = true,
+          -- },
         },
         handler = function(req, res)
-          local topic = req.params.topic
+          -- local topic = req.params.topic
 
           local system_prompt = [[
 - We will refine a plan together to do some changes, the implementation might not be exact so we will refine while doing.
@@ -174,9 +174,11 @@ function M.config()
 
           local response = res:system():text(system_prompt)
 
-          response = response:user():text(string.format("Let us start by creating a plan: %s", topic))
+          -- response = response:user():text(string.format("Let us start by creating a plan: %s", topic))
 
-          return response:llm():text(string.format("I will suck it up and wait in the sidelines while you do your thing.", topic)):send()
+          -- return response:llm():text(string.format("I will suck it up and wait in the sidelines while you do your thing.", topic)):send()
+
+          return response:llm():text("Understood master."):send()
         end,
       })
 
