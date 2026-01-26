@@ -429,6 +429,15 @@ M.DASHBOARD = {
       icon = nvim.ui.icons.misc.Obsidian,
     },
     {
+      key = "<localleader>d",
+      desc = "~.dotfiles",
+      action = function()
+        vim.fn.chdir(join_paths(vim.env.HOME, ".dotfiles/"))
+        require("possession").load(require("possession.paths").cwd_session_name())
+      end,
+      icon = nvim.ui.icons.misc.Obsidian,
+    },
+    {
       key = "SPC w q",
       desc = "Quit",
       action = "<leader>wq",
