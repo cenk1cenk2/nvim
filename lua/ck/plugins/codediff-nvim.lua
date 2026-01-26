@@ -246,7 +246,7 @@ function M.compare_buffer_with_branch()
     log:info("Comparing buffer with branch: %s -> %s", require("ck.utils.fs").get_project_buffer_filepath(), branch)
     shada.set(store_key, branch)
 
-    vim.cmd(":CodeDiff file " .. branch)
+    vim.cmd(":CodeDiff file " .. branch .. " HEAD")
   end)
 end
 
