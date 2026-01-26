@@ -181,7 +181,7 @@ function M.config()
     end,
     autocmds = function()
       local function grug_far_toggle_flags(flags)
-        local status = require("grug-far").toggle_flags(flags)
+        local status = require("grug-far").get_instance():toggle_flags(flags)
         local state = unpack(status) and "ON" or "OFF"
         vim.notify(("Grug Far: toggled %s: %s"):format(table.concat(flags, " "), state))
       end
