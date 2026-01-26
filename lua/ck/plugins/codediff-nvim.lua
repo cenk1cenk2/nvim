@@ -6,7 +6,7 @@ local log = require("ck.log")
 M.name = "esmuellert/codediff.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, true, {
+  require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
       ---@type Plugin
       return {
@@ -246,7 +246,7 @@ function M.compare_buffer_with_branch()
     log:info("Comparing buffer with branch: %s -> %s", require("ck.utils.fs").get_project_buffer_filepath(), branch)
     shada.set(store_key, branch)
 
-    vim.cmd(":CodeDiff file " .. branch .. " HEAD")
+    vim.cmd(":CodeDiff file " .. branch)
   end)
 end
 
