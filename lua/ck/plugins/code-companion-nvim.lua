@@ -354,6 +354,91 @@ function M.config()
                 end,
                 description = "Browse all chats",
               },
+              browse_open_chats = {
+                modes = { n = fn.local_keystroke({ "o" }) },
+                callback = function()
+                  local chat_metadata = _G.codecompanion_chat_metadata or {}
+                  local chat_buffers = vim.tbl_keys(chat_metadata)
+
+                  if #chat_buffers == 0 then
+                    vim.notify("No open chats", vim.log.levels.INFO)
+
+                    return
+                  end
+
+                  local pickers = require("telescope.pickers")
+                  local finders = require("telescope.finders")
+                  local conf = require("telescope.config").values
+                  local actions = require("telescope.actions")
+                  local action_state = require("telescope.actions.state")
+
+                  local entries = {}
+                  for _, bufnr in ipairs(chat_buffers) do
+                    local chat = require("codecompanion").buf_get_chat(bufnr)
+                    if chat then
+                      local title = chat_metadata[bufnr].title or "Untitled Chat"
+                      local adapter = chat.adapter and chat.adapter.name or "Unknown"
+                      table.insert(entries, {
+                        bufnr = bufnr,
+                        display = string.format("[%s] %s", adapter, title),
+                        title = title,
+                        adapter = adapter,
+                      })
+                    end
+                  end
+
+                  pickers
+                    .new({}, {
+                      prompt_title = "Open Chats",
+                      finder = finders.new_table({
+                        results = entries,
+                        entry_maker = function(entry)
+                          return {
+                            value = entry,
+                            display = entry.display,
+                            ordinal = entry.title,
+                            bufnr = entry.bufnr,
+                          }
+                        end,
+                      }),
+                      sorter = conf.generic_sorter({}),
+                      attach_mappings = function(prompt_bufnr, map)
+                        actions.select_default:replace(function()
+                          actions.close(prompt_bufnr)
+                          local selection = action_state.get_selected_entry()
+                          if selection then
+                            local chat = require("codecompanion").buf_get_chat(selection.bufnr)
+                            if chat then
+                              chat.ui:open()
+                            end
+                          end
+                        end)
+
+                        map("i", "<C-d>", function()
+                          local selection = action_state.get_selected_entry()
+                          if selection then
+                            local chat = require("codecompanion").buf_get_chat(selection.bufnr)
+                            if chat then
+                              -- Delete the buffer
+                              vim.api.nvim_buf_delete(selection.bufnr, { force = true })
+                              -- Remove from global metadata
+                              if _G.codecompanion_chat_metadata then
+                                _G.codecompanion_chat_metadata[selection.bufnr] = nil
+                              end
+                              -- Close picker and refresh
+                              actions.close(prompt_bufnr)
+                              vim.notify("Chat deleted", vim.log.levels.INFO)
+                            end
+                          end
+                        end)
+
+                        return true
+                      end,
+                    })
+                    :find()
+                end,
+                description = "Browse open chats",
+              },
               _acp_allow_once = {
                 modes = { n = "." },
               },
@@ -446,7 +531,7 @@ function M.config()
                 ---Model for generating titles (defaults to current chat model)
                 model = "gpt-5.1", -- "gpt-4o"
                 ---Number of user prompts after which to refresh the title (0 to disable)
-                refresh_every_n_prompts = 0, -- e.g., 3 to refresh after every 3rd user prompt
+                refresh_every_n_prompts = 3, -- e.g., 3 to refresh after every 3rd user prompt
                 ---Maximum number of times to refresh the title (default: 3)
                 max_refreshes = 3,
                 format_title = function(original_title)
