@@ -124,7 +124,7 @@
       ],
       "autoApprove": [],
       "command": "bunx",
-      "disabled": false
+      "disabled": true
     },
     "linear/kilic-dev": {
       "autoApprove": [
