@@ -435,7 +435,7 @@ M.DASHBOARD = {
         vim.fn.chdir(join_paths(vim.env.HOME, ".dotfiles/"))
         require("possession").load(require("possession.paths").cwd_session_name())
       end,
-      icon = nvim.ui.icons.misc.Obsidian,
+      icon = nvim.ui.icons.misc.Linux,
     },
     {
       key = "SPC w q",
