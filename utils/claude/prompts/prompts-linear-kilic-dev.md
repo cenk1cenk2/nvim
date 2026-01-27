@@ -14,6 +14,14 @@
   - Use web search and sequential thinking for technical research.
   - Compile documentation links and resources directly in the issue.
   - Use linear link references when possible for additional context, ALWAYS FOR REPOSITORY AND MERGE REQUEST LINKS.
+  - **Use the `links` parameter** when creating or updating issues to attach repository links, merge requests, or other relevant URLs as proper Linear attachments
+  - **Format**: Pass an array of objects with `url` and `title` fields:
+    ```json
+    [
+      { "url": "https://gitlab.kilic.dev/org/repo", "title": "repo-name" },
+      { "url": "https://gitlab.kilic.dev/org/repo/-/merge_requests/123", "title": "MR !123" }
+    ]
+    ```
 - For technical issues requiring research use the following guidelines.
   - Use sequential thinking to break down the research process.
   - Gather official documentation links and add it to appendix.
