@@ -224,9 +224,7 @@ function M.load_prompts(mcphub)
         description = metadata.description,
         arguments = metadata.arguments or {},
         handler = function(_, res)
-          local response = res:system():text(content)
-
-          return response:llm():text(metadata.response):send()
+          return res:system():text(content):user():llm():text(metadata.response):send()
         end,
       })
     end
