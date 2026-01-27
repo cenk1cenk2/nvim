@@ -149,57 +149,7 @@ function M.config()
         end,
       })
 
-      mcphub.add_prompt("prompts", {
-        name = "assistant",
-        description = "Plan and track changes through an assistant.",
-        arguments = {
-          -- {
-          --   name = "topic",
-          --   description = "Brief description of the topic or changes to be made to plan first.",
-          --   required = true,
-          -- },
-        },
-        handler = function(req, res)
-          -- local topic = req.params.topic
-
-          local system_prompt = [[
-- We will refine a plan together to do some changes, the implementation might not be exact so we will refine while doing.
-- First we will go through what needs to be achieved and what changes we need to make that happen.
-- I want you the assistant to keep track of the changes we are doing and propose pitfalls and problems each time prompted.
-- Always keep track of the changes through `git` changes and utilizing your available tools to cross things of the initial plan and adjust the plan as we go along. You can read the filels directly too make sure diff is up to date.
-- Refine your understanding as we go along and the changes evolve, by taking in the inputs about our discussions.
-- Use thinking whenever you feel like deviating from the current plan might cause problems and propose solutions.
-- Be understanding of the things of the replies but always feel free to question them.
-]]
-
-          local response = res:system():text(system_prompt)
-
-          -- response = response:user():text(string.format("Let us start by creating a plan: %s", topic))
-
-          -- return response:llm():text(string.format("I will suck it up and wait in the sidelines while you do your thing.", topic)):send()
-
-          return response:llm():text("Understood master."):send()
-        end,
-      })
-
-      mcphub.add_prompt("prompts", {
-        name = "evaluate",
-        description = "Evaluate the code changes as the assistant to determine the progress done so far.",
-        handler = function(req, res)
-          local system_prompt = [[
-- We are going through the changes we planned together with the assistant mode.
-- The user has updated the codebase according to the plan.
-- As the assistant, your task is to evaluate the current state of the codebase and determine the progress made so far.
-- You can use the git mcp tool to get the differences made to the codebase, unless specifically provided.
-- Provide feedback on the changes implemented, highlighting what has been accomplished and update the plan accordingly.
-- Fulfill all your assistant mode duties as required on providing feedback.
-]]
-
-          local response = res:system():text(system_prompt)
-
-          return response:llm():text("Understood master."):send()
-        end,
-      })
+      M.load_prompts(mcphub)
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
@@ -215,6 +165,72 @@ function M.config()
       }
     end,
   })
+end
+
+---Load a prompt from the prompts directory
+---@param name string The base name of the prompt (e.g., "prompts-assistant")
+---@return table|nil metadata The loaded metadata or nil if not found
+---@return string|nil content The markdown content or nil if not found
+---@return string|nil error Error message if loading failed
+function M.load_prompt(name)
+  local prompts_dir = join_paths(get_config_dir(), "utils", "claude", "prompts")
+
+  local json_path = vim.fs.joinpath(prompts_dir, name .. ".json")
+  local md_path = vim.fs.joinpath(prompts_dir, name .. ".md")
+
+  if vim.fn.filereadable(json_path) == 0 then
+    return nil, nil, string.format("JSON metadata file not found: %s", json_path)
+  end
+
+  if vim.fn.filereadable(md_path) == 0 then
+    return nil, nil, string.format("Markdown content file not found: %s", md_path)
+  end
+
+  local json_content = vim.fn.readfile(json_path)
+  local ok, metadata = pcall(vim.json.decode, table.concat(json_content, "\n"))
+  if not ok then
+    return nil, nil, string.format("Failed to parse JSON metadata: %s", metadata)
+  end
+
+  local md_content = vim.fn.readfile(md_path)
+  local content = table.concat(md_content, "\n")
+
+  return metadata, content, nil
+end
+
+---Load all prompts and register them with mcphub
+---@param mcphub table The mcphub module
+function M.load_prompts(mcphub)
+  local async = require("plenary.async")
+
+  async.run(function()
+    local config_dir = vim.fn.stdpath("config")
+    local prompts_dir = vim.fs.joinpath(config_dir, "utils", "claude", "prompts")
+
+    local json_files = vim.fn.glob(vim.fs.joinpath(prompts_dir, "prompts-*.json"), false, true)
+
+    for _, json_path in ipairs(json_files) do
+      local prompt_name = vim.fn.fnamemodify(json_path, ":t:r")
+
+      local metadata, content, err = M.load_prompt(prompt_name)
+      if err then
+        error(string.format("Failed to load prompt '%s': %s", prompt_name, err), vim.log.levels.ERROR)
+      elseif not metadata or not content then
+        error(string.format("No metadata found for prompt '%s'", prompt_name), vim.log.levels.ERROR)
+      end
+
+      mcphub.add_prompt(metadata.group, {
+        name = metadata.name,
+        description = metadata.description,
+        arguments = metadata.arguments or {},
+        handler = function(_, res)
+          local response = res:system():text(content)
+
+          return response:llm():text(metadata.response or "Understood master."):send()
+        end,
+      })
+    end
+  end, nil)
 end
 
 return M

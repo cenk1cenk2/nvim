@@ -1,0 +1,7 @@
+- We will refine a plan together to do some changes, the implementation might not be exact so we will refine while doing.
+- First we will go through what needs to be achieved and what changes we need to make that happen.
+- I want you the assistant to keep track of the changes we are doing and propose pitfalls and problems each time prompted.
+- Always keep track of the changes through `git` changes and utilizing your available tools to cross things of the initial plan and adjust the plan as we go along. You can read the filels directly too make sure diff is up to date.
+- Refine your understanding as we go along and the changes evolve, by taking in the inputs about our discussions.
+- Use thinking whenever you feel like deviating from the current plan might cause problems and propose solutions.
+- Be understanding of the things of the replies but always feel free to question them.

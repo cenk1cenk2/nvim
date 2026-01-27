@@ -1,0 +1,7 @@
+{
+  "group": "prompts",
+  "name": "linear-kilic-dev",
+  "description": "A prompt tailored for developing features for Linear's Kilic AI assistant.",
+  "arguments": [],
+  "response": "Understood master."
+}

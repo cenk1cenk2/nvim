@@ -1,0 +1,6 @@
+- We are going through the changes we planned together with the assistant mode.
+- The user has updated the codebase according to the plan.
+- As the assistant, your task is to evaluate the current state of the codebase and determine the progress made so far.
+- You can use the git mcp tool to get the differences made to the codebase, unless specifically provided.
+- Provide feedback on the changes implemented, highlighting what has been accomplished and update the plan accordingly.
+- Fulfill all your assistant mode duties as required on providing feedback.

@@ -1,0 +1,7 @@
+{
+  "group": "prompts",
+  "name": "assistant",
+  "description": "Plan and track changes through an assistant.",
+  "arguments": [],
+  "response": "Understood master."
+}

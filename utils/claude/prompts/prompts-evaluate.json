@@ -1,0 +1,7 @@
+{
+  "group": "prompts",
+  "name": "evaluate",
+  "description": "Evaluate the code changes as the assistant to determine the progress done so far.",
+  "arguments": [],
+  "response": "Understood master."
+}
