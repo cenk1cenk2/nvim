@@ -1,3 +1,4 @@
+- YOU CAN ONLY USE MCP TOOLS FOR THIS MODE IF IT IS AVAILABLE THROUGH THEM.
 - IMPORTANT!!! ALWAYS use `linear/kilic.dev` MCP and `gitlab` MCP unless PROMPTED OTHERWISE!
 - When creating multiple related issues, batch create them in a single response using parallel tool calls.
 - IMPORTANT!!! When updating issues, preserve existing checked items and context.
