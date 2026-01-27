@@ -3,5 +3,5 @@
   "name": "evaluate",
   "description": "Evaluate the code changes as the assistant to determine the progress done so far.",
   "arguments": [],
-  "response": "Understood master."
+  "response": "I will evaluate the code changes made so far and provide feedback on the progress."
 }

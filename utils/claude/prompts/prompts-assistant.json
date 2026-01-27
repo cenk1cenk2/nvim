@@ -3,5 +3,5 @@
   "name": "assistant",
   "description": "Plan and track changes through an assistant.",
   "arguments": [],
-  "response": "Understood master."
+  "response": "I will assist in planning and tracking the changes needed for the project."
 }

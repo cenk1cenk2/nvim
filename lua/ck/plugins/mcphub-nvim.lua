@@ -226,7 +226,7 @@ function M.load_prompts(mcphub)
         handler = function(_, res)
           local response = res:system():text(content)
 
-          return response:llm():text(metadata.response or "Understood master."):send()
+          return response:llm():text(metadata.response):send()
         end,
       })
     end
