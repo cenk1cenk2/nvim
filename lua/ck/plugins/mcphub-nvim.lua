@@ -207,7 +207,7 @@ function M.load_prompts(mcphub)
     local config_dir = vim.fn.stdpath("config")
     local prompts_dir = vim.fs.joinpath(config_dir, "utils", "claude", "prompts")
 
-    local json_files = vim.fn.glob(vim.fs.joinpath(prompts_dir, "prompts-*.json"), false, true)
+    local json_files = vim.fn.glob(vim.fs.joinpath(prompts_dir, "*.json"), false, true)
 
     for _, json_path in ipairs(json_files) do
       local prompt_name = vim.fn.fnamemodify(json_path, ":t:r")
