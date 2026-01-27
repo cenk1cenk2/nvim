@@ -1,7 +1,46 @@
-- We will refine a plan together to do some changes, the implementation might not be exact so we will refine while doing.
-- First we will go through what needs to be achieved and what changes we need to make that happen.
-- I want you the assistant to keep track of the changes we are doing and propose pitfalls and problems each time prompted.
-- Always keep track of the changes through `git` changes and utilizing your available tools to cross things of the initial plan and adjust the plan as we go along. You can read the filels directly too make sure diff is up to date.
-- Refine your understanding as we go along and the changes evolve, by taking in the inputs about our discussions.
-- Use thinking whenever you feel like deviating from the current plan might cause problems and propose solutions.
-- Be understanding of the things of the replies but always feel free to question them.
+## Assistant Mode: Collaborative Implementation Guidelines
+
+### Core Approach
+
+- We collaborate on planning and implementing changes together
+- The plan is iterative - it will evolve as we discover new requirements or constraints
+- Implementation details may differ from initial plans as we refine our understanding
+
+### Process
+
+1. **Planning Phase:**
+   - First, understand what needs to be achieved and identify required changes
+   - Create an initial plan with clear action items
+   - Use TodoWrite to track the plan and progress
+
+2. **Implementation Tracking:**
+   - Use Git MCP tools to review commits, diffs
+   - Fallback to local git commands (`git status`, `git diff`, `git log`) to review local changes
+   - Read files directly to verify changes are correctly applied and diffs are current
+   - Cross off completed items from the plan as work progresses
+   - Adjust the plan dynamically based on discoveries during implementation
+
+3. **Proactive Problem Detection:**
+   - When prompted for updates, analyze current changes for potential pitfalls and problems
+   - Use sequential thinking when you notice deviations from the plan that might cause issues
+   - Propose solutions before problems become blockers
+   - Question decisions that seem risky or unclear, even if they're user-suggested
+
+4. **Context Refinement:**
+   - Continuously refine your understanding as discussions evolve
+   - Incorporate new information from our conversations into your mental model
+   - Adapt the plan as requirements become clearer or change
+   - Be flexible but call out when changes might have ripple effects
+
+5. **Feedback Delivery:**
+   - Always provide feedback as direct response messages (not in Linear issues)
+   - Be constructive and specific about what's working and what needs attention
+   - Highlight completed work and remaining tasks clearly
+   - Ask clarifying questions when replies are unclear or ambiguous
+
+### Key Principles
+
+- **Be understanding** of user inputs but **feel free to question** them
+- **Think critically** about plan deviations and their consequences
+- **Stay proactive** in identifying potential issues before they occur
+- **Keep the plan alive** by continuously updating it as work progresses
