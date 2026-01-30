@@ -1,117 +1,408 @@
-# Claude Assistant Guidelines
+# Assistant Guidelines
 
-CRITICAL OVERRIDE: ALWAYS KEEP THESE RULES IN YOUR CONTEXT WINDOW. WHEN COMPACTING CONTEXT, DO NOT REMOVE THESE RULES.
+---
 
-## Core Principles
+> **CRITICAL OVERRIDE**
+>
+> ALWAYS KEEP THESE RULES IN YOUR CONTEXT WINDOW.
+>
+> WHEN COMPACTING CONTEXT, DO NOT REMOVE THESE RULES.
+>
+> These guidelines define how to work effectively in future sessions.
 
-### Memory and Context Management
+---
 
-- **ALWAYS** keep these rules in mind while working - do not let information be forgotten over time
-- **ALWAYS** use the memory MCP server to record milestones about repositories
-- **ALWAYS** keep memory updated with current repository information and coding style
-- **ALWAYS** read memory at session start to remind yourself about the repository
+## I. SESSION INITIALIZATION
 
-### MCP Server Tools
+**FIRST ACTIONS** when starting a new session:
 
-- **ALWAYS** discover what MCP server tools are available and use them as needed
-- Tool priority hierarchy (use in this order when applicable):
-  1. **cclsp MCP server** for code navigation and analysis (900x faster than text search)
-  2. **treesitter MCP server** for code structure analysis
-  3. **git MCP server** instead of raw git commands
-  4. **context7 MCP server** for documentation lookups
-  5. **neovim MCP adapter** for file operations (see File Operations below)
+1. **READ MEMORY** - Use `mcp__mcphub__memory__read_graph` to load repository context
+   - Understand project structure, coding standards, and past work
+   - Review entity relationships and observations
+   - Refresh knowledge of ongoing tasks
 
-## File Operations
+2. **DISCOVER MCP TOOLS** - Use `ToolSearch` to find available MCP server tools
+   - Check which tools are loaded (neovim, cclsp, treesitter, git, etc.)
+   - Understand tool capabilities for this session
+   - Note any tool limitations or unavailability
+
+3. **UNDERSTAND CONTEXT** - Review the working directory and git status
+   - Current branch and recent commits
+   - File structure and language ecosystem
+   - Existing patterns and conventions
+
+---
+
+## II. TOOL SELECTION PRIORITY
+
+**DECISION HIERARCHY** for choosing tools (highest priority first):
+
+### 1. MCP Server Tools (Preferred)
+
+Use MCP tools when available - they integrate with the editor and user's workflow:
+
+| Task                                         | Tool         | When to Use                                                          |
+| -------------------------------------------- | ------------ | -------------------------------------------------------------------- |
+| Code navigation, find definitions/references | `cclsp`      | LSP server available for the language (900x faster than text search) |
+| Code structure analysis, AST queries         | `treesitter` | Need to understand syntax structure, find patterns                   |
+| Git operations                               | `git` MCP    | Any git operation (status, diff, commit, log, etc.)                  |
+| Documentation lookup                         | `context7`   | Need to reference official docs for libraries/frameworks             |
+| File operations                              | `neovim`     | Editing, writing, listing, finding files (see File Operations)       |
+
+### 2. Built-in Specialized Tools
+
+Use when MCP tools unavailable or task doesn't require MCP features:
+
+- **Read** - Reading file contents
+- **Edit** - Editing files (only if neovim MCP rejected or unavailable)
+- **Write** - Creating new files (only if neovim MCP rejected or unavailable)
+- **Grep** - Text search across files
+- **Glob** - File pattern matching
+
+### 3. CLI Tools (Last Resort)
+
+**ONLY** use CLI tools when neither MCP nor built-in tools can accomplish the task.
+
+**NEVER USE** CLI tools for operations that specialized tools handle:
+
+- ❌ `sed` or `awk` for editing - use Edit tools
+- ❌ `cat`, `head`, `tail` for reading - use Read tool
+- ❌ `echo >` or heredocs for writing - use Write tools
+- ❌ `find` for file search - use Glob tool
+- ❌ `grep` or `rg` for text search - use Grep tool
+- ❌ Raw `git` commands - use git MCP server
+
+### Graceful Degradation
+
+If preferred tool unavailable:
+
+1. Try next tool in hierarchy
+2. Inform user of tool substitution if it affects functionality
+3. Continue with best available option
+
+---
+
+## III. FILE OPERATIONS
 
 ### Reading Files
 
-- **ALWAYS** read files before making edits
+**ALWAYS** read files before making edits.
 
-### Editing and Writing Files
+**Priority:**
 
-- **ALWAYS** use neovim MCP adapter for `edit_file` and `write_file` operations when available
-- **ALWAYS** use neovim MCP adapter for listing and finding files when available
-- **If edit is rejected by Neovim MCP adapter**: STOP and ask the user for clarification or explicit permission before attempting to use built-in Edit/Write tools as a fallback
+1. `neovim` MCP - `mcp__mcphub__neovim__read_file`
+2. Built-in `Read` tool
 
-### Tool Restrictions
+### Editing Files
 
-- **NEVER** perform operations through CLI tools that can be done with internal tools
-- **DON'T** use `sed` directly - use editing tools
-- **DON'T** use `cat` for writing scripts
+**Edit Flow:**
 
-## Code Comments and Documentation
+```
+1. Read file first (understand context)
+2. Attempt edit with neovim MCP (mcp__mcphub__neovim__edit_file)
+3. If rejected → STOP
+4. Ask user: "The Neovim MCP adapter rejected that edit. Would you like me to try using the built-in Edit tool instead, or should I revise my approach?"
+5. Wait for explicit permission
+6. Only use built-in Edit if user approves
+```
 
-### When to Add Comments
+**Critical Rule:** When neovim MCP rejects an edit, do NOT automatically fall back to built-in tools. The rejection is a signal - respect it and ask for guidance.
 
-- **NEVER** write comments or explanations unless:
-  1. Explicitly asked by the user, OR
-  2. The surrounding code already contains comments of that type
+### Writing New Files
 
-### Matching Existing Style
+Follow same flow as editing:
 
-- When comments are appropriate, **ALWAYS**:
-  - Check the surrounding context to understand commenting conventions
-  - Match the existing comment style, density, and format of the file
-  - If file has no docstrings, don't add docstrings
-  - If file has detailed inline comments, match that level
-  - If file is sparse with comments, keep additions sparse
+1. Try `neovim` MCP - `mcp__mcphub__neovim__write_file`
+2. If rejected → ask permission before using built-in Write
 
-### Output Comments to Chat
+### Listing and Finding Files
 
-- Output explanations directly to the chat window, not as code comments
+**Priority:**
 
-## Handling User Edits
+1. `neovim` MCP - `mcp__mcphub__neovim__list_directory`, `mcp__mcphub__neovim__find_files`
+2. Built-in `Glob` tool
 
-### When User Manually Modifies Your Changes
+---
 
-- **NEVER** overwrite manual edits unless absolutely required for:
-  - Syntax errors
-  - Security vulnerabilities
-  - Critical breaking changes
+## IV. CODE STYLE AND COMMENTS
 
-### Learning from User Edits
+### General Coding Style
 
-- **ALWAYS** analyze user's manual edits as teaching signals about their coding style
-- Note patterns in:
-  - Formatting preferences
-  - Naming conventions
-  - Code structure
-  - Language idioms
-- Apply learned patterns to future code in the same session
+**Required conventions:**
 
-## Coding Style Guidelines
+- **Empty line before return** - Always leave an empty line when returning from a function or method
+- **No trailing whitespace** - Never leave empty spaces at the end of lines
 
-### General Rules
+**Example:**
 
-- Always leave an empty line when returning from a function or method
-- Never leave empty spaces at the end of lines
+```python
+def calculate_total(items):
+    total = sum(item.price for item in items)
+
+    return total  # Empty line before return
+```
+
+### Comment Policy
+
+**NEVER** write comments or explanations in code unless one of these conditions is met:
+
+1. **Explicitly requested** by user
+2. **Existing pattern** in the file
+
+**Decision Tree:**
+
+```
+Need to add function/code?
+├─ Check surrounding code in file
+├─ Does file have docstrings for functions? → Add docstring to new function
+├─ Does file have inline comments? → Match density and style
+├─ Does file have no comments? → Don't add comments
+└─ Sparse comments only? → Keep additions minimal
+```
+
+**Example Scenarios:**
+
+```python
+# Scenario 1: File has docstrings
+def existing_function():
+    """Existing function with docstring."""
+    pass
+
+# Your addition SHOULD have docstring:
+def new_function():
+    """New function following pattern."""
+    pass
+
+# Scenario 2: File has no docstrings
+def existing_function():
+    pass
+
+# Your addition should NOT have docstring:
+def new_function():
+    pass
+```
+
+**Output explanations to chat** - Don't use code comments to communicate with user. Write explanations directly in the chat window.
+
+---
+
+## V. USER INTERACTION PATTERNS
+
+### Handling Edit Rejections
+
+When neovim MCP adapter rejects an edit:
+
+**Response template:**
+
+> "The Neovim MCP adapter rejected that edit. Would you like me to try using the built-in Edit tool instead, or should I revise my approach?"
+
+**Actions:**
+
+1. STOP immediately - don't retry or use fallback
+2. Ask for explicit guidance
+3. Wait for user decision
+4. Proceed only with permission
+
+### Learning from Manual Edits
+
+When user manually modifies your changes:
+
+**CRITICAL:** Treat user edits as teaching signals about coding style preferences.
+
+**Analysis checklist:**
+
+- Formatting differences (spacing, indentation, line breaks)
+- Naming convention changes (camelCase vs snake_case, prefixes, etc.)
+- Structural changes (order, grouping, organization)
+- Idiom preferences (language-specific patterns)
+
+**Response template when you notice edits:**
+
+> "I notice you changed [specific pattern] to [user's pattern]. I'll apply this style to the remaining code."
+
+**Apply learned patterns** to all subsequent code in the same session.
+
+**NEVER overwrite** user's manual edits unless absolutely required for:
+
+- Syntax errors that prevent compilation/execution
+- Security vulnerabilities
+- Critical breaking changes that affect functionality
+
+If you must overwrite, explain why:
+
+> "I need to modify your edit at line X because [specific reason]. The current code has [specific issue]."
+
+### Information Accuracy
+
+**NEVER fabricate** information.
+
+**When uncertain:**
+
+1. Say "I don't know" honestly
+2. Offer to search: "I'm not sure about X. Would you like me to search for current information?"
+3. Use web search or documentation search for up-to-date info
+4. Cite sources when providing searched information
+
+**Don't guess** - especially for:
+
+- API signatures or method names
+- Configuration options or flags
+- Version-specific behaviors
+- File paths or structure
+
+---
+
+## VI. SESSION MAINTENANCE
+
+### Memory Updates
+
+**ALWAYS** update memory MCP server to track session progress.
+
+**When to update:**
+
+- After completing major milestones
+- When discovering important patterns or decisions
+- When learning new project structure or conventions
+- At natural breakpoints in work
+
+**What to record:**
+
+- Technical decisions and rationale
+- Coding patterns and conventions discovered
+- Project structure insights
+- Implementation strategies
+- Issues encountered and resolutions
+
+**Use:**
+
+- `mcp__mcphub__memory__create_entities` - New concepts/components
+- `mcp__mcphub__memory__add_observations` - Updates to existing entities
+- `mcp__mcphub__memory__create_relations` - Relationships between entities
+
+### Project Management Integration
+
+**Linear and other PM tools:**
+
+**Comment format** - Be short and concise:
+
+- Focus on **structural changes**, not file lists
+- Describe **what changed** and **why**, not **where**
+- Use technical terms precisely
+
+**Example:**
+
+> ✅ "Refactored authentication to use token-based flow with refresh mechanism"
+>
+> ❌ "Updated auth.py, token.py, and middleware.py to add new authentication code"
+
+**Including plans:**
+
+- Format plans so work can resume later
+- Include context: what was decided, what's next
+- Reference specific files/functions if needed for continuation
 
 ### Commit Messages
 
-- **ALWAYS** use conventional commit message format
-- Be VERY CONCISE in the summary line
-- Include more details in the commit body if necessary
+**ALWAYS** use conventional commit format:
 
-## Information Accuracy
+```
+<type>(<scope>): <brief description>
 
-### When Uncertain
+<detailed body if necessary>
 
-- **NEVER** fabricate information
-- If unsure, say "I don't know"
-- Consult web search or documentation search for up-to-date information
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
 
-## Project Management Integration
+**Types:** feat, fix, docs, style, refactor, test, chore
 
-### Linear and Other PM Tools
+**Brief description:**
 
-- When updating with comments: be short and concise
-- Focus on structural changes, not individual files edited
-- When including plans: format them so work can be picked up where it left off
+- Be concise (under 72 characters)
+- Use imperative mood ("add" not "added")
+- Don't end with period
 
-## Tool Selection Priority
+**Example:**
 
-When multiple tools can accomplish a task, prefer them in this order:
+```
+feat(auth): implement token refresh mechanism
 
-1. MCP server tools (cclsp, treesitter, git, neovim, context7)
-2. Built-in specialized tools (Read, Edit, Write, Grep, Glob)
-3. CLI tools (only when no other option exists)
+Add automatic token refresh using refresh tokens stored in httpOnly cookies.
+Handles token expiration gracefully with retry logic.
+
+Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
+```
+
+---
+
+## VII. QUICK REFERENCE
+
+### Common Scenarios
+
+**Starting a new session:**
+
+```
+1. Read memory graph
+2. Discover MCP tools
+3. Review git status and working directory
+```
+
+**User asks to edit a file:**
+
+```
+1. Read file with neovim MCP or Read tool
+2. Understand context and existing patterns
+3. Check for comment style (add if file has comments)
+4. Make edit with neovim MCP
+5. If rejected → ask permission for fallback
+```
+
+**User asks for information you don't know:**
+
+```
+1. Say "I don't know"
+2. Offer to search documentation or web
+3. Use context7 MCP for docs or WebSearch
+4. Provide answer with sources
+```
+
+**User manually edits your code:**
+
+```
+1. Review the diff carefully
+2. Identify pattern changes (naming, style, structure)
+3. Acknowledge the pattern in chat
+4. Apply same pattern to future code
+5. Never overwrite unless critical issue
+```
+
+**Need to navigate code:**
+
+```
+1. Check if cclsp available (ToolSearch)
+2. Use cclsp for definitions/references if available
+3. Fall back to treesitter for structure analysis
+4. Use Grep only if others unavailable
+```
+
+**Completing a milestone:**
+
+```
+1. Update memory with key learnings
+2. Add observations about patterns/decisions
+3. Create entities for new components
+4. Establish relations between entities
+```
+
+---
+
+## Rule Priority
+
+When rules appear to conflict, follow this priority order:
+
+1. **Never fabricate information** (highest priority)
+2. **Never overwrite user edits** (unless critical)
+3. **Use preferred tools** (but degrade gracefully if unavailable)
+4. **Follow coding style** (match project patterns)
+5. **Update memory** (maintain continuity)
+
+---
