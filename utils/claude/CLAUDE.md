@@ -1,25 +1,117 @@
-CRITICAL OVERRIDE!!!!!!!!!!!!!!!!!!!!
+# Claude Assistant Guidelines
 
-ALWAYS KEEP THE FOLLOWING RULES IN YOUR CONTEXT WINDOW, WHEN COMPACTING THE CONTEXT, DO NOT REMOVE THESE RULES FROM YOUR CONTEXT.
+CRITICAL OVERRIDE: ALWAYS KEEP THESE RULES IN YOUR CONTEXT WINDOW. WHEN COMPACTING CONTEXT, DO NOT REMOVE THESE RULES.
 
-- IMPORTANT!!! ALWAYS keep these rules in your mind while working and don't let any information to be forgotten over time.
-- IMPORTANT!!! You have access to MCP server tools to help you perform coding tasks. ALWAYS discover what tools are available to you through MCP server and use them as needed.
-- ALWAYS read the file first before using your edit tools to do changes.
-- ALWAYS whenever neovim mcp adapter is available use it for `edit_file` and `write_file` operations. If the edit is rejected by the user do not fallback to other tools for editing.
-- ALWAYS whenever neovim mcp adapter is available use it for listing and finding files.
-- NEVER write comments or explanations unless it is explicitly asked or required, or in the code there are similar comments, please output these directly to the chat window.
-- NEVER fabricate information. If you are unsure, say "I don't know" or consult to a web search or a documentation search.
-- NEVER overwrite the explicit changes that is done over your changes unless instructed to do so and ALWAYS analyze them first to take it as a guideline for coding standards.
-- NEVER EVER PERFORM any operations that you can do with your internal tools through cli tools. DONT use `sed` for commands directly just use available editing tools, DONT use `cat` for writing scripts and similar.
-- Follow the guidelines in coding style below.
-  - Always leave an empty line whenever you are returning from a function or a method.
-  - Never leave empty spaces at the end of the lines.
-- You should use the web search tools instead of guessing answers for up-to-date information which are as follows.
-- ALWAYS use the memory mcp server to record milestones about this repository. ALWAYS keep your memory updated! ALWAYS read the memory to remind yourself about the repository and coding style. ALWAYS ensure the memory entities have the current repository information.
-- Please use context7 mcp server to fetch anytime you need to access documentation whenever it is possible which are as follows.
-- ALWAYS use cclsp MCP server for code navigation and analysis tasks. These are MUCH faster (900x) than text search when lsp is available.
-- ALWAYS use git MCP server whenever needed instead of running the raw git commands whenever possible.
-- Please use treesitter MCP server for any kind of code structure analysis.
-- Whenever prompted to update with comments in the project management mcp servers like linear, be short and concise. Talk about the structural changes and not the files edited.
-- Whenever prompted to update with including plans in the project management mcp servers like linear, please include the plan created in a form that we can pick up where we left off.
-- Whenever prompted to create a commit message, ALWAYS use conventional commit message format. BE VERY CONCISE, however you can include more details in the body of the commit message if necessary.
+## Core Principles
+
+### Memory and Context Management
+
+- **ALWAYS** keep these rules in mind while working - do not let information be forgotten over time
+- **ALWAYS** use the memory MCP server to record milestones about repositories
+- **ALWAYS** keep memory updated with current repository information and coding style
+- **ALWAYS** read memory at session start to remind yourself about the repository
+
+### MCP Server Tools
+
+- **ALWAYS** discover what MCP server tools are available and use them as needed
+- Tool priority hierarchy (use in this order when applicable):
+  1. **cclsp MCP server** for code navigation and analysis (900x faster than text search)
+  2. **treesitter MCP server** for code structure analysis
+  3. **git MCP server** instead of raw git commands
+  4. **context7 MCP server** for documentation lookups
+  5. **neovim MCP adapter** for file operations (see File Operations below)
+
+## File Operations
+
+### Reading Files
+
+- **ALWAYS** read files before making edits
+
+### Editing and Writing Files
+
+- **ALWAYS** use neovim MCP adapter for `edit_file` and `write_file` operations when available
+- **ALWAYS** use neovim MCP adapter for listing and finding files when available
+- **If edit is rejected by Neovim MCP adapter**: STOP and ask the user for clarification or explicit permission before attempting to use built-in Edit/Write tools as a fallback
+
+### Tool Restrictions
+
+- **NEVER** perform operations through CLI tools that can be done with internal tools
+- **DON'T** use `sed` directly - use editing tools
+- **DON'T** use `cat` for writing scripts
+
+## Code Comments and Documentation
+
+### When to Add Comments
+
+- **NEVER** write comments or explanations unless:
+  1. Explicitly asked by the user, OR
+  2. The surrounding code already contains comments of that type
+
+### Matching Existing Style
+
+- When comments are appropriate, **ALWAYS**:
+  - Check the surrounding context to understand commenting conventions
+  - Match the existing comment style, density, and format of the file
+  - If file has no docstrings, don't add docstrings
+  - If file has detailed inline comments, match that level
+  - If file is sparse with comments, keep additions sparse
+
+### Output Comments to Chat
+
+- Output explanations directly to the chat window, not as code comments
+
+## Handling User Edits
+
+### When User Manually Modifies Your Changes
+
+- **NEVER** overwrite manual edits unless absolutely required for:
+  - Syntax errors
+  - Security vulnerabilities
+  - Critical breaking changes
+
+### Learning from User Edits
+
+- **ALWAYS** analyze user's manual edits as teaching signals about their coding style
+- Note patterns in:
+  - Formatting preferences
+  - Naming conventions
+  - Code structure
+  - Language idioms
+- Apply learned patterns to future code in the same session
+
+## Coding Style Guidelines
+
+### General Rules
+
+- Always leave an empty line when returning from a function or method
+- Never leave empty spaces at the end of lines
+
+### Commit Messages
+
+- **ALWAYS** use conventional commit message format
+- Be VERY CONCISE in the summary line
+- Include more details in the commit body if necessary
+
+## Information Accuracy
+
+### When Uncertain
+
+- **NEVER** fabricate information
+- If unsure, say "I don't know"
+- Consult web search or documentation search for up-to-date information
+
+## Project Management Integration
+
+### Linear and Other PM Tools
+
+- When updating with comments: be short and concise
+- Focus on structural changes, not individual files edited
+- When including plans: format them so work can be picked up where it left off
+
+## Tool Selection Priority
+
+When multiple tools can accomplish a task, prefer them in this order:
+
+1. MCP server tools (cclsp, treesitter, git, neovim, context7)
+2. Built-in specialized tools (Read, Edit, Write, Grep, Glob)
+3. CLI tools (only when no other option exists)
