@@ -96,7 +96,9 @@
         "get_latest_release",
         "get_label",
         "get_file_contents",
-        "get_commit"
+        "get_commit",
+        "pull_request_read",
+        "request_copilot_review"
       ],
       "disabled": false,
       "headers": {
