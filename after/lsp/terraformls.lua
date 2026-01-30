@@ -33,7 +33,7 @@ return {
   end,
   settings = {
     terraform = {
-      codelens = { referenceCount = true },
+      -- codelens = { referenceCount = true },
       validation = {
         enableEnhancedValidation = true,
       },
