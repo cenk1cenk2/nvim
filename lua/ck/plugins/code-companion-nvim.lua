@@ -52,15 +52,7 @@ function M.config()
           log_level = require("ck.log"):to_nvim_level(),
         },
         adapters = {
-          http = {
-            anthropic = function()
-              return require("codecompanion.adapters").extend("anthropic", {
-                env = {
-                  api_key = "ANTHROPIC_API_KEY",
-                },
-              })
-            end,
-          },
+          http = {},
           acp = {
             ---@type fun (): CodeCompanion.ACPAdapter
             claude_code = function()
@@ -83,7 +75,11 @@ function M.config()
                 ---@type CodeCompanion.ACPAdapter
                 {
                   env = {
-                    CLAUDE_CODE_OAUTH_TOKEN = vim.env["CLAUDE_CODE_OAUTH_TOKEN"],
+                    PATH = vim.env["PATH"],
+                    HOME = vim.env["HOME"],
+                    USER = vim.env["USER"],
+                    ANTHROPIC_API_KEY = nil,
+                    CLAUDE_CODE_OAUTH_TOKEN = vim.env["NVIM_CLAUDE_ACP"],
                   },
                   opts = {
                     verbose_output = true,
