@@ -56,6 +56,11 @@ function M.config()
           acp = {
             ---@type fun (): CodeCompanion.ACPAdapter
             claude_code = function()
+              if vim.env["NVIM_CLAUDE_ACP"] == nil then
+                vim.env["NVIM_CLAUDE_ACP"] = vim.env["NVIM_CLAUDE_ACP_KILIC"]
+                vim.env["NVIM_CLAUDE_CONFIG_DIR"] = vim.env["NVIM_CLAUDE_CONFIG_DIR_KILIC"]
+              end
+
               log:info("Setting up the AI Overlord...")
               ---@type MCPHub.Hub|nil
               local instance
@@ -80,6 +85,7 @@ function M.config()
                     USER = vim.env["USER"],
                     ANTHROPIC_API_KEY = nil,
                     CLAUDE_CODE_OAUTH_TOKEN = vim.env["NVIM_CLAUDE_ACP"],
+                    CLAUDE_CONFIG_DIR = vim.env["NVIM_CLAUDE_CONFIG_DIR"],
                   },
                   opts = {
                     verbose_output = true,
@@ -664,11 +670,19 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "Q" }),
+          fn.wk_keystroke({ categories.COPILOT, "X" }),
           function()
             require("codecompanion").close_last_chat()
           end,
           desc = "close last chat [codecompanion]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "Q" }),
+          function()
+            vim.cmd([[Lazy reload codecompanion.nvim]])
+          end,
+          desc = "reload [codecompanion]",
           mode = { "n", "v" },
         },
         {
@@ -678,6 +692,43 @@ function M.config()
           end,
           desc = "add selected code [codecompanion]",
           mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "E" }),
+          function()
+            vim.ui.select({
+              {
+                name = "Personal",
+                env = {
+                  NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_KILIC"],
+                  NVIM_CLAUDE_CONFIG_DIR = vim.env["NVIM_CLAUDE_CONFIG_DIR_KILIC"],
+                },
+              },
+              {
+                name = "Work",
+                env = {
+                  NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_WORK"],
+                  NVIM_CLAUDE_CONFIG_DIR = vim.env["NVIM_CLAUDE_CONFIG_DIR_WORK"],
+                },
+              },
+            }, {
+              prompt = "Select Claude Code ACP Profile",
+              format_item = function(item)
+                return item.name
+              end,
+            }, function(selected)
+              if not selected then
+                return
+              end
+
+              log:info("Switching to Claude Code profile: %s", selected.name)
+
+              vim.env["NVIM_CLAUDE_ACP"] = selected.env["NVIM_CLAUDE_ACP"]
+              vim.env["NVIM_CLAUDE_CONFIG_DIR"] = selected.env["NVIM_CLAUDE_CONFIG_DIR"]
+            end)
+          end,
+          desc = "select profile for claude [codecompanion]",
+          mode = { "n" },
         },
       }
     end,
