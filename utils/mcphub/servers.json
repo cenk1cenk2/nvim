@@ -72,7 +72,8 @@
       ],
       "disabled": false,
       "headers": {
-        "Authorization": "Bearer ${NVIM_GITHUB}"
+        "Authorization": "Bearer ${NVIM_GITHUB}",
+        "X-MCP-Insiders": "true"
       },
       "url": "https://api.githubcopilot.com/mcp/"
     },
