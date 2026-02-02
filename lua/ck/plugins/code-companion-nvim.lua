@@ -57,8 +57,7 @@ function M.config()
             ---@type fun (): CodeCompanion.ACPAdapter
             claude_code = function()
               if vim.env["NVIM_CLAUDE_ACP"] == nil then
-                vim.env["NVIM_CLAUDE_ACP"] = vim.env["NVIM_CLAUDE_ACP_KILIC"]
-                vim.env["NVIM_CLAUDE_CONFIG_DIR"] = vim.env["NVIM_CLAUDE_CONFIG_DIR_KILIC"]
+                vim.env["NVIM_CLAUDE_ACP"] = vim.env["NVIM_CLAUDE_ACP_WORK"]
               end
 
               log:info("Setting up the AI Overlord...")
@@ -85,7 +84,6 @@ function M.config()
                     USER = vim.env["USER"],
                     ANTHROPIC_API_KEY = nil,
                     CLAUDE_CODE_OAUTH_TOKEN = vim.env["NVIM_CLAUDE_ACP"],
-                    CLAUDE_CONFIG_DIR = vim.env["NVIM_CLAUDE_CONFIG_DIR"],
                   },
                   opts = {
                     verbose_output = true,
@@ -701,14 +699,12 @@ function M.config()
                 name = "Personal",
                 env = {
                   NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_KILIC"],
-                  NVIM_CLAUDE_CONFIG_DIR = vim.env["NVIM_CLAUDE_CONFIG_DIR_KILIC"],
                 },
               },
               {
                 name = "Work",
                 env = {
                   NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_WORK"],
-                  NVIM_CLAUDE_CONFIG_DIR = vim.env["NVIM_CLAUDE_CONFIG_DIR_WORK"],
                 },
               },
             }, {
@@ -724,7 +720,6 @@ function M.config()
               log:info("Switching to Claude Code profile: %s", selected.name)
 
               vim.env["NVIM_CLAUDE_ACP"] = selected.env["NVIM_CLAUDE_ACP"]
-              vim.env["NVIM_CLAUDE_CONFIG_DIR"] = selected.env["NVIM_CLAUDE_CONFIG_DIR"]
             end)
           end,
           desc = "select profile for claude [codecompanion]",
