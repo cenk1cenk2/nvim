@@ -93,7 +93,7 @@ function M.config()
                         end
 
                         local proxy = require("mcphub.extensions.proxy").get()
-                        log:debug("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
+                        log:info("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
 
                         return vim.tbl_extend("force", { name = "mcphub" }, proxy)
                       end,
