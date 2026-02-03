@@ -16,10 +16,14 @@
 
 **FIRST ACTIONS** when starting a new session:
 
-1. **READ MEMORY** - Use `mcp__mcphub__memory__read_graph` to load repository context
-   - Understand project structure, coding standards, and past work
-   - Review entity relationships and observations
-   - Refresh knowledge of ongoing tasks
+1. **READ MEMORY** - to load repository context
+
+- Use `mcp__mcphub__memory__read_graph`,
+- `mcp__plugin_claude-mem_mcp-search____IMPORTANT` - Key observations
+- `mcp__plugin_claude-mem_mcp-search__get_observations` - Retrieve past observations for context
+- Understand project structure, coding standards, and past work
+- Review entity relationships and observations
+- Refresh knowledge of ongoing tasks
 
 2. **DISCOVER MCP TOOLS** - Use `ToolSearch` to find available MCP server tools
    - Check which tools are loaded (neovim, cclsp, treesitter, git, etc.)
