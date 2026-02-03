@@ -8,7 +8,7 @@
 - When creating multiple related issues, batch create them in a single response using parallel tool calls
 - Use project names directly when creating issues - Linear MCP will resolve them, unless prompted to specifically search for it
 - Keep issue titles concise and replicate the styling of encountered issues in the same project
-- ALWAYS!!! create issue in `backlog` state unless prompted otherwise, for things that is prompted as undecided work can be in `triage` state.
+- ALWAYS!!! create issue in `backlog` state unless prompted otherwise, for things that is prompted as undecided work can be in `triage` state. You ALWAYS have to send `{"state": "backlog"}` to make this happen since default is triage.
 
 ### Issue Structure
 
