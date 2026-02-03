@@ -275,6 +275,13 @@ If you must overwrite, explain why:
 
 **Use:**
 
+It is very IMPORTANT to use the following memory MCP tools for understanding what we are working with and keeping track of important information:
+
+- `mcp__plugin_claude-mem_mcp-search____IMPORTANT` - Key observations
+- `mcp__plugin_claude-mem_mcp-search__search` - Search for existing entities before creating new ones
+- `mcp__plugin_claude-mem_mcp-search__timeline` - Timeline of significant events
+- `mcp__plugin_claude-mem_mcp-search__get_observations` - Retrieve past observations for context
+
 - `mcp__mcphub__memory__create_entities` - New concepts/components
 - `mcp__mcphub__memory__add_observations` - Updates to existing entities
 - `mcp__mcphub__memory__create_relations` - Relationships between entities

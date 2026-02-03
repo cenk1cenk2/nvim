@@ -162,6 +162,14 @@ function M.config()
           desc = "toggle mcphub",
           mode = { "n", "v" },
         },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "H" }),
+          function()
+            vim.ui.open("http://localhost:37777")
+          end,
+          desc = "toggle claude memory",
+          mode = { "n", "v" },
+        },
       }
     end,
   })
