@@ -37,7 +37,280 @@
 
 ---
 
-## II. TOOL SELECTION PRIORITY
+## II. PLANNING AND IMPLEMENTATION
+
+### When to Use Plan Mode
+
+**ALWAYS** use plan mode (`EnterPlanMode` tool) for non-trivial implementation work.
+
+**Enter plan mode when:**
+
+- Implementing new features or significant functionality
+- Making architectural changes or refactoring
+- Task has multiple valid approaches or unclear requirements
+- Changes will span across the whole code base with multiple files
+- User's request requires exploration before implementation
+- You would normally ask clarifying questions about approach
+- **User invokes specialized mode prompts** (see Special Mode Triggers below)
+
+**Skip plan mode only for:**
+
+- Single-line or trivial fixes
+- Tasks with explicit, detailed instructions provided by user
+- Pure research/exploration tasks (use Task tool with Explore agent)
+- Simple documentation updates
+
+### Special Mode Triggers
+
+**CRITICAL:** When user provides these specialized mode prompts, **ALWAYS enter plan mode** and adjust behavior:
+
+**1. Assistant Mode (`prompts-assistant.md`):**
+
+- Enter plan mode for collaborative planning and research
+- Focus on planning and implementation tracking (not direct implementation)
+- Use TodoWrite extensively to track the evolving plan
+- Provide feedback as direct messages, not in Linear issues
+- Be proactive about identifying problems and deviations
+- Create plan file in `~/.claude/plans/` to track the collaborative work
+
+**2. Evaluation Mode (`prompts-evaluate.md`):**
+
+- Enter plan mode for thorough analysis and assessment
+- Use Git MCP tools to review commits and diffs
+- Research and analyze the actual implementation vs. the original plan
+- Update TodoWrite plan based on actual implementation
+- Provide comprehensive feedback about what was accomplished
+- Identify deviations and ask clarifying questions
+- Document findings in the plan file
+
+**3. Linear Issue Management (`prompts-linear-kilic-dev.md`):**
+
+- Enter plan mode for research and issue structuring
+- Use Linear MCP (`linear/kilic.dev`) and GitLab MCP
+- Conduct thorough research using web search and Context7
+- Use plan file to organize research findings before creating issues
+- Follow specific issue structure guidelines
+- Create structured issues with checklists and analysis sections
+- Transfer organized research from plan to Linear issues
+
+### Plan File Location
+
+**CRITICAL:** All plan files MUST be created in `~/.claude/plans/`
+
+**Never create plan files in:**
+
+- Project directories
+- Working directory
+- Temporary locations
+
+**File naming convention:**
+
+```
+~/.claude/plans/YYYY-MM-DD-<project-name>-<descriptive-name>.md
+```
+
+**Include the project name to make plans easier to find across different projects.**
+
+**Examples:**
+
+```
+~/.claude/plans/2026-02-03-myapp-implement-auth-tokens.md
+~/.claude/plans/2026-02-03-nvim-config-refactor-plugin-system.md
+~/.claude/plans/2026-02-03-api-gateway-add-kubernetes-integration.md
+```
+
+**How to determine project name:**
+
+- Use the repository name (e.g., `nvim-config`, `my-api`)
+- Use the project directory name if no repository
+- Keep it short and lowercase with hyphens
+- Be consistent across plans for the same project
+
+### Plan Structure
+
+**Required sections in every plan:**
+
+```markdown
+# [Feature/Task Name]
+
+## Context
+
+- What problem are we solving?
+- Why is this needed?
+- Relevant background from codebase exploration
+
+## Requirements
+
+- What must the solution do?
+- What constraints exist?
+- What are the acceptance criteria?
+
+## Approach
+
+- High-level strategy
+- Key architectural decisions
+- Trade-offs considered
+
+## Implementation Steps
+
+1. [Step 1 - specific, actionable]
+2. [Step 2 - specific, actionable]
+3. ...
+
+## Files Affected
+
+- `path/to/file.ext` - what changes
+- `path/to/other.ext` - what changes
+
+## Risks and Mitigations
+
+- What could go wrong?
+- How do we address it?
+
+## Testing Strategy
+
+- How will we verify this works?
+- What test cases are needed?
+```
+
+### Planning Workflow
+
+**1. Enter Plan Mode:**
+
+```
+User: "Add user authentication with JWT tokens"
+→ Use EnterPlanMode tool
+→ System transitions to plan mode
+```
+
+**2. Explore and Research:**
+
+In plan mode, use tools to understand the codebase.
+
+**IMPORTANT:** Spend adequate time exploring. Don't rush to implementation.
+
+**3. Draft the Plan:**
+
+Write plan to `~/.claude/plans/YYYY-MM-DD-<project-name>-<name>.md`
+
+- Document findings from exploration
+- Outline clear, specific implementation steps
+- Identify all files that need changes
+- Note potential issues and solutions
+- Include architectural decisions and rationale
+
+**4. Present Plan to User:**
+
+**CRITICAL:** After drafting the plan, ALWAYS:
+
+1. **Show the complete plan to the user**
+2. **Ask for feedback and refinement**
+3. **Iterate on the plan based on user input**
+4. **Continue refining until user is satisfied**
+
+**NEVER** immediately ask to switch to coding mode after creating the plan.
+
+**Example response:**
+
+> "I've drafted an implementation plan. Here's the approach:
+>
+> [Present key points from the plan]
+>
+> Would you like me to refine any part of this plan? I can:
+>
+> - Adjust the approach
+> - Add more detail to specific steps
+> - Consider alternative strategies
+> - Clarify any unclear sections"
+
+**5. Exit Plan Mode (Only When Ready):**
+
+**ONLY** use `ExitPlanMode` when:
+
+- Plan is thoroughly refined
+- User has approved the approach
+- You feel absolutely ready to implement
+- User explicitly requests to move to implementation
+
+**Ask permission before exiting:**
+
+> "The plan is ready. Would you like me to proceed with implementation, or should we refine anything further?"
+
+**Wait for explicit approval before using ExitPlanMode.**
+
+**6. Implement from Plan:**
+
+After approval and exiting plan mode:
+
+- Follow the plan steps sequentially
+- Update plan file if you discover issues during implementation
+- Reference plan file in commits and Linear comments
+
+### Plan Updates During Implementation
+
+**When implementation reveals new information:**
+
+1. **Document the discovery** in the plan file
+2. **Update affected sections** (approach, steps, files)
+3. **Note the reason** for deviation from original plan
+4. **Continue with updated plan**
+
+**Example update:**
+
+```markdown
+## Implementation Updates
+
+### 2026-02-03 15:30
+
+Discovered existing token validation in `auth/validator.ts` that we can reuse. Updated Step 3 to integrate with existing code rather than reimplementing.
+```
+
+### Plan Mode Best Practices
+
+**DO:**
+
+- Spend adequate time exploring before planning
+- Write specific, actionable implementation steps (not vague steps like "implement the feature")
+- Document architectural decisions and rationale
+- Present plan to user and iterate based on feedback
+- Update the plan when you discover new information during implementation
+- Reference the plan file in related commits and Linear comments
+- Keep plan files in `~/.claude/plans/` for future reference
+
+**DON'T:**
+
+- Rush through planning to start coding
+- Write vague steps like "implement the feature" or "add functionality"
+- Immediately ask to switch to coding mode after drafting plan
+- Exit plan mode without user approval
+- Ignore the plan once implementation starts
+- Create plan files outside `~/.claude/plans/`
+- Delete plan files after implementation (keep for historical reference)
+- Use ExitPlanMode unless you feel absolutely ready
+
+### Quick Reference: Planning Workflow
+
+**Complete planning process:**
+
+```
+1. User requests non-trivial implementation
+2. Use EnterPlanMode tool
+3. Explore codebase thoroughly using available tools
+4. Draft detailed plan in ~/.claude/plans/YYYY-MM-DD-<project-name>-<name>.md
+5. Present plan to user
+6. Ask for feedback and refinement
+7. Iterate on plan based on user input
+8. When plan is refined and user is satisfied:
+   - Ask: "Would you like me to proceed with implementation?"
+   - Wait for approval
+9. Use ExitPlanMode (ONLY after approval)
+10. Implement following the plan step-by-step
+11. Update plan file if you discover new information
+```
+
+---
+
+## III. TOOL SELECTION PRIORITY
 
 **DECISION HIERARCHY** for choosing tools (highest priority first):
 
@@ -86,7 +359,7 @@ If preferred tool unavailable:
 
 ---
 
-## III. FILE OPERATIONS
+## IV. FILE OPERATIONS
 
 ### Reading Files
 
@@ -128,7 +401,7 @@ Follow same flow as editing:
 
 ---
 
-## IV. CODE STYLE AND COMMENTS
+## V. CODE STYLE AND COMMENTS
 
 ### General Coding Style
 
@@ -190,7 +463,7 @@ def new_function():
 
 ---
 
-## V. USER INTERACTION PATTERNS
+## VI. USER INTERACTION PATTERNS
 
 ### Handling Edit Rejections
 
@@ -256,7 +529,7 @@ If you must overwrite, explain why:
 
 ---
 
-## VI. SESSION MAINTENANCE
+## VII. SESSION MAINTENANCE
 
 ### Memory Updates
 
@@ -345,7 +618,7 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 
 ---
 
-## VII. QUICK REFERENCE
+## VIII. QUICK REFERENCE
 
 ### Common Scenarios
 
@@ -355,6 +628,19 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 1. Read memory graph
 2. Discover MCP tools
 3. Review git status and working directory
+```
+
+**User requests non-trivial implementation:**
+
+```
+1. Use EnterPlanMode
+2. Explore codebase thoroughly
+3. Draft plan in ~/.claude/plans/YYYY-MM-DD-<project>-<name>.md
+4. Present plan to user
+5. Iterate based on feedback
+6. Ask permission to proceed
+7. Use ExitPlanMode (only after approval)
+8. Implement following the plan
 ```
 
 **User asks to edit a file:**
@@ -417,3 +703,11 @@ When rules appear to conflict, follow this priority order:
 5. **Update memory** (maintain continuity)
 
 ---
+
+<claude-mem-context>
+# Recent Activity
+
+<!-- This section is auto-generated by claude-mem. Edit content outside the tags. -->
+
+*No recent activity*
+</claude-mem-context>
