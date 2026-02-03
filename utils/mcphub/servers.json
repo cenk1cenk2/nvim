@@ -124,7 +124,7 @@
       }
     },
     "kubernetes": {
-      "args": ["-y", "kubernetes-mcp-server@latest", "--config", "${HOME}/.config/nvim/utils/mcphub/kubernetes-config.toml", "--read-only"],
+      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only"],
       "autoApprove": ["get_pod", "list_pods", "get_pod_logs", "list_namespaces", "get_resource", "list_resources"],
       "command": "bunx",
       "disabled": true
