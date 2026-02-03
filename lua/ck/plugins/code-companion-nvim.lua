@@ -47,6 +47,8 @@ function M.config()
       end)
     end,
     setup = function(_, fn)
+      local instance = require("mcphub").get_hub_instance()
+
       return {
         opts = {
           log_level = require("ck.log"):to_nvim_level(),
@@ -60,19 +62,7 @@ function M.config()
                 vim.env["NVIM_CLAUDE_ACP"] = vim.env["NVIM_CLAUDE_ACP_WORK"]
               end
 
-              log:info("Setting up the AI Overlord...")
-              ---@type MCPHub.Hub|nil
-              local instance
-              local ok = vim.wait(15000, function()
-                instance = require("mcphub").get_hub_instance()
-
-                return instance ~= nil and instance:is_ready()
-              end, 250)
-              if not ok or not instance then
-                log:error("MCPHub instance not ready in time")
-              end
-              local proxy = require("mcphub.extensions.proxy").get()
-              log:info("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
+              log:debug("Setting up the AI Overlord...")
 
               return require("codecompanion.adapters").extend(
                 "claude_code",
@@ -90,7 +80,23 @@ function M.config()
                   },
                   defaults = {
                     mcpServers = {
-                      vim.tbl_extend("force", { name = "mcphub" }, proxy),
+                      function(adapter)
+                        log:info("Connecting to MCPHub...")
+
+                        local ok = vim.wait(15000, function()
+                          instance = require("mcphub").get_hub_instance()
+                          return instance ~= nil and instance:is_ready()
+                        end, 250)
+
+                        if not ok or not instance then
+                          log:warn("MCPHub instance not ready in time.")
+                        end
+
+                        local proxy = require("mcphub.extensions.proxy").get()
+                        log:debug("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
+
+                        return vim.tbl_extend("force", { name = "mcphub" }, proxy)
+                      end,
                     },
                   },
                   commands = {
