@@ -1,5 +1,12 @@
 ## Linear Issue Management Guidelines
 
+> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
+>
+> - Use `EnterPlanMode` tool immediately
+> - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`
+> - Use plan file to organize research findings before creating Linear issues
+> - Conduct thorough research using web search and Context7
+
 ### Core Requirements
 
 - **IMPORTANT!!! ALWAYS use `linear/kilic.dev` MCP and `gitlab` MCP unless PROMPTED OTHERWISE!**

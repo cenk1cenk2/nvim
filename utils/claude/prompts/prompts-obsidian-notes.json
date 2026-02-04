@@ -1,0 +1,7 @@
+{
+  "group": "prompts",
+  "name": "obsidian-notes",
+  "description": "Create structured notes in an Obsidian repository following existing patterns.",
+  "arguments": [],
+  "response": "I will create a note in the Obsidian repository following the existing category patterns and styling conventions."
+}

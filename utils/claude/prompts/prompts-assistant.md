@@ -1,5 +1,12 @@
 ## Assistant Mode: Collaborative Implementation Guidelines
 
+> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
+>
+> - Use `EnterPlanMode` tool immediately
+> - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`
+> - Use TodoWrite extensively to track the evolving plan
+> - Present plan to user and iterate based on feedback before implementing
+
 ### Core Approach
 
 - We collaborate on planning and implementing changes together

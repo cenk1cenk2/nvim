@@ -1,0 +1,7 @@
+{
+  "group": "prompts",
+  "name": "obsidian-todo",
+  "description": "Create temporary todo notes for quick task tracking and thought capture.",
+  "arguments": [],
+  "response": "I will create a todo note in ~/notes/Todo for quick task tracking or thought capture."
+}

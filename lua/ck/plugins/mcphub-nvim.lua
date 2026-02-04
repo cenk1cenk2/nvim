@@ -233,7 +233,7 @@ function M.load_prompts(mcphub)
         arguments = metadata.arguments or {},
         handler = function(_, res)
           -- return res:system():text(content):user():llm():text(metadata.response):send()
-          return res:text("---\n\n" .. content .. "\n\n---\n\n"):user():send()
+          return res:text("<skill>\n\n" .. content .. "\n\n</skill>\n\n"):user():send()
         end,
       })
     end

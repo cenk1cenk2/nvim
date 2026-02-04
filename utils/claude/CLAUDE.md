@@ -30,11 +30,6 @@
    - Understand tool capabilities for this session
    - Note any tool limitations or unavailability
 
-3. **UNDERSTAND CONTEXT** - Review the working directory and git status
-   - Current branch and recent commits
-   - File structure and language ecosystem
-   - Existing patterns and conventions
-
 ---
 
 ## II. PLANNING AND IMPLEMENTATION
@@ -62,36 +57,24 @@
 
 ### Special Mode Triggers
 
-**CRITICAL:** When user provides these specialized mode prompts, **ALWAYS enter plan mode** and adjust behavior:
+**CRITICAL:** User invokes specialized modes using the **Skill tool** (e.g., invoking `/assistant`, `/linear-kilic-dev`, `/obsidian-notes`). When a specialized mode is invoked, the corresponding prompt file from `utils/claude/prompts/` is loaded automatically. Follow the instructions at the top of that prompt file.
 
-**1. Assistant Mode (`prompts-assistant.md`):**
+**Available specialized modes:**
 
-- Enter plan mode for collaborative planning and research
-- Focus on planning and implementation tracking (not direct implementation)
-- Use TodoWrite extensively to track the evolving plan
-- Provide feedback as direct messages, not in Linear issues
-- Be proactive about identifying problems and deviations
-- Create plan file in `~/.claude/plans/` to track the collaborative work
+1. **Assistant Mode** (`prompts-assistant.md`) - Collaborative planning and implementation tracking
+2. **Evaluation Mode** (`prompts-evaluate.md`) - Progress evaluation and assessment
+3. **Linear Issue Management** (`prompts-linear-kilic-dev.md`) - Research and issue creation workflow
+4. **Obsidian Note-Taking** (`prompts-obsidian-notes.md`) - Structured note creation in ~/notes vault
+5. **Obsidian Todo Notes** (`prompts-obsidian-todo.md`) - Quick capture notes in ~/notes/Todo
 
-**2. Evaluation Mode (`prompts-evaluate.md`):**
+**Each prompt file contains:**
 
-- Enter plan mode for thorough analysis and assessment
-- Use Git MCP tools to review commits and diffs
-- Research and analyze the actual implementation vs. the original plan
-- Update TodoWrite plan based on actual implementation
-- Provide comprehensive feedback about what was accomplished
-- Identify deviations and ask clarifying questions
-- Document findings in the plan file
+- Whether to enter plan mode or not
+- Specific workflow instructions
+- Tool requirements
+- Mode-specific guidelines
 
-**3. Linear Issue Management (`prompts-linear-kilic-dev.md`):**
-
-- Enter plan mode for research and issue structuring
-- Use Linear MCP (`linear/kilic.dev`) and GitLab MCP
-- Conduct thorough research using web search and Context7
-- Use plan file to organize research findings before creating issues
-- Follow specific issue structure guidelines
-- Create structured issues with checklists and analysis sections
-- Transfer organized research from plan to Linear issues
+**Always read and follow the prompt file instructions - they are the source of truth for each mode's behavior.**
 
 ### Plan File Location
 
@@ -157,11 +140,6 @@
 2. [Step 2 - specific, actionable]
 3. ...
 
-## Files Affected
-
-- `path/to/file.ext` - what changes
-- `path/to/other.ext` - what changes
-
 ## Risks and Mitigations
 
 - What could go wrong?
@@ -185,9 +163,14 @@ User: "Add user authentication with JWT tokens"
 
 **2. Explore and Research:**
 
-In plan mode, use tools to understand the codebase.
+In plan mode, use tools to understand the codebase (see Section III for tool selection).
 
-**IMPORTANT:** Spend adequate time exploring. Don't rush to implementation.
+**IMPORTANT:** Explore until you understand:
+
+- What needs to change and why
+- Existing patterns and conventions to follow
+- All files that will be affected by the changes
+- Dependencies and potential side effects
 
 **3. Draft the Plan:**
 
@@ -210,26 +193,40 @@ Write plan to `~/.claude/plans/YYYY-MM-DD-<project-name>-<name>.md`
 
 **NEVER** immediately ask to switch to coding mode after creating the plan.
 
-**Example response:**
+**Example plan presentation (structured summary format):**
 
-> "I've drafted an implementation plan. Here's the approach:
+> "I've drafted an implementation plan. Here's the structured overview:
 >
-> [Present key points from the plan]
+> **Context:** Need to add JWT token authentication to replace session-based auth. Current system uses cookies which don't work for mobile API clients.
 >
-> Would you like me to refine any part of this plan? I can:
+> **Requirements:**
 >
-> - Adjust the approach
-> - Add more detail to specific steps
-> - Consider alternative strategies
-> - Clarify any unclear sections"
+> - Support JWT access and refresh tokens
+> - Maintain backward compatibility with existing sessions
+> - Token refresh mechanism for mobile clients
+>
+> **Approach:** Middleware-based approach using existing auth system as foundation. Add JWT validation layer that runs before session check.
+>
+> **Implementation Steps:**
+>
+> 1. Create JWT token generation utility in auth/tokens.ts
+> 2. Add token validation middleware in middleware/auth.ts
+> 3. Update login endpoint to return both session and JWT
+> 4. Add refresh endpoint at /api/auth/refresh
+> 5. Update API routes to accept Authorization header
+>
+> **Risks:** Token storage on client side, refresh token rotation complexity
+>
+> Would you like me to refine any part of this plan? I can adjust the approach, add more detail, or clarify sections."
 
 **5. Exit Plan Mode (Only When Ready):**
 
 **ONLY** use `ExitPlanMode` when:
 
-- Plan is thoroughly refined
-- User has approved the approach
-- You feel absolutely ready to implement
+- Plan has all required sections filled out
+- User has explicitly approved the approach
+- You can explain each implementation step clearly
+- You understand what files need changes and why
 - User explicitly requests to move to implementation
 
 **Ask permission before exiting:**
@@ -269,8 +266,10 @@ Discovered existing token validation in `auth/validator.ts` that we can reuse. U
 
 **DO:**
 
-- Spend adequate time exploring before planning
-- Write specific, actionable implementation steps (not vague steps like "implement the feature")
+- Explore thoroughly before planning (understand what, why, where, dependencies)
+- Write specific, actionable implementation steps with file paths and function names
+  - ✅ Good: "Create JWT token generation utility in auth/tokens.ts with generateAccessToken() and generateRefreshToken() functions"
+  - ❌ Bad: "Implement the feature" or "Add token support"
 - Document architectural decisions and rationale
 - Present plan to user and iterate based on feedback
 - Update the plan when you discover new information during implementation
@@ -326,13 +325,13 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | Documentation lookup                         | `context7`   | Need to reference official docs for libraries/frameworks             |
 | File operations                              | `neovim`     | Editing, writing, listing, finding files (see File Operations)       |
 
-### 2. Built-in Specialized Tools
+### 2. mcp**acp** Tools (Built-in MCP Tools)
 
-Use when MCP tools unavailable or task doesn't require MCP features:
+Use when MCP server tools unavailable or rejected:
 
-- **Read** - Reading file contents
-- **Edit** - Editing files (only if neovim MCP rejected or unavailable)
-- **Write** - Creating new files (only if neovim MCP rejected or unavailable)
+- **mcp**acp**Read** - Reading file contents
+- **mcp**acp**Edit** - Editing files (MUST read file first with mcp**acp**Read - see File Operations)
+- **mcp**acp**Write** - Creating new files
 - **Grep** - Text search across files
 - **Glob** - File pattern matching
 
@@ -342,9 +341,9 @@ Use when MCP tools unavailable or task doesn't require MCP features:
 
 **NEVER USE** CLI tools for operations that specialized tools handle:
 
-- ❌ `sed` or `awk` for editing - use Edit tools
-- ❌ `cat`, `head`, `tail` for reading - use Read tool
-- ❌ `echo >` or heredocs for writing - use Write tools
+- ❌ `sed` or `awk` for editing - use mcp**acp**Edit or neovim MCP
+- ❌ `cat`, `head`, `tail` for reading - use mcp**acp**Read or neovim MCP
+- ❌ `echo >` or heredocs for writing - use mcp**acp**Write or neovim MCP
 - ❌ `find` for file search - use Glob tool
 - ❌ `grep` or `rg` for text search - use Grep tool
 - ❌ Raw `git` commands - use git MCP server
@@ -363,34 +362,52 @@ If preferred tool unavailable:
 
 ### Reading Files
 
-**ALWAYS** read files before making edits.
+Reading requirements depend on which editing tool you'll use:
 
-**Priority:**
+**When using neovim MCP for editing:**
+
+- Reading first is optional (neovim MCP handles context internally)
+- Recommended to read for better understanding, but not required
+
+**When using mcp**acp**Edit for editing:**
+
+- MUST read file first using mcp**acp**Read
+- The Edit tool requires fresh context from Read to work properly
+- Read immediately before editing to ensure accurate context
+
+**Tool priority for reading:**
 
 1. `neovim` MCP - `mcp__mcphub__neovim__read_file`
-2. Built-in `Read` tool
+2. `mcp__acp__Read` - Built-in MCP read tool
 
 ### Editing Files
 
 **Edit Flow:**
 
 ```
-1. Read file first (understand context)
-2. Attempt edit with neovim MCP (mcp__mcphub__neovim__edit_file)
-3. If rejected → STOP
-4. Ask user: "The Neovim MCP adapter rejected that edit. Would you like me to try using the built-in Edit tool instead, or should I revise my approach?"
-5. Wait for explicit permission
-6. Only use built-in Edit if user approves
+1. Choose editing approach:
+   - Prefer neovim MCP (mcp__mcphub__neovim__edit_file)
+   - Fallback to mcp__acp__Edit if neovim unavailable or rejected
+
+2. If using neovim MCP:
+   - Can edit directly (reading first is optional but recommended)
+   - If rejected → STOP
+   - Ask user: "The Neovim MCP adapter rejected that edit. Would you like me to try using mcp__acp__Edit instead, or should I revise my approach?"
+   - Wait for explicit permission before trying mcp__acp__Edit
+
+3. If using mcp__acp__Edit:
+   - MUST read file first using mcp__acp__Read
+   - Use fresh context from Read for the edit
+   - The Edit tool depends on Read output for proper operation
 ```
 
-**Critical Rule:** When neovim MCP rejects an edit, do NOT automatically fall back to built-in tools. The rejection is a signal - respect it and ask for guidance.
+**Critical Rule:** When neovim MCP rejects an edit, do NOT automatically fall back to mcp**acp**Edit. The rejection is a signal - respect it and ask for guidance.
 
 ### Writing New Files
 
 Follow same flow as editing:
 
-1. Try `neovim` MCP - `mcp__mcphub__neovim__write_file`
-2. If rejected → ask permission before using built-in Write
+1. use `mcp__acp__Write` as default
 
 ### Listing and Finding Files
 
@@ -471,7 +488,7 @@ When neovim MCP adapter rejects an edit:
 
 **Response template:**
 
-> "The Neovim MCP adapter rejected that edit. Would you like me to try using the built-in Edit tool instead, or should I revise my approach?"
+> "The Neovim MCP adapter rejected that edit. Would you like me to try using mcp**acp**Edit instead, or should I revise my approach?"
 
 **Actions:**
 
@@ -495,9 +512,9 @@ When user manually modifies your changes:
 
 **Response template when you notice edits:**
 
-> "I notice you changed [specific pattern] to [user's pattern]. I'll apply this style to the remaining code."
+> "I notice you changed [specific pattern] to [user's pattern]. I'll apply this style to the remaining code and save it to memory for future sessions."
 
-**Apply learned patterns** to all subsequent code in the same session.
+**Apply learned patterns** to all subsequent code in the same session AND save to memory for future sessions (coding style patterns are usually general, not repository-specific).
 
 **NEVER overwrite** user's manual edits unless absolutely required for:
 
@@ -505,9 +522,19 @@ When user manually modifies your changes:
 - Security vulnerabilities
 - Critical breaking changes that affect functionality
 
-If you must overwrite, explain why:
+**IMPORTANT:** User may make manual changes outside of this conversation while you're working together. If you notice unexpected file state:
 
-> "I need to modify your edit at line X because [specific reason]. The current code has [specific issue]."
+- File doesn't have changes you expected to see
+- Changes you made seem to have disappeared
+- File state differs from what you remember
+
+**ALWAYS ask for confirmation before re-applying or overwriting:**
+
+> "I notice the changes in [file] don't match what I expected. The [specific change] I made earlier seems to be missing. Did you modify this file manually? Should I re-apply my changes, or would you like to keep the current version?"
+
+If you must overwrite for critical reasons, explain why:
+
+> "I need to modify the code at line X because [specific reason]. The current code has [specific issue]."
 
 ### Information Accuracy
 
@@ -533,14 +560,28 @@ If you must overwrite, explain why:
 
 ### Memory Updates
 
-**ALWAYS** update memory MCP server to track session progress.
+**Update memory MCP server to track session progress.**
 
-**When to update:**
+**When to update (batch approach with breakthrough exception):**
 
-- After completing major milestones
-- When discovering important patterns or decisions
-- When learning new project structure or conventions
-- At natural breakpoints in work
+**Periodic Batch Updates** - accumulate learnings and write at milestones:
+
+- After completing a major feature or milestone
+- At end of significant work session
+- When user pauses or switches context
+- Before ending conversation
+
+**Immediate Breakthrough Updates** - write immediately when:
+
+- Discovered existing system/pattern you didn't know about
+- Realized wrong assumption about architecture or approach
+- Found significantly better approach than originally planned
+- Learned critical pattern that fundamentally changes understanding
+- User manually corrects your mental model with important information
+
+**Example breakthrough:** You assumed database was PostgreSQL and designed SQL queries accordingly, then discovered it's actually MongoDB - update memory immediately to avoid repeating the mistake.
+
+**What to batch:** Incremental learnings like coding style patterns, small decisions, file locations - accumulate these and write periodically at milestones.
 
 **What to record:**
 
@@ -549,19 +590,28 @@ If you must overwrite, explain why:
 - Project structure insights
 - Implementation strategies
 - Issues encountered and resolutions
+- Architectural discoveries and assumptions corrected
 
 **Use:**
 
-It is very IMPORTANT to use the following memory MCP tools for understanding what we are working with and keeping track of important information:
+**Two memory systems are available:**
 
-- `mcp__plugin_claude-mem_mcp-search____IMPORTANT` - Key observations
-- `mcp__plugin_claude-mem_mcp-search__search` - Search for existing entities before creating new ones
-- `mcp__plugin_claude-mem_mcp-search__timeline` - Timeline of significant events
-- `mcp__plugin_claude-mem_mcp-search__get_observations` - Retrieve past observations for context
+**1. claude-mem (Automatic - Claude Code Plugin):**
 
-- `mcp__mcphub__memory__create_entities` - New concepts/components
-- `mcp__mcphub__memory__add_observations` - Updates to existing entities
-- `mcp__mcphub__memory__create_relations` - Relationships between entities
+- `mcp__plugin_claude-mem_mcp-search____IMPORTANT` - Key observations (auto-generated)
+- `mcp__plugin_claude-mem_mcp-search__search` - Search existing observations
+- `mcp__plugin_claude-mem_mcp-search__timeline` - Timeline of events
+- `mcp__plugin_claude-mem_mcp-search__get_observations` - Retrieve past observations
+- **When to use:** Read context automatically provided by the system
+- **Nature:** Provides rich automatic context about recent work
+
+**2. mcphub memory (Manual - Knowledge Graph):**
+
+- `mcp__mcphub__memory__create_entities` - Create new concepts/components
+- `mcp__mcphub__memory__add_observations` - Add observations to entities
+- `mcp__mcphub__memory__create_relations` - Create relationships between entities
+- **When to use:** Manually store important learnings, patterns, architectural decisions
+- **Nature:** Generic knowledge graph for structured information (similar to a graph database)
 
 ### Project Management Integration
 
@@ -575,7 +625,7 @@ It is very IMPORTANT to use the following memory MCP tools for understanding wha
 
 **Example:**
 
-> ✅ "Refactored authentication to use token-based flow with refresh mechanism"
+> ✅ "refactored authentication to use token-based flow with refresh mechanism"
 >
 > ❌ "Updated auth.py, token.py, and middleware.py to add new authentication code"
 
@@ -593,15 +643,13 @@ It is very IMPORTANT to use the following memory MCP tools for understanding wha
 <type>(<scope>): <brief description>
 
 <detailed body if necessary>
-
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 ```
 
 **Types:** feat, fix, docs, style, refactor, test, chore
 
 **Brief description:**
 
-- Be concise (under 72 characters)
+- Be concise
 - Use imperative mood ("add" not "added")
 - Don't end with period
 
@@ -612,8 +660,6 @@ feat(auth): implement token refresh mechanism
 
 Add automatic token refresh using refresh tokens stored in httpOnly cookies.
 Handles token expiration gracefully with retry logic.
-
-Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 ```
 
 ---
@@ -646,11 +692,12 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 **User asks to edit a file:**
 
 ```
-1. Read file with neovim MCP or Read tool
-2. Understand context and existing patterns
-3. Check for comment style (add if file has comments)
-4. Make edit with neovim MCP
-5. If rejected → ask permission for fallback
+1. Choose tool: prefer neovim MCP, fallback to mcp__acp__Edit
+2. If using neovim MCP: can edit directly (optional to read first)
+3. If using mcp__acp__Edit: MUST read file first with mcp__acp__Read
+4. Understand context and existing patterns (comment style, conventions)
+5. Make the edit
+6. If neovim MCP rejected → ask permission to try mcp__acp__Edit
 ```
 
 **User asks for information you don't know:**
@@ -697,10 +744,14 @@ Co-Authored-By: Claude Sonnet 4.5 <noreply@anthropic.com>
 When rules appear to conflict, follow this priority order:
 
 1. **Never fabricate information** (highest priority)
-2. **Never overwrite user edits** (unless critical)
-3. **Use preferred tools** (but degrade gracefully if unavailable)
-4. **Follow coding style** (match project patterns)
-5. **Update memory** (maintain continuity)
+2. **User explicit instructions** - when user contradicts these guidelines, always ask for confirmation first
+   - Example: User says "skip plan mode" for non-trivial task
+   - Response: "I notice this task involves [reasons why plan mode would help]. The guidelines recommend plan mode for this. Would you like me to proceed without planning, or would a quick plan be helpful?"
+   - Wait for confirmation before proceeding against guidelines
+3. **Never overwrite user edits** (unless critical for security/functionality)
+4. **Use preferred tools** (but degrade gracefully if unavailable)
+5. **Follow coding style** (match project patterns)
+6. **Update memory** (maintain continuity)
 
 ---
 
@@ -709,5 +760,12 @@ When rules appear to conflict, follow this priority order:
 
 <!-- This section is auto-generated by claude-mem. Edit content outside the tags. -->
 
-*No recent activity*
+### Feb 4, 2026
+
+| ID   | Time    | T   | Title                                                                  | Read |
+| ---- | ------- | --- | ---------------------------------------------------------------------- | ---- |
+| #638 | 1:50 AM | 🟣  | Added memory persistence requirement for learned coding style patterns | ~318 |
+| #628 | 1:42 AM | 🟣  | Clarified file reading requirements based on editing tool context      | ~387 |
+| #627 | "       | ✅  | Updated CLI prohibition list with specific mcp**acp** tool names       | ~329 |
+
 </claude-mem-context>

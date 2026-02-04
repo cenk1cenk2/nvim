@@ -1,5 +1,12 @@
 ## Assistant Mode: Progress Evaluation
 
+> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
+>
+> - Use `EnterPlanMode` tool immediately
+> - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`
+> - Use plan file to document analysis and findings
+> - Update TodoWrite plan based on actual implementation discovered
+
 ### Context
 
 - This is invoked during Assistant Mode when switching from planning/discussion to evaluation
