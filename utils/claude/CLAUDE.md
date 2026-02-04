@@ -586,22 +586,22 @@ If you must overwrite for critical reasons, explain why:
 
 **Two memory systems are available:**
 
-**1. claude-mem (Automatic - Claude Code Plugin):**
-
-- `mcp__plugin_claude-mem_mcp-search____IMPORTANT` - Key observations (auto-generated)
-- `mcp__plugin_claude-mem_mcp-search__search` - Search existing observations
-- `mcp__plugin_claude-mem_mcp-search__timeline` - Timeline of events
-- `mcp__plugin_claude-mem_mcp-search__get_observations` - Retrieve past observations
-- **When to use:** Read context automatically provided by the system
-- **Nature:** Provides rich automatic context about recent work
-
-**2. mcphub memory (Manual - Knowledge Graph):**
+**1. mcphub memory (Manual - Knowledge Graph):**
 
 - `mcp__mcphub__memory__create_entities` - Create new concepts/components
 - `mcp__mcphub__memory__add_observations` - Add observations to entities
 - `mcp__mcphub__memory__create_relations` - Create relationships between entities
 - **When to use:** Manually store important learnings, patterns, architectural decisions
 - **Nature:** Generic knowledge graph for structured information (similar to a graph database)
+
+**2. claude-mem (Automatic - Claude Code Plugin):**
+
+- `mcp__plugin_claude-mem_mcp-search____IMPORTANT` - Key observations (auto-generated)
+- `mcp__plugin_claude-mem_mcp-search__search` - Search existing observations
+- `mcp__plugin_claude-mem_mcp-search__timeline` - Timeline of events
+- `mcp__plugin_claude-mem_mcp-search__get_observations` - Retrieve past observations
+- **When to use:** Context is automatically read during session start, but you can refer to findings at any given time
+- **Nature:** Provides rich automatic context about recent work
 
 ### Project Management Integration
 
