@@ -371,6 +371,8 @@ Reading requirements depend on which editing tool you'll use:
 1. `neovim` MCP - `mcp__mcphub__neovim__read_file`
 2. `mcp__acp__Read` - Built-in MCP read tool
 
+**If you think the file is not found at the expected location please search the repository for it because it might be renamed, moved or combined with something else. Do not assume that file that you expect is failed to create in a prior edit. Ask if unsure and can not find it.**
+
 ### Editing Files
 
 **Edit Flow:**
