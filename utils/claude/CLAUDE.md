@@ -29,6 +29,7 @@
    - Check which tools are loaded (neovim, cclsp, treesitter, git, etc.)
    - Understand tool capabilities for this session
    - Note any tool limitations or unavailability
+   - **If tools are unavailable, silently skip and continue** - tools may not always be loaded
 
 ---
 
@@ -43,7 +44,7 @@
 - Implementing new features or significant functionality
 - Making architectural changes or refactoring
 - Task has multiple valid approaches or unclear requirements
-- Changes will span across the whole code base with multiple files
+- Changes will span multiple files across different areas (5-10+ files typically)
 - User's request requires exploration before implementation
 - You would normally ask clarifying questions about approach
 - **User invokes specialized mode prompts** (see Special Mode Triggers below)
@@ -405,9 +406,12 @@ Reading requirements depend on which editing tool you'll use:
 
 ### Writing New Files
 
-Follow same flow as editing:
+**Always use `mcp__acp__Write` for creating new files.**
 
-1. use `mcp__acp__Write` as default
+Writing is different from editing - go directly to the built-in tool:
+
+1. Use `mcp__acp__Write` to create new files
+2. Do not attempt neovim MCP for writing (unlike editing where neovim is preferred)
 
 ### Listing and Finding Files
 
@@ -671,8 +675,8 @@ Handles token expiration gracefully with retry logic.
 **Starting a new session:**
 
 ```
-1. Read memory graph
-2. Discover MCP tools
+1. Read memory graph (skip silently if unavailable)
+2. Discover MCP tools (skip silently if unavailable)
 3. Review git status and working directory
 ```
 
@@ -762,10 +766,9 @@ When rules appear to conflict, follow this priority order:
 
 ### Feb 4, 2026
 
-| ID   | Time    | T   | Title                                                                  | Read |
-| ---- | ------- | --- | ---------------------------------------------------------------------- | ---- |
-| #638 | 1:50 AM | 🟣  | Added memory persistence requirement for learned coding style patterns | ~318 |
-| #628 | 1:42 AM | 🟣  | Clarified file reading requirements based on editing tool context      | ~387 |
-| #627 | "       | ✅  | Updated CLI prohibition list with specific mcp**acp** tool names       | ~329 |
-
+| ID | Time | T | Title | Read |
+|----|------|---|-------|------|
+| #638 | 1:50 AM | 🟣 | Added memory persistence requirement for learned coding style patterns | ~318 |
+| #628 | 1:42 AM | 🟣 | Clarified file reading requirements based on editing tool context | ~387 |
+| #627 | " | ✅ | Updated CLI prohibition list with specific mcp__acp__ tool names | ~329 |
 </claude-mem-context>
