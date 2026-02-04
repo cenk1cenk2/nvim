@@ -6,6 +6,13 @@
 > - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`
 > - Use plan file to organize research findings before creating Linear issues
 > - Conduct thorough research using web search and Context7
+>
+> **CRITICAL: This is a research and issue creation workflow ONLY.**
+>
+> - Do NOT implement or write code unless explicitly requested by the user
+> - Do NOT exit plan mode and start implementation automatically
+> - After creating the Linear issue(s), present the results and wait for user direction
+> - The goal is to research, plan, and document - NOT to implement
 
 ### Core Requirements
 

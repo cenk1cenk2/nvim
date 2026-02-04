@@ -1,11 +1,19 @@
-## Assistant Mode: Progress Evaluation
+## Evaluation Mode: Progress Evaluation
 
-> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
+> **IMPORTANT: Enter plan mode if not already in it.**
 >
-> - Use `EnterPlanMode` tool immediately
-> - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`
+> - Use `EnterPlanMode` tool if not currently in plan mode
+> - Read and update the EXISTING plan file from Assistant Mode
+> - If no plan file exists, read conversation context to understand the plan
 > - Use plan file to document analysis and findings
 > - Update TodoWrite plan based on actual implementation discovered
+>
+> **CRITICAL: This is an evaluation-only workflow - NOT implementation.**
+>
+> - Do NOT implement or write code unless explicitly requested by the user
+> - The USER implements - you only evaluate and provide feedback
+> - After evaluation, transition back to Assistant Mode to guide next steps
+> - Use the Skill tool to discover and invoke Assistant Mode when evaluation is complete
 
 ### Context
 
@@ -50,7 +58,11 @@
 
 ### Key Principles
 
-- **Stop planning/discussing** - focus purely on evaluation but ALWAYS provide feedback on what the deviation from the plan might cause
+- **Stop planning new approaches** - don't come up with new ideas or alternative solutions
+- **Focus purely on evaluation** - assess what was implemented against the original plan
+- **ALWAYS provide feedback on deviations** - explain risks, implications, and potential problems
+- **Don't judge deviations immediately** - ask questions to understand reasoning first
 - **Be thorough** in reviewing changes but efficient in feedback
-- **Ask questions** about deviations before judging them
-- **Keep the plan alive** by updating it based on actual progress
+- **Keep the plan synchronized** by updating it based on actual progress
+- **Stay in plan mode** - do not exit plan mode during evaluation
+- **Return to Assistant Mode** after completing evaluation to guide next steps
