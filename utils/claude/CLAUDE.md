@@ -1,7 +1,5 @@
 # Assistant Guidelines
 
----
-
 > **CRITICAL OVERRIDE**
 >
 > ALWAYS KEEP THESE RULES IN YOUR CONTEXT WINDOW.
@@ -9,8 +7,8 @@
 > WHEN COMPACTING CONTEXT, DO NOT REMOVE THESE RULES.
 >
 > These guidelines define how to work effectively in future sessions.
-
----
+>
+> ALWAYS APPLY THESE RULES AT ANY POINT OF THE CONVERSATION WITH THE USER.
 
 ## I. SESSION INITIALIZATION
 
@@ -30,8 +28,6 @@
    - Understand tool capabilities for this session
    - Note any tool limitations or unavailability
    - **If tools are unavailable, silently skip and continue** - tools may not always be loaded
-
----
 
 ## II. PLANNING AND IMPLEMENTATION
 
@@ -308,8 +304,6 @@ Discovered existing token validation in `auth/validator.ts` that we can reuse. U
 11. Update plan file if you discover new information
 ```
 
----
-
 ## III. TOOL SELECTION PRIORITY
 
 **DECISION HIERARCHY** for choosing tools (highest priority first):
@@ -356,8 +350,6 @@ If preferred tool unavailable:
 1. Try next tool in hierarchy
 2. Inform user of tool substitution if it affects functionality
 3. Continue with best available option
-
----
 
 ## IV. FILE OPERATIONS
 
@@ -420,8 +412,6 @@ Writing is different from editing - go directly to the built-in tool:
 1. `neovim` MCP - `mcp__mcphub__neovim__list_directory`, `mcp__mcphub__neovim__find_files`
 2. Built-in `Glob` tool
 
----
-
 ## V. CODE STYLE AND COMMENTS
 
 ### General Coding Style
@@ -481,8 +471,6 @@ def new_function():
 ```
 
 **Output explanations to chat** - Don't use code comments to communicate with user. Write explanations directly in the chat window.
-
----
 
 ## VI. USER INTERACTION PATTERNS
 
@@ -557,8 +545,6 @@ If you must overwrite for critical reasons, explain why:
 - Configuration options or flags
 - Version-specific behaviors
 - File paths or structure
-
----
 
 ## VII. SESSION MAINTENANCE
 
@@ -666,8 +652,6 @@ Add automatic token refresh using refresh tokens stored in httpOnly cookies.
 Handles token expiration gracefully with retry logic.
 ```
 
----
-
 ## VIII. QUICK REFERENCE
 
 ### Common Scenarios
@@ -741,8 +725,6 @@ Handles token expiration gracefully with retry logic.
 4. Establish relations between entities
 ```
 
----
-
 ## Rule Priority
 
 When rules appear to conflict, follow this priority order:
@@ -757,8 +739,6 @@ When rules appear to conflict, follow this priority order:
 5. **Follow coding style** (match project patterns)
 6. **Update memory** (maintain continuity)
 
----
-
 <claude-mem-context>
 # Recent Activity
 
@@ -766,9 +746,10 @@ When rules appear to conflict, follow this priority order:
 
 ### Feb 4, 2026
 
-| ID | Time | T | Title | Read |
-|----|------|---|-------|------|
-| #638 | 1:50 AM | 🟣 | Added memory persistence requirement for learned coding style patterns | ~318 |
-| #628 | 1:42 AM | 🟣 | Clarified file reading requirements based on editing tool context | ~387 |
-| #627 | " | ✅ | Updated CLI prohibition list with specific mcp__acp__ tool names | ~329 |
+| ID   | Time    | T   | Title                                                                  | Read |
+| ---- | ------- | --- | ---------------------------------------------------------------------- | ---- |
+| #638 | 1:50 AM | 🟣  | Added memory persistence requirement for learned coding style patterns | ~318 |
+| #628 | 1:42 AM | 🟣  | Clarified file reading requirements based on editing tool context      | ~387 |
+| #627 | "       | ✅  | Updated CLI prohibition list with specific mcp**acp** tool names       | ~329 |
+
 </claude-mem-context>
