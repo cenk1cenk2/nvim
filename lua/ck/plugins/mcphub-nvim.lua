@@ -148,8 +148,6 @@ function M.config()
           return res:text("Successfully opened in Obsidian: " .. url):send()
         end,
       })
-
-      M.load_prompts(mcphub)
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
@@ -173,71 +171,6 @@ function M.config()
       }
     end,
   })
-end
-
----Load a prompt from the prompts directory
----@param name string The base name of the prompt (e.g., "prompts-assistant")
----@return table|nil metadata The loaded metadata or nil if not found
----@return string|nil content The markdown content or nil if not found
----@return string|nil error Error message if loading failed
-function M.load_prompt(name)
-  local prompts_dir = join_paths(get_config_dir(), "utils", "claude", "prompts")
-
-  local json_path = vim.fs.joinpath(prompts_dir, name .. ".json")
-  local md_path = vim.fs.joinpath(prompts_dir, name .. ".md")
-
-  if vim.fn.filereadable(json_path) == 0 then
-    return nil, nil, string.format("JSON metadata file not found: %s", json_path)
-  end
-
-  if vim.fn.filereadable(md_path) == 0 then
-    return nil, nil, string.format("Markdown content file not found: %s", md_path)
-  end
-
-  local json_content = vim.fn.readfile(json_path)
-  local ok, metadata = pcall(vim.json.decode, table.concat(json_content, "\n"))
-  if not ok then
-    return nil, nil, string.format("Failed to parse JSON metadata: %s", metadata)
-  end
-
-  local md_content = vim.fn.readfile(md_path)
-  local content = table.concat(md_content, "\n")
-
-  return metadata, content, nil
-end
-
----Load all prompts and register them with mcphub
----@param mcphub table The mcphub module
-function M.load_prompts(mcphub)
-  local async = require("plenary.async")
-
-  async.run(function()
-    local config_dir = vim.fn.stdpath("config")
-    local prompts_dir = vim.fs.joinpath(config_dir, "utils", "claude", "prompts")
-
-    local json_files = vim.fn.glob(vim.fs.joinpath(prompts_dir, "*.json"), false, true)
-
-    for _, json_path in ipairs(json_files) do
-      local prompt_name = vim.fn.fnamemodify(json_path, ":t:r")
-
-      local metadata, content, err = M.load_prompt(prompt_name)
-      if err then
-        error(string.format("Failed to load prompt '%s': %s", prompt_name, err), vim.log.levels.ERROR)
-      elseif not metadata or not content then
-        error(string.format("No metadata found for prompt '%s'", prompt_name), vim.log.levels.ERROR)
-      end
-
-      mcphub.add_prompt(metadata.group, {
-        name = metadata.name,
-        description = metadata.description,
-        arguments = metadata.arguments or {},
-        handler = function(_, res)
-          -- return res:system():text(content):user():llm():text(metadata.response):send()
-          return res:text("<skill>\n\n" .. content .. "\n\n</skill>\n\n"):user():send()
-        end,
-      })
-    end
-  end, nil)
 end
 
 return M

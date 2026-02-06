@@ -1,7 +1,0 @@
-{
-  "group": "prompts",
-  "name": "assistant",
-  "description": "Plan and track changes through an assistant.",
-  "arguments": [],
-  "response": "I will assist in planning and tracking the changes needed for the project."
-}

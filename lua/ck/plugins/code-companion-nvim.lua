@@ -111,7 +111,6 @@ function M.config()
           claude = {
             description = "Rules files for Claude Code users",
             files = {
-              { path = "~/.config/nvim/utils/claude/CLAUDE.md", parser = "claude" },
               { path = "~/.claude/CLAUDE.md", parser = "claude" },
               { path = "CLAUDE.md", parser = "claude" },
               { path = "AGENTS.md" },
