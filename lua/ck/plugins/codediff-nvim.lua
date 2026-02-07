@@ -10,7 +10,8 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        "esmuellert/codediff.nvim",
+        -- "esmuellert/codediff.nvim",
+        dir = "~/development/codediff.nvim",
         dependencies = { "MunifTanjim/nui.nvim" },
         cmd = { "CodeDiff" },
       }
@@ -140,7 +141,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.GIT, "A" }),
           function()
-            vim.cmd([[CodeDiff history HEAD %]])
+            vim.cmd([[CodeDiff history % --base WORKING]])
           end,
           desc = "buffer commits [HEAD]",
           mode = { "n", "v" },
@@ -169,7 +170,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.GIT, "W" }),
           function()
-            vim.cmd([[CodeDiff history HEAD]])
+            vim.cmd([[CodeDiff history --base WORKING]])
           end,
           desc = "workspace commits [HEAD]",
         },
@@ -224,7 +225,7 @@ function M.compare_with_branch()
     log:info("Comparing with branch: %s", branch)
     shada.set(store_key, branch)
 
-    vim.cmd(":CodeDiff " .. branch)
+    vim.cmd(":CodeDiff " .. branch .. "...")
   end)
 end
 
@@ -246,7 +247,7 @@ function M.compare_buffer_with_branch()
     log:info("Comparing buffer with branch: %s -> %s", require("ck.utils.fs").get_project_buffer_filepath(), branch)
     shada.set(store_key, branch)
 
-    vim.cmd(":CodeDiff file " .. branch)
+    vim.cmd(":CodeDiff file " .. branch .. "...")
   end)
 end
 
