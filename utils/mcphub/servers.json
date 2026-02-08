@@ -165,7 +165,7 @@
       "headers": {
         "Authorization": "Bearer ${NVIM_LINEAR_WORK}"
       },
-      "url": "https://mcp.linear.app/sse"
+      "url": "https://mcp.linear.app/mcp"
     },
     "memory": {
       "args": ["-y", "@modelcontextprotocol/server-memory@latest"],
