@@ -1,8 +1,15 @@
 {
   "mcpServers": {
     "cclsp": {
-      "args": ["-y", "cclsp@latest"],
-      "autoApprove": ["find_definition", "find_references", "get_diagnostics"],
+      "args": [
+        "-y",
+        "cclsp@latest"
+      ],
+      "autoApprove": [
+        "find_definition",
+        "find_references",
+        "get_diagnostics"
+      ],
       "command": "bunx",
       "disabled": true,
       "env": {
@@ -10,19 +17,31 @@
       }
     },
     "context7": {
-      "autoApprove": ["get-library-docs", "resolve-library-id", "query-docs"],
+      "autoApprove": [
+        "get-library-docs",
+        "resolve-library-id",
+        "query-docs"
+      ],
       "headers": {
         "CONTEXT7_API_KEY": "${NVIM_CONTEXT7}"
       },
       "url": "https://mcp.context7.com/mcp"
     },
     "fetch": {
-      "args": ["mcp-server-fetch@latest"],
-      "autoApprove": ["fetch"],
+      "args": [
+        "mcp-server-fetch@latest"
+      ],
+      "autoApprove": [
+        "fetch"
+      ],
       "command": "uvx"
     },
     "filesystem": {
-      "args": ["-y", "@modelcontextprotocol/server-filesystem@latest", "${CWD}"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem@latest",
+        "${CWD}"
+      ],
       "autoApprove": [
         "directory_tree",
         "get_file_info",
@@ -36,11 +55,22 @@
         "read_text_file"
       ],
       "command": "bunx",
-      "disabled_tools": ["write_file"]
+      "disabled_tools": [
+        "write_file"
+      ]
     },
     "git": {
-      "args": ["mcp-server-git@latest"],
-      "autoApprove": ["git_diff", "git_diff_staged", "git_diff_unstaged", "git_log", "git_show", "git_status"],
+      "args": [
+        "mcp-server-git@latest"
+      ],
+      "autoApprove": [
+        "git_diff",
+        "git_diff_staged",
+        "git_diff_unstaged",
+        "git_log",
+        "git_show",
+        "git_status"
+      ],
       "command": "uvx"
     },
     "github": {
@@ -78,7 +108,10 @@
       "url": "https://api.githubcopilot.com/mcp/"
     },
     "gitlab": {
-      "args": ["-y", "@zereight/mcp-gitlab"],
+      "args": [
+        "-y",
+        "@zereight/mcp-gitlab"
+      ],
       "autoApprove": [
         "get_branch_diffs",
         "get_commit",
@@ -124,8 +157,19 @@
       }
     },
     "kubernetes": {
-      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only"],
-      "autoApprove": ["get_pod", "list_pods", "get_pod_logs", "list_namespaces", "get_resource", "list_resources"],
+      "args": [
+        "-y",
+        "kubernetes-mcp-server@latest",
+        "--read-only"
+      ],
+      "autoApprove": [
+        "get_pod",
+        "list_pods",
+        "get_pod_logs",
+        "list_namespaces",
+        "get_resource",
+        "list_resources"
+      ],
       "command": "bunx",
       "disabled": true
     },
@@ -168,7 +212,10 @@
       "url": "https://mcp.linear.app/mcp"
     },
     "memory": {
-      "args": ["-y", "@modelcontextprotocol/server-memory@latest"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory@latest"
+      ],
       "autoApprove": [
         "create_relations",
         "delete_entities",
@@ -186,8 +233,20 @@
       }
     },
     "nvim": {
-      "args": ["-y", "mcp-neovim-server@latest"],
-      "autoApprove": ["vim_buffer", "vim_buffer_switch", "vim_file_open", "vim_fold", "vim_grep", "vim_jump", "vim_search", "vim_status"],
+      "args": [
+        "-y",
+        "mcp-neovim-server@latest"
+      ],
+      "autoApprove": [
+        "vim_buffer",
+        "vim_buffer_switch",
+        "vim_file_open",
+        "vim_fold",
+        "vim_grep",
+        "vim_jump",
+        "vim_search",
+        "vim_status"
+      ],
       "command": "bunx",
       "disabled": false,
       "env": {
@@ -196,8 +255,15 @@
       }
     },
     "obsidian": {
-      "args": ["-y", "obsidian-mcp-server@latest"],
-      "autoApprove": ["obsidian_global_search", "obsidian_list_notes", "obsidian_read_note"],
+      "args": [
+        "-y",
+        "obsidian-mcp-server@latest"
+      ],
+      "autoApprove": [
+        "obsidian_global_search",
+        "obsidian_list_notes",
+        "obsidian_read_note"
+      ],
       "command": "bunx",
       "env": {
         "OBSIDIAN_API_KEY": "${NVIM_OBSIDIAN}",
@@ -207,13 +273,37 @@
       }
     },
     "sequentialthinking": {
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking@latest"],
-      "autoApprove": ["sequentialthinking"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking@latest"
+      ],
+      "autoApprove": [
+        "sequentialthinking"
+      ],
       "command": "bunx",
       "disabled": false
     },
+    "tmux": {
+      "args": [
+        "-y",
+        "tmux-mcp",
+        "--shell-type=zsh"
+      ],
+      "autoApprove": [
+        "get-command-result"
+      ],
+      "command": "bunx",
+      "disabled_tools": [
+        "kill-window",
+        "kill-session",
+        "kill-pane",
+        "create-session"
+      ]
+    },
     "treesitter": {
-      "args": ["mcp-server-tree-sitter@latest"],
+      "args": [
+        "mcp-server-tree-sitter@latest"
+      ],
       "autoApprove": [
         "check_language_available",
         "configure",
@@ -244,14 +334,24 @@
   },
   "nativeMCPServers": {
     "browser": {
-      "autoApprove": ["open_in_browser", "open_in_obsidian"],
+      "autoApprove": [
+        "open_in_browser",
+        "open_in_obsidian"
+      ],
       "disabled_tools": []
     },
     "mcphub": {
-      "autoApprove": ["get_current_servers"]
+      "autoApprove": [
+        "get_current_servers"
+      ]
     },
     "neovim": {
-      "autoApprove": ["find_files", "list_directory", "read_file", "read_multiple_files"],
+      "autoApprove": [
+        "find_files",
+        "list_directory",
+        "read_file",
+        "read_multiple_files"
+      ],
       "disabled": false,
       "disabled_tools": []
     }
