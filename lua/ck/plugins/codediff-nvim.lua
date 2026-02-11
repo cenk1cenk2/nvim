@@ -11,7 +11,7 @@ function M.config()
       ---@type Plugin
       return {
         -- "esmuellert/codediff.nvim",
-        dir = "~/development/codediff.nvim",
+        -- dir = "~/development/codediff.nvim",
         dependencies = { "MunifTanjim/nui.nvim" },
         cmd = { "CodeDiff" },
       }

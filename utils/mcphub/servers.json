@@ -34,7 +34,8 @@
       "autoApprove": [
         "fetch"
       ],
-      "command": "uvx"
+      "command": "uvx",
+      "disabled": true
     },
     "filesystem": {
       "args": [
@@ -56,7 +57,9 @@
       ],
       "command": "bunx",
       "disabled_tools": [
-        "write_file"
+        "write_file",
+        "edit_file",
+        "list_directory_with_sizes"
       ]
     },
     "git": {
@@ -71,7 +74,15 @@
         "git_show",
         "git_status"
       ],
-      "command": "uvx"
+      "command": "uvx",
+      "disabled_tools": [
+        "git_add",
+        "git_branch",
+        "git_checkout",
+        "git_commit",
+        "git_create_branch",
+        "git_reset"
+      ]
     },
     "github": {
       "autoApprove": [
@@ -101,6 +112,17 @@
         "request_copilot_review"
       ],
       "disabled": false,
+      "disabled_tools": [
+        "assign_copilot_to_issue",
+        "create_branch",
+        "create_or_update_file",
+        "create_repository",
+        "delete_file",
+        "fork_repository",
+        "get_label",
+        "get_team_members",
+        "merge_pull_request"
+      ],
       "headers": {
         "Authorization": "Bearer ${NVIM_GITHUB}",
         "X-MCP-Insiders": "true"
@@ -150,6 +172,10 @@
         "mr_discussions"
       ],
       "command": "npx",
+      "disabled_tools": [
+        "download_attachment",
+        "download_release_asset"
+      ],
       "env": {
         "GITLAB_API_URL": "https://gitlab.kilic.dev/api/v4/",
         "GITLAB_PERSONAL_ACCESS_TOKEN": "${NVIM_GITLAB}",
@@ -248,7 +274,7 @@
         "vim_status"
       ],
       "command": "bunx",
-      "disabled": false,
+      "disabled": true,
       "env": {
         "ALLOW_SHELL_COMMANDS": "true",
         "NVIM_SOCKET_PATH": "${NVIM}"
@@ -290,7 +316,10 @@
         "--shell-type=zsh"
       ],
       "autoApprove": [
-        "get-command-result"
+        "get-command-result",
+        "list-panes",
+        "list-sessions",
+        "list-windows"
       ],
       "command": "bunx",
       "disabled_tools": [
@@ -324,7 +353,17 @@
         "list_query_templates_tool",
         "run_query"
       ],
-      "command": "uvx"
+      "command": "uvx",
+      "disabled_tools": [
+        "analyze_complexity",
+        "analyze_project",
+        "adapt_query",
+        "build_query",
+        "clear_cache",
+        "diagnose_config",
+        "register_project_tool",
+        "remove_project_tool"
+      ]
     },
     "vectorcode": {
       "args": [],
