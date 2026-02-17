@@ -11,7 +11,7 @@ function M.config()
       ---@type Plugin
       return {
         "esmuellert/codediff.nvim",
-        -- dir = "~/development/codediff.nvim",
+        dir = "~/development/codediff.nvim",
         dependencies = { "MunifTanjim/nui.nvim" },
         cmd = { "CodeDiff" },
       }
@@ -75,6 +75,7 @@ function M.config()
           hide_merge_artifacts = false,
           original_position = "left",
           conflict_ours_position = "right",
+          conflict_result_position = "center",
         },
         explorer = {
           position = "left",
