@@ -157,19 +157,21 @@ function M.config()
           },
         },
         rules = {
-          claude = {
-            description = "Rules files for Claude Code users",
+          agents = {
+            description = "Rules files for agent workflows",
             files = {
+              { path = "~/.config/nvim/utils/agents/AGENTS.md" },
+              { path = "AGENTS.md" },
+              { path = "AGENTS.local.md" },
               { path = "~/.claude/CLAUDE.md", parser = "claude" },
               { path = "CLAUDE.md", parser = "claude" },
-              { path = "AGENTS.md" },
               { path = "CLAUDE.local.md", parser = "claude" },
             },
           },
           opts = {
             chat = {
               enabled = true,
-              autoload = "claude",
+              autoload = "agents",
             },
           },
         },

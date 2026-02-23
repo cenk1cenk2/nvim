@@ -148,6 +148,7 @@ function M.config()
           return res:text("Successfully opened in Obsidian: " .. url):send()
         end,
       })
+      M.register_agent_skills()
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
@@ -171,6 +172,146 @@ function M.config()
       }
     end,
   })
+end
+
+function M.agent_skills_dir()
+  return join_paths(get_config_dir(), "utils/agents/skills")
+end
+
+---@param content string
+---@param fallback_name string
+---@return {name:string, description:string, body:string, frontmatter:table<string,string>}
+function M.parse_skill_markdown(content, fallback_name)
+  local lines = vim.split(content, "\n", { plain = true })
+  local frontmatter = {}
+  local body_start = 1
+
+  if lines[1] == "---" then
+    local end_idx = nil
+    for i = 2, #lines do
+      if lines[i] == "---" then
+        end_idx = i
+        break
+      end
+
+      local key, value = lines[i]:match("^([%w_%-]+):%s*(.*)$")
+      if key then
+        value = value:gsub("^['\"]", ""):gsub("['\"]$", "")
+        frontmatter[key] = value
+      end
+    end
+
+    if end_idx ~= nil then
+      body_start = end_idx + 1
+    end
+  end
+
+  local body_lines = {}
+  for i = body_start, #lines do
+    table.insert(body_lines, lines[i])
+  end
+
+  local name = frontmatter.name or fallback_name
+  local description = frontmatter.description or ("Guidance for " .. name)
+  local body = vim.trim(table.concat(body_lines, "\n"))
+
+  return {
+    name = name,
+    description = description,
+    body = body,
+    frontmatter = frontmatter,
+  }
+end
+
+---@param dir string|nil
+---@return table[]
+function M.load_agent_skills(dir)
+  local skills = {}
+  local skill_dir = dir or M.agent_skills_dir()
+
+  if vim.fn.isdirectory(skill_dir) == 0 then
+    return skills
+  end
+
+  local files = vim.fn.glob(join_paths(skill_dir, "*/SKILL.md"), false, true)
+  table.sort(files)
+
+  for _, file in ipairs(files) do
+    local file_content = vim.fn.readfile(file)
+    if file_content and #file_content > 0 then
+      local fallback_name = vim.fn.fnamemodify(file, ":h:t")
+      local parsed = M.parse_skill_markdown(table.concat(file_content, "\n"), fallback_name)
+      if parsed.name ~= "" and parsed.description ~= "" and parsed.body ~= "" then
+        table.insert(skills, parsed)
+      end
+    end
+  end
+
+  return skills
+end
+
+function M.register_agent_skills()
+  if M._agent_skills_registered then
+    return
+  end
+
+  local mcphub = require("mcphub")
+  local skills = M.load_agent_skills()
+
+  local function xml_escape(value)
+    if value == nil then
+      return ""
+    end
+
+    local s = tostring(value)
+    s = s:gsub("&", "&amp;")
+    s = s:gsub("<", "&lt;")
+    s = s:gsub(">", "&gt;")
+    s = s:gsub('"', "&quot;")
+    s = s:gsub("'", "&apos;")
+    return s
+  end
+
+  ---@param skill {name:string, description:string, body:string, frontmatter:table<string,string>}
+  ---@param request string
+  ---@return string
+  local function build_skill_user_payload(skill)
+    local lines = {
+      "<Skill>",
+      "  <Name>" .. xml_escape(skill.name) .. "</Name>",
+      "  <Description>" .. xml_escape(skill.description) .. "</Description>",
+      "  <Instructions>",
+      skill.body,
+      "  </Instructions>",
+    }
+
+    local metadata_keys = vim.tbl_keys(skill.frontmatter or {})
+    table.sort(metadata_keys)
+    if #metadata_keys > 0 then
+      table.insert(lines, "  <Metadata>")
+      for _, key in ipairs(metadata_keys) do
+        table.insert(lines, string.format('    <Field key="%s">%s</Field>', xml_escape(key), xml_escape(skill.frontmatter[key])))
+      end
+      table.insert(lines, "  </Metadata>")
+    end
+
+    table.insert(lines, "</Skill>")
+    table.insert(lines, "\n\n")
+
+    return table.concat(lines, "\n")
+  end
+
+  for _, skill in ipairs(skills) do
+    mcphub.add_prompt("skills", {
+      name = skill.name,
+      description = skill.description,
+      handler = function(req, res)
+        return res:user():text(build_skill_user_payload(skill)):send()
+      end,
+    })
+  end
+
+  M._agent_skills_registered = true
 end
 
 return M
