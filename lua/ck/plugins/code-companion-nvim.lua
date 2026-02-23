@@ -105,6 +105,55 @@ function M.config()
                 }
               )
             end,
+            ---@type fun (): CodeCompanion.ACPAdapter
+            codex = function()
+              if vim.env["NVIM_CODEX_ACP"] == nil then
+                vim.env["NVIM_CODEX_ACP"] = vim.env["NVIM_CODEX_ACP_KILIC"]
+              end
+
+              log:debug("Setting up the AI Overlord...")
+
+              return require("codecompanion.adapters").extend(
+                "claude_code",
+                ---@type CodeCompanion.ACPAdapter
+                {
+                  env = {
+                    PATH = vim.env["PATH"],
+                    HOME = vim.env["HOME"],
+                    USER = vim.env["USER"],
+                    ANTHROPIC_API_KEY = nil,
+                    CODEX_API_KEY = vim.env["NVIM_CODEX_ACP"],
+                  },
+                  opts = {
+                    verbose_output = true,
+                  },
+                  defaults = {
+                    mcpServers = {
+                      function(adapter)
+                        log:info("Connecting to MCPHub...")
+
+                        local ok = vim.wait(15000, function()
+                          instance = require("mcphub").get_hub_instance()
+                          return instance ~= nil and instance:is_ready()
+                        end, 250)
+
+                        if not ok or not instance then
+                          log:warn("MCPHub instance not ready in time.")
+                        end
+
+                        local proxy = require("mcphub.extensions.proxy").get()
+                        log:info("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
+
+                        return vim.tbl_extend("force", { name = "mcphub" }, proxy)
+                      end,
+                    },
+                  },
+                  commands = {
+                    default = { "bunx", "-y", "@zed-industries/codex-acp@latest" },
+                  },
+                }
+              )
+            end,
           },
         },
         rules = {
@@ -704,6 +753,7 @@ function M.config()
                 name = "Personal",
                 env = {
                   NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_KILIC"],
+                  NVIM_CODEX_ACP = vim.env["NVIM_CODEX_ACP_KILIC"],
                 },
               },
               {
@@ -725,6 +775,7 @@ function M.config()
               log:info("Switching to Claude Code profile: %s", selected.name)
 
               vim.env["NVIM_CLAUDE_ACP"] = selected.env["NVIM_CLAUDE_ACP"]
+              vim.env["NVIM_CODEX_ACP"] = selected.env["NVIM_CODEX_ACP"]
             end)
           end,
           desc = "select profile for claude [codecompanion]",
