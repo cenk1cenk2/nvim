@@ -869,10 +869,40 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "a" }),
           function()
+            local bufnr = vim.api.nvim_get_current_buf()
+            local codecompanion = require("codecompanion")
+            local chat = codecompanion.last_chat()
+
+            if not chat then
+              chat = codecompanion.chat({
+                context = require("codecompanion.utils.context").get(bufnr),
+              })
+            end
+
+            if not chat then
+              return
+            end
+
+            local config = require("codecompanion.config")
+            local Variable = require("codecompanion.interactions.chat.variables.buffer")
+            local var = Variable.new({
+              Chat = chat,
+              config = config.interactions.chat.variables["buffer"] or {},
+              params = (config.interactions.chat.variables["buffer"] or {}).opts and config.interactions.chat.variables["buffer"].opts.default_params,
+            })
+
+            var:output({ bufnr = bufnr })
+          end,
+          desc = "add current buffer to context [codecompanion]",
+          mode = { "n" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "a" }),
+          function()
             require("codecompanion").add({})
           end,
           desc = "add selected code [codecompanion]",
-          mode = { "n", "v" },
+          mode = { "v" },
         },
         {
           fn.wk_keystroke({ categories.COPILOT, "P" }),
@@ -959,3 +989,4 @@ function M.config()
 end
 
 return M
+
