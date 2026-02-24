@@ -121,8 +121,6 @@ function M.config()
                 vim.env["NVIM_CLAUDE_ACP"] = vim.env["NVIM_CLAUDE_ACP_WORK"]
               end
 
-              log:debug("Setting up the AI Overlord...")
-
               return {
                 PATH = vim.env["PATH"],
                 HOME = vim.env["HOME"],
@@ -141,8 +139,6 @@ function M.config()
               if vim.env["NVIM_CODEX_ACP"] == nil then
                 vim.env["NVIM_CODEX_ACP"] = vim.env["NVIM_CODEX_ACP_KILIC"]
               end
-
-              log:debug("Setting up the AI Overlord...")
 
               return {
                 PATH = vim.env["PATH"],
@@ -205,6 +201,7 @@ function M.config()
           auto_approve_tool_permissions = false,
           acp_follow_agent_locations = true,
           confirmation_ui_style = "popup",
+          -- confirmation_ui_style = "inline_buttons",
           auto_add_current_file = false,
         },
         diff = {
@@ -393,6 +390,11 @@ function M.config()
         },
         -- model
         {
+          fn.wk_keystroke({ categories.COPILOT, "m" }),
+          group = "model [avante]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "m", "a" }),
           function()
             require("avante.api").select_model()
@@ -403,7 +405,25 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "m", "p" }),
           function()
-            vim.cmd("AvanteSwitchProvider")
+            local Config = require("avante.config")
+            local providers = vim.tbl_keys(Config.acp_providers or {})
+            table.sort(providers)
+
+            vim.ui.select(providers, {
+              prompt = "Switch ACP Provider",
+              format_item = function(item)
+                local current = Config.provider
+                if item == current then
+                  return item .. " (current)"
+                end
+
+                return item
+              end,
+            }, function(choice)
+              if choice then
+                require("avante.api").switch_provider(choice)
+              end
+            end)
           end,
           desc = "switch provider [avante]",
           mode = { "n" },
