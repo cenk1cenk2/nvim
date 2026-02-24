@@ -326,6 +326,14 @@ function M.config()
               { path = "~/.claude/CLAUDE.md", parser = "claude" },
               { path = "CLAUDE.md", parser = "claude" },
               { path = "CLAUDE.local.md", parser = "claude" },
+              ".clinerules",
+              ".cursorrules",
+              ".goosehints",
+              ".rules",
+              ".windsurfrules",
+              ".github/copilot-instructions.md",
+              "AGENT.md",
+              "OPENCODE.md",
             },
           },
           opts = {
@@ -829,7 +837,7 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "E" }),
+          fn.wk_keystroke({ categories.COPILOT, "P" }),
           function()
             vim.ui.select({
               {

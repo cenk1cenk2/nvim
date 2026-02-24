@@ -756,7 +756,7 @@ hl.plugins.symbol_usage_nvim = {
 ---@type table<string, vim.api.keyset.highlight>
 hl.plugins.avante = {
   ["AvanteConflictIncoming"] = { link = "DiffChange" },
-  ["AvanteConflictCurrent"] = { link = "DiffRemoved" },
+  ["AvanteConflictCurrent"] = { bg = c.diff.delete, bold = true },
 }
 
 ---@type table<string, vim.api.keyset.highlight>

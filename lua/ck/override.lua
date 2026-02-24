@@ -27,7 +27,7 @@ nvim.lsp.features.inlay_hints.enabled = true
 nvim.lsp.features.inlay_hints.toggled = false
 nvim.lsp.features.inlay_hints.mode = "eol"
 
-nvim.lsp.ai.chat.provider = { "codecompanion" }
+nvim.lsp.ai.chat.provider = { "avante" }
 nvim.lsp.ai.completion.provider = { "inline" }
 -- nvim.lsp.ai.provider.chat = "copilot"
 -- nvim.lsp.ai.model.chat = "claude-sonnet-4"

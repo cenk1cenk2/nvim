@@ -1,6 +1,8 @@
 -- https://github.com/yetone/avante.nvim
 local M = {}
 
+local log = require("ck.log")
+
 M.name = "yetone/avante.nvim"
 
 function M.config()
@@ -12,10 +14,15 @@ function M.config()
         build = "make",
         dependencies = {
           { "Kaiser-Yang/blink-cmp-avante" },
+          -- TODO: POINT TO ORIGINAL WHEN FORK MERGES OR IF MERGES?
+          "cenk1cenk2/mcphub.nvim",
         },
       }
     end,
     configure = function(_, fn)
+      vim.env["GOOGLE_SEARCH_ENGINE_ID"] = vim.env["NVIM_GOOGLE_SEARCH_ID"]
+      vim.env["GOOGLE_SEARCH_API_KEY"] = vim.env["NVIM_GOOGLE_SEARCH_KEY"]
+
       fn.add_disabled_filetypes({
         "AvanteSelectedFiles",
         "AvanteInput",
@@ -65,39 +72,93 @@ function M.config()
     setup = function(_, fn)
       local categories = fn.get_wk_categories()
 
+      local function get_acp_provider()
+        local provider = nvim.lsp.ai.provider.chat
+
+        if provider == "claude_code" then
+          return "claude-code"
+        end
+
+        return provider
+      end
+
+      local function get_mcp_servers()
+        log:info("Connecting to MCPHub...")
+
+        local instance
+        local ok = vim.wait(15000, function()
+          instance = require("mcphub").get_hub_instance()
+          return instance ~= nil and instance:is_ready()
+        end, 250)
+
+        if not ok or not instance then
+          log:warn("MCPHub instance not ready in time.")
+          return {}
+        end
+
+        local proxy = require("mcphub.extensions.proxy").get()
+        log:info("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
+
+        return { proxy }
+      end
+
       ---@type avante.Config
       return {
         debug = nvim.lsp.ai.debug,
-        provider = nvim.lsp.ai.provider.chat,
+        mode = "agentic",
+        provider = get_acp_provider(),
         providers = {
           copilot = {
             model = nvim.lsp.ai.model.chat,
           },
-          claude = {
-            endpoint = "https://api.anthropic.com",
-            model = nvim.lsp.ai.model.chat,
+        },
+        acp_providers = {
+          ["claude-code"] = {
+            command = "bunx",
+            args = { "-y", "@zed-industries/claude-code-acp@latest" },
+            env = (function()
+              if vim.env["NVIM_CLAUDE_ACP"] == nil then
+                vim.env["NVIM_CLAUDE_ACP"] = vim.env["NVIM_CLAUDE_ACP_WORK"]
+              end
+
+              log:debug("Setting up the AI Overlord...")
+
+              return {
+                PATH = vim.env["PATH"],
+                HOME = vim.env["HOME"],
+                USER = vim.env["USER"],
+                ANTHROPIC_API_KEY = nil,
+                CLAUDE_CODE_OAUTH_TOKEN = vim.env["NVIM_CLAUDE_ACP"],
+                -- ACP_PERMISSION_MODE = "bypassPermissions",
+              }
+            end)(),
+            mcp_servers = get_mcp_servers(),
           },
-          -- Ollama API Documentation https://github.com/ollama/ollama/blob/main/docs/api.md#generate-a-completion
-          ["ai.kilic.dev"] = {
-            __inherited_from = "ollama",
-            api_key_name = "AI_KILIC_DEV_API_KEY",
-            endpoint = "https://api.ai.kilic.dev",
-            parse_curl_args = function(self, prompt)
-              local Ollama = require("avante.providers").ollama
-              local args = Ollama.parse_curl_args(self, prompt)
+          ["codex"] = {
+            command = "bunx",
+            args = { "-y", "@zed-industries/codex-acp@latest" },
+            env = (function()
+              if vim.env["NVIM_CODEX_ACP"] == nil then
+                vim.env["NVIM_CODEX_ACP"] = vim.env["NVIM_CODEX_ACP_KILIC"]
+              end
 
-              args.headers["Authorization"] = "Bearer " .. (os.getenv(self.api_key_name) or "")
+              log:debug("Setting up the AI Overlord...")
 
-              return args
-            end,
-            model = nvim.lsp.ai.model.chat,
-            stream = true, -- Optional
-            -- https://github.com/ollama/ollama/blob/main/docs/modelfile.md#parameter
-            extra_request_body = {
-              options = nvim.lsp.ai.chat.options,
-            },
+              return {
+                PATH = vim.env["PATH"],
+                HOME = vim.env["HOME"],
+                USER = vim.env["USER"],
+                CODEX_API_KEY = vim.env["NVIM_CODEX_ACP"],
+              }
+            end)(),
+            mcp_servers = get_mcp_servers(),
           },
         },
+        custom_tools = function()
+          return {
+            require("mcphub.extensions.avante").mcp_tool(),
+          }
+        end,
         web_search_engine = {
           provider = "google",
         },
@@ -105,14 +166,20 @@ function M.config()
           enabled = nvim.lsp.ai.chat.rag,
           host_mount = os.getenv("HOME"),
           --- NOTE: api key is causing a problem so we are using the open ai client
-          provider = "openai",
-          endpoint = "https://api.ai.kilic.dev/v1",
-          -- llm_model = nvim.lsp.ai.model.completion,
-          --- NOTE: this should be an openai model matching cause of pydantic
-          llm_model = "o1",
-          --- NOTE: this should be an openai model matching cause of pydantic
-          embed_model = "text-embedding-3-small",
-          -- embed_model = nvim.lsp.ai.model.embed,
+          llm = {
+            provider = "openai",
+            endpoint = "https://api.ai.kilic.dev/v1",
+            api_key = "AI_KILIC_DEV_API_KEY",
+            --- NOTE: this should be an openai model matching cause of pydantic
+            model = "o1",
+          },
+          embed = {
+            provider = "openai",
+            endpoint = "https://api.ai.kilic.dev/v1",
+            api_key = "AI_KILIC_DEV_API_KEY",
+            --- NOTE: this should be an openai model matching cause of pydantic
+            model = "text-embedding-3-small",
+          },
           docker_extra_args = table.concat({
             "-e",
             "OLLAMA_API_KEY=" .. (os.getenv("AI_KILIC_DEV_API_KEY") or ""),
@@ -135,13 +202,29 @@ function M.config()
           auto_set_highlight_group = true,
           auto_set_keymaps = false,
           enable_token_counting = true,
+          auto_approve_tool_permissions = false,
+          acp_follow_agent_locations = true,
+          confirmation_ui_style = "popup",
+          auto_add_current_file = false,
+        },
+        diff = {
+          autojump = true,
+        },
+        selection = {
+          enabled = true,
+        },
+        file_selector = {
+          provider = "telescope",
+        },
+        selector = {
+          provider = "telescope",
         },
         mappings = {
           --- @class AvanteConflictMappings
           diff = {
             ours = fn.local_keystroke({ "c", "o" }),
             theirs = fn.local_keystroke({ "c", "t" }),
-            all_theirs = fn.local_keystroke({ "a", "t" }),
+            all_theirs = fn.local_keystroke({ "c", "a" }),
             both = fn.local_keystroke({ "c", "b" }),
             cursor = fn.local_keystroke({ "c", "c" }),
             next = "]c",
@@ -154,32 +237,58 @@ function M.config()
             dismiss = "<C-h>",
           },
           jump = {
-            next = "]]",
-            prev = "[[",
+            next = fn.local_keystroke({ "]" }),
+            prev = fn.local_keystroke({ "[" }),
           },
           submit = {
             normal = "<CR>",
             insert = "<C-s>",
           },
+          cancel = {
+            normal = { "<C-c>", "q" },
+            insert = { "<C-c>" },
+          },
           sidebar = {
-            apply_all = fn.local_keystroke({ "A" }),
-            apply_cursor = fn.local_keystroke({ "a" }),
+            expand_tool_use = "zo",
+            next_prompt = "]p",
+            prev_prompt = "[p",
+            apply_all = fn.local_keystroke({ "p" }),
+            apply_cursor = fn.local_keystroke({ "w" }),
             switch_windows = "<C-n>",
             reverse_switch_windows = "<C-p>",
-            remove_file = fn.local_keystroke({ "x" }),
+            toggle_code_window = fn.local_keystroke({ "x" }),
+            remove_file = fn.local_keystroke({ "d" }),
             add_file = fn.local_keystroke({ "f" }),
-            close = { "<C-c><C-c>" },
+            close = { "<C-c>" },
+            close_from_input = { normal = "<C-c>", insert = "<C-c>" },
+            retry_user_request = fn.local_keystroke({ "r" }),
+            edit_user_request = fn.local_keystroke({ "e" }),
           },
           files = {
             add_current = fn.wk_keystroke({ categories.COPILOT, "b" }),
+            add_all_buffers = fn.wk_keystroke({ categories.COPILOT, "B" }),
           },
           ask = fn.wk_keystroke({ categories.COPILOT, "c" }),
+          new_ask = fn.wk_keystroke({ categories.COPILOT, "C" }),
+          zen_mode = fn.wk_keystroke({ categories.COPILOT, "z" }),
           edit = fn.wk_keystroke({ categories.COPILOT, "e" }),
           refresh = fn.wk_keystroke({ categories.COPILOT, "r" }),
-          focus = fn.wk_keystroke({ categories.COPILOT, "f" }),
+          focus = fn.wk_keystroke({ categories.COPILOT, "F" }),
+          stop = fn.wk_keystroke({ categories.COPILOT, "q" }),
+          select_model = fn.wk_keystroke({ categories.COPILOT, "m", "a" }),
+          select_history = fn.wk_keystroke({ categories.COPILOT, "f" }),
+          confirm = {
+            focus_window = "<C-w>f",
+            code = "c",
+            resp = "r",
+            input = "i",
+          },
           toggle = {
-            debug = fn.wk_keystroke({ categories.COPILOT, "A" }),
-            hint = fn.wk_keystroke({ categories.COPILOT, "a" }),
+            default = fn.wk_keystroke({ categories.COPILOT, "c" }),
+            debug = fn.local_keystroke({ "?" }),
+            selection = fn.wk_keystroke({ categories.COPILOT, "s" }),
+            suggestion = fn.wk_keystroke({ categories.COPILOT, "S" }),
+            repomap = fn.wk_keystroke({ categories.COPILOT, "R" }),
           },
         },
       }
@@ -190,30 +299,7 @@ function M.config()
     wk = function(_, categories, fn)
       ---@type WKMappings
       return {
-        {
-          fn.wk_keystroke({ categories.COPILOT, "q" }),
-          function()
-            vim.cmd("AvanteClear")
-          end,
-          desc = "clear [avante]",
-          mode = { "n", "v" },
-        },
-        {
-          fn.wk_keystroke({ categories.COPILOT, "Q" }),
-          function()
-            require("avante.api").stop()
-          end,
-          desc = "stop [avante]",
-          mode = { "n", "v" },
-        },
-        {
-          fn.wk_keystroke({ categories.COPILOT, "f" }),
-          function()
-            require("avante.api").select_history()
-          end,
-          desc = "select history [avante]",
-          mode = { "n", "v" },
-        },
+        -- chat
         {
           fn.wk_keystroke({ categories.COPILOT, "c" }),
           function()
@@ -227,9 +313,34 @@ function M.config()
           function()
             require("avante.api").ask({ new_chat = true })
           end,
-          desc = "toggle chat with new [avante]",
+          desc = "new chat [avante]",
           mode = { "n", "v" },
         },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "f" }),
+          function()
+            require("avante.api").select_history()
+          end,
+          desc = "chat history [avante]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "X" }),
+          function()
+            vim.cmd("AvanteClear")
+          end,
+          desc = "close last chat [avante]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "q" }),
+          function()
+            require("avante.api").stop()
+          end,
+          desc = "stop request [avante]",
+          mode = { "n", "v" },
+        },
+        -- actions
         {
           fn.wk_keystroke({ categories.COPILOT, "e" }),
           function()
@@ -246,14 +357,140 @@ function M.config()
           desc = "refresh [avante]",
           mode = { "n" },
         },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "<Space>" }),
+          function()
+            require("avante.api").focus()
+          end,
+          desc = "focus sidebar [avante]",
+          mode = { "n" },
+        },
+        -- files
+        {
+          fn.wk_keystroke({ categories.COPILOT, "a" }),
+          function()
+            require("avante.api").add_selected_file(vim.fn.expand("%"))
+          end,
+          desc = "add current file [avante]",
+          mode = { "n" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "B" }),
+          function()
+            require("avante.api").add_buffer_files()
+          end,
+          desc = "add all buffer files [avante]",
+          mode = { "n" },
+        },
+        -- toggles
+        {
+          fn.wk_keystroke({ categories.COPILOT, "s" }),
+          function()
+            require("avante").toggle.selection()
+          end,
+          desc = "toggle selection [avante]",
+          mode = { "n" },
+        },
+        -- model
+        {
+          fn.wk_keystroke({ categories.COPILOT, "m", "a" }),
+          function()
+            require("avante.api").select_model()
+          end,
+          desc = "select model [avante]",
+          mode = { "n" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "m", "p" }),
+          function()
+            vim.cmd("AvanteSwitchProvider")
+          end,
+          desc = "switch provider [avante]",
+          mode = { "n" },
+        },
+        -- admin
+        {
+          fn.wk_keystroke({ categories.COPILOT, "Q" }),
+          function()
+            vim.cmd([[Lazy reload avante.nvim]])
+          end,
+          desc = "reload [avante]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "P" }),
+          function()
+            vim.ui.select({
+              {
+                name = "Personal",
+                env = {
+                  NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_KILIC"],
+                  NVIM_CODEX_ACP = vim.env["NVIM_CODEX_ACP_KILIC"],
+                },
+              },
+              {
+                name = "Work",
+                env = {
+                  NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_WORK"],
+                },
+              },
+            }, {
+              prompt = "Select Claude Code ACP Profile",
+              format_item = function(item)
+                return item.name
+              end,
+            }, function(selected)
+              if not selected then
+                return
+              end
+
+              log:info("Switching to Claude Code profile: %s", selected.name)
+
+              vim.env["NVIM_CLAUDE_ACP"] = selected.env["NVIM_CLAUDE_ACP"]
+              vim.env["NVIM_CODEX_ACP"] = selected.env["NVIM_CODEX_ACP"]
+            end)
+          end,
+          desc = "select profile for claude [avante]",
+          mode = { "n" },
+        },
       }
     end,
     autocmds = function()
+      local markview_disabled_buffers = {}
+
       return {
-        require("ck.modules.autocmds").q_close_autocmd({
-          "Avante",
-          "AvanteInput",
-        }),
+        -- {
+        --   event = "User",
+        --   group = "_avante_markview",
+        --   pattern = "AvanteInputSubmitted",
+        --   callback = function()
+        --     local ok, sidebar = pcall(function()
+        --       return require("avante").get()
+        --     end)
+        --     if not ok or not sidebar or not sidebar.containers or not sidebar.containers.result then
+        --       return
+        --     end
+        --
+        --     local bufnr = sidebar.containers.result.bufnr
+        --     if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+        --       pcall(require("markview.commands").disable, bufnr)
+        --       markview_disabled_buffers[bufnr] = true
+        --     end
+        --   end,
+        -- },
+        -- {
+        --   event = "User",
+        --   group = "_avante_markview",
+        --   pattern = "AvanteViewBufferUpdated",
+        --   callback = function()
+        --     for bufnr, _ in pairs(markview_disabled_buffers) do
+        --       if vim.api.nvim_buf_is_valid(bufnr) then
+        --         pcall(require("markview.commands").enable, bufnr)
+        --       end
+        --     end
+        --     markview_disabled_buffers = {}
+        --   end,
+        -- },
       }
     end,
   })
