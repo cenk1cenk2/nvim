@@ -347,7 +347,7 @@ function M.config()
           mode = { "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "r" }),
+          fn.wk_keystroke({ categories.COPILOT, "R" }),
           function()
             require("avante.api").refresh()
           end,
@@ -478,39 +478,50 @@ function M.config()
     autocmds = function()
       local markview_disabled_buffers = {}
 
+      local function disable_markview()
+        local ok, sidebar = pcall(function()
+          return require("avante").get()
+        end)
+        if not ok or not sidebar or not sidebar.containers or not sidebar.containers.result then
+          return
+        end
+
+        local bufnr = sidebar.containers.result.bufnr
+        if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) or markview_disabled_buffers[bufnr] then
+          return
+        end
+
+        pcall(require("markview.actions").clear, bufnr)
+        markview_disabled_buffers[bufnr] = true
+      end
+
+      local function enable_markview()
+        for bufnr, _ in pairs(markview_disabled_buffers) do
+          if vim.api.nvim_buf_is_valid(bufnr) then
+            pcall(require("markview.actions").render, bufnr)
+          end
+        end
+
+        markview_disabled_buffers = {}
+      end
+
       return {
-        -- {
-        --   event = "User",
-        --   group = "_avante_markview",
-        --   pattern = "AvanteInputSubmitted",
-        --   callback = function()
-        --     local ok, sidebar = pcall(function()
-        --       return require("avante").get()
-        --     end)
-        --     if not ok or not sidebar or not sidebar.containers or not sidebar.containers.result then
-        --       return
-        --     end
-        --
-        --     local bufnr = sidebar.containers.result.bufnr
-        --     if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
-        --       pcall(require("markview.commands").disable, bufnr)
-        --       markview_disabled_buffers[bufnr] = true
-        --     end
-        --   end,
-        -- },
-        -- {
-        --   event = "User",
-        --   group = "_avante_markview",
-        --   pattern = "AvanteViewBufferUpdated",
-        --   callback = function()
-        --     for bufnr, _ in pairs(markview_disabled_buffers) do
-        --       if vim.api.nvim_buf_is_valid(bufnr) then
-        --         pcall(require("markview.commands").enable, bufnr)
-        --       end
-        --     end
-        --     markview_disabled_buffers = {}
-        --   end,
-        -- },
+        {
+          event = "User",
+          group = "_avante_markview",
+          pattern = "AvanteInputSubmitted",
+          callback = function()
+            disable_markview()
+          end,
+        },
+        {
+          event = "User",
+          group = "_avante_markview",
+          pattern = "AvanteViewBufferUpdated",
+          callback = function()
+            enable_markview()
+          end,
+        },
       }
     end,
   })

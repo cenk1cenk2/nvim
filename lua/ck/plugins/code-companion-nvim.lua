@@ -813,6 +813,44 @@ function M.config()
           mode = { "n" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "<Space>" }),
+          function()
+            local codecompanion = require("codecompanion")
+            local last = codecompanion.last_chat()
+
+            if not last then
+              return
+            end
+
+            local chat_bufnr = last.bufnr
+            if not chat_bufnr or not vim.api.nvim_buf_is_valid(chat_bufnr) then
+              return
+            end
+
+            local current_buf = vim.api.nvim_get_current_buf()
+
+            if current_buf == chat_bufnr then
+              vim.cmd("wincmd p")
+            else
+              local chat_win
+              for _, win in ipairs(vim.api.nvim_list_wins()) do
+                if vim.api.nvim_win_get_buf(win) == chat_bufnr then
+                  chat_win = win
+                  break
+                end
+              end
+
+              if chat_win then
+                vim.api.nvim_set_current_win(chat_win)
+              else
+                last.ui:open()
+              end
+            end
+          end,
+          desc = "focus sidebar [codecompanion]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "X" }),
           function()
             require("codecompanion").close_last_chat()
@@ -875,8 +913,46 @@ function M.config()
       }
     end,
     autocmds = function()
+      local markview_disabled_buffers = {}
+
+      local function disable_markview(bufnr)
+        if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) or markview_disabled_buffers[bufnr] then
+          return
+        end
+
+        pcall(require("markview.actions").clear, bufnr)
+        markview_disabled_buffers[bufnr] = true
+      end
+
+      local function enable_markview()
+        for bufnr, _ in pairs(markview_disabled_buffers) do
+          if vim.api.nvim_buf_is_valid(bufnr) then
+            pcall(require("markview.actions").render, bufnr)
+          end
+        end
+
+        markview_disabled_buffers = {}
+      end
+
       return {
         require("ck.modules.autocmds").set_view_buffer({ "codecompanion" }),
+        {
+          event = "User",
+          group = "_codecompanion_markview",
+          pattern = "CodeCompanionRequestStarted",
+          callback = function(ev)
+            local bufnr = ev.data and ev.data.bufnr
+            disable_markview(bufnr)
+          end,
+        },
+        {
+          event = "User",
+          group = "_codecompanion_markview",
+          pattern = { "CodeCompanionRequestFinished", "CodeCompanionRequestError", "CodeCompanionRequestCancelled" },
+          callback = function()
+            enable_markview()
+          end,
+        },
       }
     end,
   })
