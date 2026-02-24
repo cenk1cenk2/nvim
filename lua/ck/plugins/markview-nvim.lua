@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "OXY2DEV/markview.nvim",
-        ft = { "markdown", "rmd", "norg", "org", "vimwiki", "Avante", "codecompanion" },
+        ft = { "markdown", "rmd", "norg", "org", "vimwiki", "Avante", "AvanteInput", "codecompanion" },
       }
     end,
     setup = function()
@@ -24,6 +24,7 @@ function M.config()
             "org",
             "vimwiki",
             "Avante",
+            "AventeInput",
             "codecompanion",
           },
           callbacks = {
