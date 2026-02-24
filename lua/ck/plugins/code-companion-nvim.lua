@@ -821,7 +821,7 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "e" }),
+          fn.wk_keystroke({ categories.COPILOT, "a" }),
           function()
             require("codecompanion").add({})
           end,
