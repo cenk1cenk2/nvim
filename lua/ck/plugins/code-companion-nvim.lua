@@ -269,7 +269,7 @@ function M.config()
                     },
                   },
                   commands = {
-                    default = { "bunx", "-y", "@zed-industries/claude-code-acp@latest" },
+                    default = { "bunx", "-y", "@zed-industries/claude-agent-acp@latest" },
                   },
                 }
               )
@@ -320,7 +320,7 @@ function M.config()
                     },
                   },
                   commands = {
-                    default = { "bunx", "-y", "@zed-industries/codex-acp@latest" },
+                    default = { "bunx", "-y", "@zed-industries/codex-agent-acp@latest" },
                   },
                 }
               )
@@ -365,28 +365,7 @@ function M.config()
                 return ctx.default_system_prompt
               end,
             },
-            window = {
-              border = nvim.ui.border,
-              numberwidth = 0,
-              sticky = true,
-              opts = {
-                numberwidth = 0,
-              },
-            },
-            diff_window = {
-              ---@return number|fun(): number
-              width = function()
-                return math.min(180, vim.o.columns - 10)
-              end,
-              ---@return number|fun(): number
-              height = function()
-                return vim.o.lines - 4
-              end,
-              opts = {
-                number = true,
-              },
-            },
-            variables = {
+            editor_context = {
               ["buffer"] = {
                 opts = {
                   --- https://codecompanion.olimorris.dev/usage/chat-buffer/variables#with-parameters
@@ -399,14 +378,13 @@ function M.config()
                 ["default"] = {
                   -- prompt = [[I'm giving you access to the ${tools} to help you perform coding tasks. Please use neovim mcp adapter first for any kind of file based operations. Please use fetch for web searches.]],
                   tools = {
-                    "cmd_runner",
                     "create_file",
                     "file_search",
                     "get_changed_files",
                     "grep_search",
                     "insert_edit_into_file",
-                    "list_code_usages",
                     "read_file",
+                    "run_command",
                     -- "mcp",
                     -- "neovim",
                   },
@@ -438,11 +416,6 @@ function M.config()
                 },
               },
               ["read_file"] = {
-                opts = {
-                  require_approval_before = false,
-                },
-              },
-              ["list_code_usages"] = {
                 opts = {
                   require_approval_before = false,
                 },
@@ -534,9 +507,6 @@ function M.config()
               copilot_stats = {
                 modes = { n = fn.local_keystroke({ "a", "s" }) },
               },
-              super_diff = {
-                modes = { n = fn.local_keystroke({ "d" }) },
-              },
               clear_approvals = {
                 modes = { n = fn.local_keystroke({ "a", "X" }) },
               },
@@ -614,6 +584,8 @@ function M.config()
               name = nvim.lsp.ai.provider.chat,
               model = nvim.lsp.ai.model.chat,
             },
+          },
+          shared = {
             keymaps = {
               accept_change = {
                 modes = { n = "." },
@@ -630,6 +602,11 @@ function M.config()
         display = {
           diff = {
             enabled = true,
+            window = {
+              opts = {
+                number = true,
+              },
+            },
           },
           chat = {
             show_header_separator = true,
@@ -639,6 +616,13 @@ function M.config()
             show_tools_processing = true, -- Show the loading message when tools are being executed?
             show_token_count = true, -- Show the token count for each response?
             start_in_insert_mode = true, -- Open the chat buffer in insert mode?
+            window = {
+              border = nvim.ui.border,
+              sticky = true,
+              opts = {
+                numberwidth = 0,
+              },
+            },
           },
         },
         extensions = {
@@ -895,14 +879,14 @@ function M.config()
             end
 
             local config = require("codecompanion.config")
-            local Variable = require("codecompanion.interactions.chat.variables.buffer")
-            local var = Variable.new({
+            local EditorContext = require("codecompanion.interactions.chat.editor_context.buffer")
+            local ctx = EditorContext.new({
               Chat = chat,
-              config = config.interactions.chat.variables["buffer"] or {},
-              params = (config.interactions.chat.variables["buffer"] or {}).opts and config.interactions.chat.variables["buffer"].opts.default_params,
+              config = config.interactions.chat.editor_context["buffer"] or {},
+              params = (config.interactions.chat.editor_context["buffer"] or {}).opts and config.interactions.chat.editor_context["buffer"].opts.default_params,
             })
 
-            var:output({ bufnr = bufnr })
+            ctx:output({ bufnr = bufnr })
           end,
           desc = "add current buffer to context [codecompanion]",
           mode = { "n" },
