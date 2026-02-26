@@ -89,7 +89,9 @@ description: Analyze and write GitHub pull request titles and descriptions. Use 
 
 - Be concise — every sentence must earn its place
 - Focus on **what changed logically**, not what files were touched
+- Do NOT mention file names, line counts, number of lines changed, or other mechanical details
 - Use imperative mood in bullet points: "Add retry logic" not "Added retry logic"
+- Always end each bullet point with a period (`.`)
 - No filler phrases: skip "This PR...", "This change...", "In this pull request..."
 - Start the summary directly with the action or context
 - Bullet points should be self-contained and scannable
