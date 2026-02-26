@@ -4,7 +4,7 @@
       "args": ["-y", "cclsp@latest"],
       "autoApprove": ["find_definition", "find_references", "get_diagnostics"],
       "command": "bunx",
-      "disabled": false,
+      "disabled": true,
       "env": {
         "CCLSP_CONFIG_PATH": "${HOME}/.config/nvim/utils/agents/mcp/cclsp.json"
       }

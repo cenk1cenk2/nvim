@@ -10,11 +10,19 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        "olimorris/codecompanion.nvim",
+        -- "olimorris/codecompanion.nvim",
+        "cenk1cenk2/codecompanion.nvim",
+        branch = "next",
+        -- dir = "~/development/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         keys = { "<Space>c" },
         dependencies = {
-          "ravitemer/codecompanion-history.nvim",
+          {
+            -- "ravitemer/codecompanion-history.nvim",
+            "cenk1cenk2/codecompanion-history.nvim",
+            branch = "next",
+            -- dir = "~/development/codecompanion-history.nvim",
+          },
           -- "ravitemer/mcphub.nvim",
           -- TODO: POINT TO ORIGINAL WHEN FORK MERGES OR IF MERGES?
           "cenk1cenk2/mcphub.nvim",
@@ -211,7 +219,8 @@ function M.config()
 
       return {
         opts = {
-          log_level = require("ck.log"):to_nvim_level(),
+          -- log_level = require("ck.log"):to_nvim_level(),
+          log_level = vim.log.levels.DEBUG,
         },
         adapters = {
           http = {},
@@ -274,20 +283,22 @@ function M.config()
               log:debug("Setting up the AI Overlord...")
 
               return require("codecompanion.adapters").extend(
-                "claude_code",
+                "codex",
                 ---@type CodeCompanion.ACPAdapter
                 {
                   env = {
                     PATH = vim.env["PATH"],
                     HOME = vim.env["HOME"],
                     USER = vim.env["USER"],
-                    ANTHROPIC_API_KEY = nil,
                     CODEX_API_KEY = vim.env["NVIM_CODEX_ACP"],
                   },
                   opts = {
                     verbose_output = true,
                   },
                   defaults = {
+                    -- TODO: something was not working here
+                    -- auth_method="codex-api-key",
+                    auth_method = "chatgpt",
                     mcpServers = {
                       function(adapter)
                         log:info("Connecting to MCPHub...")
@@ -989,4 +1000,3 @@ function M.config()
 end
 
 return M
-
