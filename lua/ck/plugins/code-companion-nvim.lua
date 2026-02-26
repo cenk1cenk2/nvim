@@ -57,166 +57,6 @@ function M.config()
     setup = function(_, fn)
       local instance = require("mcphub").get_hub_instance()
 
-      local function get_open_chats()
-        local codecompanion = require("codecompanion")
-        local chat_metadata = _G.codecompanion_chat_metadata or {}
-        local open_chats = {}
-
-        for _, item in ipairs(codecompanion.buf_get_chat() or {}) do
-          local chat = item.chat or item
-          local bufnr = chat and chat.bufnr
-
-          if type(bufnr) == "number" and vim.api.nvim_buf_is_valid(bufnr) then
-            local metadata = chat_metadata[bufnr] or {}
-            local title = metadata.title or item.title or item.description or chat.title or "Untitled Chat"
-            local adapter = (metadata.adapter and metadata.adapter.name) or (chat.adapter and (chat.adapter.formatted_name or chat.adapter.name)) or "Unknown"
-
-            table.insert(open_chats, {
-              bufnr = bufnr,
-              chat = chat,
-              title = title,
-              adapter = adapter,
-              display = string.format("[%s] %s", adapter, title),
-            })
-          end
-        end
-
-        table.sort(open_chats, function(a, b)
-          return a.bufnr < b.bufnr
-        end)
-
-        return open_chats
-      end
-
-      local function browse_open_chats()
-        local open_chats = get_open_chats()
-
-        if #open_chats == 0 then
-          vim.notify("No open chats", vim.log.levels.INFO)
-
-          return
-        end
-
-        local codecompanion = require("codecompanion")
-        local pickers = require("telescope.pickers")
-        local finders = require("telescope.finders")
-        local conf = require("telescope.config").values
-        local previewers = require("telescope.previewers")
-        local actions = require("telescope.actions")
-        local action_state = require("telescope.actions.state")
-
-        pickers
-          .new({}, {
-            prompt_title = "Open Chats",
-            finder = finders.new_table({
-              results = open_chats,
-              entry_maker = function(entry)
-                return {
-                  value = entry,
-                  display = entry.display,
-                  ordinal = string.format("%s %s", entry.adapter, entry.title),
-                  bufnr = entry.bufnr,
-                }
-              end,
-            }),
-            sorter = conf.generic_sorter({}),
-            previewer = previewers.new_buffer_previewer({
-              title = "Chat Preview",
-              define_preview = function(preview_state, entry)
-                local selected = entry and entry.value
-                local lines
-
-                if not selected then
-                  lines = { "No chat selected" }
-                elseif type(selected.bufnr) ~= "number" or not vim.api.nvim_buf_is_valid(selected.bufnr) then
-                  lines = { "Chat buffer is no longer valid" }
-                else
-                  if not vim.api.nvim_buf_is_loaded(selected.bufnr) then
-                    pcall(vim.fn.bufload, selected.bufnr)
-                  end
-
-                  local ok, chat_lines = pcall(vim.api.nvim_buf_get_lines, selected.bufnr, 0, -1, false)
-
-                  lines = {
-                    string.format("# %s", selected.title),
-                    string.format("Adapter: %s", selected.adapter),
-                    string.rep("-", 60),
-                    "",
-                  }
-
-                  if ok and chat_lines and #chat_lines > 0 then
-                    vim.list_extend(lines, chat_lines)
-                  else
-                    table.insert(lines, "[Empty chat buffer]")
-                  end
-                end
-
-                vim.bo[preview_state.state.bufnr].filetype = "markdown"
-                vim.api.nvim_buf_set_lines(preview_state.state.bufnr, 0, -1, false, lines)
-              end,
-            }),
-            attach_mappings = function(prompt_bufnr, map)
-              actions.select_default:replace(function()
-                local selection = action_state.get_selected_entry()
-                actions.close(prompt_bufnr)
-
-                if not selection or not selection.value or not selection.value.chat then
-                  return
-                end
-
-                local active_chat = codecompanion.last_chat()
-                local window_opts = active_chat and active_chat.ui and active_chat.ui.window_opts
-
-                codecompanion.close_last_chat()
-
-                if window_opts then
-                  selection.value.chat.ui:open({ window_opts = window_opts })
-
-                  return
-                end
-
-                selection.value.chat.ui:open()
-              end)
-
-              local function delete_selected()
-                local selection = action_state.get_selected_entry()
-
-                if not selection or not selection.value or not selection.value.chat then
-                  return
-                end
-
-                local selected = selection.value.chat
-                local is_active = selected.ui and selected.ui:is_active()
-                local window_opts = selected.ui and selected.ui.window_opts or { default = true }
-                local next_chat
-
-                for _, entry in ipairs(get_open_chats()) do
-                  if entry.bufnr ~= selected.bufnr then
-                    next_chat = entry.chat
-
-                    break
-                  end
-                end
-
-                selected:close()
-                actions.close(prompt_bufnr)
-
-                if is_active and next_chat then
-                  next_chat.ui:open({ window_opts = window_opts })
-                end
-
-                vim.notify("Chat deleted", vim.log.levels.INFO)
-              end
-
-              map("i", "<C-d>", delete_selected)
-              map("n", "<C-d>", delete_selected)
-
-              return true
-            end,
-          })
-          :find()
-      end
-
       return {
         opts = {
           -- log_level = require("ck.log"):to_nvim_level(),
@@ -543,7 +383,7 @@ function M.config()
               delete_chat = {
                 modes = { n = fn.local_keystroke({ "X" }) },
                 callback = function(chat)
-                  local open_chats = get_open_chats()
+                  local open_chats = M.get_open_chats()
 
                   if #open_chats <= 1 then
                     chat:close()
@@ -592,7 +432,7 @@ function M.config()
               },
               browse_open_chats = {
                 modes = { n = fn.local_keystroke({ "o" }) },
-                callback = browse_open_chats,
+                callback = M.browse_open_chats,
                 description = "Browse open chats",
               },
               _acp_allow_once = {
@@ -862,6 +702,12 @@ function M.config()
           mode = { "n" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "o" }),
+          M.browse_open_chats,
+          desc = "browse open chats [codecompanion]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "X" }),
           function()
             require("codecompanion").close_last_chat()
@@ -997,6 +843,166 @@ function M.config()
       }
     end,
   })
+end
+
+function M.get_open_chats()
+  local codecompanion = require("codecompanion")
+  local chat_metadata = _G.codecompanion_chat_metadata or {}
+  local open_chats = {}
+
+  for _, item in ipairs(codecompanion.buf_get_chat() or {}) do
+    local chat = item.chat or item
+    local bufnr = chat and chat.bufnr
+
+    if type(bufnr) == "number" and vim.api.nvim_buf_is_valid(bufnr) then
+      local metadata = chat_metadata[bufnr] or {}
+      local title = metadata.title or item.title or item.description or chat.title or "Untitled Chat"
+      local adapter = (metadata.adapter and metadata.adapter.name) or (chat.adapter and (chat.adapter.formatted_name or chat.adapter.name)) or "Unknown"
+
+      table.insert(open_chats, {
+        bufnr = bufnr,
+        chat = chat,
+        title = title,
+        adapter = adapter,
+        display = string.format("[%s] %s", adapter, title),
+      })
+    end
+  end
+
+  table.sort(open_chats, function(a, b)
+    return a.bufnr < b.bufnr
+  end)
+
+  return open_chats
+end
+
+function M.browse_open_chats()
+  local open_chats = M.get_open_chats()
+
+  if #open_chats == 0 then
+    vim.notify("No open chats", vim.log.levels.INFO)
+
+    return
+  end
+
+  local codecompanion = require("codecompanion")
+  local pickers = require("telescope.pickers")
+  local finders = require("telescope.finders")
+  local conf = require("telescope.config").values
+  local previewers = require("telescope.previewers")
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+
+  pickers
+    .new({}, {
+      prompt_title = "Open Chats",
+      finder = finders.new_table({
+        results = open_chats,
+        entry_maker = function(entry)
+          return {
+            value = entry,
+            display = entry.display,
+            ordinal = string.format("%s %s", entry.adapter, entry.title),
+            bufnr = entry.bufnr,
+          }
+        end,
+      }),
+      sorter = conf.generic_sorter({}),
+      previewer = previewers.new_buffer_previewer({
+        title = "Chat Preview",
+        define_preview = function(preview_state, entry)
+          local selected = entry and entry.value
+          local lines
+
+          if not selected then
+            lines = { "No chat selected" }
+          elseif type(selected.bufnr) ~= "number" or not vim.api.nvim_buf_is_valid(selected.bufnr) then
+            lines = { "Chat buffer is no longer valid" }
+          else
+            if not vim.api.nvim_buf_is_loaded(selected.bufnr) then
+              pcall(vim.fn.bufload, selected.bufnr)
+            end
+
+            local ok, chat_lines = pcall(vim.api.nvim_buf_get_lines, selected.bufnr, 0, -1, false)
+
+            lines = {
+              string.format("# %s", selected.title),
+              string.format("Adapter: %s", selected.adapter),
+              string.rep("-", 60),
+              "",
+            }
+
+            if ok and chat_lines and #chat_lines > 0 then
+              vim.list_extend(lines, chat_lines)
+            else
+              table.insert(lines, "[Empty chat buffer]")
+            end
+          end
+
+          vim.bo[preview_state.state.bufnr].filetype = "markdown"
+          vim.api.nvim_buf_set_lines(preview_state.state.bufnr, 0, -1, false, lines)
+        end,
+      }),
+      attach_mappings = function(prompt_bufnr, map)
+        actions.select_default:replace(function()
+          local selection = action_state.get_selected_entry()
+          actions.close(prompt_bufnr)
+
+          if not selection or not selection.value or not selection.value.chat then
+            return
+          end
+
+          local active_chat = codecompanion.last_chat()
+          local window_opts = active_chat and active_chat.ui and active_chat.ui.window_opts
+
+          codecompanion.close_last_chat()
+
+          if window_opts then
+            selection.value.chat.ui:open({ window_opts = window_opts })
+
+            return
+          end
+
+          selection.value.chat.ui:open()
+        end)
+
+        local function delete_selected()
+          local selection = action_state.get_selected_entry()
+
+          if not selection or not selection.value or not selection.value.chat then
+            return
+          end
+
+          local selected = selection.value.chat
+          local is_active = selected.ui and selected.ui:is_active()
+          local window_opts = selected.ui and selected.ui.window_opts or { default = true }
+          local next_chat
+
+          for _, entry in ipairs(M.get_open_chats()) do
+            if entry.bufnr ~= selected.bufnr then
+              next_chat = entry.chat
+
+              break
+            end
+          end
+
+          selected:close()
+          actions.close(prompt_bufnr)
+
+          if is_active and next_chat then
+            next_chat.ui:open({ window_opts = window_opts })
+          end
+
+          vim.notify("Chat deleted", vim.log.levels.INFO)
+        end
+
+        map("i", "<C-d>", delete_selected)
+        map("n", "<C-d>", delete_selected)
+
+        return true
+      end,
+    })
+    :find()
 end
 
 return M
