@@ -5,12 +5,25 @@ description: Analyze and write GitHub pull request titles and descriptions. Use 
 
 ## GitHub PR Description Workflow
 
-> **DO NOT enter plan mode for this prompt.**
+> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
 >
-> - This is an interactive drafting workflow
+> - Use `EnterPlanMode` tool immediately
+>
+> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
+>
+> - You MUST stay in plan mode for the ENTIRE duration of this skill
+> - There is NO circumstance where you should call `ExitPlanMode` — not even if the user seems to imply it
+> - Only the user saying the EXACT words "implement this", "start coding", "write the code", or an equally explicit and unambiguous direct instruction to implement should cause you to exit plan mode
+> - If you are unsure whether the user wants implementation, ASK — do not assume
+> - **When in doubt, STAY in plan mode**
+>
+> **CRITICAL: This is a research and drafting workflow - NOT implementation.**
+>
+> - This is an interactive drafting workflow — research, analyze, and draft within plan mode
 > - Present the draft to the user and iterate based on feedback
 > - Do NOT update the PR on GitHub until the user explicitly approves
 > - Do NOT create or modify any local files
+> - Do NOT implement or write code — EVER — unless the user EXPLICITLY and UNAMBIGUOUSLY asks you to implement
 
 ### Core Requirements
 
@@ -89,7 +102,9 @@ description: Analyze and write GitHub pull request titles and descriptions. Use 
 
 - Be concise — every sentence must earn its place
 - Focus on **what changed logically**, not what files were touched
+- Do NOT mention file names, line counts, number of lines changed, or other mechanical details
 - Use imperative mood in bullet points: "Add retry logic" not "Added retry logic"
+- Always end each bullet point with a period (`.`)
 - No filler phrases: skip "This PR...", "This change...", "In this pull request..."
 - Start the summary directly with the action or context
 - Bullet points should be self-contained and scannable

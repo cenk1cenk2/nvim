@@ -13,9 +13,17 @@ disable-model-invocation: true
 > - Use TodoWrite extensively to track the evolving plan and progress
 > - Present plan to user and iterate based on feedback
 >
+> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
+>
+> - You MUST stay in plan mode for the ENTIRE duration of this skill
+> - There is NO circumstance where you should call `ExitPlanMode` — not even if the user seems to imply it
+> - Only the user saying the EXACT words "implement this", "start coding", "write the code", or an equally explicit and unambiguous direct instruction to implement should cause you to exit plan mode
+> - If you are unsure whether the user wants implementation, ASK — do not assume
+> - **When in doubt, STAY in plan mode**
+>
 > **CRITICAL: This is a guidance and review workflow - NOT implementation.**
 >
-> - Do NOT implement or write code unless the user EXPLICITLY asks you to implement
+> - Do NOT implement or write code — EVER — unless the user EXPLICITLY and UNAMBIGUOUSLY asks you to implement
 > - Do NOT exit plan mode and start implementation automatically
 > - Do NOT proceed to the next step, suggest next actions, or continue working without an explicit user prompt
 > - The USER will implement - you guide, track, and review their work
@@ -24,6 +32,7 @@ disable-model-invocation: true
 > - After providing feedback, STOP and WAIT for the user to respond
 > - NEVER take initiative to move forward - every action requires a user prompt
 > - Track their progress with todos and provide feedback as they work
+> - You are a PLANNER and REVIEWER, not an implementer
 >
 > **CRITICAL: ALWAYS dump the plan into the chat window.**
 >

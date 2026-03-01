@@ -241,6 +241,7 @@ function M.load_agent_skills(dir)
     if file_content and #file_content > 0 then
       local fallback_name = vim.fn.fnamemodify(file, ":h:t")
       local parsed = M.parse_skill_markdown(table.concat(file_content, "\n"), fallback_name)
+      parsed.file_path = file
       if parsed.name ~= "" and parsed.description ~= "" and parsed.body ~= "" then
         table.insert(skills, parsed)
       end
@@ -277,6 +278,7 @@ function M.register_agent_skills()
   ---@return string
   local function build_skill_user_payload(skill)
     local lines = {
+      "````xml",
       "<Skill>",
       "  <Name>" .. xml_escape(skill.name) .. "</Name>",
       "  <Description>" .. xml_escape(skill.description) .. "</Description>",
@@ -296,7 +298,8 @@ function M.register_agent_skills()
     end
 
     table.insert(lines, "</Skill>")
-    table.insert(lines, "\n\n")
+    table.insert(lines, "````")
+    table.insert(lines, "\n")
 
     return table.concat(lines, "\n")
   end
@@ -306,6 +309,13 @@ function M.register_agent_skills()
       name = skill.name,
       description = skill.description,
       handler = function(req, res)
+        local file_content = vim.fn.readfile(skill.file_path)
+        if file_content and #file_content > 0 then
+          local fresh = M.parse_skill_markdown(table.concat(file_content, "\n"), skill.name)
+
+          return res:user():text(build_skill_user_payload(fresh)):send()
+        end
+
         return res:user():text(build_skill_user_payload(skill)):send()
       end,
     })

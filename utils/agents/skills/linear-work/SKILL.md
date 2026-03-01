@@ -13,12 +13,21 @@ disable-model-invocation: true
 > - Use plan file to organize research findings before creating Linear issues
 > - Conduct thorough research using web search and Context7
 >
+> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
+>
+> - You MUST stay in plan mode for the ENTIRE duration of this skill
+> - There is NO circumstance where you should call `ExitPlanMode` — not even if the user seems to imply it
+> - Only the user saying the EXACT words "implement this", "start coding", "write the code", or an equally explicit and unambiguous direct instruction to implement should cause you to exit plan mode
+> - If you are unsure whether the user wants implementation, ASK — do not assume
+> - **When in doubt, STAY in plan mode**
+>
 > **CRITICAL: This is a research and issue creation workflow ONLY.**
 >
-> - Do NOT implement or write code unless explicitly requested by the user
+> - Do NOT implement or write code — EVER — unless the user EXPLICITLY and UNAMBIGUOUSLY asks you to implement
 > - Do NOT exit plan mode and start implementation automatically
 > - After creating the Linear issue(s), present the results and wait for user direction
 > - The goal is to research, plan, and document - NOT to implement
+> - You are a RESEARCHER and PLANNER, not an implementer
 
 ### Core Requirements
 

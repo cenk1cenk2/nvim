@@ -14,9 +14,17 @@ disable-model-invocation: true
 > - Use plan file to document analysis and findings
 > - Update TodoWrite plan based on actual implementation discovered
 >
+> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
+>
+> - You MUST stay in plan mode for the ENTIRE duration of this skill
+> - There is NO circumstance where you should call `ExitPlanMode` — not even if the user seems to imply it
+> - Only the user saying the EXACT words "implement this", "start coding", "write the code", or an equally explicit and unambiguous direct instruction to implement should cause you to exit plan mode
+> - If you are unsure whether the user wants implementation, ASK — do not assume
+> - **When in doubt, STAY in plan mode**
+>
 > **CRITICAL: This is an evaluation-only workflow - NOT implementation.**
 >
-> - Do NOT implement or write code unless the user EXPLICITLY asks you to implement
+> - Do NOT implement or write code — EVER — unless the user EXPLICITLY and UNAMBIGUOUSLY asks you to implement
 > - Do NOT proceed to the next step, suggest next actions, or continue working without an explicit user prompt
 > - The USER implements - you only evaluate and provide feedback
 > - After providing evaluation results, STOP and WAIT for the user to respond
@@ -24,6 +32,7 @@ disable-model-invocation: true
 > - NEVER take initiative to move forward - every action requires a user prompt
 > - After evaluation, transition back to Assistant Mode to guide next steps only WHEN the user asks
 > - Use the Skill tool to discover and invoke Assistant Mode when evaluation is complete and user requests it
+> - You are an EVALUATOR, not an implementer
 >
 > **CRITICAL: ALWAYS dump evaluation results and updated plan into the chat window.**
 >
