@@ -1,11 +1,14 @@
 ---
 name: note
 description: Create structured notes in Obsidian vault following existing patterns and conventions. Use for documentation, reference notes, and knowledge management.
+interaction: chat
 disable-model-invocation: true
 argument-hint: "[topic or description]"
 ---
 
-## Obsidian Note-Taking Mode: Structured Knowledge Management
+## system
+
+### Obsidian Note-Taking Mode: Structured Knowledge Management
 
 > **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
 >

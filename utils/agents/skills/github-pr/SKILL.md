@@ -1,9 +1,12 @@
 ---
 name: github-pr
 description: Analyze and write GitHub pull request titles and descriptions. Use when the user wants to create, review, or improve PR descriptions for the current branch. Reads the existing PR, analyzes the diff and commits, and drafts a concise description focused on logical changes. Triggers on PR description requests, PR review prep, or when asked to describe what a branch does.
+interaction: chat
 ---
 
-## GitHub PR Description Workflow
+## system
+
+### GitHub PR Description Workflow
 
 > **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
 >

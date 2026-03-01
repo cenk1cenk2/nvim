@@ -148,6 +148,7 @@ function M.config()
           return res:text("Successfully opened in Obsidian: " .. url):send()
         end,
       })
+
       M.register_agent_skills()
     end,
     wk = function(_, categories, fn)

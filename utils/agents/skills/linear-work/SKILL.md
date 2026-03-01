@@ -1,10 +1,13 @@
 ---
 name: linear-work
 description: Research and create Linear issues with comprehensive analysis for Laravel work projects. Use for issue management, research documentation, and task planning in Linear using the Laravel Linear workspace and GitHub Laravel organization.
+interaction: chat
 disable-model-invocation: true
 ---
 
-## Linear Issue Management Guidelines
+## system
+
+### Linear Issue Management Guidelines
 
 > **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
 >

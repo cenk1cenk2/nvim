@@ -1,10 +1,13 @@
 ---
 name: evaluate
 description: Evaluate code changes to determine progress against the current plan. Use when switching from planning to reviewing implemented work.
+interaction: chat
 disable-model-invocation: true
 ---
 
-## Evaluation Mode: Progress Evaluation
+## system
+
+### Evaluation Mode: Progress Evaluation
 
 > **IMPORTANT: Enter plan mode if not already in it.**
 >

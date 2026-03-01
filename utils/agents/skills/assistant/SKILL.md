@@ -1,10 +1,13 @@
 ---
 name: assistant
 description: Plan and track changes through collaborative assistant guidance. Use when the user wants help planning implementation, tracking progress, or reviewing their work.
+interaction: chat
 disable-model-invocation: true
 ---
 
-## Assistant Mode: Collaborative Planning and Guidance
+## system
+
+### Assistant Mode: Collaborative Planning and Guidance
 
 > **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
 >

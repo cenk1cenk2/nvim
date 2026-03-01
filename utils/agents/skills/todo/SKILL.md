@@ -1,11 +1,14 @@
 ---
 name: todo
 description: Create quick todo notes for task tracking and thought capture in Obsidian.
+interaction: chat
 disable-model-invocation: true
 argument-hint: "[task or thought to capture]"
 ---
 
-## Obsidian Todo Mode: Quick Capture & Task Tracking
+## system
+
+### Obsidian Todo Mode: Quick Capture & Task Tracking
 
 > **IMPORTANT: DO NOT enter plan mode for this prompt.**
 >
@@ -223,23 +226,16 @@ aliases:
   - Laravel Cloud Queue Manager Updates
 ---
 
-I just want to wrap this up before we going into the next cycle. So here goes
-another update. The goal is to get this deployable at late tomorrow so that you
-can give it a try next week with real jobs.
+I just want to wrap this up before we going into the next cycle. So here goes another update. The goal is to get this deployable at late tomorrow so that you can give it a try next week with real jobs.
 
-Probably with the following changes, I have solved some stuff and created some
-other problems that I can not see right now maybe even completely broke it,
-because with highsight it was just a house of cards.
+Probably with the following changes, I have solved some stuff and created some other problems that I can not see right now maybe even completely broke it, because with highsight it was just a house of cards.
 
-- From my initial test suite and the last update, I have lost the ability to
-  quickly scale up and down the workers which is the only thing I am trying to
-  fix right now.
+- From my initial test suite and the last update, I have lost the ability to quickly scale up and down the workers which is the only thing I am trying to fix right now.
 - Horizontal scaling still should be checked for stability...
 
 ## The Problem in Implementation
 
-I did not want to go in there but to fix some randomly occurring conditions I
-had to do a bit (underestimation) of refactoring...
+I did not want to go in there but to fix some randomly occurring conditions I had to do a bit (underestimation) of refactoring...
 
 - There were too much circular dependencies going around...
 - Lots of lots of errors ignored and not handled...
