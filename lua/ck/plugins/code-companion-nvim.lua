@@ -10,7 +10,9 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        "olimorris/codecompanion.nvim",
+        -- "olimorris/codecompanion.nvim",
+        "cenk1cenk2/codecompanion.nvim",
+        branch = "patch-4",
         -- dir = "~/development/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         keys = { "<Space>c" },
