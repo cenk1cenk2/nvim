@@ -209,10 +209,16 @@ kanban-plugin: board
 
 ### Tools to Use
 
-- **Obsidian MCP tools** - For reading, creating, and managing notes
+**File operations depend on the current working directory:**
+
+- **If CWD is the notes directory (`~/notes`):** Use standard file tools (neovim MCP, Read/Edit/Write, Grep/Glob) directly — no need for Obsidian MCP since you're already in the vault
+- **If CWD is NOT the notes directory:** Use **Obsidian MCP tools** for reading, creating, and managing notes — they can access the vault regardless of CWD
+
+**Always available:**
+
 - **WebSearch** - For current information and research
 - **Context7** - For official documentation references
-- **Grep/Glob** - For finding similar notes and patterns in the vault
+- **Grep/Glob** - For finding similar notes and patterns in the vault (when in notes CWD)
 
 ### Key Principles
 
