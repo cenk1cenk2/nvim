@@ -308,6 +308,31 @@ function M.config()
               )
             end,
           },
+          ---@type fun (): CodeCompanion.ACPAdapter
+          opencode = function()
+            log:debug("Setting up the AI Overlord...")
+
+            return require("codecompanion.adapters").extend(
+              "opencode",
+              ---@type CodeCompanion.ACPAdapter
+              {
+                env = {
+                  PATH = vim.env["PATH"],
+                  HOME = vim.env["HOME"],
+                  USER = vim.env["USER"],
+                },
+                opts = {
+                  verbose_output = true,
+                },
+                defaults = {
+                  mcpServers = { get_mcphub_mcp_servers },
+                },
+                commands = {
+                  default = { "opencode", "acp" },
+                },
+              }
+            )
+          end,
         },
         rules = {
           agents = {
