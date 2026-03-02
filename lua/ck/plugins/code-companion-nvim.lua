@@ -640,7 +640,7 @@ function M.config()
               -- format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
               -- MCP Resources
               -- TODO: SET ME TRUE AFTER THE PLUGIN UPDATE
-              make_vars = false,
+              make_vars = true,
               -- MCP Prompts
               make_slash_commands = true, -- Add MCP prompts as /slash commands
             },
