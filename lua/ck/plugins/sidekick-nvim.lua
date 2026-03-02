@@ -81,7 +81,7 @@ function M.config()
           mode = { "i", "n", "v" },
         },
         {
-          "<M-r>",
+          "<M-f>",
           function()
             require("sidekick.nes").update()
           end,

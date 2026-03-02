@@ -37,7 +37,6 @@ function M.config()
             components.noice_message,
           },
           lualine_x = {
-            components.nes,
             components.vectorcode,
             components.searchcount,
             components.snippet,
@@ -295,27 +294,6 @@ function M.components()
         return table.concat(message, " ")
       end,
       color = { fg = nvim.ui.colors.fg, bg = nvim.ui.colors.bg[300] },
-    },
-    nes = {
-      function()
-        return string.format("%s ", nvim.ui.icons.misc.Robot)
-      end,
-      color = function()
-        local status = require("sidekick.status").get()
-        if status then
-          return status.kind == "Error" and { fg = nvim.ui.colors.red[300], bg = nvim.ui.colors.bg[300] }
-            or status.busy and { fg = nvim.ui.colors.yellow[300], bg = nvim.ui.colors.bg[300] }
-            or { fg = nvim.ui.colors.green[300], bg = nvim.ui.colors.bg[300] }
-        end
-      end,
-      cond = function()
-        if not is_loaded("sidekick") then
-          return false
-        end
-
-        local status = require("sidekick.status")
-        return status.get() ~= nil
-      end,
     },
     vectorcode = {
       function()

@@ -46,6 +46,7 @@ local plugins = {
   "minuet-ai-nvim",
   "vectorcode",
   "sidekick-nvim",
+  "copilot-lsp",
   "avante-nvim",
   "mcphub-nvim",
   "code-companion-nvim",

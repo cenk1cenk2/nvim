@@ -52,19 +52,49 @@ function M.config()
             local applied = require("copilot-lsp.nes").apply_pending_nes()
             if not applied then
               log:info("Requesting NES...")
-              require("copilot-lsp.nes").request()
+              local client = vim.lsp.get_clients({ name = "copilot" })
+              if not client or #client == 0 then
+                log:warn("No Copilot LSP client found")
+                return
+              end
+
+              require("copilot-lsp.nes").request_nes(client[1])
             end
           end,
           desc = "nes: apply",
           mode = { "i", "n", "v" },
         },
         {
-          "<M-r>",
+          "<M-f>",
           function()
-            require("copilot-lsp.nes").request()
+            log:info("Requesting NES...")
+            local client = vim.lsp.get_clients({ name = "copilot" })
+            if not client or #client == 0 then
+              log:warn("No Copilot LSP client found")
+              return
+            end
+            require("copilot-lsp.nes").request_nes(client[1])
           end,
           desc = "nes: request suggestion",
           mode = { "i", "n", "v" },
+        },
+      }
+    end,
+    autocmds = function()
+      ---@type Autocmds
+      return {
+        {
+          event = { "LspAttach" },
+          group = "copilotlsp.nes_init",
+          callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            if not client or client.name ~= "copilot" then
+              return
+            end
+
+            local au = vim.api.nvim_create_augroup("copilotlsp.init", { clear = true })
+            require("copilot-lsp.nes").lsp_on_init(client, au)
+          end,
         },
       }
     end,

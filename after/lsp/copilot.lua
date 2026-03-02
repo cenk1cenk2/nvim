@@ -20,16 +20,4 @@ local config = {
   },
 }
 
-if nvim.lsp.ai.copilot.nes.enabled then
-  config = vim.tbl_extend("force", config, {
-    handlers = require("copilot-lsp.handlers"),
-    on_init = function(client, bufnr)
-      require("ck.lsp.handlers").on_init(client, bufnr)
-
-      local au = vim.api.nvim_create_augroup("copilotlsp.init", { clear = true })
-      require("copilot-lsp.nes").lsp_on_init(client, au)
-    end,
-  })
-end
-
 return config
