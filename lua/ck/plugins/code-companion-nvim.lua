@@ -20,7 +20,7 @@ function M.config()
           {
             -- "ravitemer/codecompanion-history.nvim",
             "cenk1cenk2/codecompanion-history.nvim",
-            branch = "next",
+            branch = "patch-1",
             -- dir = "~/development/codecompanion-history.nvim",
           },
           -- "ravitemer/mcphub.nvim",
