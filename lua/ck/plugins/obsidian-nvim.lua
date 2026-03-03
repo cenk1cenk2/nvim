@@ -15,14 +15,14 @@ function M.config()
             pattern = { ("%s/notes/**.md"):format(vim.fn.expand("~")) },
           },
         },
-        dependencies = { "nvim-lua/plenary.nvim" },
+        dependencies = {},
         cmd = {
           "Obsidian",
         },
       }
     end,
     setup = function()
-      ---@type obsidian.config.ClientOpts
+      ---@type obsidian.config
       return {
         workspaces = {
           {
@@ -34,33 +34,14 @@ function M.config()
         legacy_commands = false,
 
         daily_notes = {
-          -- Optional, if you keep daily notes in a separate directory.
           folder = "Calendar/Day",
-          -- Optional, if you want to change the date format for the ID of daily notes.
-          date_format = "%Y-%m-%d",
-          -- Optional, if you want to change the date format of the default alias of daily notes.
-          alias_format = "%B %-d, %Y",
-          -- Optional, if you want to automatically insert a template from your template directory like 'daily.md'
+          date_format = "YYYY-MM-DD",
+          alias_format = "MMMM D, YYYY",
           template = "Daily.md",
         },
 
         frontmatter = {
           enabled = false,
-          func = function(note)
-            -- This is equivalent to the default frontmatter function.
-            local out = {
-              aliases = note.aliases,
-              tags = note.tags,
-            }
-            -- `note.metadata` contains any manually added fields in the frontmatter.
-            -- So here we just make sure those fields are kept in the frontmatter.
-            if note.metadata ~= nil and not vim.tbl_isempty(note.metadata) then
-              for k, v in pairs(note.metadata) do
-                out[k] = v
-              end
-            end
-            return out
-          end,
         },
 
         note_id_func = function(title)
@@ -71,119 +52,58 @@ function M.config()
 
         new_notes_location = "current_dir",
 
-        -- Optional, customize how note file names are generated given the ID, target directory, and title.
-        ---@param spec { id: string, dir: obsidian.Path, title: string|? }
-        ---@return string|obsidian.Path The full path to the new note.
         note_path_func = function(spec)
           return join_paths(require("ck.utils.fs").get_buffer_dirpath(), ("%s.md"):format(tostring(spec.id)))
         end,
 
         completion = {
-          nvim_cmp = true,
           min_chars = 2,
         },
 
-        -- Optional, customize how wiki links are formatted. You can set this to one of:
-        --  * "use_alias_only", e.g. '[[Foo Bar]]'
-        --  * "prepend_note_id", e.g. '[[foo-bar|Foo Bar]]'
-        --  * "prepend_note_path", e.g. '[[foo-bar.md|Foo Bar]]'
-        --  * "use_path_only", e.g. '[[foo-bar.md]]'
         wiki_link_func = function(opts)
-          return require("obsidian.util").wiki_link_id_prefix(opts)
+          return require("obsidian.builtin").wiki_link_id_prefix(opts)
         end,
 
-        -- Optional, customize how markdown links are formatted.
         markdown_link_func = function(opts)
-          return require("obsidian.util").markdown_link(opts)
+          return require("obsidian.builtin").markdown_link(opts)
         end,
-
-        -- Optional, configure key mappings. These are the defaults. If you don't want to set any keymappings this
-        -- way then set 'mappings = {}'.
 
         templates = {
-          subdir = "Templates",
-          date_format = "%Y-%m-%d",
-          time_format = "%H:%M",
-          -- A map for custom variables, the key should be the variable and the value a function
+          folder = "Templates",
+          date_format = "YYYY-MM-DD",
+          time_format = "HH:mm",
           substitutions = {},
         },
 
-        -- Optional, by default commands like `:ObsidianSearch` will attempt to use
-        -- telescope.nvim, fzf-lua, fzf.vim, or mini.pick (in that order), and use the
-        -- first one they find. You can set this option to tell obsidian.nvim to always use this
-        -- finder.
-        finder = "telescope.nvim",
-
-        -- Optional, configure key mappings for the finder. These are the defaults.
-        -- If you don't want to set any mappings this way then set
-        finder_mappings = {
-          -- Create a new note from your query with `:ObsidianSearch` and `:ObsidianQuickSwitch`.
-          -- Currently only telescope supports this.
-          new = "<C-x>",
-        },
-
         picker = {
-          -- Set your preferred picker. Can be one of 'telescope.nvim', 'fzf-lua', or 'mini.pick'.
           name = "telescope.nvim",
-          -- Optional, configure key mappings for the picker. These are the defaults.
-          -- Not all pickers support all mappings.
           note_mappings = {
-            -- Create a new note from your query.
             new = "<C-x>",
-            -- Insert a link to the selected note.
             insert_link = "<C-l>",
           },
           tag_mappings = {
-            -- Add tag(s) to current note.
             tag_note = "<C-x>",
-            -- Insert a tag at the current location.
             insert_tag = "<C-l>",
           },
         },
 
-        -- Optional, sort search results by "path", "modified", "accessed", or "created".
-        -- The recommend value is "modified" and `true` for `sort_reversed`, which means, for example,
-        -- that `:ObsidianQuickSwitch` will show the notes sorted by latest modified time
         search = {
           sort_by = "modified",
           sort_reversed = true,
         },
 
-        -- Optional, determines how certain commands open notes. The valid options are:
-        -- 1. "current" (the default) - to always open in the current window
-        -- 2. "vsplit" - to open in a vertical split if there's not already a vertical split
-        -- 3. "hsplit" - to open in a horizontal split if there's not already a horizontal split
         open_notes_in = "current",
 
-        -- Specify how to handle attachments.
         attachments = {
-          -- The default folder to place images in via `:ObsidianPasteImg`.
-          -- If this is a relative path it will be interpreted as relative to the vault root.
-          -- You can always override this per image by passing a full path to the command instead of just a filename.
-          folder = "", -- This is the default
+          folder = "",
         },
 
         checkbox = {
           order = { " ", "x" },
         },
 
-        -- Optional, configure additional syntax highlighting / extmarks.
-        -- This requires you have `conceallevel` set to 1 or 2. See `:help conceallevel` for more details.
         ui = {
-          enable = false, -- set to false to disable all additional syntax features
-          -- checkboxes = {
-          --   -- NOTE: the 'char' value has to be a single character, and the highlight groups are defined below.
-          --   [" "] = { char = "󰄱", hl_group = "ObsidianTodo" },
-          --   ["x"] = { char = "", hl_group = "ObsidianDone" },
-          --   -- [">"] = { char = "", hl_group = "ObsidianRightArrow" },
-          --   -- ["~"] = { char = "󰰱", hl_group = "ObsidianTilde" },
-          --   -- ["!"] = { char = "", hl_group = "ObsidianImportant" },
-          --   -- Replace the above with this if you don't have a patched font:
-          --   -- [" "] = { char = "☐", hl_group = "ObsidianTodo" },
-          --   -- ["x"] = { char = "✔", hl_group = "ObsidianDone" },
-          --
-          --   -- You can also add more custom ones...
-          -- },
+          enable = false,
         },
       }
     end,
@@ -389,7 +309,7 @@ function M.config()
                 {
                   "gf",
                   function()
-                    return require("obsidian.api").follow_link({})
+                    return require("obsidian.api").follow_link()
                   end,
                   desc = "go to file",
                   buffer = event.buf,
@@ -421,32 +341,36 @@ function M.config()
 end
 
 function M.note_from_template(root, title, template)
-  local client = require("obsidian").get_client()
   local search = require("obsidian.search")
+  local api = require("obsidian.api")
   local file = ("%s/%s.md"):format(root, title)
-  local note = search.resolve_note(file)
+  local notes = search.resolve_note(file)
 
-  if #note > 0 then
+  if #notes > 0 then
     require("ck.log"):info("Opening note: %s", file)
-    client:open_note(note[1])
+    api.open_note(tostring(notes[1].path))
 
     return
   end
 
-  require("ck.log"):info("Creating note: %s", file)
-  -- client:create_note({ title = file, no_write = true })
-  require("obsidian.commands.new")({ args = file })
+  require("ck.log"):info("Creating note: %s from %s", file, template)
 
-  local bufnr = vim.api.nvim_get_current_buf()
+  local Path = require("obsidian.path")
+  local Note = require("obsidian.note")
+  local Template = require("obsidian.templates")
 
-  local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
-  if #lines == 2 and lines[1] == ("# %s"):format(title) then
-    require("ck.log"):info("Templating note: %s from %s", file, template)
-    vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, {})
-    require("obsidian.commands.template")({ args = template })
-  end
+  local note_path = Path.new(Obsidian.dir) / file
+  assert(note_path:parent()):mkdir({ parents = true, exist_ok = true })
 
-  vim.api.nvim_buf_set_name(bufnr, file)
+  local note = Note.new(title, {}, {}, note_path, title)
+  Template.clone_template({
+    type = "clone_template",
+    template_name = template,
+    destination_path = note_path,
+    templates_dir = api.templates_dir(),
+    partial_note = note,
+  })
+  note:open({ sync = true })
 end
 
 return M
