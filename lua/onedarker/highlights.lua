@@ -93,10 +93,10 @@ hl.common = {
   FloatTitle = { fg = c.green[300] },
   NormalFloat = { bg = c.bg[200] },
 
-  Pmenu = { link = "NormalFloat" },
-  PmenuSbar = { fg = c.none, bg = c.bg[300] },
-  PmenuSel = { fg = c.none, bg = c.blue[900] },
-  PmenuThumb = { fg = c.none, bg = c.gray[600] },
+  Pmenu = { fg = c.black, bg = c.blue[100] },
+  PmenuSbar = { fg = c.black, bg = c.bg[300] },
+  PmenuSel = { fg = c.black, bg = c.blue[300] },
+  PmenuThumb = { fg = c.black, bg = c.gray[600] },
 
   SpecialKey = { fg = c.gray[600] },
   ToolbarButton = { fg = c.bg[200], bg = c.blue[900] },
@@ -796,3 +796,4 @@ function M.setup()
 end
 
 return M
+
