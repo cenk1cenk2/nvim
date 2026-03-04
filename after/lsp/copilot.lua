@@ -5,7 +5,7 @@ local config = {
   end,
   flags = {
     debounce_text_changes = nvim.lsp.ai.copilot.debounce,
-    allow_incremental_sync = true,
+    allow_incremental_sync = false,
   },
   -- filetypes = nvim.lsp.ai.copilot.filetypes
   settings = {
