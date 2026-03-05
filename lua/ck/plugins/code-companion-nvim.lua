@@ -838,16 +838,16 @@ function M.config()
                       return
                     end
 
-                    local models_data = chat.acp_connection:get_models()
+                    local models = chat.acp_connection:get_models()
 
-                    if not models_data or not models_data.availableModels or #models_data.availableModels < 2 then
+                    if not models or not models.availableModels or #models.availableModels < 2 then
                       return
                     end
 
-                    vim.ui.select(models_data.availableModels, {
+                    vim.ui.select(models.availableModels, {
                       prompt = "Select a model for this chat",
                       format_item = function(item)
-                        return ("%s (%s)"):format(item.name or item.modelId, item.description) .. (item.modelId == models_data.currentModelId and " [*]" or "")
+                        return ("%s (%s)"):format(item.name or item.modelId, item.description) .. (item.modelId == models.currentModelId and " [*]" or "")
                       end,
                     }, function(model)
                       if not model then
