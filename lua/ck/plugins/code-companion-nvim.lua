@@ -813,7 +813,19 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "C" }),
           function()
-            require("codecompanion").chat()
+            vim.ui.select({ "claude_code", "codex", "opencode" }, {
+              prompt = "Select an adapter for this chat",
+            }, function(selected)
+              if not selected then
+                return
+              end
+
+              require("codecompanion").chat({
+                params = {
+                  adapter = selected,
+                },
+              })
+            end)
           end,
           desc = "new chat [codecompanion]",
           mode = { "n", "v" },
