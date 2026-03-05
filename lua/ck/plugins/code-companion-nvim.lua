@@ -88,24 +88,6 @@ function M.config()
         return open_chats
       end
 
-      local function get_mcphub_mcp_servers()
-        log:info("Connecting to MCPHub...")
-
-        local ok = vim.wait(15000, function()
-          instance = require("mcphub").get_hub_instance()
-          return instance ~= nil and instance:is_ready()
-        end, 250)
-
-        if not ok or not instance then
-          log:warn("MCPHub instance not ready in time.")
-        end
-
-        local proxy = require("mcphub.extensions.proxy").get()
-        log:info("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
-
-        return vim.tbl_extend("force", { name = "mcphub" }, proxy)
-      end
-
       local function browse_open_chats()
         local open_chats = get_open_chats()
 
@@ -235,10 +217,46 @@ function M.config()
           :find()
       end
 
+      local function get_mcphub_mcp_servers()
+        log:info("Connecting to MCPHub...")
+
+        local ok = vim.wait(15000, function()
+          instance = require("mcphub").get_hub_instance()
+          return instance ~= nil and instance:is_ready()
+        end, 250)
+
+        if not ok or not instance then
+          log:warn("MCPHub instance not ready in time.")
+        end
+
+        local proxy = require("mcphub.extensions.proxy").get()
+        log:info("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
+
+        return vim.tbl_extend("force", {
+          name = "mcphub",
+        }, proxy)
+      end
+
+      local categories = fn.get_wk_categories()
+      dd(get_mcphub_mcp_servers())
+
       return {
         opts = {
-          -- log_level = require("ck.log"):to_nvim_level(),
-          log_level = vim.log.levels.DEBUG,
+          log_level = require("ck.log"):to_nvim_level(),
+          -- log_level = vim.log.levels.DEBUG,
+        },
+        mcp = {
+          servers = {
+            ["mcphub"] = {
+              cmd = vim.list_extend({ "bun" }, get_mcphub_mcp_servers().args),
+              tool_defaults = {
+                require_approval_before = false,
+              },
+            },
+          },
+          opts = {
+            default_servers = { "mcphub" },
+          },
         },
         adapters = {
           http = {},
@@ -266,7 +284,7 @@ function M.config()
                     verbose_output = true,
                   },
                   defaults = {
-                    mcpServers = { get_mcphub_mcp_servers },
+                    mcpServers = "inherit_from_config",
                   },
                   commands = {
                     default = { "bunx", "-y", "@zed-industries/claude-agent-acp@latest" },
@@ -299,7 +317,7 @@ function M.config()
                     -- TODO: something was not working here
                     -- auth_method="codex-api-key",
                     auth_method = "chatgpt",
-                    mcpServers = { get_mcphub_mcp_servers },
+                    mcpServers = "inherit_from_config",
                   },
                   commands = {
                     default = { "bunx", "-y", "@zed-industries/codex-acp@latest" },
@@ -325,7 +343,7 @@ function M.config()
                   verbose_output = true,
                 },
                 defaults = {
-                  mcpServers = { get_mcphub_mcp_servers },
+                  mcpServers = "inherit_from_config",
                 },
                 commands = {
                   default = { "opencode", "acp" },
@@ -487,10 +505,10 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "w" }) },
               },
               next_chat = {
-                modes = { n = fn.local_keystroke({ "}" }) },
+                modes = { n = fn.wk_keystroke({ categories.COPILOT, "n" }) },
               },
               previous_chat = {
-                modes = { n = fn.local_keystroke({ "{" }) },
+                modes = { n = fn.wk_keystroke({ categories.COPILOT, "p" }) },
               },
               next_header = {
                 modes = { n = fn.local_keystroke({ "]" }) },
@@ -526,7 +544,7 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "a", "X" }) },
               },
               delete_chat = {
-                modes = { n = fn.local_keystroke({ "X" }) },
+                modes = { n = fn.wk_keystroke({ categories.COPILOT, "X" }) },
                 callback = function(chat)
                   local open_chats = get_open_chats()
 
@@ -560,7 +578,7 @@ function M.config()
                 description = "Delete current chat from session",
               },
               browse_project_chats = {
-                modes = { n = fn.local_keystroke({ "f" }) },
+                modes = { n = fn.wk_keystroke({ categories.COPILOT, "f" }) },
                 callback = function()
                   require("codecompanion").extensions.history.browse_chats(function(chat_data)
                     return chat_data.project_root == require("codecompanion._extensions.history.utils").find_project_root()
@@ -576,7 +594,7 @@ function M.config()
                 description = "Browse all chats",
               },
               browse_open_chats = {
-                modes = { n = fn.local_keystroke({ "o" }) },
+                modes = { n = fn.wk_keystroke({ categories.COPILOT, "p" }) },
                 callback = browse_open_chats,
                 description = "Browse open chats",
               },
@@ -981,6 +999,10 @@ function M.config()
           end,
           desc = "add selected code [codecompanion]",
           mode = { "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "X" }),
+          function() end,
         },
         {
           fn.wk_keystroke({ categories.COPILOT, "P" }),
