@@ -824,6 +824,40 @@ function M.config()
                 params = {
                   adapter = adapter,
                 },
+                callbacks = {
+                  on_created = function(chat)
+                    -- ACP connection is created async via vim.schedule in Chat.new,
+                    -- but on_created fires before that. Force sync connection.
+                    if not chat.acp_connection then
+                      chat:change_adapter(adapter)
+                    end
+
+                    if not chat.acp_connection then
+                      log:warn("Selected adapter '%s' does not have an ACP connection. Cannot select model.", adapter)
+
+                      return
+                    end
+
+                    local models_data = chat.acp_connection:get_models()
+
+                    if not models_data or not models_data.availableModels or #models_data.availableModels < 2 then
+                      return
+                    end
+
+                    vim.ui.select(models_data.availableModels, {
+                      prompt = "Select a model for this chat",
+                      format_item = function(item)
+                        return ("%s (%s)"):format(item.name or item.modelId, item.description) .. (item.modelId == models_data.currentModelId and " [*]" or "")
+                      end,
+                    }, function(model)
+                      if not model then
+                        return
+                      end
+
+                      chat:change_model({ model = model.modelId })
+                    end)
+                  end,
+                },
               })
             end)
           end,
