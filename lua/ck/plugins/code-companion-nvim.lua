@@ -813,12 +813,6 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "C" }),
           function()
-            local adapter_models = {
-              claude_code = { "claude-sonnet-4-20250514", "claude-opus-4-20250514", "claude-haiku-4-20250414" },
-              codex = { "o3", "o4-mini", "gpt-4.1", "gpt-4.1-mini", "gpt-4.1-nano" },
-              opencode = {},
-            }
-
             vim.ui.select({ "claude_code", "codex", "opencode" }, {
               prompt = "Select an adapter for this chat",
             }, function(adapter)
@@ -826,28 +820,11 @@ function M.config()
                 return
               end
 
-              local models = adapter_models[adapter] or {}
-
-              if #models == 0 then
-                require("codecompanion").chat({
-                  params = {
-                    adapter = adapter,
-                  },
-                })
-
-                return
-              end
-
-              vim.ui.select(models, {
-                prompt = ("Select a model for %s"):format(adapter),
-              }, function(model)
-                require("codecompanion").chat({
-                  params = {
-                    adapter = adapter,
-                    model = model,
-                  },
-                })
-              end)
+              require("codecompanion").chat({
+                params = {
+                  adapter = adapter,
+                },
+              })
             end)
           end,
           desc = "new chat [codecompanion]",
