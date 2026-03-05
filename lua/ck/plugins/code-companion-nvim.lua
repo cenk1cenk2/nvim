@@ -238,7 +238,6 @@ function M.config()
       end
 
       local categories = fn.get_wk_categories()
-      dd(get_mcphub_mcp_servers())
 
       return {
         opts = {
