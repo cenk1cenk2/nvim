@@ -27,7 +27,8 @@ function M.config()
           -- https://github.com/nvim-contrib/nvim-ginkgo
           {
             -- dir = "~/development/nvim-ginkgo",
-            "cenk1cenk2/nvim-ginkgo",
+            "nvim-contrib/nvim-ginkgo",
+            -- "cenk1cenk2/nvim-ginkgo",
           },
           "nvim-treesitter/nvim-treesitter",
           -- {
