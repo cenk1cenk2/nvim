@@ -34,6 +34,7 @@ function M.config()
         legacy_commands = false,
 
         daily_notes = {
+          enabled = true,
           folder = "Calendar/Day",
           date_format = "YYYY-MM-DD",
           alias_format = "MMMM D, YYYY",
@@ -48,7 +49,10 @@ function M.config()
           return title or os.date("%Y%m%dT%H%M%S")
         end,
 
-        preferred_link_style = "markdown",
+        link = {
+          style = "markdown",
+          format = "relative",
+        },
 
         new_notes_location = "current_dir",
 
@@ -60,15 +64,8 @@ function M.config()
           min_chars = 2,
         },
 
-        wiki_link_func = function(opts)
-          return require("obsidian.builtin").wiki_link_id_prefix(opts)
-        end,
-
-        markdown_link_func = function(opts)
-          return require("obsidian.builtin").markdown_link(opts)
-        end,
-
         templates = {
+          enabled = true,
           folder = "Templates",
           date_format = "YYYY-MM-DD",
           time_format = "HH:mm",
