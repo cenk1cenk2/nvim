@@ -480,7 +480,7 @@ function M.config()
                 modes = { n = { "<CR>", "<C-s>" }, i = "<C-s>" },
               },
               close = {
-                modes = { n = "<C-c>", i = "<C-c>" },
+                modes = { n = "<C-q>", i = "<C-q>" },
               },
               regenerate = {
                 modes = { n = fn.local_keystroke({ "r" }) },
