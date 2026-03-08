@@ -41,6 +41,15 @@ disable-model-invocation: true
 - Use project names directly when creating issues - Linear MCP will resolve them, unless prompted to specifically search for it
 - Keep issue titles concise and replicate the styling of encountered issues in the same project
 - ALWAYS!!! create issue in `backlog` state unless prompted otherwise, for things that is prompted as undecided work can be in `triage` state. You ALWAYS have to send `{"state": "backlog"}` to make this happen since default is triage.
+- **MANDATORY FIELDS** — Every issue MUST have `labels`, `estimate`, and `priority` set. If you are unsure about any of these values, STOP and ask the user before creating the issue. Do NOT create issues with missing labels, estimates, or priorities.
+  - `priority`: 0=None, 1=Urgent, 2=High, 3=Normal, 4=Low
+  - `estimate`: Use the team's estimation scale
+  - `labels`: At minimum one label categorizing the issue type
+- **RELATIONS** — When creating multiple related issues or working with projects, ALWAYS set proper relations:
+  - Use `blocks` / `blockedBy` to express dependency order between issues
+  - Use `relatedTo` for issues that are connected but not blocking each other
+  - Use `parentId` for sub-issues that belong to a parent issue
+  - When creating a set of issues for a project, think through the dependency graph and set blocking relations so the work order is clear
 
 ### Issue Structure
 
