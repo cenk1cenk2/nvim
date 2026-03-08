@@ -28,6 +28,9 @@ return {
   },
   ai = {
     debug = false,
+    vectorcode = {
+      enabled = false,
+    },
     chat = {
       ---@type ("codecompanion" | "avante")[]
       provider = { "codecompanion" },
@@ -41,10 +44,6 @@ return {
       number_of_completions = 1,
       context_window = 2048,
       line_limit = 15,
-      vectorcode = {
-        enabled = false,
-        number_of_files = 1,
-      },
       prompt = "",
       fim = {
         prefix = "",

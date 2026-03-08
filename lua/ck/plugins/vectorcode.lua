@@ -4,13 +4,15 @@ local M = {}
 M.name = "vectorcode"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, false, {
+  require("ck.setup").define_plugin(M.name, nvim.lsp.ai.vectorcode.enabled, {
     plugin = function()
       ---@type Plugin
       return {
         "Davidyz/VectorCode",
         version = "*",
-        -- build = { "uv tool install -U vectorcode" },
+        build = {
+          "uv tool install --python 3.13 vectorcode[lsp,mcp]",
+        },
         dependencies = { "nvim-lua/plenary.nvim" },
       }
     end,
@@ -33,7 +35,7 @@ function M.config()
         notify = true,
         timeout_ms = 5000,
         on_setup = {
-          update = false, -- set to true to enable update when `setup` is called.
+          update = false,
           lsp = true,
         },
         sync_log_env_var = false,
@@ -43,18 +45,24 @@ function M.config()
       require("vectorcode").setup(opts)
     end,
     autocmds = function()
+      if nvim.lsp.ai.vectorcode.enabled == false then
+        return {}
+      end
+
       ---@type Autocmds
       return {
         {
           event = { "LspAttach" },
           group = "__completion",
           callback = function(event)
-            -- if not nvim.lsp.ai.completion.vectorcode.enabled then
-            --   return
-            -- end
+            local client = vim.lsp.get_client_by_id(event.data.client_id)
+            if not client or client.name ~= "vectorcode_server" then
+              return
+            end
 
-            require("vectorcode.cacher").utils.async_check("config", function()
-              require("vectorcode.cacher.lsp").register_buffer(event.buf, {
+            local cacher = require("vectorcode.config").get_cacher_backend()
+            cacher.async_check("config", function()
+              cacher.register_buffer(event.buf, {
                 notify = nvim.lsp.ai.debug,
                 run_on_register = true,
                 events = { "BufReadPost", "BufWritePost", "InsertLeave" },
