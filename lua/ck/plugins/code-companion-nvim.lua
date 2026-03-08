@@ -611,24 +611,24 @@ function M.config()
                 end,
                 description = "Delete current chat from session",
               },
-              browse_project_chats = {
-                modes = { n = fn.local_keystroke({ "f" }) },
-                callback = function()
-                  require("codecompanion").extensions.history.browse_chats(function(chat_data)
-                    return chat_data.project_root == require("codecompanion._extensions.history.utils").find_project_root()
-                  end)
-                end,
-                description = "Browse chats for current project",
-              },
-              browse_all_chats = {
-                modes = { n = fn.local_keystroke({ "F" }) },
-                callback = function()
-                  require("codecompanion").extensions.history.browse_chats()
-                end,
-                description = "Browse all chats",
-              },
+              -- browse_project_chats = {
+              --   modes = { n = fn.local_keystroke({ "f" }) },
+              --   callback = function()
+              --     require("codecompanion").extensions.history.browse_chats(function(chat_data)
+              --       return chat_data.project_root == require("codecompanion._extensions.history.utils").find_project_root()
+              --     end)
+              --   end,
+              --   description = "Browse chats for current project",
+              -- },
+              -- browse_all_chats = {
+              --   modes = { n = fn.local_keystroke({ "F" }) },
+              --   callback = function()
+              --     require("codecompanion").extensions.history.browse_chats()
+              --   end,
+              --   description = "Browse all chats",
+              -- },
               browse_open_chats = {
-                modes = { n = fn.local_keystroke({ "o" }) },
+                modes = { n = fn.local_keystroke({ "f" }) },
                 callback = browse_open_chats,
                 description = "Browse open chats",
               },
