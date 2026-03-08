@@ -263,7 +263,7 @@ function M.config()
           http = {
             ai_kilic_dev = function()
               return require("codecompanion.adapters.http").extend("openai_compatible", {
-                name = "ai.kilic.dev",
+                name = "ai_kilic_dev",
                 formatted_name = "ai.kilic.dev",
                 env = {
                   url = "https://ai.kilic.dev",
