@@ -258,7 +258,20 @@ function M.config()
           },
         },
         adapters = {
-          http = {},
+          http = {
+            ai_kilic_dev = function()
+              return require("codecompanion.adapters.http").extend("openai_compatible", {
+                name = "ai.kilic.dev",
+                formatted_name = "ai.kilic.dev",
+                env = {
+                  url = "https://ai.kilic.dev",
+                  api_key = "AI_KILIC_DEV_API_KEY",
+                  chat_url = "/api/v1/chat/completions",
+                  models_endpoint = "/api/v1/models",
+                },
+              })
+            end,
+          },
           acp = {
             ---@type fun (): CodeCompanion.ACPAdapter
             claude_code = function()
@@ -417,6 +430,8 @@ function M.config()
                     "grep_search",
                     "insert_edit_into_file",
                     "read_file",
+                    "web_search",
+                    "fetch_webpage",
                     -- "mcp",
                     -- "neovim",
                   },
@@ -830,12 +845,24 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "C" }),
           function()
-            vim.ui.select({ "claude_code", "codex", "opencode" }, {
+            local all_adapters = {
+              { name = "claude_code", type = "acp" },
+              { name = "codex", type = "acp" },
+              -- { name = "opencode", type = "acp" },
+              { name = "ai_kilic_dev", type = "http" },
+            }
+
+            vim.ui.select(all_adapters, {
               prompt = "Select an adapter for this chat",
-            }, function(adapter)
-              if not adapter then
+              format_item = function(item)
+                return ("%s [%s]"):format(item.name, item.type)
+              end,
+            }, function(selected)
+              if not selected then
                 return
               end
+
+              local adapter = selected.name
 
               require("codecompanion").chat({
                 params = {
@@ -843,6 +870,12 @@ function M.config()
                 },
                 callbacks = {
                   on_created = function(chat)
+                    if selected.type == "http" then
+                      require("codecompanion.interactions.chat.keymaps.change_adapter").select_model(chat)
+
+                      return
+                    end
+
                     -- ACP connection is created async via vim.schedule in Chat.new,
                     -- but on_created fires before that. Force sync connection.
                     if not chat.acp_connection then

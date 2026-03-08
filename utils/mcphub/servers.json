@@ -16,12 +16,6 @@
       },
       "url": "https://mcp.context7.com/mcp"
     },
-    "fetch": {
-      "args": ["mcp-server-fetch@latest"],
-      "autoApprove": ["fetch"],
-      "command": "uvx",
-      "disabled": true
-    },
     "filesystem": {
       "args": ["-y", "@modelcontextprotocol/server-filesystem@latest", "${CWD}"],
       "autoApprove": [
