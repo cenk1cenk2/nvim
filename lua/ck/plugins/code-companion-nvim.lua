@@ -477,6 +477,26 @@ function M.config()
               ---The header name for the LLM's messages
               ---@type string|fun(adapter: CodeCompanion.Adapter): string
               llm = function(adapter)
+                local model
+                if adapter.type == "acp" then
+                  for _, item in ipairs(require("codecompanion").buf_get_chat() or {}) do
+                    local chat = item.chat or item
+                    if chat.acp_connection and chat.adapter and chat.adapter == adapter then
+                      local models = chat.acp_connection:get_models()
+                      if models and models.currentModelId then
+                        model = models.currentModelId
+                      end
+
+                      break
+                    end
+                  end
+                else
+                  model = (adapter.model and adapter.model.name) or (adapter.schema and adapter.schema.model and adapter.schema.model.default)
+                end
+                if model then
+                  return ("AI Overlord - %s (%s)"):format(adapter.formatted_name, model)
+                end
+
                 return ("AI Overlord - %s"):format(adapter.formatted_name)
               end,
 
