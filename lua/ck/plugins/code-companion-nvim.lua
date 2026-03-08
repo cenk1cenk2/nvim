@@ -239,8 +239,6 @@ function M.config()
         }, proxy)
       end
 
-      local categories = fn.get_wk_categories()
-
       return {
         opts = {
           log_level = require("ck.log"):to_nvim_level(),
@@ -541,10 +539,10 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "w" }) },
               },
               next_chat = {
-                modes = { n = fn.wk_keystroke({ categories.COPILOT, "n" }) },
+                modes = { n = fn.local_keystroke({ "n" }) },
               },
               previous_chat = {
-                modes = { n = fn.wk_keystroke({ categories.COPILOT, "p" }) },
+                modes = { n = fn.local_keystroke({ "p" }) },
               },
               next_header = {
                 modes = { n = fn.local_keystroke({ "]" }) },
@@ -580,7 +578,7 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "a", "X" }) },
               },
               delete_chat = {
-                modes = { n = fn.wk_keystroke({ categories.COPILOT, "X" }) },
+                modes = { n = fn.local_keystroke({ "X" }) },
                 callback = function(chat)
                   local open_chats = get_open_chats()
 
@@ -614,7 +612,7 @@ function M.config()
                 description = "Delete current chat from session",
               },
               browse_project_chats = {
-                modes = { n = fn.wk_keystroke({ categories.COPILOT, "f" }) },
+                modes = { n = fn.local_keystroke({ "f" }) },
                 callback = function()
                   require("codecompanion").extensions.history.browse_chats(function(chat_data)
                     return chat_data.project_root == require("codecompanion._extensions.history.utils").find_project_root()
@@ -630,7 +628,7 @@ function M.config()
                 description = "Browse all chats",
               },
               browse_open_chats = {
-                modes = { n = fn.wk_keystroke({ categories.COPILOT, "p" }) },
+                modes = { n = fn.local_keystroke({ "o" }) },
                 callback = browse_open_chats,
                 description = "Browse open chats",
               },
@@ -1019,6 +1017,14 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "a" }),
           function()
+            require("codecompanion").add({})
+          end,
+          desc = "add selected code [codecompanion]",
+          mode = { "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "A" }),
+          function()
             local bufnr = vim.api.nvim_get_current_buf()
             local codecompanion = require("codecompanion")
             local chat = codecompanion.last_chat()
@@ -1047,19 +1053,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "a" }),
-          function()
-            require("codecompanion").add({})
-          end,
-          desc = "add selected code [codecompanion]",
-          mode = { "v" },
-        },
-        {
-          fn.wk_keystroke({ categories.COPILOT, "X" }),
-          function() end,
-        },
-        {
-          fn.wk_keystroke({ categories.COPILOT, "P" }),
+          fn.wk_keystroke({ "P" }),
           function()
             vim.ui.select({
               {
