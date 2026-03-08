@@ -49,7 +49,7 @@ disable-model-invocation: true
 - When creating multiple related issues, batch create them in a single response using parallel tool calls
 - Use project names directly when creating issues - Linear MCP will resolve them, unless prompted to specifically search for it
 - Keep issue titles concise and replicate the styling of encountered issues in the same project
-- ALWAYS!!! create issue in `backlog` state unless prompted otherwise, for things that is prompted as undecided work can be in `triage` state. You ALWAYS have to send `{"state": "backlog"}` to make this happen since default is triage.
+- **STATE IS MANDATORY — ALWAYS `backlog`** — EVERY issue MUST be created with `{"state": "backlog"}`. The Linear API defaults to `triage` which is WRONG. You MUST explicitly send `"state": "backlog"` on EVERY `save_issue` call. The ONLY exception is if the user EXPLICITLY says to use a different state (e.g., "put this in triage"). If the user says nothing about state, it is `backlog`. NO EXCEPTIONS.
 - **MANDATORY FIELDS** — Every issue MUST have `labels`, `estimate`, and `priority` set. If you are unsure about any of these values, STOP and ask the user before creating the issue. Do NOT create issues with missing labels, estimates, or priorities.
   - `priority`: 0=None, 1=Urgent, 2=High, 3=Normal, 4=Low
   - `estimate`: Use the team's estimation scale
