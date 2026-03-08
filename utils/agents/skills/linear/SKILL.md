@@ -32,10 +32,19 @@ disable-model-invocation: true
 > - The goal is to research, plan, and document - NOT to implement
 > - You are a RESEARCHER and PLANNER, not an implementer
 
+### Session Initialization
+
+**FIRST ACTION** when this skill is invoked — before any research or issue creation:
+
+1. Call `mcp__mcphub__linear_kilic-dev__get_user` with `query: "me"` to identify the current user
+2. Note the user's **team(s)** from the response — this is your default team for issue creation
+3. Store the user ID for assigning issues
+
 ### Core Requirements
 
 - **IMPORTANT!!! ALWAYS use `linear/kilic-dev` MCP and `gitlab` MCP unless PROMPTED OTHERWISE!**
 - **IMPORTANT!!! When updating issues, preserve existing checked items and context.**
+- **TEAM IS MANDATORY** — Every issue MUST have a `team` set. The `team` field can NEVER be empty. Unless the user explicitly specifies a different team, ALWAYS use the current user's team (discovered during session initialization). If the user belongs to multiple teams and no team is specified, ASK which team to use.
 - Always assign issues to the current user
 - When creating multiple related issues, batch create them in a single response using parallel tool calls
 - Use project names directly when creating issues - Linear MCP will resolve them, unless prompted to specifically search for it
