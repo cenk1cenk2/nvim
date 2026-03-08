@@ -102,6 +102,34 @@ function M.config()
         end,
       })
     end,
+    keymaps = function()
+      return {
+        {
+          "<S-CR>",
+          function()
+            require("vim.treesitter._select").select_parent(vim.v.count1)
+          end,
+          desc = "start/grow treesitter selection",
+          mode = { "n", "v" },
+        },
+        {
+          "<CR>",
+          function()
+            require("vim.treesitter._select").select_parent(vim.v.count1)
+          end,
+          desc = "grow treesitter selection",
+          mode = { "v" },
+        },
+        {
+          "<BS>",
+          function()
+            require("vim.treesitter._select").select_child(vim.v.count1)
+          end,
+          desc = "shrink treesitter selection",
+          mode = { "v" },
+        },
+      }
+    end,
     wk = function(_, categories, fn)
       ---@type WKMappings
       return {

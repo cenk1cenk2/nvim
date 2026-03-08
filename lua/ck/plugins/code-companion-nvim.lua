@@ -263,10 +263,16 @@ function M.config()
                 formatted_name = "ai.kilic.dev",
                 env = {
                   url = "https://ai.kilic.dev/ollama",
+                  api_key = "AI_KILIC_DEV_API_KEY",
                 },
                 headers = {
                   ["Content-Type"] = "application/json",
                   ["Authorization"] = "Bearer ${api_key}",
+                },
+                schema = {
+                  model = {
+                    default = "glm-5:cloud",
+                  },
                 },
               })
             end,
@@ -285,7 +291,7 @@ function M.config()
 
               log:debug("Setting up the AI Overlord...")
 
-              return require("codecompanion.adapters").extend(
+              return require("codecompanion.adapters.acp").extend(
                 "claude_code",
                 ---@type CodeCompanion.ACPAdapter
                 {
@@ -316,7 +322,7 @@ function M.config()
 
               log:debug("Setting up the AI Overlord...")
 
-              return require("codecompanion.adapters").extend(
+              return require("codecompanion.adapters.acp").extend(
                 "codex",
                 ---@type CodeCompanion.ACPAdapter
                 {
@@ -346,7 +352,7 @@ function M.config()
           opencode = function()
             log:debug("Setting up the AI Overlord...")
 
-            return require("codecompanion.adapters").extend(
+            return require("codecompanion.adapters.acp").extend(
               "opencode",
               ---@type CodeCompanion.ACPAdapter
               {
@@ -482,21 +488,22 @@ function M.config()
               ---@type string|fun(adapter: CodeCompanion.Adapter): string
               llm = function(adapter)
                 local model
-                if adapter.type == "acp" then
-                  for _, item in ipairs(require("codecompanion").buf_get_chat() or {}) do
-                    local chat = item.chat or item
-                    if chat.acp_connection and chat.adapter and chat.adapter == adapter then
+                for _, item in ipairs(require("codecompanion").buf_get_chat() or {}) do
+                  local chat = item.chat or item
+                  if chat.adapter == adapter then
+                    if chat.acp_connection then
                       local models = chat.acp_connection:get_models()
                       if models and models.currentModelId then
                         model = models.currentModelId
                       end
-
-                      break
+                    else
+                      model = adapter.model and (adapter.model.formatted_name or adapter.model.name)
                     end
+
+                    break
                   end
-                else
-                  model = (adapter.model and adapter.model.name) or (adapter.schema and adapter.schema.model and adapter.schema.model.default)
                 end
+
                 if model then
                   return ("AI Overlord - %s (%s)"):format(adapter.formatted_name, model)
                 end
