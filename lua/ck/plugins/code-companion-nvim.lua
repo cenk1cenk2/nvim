@@ -6,6 +6,8 @@ local log = require("ck.log")
 M.name = "olimorris/codecompanion.nvim"
 
 function M.config()
+  vim.env.TAVILY_API_KEY = vim.env.NVIM_TAVILY_API_KEY
+
   require("ck.setup").define_plugin(M.name, vim.tbl_contains(nvim.lsp.ai.chat.provider, "codecompanion"), {
     plugin = function()
       ---@type Plugin

@@ -309,6 +309,8 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | Git operations | `git` MCP | Any git operation — available tools: `mcp__mcphub__git__git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch` |
 | Documentation lookup | `context7` | Need to reference official docs for libraries/frameworks |
 | Shell command execution (visible to user) | `tmux` | Long-running commands, builds, tests, and commands the user should see — via neovim session's scratch pane |
+| Web search | `web_search` (built-in) | Search the web via Tavily API. Only use when no MCP search tool is available |
+| Fetch webpage content | `fetch_webpage` (built-in) | Fetch and extract content from a URL via Jina. Only use when no MCP fetch tool is available |
 
 #### Tmux Scratch Pane (Command Runner)
 
