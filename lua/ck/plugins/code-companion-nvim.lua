@@ -260,14 +260,15 @@ function M.config()
         adapters = {
           http = {
             ai_kilic_dev = function()
-              return require("codecompanion.adapters.http").extend("openai_compatible", {
+              return require("codecompanion.adapters").extend("ollama", {
                 name = "ai_kilic_dev",
                 formatted_name = "ai.kilic.dev",
                 env = {
-                  url = "https://ai.kilic.dev",
-                  api_key = "AI_KILIC_DEV_API_KEY",
-                  chat_url = "/api/v1/chat/completions",
-                  models_endpoint = "/api/v1/models",
+                  url = "https://ai.kilic.dev/ollama",
+                },
+                headers = {
+                  ["Content-Type"] = "application/json",
+                  ["Authorization"] = "Bearer ${api_key}",
                 },
               })
             end,
