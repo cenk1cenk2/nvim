@@ -89,7 +89,7 @@ local plugins = {
   "telescope-dap",
   "nvim-docs-view",
   "mini-nvim-ai",
-  "mini-nvim-splitjoin",
+  "treesj",
   "treewalker-nvim",
   "winshift-nvim",
   "browse-nvim",
