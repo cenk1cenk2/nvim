@@ -118,7 +118,7 @@ function M.config()
             require("vim.treesitter._select").select_parent(vim.v.count1)
           end,
           desc = "grow treesitter selection",
-          mode = { "v" },
+          mode = { "v", "o" },
         },
         {
           "<BS>",
@@ -126,7 +126,7 @@ function M.config()
             require("vim.treesitter._select").select_child(vim.v.count1)
           end,
           desc = "shrink treesitter selection",
-          mode = { "v" },
+          mode = { "v", "o" },
         },
       }
     end,

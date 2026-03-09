@@ -21,6 +21,11 @@ function M.config()
         highlight_duration = 250,
       }
     end,
+    setup = function()
+      return {
+        scope_confined = true,
+      }
+    end,
     on_setup = function(c)
       require("treewalker").setup(c)
     end,
