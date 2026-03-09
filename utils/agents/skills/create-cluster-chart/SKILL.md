@@ -63,7 +63,6 @@ chart-<name>/
 ├── .helmignore
 ├── Chart.yaml
 ├── Taskfile.yml
-├── mise.toml
 ├── package.json
 ├── release.config.mjs
 ├── renovate.json
@@ -109,14 +108,19 @@ version: 1.0.0
 
 #### values.yaml
 
-**For upstream wrappers**, nest values under the dependency name (or alias):
+**Upstream defaults reference:** When writing values for an upstream chart dependency, include a comment at the top of the dependency's values block with a link to the upstream chart's default `values.yaml` (GitHub raw link or documentation URL). This helps future maintainers understand what options are available.
 
 ```yaml
+# Upstream chart defaults: <link-to-upstream-values.yaml>
 <dependency-name-or-alias>:
   key: value
   nested:
     key: value
 ```
+
+Find the link during the Research Phase — check the chart's GitHub/GitLab repository for the `values.yaml` file, or the chart's documentation page listing all configurable values.
+
+**For upstream wrappers**, nest values under the dependency name (or alias).
 
 **For charts with ExternalSecret**, add a top-level `secrets:` block:
 
@@ -183,15 +187,6 @@ Always identical:
   "extends": ["local>renovate/renovate-config:default/default"],
   "ignorePresets": []
 }
-```
-
-#### mise.toml
-
-Always identical:
-
-```toml
-[tools]
-helm-docs = "latest"
 ```
 
 #### package.json
@@ -328,6 +323,6 @@ secrets:
 - [ ] Create `values.yaml` with sensible defaults nested under dependency name
 - [ ] If ExternalSecret needed: create `templates/external-secret.yaml` and add `secrets:` block to values
 - [ ] If custom resources needed: create templates with proper Helm templating
-- [ ] Create all boilerplate files (`.gitlab-ci.yml`, `Taskfile.yml`, `renovate.json`, `mise.toml`, `package.json`, `release.config.mjs`, `.gitignore`, `.helmignore`)
+- [ ] Create all boilerplate files (`.gitlab-ci.yml`, `Taskfile.yml`, `renovate.json`, `package.json`, `release.config.mjs`, `.gitignore`, `.helmignore`)
 - [ ] Verify values structure matches upstream chart's expected format
 - [ ] Match code style from the reference chart
