@@ -34,30 +34,30 @@ function M.config()
     on_setup = function(opts)
       require("vectorcode").setup(opts)
     end,
-    autocmds = function()
-      if nvim.lsp.ai.vectorcode.enabled == false then
-        return {}
-      end
-
-      ---@type Autocmds
-      return {
-        {
-          event = { "LspAttach" },
-          group = "__completion",
-          callback = function(event)
-            local client = vim.lsp.get_client_by_id(event.data.client_id)
-            if not client or client.name ~= "vectorcode_server" then
-              return
-            end
-
-            local cacher = require("vectorcode.config").get_cacher_backend()
-            cacher.async_check("config", function()
-              cacher.register_buffer(event.buf)
-            end, nil)
-          end,
-        },
-      }
-    end,
+    -- autocmds = function()
+    --   if nvim.lsp.ai.vectorcode.enabled == false then
+    --     return {}
+    --   end
+    --
+    --   ---@type Autocmds
+    --   return {
+    --     {
+    --       event = { "LspAttach" },
+    --       group = "__completion",
+    --       callback = function(event)
+    --         local client = vim.lsp.get_client_by_id(event.data.client_id)
+    --         if not client or client.name ~= "vectorcode_server" then
+    --           return
+    --         end
+    --
+    --         local cacher = require("vectorcode.config").get_cacher_backend()
+    --         cacher.async_check("config", function()
+    --           cacher.register_buffer(event.buf)
+    --         end, nil)
+    --       end,
+    --     },
+    --   }
+    -- end,
   })
 end
 
