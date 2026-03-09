@@ -57,7 +57,7 @@ Example:
 ```yaml
 ---
 aliases:
-  - Laravel NGINX/KEDA Updates
+  - Infrastructure Rollout Updates
 ---
 ```
 
@@ -96,14 +96,14 @@ aliases:
 ```markdown
 ---
 aliases:
-  - Laravel NGINX/KEDA Updates
+  - Infrastructure Rollout Updates
 ---
 
-- [x] ap-southeast-1
-- [x] ap-southeast-2
-- [x] ca-central-1
-- [ ] eu-central-1 (https://github.com/.../pull/1867/files)
-- [ ] eu-west-2
+- [x] staging-cluster-1
+- [x] staging-cluster-2
+- [x] production-us
+- [ ] production-eu (https://gitlab.example.com/.../merge_requests/42)
+- [ ] production-apac
 ```
 
 #### Pattern 2: Thought Dump (Context & Problem Capture)
@@ -218,15 +218,15 @@ aliases:
 
 ### Real Example from Vault
 
-From `20260101T120205.md` (Queue Manager refactoring):
+From `20260101T120205.md` (background worker refactoring):
 
 ```markdown
 ---
 aliases:
-  - Laravel Cloud Queue Manager Updates
+  - Background Worker Scaling Updates
 ---
 
-I just want to wrap this up before we going into the next cycle. So here goes another update. The goal is to get this deployable at late tomorrow so that you can give it a try next week with real jobs.
+I just want to wrap this up before we going into the next cycle. So here goes another update. The goal is to get this deployable at late tomorrow so that you can give it a try next week with real workloads.
 
 Probably with the following changes, I have solved some stuff and created some other problems that I can not see right now maybe even completely broke it, because with highsight it was just a house of cards.
 
