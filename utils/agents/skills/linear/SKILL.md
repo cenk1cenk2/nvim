@@ -39,6 +39,10 @@ disable-model-invocation: true
 1. Call `mcp__mcphub__linear_kilic-dev__get_user` with `query: "me"` to identify the current user
 2. Note the user's **team(s)** from the response — this is your default team for issue creation
 3. Store the user ID for assigning issues
+4. Call `mcp__mcphub__linear_kilic-dev__list_issue_labels` to fetch **all available labels** for the workspace
+   - Store the label list for the session
+   - **NEVER fabricate or guess label names** — only use labels that exist in this list
+   - If no label fits the issue, ASK the user which label to use rather than inventing one
 
 ### Core Requirements
 
@@ -53,7 +57,7 @@ disable-model-invocation: true
 - **MANDATORY FIELDS** — Every issue MUST have `labels`, `estimate`, and `priority` set. If you are unsure about any of these values, STOP and ask the user before creating the issue. Do NOT create issues with missing labels, estimates, or priorities.
   - `priority`: 0=None, 1=Urgent, 2=High, 3=Normal, 4=Low
   - `estimate`: Use the team's estimation scale
-  - `labels`: At minimum one label categorizing the issue type
+  - `labels`: At minimum one label categorizing the issue type. **MUST be from the fetched label list — NEVER invent labels**
 - **RELATIONS** — When creating multiple related issues or working with projects, ALWAYS set proper relations:
   - Use `blocks` / `blockedBy` to express dependency order between issues
   - Use `relatedTo` for issues that are connected but not blocking each other

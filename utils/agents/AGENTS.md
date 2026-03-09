@@ -309,9 +309,9 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | Git operations | `git` MCP | Any git operation — available tools: `mcp__mcphub__git__git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch` |
 | Documentation lookup | `context7` | Need to reference official docs for libraries/frameworks |
 | Shell command execution (visible to user) | `tmux` | Long-running commands, builds, tests, and commands the user should see — via neovim session's scratch pane |
-| Deep research / web search | `tavily` MCP | **Preferred for all web research.** Tools: `tavily-search` (real-time web search with advanced depth), `tavily-extract` (extract structured content from URLs), `tavily-crawl` (systematic website traversal), `tavily-map` (map website structure/sitemap). Use for deep research, multi-source investigation, and URL content extraction |
-| Web search (fallback) | `web_search` (built-in) | Fallback when Tavily MCP is not loaded |
-| Fetch webpage content (fallback) | `fetch_webpage` (built-in) | Fallback when Tavily MCP `tavily-extract` is not loaded |
+| Web search | `web_search` (built-in) | **Preferred for web search** |
+| Fetch webpage content | `fetch_webpage` (built-in) | **Preferred for extracting content from URLs** |
+| Deep research / web search (last resort) | `tavily` MCP | **Last resort only.** Use when built-in web search and fetch are insufficient. Tools: `tavily-search`, `tavily-extract`, `tavily-crawl`, `tavily-map` |
 
 #### Tmux Scratch Pane (Command Runner)
 

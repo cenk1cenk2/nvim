@@ -11,7 +11,7 @@ function M.config()
         "Davidyz/VectorCode",
         version = "*",
         build = {
-          "uv tool install --python 3.13 vectorcode[lsp,mcp]",
+          "uv tool install --python 3.13 'vectorcode[lsp,mcp]'",
         },
         dependencies = { "nvim-lua/plenary.nvim" },
       }
@@ -19,26 +19,16 @@ function M.config()
     setup = function()
       ---@type VectorCode.Opts
       return {
-        ---@type VectorCode.RegisterOpts
         async_opts = {
-          debounce = 10,
-          events = { "BufWritePost", "InsertEnter", "BufReadPost" },
-          exclude_this = true,
-          n_query = 1,
-          notify = false,
-          query_cb = require("vectorcode.utils").make_surrounding_lines_cb(-1),
-          run_on_register = false,
+          run_on_register = true,
+          notify = nvim.lsp.ai.debug,
         },
         async_backend = "lsp",
-        exclude_this = true,
-        n_query = 1,
         notify = true,
-        timeout_ms = 5000,
         on_setup = {
           update = false,
           lsp = true,
         },
-        sync_log_env_var = false,
       }
     end,
     on_setup = function(opts)
@@ -62,12 +52,7 @@ function M.config()
 
             local cacher = require("vectorcode.config").get_cacher_backend()
             cacher.async_check("config", function()
-              cacher.register_buffer(event.buf, {
-                notify = nvim.lsp.ai.debug,
-                run_on_register = true,
-                events = { "BufReadPost", "BufWritePost", "InsertLeave" },
-                debounce = 15,
-              })
+              cacher.register_buffer(event.buf)
             end, nil)
           end,
         },
