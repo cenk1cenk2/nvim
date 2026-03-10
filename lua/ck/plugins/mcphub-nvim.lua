@@ -17,6 +17,9 @@ function M.config()
         keys = { "<leader>c" },
         cmd = { "MCPHub" },
         -- event = { "VeryLazy" },
+        dependencies = {
+          { "georgeharker/mcp-diagnostics.nvim" },
+        },
       }
     end,
     setup = function()
@@ -150,6 +153,31 @@ function M.config()
       })
 
       M.register_agent_skills()
+
+      -- Advanced mcphub configuration
+      require("mcp-diagnostics").setup({
+        mode = "mcphub",
+
+        mcphub = {
+          -- Server identification
+          server_name = "mcp-diagnostics",
+          display_name = "Neovim Diagnostics & LSP",
+
+          -- Auto-approve: Let AI run diagnostic tools without asking
+          auto_approve = false, -- Set to true for seamless experience
+
+          -- Feature toggles
+          enable_diagnostics = true, -- Diagnostic tools
+          enable_lsp = true, -- LSP tools
+          enable_prompts = true, -- Investigation guides
+
+          -- Other options
+          debug = nvim.lsp.ai.debug, -- Show detailed logs
+          lsp_timeout = 1000, -- LSP operation timeout (ms)
+          auto_register = true, -- Auto-register with mcphub
+          auto_reload_files = true, -- Automatically reload changed files
+        },
+      })
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings

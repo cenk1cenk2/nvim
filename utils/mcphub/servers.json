@@ -1,14 +1,5 @@
 {
   "mcpServers": {
-    "cclsp": {
-      "args": ["-y", "cclsp@latest"],
-      "autoApprove": ["find_definition", "find_references", "get_diagnostics"],
-      "command": "bunx",
-      "disabled": true,
-      "env": {
-        "CCLSP_CONFIG_PATH": "${HOME}/.config/nvim/utils/agents/mcp/cclsp.json"
-      }
-    },
     "context7": {
       "autoApprove": ["get-library-docs", "resolve-library-id", "query-docs"],
       "headers": {
@@ -230,8 +221,8 @@
       "autoApprove": ["vim_status", "vim_search", "vim_grep", "vim_jump", "vim_health", "vim_buffer_switch", "vim_file_open", "vim_tab", "vim_fold", "vim_visual", "vim_window"],
       "command": "bunx",
       "disabled": false,
-      "disabled_tools": ["vim_buffer", "vim_command", "vim_edit", "vim_mark", "vim_register", "vim_buffer_save", "vim_search_replace"],
       "disabled_resources": ["nvim://session", "nvim://buffers"],
+      "disabled_tools": ["vim_buffer", "vim_command", "vim_edit", "vim_mark", "vim_register", "vim_buffer_save", "vim_search_replace"],
       "env": {
         "ALLOW_SHELL_COMMANDS": "true",
         "NVIM_SOCKET_PATH": "${NVIM}"
@@ -248,20 +239,20 @@
         "OBSIDIAN_VERIFY_SSL": "false"
       }
     },
-    "slack": {
-      "command": "bunx",
-      "args": ["-y", "@modelcontextprotocol/server-slack@latest"],
-      "env": {
-        "SLACK_BOT_TOKEN": "${NVIM_SLACK_TOKEN}",
-        "SLACK_TEAM_ID": "${NVIM_SLACK_TEAM_ID}"
-      },
-      "autoApprove": ["slack_list_channels", "slack_get_channel_history", "slack_get_thread_replies", "slack_get_users", "slack_get_user_profile", "slack_add_reaction"]
-    },
     "sequentialthinking": {
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking@latest"],
       "autoApprove": ["sequentialthinking"],
       "command": "bunx",
       "disabled": false
+    },
+    "slack": {
+      "args": ["-y", "@modelcontextprotocol/server-slack@latest"],
+      "autoApprove": ["slack_list_channels", "slack_get_channel_history", "slack_get_thread_replies", "slack_get_users", "slack_get_user_profile", "slack_add_reaction"],
+      "command": "bunx",
+      "env": {
+        "SLACK_BOT_TOKEN": "${NVIM_SLACK_TOKEN}",
+        "SLACK_TEAM_ID": "${NVIM_SLACK_TEAM_ID}"
+      }
     },
     "tavily": {
       "autoApprove": ["tavily-search", "tavily_search"],
@@ -311,6 +302,27 @@
     "browser": {
       "autoApprove": ["open_in_browser", "open_in_obsidian"],
       "disabled_tools": []
+    },
+    "mcp-diagnostics": {
+      "autoApprove": [
+        "analyze_diagnostics",
+        "analyze_symbol",
+        "buffer_status",
+        "correlate_diagnostics",
+        "diagnostic_by_severity",
+        "diagnostic_hotspots",
+        "diagnostic_stats",
+        "diagnostics_get",
+        "diagnostics_summary",
+        "ensure_files_loaded",
+        "lsp_definition",
+        "lsp_document_symbols",
+        "lsp_references",
+        "lsp_workspace_symbols",
+        "refresh_after_external_changes",
+        "symbol_lookup",
+        "lsp_hover"
+      ]
     },
     "mcphub": {
       "autoApprove": ["get_current_servers"]

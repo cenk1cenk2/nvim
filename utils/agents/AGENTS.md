@@ -22,7 +22,7 @@
 - Refresh knowledge of ongoing tasks
 
 2. **DISCOVER MCP TOOLS** - Use `ToolSearch` (Claude Code's internal tool discovery mechanism) to find available MCP server tools
-   - Search for key tool categories: `neovim`, `git`, `treesitter`, `cclsp`, `context7`, `tmux`
+   - Search for key tool categories: `neovim`, `git`, `treesitter`, `mcp-diagnostics`, `context7`, `tmux`
    - Understand tool capabilities for this session
    - Note any tool limitations or unavailability
    - **If tools are unavailable, silently skip and continue** - tools may not always be loaded
@@ -312,7 +312,8 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | **File reading** | `neovim` MCP | **ALWAYS first choice** for reading files — no exceptions (see File Operations) |
 | **File editing** | `neovim` MCP | **ALWAYS** use `mcp__mcphub__neovim__edit_file` for editing existing files — no exceptions (see File Operations) |
 | **File creation** | Built-in `create_file` | Use the builtin `create_file` tool for creating new files |
-| Code navigation, find definitions/references | `cclsp` | LSP server available for the language. **No fallback exists** — if cclsp is unavailable, use Grep as a last resort |
+| Code navigation (definitions/references/hover) | `mcp-diagnostics` (native) | **ALWAYS first choice** for LSP operations — uses Neovim's running LSP clients. Tools: `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, `lsp_workspace_symbols`, `lsp_code_actions`. Fallback: `treesitter` for structure, then Grep |
+| Diagnostics (errors, warnings) | `mcp-diagnostics` (native) | Diagnostic analysis from running LSP servers. Tools: `document_diagnostics`, `workspace_diagnostics`, `diagnostics_summary` |
 | Code structure analysis, AST queries | `treesitter` | Need to understand syntax structure, find patterns |
 | Git operations | `git` MCP | Any git operation — available tools: `mcp__mcphub__git__git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch` |
 | **GitHub operations** (PRs, issues, repos, code search) | `github` MCP | **ALWAYS first choice** for any GitHub interaction. Fallback: `gh` CLI via tmux/Bash. Never use raw API calls |
@@ -759,10 +760,9 @@ Handles token expiration gracefully with retry logic.
 **Need to navigate code:**
 
 ```
-1. Check if cclsp available (ToolSearch)
-2. Use cclsp for definitions/references if available (no fallback for this capability)
-3. Fall back to treesitter for structure analysis
-4. Use Grep only if others unavailable
+1. Use mcp-diagnostics for definitions/references/hover (native server, always available)
+2. Fall back to treesitter for structure analysis
+3. Use Grep only if others unavailable
 ```
 
 **Showing code to user in editor:**
