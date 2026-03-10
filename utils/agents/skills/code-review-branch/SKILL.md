@@ -1,5 +1,5 @@
 ---
-name: review-branch
+name: code-review-branch
 description: Review the current branch's changes against the default or target branch with full conversation context. Use for thorough code review that considers the intent behind changes, not just the code itself.
 interaction: chat
 disable-model-invocation: true
@@ -18,7 +18,7 @@ argument-hint: "[optional: target-branch or PR URL]"
 
 ### Context
 
-This is not a generic code review — it is a **context-aware audit**. Before looking at any code, you must understand *what is being achieved* by analyzing the conversation history, any prior skills invoked (Linear issues, assistant plans, etc.), and the goals behind the changes. Review the code in that light.
+This is not a generic code review — it is a **context-aware audit**. Before looking at any code, you must understand _what is being achieved_ by analyzing the conversation history, any prior skills invoked (Linear issues, assistant plans, etc.), and the goals behind the changes. Review the code in that light.
 
 ### Process
 
@@ -61,24 +61,26 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - For each finding, show the code in question and the proposed change using this format:
 
      **Current:**
-     ````language
+
+     ```language
      # path/to/file:linenumber
 
      snippet of code in question
 
      # path/to/file:endlinenumber
-     ````
+     ```
 
      **Proposed:**
-     ````language
+
+     ```language
      # path/to/file:linenumber
 
      proposed change
 
      # path/to/file:endlinenumber
-     ````
+     ```
 
-   - Explain *what* the issue is and *why* it matters in the context of the intent.
+   - Explain _what_ the issue is and _why_ it matters in the context of the intent.
    - If there are many findings, present them in chunks rather than one massive wall — let the user process and respond incrementally.
    - If no issues found, say so — don't invent problems.
 
