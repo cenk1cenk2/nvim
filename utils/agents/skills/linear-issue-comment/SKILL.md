@@ -1,5 +1,5 @@
 ---
-name: linear-comment
+name: linear-issue-comment
 description: Record critical findings, deviations, and decisions as concise comments on Linear issues. Use when documenting outcomes of research, debugging, or implementation sessions.
 interaction: chat
 disable-model-invocation: true
@@ -57,4 +57,4 @@ When the session produced significant research, reasoning, or context worth pres
 [Detailed context: research trail, options considered, reasoning behind decisions, links to relevant code or docs]
 ```
 
-Use the appendix when the comment would otherwise lose important context that future readers need to understand *why* decisions were made.
+Use the appendix when the comment would otherwise lose important context that future readers need to understand _why_ decisions were made.
