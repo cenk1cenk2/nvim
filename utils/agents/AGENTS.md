@@ -309,6 +309,11 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | Code navigation, find definitions/references | `cclsp` | LSP server available for the language. **No fallback exists** — if cclsp is unavailable, use Grep as a last resort |
 | Code structure analysis, AST queries | `treesitter` | Need to understand syntax structure, find patterns |
 | Git operations | `git` MCP | Any git operation — available tools: `mcp__mcphub__git__git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch` |
+| **GitHub operations** (PRs, issues, repos, code search) | `github` MCP | **ALWAYS first choice** for any GitHub interaction. Fallback: `gh` CLI via tmux/Bash. Never use raw API calls |
+| **GitLab operations** (MRs, issues, repos, pipelines) | `gitlab` MCP | **ALWAYS first choice** for any GitLab interaction. Fallback: `glab` CLI via tmux/Bash. Never use raw API calls |
+| **Linear operations** (issues, projects, cycles, docs) | `linear` MCP | **ALWAYS first choice** for any Linear interaction. Two workspaces: `linear_kilic-dev` and `linear_laravel`. No CLI fallback |
+| **Obsidian operations** (notes, search, tags) | `obsidian` MCP | **ALWAYS first choice** for vault operations. No CLI fallback — do not manipulate vault files directly |
+| **Filesystem operations** (beyond neovim scope) | `filesystem` MCP | Directory trees, file info, media files. Fallback: built-in Glob/Read, then shell commands |
 | Documentation lookup | `context7` | Need to reference official docs for libraries/frameworks |
 | Shell command execution (visible to user) | `tmux` | Long-running commands, builds, tests, and commands the user should see — via neovim session's scratch pane |
 | Web search | `web_search` (built-in) | **Preferred for web search** |
@@ -391,6 +396,9 @@ If the scratch session does not exist but tmux MCP is loaded and you need to run
 - `find` for file search - use Glob tool
 - `grep` or `rg` for text search - use Grep tool
 - Raw `git` commands WHENEVER POSSIBLE - use `mcp__mcphub__git__*` MCP server tools
+- `gh` CLI for GitHub when `github` MCP is available — use `mcp__mcphub__github__*` first
+- `glab` CLI for GitLab when `gitlab` MCP is available — use `mcp__mcphub__gitlab__*` first
+- Direct vault file manipulation for Obsidian when `obsidian` MCP is available — use `mcp__mcphub__obsidian__*` first
 
 ### Graceful Degradation
 
@@ -721,6 +729,14 @@ Handles token expiration gracefully with retry logic.
 2. Use cclsp for definitions/references if available (no fallback for this capability)
 3. Fall back to treesitter for structure analysis
 4. Use Grep only if others unavailable
+```
+
+**Interacting with external services (GitHub, GitLab, Linear, Obsidian):**
+
+```
+1. MCP tool for that service (ALWAYS first choice)
+2. Dedicated CLI tool (gh, glab) via tmux/Bash (fallback)
+3. Raw shell commands / API calls (last resort, avoid)
 ```
 
 **Completing a milestone:**
