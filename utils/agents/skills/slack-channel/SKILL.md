@@ -39,8 +39,19 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
    - If you have previously processed this channel (check your earlier messages in the conversation for timestamps), offer to start from where you left off.
    - Otherwise, ask the user how far back to look.
 
-3. **Fetch messages.**
-   - Use `slack_get_channel_history` to fetch messages within the timeframe.
+3. **Fetch and filter messages.**
+   - Use `slack_get_channel_history` with a generous `limit` to fetch messages.
+   - The result may be large and saved to a tool-results file. When this happens, use `jq` via Bash to extract and filter:
+     ```bash
+     # Extract timestamps to identify date range
+     cat <result-file> | jq -r '.[0].text' | jq '[.messages[] | {ts, date: (.ts | split(".")[0] | tonumber | strftime("%Y-%m-%d %H:%M:%S"))}]'
+
+     # Filter to today's messages (replace EPOCH with start-of-day unix timestamp)
+     cat <result-file> | jq -r '.[0].text' | jq '[.messages[] | select((.ts | split(".")[0] | tonumber) >= EPOCH)]'
+
+     # Extract message content for analysis
+     cat <result-file> | jq -r '.[0].text' | jq '[.messages[] | select((.ts | split(".")[0] | tonumber) >= EPOCH)] | .[] | {ts, text, user, bot_id, attachments}'
+     ```
    - For any message with thread replies, use `slack_get_thread_replies` to read the full thread.
    - Resolve user IDs to real names using `slack_get_users` or `slack_get_user_profile`.
 
@@ -100,14 +111,26 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
    - Provide a general summary of messages grouped by topic or thread.
    - Ask the user how they'd like to handle the content.
 
-5. **Present the summary.**
+5. **Respond back to Slack.**
+
+   The response method depends on whether you processed a single message or a batch:
+
+   **Single message** → reply in thread:
+   - Use `slack_reply_to_thread` on the message you processed.
+   - Add `:dark_sunglasses:` reaction to that message.
+
+   **Batch of messages** → post channel-level summary:
+   - Use `slack_post_message` to post a summary to the channel.
+   - Add `:dark_sunglasses:` reaction to **each message that was included in the summary**.
    - Group findings by channel type logic above.
    - Lead with actionable items (failures, pending deployments, unresolved feedback).
    - Follow with informational items (successful deploys, merged MRs, passed pipelines).
-   - For `echo` channel, present items one by one and prompt for action on each.
 
-6. **React to processed messages.**
-   - Add `:dark_sunglasses:` reaction via `slack_add_reaction` to each message you have processed, so you and the user can track what's been covered.
+   **`:dark_sunglasses:` means "processed"** — only react to messages you actually wrote a response for (thread reply or included in a summary). Never react to messages you merely read but didn't act on.
+
+   - For `echo` channel, present items one by one in chat and prompt for action on each (do NOT post to Slack automatically for echo).
+   - The Slack summary also serves as a record that can be used to create Linear issues later.
+   - Unless the user explicitly asks for chat-only output, always write back to Slack.
 
 ### Composing with Other Skills
 
@@ -118,9 +141,10 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
 
 ### Key Principles
 
-- **Always reply in threads.** If you need to respond in Slack, use `slack_reply_to_thread`. Never post channel-level messages unless the user explicitly asks.
-- **Signal processing.** React with `:dark_sunglasses:` on each message you process.
-- **Never send messages without approval.** Reactions (`:dark_sunglasses:`) are automatic. All other Slack actions (replies, posts) require explicit user confirmation.
+- **Single message → thread reply. Batch → channel post.** Use `slack_reply_to_thread` when processing one message. Use `slack_post_message` when summarizing multiple messages.
+- **`:dark_sunglasses:` = processed.** Only react to messages you actually responded to (thread reply or included in summary). Never react to messages you merely read.
+- **Always write back to Slack.** Default behavior is to respond in Slack, not just in chat. The posted content doubles as a record for creating Linear issues.
+- **Never send ad-hoc replies without approval.** Summaries and reactions are automatic. Other thread replies require explicit user confirmation.
 - **Enrich with source tools.** Don't just summarize Slack text — use GitLab/Linear MCP tools to provide real context (diffs, MR details, issue state).
 - **Prompt for `echo`.** The echo channel is personal — always ask before creating issues or notes.
 - **Track your position.** Note the timestamp of the last message you processed so you can offer to resume from there next time.

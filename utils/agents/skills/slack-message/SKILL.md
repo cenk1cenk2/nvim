@@ -31,9 +31,8 @@ The user provides a Slack message URL and a task. This skill reads the message a
 
 ### Process
 
-1. **Acknowledge the message.**
+1. **Parse the message.**
    - Parse the Slack message URL to identify the channel ID and message timestamp.
-   - Immediately add a `:dark_sunglasses:` reaction to the message via `slack_add_reaction` to signal that you are working on it.
 
 2. **Extract the message.**
    - Use `slack_get_channel_history` to fetch the message if only the channel and timestamp are known.
@@ -58,7 +57,7 @@ The user provides a Slack message URL and a task. This skill reads the message a
      - **Create an Obsidian note** — invoke `/obsidian-note` with the thread context.
      - **Research a topic** — use web search, Context7, or codebase exploration based on what the thread discusses.
      - **Write or modify code** — use the thread context to inform implementation.
-     - **Summarize** — provide a structured summary in chat.
+     - **Summarize** — reply in thread via `slack_reply_to_thread` with the summary and add `:dark_sunglasses:` reaction to the message.
      - **Reply** — draft a response and present it for approval. **Always use `slack_reply_to_thread`** to keep conversations in threads. Only use `slack_post_message` for a new channel-level message when there is no thread context or the user explicitly asks.
      - **React** — add an emoji reaction via `slack_add_reaction` when the user asks.
 
@@ -70,8 +69,8 @@ The user provides a Slack message URL and a task. This skill reads the message a
 ### Key Principles
 
 - **Read the full thread.** A single message without thread context is often insufficient. Always fetch the complete thread.
-- **Always reply in threads.** Use `slack_reply_to_thread` by default for continuity. Channel-level messages (`slack_post_message`) only when there is no existing thread or the user explicitly requests it.
-- **Signal that you're working.** React with `:dark_sunglasses:` immediately upon receiving a message to process — before reading or summarizing.
-- **Never send messages without approval.** This skill reads and processes — it does NOT send replies, post messages, or add reactions (other than the `:dark_sunglasses:` working indicator) unless the user explicitly asks and confirms the content.
+- **Always reply in threads.** This skill processes a single message — use `slack_reply_to_thread` by default. Channel-level messages (`slack_post_message`) only when there is no existing thread or the user explicitly requests it.
+- **`:dark_sunglasses:` = processed.** Add the reaction only after you have written a response (thread reply or summary) for the message. It means "I handled this", not "I read this".
+- **Never send ad-hoc replies without approval.** Summaries and reactions are automatic. Other thread replies require explicit user confirmation of the draft content.
 - **Compose, don't duplicate.** When another skill handles the action better, invoke it with the gathered context rather than reimplementing its workflow.
 - **Slack context is ephemeral.** Summarize key information in chat so the user has it even if the thread evolves later.
