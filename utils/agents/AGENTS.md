@@ -457,21 +457,16 @@ Use the builtin `create_file` tool for creating new files. Do not use the edit t
 
 ### Editor Navigation (Showing Code to User)
 
-Use nvim MCP tools to navigate the user's editor when referring to specific code locations or when the user wants to see something. **If nvim MCP tools are unavailable, skip silently — do not fall back to other tools.**
+Use neovim MCP navigation tools to navigate the user's editor when referring to specific code locations or when the user wants to see something. **If these tools are unavailable, skip silently — do not fall back to other tools.**
 
 **Available tools:**
 
 | Tool | Purpose |
 |------|---------|
-| `mcp__mcphub__nvim__vim_status` | Get current editor state (cursor, mode, filename). |
-| `mcp__mcphub__nvim__vim_jump` | Jump to a specific line/column. |
-| `mcp__mcphub__nvim__vim_search` | Search for a pattern and jump to match. |
-| `mcp__mcphub__nvim__vim_grep` | Grep across files and jump to results. |
-| `mcp__mcphub__nvim__vim_file_open` | Open a file by path. |
-| `mcp__mcphub__nvim__vim_buffer_switch` | Switch to an already-open buffer. |
-| `mcp__mcphub__nvim__vim_window` | Manage window splits and layout. |
-| `mcp__mcphub__nvim__vim_fold` | Control code folding. |
-| `mcp__mcphub__nvim__vim_tab` | Manage editor tabs. |
+| `mcp__mcphub__neovim__vim_status` | Get current editor state (cursor, mode, filename, open buffers). |
+| `mcp__mcphub__neovim__vim_file_open` | Open a file by path (reuses buffer if open), optionally jump to line/col. |
+| `mcp__mcphub__neovim__vim_jump` | Jump to a specific line/column in current buffer. |
+| `mcp__mcphub__neovim__vim_select` | Visually select a range of lines. |
 
 **Rules:**
 
@@ -770,8 +765,8 @@ Handles token expiration gracefully with retry logic.
 ```
 1. Use vim_status to check current editor state (skip silently if unavailable)
 2. Ask permission before navigating (unless user explicitly requested it)
-3. Use vim_file_open / vim_jump / vim_search to navigate
-4. Confirm the user can see the target code
+3. Use vim_file_open / vim_jump to navigate
+4. Use vim_select to highlight code ranges for the user
 ```
 
 **Interacting with external services (GitHub, GitLab, Linear, Obsidian):**

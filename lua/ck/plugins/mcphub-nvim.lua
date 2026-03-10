@@ -152,6 +152,231 @@ function M.config()
         end,
       })
 
+      -- Helper: switch to a buffer by path or bufnr, creating if needed
+      -- Uses window-picker to find a suitable window, avoiding special windows
+      local function switch_to_buffer(path, bufnr)
+        local function focus_or_pick(target_buf)
+          local wins = vim.fn.win_findbuf(target_buf)
+          if #wins > 0 then
+            vim.api.nvim_set_current_win(wins[1])
+
+            return
+          end
+
+          local win = nvim.fn.pick_window()
+          if win then
+            vim.api.nvim_set_current_win(win)
+          end
+          vim.api.nvim_set_current_buf(target_buf)
+        end
+
+        if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+          focus_or_pick(bufnr)
+
+          return
+        end
+
+        if path then
+          local existing = vim.fn.bufnr(path)
+          if existing ~= -1 then
+            focus_or_pick(existing)
+          else
+            local win = nvim.fn.pick_window()
+            if win then
+              vim.api.nvim_set_current_win(win)
+            end
+            vim.cmd.edit(vim.fn.fnameescape(path))
+          end
+        end
+      end
+
+      -- Navigation tools for editor control
+      mcphub.add_tool("neovim", {
+        name = "vim_status",
+        description = "Get current editor state: cursor position, mode, current file, and open buffers",
+        inputSchema = {
+          type = "object",
+          properties = {},
+        },
+        handler = function(req, res)
+          local info = req.editor_info
+          local active = info.last_active
+
+          local buffers = {}
+          for _, buf in ipairs(info.buffers) do
+            if buf.is_loaded then
+              table.insert(buffers, {
+                name = buf.filename,
+                filetype = buf.filetype,
+                modified = buf.is_modified,
+                visible = buf.is_visible,
+                bufnr = buf.bufnr,
+              })
+            end
+          end
+
+          return res
+            :text(vim.json.encode({
+              file = active.filename,
+              filetype = active.filetype,
+              cursor = { line = active.cursor_pos[1], col = active.cursor_pos[2] },
+              line_count = active.line_count,
+              modified = active.is_modified,
+              mode = vim.api.nvim_get_mode().mode,
+              buffers = buffers,
+            }))
+            :send()
+        end,
+      })
+
+      mcphub.add_tool("neovim", {
+        name = "vim_file_open",
+        description = "Open a file in the editor. Reuses existing buffer if already open. Optionally jump to a line and column.",
+        inputSchema = {
+          type = "object",
+          properties = {
+            path = {
+              type = "string",
+              description = "Absolute file path to open",
+            },
+            line = {
+              type = "number",
+              description = "Line number to jump to (1-based, optional)",
+            },
+            col = {
+              type = "number",
+              description = "Column number to jump to (0-based, optional)",
+            },
+          },
+          required = { "path" },
+        },
+        handler = function(req, res)
+          local path = req.params.path
+          local line = req.params.line
+          local col = req.params.col or 0
+
+          vim.schedule(function()
+            switch_to_buffer(path)
+
+            if line then
+              local buf = vim.api.nvim_get_current_buf()
+              local max_lines = vim.api.nvim_buf_line_count(buf)
+              line = math.min(line, max_lines)
+              vim.api.nvim_win_set_cursor(0, { line, col })
+              vim.cmd.normal({ "zz", bang = true })
+            end
+          end)
+
+          local msg = "Opened " .. path
+          if line then
+            msg = msg .. " at line " .. line
+          end
+
+          return res:text(msg):send()
+        end,
+      })
+
+      mcphub.add_tool("neovim", {
+        name = "vim_jump",
+        description = "Jump to a specific line and column. Targets current buffer unless path or bufnr is provided.",
+        inputSchema = {
+          type = "object",
+          properties = {
+            line = {
+              type = "number",
+              description = "Line number to jump to (1-based)",
+            },
+            col = {
+              type = "number",
+              description = "Column number to jump to (0-based, optional, defaults to 0)",
+            },
+            path = {
+              type = "string",
+              description = "File path to target (optional, opens/switches to buffer first)",
+            },
+            bufnr = {
+              type = "number",
+              description = "Buffer number to target (optional, alternative to path)",
+            },
+          },
+          required = { "line" },
+        },
+        handler = function(req, res)
+          local line = req.params.line
+          local col = req.params.col or 0
+          local path = req.params.path
+          local bufnr = req.params.bufnr
+
+          vim.schedule(function()
+            if path or bufnr then
+              switch_to_buffer(path, bufnr)
+            end
+
+            local buf = vim.api.nvim_get_current_buf()
+            local max_lines = vim.api.nvim_buf_line_count(buf)
+            line = math.min(line, max_lines)
+            vim.api.nvim_win_set_cursor(0, { line, col })
+            vim.cmd.normal({ "zz", bang = true })
+          end)
+
+          local target = path or req.editor_info.last_active.filename
+
+          return res:text("Jumped to line " .. line .. " in " .. target):send()
+        end,
+      })
+
+      mcphub.add_tool("neovim", {
+        name = "vim_select",
+        description = "Visually select a range of lines. Targets current buffer unless path or bufnr is provided.",
+        inputSchema = {
+          type = "object",
+          properties = {
+            start_line = {
+              type = "number",
+              description = "Start line of selection (1-based)",
+            },
+            end_line = {
+              type = "number",
+              description = "End line of selection (1-based)",
+            },
+            path = {
+              type = "string",
+              description = "File path to target (optional, opens/switches to buffer first)",
+            },
+            bufnr = {
+              type = "number",
+              description = "Buffer number to target (optional, alternative to path)",
+            },
+          },
+          required = { "start_line", "end_line" },
+        },
+        handler = function(req, res)
+          local start_line = req.params.start_line
+          local end_line = req.params.end_line
+          local path = req.params.path
+          local bufnr = req.params.bufnr
+
+          vim.schedule(function()
+            if path or bufnr then
+              switch_to_buffer(path, bufnr)
+            end
+
+            local buf = vim.api.nvim_get_current_buf()
+            local max_lines = vim.api.nvim_buf_line_count(buf)
+            start_line = math.min(start_line, max_lines)
+            end_line = math.min(end_line, max_lines)
+
+            vim.api.nvim_win_set_cursor(0, { start_line, 0 })
+            vim.cmd.normal({ "V", bang = true })
+            vim.api.nvim_win_set_cursor(0, { end_line, 0 })
+          end)
+
+          local target = path or req.editor_info.last_active.filename
+
+          return res:text("Selected lines " .. start_line .. "-" .. end_line .. " in " .. target):send()
+        end,
+      })
+
       M.register_agent_skills()
 
       -- Advanced mcphub configuration
