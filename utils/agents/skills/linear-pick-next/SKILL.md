@@ -21,28 +21,46 @@ argument-hint: "[project-name or Linear URL] (optional — omit to analyze all p
 
 A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked before this skill, unless a full Linear URL is provided — in that case, deduce the workspace from the URL and use the corresponding MCP tools.
 
+### Project Discovery (IMPORTANT)
+
+**DO NOT use `list_projects` or `get_project`** — these tools have complexity limits and lookup issues.
+
+**ALWAYS use `list_issues` with the `project` parameter** to fetch issues directly:
+
+```
+project parameter accepts:
+- Project name (e.g., "renovate-operator-migration")
+- Project slug from URL (e.g., "1e710cd45ccd")
+- Partial project name matches
+```
+
+If user provides a Linear URL like `https://linear.app/kilic-dev/project/renovate-operator-migration-1e710cd45ccd/issues`:
+
+- Extract the project name: `renovate-operator-migration`
+- Use `list_issues` with `project: "renovate-operator-migration"`
+
 ### Process
 
 #### Step 1: Determine Scope
 
-If a project was provided, skip to Step 3.
+If a project was provided (name or URL), extract the project identifier and skip to Step 3.
 
 If no project was specified, ask the user:
 
 - **"Should I look across all your projects, or do you have a specific project in mind?"**
-- If the user names a project, use that. If they want a broad view, proceed to Step 2.
+- If the user names a project or provides a URL, use that. If they want a broad view, proceed to Step 2.
 
 #### Step 2: Cross-Project Analysis (all projects)
 
-1. **Fetch all active projects** (status: planned, started) assigned to the user.
-2. For each project, fetch a summary: project status, total issues, issues in progress, issues in backlog/todo.
+1. **Fetch issues from all projects** using `list_issues` with broad query terms (e.g., user's name or team).
+2. Group issues by project from the response.
 3. **Rank projects** by urgency — consider: project deadlines/milestones, number of blocked chains waiting, issues already in progress that need follow-up, overall project priority.
 4. **Present the project overview** to the user with a recommendation of which project to focus on.
 5. Wait for the user to confirm a project before proceeding to Step 3.
 
 #### Step 3: Issue Analysis (within a project)
 
-1. **Fetch all issues** in the selected project.
+1. **Fetch all issues** using `list_issues` with `project` parameter.
 2. **Filter to actionable issues** — status is backlog or todo (not done, cancelled, or already in progress).
 3. **For each actionable issue, check:**
    - **Prerequisites met?** — are all `blockedBy` issues completed? If not, the issue is not yet actionable.

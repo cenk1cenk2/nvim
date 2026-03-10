@@ -23,8 +23,8 @@ A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked bef
 
 ### Process
 
-1. **Fetch the project** using the appropriate Linear MCP tools. Note the project description, status, labels, initiative, and milestone.
-2. **Fetch all subissues** in the project. For each issue, collect: title, description, status, priority, estimate, labels, and blocking/blocked-by relations.
+1. **Fetch all project issues** using `list_issues` with the `project` parameter (do NOT use `get_project` or `list_projects` — they have complexity limits). Note the project name from the issues' `project` field.
+2. **Extract project details** from the issues — description, status, labels, initiative, and milestone can be inferred from the issues' metadata.
 3. **Audit the project-level configuration:**
    - Does the project description still accurately reflect the goal and scope?
    - Is the project status correct (backlog, planned, started, paused, completed, cancelled)?

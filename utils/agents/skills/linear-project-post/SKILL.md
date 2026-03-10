@@ -24,10 +24,10 @@ A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked bef
 
 ### Process
 
-1. **Fetch the project** using the appropriate Linear MCP tools.
+1. **Fetch the project issues** using `list_issues` with the `project` parameter (do NOT use `get_project` or `list_projects` — they have complexity limits).
 2. **Fetch prior project updates** using `get_status_updates` to establish the baseline — what was the last update, what was communicated, what was the state at that point.
 3. **Analyze the last update** — identify the cutoff point. Everything after this update is "recent" for the purpose of the new post.
-4. **Fetch all project issues** and categorize them by status.
+4. **Categorize issues** by status from the `list_issues` response.
 5. **Investigate completed issues since the last update** — these form the first paragraph. Understand what was accomplished, not just the issue titles. Read descriptions if needed to summarize the work meaningfully.
 6. **Investigate cancelled or descoped issues since the last update** — these form the deviations section. Summarize why they were dropped or changed in a concise manner.
 7. **Investigate in-progress and upcoming issues** — identify the immediate next steps for the closing sentence(s).
