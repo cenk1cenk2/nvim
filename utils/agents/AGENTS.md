@@ -462,18 +462,18 @@ Use vim MCP navigation tools to navigate the user's editor when referring to spe
 
 **Available tools:**
 
-| Tool | Purpose |
-|------|---------|
-| `mcp__mcphub__vim__vim_status` | Get current editor state (cursor, mode, filename, open buffers). |
+| Tool                              | Purpose                                                                   |
+| --------------------------------- | ------------------------------------------------------------------------- |
+| `mcp__mcphub__vim__vim_status`    | Get current editor state (cursor, mode, filename, open buffers).          |
 | `mcp__mcphub__vim__vim_file_open` | Open a file by path (reuses buffer if open), optionally jump to line/col. |
-| `mcp__mcphub__vim__vim_jump` | Jump to a specific line/column, optionally target a path or bufnr. |
-| `mcp__mcphub__vim__vim_select` | Visually select a range of lines, optionally target a path or bufnr. |
+| `mcp__mcphub__vim__vim_jump`      | Jump to a specific line/column, optionally target a path or bufnr.        |
+| `mcp__mcphub__vim__vim_select`    | Visually select a range of lines, optionally target a path or bufnr.      |
 
 **Rules:**
 
 - **Always ask before navigating.** The user's cursor position is their workspace — never move it without permission.
 - Use `vim_status` to understand where the user currently is before suggesting navigation.
-- When referring to a specific line of code in chat, offer: *"Want me to jump to that line in the editor?"*
+- When referring to a specific line of code in chat, offer: _"Want me to jump to that line in the editor?"_
 - In assistant mode, when listing lines to change, offer to navigate to each location.
 - Skip asking when the user explicitly requests navigation (e.g., "show me that file", "go to line 42").
 - If the user seems lost or not following along, offer to show the relevant code in the editor.
@@ -486,6 +486,7 @@ Use vim MCP navigation tools to navigate the user's editor when referring to spe
 
 - **Empty line before return** - Leave an empty line before the return statement when the function body has multiple statements. For single-statement functions or early-return guard clauses that are the only statement in their block, the empty line may be omitted.
 - **No trailing whitespace** - Never leave empty spaces at the end of lines
+- **YAML document separator** - Always start YAML files with `---` (document separator) unless explicitly stated otherwise or the other documents in the same folder do not follow this convention.
 
 **Example:**
 
@@ -590,16 +591,16 @@ When generating markdown content for project updates, documentation, or any exte
 
 **Terms that should be code-blocked:**
 
-| Category | Examples |
-|----------|----------|
-| Repository names | `renovate/renovate-runner`, `cluster/charts` |
-| Tool/command names | `kustomize`, `helmCharts`, `pulumi`, `kubectl` |
-| Cluster/host names | `cluster-rubik`, `cluster-sun`, `renovate.kilic.dev` |
-| File paths | `.deploy/rubik/kustomization.yaml`, `src/workloads/` |
-| CRD/resource types | `RenovateJob`, `ApplicationSet`, `HTTPRoute` |
-| Package/chart names | `mogenius/renovate-operator`, `chart-cert-manager` |
-| Configuration keys | `system.feature.kilic.dev/renovate-operator` |
-| Git references | `HEAD`, `main`, `feature-branch` |
+| Category            | Examples                                             |
+| ------------------- | ---------------------------------------------------- |
+| Repository names    | `renovate/renovate-runner`, `cluster/charts`         |
+| Tool/command names  | `kustomize`, `helmCharts`, `pulumi`, `kubectl`       |
+| Cluster/host names  | `cluster-rubik`, `cluster-sun`, `renovate.kilic.dev` |
+| File paths          | `.deploy/rubik/kustomization.yaml`, `src/workloads/` |
+| CRD/resource types  | `RenovateJob`, `ApplicationSet`, `HTTPRoute`         |
+| Package/chart names | `mogenius/renovate-operator`, `chart-cert-manager`   |
+| Configuration keys  | `system.feature.kilic.dev/renovate-operator`         |
+| Git references      | `HEAD`, `main`, `feature-branch`                     |
 
 **Example:**
 
