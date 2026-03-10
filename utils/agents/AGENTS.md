@@ -32,6 +32,12 @@
    - Resolve the pane ID for command execution during the session
    - **If no scratch session exists, CREATE one** — see "Creating a scratch session" below
 
+4. **LOAD REPOSITORY NOTE** - If obsidian MCP is available, check for a repository note
+   - Derive the note path from the current working directory relative to `~/development/` (e.g., `~/development/laravel/cloud-app-operator/` → `Repositories/laravel/cloud-app-operator`)
+   - Read the note via `mcp__mcphub__obsidian__obsidian_read_note` with the derived path
+   - If the note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
+   - **If the note does not exist or obsidian MCP is unavailable, silently skip and continue**
+
 ## II. PLANNING AND IMPLEMENTATION
 
 ### When to Use Plan Mode
@@ -677,7 +683,8 @@ Handles token expiration gracefully with retry logic.
 ```
 1. Read memory graph (skip silently if unavailable)
 2. Discover MCP tools (skip silently if unavailable)
-3. Review git status and working directory
+3. Discover tmux scratch pane (skip silently if unavailable)
+4. Load repository note from Obsidian (skip silently if unavailable)
 ```
 
 **User requests complex implementation:**

@@ -279,6 +279,8 @@ function M.register_agent_skills()
   ---@return string
   local function build_skill_user_payload(skill)
     local lines = {
+      "",
+      "",
       "````xml",
       "<Skill>",
       "  <Name>" .. xml_escape(skill.name) .. "</Name>",
@@ -300,7 +302,8 @@ function M.register_agent_skills()
 
     table.insert(lines, "</Skill>")
     table.insert(lines, "````")
-    table.insert(lines, "\n")
+    table.insert(lines, "")
+    table.insert(lines, "")
 
     return table.concat(lines, "\n")
   end

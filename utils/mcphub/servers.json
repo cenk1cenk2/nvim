@@ -246,6 +246,14 @@
         "OBSIDIAN_VERIFY_SSL": "false"
       }
     },
+    "slack": {
+      "disabled_tools": [
+        "slack_send_message",
+        "slack_create_canvas",
+        "slack_update_canvas"
+      ],
+      "url": "https://mcp.slack.com/mcp"
+    },
     "sequentialthinking": {
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking@latest"],
       "autoApprove": ["sequentialthinking"],
