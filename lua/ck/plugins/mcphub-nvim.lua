@@ -377,6 +377,58 @@ function M.config()
         end,
       })
 
+      mcphub.add_tool("mcp-diagnostics", {
+        name = "lsp_rename",
+        description = "Rename a symbol under the cursor using LSP. Optionally navigate to a specific location first.",
+        inputSchema = {
+          type = "object",
+          properties = {
+            new_name = {
+              type = "string",
+              description = "The new name for the symbol",
+            },
+            path = {
+              type = "string",
+              description = "File path containing the symbol (optional, uses current buffer if omitted)",
+            },
+            line = {
+              type = "number",
+              description = "Line number of the symbol (1-based, optional)",
+            },
+            col = {
+              type = "number",
+              description = "Column number of the symbol (0-based, optional)",
+            },
+          },
+          required = { "new_name" },
+        },
+        handler = function(req, res)
+          local new_name = req.params.new_name
+          local path = req.params.path
+          local line = req.params.line
+          local col = req.params.col or 0
+
+          vim.schedule(function()
+            if path then
+              switch_to_buffer(path)
+            end
+
+            if line then
+              local buf = vim.api.nvim_get_current_buf()
+              local max_lines = vim.api.nvim_buf_line_count(buf)
+              line = math.min(line, max_lines)
+              vim.api.nvim_win_set_cursor(0, { line, col })
+            end
+
+            vim.lsp.buf.rename(new_name)
+          end)
+
+          local target = path or req.editor_info.last_active.filename
+
+          return res:text("Renamed symbol to '" .. new_name .. "' in " .. target):send()
+        end,
+      })
+
       M.register_agent_skills()
 
       -- Advanced mcphub configuration

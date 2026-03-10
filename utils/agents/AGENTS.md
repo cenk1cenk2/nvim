@@ -313,6 +313,7 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | **File editing** | `neovim` MCP | **ALWAYS** use `mcp__mcphub__neovim__edit_file` for editing existing files — no exceptions (see File Operations) |
 | **File creation** | Built-in `create_file` | Use the builtin `create_file` tool for creating new files |
 | Code navigation (definitions/references/hover) | `mcp-diagnostics` (native) | **ALWAYS first choice** for LSP operations — uses Neovim's running LSP clients. Tools: `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, `lsp_workspace_symbols`, `lsp_code_actions`. Fallback: `treesitter` for structure, then Grep |
+| **Renaming symbols** | `mcp-diagnostics` (native) | **ALWAYS use `lsp_rename` instead of find-and-replace or manual edits.** Single tool call renames across the entire workspace via LSP — the fastest way to rename. Accepts `new_name`, optional `path`/`line`/`col` to target. |
 | Diagnostics (errors, warnings) | `mcp-diagnostics` (native) | Diagnostic analysis from running LSP servers. Tools: `document_diagnostics`, `workspace_diagnostics`, `diagnostics_summary` |
 | Code structure analysis, AST queries | `treesitter` | Need to understand syntax structure, find patterns |
 | Git operations | `git` MCP | Any git operation — available tools: `mcp__mcphub__git__git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch` |
