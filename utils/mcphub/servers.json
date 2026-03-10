@@ -250,7 +250,8 @@
       "command": "bunx",
       "args": ["-y", "@modelcontextprotocol/server-slack@latest"],
       "env": {
-        "SLACK_BOT_TOKEN": "${NVIM_SLACK_TOKEN}"
+        "SLACK_BOT_TOKEN": "${NVIM_SLACK_TOKEN}",
+        "SLACK_TEAM_ID": "${NVIM_SLACK_TEAM_ID}"
       },
       "autoApprove": ["slack_list_channels", "slack_get_channel_history", "slack_get_thread_replies", "slack_get_users", "slack_get_user_profile"]
     },
