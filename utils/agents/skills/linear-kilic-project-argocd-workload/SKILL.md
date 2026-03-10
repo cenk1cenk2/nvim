@@ -1,5 +1,5 @@
 ---
-name: linear-create-project-argocd-workload
+name: linear-kilic-project-argocd-workload
 description: Create a Linear project for deploying application workloads to Kubernetes clusters via ArgoCD. Use when deploying applications, services, or CRD-based workloads that run on target clusters.
 interaction: chat
 disable-model-invocation: true

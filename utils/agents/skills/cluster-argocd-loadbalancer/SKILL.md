@@ -1,5 +1,5 @@
 ---
-name: create-cluster-workload-loadbalancer
+name: cluster-argocd-loadbalancer
 description: Create or extend routing workloads in a load balancer cluster's ArgoCD repository. Scaffolds Pulumi services for cross-cluster routing, VM routing, or direct LB routes. Can also add new routes to existing workload services.
 interaction: chat
 disable-model-invocation: true

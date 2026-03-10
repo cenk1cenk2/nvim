@@ -1,5 +1,5 @@
 ---
-name: linear-create-project-argocd-system
+name: linear-kilic-project-argocd-system
 description: Create a Linear project for deploying system-level components (operators, controllers, infrastructure tools) to Kubernetes clusters via ArgoCD. Use when deploying new system software like cert-manager, external-secrets-operator, renovate-operator, etc.
 interaction: chat
 disable-model-invocation: true

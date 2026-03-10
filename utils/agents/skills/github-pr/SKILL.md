@@ -41,7 +41,7 @@ interaction: chat
    - Get current branch name via `mcp__mcphub__git__git_status`
    - Get remote origin URL to extract owner/repo
    - Find the open PR for the current branch via `mcp__mcphub__github__list_pull_requests` with `head` filter (format: `owner:branch`)
-   - If no PR exists, inform the user and stop
+   - If no PR exists, ask the user if they want to create one. Use `mcp__mcphub__github__create_pull_request` or fall back to `gh pr create` via CLI if MCP creation is not available.
 
 2. **Analyze the PR:**
    - Read PR details via `mcp__mcphub__github__pull_request_read` with method `get`

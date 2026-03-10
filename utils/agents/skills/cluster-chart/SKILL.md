@@ -1,5 +1,5 @@
 ---
-name: create-cluster-chart
+name: cluster-chart
 description: Create a new Helm chart wrapper in the cluster/charts group on GitLab. Scaffolds the chart repository with upstream dependency, values, optional custom templates (ExternalSecret, Gateway API resources, CRDs), and all standard boilerplate.
 interaction: chat
 disable-model-invocation: true

@@ -1,5 +1,5 @@
 ---
-name: linear
+name: linear-kilic
 description: Research and create Linear issues with comprehensive analysis. Use for issue management, research documentation, and task planning in Linear.
 interaction: chat
 disable-model-invocation: true

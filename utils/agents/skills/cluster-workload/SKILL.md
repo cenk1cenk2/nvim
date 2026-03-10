@@ -1,5 +1,5 @@
 ---
-name: create-cluster-workload
+name: cluster-workload
 description: Create a new workload deployment repository in the cluster/workloads group on GitLab. Scaffolds the kustomize structure with Helm charts, ExternalSecrets, Gateway API routing, databases, SSO, and other common patterns.
 interaction: chat
 disable-model-invocation: true

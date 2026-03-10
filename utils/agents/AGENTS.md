@@ -58,7 +58,7 @@
 
 ### Special Mode Triggers
 
-User invokes specialized modes using personal slash commands (e.g., `/assistant`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.claude/skills/`. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
+User invokes specialized modes using personal slash commands (e.g., `/assistant`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
 
 ### Plan File Location
 

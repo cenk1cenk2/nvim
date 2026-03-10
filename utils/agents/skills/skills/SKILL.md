@@ -1,19 +1,19 @@
 ---
-name: manage-skills
+name: skills
 description: Create, update, or review skills in the skills directory. Use when the user wants to add a new skill, modify an existing one, or understand the skill conventions.
-interaction: inline
-argument-hint: "[create|update] [skill-name] [description of what the skill should do]"
+interaction: chat
+argument-hint: "[create|update|review] [skill-name] [description of what the skill should do]"
 ---
 
 ## system
 
 ### Skill Management
 
-> **DO NOT enter plan mode for this prompt.**
+> **ALWAYS enter plan mode for this prompt.**
 >
-> - This is an interactive workflow
-> - Present drafts to the user and iterate based on feedback
-> - Do NOT write files until the user explicitly approves
+> - Present findings, drafts, or proposed changes to the user.
+> - Iterate based on feedback.
+> - Do NOT write files until the user explicitly approves the plan.
 
 ### Skills Directory
 
@@ -29,24 +29,29 @@ All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a direct
 
 ### Process
 
-1. **Understand the Request:**
-   - Determine if this is a create, update, or review operation.
-   - For updates, read the existing `SKILL.md` first.
-   - For creates, ask what the skill should do if not clear from context.
+#### Create
 
-2. **Research Existing Conventions:**
-   - Read 2-3 existing skills from the directory to understand patterns.
-   - Match the tone, structure, and level of detail of existing skills.
-   - Pay attention to which skills use `disable-model-invocation`, `argument-hint`, plan mode, etc.
+1. Determine what the skill should do. Ask the user if not clear from context.
+2. Read 2-3 existing skills to understand patterns, tone, and structure.
+3. Draft the full `SKILL.md` and present it in chat.
+4. Iterate based on user feedback.
+5. After approval, create the directory and write the file.
 
-3. **Draft the Skill:**
-   - Follow the SKILL.md format below.
-   - Present the full draft to the user in chat.
-   - Iterate based on feedback.
+#### Update
 
-4. **Apply (Only After Approval):**
-   - Create the directory and write the `SKILL.md` file.
-   - Confirm the skill was created/updated.
+1. Read the existing `SKILL.md` for the target skill.
+2. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
+3. Identify what needs to change and present proposed changes to the user.
+4. Iterate based on feedback.
+5. After approval, apply the changes.
+
+#### Review
+
+1. Read the existing `SKILL.md` for the target skill.
+2. List ambiguities, inconsistencies, or areas that could be improved.
+3. Ask clarifying questions to understand user intent.
+4. Propose specific improvements based on answers.
+5. After approval, apply the changes (or leave as-is if no changes needed).
 
 ### SKILL.md Format
 
@@ -58,20 +63,21 @@ Every `SKILL.md` starts with YAML frontmatter followed by markdown instructions.
 ---
 name: skill-name # kebab-case, matches directory name
 description: One-line description of what the skill does and when to use it.
+interaction: chat
 ---
 ```
 
 **Optional frontmatter fields:**
 
 ```yaml
-disable-model-invocation: true # Prevents the model from auto-invoking this skill
-argument-hint: "[args]" # Shown to user as usage hint
+disable-model-invocation: true # Prevents the model from auto-invoking this skill.
+argument-hint: "[args]" # Shown to user as usage hint.
 ```
 
 **Body structure:**
 
 ```markdown
-## Skill Title
+## system
 
 > **Plan mode directive** (choose one per skill)
 >
