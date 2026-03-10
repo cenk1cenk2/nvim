@@ -584,6 +584,33 @@ When user manually modifies your changes:
 
 **Apply learned patterns** to all subsequent code in the same session AND save to memory for future sessions.
 
+### Markdown Output Formatting
+
+When generating markdown content for project updates, documentation, or any external output, **always wrap technical terms in code blocks** (backticks) for clarity and consistency.
+
+**Terms that should be code-blocked:**
+
+| Category | Examples |
+|----------|----------|
+| Repository names | `renovate/renovate-runner`, `cluster/charts` |
+| Tool/command names | `kustomize`, `helmCharts`, `pulumi`, `kubectl` |
+| Cluster/host names | `cluster-rubik`, `cluster-sun`, `renovate.kilic.dev` |
+| File paths | `.deploy/rubik/kustomization.yaml`, `src/workloads/` |
+| CRD/resource types | `RenovateJob`, `ApplicationSet`, `HTTPRoute` |
+| Package/chart names | `mogenius/renovate-operator`, `chart-cert-manager` |
+| Configuration keys | `system.feature.kilic.dev/renovate-operator` |
+| Git references | `HEAD`, `main`, `feature-branch` |
+
+**Example:**
+
+> "The workload configuration uses `kustomize` with nested `helmCharts` to deploy the `mogenius/renovate-operator` to `cluster-rubik`. The `RenovateJob` CRDs are defined in the `renovate/renovate-runner` repository."
+
+**Not:**
+
+> "The workload configuration uses kustomize with nested helmCharts to deploy the mogenius/renovate-operator to cluster-rubik. The RenovateJob CRDs are defined in the renovate/renovate-runner repository."
+
+**Exceptions:** Plain English words, proper nouns (company names, product marketing names), and sentences where code blocks would hurt readability.
+
 ### Information Accuracy
 
 **NEVER fabricate** information.
