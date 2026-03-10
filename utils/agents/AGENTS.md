@@ -303,7 +303,8 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 
 | Task | Tool | When to Use |
 | --- | --- | --- |
-| **File reading and editing** | `neovim` | **ALWAYS first choice** for reading and editing files (see File Operations) |
+| **File reading** | `neovim` | **ALWAYS first choice** for reading files (see File Operations) |
+| **File editing and creation** | Built-in tools | Use the `insert_edit_into_file` tool for editing existing files and `create_file` for creating new files. These are provided by the adapter and use mcphub's EditSession with SEARCH/REPLACE blocks under the hood. |
 | Code navigation, find definitions/references | `cclsp` | LSP server available for the language. **No fallback exists** — if cclsp is unavailable, use Grep as a last resort |
 | Code structure analysis, AST queries | `treesitter` | Need to understand syntax structure, find patterns |
 | Git operations | `git` MCP | Any git operation — available tools: `mcp__mcphub__git__git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch` |

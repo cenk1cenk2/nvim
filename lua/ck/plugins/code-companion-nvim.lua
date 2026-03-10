@@ -448,6 +448,12 @@ function M.config()
                   },
                 },
               },
+              ["insert_edit_into_file"] = {
+                path = "ck.utils.tools.edit",
+                opts = {
+                  require_approval_before = false,
+                },
+              },
               ["web_search"] = {
                 opts = {
                   require_approval_before = false,
