@@ -227,9 +227,11 @@
     },
     "nvim": {
       "args": ["-y", "mcp-neovim-server@latest"],
-      "autoApprove": ["vim_buffer", "vim_buffer_switch", "vim_file_open", "vim_fold", "vim_grep", "vim_jump", "vim_search", "vim_status"],
+      "autoApprove": ["vim_status", "vim_search", "vim_grep", "vim_jump", "vim_health", "vim_buffer_switch", "vim_file_open", "vim_tab", "vim_fold", "vim_visual", "vim_window"],
       "command": "bunx",
-      "disabled": true,
+      "disabled": false,
+      "disabled_tools": ["vim_buffer", "vim_command", "vim_edit", "vim_mark", "vim_register", "vim_buffer_save", "vim_search_replace"],
+      "disabled_resources": ["nvim://session", "nvim://buffers"],
       "env": {
         "ALLOW_SHELL_COMMANDS": "true",
         "NVIM_SOCKET_PATH": "${NVIM}"

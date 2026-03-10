@@ -454,6 +454,33 @@ Use the builtin `create_file` tool for creating new files. Do not use the edit t
 1. `neovim` MCP - `mcp__mcphub__neovim__list_directory`, `mcp__mcphub__neovim__find_files`
 2. Built-in `Glob` tool
 
+### Editor Navigation (Showing Code to User)
+
+Use nvim MCP tools to navigate the user's editor when referring to specific code locations or when the user wants to see something. **If nvim MCP tools are unavailable, skip silently — do not fall back to other tools.**
+
+**Available tools:**
+
+| Tool | Purpose |
+|------|---------|
+| `mcp__mcphub__nvim__vim_status` | Get current editor state (cursor, mode, filename). |
+| `mcp__mcphub__nvim__vim_jump` | Jump to a specific line/column. |
+| `mcp__mcphub__nvim__vim_search` | Search for a pattern and jump to match. |
+| `mcp__mcphub__nvim__vim_grep` | Grep across files and jump to results. |
+| `mcp__mcphub__nvim__vim_file_open` | Open a file by path. |
+| `mcp__mcphub__nvim__vim_buffer_switch` | Switch to an already-open buffer. |
+| `mcp__mcphub__nvim__vim_window` | Manage window splits and layout. |
+| `mcp__mcphub__nvim__vim_fold` | Control code folding. |
+| `mcp__mcphub__nvim__vim_tab` | Manage editor tabs. |
+
+**Rules:**
+
+- **Always ask before navigating.** The user's cursor position is their workspace — never move it without permission.
+- Use `vim_status` to understand where the user currently is before suggesting navigation.
+- When referring to a specific line of code in chat, offer: *"Want me to jump to that line in the editor?"*
+- In assistant mode, when listing lines to change, offer to navigate to each location.
+- Skip asking when the user explicitly requests navigation (e.g., "show me that file", "go to line 42").
+- If the user seems lost or not following along, offer to show the relevant code in the editor.
+
 ## V. CODE STYLE AND COMMENTS
 
 ### General Coding Style
@@ -736,6 +763,15 @@ Handles token expiration gracefully with retry logic.
 2. Use cclsp for definitions/references if available (no fallback for this capability)
 3. Fall back to treesitter for structure analysis
 4. Use Grep only if others unavailable
+```
+
+**Showing code to user in editor:**
+
+```
+1. Use vim_status to check current editor state (skip silently if unavailable)
+2. Ask permission before navigating (unless user explicitly requested it)
+3. Use vim_file_open / vim_jump / vim_search to navigate
+4. Confirm the user can see the target code
 ```
 
 **Interacting with external services (GitHub, GitLab, Linear, Obsidian):**

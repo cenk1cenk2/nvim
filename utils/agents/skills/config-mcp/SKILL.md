@@ -1,5 +1,5 @@
 ---
-name: mcp
+name: config-mcp
 description: Add, remove, or modify MCP server configurations in mcphub servers.json. Researches servers online, prefers official sources and HTTP transport, prompts for variables and authentication.
 interaction: chat
 disable-model-invocation: true

@@ -1,5 +1,5 @@
 ---
-name: skills
+name: config-skills
 description: Create, update, or review skills in the skills directory. Use when the user wants to add a new skill, modify an existing one, or understand the skill conventions.
 interaction: chat
 argument-hint: "[create|update|review] [skill-name] [description of what the skill should do]"

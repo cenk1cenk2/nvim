@@ -1,5 +1,5 @@
 ---
-name: agents
+name: config-agents
 description: Update, refine, or review the AGENTS.md guidelines file. Use when the user wants to change agent behavior, add tool preferences, update workflows, or fix inconsistencies in the central guidelines.
 interaction: chat
 disable-model-invocation: true
