@@ -220,7 +220,7 @@
       "args": ["-y", "mcp-neovim-server@latest"],
       "autoApprove": ["vim_status", "vim_search", "vim_grep", "vim_health", "vim_buffer_switch", "vim_file_open", "vim_tab", "vim_fold", "vim_visual", "vim_window"],
       "command": "bunx",
-      "disabled": false,
+      "disabled": true,
       "disabled_resources": ["nvim://session", "nvim://buffers"],
       "disabled_tools": ["vim_buffer", "vim_command", "vim_edit", "vim_mark", "vim_register", "vim_buffer_save", "vim_search_replace", "vim_jump"],
       "env": {
