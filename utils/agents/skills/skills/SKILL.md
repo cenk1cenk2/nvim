@@ -27,6 +27,10 @@ All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a direct
 │   └── SKILL.md
 ```
 
+### Skill Ecosystem
+
+Skills in this directory form an interconnected system. A skill may depend on or compose with other skills in the same folder. When creating or updating a skill, read related skills to understand how they connect. Document any dependencies or composition in the process steps of the skill itself.
+
 ### Process
 
 #### Create
