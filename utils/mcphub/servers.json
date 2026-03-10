@@ -247,12 +247,12 @@
       }
     },
     "slack": {
-      "disabled_tools": [
-        "slack_send_message",
-        "slack_create_canvas",
-        "slack_update_canvas"
-      ],
-      "url": "https://mcp.slack.com/mcp"
+      "command": "bunx",
+      "args": ["-y", "@modelcontextprotocol/server-slack@latest"],
+      "env": {
+        "SLACK_BOT_TOKEN": "${NVIM_SLACK_TOKEN}"
+      },
+      "autoApprove": ["slack_list_channels", "slack_get_channel_history", "slack_get_thread_replies", "slack_get_users", "slack_get_user_profile"]
     },
     "sequentialthinking": {
       "args": ["-y", "@modelcontextprotocol/server-sequential-thinking@latest"],
