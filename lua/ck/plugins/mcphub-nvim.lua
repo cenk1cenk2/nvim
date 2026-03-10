@@ -191,7 +191,7 @@ function M.config()
       end
 
       -- Navigation tools for editor control
-      mcphub.add_tool("neovim", {
+      mcphub.add_tool("vim", {
         name = "vim_status",
         description = "Get current editor state: cursor position, mode, current file, and open buffers",
         inputSchema = {
@@ -229,7 +229,7 @@ function M.config()
         end,
       })
 
-      mcphub.add_tool("neovim", {
+      mcphub.add_tool("vim", {
         name = "vim_file_open",
         description = "Open a file in the editor. Reuses existing buffer if already open. Optionally jump to a line and column.",
         inputSchema = {
@@ -276,7 +276,7 @@ function M.config()
         end,
       })
 
-      mcphub.add_tool("neovim", {
+      mcphub.add_tool("vim", {
         name = "vim_jump",
         description = "Jump to a specific line and column. Targets current buffer unless path or bufnr is provided.",
         inputSchema = {
@@ -325,7 +325,7 @@ function M.config()
         end,
       })
 
-      mcphub.add_tool("neovim", {
+      mcphub.add_tool("vim", {
         name = "vim_select",
         description = "Visually select a range of lines. Targets current buffer unless path or bufnr is provided.",
         inputSchema = {

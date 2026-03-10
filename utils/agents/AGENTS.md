@@ -457,16 +457,16 @@ Use the builtin `create_file` tool for creating new files. Do not use the edit t
 
 ### Editor Navigation (Showing Code to User)
 
-Use neovim MCP navigation tools to navigate the user's editor when referring to specific code locations or when the user wants to see something. **If these tools are unavailable, skip silently — do not fall back to other tools.**
+Use vim MCP navigation tools to navigate the user's editor when referring to specific code locations or when the user wants to see something. **If these tools are unavailable, skip silently — do not fall back to other tools.**
 
 **Available tools:**
 
 | Tool | Purpose |
 |------|---------|
-| `mcp__mcphub__neovim__vim_status` | Get current editor state (cursor, mode, filename, open buffers). |
-| `mcp__mcphub__neovim__vim_file_open` | Open a file by path (reuses buffer if open), optionally jump to line/col. |
-| `mcp__mcphub__neovim__vim_jump` | Jump to a specific line/column in current buffer. |
-| `mcp__mcphub__neovim__vim_select` | Visually select a range of lines. |
+| `mcp__mcphub__vim__vim_status` | Get current editor state (cursor, mode, filename, open buffers). |
+| `mcp__mcphub__vim__vim_file_open` | Open a file by path (reuses buffer if open), optionally jump to line/col. |
+| `mcp__mcphub__vim__vim_jump` | Jump to a specific line/column, optionally target a path or bufnr. |
+| `mcp__mcphub__vim__vim_select` | Visually select a range of lines, optionally target a path or bufnr. |
 
 **Rules:**
 
