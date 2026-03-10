@@ -449,10 +449,7 @@ function M.config()
                 },
               },
               ["insert_edit_into_file"] = {
-                path = "ck.utils.tools.edit",
-                opts = {
-                  require_approval_before = false,
-                },
+                opts = {},
               },
               ["web_search"] = {
                 opts = {
