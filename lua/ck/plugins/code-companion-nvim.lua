@@ -548,10 +548,10 @@ function M.config()
                 modes = { n = fn.local_keystroke({ "y" }) },
               },
               buffer_sync_all = {
-                modes = { n = fn.local_keystroke({ "p" }) },
+                modes = { n = fn.local_keystroke({ "s", "p" }) },
               },
               buffer_sync_diff = {
-                modes = { n = fn.local_keystroke({ "w" }) },
+                modes = { n = fn.local_keystroke({ "s", "w" }) },
               },
               next_chat = {
                 modes = { n = fn.local_keystroke({ "n" }) },
@@ -587,7 +587,7 @@ function M.config()
                 modes = { n = "gf" },
               },
               copilot_stats = {
-                modes = { n = fn.local_keystroke({ "a", "s" }) },
+                modes = { n = fn.local_keystroke({ "a", ".", "s" }) },
               },
               clear_approvals = {
                 modes = { n = fn.local_keystroke({ "a", "X" }) },
@@ -1133,6 +1133,18 @@ function M.config()
           pattern = { "CodeCompanionRequestFinished", "CodeCompanionRequestError", "CodeCompanionRequestCancelled" },
           callback = function()
             enable_markview()
+          end,
+        },
+        {
+          event = "User",
+          group = "_codecompanion_tmux_alert",
+          pattern = { "CodeCompanionToolApprovalRequested", "MCPHubApprovalWindowOpened" },
+          callback = function()
+            local tty = vim.uv.new_tty(2, false)
+            if tty then
+              tty:write("\007")
+              tty:close()
+            end
           end,
         },
       }
