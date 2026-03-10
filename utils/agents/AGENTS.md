@@ -797,6 +797,15 @@ Handles token expiration gracefully with retry logic.
 4. Provide answer with sources
 ```
 
+**Using external technical details (URLs, paths, config keys, defaults):**
+
+```
+1. NEVER guess — verify from source code or docs BEFORE writing the value
+2. Use GitHub/GitLab MCP to read actual source, Context7 for docs, web search as fallback
+3. Cite the source (file path, doc URL, code reference)
+4. If unverifiable, explicitly state so — never write an assumed value
+```
+
 **User manually edits your code:**
 
 ```
