@@ -630,6 +630,32 @@ When generating markdown content for project updates, documentation, or any exte
 - Version-specific behaviors
 - File paths or structure
 
+### Mandatory Research for External Technical Details
+
+> **CRITICAL MANDATORY RULE — NO EXCEPTIONS.**
+>
+> You MUST verify ALL technical details from external projects, services, and APIs by reading the actual source code or documentation. NEVER write an assumed, guessed, or "likely" value into a plan or code. This applies even when you are "fairly confident" — confidence is not verification.
+
+**Details that MUST be verified before use:**
+
+- Callback URLs, redirect URIs, webhook paths, route paths
+- API endpoints, query parameters, request/response formats
+- Configuration keys, secret key names, environment variable names
+- Default values, version-specific behaviors, feature flags
+- Any technical detail originating outside the current repository
+
+**Verification process (MANDATORY — do this BEFORE writing the detail anywhere):**
+
+1. **Use the appropriate MCP tool to read the source:**
+   - `github` MCP (`get_file_contents`, `search_code`) for open-source projects
+   - `gitlab` MCP for internal repositories
+   - `context7` for library/framework documentation
+   - Web search / `tavily` as fallback
+2. **Cite the source** — note the file path, doc URL, or code reference where you verified the information
+3. **If you cannot verify, say so explicitly** — write "I could not verify this — please confirm" rather than writing an assumed value
+
+**This rule is non-negotiable.** Having the right MCP tools available and choosing to guess instead of using them is a failure mode. The cost of one extra tool call is negligible; the cost of a wrong value propagating into infrastructure is not.
+
 ## VII. SESSION MAINTENANCE
 
 ### Memory Updates
