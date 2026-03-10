@@ -18,15 +18,15 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
 
 ### Available Slack Tools
 
-| Tool | Purpose |
-|------|---------|
-| `slack_get_channel_history` | Fetch recent messages from a channel. |
-| `slack_get_thread_replies` | Fetch all replies in a message thread. |
-| `slack_list_channels` | Resolve channel name to ID. |
-| `slack_get_users` | List workspace users (resolve user IDs to names). |
-| `slack_get_user_profile` | Get detailed profile for a specific user ID. |
-| `slack_reply_to_thread` | Reply to a specific thread. |
-| `slack_add_reaction` | Add an emoji reaction to a message. |
+| Tool                        | Purpose                                           |
+| --------------------------- | ------------------------------------------------- |
+| `slack_get_channel_history` | Fetch recent messages from a channel.             |
+| `slack_get_thread_replies`  | Fetch all replies in a message thread.            |
+| `slack_list_channels`       | Resolve channel name to ID.                       |
+| `slack_get_users`           | List workspace users (resolve user IDs to names). |
+| `slack_get_user_profile`    | Get detailed profile for a specific user ID.      |
+| `slack_reply_to_thread`     | Reply to a specific thread.                       |
+| `slack_add_reaction`        | Add an emoji reaction to a message.               |
 
 ### Process
 
@@ -42,6 +42,7 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
 3. **Fetch and filter messages.**
    - Use `slack_get_channel_history` with a generous `limit` to fetch messages.
    - The result may be large and saved to a tool-results file. When this happens, use `jq` via Bash to extract and filter:
+
      ```bash
      # Extract timestamps to identify date range
      cat <result-file> | jq -r '.[0].text' | jq '[.messages[] | {ts, date: (.ts | split(".")[0] | tonumber | strftime("%Y-%m-%d %H:%M:%S"))}]'
@@ -52,6 +53,7 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
      # Extract message content for analysis
      cat <result-file> | jq -r '.[0].text' | jq '[.messages[] | select((.ts | split(".")[0] | tonumber) >= EPOCH)] | .[] | {ts, text, user, bot_id, attachments}'
      ```
+
    - For any message with thread replies, use `slack_get_thread_replies` to read the full thread.
    - Resolve user IDs to real names using `slack_get_users` or `slack_get_user_profile`.
 
@@ -81,13 +83,15 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
 
    #### `gitlab-deployments` — Deployment Status
    - Messages are automated deployment notifications.
-   - For each message, extract the project, environment, and version references.
-   - Use GitLab MCP tools to enrich:
-     - `mcp__mcphub__gitlab__get_merge_request` / `list_merge_requests` — pending MRs not yet deployed.
-     - `mcp__mcphub__gitlab__get_branch_diffs` — diff between deployed version and latest.
-     - `mcp__mcphub__gitlab__list_commits` — commits since last deployment.
-   - Summarize: what was deployed, where, and whether there are pending changes.
-   - **Warn the user** if there are undeployed changes that may need attention.
+   - For each message, extract the project, environment, and commit references.
+   - **Always use GitLab MCP tools to verify actual status:**
+     - Use `mcp__mcphub__gitlab__list_pipelines` to get recent pipeline status.
+     - For pipelines in "manual" status, use `mcp__mcphub__gitlab__get_pipeline` and `mcp__mcphub__gitlab__list_pipeline_jobs` to check if deploy job is waiting.
+     - For pipelines showing "failed" or "canceled", use `mcp__mcphub__gitlab__get_pipeline_job_output` to check logs for infrastructure variations.
+   - **Categorize findings:**
+     - **No action needed:** Pulumi/Terraform plan shows no infrastructure changes (e.g., "153 resources unchanged").
+     - **Needs attention:** Failed pipelines, actual infrastructure changes detected, or manual deploys with real changes pending.
+   - Summarize: what was deployed, actual status from GitLab MCP tools, and specific action items.
 
    #### `issues` — Linear Issue Discussions
    - Messages reference Linear issues or contain issue discussions.
@@ -127,7 +131,6 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
    - Follow with informational items (successful deploys, merged MRs, passed pipelines).
 
    **`:dark_sunglasses:` means "processed"** — only react to messages you actually wrote a response for (thread reply or included in a summary). Never react to messages you merely read but didn't act on.
-
    - For `echo` channel, present items one by one in chat and prompt for action on each (do NOT post to Slack automatically for echo).
    - The Slack summary also serves as a record that can be used to create Linear issues later.
    - Unless the user explicitly asks for chat-only output, always write back to Slack.
