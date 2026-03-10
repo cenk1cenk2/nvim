@@ -27,14 +27,14 @@ disable-model-invocation: true
 
 - **ALWAYS use `gitlab` MCP tools for all GitLab operations.**
 - **ALWAYS use `git` MCP tools for local git operations.**
-- Use `glab` CLI as fallback when MCP tools lack the needed capability (e.g., `glab ci list`, `glab ci view`).
+- Use `glab` CLI as fallback when MCP tools lack the needed capability (e.g., `glab ci trace` for job logs).
 - Determine project path from the git remote URL.
 - Determine the current branch from local git state.
 
 ### Process
 
-1. **Identify failing pipelines.** Get the current branch via `mcp__mcphub__git__git_status`. List recent pipelines for the branch using `glab ci list`. Identify pipelines with `failed` status.
-2. **Fetch failure details.** For each failing pipeline, use `glab ci view <pipeline-id>` to get the summary. Use `glab ci trace <job-id>` to extract the relevant job logs. Focus on the actual error messages, not boilerplate output.
+1. **Identify failing pipelines.** Get the current branch via `mcp__mcphub__git__git_status`. List recent pipelines for the branch using `mcp__mcphub__gitlab__list_pipelines` with the branch ref. Identify pipelines with `failed` status.
+2. **Fetch failure details.** For each failing pipeline, use `mcp__mcphub__gitlab__list_pipeline_jobs` to get the job list and identify failed jobs. Use `glab ci trace <job-id>` to extract the relevant job logs. Focus on the actual error messages, not boilerplate output.
 3. **Diagnose the error.** Analyze the error messages. Read relevant source files, config files, or pipeline definitions (`.gitlab-ci.yml`) as needed. If the error is unclear or unfamiliar, search the internet for the error message or related keywords.
 4. **Propose a fix.** Present findings to the user: what failed, why it failed, and how to fix it. Be specific — reference file paths, line numbers, and exact changes needed.
 5. **Ask to implement.** Ask the user: "Would you like me to fix this, or would you prefer to do it yourself?"
