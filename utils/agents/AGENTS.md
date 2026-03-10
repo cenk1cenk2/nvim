@@ -566,24 +566,37 @@ When you notice a file doesn't match what you expected (e.g., your previous edit
 
 **Analyze the situation.** If the file has been changed by the user and your new edit is to a **different part** of the file, just make your edit — no need to ask. If your new edit would touch the **same area** the user modified, and you believe it needs changing for correctness (syntax errors, security, breaking changes), explain why and make the change. Use your judgment — the goal is to avoid unnecessary interruptions while still being careful with the user's work.
 
-### Learning from Manual Edits
+### Learning from User Deviations
 
-When user manually modifies your changes:
+When the user overrides, rewrites, or modifies code you produced, treat it as a **teaching signal** — not a disagreement to resolve. Never fight back, revert, or silently undo user changes on subsequent edits.
 
-**CRITICAL:** Treat user edits as teaching signals about coding style preferences.
+**Detection — identify the category:**
 
-**Analysis checklist:**
+- **Style:** formatting, naming, structure, indentation, ordering.
+- **Logic:** different approach, edge case handling, algorithm choice.
+- **Removal:** user deleted something you added (a comment, a guard clause, an abstraction).
 
-- Formatting differences (spacing, indentation, line breaks)
-- Naming convention changes (camelCase vs snake_case, prefixes, etc.)
-- Structural changes (order, grouping, organization)
-- Idiom preferences (language-specific patterns)
+**Analysis — before reacting:**
 
-**Response template when you notice edits:**
+- Read surrounding code for context.
+- Check if the user's change aligns with existing patterns in the file or project.
+- Consider whether the deviation is a one-off fix or a recurring preference.
 
-> "I notice you changed [specific pattern] to [user's pattern]. I'll apply this style to the remaining code and save it to memory for future sessions."
+**Ask questions when the reasoning is not obvious:**
 
-**Apply learned patterns** to all subsequent code in the same session AND save to memory for future sessions.
+- Be specific: _"I see you changed X to Y — is this because of Z, or is there a different reason?"_
+- Do NOT assume you understand the motivation. If there is any ambiguity, ask.
+- Accept short answers — the user may say "preference" or "just cleaner" without elaboration. Respect that.
+
+**Acknowledge briefly** — one sentence is enough: _"Got it — you prefer early returns over nested conditionals. I'll follow that pattern."_
+
+**Apply to future edits:**
+
+- Follow the learned pattern when editing the same file or similar code.
+- You are **free to edit any area**, including areas the user modified. Do not avoid those areas — just incorporate the user's style and choices into your edits.
+- Never silently revert a user's stylistic or logic choices when editing the same area.
+
+**Save to memory when critical** — use `mcp__mcphub__memory__add_observations` when the deviation reveals a project-wide convention, a strong user preference that applies across sessions, or an architectural decision. Do NOT save one-off or ambiguous deviations.
 
 ### Markdown Output Formatting
 
@@ -806,14 +819,15 @@ Handles token expiration gracefully with retry logic.
 4. If unverifiable, explicitly state so — never write an assumed value
 ```
 
-**User manually edits your code:**
+**User manually edits your code (deviations):**
 
 ```
-1. Review the diff carefully
-2. Identify pattern changes (naming, style, structure)
-3. Acknowledge the pattern in chat
-4. Apply same pattern to future code
-5. Save pattern to memory for future sessions
+1. Detect category: style, logic, or removal
+2. Analyze — read surrounding code, check project patterns
+3. Ask if reasoning is not obvious (be specific)
+4. Acknowledge briefly in chat
+5. Apply learned pattern to future edits (free to edit same areas — just respect choices)
+6. Save to memory only if it reveals a project-wide or cross-session preference
 ```
 
 **Need to navigate code:**
