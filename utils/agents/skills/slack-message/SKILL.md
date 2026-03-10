@@ -16,23 +16,41 @@ argument-hint: "[slack-message-url] [what to do with it]"
 
 The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `/linear-issue-pick`, `/obsidian-note`, `/code-pull`) or performing direct actions (research, code changes, summarization).
 
+### Available Tools
+
+| Tool | Purpose |
+|------|---------|
+| `mcp__mcphub__slack__slack_get_channel_history` | Fetch recent messages from a channel. |
+| `mcp__mcphub__slack__slack_get_thread_replies` | Fetch all replies in a message thread. |
+| `mcp__mcphub__slack__slack_list_channels` | Resolve channel name to ID. |
+| `mcp__mcphub__slack__slack_get_users` | List workspace users (resolve user IDs to names). |
+| `mcp__mcphub__slack__slack_get_user_profile` | Get detailed profile for a specific user ID. |
+| `mcp__mcphub__slack__slack_post_message` | Post a new message to a channel. |
+| `mcp__mcphub__slack__slack_reply_to_thread` | Reply to a specific thread. |
+| `mcp__mcphub__slack__slack_add_reaction` | Add an emoji reaction to a message. |
+
 ### Process
 
-1. **Extract the message.**
-   - Parse the Slack message URL to identify the channel and message timestamp.
-   - Use `mcp__mcphub__slack__*` tools to read the message.
-   - If the message is part of a thread, read the **entire thread** (all replies) to get full context.
+1. **Acknowledge the message.**
+   - Parse the Slack message URL to identify the channel ID and message timestamp.
+   - Immediately add a `:dark_sunglasses:` reaction to the message via `slack_add_reaction` to signal that you are working on it.
+
+2. **Extract the message.**
+   - Use `slack_get_channel_history` to fetch the message if only the channel and timestamp are known.
+   - If the message is part of a thread, use `slack_get_thread_replies` to read the **entire thread** (all replies).
+   - Resolve user IDs to real names using `slack_get_users` or `slack_get_user_profile` for a readable summary.
+   - If the URL contains a channel name instead of an ID, use `slack_list_channels` to resolve it.
    - If the thread references other channels or messages, note them but do not fetch unless the user asks.
 
-2. **Summarize the context.**
+3. **Summarize the context.**
    - Present a concise summary of the thread to the user:
-     - Who is involved.
+     - Who is involved (resolved names, not IDs).
      - What is being discussed.
      - Key decisions, requests, or action items.
      - Any links, code snippets, or references shared.
    - Keep the summary brief — focus on what's actionable.
 
-3. **Determine the action.**
+4. **Determine the action.**
    - If the user provided explicit instructions (e.g., "create a Linear issue from this", "summarize this in Obsidian"), follow them.
    - If the user's intent is unclear, present the summary and ask what they'd like to do.
    - Common actions:
@@ -41,9 +59,10 @@ The user provides a Slack message URL and a task. This skill reads the message a
      - **Research a topic** — use web search, Context7, or codebase exploration based on what the thread discusses.
      - **Write or modify code** — use the thread context to inform implementation.
      - **Summarize** — provide a structured summary in chat.
-     - **Reply** — draft a response for the user to send (do NOT send automatically).
+     - **Reply** — draft a response and present it for approval. **Always use `slack_reply_to_thread`** to keep conversations in threads. Only use `slack_post_message` for a new channel-level message when there is no thread context or the user explicitly asks.
+     - **React** — add an emoji reaction via `slack_add_reaction` when the user asks.
 
-4. **Compose with other skills.**
+5. **Compose with other skills.**
    - When delegating to another skill, pass the thread context as input — do not make the other skill re-fetch it.
    - Respect the invoked skill's workflow (plan mode, prompts, etc.).
    - If multiple skills are relevant, ask the user which to use.
@@ -51,6 +70,8 @@ The user provides a Slack message URL and a task. This skill reads the message a
 ### Key Principles
 
 - **Read the full thread.** A single message without thread context is often insufficient. Always fetch the complete thread.
-- **Never send messages.** This skill reads and processes — it does NOT send replies or reactions unless the user explicitly asks to draft one, and even then, present the draft for approval.
+- **Always reply in threads.** Use `slack_reply_to_thread` by default for continuity. Channel-level messages (`slack_post_message`) only when there is no existing thread or the user explicitly requests it.
+- **Signal that you're working.** React with `:dark_sunglasses:` immediately upon receiving a message to process — before reading or summarizing.
+- **Never send messages without approval.** This skill reads and processes — it does NOT send replies, post messages, or add reactions (other than the `:dark_sunglasses:` working indicator) unless the user explicitly asks and confirms the content.
 - **Compose, don't duplicate.** When another skill handles the action better, invoke it with the gathered context rather than reimplementing its workflow.
 - **Slack context is ephemeral.** Summarize key information in chat so the user has it even if the thread evolves later.
