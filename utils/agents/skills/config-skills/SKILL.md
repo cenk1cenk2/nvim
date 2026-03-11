@@ -46,9 +46,9 @@ Skills in this directory form an interconnected system. A skill may depend on or
 #### Create
 
 1. Determine what the skill should do. Ask the user if not clear from context.
-2. Read 2-3 existing skills in the same family to understand patterns, tone, and structure.
-3. **Check references** — read all files in `~/.config/nvim/utils/agents/skills/references/` to identify shared conventions the new skill should use instead of duplicating. If the skill belongs to a family (e.g., Linear, Obsidian), check whether sibling skills declare references in their frontmatter and reuse the same ones.
-4. Draft the full `SKILL.md`. Use reference directives for any shared conventions found in step 3.
+2. Read 2-3 existing skills in the same family to understand patterns, tone, and structure. Use `skills__read_skill` (batch: `{ "names": ["sibling-a", "sibling-b"] }`).
+3. **Check references** — list all files in `~/.config/nvim/utils/agents/skills/references/` and read them to identify shared conventions the new skill should use instead of duplicating. If the skill belongs to a family (e.g., Linear, Obsidian), check whether sibling skills declare references in their frontmatter and reuse the same ones. Use `skills__read_reference` to read candidate references (batch: pass all relevant paths in one call).
+4. Draft the full `SKILL.md`. Use reference directives for any shared conventions found in step 3. Add matching `references:` frontmatter field.
 5. **Validate** — run the description checklist (see below) and verify conventions before presenting.
 6. Present the draft in chat.
 7. Iterate based on user feedback.
@@ -56,14 +56,15 @@ Skills in this directory form an interconnected system. A skill may depend on or
 
 #### Update
 
-1. Read the existing `SKILL.md` for the target skill.
-2. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
-3. Identify what needs to change.
-4. **Check for deduplication** — if the skill contains blocks that are duplicated in sibling skills (prerequisite blocks, plan mode directives, description structures, research patterns), check whether a shared reference already exists in `~/.config/nvim/utils/agents/skills/references/`. If it does, replace the duplicated block with a reference directive. If it doesn't and the block appears in 2+ skills, propose extracting it to a new shared reference.
-5. **Validate** — run the description checklist (see below) against the updated description.
-6. Present proposed changes to the user.
-7. Iterate based on feedback.
-8. After approval, apply the changes.
+1. Read the existing `SKILL.md` for the target skill. Use `skills__read_skill` with `{ "names": ["target-skill"] }`.
+2. **Read all declared references** — if the skill has a `references:` frontmatter field, load every reference using `skills__read_reference` with the exact paths from frontmatter. This ensures you understand the full context the skill operates in before making changes.
+3. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
+4. Identify what needs to change.
+5. **Check for deduplication** — if the skill contains blocks that are duplicated in sibling skills (prerequisite blocks, plan mode directives, description structures, research patterns), check whether a shared reference already exists in `~/.config/nvim/utils/agents/skills/references/`. If it does, replace the duplicated block with a reference directive. If it doesn't and the block appears in 2+ skills, propose extracting it to a new shared reference.
+6. **Validate** — run the description checklist (see below) against the updated description.
+7. Present proposed changes to the user.
+8. Iterate based on feedback.
+9. After approval, apply the changes.
 
 #### Review
 

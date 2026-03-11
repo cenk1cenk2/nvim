@@ -13,6 +13,33 @@
 | `slack__slack_reply_to_thread` | Reply to a specific thread. |
 | `slack__slack_add_reaction` | Add an emoji reaction to a message. |
 
+## Message Formatting (mrkdwn)
+
+Slack does NOT render standard markdown. It uses its own format called **mrkdwn**. All messages sent via `slack__slack_post_message` and `slack__slack_reply_to_thread` MUST use Slack mrkdwn syntax.
+
+| Intent | Markdown (WRONG) | Slack mrkdwn (CORRECT) |
+|--------|-------------------|------------------------|
+| Bold | `**text**` | `*text*` |
+| Italic | `*text*` | `_text_` |
+| Strikethrough | `~~text~~` | `~text~` |
+| Inline code | `` `code` `` | `` `code` `` |
+| Code block | ```` ```lang\ncode\n``` ```` | ```` ```\ncode\n``` ```` (no language hint) |
+| Link | `[label](url)` | `<url\|label>` |
+| Heading | `# Heading` | `*Heading*` (bold, no heading syntax) |
+| Bulleted list | `- item` | `• item` or `- item` |
+| Numbered list | `1. item` | `1. item` |
+| Blockquote | `> text` | `> text` |
+| User mention | n/a | `<@U12345>` |
+| Channel link | n/a | `<#C12345>` |
+
+**Rules:**
+- Never use `**` for bold — Slack renders it literally as asterisks.
+- Never use `*` for italic — Slack renders it as bold.
+- Never put a language identifier after ` ``` ` — Slack ignores it and may render it as text.
+- Links must use `<url|label>` pipe syntax, not `[label](url)`.
+- Headings don't exist — use `*bold text*` on its own line as a section header.
+- Nested lists are not supported — flatten them.
+
 ## Response Conventions
 
 ### Thread vs Channel
