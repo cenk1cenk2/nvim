@@ -2,7 +2,6 @@
 name: linear-kilic-project-argocd-system
 description: Create a Linear project for deploying system-level components (operators, controllers, infrastructure tools) to Kubernetes clusters via ArgoCD. Use when deploying new system software like cert-manager, external-secrets-operator, renovate-operator, etc.
 interaction: chat
-disable-model-invocation: true
 argument-hint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'velero'"
 ---
 
@@ -10,7 +9,7 @@ argument-hint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'v
 
 ### ArgoCD System Deployment Project Generator
 
-> **PREREQUISITE: The `/linear` skill MUST be invoked before this skill.** Linear session initialization (user discovery, label fetching, team assignment) is handled by the `/linear` skill. This skill assumes that context is already available.
+> **PREREQUISITE: The `/linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it by loading `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`. This skill is kilic-dev workspace specific.
 
 > **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
 >

@@ -2,7 +2,6 @@
 name: linear-issue-checklist
 description: Update an existing Linear issue's checklist by marking items as done or cancelled. Use when reporting progress on issue tasks.
 interaction: chat
-disable-model-invocation: true
 argument-hint: "[issue-id or Linear URL] [items to update]"
 ---
 
@@ -16,7 +15,13 @@ argument-hint: "[issue-id or Linear URL] [items to update]"
 
 ### Prerequisite
 
-A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked before this skill, unless a full Linear URL is provided — in that case, deduce the workspace from the URL and use the corresponding MCP tools.
+> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
+>
+> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
+> - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
+> - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+>
+> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
 
 ### Process
 

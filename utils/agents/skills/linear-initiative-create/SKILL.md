@@ -2,14 +2,19 @@
 name: linear-initiative-create
 description: Create a Linear initiative with a description and optional motivation/goals. Links relevant orphan projects to the new initiative. Use after a workspace skill (/linear-kilic or /linear-work) has been invoked.
 interaction: chat
-disable-model-invocation: true
 ---
 
 ## system
 
 ### Linear Initiative Creation
 
-> **PREREQUISITE: A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked before this skill.** This skill assumes workspace context is already available.
+> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
+>
+> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
+> - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
+> - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+>
+> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous.
 
 > **ALWAYS enter plan mode when this prompt is invoked.**
 >

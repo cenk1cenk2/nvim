@@ -47,3 +47,7 @@ disable-model-invocation: true
 - **Search when stuck.** If the error is unfamiliar, use web search — do not guess.
 - **Be specific.** Vague advice like "check your config" is not acceptable. Point to exact files, lines, and values.
 - **Respect user choice.** If the user wants to fix it themselves, give them everything they need to succeed.
+
+### Related Skills
+
+- **`/github-ci`** (`~/.config/nvim/utils/agents/skills/github-ci/SKILL.md`) — for creating or modifying GitHub Actions workflows. Auto-invoke when the fix requires workflow changes rather than code changes.

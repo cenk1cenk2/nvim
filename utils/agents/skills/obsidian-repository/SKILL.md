@@ -121,3 +121,7 @@ Sections are optional — use only what the repository warrants. A small utility
 - **Ask before overwriting.** When updating, always present deviations and let the user decide what to change.
 - **Concise and practical.** These are reference notes, not documentation. Focus on what helps someone navigate and contribute.
 - **Match the obsidian-note style.** Flat structure (`##` headers), kebab-case filenames, minimal prose, action-oriented.
+
+### Related Skills
+
+- **`/obsidian-note`** (`~/.config/nvim/utils/agents/skills/obsidian-note/SKILL.md`) — general-purpose note creation. This skill specializes the obsidian-note pattern for repository documentation. Do not auto-invoke.

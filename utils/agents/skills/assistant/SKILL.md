@@ -131,3 +131,9 @@ disable-model-invocation: true
 - **Stay proactive** in identifying potential issues before they occur
 - **Keep the plan alive** by continuously updating it as work progresses
 - **Keep memory up to date** by persisting plan state and evaluations to the knowledge graph
+
+### Related Skills
+
+- **`/evaluate`** (`~/.config/nvim/utils/agents/skills/evaluate/SKILL.md`) — paired evaluation skill. When the user asks to evaluate implemented work, invoke this skill. Do not auto-invoke.
+- **`/counterassistant`** (`~/.config/nvim/utils/agents/skills/counterassistant/SKILL.md`) — step-by-step implementation counterpart. When the user wants the agent to implement one step at a time with review gates. Do not auto-invoke.
+- **`/user-deviations`** (`~/.config/nvim/utils/agents/skills/user-deviations/SKILL.md`) — when reviewing the user's implementation and noticing deviations from the plan, apply the user-deviations handling pattern. Do not auto-invoke.

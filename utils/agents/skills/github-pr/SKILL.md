@@ -112,3 +112,9 @@ interaction: chat
 - Start the summary directly with the action or context
 - Bullet points should be self-contained and scannable
 - Group related changes into single bullets rather than listing every micro-change
+
+### Related Skills
+
+- **`/code-review-branch`** (`~/.config/nvim/utils/agents/skills/code-review-branch/SKILL.md`) — for reviewing the code quality of the branch before writing the PR description. Do not auto-invoke.
+- **`/github-ci`** (`~/.config/nvim/utils/agents/skills/github-ci/SKILL.md`) — for creating or updating GitHub Actions workflows. Do not auto-invoke.
+- **`/github-failed-ci`** (`~/.config/nvim/utils/agents/skills/github-failed-ci/SKILL.md`) — for diagnosing failing CI checks on the PR. Do not auto-invoke.

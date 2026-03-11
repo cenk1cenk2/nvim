@@ -2,7 +2,6 @@
 name: linear-project-update
 description: Audit and update a Linear project's structure, subissues, priorities, estimates, labels, and blocking relations. Use when reviewing whether a project's configuration still reflects reality.
 interaction: chat
-disable-model-invocation: true
 argument-hint: "[project-name or Linear URL]"
 ---
 
@@ -19,7 +18,13 @@ argument-hint: "[project-name or Linear URL]"
 
 ### Prerequisite
 
-A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked before this skill, unless a full Linear URL is provided — in that case, deduce the workspace from the URL and use the corresponding MCP tools.
+> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
+>
+> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
+> - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
+> - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+>
+> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
 
 ### Timestamp Awareness
 

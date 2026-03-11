@@ -105,3 +105,7 @@ Wait for user approval before applying any fix.
 - **Consult the user before running commands** — describe the command and its purpose, wait for approval.
 - **Consult the user before blaming externals** — don't attribute bugs to dependencies or upstream without evidence and user agreement.
 - **Stay in plan mode** — present findings and proposed fix, let the user decide when to proceed.
+
+### Related Skills
+
+- **`/code-failed`** (`~/.config/nvim/utils/agents/skills/code-failed/SKILL.md`) — for command failures (build errors, test failures, lint errors) rather than behavioral bugs. Auto-invoke when the problem is a command failure, not a behavioral issue.

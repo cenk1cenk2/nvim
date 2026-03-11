@@ -2,7 +2,6 @@
 name: linear-issue-pick
 description: Pick up an existing Linear issue and start working on it. Fetches the issue, enters plan mode, explains the work in detail, clarifies ambiguous points with the user, and only proceeds after alignment.
 interaction: chat
-disable-model-invocation: true
 argument-hint: "[issue-id] - e.g., 'K-123', 'CLOUD-45'"
 ---
 
@@ -10,9 +9,13 @@ argument-hint: "[issue-id] - e.g., 'K-123', 'CLOUD-45'"
 
 ### Linear Issue Pickup Workflow
 
-> **PREREQUISITE: A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked before this skill.** The workspace skill handles session initialization (user discovery, label fetching, team assignment) and determines which Linear MCP tools and code hosting platform (GitLab, GitHub) to use. This skill assumes that context is already available.
+> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
 >
-> **Workspace from URL:** If the user provides a full Linear URL instead of an issue ID, deduce the workspace from the URL and use the corresponding MCP tools. No need to invoke a workspace skill separately in this case.
+> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
+> - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
+> - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+>
+> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
 
 > **ALWAYS enter plan mode when this prompt is invoked.**
 >

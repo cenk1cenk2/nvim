@@ -120,3 +120,7 @@ Wait for user approval before applying any fix.
 - **Consult the user before assuming external causes** — don't blame dependencies or upstream without evidence and user agreement.
 - **Don't fix before understanding** — the investigation must produce a clear root cause before proposing a fix.
 - **Stay in plan mode** — present findings and proposed fix, let the user decide when to proceed.
+
+### Related Skills
+
+- **`/code-debug`** (`~/.config/nvim/utils/agents/skills/code-debug/SKILL.md`) — for behavioral bugs where code runs but produces wrong results. Auto-invoke when the problem is incorrect behavior, not a command failure.

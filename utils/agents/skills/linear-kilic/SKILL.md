@@ -1,8 +1,7 @@
 ---
 name: linear-kilic
-description: Initialize a Linear session for the kilic-dev workspace using GitLab as SCM. Invoke before issue creation (/linear-issue-create), cycle planning (/linear-cycle), or other Linear skills.
+description: "Initialize a Linear session for the kilic-dev workspace using GitLab as SCM. Auto-invoked when kilic-dev Linear context is detected (e.g., issue IDs like K-xxx, kilic-dev workspace URLs, GitLab repositories on gitlab.kilic.dev)."
 interaction: chat
-disable-model-invocation: true
 ---
 
 ## system

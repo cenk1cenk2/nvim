@@ -84,3 +84,7 @@ node-install:
 - **Follow the CombineTaskLists chain.** A pipe's full set of environment variables comes from all tasklists combined in `main.go`, not just one `flags.go`.
 - **Prompt for migration.** If old templates or raw scripts are found, ask the user if they want to migrate to the task-based model.
 - **Match existing patterns.** If the repository already has a `.gitlab-ci.yml`, follow its conventions for stages, rules, and variable naming.
+
+### Related Skills
+
+- **`/gitlab-failed-ci`** (`~/.config/nvim/utils/agents/skills/gitlab-failed-ci/SKILL.md`) — for diagnosing failures in existing GitLab CI pipelines. Auto-invoke when the user reports CI failures instead of wanting to create/update pipelines.

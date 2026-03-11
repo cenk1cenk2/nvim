@@ -64,3 +64,7 @@ argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 - **Ask when ambiguous.** If the user's intent is unclear — which commits, which files, which approach — ask before proceeding.
 - **Preserve local conventions.** The current repository's patterns, naming, and structure take priority over the reference repository's style.
 - **Be thorough in analysis.** Read both the reference and local files before proposing any changes. Do not assume files are identical.
+
+### Related Skills
+
+- **`/code-review-branch`** (`~/.config/nvim/utils/agents/skills/code-review-branch/SKILL.md`) — for reviewing the adapted changes after applying them. Do not auto-invoke.

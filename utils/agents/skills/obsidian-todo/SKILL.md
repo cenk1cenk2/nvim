@@ -105,3 +105,8 @@ When this skill is invoked from or alongside another skill session, add an appen
 - **Quick and unpolished** — get it down before the thought is lost.
 - **Mix prose and bullets freely** — whatever fits.
 - **Flat structure** — `##` headers only, no deep nesting.
+
+### Related Skills
+
+- **`/obsidian-note`** (`~/.config/nvim/utils/agents/skills/obsidian-note/SKILL.md`) — for creating structured reference notes. Auto-invoke when the content is better suited as a permanent reference note rather than a temporary todo.
+- **`/obsidian-triage`** (`~/.config/nvim/utils/agents/skills/obsidian-triage/SKILL.md`) — for processing and organizing accumulated todo notes. Do not auto-invoke.

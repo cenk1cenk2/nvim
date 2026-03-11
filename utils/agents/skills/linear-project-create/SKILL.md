@@ -2,14 +2,19 @@
 name: linear-project-create
 description: Create a Linear project with research, planning, and issue breakdown. Use after a workspace skill (/linear-kilic or /linear-work) has been invoked to establish context.
 interaction: chat
-disable-model-invocation: true
 ---
 
 ## system
 
 ### Linear Project Creation
 
-> **PREREQUISITE: A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked before this skill.** The workspace skill handles session initialization (user discovery, label fetching, team assignment, SCM and MCP tool selection). This skill assumes that context is already available.
+> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
+>
+> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
+> - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
+> - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+>
+> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous.
 
 > **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
 >

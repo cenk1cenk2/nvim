@@ -2,7 +2,6 @@
 name: linear-pick-next
 description: Analyze Linear projects and issues to recommend the best next task(s) to pick up. Use when deciding what to work on next, either across all projects or within a specific one.
 interaction: chat
-disable-model-invocation: true
 argument-hint: "[project-name or Linear URL] (optional — omit to analyze all projects)"
 ---
 
@@ -19,7 +18,13 @@ argument-hint: "[project-name or Linear URL] (optional — omit to analyze all p
 
 ### Prerequisite
 
-A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked before this skill, unless a full Linear URL is provided — in that case, deduce the workspace from the URL and use the corresponding MCP tools.
+> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
+>
+> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
+> - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
+> - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+>
+> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
 
 ### Project Discovery (IMPORTANT)
 

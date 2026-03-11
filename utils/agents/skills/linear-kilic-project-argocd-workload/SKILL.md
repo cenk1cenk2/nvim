@@ -2,7 +2,6 @@
 name: linear-kilic-project-argocd-workload
 description: Create a Linear project for deploying application workloads to Kubernetes clusters via ArgoCD. Use when deploying applications, services, or CRD-based workloads that run on target clusters.
 interaction: chat
-disable-model-invocation: true
 argument-hint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-cluster'"
 ---
 
@@ -10,7 +9,7 @@ argument-hint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-clu
 
 ### ArgoCD Workload Deployment Project Generator
 
-> **PREREQUISITE: The `/linear` skill MUST be invoked before this skill.** Linear session initialization (user discovery, label fetching, team assignment) is handled by the `/linear` skill. This skill assumes that context is already available.
+> **PREREQUISITE: The `/linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it by loading `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`. This skill is kilic-dev workspace specific.
 
 > **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
 >

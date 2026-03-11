@@ -2,7 +2,6 @@
 name: linear-cycle
 description: Plan and organize Linear cycles by analyzing projects, issues, and initiatives to define a realistic workload. Use when planning the current, next, or an upcoming cycle.
 interaction: chat
-disable-model-invocation: true
 argument-hint: "[cycle-number or 'current'|'next'] - e.g., '42', 'current', 'next'"
 ---
 
@@ -19,7 +18,13 @@ argument-hint: "[cycle-number or 'current'|'next'] - e.g., '42', 'current', 'nex
 
 ### Prerequisite
 
-A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked before this skill. The workspace skill handles session initialization (user discovery, label fetching, team assignment) and determines which Linear MCP tools to use. This skill assumes that context is already available.
+> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
+>
+> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
+> - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
+> - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+>
+> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous. The workspace skill handles session initialization (user discovery, label fetching, team assignment) and determines which Linear MCP tools to use.
 
 ### Process
 

@@ -86,3 +86,8 @@ Kebab-case descriptive names: `wireplumber-source-selection.md`, `gitlab-ci-toke
 - **`bookmarks:` frontmatter** — for important reference URLs.
 - **Minimal prose** — this vault is a reference system, not a knowledge base.
 - **Match the category** — different categories have different conventions. Follow what you find, not a fixed template.
+
+### Related Skills
+
+- **`/obsidian-repository`** (`~/.config/nvim/utils/agents/skills/obsidian-repository/SKILL.md`) — for documenting repository-specific knowledge in the Repositories vault folder. Auto-invoke when the note topic is about a development repository.
+- **`/obsidian-todo`** (`~/.config/nvim/utils/agents/skills/obsidian-todo/SKILL.md`) — for quick capture of tasks and thoughts. Auto-invoke when the user wants a quick note rather than a structured reference note.

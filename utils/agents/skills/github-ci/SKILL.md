@@ -51,3 +51,7 @@ disable-model-invocation: true
 - **Always read the docs.** Do not configure actions from memory — read the README from the source repository.
 - **Match existing patterns.** If the repository already has workflows, follow their conventions for naming, triggers, runners, and structure.
 - **Be explicit.** Pin action versions to exact tags (e.g., `v4.1.0`), not major-only refs (e.g., `v4`), unless the repository's existing workflows use major-only refs.
+
+### Related Skills
+
+- **`/github-failed-ci`** (`~/.config/nvim/utils/agents/skills/github-failed-ci/SKILL.md`) — for diagnosing failures in existing GitHub Actions workflows. Auto-invoke when the user reports CI failures instead of wanting to create/update workflows.

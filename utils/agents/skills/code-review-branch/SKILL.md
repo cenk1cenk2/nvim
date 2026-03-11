@@ -103,3 +103,9 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
 - **Conversation is source of truth** — if the user decided something earlier in the conversation, don't flag it as an issue.
 - **Be specific** — "this might cause problems" is not useful. "This null check on line 42 misses the case where X returns undefined from Y" is.
 - **Browse freely** — don't limit yourself to the diff. Read related files, trace call chains, check tests.
+
+### Related Skills
+
+- **`/github-pr`** (`~/.config/nvim/utils/agents/skills/github-pr/SKILL.md`) — for drafting PR descriptions after review. Do not auto-invoke.
+- **`/gitlab-pr`** (`~/.config/nvim/utils/agents/skills/gitlab-pr/SKILL.md`) — for drafting MR descriptions after review. Do not auto-invoke.
+- **`/user-deviations`** (`~/.config/nvim/utils/agents/skills/user-deviations/SKILL.md`) — when review reveals consistency deviations that are intentional user choices, apply the user-deviations handling pattern. Do not auto-invoke.

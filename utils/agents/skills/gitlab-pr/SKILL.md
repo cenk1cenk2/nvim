@@ -97,3 +97,9 @@ interaction: chat
 - No filler phrases: skip "This MR...", "This change...".
 - Bullet points should be self-contained and scannable.
 - Group related changes into single bullets rather than listing every micro-change.
+
+### Related Skills
+
+- **`/code-review-branch`** (`~/.config/nvim/utils/agents/skills/code-review-branch/SKILL.md`) — for reviewing the code quality of the branch before writing the MR description. Do not auto-invoke.
+- **`/gitlab-ci`** (`~/.config/nvim/utils/agents/skills/gitlab-ci/SKILL.md`) — for creating or updating GitLab CI/CD pipelines. Do not auto-invoke.
+- **`/gitlab-failed-ci`** (`~/.config/nvim/utils/agents/skills/gitlab-failed-ci/SKILL.md`) — for diagnosing failing CI pipelines on the MR. Do not auto-invoke.

@@ -38,6 +38,12 @@
    - If the note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
    - **If the note does not exist or obsidian MCP is unavailable, silently skip and continue**
 
+5. **DISCOVER AVAILABLE SKILLS** - List skills in `~/.config/nvim/utils/agents/skills/`
+   - List all subdirectories to know which skills are available for the session
+   - These skills can be auto-invoked based on context — see the **Skill Cross-Loading** section in Part II and `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md` for deduction rules
+   - **Do not read skill files during initialization** — just note what exists. Read the `SKILL.md` on demand when a skill is needed
+   - **If the skills directory is unavailable, silently skip and continue**
+
 ## II. PLANNING AND IMPLEMENTATION
 
 ### When to Use Plan Mode
@@ -65,6 +71,14 @@
 ### Special Mode Triggers
 
 User invokes specialized modes using personal slash commands (e.g., `/assistant`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
+
+### Skill Cross-Loading (IMPORTANT)
+
+> **Skills have dependencies.** Many skills require other skills to be active first (e.g., Linear issue skills need a workspace skill). When a skill declares a prerequisite, **auto-invoke the prerequisite** if it hasn't been loaded in the current session.
+>
+> **Reference:** `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md` contains the full deduction rules for resolving skill dependencies — which workspace to pick based on issue ID prefixes, URLs, and repository hosting; how to chain skills; and how to handle ambiguity.
+>
+> **Key rule:** If context unambiguously identifies the prerequisite, load it automatically. If ambiguous, ask the user. Never skip prerequisites.
 
 ### Plan File Location
 

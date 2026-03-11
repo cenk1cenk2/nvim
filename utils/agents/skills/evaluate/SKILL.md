@@ -122,3 +122,8 @@ disable-model-invocation: true
 - **Keep memory up to date** by persisting evaluation findings and plan state to the knowledge graph
 - **Stay in plan mode** - do not exit plan mode during evaluation
 - **Return to Assistant Mode** after completing evaluation to guide next steps only WHEN the user asks to do so
+
+### Related Skills
+
+- **`/assistant`** (`~/.config/nvim/utils/agents/skills/assistant/SKILL.md`) — paired planning skill. Evaluate reads and updates the plan created by assistant. Do not auto-invoke.
+- **`/user-deviations`** (`~/.config/nvim/utils/agents/skills/user-deviations/SKILL.md`) — when evaluation reveals the user deviated from the plan, apply the user-deviations handling pattern. Do not auto-invoke.

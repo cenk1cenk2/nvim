@@ -37,3 +37,8 @@ disable-model-invocation: true
 - **Always self-evaluate.** Never skip the evaluate step.
 - **Stop after each step.** Never continue to the next step without explicit user approval.
 - **Defer to assistant on rejection.** If the user is not satisfied, go back to planning — do not retry implementation on your own.
+
+### Related Skills
+
+- **`/assistant`** (`~/.config/nvim/utils/agents/skills/assistant/SKILL.md`) — prerequisite. A plan from assistant MUST exist before this skill runs. Auto-invoke if no plan file exists and the user requests step-by-step implementation.
+- **`/evaluate`** (`~/.config/nvim/utils/agents/skills/evaluate/SKILL.md`) — self-evaluation after each step. Invoked automatically as part of the counterassistant process.
