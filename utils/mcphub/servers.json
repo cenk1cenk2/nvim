@@ -30,6 +30,7 @@
         "read_text_file"
       ],
       "command": "bunx",
+      "disabled": true,
       "disabled_tools": [
         "write_file",
         "edit_file",
@@ -284,6 +285,7 @@
         "notion-query-database-view",
         "notion-search"
       ],
+      "disabled": true,
       "disabled_resources": [],
       "disabled_tools": [
         "notion-create-database",
@@ -399,6 +401,7 @@
         "run_query"
       ],
       "command": "uvx",
+      "disabled": true,
       "disabled_tools": [
         "analyze_complexity",
         "analyze_project",
