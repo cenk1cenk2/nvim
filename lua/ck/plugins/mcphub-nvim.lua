@@ -14,7 +14,6 @@ function M.config()
         -- dir = "~/development/mcphub.nvim",
         branch = "next",
         build = { "bundled_scripts.lua" },
-        rocks = { "lyaml" },
         keys = { "<leader>c" },
         cmd = { "MCPHub" },
         -- event = { "VeryLazy" },
@@ -640,12 +639,33 @@ function M.parse_skill_markdown(content, fallback_name)
     end
 
     if end_idx ~= nil then
-      local yaml_block = table.concat(vim.list_slice(lines, 2, end_idx - 1), "\n")
-      local ok, lyaml = pcall(require, "lyaml")
-      if ok and yaml_block ~= "" then
-        local parsed_ok, parsed = pcall(lyaml.load, yaml_block)
-        if parsed_ok and type(parsed) == "table" then
-          frontmatter = parsed
+      local current_key = nil
+      for i = 2, end_idx - 1 do
+        local line = lines[i]
+        local list_val = line:match("^%s+-%s+(.+)")
+        if list_val and current_key then
+          if type(frontmatter[current_key]) ~= "table" then
+            frontmatter[current_key] = {}
+          end
+          table.insert(frontmatter[current_key], vim.trim(list_val))
+        else
+          local key, val = line:match("^([%w_-]+):%s*(.*)")
+          if key then
+            current_key = key
+            val = vim.trim(val)
+            if val == "" then
+              frontmatter[key] = {}
+            else
+              val = val:gsub("^[\"'](.-)[\"']$", "%1")
+              if val == "true" then
+                frontmatter[key] = true
+              elseif val == "false" then
+                frontmatter[key] = false
+              else
+                frontmatter[key] = val
+              end
+            end
+          end
         end
       end
       body_start = end_idx + 1
