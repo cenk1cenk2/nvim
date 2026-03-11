@@ -114,6 +114,30 @@ skills/
 - See `/load-skills` for dependency resolution and reference loading details.
 - See `/config-skills` for skill authoring conventions.
 
+### Claude Code Directory Structure
+
+Claude Code stores session data and configuration in `~/.claude/`. Understanding this structure helps agents read prior context and write to the right locations.
+
+```
+~/.claude/
+  plans/                                    # Plan files for all projects
+    YYYY-MM-DD-<project>-<name>.md          # One plan per task
+  projects/                                 # Per-project session data
+    <sanitized-path>/                       # Project directory (path with / → -)
+      <uuid>.jsonl                          # Session transcript (one per conversation)
+      <uuid>/                              # Session artifacts (tool results, etc.)
+      sessions-index.json                   # Index of all sessions for this project
+      memory/                              # Auto-memory files (persistent across sessions)
+        MEMORY.md                          # Main memory file (auto-loaded into context)
+      CLAUDE.md                            # Project-specific instructions
+```
+
+**Project path sanitization:** The project's absolute path becomes the directory name with `/` replaced by `-` and leading `-`. Example: `/home/cenk/.config/nvim` → `-home-cenk--config-nvim`.
+
+**`sessions-index.json`** contains metadata for each session: `sessionId`, `firstPrompt`, `summary`, `messageCount`, `created`, `modified`, `gitBranch`, `projectPath`.
+
+**Session transcripts** (`.jsonl`) are the full conversation logs. Use these to resume context from prior sessions when the user references "last session" or "what I did yesterday."
+
 ### Plan File Location
 
 **CRITICAL:** All plan files MUST be created in `~/.claude/plans/`

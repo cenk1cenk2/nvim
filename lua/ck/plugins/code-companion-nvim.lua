@@ -300,8 +300,47 @@ function M.config()
                   },
                 },
               },
+              ["read_file"] = {
+                opts = {
+                  require_approval_before = function(tool)
+                    local path = tool.args and tool.args.filepath or ""
+                    path = vim.fs.normalize(path)
+                    for _, dir in ipairs(M.auto_approve_read_dirs) do
+                      if path:find(dir, 1, true) == 1 then
+                        return false
+                      end
+                    end
+                    return true
+                  end,
+                },
+              },
+              ["create_file"] = {
+                opts = {
+                  require_approval_before = function(tool)
+                    local path = tool.args and tool.args.filepath or ""
+                    path = vim.fs.normalize(path)
+                    for _, dir in ipairs(M.auto_approve_write_dirs) do
+                      if path:find(dir, 1, true) == 1 then
+                        return false
+                      end
+                    end
+                    return true
+                  end,
+                },
+              },
               ["insert_edit_into_file"] = {
-                opts = {},
+                opts = {
+                  require_approval_before = function(tool)
+                    local path = tool.args and tool.args.filepath or ""
+                    path = vim.fs.normalize(path)
+                    for _, dir in ipairs(M.auto_approve_write_dirs) do
+                      if path:find(dir, 1, true) == 1 then
+                        return false
+                      end
+                    end
+                    return true
+                  end,
+                },
               },
               ["web_search"] = {
                 opts = {
@@ -324,11 +363,6 @@ function M.config()
                 },
               },
               ["grep_search"] = {
-                opts = {
-                  require_approval_before = false,
-                },
-              },
-              ["read_file"] = {
                 opts = {
                   require_approval_before = false,
                 },
@@ -1017,6 +1051,19 @@ function M.config()
     end,
   })
 end
+
+-- Directories where read operations are auto-approved (no user confirmation needed).
+M.auto_approve_read_dirs = {
+  vim.fs.normalize("~/.config/nvim/utils/agents/skills"),
+  vim.fs.normalize("~/.claude/plans"),
+  vim.fs.normalize("~/.claude/projects"),
+}
+
+-- Directories where write operations are auto-approved (no user confirmation needed).
+M.auto_approve_write_dirs = {
+  vim.fs.normalize("~/.claude/plans"),
+  vim.fs.normalize("~/.claude/projects"),
+}
 
 function M.get_open_chats()
   local codecompanion = require("codecompanion")
