@@ -51,11 +51,8 @@
       ],
       "command": "uvx",
       "disabled_tools": [
-        "git_add",
         "git_checkout",
-        "git_commit",
-        "git_create_branch",
-        "git_reset"
+        "git_create_branch"
       ]
     },
     "github": {
@@ -448,20 +445,20 @@
       "disabled": false,
       "disabled_tools": []
     },
+    "skills": {
+      "autoApprove": [
+        "list_skills",
+        "read_skill",
+        "read_reference"
+      ],
+      "disabled_tools": []
+    },
     "vim": {
       "autoApprove": [
         "vim_status",
         "vim_file_open",
         "vim_jump",
         "vim_select"
-      ],
-      "disabled_tools": []
-    },
-    "skills": {
-      "autoApprove": [
-        "list_skills",
-        "read_skill",
-        "read_reference"
       ],
       "disabled_tools": []
     }
