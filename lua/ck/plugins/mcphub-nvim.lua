@@ -690,7 +690,7 @@ function M.register_agent_skills()
   ---@return string
   local function build_skill_load_prompt(skill)
     return string.format(
-      '\n\n**!!CRITICAL!!:** Load the `%s` skill using `mcp__mcphub__skills__read_skill` before processing with arguments `{ "names": ["%s"] }`, then follow its instructions of the SKILL.\n\n',
+      '\n\n**Load the `%s` skill using `mcp__mcphub__skills__read_skill` before processing with arguments `{ "names": ["%s"] }`, then follow its instructions of the SKILL.**\n\n',
       skill.name,
       skill.name
     )
