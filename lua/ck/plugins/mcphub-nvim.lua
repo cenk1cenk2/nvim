@@ -675,29 +675,6 @@ function M.load_agent_skills(dir)
   return skills
 end
 
----@param skill_file_path string
----@param references_str string
----@return string[]
-function M.resolve_references(skill_file_path, references_str)
-  local refs = {}
-  local skill_folder = vim.fn.fnamemodify(skill_file_path, ":h")
-  local entries = vim.split(references_str, ",", { trimempty = true })
-
-  for _, entry in ipairs(entries) do
-    local trimmed = vim.trim(entry)
-    if trimmed ~= "" then
-      local abs_path = vim.fn.resolve(join_paths(skill_folder, trimmed))
-      if vim.fn.filereadable(abs_path) == 1 then
-        table.insert(refs, abs_path)
-      end
-    end
-  end
-
-  table.sort(refs)
-
-  return refs
-end
-
 function M.register_agent_skills()
   if M._agent_skills_registered then
     return
@@ -706,60 +683,10 @@ function M.register_agent_skills()
   local mcphub = require("mcphub")
   local skills = M.load_agent_skills()
 
-  local function xml_escape(value)
-    if value == nil then
-      return ""
-    end
-
-    local s = tostring(value)
-    s = s:gsub("&", "&amp;")
-    s = s:gsub("<", "&lt;")
-    s = s:gsub(">", "&gt;")
-    s = s:gsub('"', "&quot;")
-    s = s:gsub("'", "&apos;")
-    return s
-  end
-
   ---@param skill {name:string, description:string, body:string, frontmatter:table<string,string>}
-  ---@param request string
   ---@return string
-  local function build_skill_user_payload(skill, references)
-    local lines = {
-      "",
-      "",
-      "````xml",
-      "<Skill>",
-      "  <Name>" .. xml_escape(skill.name) .. "</Name>",
-      "  <Description>" .. xml_escape(skill.description) .. "</Description>",
-      "  <Instructions>",
-      skill.body,
-      "  </Instructions>",
-    }
-
-    local metadata_keys = vim.tbl_keys(skill.frontmatter or {})
-    table.sort(metadata_keys)
-    if #metadata_keys > 0 then
-      table.insert(lines, "  <Metadata>")
-      for _, key in ipairs(metadata_keys) do
-        table.insert(lines, string.format('    <Field key="%s">%s</Field>', xml_escape(key), xml_escape(skill.frontmatter[key])))
-      end
-      table.insert(lines, "  </Metadata>")
-    end
-
-    if references and #references > 0 then
-      table.insert(lines, "  <References>")
-      for _, ref_path in ipairs(references) do
-        table.insert(lines, string.format('    <File path="%s" />', xml_escape(ref_path)))
-      end
-      table.insert(lines, "  </References>")
-    end
-
-    table.insert(lines, "</Skill>")
-    table.insert(lines, "````")
-    table.insert(lines, "")
-    table.insert(lines, "")
-
-    return table.concat(lines, "\n")
+  local function build_skill_load_prompt(skill)
+    return string.format('\n> Load the `%s` skill using `mcp__mcphub__skills__read_skill` with `{ "names": ["%s"] }`, then follow its instructions.\n', skill.name, skill.name)
   end
 
   for _, skill in ipairs(skills) do
@@ -769,16 +696,12 @@ function M.register_agent_skills()
       handler = function(req, res)
         local file_content = vim.fn.readfile(skill.file_path)
         if file_content and #file_content > 0 then
-          local fresh = M.parse_skill_markdown(table.concat(file_content, "\n"), skill.name)
-          local references = {}
-          if fresh.frontmatter.references and fresh.frontmatter.references ~= "" then
-            references = M.resolve_references(skill.file_path, fresh.frontmatter.references)
-          end
+          skill = M.parse_skill_markdown(table.concat(file_content, "\n"), skill.name)
 
-          return res:user():text(build_skill_user_payload(fresh, references)):send()
+          return res:user():text(build_skill_load_prompt(skill)):send()
         end
 
-        return res:user():text(build_skill_user_payload(skill, {})):send()
+        return res:user():text(build_skill_load_prompt(skill)):send()
       end,
     })
   end
