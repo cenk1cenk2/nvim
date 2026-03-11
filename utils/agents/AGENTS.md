@@ -38,11 +38,15 @@
    - If the note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
    - **If the note does not exist or obsidian MCP is unavailable, silently skip and continue**
 
-5. **DISCOVER AVAILABLE SKILLS** - List skills in `~/.config/nvim/utils/agents/skills/`
-   - List all subdirectories to know which skills are available for the session
-   - These skills can be auto-invoked based on context — see the **Skill Cross-Loading** section in Part II and `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md` for deduction rules
-   - **Do not read skill files during initialization** — just note what exists. Read the `SKILL.md` on demand when a skill is needed
-   - **If the skills directory is unavailable, silently skip and continue**
+5. **DISCOVER AVAILABLE SKILLS** - Call `skills__list_skills` to discover all skills
+   - The tool returns each skill's name, description, and invocation mode:
+     - **`[auto]`** — the model CAN auto-invoke this skill when context matches its description. Read it via `skills__read_skill` and follow its instructions.
+     - **`[manual]`** — the model MUST NOT auto-invoke this skill. Only load it when the user explicitly requests it (e.g., `/skill-name` or "use the X skill"). If the skill seems relevant, **suggest it** to the user in conversation instead of invoking it.
+   - **Do not read skill files during initialization** — just note what exists. Read skills on demand when needed.
+   - When a task matches a skill's description, use `skills__read_skill` to load it (supports batch: `{ "names": ["skill-a", "skill-b"] }`).
+   - When a loaded skill declares references in its frontmatter, use `skills__read_reference` to load them (supports batch: `{ "paths": ["../references/a.md", "../references/b.md"], "skill": "skill-name" }`).
+   - See the **Skill Cross-Loading** section in Part II and `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md` for dependency resolution rules.
+   - **If skills tools are unavailable, silently skip and continue.**
 
 ## II. PLANNING AND IMPLEMENTATION
 
@@ -113,6 +117,29 @@ skills/
 - Relative paths resolve from the skill's directory: `../references/` for shared, `./references/` for skill-local.
 - See `/load-skills` for dependency resolution and reference loading details.
 - See `/config-skills` for skill authoring conventions.
+
+**Skills MCP tools** (auto-approved, no user confirmation needed):
+
+| Tool | Parameters | Purpose |
+|------|-----------|---------|
+| `skills__list_skills` | _(none)_ | List all skills with names, descriptions, and invocation mode (`[auto]` or `[manual]`). |
+| `skills__read_skill` | `names` (required): array of skill names | Read one or more skills. Example: `{ "names": ["obsidian-note"] }` or batch: `{ "names": ["linear-issue-create", "linear-issue-update"] }`. |
+| `skills__read_reference` | `paths` (required): array of relative paths, `skill` (required): skill name | Read one or more reference files. Paths are the exact relative paths from the skill's frontmatter. Example: `{ "paths": ["../references/slack.md", "../references/plan-mode.md"], "skill": "slack-channel" }`. |
+
+**ALWAYS use these tools** to read skills and references instead of filesystem MCP tools (`filesystem__read_file`) or built-in file tools (`read_file`). The skills tools are:
+- **Auto-approved** — no user confirmation popup, no interruption.
+- **Scoped** — only access the skills directory, cannot read arbitrary files.
+- **Batch-capable** — load multiple skills or references in a single call.
+- **Correct** — resolve relative paths from the skill's directory automatically.
+
+**Invocation modes:**
+- **`[auto]`** — auto-invoke when context matches the skill's description. Read the skill and follow its instructions.
+- **`[manual]`** — do NOT auto-invoke. Only load when the user explicitly requests it. If relevant, **suggest** the skill to the user.
+
+**When to use each tool:**
+- **Discovering skills:** Call `skills__list_skills` at session start and when looking for applicable skills.
+- **Loading skills:** Call `skills__read_skill` with one or more names. Supports batch loading for related skills.
+- **Loading references:** When a skill declares `references:` in frontmatter, pass those paths directly to `skills__read_reference`. Example: if a skill has `references: ../references/slack.md, ../references/plan-mode.md`, call `{ "paths": ["../references/slack.md", "../references/plan-mode.md"], "skill": "the-skill-name" }`.
 
 ### Claude Code Directory Structure
 

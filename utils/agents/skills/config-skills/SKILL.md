@@ -142,7 +142,7 @@ References implement progressive disclosure — SKILL.md stays lean with the cor
 1. Skills declare references in frontmatter as comma-separated relative paths.
 2. The mcphub plugin resolves these paths and lists them in the XML `<References>` block when the skill is invoked.
 3. The SKILL.md body tells the model which references to read and when, using reference directives (blockquotes).
-4. The model reads reference files via MCP filesystem tools — they are NOT auto-loaded into context.
+4. The model reads reference files using `skills__read_reference` MCP tool (auto-approved, no user confirmation) — they are NOT auto-loaded into context. Pass the exact relative paths from frontmatter: `{ "paths": ["../references/slack.md"], "skill": "skill-name" }`. Supports batch loading. Fallback: `filesystem__read_file` or `neovim__read_file`.
 5. Skills must work even if references fail to load (graceful degradation).
 
 #### Path Convention
@@ -176,7 +176,7 @@ The directive should:
 - Name the reference clearly (matching the filename without extension).
 - State what the reference covers so the model knows why to read it.
 - Include a brief inline summary so the skill still works if the reference fails to load.
-- For plan-mode references, include "resolve references from the `<References>` block via MCP filesystem tools" so the model knows how to load them.
+- Include "resolve references from the `<References>` block via `skills__read_reference`" so the model knows how to load them. The model should use `skills__read_reference` (auto-approved, batch-capable) as the primary tool, passing the exact relative paths from frontmatter. Fallback: filesystem tools if unavailable.
 
 #### When to Create a New Shared Reference
 

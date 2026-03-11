@@ -429,6 +429,124 @@ function M.config()
         end,
       })
 
+      -- Skills tools — auto-approved MCP tools for reading skills and references
+      local skills_dir = M.agent_skills_dir()
+
+      mcphub.add_tool("skills", {
+        name = "list_skills",
+        description = "List all available skills with their names, descriptions, and invocation mode. [auto] skills can be auto-invoked by the model based on context. [manual] skills require explicit user request.",
+        inputSchema = {
+          type = "object",
+          properties = {},
+        },
+        handler = function(req, res)
+          local skills = M.load_agent_skills()
+          local lines = {}
+          for _, skill in ipairs(skills) do
+            local invokable = skill.frontmatter["disable-model-invocation"] ~= "true"
+            local tag = invokable and "[auto]" or "[manual]"
+            table.insert(lines, string.format("- %s **%s**: %s", tag, skill.name, skill.description))
+          end
+
+          return res:text(table.concat(lines, "\n")):send()
+        end,
+      })
+
+      mcphub.add_tool("skills", {
+        name = "read_skill",
+        description = "Read one or more skills by name. Returns full SKILL.md content including frontmatter for each skill.",
+        inputSchema = {
+          type = "object",
+          properties = {
+            names = {
+              type = "array",
+              items = { type = "string" },
+              description = "Skill names to read (e.g., ['linear-issue-create', 'obsidian-note']).",
+            },
+          },
+          required = { "names" },
+        },
+        handler = function(req, res)
+          local names = req.params.names
+          if not names or #names == 0 then
+            return res:error("No skill names provided")
+          end
+
+          local results = {}
+          local errors = {}
+          for _, name in ipairs(names) do
+            local skill_path = join_paths(skills_dir, name, "SKILL.md")
+            if vim.fn.filereadable(skill_path) == 1 then
+              local content = table.concat(vim.fn.readfile(skill_path), "\n")
+              table.insert(results, string.format("--- %s ---\n%s", name, content))
+            else
+              table.insert(errors, name)
+            end
+          end
+
+          if #errors > 0 then
+            table.insert(results, string.format("\n--- NOT FOUND: %s ---", table.concat(errors, ", ")))
+          end
+
+          return res:text(table.concat(results, "\n\n")):send()
+        end,
+      })
+
+      mcphub.add_tool("skills", {
+        name = "read_reference",
+        description = "Read one or more reference files using relative paths as declared in skill frontmatter. Paths are resolved from the skill's directory.",
+        inputSchema = {
+          type = "object",
+          properties = {
+            paths = {
+              type = "array",
+              items = { type = "string" },
+              description = "Relative reference paths exactly as declared in skill frontmatter (e.g., ['../references/slack.md', '../references/plan-mode.md', './references/local.md']).",
+            },
+            skill = {
+              type = "string",
+              description = "The skill name whose directory is used to resolve relative paths (e.g., 'linear-issue-create'). Required for correct path resolution.",
+            },
+          },
+          required = { "paths", "skill" },
+        },
+        handler = function(req, res)
+          local paths = req.params.paths
+          local skill_name = req.params.skill
+
+          if not paths or #paths == 0 then
+            return res:error("No reference paths provided")
+          end
+          if not skill_name or skill_name == "" then
+            return res:error("Skill name is required for resolving relative paths")
+          end
+
+          local skill_folder = join_paths(skills_dir, skill_name)
+          if vim.fn.isdirectory(skill_folder) ~= 1 then
+            return res:error("Skill directory not found: " .. skill_name)
+          end
+
+          local results = {}
+          local errors = {}
+          for _, rel_path in ipairs(paths) do
+            local abs_path = vim.fn.resolve(join_paths(skill_folder, vim.trim(rel_path)))
+            if vim.fn.filereadable(abs_path) == 1 then
+              local basename = vim.fn.fnamemodify(abs_path, ":t")
+              local content = table.concat(vim.fn.readfile(abs_path), "\n")
+              table.insert(results, string.format("--- %s ---\n%s", basename, content))
+            else
+              table.insert(errors, rel_path)
+            end
+          end
+
+          if #errors > 0 then
+            table.insert(results, string.format("\n--- NOT FOUND: %s ---", table.concat(errors, ", ")))
+          end
+
+          return res:text(table.concat(results, "\n\n")):send()
+        end,
+      })
+
       M.register_agent_skills()
 
       -- Advanced mcphub configuration
