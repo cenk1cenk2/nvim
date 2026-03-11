@@ -82,7 +82,11 @@ User invokes specialized modes using personal slash commands (e.g., `/assistant`
 >
 > **Reference:** `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md` contains the full deduction rules for resolving skill dependencies — which workspace to pick based on issue ID prefixes, URLs, and repository hosting; how to chain skills; and how to handle ambiguity.
 >
-> **Key rule:** If context unambiguously identifies the prerequisite, load it automatically. If ambiguous, ask the user. Never skip prerequisites.
+> **Key rules:**
+>
+> - If context unambiguously identifies the prerequisite, load it automatically. If ambiguous, ask the user. Never skip prerequisites.
+> - **Announce loaded skills.** When a skill is loaded, give a one-line summary: `Using <skill-name> — <what it does>.` (e.g., `Using config-agents — updates the AGENTS.md guidelines file.`).
+> - **Dismissing skills.** When the user says "unload the X skill" or "dismiss the X skill", mark it as obsolete in context for cleanup. Dismissal is not permanent — the skill can be re-invoked later if context matches.
 
 ### Skills Architecture
 
@@ -121,22 +125,25 @@ skills/
 **Skills MCP tools** (auto-approved, no user confirmation needed):
 
 | Tool | Parameters | Purpose |
-|------|-----------|---------|
+| --- | --- | --- |
 | `skills__list_skills` | _(none)_ | List all skills with names, descriptions, and invocation mode (`[auto]` or `[manual]`). |
 | `skills__read_skill` | `names` (required): array of skill names | Read one or more skills. Example: `{ "names": ["obsidian-note"] }` or batch: `{ "names": ["linear-issue-create", "linear-issue-update"] }`. |
 | `skills__read_reference` | `paths` (required): array of relative paths, `skill` (required): skill name | Read one or more reference files. Paths are the exact relative paths from the skill's frontmatter. Example: `{ "paths": ["../references/slack.md", "../references/plan-mode.md"], "skill": "slack-channel" }`. |
 
 **ALWAYS use these tools** to read skills and references instead of filesystem MCP tools (`filesystem__read_file`) or built-in file tools (`read_file`). The skills tools are:
+
 - **Auto-approved** — no user confirmation popup, no interruption.
 - **Scoped** — only access the skills directory, cannot read arbitrary files.
 - **Batch-capable** — load multiple skills or references in a single call.
 - **Correct** — resolve relative paths from the skill's directory automatically.
 
 **Invocation modes:**
+
 - **`[auto]`** — auto-invoke when context matches the skill's description. Read the skill and follow its instructions.
 - **`[manual]`** — do NOT auto-invoke. Only load when the user explicitly requests it. If relevant, **suggest** the skill to the user.
 
 **When to use each tool:**
+
 - **Discovering skills:** Call `skills__list_skills` at session start and when looking for applicable skills.
 - **Loading skills:** Call `skills__read_skill` with one or more names. Supports batch loading for related skills.
 - **Loading references:** When a skill declares `references:` in frontmatter, pass those paths directly to `skills__read_reference`. Example: if a skill has `references: ../references/slack.md, ../references/plan-mode.md`, call `{ "paths": ["../references/slack.md", "../references/plan-mode.md"], "skill": "the-skill-name" }`.

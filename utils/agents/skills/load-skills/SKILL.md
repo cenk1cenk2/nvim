@@ -28,30 +28,30 @@ When a skill has a **PREREQUISITE** block, the agent MUST ensure that prerequisi
 
 Two Linear workspaces exist. Deduce which one from context:
 
-| Signal | Workspace | Skill to load |
-|---|---|---|
-| Issue ID prefix `K-xxx` | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| Issue ID prefix `CLOUD-xxx` | Laravel | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md` |
-| Linear URL containing `kilic-dev` | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| Linear URL containing `laravel` | Laravel | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md` |
+| Signal                                 | Workspace | Skill to load                                              |
+| -------------------------------------- | --------- | ---------------------------------------------------------- |
+| Issue ID prefix `K-xxx`                | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
+| Issue ID prefix `CLOUD-xxx`            | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
+| Linear URL containing `kilic-dev`      | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
+| Linear URL containing `laravel`        | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
 | GitLab repository (`gitlab.kilic.dev`) | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| GitHub repository (Laravel org) | Laravel | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md` |
-| User says "work" or "laravel" | Laravel | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md` |
-| User says "personal" or "kilic" | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| No signal available | — | Ask the user |
+| GitHub repository (Laravel org)        | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
+| User says "work" or "laravel"          | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
+| User says "personal" or "kilic"        | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
+| No signal available                    | —         | Ask the user                                               |
 
 #### Skill Chaining
 
 Some skills reference other skills as follow-up actions. When a skill recommends invoking another skill, load it by path:
 
-| Context | Skill to load |
-|---|---|
-| Need to create Linear issues | `~/.config/nvim/utils/agents/skills/linear-issue-create/SKILL.md` |
-| Need to create a Linear project | `~/.config/nvim/utils/agents/skills/linear-project-create/SKILL.md` |
-| Need to update/refine an issue description | `~/.config/nvim/utils/agents/skills/linear-issue-update/SKILL.md` |
-| Need to create a Linear initiative | `~/.config/nvim/utils/agents/skills/linear-initiative-create/SKILL.md` |
-| Need to update a Linear initiative | `~/.config/nvim/utils/agents/skills/linear-initiative-update/SKILL.md` |
-| Need to organize a todo note into the vault | `~/.config/nvim/utils/agents/skills/obsidian-note/SKILL.md` |
+| Context                                     | Skill to load                                                          |
+| ------------------------------------------- | ---------------------------------------------------------------------- |
+| Need to create Linear issues                | `~/.config/nvim/utils/agents/skills/linear-issue-create/SKILL.md`      |
+| Need to create a Linear project             | `~/.config/nvim/utils/agents/skills/linear-project-create/SKILL.md`    |
+| Need to update/refine an issue description  | `~/.config/nvim/utils/agents/skills/linear-issue-update/SKILL.md`      |
+| Need to create a Linear initiative          | `~/.config/nvim/utils/agents/skills/linear-initiative-create/SKILL.md` |
+| Need to update a Linear initiative          | `~/.config/nvim/utils/agents/skills/linear-initiative-update/SKILL.md` |
+| Need to organize a todo note into the vault | `~/.config/nvim/utils/agents/skills/obsidian-note/SKILL.md`            |
 
 #### Multiple Instances
 
@@ -88,21 +88,31 @@ references: ../references/linear-prerequisite.md, ../references/plan-mode.md
    - Example: `{ "paths": ["../references/slack.md", "../references/plan-mode.md"], "skill": "slack-channel" }`.
    - Supports batch loading — pass all needed references in one call.
    - Paths are resolved from the skill's directory, so `../references/` reaches shared references and `./references/` reaches skill-local ones.
-5. Skills must work even without references (graceful degradation) — they contain enough inline context to function.
+4. Skills must work even without references (graceful degradation) — they contain enough inline context to function.
 
 **Fallback:** If skills MCP tools are unavailable, read reference files using `filesystem__read_file` or `neovim__read_file` at `~/.config/nvim/utils/agents/skills/references/<filename>`.
 
 **Reference locations:**
 
-| Path pattern | Scope | Example |
-|---|---|---|
-| `../references/<file>.md` | Shared across skills | `../references/linear-prerequisite.md` |
-| `./references/<file>.md` | Specific to one skill | `./references/research-workflow.md` |
+| Path pattern              | Scope                 | Example                                |
+| ------------------------- | --------------------- | -------------------------------------- |
+| `../references/<file>.md` | Shared across skills  | `../references/linear-prerequisite.md` |
+| `./references/<file>.md`  | Specific to one skill | `./references/research-workflow.md`    |
 
 **Do NOT auto-load references.** Only read them when the skill's instructions tell you to.
 
+### Dismissing Skills
+
+When the user explicitly asks to unload a skill (e.g., "unload the obsidian skill", "dismiss the linear skill", "drop the slack skill"):
+
+1. **Acknowledge** — confirm which skill is being unloaded.
+2. **Mark as obsolete** — treat the skill's instructions in context as obsolete. They can be cleaned up during context compaction.
+3. **Drop orphaned prerequisites** — if the dismissed skill was the only reason a prerequisite was loaded, mark the prerequisite as obsolete too. Ask if unclear.
+4. **Re-invocation is allowed** — if context later matches the dismissed skill, it can be auto-invoked again normally. Dismissal is not permanent.
+
 ### Key Rules
 
+- **Announce loaded skills.** When a skill is loaded, give a one-line summary: `Using <skill-name> — <what it does>.` (e.g., `Using config-agents — updates the AGENTS.md guidelines file.`).
 - **Auto-invoke when unambiguous.** If context clearly identifies the prerequisite, load it without asking.
 - **Ask when ambiguous.** If multiple skills could apply and context doesn't disambiguate, ask the user.
 - **Never skip prerequisites.** A skill that declares a prerequisite MUST have it satisfied — there are no optional prerequisites.
