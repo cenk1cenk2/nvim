@@ -16,7 +16,13 @@ references:
 >
 > - These are quick capture notes — create immediately, no planning.
 > - Emphasize speed over perfection.
-> - Read the `obsidian` reference for vault location and tool access — resolve references from the `<References>` block via MCP filesystem tools. Use `obsidian__obsidian_update_note` to create notes in `Todo/` when not in `~/notes`.
+> - Read the `obsidian` reference for vault location and tool access — resolve references from the `<References>` block via `skills__read_reference`.
+
+> **CRITICAL — Tool Selection (non-negotiable, check CWD first):**
+>
+> - **CWD is `~/notes`** → use built-in tools: `Write` to create, `Read` to read, `Edit` to modify, `Bash rm` to delete, `Bash mv` to move. Do NOT use `obsidian__obsidian_update_note` or `obsidian__obsidian_read_note` or `obsidian__obsidian_delete_note`. Fall back to obsidian MCP only if the built-in tool is unavailable.
+> - **CWD is NOT `~/notes`** → use `obsidian__*` MCP tools.
+> - **Always use** `obsidian__obsidian_list_notes` and `obsidian__obsidian_global_search` regardless of CWD.
 
 ### Context
 

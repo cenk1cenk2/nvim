@@ -13,9 +13,15 @@ references:
 
 > **DO NOT enter plan mode.** This is an interactive, note-by-note workflow driven by user decisions.
 
+> **CRITICAL — Tool Selection (non-negotiable, check CWD first):**
+>
+> - **CWD is `~/notes`** → use built-in tools: `Write` to create, `Read` to read, `Edit` to modify, `Bash rm` to delete, `Bash mv` to move. Do NOT use `obsidian__obsidian_update_note` or `obsidian__obsidian_read_note` or `obsidian__obsidian_delete_note`. Fall back to obsidian MCP only if the built-in tool is unavailable.
+> - **CWD is NOT `~/notes`** → use `obsidian__*` MCP tools.
+> - **Always use** `obsidian__obsidian_list_notes` and `obsidian__obsidian_global_search` regardless of CWD.
+
 ### Context
 
-> Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, and writing style conventions — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, and writing style conventions — resolve references from the `<References>` block via `skills__read_reference`.
 
 Todo notes in `Todo/` are quick captures — timestamped files with rough thoughts, checklists, and brain dumps. Over time they accumulate. This skill processes them one by one: organizing relevant notes into proper vault categories (like `/obsidian-note` would), flagging stale or completed notes for removal, and refining what remains.
 

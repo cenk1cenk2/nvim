@@ -495,29 +495,26 @@ function M.config()
 
       mcphub.add_tool("skills", {
         name = "read_reference",
-        description = "Read one or more reference files using relative paths as declared in skill frontmatter. Paths are resolved from the skill's directory.",
+        description = "Read reference files for a skill. When paths are omitted, loads ALL references declared in the skill's frontmatter. When paths are provided, loads only the specified references.",
         inputSchema = {
           type = "object",
           properties = {
             paths = {
               type = "array",
               items = { type = "string" },
-              description = "Relative reference paths exactly as declared in skill frontmatter (e.g., ['../references/slack.md', '../references/plan-mode.md', './references/local.md']).",
+              description = "Relative reference paths exactly as declared in skill frontmatter (e.g., ['../references/slack.md', '../references/plan-mode.md', './references/local.md']). When omitted, all references from the skill's frontmatter are loaded.",
             },
             skill = {
               type = "string",
               description = "The skill name whose directory is used to resolve relative paths (e.g., 'linear-issue-create'). Required for correct path resolution.",
             },
           },
-          required = { "paths", "skill" },
+          required = { "skill" },
         },
         handler = function(req, res)
           local paths = req.params.paths
           local skill_name = req.params.skill
 
-          if not paths or #paths == 0 then
-            return res:error("No reference paths provided")
-          end
           if not skill_name or skill_name == "" then
             return res:error("Skill name is required for resolving relative paths")
           end
@@ -525,6 +522,28 @@ function M.config()
           local skill_folder = join_paths(skills_dir, skill_name)
           if vim.fn.isdirectory(skill_folder) ~= 1 then
             return res:error("Skill directory not found: " .. skill_name)
+          end
+
+          -- When paths not provided, load all references from skill frontmatter
+          if not paths or #paths == 0 then
+            local skill_path = join_paths(skill_folder, "SKILL.md")
+            if vim.fn.filereadable(skill_path) ~= 1 then
+              return res:error("SKILL.md not found for: " .. skill_name)
+            end
+
+            local skill_content = table.concat(vim.fn.readfile(skill_path), "\n")
+            local parsed = M.parse_skill_markdown(skill_content, skill_name)
+            local refs = parsed.frontmatter.references
+
+            if not refs or (type(refs) == "table" and #refs == 0) then
+              return res:text("No references declared in " .. skill_name .. " frontmatter."):send()
+            end
+
+            if type(refs) == "string" then
+              refs = { refs }
+            end
+
+            paths = refs
           end
 
           local results = {}
