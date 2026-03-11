@@ -686,7 +686,11 @@ function M.register_agent_skills()
   ---@param skill {name:string, description:string, body:string, frontmatter:table<string,string>}
   ---@return string
   local function build_skill_load_prompt(skill)
-    return string.format('\n> Load the `%s` skill using `mcp__mcphub__skills__read_skill` with `{ "names": ["%s"] }`, then follow its instructions.\n', skill.name, skill.name)
+    return string.format(
+      '\n\n---\n> IMPORTANT!: Load the `%s` skill using `mcp__mcphub__skills__read_skill` now with `{ "names": ["%s"] }`, then follow its instructions.\n---\n\n',
+      skill.name,
+      skill.name
+    )
   end
 
   for _, skill in ipairs(skills) do
