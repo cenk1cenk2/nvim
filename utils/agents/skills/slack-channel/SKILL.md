@@ -4,7 +4,8 @@ description: Process a Slack channel — reads recent messages, analyzes automat
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[channel-name-or-id] [optional: timeframe or instructions]"
-references: ../references/slack.md
+references:
+  - ../references/slack.md
 ---
 
 ## system

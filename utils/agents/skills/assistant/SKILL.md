@@ -3,7 +3,8 @@ name: assistant
 description: Plan and track changes through collaborative assistant guidance. Always manually invoked. Do NOT use for executing steps (/counterassistant) or evaluating progress (/evaluate).
 interaction: chat
 disable-model-invocation: true
-references: ../references/plan-mode.md
+references:
+  - ../references/plan-mode.md
 ---
 
 ## system

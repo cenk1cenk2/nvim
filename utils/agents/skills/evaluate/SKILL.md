@@ -3,7 +3,8 @@ name: evaluate
 description: Evaluate code changes to determine progress against the current plan. Always manually invoked. Do NOT use for planning (/assistant) or executing steps (/counterassistant).
 interaction: chat
 disable-model-invocation: true
-references: ../references/plan-mode.md
+references:
+  - ../references/plan-mode.md
 ---
 
 ## system

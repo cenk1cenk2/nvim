@@ -4,7 +4,8 @@ description: Plan work and execute it across parallel agents. Use when user says
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[goal or task list] [optional: 'with worktrees']"
-references: ../references/scm-detect.md
+references:
+  - ../references/scm-detect.md
 ---
 
 ## system

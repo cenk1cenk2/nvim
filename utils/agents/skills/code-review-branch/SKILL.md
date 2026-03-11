@@ -4,7 +4,10 @@ description: Review the current branch's changes against the default or target b
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[optional: target-branch or PR URL]"
-references: ../references/scm-detect.md, ../references/scm-github.md, ../references/scm-gitlab.md
+references:
+  - ../references/scm-detect.md
+  - ../references/scm-github.md
+  - ../references/scm-gitlab.md
 ---
 
 ## system

@@ -14,6 +14,7 @@ function M.config()
         -- dir = "~/development/mcphub.nvim",
         branch = "next",
         build = { "bundled_scripts.lua" },
+        rocks = { "lyaml" },
         keys = { "<leader>c" },
         cmd = { "MCPHub" },
         -- event = { "VeryLazy" },
@@ -443,7 +444,7 @@ function M.config()
           local skills = M.load_agent_skills()
           local lines = {}
           for _, skill in ipairs(skills) do
-            local invokable = skill.frontmatter["disable-model-invocation"] ~= "true"
+            local invokable = not skill.frontmatter["disable-model-invocation"]
             local tag = invokable and "[auto]" or "[manual]"
             table.insert(lines, string.format("- %s **%s**: %s", tag, skill.name, skill.description))
           end
@@ -604,7 +605,7 @@ end
 
 ---@param content string
 ---@param fallback_name string
----@return {name:string, description:string, body:string, frontmatter:table<string,string>}
+---@return {name:string, description:string, body:string, frontmatter:table<string,string|boolean|string[]>}
 function M.parse_skill_markdown(content, fallback_name)
   local lines = vim.split(content, "\n", { plain = true })
   local frontmatter = {}
@@ -617,15 +618,17 @@ function M.parse_skill_markdown(content, fallback_name)
         end_idx = i
         break
       end
-
-      local key, value = lines[i]:match("^([%w_%-]+):%s*(.*)$")
-      if key then
-        value = value:gsub("^['\"]", ""):gsub("['\"]$", "")
-        frontmatter[key] = value
-      end
     end
 
     if end_idx ~= nil then
+      local yaml_block = table.concat(vim.list_slice(lines, 2, end_idx - 1), "\n")
+      local ok, lyaml = pcall(require, "lyaml")
+      if ok and yaml_block ~= "" then
+        local parsed_ok, parsed = pcall(lyaml.load, yaml_block)
+        if parsed_ok and type(parsed) == "table" then
+          frontmatter = parsed
+        end
+      end
       body_start = end_idx + 1
     end
   end

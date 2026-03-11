@@ -2,7 +2,8 @@
 name: github-pr
 description: Analyze and write GitHub pull request titles and descriptions. Use when user says "write a PR description", "create a PR", "improve the PR", or "describe what this branch does". Do NOT use for GitLab MRs (/gitlab-pr), CI workflows (/github-ci), or CI failures (/github-failed-ci).
 interaction: chat
-references: ../references/scm-github.md
+references:
+  - ../references/scm-github.md
 ---
 
 ## system

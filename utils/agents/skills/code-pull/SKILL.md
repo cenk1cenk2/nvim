@@ -3,7 +3,11 @@ name: code-pull
 description: Pull changes from a reference GitHub/GitLab repository and adapt them to the current repository. Always manually invoked. Do NOT use for code review (/code-review-branch), debugging (/code-debug), or PR descriptions (/github-pr, /gitlab-pr).
 interaction: chat
 disable-model-invocation: true
-references: ../references/plan-mode.md, ../references/scm-detect.md, ../references/scm-github.md, ../references/scm-gitlab.md
+references:
+  - ../references/plan-mode.md
+  - ../references/scm-detect.md
+  - ../references/scm-github.md
+  - ../references/scm-gitlab.md
 argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 ---
 

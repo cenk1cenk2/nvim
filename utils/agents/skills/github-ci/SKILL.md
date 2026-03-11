@@ -3,7 +3,9 @@ name: github-ci
 description: Create or update GitHub Actions workflows for the current repository. Use when user says "add CI", "set up GitHub Actions", or "modify the workflow". Do NOT use for diagnosing failures (/github-failed-ci), GitLab pipelines (/gitlab-ci), or PR descriptions (/github-pr).
 interaction: chat
 disable-model-invocation: true
-references: ../references/plan-mode.md, ../references/scm-github.md
+references:
+  - ../references/plan-mode.md
+  - ../references/scm-github.md
 ---
 
 ## system

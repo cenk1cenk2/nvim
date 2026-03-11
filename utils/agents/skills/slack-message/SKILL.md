@@ -4,7 +4,8 @@ description: Process a Slack message link — reads the thread, understands cont
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[slack-message-url] [what to do with it]"
-references: ../references/slack.md
+references:
+  - ../references/slack.md
 ---
 
 ## system

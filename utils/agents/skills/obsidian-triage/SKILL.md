@@ -3,7 +3,8 @@ name: obsidian-triage
 description: Process todo notes in Obsidian vault. Organizes, moves, renames, or removes notes interactively. Use when user says "triage my notes", "clean up todos", or "organize the Todo folder". Do NOT use for creating notes (/obsidian-note), repository docs (/obsidian-repository), or adding todos (/obsidian-todo).
 interaction: chat
 disable-model-invocation: true
-references: ../references/obsidian.md
+references:
+  - ../references/obsidian.md
 ---
 
 ## system

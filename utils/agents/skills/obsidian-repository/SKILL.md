@@ -4,7 +4,8 @@ description: Document repository knowledge in Obsidian — key findings, archite
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[repository name or path] [optional: what to document]"
-references: ../references/obsidian.md
+references:
+  - ../references/obsidian.md
 ---
 
 ## system

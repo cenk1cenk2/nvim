@@ -4,7 +4,8 @@ description: Quick, iterative code review of recent changes with a sharp eye. Us
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[optional: baseline — branch, commit, or 'this conversation']"
-references: ../references/scm-detect.md
+references:
+  - ../references/scm-detect.md
 ---
 
 ## system

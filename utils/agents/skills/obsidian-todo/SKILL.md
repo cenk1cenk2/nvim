@@ -4,7 +4,8 @@ description: Create quick todo notes for task tracking and thought capture in Ob
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[task or thought to capture]"
-references: ../references/obsidian.md
+references:
+  - ../references/obsidian.md
 ---
 
 ## system

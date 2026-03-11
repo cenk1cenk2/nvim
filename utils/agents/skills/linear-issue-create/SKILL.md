@@ -2,7 +2,10 @@
 name: linear-issue-create
 description: Create new Linear issues with comprehensive analysis and research. Use when user says "create an issue", "file a bug", "add a task to Linear", or "create a ticket". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for updating existing issues (/linear-issue-update), commenting (/linear-issue-comment), or picking up issues (/linear-issue-pick).
 interaction: chat
-references: ../references/linear-prerequisite.md, ../references/linear-mandatory-fields.md, ../references/plan-mode.md
+references:
+  - ../references/linear-prerequisite.md
+  - ../references/linear-mandatory-fields.md
+  - ../references/plan-mode.md
 ---
 
 ## system

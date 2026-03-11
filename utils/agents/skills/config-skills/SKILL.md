@@ -95,7 +95,9 @@ interaction: chat
 ```yaml
 disable-model-invocation: true # Prevents the model from auto-invoking this skill.
 argument-hint: "[args]" # Shown to user as usage hint.
-references: ../references/file.md, ./references/local.md # Comma-separated relative paths to reference files.
+references: # YAML array of relative paths to reference files.
+  - ../references/file.md
+  - ./references/local.md
 ```
 
 **Body structure:**
@@ -140,7 +142,7 @@ References implement progressive disclosure — SKILL.md stays lean with the cor
 
 #### How References Work
 
-1. Skills declare references in frontmatter as comma-separated relative paths.
+1. Skills declare references in frontmatter as a YAML array of relative paths.
 2. The mcphub plugin resolves these paths and lists them in the XML `<References>` block when the skill is invoked.
 3. The SKILL.md body tells the model which references to read and when, using reference directives (blockquotes).
 4. The model reads reference files using `skills__read_reference` MCP tool (auto-approved, no user confirmation) — they are NOT auto-loaded into context. Pass the exact relative paths from frontmatter: `{ "paths": ["../references/slack.md"], "skill": "skill-name" }`. Supports batch loading. Fallback: `filesystem__read_file` or `neovim__read_file`.

@@ -4,7 +4,8 @@ description: Create structured notes in Obsidian vault following existing patter
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[topic or description]"
-references: ../references/obsidian.md
+references:
+  - ../references/obsidian.md
 ---
 
 ## system

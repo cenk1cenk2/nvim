@@ -2,7 +2,8 @@
 name: gitlab-pr
 description: Analyze and write GitLab merge request titles and descriptions. Use when user says "write an MR description", "create an MR", "improve the MR", or "describe what this branch does". Do NOT use for GitHub PRs (/github-pr), CI pipelines (/gitlab-ci), or CI failures (/gitlab-failed-ci).
 interaction: chat
-references: ../references/scm-gitlab.md
+references:
+  - ../references/scm-gitlab.md
 ---
 
 ## system

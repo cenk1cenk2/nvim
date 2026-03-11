@@ -3,7 +3,8 @@ name: config-agents
 description: Update, refine, or review the AGENTS.md guidelines file. Always manually invoked. Do NOT use for skills (/config-skills) or MCP server configs (/config-mcp).
 interaction: chat
 disable-model-invocation: true
-references: ../references/plan-mode.md
+references:
+  - ../references/plan-mode.md
 argument-hint: "[what to change or review in AGENTS.md]"
 ---
 
