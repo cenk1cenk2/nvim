@@ -29,6 +29,7 @@ Ask the user:
 - **Workload name:** e.g., `my-app`
 - **Workload repo:** The GitLab repo containing the Kubernetes manifests (e.g., `cluster/workloads/<workload>`)
 - **Gateway listener needed?** Does it need an HTTPS/TCP listener on the cluster gateway? If yes, what hostname/subdomain?
+- **Resource quota needed?** Only if the user explicitly requests it. What CPU/memory limits?
 
 ### Research Phase (MANDATORY)
 
@@ -169,6 +170,30 @@ this.clusterGateway.listen(
 )
 ```
 
+**With resource quota** (only when explicitly requested by user) — add after namespace creation, before `newApplication()`:
+
+```typescript
+// Additional import:
+import * as k8s from '@pulumi/kubernetes'
+
+// After namespace creation, before newApplication():
+new k8s.core.v1.ResourceQuota(
+  workload.name,
+  {
+    metadata: {
+      name: workload.name
+    },
+    spec: {
+      hard: {
+        ['limits.cpu']: '<cpu>',       // e.g., '4'
+        ['limits.memory']: '<memory>'  // e.g., '12Gi'
+      }
+    }
+  },
+  { provider: workload.provider() }
+)
+```
+
 ### Registration
 
 After creating the service, register it in `src/workloads/workloads.module.ts`:
@@ -184,4 +209,5 @@ After creating the service, register it in `src/workloads/workloads.module.ts`:
 - [ ] Register in `src/workloads/workloads.module.ts`
 - [ ] If gateway: use correct `ClusterGateways` and `ClusterDomains` for this cluster
 - [ ] Service class name follows PascalCase (e.g., `HtmlCv3Service`, `GitlabRunnerService`)
-- [ ] Match code style from the reference workload
+- [ ] If resource quota explicitly requested: add `ResourceQuota` after namespace creation with correct limits.
+- [ ] Match code style from the reference workload.
