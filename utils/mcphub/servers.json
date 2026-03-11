@@ -272,6 +272,30 @@
         "MEMORY_FILE_PATH": "${HOME}/.local/state/nvim/memory.jsonl"
       }
     },
+    "notion/laravel": {
+      "autoApprove": [
+        "notion-fetch",
+        "notion-get-comments",
+        "notion-get-self",
+        "notion-get-teams",
+        "notion-get-user",
+        "notion-get-users",
+        "notion-query-data-sources",
+        "notion-query-database-view",
+        "notion-search"
+      ],
+      "disabled_resources": [],
+      "disabled_tools": [
+        "notion-create-database",
+        "notion-create-view",
+        "notion-duplicate-page",
+        "notion-move-pages",
+        "notion-update-data-source",
+        "notion-update-view",
+        "notion-query-meeting-notes"
+      ],
+      "url": "https://mcp.notion.com/mcp"
+    },
     "obsidian": {
       "args": [
         "-y",
