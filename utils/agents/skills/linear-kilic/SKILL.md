@@ -44,6 +44,12 @@ disable-model-invocation: true
    - **NEVER fabricate or guess label names** — only use labels that exist in this list
    - If no label fits the issue, ASK the user which label to use rather than inventing one
 
+### Core Principle
+
+> **THE ISSUE IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.**
+>
+> Linear issues outline the general shape of the work, but the real requirements come from the user and the current conversation. The user may have more recent knowledge than what is stored in the issue — descriptions and comments carry timestamps (`createdAt`, `updatedAt`) and may be stale relative to the current session. When there is a conflict between the issue content and the conversation context, **the conversation wins.** Always ask the user to clarify when you detect a gap between the issue's timestamps and the current session.
+
 ### Core Requirements
 
 - **IMPORTANT!!! ALWAYS use `linear/kilic-dev` MCP and `gitlab` MCP unless PROMPTED OTHERWISE!**

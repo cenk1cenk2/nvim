@@ -21,6 +21,10 @@ argument-hint: "[project-name or Linear URL]"
 
 A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked before this skill, unless a full Linear URL is provided — in that case, deduce the workspace from the URL and use the corresponding MCP tools.
 
+### Timestamp Awareness
+
+Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). When auditing, **check `updatedAt` on each issue** — if a description hasn't been updated in a while, it may be stale regardless of how it reads. The current conversation context holds the most recent understanding of the project — the goal is to bring Linear in line with reality, not the other way around. When you flag a description as stale, note its `updatedAt` timestamp and ask the user to confirm before recommending changes.
+
 ### Process
 
 1. **Fetch all project issues** using `list_issues` with the `project` parameter (do NOT use `get_project` or `list_projects` — they have complexity limits). Note the project name from the issues' `project` field.
@@ -36,7 +40,7 @@ A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked bef
    - **Label consistency** — do all issues have appropriate labels? Are labels consistent across the project?
    - **Priority correctness** — apply the blocking-priority rule: issues that block others should generally have equal or higher priority than the issues they block. Flag violations.
    - **Blocking relations** — are dependency chains correct? Are there missing `blocks`/`blockedBy` relations? Are there stale relations to issues that are already done?
-   - **Description freshness** — flag issues whose descriptions are clearly outdated or no longer match the current approach.
+   - **Description freshness** — flag issues whose descriptions are clearly outdated or no longer match the current approach. Use the `updatedAt` timestamp as evidence.
 5. **Build a change report** organized by category:
    - **Project-level changes** (description, status, labels, initiative, milestone).
    - **Priority adjustments** with rationale (especially blocking-priority violations).

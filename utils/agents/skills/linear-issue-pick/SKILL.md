@@ -24,6 +24,8 @@ argument-hint: "[issue-id] - e.g., 'K-123', 'CLOUD-45'"
 > **THE ISSUE IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.**
 >
 > Linear issues outline the general shape of the work, but the real requirements come from the user. The user may skip items, reorder work, add requirements, change the approach, or override any detail. **You MUST respect user changes as a rule.** Never push back with "but the issue says..." — the issue is guidance, the user is authority.
+>
+> Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). If the description was last updated or comments were posted before the current conversation context, **the user's knowledge may be more current than what Linear shows.** When you detect a gap between the issue's timestamps and the current session, **ask the user** to clarify rather than treating the issue content as definitive.
 
 ### Modes
 
@@ -42,8 +44,10 @@ Plan and refine only — **NEVER implement, NEVER exit plan mode.** Stay in plan
 **Step 1: Fetch the Issue**
 
 - Retrieve the issue using the Linear MCP tools from the active workspace skill.
+- **Check the `updatedAt` timestamp** on the issue and note when the description was last modified.
 - Read the full description, checklist, labels, relations, and any linked issues/projects.
 - If the issue has parent issues or blocking relations, fetch those too for context.
+- If the description's `updatedAt` is older than the current session context, flag this during alignment (Step 4) — the user may have more recent knowledge.
 
 **Step 2: Research the Context**
 

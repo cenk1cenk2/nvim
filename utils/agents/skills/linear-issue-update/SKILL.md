@@ -19,14 +19,21 @@ argument-hint: "[issue-id or Linear URL]"
 
 A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked before this skill, unless a full Linear URL is provided — in that case, deduce the workspace from the URL and use the corresponding MCP tools.
 
+### Core Principle
+
+> **THE ISSUE IS NOT THE ABSOLUTE TRUTH. THE CONVERSATION IS.**
+>
+> Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). The user's session knowledge and the current conversation context hold the most recent version of the issue's intent. The goal of this skill is to apply deviations from the conversation back to the issue in Linear. When the issue's `updatedAt` is older than the current conversation context, **treat the conversation as the source of truth** and update the issue to match — always confirming with the user before applying.
+
 ### Process
 
 1. **Fetch the issue** using the appropriate Linear MCP tools.
-2. **Review the conversation** for deviations from the original issue — changed requirements, rejected approaches, new decisions, corrected assumptions.
-3. **Flag outdated or irrelevant sections** — warn the user about parts of the issue that are stale, no longer applicable, or contradicted by the conversation. Get explicit approval before modifying or removing these.
-4. **Draft the updated description** and present it to the user, highlighting what changed and why.
-5. **Iterate** based on user feedback. This is a refining process — work with the user to get the issue into a state that accurately reflects the current understanding.
-6. **Apply changes** only after user approval.
+2. **Check the `updatedAt` timestamp** — if the description is older than the current session context, ask the user what has changed before assuming the stored content is current.
+3. **Review the conversation** for deviations from the original issue — changed requirements, rejected approaches, new decisions, corrected assumptions.
+4. **Flag outdated or irrelevant sections** — warn the user about parts of the issue that are stale, no longer applicable, or contradicted by the conversation. Get explicit approval before modifying or removing these.
+5. **Draft the updated description** and present it to the user, highlighting what changed and why.
+6. **Iterate** based on user feedback. This is a refining process — work with the user to get the issue into a state that accurately reflects the current understanding.
+7. **Apply changes** only after user approval.
 
 ### What to Update
 

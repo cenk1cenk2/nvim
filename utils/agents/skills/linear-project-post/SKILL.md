@@ -27,13 +27,14 @@ A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked bef
 1. **Fetch the project issues** using `list_issues` with the `project` parameter (do NOT use `get_project` or `list_projects` — they have complexity limits).
 2. **Fetch prior project updates** using `get_status_updates` to establish the baseline — what was the last update, what was communicated, what was the state at that point.
 3. **Analyze the last update** — identify the cutoff point. Everything after this update is "recent" for the purpose of the new post.
-4. **Categorize issues** by status from the `list_issues` response.
-5. **Investigate completed issues since the last update** — these form the first paragraph. Understand what was accomplished, not just the issue titles. Read descriptions if needed to summarize the work meaningfully.
-6. **Investigate cancelled or descoped issues since the last update** — these form the deviations section. Summarize why they were dropped or changed in a concise manner.
-7. **Investigate in-progress and upcoming issues** — identify the immediate next steps for the closing sentence(s).
-8. **Draft the update post** following the format below.
-9. **Present the draft to the user.** Iterate based on feedback.
-10. **Post only after explicit user approval** using the `save_status_update` tool.
+4. **Check timestamps** — use `updatedAt` on issues and `createdAt` on comments to build an accurate timeline of what happened since the last update. If timestamps suggest the user's session knowledge may be more recent than what's recorded in Linear, ask the user to fill in gaps before drafting.
+5. **Categorize issues** by status from the `list_issues` response.
+6. **Investigate completed issues since the last update** — these form the first paragraph. Understand what was accomplished, not just the issue titles. Read descriptions if needed to summarize the work meaningfully.
+7. **Investigate cancelled or descoped issues since the last update** — these form the deviations section. Summarize why they were dropped or changed in a concise manner.
+8. **Investigate in-progress and upcoming issues** — identify the immediate next steps for the closing sentence(s).
+9. **Draft the update post** following the format below.
+10. **Present the draft to the user.** Iterate based on feedback.
+11. **Post only after explicit user approval** using the `save_status_update` tool.
 
 ### Post Format
 
