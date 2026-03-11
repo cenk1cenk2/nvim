@@ -64,6 +64,9 @@ A Linear workspace skill (`/linear-kilic` or `/linear-work`) MUST be invoked bef
 
 - Fetch the **2-3 most recent completed cycles** using `list_cycles`.
 - For each, count the total estimated points completed.
+- **Normalize by cycle length** — compare points completed per week (or per day) rather than raw totals. A 3-week cycle completing 30 points is not the same velocity as a 2-week cycle completing 30 points.
+- **Calculate the target cycle's length** from its start/end dates, and scale the normalized velocity to derive realistic capacity.
+- **Calculate remaining time** — determine how many days/weeks remain from today until the target cycle's end date. For cycles already in progress, capacity should reflect only the remaining time, not the full cycle length.
 - Use this as a baseline for realistic capacity in the target cycle.
 - Account for work already committed (from Step 2).
 - Use `sequentialthinking` to reason through capacity constraints if the workload is complex.
@@ -77,7 +80,7 @@ Build a structured plan that fits within the calibrated capacity:
 3. **Initiative completions** — issues that would wrap up an initiative if done this cycle.
 4. **High-priority project issues** — next logical issues from active projects, respecting dependency order.
 5. **Standalone issues** — high-priority standalone work that fits remaining capacity.
-6. **Stretch goals** — optional items if capacity allows, clearly marked as stretch.
+6. **Stretch goals** — optional items if capacity allows, clearly marked as stretch. Keep stretch goals reasonable — total planned points (core + stretch) should not exceed **2× the available capacity**. Stretch means "if things go well", not "if we work twice as hard".
 
 For each issue in the plan, note:
 - Issue ID and title.
@@ -86,33 +89,68 @@ For each issue in the plan, note:
 - Estimate.
 - Why it belongs in this cycle (dependency, priority, initiative completion, etc.).
 
+#### Step 7.5: Build Recommendations
+
+After drafting the core plan, generate a **Recommendations** section with actionable insights. This is not a summary — it is strategic advice based on everything analyzed in steps 1-7.
+
+**Categories to cover (include all that apply):**
+
+- **Capacity warnings** — are you over- or under-committed? By how much? What should be cut or added?
+- **Dependency risks** — are there issues in the cycle that are blocked by work not in the cycle? Flag them and suggest pulling in the blockers or deferring the blocked work.
+- **Initiative momentum** — are there initiatives that are 1-2 issues away from completion? Recommend pulling those in even if they weren't otherwise prioritized.
+- **Project pacing** — for multi-cycle projects, is the current pace on track to finish within the project timeline? If behind, recommend acceleration. If ahead, recommend pulling less.
+- **Balance and focus** — is the cycle too scattered across many projects? Recommend consolidating focus if so. Is it too focused on one area at the expense of others? Flag that.
+- **Stale or aging issues** — are there issues that have been in backlog/todo for many cycles without progress? Recommend either committing to them or explicitly deprioritizing/cancelling.
+- **Missing estimates** — flag issues in the plan that lack estimates, since they undermine capacity reasoning.
+- **Suggested additions** — issues NOT in the plan that are worth considering, with reasoning (e.g., quick wins, unblocks other work, high user impact, low effort).
+- **Suggested removals** — issues in the plan that could be deferred without consequence, freeing capacity for higher-impact work.
+
 #### Step 8: Present the Plan
 
-Present the cycle plan to the user in a clear format:
+Present the cycle plan to the user in a clear format. **List every issue** — do not truncate, abbreviate, or show only a few examples. The user needs the full picture to make decisions.
 
 ```
 ## Cycle <number> Plan (<start> — <end>)
 
 ### Capacity
-- Historical average: <X> points/cycle (based on last 2-3 cycles).
+- Historical velocity: <X> points/week (based on last 2-3 cycles, normalized by cycle length).
+- Cycle length: <N> weeks (<start> — <end>).
+- Remaining: <M> weeks/days from today.
+- Full cycle capacity: <C> points (velocity × cycle length).
 - Already committed: <Y> points.
-- Available: <Z> points.
+- Available: <Z> points (based on remaining time, not full cycle).
 
 ### Carry-over
+(List ALL carry-over issues. Do not truncate.)
 - <issue-id>: <title> (<estimate>pts, <status>)
+- ...
 
 ### Project Work
+(List ALL project issues being proposed. Group by project. Do not truncate.)
 #### <Project Name>
 - <issue-id>: <title> (<estimate>pts) — <reason>
+- ...
+
+#### <Another Project Name>
 - <issue-id>: <title> (<estimate>pts) — <reason>
+- ...
 
 ### Standalone Issues
+(List ALL standalone issues being proposed. Do not truncate.)
 - <issue-id>: <title> (<estimate>pts) — <reason>
+- ...
 
 ### Stretch Goals
+(List ALL stretch goals. Do not truncate.)
 - <issue-id>: <title> (<estimate>pts) — <reason>
+- ...
 
 ### Total: <N> points planned / <Z> available
+
+### Recommendations
+(Include all applicable categories from Step 7.5. Be specific — reference issue IDs, project names, and point values. Each recommendation should be actionable.)
+- **<Category>:** <specific recommendation with issue IDs and reasoning>
+- ...
 ```
 
 - Wait for user feedback and iterate on the plan.
