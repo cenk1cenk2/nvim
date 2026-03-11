@@ -172,6 +172,57 @@ Claude Code stores session data and configuration in `~/.claude/`. Understanding
 
 **Session transcripts** (`.jsonl`) are the full conversation logs. Use these to resume context from prior sessions when the user references "last session" or "what I did yesterday."
 
+### Reading Session Transcripts
+
+Session files (`.jsonl`) contain complete conversation logs in JSON Lines format. To read a past session:
+
+**1. Find the session file:**
+
+```bash
+# List sessions by project, sorted by modification time
+ls -lt ~/.claude/projects/ <sanitized-path >/sessions-index.json
+
+# Or find the most recent .jsonl directly
+ls -t ~/.claude/projects/ <sanitized-path >/*.jsonl | head -5
+```
+
+**2. Read with jq (recommended):**
+
+```bash
+# Extract user messages with timestamps
+cat <session >.jsonl | jq -r 'select(.message.role == "user") | "\(.timestamp): \(.message.content[0].text[:200])"'
+
+# Extract last N user-assistant exchanges
+cat <session >.jsonl | jq -s '.[-50:] | map(select(.message.role == "user" or .message.role == "assistant") | {role: .message.role, text: .message.content[0].text[:150]})'
+
+# Extract only assistant tool_use calls
+cat <session >.jsonl | jq -r 'select(.message.content[0].type == "tool_use") | .message.content[0].name'
+```
+
+**3. Raw file inspection:**
+
+```bash
+# Last 100 lines (quick context)
+tail -100 <session >.jsonl | jq .
+
+# First 50 messages (session start)
+head -50 <session >.jsonl | jq 'select(.message.role == "user") | .message.content[0].text[:100]'
+```
+
+**Key fields in transcript entries:**
+
+- `timestamp`: ISO 8601 datetime
+- `message.role`: `user`, `assistant`, `progress`, `queue-operation`
+- `message.content[0].text`: Message content
+- `message.content[0].type`: `text`, `tool_use`, `tool_result`
+- `toolUseResult`: Results from tool execution
+
+**When to read transcripts:**
+
+- User references "last session" or "what we did yesterday"
+- Need to recover context that wasn't saved to memory
+- Debugging session flow or tool usage patterns
+
 ### Plan File Location
 
 **CRITICAL:** All plan files MUST be created in `~/.claude/plans/`
