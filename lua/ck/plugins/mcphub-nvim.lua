@@ -703,9 +703,9 @@ function M.register_agent_skills()
       handler = function(req, res)
         local file_content = vim.fn.readfile(skill.file_path)
         if file_content and #file_content > 0 then
-          skill = M.parse_skill_markdown(table.concat(file_content, "\n"), skill.name)
+          local data = M.parse_skill_markdown(table.concat(file_content, "\n"), skill.name)
 
-          return res:user():text(build_skill_load_prompt(skill)):send()
+          return res:user():text(build_skill_load_prompt(data)):send()
         end
 
         return res:user():text(build_skill_load_prompt(skill)):send()
