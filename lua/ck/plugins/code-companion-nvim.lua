@@ -952,6 +952,8 @@ function M.config()
             })
 
             var:output({ bufnr = bufnr })
+
+            log:info("Added buffer to chat context: %s", require("ck.utils.fs").get_project_buffer_filepath(bufnr))
           end,
           desc = "add current buffer to context [codecompanion]",
           mode = { "n" },
