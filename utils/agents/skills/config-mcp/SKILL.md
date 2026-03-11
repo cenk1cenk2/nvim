@@ -1,6 +1,6 @@
 ---
 name: config-mcp
-description: Add, remove, or modify MCP server configurations in mcphub servers.json. Researches servers online, prefers official sources and HTTP transport, prompts for variables and authentication.
+description: Add, remove, or modify MCP server configurations in mcphub servers.json. Researches servers online, prefers official sources and HTTP transport, prompts for variables and authentication. Always manually invoked. Do NOT use for skills (/config-skills) or agent guidelines (/config-agents).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[add|remove|modify] [server-name] [optional description]"

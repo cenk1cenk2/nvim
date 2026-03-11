@@ -1,9 +1,10 @@
 ---
 name: code-review-branch
-description: Review the current branch's changes against the default or target branch with full conversation context. Use for thorough code review that considers the intent behind changes, not just the code itself.
+description: Review the current branch's changes against the default or target branch with full conversation context. Always manually invoked. Do NOT use for PR/MR descriptions (/github-pr, /gitlab-pr), debugging (/code-debug), or failed commands (/code-failed).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[optional: target-branch or PR URL]"
+references: ../references/scm-detect.md, ../references/scm-github.md, ../references/scm-gitlab.md
 ---
 
 ## system
@@ -29,15 +30,14 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - Summarize your understanding of the intent before proceeding — confirm with the user if anything is unclear.
 
 2. **Discover Platform and Review Mode:**
-   - Identify the current branch via `mcp__mcphub__git__git_status`.
-   - Determine the code hosting platform from the remote URL — GitHub (`github.com`) or GitLab (`gitlab.*`). Use the corresponding MCP tools for the rest of the session.
+   - Read the `scm-detect` reference to detect the current branch and SCM platform — resolve from the `<References>` block via MCP filesystem tools. Then read the matching platform reference (`scm-github` or `scm-gitlab`) for provider-specific tools.
    - Check if a PR/MR is open for this branch.
    - If a PR/MR exists, ask the user: **"There's an open PR/MR. Would you like findings inline in chat, or annotated directly on the PR/MR?"**
    - If a PR/MR is open, use its target branch and diff. Otherwise diff against the default branch (`main`/`master`/`rolling`).
-   - Use `mcp__mcphub__git__git_diff` for the full diff, or MCP PR/MR diff tools if available.
+   - Use `git__git_diff` for the full diff, or MCP PR/MR diff tools if available.
 
 3. **Analyze the Changes:**
-   - Use `mcp__mcphub__sequentialthinking__sequentialthinking` to methodically work through the diff.
+   - Use `sequentialthinking__sequentialthinking` to methodically work through the diff.
    - Browse the full codebase freely — read surrounding files, check call sites, trace dependencies. The diff alone is never enough.
    - For each logical group of changes, evaluate against the established intent:
      - **Does this achieve what was agreed?** — missing requirements, incomplete implementation.
@@ -85,7 +85,7 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - If no issues found, say so — don't invent problems.
 
 6. **Annotate on PR/MR (only if user chose this mode):**
-   - Use the appropriate MCP review tools to post comments on the PR/MR (e.g., `mcp__mcphub__github__pull_request_review_write`, `mcp__mcphub__gitlab__mr_discussions`).
+   - Use the appropriate MCP review tools to post comments on the PR/MR (e.g., `github__pull_request_review_write`, `gitlab__mr_discussions`).
    - Attach comments to specific lines/files in the diff.
    - Only annotate after the user has reviewed and approved the findings in chat first.
 

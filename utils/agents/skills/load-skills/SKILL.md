@@ -69,6 +69,31 @@ For LLMs or environments that do not have a native skill invocation system (no `
 2. Follow the instructions in the file as if they were system instructions for the current task.
 3. If the loaded skill has its own prerequisites, resolve them recursively.
 
+### Reference Files
+
+Skills may declare references to additional files for shared conventions and detailed context. References are declared in YAML frontmatter as comma-separated relative paths:
+
+```yaml
+references: ../references/linear-prerequisite.md, ../references/plan-mode.md
+```
+
+**How references work:**
+
+1. When a skill is invoked, its declared references are resolved and listed in the XML `<References>` block.
+2. The SKILL.md body tells you which references to read and when (e.g., "Read the `linear-prerequisite` reference for workspace detection rules.").
+3. Read reference files using `neovim__read_file` or `filesystem__read_file`.
+4. If a reference file fails to load via relative path, resolve from the skills root: `~/.config/nvim/utils/agents/skills/`.
+5. Skills must work even without references (graceful degradation) — they contain enough inline context to function.
+
+**Reference locations:**
+
+| Path pattern | Scope | Example |
+|---|---|---|
+| `../references/<file>.md` | Shared across skills | `../references/linear-prerequisite.md` |
+| `./references/<file>.md` | Specific to one skill | `./references/research-workflow.md` |
+
+**Do NOT auto-load references.** Only read them when the skill's instructions tell you to.
+
 ### Key Rules
 
 - **Auto-invoke when unambiguous.** If context clearly identifies the prerequisite, load it without asking.

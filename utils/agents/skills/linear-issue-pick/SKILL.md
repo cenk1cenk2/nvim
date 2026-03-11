@@ -1,6 +1,6 @@
 ---
 name: linear-issue-pick
-description: Pick up an existing Linear issue and start working on it. Fetches the issue, enters plan mode, explains the work in detail, clarifies ambiguous points with the user, and only proceeds after alignment.
+description: Pick up an existing Linear issue and start working on it. Use when user says "pick up K-123", "work on this issue", "start CLOUD-45", or provides a Linear issue URL to begin work. Do NOT use for just reading/refreshing an issue (/linear-issue-revisit) or choosing what to work on next (/linear-pick-next).
 interaction: chat
 argument-hint: "[issue-id] - e.g., 'K-123', 'CLOUD-45'"
 ---

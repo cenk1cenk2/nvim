@@ -1,7 +1,8 @@
 ---
 name: github-pr
-description: Analyze and write GitHub pull request titles and descriptions. Use when the user wants to create, review, or improve PR descriptions for the current branch. Reads the existing PR, analyzes the diff and commits, and drafts a concise description focused on logical changes. Triggers on PR description requests, PR review prep, or when asked to describe what a branch does.
+description: Analyze and write GitHub pull request titles and descriptions. Use when user says "write a PR description", "create a PR", "improve the PR", or "describe what this branch does". Do NOT use for GitLab MRs (/gitlab-pr), CI workflows (/github-ci), or CI failures (/github-failed-ci).
 interaction: chat
+references: ../references/scm-github.md
 ---
 
 ## system
@@ -30,23 +31,20 @@ interaction: chat
 
 ### Core Requirements
 
-- **ALWAYS use `github` MCP tools for all GitHub operations**
-- **ALWAYS use `git` MCP tools for local git operations**
-- Determine repository owner and name from the git remote URL
-- Determine the current branch from local git state
+> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
 
 ### Process
 
 1. **Gather Context:**
-   - Get current branch name via `mcp__mcphub__git__git_status`
+   - Get current branch name via `git__git_status`
    - Get remote origin URL to extract owner/repo
-   - Find the open PR for the current branch via `mcp__mcphub__github__list_pull_requests` with `head` filter (format: `owner:branch`)
-   - If no PR exists, ask the user if they want to create one. Use `mcp__mcphub__github__create_pull_request` or fall back to `gh pr create` via CLI if MCP creation is not available.
+   - Find the open PR for the current branch via `github__list_pull_requests` with `head` filter (format: `owner:branch`)
+   - If no PR exists, ask the user if they want to create one. Use `github__create_pull_request` or fall back to `gh pr create` via CLI if MCP creation is not available.
 
 2. **Analyze the PR:**
-   - Read PR details via `mcp__mcphub__github__pull_request_read` with method `get`
-   - Read the full diff via `mcp__mcphub__github__pull_request_read` with method `get_diff`
-   - Read commit history via `mcp__mcphub__github__list_commits` filtered to the PR branch
+   - Read PR details via `github__pull_request_read` with method `get`
+   - Read the full diff via `github__pull_request_read` with method `get_diff`
+   - Read commit history via `github__list_commits` filtered to the PR branch
    - Note the existing PR title and body (may contain a template or prior content)
 
 3. **Draft the Description:**
@@ -67,7 +65,7 @@ interaction: chat
    - Ask for feedback and iterate until the user is satisfied
 
 6. **Apply (Only After Approval):**
-   - When user explicitly approves, update the PR via `mcp__mcphub__github__update_pull_request`
+   - When user explicitly approves, update the PR via `github__update_pull_request`
    - Update both `title` (if changed) and `body`
    - Confirm the update was successful
 
@@ -112,6 +110,34 @@ interaction: chat
 - Start the summary directly with the action or context
 - Bullet points should be self-contained and scannable
 - Group related changes into single bullets rather than listing every micro-change
+
+### Examples
+
+**User says:** "Write a PR description for this branch"
+
+1. Enter plan mode.
+2. Get current branch `feat/add-retry-logic`, find open PR #42.
+3. Read PR diff and commit history.
+4. Draft title: `feat(api): add retry logic for transient failures`.
+5. Draft description with summary and bullet points.
+6. Present to user, iterate on feedback.
+7. After approval, update PR #42 via GitHub MCP.
+
+**Result:** PR title and description updated on GitHub.
+
+---
+
+**User says:** "Create a PR"
+
+1. Enter plan mode.
+2. Detect no open PR for current branch.
+3. Ask user to confirm PR creation, target branch.
+4. Create PR via `github__create_pull_request`.
+5. Analyze diff, draft title and description.
+6. Present to user, iterate.
+7. After approval, update the PR.
+
+**Result:** New PR created with analyzed title and description.
 
 ### Related Skills
 

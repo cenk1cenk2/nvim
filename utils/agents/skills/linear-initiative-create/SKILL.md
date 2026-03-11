@@ -1,6 +1,6 @@
 ---
 name: linear-initiative-create
-description: Create a Linear initiative with a description and optional motivation/goals. Links relevant orphan projects to the new initiative. Use after a workspace skill (/linear-kilic or /linear-work) has been invoked.
+description: Create a new Linear initiative with description and goals, linking orphan projects. Use when user says "create an initiative", "start a new initiative", or "group these projects under an initiative". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for updating initiatives (/linear-initiative-update).
 interaction: chat
 ---
 

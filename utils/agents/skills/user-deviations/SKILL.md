@@ -1,6 +1,6 @@
 ---
 name: user-deviations
-description: Handle user overrides to agent edits. Use when the user modifies, rejects, or rewrites code that the agent produced, to learn their intent and align future edits.
+description: Handle user overrides to agent edits. Use when the user modifies, rejects, or rewrites code that the agent produced, to learn their intent and align future edits. Always manually invoked.
 interaction: chat
 disable-model-invocation: true
 ---
@@ -43,7 +43,7 @@ When the user overrides, rewrites, or modifies code that you produced, this is a
    - Never silently revert a user's stylistic or logic choices when editing the same area. Your new code should reflect their preferences.
 
 6. **Save to memory when critical.**
-   - Save to memory MCP (`mcp__mcphub__memory__add_observations`) when the deviation reveals:
+   - Save to memory MCP (`memory__add_observations`) when the deviation reveals:
      - A project-wide coding convention you didn't know about.
      - A strong user preference that will apply across sessions.
      - An architectural decision or pattern choice.

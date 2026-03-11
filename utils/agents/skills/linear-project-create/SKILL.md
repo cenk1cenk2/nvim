@@ -1,6 +1,6 @@
 ---
 name: linear-project-create
-description: Create a Linear project with research, planning, and issue breakdown. Use after a workspace skill (/linear-kilic or /linear-work) has been invoked to establish context.
+description: Create a new Linear project with research, planning, and issue breakdown. Use when user says "create a project", "plan a new project", or "break this down into a Linear project". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for updating existing projects (/linear-project-update) or posting status updates (/linear-project-post).
 interaction: chat
 ---
 

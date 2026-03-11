@@ -1,8 +1,9 @@
 ---
 name: config-agents
-description: Update, refine, or review the AGENTS.md guidelines file. Use when the user wants to change agent behavior, add tool preferences, update workflows, or fix inconsistencies in the central guidelines.
+description: Update, refine, or review the AGENTS.md guidelines file. Always manually invoked. Do NOT use for skills (/config-skills) or MCP server configs (/config-mcp).
 interaction: chat
 disable-model-invocation: true
+references: ../references/plan-mode.md
 argument-hint: "[what to change or review in AGENTS.md]"
 ---
 
@@ -10,20 +11,12 @@ argument-hint: "[what to change or review in AGENTS.md]"
 
 ### Agents Guidelines Management
 
-> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Changes to AGENTS.md affect ALL future agent sessions — treat every change with care.
 > - Present proposed changes to the user before writing anything.
-> - Iterate based on feedback.
 > - Do NOT write changes until the user explicitly approves.
->
-> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
->
-> - You MUST stay in plan mode for the ENTIRE duration of this skill.
-> - Only the user saying the EXACT words "apply this", "make the changes", "update it", or an equally explicit and unambiguous direct instruction should cause you to exit plan mode.
-> - If you are unsure whether the user wants the changes applied, ASK — do not assume.
-> - **When in doubt, STAY in plan mode.**
 
 ### Target File
 

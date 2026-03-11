@@ -1,9 +1,10 @@
 ---
 name: obsidian-repository
-description: Document repository knowledge in Obsidian — key findings, architecture, conventions, and gotchas. Use when the user wants to capture or update repository documentation in the Repositories vault folder.
+description: Document repository knowledge in Obsidian — key findings, architecture, conventions, and gotchas. Use when user says "document this repo", "update the repo note", or "capture architecture in Obsidian". Do NOT use for general notes (/obsidian-note), quick todos (/obsidian-todo), or triaging notes (/obsidian-triage).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[repository name or path] [optional: what to document]"
+references: ../references/obsidian.md
 ---
 
 ## system
@@ -30,8 +31,8 @@ If the current working directory is under `~/development/`, derive the note path
 
 ### Tools
 
-- **If CWD is `~/notes`:** Use standard file tools directly.
-- **Otherwise:** Use `mcp__mcphub__obsidian__*` tools to access the vault.
+> Read the `obsidian` reference for vault location and tool access conventions — resolve references from the `<References>` block via MCP filesystem tools.
+
 - Use codebase exploration tools (treesitter, Grep, Glob, git MCP) to analyze the repository.
 
 ### Process

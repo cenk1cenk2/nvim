@@ -80,6 +80,40 @@ User invokes specialized modes using personal slash commands (e.g., `/assistant`
 >
 > **Key rule:** If context unambiguously identifies the prerequisite, load it automatically. If ambiguous, ask the user. Never skip prerequisites.
 
+### Skills Architecture
+
+Skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a directory with a `SKILL.md` file parsed by the mcphub plugin at load time.
+
+```
+skills/
+  references/                          # Shared reference files (read on demand)
+    linear-prerequisite.md             # Workspace detection rules
+    linear-mandatory-fields.md         # Team, state, labels, estimate, priority
+    linear-issue-philosophy.md         # Issue vs. conversation authority
+    linear-description-structure.md    # Issue/project/initiative description format
+    linear-research-documentation.md   # Research process, analysis, appendix, links
+    plan-mode.md                       # Plan mode directive variants
+    scm-detect.md                      # SCM platform detection and local git tools
+    scm-github.md                      # GitHub MCP tools and conventions
+    scm-gitlab.md                      # GitLab MCP tools and conventions
+    obsidian.md                        # Obsidian vault conventions and tool access
+    slack.md                           # Slack tools, response conventions, reaction rules
+  <skill-name>/
+    SKILL.md                           # Skill definition (frontmatter + instructions)
+    references/                        # Skill-specific reference files (optional)
+```
+
+**Key conventions:**
+
+- `SKILL.md` is the only file automatically parsed and registered as an MCP prompt.
+- Skills declare references in frontmatter as comma-separated relative paths: `references: ../references/file.md`.
+- Declared references are listed in the XML `<References>` block but NOT loaded into context automatically.
+- The SKILL.md body tells the model which references to read and when.
+- Skills must work even if references fail to load (graceful degradation).
+- Relative paths resolve from the skill's directory: `../references/` for shared, `./references/` for skill-local.
+- See `/load-skills` for dependency resolution and reference loading details.
+- See `/config-skills` for skill authoring conventions.
+
 ### Plan File Location
 
 **CRITICAL:** All plan files MUST be created in `~/.claude/plans/`
@@ -316,6 +350,10 @@ Discovered existing token validation in `auth/validator.ts` that we can reuse. U
 ## III. TOOL SELECTION PRIORITY
 
 **DECISION HIERARCHY** for choosing tools (highest priority first):
+
+### MCP Tool Name Convention
+
+MCP tools are available under two prefixes: `mcp__mcphub__<server>__<tool>` (full) and `mcp__<server>__<tool>` (short). Both resolve to the same tool — **prefer `mcp__mcphub__` when both exist** as it routes through the mcphub hub. In documentation and skill references, use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git__git_status`, `slack__slack_list_channels`) for readability — the server name is the identifying factor. The agent resolves the correct prefix at call time.
 
 ### 1. MCP Server Tools (Preferred)
 

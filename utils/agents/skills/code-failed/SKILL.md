@@ -1,6 +1,6 @@
 ---
 name: code-failed
-description: Investigate a failed command (build, test, lint, etc.) by capturing terminal output, analyzing errors, and systematically isolating the root cause. Use when a command fails and you need to understand why.
+description: Investigate a failed command (build, test, lint, etc.) by capturing terminal output, analyzing errors, and systematically isolating the root cause. Always manually invoked. Do NOT use for behavioral bugs (/code-debug) or code review (/code-review-branch).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[brief description of what failed, e.g., 'build failed', 'test suite', 'lint errors']"
@@ -20,7 +20,7 @@ argument-hint: "[brief description of what failed, e.g., 'build failed', 'test s
 
 #### Step 1: Capture the Failure
 
-- Use `mcp__mcphub__tmux__capture-pane` on the scratch pane to grab the terminal output.
+- Use `tmux__capture-pane` on the scratch pane to grab the terminal output.
 - If the failure output is not visible in the pane (scrolled off or in a different pane), ask the user which pane or window contains the output.
 - Extract the **error messages, stack traces, and exit codes** from the captured output.
 

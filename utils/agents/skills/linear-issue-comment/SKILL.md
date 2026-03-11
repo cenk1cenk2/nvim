@@ -1,6 +1,6 @@
 ---
 name: linear-issue-comment
-description: Record critical findings, deviations, and decisions as concise comments on Linear issues. Use when documenting outcomes of research, debugging, or implementation sessions.
+description: Record critical findings, deviations, and decisions as concise comments on Linear issues. Use when user says "comment on the issue", "log this to Linear", "document this finding", or "add a note to the issue". Do NOT use for updating the issue description (/linear-issue-update) or checklist (/linear-issue-checklist).
 interaction: chat
 argument-hint: "[issue-id or Linear URL] [what to comment]"
 ---

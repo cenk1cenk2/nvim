@@ -1,6 +1,6 @@
 ---
 name: linear-project-update
-description: Audit and update a Linear project's structure, subissues, priorities, estimates, labels, and blocking relations. Use when reviewing whether a project's configuration still reflects reality.
+description: Audit and update a Linear project's structure, subissues, priorities, estimates, labels, and blocking relations. Use when user says "audit the project", "update project structure", "review project priorities", or "is the project still accurate". Do NOT use for posting status updates (/linear-project-post) or creating new projects (/linear-project-create).
 interaction: chat
 argument-hint: "[project-name or Linear URL]"
 ---

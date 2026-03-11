@@ -1,7 +1,8 @@
 ---
 name: gitlab-pr
-description: Analyze and write GitLab merge request titles and descriptions. Use when the user wants to create, review, or improve MR descriptions for the current branch. Reads the existing MR, analyzes the diff and commits, and drafts a concise description focused on logical changes.
+description: Analyze and write GitLab merge request titles and descriptions. Use when user says "write an MR description", "create an MR", "improve the MR", or "describe what this branch does". Do NOT use for GitHub PRs (/github-pr), CI pipelines (/gitlab-ci), or CI failures (/gitlab-failed-ci).
 interaction: chat
+references: ../references/scm-gitlab.md
 ---
 
 ## system
@@ -17,23 +18,20 @@ interaction: chat
 
 ### Core Requirements
 
-- **ALWAYS use `gitlab` MCP tools for all GitLab operations.**
-- **ALWAYS use `git` MCP tools for local git operations.**
-- Determine project path from the git remote URL.
-- Determine the current branch from local git state.
+> Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
 
 ### Process
 
 1. **Gather Context:**
-   - Get current branch name via `mcp__mcphub__git__git_status`.
+   - Get current branch name via `git__git_status`.
    - Get remote origin URL to extract the GitLab project path.
-   - Find the open MR for the current branch via `mcp__mcphub__gitlab__list_merge_requests` with `source_branch` filter.
+   - Find the open MR for the current branch via `gitlab__list_merge_requests` with `source_branch` filter.
    - If no MR exists, ask the user if they want to create one. Use GitLab MCP tools or fall back to `glab mr create` via CLI if MCP creation is not available.
 
 2. **Analyze the MR:**
-   - Read MR details via `mcp__mcphub__gitlab__get_merge_request`.
-   - Read the full diff via `mcp__mcphub__gitlab__get_merge_request_diffs`.
-   - Read commit history via `mcp__mcphub__gitlab__list_commits` filtered to the MR branch.
+   - Read MR details via `gitlab__get_merge_request`.
+   - Read the full diff via `gitlab__get_merge_request_diffs`.
+   - Read commit history via `gitlab__list_commits` filtered to the MR branch.
    - Note the existing MR title and description.
 
 3. **Draft the Description:**

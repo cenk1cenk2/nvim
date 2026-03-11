@@ -1,6 +1,6 @@
 ---
 name: config-skills
-description: Create, update, or review skills in the skills directory. Use when the user wants to add a new skill, modify an existing one, or understand the skill conventions.
+description: Create, update, or review skills in the skills directory. Use when user says "create a skill", "update skill X", "review my skills", "add a new slash command", or "improve this skill". Do NOT use for loading or chaining skills (use /load-skills).
 interaction: chat
 argument-hint: "[create|update|review] [skill-name] [description of what the skill should do]"
 ---
@@ -17,12 +17,22 @@ argument-hint: "[create|update|review] [skill-name] [description of what the ski
 
 ### Skills Directory
 
-All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a directory containing a `SKILL.md` file.
+All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a directory containing a `SKILL.md` file. Shared reference files live in `references/` at the skills root.
 
 ```
 ~/.config/nvim/utils/agents/skills/
+├── references/                          # Shared reference files (read on demand)
+│   ├── linear-prerequisite.md           # Workspace detection and auto-invoke rules
+│   ├── linear-mandatory-fields.md       # Team, state, labels, estimate, priority, relations
+│   ├── linear-issue-philosophy.md       # Issue vs. conversation authority and timestamps
+│   ├── linear-description-structure.md  # Issue/project/initiative description format
+│   ├── linear-research-documentation.md # Research process, analysis, appendix, links
+│   ├── plan-mode.md                     # Plan mode directive variants (strict/standard)
+│   ├── obsidian.md                      # Vault conventions, tool access, writing style
+│   └── slack.md                         # Slack tools, response conventions, reaction rules
 ├── skill-name/
-│   └── SKILL.md
+│   ├── SKILL.md
+│   └── references/                      # Skill-specific references (optional)
 ├── another-skill/
 │   └── SKILL.md
 ```
@@ -36,26 +46,34 @@ Skills in this directory form an interconnected system. A skill may depend on or
 #### Create
 
 1. Determine what the skill should do. Ask the user if not clear from context.
-2. Read 2-3 existing skills to understand patterns, tone, and structure.
-3. Draft the full `SKILL.md` and present it in chat.
-4. Iterate based on user feedback.
-5. After approval, create the directory and write the file.
+2. Read 2-3 existing skills in the same family to understand patterns, tone, and structure.
+3. **Check references** — read all files in `~/.config/nvim/utils/agents/skills/references/` to identify shared conventions the new skill should use instead of duplicating. If the skill belongs to a family (e.g., Linear, Obsidian), check whether sibling skills declare references in their frontmatter and reuse the same ones.
+4. Draft the full `SKILL.md`. Use reference directives for any shared conventions found in step 3.
+5. **Validate** — run the description checklist (see below) and verify conventions before presenting.
+6. Present the draft in chat.
+7. Iterate based on user feedback.
+8. After approval, create the directory and write the file.
 
 #### Update
 
 1. Read the existing `SKILL.md` for the target skill.
 2. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
-3. Identify what needs to change and present proposed changes to the user.
-4. Iterate based on feedback.
-5. After approval, apply the changes.
+3. Identify what needs to change.
+4. **Check for deduplication** — if the skill contains blocks that are duplicated in sibling skills (prerequisite blocks, plan mode directives, description structures, research patterns), check whether a shared reference already exists in `~/.config/nvim/utils/agents/skills/references/`. If it does, replace the duplicated block with a reference directive. If it doesn't and the block appears in 2+ skills, propose extracting it to a new shared reference.
+5. **Validate** — run the description checklist (see below) against the updated description.
+6. Present proposed changes to the user.
+7. Iterate based on feedback.
+8. After approval, apply the changes.
 
 #### Review
 
 1. Read the existing `SKILL.md` for the target skill.
-2. List ambiguities, inconsistencies, or areas that could be improved.
-3. Ask clarifying questions to understand user intent.
-4. Propose specific improvements based on answers.
-5. After approval, apply the changes (or leave as-is if no changes needed).
+2. **Validate** — run the description checklist (see below) and check all conventions.
+3. **Audit references** — check whether the skill duplicates content that exists in shared references. List any blocks that could be replaced with reference directives. Check whether the skill's declared references in frontmatter are still accurate (no stale paths, no missing references).
+4. List ambiguities, inconsistencies, or areas that could be improved.
+5. Ask clarifying questions to understand user intent.
+6. Propose specific improvements based on answers.
+7. After approval, apply the changes (or leave as-is if no changes needed).
 
 ### SKILL.md Format
 
@@ -66,7 +84,7 @@ Every `SKILL.md` starts with YAML frontmatter followed by markdown instructions.
 ```yaml
 ---
 name: skill-name # kebab-case, matches directory name
-description: One-line description of what the skill does and when to use it.
+description: What it does. Use when user says "trigger phrase", "another phrase". Do NOT use for X (use /other-skill).
 interaction: chat
 ---
 ```
@@ -76,6 +94,7 @@ interaction: chat
 ```yaml
 disable-model-invocation: true # Prevents the model from auto-invoking this skill.
 argument-hint: "[args]" # Shown to user as usage hint.
+references: ../references/file.md, ./references/local.md # Comma-separated relative paths to reference files.
 ```
 
 **Body structure:**
@@ -87,6 +106,11 @@ argument-hint: "[args]" # Shown to user as usage hint.
 >
 > - "ALWAYS enter plan mode" — for skills that require research and planning before action.
 > - "DO NOT enter plan mode" — for interactive or quick-action skills.
+> - When the skill declares `plan-mode.md` as a reference, combine the directive with reference loading guidance (see example below).
+
+> **Reference directives** (when the skill uses shared conventions)
+>
+> Read the `<reference-name>` reference for <topic>.
 
 ### Context (optional)
 
@@ -100,17 +124,174 @@ Numbered steps describing the workflow.
 
 Templates, patterns, or formatting rules.
 
+### Examples (optional, recommended for workflow skills)
+
+Concrete use case examples showing trigger → actions → result.
+
 ### Key Principles (optional)
 
 Guiding rules for the skill's behavior.
 ```
 
+### References
+
+References implement progressive disclosure — SKILL.md stays lean with the core workflow, while detailed shared conventions live in separate files read on demand.
+
+#### How References Work
+
+1. Skills declare references in frontmatter as comma-separated relative paths.
+2. The mcphub plugin resolves these paths and lists them in the XML `<References>` block when the skill is invoked.
+3. The SKILL.md body tells the model which references to read and when, using reference directives (blockquotes).
+4. The model reads reference files via MCP filesystem tools — they are NOT auto-loaded into context.
+5. Skills must work even if references fail to load (graceful degradation).
+
+#### Path Convention
+
+Paths are relative to the skill's own directory:
+
+- `../references/<file>.md` — shared references (up to `skills/`, into `references/`).
+- `./references/<file>.md` — skill-specific references (inside the skill's own directory).
+
+If a relative path fails to resolve, the model should try the absolute base: `~/.config/nvim/utils/agents/skills/references/`.
+
+#### Reference Directives in SKILL.md
+
+Use blockquotes to instruct the model to read a reference:
+
+```markdown
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules.
+> A Linear workspace skill MUST be active before this skill runs.
+```
+
+**Combined plan-mode + reference directive** (used when the skill declares `plan-mode.md`):
+
+```markdown
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
+>
+> - Use `EnterPlanMode` tool immediately.
+> - [Skill-specific plan mode rules here.]
+```
+
+The directive should:
+- Name the reference clearly (matching the filename without extension).
+- State what the reference covers so the model knows why to read it.
+- Include a brief inline summary so the skill still works if the reference fails to load.
+- For plan-mode references, include "resolve references from the `<References>` block via MCP filesystem tools" so the model knows how to load them.
+
+#### When to Create a New Shared Reference
+
+Extract content to a shared reference when:
+
+- The same block appears in **2 or more skills** (verbatim or near-verbatim).
+- The block is **longer than 5 lines** — short duplications (1-2 lines) are not worth the indirection.
+- The block represents a **convention or policy** (not skill-specific logic).
+
+Do NOT extract:
+- Skill-specific workflow steps — these belong in SKILL.md.
+- Descriptions or examples — these are unique per skill.
+- Short inline rules that would lose context when separated.
+
+#### Checking for Deduplication
+
+When creating or updating a skill, always check:
+
+1. **Read existing references** — list files in `~/.config/nvim/utils/agents/skills/references/` and read their content.
+2. **Compare against the skill** — identify any blocks in the skill that overlap with existing references.
+3. **Check sibling skills** — read 2-3 skills in the same family and look for blocks duplicated across them.
+4. **Propose extraction** — if a duplicated block has no matching reference, propose creating one. Name it `<family>-<topic>.md` (e.g., `linear-prerequisite.md`, `cluster-naming.md`).
+5. **Present findings** — show the user which blocks can be replaced with references and which new references should be created.
+
+#### Available Shared References
+
+| File | Covers | Used by |
+|------|--------|---------|
+| `linear-prerequisite.md` | Workspace detection, auto-invoke rules. | Linear family (14 skills). |
+| `linear-mandatory-fields.md` | Team, state, labels, estimate, priority, relations. | Issue/project creation skills. |
+| `linear-issue-philosophy.md` | Issue vs. conversation authority, timestamps. | Issue update/revisit/pick skills. |
+| `linear-description-structure.md` | Issue/project/initiative description format. | Issue/project/initiative creation skills. |
+| `linear-research-documentation.md` | Research process, analysis, appendix, link management. | Research-heavy creation skills. |
+| `scm-detect.md` | SCM platform detection from remote URL, local git MCP tools, CLI fallback. | Cross-platform skills (code-pull, code-review-branch). |
+| `scm-github.md` | GitHub MCP tools, `gh` CLI fallback, platform-specific conventions. | GitHub CI/PR/failed-CI skills, cross-platform skills. |
+| `scm-gitlab.md` | GitLab MCP tools, `glab` CLI fallback, platform-specific conventions. | GitLab CI/PR/failed-CI skills, cross-platform skills. |
+| `plan-mode.md` | Strict and standard plan mode directives. | Any skill using plan mode. |
+| `obsidian.md` | Vault location, tool access, file naming, frontmatter, writing style, vault exploration. | Obsidian family (4 skills). |
+| `slack.md` | Slack MCP tools, response conventions, `:dark_sunglasses:` pattern, large results handling. | Slack family (2 skills). |
+
+### Description Checklist
+
+Run this checklist when creating, updating, or reviewing any skill description:
+
+1. **Structure** — follows the format: `[What it does] + [When to use it / trigger phrases] + [Negative triggers if needed]`.
+2. **Trigger phrases** — includes phrases users would actually say (e.g., "create a skill", "set up a project").
+3. **Negative triggers** — includes "Do NOT use for X" when the skill shares vocabulary with sibling skills (e.g., Linear family, cluster family).
+4. **Specificity** — not too vague ("Helps with projects" is bad) and not too technical ("Implements the entity model" is bad).
+5. **Length** — under 1024 characters.
+6. **No XML tags** — no `<` or `>` characters in the description (security restriction).
+
 ### Conventions
 
 - **Directory name** must match the `name` field in frontmatter, both in kebab-case.
-- **Description** should answer two questions: what does it do, and when should it be used.
+- **Description** must follow the description checklist above.
 - **Plan mode** — use it for skills that need research or multi-step planning. Skip it for interactive or quick-turnaround skills.
 - **`disable-model-invocation: true`** — use when the skill should only be triggered by explicit user request, not auto-detected.
-- **MCP tools** — reference specific tool names (e.g., `mcp__mcphub__github__*`) when the skill depends on them.
+- **MCP tools** — reference specific tool names (e.g., `github__*`) when the skill depends on them. Use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git__git_status`, `slack__slack_list_channels`) — see MCP Tool Name Convention below.
 - **Be concise** — skills are instructions for an agent, not documentation for humans. Keep it actionable.
 - **End list items with `.`** — consistent punctuation across all skills.
+- **Examples** — workflow skills that orchestrate multi-step processes should include at least one example showing trigger → actions → result.
+- **SKILL.md size** — keep under 500 lines. Move shared conventions to references.
+
+### MCP Tool Name Convention
+
+MCP tools are available under two prefixes: `mcp__mcphub__<server>__<tool>` (full) and `mcp__<server>__<tool>` (short). Both resolve to the same tool — **prefer `mcp__mcphub__` when both exist** as it routes through the mcphub hub.
+
+In skill files, reference files, and documentation, use the **`<server>__<tool>` short form** for readability — the server name is the identifying factor. Examples:
+
+- `github__get_file_contents` (server: `github`, tool: `get_file_contents`)
+- `gitlab__get_merge_request` (server: `gitlab`, tool: `get_merge_request`)
+- `git__git_status` (server: `git`, tool: `git_status`)
+- `slack__slack_list_channels` (server: `slack`, tool: `slack_list_channels`)
+- `linear_kilic-dev__get_issue` (server: `linear_kilic-dev`, tool: `get_issue`)
+- `memory__add_observations` (server: `memory`, tool: `add_observations`)
+- `obsidian__obsidian_read_note` (server: `obsidian`, tool: `obsidian_read_note`)
+
+The agent resolves the correct `mcp__mcphub__` or `mcp__` prefix at call time. When writing tool tables in skills or references, use the `<server>__<tool>` form consistently.
+
+### Examples
+
+**User says:** "Create a skill for managing Obsidian daily notes"
+
+1. Ask clarifying questions (what should the skill do, manual or auto-invoked).
+2. Read 2-3 existing Obsidian skills for patterns.
+3. Check `references/` for shared conventions the new skill should use.
+4. Draft `SKILL.md` with frontmatter, process, and format sections.
+5. Validate against description checklist.
+6. Present draft in chat, iterate on feedback.
+7. After approval, create `obsidian-daily/SKILL.md`.
+
+**Result:** New skill directory and `SKILL.md` created.
+
+---
+
+**User says:** "Review the linear-issue-create skill"
+
+1. Read `linear-issue-create/SKILL.md`.
+2. Run description checklist — check trigger phrases, negative triggers, specificity.
+3. Check conventions — plan mode, punctuation, conciseness.
+4. Audit references — check if duplicated blocks exist that should use shared references.
+5. Present findings: "Description missing negative triggers for /linear-issue-update".
+6. Propose improvements, iterate.
+
+**Result:** Skill updated with improved description and conventions.
+
+---
+
+**User says:** "Update the linear-project-create skill"
+
+1. Read `linear-project-create/SKILL.md`.
+2. Read shared references in `references/` to check for deduplication.
+3. Identify prerequisite block, plan mode block, and research section as duplicates of existing references.
+4. Propose replacing them with reference directives and adding `references` to frontmatter.
+5. Present changes, iterate on feedback.
+6. After approval, update the skill.
+
+**Result:** Skill slimmed down with reference directives, frontmatter updated.

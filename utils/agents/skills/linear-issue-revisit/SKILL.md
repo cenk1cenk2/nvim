@@ -1,6 +1,6 @@
 ---
 name: linear-issue-revisit
-description: Refresh and reconcile knowledge of a Linear issue by re-reading its description, comments, relations, and project context. Use when resuming work on an issue to catch deviations, unblocked dependencies, or significant updates.
+description: Refresh and reconcile knowledge of a Linear issue by re-reading its description, comments, relations, and project context. Use when user says "refresh the issue", "re-read the issue", "what changed on this issue", or "catch me up on K-123". Do NOT use for starting work (/linear-issue-pick) or updating the issue (/linear-issue-update).
 interaction: chat
 argument-hint: "[issue-id or Linear URL]"
 ---

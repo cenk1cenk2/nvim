@@ -1,6 +1,6 @@
 ---
 name: code-debug
-description: Debug a behavioral issue where code runs but produces wrong results. Investigates using LSP, code hosting, web search, and terminal tools to find the root cause. Use when something works but not as intended.
+description: Debug a behavioral issue where code runs but produces wrong results. Investigates using LSP, code hosting, web search, and terminal tools to find the root cause. Always manually invoked. Do NOT use for failed commands (/code-failed) or code review (/code-review-branch).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[description of the problem or paste the failing snippet]"

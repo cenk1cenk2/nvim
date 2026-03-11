@@ -1,40 +1,29 @@
 ---
 name: gitlab-failed-ci
-description: Diagnose failing CI pipelines on the current branch in GitLab, research errors, and propose fixes. Use when GitLab CI/CD pipelines are failing and the user wants help understanding and resolving the failures.
+description: Diagnose failing CI pipelines on the current branch in GitLab, research errors, and propose fixes. Use when user says "pipeline is failing", "fix the GitLab CI", "why is the pipeline red", or "debug the pipeline". Do NOT use for creating/updating pipelines (/gitlab-ci), GitHub failures (/github-failed-ci), or MR descriptions (/gitlab-pr).
 interaction: chat
 disable-model-invocation: true
+references: ../references/plan-mode.md, ../references/scm-gitlab.md
 ---
 
 ## system
 
 ### GitLab Failed CI: Diagnose and Fix Failing Pipelines
 
-> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Present findings and proposed fixes to the user.
-> - Iterate based on feedback.
 > - Do NOT write code until the user explicitly approves.
->
-> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
->
-> - You MUST stay in plan mode for the ENTIRE duration of this skill.
-> - Only the user saying the EXACT words "fix it", "implement this", "start coding", "write the code", or an equally explicit and unambiguous direct instruction should cause you to exit plan mode.
-> - If you are unsure whether the user wants you to fix it, ASK — do not assume.
-> - **When in doubt, STAY in plan mode.**
 
 ### Core Requirements
 
-- **ALWAYS use `gitlab` MCP tools for all GitLab operations.**
-- **ALWAYS use `git` MCP tools for local git operations.**
-- Use `glab` CLI as fallback when MCP tools lack the needed capability (e.g., `glab ci trace` for job logs).
-- Determine project path from the git remote URL.
-- Determine the current branch from local git state.
+> Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
 
 ### Process
 
-1. **Identify failing pipelines.** Get the current branch via `mcp__mcphub__git__git_status`. List recent pipelines for the branch using `mcp__mcphub__gitlab__list_pipelines` with the branch ref. Identify pipelines with `failed` status.
-2. **Fetch failure details.** For each failing pipeline, use `mcp__mcphub__gitlab__list_pipeline_jobs` to get the job list and identify failed jobs. Use `glab ci trace <job-id>` to extract the relevant job logs. Focus on the actual error messages, not boilerplate output.
+1. **Identify failing pipelines.** Get the current branch via `git__git_status`. List recent pipelines for the branch using `gitlab__list_pipelines` with the branch ref. Identify pipelines with `failed` status.
+2. **Fetch failure details.** For each failing pipeline, use `gitlab__list_pipeline_jobs` to get the job list and identify failed jobs. Use `glab ci trace <job-id>` to extract the relevant job logs. Focus on the actual error messages, not boilerplate output.
 3. **Diagnose the error.** Analyze the error messages. Read relevant source files, config files, or pipeline definitions (`.gitlab-ci.yml`) as needed. If the error is unclear or unfamiliar, search the internet for the error message or related keywords.
 4. **Propose a fix.** Present findings to the user: what failed, why it failed, and how to fix it. Be specific — reference file paths, line numbers, and exact changes needed.
 5. **Ask to implement.** Ask the user: "Would you like me to fix this, or would you prefer to do it yourself?"

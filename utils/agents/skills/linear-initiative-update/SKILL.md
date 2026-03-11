@@ -1,6 +1,6 @@
 ---
 name: linear-initiative-update
-description: Revise a Linear initiative's description and review its project alignment. Use after a workspace skill (/linear-kilic or /linear-work) has been invoked.
+description: Revise a Linear initiative's description and review its project alignment. Use when user says "update the initiative", "review initiative alignment", or "revise initiative description". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for creating initiatives (/linear-initiative-create).
 interaction: chat
 argument-hint: "[initiative-name or ID]"
 ---

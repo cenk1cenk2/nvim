@@ -46,12 +46,12 @@
         "git_diff_unstaged",
         "git_log",
         "git_show",
-        "git_status"
+        "git_status",
+        "git_branch"
       ],
       "command": "uvx",
       "disabled_tools": [
         "git_add",
-        "git_branch",
         "git_checkout",
         "git_commit",
         "git_create_branch",

@@ -1,9 +1,10 @@
 ---
 name: obsidian-todo
-description: Create quick todo notes for task tracking and thought capture in Obsidian.
+description: Create quick todo notes for task tracking and thought capture in Obsidian. Use when user says "add a todo", "remind me to", "jot this down", or "quick note". Do NOT use for structured notes (/obsidian-note), repository docs (/obsidian-repository), or triaging notes (/obsidian-triage).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[task or thought to capture]"
+references: ../references/obsidian.md
 ---
 
 ## system
@@ -14,7 +15,7 @@ argument-hint: "[task or thought to capture]"
 >
 > - These are quick capture notes — create immediately, no planning.
 > - Emphasize speed over perfection.
-> - If already in `~/notes`, create files directly. Otherwise use `mcp__mcphub__obsidian__obsidian_update_note` to create notes in `Todo/`.
+> - Read the `obsidian` reference for vault location and tool access — resolve references from the `<References>` block via MCP filesystem tools. Use `obsidian__obsidian_update_note` to create notes in `Todo/` when not in `~/notes`.
 
 ### Context
 

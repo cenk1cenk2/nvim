@@ -1,7 +1,8 @@
 ---
 name: linear-kilic-project-argocd-workload
-description: Create a Linear project for deploying application workloads to Kubernetes clusters via ArgoCD. Use when deploying applications, services, or CRD-based workloads that run on target clusters.
+description: Create a Linear project for deploying application workloads to Kubernetes clusters via ArgoCD. Use when user says "deploy my-app", "add a workload", or "deploy this service to the cluster". Do NOT use for system components (/linear-kilic-project-argocd-system) or generic projects (/linear-project-create).
 interaction: chat
+references: ../references/plan-mode.md
 argument-hint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-cluster'"
 ---
 
@@ -11,17 +12,12 @@ argument-hint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-clu
 
 > **PREREQUISITE: The `/linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it by loading `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`. This skill is kilic-dev workspace specific.
 
-> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
 >
-> - Use `EnterPlanMode` tool immediately
-> - Create plan file in `~/.claude/plans/YYYY-MM-DD-workload-<name>.md`
-> - Research the workload, existing patterns, and cluster requirements
-> - Present the plan for user approval before creating issues
->
-> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
->
-> - Stay in plan mode for the ENTIRE duration
-> - After creating the Linear project and issues, present the results and wait for user direction
+> - Use `EnterPlanMode` tool immediately.
+> - Create plan file in `~/.claude/plans/YYYY-MM-DD-workload-<name>.md`.
+> - Research the workload, existing patterns, and cluster requirements.
+> - Present the plan for user approval before creating issues.
 
 ### Overview
 

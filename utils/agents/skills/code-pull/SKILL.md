@@ -1,8 +1,9 @@
 ---
 name: code-pull
-description: Pull changes from a reference GitHub/GitLab repository and adapt them to the current repository. Use when the user wants to apply commits, PRs, or MRs from another repository to the current one.
+description: Pull changes from a reference GitHub/GitLab repository and adapt them to the current repository. Always manually invoked. Do NOT use for code review (/code-review-branch), debugging (/code-debug), or PR descriptions (/github-pr, /gitlab-pr).
 interaction: chat
 disable-model-invocation: true
+references: ../references/plan-mode.md, ../references/scm-detect.md, ../references/scm-github.md, ../references/scm-gitlab.md
 argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 ---
 
@@ -10,27 +11,18 @@ argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 
 ### Code Pull: Adapt Changes from a Reference Repository
 
-> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Analyze the reference changes and plan how to adapt them before writing any code.
 > - Present findings and proposed changes to the user.
-> - Iterate based on feedback.
 > - Do NOT write code until the user explicitly approves.
->
-> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
->
-> - You MUST stay in plan mode for the ENTIRE duration of this skill.
-> - Only the user saying the EXACT words "implement this", "apply it", "start coding", "write the code", or an equally explicit and unambiguous direct instruction should cause you to exit plan mode.
-> - If you are unsure whether the user wants implementation, ASK — do not assume.
-> - **When in doubt, STAY in plan mode.**
 
 ### Core Requirements
 
-- **Use `github` MCP tools for GitHub repositories and `gitlab` MCP tools for GitLab repositories.**
-- **Use `git` MCP tools for local git operations.**
-- Use `gh` / `glab` CLI as fallback when MCP tools lack the needed capability.
-- Determine the source platform (GitHub or GitLab) from the provided URL or path.
+> Read the `scm-detect` reference to detect the SCM platform and access local git MCP tools — resolve references from the `<References>` block via MCP filesystem tools. Then read the matching platform reference (`scm-github` or `scm-gitlab`) for provider-specific tools.
+
+- Determine the source platform (GitHub or GitLab) from the provided URL or remote origin.
 - The current repository and the reference repository are similar but NOT identical. Changes must be adapted, not blindly copied.
 
 ### Process
@@ -40,9 +32,9 @@ argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
    - Which changes? A PR/MR, a branch, or specific commits.
    - If no specific commits or PR/MR are given and the reference is the default branch, ask which commits to look at.
 2. **Fetch reference changes.** Based on what the user specified:
-   - **PR/MR:** Read the diff and commit list via `mcp__mcphub__github__pull_request_read` (method `get_diff`) or `mcp__mcphub__gitlab__get_merge_request_diffs`.
-   - **Specific commits:** Read each commit via `mcp__mcphub__github__get_commit` or `mcp__mcphub__gitlab__get_commit_diff`.
-   - **Branch:** List recent commits via `mcp__mcphub__github__list_commits` or `mcp__mcphub__gitlab__list_commits` and read relevant diffs.
+   - **PR/MR:** Read the diff and commit list via `github__pull_request_read` (method `get_diff`) or `gitlab__get_merge_request_diffs`.
+   - **Specific commits:** Read each commit via `github__get_commit` or `gitlab__get_commit_diff`.
+   - **Branch:** List recent commits via `github__list_commits` or `gitlab__list_commits` and read relevant diffs.
 3. **Understand the reference changes.** Read the full diff and affected files in the reference repository. Summarize what each change does logically — not just file-by-file, but the intent behind the changes.
 4. **Analyze the current repository.** Read the corresponding files in the current repository. Identify structural differences: naming conventions, file layout, framework differences, language idioms, existing patterns.
 5. **Plan the adaptation.** For each reference change, determine how it maps to the current repository:

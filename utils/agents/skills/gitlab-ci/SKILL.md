@@ -1,35 +1,25 @@
 ---
 name: gitlab-ci
-description: Create or update GitLab CI/CD pipelines using the devops/pipelines task-based model. Use when the user wants to add or modify .gitlab-ci.yml for a repository.
+description: Create or update GitLab CI/CD pipelines using the devops/pipelines task-based model. Use when user says "add a pipeline", "set up GitLab CI", or "modify .gitlab-ci.yml". Do NOT use for diagnosing failures (/gitlab-failed-ci), GitHub Actions (/github-ci), or MR descriptions (/gitlab-pr).
 interaction: chat
 disable-model-invocation: true
+references: ../references/plan-mode.md, ../references/scm-gitlab.md
 ---
 
 ## system
 
 ### GitLab CI: Create and Update GitLab CI/CD Pipelines
 
-> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Research existing patterns and available templates before proposing anything.
 > - Present findings and proposed pipeline to the user.
-> - Iterate based on feedback.
 > - Do NOT write files until the user explicitly approves.
->
-> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
->
-> - You MUST stay in plan mode for the ENTIRE duration of this skill.
-> - Only the user saying the EXACT words "implement this", "start coding", "write the code", or an equally explicit and unambiguous direct instruction should cause you to exit plan mode.
-> - If you are unsure whether the user wants implementation, ASK — do not assume.
-> - **When in doubt, STAY in plan mode.**
 
 ### Core Requirements
 
-- **ALWAYS use `gitlab` MCP tools for all GitLab operations.**
-- **ALWAYS use `git` MCP tools for local git operations.**
-- Use `glab` CLI as fallback when MCP tools lack the needed capability.
-- Determine project path from the git remote URL.
+> Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
 
 ### Architecture: devops/pipelines + devops/pipes
 
@@ -65,14 +55,14 @@ node-install:
 1. **Understand the requirement.** Clarify what the pipeline should do: build, test, lint, deploy, release, etc. Identify the language, framework, and runtime involved.
 2. **Analyze existing patterns.** Read `.gitlab-ci.yml` in the current repository. Note existing includes, stages, variables, and job structure. New additions must be consistent with existing patterns.
 3. **Check for old template usage.** If the existing `.gitlab-ci.yml` uses raw scripts or the old template-based approach instead of `devops/pipelines` includes, prompt the user: "This pipeline uses the old template approach. Would you like to migrate to the task-based model from devops/pipelines?" Offer to migrate if accepted.
-4. **Search for available templates.** Use `mcp__mcphub__gitlab__get_repository_tree` on `devops/pipelines` to find templates for the required technology. Read the template file via `mcp__mcphub__gitlab__get_file_contents` to understand its `spec:` inputs and job definition.
-5. **Fetch latest template version.** Use `mcp__mcphub__gitlab__list_tags` on `devops/pipelines` to find the latest tag for the relevant template (e.g., `node@1.2.0`). Always use the latest version.
+4. **Search for available templates.** Use `gitlab__get_repository_tree` on `devops/pipelines` to find templates for the required technology. Read the template file via `gitlab__get_file_contents` to understand its `spec:` inputs and job definition.
+5. **Fetch latest template version.** Use `gitlab__list_tags` on `devops/pipelines` to find the latest tag for the relevant template (e.g., `node@1.2.0`). Always use the latest version.
 6. **Discover available environment variables.** Read the corresponding pipe's flags from `devops/pipes`:
    - Find the pipe module in `pipes/<pipe-name>/`.
    - Read `flags.go` files for each relevant command.
    - Read `main.go` to understand `CombineTaskLists` and which tasklists (and their flags) are combined.
    - Follow subtask imports to find all available environment variables.
-7. **Ask for reference implementation (optional).** Ask the user if they have a reference repository or `.gitlab-ci.yml` they want to base the pipeline on. If provided, read it via `mcp__mcphub__gitlab__get_file_contents` and adapt its patterns to the current repository's conventions.
+7. **Ask for reference implementation (optional).** Ask the user if they have a reference repository or `.gitlab-ci.yml` they want to base the pipeline on. If provided, read it via `gitlab__get_file_contents` and adapt its patterns to the current repository's conventions.
 8. **Draft the pipeline.** Write the complete `.gitlab-ci.yml` and present it in chat. Explain what each include and job does. List the available environment variables the user can customize.
 9. **Ask to implement.** After user approval, exit plan mode and write the pipeline file.
 

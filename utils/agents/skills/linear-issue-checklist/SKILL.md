@@ -1,6 +1,6 @@
 ---
 name: linear-issue-checklist
-description: Update an existing Linear issue's checklist by marking items as done or cancelled. Use when reporting progress on issue tasks.
+description: Update a Linear issue's checklist by marking items as done or cancelled. Use when user says "mark task as done", "update the checklist", "check off this item", or "cancel this task". Do NOT use for commenting (/linear-issue-comment) or updating the issue description (/linear-issue-update).
 interaction: chat
 argument-hint: "[issue-id or Linear URL] [items to update]"
 ---

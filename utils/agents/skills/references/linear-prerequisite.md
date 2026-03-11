@@ -1,0 +1,24 @@
+# Linear Workspace Prerequisite
+
+A Linear workspace skill **MUST** be active before any Linear issue/project/initiative skill runs.
+
+If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
+
+- **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
+- **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+
+## Deduction Rules
+
+| Signal | Workspace | Skill |
+|--------|-----------|-------|
+| Issue ID prefix `K-xxx` | kilic-dev | `linear-kilic` |
+| Issue ID prefix `CLOUD-xxx` | Laravel | `linear-work` |
+| Linear URL containing `kilic-dev` | kilic-dev | `linear-kilic` |
+| Linear URL containing `laravel` | Laravel | `linear-work` |
+| GitLab repository (`gitlab.kilic.dev`) | kilic-dev | `linear-kilic` |
+| GitHub repository (Laravel org) | Laravel | `linear-work` |
+| User says "work" or "laravel" | Laravel | `linear-work` |
+| User says "personal" or "kilic" | kilic-dev | `linear-kilic` |
+| No signal available | — | Ask the user |
+
+If a full Linear URL is provided, deduce the workspace from the URL directly.

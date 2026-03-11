@@ -1,6 +1,6 @@
 ---
 name: cluster-workload
-description: Create a new workload deployment repository in the cluster/workloads group on GitLab. Scaffolds the kustomize structure with Helm charts, ExternalSecrets, Gateway API routing, databases, SSO, and other common patterns.
+description: Create a new workload deployment repository in the cluster/workloads group on GitLab. Scaffolds the kustomize structure with Helm charts, ExternalSecrets, Gateway API routing, databases, SSO, and other common patterns. Always manually invoked. Do NOT use for ArgoCD workloads (/cluster-argocd-workload), LB routing (/cluster-argocd-loadbalancer), or Helm chart wrappers (/cluster-chart).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[workload-name] - e.g., 'seafile', 'immich', 'my-app'"

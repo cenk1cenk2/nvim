@@ -1,7 +1,8 @@
 ---
 name: linear-kilic-project-argocd-system
-description: Create a Linear project for deploying system-level components (operators, controllers, infrastructure tools) to Kubernetes clusters via ArgoCD. Use when deploying new system software like cert-manager, external-secrets-operator, renovate-operator, etc.
+description: Create a Linear project for deploying system-level components (operators, controllers, infrastructure tools) to Kubernetes clusters via ArgoCD. Use when user says "deploy cert-manager", "add renovate-operator", or "set up a system component". Do NOT use for application workloads (/linear-kilic-project-argocd-workload) or generic projects (/linear-project-create).
 interaction: chat
+references: ../references/plan-mode.md
 argument-hint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'velero'"
 ---
 
@@ -11,17 +12,12 @@ argument-hint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'v
 
 > **PREREQUISITE: The `/linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it by loading `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`. This skill is kilic-dev workspace specific.
 
-> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
 >
-> - Use `EnterPlanMode` tool immediately
-> - Create plan file in `~/.claude/plans/YYYY-MM-DD-argocd-system-<component>.md`
-> - Research the component, existing patterns, and cluster requirements
-> - Present the plan for user approval before creating issues
->
-> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
->
-> - Stay in plan mode for the ENTIRE duration
-> - After creating the Linear project and issues, present the results and wait for user direction
+> - Use `EnterPlanMode` tool immediately.
+> - Create plan file in `~/.claude/plans/YYYY-MM-DD-argocd-system-<component>.md`.
+> - Research the component, existing patterns, and cluster requirements.
+> - Present the plan for user approval before creating issues.
 
 ### Overview
 

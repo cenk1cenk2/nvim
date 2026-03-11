@@ -1,6 +1,6 @@
 ---
 name: linear-triage
-description: Process all Linear issues in triage status. Recommends projects, priorities, teams, and refinements for each issue interactively. Use after a workspace skill (/linear-kilic or /linear-work) has been invoked.
+description: Process all Linear issues in triage status, recommending projects, priorities, teams, and refinements interactively. Use when user says "triage issues", "process the triage queue", or "review untriaged issues". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for cycle planning (/linear-cycle) or picking next tasks (/linear-pick-next).
 interaction: chat
 ---
 

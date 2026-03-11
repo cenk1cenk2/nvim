@@ -1,6 +1,6 @@
 ---
 name: cluster-chart
-description: Create a new Helm chart wrapper in the cluster/charts group on GitLab. Scaffolds the chart repository with upstream dependency, values, optional custom templates (ExternalSecret, Gateway API resources, CRDs), and all standard boilerplate.
+description: Create a new Helm chart wrapper in the cluster/charts group on GitLab. Scaffolds the chart repository with upstream dependency, values, optional custom templates (ExternalSecret, Gateway API resources, CRDs), and all standard boilerplate. Always manually invoked. Do NOT use for workload deployments (/cluster-workload), ArgoCD workloads (/cluster-argocd-workload), or LB routing (/cluster-argocd-loadbalancer).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[chart-name] - e.g., 'goldilocks', 'velero', 'cilium-l2-announcement'"

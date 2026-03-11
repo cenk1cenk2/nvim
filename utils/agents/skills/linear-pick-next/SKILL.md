@@ -1,6 +1,6 @@
 ---
 name: linear-pick-next
-description: Analyze Linear projects and issues to recommend the best next task(s) to pick up. Use when deciding what to work on next, either across all projects or within a specific one.
+description: Analyze Linear projects and issues to recommend the best next task(s) to pick up. Use when user says "what should I work on", "pick next task", "what's the priority", or "recommend a task". Do NOT use for picking up a specific known issue (/linear-issue-pick) or cycle planning (/linear-cycle).
 interaction: chat
 argument-hint: "[project-name or Linear URL] (optional — omit to analyze all projects)"
 ---

@@ -1,6 +1,6 @@
 ---
 name: cluster-argocd-workload
-description: Create a new workload service in the current cluster's ArgoCD repository. Scaffolds the Pulumi service, registers it in the workloads module, and optionally configures gateway listeners.
+description: Create a new workload service in the current cluster's ArgoCD repository. Scaffolds the Pulumi service, registers it in the workloads module, and optionally configures gateway listeners. Always manually invoked. Do NOT use for LB routing (/cluster-argocd-loadbalancer), standalone workload repos (/cluster-workload), or Helm chart wrappers (/cluster-chart).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[workload-name] - e.g., 'my-app', 'html-cv3', 'notifications'"

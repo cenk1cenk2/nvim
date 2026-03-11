@@ -243,6 +243,18 @@ function M.config()
           },
         },
         interactions = {
+          -- background = {
+          --   chat = {
+          --     callbacks = {
+          --       ["on_ready"] = {
+          --         actions = {
+          --           "interactions.background.builtin.chat_make_title",
+          --         },
+          --         enabled = true,
+          --       },
+          --     },
+          --   },
+          -- },
           chat = {
             adapter = nvim.lsp.ai.provider.chat,
             model = nvim.lsp.ai.model.chat,
@@ -523,9 +535,17 @@ function M.config()
         },
         prompt_library = {
           markdown = {
-            dirs = {
-              "~/.config/nvim/utils/agents/skills",
-            },
+            dirs = (function()
+              local base = vim.fn.expand("~/.config/nvim/utils/agents/skills")
+              local dirs = {}
+              for _, entry in ipairs(vim.fn.readdir(base)) do
+                local path = base .. "/" .. entry
+                if vim.fn.isdirectory(path) == 1 and entry ~= "references" then
+                  table.insert(dirs, path)
+                end
+              end
+              return dirs
+            end)(),
           },
         },
         display = {
@@ -1009,7 +1029,7 @@ function M.get_open_chats()
 
     if type(bufnr) == "number" and vim.api.nvim_buf_is_valid(bufnr) then
       local metadata = chat_metadata[bufnr] or {}
-      local title = metadata.title or item.title or item.description or chat.title or "Untitled Chat"
+      local title = (chat.opts and chat.opts.title) or chat.title or item.description or item.title or "Untitled Chat"
       local adapter = (metadata.adapter and metadata.adapter.name) or (chat.adapter and (chat.adapter.formatted_name or chat.adapter.name)) or "Unknown"
 
       table.insert(open_chats, {

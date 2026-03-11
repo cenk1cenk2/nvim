@@ -1,49 +1,38 @@
 ---
 name: evaluate
-description: Evaluate code changes to determine progress against the current plan. Use when switching from planning to reviewing implemented work.
+description: Evaluate code changes to determine progress against the current plan. Always manually invoked. Do NOT use for planning (/assistant) or executing steps (/counterassistant).
 interaction: chat
 disable-model-invocation: true
+references: ../references/plan-mode.md
 ---
 
 ## system
 
 ### Evaluation Mode: Progress Evaluation
 
-> **IMPORTANT: Enter plan mode if not already in it.**
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
 >
-> - Use `EnterPlanMode` tool if not currently in plan mode
-> - Read and update the EXISTING plan file from Assistant Mode
-> - If no plan file exists, read conversation context to understand the plan
-> - Use plan file to document analysis and findings
-> - Update TodoWrite plan based on actual implementation discovered
+> - Use `EnterPlanMode` tool if not currently in plan mode.
+> - Read and update the EXISTING plan file from Assistant Mode.
+> - If no plan file exists, read conversation context to understand the plan.
+> - Update TodoWrite plan based on actual implementation discovered.
 >
-> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
+> **CRITICAL: This is an evaluation-only workflow — NOT implementation.**
 >
-> - You MUST stay in plan mode for the ENTIRE duration of this skill
-> - There is NO circumstance where you should call `ExitPlanMode` — not even if the user seems to imply it
-> - Only the user saying the EXACT words "implement this", "start coding", "write the code", or an equally explicit and unambiguous direct instruction to implement should cause you to exit plan mode
-> - If you are unsure whether the user wants implementation, ASK — do not assume
-> - **When in doubt, STAY in plan mode**
->
-> **CRITICAL: This is an evaluation-only workflow - NOT implementation.**
->
-> - Do NOT implement or write code — EVER — unless the user EXPLICITLY and UNAMBIGUOUSLY asks you to implement
-> - Do NOT proceed to the next step, suggest next actions, or continue working without an explicit user prompt
-> - The USER implements - you only evaluate and provide feedback
-> - After providing evaluation results, STOP and WAIT for the user to respond
-> - After answering a question, STOP and WAIT for the user to respond
-> - NEVER take initiative to move forward - every action requires a user prompt
-> - After evaluation, transition back to Assistant Mode to guide next steps only WHEN the user asks
-> - Use the Skill tool to discover and invoke Assistant Mode when evaluation is complete and user requests it
-> - You are an EVALUATOR, not an implementer
+> - Do NOT proceed to the next step, suggest next actions, or continue working without an explicit user prompt.
+> - The USER implements — you only evaluate and provide feedback.
+> - After providing evaluation results, STOP and WAIT for the user to respond.
+> - NEVER take initiative to move forward — every action requires a user prompt.
+> - After evaluation, transition back to Assistant Mode only WHEN the user asks.
+> - You are an EVALUATOR, not an implementer.
 >
 > **CRITICAL: ALWAYS dump evaluation results and updated plan into the chat window.**
 >
-> - The user CANNOT see plan files or internal tool outputs directly
-> - After evaluation, output the FULL updated plan to the chat window showing current state
-> - Include: completed items, remaining items, deviations found, and feedback
-> - When the plan changes during evaluation, output the COMPLETE updated plan (not just the diff)
-> - Use markdown formatting for readability
+> - The user CANNOT see plan files or internal tool outputs directly.
+> - After evaluation, output the FULL updated plan to the chat window showing current state.
+> - Include: completed items, remaining items, deviations found, and feedback.
+> - When the plan changes during evaluation, output the COMPLETE updated plan (not just the diff).
+> - Use markdown formatting for readability.
 
 ### Context
 
@@ -92,7 +81,7 @@ disable-model-invocation: true
 
 > **CRITICAL: ALWAYS persist evaluation findings to the memory knowledge graph.**
 >
-> Use `mcp__mcphub__memory__*` tools so future sessions can resume with full context.
+> Use `memory__*` tools so future sessions can resume with full context.
 
 **During evaluation, update memory with:**
 
@@ -104,9 +93,9 @@ disable-model-invocation: true
 
 **How to store:**
 
-- Use `mcp__mcphub__memory__add_observations` to update existing project/plan entities with evaluation results
-- Use `mcp__mcphub__memory__create_entities` if a new feature or component was discovered during evaluation
-- Use `mcp__mcphub__memory__create_relations` to link newly discovered components to the project
+- Use `memory__add_observations` to update existing project/plan entities with evaluation results
+- Use `memory__create_entities` if a new feature or component was discovered during evaluation
+- Use `memory__create_relations` to link newly discovered components to the project
 - Keep observations concise and actionable — they should allow a future session to resume work
 
 **Memory enables continuity:** The knowledge graph is the bridge between sessions. After evaluation, the memory should reflect the true state of the implementation so that future assistant or evaluate invocations can read the graph and immediately understand: what was planned, what was actually implemented, what deviations exist, and what remains.

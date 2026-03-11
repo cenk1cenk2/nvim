@@ -1,6 +1,6 @@
 ---
 name: counterassistant
-description: Implement the next agreed-upon step from an assistant plan, self-evaluate, then stop for user review. Use when the user wants the agent to execute one step at a time with review gates.
+description: Implement the next agreed-upon step from an assistant plan, self-evaluate, then stop for user review. Always manually invoked. Do NOT use for planning (/assistant) or evaluating progress (/evaluate).
 interaction: chat
 disable-model-invocation: true
 ---

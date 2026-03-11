@@ -1,8 +1,9 @@
 ---
 name: obsidian-triage
-description: Process todo notes in Obsidian vault. Organizes, moves, renames, or removes notes interactively. Use to clean up the Todo/ folder.
+description: Process todo notes in Obsidian vault. Organizes, moves, renames, or removes notes interactively. Use when user says "triage my notes", "clean up todos", or "organize the Todo folder". Do NOT use for creating notes (/obsidian-note), repository docs (/obsidian-repository), or adding todos (/obsidian-todo).
 interaction: chat
 disable-model-invocation: true
+references: ../references/obsidian.md
 ---
 
 ## system
@@ -13,12 +14,9 @@ disable-model-invocation: true
 
 ### Context
 
+> Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, and writing style conventions — resolve references from the `<References>` block via MCP filesystem tools.
+
 Todo notes in `Todo/` are quick captures — timestamped files with rough thoughts, checklists, and brain dumps. Over time they accumulate. This skill processes them one by one: organizing relevant notes into proper vault categories (like `/obsidian-note` would), flagging stale or completed notes for removal, and refining what remains.
-
-### Tools
-
-- **If CWD is `~/notes`:** Use standard file tools directly.
-- **Otherwise:** Use `mcp__mcphub__obsidian__*` tools to access the vault.
 
 ### Process
 

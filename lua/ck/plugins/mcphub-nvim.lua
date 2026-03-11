@@ -557,6 +557,29 @@ function M.load_agent_skills(dir)
   return skills
 end
 
+---@param skill_file_path string
+---@param references_str string
+---@return string[]
+function M.resolve_references(skill_file_path, references_str)
+  local refs = {}
+  local skill_folder = vim.fn.fnamemodify(skill_file_path, ":h")
+  local entries = vim.split(references_str, ",", { trimempty = true })
+
+  for _, entry in ipairs(entries) do
+    local trimmed = vim.trim(entry)
+    if trimmed ~= "" then
+      local abs_path = vim.fn.resolve(join_paths(skill_folder, trimmed))
+      if vim.fn.filereadable(abs_path) == 1 then
+        table.insert(refs, abs_path)
+      end
+    end
+  end
+
+  table.sort(refs)
+
+  return refs
+end
+
 function M.register_agent_skills()
   if M._agent_skills_registered then
     return
@@ -582,7 +605,7 @@ function M.register_agent_skills()
   ---@param skill {name:string, description:string, body:string, frontmatter:table<string,string>}
   ---@param request string
   ---@return string
-  local function build_skill_user_payload(skill)
+  local function build_skill_user_payload(skill, references)
     local lines = {
       "",
       "",
@@ -605,6 +628,14 @@ function M.register_agent_skills()
       table.insert(lines, "  </Metadata>")
     end
 
+    if references and #references > 0 then
+      table.insert(lines, "  <References>")
+      for _, ref_path in ipairs(references) do
+        table.insert(lines, string.format('    <File path="%s" />', xml_escape(ref_path)))
+      end
+      table.insert(lines, "  </References>")
+    end
+
     table.insert(lines, "</Skill>")
     table.insert(lines, "````")
     table.insert(lines, "")
@@ -621,11 +652,15 @@ function M.register_agent_skills()
         local file_content = vim.fn.readfile(skill.file_path)
         if file_content and #file_content > 0 then
           local fresh = M.parse_skill_markdown(table.concat(file_content, "\n"), skill.name)
+          local references = {}
+          if fresh.frontmatter.references and fresh.frontmatter.references ~= "" then
+            references = M.resolve_references(skill.file_path, fresh.frontmatter.references)
+          end
 
-          return res:user():text(build_skill_user_payload(fresh)):send()
+          return res:user():text(build_skill_user_payload(fresh, references)):send()
         end
 
-        return res:user():text(build_skill_user_payload(skill)):send()
+        return res:user():text(build_skill_user_payload(skill, {})):send()
       end,
     })
   end
