@@ -481,8 +481,10 @@
     "tavily": {
       "autoApprove": [
         "tavily-search",
-        "tavily_search"
+        "tavily_search",
+        "tavily_extract"
       ],
+      "disabled_tools": [],
       "env": {
         "TAVILY_API_KEY": "${NVIM_TAVILY_API_KEY}"
       },
