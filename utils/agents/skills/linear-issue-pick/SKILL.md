@@ -12,6 +12,7 @@ argument-hint: "[issue-id] - e.g., 'K-123', 'CLOUD-45'"
 > **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
 >
 > If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
+>
 > - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
 > - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
 >
@@ -51,6 +52,7 @@ Plan and refine only — **NEVER implement, NEVER exit plan mode.** Stay in plan
 - Read the full description, checklist, labels, relations, and any linked issues/projects.
 - If the issue has parent issues or blocking relations, fetch those too for context.
 - If the description's `updatedAt` is older than the current session context, flag this during alignment (Step 4) — the user may have more recent knowledge.
+- **Move the issue to "In Progress"** — use `save_issue` with `state: "In Progress"` immediately after fetching. The issue is now actively being worked on.
 
 **Step 2: Research the Context**
 
