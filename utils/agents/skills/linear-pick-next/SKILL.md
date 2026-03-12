@@ -68,12 +68,12 @@ If no project was specified, ask the user:
 
 1. **Fetch all issues** using `list_issues` with `project` parameter.
 2. **Separate issues by status:**
-   - **Active work:** status "In Review" or "In Progress" — these are already being worked on.
-   - **Actionable:** status "Backlog" or "Todo" and all `blockedBy` issues are done.
-   - **Blocked:** status "Backlog" or "Todo" but has incomplete `blockedBy` issues.
+   - **Active work:** status "In Review" or "In Progress" — these are already being worked on. Note: "In Review" means the work is essentially complete, so dependent issues CAN proceed.
+   - **Actionable:** status "Backlog" or "Todo" and all `blockedBy` issues are either "Done" or "In Review".
+   - **Blocked:** status "Backlog" or "Todo" but has `blockedBy` issues in "Todo" or "In Progress" (not yet ready).
    - **Completed:** status "Done" or "Cancelled" — exclude from recommendations.
 3. **For each actionable issue, check:**
-   - **Prerequisites met?** — are all `blockedBy` issues completed? If not, the issue is not yet actionable.
+   - **Prerequisites met?** — are all `blockedBy` issues either "Done" or "In Review"? If blocked by "Todo" or "In Progress", the issue is not yet actionable.
    - **Is it a blocker?** — does this issue block other issues? Blockers should be prioritized.
    - **Priority level** — respect the existing priority assignment.
    - **Estimate** — note the size for session planning.
@@ -88,8 +88,8 @@ If no project was specified, ask the user:
 Ask the user:
 
 - **"What would you like to work on?"**
-  - **Continue active work** — pick an issue that's already "In Review" or "In Progress"
-  - **Start fresh** — pick a new issue from "Backlog" or "Todo"
+  - **Continue active work** — pick an issue that's already "In Review" or "In Progress" (ongoing work)
+  - **Pick a new issue** — start a fresh issue from "Backlog" or "Todo" (note: "In Review" blockers are considered complete, so dependents CAN be picked)
   - **Let me decide** — recommend based on what's most urgent
 
 If the user chooses to continue active work:
@@ -98,15 +98,16 @@ If the user chooses to continue active work:
 2. If there's only one active issue, offer to open it.
 3. If there are multiple, present them and ask which to continue.
 
-If the user chooses to start fresh:
+If the user chooses to pick a new issue:
 
-1. Focus on "Ready to Pick Up" issues.
-2. Apply the dependency-aware ranking from Step 3.
+1. Focus on "Ready to Pick Up" issues from Step 3.
+2. Remember: issues blocked by "In Review" are actionable — "In Review" means the work is essentially complete.
+3. Apply the dependency-aware ranking from Step 3.
 
 If the user lets you decide:
 
-1. If there's active work blocking other issues, recommend continuing it first.
-2. Otherwise, recommend the highest-priority actionable issue.
+1. If there's active work that needs attention (e.g., failing CI, awaiting review), highlight it.
+2. Otherwise, recommend the highest-priority actionable issue from "Ready to Pick Up".
 
 #### Step 5: Open in Browser (Optional)
 
@@ -161,8 +162,8 @@ Once the user agrees on the selection:
 
 - **Never move issues without user approval.**
 - **Never exit plan mode.**
-- **Prerequisites are hard constraints** — never recommend an issue whose blockers are not done.
+- **Prerequisites are hard constraints for "Todo" and "In Progress" blockers** — but "In Review" blockers are considered complete. Issues blocked by "In Review" work CAN be picked up.
 - **Blockers first** — issues that unblock other work take priority over isolated tasks.
-- **Exclude active work from recommendations** — issues with status "In Review" or "In Progress" are already being worked on. Show them separately in an "Active Work" section so the user can decide whether to continue or pick up new work.
+- **Show active work separately** — "In Review" and "In Progress" issues appear in an "Active Work" section. When picking a new issue, these are NOT blockers since "In Review" means essentially complete.
 - **Ask, don't assume** — if the user's availability or focus area is unclear, ask before recommending.
 - **Respect user overrides** — if the user wants to pick something different from the recommendation, accept it.
