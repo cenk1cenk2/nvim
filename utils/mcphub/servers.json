@@ -250,6 +250,7 @@
         "get_alert_rule_by_uid"
       ],
       "command": "uvx",
+      "disabled": true,
       "disabled_tools": [
         "add_activity_to_incident",
         "create_alert_rule",
