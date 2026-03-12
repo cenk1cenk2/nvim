@@ -112,7 +112,7 @@ function M.config()
                 },
                 schema = {
                   model = {
-                    default = "kimi-k2.5:cloud",
+                    default = "glm-5:cloud",
                   },
                 },
               })
