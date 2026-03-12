@@ -1037,6 +1037,14 @@ Handles token expiration gracefully with retry logic.
 3. Raw shell commands / API calls (last resort, avoid)
 ```
 
+**MCP server tools missing or user requests disabled server:**
+
+```
+1. Suspect an optional server — invoke config-mcp-update skill
+2. Ask the user before toggling (never auto-toggle)
+3. After task completion, offer to turn off servers you enabled
+```
+
 **Completing a milestone:**
 
 ```
