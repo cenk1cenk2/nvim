@@ -33,6 +33,13 @@ function M.config()
           end,
           desc = "paste image",
         },
+        {
+          fn.wk_keystroke({ categories.RUN, "P" }),
+          function()
+            require("img-clip").paste_image({ dir_path = vim.fn.tempname(), use_absolute_path = true, prompt_for_file_name = false })
+          end,
+          desc = "paste temporary image",
+        },
       }
     end,
   })
