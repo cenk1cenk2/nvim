@@ -27,7 +27,7 @@ function M.config()
           -- https://github.com/nvim-contrib/nvim-ginkgo
           {
             -- dir = "~/development/nvim-ginkgo",
-            "nvim-contrib/nvim-ginkgo",
+            "nvim-contrib/neotest-ginkgo",
             -- "cenk1cenk2/nvim-ginkgo",
           },
           "nvim-treesitter/nvim-treesitter",
@@ -135,7 +135,7 @@ function M.config()
           },
         },
         adapters = {
-          require("nvim-ginkgo"),
+          require("neotest-ginkgo"),
           require("neotest-golang")({
             runner = "gotestsum",
           }),
