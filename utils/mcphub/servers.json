@@ -1,5 +1,33 @@
 {
   "mcpServers": {
+    "argocd/kilic": {
+      "args": [
+        "-y",
+        "argocd-mcp@latest",
+        "stdio"
+      ],
+      "autoApprove": [
+        "list_applications",
+        "get_application",
+        "get_application_resource_tree",
+        "get_application_managed_resources",
+        "get_application_workload_logs",
+        "get_application_events",
+        "get_resource_events",
+        "get_resources",
+        "get_resource_actions"
+      ],
+      "command": "bunx",
+      "disabled_tools": [
+        "create_application",
+        "update_application",
+        "delete_application"
+      ],
+      "env": {
+        "ARGOCD_BASE_URL": "${NVIM_ARGOCD_KILIC_URL}",
+        "ARGOCD_API_TOKEN": "${NVIM_ARGOCD_KILIC_TOKEN}"
+      }
+    },
     "context7": {
       "autoApprove": [
         "get-library-docs",
