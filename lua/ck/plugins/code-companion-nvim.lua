@@ -959,7 +959,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ "P" }),
+          fn.wk_keystroke({ categories.COPILOT, "P" }),
           function()
             vim.ui.select({
               {
