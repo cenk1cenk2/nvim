@@ -582,6 +582,27 @@ If the scratch session does not exist but tmux MCP is loaded and you need to run
 2. Ask the user for guidance before trying an alternative tool
 3. Wait for explicit permission before proceeding
 
+### Optional MCP Servers
+
+Some MCP servers are disabled by default to save resources. When the user requests functionality that maps to a disabled server, or when you cannot find expected tools in your toolset, **invoke the `config-mcp-update` skill** to offer toggling the server on.
+
+**Known optional servers:**
+
+| Server | Provides |
+|--------|----------|
+| `grafana/kilic` | Dashboards, alerts, metrics (personal/kilic). |
+| `grafana/laravel` | Dashboards, alerts, metrics (Laravel/work). |
+| `kubernetes` | Pods, deployments, services, namespaces, cluster operations. |
+| `notion/laravel` | Notion pages, databases, work documentation. |
+| `treesitter` | AST queries, syntax tree analysis, structural code patterns. |
+
+**When to invoke:**
+- User mentions grafana, kubernetes, notion, treesitter, or similar and the tools are not in your toolset.
+- You cannot find a tool you expect to exist — check if an optional server provides it before saying you can't help.
+- User explicitly asks to enable or disable an MCP server.
+
+**Never auto-toggle.** Always ask the user before enabling or disabling a server.
+
 ## IV. FILE OPERATIONS
 
 > **MANDATORY:** Neovim MCP is the **ABSOLUTE FIRST CHOICE** for all file reading and editing operations — **NO EXCEPTIONS**. Do NOT use built-in Read/Edit tools, adapter-provided edit tools, or any other mechanism when neovim MCP is available. This is the single most important tool preference in this entire document.
