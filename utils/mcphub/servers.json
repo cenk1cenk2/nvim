@@ -309,7 +309,7 @@
         "configuration_contexts_list"
       ],
       "command": "bunx",
-      "disabled": false,
+      "disabled": true,
       "disabled_tools": [
         "helm_list"
       ]
