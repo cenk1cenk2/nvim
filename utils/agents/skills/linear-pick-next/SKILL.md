@@ -21,6 +21,7 @@ argument-hint: "[project-name or Linear URL] (optional — omit to analyze all p
 > **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
 >
 > If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
+>
 > - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
 > - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
 >
@@ -66,7 +67,11 @@ If no project was specified, ask the user:
 #### Step 3: Issue Analysis (within a project)
 
 1. **Fetch all issues** using `list_issues` with `project` parameter.
-2. **Filter to actionable issues** — status is backlog or todo (not done, cancelled, or already in progress).
+2. **Separate issues by status:**
+   - **Active work:** status "In Review" or "In Progress" — these are already being worked on.
+   - **Actionable:** status "Backlog" or "Todo" and all `blockedBy` issues are done.
+   - **Blocked:** status "Backlog" or "Todo" but has incomplete `blockedBy` issues.
+   - **Completed:** status "Done" or "Cancelled" — exclude from recommendations.
 3. **For each actionable issue, check:**
    - **Prerequisites met?** — are all `blockedBy` issues completed? If not, the issue is not yet actionable.
    - **Is it a blocker?** — does this issue block other issues? Blockers should be prioritized.
@@ -78,7 +83,39 @@ If no project was specified, ask the user:
    - Third tier: issues with unmet prerequisites — note what needs to happen first.
 5. **Present the ranked list** to the user with reasoning for the ordering.
 
-#### Step 4: Session Planning
+#### Step 4: Choose Work Type
+
+Ask the user:
+
+- **"What would you like to work on?"**
+  - **Continue active work** — pick an issue that's already "In Review" or "In Progress"
+  - **Start fresh** — pick a new issue from "Backlog" or "Todo"
+  - **Let me decide** — recommend based on what's most urgent
+
+If the user chooses to continue active work:
+
+1. Focus on issues in "In Review" or "In Progress" status.
+2. If there's only one active issue, offer to open it.
+3. If there are multiple, present them and ask which to continue.
+
+If the user chooses to start fresh:
+
+1. Focus on "Ready to Pick Up" issues.
+2. Apply the dependency-aware ranking from Step 3.
+
+If the user lets you decide:
+
+1. If there's active work blocking other issues, recommend continuing it first.
+2. Otherwise, recommend the highest-priority actionable issue.
+
+#### Step 5: Open in Browser (Optional)
+
+If the user asks to open the issue:
+
+- Use `browser__open_in_browser` with the issue URL: `https://linear.app/<workspace>/issue/<identifier>`
+- If opening multiple issues, ask the user which one to open first.
+
+#### Step 6: Session Planning
 
 Ask the user:
 
@@ -86,7 +123,7 @@ Ask the user:
 - Based on the answer, recommend either a single issue or a set of issues that fit the session.
 - For multi-issue sessions, respect dependency order — if issue A blocks issue B, both can be in the session but A comes first.
 
-#### Step 5: Confirm and Move Issues
+#### Step 7: Confirm and Move Issues
 
 Once the user agrees on the selection:
 
@@ -100,6 +137,9 @@ Once the user agrees on the selection:
 
 ```
 ## Project: <name>
+
+### Active Work (In Review / In Progress)
+- <issue-id>: <title> — already being worked on, complete this first if applicable
 
 ### Ready to Pick Up
 1. <issue-id>: <title> (priority: <P>, estimate: <E>)
@@ -123,5 +163,6 @@ Once the user agrees on the selection:
 - **Never exit plan mode.**
 - **Prerequisites are hard constraints** — never recommend an issue whose blockers are not done.
 - **Blockers first** — issues that unblock other work take priority over isolated tasks.
+- **Exclude active work from recommendations** — issues with status "In Review" or "In Progress" are already being worked on. Show them separately in an "Active Work" section so the user can decide whether to continue or pick up new work.
 - **Ask, don't assume** — if the user's availability or focus area is unclear, ask before recommending.
 - **Respect user overrides** — if the user wants to pick something different from the recommendation, accept it.
