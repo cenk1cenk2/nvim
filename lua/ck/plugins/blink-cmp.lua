@@ -141,10 +141,10 @@ function M.config()
           end,
           per_filetype = {
             codecompanion = function()
-              return { "path", "ripgrep" }
+              return { "path" }
             end,
             AvanteInput = function()
-              return { "path", "ripgrep" }
+              return { "path" }
             end,
           },
           providers = {
