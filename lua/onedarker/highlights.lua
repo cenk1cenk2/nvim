@@ -767,6 +767,13 @@ hl.plugins.copilot_lsp = {
 }
 
 ---@type table<string, vim.api.keyset.highlight>
+hl.plugins.markview = {
+  MarkviewDiffAdd = { link = "DiffAdd" },
+  MarkviewDiffDelete = { link = "DiffDelete" },
+  MarkviewDiffChange = { link = "DiffChange" },
+}
+
+---@type table<string, vim.api.keyset.highlight>
 hl.plugins.mcphub = {
   MCPHubDiffAdd = { link = "DiffAdd" },
   MCPHubDiffChange = { link = "DiffChange" }, -- New content being added

@@ -52,6 +52,22 @@ function M.config()
           end,
         },
         markdown = {
+          code_blocks = {
+            ["diff"] = {
+              block_hl = function(_, line)
+                if line:match("^%+") then
+                  return "MarkviewDiffAdd"
+                elseif line:match("^%-") then
+                  return "MarkviewDiffDelete"
+                elseif line:match("^@@") then
+                  return "MarkviewDiffChange"
+                else
+                  return "MarkviewCode"
+                end
+              end,
+              pad_hl = "MarkviewCode",
+            },
+          },
           headings = {
             enable = true,
             shift_width = 0,
