@@ -1001,6 +1001,16 @@ function M.config()
         require("ck.modules.autocmds").set_view_buffer({ "codecompanion" }),
         {
           event = "User",
+          group = "_codecompanion_markview",
+          pattern = "CodeCompanionRequestStarted",
+          once = true,
+          callback = function(ev)
+            local bufnr = ev.data and ev.data.bufnr
+            pcall(require("markview.actions").render, bufnr)
+          end,
+        },
+        {
+          event = "User",
           group = "_codecompanion_tmux_alert",
           pattern = {
             "CodeCompanionToolApprovalRequested",

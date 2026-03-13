@@ -9,7 +9,16 @@ function M.config()
       ---@type Plugin
       return {
         "OXY2DEV/markview.nvim",
-        ft = { "markdown", "rmd", "norg", "org", "vimwiki", "Avante", "AvanteInput", "codecompanion" },
+        ft = {
+          "markdown",
+          "rmd",
+          "norg",
+          "org",
+          "vimwiki",
+          "Avante",
+          "AvanteInput",
+          "codecompanion",
+        },
       }
     end,
     setup = function()
@@ -17,7 +26,7 @@ function M.config()
         preview = {
           max_buf_lines = 250,
           draw_range = { vim.o.lines, vim.o.lines },
-          debounce = 200,
+          debounce = 150,
           modes = { "n", "no", "c" }, -- Change these modes
           hybrid_modes = { "n", "v", "x" },
           filetypes = {
@@ -27,16 +36,20 @@ function M.config()
             "org",
             "vimwiki",
             "Avante",
-            "AventeInput",
+            "AvanteInput",
             "codecompanion",
           },
-          callbacks = {
-            -- on_enable = function(_, win)
-            --   vim.wo[win].conceallevel = 2
-            --   vim.wo[win].concealcursor = "c"
-            -- end,
-          },
           ignore_buftypes = {},
+          condition = function(bufnr)
+            local ft = vim.bo[bufnr].ft
+            local bt = vim.bo[bufnr].bt
+
+            if bt == "nofile" and vim.tbl_contains({ "codecompanion", "Avante", "AvanteInput" }, ft) then
+              return true
+            elseif bt == "nofile" then
+              return false
+            end
+          end,
         },
         markdown = {
           headings = {
