@@ -27,14 +27,14 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.RUN, "p" }),
+          fn.wk_keystroke({ categories.RUN, "P" }),
           function()
             require("img-clip").paste_image()
           end,
           desc = "paste image",
         },
         {
-          fn.wk_keystroke({ categories.RUN, "P" }),
+          fn.wk_keystroke({ categories.RUN, "p" }),
           function()
             require("img-clip").paste_image({ dir_path = vim.fn.tempname(), use_absolute_path = true, prompt_for_file_name = false })
           end,
