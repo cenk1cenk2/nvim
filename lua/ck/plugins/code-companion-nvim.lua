@@ -1040,7 +1040,12 @@ function M.config()
         {
           event = "User",
           group = "_codecompanion_tmux_alert",
-          pattern = { "CodeCompanionToolApprovalRequested", "MCPHubApprovalWindowOpened" },
+          pattern = {
+            "CodeCompanionToolApprovalRequested",
+            "MCPHubApprovalWindowOpened",
+            "CodeCompanionRequestFinished",
+            "CodeCompanionRequestError",
+          },
           callback = function()
             local tty = vim.uv.new_tty(2, false)
             if tty then
