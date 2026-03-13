@@ -997,46 +997,8 @@ function M.config()
       }
     end,
     autocmds = function()
-      local markview_disabled_buffers = {}
-
-      local function disable_markview(bufnr)
-        if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) or markview_disabled_buffers[bufnr] then
-          return
-        end
-
-        pcall(require("markview.actions").clear, bufnr)
-        markview_disabled_buffers[bufnr] = true
-      end
-
-      local function enable_markview()
-        for bufnr, _ in pairs(markview_disabled_buffers) do
-          if vim.api.nvim_buf_is_valid(bufnr) then
-            pcall(require("markview.actions").render, bufnr)
-          end
-        end
-
-        markview_disabled_buffers = {}
-      end
-
       return {
         require("ck.modules.autocmds").set_view_buffer({ "codecompanion" }),
-        {
-          event = "User",
-          group = "_codecompanion_markview",
-          pattern = "CodeCompanionRequestStarted",
-          callback = function(ev)
-            local bufnr = ev.data and ev.data.bufnr
-            disable_markview(bufnr)
-          end,
-        },
-        {
-          event = "User",
-          group = "_codecompanion_markview",
-          pattern = { "CodeCompanionRequestFinished", "CodeCompanionRequestError", "CodeCompanionRequestCancelled" },
-          callback = function()
-            enable_markview()
-          end,
-        },
         {
           event = "User",
           group = "_codecompanion_tmux_alert",

@@ -15,6 +15,9 @@ function M.config()
     setup = function()
       return {
         preview = {
+          max_buf_lines = 250,
+          draw_range = { vim.o.lines, vim.o.lines },
+          debounce = 200,
           modes = { "n", "no", "c" }, -- Change these modes
           hybrid_modes = { "n", "v", "x" },
           filetypes = {

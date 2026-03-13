@@ -139,7 +139,10 @@ function M.config()
               "ripgrep",
             }
           end,
-          per_filetype = {},
+          per_filetype = {
+            codecompanion = {},
+            AvanteInput = {},
+          },
           providers = {
             lsp = {
               score_offset = 10,
