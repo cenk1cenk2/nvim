@@ -24,8 +24,8 @@
         "delete_application"
       ],
       "env": {
-        "ARGOCD_BASE_URL": "${NVIM_ARGOCD_KILIC_URL}",
-        "ARGOCD_API_TOKEN": "${NVIM_ARGOCD_KILIC_TOKEN}"
+        "ARGOCD_API_TOKEN": "${NVIM_ARGOCD_KILIC_TOKEN}",
+        "ARGOCD_BASE_URL": "${NVIM_ARGOCD_KILIC_URL}"
       }
     },
     "context7": {
@@ -278,7 +278,7 @@
         "get_alert_rule_by_uid"
       ],
       "command": "uvx",
-      "disabled": true,
+      "disabled": false,
       "disabled_tools": [
         "add_activity_to_incident",
         "create_alert_rule",

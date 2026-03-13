@@ -24,17 +24,9 @@ function M.config()
                   name = "cmp-dbee",
                 }
 
-                c.sources.per_filetype = {
-                  sql = {
-                    "dbee",
-                  },
-                  mysql = {
-                    "dbee",
-                  },
-                  plsql = {
-                    "dbee",
-                  },
-                }
+                c.sources.per_filetype.sql = { "dbee" }
+                c.sources.per_filetype.mysql = { "dbee" }
+                c.sources.per_filetype.plsql = { "dbee" }
 
                 return c
               end)

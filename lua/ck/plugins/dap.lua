@@ -34,11 +34,7 @@ function M.config()
           name = "dap",
         }
 
-        c.sources.per_filetype = {
-          ["dap-repl"] = {
-            "dap",
-          },
-        }
+        c.sources.per_filetype["dap-repl"] = { "dap" }
 
         return c
       end)
