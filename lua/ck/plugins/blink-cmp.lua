@@ -191,6 +191,9 @@ function M.config()
               opts = { disable_omnifuncs = { "v:lua.vim.lsp.omnifunc", "sqlcomplete#Complete" } },
               async = true,
             },
+            buffer = {
+              async = true,
+            },
             fuzzy_buffer = {
               module = "blink.compat.source",
               async = true,
