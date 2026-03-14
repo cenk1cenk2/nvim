@@ -115,6 +115,9 @@ function M.config()
                     default = "glm-5:cloud",
                   },
                 },
+                opts = {
+                  show_tool_output = false, -- Disable tool outputs for this adapter only
+                },
               })
             end,
             tavily = {

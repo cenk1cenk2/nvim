@@ -8,7 +8,9 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        "HiPhish/rainbow-delimiters.nvim",
+        -- "HiPhish/rainbow-delimiters.nvim",
+        "cenk1cenk2/rainbow-delimiters.nvim",
+        branch = "patch-1",
         event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
