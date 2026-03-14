@@ -98,28 +98,6 @@ function M.config()
         },
         adapters = {
           http = {
-            ai_kilic_dev = function()
-              return require("codecompanion.adapters").extend("ollama", {
-                name = "ai_kilic_dev",
-                formatted_name = "ai.kilic.dev",
-                env = {
-                  url = "https://ai.kilic.dev/ollama",
-                  api_key = "AI_KILIC_DEV_API_KEY",
-                },
-                headers = {
-                  ["Content-Type"] = "application/json",
-                  ["Authorization"] = "Bearer ${api_key}",
-                },
-                schema = {
-                  model = {
-                    default = "glm-5:cloud",
-                  },
-                },
-                opts = {
-                  show_tool_output = false, -- Disable tool outputs for this adapter only
-                },
-              })
-            end,
             tavily = {
               env = {
                 api_key = "NVIM_TAVILY_API_KEY",
@@ -154,6 +132,36 @@ function M.config()
                   },
                   commands = {
                     default = { "bunx", "-y", "@zed-industries/claude-agent-acp@latest" },
+                  },
+                }
+              )
+            end,
+            ---@type fun (): CodeCompanion.ACPAdapter
+            kilic = function()
+              log:debug("Setting up the AI Overlord...")
+
+              return require("codecompanion.adapters.acp").extend(
+                "opencode",
+                ---@type CodeCompanion.ACPAdapter
+                {
+                  name = "kilic",
+                  formatted_name = "kilic",
+                  env = {
+                    PATH = vim.env["PATH"],
+                    HOME = vim.env["HOME"],
+                    USER = vim.env["USER"],
+                    OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/kilic.json"),
+                    AI_KILIC_DEV_API_KEY = vim.env["AI_KILIC_DEV_API_KEY"],
+                    EXA_API_KEY = vim.env["NVIM_EXA_API_KEY"],
+                  },
+                  opts = {
+                    verbose_output = true,
+                  },
+                  defaults = {
+                    mcpServers = "inherit_from_config",
+                  },
+                  commands = {
+                    default = { "opencode", "acp" },
                   },
                 }
               )
@@ -769,8 +777,8 @@ function M.config()
             local all_adapters = {
               { name = "claude_code", type = "acp" },
               { name = "codex", type = "acp" },
+              { name = "kilic", type = "acp" },
               -- { name = "opencode", type = "acp" },
-              { name = "ai_kilic_dev", type = "http" },
             }
 
             vim.ui.select(all_adapters, {

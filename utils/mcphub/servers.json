@@ -182,6 +182,7 @@
         "get_pipeline_job_output"
       ],
       "command": "npx",
+      "disabled": false,
       "disabled_tools": [
         "download_attachment",
         "download_release_asset"

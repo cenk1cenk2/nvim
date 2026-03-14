@@ -485,9 +485,9 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | **Filesystem operations** (beyond neovim scope) | `filesystem` MCP | Directory trees, file info, media files. Fallback: built-in Glob/Read, then shell commands |
 | Documentation lookup | `context7` | Need to reference official docs for libraries/frameworks |
 | Shell command execution (visible to user) | `tmux` | Long-running commands, builds, tests, and commands the user should see — via neovim session's scratch pane |
-| Web search | `web_search` (built-in) | **Preferred for web search** |
-| Fetch webpage content | `fetch_webpage` (built-in) | **Preferred for extracting content from URLs** |
-| Deep research / web search (last resort) | `tavily` MCP | **Last resort only.** Use when built-in web search and fetch are insufficient. Tools: `tavily-search`, `tavily-extract`, `tavily-crawl`, `tavily-map` |
+| Web search | `web_search` (built-in) | **ALWAYS first choice** for any web search. Try this before anything else |
+| Fetch webpage content | `fetch_webpage` (built-in) | **ALWAYS first choice** for extracting content from URLs |
+| Deep research (last resort) | `tavily` MCP | **Absolute last resort.** Only when built-in search/fetch have been tried and failed, or task requires multi-page crawl/site mapping. Tools: `tavily_search`, `tavily_extract`, `tavily_crawl`, `tavily_map` |
 
 #### Tmux Scratch Pane (Command Runner)
 
