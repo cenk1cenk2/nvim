@@ -39,6 +39,21 @@
       },
       "url": "https://mcp.context7.com/mcp"
     },
+    "exa": {
+      "autoApprove": [
+        "web_search_exa",
+        "get_code_context_exa"
+      ],
+      "disabled_prompts": [
+        "web_search_help",
+        "code_search_help"
+      ],
+      "disabled_resources": [
+        "exa://tools/list"
+      ],
+      "disabled_tools": [],
+      "url": "https://mcp.exa.ai/mcp"
+    },
     "filesystem": {
       "args": [
         "-y",

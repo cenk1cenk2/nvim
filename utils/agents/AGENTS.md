@@ -487,7 +487,8 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | Shell command execution (visible to user) | `tmux` | Long-running commands, builds, tests, and commands the user should see — via neovim session's scratch pane |
 | Web search | `web_search` (built-in) | **ALWAYS first choice** for any web search. Try this before anything else |
 | Fetch webpage content | `fetch_webpage` (built-in) | **ALWAYS first choice** for extracting content from URLs |
-| Deep research (last resort) | `tavily` MCP | **Absolute last resort.** Only when built-in search/fetch have been tried and failed, or task requires multi-page crawl/site mapping. Tools: `tavily_search`, `tavily_extract`, `tavily_crawl`, `tavily_map` |
+| Web search / code context (fallback) | `exa` MCP | **Priority fallback.** Use when built-in search/fetch are unavailable or insufficient. Tools: `web_search_exa`, `get_code_context_exa` |
+| Deep research (last resort) | `tavily` MCP | **Absolute last resort.** Only when built-in tools AND Exa have been tried and failed, or task requires multi-page crawl/site mapping. Tools: `tavily_search`, `tavily_extract`, `tavily_crawl`, `tavily_map` |
 
 #### Tmux Scratch Pane (Command Runner)
 
