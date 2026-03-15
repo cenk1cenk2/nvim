@@ -2,6 +2,8 @@
 name: linear-triage
 description: Process all Linear issues in triage status, recommending projects, priorities, teams, and refinements interactively. Use when user says "triage issues", "process the triage queue", or "review untriaged issues". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for cycle planning (/linear-cycle) or picking next tasks (/linear-pick-next).
 interaction: chat
+references:
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -17,6 +19,8 @@ interaction: chat
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous.
 
 > **DO NOT enter plan mode.** This is an interactive, issue-by-issue workflow driven by user decisions.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

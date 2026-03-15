@@ -5,6 +5,7 @@ interaction: chat
 disable-model-invocation: true
 references:
   - ../references/obsidian.md
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -24,6 +25,8 @@ references:
 > Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, and writing style conventions — resolve references from the `<References>` block via `skills__read_reference`.
 
 Todo notes in `Todo/` are quick captures — timestamped files with rough thoughts, checklists, and brain dumps. Over time they accumulate. This skill processes them one by one: organizing relevant notes into proper vault categories (like `/obsidian-note` would), flagging stale or completed notes for removal, and refining what remains.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

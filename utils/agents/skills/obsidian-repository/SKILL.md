@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[repository name or path] [optional: what to document]"
 references:
   - ../references/obsidian.md
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -22,11 +23,11 @@ You maintain structured reference notes about development repositories in `~/not
 
 Repositories live in `~/development/`. The note path mirrors the repository path relative to `~/development/`:
 
-| Repository path | Note path |
-|---|---|
-| `~/development/ansible-playbooks/` | `~/notes/Repositories/ansible-playbooks.md` |
+| Repository path                             | Note path                                            |
+| ------------------------------------------- | ---------------------------------------------------- |
+| `~/development/ansible-playbooks/`          | `~/notes/Repositories/ansible-playbooks.md`          |
 | `~/development/laravel/cloud-app-operator/` | `~/notes/Repositories/laravel/cloud-app-operator.md` |
-| `~/development/kilic-dev/my-tool/` | `~/notes/Repositories/kilic-dev/my-tool.md` |
+| `~/development/kilic-dev/my-tool/`          | `~/notes/Repositories/kilic-dev/my-tool.md`          |
 
 If the current working directory is under `~/development/`, derive the note path automatically. Otherwise, ask the user which repository.
 
@@ -41,6 +42,8 @@ If the current working directory is under `~/development/`, derive the note path
 > Read the `obsidian` reference for vault location and full tool access conventions — resolve references from the `<References>` block via `skills__read_reference`.
 
 - Use codebase exploration tools (treesitter, Grep, Glob, git MCP) to analyze the repository.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

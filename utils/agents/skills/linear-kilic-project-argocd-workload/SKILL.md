@@ -4,6 +4,7 @@ description: Create a Linear project for deploying application workloads to Kube
 interaction: chat
 references:
   - ../references/plan-mode.md
+  - ../references/mcp-output-transparency.md
 argument-hint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-cluster'"
 ---
 
@@ -19,6 +20,8 @@ argument-hint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-clu
 > - Create plan file in `~/.claude/plans/YYYY-MM-DD-workload-<name>.md`.
 > - Research the workload, existing patterns, and cluster requirements.
 > - Present the plan for user approval before creating issues.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Overview
 

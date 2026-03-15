@@ -3,6 +3,8 @@ name: linear-issue-comment
 description: Record critical findings, deviations, and decisions as concise comments on Linear issues. Use when user says "comment on the issue", "log this to Linear", "document this finding", or "add a note to the issue". Do NOT use for updating the issue description (/linear-issue-update) or checklist (/linear-issue-checklist).
 interaction: chat
 argument-hint: "[issue-id or Linear URL] [what to comment]"
+references:
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -29,6 +31,8 @@ argument-hint: "[issue-id or Linear URL] [what to comment]"
 You record critical findings and deviations as comments on Linear issues. Comments are **not summaries or status updates** — they document specific things that changed from the original plan: decisions made, approaches rejected, blockers discovered, or assumptions corrected.
 
 The current conversation context holds the most recent version of the issue's intent. The goal is to capture deviations from the conversation back into Linear so future readers understand what changed and why. The issue description may be stale — the conversation is the source of truth for what to document.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

@@ -2,6 +2,8 @@
 name: linear-project-create
 description: Create a new Linear project with research, planning, and issue breakdown. Use when user says "create a project", "plan a new project", or "break this down into a Linear project". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for updating existing projects (/linear-project-update) or posting status updates (/linear-project-post).
 interaction: chat
+references:
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -37,6 +39,8 @@ interaction: chat
 > - Do NOT exit plan mode and start implementation automatically.
 > - After creating the Linear project and issues, present the results and wait for user direction.
 > - You are a RESEARCHER and PLANNER, not an implementer.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Core Requirements
 

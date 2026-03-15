@@ -4,6 +4,8 @@ description: "Push the current markdown file to a Notion page. Use when user say
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[notion-url or search description]"
+references:
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -12,10 +14,13 @@ argument-hint: "[notion-url or search description]"
 
 > **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
 
-> **PREREQUISITE:** The `/notion-work` skill MUST be active before this skill runs.
-> If no Notion workspace context exists in the current session, auto-invoke `/notion-work` first.
+> **PREREQUISITE:** The `/notion-work` skill MUST be active before this skill runs. If no Notion workspace context exists in the current session, auto-invoke `/notion-work` first.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 **Step 1: Read the current file.**
 

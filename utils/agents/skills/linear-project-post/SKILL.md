@@ -3,6 +3,8 @@ name: linear-project-post
 description: Draft a project update post for a Linear project by analyzing recent progress, deviations, and next steps. Use when user says "write a project update", "post a status update", "summarize project progress", or "draft a project post". Do NOT use for modifying project structure (/linear-project-update).
 interaction: chat
 argument-hint: "[project-name or Linear URL]"
+references:
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -26,6 +28,8 @@ argument-hint: "[project-name or Linear URL]"
 > - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
 >
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

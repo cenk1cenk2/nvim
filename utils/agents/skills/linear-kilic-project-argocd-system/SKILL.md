@@ -4,6 +4,7 @@ description: Create a Linear project for deploying system-level components (oper
 interaction: chat
 references:
   - ../references/plan-mode.md
+  - ../references/mcp-output-transparency.md
 argument-hint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'velero'"
 ---
 
@@ -19,6 +20,8 @@ argument-hint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'v
 > - Create plan file in `~/.claude/plans/YYYY-MM-DD-argocd-system-<component>.md`.
 > - Research the component, existing patterns, and cluster requirements.
 > - Present the plan for user approval before creating issues.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Overview
 

@@ -41,8 +41,8 @@
     },
     "exa": {
       "autoApprove": [
-        "web_search_exa",
-        "get_code_context_exa"
+        "get_code_context_exa",
+        "web_search_exa"
       ],
       "disabled_prompts": [
         "web_search_help",

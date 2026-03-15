@@ -2,6 +2,8 @@
 name: linear-initiative-create
 description: Create a new Linear initiative with description and goals, linking orphan projects. Use when user says "create an initiative", "start a new initiative", or "group these projects under an initiative". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for updating initiatives (/linear-initiative-update).
 interaction: chat
+references:
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -21,6 +23,8 @@ interaction: chat
 > - Use `EnterPlanMode` tool immediately.
 > - Present the initiative draft to the user for approval before creating.
 > - **NEVER exit plan mode.**
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

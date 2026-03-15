@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[task or thought to capture]"
 references:
   - ../references/obsidian.md
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -23,6 +24,8 @@ references:
 > - **CWD is `~/notes`** → use built-in tools: `Write` to create, `Read` to read, `Edit` to modify, `Bash rm` to delete, `Bash mv` to move. Do NOT use `obsidian__obsidian_update_note` or `obsidian__obsidian_read_note` or `obsidian__obsidian_delete_note`. Fall back to obsidian MCP only if the built-in tool is unavailable.
 > - **CWD is NOT `~/notes`** → use `obsidian__*` MCP tools.
 > - **Always use** `obsidian__obsidian_list_notes` and `obsidian__obsidian_global_search` regardless of CWD.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Context
 

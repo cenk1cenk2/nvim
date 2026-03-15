@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[slack-message-url] [what to do with it]"
 references:
   - ../references/slack.md
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -14,6 +15,8 @@ references:
 
 > **DO NOT enter plan mode.** This skill gathers context and delegates to other skills or acts directly based on user instructions.
 
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+
 ### Context
 
 > Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling — resolve references from the `<References>` block via MCP filesystem tools.
@@ -21,6 +24,8 @@ references:
 The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `/linear-issue-pick`, `/obsidian-note`, `/code-pull`) or performing direct actions (research, code changes, summarization).
 
 ### Process
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 1. **Parse the message.**
    - Parse the Slack message URL to identify the channel ID and message timestamp.

@@ -3,6 +3,8 @@ name: linear-initiative-update
 description: Revise a Linear initiative's description and review its project alignment. Use when user says "update the initiative", "review initiative alignment", or "revise initiative description". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for creating initiatives (/linear-initiative-create).
 interaction: chat
 argument-hint: "[initiative-name or ID]"
+references:
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -28,6 +30,8 @@ argument-hint: "[initiative-name or ID]"
 > **THE CONVERSATION IS MORE RECENT THAN THE INITIATIVE.**
 >
 > Initiative descriptions carry timestamps. The user's session knowledge and the current conversation context hold the most recent understanding of the initiative's intent. When the initiative's content is stale relative to the conversation, **treat the conversation as the source of truth** and update the initiative to match — always confirming with the user before applying.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

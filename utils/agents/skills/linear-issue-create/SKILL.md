@@ -6,6 +6,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/linear-mandatory-fields.md
   - ../references/plan-mode.md
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -30,6 +31,8 @@ Additional rules for issue creation:
 - When creating multiple related issues, batch create them in a single response using parallel tool calls.
 - Use project names directly when creating issues — Linear MCP will resolve them, unless prompted to specifically search for it.
 - Keep issue titles concise and replicate the styling of encountered issues in the same project.
+
+> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Issue Structure
 
