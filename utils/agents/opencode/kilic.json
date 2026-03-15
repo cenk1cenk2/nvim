@@ -11,17 +11,17 @@
         "apiKey": "{env:AI_KILIC_DEV_API_KEY}"
       },
       "models": {
-        "deepseek-v3.2:cloud": {
-          "name": "DeepSeek V3.2 Cloud"
-        },
-        "qwen3.5:397b-cloud": {
-          "name": "Qwen 3.5 397B Cloud"
-        },
         "glm-5:cloud": {
           "name": "GLM-5 Cloud"
         },
         "kimi-k2.5:cloud": {
           "name": "Kimi K2.5 Cloud"
+        },
+        "deepseek-v3.2:cloud": {
+          "name": "DeepSeek V3.2 Cloud"
+        },
+        "qwen3.5:397b-cloud": {
+          "name": "Qwen 3.5 397B Cloud"
         }
       }
     }

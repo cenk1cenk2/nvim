@@ -774,14 +774,14 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "C" }),
           function()
-            local all_adapters = {
+            local adapters = {
               { name = "claude_code", type = "acp" },
-              { name = "codex", type = "acp" },
+              -- { name = "codex", type = "acp" },
               { name = "kilic", type = "acp" },
               -- { name = "opencode", type = "acp" },
             }
 
-            vim.ui.select(all_adapters, {
+            vim.ui.select(adapters, {
               prompt = "Select an adapter for this chat",
               format_item = function(item)
                 return ("%s [%s]"):format(item.name, item.type)
