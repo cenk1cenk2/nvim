@@ -124,10 +124,10 @@ skills/
 
 **Skills MCP tools** (auto-approved, no user confirmation needed):
 
-| Tool | Parameters | Purpose |
-| --- | --- | --- |
-| `skills__list_skills` | _(none)_ | List all skills with names, descriptions, and invocation mode (`[auto]` or `[manual]`). |
-| `skills__read_skill` | `names` (required): array of skill names | Read one or more skills. Example: `{ "names": ["obsidian-note"] }` or batch: `{ "names": ["linear-issue-create", "linear-issue-update"] }`. |
+| Tool                     | Parameters                                                                  | Purpose                                                                                                                                                                                                        |
+| ------------------------ | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `skills__list_skills`    | _(none)_                                                                    | List all skills with names, descriptions, and invocation mode (`[auto]` or `[manual]`).                                                                                                                        |
+| `skills__read_skill`     | `names` (required): array of skill names                                    | Read one or more skills. Example: `{ "names": ["obsidian-note"] }` or batch: `{ "names": ["linear-issue-create", "linear-issue-update"] }`.                                                                    |
 | `skills__read_reference` | `paths` (required): array of relative paths, `skill` (required): skill name | Read one or more reference files. Paths are the exact relative paths from the skill's frontmatter. Example: `{ "paths": ["../references/slack.md", "../references/plan-mode.md"], "skill": "slack-channel" }`. |
 
 **ALWAYS use these tools** to read skills and references instead of filesystem MCP tools (`filesystem__read_file`) or built-in file tools (`read_file`). The skills tools are:
@@ -468,27 +468,31 @@ MCP tools are available under two prefixes: `mcp__mcphub__<server>__<tool>` (ful
 
 Use MCP tools when available - they integrate with the editor and user's workflow:
 
-| Task | Tool | When to Use |
-| --- | --- | --- |
-| **File reading** | `neovim` MCP | **ALWAYS first choice** for reading files — no exceptions (see File Operations) |
-| **File editing** | `neovim` MCP | **ALWAYS** use `mcp__mcphub__neovim__edit_file` for editing existing files — no exceptions (see File Operations) |
-| **File creation** | Built-in `create_file` | Use the builtin `create_file` tool for creating new files |
-| Code navigation (definitions/references/hover) | `mcp-diagnostics` (native) | **ALWAYS first choice** for LSP operations — uses Neovim's running LSP clients. Tools: `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, `lsp_workspace_symbols`, `lsp_code_actions`. Fallback: `treesitter` for structure, then Grep |
-| **Renaming symbols** | `mcp-diagnostics` (native) | **ALWAYS use `lsp_rename` instead of find-and-replace or manual edits.** Single tool call renames across the entire workspace via LSP — the fastest way to rename. Accepts `new_name`, optional `path`/`line`/`col` to target. |
-| Diagnostics (errors, warnings) | `mcp-diagnostics` (native) | Diagnostic analysis from running LSP servers. Tools: `document_diagnostics`, `workspace_diagnostics`, `diagnostics_summary` |
-| Code structure analysis, AST queries | `treesitter` | Need to understand syntax structure, find patterns |
-| Git operations | `git` MCP | Any git operation — available tools: `mcp__mcphub__git__git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch` |
-| **GitHub operations** (PRs, issues, repos, code search) | `github` MCP | **ALWAYS first choice** for any GitHub interaction. Fallback: `gh` CLI via tmux/Bash. Never use raw API calls |
-| **GitLab operations** (MRs, issues, repos, pipelines) | `gitlab` MCP | **ALWAYS first choice** for any GitLab interaction. Fallback: `glab` CLI via tmux/Bash. Never use raw API calls |
-| **Linear operations** (issues, projects, cycles, docs) | `linear` MCP | **ALWAYS first choice** for any Linear interaction. Two workspaces: `linear_kilic-dev` and `linear_laravel`. No CLI fallback |
-| **Obsidian operations** (notes, search, tags) | `obsidian` MCP | **ALWAYS first choice** for vault operations. No CLI fallback — do not manipulate vault files directly |
-| **Filesystem operations** (beyond neovim scope) | `filesystem` MCP | Directory trees, file info, media files. Fallback: built-in Glob/Read, then shell commands |
-| Documentation lookup | `context7` | Need to reference official docs for libraries/frameworks |
-| Shell command execution (visible to user) | `tmux` | Long-running commands, builds, tests, and commands the user should see — via neovim session's scratch pane |
-| Web search | `web_search` (built-in) | **ALWAYS first choice** for any web search. Try this before anything else |
-| Fetch webpage content | `fetch_webpage` (built-in) | **ALWAYS first choice** for extracting content from URLs |
-| Web search / code context (fallback) | `exa` MCP | **Priority fallback.** Use when built-in search/fetch are unavailable or insufficient. Tools: `web_search_exa`, `get_code_context_exa` |
-| Deep research (last resort) | `tavily` MCP | **Absolute last resort.** Only when built-in tools AND Exa have been tried and failed, or task requires multi-page crawl/site mapping. Tools: `tavily_search`, `tavily_extract`, `tavily_crawl`, `tavily_map` |
+| Task                                                    | Tool                       | When to Use                                                                                                                                                                                                                                                  |
+| ------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **File reading**                                        | `neovim` MCP               | **ALWAYS first choice** for reading files — no exceptions (see File Operations)                                                                                                                                                                              |
+| **File editing**                                        | `neovim` MCP               | **ALWAYS** use `mcp__mcphub__neovim__edit_file` for editing existing files — no exceptions (see File Operations)                                                                                                                                             |
+| **File creation**                                       | Built-in `create_file`     | Use the builtin `create_file` tool for creating new files                                                                                                                                                                                                    |
+| Code navigation (definitions/references/hover)          | `mcp-diagnostics` (native) | **ALWAYS first choice** for LSP operations — uses Neovim's running LSP clients. Tools: `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, `lsp_workspace_symbols`, `lsp_code_actions`. Fallback: `treesitter` for structure, then Grep |
+| **Renaming symbols**                                    | `mcp-diagnostics` (native) | **ALWAYS use `lsp_rename` instead of find-and-replace or manual edits.** Single tool call renames across the entire workspace via LSP — the fastest way to rename. Accepts `new_name`, optional `path`/`line`/`col` to target.                               |
+| Diagnostics (errors, warnings)                          | `mcp-diagnostics` (native) | Diagnostic analysis from running LSP servers. Tools: `document_diagnostics`, `workspace_diagnostics`, `diagnostics_summary`                                                                                                                                  |
+| Code structure analysis, AST queries                    | `treesitter`               | Need to understand syntax structure, find patterns                                                                                                                                                                                                           |
+| Git operations                                          | `git` MCP                  | Any git operation — available tools: `mcp__mcphub__git__git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch`                      |
+| **GitHub operations** (PRs, issues, repos, code search) | `github` MCP               | **ALWAYS first choice** for any GitHub interaction. Fallback: `gh` CLI via tmux/Bash. Never use raw API calls                                                                                                                                                |
+| **GitLab operations** (MRs, issues, repos, pipelines)   | `gitlab` MCP               | **ALWAYS first choice** for any GitLab interaction. Fallback: `glab` CLI via tmux/Bash. Never use raw API calls                                                                                                                                              |
+| **Linear operations** (issues, projects, cycles, docs)  | `linear` MCP               | **ALWAYS first choice** for any Linear interaction. Two workspaces: `linear_kilic-dev` and `linear_laravel`. No CLI fallback                                                                                                                                 |
+| **Obsidian operations** (notes, search, tags)           | `obsidian` MCP             | **ALWAYS first choice** for vault operations. No CLI fallback — do not manipulate vault files directly                                                                                                                                                       |
+| **Filesystem operations** (beyond neovim scope)         | `filesystem` MCP           | Directory trees, file info, media files. Fallback: built-in Glob/Read, then shell commands                                                                                                                                                                   |
+| Documentation lookup                                    | `context7`                 | Need to reference official docs for libraries/frameworks                                                                                                                                                                                                     |
+| Shell command execution (visible to user)               | `tmux`                     | Long-running commands, builds, tests, and commands the user should see — via neovim session's scratch pane                                                                                                                                                   |
+| Web search                                              | `web_search` (built-in)    | **ALWAYS first choice** for any web search. Try this before anything else                                                                                                                                                                                    |
+| Fetch webpage content                                   | `fetch_webpage` (built-in) | **ALWAYS first choice** for extracting content from URLs                                                                                                                                                                                                     |
+| Web search / code context (caution)                     | `exa` MCP                  | **Use with caution.** Built-in `web_search` already exists — only use Exa when built-in search is unavailable or genuinely insufficient. Tools: `web_search_exa`, `get_code_context_exa`                                                                     |
+| Deep research (last resort)                             | `tavily` MCP               | **ABSOLUTE LAST RESORT — see callout below.** Tools: `tavily_search`, `tavily_extract`, `tavily_crawl`, `tavily_map`                                                                                                                                         |
+
+> **CRITICAL: Tavily is the ABSOLUTE LAST RESORT.**
+>
+> Tavily MUST NOT be used unless ALL other search tools (built-in `web_search`, built-in `fetch_webpage`, and `exa` MCP) have been tried and failed. Even then, only use Tavily if the user is explicitly insisting on further research. Tavily's only unique value is multi-page crawl/site mapping — for everything else, the other tools are sufficient. **Do NOT reach for Tavily out of convenience.**
 
 #### Tmux Scratch Pane (Command Runner)
 
@@ -589,15 +593,16 @@ Some MCP servers are disabled by default to save resources. When the user reques
 
 **Known optional servers:**
 
-| Server | Provides |
-|--------|----------|
-| `grafana/kilic` | Dashboards, alerts, metrics (personal/kilic). |
-| `grafana/laravel` | Dashboards, alerts, metrics (Laravel/work). |
-| `kubernetes` | Pods, deployments, services, namespaces, cluster operations. |
-| `notion/laravel` | Notion pages, databases, work documentation. |
-| `treesitter` | AST queries, syntax tree analysis, structural code patterns. |
+| Server            | Provides                                                     |
+| ----------------- | ------------------------------------------------------------ |
+| `grafana/kilic`   | Dashboards, alerts, metrics (personal/kilic).                |
+| `grafana/laravel` | Dashboards, alerts, metrics (Laravel/work).                  |
+| `kubernetes`      | Pods, deployments, services, namespaces, cluster operations. |
+| `notion/laravel`  | Notion pages, databases, work documentation.                 |
+| `treesitter`      | AST queries, syntax tree analysis, structural code patterns. |
 
 **When to invoke:**
+
 - User mentions grafana, kubernetes, notion, treesitter, or similar and the tools are not in your toolset.
 - You cannot find a tool you expect to exist — check if an optional server provides it before saying you can't help.
 - User explicitly asks to enable or disable an MCP server.
@@ -846,7 +851,7 @@ When generating markdown content for project updates, documentation, or any exte
    - `github` MCP (`get_file_contents`, `search_code`) for open-source projects
    - `gitlab` MCP for internal repositories
    - `context7` for library/framework documentation
-   - Web search / `tavily` as fallback
+   - Web search (built-in) → `exa` MCP (if built-in insufficient) → `tavily` only as absolute last resort when user insists
 2. **Cite the source** — note the file path, doc URL, or code reference where you verified the information
 3. **If you cannot verify, say so explicitly** — write "I could not verify this — please confirm" rather than writing an assumed value
 
@@ -989,8 +994,10 @@ Handles token expiration gracefully with retry logic.
 ```
 1. Say "I don't know"
 2. Offer to search documentation or web
-3. Use context7 MCP for docs or WebSearch
-4. Provide answer with sources
+3. Use context7 MCP for docs, then built-in WebSearch
+4. Exa MCP only if built-in search is insufficient
+5. Tavily ONLY as absolute last resort when user insists
+6. Provide answer with sources
 ```
 
 **Using external technical details (URLs, paths, config keys, defaults):**
