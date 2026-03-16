@@ -171,6 +171,14 @@ function M.config()
           ["<c-w>="] = function(win)
             win.view.edgebar:equalize()
           end,
+          ["<c-w>m"] = function(win)
+            local dim = win.view.edgebar.vertical and "width" or "height"
+            if vim.w[win.win]["edgy_" .. dim] then
+              win.view.edgebar:equalize()
+            else
+              win:resize(dim, 999)
+            end
+          end,
         },
         icons = {
           closed = nvim.ui.icons.ui.ChevronShortRight,
