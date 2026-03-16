@@ -14,6 +14,9 @@
         "glm-5:cloud": {
           "name": "GLM-5 Cloud"
         },
+        "nemotron-3-super:cloud": {
+          "name": "Nemotron 3 Super Cloud"
+        },
         "kimi-k2.5:cloud": {
           "name": "Kimi K2.5 Cloud"
         },
