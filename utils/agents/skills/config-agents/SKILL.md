@@ -5,6 +5,7 @@ interaction: chat
 disable-model-invocation: true
 references:
   - ../references/plan-mode.md
+  - ../references/mcp-output-transparency.md
 argument-hint: "[what to change or review in AGENTS.md]"
 ---
 
@@ -18,6 +19,8 @@ argument-hint: "[what to change or review in AGENTS.md]"
 > - Changes to AGENTS.md affect ALL future agent sessions — treat every change with care.
 > - Present proposed changes to the user before writing anything.
 > - Do NOT write changes until the user explicitly approves.
+
+> Read the `mcp-output-transparency` reference for chunked change presentation — show reasoning + content blocks for each proposed change before asking for approval.
 
 ### Target File
 

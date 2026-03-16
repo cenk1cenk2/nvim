@@ -3,6 +3,8 @@ name: config-repository
 description: Create or revise repository knowledge base files (CLAUDE.md, AGENTS.md, or .local variants). Use when user says "update CLAUDE.md", "create AGENTS.md", "write repo knowledge base", "document decisions", or "snapshot this session". Do NOT use for the central AGENTS.md guidelines (/config-agents), skills (/config-skills), or MCP server configs (/config-mcp).
 interaction: chat
 disable-model-invocation: true
+references:
+  - ../references/mcp-output-transparency.md
 argument-hint: "[local] [optional: what changed or focus area]"
 ---
 
@@ -11,6 +13,8 @@ argument-hint: "[local] [optional: what changed or focus area]"
 ### Repository Knowledge Base
 
 > **DO NOT enter plan mode.** This skill explores the repository and session context, then writes directly.
+
+> Read the `mcp-output-transparency` reference for chunked change presentation — show reasoning + content blocks for each proposed section change before writing.
 
 ### Purpose
 

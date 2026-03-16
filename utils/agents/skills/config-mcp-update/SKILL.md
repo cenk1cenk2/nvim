@@ -2,6 +2,8 @@
 name: config-mcp-update
 description: Toggle optional MCP servers on or off at runtime. Auto-invoked when the user mentions an MCP server that is currently disabled (e.g., "check grafana", "use treesitter", "kubernetes pods"). Tracks servers toggled on during the session and offers to turn them off when no longer needed. Do NOT use for adding or configuring servers (/config-mcp).
 interaction: chat
+references:
+  - ../references/mcp-output-transparency.md
 ---
 
 ## system
@@ -9,6 +11,8 @@ interaction: chat
 ### Runtime MCP Server Manager
 
 > **DO NOT enter plan mode.** This is a reactive, auto-invoked skill.
+
+> Read the `mcp-output-transparency` reference for chunked change presentation — present toggle actions with reasoning before executing.
 
 ### Context
 

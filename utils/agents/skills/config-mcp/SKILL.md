@@ -3,6 +3,8 @@ name: config-mcp
 description: Add, remove, or modify MCP server configurations in mcphub servers.json. Researches servers online, prefers official sources and HTTP transport, prompts for variables and authentication. Always manually invoked. Do NOT use for skills (/config-skills) or agent guidelines (/config-agents).
 interaction: chat
 disable-model-invocation: true
+references:
+  - ../references/mcp-output-transparency.md
 argument-hint: "[add|remove|modify] [server-name] [optional description]"
 ---
 
@@ -11,6 +13,8 @@ argument-hint: "[add|remove|modify] [server-name] [optional description]"
 ### MCP Server Configuration Manager
 
 > **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
+
+> Read the `mcp-output-transparency` reference for chunked change presentation — show reasoning + content blocks for each configuration change before applying.
 
 ### Context
 
