@@ -15,18 +15,13 @@ function M.config()
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
         branch = "main", -- Changed from "master" to "main"
-        event = "BufReadPre",
+        event = { "BufReadPre", "BufNewFile", "BufNew" },
         cmd = { "TSInstall", "TSUninstall", "TSUpdate", "TSUpdateSync" },
         dependencies = {
           {
-            "JoosepAlviste/nvim-ts-context-commentstring",
-            dependencies = { "nvim-treesitter/nvim-treesitter" },
-            event = { "BufReadPost", "BufNewFile", "BufNew" },
-          },
-          {
             "windwp/nvim-ts-autotag",
             dependencies = { "nvim-treesitter/nvim-treesitter" },
-            event = "InsertEnter",
+            event = { "BufReadPost", "BufNewFile", "BufNew" },
           },
         },
       }
@@ -50,11 +45,6 @@ function M.config()
       if #not_installed > 0 then
         require("nvim-treesitter").install(not_installed, { summary = false })
       end
-
-      -- Setup context commentstring
-      require("ts_context_commentstring").setup({
-        enable_autocmd = false,
-      })
     end,
     on_done = function()
       if next(nvim.treesitter.custom_parsers) then

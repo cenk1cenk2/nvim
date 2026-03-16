@@ -9,6 +9,7 @@ local modules = {
   "quit",
   -- rest
   "unimpaired",
+  "uuid",
 }
 
 function M.config()

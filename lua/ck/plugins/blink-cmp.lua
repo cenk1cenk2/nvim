@@ -45,35 +45,8 @@ function M.config()
               })
             end,
           },
-          -- https://github.com/petertriho/cmp-git
-          {
-            "petertriho/cmp-git",
-            config = function()
-              require("cmp_git").setup({
-                filetypes = { "gitcommit" },
-                remotes = { "upstream", "origin" },
-                gitlab = {
-                  hosts = {
-                    "gitlab.kilic.dev",
-                  },
-                },
-              })
-            end,
-          },
-          -- https://github.com/David-Kunz/cmp-npm
-          {
-            "David-Kunz/cmp-npm",
-            config = function()
-              require("cmp-npm").setup({
-                filetypes = { "json" },
-              })
-            end,
-          },
-          -- https://github.com/wookayin/cmp-omni
-          {
-            "wookayin/cmp-omni",
-            branch = "fix-return",
-          },
+          -- https://github.com/Kaiser-Yang/blink-cmp-git
+          { "Kaiser-Yang/blink-cmp-git" },
           {
             -- https://github.com/fang2hou/blink-copilot
             "fang2hou/blink-copilot",
@@ -131,7 +104,6 @@ function M.config()
               "lazydev",
               "zsh",
               "omni",
-              "npm",
               "git",
               "snippets",
               "path",
@@ -176,20 +148,61 @@ function M.config()
               async = true,
             },
             git = {
-              module = "blink.compat.source",
-              name = "git",
-              async = true,
-            },
-            npm = {
-              module = "blink.compat.source",
-              name = "npm",
-              async = true,
+              module = "blink-cmp-git",
+              name = "Git",
+              enabled = function()
+                return vim.tbl_contains({ "gitcommit", "markdown" }, vim.bo.filetype)
+              end,
+              opts = {
+                git_centers = {
+                  gitlab = {
+                    issue = {
+                      enable = function()
+                        local utils = require("blink-cmp-git.utils")
+                        if not utils.command_found("git") or (not utils.command_found("glab") and not utils.command_found("curl")) then
+                          return false
+                        end
+
+                        return utils.get_repo_remote_url():find("gitlab.kilic.dev", 1, true) ~= nil
+                      end,
+                    },
+                    pull_request = {
+                      enable = function()
+                        local utils = require("blink-cmp-git.utils")
+                        if not utils.command_found("git") or (not utils.command_found("glab") and not utils.command_found("curl")) then
+                          return false
+                        end
+
+                        return utils.get_repo_remote_url():find("gitlab.kilic.dev", 1, true) ~= nil
+                      end,
+                    },
+                    mention = {
+                      enable = function()
+                        local utils = require("blink-cmp-git.utils")
+                        if not utils.command_found("git") or (not utils.command_found("glab") and not utils.command_found("curl")) then
+                          return false
+                        end
+
+                        return utils.get_repo_remote_url():find("gitlab.kilic.dev", 1, true) ~= nil
+                      end,
+                    },
+                  },
+                },
+              },
             },
             omni = {
-              module = "blink.compat.source",
-              name = "omni",
-              opts = { disable_omnifuncs = { "v:lua.vim.lsp.omnifunc", "sqlcomplete#Complete" } },
-              async = true,
+              module = "blink.cmp.sources.complete_func",
+              name = "Omni",
+              opts = {
+                complete_func = function()
+                  local omnifunc = vim.bo.omnifunc
+                  if omnifunc == "" or omnifunc == "v:lua.vim.lsp.omnifunc" then
+                    return nil
+                  end
+
+                  return omnifunc
+                end,
+              },
             },
             buffer = {
               async = true,

@@ -33,6 +33,13 @@ function M.config()
     setup = function()
       ---@type snacks.Config
       return {
+        input = {
+          enabled = true,
+          icon = nvim.ui.icons.ui.ChevronRight,
+        },
+        select = {
+          enabled = true,
+        },
         bigfile = {
           enabled = false,
           notify = true, -- show notification when big file detected

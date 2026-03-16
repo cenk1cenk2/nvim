@@ -144,6 +144,21 @@ function M.toggle_inlay_hints(filter)
   vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled(filter), filter)
 end
 
+function M.toggle_virtual_lines()
+  local value = vim.diagnostic.config()
+
+  if not value.virtual_lines then
+    -- off -> current line only
+    vim.diagnostic.config({ virtual_lines = { current_line = true }, virtual_text = { current_line = false } })
+  elseif type(value.virtual_lines) == "table" and value.virtual_lines.current_line then
+    -- current line -> all lines
+    vim.diagnostic.config({ virtual_lines = true, virtual_text = false })
+  else
+    -- all lines -> off
+    vim.diagnostic.config({ virtual_lines = false, virtual_text = nvim.lsp.diagnostics.virtual_text })
+  end
+end
+
 ---@param filter? vim.lsp.capability.enable.Filter
 function M.toggle_inline_completion(filter)
   filter = filter or {}

@@ -343,6 +343,14 @@ function M.setup()
           mode = { "n", "v", "x" },
         },
         {
+          "gL",
+          function()
+            nvim.lsp.fn.toggle_virtual_lines()
+          end,
+          desc = "toggle lsp lines",
+          mode = { "n" },
+        },
+        {
           "gh",
           function()
             nvim.lsp.fn.code_action()

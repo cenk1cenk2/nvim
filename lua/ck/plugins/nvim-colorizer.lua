@@ -1,14 +1,14 @@
--- https://github.com/NvChad/nvim-colorizer.lua
+-- https://github.com/catgoose/nvim-colorizer.lua
 local M = {}
 
-M.name = "NvChad/nvim-colorizer.lua"
+M.name = "catgoose/nvim-colorizer.lua"
 
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
       ---@type Plugin
       return {
-        "NvChad/nvim-colorizer.lua",
+        "catgoose/nvim-colorizer.lua",
         ft = { "javascript", "typescript", "javascriptreact", "typescriptreact", "vue", "svelte" },
       }
     end,
