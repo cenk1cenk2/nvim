@@ -20,11 +20,17 @@ function M.config()
           enable = true,
           minwidth = 5,
         },
+        ui = {
+          signcolumn = false,
+          cursorline = false,
+        },
       }
     end,
-    on_setup = function(c)
+    configure = function()
       vim.opt.winminwidth = 0
       vim.opt.equalalways = false
+    end,
+    on_setup = function(c)
       require("focus").setup(c)
     end,
     wk = function(_, categories, fn)
