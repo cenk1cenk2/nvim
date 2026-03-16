@@ -574,6 +574,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "n" }),
           function()
+            require("neo-tree")
             require("neo-tree.sources.filesystem.lib.fs_actions").create_node(require("ck.utils.fs").get_buffer_dirpath())
           end,
           desc = "create file relative to current buffer in filesystem",
@@ -582,6 +583,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "d" }),
           function()
+            require("neo-tree")
             require("neo-tree.sources.filesystem.lib.fs_actions").delete_node(require("ck.utils.fs").get_buffer_filepath())
           end,
           desc = "delete current buffer from filesystem",
@@ -590,6 +592,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "m" }),
           function()
+            require("neo-tree")
             require("neo-tree.sources.filesystem.lib.fs_actions").move_node(require("ck.utils.fs").get_buffer_filepath())
           end,
           desc = "move current buffer in filesystem",
@@ -598,6 +601,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "r" }),
           function()
+            require("neo-tree")
             require("neo-tree.sources.filesystem.lib.fs_actions").rename_node(require("ck.utils.fs").get_buffer_filepath())
           end,
           desc = "rename current buffer in filesystem",
@@ -606,6 +610,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.BUFFER, "y" }),
           function()
+            require("neo-tree")
             require("neo-tree.sources.filesystem.lib.fs_actions").copy_node(require("ck.utils.fs").get_buffer_filepath())
           end,
           desc = "copy current buffer in filesystem",
