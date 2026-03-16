@@ -17,7 +17,7 @@ function M.config()
       return {
         commands = false,
         autoresize = {
-          enable = true,
+          enable = false,
           minwidth = 5,
         },
         ui = {
