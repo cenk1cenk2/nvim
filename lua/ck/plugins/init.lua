@@ -56,7 +56,7 @@ local plugins = {
   "indent-tools-nvim",
   "rainbow-delimiters-nvim",
   "nvim-recorder",
-  "windows-nvim",
+  "focus-nvim",
   "quicker-nvim",
   "nvim-bqf",
   "lsp-trouble",
