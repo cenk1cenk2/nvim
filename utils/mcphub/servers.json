@@ -648,7 +648,10 @@
         "read_multiple_files"
       ],
       "disabled": false,
-      "disabled_tools": []
+      "disabled_tools": [
+        "edit_file",
+        "write_file"
+      ]
     },
     "skills": {
       "autoApprove": [
