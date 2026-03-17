@@ -468,6 +468,10 @@ function M.config()
         },
         handler = function(req, res)
           local names = req.params.names
+          if type(names) == "string" then
+            local ok, decoded = pcall(vim.json.decode, names)
+            names = ok and type(decoded) == "table" and decoded or { names }
+          end
           if not names or #names == 0 then
             return res:error("No skill names provided")
           end
@@ -512,6 +516,10 @@ function M.config()
         },
         handler = function(req, res)
           local paths = req.params.paths
+          if type(paths) == "string" then
+            local ok, decoded = pcall(vim.json.decode, paths)
+            paths = ok and type(decoded) == "table" and decoded or { paths }
+          end
           local skill_name = req.params.skill
 
           if not skill_name or skill_name == "" then
@@ -624,6 +632,10 @@ function M.config()
         },
         handler = function(req, res)
           local names = req.params.names
+          if type(names) == "string" then
+            local ok, decoded = pcall(vim.json.decode, names)
+            names = ok and type(decoded) == "table" and decoded or { names }
+          end
           local folder = req.params.folder or "references"
           local abs_folder = join_paths(skills_dir, folder)
 
@@ -911,7 +923,7 @@ function M.register_agent_unloaders()
           :user()
           :text(
             string.format(
-              '\n\n**Dismiss the `%s` skill. Stop following its instructions immediately. It is no longer active for this session unless explicitly re-invoked.**\n\n',
+              "\n\n**Dismiss the `%s` skill. Stop following its instructions immediately. It is no longer active for this session unless explicitly re-invoked.**\n\n",
               skill.name
             )
           )
@@ -929,7 +941,7 @@ function M.register_agent_unloaders()
           :user()
           :text(
             string.format(
-              '\n\n**Dismiss the `%s` reference. Stop following its guidelines immediately. It is no longer active for this session unless explicitly re-invoked.**\n\n',
+              "\n\n**Dismiss the `%s` reference. Stop following its guidelines immediately. It is no longer active for this session unless explicitly re-invoked.**\n\n",
               name
             )
           )
