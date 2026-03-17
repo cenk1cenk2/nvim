@@ -713,16 +713,12 @@ hl.plugins.lspsaga = {
 }
 
 ---@type table<string, vim.api.keyset.highlight>
-hl.plugins.autopairs = {
-  AutoPairsFastWrap = { bg = c.orange[600], fg = c.black },
-}
-
----@type table<string, vim.api.keyset.highlight>
-hl.plugins.treesitter_rainbow = {
-  TSRainbow1 = { fg = c.yellow[900] },
-  TSRainbow2 = { fg = c.cyan[900] },
-  TSRainbow3 = { fg = c.orange[900] },
-  TSRainbow4 = { fg = c.blue[900] },
+hl.plugins.blink_pairs = {
+  BlinkPairsRainbow1 = { fg = c.yellow[900] },
+  BlinkPairsRainbow2 = { fg = c.cyan[900] },
+  BlinkPairsRainbow3 = { fg = c.orange[900] },
+  BlinkPairsRainbow4 = { fg = c.blue[900] },
+  BlinkPairsUnmatched = { fg = c.red[900], undercurl = true, sp = c.red[900] },
 }
 
 ---@type table<string, vim.api.keyset.highlight>

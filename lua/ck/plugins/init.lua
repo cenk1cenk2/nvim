@@ -26,7 +26,7 @@ local plugins = {
   "neotree-nvim",
   "comment-nvim",
   "gitsigns-nvim",
-  "nvim-autopairs",
+  "blink-pairs",
   "possession-nvim",
   "stickybuf-nvim",
   "noice-nvim",
@@ -54,7 +54,7 @@ local plugins = {
   "nvim-treesitter-textobjects",
   "nvim-treesitter-context",
   "indent-tools-nvim",
-  "rainbow-delimiters-nvim",
+  -- "rainbow-delimiters-nvim", -- replaced by blink-pairs
   "nvim-recorder",
   -- "focus-nvim",
   "windows-nvim",
