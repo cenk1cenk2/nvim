@@ -9,8 +9,6 @@ function M.config()
       ---@type Plugin
       return {
         "nvim-focus/focus.nvim",
-        event = { "BufReadPost", "BufNewFile", "BufNew" },
-        cmd = { "FocusEqualise", "FocusMaximise", "FocusMaxOrEqual", "FocusToggle" },
       }
     end,
     setup = function()
