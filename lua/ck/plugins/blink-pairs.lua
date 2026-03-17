@@ -12,6 +12,9 @@ function M.config()
         "saghen/blink.pairs",
         version = "*",
         event = { "InsertEnter", "CmdlineEnter" },
+        dependencies = {
+          "saghen/blink.download",
+        },
       }
     end,
     setup = function()
