@@ -1,6 +1,6 @@
 ---
-name: cluster-workload
-description: Create a new workload deployment repository in the cluster/workloads group on GitLab. Scaffolds the kustomize structure with Helm charts, ExternalSecrets, Gateway API routing, databases, SSO, and other common patterns. Always manually invoked. Do NOT use for ArgoCD workloads (/cluster-argocd-workload), LB routing (/cluster-argocd-loadbalancer), or Helm chart wrappers (/cluster-chart).
+name: kilic-cluster-workload
+description: Create a new workload deployment repository in the cluster/workloads group on GitLab. Scaffolds the kustomize structure with Helm charts, ExternalSecrets, Gateway API routing, databases, SSO, and other common patterns. Always manually invoked. Do NOT use for ArgoCD workloads (/kilic-argocd-workload), LB routing (/kilic-argocd-loadbalancer), or Helm chart wrappers (/kilic-cluster-chart).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[workload-name] - e.g., 'seafile', 'immich', 'my-app'"
@@ -14,7 +14,7 @@ argument-hint: "[workload-name] - e.g., 'seafile', 'immich', 'my-app'"
 
 ### How Workloads Work in This System
 
-Each application deployed to a cluster gets a workload repository at `cluster/workloads/<name>`. These repos contain **kustomize-based Kubernetes manifests** that ArgoCD syncs to the target cluster. The cluster's ArgoCD repo (`cluster/<cluster>/argocd-<cluster>`) has a workload service that points to this repo.
+Each application deployed to a cluster gets a workload repository at `cluster/workloads/<name>`. These repos contain **kustomize-based Kubernetes manifests** that ArgoCD syncs to the target cluster. The cluster's ArgoCD repo (`cluster/<cluster>/argocd-kilic-<cluster>`) has a workload service that points to this repo.
 
 Workload repos are self-contained — they define everything the application needs: deployments, services, routes, secrets, databases, storage, and monitoring.
 

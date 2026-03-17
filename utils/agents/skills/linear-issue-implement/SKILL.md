@@ -1,6 +1,6 @@
 ---
-name: linear-issue-pick
-description: Pick up an existing Linear issue and start working on it. Use when user says "pick up K-123", "work on this issue", "start CLOUD-45", or provides a Linear issue URL to begin work. Do NOT use for just reading/refreshing an issue (/linear-issue-revisit) or choosing what to work on next (/linear-pick-next).
+name: linear-issue-implement
+description: Pick up an existing Linear issue and start working on it. Use when user says "pick up K-123", "work on this issue", "start CLOUD-45", or provides a Linear issue URL to begin work. Do NOT use for just reading/refreshing an issue (/linear-issue-revisit) or choosing what to work on next (/linear-next-task).
 interaction: chat
 argument-hint: "[issue-id] - e.g., 'K-123', 'CLOUD-45'"
 ---
@@ -39,7 +39,7 @@ This skill operates in two modes depending on how it was invoked:
 
 Plan first, then implement after user approval. Exit plan mode and begin implementation once the user approves the plan.
 
-#### Assistant Mode (invoked with `/assistant`)
+#### Assistant Mode (invoked with `/code-assistant`)
 
 Plan and refine only — **NEVER implement, NEVER exit plan mode.** Stay in plan mode for the entire session. Follow the collaborative guidance principles from the assistant skill. Only produce plans, analysis, and recommendations.
 

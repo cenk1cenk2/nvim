@@ -1,6 +1,6 @@
 ---
-name: evaluate
-description: Evaluate code changes to determine progress against the current plan. Always manually invoked. Do NOT use for planning (/assistant) or executing steps (/counterassistant).
+name: code-assistant-evaluate
+description: Evaluate code changes to determine progress against the current plan. Always manually invoked. Do NOT use for planning (/code-assistant) or executing steps (/code-assistant-implement).
 interaction: chat
 disable-model-invocation: true
 references:
@@ -115,5 +115,5 @@ references:
 
 ### Related Skills
 
-- **`/assistant`** (`~/.config/nvim/utils/agents/skills/assistant/SKILL.md`) — paired planning skill. Evaluate reads and updates the plan created by assistant. Do not auto-invoke.
-- **`/user-deviations`** (`~/.config/nvim/utils/agents/skills/user-deviations/SKILL.md`) — when evaluation reveals the user deviated from the plan, apply the user-deviations handling pattern. Do not auto-invoke.
+- **`/code-assistant`** (`~/.config/nvim/utils/agents/skills/code-assistant/SKILL.md`) — paired planning skill. Evaluate reads and updates the plan created by assistant. Do not auto-invoke.
+- **`/code-deviations`** (`~/.config/nvim/utils/agents/skills/code-deviations/SKILL.md`) — when evaluation reveals the user deviated from the plan, apply the code-deviations handling pattern. Do not auto-invoke.

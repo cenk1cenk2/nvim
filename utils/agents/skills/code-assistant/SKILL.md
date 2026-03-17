@@ -1,6 +1,6 @@
 ---
-name: assistant
-description: Plan and track changes through collaborative assistant guidance. Always manually invoked. Do NOT use for executing steps (/counterassistant) or evaluating progress (/evaluate).
+name: code-assistant
+description: Plan and track changes through collaborative assistant guidance. Always manually invoked. Do NOT use for executing steps (/code-assistant-implement) or evaluating progress (/code-assistant-evaluate).
 interaction: chat
 disable-model-invocation: true
 references:
@@ -123,6 +123,6 @@ references:
 
 ### Related Skills
 
-- **`/evaluate`** (`~/.config/nvim/utils/agents/skills/evaluate/SKILL.md`) — paired evaluation skill. When the user asks to evaluate implemented work, invoke this skill. Do not auto-invoke.
-- **`/counterassistant`** (`~/.config/nvim/utils/agents/skills/counterassistant/SKILL.md`) — step-by-step implementation counterpart. When the user wants the agent to implement one step at a time with review gates. Do not auto-invoke.
-- **`/user-deviations`** (`~/.config/nvim/utils/agents/skills/user-deviations/SKILL.md`) — when reviewing the user's implementation and noticing deviations from the plan, apply the user-deviations handling pattern. Do not auto-invoke.
+- **`/code-assistant-evaluate`** (`~/.config/nvim/utils/agents/skills/code-assistant-evaluate/SKILL.md`) — paired evaluation skill. When the user asks to evaluate implemented work, invoke this skill. Do not auto-invoke.
+- **`/code-assistant-implement`** (`~/.config/nvim/utils/agents/skills/code-assistant-implement/SKILL.md`) — step-by-step implementation counterpart. When the user wants the agent to implement one step at a time with review gates. Do not auto-invoke.
+- **`/code-deviations`** (`~/.config/nvim/utils/agents/skills/code-deviations/SKILL.md`) — when reviewing the user's implementation and noticing deviations from the plan, apply the code-deviations handling pattern. Do not auto-invoke.

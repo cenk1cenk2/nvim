@@ -1,12 +1,12 @@
 ---
 name: linear-issue-create
-description: Create new Linear issues with comprehensive analysis and research. Use when user says "create an issue", "file a bug", "add a task to Linear", or "create a ticket". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for updating existing issues (/linear-issue-update), commenting (/linear-issue-comment), or picking up issues (/linear-issue-pick).
+description: Create new Linear issues with comprehensive analysis and research. Use when user says "create an issue", "file a bug", "add a task to Linear", or "create a ticket". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for updating existing issues (/linear-issue-update), commenting (/linear-issue-comment), or picking up issues (/linear-issue-implement).
 interaction: chat
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-mandatory-fields.md
   - ../references/plan-mode.md
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -32,7 +32,7 @@ Additional rules for issue creation:
 - Use project names directly when creating issues — Linear MCP will resolve them, unless prompted to specifically search for it.
 - Keep issue titles concise and replicate the styling of encountered issues in the same project.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Issue Structure
 

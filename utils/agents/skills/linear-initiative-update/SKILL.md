@@ -4,7 +4,7 @@ description: Revise a Linear initiative's description and review its project ali
 interaction: chat
 argument-hint: "[initiative-name or ID]"
 references:
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -31,7 +31,7 @@ references:
 >
 > Initiative descriptions carry timestamps. The user's session knowledge and the current conversation context hold the most recent understanding of the initiative's intent. When the initiative's content is stale relative to the conversation, **treat the conversation as the source of truth** and update the initiative to match — always confirming with the user before applying.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

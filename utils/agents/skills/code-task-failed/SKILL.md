@@ -1,5 +1,5 @@
 ---
-name: code-failed
+name: code-task-failed
 description: Investigate a failed command (build, test, lint, etc.) by capturing terminal output, analyzing errors, and systematically isolating the root cause. Always manually invoked. Do NOT use for behavioral bugs (/code-debug) or code review (/code-review-branch).
 interaction: chat
 disable-model-invocation: true

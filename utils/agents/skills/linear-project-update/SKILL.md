@@ -4,7 +4,7 @@ description: Audit and update a Linear project's structure, subissues, prioritie
 interaction: chat
 argument-hint: "[project-name or Linear URL]"
 references:
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -32,7 +32,7 @@ references:
 
 Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). When auditing, **check `updatedAt` on each issue** — if a description hasn't been updated in a while, it may be stale regardless of how it reads. The current conversation context holds the most recent understanding of the project — the goal is to bring Linear in line with reality, not the other way around. When you flag a description as stale, note its `updatedAt` timestamp and ask the user to confirm before recommending changes.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

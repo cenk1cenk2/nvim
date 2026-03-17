@@ -1,6 +1,6 @@
 ---
-name: cluster-argocd-loadbalancer
-description: Create or extend routing workloads in a load balancer cluster's ArgoCD repository. Scaffolds Pulumi services for cross-cluster routing, VM routing, or direct LB routes. Always manually invoked. Do NOT use for non-LB ArgoCD workloads (/cluster-argocd-workload), standalone workload repos (/cluster-workload), or Helm chart wrappers (/cluster-chart).
+name: kilic-argocd-loadbalancer
+description: Create or extend routing workloads in a load balancer cluster's ArgoCD repository. Scaffolds Pulumi services for cross-cluster routing, VM routing, or direct LB routes. Always manually invoked. Do NOT use for non-LB ArgoCD workloads (/kilic-argocd-workload), standalone workload repos (/kilic-cluster-workload), or Helm chart wrappers (/kilic-cluster-chart).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[workload-name or 'add route to <existing>'] - e.g., 'cluster-rubik', 'vm-gitlab', 'add route to cluster-rubik'"
@@ -10,7 +10,7 @@ argument-hint: "[workload-name or 'add route to <existing>'] - e.g., 'cluster-ru
 
 ### LB Cluster Routing Workload Creator
 
-> **IMPORTANT: This skill assumes you are already inside a load balancer cluster ArgoCD repository** (e.g., `cluster/sun/argocd-sun`).
+> **IMPORTANT: This skill assumes you are already inside a load balancer cluster ArgoCD repository** (e.g., `cluster/sun/argocd-kilic-sun`).
 
 ### How This Repository Works
 

@@ -4,7 +4,7 @@ description: Create a Linear project for deploying system-level components (oper
 interaction: chat
 references:
   - ../references/plan-mode.md
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 argument-hint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'velero'"
 ---
 
@@ -21,7 +21,7 @@ argument-hint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'v
 > - Research the component, existing patterns, and cluster requirements.
 > - Present the plan for user approval before creating issues.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Overview
 
@@ -33,17 +33,17 @@ All repositories are on `gitlab.kilic.dev`. The deployment involves these reposi
 
 ```
 cluster/charts/chart-<component>                                        # Helm chart wrapper
-cluster/argocd-system/base/<component>/applicationset.yaml              # ApplicationSet definition
-cluster/argocd-root/src/argocd/assets/cluster/<cluster>/labels.yml      # Feature labels
-cluster/argocd-root/src/argocd/assets/cluster/<cluster>/annotations.yml # Values injection
+cluster/argocd-kilic-system/base/<component>/applicationset.yaml              # ApplicationSet definition
+cluster/argocd-kilic-root/src/argocd-kilic/assets/cluster/<cluster>/labels.yml      # Feature labels
+cluster/argocd-kilic-root/src/argocd-kilic/assets/cluster/<cluster>/annotations.yml # Values injection
 infrastructure/pulumi-config-gitlab                                     # ArgoCD repository access
-cluster/<lb-cluster>/argocd-<lb-cluster>                                # Load balancer routes (if needed)
+cluster/<lb-cluster>/argocd-kilic-<lb-cluster>                                # Load balancer routes (if needed)
 Vault: secret/<cluster>/<namespace>/...                                 # Secrets (optional)
 ```
 
 **Known clusters:** `moon`, `nailbed`, `neutrino`, `overseer`, `rubik`, `sun`
 
-Each cluster has its own ArgoCD repo at `cluster/<cluster>/argocd-<cluster>` and label/annotation files at `cluster/argocd-root/src/argocd/assets/cluster/<cluster>/`.
+Each cluster has its own ArgoCD repo at `cluster/<cluster>/argocd-kilic-<cluster>` and label/annotation files at `cluster/argocd-kilic-root/src/argocd-kilic/assets/cluster/<cluster>/`.
 
 ### Workflow
 
@@ -61,10 +61,10 @@ Each cluster has its own ArgoCD repo at `cluster/<cluster>/argocd-<cluster>` and
 Use GitLab MCP to analyze existing deployments for reference:
 
 - **Charts:** Browse `cluster/charts` group for `chart-<similar-component>` repos — check `Chart.yaml` (upstream dependency), `values.yaml` (defaults), `Taskfile.yml` (release automation), `renovate.json` (dependency updates)
-- **ApplicationSets:** Browse `cluster/argocd-system` repo → `base/<similar-component>/applicationset.yaml` — label selectors, namespace, sync policy, values injection
-- **Labels/Annotations:** Browse `cluster/argocd-root` repo → `src/argocd/assets/cluster/<cluster>/labels.yml` for feature flags and `annotations.yml` for values injection patterns
+- **ApplicationSets:** Browse `cluster/argocd-kilic-system` repo → `base/<similar-component>/applicationset.yaml` — label selectors, namespace, sync policy, values injection
+- **Labels/Annotations:** Browse `cluster/argocd-kilic-root` repo → `src/argocd-kilic/assets/cluster/<cluster>/labels.yml` for feature flags and `annotations.yml` for values injection patterns
 - **Pulumi:** Browse `infrastructure/pulumi-config-gitlab` repo → `src/modules/` for ArgoCD deploy key and webhook setup
-- **Load balancer:** Browse `cluster/<lb-cluster>/argocd-<lb-cluster>` repo → `src/cluster/gateway.service.ts` for gateway definitions, `src/workloads/cluster-<target>/` for route service patterns
+- **Load balancer:** Browse `cluster/<lb-cluster>/argocd-kilic-<lb-cluster>` repo → `src/cluster/gateway.service.ts` for gateway definitions, `src/workloads/cluster-<target>/` for route service patterns
 
 **3. Create Project and Issues:**
 
@@ -97,9 +97,9 @@ The following issues form the deployment pipeline. Adjust based on what's actual
 - Verify deploy key and webhook creation
 - **Blocked by:** Issue 1
 
-**Issue 3: Create ApplicationSet in cluster/argocd-system**
+**Issue 3: Create ApplicationSet in cluster/argocd-kilic-system**
 
-> **Repo:** `cluster/argocd-system`
+> **Repo:** `cluster/argocd-kilic-system`
 > **Purpose:** Contains ApplicationSet definitions that tell ArgoCD how to deploy system components across clusters. An ApplicationSet uses cluster label selectors (`system.feature.kilic.dev/<component>`) to determine which clusters get the component, and reads values from cluster annotations for per-cluster configuration.
 
 - Use the `.claude/skills/add-base-application` skill in the cluster repository to create the ApplicationSet
@@ -120,18 +120,18 @@ The following issues form the deployment pipeline. Adjust based on what's actual
 
 **Issue 5: Enable Feature Label for Target Clusters**
 
-> **Repo:** `cluster/argocd-root`
+> **Repo:** `cluster/argocd-kilic-root`
 > **Purpose:** Central repo that defines per-cluster metadata. Each cluster has `labels.yml` (feature flags that ApplicationSets match on) and `annotations.yml` (values injected into Helm releases). Adding the feature label here triggers the ApplicationSet to deploy the component to that cluster.
 
 - Use the `.claude/skills/promote-application` skill in the cluster repository to promote the application to target clusters
 - Add `system.feature.kilic.dev/<component>: "true"` to `labels.yml`
-- Update for each target cluster in `cluster/argocd-root/src/argocd/assets/cluster/`
+- Update for each target cluster in `cluster/argocd-kilic-root/src/argocd-kilic/assets/cluster/`
 - Configure values via `annotations.yml` if needed
 - **Blocked by:** Issue 3 (and Issue 4 if secrets are needed)
 
 **Issue 6 (Optional — if load balancer is needed): Configure Load Balancer Routes**
 
-> **Repo:** `cluster/<lb-cluster>/argocd-<lb-cluster>`
+> **Repo:** `cluster/<lb-cluster>/argocd-kilic-<lb-cluster>`
 > **Purpose:** Each cluster's ArgoCD repo contains Pulumi code that generates Kubernetes manifests. The LB cluster acts as the ingress point — its Pulumi services create Gateway listeners, TLSRoute/HTTPRoute resources, EnvoyGateway Backends (pointing to target cluster gateway FQDNs), and DNSEndpoint resources for DNS registration.
 
 - Add route Pulumi service in LB cluster: `src/workloads/cluster-<target>/cluster-<target>.service.ts`
@@ -184,7 +184,7 @@ values.system.feature.kilic.dev/<component>: |
     key: value
 ```
 
-Both files are located at `cluster/argocd-root/src/argocd/assets/cluster/<cluster>/`.
+Both files are located at `cluster/argocd-kilic-root/src/argocd-kilic/assets/cluster/<cluster>/`.
 
 ### Namespace Convention
 
@@ -200,7 +200,7 @@ System operators typically use:
 - **Always create Helm chart first** — ApplicationSet depends on it
 - **Run Pulumi after chart creation** — ArgoCD needs repository access
 - **Cluster labels enable selective deployment** — not all clusters need every component
-- **Load balancer cluster is separate** — routes are Pulumi-managed in `cluster/<lb-cluster>/argocd-<lb-cluster>` (ask user which cluster(s) serve as load balancer)
+- **Load balancer cluster is separate** — routes are Pulumi-managed in `cluster/<lb-cluster>/argocd-kilic-<lb-cluster>` (ask user which cluster(s) serve as load balancer)
 - **All routes are Pulumi-managed** — manifests in `workloads/*/1-manifest/` are generated output, not hand-written
 - **Two DNS providers:** Cloudflare (external, `provider.kilic.dev/external-dns-cloudflare`) and OPNSense (internal, `provider.kilic.dev/external-dns-opnsense-loki`)
 - **Two LB gateways:** `default` for external traffic, `internal` for internal-only services

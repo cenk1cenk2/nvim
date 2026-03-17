@@ -4,7 +4,7 @@ description: Add, remove, or modify MCP server configurations in mcphub servers.
 interaction: chat
 disable-model-invocation: true
 references:
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 argument-hint: "[add|remove|modify] [server-name] [optional description]"
 ---
 
@@ -14,7 +14,7 @@ argument-hint: "[add|remove|modify] [server-name] [optional description]"
 
 > **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
 
-> Read the `mcp-output-transparency` reference for chunked change presentation — show reasoning + content blocks for each configuration change before applying.
+> Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each configuration change before applying.
 
 ### Context
 

@@ -148,5 +148,5 @@ Do NOT modify files outside your write scope. Other agents are handling:
 ### Related Skills
 
 - **`/code-review-changes`** (`~/.config/nvim/utils/agents/skills/code-review-changes/SKILL.md`) — auto-invoked after all agents complete to review the combined result.
-- **`/assistant`** (`~/.config/nvim/utils/agents/skills/assistant/SKILL.md`) — for guided planning where the user implements. This skill plans AND executes. Do not auto-invoke.
-- **`/counterassistant`** (`~/.config/nvim/utils/agents/skills/counterassistant/SKILL.md`) — for sequential step-by-step execution with review gates. Use that when parallelism is not needed. Do not auto-invoke.
+- **`/code-assistant`** (`~/.config/nvim/utils/agents/skills/code-assistant/SKILL.md`) — for guided planning where the user implements. This skill plans AND executes. Do not auto-invoke.
+- **`/code-assistant-implement`** (`~/.config/nvim/utils/agents/skills/code-assistant-implement/SKILL.md`) — for sequential step-by-step execution with review gates. Use that when parallelism is not needed. Do not auto-invoke.

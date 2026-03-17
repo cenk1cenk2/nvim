@@ -4,7 +4,7 @@ description: Draft a project update post for a Linear project by analyzing recen
 interaction: chat
 argument-hint: "[project-name or Linear URL]"
 references:
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -29,7 +29,7 @@ references:
 >
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

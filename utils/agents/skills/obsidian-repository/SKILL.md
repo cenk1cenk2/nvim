@@ -6,7 +6,7 @@ disable-model-invocation: true
 argument-hint: "[repository name or path] [optional: what to document]"
 references:
   - ../references/obsidian.md
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -43,7 +43,7 @@ If the current working directory is under `~/development/`, derive the note path
 
 - Use codebase exploration tools (treesitter, Grep, Glob, git MCP) to analyze the repository.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

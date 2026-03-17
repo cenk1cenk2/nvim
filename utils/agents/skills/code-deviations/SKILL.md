@@ -1,5 +1,5 @@
 ---
-name: user-deviations
+name: code-deviations
 description: Handle user overrides to agent edits. Use when the user modifies, rejects, or rewrites code that the agent produced, to learn their intent and align future edits. Always manually invoked.
 interaction: chat
 disable-model-invocation: true

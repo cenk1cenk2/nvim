@@ -4,7 +4,7 @@ description: Update a Linear issue's description to reflect deviations and refin
 interaction: chat
 argument-hint: "[issue-id or Linear URL]"
 references:
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -32,7 +32,7 @@ references:
 >
 > Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). The user's session knowledge and the current conversation context hold the most recent version of the issue's intent. The goal of this skill is to apply deviations from the conversation back to the issue in Linear. When the issue's `updatedAt` is older than the current conversation context, **treat the conversation as the source of truth** and update the issue to match — always confirming with the user before applying.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

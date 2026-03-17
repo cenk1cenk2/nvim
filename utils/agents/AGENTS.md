@@ -74,7 +74,7 @@
 
 ### Special Mode Triggers
 
-User invokes specialized modes using personal slash commands (e.g., `/assistant`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
+User invokes specialized modes using personal slash commands (e.g., `/code-assistant`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
 
 ### Skill Cross-Loading (IMPORTANT)
 
@@ -813,6 +813,49 @@ When generating markdown content for project updates, documentation, or any exte
 
 **Exceptions:** Plain English words, proper nouns (company names, product marketing names), and sentences where code blocks would hurt readability.
 
+### Presenting Changes Before External Writes
+
+When creating or updating resources in external systems (Linear, GitHub, GitLab, Obsidian, Slack, Notion), **always present changes to the user before executing any write operation**.
+
+**Format — logical chunks:**
+
+Each chunk has:
+1. **Reasoning** (1-2 sentences) — what this chunk does and why.
+2. **Content block** — fenced code block showing the actual content or diff.
+
+Present ALL chunks before asking for approval. Do not interleave with approval prompts.
+
+**Update operations** — use `diff` formatting to show what changed:
+
+> Title was generic. Updated to reflect the actual scope.
+>
+> ```diff
+> - fix: update config
+> + fix(auth): rotate JWT signing key
+> ```
+
+**Create operations** — show the actual content that will be written:
+
+> High priority because TLS certs are managed manually. Estimate based on similar deployments.
+>
+> ```
+> title:    Add cert-manager to cluster-rubik
+> team:     Infrastructure
+> priority: High
+> labels:   kubernetes, security
+> estimate: 3
+> ```
+
+**Rules:**
+
+- One chunk per logical change. Group related small changes when reasoning is shared.
+- For long-form content changes, show a concise diff — do not dump unchanged surrounding text.
+- Omit unchanged fields entirely.
+- Use appropriate code block language: `diff` for field changes, `markdown` for descriptions, `yaml` for configuration.
+- Wait for explicit user approval before calling any MCP write tool.
+
+**Scope:** Any MCP tool call that creates or modifies a resource in an external system. Does NOT apply to read-only operations, local file operations, or lightweight status transitions (e.g., emoji reactions).
+
 ### Information Accuracy
 
 **NEVER fabricate** information.
@@ -1043,6 +1086,7 @@ Handles token expiration gracefully with retry logic.
 1. MCP tool for that service (ALWAYS first choice)
 2. Dedicated CLI tool (gh, glab) via tmux/Bash (fallback)
 3. Raw shell commands / API calls (last resort, avoid)
+4. For ANY write operation: present changes as logical chunks (reasoning + content/diff) and wait for approval
 ```
 
 **MCP server tools missing or user requests disabled server:**

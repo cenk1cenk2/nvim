@@ -1,5 +1,5 @@
 ---
-name: github-failed-ci
+name: github-ci-failed
 description: Diagnose failing CI actions on the current branch, research errors, and propose fixes. Use when user says "CI is failing", "fix the GitHub Actions", "why is the check red", or "debug the workflow". Do NOT use for creating/updating workflows (/github-ci), GitLab failures (/gitlab-failed-ci), or PR descriptions (/github-pr).
 interaction: chat
 disable-model-invocation: true

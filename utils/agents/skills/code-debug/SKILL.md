@@ -1,6 +1,6 @@
 ---
 name: code-debug
-description: Debug a behavioral issue where code runs but produces wrong results. Investigates using LSP, code hosting, web search, and terminal tools to find the root cause. Always manually invoked. Do NOT use for failed commands (/code-failed) or code review (/code-review-branch).
+description: Debug a behavioral issue where code runs but produces wrong results. Investigates using LSP, code hosting, web search, and terminal tools to find the root cause. Always manually invoked. Do NOT use for failed commands (/code-task-failed) or code review (/code-review-branch).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[description of the problem or paste the failing snippet]"
@@ -18,7 +18,7 @@ argument-hint: "[description of the problem or paste the failing snippet]"
 
 ### Context
 
-This skill is for **behavioral bugs** — code that runs without crashing but produces wrong results, unexpected side effects, or incorrect behavior. For command failures (build errors, test failures, lint errors), use `/code-failed` instead.
+This skill is for **behavioral bugs** — code that runs without crashing but produces wrong results, unexpected side effects, or incorrect behavior. For command failures (build errors, test failures, lint errors), use `/code-task-failed` instead.
 
 ### Process
 
@@ -108,4 +108,4 @@ Wait for user approval before applying any fix.
 
 ### Related Skills
 
-- **`/code-failed`** (`~/.config/nvim/utils/agents/skills/code-failed/SKILL.md`) — for command failures (build errors, test failures, lint errors) rather than behavioral bugs. Auto-invoke when the problem is a command failure, not a behavioral issue.
+- **`/code-task-failed`** (`~/.config/nvim/utils/agents/skills/code-task-failed/SKILL.md`) — for command failures (build errors, test failures, lint errors) rather than behavioral bugs. Auto-invoke when the problem is a command failure, not a behavioral issue.

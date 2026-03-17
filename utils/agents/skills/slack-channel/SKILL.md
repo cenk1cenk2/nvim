@@ -6,7 +6,7 @@ disable-model-invocation: true
 argument-hint: "[channel-name-or-id] [optional: timeframe or instructions]"
 references:
   - ../references/slack.md
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -15,7 +15,7 @@ references:
 
 > **DO NOT enter plan mode.** This skill reads channel history, classifies messages, and acts on them directly or by composing with other skills.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Context
 
@@ -25,7 +25,7 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
 
 ### Process
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 1. **Resolve the channel.**
    - If the user provides a channel name, use `slack__slack_list_channels` to resolve it to a channel ID.

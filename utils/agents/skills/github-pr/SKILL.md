@@ -1,10 +1,10 @@
 ---
 name: github-pr
-description: Analyze and write GitHub pull request titles and descriptions. Use when user says "write a PR description", "create a PR", "improve the PR", or "describe what this branch does". Do NOT use for GitLab MRs (/gitlab-pr), CI workflows (/github-ci), or CI failures (/github-failed-ci).
+description: Analyze and write GitHub pull request titles and descriptions. Use when user says "write a PR description", "create a PR", "improve the PR", or "describe what this branch does". Do NOT use for GitLab MRs (/gitlab-pr), CI workflows (/github-ci), or CI failures (/github-ci-failed).
 interaction: chat
 references:
   - ../references/scm-github.md
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -35,7 +35,7 @@ references:
 
 > Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 
@@ -147,4 +147,4 @@ references:
 
 - **`/code-review-branch`** (`~/.config/nvim/utils/agents/skills/code-review-branch/SKILL.md`) — for reviewing the code quality of the branch before writing the PR description. Do not auto-invoke.
 - **`/github-ci`** (`~/.config/nvim/utils/agents/skills/github-ci/SKILL.md`) — for creating or updating GitHub Actions workflows. Do not auto-invoke.
-- **`/github-failed-ci`** (`~/.config/nvim/utils/agents/skills/github-failed-ci/SKILL.md`) — for diagnosing failing CI checks on the PR. Do not auto-invoke.
+- **`/github-ci-failed`** (`~/.config/nvim/utils/agents/skills/github-ci-failed/SKILL.md`) — for diagnosing failing CI checks on the PR. Do not auto-invoke.

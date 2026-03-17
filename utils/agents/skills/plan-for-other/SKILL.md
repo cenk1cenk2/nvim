@@ -1,6 +1,6 @@
 ---
 name: plan-for-other
-description: Create a self-contained plan for another Claude Code session or another repository. Use when user says "plan for another session", "plan for other repo", "create a handoff plan", "delegate this plan", or "plan this for later". Do NOT use for planning in the current session (use /assistant or EnterPlanMode directly).
+description: Create a self-contained plan for another Claude Code session or another repository. Use when user says "plan for another session", "plan for other repo", "create a handoff plan", "delegate this plan", or "plan this for later". Do NOT use for planning in the current session (use /code-assistant or EnterPlanMode directly).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[same-repo|other-repo] [goal description]"

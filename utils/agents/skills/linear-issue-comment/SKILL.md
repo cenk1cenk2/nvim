@@ -4,7 +4,7 @@ description: Record critical findings, deviations, and decisions as concise comm
 interaction: chat
 argument-hint: "[issue-id or Linear URL] [what to comment]"
 references:
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -32,7 +32,7 @@ You record critical findings and deviations as comments on Linear issues. Commen
 
 The current conversation context holds the most recent version of the issue's intent. The goal is to capture deviations from the conversation back into Linear so future readers understand what changed and why. The issue description may be stale — the conversation is the source of truth for what to document.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

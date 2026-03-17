@@ -6,7 +6,7 @@ disable-model-invocation: true
 argument-hint: "[slack-message-url] [what to do with it]"
 references:
   - ../references/slack.md
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -15,17 +15,17 @@ references:
 
 > **DO NOT enter plan mode.** This skill gathers context and delegates to other skills or acts directly based on user instructions.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Context
 
 > Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling — resolve references from the `<References>` block via MCP filesystem tools.
 
-The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `/linear-issue-pick`, `/obsidian-note`, `/code-pull`) or performing direct actions (research, code changes, summarization).
+The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `/linear-issue-implement`, `/obsidian-note`, `/code-pull`) or performing direct actions (research, code changes, summarization).
 
 ### Process
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 1. **Parse the message.**
    - Parse the Slack message URL to identify the channel ID and message timestamp.
@@ -49,7 +49,7 @@ The user provides a Slack message URL and a task. This skill reads the message a
    - If the user provided explicit instructions (e.g., "create a Linear issue from this", "summarize this in Obsidian"), follow them.
    - If the user's intent is unclear, present the summary and ask what they'd like to do.
    - Common actions:
-     - **Create a Linear issue** — invoke the appropriate Linear workspace skill and compose with `/linear-issue-pick` or create directly.
+     - **Create a Linear issue** — invoke the appropriate Linear workspace skill and compose with `/linear-issue-implement` or create directly.
      - **Create an Obsidian note** — invoke `/obsidian-note` with the thread context.
      - **Research a topic** — use web search, Context7, or codebase exploration based on what the thread discusses.
      - **Write or modify code** — use the thread context to inform implementation.

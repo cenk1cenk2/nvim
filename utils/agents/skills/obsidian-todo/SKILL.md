@@ -6,7 +6,7 @@ disable-model-invocation: true
 argument-hint: "[task or thought to capture]"
 references:
   - ../references/obsidian.md
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -25,7 +25,7 @@ references:
 > - **CWD is NOT `~/notes`** → use `obsidian__*` MCP tools.
 > - **Always use** `obsidian__obsidian_list_notes` and `obsidian__obsidian_global_search` regardless of CWD.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Context
 
@@ -102,7 +102,7 @@ When this skill is invoked from or alongside another skill session, add an appen
 ```markdown
 ## Appendix: Session Context
 
-- **Origin:** [which skill/session triggered this — e.g., "review of cluster-chart skill"].
+- **Origin:** [which skill/session triggered this — e.g., "review of kilic-cluster-chart skill"].
 - **Key decisions:** [what was decided and why].
 - **Alternatives considered:** [options that were rejected and reasoning].
 - **Open threads:** [anything unresolved from the session].

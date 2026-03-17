@@ -6,7 +6,7 @@ disable-model-invocation: true
 argument-hint: "[topic or description]"
 references:
   - ../references/obsidian.md
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 ---
 
 ## system
@@ -36,7 +36,7 @@ Additional tools beyond the obsidian reference:
 - **WebSearch** — for current information and research.
 - **Context7** — for official documentation references.
 
-> Read the `mcp-output-transparency` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
 

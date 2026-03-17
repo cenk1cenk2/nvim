@@ -566,7 +566,99 @@ function M.config()
         end,
       })
 
+      mcphub.add_tool("skills", {
+        name = "list_references",
+        description = "List reference files in a folder under the skills directory. Defaults to the shared 'references/' folder when no folder is given.",
+        inputSchema = {
+          type = "object",
+          properties = {
+            folder = {
+              type = "string",
+              default = "references",
+              description = "Folder path relative to the skills directory (e.g., 'references', 'linear-issue-create/references'). Defaults to 'references' if omitted.",
+            },
+          },
+        },
+        handler = function(req, res)
+          local folder = req.params.folder or "references"
+          local abs_folder = join_paths(skills_dir, folder)
+
+          if vim.fn.isdirectory(abs_folder) ~= 1 then
+            return res:error("Directory not found: " .. folder)
+          end
+
+          local files = vim.fn.glob(join_paths(abs_folder, "*.md"), false, true)
+          table.sort(files)
+
+          if #files == 0 then
+            return res:text("No reference files found in " .. folder):send()
+          end
+
+          local lines = {}
+          for _, file in ipairs(files) do
+            local name = vim.fn.fnamemodify(file, ":t")
+            table.insert(lines, "- " .. name)
+          end
+
+          return res:text(string.format("References in `%s/` (%d files):\n%s", folder, #files, table.concat(lines, "\n"))):send()
+        end,
+      })
+
+      mcphub.add_tool("skills", {
+        name = "load_reference",
+        description = "Load reference files by name from a folder under the skills directory. Returns the full content of each file. Defaults to the shared 'references/' folder when no folder is given.",
+        inputSchema = {
+          type = "object",
+          properties = {
+            names = {
+              type = "array",
+              items = { type = "string" },
+              description = "Reference file names to load (e.g., ['slack.md', 'plan-mode.md']). The .md extension is optional.",
+            },
+            folder = {
+              type = "string",
+              description = "Folder path relative to the skills directory (e.g., 'references', 'linear-issue-create/references'). Defaults to 'references' if omitted.",
+            },
+          },
+          required = { "names" },
+        },
+        handler = function(req, res)
+          local names = req.params.names
+          local folder = req.params.folder or "references"
+          local abs_folder = join_paths(skills_dir, folder)
+
+          if not names or #names == 0 then
+            return res:error("No reference names provided")
+          end
+
+          if vim.fn.isdirectory(abs_folder) ~= 1 then
+            return res:error("Directory not found: " .. folder)
+          end
+
+          local results = {}
+          local errors = {}
+          for _, name in ipairs(names) do
+            local filename = name:match("%.md$") and name or (name .. ".md")
+            local file_path = join_paths(abs_folder, filename)
+            if vim.fn.filereadable(file_path) == 1 then
+              local content = table.concat(vim.fn.readfile(file_path), "\n")
+              table.insert(results, string.format("--- %s ---\n%s", filename, content))
+            else
+              table.insert(errors, filename)
+            end
+          end
+
+          if #errors > 0 then
+            table.insert(results, string.format("\n--- NOT FOUND: %s ---", table.concat(errors, ", ")))
+          end
+
+          return res:text(table.concat(results, "\n\n")):send()
+        end,
+      })
+
       M.register_agent_skills()
+      M.register_agent_references()
+      M.register_agent_unloaders()
 
       -- Advanced mcphub configuration
       require("mcp-diagnostics").setup({
@@ -753,6 +845,100 @@ function M.register_agent_skills()
   end
 
   M._agent_skills_registered = true
+end
+
+-- References exposed as slash commands (reference:<name>).
+-- Only references listed here are registered as prompts.
+M.agent_reference_prompts = {
+  "output-diff",
+}
+
+function M.register_agent_references()
+  if M._agent_references_registered then
+    return
+  end
+
+  local mcphub = require("mcphub")
+  local refs_dir = join_paths(M.agent_skills_dir(), "references")
+
+  if vim.fn.isdirectory(refs_dir) ~= 1 then
+    M._agent_references_registered = true
+
+    return
+  end
+
+  for _, name in ipairs(M.agent_reference_prompts) do
+    local file = join_paths(refs_dir, name .. ".md")
+    if vim.fn.filereadable(file) == 1 then
+      local prompt_name = "reference:" .. name
+
+      mcphub.add_prompt("skills", {
+        name = prompt_name,
+        description = "Load reference: " .. name,
+        handler = function(req, res)
+          return res
+            :user()
+            :text(
+              string.format(
+                '\n\n**Load the `%s` reference using `mcp__mcphub__skills__load_reference` with arguments `{ "names": ["%s"] }`, then follow its guidelines until otherwise prompted.**\n\n',
+                name,
+                name
+              )
+            )
+            :send()
+        end,
+      })
+    end
+  end
+
+  M._agent_references_registered = true
+end
+
+function M.register_agent_unloaders()
+  if M._agent_unloaders_registered then
+    return
+  end
+
+  local mcphub = require("mcphub")
+
+  local skills = M.load_agent_skills()
+  for _, skill in ipairs(skills) do
+    mcphub.add_prompt("skills", {
+      name = "unload:" .. skill.name,
+      description = "Unload skill: " .. skill.name,
+      handler = function(req, res)
+        return res
+          :user()
+          :text(
+            string.format(
+              '\n\n**Dismiss the `%s` skill. Stop following its instructions immediately. It is no longer active for this session unless explicitly re-invoked.**\n\n',
+              skill.name
+            )
+          )
+          :send()
+      end,
+    })
+  end
+
+  for _, name in ipairs(M.agent_reference_prompts) do
+    mcphub.add_prompt("skills", {
+      name = "unload:reference:" .. name,
+      description = "Unload reference: " .. name,
+      handler = function(req, res)
+        return res
+          :user()
+          :text(
+            string.format(
+              '\n\n**Dismiss the `%s` reference. Stop following its guidelines immediately. It is no longer active for this session unless explicitly re-invoked.**\n\n',
+              name
+            )
+          )
+          :send()
+      end,
+    })
+  end
+
+  M._agent_unloaders_registered = true
 end
 
 return M

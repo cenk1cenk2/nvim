@@ -3,7 +3,7 @@ name: config-skills
 description: Create, update, or review skills in the skills directory. Use when user says "create a skill", "update skill X", "review my skills", "add a new slash command", or "improve this skill". Do NOT use for loading or chaining skills (use /load-skills).
 interaction: chat
 references:
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 argument-hint: "[create|update|review] [skill-name] [description of what the skill should do]"
 ---
 
@@ -17,7 +17,7 @@ argument-hint: "[create|update|review] [skill-name] [description of what the ski
 > - Iterate based on feedback.
 > - Do NOT write files until the user explicitly approves the plan.
 
-> Read the `mcp-output-transparency` reference for chunked change presentation — show reasoning + content blocks for each proposed skill change before writing.
+> Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed skill change before writing.
 
 ### Skills Directory
 
@@ -223,7 +223,7 @@ When creating or updating a skill, always check:
 | `plan-mode.md` | Strict and standard plan mode directives. | Any skill using plan mode. |
 | `obsidian.md` | Vault location, tool access, file naming, frontmatter, writing style, vault exploration. | Obsidian family (4 skills). |
 | `slack.md` | Slack MCP tools, response conventions, `:dark_sunglasses:` pattern, large results handling. | Slack family (2 skills). |
-| `mcp-output-transparency.md` | Chunked change presentation — reasoning + content blocks before any write. | Config family (5 skills), Linear/Obsidian/Slack write skills. |
+| `output-diff.md` | Chunked change presentation — reasoning + content blocks before any write. | Config family (5 skills), Linear/Obsidian/Slack write skills. |
 
 ### Description Checklist
 

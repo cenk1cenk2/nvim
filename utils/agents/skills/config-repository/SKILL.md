@@ -4,7 +4,7 @@ description: Create or revise repository knowledge base files (CLAUDE.md, AGENTS
 interaction: chat
 disable-model-invocation: true
 references:
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 argument-hint: "[local] [optional: what changed or focus area]"
 ---
 
@@ -14,7 +14,7 @@ argument-hint: "[local] [optional: what changed or focus area]"
 
 > **DO NOT enter plan mode.** This skill explores the repository and session context, then writes directly.
 
-> Read the `mcp-output-transparency` reference for chunked change presentation — show reasoning + content blocks for each proposed section change before writing.
+> Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed section change before writing.
 
 ### Purpose
 

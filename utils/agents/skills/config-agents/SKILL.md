@@ -5,7 +5,7 @@ interaction: chat
 disable-model-invocation: true
 references:
   - ../references/plan-mode.md
-  - ../references/mcp-output-transparency.md
+  - ../references/output-diff.md
 argument-hint: "[what to change or review in AGENTS.md]"
 ---
 
@@ -20,7 +20,7 @@ argument-hint: "[what to change or review in AGENTS.md]"
 > - Present proposed changes to the user before writing anything.
 > - Do NOT write changes until the user explicitly approves.
 
-> Read the `mcp-output-transparency` reference for chunked change presentation — show reasoning + content blocks for each proposed change before asking for approval.
+> Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed change before asking for approval.
 
 ### Target File
 

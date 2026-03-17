@@ -1,4 +1,4 @@
-# MCP Output Transparency
+# Output Diff
 
 Standardized chat output conventions for skills that write to external systems (Linear, GitHub, GitLab, Obsidian, Slack, Notion). These rules ensure the user sees exactly what will be created or changed — and why — before any MCP write operation executes.
 
