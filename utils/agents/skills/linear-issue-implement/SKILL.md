@@ -1,6 +1,6 @@
 ---
 name: linear-issue-implement
-description: Pick up an existing Linear issue and start working on it. Use when user says "pick up K-123", "work on this issue", "start CLOUD-45", or provides a Linear issue URL to begin work. Do NOT use for just reading/refreshing an issue (/linear-issue-revisit) or choosing what to work on next (/linear-next-task).
+description: Pick up an existing Linear issue and start working on it. Use when user says "pick up K-123", "work on this issue", "start CLOUD-45", or provides a Linear issue URL to begin work. Do NOT use for just reading/refreshing an issue (linear-issue-revisit) or choosing what to work on next (linear-next-task).
 interaction: chat
 argument-hint: "[issue-id] - e.g., 'K-123', 'CLOUD-45'"
 ---
@@ -13,8 +13,8 @@ argument-hint: "[issue-id] - e.g., 'K-123', 'CLOUD-45'"
 >
 > If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
 >
-> - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
-> - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+> - **kilic-dev workspace:** Load skill `linear-kilic` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/linear-kilic" })`
+> - **Laravel workspace:** Load skill `linear-work` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/linear-work" })`
 >
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
 
@@ -39,7 +39,7 @@ This skill operates in two modes depending on how it was invoked:
 
 Plan first, then implement after user approval. Exit plan mode and begin implementation once the user approves the plan.
 
-#### Assistant Mode (invoked with `/code-assistant`)
+#### Assistant Mode (invoked with `code-assistant`)
 
 Plan and refine only — **NEVER implement, NEVER exit plan mode.** Stay in plan mode for the entire session. Follow the collaborative guidance principles from the assistant skill. Only produce plans, analysis, and recommendations.
 

@@ -1,6 +1,6 @@
 ---
 name: slack-message
-description: Process a Slack message link — reads the thread, understands context, and acts on user instructions by composing with other skills. Always manually invoked. Do NOT use for channel-wide catch-up (/slack-channel).
+description: Process a Slack message link — reads the thread, understands context, and acts on user instructions by composing with other skills. Always manually invoked. Do NOT use for channel-wide catch-up (slack-channel).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[slack-message-url] [what to do with it]"
@@ -21,7 +21,7 @@ references:
 
 > Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling — resolve references from the `<References>` block via MCP filesystem tools.
 
-The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `/linear-issue-implement`, `/obsidian-note`, `/code-pull`) or performing direct actions (research, code changes, summarization).
+The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `linear-issue-implement`, `obsidian-note`, `code-pull`) or performing direct actions (research, code changes, summarization).
 
 ### Process
 
@@ -49,8 +49,8 @@ The user provides a Slack message URL and a task. This skill reads the message a
    - If the user provided explicit instructions (e.g., "create a Linear issue from this", "summarize this in Obsidian"), follow them.
    - If the user's intent is unclear, present the summary and ask what they'd like to do.
    - Common actions:
-     - **Create a Linear issue** — invoke the appropriate Linear workspace skill and compose with `/linear-issue-implement` or create directly.
-     - **Create an Obsidian note** — invoke `/obsidian-note` with the thread context.
+     - **Create a Linear issue** — invoke the appropriate Linear workspace skill and compose with `linear-issue-implement` or create directly.
+     - **Create an Obsidian note** — invoke `obsidian-note` with the thread context.
      - **Research a topic** — use web search, Context7, or codebase exploration based on what the thread discusses.
      - **Write or modify code** — use the thread context to inform implementation.
      - **Summarize** — reply in thread via `slack__slack_reply_to_thread` with the summary and add `:dark_sunglasses:` reaction to the message.
@@ -70,19 +70,19 @@ The user provides a Slack message URL and a task. This skill reads the message a
 
 ### Examples
 
-**User says:** `/slack-message https://slack.com/archives/C123/p456 create a Linear issue from this`
+**User says:** `slack-message https://slack.com/archives/C123/p456 create a Linear issue from this`
 
 1. Parse URL → channel `C123`, timestamp `456`.
 2. Fetch thread via `slack__slack_get_thread_replies`.
 3. Resolve user IDs to names.
 4. Summarize: "Alice reported a DNS resolution bug in cluster-rubik. Bob confirmed it affects all pods."
-5. Invoke `/linear-kilic` → compose with issue creation using thread context.
+5. Invoke `linear-kilic` → compose with issue creation using thread context.
 
 **Result:** Linear issue created with thread summary, participants, and relevant details.
 
 ---
 
-**User says:** `/slack-message https://slack.com/archives/C789/p012 summarize this`
+**User says:** `slack-message https://slack.com/archives/C789/p012 summarize this`
 
 1. Parse URL, fetch full thread.
 2. Resolve user names.

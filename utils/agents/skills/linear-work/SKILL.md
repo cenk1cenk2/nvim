@@ -32,4 +32,4 @@ interaction: chat
 
 ### After Initialization
 
-Once context is established, proceed with the user's request. If the user wants to create issues, follow the `/linear-issue-create` skill workflow.
+Once context is established, proceed with the user's request. If the user wants to create issues, follow the `linear-issue-create` skill workflow.

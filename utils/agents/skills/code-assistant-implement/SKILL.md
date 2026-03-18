@@ -1,6 +1,6 @@
 ---
 name: code-assistant-implement
-description: Implement the next agreed-upon step from an assistant plan, self-evaluate, then stop for user review. Always manually invoked. Do NOT use for planning (/code-assistant) or evaluating progress (/code-assistant-evaluate).
+description: Implement the next agreed-upon step from an assistant plan, self-evaluate, then stop for user review. Always manually invoked. Do NOT use for planning (code-assistant) or evaluating progress (code-assistant-evaluate).
 interaction: chat
 disable-model-invocation: true
 ---
@@ -19,7 +19,7 @@ disable-model-invocation: true
 
 - The `code-assistant` skill must have been used to create and agree on a plan.
 - A plan file must exist in `~/.claude/plans/` for the current task.
-- If no plan exists, STOP and tell the user to run `/code-assistant` first.
+- If no plan exists, STOP and tell the user to run `code-assistant` first.
 
 ### Process
 
@@ -40,5 +40,5 @@ disable-model-invocation: true
 
 ### Related Skills
 
-- **`/code-assistant`** (`~/.config/nvim/utils/agents/skills/code-assistant/SKILL.md`) — prerequisite. A plan from assistant MUST exist before this skill runs. Auto-invoke if no plan file exists and the user requests step-by-step implementation.
-- **`/code-assistant-evaluate`** (`~/.config/nvim/utils/agents/skills/code-assistant-evaluate/SKILL.md`) — self-evaluation after each step. Invoked automatically as part of the code-assistant-implement process.
+- **`code-assistant`** (resource: `skills://skill/code-assistant`) — prerequisite. A plan from assistant MUST exist before this skill runs. Auto-invoke if no plan file exists and the user requests step-by-step implementation.
+- **`code-assistant-evaluate`** (resource: `skills://skill/code-assistant-evaluate`) — self-evaluation after each step. Invoked automatically as part of the code-assistant-implement process.

@@ -1,6 +1,6 @@
 ---
 name: notion-push
-description: "Push the current markdown file to a Notion page. Use when user says 'push to Notion', 'update Notion page', 'sync to Notion', or wants to update a Notion document from local markdown. Converts # heading to title and frontmatter to metadata. Do NOT use for pulling (/notion-pull) or session init (/notion-work)."
+description: "Push the current markdown file to a Notion page. Use when user says 'push to Notion', 'update Notion page', 'sync to Notion', or wants to update a Notion document from local markdown. Converts # heading to title and frontmatter to metadata. Do NOT use for pulling (notion-pull) or session init (notion-work)."
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[notion-url or search description]"
@@ -14,7 +14,7 @@ references:
 
 > **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
 
-> **PREREQUISITE:** The `/notion-work` skill MUST be active before this skill runs. If no Notion workspace context exists in the current session, auto-invoke `/notion-work` first.
+> **PREREQUISITE:** The `notion-work` skill MUST be active before this skill runs. If no Notion workspace context exists in the current session, auto-invoke `notion-work` first.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -71,7 +71,7 @@ Present a summary to the user before updating:
 ### Key Principles
 
 - **Always confirm before pushing** — show what will be updated and wait for approval.
-- **Prefer `notion-url` from frontmatter** — enables seamless round-trip with `/notion-pull`.
+- **Prefer `notion-url` from frontmatter** — enables seamless round-trip with `notion-pull`.
 - **Search requires approval** — never auto-select a search result.
 - **Preserve the local file** — pushing does not modify the local markdown file.
 - **Report failures clearly** — if the update fails (permissions, page not found), explain the error and suggest next steps.

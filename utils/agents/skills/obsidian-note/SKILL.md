@@ -1,6 +1,6 @@
 ---
 name: obsidian-note
-description: Create structured notes in Obsidian vault following existing patterns and conventions. Use when user says "create a note", "document this", "write it up in Obsidian", or "save this to my vault". Do NOT use for repository docs (/obsidian-repository), quick todos (/obsidian-todo), or triaging notes (/obsidian-triage).
+description: Create structured notes in Obsidian vault following existing patterns and conventions. Use when user says "create a note", "document this", "write it up in Obsidian", or "save this to my vault". Do NOT use for repository docs (obsidian-repository), quick todos (obsidian-todo), or triaging notes (obsidian-triage).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[topic or description]"
@@ -57,5 +57,5 @@ Additional tools beyond the obsidian reference:
 
 ### Related Skills
 
-- **`/obsidian-repository`** (`~/.config/nvim/utils/agents/skills/obsidian-repository/SKILL.md`) — for documenting repository-specific knowledge in the Repositories vault folder. Auto-invoke when the note topic is about a development repository.
-- **`/obsidian-todo`** (`~/.config/nvim/utils/agents/skills/obsidian-todo/SKILL.md`) — for quick capture of tasks and thoughts. Auto-invoke when the user wants a quick note rather than a structured reference note.
+- **`obsidian-repository`** (resource: `skills://skill/obsidian-repository`) — for documenting repository-specific knowledge in the Repositories vault folder. Auto-invoke when the note topic is about a development repository.
+- **`obsidian-todo`** (resource: `skills://skill/obsidian-todo`) — for quick capture of tasks and thoughts. Auto-invoke when the user wants a quick note rather than a structured reference note.

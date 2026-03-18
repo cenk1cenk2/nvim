@@ -1,6 +1,6 @@
 ---
 name: linear-triage
-description: Process all Linear issues in triage status, recommending projects, priorities, teams, and refinements interactively. Use when user says "triage issues", "process the triage queue", or "review untriaged issues". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for cycle planning (/linear-cycle) or picking next tasks (/linear-next-task).
+description: Process all Linear issues in triage status, recommending projects, priorities, teams, and refinements interactively. Use when user says "triage issues", "process the triage queue", or "review untriaged issues". Requires a workspace skill (linear-kilic or linear-work). Do NOT use for cycle planning (linear-cycle) or picking next tasks (linear-next-task).
 interaction: chat
 references:
   - ../references/output-diff.md
@@ -13,8 +13,8 @@ references:
 > **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
 >
 > If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
-> - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
-> - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+> - **kilic-dev workspace:** Load skill `linear-kilic` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/linear-kilic" })`
+> - **Laravel workspace:** Load skill `linear-work` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/linear-work" })`
 >
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous.
 
@@ -42,7 +42,7 @@ Present the triage queue to the user:
 
 - Total number of issues in triage.
 - Grouping by theme if patterns are visible (e.g., "5 issues related to authentication, 3 related to monitoring").
-- **Project creation signal** — if 3+ issues cluster around a common theme and no existing project covers it, flag this to the user and recommend creating a project via `/linear-project-create` (`~/.config/nvim/utils/agents/skills/linear-project-create/SKILL.md`). Do NOT create the project yourself — just recommend it and move on. The user can act on it after triage.
+- **Project creation signal** — if 3+ issues cluster around a common theme and no existing project covers it, flag this to the user and recommend creating a project via `linear-project-create` (resource: `skills://skill/linear-project-create`). Do NOT create the project yourself — just recommend it and move on. The user can act on it after triage.
 - Ask the user if they want to process all issues or focus on a specific group.
 
 #### Step 4: Process Each Issue
@@ -56,7 +56,7 @@ For each issue, present a recommendation covering:
 5. **Team** — confirm team assignment. Flag if the issue seems like it belongs to a different team.
 6. **Target state** — recommend `backlog` as the default. Recommend `todo` if the issue is urgent or the user wants it in the current cycle.
 7. **Cycle** — if recommending `todo`, suggest adding to the current cycle. Only if the user confirms.
-8. **Description refinement** — if the description is vague, incomplete, or could be improved, suggest specific changes. Follow the approach from the `/linear-issue-update` skill (`~/.config/nvim/utils/agents/skills/linear-issue-update/SKILL.md`): identify what's missing or unclear, draft improvements, and present them for approval.
+8. **Description refinement** — if the description is vague, incomplete, or could be improved, suggest specific changes. Follow the approach from the `linear-issue-update` skill (resource: `skills://skill/linear-issue-update`): identify what's missing or unclear, draft improvements, and present them for approval.
 9. **Estimate** — recommend an estimate if missing.
 
 **Present recommendations as a concise block per issue.** Example:

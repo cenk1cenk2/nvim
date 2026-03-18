@@ -1,6 +1,6 @@
 ---
 name: linear-issue-create
-description: Create new Linear issues with comprehensive analysis and research. Use when user says "create an issue", "file a bug", "add a task to Linear", or "create a ticket". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for updating existing issues (/linear-issue-update), commenting (/linear-issue-comment), or picking up issues (/linear-issue-implement).
+description: Create new Linear issues with comprehensive analysis and research. Use when user says "create an issue", "file a bug", "add a task to Linear", or "create a ticket". Requires a workspace skill (linear-kilic or linear-work). Do NOT use for updating existing issues (linear-issue-update), commenting (linear-issue-comment), or picking up issues (linear-issue-implement).
 interaction: chat
 references:
   - ../references/linear-prerequisite.md
@@ -100,7 +100,7 @@ Additional rules for issue creation:
 
 **User says:** "Create an issue for adding cert-manager to cluster-rubik"
 
-1. Auto-invoke `/linear-kilic` (GitLab context detected).
+1. Auto-invoke `linear-kilic` (GitLab context detected).
 2. Enter plan mode.
 3. Research cert-manager deployment patterns via web search and Context7.
 4. Fetch labels and team from Linear workspace.

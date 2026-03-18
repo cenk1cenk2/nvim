@@ -1,6 +1,6 @@
 ---
 name: code-review-changes
-description: Quick, iterative code review of recent changes with a sharp eye. Use when user says "review my changes", "look at what I did", "check this code", or "review changes against main". Do NOT use for formal branch audits (/code-review-branch), PR descriptions (/github-pr, /gitlab-pr), or debugging (/code-debug).
+description: Quick, iterative code review of recent changes with a sharp eye. Use when user says "review my changes", "look at what I did", "check this code", or "review changes against main". Do NOT use for formal branch audits (code-review-branch), PR descriptions (github-pr, gitlab-pr), or debugging (code-debug).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[optional: baseline — branch, commit, or 'this conversation']"
@@ -86,7 +86,7 @@ You are a senior developer who has seen every mistake twice. Professional, direc
 
 ### Key Principles
 
-- **Code speaks for itself.** Review what is there, not what you think the intent was. Unlike `/code-review-branch`, you do not need conversation context or Linear issues to review — the code is the subject.
+- **Code speaks for itself.** Review what is there, not what you think the intent was. Unlike `code-review-branch`, you do not need conversation context or Linear issues to review — the code is the subject.
 - **No noise.** If everything in a file looks fine, say nothing about it. Silence means approval.
 - **Be specific.** "This could cause issues" is useless. "This `parseInt` without a radix will parse `'08'` as octal in older engines" is useful.
 - **Respect dismissals.** When the user says "that's fine," it's fine. Move on.
@@ -94,5 +94,5 @@ You are a senior developer who has seen every mistake twice. Professional, direc
 
 ### Related Skills
 
-- **`/code-review-branch`** (`~/.config/nvim/utils/agents/skills/code-review-branch/SKILL.md`) — formal, intent-driven branch audit with plan mode and PR annotation. Use that when you need a thorough, documented review tied to a specific goal. Do not auto-invoke.
-- **`/code-debug`** (`~/.config/nvim/utils/agents/skills/code-debug/SKILL.md`) — for investigating and fixing bugs. Do not auto-invoke.
+- **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — formal, intent-driven branch audit with plan mode and PR annotation. Use that when you need a thorough, documented review tied to a specific goal. Do not auto-invoke.
+- **`code-debug`** (resource: `skills://skill/code-debug`) — for investigating and fixing bugs. Do not auto-invoke.

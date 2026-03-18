@@ -28,30 +28,30 @@ When a skill has a **PREREQUISITE** block, the agent MUST ensure that prerequisi
 
 Two Linear workspaces exist. Deduce which one from context:
 
-| Signal                                 | Workspace | Skill to load                                              |
-| -------------------------------------- | --------- | ---------------------------------------------------------- |
-| Issue ID prefix `K-xxx`                | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| Issue ID prefix `CLOUD-xxx`            | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
-| Linear URL containing `kilic-dev`      | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| Linear URL containing `laravel`        | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
-| GitLab repository (`gitlab.kilic.dev`) | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| GitHub repository (Laravel org)        | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
-| User says "work" or "laravel"          | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
-| User says "personal" or "kilic"        | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| No signal available                    | —         | Ask the user                                               |
+| Signal                                 | Workspace | Skill resource                |
+| -------------------------------------- | --------- | ----------------------------- |
+| Issue ID prefix `K-xxx`                | kilic-dev | `skills://skill/linear-kilic` |
+| Issue ID prefix `CLOUD-xxx`            | Laravel   | `skills://skill/linear-work`  |
+| Linear URL containing `kilic-dev`      | kilic-dev | `skills://skill/linear-kilic` |
+| Linear URL containing `laravel`        | Laravel   | `skills://skill/linear-work`  |
+| GitLab repository (`gitlab.kilic.dev`) | kilic-dev | `skills://skill/linear-kilic` |
+| GitHub repository (Laravel org)        | Laravel   | `skills://skill/linear-work`  |
+| User says "work" or "laravel"          | Laravel   | `skills://skill/linear-work`  |
+| User says "personal" or "kilic"        | kilic-dev | `skills://skill/linear-kilic` |
+| No signal available                    | —         | Ask the user                  |
 
 #### Skill Chaining
 
-Some skills reference other skills as follow-up actions. When a skill recommends invoking another skill, load it by path:
+Some skills reference other skills as follow-up actions. When a skill recommends invoking another skill, load it via `ReadMcpResourceTool`:
 
-| Context                                     | Skill to load                                                          |
-| ------------------------------------------- | ---------------------------------------------------------------------- |
-| Need to create Linear issues                | `~/.config/nvim/utils/agents/skills/linear-issue-create/SKILL.md`      |
-| Need to create a Linear project             | `~/.config/nvim/utils/agents/skills/linear-project-create/SKILL.md`    |
-| Need to update/refine an issue description  | `~/.config/nvim/utils/agents/skills/linear-issue-update/SKILL.md`      |
-| Need to create a Linear initiative          | `~/.config/nvim/utils/agents/skills/linear-initiative-create/SKILL.md` |
-| Need to update a Linear initiative          | `~/.config/nvim/utils/agents/skills/linear-initiative-update/SKILL.md` |
-| Need to organize a todo note into the vault | `~/.config/nvim/utils/agents/skills/obsidian-note/SKILL.md`            |
+| Context                                     | Skill resource                            |
+| ------------------------------------------- | ----------------------------------------- |
+| Need to create Linear issues                | `skills://skill/linear-issue-create`      |
+| Need to create a Linear project             | `skills://skill/linear-project-create`    |
+| Need to update/refine an issue description  | `skills://skill/linear-issue-update`      |
+| Need to create a Linear initiative          | `skills://skill/linear-initiative-create` |
+| Need to update a Linear initiative          | `skills://skill/linear-initiative-update` |
+| Need to organize a todo note into the vault | `skills://skill/obsidian-note`            |
 
 #### Multiple Instances
 
@@ -77,7 +77,9 @@ For LLMs or environments that do not have a native skill invocation system (no `
 Skills may declare references to additional files for shared conventions and detailed context. References are declared in YAML frontmatter as comma-separated relative paths:
 
 ```yaml
-references: ../references/linear-prerequisite.md, ../references/plan-mode.md
+references:
+  - ../references/linear-prerequisite.md
+  - ../references/plan-mode.md
 ```
 
 **How references work:**

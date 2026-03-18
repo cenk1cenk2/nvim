@@ -1,6 +1,6 @@
 ---
 name: obsidian-repository
-description: Document repository knowledge in Obsidian — key findings, architecture, conventions, and gotchas. Use when user says "document this repo", "update the repo note", or "capture architecture in Obsidian". Do NOT use for general notes (/obsidian-note), quick todos (/obsidian-todo), or triaging notes (/obsidian-triage).
+description: Document repository knowledge in Obsidian — key findings, architecture, conventions, and gotchas. Use when user says "document this repo", "update the repo note", or "capture architecture in Obsidian". Do NOT use for general notes (obsidian-note), quick todos (obsidian-todo), or triaging notes (obsidian-triage).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[repository name or path] [optional: what to document]"
@@ -135,4 +135,4 @@ Sections are optional — use only what the repository warrants. A small utility
 
 ### Related Skills
 
-- **`/obsidian-note`** (`~/.config/nvim/utils/agents/skills/obsidian-note/SKILL.md`) — general-purpose note creation. This skill specializes the obsidian-note pattern for repository documentation. Do not auto-invoke.
+- **`obsidian-note`** (resource: `skills://skill/obsidian-note`) — general-purpose note creation. This skill specializes the obsidian-note pattern for repository documentation. Do not auto-invoke.
