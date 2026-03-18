@@ -17,7 +17,7 @@ references:
 >
 > - These are quick capture notes — create immediately, no planning.
 > - Emphasize speed over perfection.
-> - Read the `obsidian` reference for vault location and tool access — resolve references from the `<References>` block via `skills__read_reference`.
+> - Read the `obsidian` reference for vault location and tool access — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/obsidian-todo/references`.
 
 > **CRITICAL — Tool Selection (non-negotiable, check CWD first):**
 >

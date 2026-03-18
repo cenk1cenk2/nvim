@@ -27,7 +27,7 @@ references:
 
 ### Context
 
-> Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, writing style, and vault exploration conventions — resolve references from the `<References>` block via `skills__read_reference`.
+> Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, writing style, and vault exploration conventions — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/obsidian-note/references`.
 
 You create concise, practical reference notes that match the existing conventions in the vault. Every category has its own patterns — discover them, don't assume.
 

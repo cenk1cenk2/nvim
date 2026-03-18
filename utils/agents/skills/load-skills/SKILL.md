@@ -63,14 +63,14 @@ When a skill exists in multiple variants (e.g., `linear-kilic-project-argocd-sys
 
 ### Loading Skills Without a Skill Mechanism
 
-For LLMs or environments that do not have a native skill invocation system (no `/slash-commands`), skills can be loaded using the **skills MCP tools** — these are auto-approved and require no user confirmation:
+For LLMs or environments that do not have a native skill invocation system (no `/slash-commands`), skills can be loaded using the **skills MCP resources** on the `mcphub` server:
 
-1. Call `skills__list_skills` to discover available skills. Each skill is tagged `[auto]` (model can auto-invoke) or `[manual]` (explicit user request only).
-2. Call `skills__read_skill` with `{ "names": ["<skill-name>"] }` to read one or more skills. Supports batch: `{ "names": ["skill-a", "skill-b"] }`.
+1. Use `ListMcpResourcesTool({ server: "mcphub" })` to discover available skills. Each skill resource is tagged `[auto]` (model can auto-invoke) or `[manual]` (explicit user request only).
+2. Read `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}" })` to read a skill. For multiple skills, make parallel calls.
 3. Follow the instructions in the file as if they were system instructions for the current task.
 4. If the loaded skill has its own prerequisites, resolve them recursively.
 
-**Fallback:** If skills MCP tools are unavailable, read the file directly at `~/.config/nvim/utils/agents/skills/<skill-name>/SKILL.md` using filesystem tools.
+**Fallback:** If skills MCP resources are unavailable, read the file directly at `~/.config/nvim/utils/agents/skills/<skill-name>/SKILL.md` using filesystem tools.
 
 ### Reference Files
 
@@ -84,10 +84,8 @@ references: ../references/linear-prerequisite.md, ../references/plan-mode.md
 
 1. When a skill is invoked, its declared references are resolved and listed in the XML `<References>` block.
 2. The SKILL.md body tells you which references to read and when (e.g., "Read the `slack` reference for available tools and conventions.").
-3. **Read reference files using `skills__read_reference`** — pass the exact relative paths from frontmatter. This tool is auto-approved — no user confirmation needed.
-   - Example: `{ "paths": ["../references/slack.md", "../references/plan-mode.md"], "skill": "slack-channel" }`.
-   - Supports batch loading — pass all needed references in one call.
-   - Paths are resolved from the skill's directory, so `../references/` reaches shared references and `./references/` reaches skill-local ones.
+3. **Read reference files using `ReadMcpResourceTool`** from the `mcphub` server — read all references for a skill: `skills://skill/{name}/references`. For shared references outside a skill context: `skills://reference/{name}`.
+   - References resolve automatically — shared references and skill-local ones are both handled.
 4. Skills must work even without references (graceful degradation) — they contain enough inline context to function.
 
 **Fallback:** If skills MCP tools are unavailable, read reference files using `filesystem__read_file` or `neovim__read_file` at `~/.config/nvim/utils/agents/skills/references/<filename>`.

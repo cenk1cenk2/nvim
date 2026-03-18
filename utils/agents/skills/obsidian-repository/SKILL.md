@@ -39,7 +39,7 @@ If the current working directory is under `~/development/`, derive the note path
 > - **CWD is NOT `~/notes`** → use `obsidian__*` MCP tools.
 > - **Always use** `obsidian__obsidian_list_notes` and `obsidian__obsidian_global_search` regardless of CWD.
 >
-> Read the `obsidian` reference for vault location and full tool access conventions — resolve references from the `<References>` block via `skills__read_reference`.
+> Read the `obsidian` reference for vault location and full tool access conventions — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/obsidian-repository/references`.
 
 - Use codebase exploration tools (treesitter, Grep, Glob, git MCP) to analyze the repository.
 

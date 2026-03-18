@@ -87,8 +87,13 @@ function M.config()
       require("mcphub").setup(config)
     end,
     on_done = function()
-      -- Add native browser tool
       local mcphub = require("mcphub")
+
+      mcphub.add_server("browser", {
+        displayName = "Browser",
+        description = "Open URLs and search queries in the default web browser.",
+      })
+
       mcphub.add_tool("browser", {
         name = "open_in_browser",
         description = "Open a URL in the default web browser using vim.ui.open()",
@@ -190,7 +195,11 @@ function M.config()
         end
       end
 
-      -- Navigation tools for editor control
+      mcphub.add_server("vim", {
+        displayName = "Vim",
+        description = "Editor navigation and control. Jump to lines, open files, select ranges, and inspect editor state.",
+      })
+
       mcphub.add_tool("vim", {
         name = "vim_status",
         description = "Get current editor state: cursor position, mode, current file, and open buffers",
@@ -429,101 +438,45 @@ function M.config()
         end,
       })
 
-      -- Skills tools — auto-approved MCP tools for reading skills and references
+      -- Skills resources — MCP resources for reading skills and references
       local skills_dir = M.agent_skills_dir()
 
-      mcphub.add_tool("skills", {
-        name = "list_skills",
-        description = "List all available skills with their names, descriptions, and invocation mode. [auto] skills can be auto-invoked by the model based on context. [manual] skills require explicit user request.",
-        inputSchema = {
-          type = "object",
-          properties = {},
-        },
-        handler = function(req, res)
-          local skills = M.load_agent_skills()
-          local lines = {}
-          for _, skill in ipairs(skills) do
-            local invokable = not skill.frontmatter["disable-model-invocation"]
-            local tag = invokable and "[auto]" or "[manual]"
-            table.insert(lines, string.format("- %s **%s**: %s", tag, skill.name, skill.description))
-          end
-
-          return res:text(table.concat(lines, "\n")):send()
-        end,
+      mcphub.add_server("skills", {
+        displayName = "Skills",
+        description = "Agent skills and shared references. Each skill is a static resource at skill/{name}. Each shared reference is at reference/{name}. Use skill/{name}/references to load all declared references for a skill.",
       })
 
-      mcphub.add_tool("skills", {
-        name = "read_skill",
-        description = "Read one or more skills by name. Returns full SKILL.md content including frontmatter for each skill.",
-        inputSchema = {
-          type = "object",
-          properties = {
-            names = {
-              type = "array",
-              items = { type = "string" },
-              description = "Skill names to read (e.g., ['linear-issue-create', 'obsidian-note']).",
-            },
-          },
-          required = { "names" },
-        },
-        handler = function(req, res)
-          local names = req.params.names
-          if type(names) == "string" then
-            local ok, decoded = pcall(vim.json.decode, names)
-            names = ok and type(decoded) == "table" and decoded or { names }
-          end
-          if not names or #names == 0 then
-            return res:error("No skill names provided")
-          end
-
-          local results = {}
-          local errors = {}
-          for _, name in ipairs(names) do
-            local skill_path = join_paths(skills_dir, name, "SKILL.md")
-            if vim.fn.filereadable(skill_path) == 1 then
-              local content = table.concat(vim.fn.readfile(skill_path), "\n")
-              table.insert(results, string.format("--- %s ---\n%s", name, content))
-            else
-              table.insert(errors, name)
+      -- Static resources: one per skill (discoverable via @skills: autocomplete)
+      local skills = M.load_agent_skills()
+      for _, skill in ipairs(skills) do
+        mcphub.add_resource("skills", {
+          name = skill.name,
+          uri = "skill/" .. skill.name,
+          description = skill.description,
+          mimeType = "text/markdown",
+          handler = function(req, res)
+            local skill_path = join_paths(skills_dir, skill.name, "SKILL.md")
+            if vim.fn.filereadable(skill_path) ~= 1 then
+              return res:error("Skill not found: " .. skill.name)
             end
-          end
 
-          if #errors > 0 then
-            table.insert(results, string.format("\n--- NOT FOUND: %s ---", table.concat(errors, ", ")))
-          end
+            local content = table.concat(vim.fn.readfile(skill_path), "\n")
 
-          return res:text(table.concat(results, "\n\n")):send()
-        end,
-      })
+            return res:text(string.format("--- %s ---\n%s", skill.name, content)):send()
+          end,
+        })
+      end
 
-      mcphub.add_tool("skills", {
-        name = "read_reference",
-        description = "Read reference files for a skill. When paths are omitted, loads ALL references declared in the skill's frontmatter. When paths are provided, loads only the specified references.",
-        inputSchema = {
-          type = "object",
-          properties = {
-            paths = {
-              type = "array",
-              items = { type = "string" },
-              description = "Relative reference paths exactly as declared in skill frontmatter (e.g., ['../references/slack.md', '../references/plan-mode.md', './references/local.md']). When omitted, all references from the skill's frontmatter are loaded.",
-            },
-            skill = {
-              type = "string",
-              description = "The skill name whose directory is used to resolve relative paths (e.g., 'linear-issue-create'). Required for correct path resolution.",
-            },
-          },
-          required = { "skill" },
-        },
+      -- Resource template: read all declared references for a skill
+      mcphub.add_resource_template("skills", {
+        name = "Skill References (all)",
+        uriTemplate = "skill/{name}/references",
+        description = "Read all references declared in a skill's frontmatter.",
+        mimeType = "text/markdown",
         handler = function(req, res)
-          local paths = req.params.paths
-          if type(paths) == "string" then
-            local ok, decoded = pcall(vim.json.decode, paths)
-            paths = ok and type(decoded) == "table" and decoded or { paths }
-          end
-          local skill_name = req.params.skill
-
+          local skill_name = req.params.name
           if not skill_name or skill_name == "" then
-            return res:error("Skill name is required for resolving relative paths")
+            return res:error("Skill name is required")
           end
 
           local skill_folder = join_paths(skills_dir, skill_name)
@@ -531,31 +484,26 @@ function M.config()
             return res:error("Skill directory not found: " .. skill_name)
           end
 
-          -- When paths not provided, load all references from skill frontmatter
-          if not paths or #paths == 0 then
-            local skill_path = join_paths(skill_folder, "SKILL.md")
-            if vim.fn.filereadable(skill_path) ~= 1 then
-              return res:error("SKILL.md not found for: " .. skill_name)
-            end
+          local skill_path = join_paths(skill_folder, "SKILL.md")
+          if vim.fn.filereadable(skill_path) ~= 1 then
+            return res:error("SKILL.md not found for: " .. skill_name)
+          end
 
-            local skill_content = table.concat(vim.fn.readfile(skill_path), "\n")
-            local parsed = M.parse_skill_markdown(skill_content, skill_name)
-            local refs = parsed.frontmatter.references
+          local skill_content = table.concat(vim.fn.readfile(skill_path), "\n")
+          local parsed = M.parse_skill_markdown(skill_content, skill_name)
+          local refs = parsed.frontmatter.references
 
-            if not refs or (type(refs) == "table" and #refs == 0) then
-              return res:text("No references declared in " .. skill_name .. " frontmatter."):send()
-            end
+          if not refs or (type(refs) == "table" and #refs == 0) then
+            return res:text("No references declared in " .. skill_name .. " frontmatter."):send()
+          end
 
-            if type(refs) == "string" then
-              refs = { refs }
-            end
-
-            paths = refs
+          if type(refs) == "string" then
+            refs = { refs }
           end
 
           local results = {}
           local errors = {}
-          for _, rel_path in ipairs(paths) do
+          for _, rel_path in ipairs(refs) do
             local abs_path = vim.fn.resolve(join_paths(skill_folder, vim.trim(rel_path)))
             if vim.fn.filereadable(abs_path) == 1 then
               local basename = vim.fn.fnamemodify(abs_path, ":t")
@@ -574,103 +522,30 @@ function M.config()
         end,
       })
 
-      mcphub.add_tool("skills", {
-        name = "list_references",
-        description = "List reference files in a folder under the skills directory. Defaults to the shared 'references/' folder when no folder is given.",
-        inputSchema = {
-          type = "object",
-          properties = {
-            folder = {
-              type = "string",
-              default = "references",
-              description = "Folder path relative to the skills directory (e.g., 'references', 'linear-issue-create/references'). Defaults to 'references' if omitted.",
-            },
-          },
-        },
-        handler = function(req, res)
-          local folder = req.params.folder or "references"
-          local abs_folder = join_paths(skills_dir, folder)
+      -- Static resources: one per shared reference (discoverable via @skills: autocomplete)
+      local refs_dir = join_paths(skills_dir, "references")
+      if vim.fn.isdirectory(refs_dir) == 1 then
+        local ref_files = vim.fn.glob(join_paths(refs_dir, "*.md"), false, true)
+        table.sort(ref_files)
+        for _, ref_file in ipairs(ref_files) do
+          local ref_name = vim.fn.fnamemodify(ref_file, ":t:r")
+          mcphub.add_resource("skills", {
+            name = "reference:" .. ref_name,
+            uri = "reference/" .. ref_name,
+            description = "Shared reference: " .. ref_name,
+            mimeType = "text/markdown",
+            handler = function(req, res)
+              if vim.fn.filereadable(ref_file) ~= 1 then
+                return res:error("Reference not found: " .. ref_name)
+              end
 
-          if vim.fn.isdirectory(abs_folder) ~= 1 then
-            return res:error("Directory not found: " .. folder)
-          end
+              local content = table.concat(vim.fn.readfile(ref_file), "\n")
 
-          local files = vim.fn.glob(join_paths(abs_folder, "*.md"), false, true)
-          table.sort(files)
-
-          if #files == 0 then
-            return res:text("No reference files found in " .. folder):send()
-          end
-
-          local lines = {}
-          for _, file in ipairs(files) do
-            local name = vim.fn.fnamemodify(file, ":t")
-            table.insert(lines, "- " .. name)
-          end
-
-          return res:text(string.format("References in `%s/` (%d files):\n%s", folder, #files, table.concat(lines, "\n"))):send()
-        end,
-      })
-
-      mcphub.add_tool("skills", {
-        name = "load_reference",
-        description = "Load reference files by name from a folder under the skills directory. Returns the full content of each file. Defaults to the shared 'references/' folder when no folder is given.",
-        inputSchema = {
-          type = "object",
-          properties = {
-            names = {
-              type = "array",
-              items = { type = "string" },
-              description = "Reference file names to load (e.g., ['slack.md', 'plan-mode.md']). The .md extension is optional.",
-            },
-            folder = {
-              type = "string",
-              description = "Folder path relative to the skills directory (e.g., 'references', 'linear-issue-create/references'). Defaults to 'references' if omitted.",
-            },
-          },
-          required = { "names" },
-        },
-        handler = function(req, res)
-          local names = req.params.names
-          if type(names) == "string" then
-            local ok, decoded = pcall(vim.json.decode, names)
-            names = ok and type(decoded) == "table" and decoded or { names }
-          end
-          local folder = req.params.folder or "references"
-          local abs_folder = join_paths(skills_dir, folder)
-
-          if not names or #names == 0 then
-            return res:error("No reference names provided")
-          end
-
-          if vim.fn.isdirectory(abs_folder) ~= 1 then
-            return res:error("Directory not found: " .. folder)
-          end
-
-          local results = {}
-          local errors = {}
-          for _, name in ipairs(names) do
-            local filename = name:match("%.md$") and name or (name .. ".md")
-            local file_path = join_paths(abs_folder, filename)
-            if vim.fn.filereadable(file_path) == 1 then
-              local content = table.concat(vim.fn.readfile(file_path), "\n")
-              table.insert(results, string.format("--- %s ---\n%s", filename, content))
-            else
-              table.insert(errors, filename)
-            end
-          end
-
-          if #errors > 0 then
-            table.insert(results, string.format("\n--- NOT FOUND: %s ---", table.concat(errors, ", ")))
-          end
-
-          return res:text(table.concat(results, "\n\n")):send()
-        end,
-      })
-
-      M.register_agent_skills()
-      M.register_agent_references()
-      M.register_agent_unloaders()
+              return res:text(string.format("--- %s ---\n%s", ref_name .. ".md", content)):send()
+            end,
+          })
+        end
+      end
 
       -- Advanced mcphub configuration
       require("mcp-diagnostics").setup({
@@ -819,138 +694,6 @@ function M.load_agent_skills(dir)
   end
 
   return skills
-end
-
-function M.register_agent_skills()
-  if M._agent_skills_registered then
-    return
-  end
-
-  local mcphub = require("mcphub")
-  local skills = M.load_agent_skills()
-
-  ---@param skill {name:string, description:string, body:string, frontmatter:table<string,string>}
-  ---@return string
-  local function build_skill_load_prompt(skill)
-    return string.format(
-      '\n\n**Load the `%s` skill using `mcp__mcphub__skills__read_skill` before processing with arguments `{ "names": ["%s"] }`, then follow its instructions of the SKILL.**\n\n',
-      skill.name,
-      skill.name
-    )
-  end
-
-  for _, skill in ipairs(skills) do
-    mcphub.add_prompt("skills", {
-      name = skill.name,
-      description = skill.description,
-      handler = function(req, res)
-        local file_content = vim.fn.readfile(skill.file_path)
-        if file_content and #file_content > 0 then
-          local data = M.parse_skill_markdown(table.concat(file_content, "\n"), skill.name)
-
-          return res:user():text(build_skill_load_prompt(data)):send()
-        end
-
-        return res:user():text(build_skill_load_prompt(skill)):send()
-      end,
-    })
-  end
-
-  M._agent_skills_registered = true
-end
-
--- References exposed as slash commands (reference:<name>).
--- Only references listed here are registered as prompts.
-M.agent_reference_prompts = {
-  "output-diff",
-}
-
-function M.register_agent_references()
-  if M._agent_references_registered then
-    return
-  end
-
-  local mcphub = require("mcphub")
-  local refs_dir = join_paths(M.agent_skills_dir(), "references")
-
-  if vim.fn.isdirectory(refs_dir) ~= 1 then
-    M._agent_references_registered = true
-
-    return
-  end
-
-  for _, name in ipairs(M.agent_reference_prompts) do
-    local file = join_paths(refs_dir, name .. ".md")
-    if vim.fn.filereadable(file) == 1 then
-      local prompt_name = "reference:" .. name
-
-      mcphub.add_prompt("skills", {
-        name = prompt_name,
-        description = "Load reference: " .. name,
-        handler = function(req, res)
-          return res
-            :user()
-            :text(
-              string.format(
-                '\n\n**Load the `%s` reference using `mcp__mcphub__skills__load_reference` with arguments `{ "names": ["%s"] }`, then follow its guidelines until otherwise prompted.**\n\n',
-                name,
-                name
-              )
-            )
-            :send()
-        end,
-      })
-    end
-  end
-
-  M._agent_references_registered = true
-end
-
-function M.register_agent_unloaders()
-  if M._agent_unloaders_registered then
-    return
-  end
-
-  local mcphub = require("mcphub")
-
-  local skills = M.load_agent_skills()
-  for _, skill in ipairs(skills) do
-    mcphub.add_prompt("skills", {
-      name = "unload:" .. skill.name,
-      description = "Unload skill: " .. skill.name,
-      handler = function(req, res)
-        return res
-          :user()
-          :text(
-            string.format(
-              "\n\n**Dismiss the `%s` skill. Stop following its instructions immediately. It is no longer active for this session unless explicitly re-invoked.**\n\n",
-              skill.name
-            )
-          )
-          :send()
-      end,
-    })
-  end
-
-  for _, name in ipairs(M.agent_reference_prompts) do
-    mcphub.add_prompt("skills", {
-      name = "unload:reference:" .. name,
-      description = "Unload reference: " .. name,
-      handler = function(req, res)
-        return res
-          :user()
-          :text(
-            string.format(
-              "\n\n**Dismiss the `%s` reference. Stop following its guidelines immediately. It is no longer active for this session unless explicitly re-invoked.**\n\n",
-              name
-            )
-          )
-          :send()
-      end,
-    })
-  end
-
-  M._agent_unloaders_registered = true
 end
 
 return M

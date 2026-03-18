@@ -49,8 +49,8 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 1. Determine the scope — **shared** or **skill-specific**.
    - Shared: the content applies to 2+ skills or is a general convention.
    - Skill-specific: the content supports only one skill and would clutter its SKILL.md.
-2. If shared, check existing references via `skills__list_references` to avoid duplication.
-3. If skill-specific, read the parent skill via `skills__read_skill` to understand context.
+2. If shared, list files in `~/.config/nvim/utils/agents/skills/references/` to check for existing references and avoid duplication.
+3. If skill-specific, read the parent skill via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}" })` to understand context.
 4. Name the file:
    - Shared: `<family>-<topic>.md` (e.g., `linear-prerequisite.md`, `scm-detect.md`).
    - Skill-specific: `<topic>.md` inside `<skill-name>/references/`.
@@ -61,7 +61,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 
 #### Update
 
-1. Read the existing reference via `skills__read_reference`.
+1. Read the existing reference via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://reference/{name}" })`.
 2. Read skills that declare it — search for the filename in skill frontmatter to understand consumers.
 3. Identify what needs to change based on conversation context.
 4. Present proposed changes using diff format.
@@ -70,7 +70,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 
 #### Review
 
-1. List all references via `skills__list_references`.
+1. List all files in `~/.config/nvim/utils/agents/skills/references/`.
 2. For each reference (or a specific one if requested):
    - Read its content.
    - Check which skills declare it in their frontmatter.
