@@ -955,11 +955,11 @@ function M.config()
             end
 
             local config = require("codecompanion.config")
-            local Variable = require("codecompanion.interactions.chat.editor_context.buffer")
+            local Variable = require("codecompanion.interactions.shared.editor_context.buffer")
             local var = Variable.new({
               Chat = chat,
-              config = config.interactions.chat.editor_context["buffer"] or {},
-              params = (config.interactions.chat.editor_context["buffer"] or {}).opts and config.interactions.chat.editor_context["buffer"].opts.default_params,
+              config = config.interactions.shared.editor_context["buffer"] or {},
+              params = (config.interactions.shared.editor_context["buffer"] or {}).opts and config.interactions.shared.editor_context["buffer"].opts.default_params,
             })
 
             var:output({ bufnr = bufnr })
