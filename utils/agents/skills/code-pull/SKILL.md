@@ -1,6 +1,6 @@
 ---
 name: code-pull
-description: Pull changes from a reference GitHub/GitLab repository and adapt them to the current repository. Always manually invoked. Do NOT use for code review (/code-review-branch), debugging (/code-debug), or PR descriptions (/github-pr, /gitlab-pr).
+description: Pull changes from a reference GitHub/GitLab repository and adapt them to the current repository. Always manually invoked. Do NOT use for code review (code-review-branch), debugging (code-debug), or PR descriptions (github-pr, gitlab-pr).
 interaction: chat
 disable-model-invocation: true
 references:
@@ -63,4 +63,4 @@ argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 
 ### Related Skills
 
-- **`/code-review-branch`** (`~/.config/nvim/utils/agents/skills/code-review-branch/SKILL.md`) — for reviewing the adapted changes after applying them. Do not auto-invoke.
+- **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — for reviewing the adapted changes after applying them. Do not auto-invoke.

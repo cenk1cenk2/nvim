@@ -1,6 +1,6 @@
 ---
 name: obsidian-triage
-description: Process todo notes in Obsidian vault. Organizes, moves, renames, or removes notes interactively. Use when user says "triage my notes", "clean up todos", or "organize the Todo folder". Do NOT use for creating notes (/obsidian-note), repository docs (/obsidian-repository), or adding todos (/obsidian-todo).
+description: Process todo notes in Obsidian vault. Organizes, moves, renames, or removes notes interactively. Use when user says "triage my notes", "clean up todos", or "organize the Todo folder". Do NOT use for creating notes (obsidian-note), repository docs (obsidian-repository), or adding todos (obsidian-todo).
 interaction: chat
 disable-model-invocation: true
 references:
@@ -22,9 +22,9 @@ references:
 
 ### Context
 
-> Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, and writing style conventions — resolve references from the `<References>` block via `skills__read_reference`.
+> Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, and writing style conventions — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/obsidian-triage/references`.
 
-Todo notes in `Todo/` are quick captures — timestamped files with rough thoughts, checklists, and brain dumps. Over time they accumulate. This skill processes them one by one: organizing relevant notes into proper vault categories (like `/obsidian-note` would), flagging stale or completed notes for removal, and refining what remains.
+Todo notes in `Todo/` are quick captures — timestamped files with rough thoughts, checklists, and brain dumps. Over time they accumulate. This skill processes them one by one: organizing relevant notes into proper vault categories (like `obsidian-note` would), flagging stale or completed notes for removal, and refining what remains.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -58,7 +58,7 @@ For each note, present its content summary and recommend one of:
    - Recommend a target category based on the vault structure.
    - Propose a kebab-case filename (replacing the timestamp name).
    - Propose updated frontmatter following the target category's conventions (read 1-2 existing notes in that category if not already familiar with its patterns).
-   - Propose restructured content to match the category's style — following the same approach as `/obsidian-note` (`~/.config/nvim/utils/agents/skills/obsidian-note/SKILL.md`): concise, practical, flat `##` structure.
+   - Propose restructured content to match the category's style — following the same approach as `obsidian-note` (resource: `skills://skill/obsidian-note`): concise, practical, flat `##` structure.
    - Present the full proposed note for approval before writing.
 
 2. **Keep** — the note is still an active todo and should stay in `Todo/`.

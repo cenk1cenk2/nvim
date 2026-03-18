@@ -1,6 +1,6 @@
 ---
 name: notion-work
-description: "Initialize a Notion session for the Laravel workspace. Auto-invoked when Notion context is detected (e.g., Notion URLs, references to Notion pages in Laravel workspace context). Do NOT use for pulling (/notion-pull) or pushing (/notion-push) pages."
+description: "Initialize a Notion session for the Laravel workspace. Auto-invoked when Notion context is detected (e.g., Notion URLs, references to Notion pages in Laravel workspace context). Do NOT use for pulling (notion-pull) or pushing (notion-push) pages."
 interaction: chat
 ---
 
@@ -29,4 +29,4 @@ interaction: chat
 
 ### After Initialization
 
-Once context is established, proceed with the user's request. If the user wants to pull or push pages, follow the `/notion-pull` or `/notion-push` skill workflows.
+Once context is established, proceed with the user's request. If the user wants to pull or push pages, follow the `notion-pull` or `notion-push` skill workflows.

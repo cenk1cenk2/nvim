@@ -633,7 +633,7 @@ function M.config()
               make_tools = true, -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
               show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
               add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
-              show_result_in_chat = false, -- Show tool results directly in chat buffer
+              show_result_in_chat = true, -- Show tool results directly in chat buffer
               -- format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
               -- MCP Resources
               -- TODO: SET ME TRUE AFTER THE PLUGIN UPDATE
@@ -955,11 +955,11 @@ function M.config()
             end
 
             local config = require("codecompanion.config")
-            local Variable = require("codecompanion.interactions.chat.editor_context.buffer")
+            local Variable = require("codecompanion.interactions.shared.editor_context.buffer")
             local var = Variable.new({
               Chat = chat,
-              config = config.interactions.chat.editor_context["buffer"] or {},
-              params = (config.interactions.chat.editor_context["buffer"] or {}).opts and config.interactions.chat.editor_context["buffer"].opts.default_params,
+              config = config.interactions.shared.editor_context["buffer"] or {},
+              params = (config.interactions.shared.editor_context["buffer"] or {}).opts and config.interactions.shared.editor_context["buffer"].opts.default_params,
             })
 
             var:output({ bufnr = bufnr })

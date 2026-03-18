@@ -4,8 +4,8 @@ A Linear workspace skill **MUST** be active before any Linear issue/project/init
 
 If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
 
-- **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
-- **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+- **kilic-dev workspace:** Load skill `linear-kilic` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/linear-kilic" })`
+- **Laravel workspace:** Load skill `linear-work` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/linear-work" })`
 
 ## Deduction Rules
 

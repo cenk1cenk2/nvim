@@ -1,6 +1,6 @@
 ---
 name: slack-channel
-description: Process a Slack channel — reads recent messages, analyzes automated and human messages, and acts per channel type. Always manually invoked. Do NOT use for individual Slack message links (/slack-message).
+description: Process a Slack channel — reads recent messages, analyzes automated and human messages, and acts per channel type. Always manually invoked. Do NOT use for individual Slack message links (slack-message).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[channel-name-or-id] [optional: timeframe or instructions]"
@@ -84,15 +84,15 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
    - If the thread references a Linear issue, fetch it via `linear_kilic-dev__get_issue`.
    - If the thread contains user comments with feedback or refinements:
      - Use `linear_kilic-dev__list_comments` to see existing Linear comments.
-     - Compose with the `/linear-kilic` skill to update the issue based on thread discussion.
+     - Compose with the `linear-kilic` skill to update the issue based on thread discussion.
    - Summarize: which issues were discussed, what feedback was given, what actions are needed.
 
    #### `echo` — Personal Thoughts & Ideas
    - Messages are the user's own thoughts, ideas, links, or quick notes.
    - For each message, read the full thread if it has replies.
    - **Always prompt the user** for what to do with each item. Common actions:
-     - **Create a Linear issue** — compose with `/linear-kilic` skill, passing the thought as context.
-     - **Create an Obsidian note** — compose with `/obsidian-note` skill, passing the content.
+     - **Create a Linear issue** — compose with `linear-kilic` skill, passing the thought as context.
+     - **Create an Obsidian note** — compose with `obsidian-note` skill, passing the content.
      - **Just acknowledge** — summarize and move on.
    - Do NOT auto-create issues or notes — always ask first.
 
@@ -122,9 +122,9 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
 
 ### Composing with Other Skills
 
-- **`/linear-kilic`** — for creating or updating Linear issues from channel content.
-- **`/obsidian-note`** — for creating Obsidian notes from thoughts or discussions.
-- **`/slack-message`** — if the user wants to deep-dive into a specific message thread.
+- **`linear-kilic`** — for creating or updating Linear issues from channel content.
+- **`obsidian-note`** — for creating Obsidian notes from thoughts or discussions.
+- **`slack-message`** — if the user wants to deep-dive into a specific message thread.
 - When delegating, pass the gathered context — do not make the other skill re-fetch it.
 
 ### Key Principles

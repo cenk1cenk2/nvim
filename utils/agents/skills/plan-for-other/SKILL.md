@@ -12,7 +12,7 @@ references:
 
 ### Cross-Session / Cross-Repository Planning
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via `skills__read_reference`.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/plan-for-other/references`.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.

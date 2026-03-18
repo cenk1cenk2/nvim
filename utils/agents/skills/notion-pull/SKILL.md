@@ -1,6 +1,6 @@
 ---
 name: notion-pull
-description: "Pull a Notion page into the current editor as markdown. Use when user says 'pull from Notion', 'fetch Notion page', 'import from Notion', or provides a Notion URL to pull. Converts title to # heading and metadata to frontmatter. Do NOT use for pushing (/notion-push) or session init (/notion-work)."
+description: "Pull a Notion page into the current editor as markdown. Use when user says 'pull from Notion', 'fetch Notion page', 'import from Notion', or provides a Notion URL to pull. Converts title to # heading and metadata to frontmatter. Do NOT use for pushing (notion-push) or session init (notion-work)."
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[notion-url or search description]"
@@ -12,8 +12,8 @@ argument-hint: "[notion-url or search description]"
 
 > **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
 
-> **PREREQUISITE:** The `/notion-work` skill MUST be active before this skill runs.
-> If no Notion workspace context exists in the current session, auto-invoke `/notion-work` first.
+> **PREREQUISITE:** The `notion-work` skill MUST be active before this skill runs.
+> If no Notion workspace context exists in the current session, auto-invoke `notion-work` first.
 
 ### Process
 
@@ -76,7 +76,7 @@ Body content here...
 
 ### Key Principles
 
-- **Always include `notion-url` in frontmatter** — enables round-trip with `/notion-push`.
+- **Always include `notion-url` in frontmatter** — enables round-trip with `notion-push`.
 - **Search requires approval** — never auto-select a search result.
 - **Preserve fidelity** — convert as much Notion formatting as possible to markdown equivalents.
 - **Ask before overwriting** — if the target buffer has content, confirm with the user.

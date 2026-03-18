@@ -87,7 +87,7 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
    - After all merges, verify the working tree is clean.
 
 8. **Review.**
-   - After all agents complete (and merges are done if worktree mode), run `/code-review-changes` against the recorded baseline.
+   - After all agents complete (and merges are done if worktree mode), run `code-review-changes` against the recorded baseline.
    - This catches integration issues, inconsistencies between agents' work, and individual mistakes.
    - Present findings to the user. Fix issues if asked.
 
@@ -142,11 +142,11 @@ Do NOT modify files outside your write scope. Other agents are handling:
 - **Non-overlapping is non-negotiable.** If tasks overlap on files, fix the split before launching. Two agents writing the same file will produce garbage.
 - **Each agent is self-contained.** Agents cannot communicate with each other. Every agent must have all the context it needs in its prompt.
 - **Fewer, larger agents over many small ones.** Agent startup and context have overhead. 2-4 agents is the sweet spot for most tasks.
-- **Always review after.** The `/code-review-changes` pass at the end is mandatory, not optional. Parallel work introduces integration risk.
+- **Always review after.** The `code-review-changes` pass at the end is mandatory, not optional. Parallel work introduces integration risk.
 - **Worktrees are opt-in.** Default is same working tree with non-overlapping file ownership.
 
 ### Related Skills
 
-- **`/code-review-changes`** (`~/.config/nvim/utils/agents/skills/code-review-changes/SKILL.md`) — auto-invoked after all agents complete to review the combined result.
-- **`/code-assistant`** (`~/.config/nvim/utils/agents/skills/code-assistant/SKILL.md`) — for guided planning where the user implements. This skill plans AND executes. Do not auto-invoke.
-- **`/code-assistant-implement`** (`~/.config/nvim/utils/agents/skills/code-assistant-implement/SKILL.md`) — for sequential step-by-step execution with review gates. Use that when parallelism is not needed. Do not auto-invoke.
+- **`code-review-changes`** (resource: `skills://skill/code-review-changes`) — auto-invoked after all agents complete to review the combined result.
+- **`code-assistant`** (resource: `skills://skill/code-assistant`) — for guided planning where the user implements. This skill plans AND executes. Do not auto-invoke.
+- **`code-assistant-implement`** (resource: `skills://skill/code-assistant-implement`) — for sequential step-by-step execution with review gates. Use that when parallelism is not needed. Do not auto-invoke.

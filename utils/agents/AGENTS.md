@@ -33,20 +33,22 @@
    - **If no scratch session exists, CREATE one** — see "Creating a scratch session" below
 
 4. **LOAD REPOSITORY NOTE** - If obsidian MCP is available, check for a repository note
-   - Derive the note path from the current working directory relative to `~/development/` (e.g., `~/development/laravel/cloud-app-operator/` → `Repositories/laravel/cloud-app-operator`)
-   - Read the note via `mcp__mcphub__obsidian__obsidian_read_note` with the derived path
-   - If the note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
+   - Derive the note folder from the current working directory relative to `~/development/` (e.g., `~/development/laravel/cloud-app-operator/` → `Repositories/laravel/cloud-app-operator/`)
+   - Read the main note at `<folder>/README` via `mcp__mcphub__obsidian__obsidian_read_note` (e.g., `Repositories/laravel/cloud-app-operator/README`)
+   - The repository folder may contain additional detailed notes (e.g., `Repositories/laravel/cloud-app-operator/architecture`) — read these on demand when relevant to the task
+   - If the main note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
    - **If the note does not exist or obsidian MCP is unavailable, silently skip and continue**
 
-5. **DISCOVER AVAILABLE SKILLS** - Call `skills__list_skills` to discover all skills
-   - The tool returns each skill's name, description, and invocation mode:
-     - **`[auto]`** — the model CAN auto-invoke this skill when context matches its description. Read it via `skills__read_skill` and follow its instructions.
-     - **`[manual]`** — the model MUST NOT auto-invoke this skill. Only load it when the user explicitly requests it (e.g., `/skill-name` or "use the X skill"). If the skill seems relevant, **suggest it** to the user in conversation instead of invoking it.
+5. **DISCOVER AVAILABLE SKILLS** - Use `ListMcpResourcesTool({ server: "mcphub" })` to list all skill and reference resources
+   - Each skill is a static resource at `skills://skill/{name}` with the skill's description.
+   - Each shared reference is a static resource at `skills://reference/{name}`.
+     - **`[auto]`** skills can be auto-invoked when context matches their description. Read via `ReadMcpResourceTool` and follow instructions.
+     - **`[manual]`** skills must NOT be auto-invoked. Only load when the user explicitly requests it. If relevant, **suggest** the skill to the user.
    - **Do not read skill files during initialization** — just note what exists. Read skills on demand when needed.
-   - When a task matches a skill's description, use `skills__read_skill` to load it (supports batch: `{ "names": ["skill-a", "skill-b"] }`).
-   - When a loaded skill declares references in its frontmatter, use `skills__read_reference` to load them (supports batch: `{ "paths": ["../references/a.md", "../references/b.md"], "skill": "skill-name" }`).
+   - When a task matches a skill's description, read it: `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}" })`. For multiple skills, make parallel calls.
+   - When a loaded skill declares references in its frontmatter, read them via: `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}/references" })` to load all at once.
    - See the **Skill Cross-Loading** section in Part II and `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md` for dependency resolution rules.
-   - **If skills tools are unavailable, silently skip and continue.**
+   - **If skills resources are unavailable, silently skip and continue.**
 
 ## II. PLANNING AND IMPLEMENTATION
 
@@ -122,31 +124,28 @@ skills/
 - See `/load-skills` for dependency resolution and reference loading details.
 - See `/config-skills` for skill authoring conventions.
 
-**Skills MCP tools** (auto-approved, no user confirmation needed):
+**Skills MCP resources** (accessed via `ReadMcpResourceTool` with `server: "mcphub"`):
 
-| Tool                     | Parameters                                                                  | Purpose                                                                                                                                                                                                        |
-| ------------------------ | --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `skills__list_skills`    | _(none)_                                                                    | List all skills with names, descriptions, and invocation mode (`[auto]` or `[manual]`).                                                                                                                        |
-| `skills__read_skill`     | `names` (required): array of skill names                                    | Read one or more skills. Example: `{ "names": ["obsidian-note"] }` or batch: `{ "names": ["linear-issue-create", "linear-issue-update"] }`.                                                                    |
-| `skills__read_reference` | `paths` (required): array of relative paths, `skill` (required): skill name | Read one or more reference files. Paths are the exact relative paths from the skill's frontmatter. Example: `{ "paths": ["../references/slack.md", "../references/plan-mode.md"], "skill": "slack-channel" }`. |
+| Resource                | URI Pattern                                | Purpose                                                                                                        |
+| ----------------------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
+| Read skill              | `skills://skill/{name}`                    | Read a skill's full SKILL.md content. One static resource per skill.                                           |
+| Skill references (all)  | `skills://skill/{name}/references`         | Read all declared references for a skill. Template resource.                                                   |
+| Read shared reference   | `skills://reference/{name}`                | Read a shared reference by name. One static resource per reference file.                                       |
 
-**ALWAYS use these tools** to read skills and references instead of filesystem MCP tools (`filesystem__read_file`) or built-in file tools (`read_file`). The skills tools are:
+**Access pattern:** `ReadMcpResourceTool({ server: "mcphub", uri: "<uri>" })`. For multiple skills, make parallel calls.
 
-- **Auto-approved** — no user confirmation popup, no interruption.
+**Discovery:** `ListMcpResourcesTool({ server: "mcphub" })` returns all skills and shared references as static resources — use this instead of a separate listing resource.
+
+**ALWAYS use these resources** to read skills and references instead of filesystem MCP tools (`filesystem__read_file`) or built-in file tools (`read_file`). The skills resources are:
+
 - **Scoped** — only access the skills directory, cannot read arbitrary files.
-- **Batch-capable** — load multiple skills or references in a single call.
-- **Correct** — resolve relative paths from the skill's directory automatically.
+- **Correct** — resolve reference paths from the skill's directory automatically.
 
-**Invocation modes:**
+**When to use each resource:**
 
-- **`[auto]`** — auto-invoke when context matches the skill's description. Read the skill and follow its instructions.
-- **`[manual]`** — do NOT auto-invoke. Only load when the user explicitly requests it. If relevant, **suggest** the skill to the user.
-
-**When to use each tool:**
-
-- **Discovering skills:** Call `skills__list_skills` at session start and when looking for applicable skills.
-- **Loading skills:** Call `skills__read_skill` with one or more names. Supports batch loading for related skills.
-- **Loading references:** When a skill declares `references:` in frontmatter, pass those paths directly to `skills__read_reference`. Example: if a skill has `references: ../references/slack.md, ../references/plan-mode.md`, call `{ "paths": ["../references/slack.md", "../references/plan-mode.md"], "skill": "the-skill-name" }`.
+- **Discovering skills:** Use `ListMcpResourcesTool({ server: "mcphub" })` at session start.
+- **Loading skills:** Read `skills://skill/{name}` for each skill. For multiple skills, make parallel calls.
+- **Loading references:** When a skill declares references, read `skills://skill/{name}/references` to load all at once. For shared references outside a skill context, read `skills://reference/{name}`.
 
 ### Claude Code Directory Structure
 

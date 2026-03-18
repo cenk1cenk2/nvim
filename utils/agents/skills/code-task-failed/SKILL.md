@@ -1,6 +1,6 @@
 ---
 name: code-task-failed
-description: Investigate a failed command (build, test, lint, etc.) by capturing terminal output, analyzing errors, and systematically isolating the root cause. Always manually invoked. Do NOT use for behavioral bugs (/code-debug) or code review (/code-review-branch).
+description: Investigate a failed command (build, test, lint, etc.) by capturing terminal output, analyzing errors, and systematically isolating the root cause. Always manually invoked. Do NOT use for behavioral bugs (code-debug) or code review (code-review-branch).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[brief description of what failed, e.g., 'build failed', 'test suite', 'lint errors']"
@@ -123,4 +123,4 @@ Wait for user approval before applying any fix.
 
 ### Related Skills
 
-- **`/code-debug`** (`~/.config/nvim/utils/agents/skills/code-debug/SKILL.md`) — for behavioral bugs where code runs but produces wrong results. Auto-invoke when the problem is incorrect behavior, not a command failure.
+- **`code-debug`** (resource: `skills://skill/code-debug`) — for behavioral bugs where code runs but produces wrong results. Auto-invoke when the problem is incorrect behavior, not a command failure.

@@ -1,6 +1,6 @@
 ---
 name: obsidian-todo
-description: Create quick todo notes for task tracking and thought capture in Obsidian. Use when user says "add a todo", "remind me to", "jot this down", or "quick note". Do NOT use for structured notes (/obsidian-note), repository docs (/obsidian-repository), or triaging notes (/obsidian-triage).
+description: Create quick todo notes for task tracking and thought capture in Obsidian. Use when user says "add a todo", "remind me to", "jot this down", or "quick note". Do NOT use for structured notes (obsidian-note), repository docs (obsidian-repository), or triaging notes (obsidian-triage).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[task or thought to capture]"
@@ -17,7 +17,7 @@ references:
 >
 > - These are quick capture notes — create immediately, no planning.
 > - Emphasize speed over perfection.
-> - Read the `obsidian` reference for vault location and tool access — resolve references from the `<References>` block via `skills__read_reference`.
+> - Read the `obsidian` reference for vault location and tool access — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/obsidian-todo/references`.
 
 > **CRITICAL — Tool Selection (non-negotiable, check CWD first):**
 >
@@ -119,5 +119,5 @@ When this skill is invoked from or alongside another skill session, add an appen
 
 ### Related Skills
 
-- **`/obsidian-note`** (`~/.config/nvim/utils/agents/skills/obsidian-note/SKILL.md`) — for creating structured reference notes. Auto-invoke when the content is better suited as a permanent reference note rather than a temporary todo.
-- **`/obsidian-triage`** (`~/.config/nvim/utils/agents/skills/obsidian-triage/SKILL.md`) — for processing and organizing accumulated todo notes. Do not auto-invoke.
+- **`obsidian-note`** (resource: `skills://skill/obsidian-note`) — for creating structured reference notes. Auto-invoke when the content is better suited as a permanent reference note rather than a temporary todo.
+- **`obsidian-triage`** (resource: `skills://skill/obsidian-triage`) — for processing and organizing accumulated todo notes. Do not auto-invoke.

@@ -1,6 +1,6 @@
 ---
 name: gitlab-ci
-description: Create or update GitLab CI/CD pipelines using the devops/pipelines task-based model. Use when user says "add a pipeline", "set up GitLab CI", or "modify .gitlab-ci.yml". Do NOT use for diagnosing failures (/gitlab-failed-ci), GitHub Actions (/github-ci), or MR descriptions (/gitlab-pr).
+description: Create or update GitLab CI/CD pipelines using the devops/pipelines task-based model. Use when user says "add a pipeline", "set up GitLab CI", or "modify .gitlab-ci.yml". Do NOT use for diagnosing failures (gitlab-failed-ci), GitHub Actions (github-ci), or MR descriptions (gitlab-pr).
 interaction: chat
 disable-model-invocation: true
 references:
@@ -79,4 +79,4 @@ node-install:
 
 ### Related Skills
 
-- **`/gitlab-failed-ci`** (`~/.config/nvim/utils/agents/skills/gitlab-failed-ci/SKILL.md`) — for diagnosing failures in existing GitLab CI pipelines. Auto-invoke when the user reports CI failures instead of wanting to create/update pipelines.
+- **`gitlab-failed-ci`** (resource: `skills://skill/gitlab-failed-ci`) — for diagnosing failures in existing GitLab CI pipelines. Auto-invoke when the user reports CI failures instead of wanting to create/update pipelines.

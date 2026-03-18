@@ -28,30 +28,30 @@ When a skill has a **PREREQUISITE** block, the agent MUST ensure that prerequisi
 
 Two Linear workspaces exist. Deduce which one from context:
 
-| Signal                                 | Workspace | Skill to load                                              |
-| -------------------------------------- | --------- | ---------------------------------------------------------- |
-| Issue ID prefix `K-xxx`                | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| Issue ID prefix `CLOUD-xxx`            | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
-| Linear URL containing `kilic-dev`      | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| Linear URL containing `laravel`        | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
-| GitLab repository (`gitlab.kilic.dev`) | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| GitHub repository (Laravel org)        | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
-| User says "work" or "laravel"          | Laravel   | `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`  |
-| User says "personal" or "kilic"        | kilic-dev | `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md` |
-| No signal available                    | —         | Ask the user                                               |
+| Signal                                 | Workspace | Skill resource                |
+| -------------------------------------- | --------- | ----------------------------- |
+| Issue ID prefix `K-xxx`                | kilic-dev | `skills://skill/linear-kilic` |
+| Issue ID prefix `CLOUD-xxx`            | Laravel   | `skills://skill/linear-work`  |
+| Linear URL containing `kilic-dev`      | kilic-dev | `skills://skill/linear-kilic` |
+| Linear URL containing `laravel`        | Laravel   | `skills://skill/linear-work`  |
+| GitLab repository (`gitlab.kilic.dev`) | kilic-dev | `skills://skill/linear-kilic` |
+| GitHub repository (Laravel org)        | Laravel   | `skills://skill/linear-work`  |
+| User says "work" or "laravel"          | Laravel   | `skills://skill/linear-work`  |
+| User says "personal" or "kilic"        | kilic-dev | `skills://skill/linear-kilic` |
+| No signal available                    | —         | Ask the user                  |
 
 #### Skill Chaining
 
-Some skills reference other skills as follow-up actions. When a skill recommends invoking another skill, load it by path:
+Some skills reference other skills as follow-up actions. When a skill recommends invoking another skill, load it via `ReadMcpResourceTool`:
 
-| Context                                     | Skill to load                                                          |
-| ------------------------------------------- | ---------------------------------------------------------------------- |
-| Need to create Linear issues                | `~/.config/nvim/utils/agents/skills/linear-issue-create/SKILL.md`      |
-| Need to create a Linear project             | `~/.config/nvim/utils/agents/skills/linear-project-create/SKILL.md`    |
-| Need to update/refine an issue description  | `~/.config/nvim/utils/agents/skills/linear-issue-update/SKILL.md`      |
-| Need to create a Linear initiative          | `~/.config/nvim/utils/agents/skills/linear-initiative-create/SKILL.md` |
-| Need to update a Linear initiative          | `~/.config/nvim/utils/agents/skills/linear-initiative-update/SKILL.md` |
-| Need to organize a todo note into the vault | `~/.config/nvim/utils/agents/skills/obsidian-note/SKILL.md`            |
+| Context                                     | Skill resource                            |
+| ------------------------------------------- | ----------------------------------------- |
+| Need to create Linear issues                | `skills://skill/linear-issue-create`      |
+| Need to create a Linear project             | `skills://skill/linear-project-create`    |
+| Need to update/refine an issue description  | `skills://skill/linear-issue-update`      |
+| Need to create a Linear initiative          | `skills://skill/linear-initiative-create` |
+| Need to update a Linear initiative          | `skills://skill/linear-initiative-update` |
+| Need to organize a todo note into the vault | `skills://skill/obsidian-note`            |
 
 #### Multiple Instances
 
@@ -63,31 +63,31 @@ When a skill exists in multiple variants (e.g., `linear-kilic-project-argocd-sys
 
 ### Loading Skills Without a Skill Mechanism
 
-For LLMs or environments that do not have a native skill invocation system (no `/slash-commands`), skills can be loaded using the **skills MCP tools** — these are auto-approved and require no user confirmation:
+For LLMs or environments that do not have a native skill invocation system (no `/slash-commands`), skills can be loaded using the **skills MCP resources** on the `mcphub` server:
 
-1. Call `skills__list_skills` to discover available skills. Each skill is tagged `[auto]` (model can auto-invoke) or `[manual]` (explicit user request only).
-2. Call `skills__read_skill` with `{ "names": ["<skill-name>"] }` to read one or more skills. Supports batch: `{ "names": ["skill-a", "skill-b"] }`.
+1. Use `ListMcpResourcesTool({ server: "mcphub" })` to discover available skills. Each skill resource is tagged `[auto]` (model can auto-invoke) or `[manual]` (explicit user request only).
+2. Read `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}" })` to read a skill. For multiple skills, make parallel calls.
 3. Follow the instructions in the file as if they were system instructions for the current task.
 4. If the loaded skill has its own prerequisites, resolve them recursively.
 
-**Fallback:** If skills MCP tools are unavailable, read the file directly at `~/.config/nvim/utils/agents/skills/<skill-name>/SKILL.md` using filesystem tools.
+**Fallback:** If skills MCP resources are unavailable, read the file directly at `~/.config/nvim/utils/agents/skills/<skill-name>/SKILL.md` using filesystem tools.
 
 ### Reference Files
 
 Skills may declare references to additional files for shared conventions and detailed context. References are declared in YAML frontmatter as comma-separated relative paths:
 
 ```yaml
-references: ../references/linear-prerequisite.md, ../references/plan-mode.md
+references:
+  - ../references/linear-prerequisite.md
+  - ../references/plan-mode.md
 ```
 
 **How references work:**
 
 1. When a skill is invoked, its declared references are resolved and listed in the XML `<References>` block.
 2. The SKILL.md body tells you which references to read and when (e.g., "Read the `slack` reference for available tools and conventions.").
-3. **Read reference files using `skills__read_reference`** — pass the exact relative paths from frontmatter. This tool is auto-approved — no user confirmation needed.
-   - Example: `{ "paths": ["../references/slack.md", "../references/plan-mode.md"], "skill": "slack-channel" }`.
-   - Supports batch loading — pass all needed references in one call.
-   - Paths are resolved from the skill's directory, so `../references/` reaches shared references and `./references/` reaches skill-local ones.
+3. **Read reference files using `ReadMcpResourceTool`** from the `mcphub` server — read all references for a skill: `skills://skill/{name}/references`. For shared references outside a skill context: `skills://reference/{name}`.
+   - References resolve automatically — shared references and skill-local ones are both handled.
 4. Skills must work even without references (graceful degradation) — they contain enough inline context to function.
 
 **Fallback:** If skills MCP tools are unavailable, read reference files using `filesystem__read_file` or `neovim__read_file` at `~/.config/nvim/utils/agents/skills/references/<filename>`.

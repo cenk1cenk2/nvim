@@ -23,8 +23,8 @@ references:
 > **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
 >
 > If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
-> - **kilic-dev workspace:** Load `~/.config/nvim/utils/agents/skills/linear-kilic/SKILL.md`
-> - **Laravel workspace:** Load `~/.config/nvim/utils/agents/skills/linear-work/SKILL.md`
+> - **kilic-dev workspace:** Load skill `linear-kilic` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/linear-kilic" })`
+> - **Laravel workspace:** Load skill `linear-work` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/linear-work" })`
 >
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
 
