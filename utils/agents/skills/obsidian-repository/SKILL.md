@@ -1,6 +1,6 @@
 ---
 name: obsidian-repository
-description: Document repository knowledge in Obsidian — key findings, architecture, conventions, and gotchas. Use when user says "document this repo", "update the repo note", or "capture architecture in Obsidian". Do NOT use for general notes (obsidian-note), quick todos (obsidian-todo), or triaging notes (obsidian-triage).
+description: Document repository knowledge in Obsidian — key findings, architecture, conventions, and gotchas. Use when user says "document this repo", "update the repo note", "capture architecture in Obsidian", or "add a detailed note about X in this repo". Do NOT use for general notes (obsidian-note), quick todos (obsidian-todo), or triaging notes (obsidian-triage).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[repository name or path] [optional: what to document]"
@@ -23,13 +23,24 @@ You maintain structured reference notes about development repositories in `~/not
 
 Repositories live in `~/development/`. The note path mirrors the repository path relative to `~/development/`:
 
-| Repository path                             | Note path                                            |
-| ------------------------------------------- | ---------------------------------------------------- |
-| `~/development/ansible-playbooks/`          | `~/notes/Repositories/ansible-playbooks.md`          |
-| `~/development/laravel/cloud-app-operator/` | `~/notes/Repositories/laravel/cloud-app-operator.md` |
-| `~/development/kilic-dev/my-tool/`          | `~/notes/Repositories/kilic-dev/my-tool.md`          |
+Each repository gets a **folder**. The main overview note is `README.md` inside that folder. Detailed sub-topics get their own notes alongside it.
 
-If the current working directory is under `~/development/`, derive the note path automatically. Otherwise, ask the user which repository.
+| Repository path                             | Main note path                                              |
+| ------------------------------------------- | ----------------------------------------------------------- |
+| `~/development/ansible-playbooks/`          | `~/notes/Repositories/ansible-playbooks/README.md`          |
+| `~/development/laravel/cloud-app-operator/` | `~/notes/Repositories/laravel/cloud-app-operator/README.md` |
+| `~/development/kilic-dev/my-tool/`          | `~/notes/Repositories/kilic-dev/my-tool/README.md`          |
+
+**Sub-notes** live in the same folder:
+
+```
+Repositories/laravel/cloud-app-operator/
+├── README.md                          # overview, stack, structure, conventions
+├── envoy-gateway-analysis.md          # detailed migration analysis
+└── deployment-topology.md             # cluster deployment details
+```
+
+If the current working directory is under `~/development/`, derive the folder path automatically. Otherwise, ask the user which repository.
 
 ### Tools
 
@@ -56,23 +67,53 @@ If the current working directory is under `~/development/`, derive the note path
    - Check git history for recent activity and major contributors.
 
 2. **Draft the note.**
-   - Follow the note structure below.
+   - Follow the note structure below for `README.md`.
    - Present the draft in chat for approval.
-   - After approval, create the note.
+   - After approval, create the repository folder and `README.md`.
+
+3. **Identify sub-note candidates (optional).**
+   - If exploration revealed detailed standalone topics (migration analyses, architecture decisions, research findings), propose creating sub-notes.
+   - Each sub-note should have its own context — if it needs the README for context, it belongs in the README instead.
+   - Draft sub-notes and present for approval alongside or after the README.
 
 #### Update (note already exists)
 
 1. **Read the existing note.**
-2. **Explore the repository** for current state.
-3. **Compare** the note against the repository:
+2. **List existing sub-notes** in the repository folder via `obsidian__obsidian_list_notes`.
+3. **Explore the repository** for current state.
+4. **Compare** the note against the repository:
    - Identify outdated information (changed structure, removed components, new patterns).
    - Identify missing information (new components, changed conventions).
-4. **Present deviations to the user.**
+   - Identify oversized sections that could be extracted to sub-notes (standalone topics with their own context, references, or findings).
+5. **Present deviations to the user.**
    - For each outdated section, show what changed and ask: "Is this still relevant, or should I update it?"
+   - For oversized sections, propose extracting to a sub-note and replacing with a brief summary + link in the README.
    - Wait for the user to confirm which updates to apply.
-5. **Apply approved updates** and present the final note.
+6. **Apply approved updates** and present the final note.
 
-### Note Structure
+### Sub-Notes
+
+Sub-notes are detailed reference documents for standalone topics within a repository. They live alongside `README.md` in the repository folder.
+
+**When to create a sub-note** (vs keeping in README):
+
+- The topic has its own context, findings, references, or action items.
+- The section would exceed ~50 lines in the README.
+- The topic is self-contained — someone could read it without the README.
+
+**When to keep in README:**
+
+- Brief conventions, stack info, or structural overview.
+- Content that only makes sense in the context of the full repository note.
+
+**Conventions:**
+
+- **Naming:** kebab-case descriptive names matching the topic (e.g., `envoy-gateway-analysis.md`, `deployment-topology.md`).
+- **Frontmatter:** same pattern as README — `aliases`, `tags: [repository]`, and `origin` field pointing to the repository path.
+- **Linking:** README should link to sub-notes where relevant — inline in the appropriate section or in a dedicated section.
+- **Structure:** flat `##` headers, same style as README. No fixed template — structure fits the topic.
+
+### Note Structure (README.md)
 
 ```yaml
 ---
@@ -131,6 +172,7 @@ Sections are optional — use only what the repository warrants. A small utility
 - **Explore before writing.** Read the repository thoroughly. Do not guess about structure or conventions.
 - **Ask before overwriting.** When updating, always present deviations and let the user decide what to change.
 - **Concise and practical.** These are reference notes, not documentation. Focus on what helps someone navigate and contribute.
+- **Extract when it grows.** If a README section becomes a standalone topic with its own references and context, extract it to a sub-note.
 - **Match the obsidian-note style.** Flat structure (`##` headers), kebab-case filenames, minimal prose, action-oriented.
 
 ### Related Skills

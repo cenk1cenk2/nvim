@@ -33,9 +33,10 @@
    - **If no scratch session exists, CREATE one** — see "Creating a scratch session" below
 
 4. **LOAD REPOSITORY NOTE** - If obsidian MCP is available, check for a repository note
-   - Derive the note path from the current working directory relative to `~/development/` (e.g., `~/development/laravel/cloud-app-operator/` → `Repositories/laravel/cloud-app-operator`)
-   - Read the note via `mcp__mcphub__obsidian__obsidian_read_note` with the derived path
-   - If the note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
+   - Derive the note folder from the current working directory relative to `~/development/` (e.g., `~/development/laravel/cloud-app-operator/` → `Repositories/laravel/cloud-app-operator/`)
+   - Read the main note at `<folder>/README` via `mcp__mcphub__obsidian__obsidian_read_note` (e.g., `Repositories/laravel/cloud-app-operator/README`)
+   - The repository folder may contain additional detailed notes (e.g., `Repositories/laravel/cloud-app-operator/architecture`) — read these on demand when relevant to the task
+   - If the main note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
    - **If the note does not exist or obsidian MCP is unavailable, silently skip and continue**
 
 5. **DISCOVER AVAILABLE SKILLS** - Use `ListMcpResourcesTool({ server: "mcphub" })` to list all skill and reference resources
