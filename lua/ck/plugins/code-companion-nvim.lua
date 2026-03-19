@@ -129,9 +129,11 @@ function M.config()
                   },
                   defaults = {
                     mcpServers = "inherit_from_config",
+                    mode = "plan",
                   },
                   commands = {
                     default = { "bunx", "-y", "@zed-industries/claude-agent-acp@latest" },
+                    yolo = { "bunx", "-y", "@zed-industries/claude-agent-acp@latest", "--yolo" },
                   },
                 }
               )
