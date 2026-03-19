@@ -161,6 +161,7 @@ function M.config()
                   },
                   defaults = {
                     mcpServers = "inherit_from_config",
+                    mode = "plan",
                   },
                   commands = {
                     default = { "opencode", "acp" },
@@ -194,6 +195,7 @@ function M.config()
                     -- auth_method="codex-api-key",
                     auth_method = "chatgpt",
                     mcpServers = "inherit_from_config",
+                    mode = "plan",
                   },
                   commands = {
                     default = { "bunx", "-y", "@zed-industries/codex-acp@latest" },
@@ -220,6 +222,7 @@ function M.config()
                 },
                 defaults = {
                   mcpServers = "inherit_from_config",
+                  mode = "plan",
                 },
                 commands = {
                   default = { "opencode", "acp" },
