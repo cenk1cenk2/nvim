@@ -718,7 +718,7 @@ hl.plugins.blink_pairs = {
   BlinkPairsRainbow2 = { fg = c.cyan[900] },
   BlinkPairsRainbow3 = { fg = c.orange[900] },
   BlinkPairsRainbow4 = { fg = c.blue[900] },
-  BlinkPairsUnmatched = { fg = c.red[900], undercurl = true, sp = c.red[900] },
+  BlinkPairsUnmatched = { bg = c.red[900], fg = c.black, sp = c.red[900] },
 }
 
 ---@type table<string, vim.api.keyset.highlight>

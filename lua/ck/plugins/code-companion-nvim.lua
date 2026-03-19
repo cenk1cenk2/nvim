@@ -311,6 +311,13 @@ function M.config()
                   },
                 },
               },
+              ["memory"] = {
+                opts = {
+                  whitelist = {
+                    { path = "~/notes/Repositories/", as = "obsidian" },
+                  },
+                },
+              },
               ["read_file"] = {
                 opts = {
                   require_approval_before = function(tool)
