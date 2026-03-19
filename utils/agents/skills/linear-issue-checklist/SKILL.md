@@ -29,7 +29,7 @@ references:
 
 ### Process
 
-1. **Fetch the issue** using the appropriate Linear MCP tools.
+1. **Fetch the issue** using the appropriate Linear MCP tools. Also fetch comments using `list_comments` — comments may reference checklist items being completed, cancelled, or changed.
 2. **Extract the current checklist** from the issue description.
 3. **Present the checklist to the user** and confirm which items to update.
 4. **Apply changes** only after user confirmation.

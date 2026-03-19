@@ -47,7 +47,11 @@ Present the triage queue to the user:
 
 #### Step 4: Process Each Issue
 
-For each issue, present a recommendation covering:
+For each issue:
+
+- Fetch comments on the issue using `list_comments`. Comments often contain context about priority, scope clarifications, team ownership, or urgency that informs better recommendations. Skip if the issue has no comments.
+
+Present a recommendation covering:
 
 1. **Summary** — restate what the issue is about in one sentence.
 2. **Project** — recommend an existing project if one fits. If no project fits, say so — not every issue needs a project. Never force a project assignment.

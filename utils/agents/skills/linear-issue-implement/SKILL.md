@@ -50,6 +50,7 @@ Plan and refine only — **NEVER implement, NEVER exit plan mode.** Stay in plan
 - Retrieve the issue using the Linear MCP tools from the active workspace skill.
 - **Check the `updatedAt` timestamp** on the issue and note when the description was last modified.
 - Read the full description, checklist, labels, relations, and any linked issues/projects.
+- Fetch all comments on the issue using `list_comments`. Scan for decisions, clarifications, blockers, or context from other team members that affects the implementation approach. Note significant comments for the plan.
 - If the issue has parent issues or blocking relations, fetch those too for context.
 - If the description's `updatedAt` is older than the current session context, flag this during alignment (Step 4) — the user may have more recent knowledge.
 - **Move the issue to "In Progress"** — use `save_issue` with `state: "In Progress"` immediately after fetching. The issue is now actively being worked on.

@@ -37,12 +37,13 @@ references:
 ### Process
 
 1. **Fetch the issue** using the appropriate Linear MCP tools.
-2. **Check the `updatedAt` timestamp** — if the description is older than the current session context, ask the user what has changed before assuming the stored content is current.
-3. **Review the conversation** for deviations from the original issue — changed requirements, rejected approaches, new decisions, corrected assumptions.
-4. **Flag outdated or irrelevant sections** — warn the user about parts of the issue that are stale, no longer applicable, or contradicted by the conversation. Get explicit approval before modifying or removing these.
-5. **Draft the updated description** and present it to the user, highlighting what changed and why.
-6. **Iterate** based on user feedback. This is a refining process — work with the user to get the issue into a state that accurately reflects the current understanding.
-7. **Apply changes** only after user approval.
+2. **Fetch comments** using `list_comments`. Scan for decisions, clarifications, or context that should be reflected in the updated description. Comments may contain agreements or corrections that the description doesn't yet capture.
+3. **Check the `updatedAt` timestamp** — if the description is older than the current session context, ask the user what has changed before assuming the stored content is current.
+4. **Review the conversation** for deviations from the original issue — changed requirements, rejected approaches, new decisions, corrected assumptions.
+5. **Flag outdated or irrelevant sections** — warn the user about parts of the issue that are stale, no longer applicable, or contradicted by the conversation. Get explicit approval before modifying or removing these.
+6. **Draft the updated description** and present it to the user, highlighting what changed and why.
+7. **Iterate** based on user feedback. This is a refining process — work with the user to get the issue into a state that accurately reflects the current understanding.
+8. **Apply changes** only after user approval.
 
 ### What to Update
 
