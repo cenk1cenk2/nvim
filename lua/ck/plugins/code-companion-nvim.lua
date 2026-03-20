@@ -791,7 +791,7 @@ function M.config()
               { name = "claude_code", type = "acp" },
               -- { name = "codex", type = "acp" },
               { name = "kilic", type = "acp" },
-              -- { name = "opencode", type = "acp" },
+              { name = "opencode", type = "acp" },
             }
 
             vim.ui.select(adapters, {
