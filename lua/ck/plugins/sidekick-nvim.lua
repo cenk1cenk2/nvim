@@ -42,6 +42,7 @@ function M.config()
           ---@field inline? "words"|"chars"|false Enable inline diffs
           diff = {
             inline = "words",
+            show = "cursor",
           },
         },
       }
