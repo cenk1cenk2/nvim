@@ -216,6 +216,7 @@ function M.config()
                   PATH = vim.env["PATH"],
                   HOME = vim.env["HOME"],
                   USER = vim.env["USER"],
+                  OPENCODE_API_KEY = vim.env["NVIM_OPENCODE_ACP_WORK"],
                 },
                 opts = {
                   verbose_output = true,
