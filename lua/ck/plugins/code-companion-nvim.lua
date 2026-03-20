@@ -169,6 +169,34 @@ function M.config()
               )
             end,
             ---@type fun (): CodeCompanion.ACPAdapter
+            opencode = function()
+              log:debug("Setting up the AI Overlord...")
+
+              return require("codecompanion.adapters.acp").extend(
+                "opencode",
+                ---@type CodeCompanion.ACPAdapter
+                {
+                  env = {
+                    PATH = vim.env["PATH"],
+                    HOME = vim.env["HOME"],
+                    USER = vim.env["USER"],
+                    OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/zen.json"),
+                    OPENCODE_API_KEY = vim.env["NVIM_OPENCODE_ACP_WORK"],
+                  },
+                  opts = {
+                    verbose_output = true,
+                  },
+                  defaults = {
+                    mcpServers = "inherit_from_config",
+                    mode = "plan",
+                  },
+                  commands = {
+                    default = { "opencode", "acp" },
+                  },
+                }
+              )
+            end,
+            ---@type fun (): CodeCompanion.ACPAdapter
             codex = function()
               if vim.env["NVIM_CODEX_ACP"] == nil then
                 vim.env["NVIM_CODEX_ACP"] = vim.env["NVIM_CODEX_ACP_KILIC"]
@@ -203,34 +231,6 @@ function M.config()
               )
             end,
           },
-          ---@type fun (): CodeCompanion.ACPAdapter
-          opencode = function()
-            log:debug("Setting up the AI Overlord...")
-
-            return require("codecompanion.adapters.acp").extend(
-              "opencode",
-              ---@type CodeCompanion.ACPAdapter
-              {
-                env = {
-                  PATH = vim.env["PATH"],
-                  HOME = vim.env["HOME"],
-                  USER = vim.env["USER"],
-                  OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/zen.json"),
-                  OPENCODE_API_KEY = vim.env["NVIM_OPENCODE_ACP_WORK"],
-                },
-                opts = {
-                  verbose_output = true,
-                },
-                defaults = {
-                  mcpServers = "inherit_from_config",
-                  mode = "plan",
-                },
-                commands = {
-                  default = { "opencode", "acp" },
-                },
-              }
-            )
-          end,
         },
         rules = {
           agents = {
