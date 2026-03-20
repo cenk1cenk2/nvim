@@ -18,6 +18,7 @@ function M.config()
           "Avante",
           "AvanteInput",
           "codecompanion",
+          "codecompanionapproval",
         },
       }
     end,
@@ -38,13 +39,14 @@ function M.config()
             "Avante",
             "AvanteInput",
             "codecompanion",
+            "codecompanionapproval",
           },
           ignore_buftypes = {},
           condition = function(bufnr)
             local ft = vim.bo[bufnr].ft
             local bt = vim.bo[bufnr].bt
 
-            if bt == "nofile" and vim.tbl_contains({ "codecompanion", "Avante", "AvanteInput" }, ft) then
+            if bt == "nofile" and vim.tbl_contains({ "codecompanion", "codecompanionapproval", "Avante", "AvanteInput" }, ft) then
               return true
             elseif bt == "nofile" then
               return false
