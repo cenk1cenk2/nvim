@@ -215,7 +215,7 @@ function M.config()
                   PATH = vim.env["PATH"],
                   HOME = vim.env["HOME"],
                   USER = vim.env["USER"],
-                  OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/opencode.json"),
+                  OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/zen.json"),
                   OPENCODE_API_KEY = vim.env["NVIM_OPENCODE_ACP_WORK"],
                 },
                 opts = {
