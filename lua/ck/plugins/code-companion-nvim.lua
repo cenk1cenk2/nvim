@@ -154,7 +154,6 @@ function M.config()
                     USER = vim.env["USER"],
                     OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/kilic.json"),
                     AI_KILIC_DEV_API_KEY = vim.env["AI_KILIC_DEV_API_KEY"],
-                    EXA_API_KEY = vim.env["NVIM_EXA_API_KEY"],
                   },
                   opts = {
                     verbose_output = true,
@@ -216,6 +215,7 @@ function M.config()
                   PATH = vim.env["PATH"],
                   HOME = vim.env["HOME"],
                   USER = vim.env["USER"],
+                  OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/opencode.json"),
                   OPENCODE_API_KEY = vim.env["NVIM_OPENCODE_ACP_WORK"],
                 },
                 opts = {
