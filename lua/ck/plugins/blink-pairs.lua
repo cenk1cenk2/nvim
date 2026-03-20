@@ -10,11 +10,12 @@ function M.config()
       ---@type Plugin
       return {
         "saghen/blink.pairs",
-        version = "*",
+        -- version = "*",
+        build = { "cargo build --release" },
         event = { "InsertEnter", "CmdlineEnter" },
-        dependencies = {
-          "saghen/blink.download",
-        },
+        -- dependencies = {
+        --   "saghen/blink.download",
+        -- },
       }
     end,
     setup = function()
