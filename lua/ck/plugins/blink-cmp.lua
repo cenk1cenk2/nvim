@@ -151,7 +151,7 @@ function M.config()
               module = "blink-cmp-git",
               name = "Git",
               enabled = function()
-                return vim.tbl_contains({ "gitcommit", "markdown" }, vim.bo.filetype)
+                return vim.tbl_contains({ "gitcommit" }, vim.bo.filetype)
               end,
               opts = {
                 git_centers = {
