@@ -104,7 +104,6 @@ function M.config()
               "lazydev",
               "zsh",
               "omni",
-              "git",
               "snippets",
               "path",
               "buffer",
@@ -112,6 +111,9 @@ function M.config()
             }
           end,
           per_filetype = {
+            gitcommit = function()
+              return { inherit_defaults = true, "git" }
+            end,
             codecompanion = function()
               return { "path" }
             end,
@@ -150,9 +152,6 @@ function M.config()
             git = {
               module = "blink-cmp-git",
               name = "Git",
-              enabled = function()
-                return vim.tbl_contains({ "gitcommit" }, vim.bo.filetype)
-              end,
               opts = {
                 git_centers = {
                   gitlab = {

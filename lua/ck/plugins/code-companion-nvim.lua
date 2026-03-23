@@ -10,9 +10,7 @@ function M.config()
     plugin = function()
       ---@type Plugin
       return {
-        -- "olimorris/codecompanion.nvim",
-        "cenk1cenk2/codecompanion.nvim",
-        branch = "patch-5",
+        "olimorris/codecompanion.nvim",
         -- dir = "~/development/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         keys = { "<Space>c" },
@@ -42,7 +40,7 @@ function M.config()
             ft = "codecompanion",
             size = {
               width = function()
-                if vim.o.columns < 120 then
+                if vim.o.columns < 180 then
                   return 0.4
                 end
 
@@ -558,18 +556,6 @@ function M.config()
                 callback = M.browse_open_chats,
                 description = "Browse open chats",
               },
-              _acp_allow_once = {
-                modes = { n = "." },
-              },
-              _acp_reject_once = {
-                modes = { n = "," },
-              },
-              _acp_allow_always = {
-                modes = { n = "ga" },
-              },
-              _acp_reject_always = {
-                modes = { n = "gr" },
-              },
             },
           },
           inline = {
@@ -580,14 +566,20 @@ function M.config()
           },
           shared = {
             keymaps = {
+              view_diff = {
+                modes = { n = "gd" },
+              },
+              always_accept = {
+                modes = { n = "ga" },
+              },
               accept_change = {
                 modes = { n = "." },
               },
               reject_change = {
                 modes = { n = "," },
               },
-              always_accept = {
-                modes = { n = "ga" },
+              cancel = {
+                modes = { n = "<C-c>" },
               },
             },
           },
