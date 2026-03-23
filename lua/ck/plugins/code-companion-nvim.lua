@@ -32,7 +32,7 @@ function M.config()
     configure = function(_, fn)
       fn.add_disabled_filetypes({
         "codecompanion",
-        "codecompanionapproval",
+        "codecompanion_approval",
       })
 
       fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
