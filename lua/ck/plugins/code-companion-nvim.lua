@@ -42,11 +42,11 @@ function M.config()
             ft = "codecompanion",
             size = {
               width = function()
-                if vim.o.columns < 180 then
-                  return 0.5
+                if vim.o.columns < 120 then
+                  return 0.4
                 end
 
-                return 180
+                return 120
               end,
             },
           },
