@@ -19,6 +19,7 @@ function M.config()
       }
     end,
     setup = function()
+      ---@type blink.pairs.Config
       return {
         mappings = {
           enabled = true,
@@ -51,6 +52,12 @@ function M.config()
               },
             },
           },
+          wrap = {
+            normal_mode = {
+              ["<M-e>"] = "motion",
+              ["<M-S-e>"] = "motion_reverse",
+            },
+          },
           disabled_filetypes = nvim.disabled_filetypes,
         },
         highlights = {
@@ -66,8 +73,6 @@ function M.config()
             enabled = true,
           },
         },
-        -- TODO: fast-wrap (<M-e>) support is on the roadmap
-        -- https://github.com/saghen/blink.pairs/issues/9
       }
     end,
     on_setup = function(c)
