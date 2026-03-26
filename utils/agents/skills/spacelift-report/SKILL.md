@@ -45,8 +45,9 @@ references:
    - If no PR is found and no commit SHA is available, inform the user and stop.
 
 2. **Discover affected stacks and collect run details:**
-   - Follow the `spacelift-github` reference — list stacks, find proposed runs matching the branch/SHA, fall back to recent runs if needed.
+   - Follow the `spacelift-github` reference — list stacks, find proposed runs matching the branch/SHA, fall back to recent runs if needed. If the input was a check run or Spacelift URL, the stack and run ID are already known — skip discovery.
    - For each affected stack, collect run status and resource changes per the reference's run detail collection and state handling sections.
+   - **If `get_stack_run_changes` returns empty** (common during APPLYING state and after completion), fall back to parsing the terraform plan output from `get_stack_run_logs` — see the "Log Parsing Fallback" section in the `spacelift-github` reference.
 
 3. **Analyze and classify resource changes:**
    - For each stack's run changes, classify every resource into one of these categories based on the change action:
@@ -62,11 +63,13 @@ references:
 
 4. **Generate the report:**
    - Build the report following the **Report Format** below.
-   - **Start each stack section with a brief narrative** (2-4 sentences) explaining what is happening in this stack at a high level — what is the intent of the changes, how do the resources relate to each other, and what is the overall effect.
+   - **Start each stack section with a brief narrative** (2-4 sentences) explaining what is happening in this stack at a high level — what is the intent of the changes, how do the resources relate to each other, and what is the overall effect. Explain the *why* — what motivated these changes.
    - After the narrative, show a **summary table** with resource changes grouped by logical concern where possible (e.g., "IAM changes", "networking", "storage") rather than listing every resource individually in the table.
    - Then show per-category detail sections with individual resources.
-   - For Added, Recreated, Updated, and Deleted categories: write a brief description per resource. Group related resources under a shared subheading when they serve the same purpose (e.g., a role + its policy attachments).
-   - For Moved, Imported, and Removed categories: use bullet-point lists.
+   - For Added, Recreated, Updated, and Deleted categories: write a brief description per resource explaining both *what* is changing and *why* it is changing (infer from resource type, attribute diffs, PR title, commit message, and surrounding context). Group related resources under a shared subheading with a reasoning sentence for the group.
+   - For Moved categories: include a sentence explaining the reason for the move (module refactor, rename, restructuring) before the bullet list.
+   - For Imported and Removed categories: include a brief reason per resource.
+   - **Markdown spacing** — always leave empty lines between all block-level elements (headings, paragraphs, lists, tables).
 
 5. **Present the report:**
    - Show the full report in chat.
@@ -80,7 +83,9 @@ references:
 ```markdown
 ## <Stack Name> (+<created>, ~<updated>, -<deleted>, ><moved>)
 
-<2-4 sentence narrative: what is changing in this stack, how do the resources relate, what is the overall intent and effect.>
+<2-4 sentence narrative: what is changing in this stack, how do the resources relate,
+what is the overall intent and effect. Explain the "why" — what motivated these changes
+(module upgrade, feature enablement, refactor, cleanup, security rotation, etc.).>
 
 | Concern | Changes |
 |---------|---------|
@@ -93,55 +98,80 @@ references:
 
 #### <Logical group heading> (if related resources exist)
 
+<1-2 sentence reasoning for this group: why are these resources being added together,
+what purpose do they serve collectively.>
+
 ##### `<resource.type>.<resource.name>`
+
 <Short description of what this resource is and why it is being created.>
+
 - <Attribute detail or notable configuration.>
 
 ##### `<resource.type>.<resource.name>`
-<Related resource — brief description.>
+
+<Related resource — brief description of its role in the group.>
+
 - <Detail.>
 
 #### `<resource.type>.<resource.name>` (standalone, unrelated resource)
-<Short description.>
+
+<Short description — what it does and why it is being added.>
+
 - <Detail.>
 
 ### Recreated (<number>)
 
 #### `<resource.type>.<resource.name>`
-<Short description — why it cannot be updated in place.>
+
+<Short description — why it cannot be updated in place, what triggered the replacement.
+Explain the cause: was it a config value change, a name change, an immutable field update?>
+
 - <Which attribute forced recreation.>
+- <Impact: does this cause downtime, data loss, or a brief interruption?>
 
 ### Updated (<number>)
 
 #### `<resource.type>.<resource.name>`
-<Short description of what changed.>
+
+<Short description of what changed and why — e.g., version bump, config tuning, label addition.>
+
 - <`attribute`: old value → new value.>
 
 ### Deleted (<number>)
 
 #### `<resource.type>.<resource.name>`
-<Short description of what is being removed and why.>
+
+<Short description of what is being removed and why — e.g., feature deprecated,
+resource consolidated elsewhere, cleanup of legacy config.>
+
 - <Dependency or impact note.>
 
 ### Moved (<number>)
+
+<1-2 sentence explanation of why resources moved — e.g., module refactor from singleton
+to indexed, rename, restructuring.>
+
 - `<old.address>` → `<new.address>`.
 
 ### Imported (<number>)
-- `<resource.address>` — <brief note on what is being imported.>
+
+- `<resource.address>` — <brief note on what is being imported and why.>
 
 ### Removed (<number>)
-- `<resource.address>` — removed from state only (resource persists in cloud).
-- `<resource.address>` — removed from state and destroyed.
+
+- `<resource.address>` — removed from state only (resource persists in cloud). <Why.>
+- `<resource.address>` — removed from state and destroyed. <Why.>
 ```
 
 **Format rules:**
 
+- **Markdown spacing** — always leave an empty line before and after headings, between list items and paragraphs, and between code blocks and surrounding text. Every block-level element (heading, paragraph, list, table, fenced code block) must be separated by a blank line.
 - Omit empty categories entirely — do not show `### Deleted (0)`.
 - The summary line counts only non-zero categories.
 - The narrative comes before the summary table — it gives the reader context to interpret the table.
 - The summary table groups resources by logical concern (IAM, networking, storage, application config, etc.). Resources that do not fit a clear group go under a catch-all row.
-- Within detail sections, group related resources under a shared subheading. Use `####` for group headings, `#####` for individual resources within a group. Standalone resources use `####` directly.
-- Resource descriptions should be concise — one line of context plus bullet details.
+- Within detail sections, group related resources under a shared subheading. Use `####` for group headings with a reasoning sentence, `#####` for individual resources within a group. Standalone resources use `####` directly.
+- **Reasoning is mandatory** — every resource and group must have a brief explanation of *why* the change is happening, not just *what* is changing. Infer the reason from the resource type, attribute diffs, PR title, and surrounding context (e.g., a `release_version` bump is an AMI update; a `secret_string` force-replacement is a config rotation; a module address change is a refactor).
 - Always end list items with a period (`.`).
 - Use inline code for resource addresses and attribute names.
 - For Updated resources, show attribute diffs as `old value → new value` where available.

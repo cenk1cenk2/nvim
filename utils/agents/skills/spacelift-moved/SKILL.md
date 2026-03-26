@@ -45,8 +45,9 @@ references:
    - If no PR is found and no commit SHA is available, inform the user and stop.
 
 2. **Discover affected stacks and collect run changes:**
-   - Follow the `spacelift-github` reference — list stacks, find proposed runs matching the branch/SHA.
+   - Follow the `spacelift-github` reference — list stacks, find proposed runs matching the branch/SHA. If the input was a check run or Spacelift URL, the stack and run ID are already known — skip discovery.
    - For each affected stack, call `spacelift_laravel__get_stack_run_changes` to get the full resource change list.
+   - **If `get_stack_run_changes` returns empty** (common during APPLYING state and after completion), fall back to parsing the terraform plan output from `get_stack_run_logs` — see the "Log Parsing Fallback" section in the `spacelift-github` reference.
 
 3. **Identify moved block candidates:**
    - Scan the change list for **delete + create pairs** — resources being destroyed and recreated under a different address.
