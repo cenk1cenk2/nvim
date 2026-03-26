@@ -481,6 +481,7 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | **GitLab operations** (MRs, issues, repos, pipelines)   | `gitlab` MCP               | **ALWAYS first choice** for any GitLab interaction. Fallback: `glab` CLI via tmux/Bash. Never use raw API calls                                                                                                                                              |
 | **Linear operations** (issues, projects, cycles, docs)  | `linear` MCP               | **ALWAYS first choice** for any Linear interaction. Two workspaces: `linear_kilic-dev` and `linear_laravel`. No CLI fallback                                                                                                                                 |
 | **Obsidian operations** (notes, search, tags)           | `obsidian` MCP             | **ALWAYS first choice** for vault operations. No CLI fallback — do not manipulate vault files directly                                                                                                                                                       |
+| **Spacelift operations** (stacks, runs, resources)      | `spacelift` MCP            | **ALWAYS first choice** for Spacelift interaction. One workspace: `spacelift_laravel`. Fallback: `spacectl` CLI via tmux/Bash                                                                                                                                |
 | **Filesystem operations** (beyond neovim scope)         | `filesystem` MCP           | Directory trees, file info, media files. Fallback: built-in Glob/Read, then shell commands                                                                                                                                                                   |
 | Documentation lookup                                    | `context7`                 | Need to reference official docs for libraries/frameworks                                                                                                                                                                                                     |
 | Shell command execution (visible to user)               | `tmux`                     | Long-running commands, builds, tests, and commands the user should see — via neovim session's scratch pane                                                                                                                                                   |
@@ -598,11 +599,12 @@ Some MCP servers are disabled by default to save resources. When the user reques
 | `grafana/laravel` | Dashboards, alerts, metrics (Laravel/work).                  |
 | `kubernetes`      | Pods, deployments, services, namespaces, cluster operations. |
 | `notion/laravel`  | Notion pages, databases, work documentation.                 |
+| `spacelift/laravel` | Stacks, runs, resources, policies, modules (Laravel/work). |
 | `treesitter`      | AST queries, syntax tree analysis, structural code patterns. |
 
 **When to invoke:**
 
-- User mentions grafana, kubernetes, notion, treesitter, or similar and the tools are not in your toolset.
+- User mentions grafana, kubernetes, notion, spacelift, treesitter, or similar and the tools are not in your toolset.
 - You cannot find a tool you expect to exist — check if an optional server provides it before saying you can't help.
 - User explicitly asks to enable or disable an MCP server.
 

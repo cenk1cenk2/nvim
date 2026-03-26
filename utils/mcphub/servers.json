@@ -522,6 +522,53 @@
         "SLACK_TEAM_ID": "${NVIM_SLACK_TEAM_ID}"
       }
     },
+    "spacelift/laravel": {
+      "args": [
+        "mcp",
+        "server"
+      ],
+      "autoApprove": [
+        "get_api_key",
+        "get_blueprint",
+        "get_context",
+        "get_graphql_type_details",
+        "get_module",
+        "get_module_guide",
+        "get_module_version",
+        "get_policy",
+        "get_policy_sample",
+        "get_space",
+        "get_stack_run",
+        "get_stack_run_changes",
+        "get_stack_run_logs",
+        "get_worker_pool",
+        "get_authentication_guide",
+        "introspect_graphql_schema",
+        "list_api_keys",
+        "list_blueprints",
+        "list_contexts",
+        "list_modules",
+        "list_module_versions",
+        "list_policies",
+        "list_policy_samples",
+        "list_policy_samples_indexed",
+        "list_resources",
+        "list_spaces",
+        "list_stack_proposed_runs",
+        "list_stack_runs",
+        "list_stacks",
+        "list_worker_pools",
+        "search_contexts",
+        "search_graphql_schema_fields",
+        "search_modules"
+      ],
+      "command": "spacectl",
+      "disabled": false,
+      "disabled_tools": [
+        "local_preview"
+      ],
+      "env": {}
+    },
     "tavily": {
       "autoApprove": [
         "tavily-search",
