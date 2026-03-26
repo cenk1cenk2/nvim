@@ -377,6 +377,7 @@ function M.config()
               ["S"] = "run_command",
               ["K"] = "show_file_details",
               ["gp"] = "telescope_find",
+              ["gP"] = "telescope_find_folder",
               ["gT"] = "telescope_grep_folder",
               ["gt"] = "telescope_grep",
               ["c"] = "copy_filename",
@@ -416,6 +417,11 @@ function M.config()
               vim.api.nvim_input(":! " .. path .. "<Home>")
             end,
             telescope_find = function(state)
+              require("ck.plugins.telescope").find_project_files(get_telescope_options(state, {
+                cwd = state.tree:get_node().type == "directory" and get_node_path(state) or get_node_dir(state),
+              }))
+            end,
+            telescope_find_folder = function(state)
               require("ck.plugins.telescope").find_project_files(get_telescope_options(state, {
                 cwd = get_node_dir(state),
               }))
