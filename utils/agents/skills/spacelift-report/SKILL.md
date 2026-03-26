@@ -63,6 +63,7 @@ references:
 
 4. **Generate the report:**
    - Build the report following the **Report Format** below.
+   - **Multi-stack overview (when 2+ stacks are affected):** Before per-stack sections, generate a cross-stack comparison section. Show a summary table of all stacks with their change counts, then describe what patterns are shared across stacks (e.g., "all 5 stacks receive the same `common` module migration") and what is unique to specific stacks (e.g., "only `staging-redis` adds new resources"). This lets the reader understand the blast radius at a glance without reading every stack section.
    - **Start each stack section with a brief narrative** (2-4 sentences) explaining what is happening in this stack at a high level — what is the intent of the changes, how do the resources relate to each other, and what is the overall effect. Explain the *why* — what motivated these changes.
    - After the narrative, show a **summary table** with resource changes grouped by logical concern where possible (e.g., "IAM changes", "networking", "storage") rather than listing every resource individually in the table.
    - Then show per-category detail sections with individual resources.
@@ -79,6 +80,39 @@ references:
    - If the user approves posting, follow `output-diff` conventions — show the content that will be posted, wait for explicit approval, then use `github__add_issue_comment`.
 
 ### Report Format
+
+#### Multi-Stack Overview (when 2+ stacks are affected)
+
+```markdown
+# Overview (<N> stacks affected)
+
+<2-3 sentence summary: what this PR/commit does across all stacks, the overall blast radius,
+and any risk or rollout considerations.>
+
+| Stack | + | ~ | - | > | Status |
+|-------|---|---|---|---|--------|
+| `<stack-1>` | N | N | N | N | Finished / Applying / etc. |
+| `<stack-2>` | N | N | N | N | Finished / Applying / etc. |
+| **Total** | **N** | **N** | **N** | **N** | |
+
+### Common Patterns
+
+<Describe change patterns that appear across multiple stacks. Group by pattern, not by stack.
+For example: "All N stacks receive the `common` module migration from singleton to indexed
+(`module.common` → `module.common[0]`), moving 10 IAM resources each. All stacks also get
+the ArgoCD cluster secret rotation adding the `cert-manager` label.">
+
+### Stack-Specific Differences
+
+<Describe what is unique to individual stacks — changes that do NOT appear in other stacks.
+For example: "Only `staging-redis` adds 2 new resources (Redis replication group + subnet group).
+`production-iam` has 1 additional IAM role deletion not seen in other stacks.">
+
+<If all stacks have identical changes, state: "All stacks have identical change sets — no
+stack-specific differences.">
+```
+
+#### Per-Stack Sections
 
 ```markdown
 ## <Stack Name> (+<created>, ~<updated>, -<deleted>, ><moved>)
