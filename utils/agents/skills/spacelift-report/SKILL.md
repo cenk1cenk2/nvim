@@ -200,6 +200,7 @@ to indexed, rename, restructuring.>
 **Format rules:**
 
 - **Markdown spacing** — always leave an empty line before and after headings, between list items and paragraphs, and between code blocks and surrounding text. Every block-level element (heading, paragraph, list, table, fenced code block) must be separated by a blank line.
+- **Multi-stack overview** — only include when 2+ stacks are affected. Skip for single-stack reports. The overview uses `#` heading level, per-stack sections use `##`. Common patterns should focus on the *pattern*, not enumerate every resource — keep it scannable. Stack-specific differences should call out what makes each stack unique.
 - Omit empty categories entirely — do not show `### Deleted (0)`.
 - The summary line counts only non-zero categories.
 - The narrative comes before the summary table — it gives the reader context to interpret the table.
