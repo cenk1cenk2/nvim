@@ -61,8 +61,7 @@ function M.config()
 
         local ok = vim.wait(15000, function()
           instance = require("mcphub").get_hub_instance()
-          return instance ~= nil
-          -- and instance:is_ready()
+          return instance ~= nil and instance:is_ready()
         end, 250)
 
         if not ok or not instance then
