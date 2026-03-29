@@ -44,7 +44,7 @@ function M.config()
                   return 0.4
                 end
 
-                return 120
+                return 180
               end,
             },
           },
