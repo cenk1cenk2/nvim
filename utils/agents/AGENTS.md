@@ -469,8 +469,8 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 
 | Task                                                    | Tool                       | When to Use                                                                                                                                                                                                                                                  |
 | ------------------------------------------------------- | -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **File reading**                                        | `neovim` MCP               | **ALWAYS first choice** for reading files — no exceptions (see File Operations)                                                                                                                                                                              |
-| **File editing**                                        | `neovim` MCP               | **ALWAYS** use `mcp__mcphub__neovim__edit_file` for editing existing files — no exceptions (see File Operations)                                                                                                                                             |
+| **File reading**                                        | Built-in `Read`            | Use built-in Read tool for reading files                                                                                                                                                                                                                     |
+| **File editing**                                        | Built-in `Edit`            | Use built-in Edit tool for editing existing files. MUST read file first                                                                                                                                                                                      |
 | **File creation**                                       | Built-in `create_file`     | Use the builtin `create_file` tool for creating new files                                                                                                                                                                                                    |
 | Code navigation (definitions/references/hover)          | `mcp-diagnostics` (native) | **ALWAYS first choice** for LSP operations — uses Neovim's running LSP clients. Tools: `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, `lsp_workspace_symbols`, `lsp_code_actions`. Fallback: `treesitter` for structure, then Grep |
 | **Renaming symbols**                                    | `mcp-diagnostics` (native) | **ALWAYS use `lsp_rename` instead of find-and-replace or manual edits.** Single tool call renames across the entire workspace via LSP — the fastest way to rename. Accepts `new_name`, optional `path`/`line`/`col` to target.                               |
@@ -553,8 +553,8 @@ If the scratch session does not exist but tmux MCP is loaded and you need to run
 ### 2. Claude Code Built-in Tools
 
 - **`create_file`** - **ALWAYS use for creating NEW files.** This is the builtin tool for file creation.
-- **Read** (`mcp__acp__Read`) - Reading file contents. **Only use when neovim MCP is not loaded.**
-- **Edit** (`mcp__acp__Edit`) - Editing files. **Only use when neovim MCP is not loaded.** MUST read file first with Read.
+- **Read** (`mcp__acp__Read`) - Reading file contents.
+- **Edit** (`mcp__acp__Edit`) - Editing files. MUST read file first with Read.
 - **Grep** - Text search across files
 - **Glob** - File pattern matching
 
@@ -564,8 +564,8 @@ If the scratch session does not exist but tmux MCP is loaded and you need to run
 
 **NEVER USE** CLI tools for operations that specialized tools handle:
 
-- `sed` or `awk` for editing - use neovim MCP or Edit
-- `cat`, `head`, `tail` for reading - use neovim MCP or Read
+- `sed` or `awk` for editing - use Edit tool
+- `cat`, `head`, `tail` for reading - use Read tool
 - `echo >` or heredocs for writing - use Write
 - `find` for file search - use Glob tool
 - `grep` or `rg` for text search - use Grep tool
@@ -612,27 +612,22 @@ Some MCP servers are disabled by default to save resources. When the user reques
 
 ## IV. FILE OPERATIONS
 
-> **MANDATORY:** Neovim MCP is the **ABSOLUTE FIRST CHOICE** for all file reading and editing operations — **NO EXCEPTIONS**. Do NOT use built-in Read/Edit tools, adapter-provided edit tools, or any other mechanism when neovim MCP is available. This is the single most important tool preference in this entire document.
+> Use built-in Read and Edit tools for all file operations. Do NOT use the adapter-provided `insert_edit_into_file` builtin tool.
 
 > **EXCEPTION — Claude Code internal directories:** For files under `.claude/` or `~/.claude/` (including plans, skills, memory, CLAUDE.md, and any other Claude Code configuration), **ALWAYS use built-in Claude Code tools** (Read, Edit, Write) directly. Do NOT use neovim MCP for these paths. These are Claude Code's own configuration files and should be managed with its native tools.
 
 ### Reading Files
 
-**Tool: `mcp__mcphub__neovim__read_file` — ALWAYS, without exception.**
-
-- Fallback to `mcp__acp__Read` ONLY when neovim MCP is not loaded.
+**Tool: Built-in `Read` (`mcp__acp__Read`).**
 
 **If you think the file is not found at the expected location please search the repository for it because it might be renamed, moved or combined with something else. Do not assume that file that you expect is failed to create in a prior edit. Ask if unsure and can not find it.**
 
 ### Editing Files
 
-**Tool: `mcp__mcphub__neovim__edit_file` — ALWAYS, without exception.**
+**Tool: Built-in `Edit` (`mcp__acp__Edit`).**
 
-- Do NOT use the adapter-provided `insert_edit_into_file` builtin tool — it bypasses the neovim MCP editing flow.
-- Do NOT use `mcp__acp__Edit` or any other editing mechanism.
-- Reading the file first is recommended for better understanding but not required — the neovim MCP edit tool handles context internally.
-- The neovim MCP edit tool uses mcphub's EditSession with SEARCH/REPLACE blocks and provides fuzzy matching, interactive hunk-by-hunk review, and detailed feedback.
-- Fallback to `mcp__acp__Edit` ONLY when neovim MCP is not loaded (and MUST read file first with `mcp__acp__Read` before editing).
+- MUST read file first before editing.
+- Do NOT use the adapter-provided `insert_edit_into_file` builtin tool.
 
 ### Creating New Files
 
@@ -1026,8 +1021,8 @@ Handles token expiration gracefully with retry logic.
 **User asks to read or edit a file:**
 
 ```
-1. Read: neovim MCP (mcp__mcphub__neovim__read_file) — no exceptions
-2. Edit: neovim MCP (mcp__mcphub__neovim__edit_file) — no exceptions
+1. Read: built-in Read tool
+2. Edit: built-in Edit tool (MUST read file first)
 3. Create: builtin create_file tool
 4. .claude/ or ~/.claude/ paths → use built-in Claude Code tools directly
 5. Understand context and existing patterns (comment style, conventions)
@@ -1116,7 +1111,6 @@ When rules appear to conflict, follow this priority order:
    - Example: User says "skip plan mode" for complex task
    - Response: "I notice this task involves [reasons why plan mode would help]. The guidelines recommend plan mode for this. Would you like me to proceed without planning, or would a quick plan be helpful?"
    - Wait for confirmation before proceeding against guidelines
-3. **Use neovim MCP for reading and editing — no exceptions** (do not use adapter builtins, do not drift to built-in tools)
-4. **Use preferred tools** (but degrade gracefully if unavailable)
-5. **Follow coding style** (match project patterns)
-6. **Update memory** (maintain continuity)
+3. **Use preferred tools** (but degrade gracefully if unavailable)
+4. **Follow coding style** (match project patterns)
+5. **Update memory** (maintain continuity)
