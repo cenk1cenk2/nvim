@@ -65,8 +65,8 @@ function M.config()
           edit_file = {
             go_to_origin_on_complete = true, -- Jump back to original file on completion
             keybindings = {
-              accept = ".", -- Accept current change
-              reject = ",", -- Reject current change
+              accept = ",.", -- Accept current change
+              reject = ",,", -- Reject current change
               next = "n", -- Next diff
               prev = "p", -- Previous diff
               accept_all = "ga", -- Accept all remaining changes

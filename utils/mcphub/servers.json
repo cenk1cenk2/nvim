@@ -383,8 +383,10 @@
         "get_milestone",
         "get_status_updates",
         "list_initiatives",
-        "list_milestones"
+        "list_milestones",
+        "get_authenticated_user"
       ],
+      "disabled_tools": [],
       "env": {
         "LINEAR_TOKEN": "${NVIM_LINEAR_KILIC}"
       },
@@ -418,7 +420,8 @@
         "list_teams",
         "list_users",
         "search_documentation",
-        "extract_images"
+        "extract_images",
+        "get_authenticated_user"
       ],
       "env": {
         "LINEAR_TOKEN": "${NVIM_LINEAR_WORK}"
@@ -563,7 +566,7 @@
         "search_modules"
       ],
       "command": "spacectl",
-      "disabled": false,
+      "disabled": true,
       "disabled_tools": [
         "local_preview"
       ],

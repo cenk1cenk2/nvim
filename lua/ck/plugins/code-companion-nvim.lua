@@ -573,10 +573,10 @@ function M.config()
                 modes = { n = "ga" },
               },
               accept_change = {
-                modes = { n = "." },
+                modes = { n = ",." },
               },
               reject_change = {
-                modes = { n = "," },
+                modes = { n = ",," },
               },
               cancel = {
                 modes = { n = "<C-c>" },
