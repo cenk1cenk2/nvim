@@ -386,6 +386,48 @@ function M.config()
         end,
       })
 
+      mcphub.add_tool("vim", {
+        name = "vim_format",
+        description = "Format a file using LSP. Targets current buffer unless path or bufnr is provided.",
+        inputSchema = {
+          type = "object",
+          properties = {
+            path = {
+              type = "string",
+              description = "File path to format (optional, uses current buffer if omitted)",
+            },
+            bufnr = {
+              type = "number",
+              description = "Buffer number to format (optional, alternative to path)",
+            },
+          },
+        },
+        handler = function(req, res)
+          local path = req.params.path
+          local target_bufnr = req.params.bufnr
+
+          if path and not target_bufnr then
+            local existing = vim.fn.bufnr(path)
+            if existing ~= -1 then
+              target_bufnr = existing
+            else
+              vim.schedule(function()
+                vim.fn.bufload(vim.fn.bufadd(path))
+              end)
+              target_bufnr = vim.fn.bufnr(path)
+            end
+          end
+
+          vim.schedule(function()
+            require("ck.lsp.fn").format({ bufnr = target_bufnr or vim.api.nvim_get_current_buf() })
+          end)
+
+          local target = path or (target_bufnr and tostring(target_bufnr)) or req.editor_info.last_active.filename
+
+          return res:text("Formatted " .. target):send()
+        end,
+      })
+
       mcphub.add_tool("mcp-diagnostics", {
         name = "lsp_rename",
         description = "Rename a symbol under the cursor using LSP. Optionally navigate to a specific location first.",

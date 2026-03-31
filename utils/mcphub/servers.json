@@ -594,7 +594,9 @@
         "get-command-result",
         "list-panes",
         "list-sessions",
-        "list-windows"
+        "list-windows",
+        "capture-pane",
+        "find-session"
       ],
       "command": "bunx",
       "disabled_tools": [
