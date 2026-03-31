@@ -1,9 +1,9 @@
 ---
-name: agents-parallel
-description: Plan work and execute it across parallel agents. Use when user says "run in parallel", "split this into agents", "agents-parallel", or has multiple independent tasks to execute concurrently. Do NOT use for single-task work or when tasks have sequential dependencies that cannot be split.
+name: agents-anonymous
+description: Plan work and execute it across anonymous fire-and-forget agents with full permissions bypass. Use when user says "agents-anonymous", "fire and forget", or wants maximum speed without approval overhead. Agents bypass all permissions and report results only after completion. Do NOT use when approval propagation is needed (use /agents-team instead) or for single-task work.
 interaction: chat
 disable-model-invocation: true
-argument-hint: "[goal or task list] [optional: 'with worktrees']"
+argument-hint: "[goal or task list] [optional: 'without worktrees']"
 references:
   - ../references/scm-detect.md
 ---
@@ -68,7 +68,8 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
      - The list of files it owns.
      - Relevant codebase context (file paths, patterns, conventions).
      - Explicit boundary: "You are responsible for [X]. Do NOT modify files outside your scope: [list]."
-     - If worktree mode: `isolation: "worktree"` parameter.
+   - Always set `isolation: "worktree"` and `mode: "bypassPermissions"` on every agent.
+   - If the user explicitly opted out of worktrees, omit `isolation` but keep `mode: "bypassPermissions"`.
    - Use `run_in_background: true` for all agents so they execute concurrently.
    - Track agent IDs for monitoring completion.
 
@@ -77,8 +78,8 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
    - For each agent, review the result summary.
    - If any agent failed or reported issues, present them to the user before proceeding.
 
-7. **Merge (worktree mode only).**
-   - When agents used git worktrees, each agent worked on an isolated branch.
+7. **Merge.**
+   - Agents run in isolated worktrees by default, each on its own branch.
    - Merge each worktree branch back to the original branch sequentially.
    - If merge conflicts occur:
      - Present the conflicting files and both sides to the user.
@@ -93,19 +94,12 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
 
 ### Worktree Mode
 
-Worktree mode is **only used when the user explicitly asks** ("with worktrees", "use git worktrees", "isolated").
+Worktree mode is the **default**. All agents run in isolated worktrees with `mode: "bypassPermissions"`. To disable worktrees, the user must explicitly say "without worktrees" or "same worktree".
 
-**When to recommend worktrees:**
-- Tasks have potential file overlap that cannot be restructured.
-- Tasks are large and risky — isolation provides safety.
-- The user wants the ability to review each agent's work independently before merging.
-
-**When worktrees are unnecessary:**
-- Tasks are cleanly split with no file overlap.
+**When to skip worktrees (user must opt out):**
 - Tasks are small and low-risk.
 - The overhead of merging is not worth it.
-
-If you think worktrees would help but the user didn't ask, suggest it — but do not use it without explicit approval.
+- The user explicitly says "without worktrees" or "same worktree".
 
 ### Agent Prompt Template
 
@@ -143,7 +137,7 @@ Do NOT modify files outside your write scope. Other agents are handling:
 - **Each agent is self-contained.** Agents cannot communicate with each other. Every agent must have all the context it needs in its prompt.
 - **Fewer, larger agents over many small ones.** Agent startup and context have overhead. 2-4 agents is the sweet spot for most tasks.
 - **Always review after.** The `code-review-changes` pass at the end is mandatory, not optional. Parallel work introduces integration risk.
-- **Worktrees are opt-in.** Default is same working tree with non-overlapping file ownership.
+- **Worktrees are the default.** Agents run isolated with full permissions. Opt out with "without worktrees".
 
 ### Related Skills
 
