@@ -494,6 +494,28 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 >
 > Tavily MUST NOT be used unless ALL other search tools (built-in `web_search`, built-in `fetch_webpage`, and `exa` MCP) have been tried and failed. Even then, only use Tavily if the user is explicitly insisting on further research. Tavily's only unique value is multi-page crawl/site mapping — for everything else, the other tools are sufficient. **Do NOT reach for Tavily out of convenience.**
 
+#### mcp-diagnostics (Native LSP Bridge)
+
+Uses Neovim's running LSP clients — always prefer over Grep/treesitter for code intelligence.
+
+**Tool inventory by purpose:**
+
+| Group | Tools | When to use |
+| ----- | ----- | ----------- |
+| **LSP Navigation** | `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, `lsp_workspace_symbols` | Tracing symbols, understanding code structure, finding usages |
+| **LSP Actions** | `lsp_code_actions`, `lsp_rename` | Automated fixes, workspace-wide renames (always prefer `lsp_rename` over find-and-replace) |
+| **Power Analysis** | `analyze_symbol`, `symbol_lookup` | `analyze_symbol` combines hover+definition+references+document symbols in one call. `symbol_lookup` finds any symbol by name without knowing its location — prefer over Grep for code navigation |
+| **Diagnostics** | `diagnostics_get`, `diagnostics_summary`, `diagnostic_by_severity`, `diagnostic_hotspots`, `diagnostic_stats`, `analyze_diagnostics`, `correlate_diagnostics` | Error investigation, systematic debugging, pattern recognition across files |
+| **Buffer Management** | `buffer_status`, `ensure_files_loaded`, `refresh_after_external_changes` | LSP prerequisites and post-edit synchronization |
+
+**Critical workflow rules:**
+
+1. **After editing files with Edit tool** → ALWAYS call `refresh_after_external_changes` with the edited file paths so neovim picks up changes and LSP diagnostics update. Without this, diagnostics are stale because edits happen outside neovim.
+2. **Before LSP operations on a file** → check if file is loaded with `buffer_status`. If not, call `ensure_files_loaded` first. LSP tools silently return empty results on unloaded files.
+3. **When investigating a symbol** → prefer `analyze_symbol` over individual `lsp_hover` + `lsp_definition` + `lsp_references` calls — one call instead of three.
+4. **When finding a symbol by name** → use `symbol_lookup` instead of Grep. It uses LSP workspace symbols and is more accurate for code navigation.
+5. **When debugging systematically** → follow this progression: `diagnostics_summary` → `diagnostic_hotspots` → `diagnostics_get` (on specific files) → `analyze_diagnostics` (deep dive on individual errors) → `correlate_diagnostics` (find root causes across files) → `lsp_code_actions` (check for automated fixes before manual editing).
+
 #### Tmux Scratch Pane (Command Runner)
 
 Each neovim session has attached tmux sessions following the pattern `root/nvim/<path>/<type>`. The `scratch` session is the command runner.
@@ -652,6 +674,7 @@ Use vim MCP navigation tools to navigate the user's editor when referring to spe
 | `mcp__mcphub__vim__vim_file_open` | Open a file by path (reuses buffer if open), optionally jump to line/col. |
 | `mcp__mcphub__vim__vim_jump`      | Jump to a specific line/column, optionally target a path or bufnr.        |
 | `mcp__mcphub__vim__vim_select`    | Visually select a range of lines, optionally target a path or bufnr.      |
+| `mcp__mcphub__vim__vim_format`    | Format a file using LSP. Targets current buffer unless path or bufnr is provided. |
 
 **Rules:**
 
@@ -1063,8 +1086,29 @@ Handles token expiration gracefully with retry logic.
 
 ```
 1. Use mcp-diagnostics for definitions/references/hover (native server, always available)
-2. Fall back to treesitter for structure analysis
-3. Use Grep only if others unavailable
+2. Use analyze_symbol for comprehensive lookup (hover+definition+references in one call)
+3. Use symbol_lookup to find any symbol by name (prefer over Grep)
+4. Fall back to treesitter for structure analysis
+5. Use Grep only if others unavailable
+```
+
+**After editing files (refresh neovim):**
+
+```
+1. Call refresh_after_external_changes with edited file paths
+2. Wait for diagnostics to update
+3. Check diagnostics_summary to verify no new errors introduced
+```
+
+**Debugging errors systematically:**
+
+```
+1. diagnostics_summary → understand scope
+2. diagnostic_hotspots → find worst files
+3. diagnostics_get (filtered by file/severity) → see specific errors
+4. analyze_diagnostics → deep dive on complex errors
+5. correlate_diagnostics → find root causes across files
+6. lsp_code_actions → check for automated fixes before manual editing
 ```
 
 **Showing code to user in editor:**
@@ -1074,6 +1118,7 @@ Handles token expiration gracefully with retry logic.
 2. Ask permission before navigating (unless user explicitly requested it)
 3. Use vim_file_open / vim_jump to navigate
 4. Use vim_select to highlight code ranges for the user
+5. Use vim_format for LSP formatting when needed
 ```
 
 **Interacting with external services (GitHub, GitLab, Linear, Obsidian):**
