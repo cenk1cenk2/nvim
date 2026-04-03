@@ -16,9 +16,7 @@ function M.config()
           "org",
           "vimwiki",
           "Avante",
-          "AvanteInput",
           "codecompanion",
-          "codecompanion_approval",
         },
       }
     end,
@@ -37,16 +35,14 @@ function M.config()
             "org",
             "vimwiki",
             "Avante",
-            "AvanteInput",
             "codecompanion",
-            "codecompanion_approval",
           },
           ignore_buftypes = {},
           condition = function(bufnr)
             local ft = vim.bo[bufnr].ft
             local bt = vim.bo[bufnr].bt
 
-            if bt == "nofile" and vim.tbl_contains({ "codecompanion", "codecompanion_approval", "Avante", "AvanteInput" }, ft) then
+            if bt == "nofile" and vim.tbl_contains({ "codecompanion", "Avante" }, ft) then
               return true
             elseif bt == "nofile" then
               return false
@@ -119,3 +115,4 @@ function M.config()
 end
 
 return M
+

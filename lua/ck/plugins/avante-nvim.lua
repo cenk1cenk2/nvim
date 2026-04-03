@@ -47,6 +47,9 @@ function M.config()
                 return 180
               end,
             },
+            wo = {
+              winbar = false,
+            },
           },
         })
 
@@ -102,10 +105,48 @@ function M.config()
         return { proxy }
       end
 
+      local function get_system_prompt()
+        local parts = {}
+        local files = {
+          vim.fn.expand("~/.config/nvim/utils/agents/AGENTS.md"),
+          vim.fn.expand("~/.claude/CLAUDE.md"),
+        }
+
+        -- project-level files that Avante does not auto-discover
+        local project_files = {
+          "AGENTS.local.md",
+          "CLAUDE.local.md",
+          ".clinerules",
+          ".goosehints",
+          ".rules",
+          "AGENT.md",
+        }
+
+        for _, f in ipairs(project_files) do
+          table.insert(files, vim.fn.getcwd() .. "/" .. f)
+        end
+
+        for _, f in ipairs(files) do
+          if vim.fn.filereadable(f) == 1 then
+            local content = table.concat(vim.fn.readfile(f), "\n")
+            if content ~= "" then
+              table.insert(parts, content)
+            end
+          end
+        end
+
+        if #parts == 0 then
+          return nil
+        end
+
+        return table.concat(parts, "\n\n")
+      end
+
       ---@type avante.Config
       return {
         debug = nvim.lsp.ai.debug,
         mode = "agentic",
+        system_prompt = get_system_prompt,
         provider = get_acp_provider(),
         providers = {
           copilot = {
@@ -149,6 +190,30 @@ function M.config()
             end)(),
             mcp_servers = get_mcp_servers(),
           },
+          ["kilic"] = {
+            command = "opencode",
+            args = { "acp" },
+            env = {
+              PATH = vim.env["PATH"],
+              HOME = vim.env["HOME"],
+              USER = vim.env["USER"],
+              OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/kilic.json"),
+              AI_KILIC_DEV_API_KEY = vim.env["AI_KILIC_DEV_API_KEY"],
+            },
+            mcp_servers = get_mcp_servers(),
+          },
+          ["opencode"] = {
+            command = "opencode",
+            args = { "acp" },
+            env = {
+              PATH = vim.env["PATH"],
+              HOME = vim.env["HOME"],
+              USER = vim.env["USER"],
+              OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/zen.json"),
+              OPENCODE_API_KEY = vim.env["NVIM_OPENCODE_ACP_WORK"],
+            },
+            mcp_servers = get_mcp_servers(),
+          },
         },
         custom_tools = function()
           return {
@@ -187,6 +252,7 @@ function M.config()
           wrap = true, -- similar to vim.o.wrap
           width = 50, -- default % based on available width
           sidebar_header = {
+            enabled = false,
             rounded = false,
           },
           input = {
@@ -209,6 +275,7 @@ function M.config()
         },
         selection = {
           enabled = true,
+          hint_display = "none",
         },
         file_selector = {
           provider = "telescope",
@@ -219,9 +286,9 @@ function M.config()
         mappings = {
           --- @class AvanteConflictMappings
           diff = {
-            ours = fn.local_keystroke({ "c", "o" }),
-            theirs = fn.local_keystroke({ "c", "t" }),
-            all_theirs = fn.local_keystroke({ "c", "a" }),
+            ours = ",,",
+            theirs = ",.",
+            all_theirs = "ga",
             both = fn.local_keystroke({ "c", "b" }),
             cursor = fn.local_keystroke({ "c", "c" }),
             next = "]c",
@@ -292,6 +359,10 @@ function M.config()
     end,
     on_setup = function(c)
       require("avante").setup(c)
+
+      -- Make separators between avante sub-windows visible by linking to the
+      -- default WinSeparator instead of the invisible AvanteSidebarWinSeparator.
+      vim.api.nvim_set_hl(0, "AvanteSidebarWinSeparator", { link = "WinSeparator" })
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
@@ -472,6 +543,76 @@ function M.config()
           end,
           desc = "select profile for claude [avante]",
           mode = { "n" },
+        },
+      }
+    end,
+    autocmds = function()
+      local function get_avante_result_bufnr()
+        local ok, avante = pcall(require, "avante")
+        if not ok then
+          return nil
+        end
+
+        local sidebar = avante.get()
+        if not sidebar or not sidebar.containers or not sidebar.containers.result then
+          return nil
+        end
+
+        local bufnr = sidebar.containers.result.bufnr
+        if not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then
+          return nil
+        end
+
+        return bufnr
+      end
+
+      return {
+        {
+          event = "User",
+          group = "_avante_markview",
+          pattern = "AvanteInputSubmitted",
+          callback = function()
+            local bufnr = get_avante_result_bufnr()
+            if not bufnr then
+              return
+            end
+
+            -- Detach markview during streaming to avoid performance issues
+            -- and treesitter query race conditions.
+            pcall(require("markview.actions").detach, bufnr)
+          end,
+        },
+        {
+          event = "User",
+          group = "_avante_markview",
+          pattern = "AvanteViewBufferUpdated",
+          callback = function()
+            local bufnr = get_avante_result_bufnr()
+            if not bufnr then
+              return
+            end
+
+            -- Re-attach markview and render after streaming completes.
+            pcall(require("markview.actions").attach, bufnr)
+            pcall(require("markview.actions").set_query, bufnr)
+            pcall(require("markview.actions").render, bufnr)
+          end,
+        },
+        {
+          event = "User",
+          group = "_avante_tmux_alert",
+          pattern = {
+            "AvanteViewBufferUpdated",
+            "AvanteLLMEscape",
+            "MCPHubApprovalWindowOpened",
+          },
+          callback = function()
+            local tty = vim.uv.new_tty(2, false)
+            if tty then
+              tty:write("\007")
+              tty:close()
+            end
+          end,
         },
       }
     end,

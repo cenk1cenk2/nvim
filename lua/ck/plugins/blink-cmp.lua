@@ -116,10 +116,10 @@ function M.config()
               return { inherit_defaults = true, "git" }
             end,
             codecompanion = function()
-              return { "path" }
+              return { "codecompanion", "path" }
             end,
             AvanteInput = function()
-              return { "path" }
+              return { "avante", "path" }
             end,
           },
           providers = {
