@@ -5,6 +5,7 @@ interaction: chat
 argument-hint: "[cycle-number or 'current'|'next'] - e.g., '42', 'current', 'next'"
 references:
   - ../references/output-diff.md
+  - ../references/linear-issue-states.md
 ---
 
 ## system
@@ -29,6 +30,8 @@ references:
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous. The workspace skill handles session initialization (user discovery, label fetching, team assignment) and determines which Linear MCP tools to use.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+
+> Read the `linear-issue-states` reference for state transition rules — especially the never-downgrade constraint and cycle promotion patterns.
 
 ### Process
 

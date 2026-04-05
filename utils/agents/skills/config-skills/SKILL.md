@@ -217,6 +217,7 @@ When creating or updating a skill, always check:
 | `linear-issue-philosophy.md` | Issue vs. conversation authority, timestamps. | Issue update/revisit/pick skills. |
 | `linear-description-structure.md` | Issue/project/initiative description format. | Issue/project/initiative creation skills. |
 | `linear-research-documentation.md` | Research process, analysis, appendix, link management. | Research-heavy creation skills. |
+| `linear-issue-states.md` | State meanings, transition rules, dependency resolution, decision patterns. | State-transition skills (implement, triage, next-task, cycle). |
 | `scm-detect.md` | SCM platform detection from remote URL, local git MCP tools, CLI fallback. | Cross-platform skills (code-pull, code-review-branch). |
 | `scm-github.md` | GitHub MCP tools, `gh` CLI fallback, platform-specific conventions. | GitHub CI/PR/failed-CI skills, cross-platform skills. |
 | `scm-gitlab.md` | GitLab MCP tools, `glab` CLI fallback, platform-specific conventions. | GitLab CI/PR/failed-CI skills, cross-platform skills. |

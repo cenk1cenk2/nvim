@@ -3,11 +3,15 @@ name: linear-next-task
 description: Analyze Linear projects and issues to recommend the best next task(s) to pick up. Use when user says "what should I work on", "pick next task", "what's the priority", or "recommend a task". Do NOT use for picking up a specific known issue (/linear-issue-implement) or cycle planning (/linear-cycle).
 interaction: chat
 argument-hint: "[project-name or Linear URL] (optional — omit to analyze all projects)"
+references:
+  - ../references/linear-issue-states.md
 ---
 
 ## system
 
 ### Linear Pick Next Task
+
+> Read the `linear-issue-states` reference for state meanings, transition rules, and dependency resolution semantics.
 
 > **ALWAYS enter plan mode when this prompt is invoked.**
 >

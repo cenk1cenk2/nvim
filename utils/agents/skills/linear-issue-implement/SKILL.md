@@ -3,6 +3,8 @@ name: linear-issue-implement
 description: Pick up an existing Linear issue and start working on it. Use when user says "pick up K-123", "work on this issue", "start CLOUD-45", or provides a Linear issue URL to begin work. Do NOT use for just reading/refreshing an issue (linear-issue-revisit) or choosing what to work on next (linear-next-task).
 interaction: chat
 argument-hint: "[issue-id] - e.g., 'K-123', 'CLOUD-45'"
+references:
+  - ../references/linear-issue-states.md
 ---
 
 ## system
@@ -53,7 +55,7 @@ Plan and refine only — **NEVER implement, NEVER exit plan mode.** Stay in plan
 - Fetch all comments on the issue using `list_comments`. Scan for decisions, clarifications, blockers, or context from other team members that affects the implementation approach. Note significant comments for the plan.
 - If the issue has parent issues or blocking relations, fetch those too for context.
 - If the description's `updatedAt` is older than the current session context, flag this during alignment (Step 4) — the user may have more recent knowledge.
-- **Move the issue to "In Progress"** — use `save_issue` with `state: "In Progress"` immediately after fetching. The issue is now actively being worked on.
+- **Move the issue to "In Progress"** — use `save_issue` with `state: "In Progress"` immediately after fetching. Read the `linear-issue-states` reference for state transition rules.
 
 **Step 2: Research the Context**
 

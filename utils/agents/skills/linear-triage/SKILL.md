@@ -4,6 +4,7 @@ description: Process all Linear issues in triage status, recommending projects, 
 interaction: chat
 references:
   - ../references/output-diff.md
+  - ../references/linear-issue-states.md
 ---
 
 ## system
@@ -21,6 +22,8 @@ references:
 > **DO NOT enter plan mode.** This is an interactive, issue-by-issue workflow driven by user decisions.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+
+> Read the `linear-issue-states` reference for state meanings and transition rules when recommending target states.
 
 ### Process
 

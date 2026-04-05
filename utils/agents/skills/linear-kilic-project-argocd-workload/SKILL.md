@@ -5,6 +5,7 @@ interaction: chat
 references:
   - ../references/plan-mode.md
   - ../references/output-diff.md
+  - ../references/linear-mandatory-fields.md
 argument-hint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-cluster'"
 ---
 
@@ -78,6 +79,10 @@ Use GitLab MCP to analyze existing deployments for reference:
 **3. Create Project and Issues:**
 
 Create the Linear project with issues based on the template below. **Only include optional issues if the user confirmed they are needed during requirements gathering.**
+
+> **CRITICAL:** Every issue MUST have `state: "Backlog"` set explicitly. The Linear API defaults to `Triage` which is WRONG. See the `linear-mandatory-fields` reference for all required fields.
+
+> **Blocking relations:** Use `blockedBy` to set dependency order between issues in a project. Think through the dependency graph and set blocking relations so work order is clear.
 
 ### Issue Template
 
