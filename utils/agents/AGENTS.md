@@ -459,6 +459,8 @@ Discovered existing token validation in `auth/validator.ts` that we can reuse. U
 
 **DECISION HIERARCHY** for choosing tools (highest priority first):
 
+> **MCP servers ALWAYS take priority over CLI equivalents.** When an MCP server is available for a service (git, GitHub, GitLab, Linear, Obsidian, Spacelift, Slack, etc.), use the MCP tool — never fall back to the CLI (`git`, `gh`, `glab`, `spacectl`, etc.) unless the MCP server is unavailable or the specific operation has no MCP tool equivalent. This is not a preference — it is a hard rule.
+
 ### MCP Tool Name Convention
 
 MCP tools are available under two prefixes: `mcp__mcphub__<server>__<tool>` (full) and `mcp__<server>__<tool>` (short). Both resolve to the same tool — **prefer `mcp__mcphub__` when both exist** as it routes through the mcphub hub. In documentation and skill references, use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git__git_status`, `slack__slack_list_channels`) for readability — the server name is the identifying factor. The agent resolves the correct prefix at call time.
@@ -476,7 +478,7 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | **Renaming symbols**                                    | `mcp-diagnostics` (native) | **ALWAYS use `lsp_rename` instead of find-and-replace or manual edits.** Single tool call renames across the entire workspace via LSP — the fastest way to rename. Accepts `new_name`, optional `path`/`line`/`col` to target.                               |
 | Diagnostics (errors, warnings)                          | `mcp-diagnostics` (native) | Diagnostic analysis from running LSP servers. Tools: `document_diagnostics`, `workspace_diagnostics`, `diagnostics_summary`                                                                                                                                  |
 | Code structure analysis, AST queries                    | `treesitter`               | Need to understand syntax structure, find patterns                                                                                                                                                                                                           |
-| Git operations                                          | `git` MCP                  | Any git operation — available tools: `mcp__mcphub__git__git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch`                      |
+| **Git operations**                                      | `git` MCP                  | **ALWAYS first choice** for any git operation. Never use raw `git` CLI when the MCP server is available. Tools: `git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch` |
 | **GitHub operations** (PRs, issues, repos, code search) | `github` MCP               | **ALWAYS first choice** for any GitHub interaction. Fallback: `gh` CLI via tmux/Bash. Never use raw API calls                                                                                                                                                |
 | **GitLab operations** (MRs, issues, repos, pipelines)   | `gitlab` MCP               | **ALWAYS first choice** for any GitLab interaction. Fallback: `glab` CLI via tmux/Bash. Never use raw API calls                                                                                                                                              |
 | **Linear operations** (issues, projects, cycles, docs)  | `linear` MCP               | **ALWAYS first choice** for any Linear interaction. Two workspaces: `linear_kilic-dev` and `linear_laravel`. No CLI fallback                                                                                                                                 |
@@ -591,10 +593,12 @@ If the scratch session does not exist but tmux MCP is loaded and you need to run
 - `echo >` or heredocs for writing - use Write
 - `find` for file search - use Glob tool
 - `grep` or `rg` for text search - use Grep tool
-- Raw `git` commands WHENEVER POSSIBLE - use `mcp__mcphub__git__*` MCP server tools
-- `gh` CLI for GitHub when `github` MCP is available — use `mcp__mcphub__github__*` first
-- `glab` CLI for GitLab when `gitlab` MCP is available — use `mcp__mcphub__gitlab__*` first
-- Direct vault file manipulation for Obsidian when `obsidian` MCP is available — use `mcp__mcphub__obsidian__*` first
+- Raw `git` commands — **ALWAYS** use `mcp__mcphub__git__*` MCP server tools instead
+- `gh` CLI for GitHub — **ALWAYS** use `mcp__mcphub__github__*` MCP tools instead
+- `glab` CLI for GitLab — **ALWAYS** use `mcp__mcphub__gitlab__*` MCP tools instead
+- `spacectl` CLI for Spacelift — **ALWAYS** use `mcp__mcphub__spacelift_laravel__*` MCP tools instead
+- Direct vault file manipulation for Obsidian — **ALWAYS** use `mcp__mcphub__obsidian__*` MCP tools instead
+- Slack CLI or API calls — **ALWAYS** use `mcp__mcphub__slack__*` MCP tools instead
 
 ### Graceful Degradation
 
@@ -1156,6 +1160,6 @@ When rules appear to conflict, follow this priority order:
    - Example: User says "skip plan mode" for complex task
    - Response: "I notice this task involves [reasons why plan mode would help]. The guidelines recommend plan mode for this. Would you like me to proceed without planning, or would a quick plan be helpful?"
    - Wait for confirmation before proceeding against guidelines
-3. **Use preferred tools** (but degrade gracefully if unavailable)
+3. **MCP servers over CLIs — always** (when an MCP server exists for a service, use it; fall back to CLI only when the MCP server is unavailable or lacks the specific operation)
 4. **Follow coding style** (match project patterns)
 5. **Update memory** (maintain continuity)
