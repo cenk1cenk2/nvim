@@ -19,6 +19,9 @@
         },
         "minimax-m2.7:cloud": {
           "name": "Minimax M2.7 Cloud"
+        },
+        "gemma4:31b-cloud": {
+          "name": "Gemma4 Cloud"
         }
       }
     }
