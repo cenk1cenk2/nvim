@@ -1,10 +1,11 @@
 ---
 name: linear-issue-create
-description: Create new Linear issues with comprehensive analysis and research. Use when user says "create an issue", "file a bug", "add a task to Linear", or "create a ticket". Requires a workspace skill (linear-kilic or linear-work). Do NOT use for updating existing issues (linear-issue-update), commenting (linear-issue-comment), or picking up issues (linear-issue-implement).
+description: Create new Linear issues with comprehensive analysis and research. Use when user says "create an issue", "file a bug", "add a task to Linear", or "create a ticket". Requires a workspace skill (linear-kilic or linear-work). ALWAYS set state explicitly — do NOT let issues go to Triage (API default). Do NOT use for updating existing issues (linear-issue-update), commenting (linear-issue-comment), or picking up issues (linear-issue-implement).
 interaction: chat
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-mandatory-fields.md
+  - ../references/linear-issue-states.md
   - ../references/plan-mode.md
   - ../references/output-diff.md
 ---
@@ -24,6 +25,8 @@ references:
 ### Core Requirements
 
 > Read the `linear-mandatory-fields` reference for team, state, labels, estimate, priority, and relations rules.
+
+> Read the `linear-issue-states` reference for state meanings, transition rules, and when to use which state.
 
 Additional rules for issue creation:
 
