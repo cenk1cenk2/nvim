@@ -194,13 +194,35 @@
         "list_pipeline_jobs",
         "get_pipeline",
         "get_pipeline_job",
-        "get_pipeline_job_output"
+        "get_pipeline_job_output",
+        "get_merge_request_conflicts",
+        "get_merge_request_file_diff",
+        "get_merge_request_note",
+        "get_merge_request_notes",
+        "list_draft_notes",
+        "list_merge_request_changed_files",
+        "list_merge_request_diffs"
       ],
       "command": "npx",
       "disabled": false,
       "disabled_tools": [
         "download_attachment",
-        "download_release_asset"
+        "download_release_asset",
+        "get_job_artifact_file",
+        "get_group_wiki_page",
+        "get_environment",
+        "get_deployment",
+        "download_job_artifacts",
+        "get_milestone",
+        "get_milestone_burndown_events",
+        "get_milestone_issue",
+        "get_milestone_merge_requests",
+        "list_deployments",
+        "list_environments",
+        "list_group_wiki_pages",
+        "list_job_artifacts",
+        "list_milestones",
+        "list_wiki_pages"
       ],
       "env": {
         "GITLAB_API_URL": "https://gitlab.kilic.dev/api/v4/",
