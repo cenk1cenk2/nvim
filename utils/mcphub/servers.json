@@ -384,7 +384,8 @@
         "get_status_updates",
         "list_initiatives",
         "list_milestones",
-        "get_authenticated_user"
+        "get_authenticated_user",
+        "research"
       ],
       "disabled_tools": [],
       "env": {
@@ -421,7 +422,8 @@
         "list_users",
         "search_documentation",
         "extract_images",
-        "get_authenticated_user"
+        "get_authenticated_user",
+        "research"
       ],
       "env": {
         "LINEAR_TOKEN": "${NVIM_LINEAR_WORK}"
