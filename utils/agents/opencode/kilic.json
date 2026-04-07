@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "kilic/glm-5:cloud",
+  "model": "kimi-k2.5:cloud",
   "enabled_providers": ["kilic"],
   "autoupdate": false,
   "permission": {
