@@ -400,19 +400,16 @@ function M.config()
               ---@type string|fun(adapter: CodeCompanion.Adapter): string
               llm = function(adapter)
                 local model
-                for _, item in ipairs(require("codecompanion").buf_get_chat() or {}) do
-                  local chat = item.chat or item
-                  if chat.adapter == adapter then
-                    if chat.acp_connection then
-                      local models = chat.acp_connection:get_models()
-                      if models and models.currentModelId then
-                        model = models.currentModelId
-                      end
-                    else
-                      model = adapter.model and (adapter.model.formatted_name or adapter.model.name)
-                    end
+                local chat = require("codecompanion").buf_get_chat(0)
 
-                    break
+                if chat then
+                  if chat.acp_connection then
+                    local models = chat.acp_connection:get_models()
+                    if models and models.currentModelId then
+                      model = models.currentModelId
+                    end
+                  else
+                    model = adapter.model and (adapter.model.formatted_name or adapter.model.name)
                   end
                 end
 
@@ -810,35 +807,33 @@ function M.config()
                       return
                     end
 
-                    -- ACP connection is created async via vim.schedule in Chat.new,
-                    -- but on_created fires before that. Force sync connection.
-                    if not chat.acp_connection then
-                      chat:change_adapter(adapter)
-                    end
+                    -- ACP connection is created async — use change_adapter callback
+                    -- to wait until the connection is ready before selecting a model.
+                    chat:change_adapter(adapter, function()
+                      if not chat.acp_connection then
+                        log:warn("Selected adapter '%s' does not have an ACP connection. Cannot select model.", adapter)
 
-                    if not chat.acp_connection then
-                      log:warn("Selected adapter '%s' does not have an ACP connection. Cannot select model.", adapter)
-
-                      return
-                    end
-
-                    local models = chat.acp_connection:get_models()
-
-                    if not models or not models.availableModels or #models.availableModels < 2 then
-                      return
-                    end
-
-                    vim.ui.select(models.availableModels, {
-                      prompt = "Select a model for this chat",
-                      format_item = function(item)
-                        return ("%s (%s)"):format(item.name or item.modelId, item.description) .. (item.modelId == models.currentModelId and " [*]" or "")
-                      end,
-                    }, function(model)
-                      if not model then
                         return
                       end
 
-                      chat:change_model({ model = model.modelId })
+                      local models = chat.acp_connection:get_models()
+
+                      if not models or not models.availableModels or #models.availableModels < 2 then
+                        return
+                      end
+
+                      vim.ui.select(models.availableModels, {
+                        prompt = "Select a model for this chat",
+                        format_item = function(item)
+                          return ("%s (%s)"):format(item.name or item.modelId, item.description) .. (item.modelId == models.currentModelId and " [*]" or "")
+                        end,
+                      }, function(model)
+                        if not model then
+                          return
+                        end
+
+                        chat:change_model({ model = model.modelId })
+                      end)
                     end)
                   end,
                 },
