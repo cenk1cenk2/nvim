@@ -12,7 +12,7 @@ function M.config()
       return {
         -- "olimorris/codecompanion.nvim",
         "cenk1cenk2/codecompanion.nvim",
-        branch = "patch-6",
+        branch = "patch-7",
         -- dir = "~/development/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         keys = { "<Space>c" },
