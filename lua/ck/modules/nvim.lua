@@ -144,7 +144,8 @@ function M.setup()
         {
           fn.wk_keystroke({ categories.NEOVIM, "Q" }),
           function()
-            require("ck.config"):reload()
+            -- require("ck.config"):reload()
+            vim.cmd([[restart]])
           end,
           desc = "reload configuration",
         },
