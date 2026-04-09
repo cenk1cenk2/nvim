@@ -12,7 +12,7 @@ function M.config()
       return {
         -- "olimorris/codecompanion.nvim",
         "cenk1cenk2/codecompanion.nvim",
-        branch = "patch-7",
+        branch = "next",
         -- dir = "~/development/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         keys = { "<Space>c" },
@@ -80,7 +80,7 @@ function M.config()
       return {
         opts = {
           log_level = require("ck.log"):to_nvim_level(),
-          -- log_level = vim.log.levels.DEBUG,
+          -- log_level = "DEBUG",
         },
         mcp = {
           servers = {
