@@ -156,7 +156,7 @@ function M.config()
         acp_providers = {
           ["claude-code"] = {
             command = "bunx",
-            args = { "-y", "@zed-industries/claude-code-acp@latest" },
+            args = { "-y", "@agentclientprotocol/claude-code-acp@latest" },
             env = (function()
               if vim.env["NVIM_CLAUDE_ACP"] == nil then
                 vim.env["NVIM_CLAUDE_ACP"] = vim.env["NVIM_CLAUDE_ACP_WORK"]
@@ -175,7 +175,7 @@ function M.config()
           },
           ["codex"] = {
             command = "bunx",
-            args = { "-y", "@zed-industries/codex-acp@latest" },
+            args = { "-y", "@agentclientprotocol/codex-acp@latest" },
             env = (function()
               if vim.env["NVIM_CODEX_ACP"] == nil then
                 vim.env["NVIM_CODEX_ACP"] = vim.env["NVIM_CODEX_ACP_KILIC"]

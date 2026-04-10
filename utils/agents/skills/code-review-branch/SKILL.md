@@ -8,6 +8,7 @@ references:
   - ../references/scm-detect.md
   - ../references/scm-github.md
   - ../references/scm-gitlab.md
+  - ../references/review-findings.md
 ---
 
 ## system
@@ -57,11 +58,10 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - The user may say "ignore that" without further explanation — respect it and drop the item.
 
 5. **Present Findings:**
-   - Group findings by severity:
-     - **Blockers** — must fix before merge. Correctness, security, data loss risks.
-     - **Warnings** — should fix. Edge cases, error handling gaps, unclear logic.
-     - **Suggestions** — optional improvements. Style, naming, minor simplifications.
-   - For each finding, show the code in question and the proposed change using this format:
+   - Read the `review-findings` reference for finding presentation format — resolve from the `<References>` block via MCP filesystem tools.
+   - Group findings under `###` headings by logical domain/system (e.g., "Authentication", "Plugin System", "Database Layer"), not by severity.
+   - Within each domain, order most critical findings first. Use severity tags (`**bug:**`, `**risk:**`, `**nit:**`, `**question:**`) when severity isn't obvious from context.
+   - For each finding, show the code in question and the proposed change:
 
      **Current:**
 

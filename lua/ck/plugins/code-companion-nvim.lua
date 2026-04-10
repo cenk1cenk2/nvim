@@ -132,8 +132,8 @@ function M.config()
                     mode = "plan",
                   },
                   commands = {
-                    default = { "bunx", "-y", "@zed-industries/claude-agent-acp@latest" },
-                    yolo = { "bunx", "-y", "@zed-industries/claude-agent-acp@latest", "--yolo" },
+                    default = { "bunx", "-y", "@agentclientprotocol/claude-agent-acp@latest" },
+                    yolo = { "bunx", "-y", "@agentclientprotocol/claude-agent-acp@latest", "--yolo" },
                   },
                 }
               )
@@ -225,7 +225,7 @@ function M.config()
                     mode = "plan",
                   },
                   commands = {
-                    default = { "bunx", "-y", "@zed-industries/codex-acp@latest" },
+                    default = { "bunx", "-y", "@agentclientprotocol/codex-acp@latest" },
                   },
                 }
               )
