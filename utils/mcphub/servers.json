@@ -531,10 +531,26 @@
         "browser_navigate",
         "browser_navigate_back",
         "browser_resize",
-        "browser_run_code"
+        "browser_run_code",
+        "browser_wait_for",
+        "browser_type",
+        "browser_tabs",
+        "browser_select_option",
+        "browser_press_key",
+        "browser_network_requests",
+        "browser_hover",
+        "browser_handle_dialog",
+        "browser_fill_form",
+        "browser_file_upload",
+        "browser_evaluate",
+        "browser_drag",
+        "browser_console_messages",
+        "browser_close",
+        "browser_click"
       ],
       "command": "bunx",
-      "disabled": true
+      "disabled": true,
+      "disabled_tools": []
     },
     "sequentialthinking": {
       "args": [
