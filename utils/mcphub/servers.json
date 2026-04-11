@@ -519,6 +519,23 @@
         "OBSIDIAN_VERIFY_SSL": "false"
       }
     },
+    "playwright": {
+      "args": [
+        "@playwright/mcp@latest",
+        "--executable-path",
+        "/usr/bin/brave"
+      ],
+      "autoApprove": [
+        "browser_take_screenshot",
+        "browser_snapshot",
+        "browser_navigate",
+        "browser_navigate_back",
+        "browser_resize",
+        "browser_run_code"
+      ],
+      "command": "bunx",
+      "disabled": true
+    },
     "sequentialthinking": {
       "args": [
         "-y",
