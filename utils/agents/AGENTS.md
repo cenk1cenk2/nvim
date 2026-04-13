@@ -78,6 +78,8 @@
 
 User invokes specialized modes using personal slash commands (e.g., `/code-assistant`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
 
+**`#{mcp:skill/...}` references:** When the user passes `#{mcp:skill/<name>}`, this is an MCP skill resource reference. **ALWAYS** load it via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>" })`. Never use the `Skill` tool for these — the `Skill` tool is for Claude Code built-in skills only, not MCP skill resources. This is non-negotiable.
+
 ### Skill Cross-Loading (IMPORTANT)
 
 > **Skills have dependencies.** Many skills require other skills to be active first (e.g., Linear issue skills need a workspace skill). When a skill declares a prerequisite, **auto-invoke the prerequisite** if it hasn't been loaded in the current session.
@@ -464,6 +466,12 @@ Discovered existing token validation in `auth/validator.ts` that we can reuse. U
 ### MCP Tool Name Convention
 
 MCP tools are available under two prefixes: `mcp__mcphub__<server>__<tool>` (full) and `mcp__<server>__<tool>` (short). Both resolve to the same tool — **prefer `mcp__mcphub__` when both exist** as it routes through the mcphub hub. In documentation and skill references, use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git__git_status`, `slack__slack_list_channels`) for readability — the server name is the identifying factor. The agent resolves the correct prefix at call time.
+
+### MCP Tool Multiline Parameters
+
+**NEVER use `\n` escape sequences** in MCP tool string parameters. MCP tools pass strings literally — `\n` renders as visible text, not line breaks. Use actual newline characters in parameter values.
+
+This applies to ALL MCP tools that accept multiline text: `github__create_pull_request` (`body`), `github__update_pull_request` (`body`), `linear__save_issue` (`description`), `linear__save_comment` (`body`), `gitlab__*`, `slack__*`, `obsidian__*`, etc.
 
 ### 1. MCP Server Tools (Preferred)
 
