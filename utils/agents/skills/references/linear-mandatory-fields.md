@@ -36,3 +36,22 @@ When creating multiple related issues or working with projects, ALWAYS set prope
 - Use `relatedTo` for issues that are connected but not blocking each other.
 - Use `parentId` for sub-issues that belong to a parent issue.
 - When creating a set of issues for a project, think through the dependency graph and set blocking relations so the work order is clear.
+
+## Structural vs. Descriptive
+
+**NEVER put relation information in issue descriptions.** Dependencies, blocking relationships, sub-issue links, and dependency chains belong in Linear's native fields — not in markdown.
+
+| Information | Where to put it | Where NOT to put it |
+|------------|-----------------|---------------------|
+| "Issue A blocks Issue B" | `blocks` / `blockedBy` fields | ❌ "## Dependencies" section in description |
+| "Issue A is a sub-issue of Issue B" | `parentId` field | ❌ "## Sub-issues" table in description |
+| "Issue A is related to Issue B" | `relatedTo` field | ❌ "See also K-123" in description |
+| Dependency chain ordering | `blockedBy` fields on each issue | ❌ "## Issue Order" or "## Dependency chain" in description |
+
+The only exception is when a parent issue needs brief context about *why* sub-issues exist — not *what* they are or *how* they relate (Linear shows that natively). Use `## Thoughts` sections for rationale, not relation listings.
+
+## Repository References
+
+- When the repository is known, include it in the issue description (e.g., `**Repo:** path/to/repo`).
+- When the repository has a Linear-connected GitLab or GitHub project, use `links` to attach the repo URL as a proper attachment instead of or in addition to inline text.
+- Do NOT force a repo line when the repository is unknown or the issue spans manual work with no repo.

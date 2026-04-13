@@ -124,4 +124,5 @@ Keep issue titles concise and consistent in style across the project. Most issue
 ### Cross-referencing
 
 - Use `relatedTo` on issues to link to relevant issues in other projects.
-- Reference related projects and issues by their Linear identifiers in descriptions when useful.
+- Use `blocks` / `blockedBy` for dependency relationships between issues.
+- Use `parentId` for sub-issues.

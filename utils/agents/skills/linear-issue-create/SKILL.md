@@ -95,8 +95,10 @@ Additional rules for issue creation:
 
 ### Cross-referencing
 
-- Reference related issues in the same project when relevant.
-- Use Linear issue identifiers (e.g., "See K-65 for related work").
+- Use `relatedTo` field to link related issues (same or different projects).
+- Use `blocks` / `blockedBy` fields for dependency relationships.
+- Use `parentId` field for sub-issues.
+- NEVER put dependency chains, sub-issue tables, or "## Dependencies" sections in issue descriptions — Linear shows these natively.
 - Link to merge requests/pull requests and repositories as attachments for easy navigation.
 
 ### Examples

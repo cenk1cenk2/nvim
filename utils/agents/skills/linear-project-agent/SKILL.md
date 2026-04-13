@@ -37,7 +37,7 @@ LLM agents work best when:
 2. **Identify repositories** — Determine which repositories are involved. If multiple repos, consider splitting into sub-projects.
 3. **Break down into layers** — Group work by concern (infrastructure, workload, networking, DNS, etc.).
 4. **One issue per layer per repo** — Each issue touches ONE repository and ONE layer.
-5. **Order by dependency** — Issues should have clear dependencies stated.
+5. **Set dependencies** — Use `blockedBy`, `blocks`, and `parentId` fields for dependency ordering. Never put this in descriptions.
 6. **Validate** — Run the issue checklist (see below).
 7. **Present to user** — Show the structured project for approval.
 
@@ -104,22 +104,9 @@ Use this structure for Linear project descriptions:
 |------|---------|
 | `cluster/workloads/teamspeak3` | Kubernetes manifests |
 | `cluster/sun/argocd-sun` | Load balancer routing |
-
-## Issue Order
-
-1. K-171: Create GitLab repo access (prereq)
-2. K-173: Create workload manifests
-3. K-170: Create ArgoCD Application
-4. K-175: Configure load balancer routes
-5. K-177: Create DNS SRV records
-6. K-174: Migrate data (manual)
-7. K-176: Validate and cutover (manual)
-
-## Dependencies
-
-- K-173 requires K-172 (Vault secret) — manual prereq
-- K-171 is a prerequisite for K-170, K-173
 ```
+
+Set dependency ordering via `blockedBy` / `blocks` / `parentId` fields on each issue — never in the project description.
 
 ### Key Principles
 
@@ -136,7 +123,7 @@ Use this structure for Linear project descriptions:
    - If code → Create separate issue in that repository
    - If manual → Include as a task within the related issue
 
-6. **State dependencies clearly** — Use "Related Issues" sections to link dependencies.
+6. **Set dependencies via Linear fields** — Use `blockedBy`, `blocks`, and `parentId` for dependency ordering. Never put dependency chains or sub-issue tables in descriptions. Linear shows these relations natively.
 
 ### Common Patterns
 
