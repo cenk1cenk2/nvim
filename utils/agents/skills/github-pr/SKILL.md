@@ -42,8 +42,9 @@ references:
 1. **Gather Context:**
    - Get current branch name via `git__git_status`
    - Get remote origin URL to extract owner/repo
-   - Find the open PR for the current branch via `github__list_pull_requests` with `head` filter (format: `owner:branch`)
-   - If no PR exists, ask the user if they want to create one. Use `github__create_pull_request` or fall back to `gh pr create` via CLI if MCP creation is not available.
+   - Find the open PR for the current branch via `github__list_pull_requests` with `head` filter (format: `owner:branch`) and `state: open`.
+   - **Branch reuse:** Branches may have previously merged or closed PRs — this is normal. Only open PRs matter. If no open PR is found but `git log main..HEAD` shows commits ahead of the base branch, the branch needs a new PR. Do NOT search for or get confused by prior closed/merged PRs on the same branch.
+   - If no open PR exists, ask the user if they want to create one. Use `github__create_pull_request` or fall back to `gh pr create` via CLI if MCP creation is not available.
 
 2. **Analyze the PR:**
    - Read PR details via `github__pull_request_read` with method `get`

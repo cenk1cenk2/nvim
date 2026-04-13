@@ -29,8 +29,9 @@ references:
 1. **Gather Context:**
    - Get current branch name via `git__git_status`.
    - Get remote origin URL to extract the GitLab project path.
-   - Find the open MR for the current branch via `gitlab__list_merge_requests` with `source_branch` filter.
-   - If no MR exists, ask the user if they want to create one. Use GitLab MCP tools or fall back to `glab mr create` via CLI if MCP creation is not available.
+   - Find the open MR for the current branch via `gitlab__list_merge_requests` with `source_branch` filter and `state: opened`.
+   - **Branch reuse:** Branches may have previously merged or closed MRs — this is normal. Only open MRs matter. If no open MR is found but `git log main..HEAD` shows commits ahead of the base branch, the branch needs a new MR. Do NOT search for or get confused by prior closed/merged MRs on the same branch.
+   - If no open MR exists, ask the user if they want to create one. Use GitLab MCP tools or fall back to `glab mr create` via CLI if MCP creation is not available.
 
 2. **Analyze the MR:**
    - Read MR details via `gitlab__get_merge_request`.
