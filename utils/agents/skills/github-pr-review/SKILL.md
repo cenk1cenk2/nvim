@@ -22,6 +22,8 @@ references:
 
 This skill performs an autonomous code review on a GitHub pull request using native inline annotations. It does NOT draft findings for user approval — it reviews the code and posts annotations and a summary directly.
 
+> **HARD RULE: All findings MUST be posted as inline review annotations via `github__pull_request_review_write` — NEVER as general PR comments via `github__add_issue_comment`.** The only general comment this skill posts is the summary in Step 7. Every finding with a file location goes through the review API as an inline annotation. No exceptions.
+
 ### Process
 
 #### Step 1: Identify the PR
@@ -68,13 +70,14 @@ Apply the review methodology from `code-review-branch` and `code-review-changes`
 
 - **Read surrounding code** — the diff alone is never enough. Trace call sites, check types, read related files.
 - **Use `sequentialthinking__sequentialthinking`** to methodically work through the diff.
+- **Cross-PR consistency** — if the user provides a reference PR (URL or number), fetch its diff via `github__pull_request_read` (method: `get_diff`) and compare both PRs for structural consistency: same variable ordering, same formatting patterns, same parameter additions/removals across analogous files. Flag deviations as `**nit:**` inline annotations on the specific lines that diverge.
 - **What to look for:**
   - **Silent failures** — errors caught and ignored, missing error propagation, fallback values hiding problems.
   - **Logic errors** — off-by-one, wrong operator, inverted conditions, missing null/undefined checks.
   - **Security** — injection, auth bypass, secret exposure, unsanitized input at boundaries.
   - **Edge cases** — empty input, large data, concurrent access, failure paths.
   - **Error handling** — swallowed errors, missing rollback.
-  - **Inconsistency** — new code deviating from existing codebase patterns.
+  - **Inconsistency** — new code deviating from existing codebase patterns or from a reference PR when provided.
   - **Unnecessary complexity** — over-engineering, premature abstraction, dead code.
 - **No noise** — only flag real issues. Silence means approval.
 - **Be specific** — concrete problem and fix, not vague suggestions.

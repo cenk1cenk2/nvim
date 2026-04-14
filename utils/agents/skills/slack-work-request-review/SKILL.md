@@ -46,32 +46,49 @@ references:
 2. **Fetch PR details.**
    - Use `github__pull_request_read` (method: `get`) to fetch the PR metadata.
    - Extract: title, URL, description/body.
+   - Use `github__pull_request_read` (method: `get_comments`) to fetch PR comments.
+   - Use `github__pull_request_read` (method: `get_review_comments`) to fetch review threads.
 
-3. **Compose the summary.**
+3. **Analyze PR context.**
+   - **PR description** — extract the core intent (what changed and why).
+   - **Infrastructure impact** — scan PR comments for Spacelift reports or infrastructure analysis (look for headings like "Spacelift Infrastructure Impact Report", "Overview", stack tables, or resource change summaries). Extract: number of stacks affected, total resource counts (+/~/−), and the 1-2 sentence overview.
+   - **Review threads** — scan review comments for unresolved threads or threads with unresolved decisions. Summarize any blocking or open items (e.g., "1 unresolved thread: security concern on IAM policy scope").
+   - If no comments or reviews exist, skip these sections.
+
+4. **Compose the summary.**
    - Write a short summary (1-3 sentences) of the PR description.
    - Focus on **what** changed and **why** — not implementation details.
    - If the PR description is empty, summarize from the title and commit messages.
+   - If infrastructure impact was found, append a one-line summary (e.g., "Spacelift: 5 stacks, +35 ~41 −10, all finished.").
+   - If unresolved review threads exist, append a one-line note (e.g., "1 unresolved review thread.").
 
-4. **Format the message.**
+5. **Format the message.**
    - Use Slack mrkdwn syntax (NOT standard markdown).
    - Template:
      ```
      :review: {pr_url}
 
      {short_summary}
+
+     {infrastructure_line}
+
+     {review_notes_line}
      ```
+   - Omit the infrastructure and review lines if not applicable.
    - Example:
      ```
-     :review: https://github.com/laravel/cloud-app-operator/pull/42
+     :review: https://github.com/laravel/cloud-infrastructure/pull/3797
 
-     Adds health check endpoint for the operator pod and configures liveness/readiness probes in the Helm chart.
+     Cuts over Cloudflare tunnel traffic to envoy-gateway for 5 euc1 enterprise clusters. Bumps dedicated-cluster module to 3.4.0.
+
+     _Spacelift: 5 stacks, +35 ~41 −10, all finished._
      ```
 
-5. **Present for approval.**
+6. **Present for approval.**
    - Show the formatted message to the user in chat.
    - Wait for explicit approval before posting.
 
-6. **Post to Slack.**
+7. **Post to Slack.**
    - Load the Slack send tool: `ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message" })`.
    - Use `mcp__claude_ai_Slack__slack_send_message` to post to channel `C073JL6GDMF`.
 
