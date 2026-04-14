@@ -158,7 +158,7 @@ function M.config()
       })
       mcphub.add_tool("open", {
         name = "copy_to_clipboard",
-        description = "Copy text to the system clipboard using the cbcp utility",
+        description = "Copy text to the system clipboard",
         inputSchema = {
           type = "object",
           properties = {
@@ -172,7 +172,7 @@ function M.config()
         handler = function(req, res)
           local text = req.params.text
 
-          local result = vim.fn.system("cbcp", text)
+          local result = vim.fn.system("wl-copy", text)
           if vim.v.shell_error ~= 0 then
             return res:error("Failed to copy to clipboard: " .. tostring(result))
           end
