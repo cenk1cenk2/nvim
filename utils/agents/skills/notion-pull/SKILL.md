@@ -15,18 +15,21 @@ argument-hint: "[notion-url or search description]"
 > **PREREQUISITE:** The `notion-work` skill MUST be active before this skill runs.
 > If no Notion workspace context exists in the current session, auto-invoke `notion-work` first.
 
+> **Deferred tools:** Notion tools are claude.ai connector tools — load via `ToolSearch` before use:
+> `ToolSearch({ query: "select:notion-fetch,notion-search" })`
+
 ### Process
 
 **Step 1: Resolve the page.**
 
 - **If the user provides a Notion URL or page ID:**
-  - Use `notion_laravel__notion-fetch` to retrieve the page directly.
+  - Use `notion-fetch` to retrieve the page directly.
 
 - **If the user provides a description or query:**
-  - Use `notion_laravel__notion-search` with the query.
+  - Use `notion-search` with the query.
   - Present the search results to the user as a numbered list (title, URL, last edited).
   - **Wait for the user to select a result.** Do NOT proceed without explicit approval.
-  - Fetch the selected page via `notion_laravel__notion-fetch`.
+  - Fetch the selected page via `notion-fetch`.
 
 **Step 2: Convert to markdown.**
 

@@ -12,28 +12,46 @@ interaction: chat
 
 ### Workspace Context
 
-- **Slack MCP:** `slack/laravel` — ALWAYS use `slack_laravel__*` tools for this workspace.
-- **Transport:** Remote HTTP (`https://mcp.slack.com/mcp`), OAuth auth.
+- **Slack:** Available via **claude.ai connector** tools (prefix `mcp__claude_ai_Slack__*` in direct Claude Code CLI).
+- **Transport:** Remote HTTP (`https://mcp.slack.com/mcp`), OAuth via claude.ai.
 - **Linked SCM:** GitHub (Laravel organization).
 - **Linked Linear:** `linear_laravel` (Laravel workspace).
 
 ### Available Tools
 
-The remote Slack MCP server exposes a different tool set from the stdio server:
+These tools are **deferred** — they must be loaded via `ToolSearch` before use. Load only the tools you need for the current task.
 
-| Category | Capabilities |
-|----------|-------------|
-| **Search** | Messages, files, users, channels with date/user/content filters. |
-| **Messaging** | Send messages, read channel history, read thread conversations. |
-| **Canvases** | Create, update, read, and export formatted documents as markdown. |
-| **Users** | Fetch profiles, access custom fields and statuses. |
+| Tool | Purpose |
+|------|---------|
+| `slack_search_public` | Search messages in public channels. |
+| `slack_search_public_and_private` | Search messages across public and private channels. |
+| `slack_search_channels` | Search for channels by name or topic. |
+| `slack_search_users` | Search for users by name or email. |
+| `slack_read_channel` | Read recent messages from a channel. |
+| `slack_read_thread` | Read all replies in a message thread. |
+| `slack_read_user_profile` | Get detailed profile for a specific user. |
+| `slack_send_message` | Send a message to a channel or thread. |
+| `slack_send_message_draft` | Draft and format a message before sending. |
+| `slack_schedule_message` | Schedule a message for later delivery. |
+| `slack_create_canvas` | Create a new Slack canvas document. |
+| `slack_read_canvas` | Read an existing canvas. |
+| `slack_update_canvas` | Update an existing canvas. |
 
-**Notable differences from `slack-kilic`:**
+**Loading tools:** Use `ToolSearch` with the tool name to load its schema before calling it:
+```
+ToolSearch({ query: "select:slack_search_public,slack_read_channel,slack_send_message" })
+```
+
+### Notable Differences from `slack-kilic`
+
 - Has powerful **search** capabilities (not available in kilic workspace).
 - Has **canvas** support for document creation.
+- Has **message scheduling** and **draft** support.
 - Does **NOT** have `slack_add_reaction` — no emoji reaction support.
 
-> **Note:** Exact tool names will be confirmed after initial OAuth authorization. Update this skill with the actual tool inventory once connected.
+### Availability
+
+These tools are only available in **direct Claude Code CLI sessions** (not through mcphub/ACP). In mcphub/ACP sessions, the `slack/laravel` MCP server in `servers.json` is configured but cannot connect due to mcp-hub OAuth limitations.
 
 ### After Initialization
 

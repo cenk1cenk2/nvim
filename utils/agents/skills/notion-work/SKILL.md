@@ -10,22 +10,32 @@ interaction: chat
 
 > **DO NOT enter plan mode.** This skill initializes workspace context only.
 
-### Session Initialization
-
-**FIRST ACTION** when this skill is invoked:
-
-1. Call `notion_laravel__notion-get-self` to identify the bot user and workspace.
-2. Note the workspace name and bot permissions from the response.
-3. Store the workspace context for the session.
-
 ### Workspace Context
 
-- **Notion MCP:** `notion_laravel` — ALWAYS use `notion_laravel__*` tools.
-- **Search tool:** `notion_laravel__notion-search` — for finding pages by query.
-- **Fetch tool:** `notion_laravel__notion-fetch` — for retrieving page content by URL or ID.
-- **Update tool:** `notion_laravel__notion-update-page` — for modifying page properties and content.
-- **Create tool:** `notion_laravel__notion-create-pages` — for creating new pages.
-- **Comment tool:** `notion_laravel__notion-create-comment` — for adding comments to pages.
+- **Notion:** Available via **claude.ai connector** tools (deferred — load via `ToolSearch` before use).
+- **Tools are deferred** — they must be loaded before each use:
+  ```
+  ToolSearch({ query: "select:notion-search,notion-fetch,notion-update-page" })
+  ```
+
+### Available Tools
+
+| Tool | Purpose |
+|------|---------|
+| `notion-search` | Find pages by query. |
+| `notion-fetch` | Retrieve page content by URL or ID. |
+| `notion-update-page` | Modify page properties and content. |
+| `notion-create-pages` | Create new pages. |
+| `notion-create-comment` | Add comments to pages. |
+| `notion-get-comments` | Read comments on a page. |
+| `notion-get-users` | List workspace users. |
+| `notion-get-teams` | List workspace teams. |
+| `notion-create-database` | Create a new database. |
+| `notion-create-view` | Create a database view. |
+| `notion-update-view` | Update a database view. |
+| `notion-update-data-source` | Update a data source. |
+| `notion-duplicate-page` | Duplicate an existing page. |
+| `notion-move-pages` | Move pages to a different parent. |
 
 ### After Initialization
 

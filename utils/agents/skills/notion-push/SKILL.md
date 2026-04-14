@@ -16,6 +16,9 @@ references:
 
 > **PREREQUISITE:** The `notion-work` skill MUST be active before this skill runs. If no Notion workspace context exists in the current session, auto-invoke `notion-work` first.
 
+> **Deferred tools:** Notion tools are claude.ai connector tools — load via `ToolSearch` before use:
+> `ToolSearch({ query: "select:notion-search,notion-update-page" })`
+
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ### Process
@@ -49,7 +52,7 @@ Determine the Notion page to update, using this priority:
 3. **Ask the user** — if neither is available, ask for a URL or description.
 
 - **If URL or page ID:** Target that page directly.
-- **If description:** Use `notion_laravel__notion-search` with the query. Present results as a numbered list. **Wait for the user to select a result.** Do NOT proceed without explicit approval.
+- **If description:** Use `notion-search` with the query. Present results as a numbered list. **Wait for the user to select a result.** Do NOT proceed without explicit approval.
 
 **Step 4: Confirm before pushing.**
 
@@ -62,7 +65,7 @@ Present a summary to the user before updating:
 
 **Step 5: Push the content.**
 
-- Use `notion_laravel__notion-update-page` to update the page with:
+- Use `notion-update-page` to update the page with:
   - Page title from the `# heading`.
   - Properties from frontmatter.
   - Body content from the markdown.
