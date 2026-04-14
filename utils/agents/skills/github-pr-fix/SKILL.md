@@ -76,28 +76,46 @@ For each thread with a clear action:
 
 Apply fixes file by file to minimize context switching. If multiple threads target the same file, batch them.
 
-#### Step 6: Reply to Threads
+#### Step 6: Reply to Threads and Resolve
 
-After applying fixes:
+After applying fixes, update each thread on the PR:
 
-- For each fixed thread, reply via `github__add_reply_to_pull_request_comment`:
-  - If a suggestion was applied verbatim: `Applied.`
-  - If a custom fix was made: one-line description of what was changed. Example: `Added null guard before accessing \`user.email\`.`
-- For threads answered with an explanation (no code change): post the explanation.
-- For threads deferred to the user: skip — the user will handle these after you report them.
+- **Fixed threads** — reply via `github__add_reply_to_pull_request_comment`:
+  - Suggestion applied verbatim: `Applied.`
+  - Custom fix: one-line description. Example: `Added null guard before accessing \`user.email\`.`
+  - Then resolve the conversation thread.
+- **Answered threads** (explanation, no code change) — post the explanation, then resolve.
+- **Stale threads** (code already changed, concern no longer applies) — reply noting it's addressed, then resolve.
+- **Deferred threads** (awaiting user input) — leave open. Do not reply or resolve.
 
-#### Step 7: Report
+Resolve threads according to their actual status — fixed and answered threads get resolved, everything else stays open.
 
-After processing all threads, report to the user in chat:
+#### Step 7: Report to User
+
+After processing all threads, present a summary in chat:
 
 ```
-**Fixed:** N threads resolved.
-**Skipped:** M threads need your input.
+### PR Fix Summary
 
-<For each skipped thread: one-liner explaining why it was skipped and what decision is needed.>
+**Resolved:** N threads
+**Deferred:** M threads (need your input)
+
+#### Resolved
+- `path/to/file:42` — <what was fixed and why>
+- `path/to/file:88` — Applied reviewer suggestion.
+- `path/to/file:120` — Replied with explanation, no code change.
+
+#### Deferred
+- `path/to/file:55` — <why this was skipped and what decision is needed>
 ```
 
-If all threads were fixed, just confirm the count.
+- List every thread with its file path, line, and a one-liner of what was done or why it was skipped.
+- Group by resolved vs deferred.
+- If all threads were resolved, omit the Deferred section.
+
+#### Step 8: Optional PR Comment
+
+If the user explicitly asks to post the summary on the PR (e.g., "post this to the PR", "comment the summary"), post it via `github__add_issue_comment` using the same summary format from Step 7. **Only when explicitly requested** — do not post automatically.
 
 ### Key Principles
 
