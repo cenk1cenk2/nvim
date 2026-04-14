@@ -56,13 +56,13 @@ references:
    - Use Slack mrkdwn syntax (NOT standard markdown).
    - Template:
      ```
-     :review: <{pr_url}|{owner}/{repo}#{number}>
+     :review: {pr_url}
 
      {short_summary}
      ```
    - Example:
      ```
-     :review: <https://github.com/laravel/cloud-app-operator/pull/42|laravel/cloud-app-operator#42>
+     :review: https://github.com/laravel/cloud-app-operator/pull/42
 
      Adds health check endpoint for the operator pod and configures liveness/readiness probes in the Helm chart.
      ```
@@ -83,5 +83,5 @@ references:
 ### Key Principles
 
 - **Always present before posting.** Never send without user approval.
-- **Use Slack mrkdwn.** Links must use `<url|label>` pipe syntax. No markdown bold (`**`), use `*text*` instead.
+- **Use Slack mrkdwn.** Use plain URLs for links (Slack auto-unfurls GitHub PRs). No markdown bold (`**`), use `*text*` instead.
 - **Keep the summary concise.** 1-3 sentences, focused on what and why.

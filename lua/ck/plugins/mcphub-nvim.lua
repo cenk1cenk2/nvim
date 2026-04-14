@@ -89,12 +89,12 @@ function M.config()
     on_done = function()
       local mcphub = require("mcphub")
 
-      mcphub.add_server("browser", {
-        displayName = "Browser",
-        description = "Open URLs and search queries in the default web browser.",
+      mcphub.add_server("open", {
+        displayName = "Open",
+        description = "Open URLs, Obsidian notes, and copy content to clipboard.",
       })
 
-      mcphub.add_tool("browser", {
+      mcphub.add_tool("open", {
         name = "open_in_browser",
         description = "Open a URL in the default web browser using vim.ui.open()",
         inputSchema = {
@@ -125,7 +125,7 @@ function M.config()
           return res:text("Successfully opened URL in browser: " .. url):send()
         end,
       })
-      mcphub.add_tool("browser", {
+      mcphub.add_tool("open", {
         name = "open_in_obsidian",
         description = "Open Obsidian note using vim.ui.open()",
         inputSchema = {
@@ -154,6 +154,30 @@ function M.config()
           end
 
           return res:text("Successfully opened in Obsidian: " .. url):send()
+        end,
+      })
+      mcphub.add_tool("open", {
+        name = "copy_to_clipboard",
+        description = "Copy text to the system clipboard using the cbcp utility",
+        inputSchema = {
+          type = "object",
+          properties = {
+            text = {
+              type = "string",
+              description = "The text content to copy to the clipboard",
+            },
+          },
+          required = { "text" },
+        },
+        handler = function(req, res)
+          local text = req.params.text
+
+          local result = vim.fn.system("cbcp", text)
+          if vim.v.shell_error ~= 0 then
+            return res:error("Failed to copy to clipboard: " .. tostring(result))
+          end
+
+          return res:text("Copied to clipboard (" .. #text .. " characters)"):send()
         end,
       })
 

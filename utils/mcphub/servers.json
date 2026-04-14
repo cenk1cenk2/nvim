@@ -560,8 +560,8 @@
     }
   },
   "nativeMCPServers": {
-    "browser": {
-      "autoApprove": ["open_in_browser", "open_in_obsidian"],
+    "open": {
+      "autoApprove": ["copy_to_clipboard", "open_in_browser", "open_in_obsidian"],
       "disabled_tools": []
     },
     "mcp-diagnostics": {
