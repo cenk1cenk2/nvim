@@ -64,6 +64,11 @@
 | `git__git_diff_unstaged` | Unstaged changes only. |
 | `git__git_log` | Commit history. |
 | `git__git_show` | Show a specific commit. |
+| `git__git_add` | Stage files for commit. |
+| `git__git_commit` | Create a commit with staged changes. |
+| `git__git_reset` | Unstage files or reset to a ref. |
+| `git__git_checkout` | Switch branches or restore files. |
+| `git__git_create_branch` | Create a new branch from current HEAD or a ref. |
 
 ## CLI Fallback
 

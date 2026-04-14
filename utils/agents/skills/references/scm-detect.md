@@ -35,3 +35,8 @@ Use these for all local repository operations. Fall back to CLI equivalents if g
 | `git__git_diff_unstaged` | Unstaged changes only. | `git diff` |
 | `git__git_log` | Commit history. | `git log` |
 | `git__git_show` | Show a specific commit. | `git show <ref>` |
+| `git__git_add` | Stage files for commit. | `git add <path>` |
+| `git__git_commit` | Create a commit with staged changes. | `git commit -m "<msg>"` |
+| `git__git_reset` | Unstage files or reset to a ref. | `git reset` |
+| `git__git_checkout` | Switch branches or restore files. | `git checkout <ref>` |
+| `git__git_create_branch` | Create a new branch from current HEAD or a ref. | `git checkout -b <branch>` |
