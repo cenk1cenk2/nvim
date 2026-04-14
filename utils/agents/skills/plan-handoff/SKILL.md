@@ -1,6 +1,6 @@
 ---
-name: plan-for-other
-description: Create a self-contained plan for another Claude Code session or another repository. Use when user says "plan for another session", "plan for other repo", "create a handoff plan", "delegate this plan", or "plan this for later". Do NOT use for planning in the current session (use /code-assistant or EnterPlanMode directly).
+name: plan-handoff
+description: Create a self-contained plan for another Claude Code session or another repository. Use when user says "plan for another session", "plan for other repo", "create a handoff plan", "hand off this plan", "delegate this plan", or "plan this for later". Do NOT use for planning in the current session (use /code-assistant or EnterPlanMode directly). Do NOT use for loading/picking up existing plans (use /plan-pickup).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[same-repo|other-repo] [goal description]"
@@ -12,7 +12,7 @@ references:
 
 ### Cross-Session / Cross-Repository Planning
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/plan-for-other/references`.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/plan-handoff/references`.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
@@ -121,11 +121,7 @@ Integration points between the two repositories.]
 
 ## Loading Instructions
 
-To apply this plan in a new session:
-1. Read this file completely.
-2. If "Research Needed" items exist, complete them first and revise the plan.
-3. If the plan is complete, proceed with implementation step by step.
-4. Update this file with any discoveries or deviations during implementation.
+To pick up this plan in a new session, use `/plan-pickup` with this file path.
 ```
 
 ### After Completion
@@ -134,7 +130,7 @@ After the user approves the plan:
 
 1. Write the plan file to `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
 2. **Output the filename** to the user so they can reference it when starting the consuming session.
-3. Inform the user: "To load this plan in the new session, tell the agent: `Load and apply the plan from <filename>`."
+3. Inform the user: "To pick up this plan in the new session, use `/plan-pickup <filename>`."
 
 ### Key Principles
 
@@ -142,4 +138,3 @@ After the user approves the plan:
 - **Honest about gaps.** If research was not done, say so clearly. Never present unverified steps as confirmed.
 - **Originating context is mandatory for cross-repo plans.** The consuming session must understand what triggered this work and what constraints it must satisfy.
 - **Filename is the handoff.** The plan file is the only artifact that crosses session boundaries. Everything the consuming session needs must be in that file.
-- **Loading is reverse planning.** When asked to LOAD a plan file, read it completely, complete any pending research, revise the plan if needed, then proceed with implementation or present a revised plan.
