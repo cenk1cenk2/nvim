@@ -89,7 +89,32 @@ User invokes specialized modes using personal slash commands (e.g., `/code-assis
 > **Key rules:**
 >
 > - If context unambiguously identifies the prerequisite, load it automatically. If ambiguous, ask the user. Never skip prerequisites.
-> - **Announce loaded skills.** When a skill is loaded, give a one-line summary: `Using <skill-name> — <what it does>.` (e.g., `Using config-agents — updates the AGENTS.md guidelines file.`).
+> - **Announce loaded skills.** When a skill is loaded, announce it using this format:
+>
+>   ```
+>   Using **<skill-name>** skill to <what it does>.
+>
+>   Additionally **<dep-skill-a>** (<what it does and why loaded>), **<dep-skill-b>** (<what it does and why loaded>).
+>
+>   References loaded:
+>
+>   - <reference-1>
+>   - <reference-2>
+>   ```
+>
+>   - The "Additionally" line is only shown when extra skills were loaded as dependencies or co-invoked alongside the primary skill. Omit if none.
+>   - The "References loaded" list is only shown when the skill declares references and they were successfully loaded. Omit if none.
+>   - Example:
+>     ```
+>     Using **github-pr** skill to analyze and draft a PR description for the current branch.
+>
+>     Additionally **linear-workspace-laravel** (prerequisite — workspace context needed for issue linking).
+>
+>     References loaded:
+>
+>     - scm-github
+>     - output-diff
+>     ```
 > - **Dismissing skills.** When the user says "unload the X skill" or "dismiss the X skill", mark it as obsolete in context for cleanup. Dismissal is not permanent — the skill can be re-invoked later if context matches.
 
 ### Skills Architecture
