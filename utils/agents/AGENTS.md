@@ -174,6 +174,24 @@ skills/
 - **Loading skills:** Read `skills://skill/{name}` for each skill. For multiple skills, make parallel calls.
 - **Loading references:** When a skill declares references, read `skills://skill/{name}/references` to load all at once. For shared references outside a skill context, read `skills://reference/{name}`.
 
+### Skill Composition
+
+Multiple skills can be active at the same time. When skills are combined, they coordinate by passing context and output between each other. Each skill's SKILL.md defines how it composes — look for "Composing with Other Skills" sections, modifier/companion roles, or delegation instructions.
+
+**Common patterns:**
+
+- **Modifier + Companion** — one skill produces output, the other intercepts it and redirects (e.g., posts as comment, copies to clipboard). The companion runs fully but skips its write step; the modifier applies its own action to the output.
+- **Additive** — a skill adds a section to another skill's output while still performing its own action independently.
+- **Delegation** — a skill hands off its optional write step to another skill instead of calling MCP tools directly.
+- **Context passing** — a skill gathers information and passes it to another skill so it doesn't re-fetch.
+
+**Rules:**
+
+- When multiple skills are active, read each skill's composition instructions to understand how they interact.
+- If it's unclear which skill should act on what, ask the user.
+- Never execute a companion skill's write action when a modifier is intercepting its output.
+- When a skill delegates to another, follow the delegated skill's workflow (approval, formatting, etc.).
+
 ### Claude Code Directory Structure
 
 Claude Code stores session data and configuration in `~/.claude/`. Understanding this structure helps agents read prior context and write to the right locations.
