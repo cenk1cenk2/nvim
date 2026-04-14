@@ -80,15 +80,18 @@ Apply fixes file by file to minimize context switching. If multiple threads targ
 
 After applying fixes, update each thread on the PR:
 
-- **Fixed threads** — reply via `github__add_reply_to_pull_request_comment`:
-  - Suggestion applied verbatim: `Applied.`
-  - Custom fix: one-line description. Example: `Added null guard before accessing \`user.email\`.`
-  - Then resolve the conversation thread.
+- **Fixed threads (obvious fix or suggestion applied)** — resolve silently. No reply needed when the fix speaks for itself.
+- **Fixed threads (non-obvious custom fix)** — reply with a one-liner only if the fix deviates from the request or needs explanation. Then resolve.
 - **Answered threads** (explanation, no code change) — post the explanation, then resolve.
-- **Stale threads** (code already changed, concern no longer applies) — reply noting it's addressed, then resolve.
+- **Stale threads** (code already changed, concern no longer applies) — resolve silently.
 - **Deferred threads** (awaiting user input) — leave open. Do not reply or resolve.
 
-Resolve threads according to their actual status — fixed and answered threads get resolved, everything else stays open.
+**Resolving GitHub threads requires GraphQL** — the MCP tools do not expose this. Use `gh api graphql` as fallback:
+
+1. Get thread IDs: `gh api graphql -f query='query { repository(owner:"OWNER", name:"REPO") { pullRequest(number:N) { reviewThreads(first:50) { nodes { id isResolved comments(first:1) { nodes { body } } } } } } }'`
+2. Resolve each thread: `gh api graphql -f query='mutation { resolveReviewThread(input: {threadId: "THREAD_ID"}) { thread { isResolved } } }'`
+
+Batch all thread IDs in Step 2 so you only need one query. Resolve in Step 6 after fixes are applied.
 
 #### Step 7: Report to User
 

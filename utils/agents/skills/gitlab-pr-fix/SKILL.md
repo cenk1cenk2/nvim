@@ -80,15 +80,13 @@ Apply fixes file by file to minimize context switching. If multiple threads targ
 
 After applying fixes, update each thread on the MR:
 
-- **Fixed threads** — reply via `gitlab__mr_discussions`:
-  - Suggestion applied verbatim: `Applied.`
-  - Custom fix: one-line description. Example: `Added null guard before accessing \`user.email\`.`
-  - Then resolve the discussion thread.
+- **Fixed threads (obvious fix or suggestion applied)** — resolve silently. No reply needed when the fix speaks for itself.
+- **Fixed threads (non-obvious custom fix)** — reply with a one-liner only if the fix deviates from the request or needs explanation. Then resolve.
 - **Answered threads** (explanation, no code change) — post the explanation, then resolve.
-- **Stale threads** (code already changed, concern no longer applies) — reply noting it's addressed, then resolve.
+- **Stale threads** (code already changed, concern no longer applies) — resolve silently.
 - **Deferred threads** (awaiting user input) — leave open. Do not reply or resolve.
 
-Resolve threads according to their actual status — fixed and answered threads get resolved, everything else stays open.
+Resolve threads via `gitlab__mr_discussions` with the `resolved: true` parameter on the discussion.
 
 #### Step 7: Report to User
 
