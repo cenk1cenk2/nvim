@@ -113,7 +113,7 @@ After processing all threads, present a summary in chat:
 
 #### Step 8: Optional MR Comment
 
-If the user explicitly asks to post the summary on the MR (e.g., "post this to the MR", "comment the summary"), post it via `gitlab__mr_discussions` (as a general note without diff position) using the same summary format from Step 7. **Only when explicitly requested** — do not post automatically.
+If the user explicitly asks to post the summary on the MR (e.g., "post this to the MR", "comment the summary"), delegate to the `gitlab-pr-comment` skill. The fix summary from Step 7 becomes the companion output that `gitlab-pr-comment` drafts, presents for approval, and posts. Do not post directly via `gitlab__mr_discussions` — let `gitlab-pr-comment` handle the draft-approve-post workflow. **Only when explicitly requested** — do not invoke `gitlab-pr-comment` automatically.
 
 ### Key Principles
 

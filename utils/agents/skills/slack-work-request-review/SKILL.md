@@ -61,6 +61,7 @@ references:
    - If the PR description is empty, summarize from the title and commit messages.
    - If infrastructure impact was found, append a one-line summary (e.g., "Spacelift: 5 stacks, +35 ~41 −10, all finished.").
    - If unresolved review threads exist, append a one-line note (e.g., "1 unresolved review thread.").
+   - **Composing with `*-pr-comment`** — if this skill is being used alongside `github-pr-comment` or `gitlab-pr-comment`, also output a `## Review Request` section containing the formatted Slack review request message (from Step 5). This section will be included in the PR/MR comment by the `*-pr-comment` skill. The Slack message is still posted separately to Slack — the `## Review Request` section is additional output for the PR/MR comment, not a replacement.
 
 5. **Format the message.**
    - Use Slack mrkdwn syntax (NOT standard markdown).
@@ -95,6 +96,7 @@ references:
 ### Composing with Other Skills
 
 - **`github-pr`** — after creating a PR with the `github-pr` skill, this skill can be invoked to post the review request. The PR URL from the `github-pr` output can be passed directly — no need to re-detect from git state.
+- **`github-pr-comment` / `gitlab-pr-comment`** — when composed with a `*-pr-comment` skill, the Slack review request message is included as a `## Review Request` section in the PR/MR comment. The `*-pr-comment` skill handles drafting, approval, and posting. The Slack message is still posted separately to Slack — the `## Review Request` section is additive output for the PR/MR comment, not a replacement for the Slack post.
 - **`slack-work`** — workspace prerequisite, must be loaded first.
 
 ### Key Principles

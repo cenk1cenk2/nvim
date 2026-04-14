@@ -118,7 +118,7 @@ After processing all threads, present a summary in chat:
 
 #### Step 8: Optional PR Comment
 
-If the user explicitly asks to post the summary on the PR (e.g., "post this to the PR", "comment the summary"), post it via `github__add_issue_comment` using the same summary format from Step 7. **Only when explicitly requested** — do not post automatically.
+If the user explicitly asks to post the summary on the PR (e.g., "post this to the PR", "comment the summary"), delegate to the `github-pr-comment` skill. The fix summary from Step 7 becomes the companion output that `github-pr-comment` drafts, presents for approval, and posts. Do not post directly via `github__add_issue_comment` — let `github-pr-comment` handle the draft-approve-post workflow. **Only when explicitly requested** — do not invoke `github-pr-comment` automatically.
 
 ### Key Principles
 
