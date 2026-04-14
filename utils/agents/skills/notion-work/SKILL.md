@@ -2,6 +2,8 @@
 name: notion-work
 description: "Initialize a Notion session for the Laravel workspace. Auto-invoked when Notion context is detected (e.g., Notion URLs, references to Notion pages in Laravel workspace context). Do NOT use for pulling (notion-pull) or pushing (notion-push) pages."
 interaction: chat
+references:
+  - ../references/claude-ai-connectors.md
 ---
 
 ## system

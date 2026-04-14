@@ -4,6 +4,8 @@ description: "Pull a Notion page into the current editor as markdown. Use when u
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[notion-url or search description]"
+references:
+  - ../references/claude-ai-connectors.md
 ---
 
 ## system

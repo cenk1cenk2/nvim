@@ -5,6 +5,7 @@ interaction: chat
 disable-model-invocation: true
 argument-hint: "[notion-url or search description]"
 references:
+  - ../references/claude-ai-connectors.md
   - ../references/output-diff.md
 ---
 

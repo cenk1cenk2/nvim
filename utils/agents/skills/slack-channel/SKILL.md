@@ -5,6 +5,7 @@ interaction: chat
 disable-model-invocation: true
 argument-hint: "[channel-name-or-id] [optional: timeframe or instructions]"
 references:
+  - ../references/claude-ai-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/output-diff.md
@@ -26,6 +27,23 @@ references:
 > Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling — resolve references from the `<References>` block via MCP filesystem tools.
 
 The user wants to catch up on a Slack channel. This skill reads the channel's recent messages, classifies them by type, and takes appropriate action depending on the channel's purpose. The skill supports both automated channels (CI/CD, deployments, publishes) and human channels (issues, echo/thoughts).
+
+### Tool Mapping by Workspace
+
+Tool names differ per workspace. Use the correct tools based on which workspace skill is active:
+
+| Action | `slack-kilic` (mcphub) | `slack-work` (claude.ai deferred) |
+|--------|------------------------|-----------------------------------|
+| Read channel | `slack_kilic__slack_get_channel_history` | `slack_read_channel` |
+| Read thread | `slack_kilic__slack_get_thread_replies` | `slack_read_thread` |
+| List channels | `slack_kilic__slack_list_channels` | `slack_search_channels` |
+| Get users | `slack_kilic__slack_get_users` | `slack_search_users` |
+| Get user profile | `slack_kilic__slack_get_user_profile` | `slack_read_user_profile` |
+| Post message | `slack_kilic__slack_post_message` | `slack_send_message` |
+| Reply to thread | `slack_kilic__slack_reply_to_thread` | `slack_send_message` (with thread) |
+| Add reaction | `slack_kilic__slack_add_reaction` | NOT available |
+
+**`slack-work` tools are deferred** — load via `ToolSearch` before use.
 
 ### Process
 

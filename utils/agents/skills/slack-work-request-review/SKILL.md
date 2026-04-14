@@ -5,6 +5,7 @@ interaction: chat
 disable-model-invocation: true
 argument-hint: "[github-pr-url or PR number]"
 references:
+  - ../references/claude-ai-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/scm-github.md
