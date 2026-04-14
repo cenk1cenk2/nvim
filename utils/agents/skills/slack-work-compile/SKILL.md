@@ -12,6 +12,7 @@ references:
   - ../references/scm-gitlab.md
   - ../references/scm-detect.md
   - ../references/output-diff.md
+  - ../references/enrich-context.md
 ---
 
 ## system
@@ -25,6 +26,7 @@ references:
 
 > Read the `slack` reference for Slack mrkdwn formatting rules.
 > Read the `scm-github` and `scm-gitlab` references for SCM MCP tools.
+> Read the `enrich-context` reference for the entity enrichment table, code permalink format, and appendix pattern.
 > Read the `output-diff` reference for presenting the draft before posting.
 
 This skill takes the user's input — a question, finding, or topic — and compiles it into a concise Slack message enriched with real links and references. The goal is to make the message self-contained so others can understand it and reach the relevant resources without asking follow-up questions.
@@ -52,19 +54,9 @@ Read the user's message carefully. Identify:
 
 #### Step 2: Enrich with Links and References
 
-For each entity the user mentioned, fetch the real link using the appropriate MCP tools:
+Follow the `enrich-context` reference. For each entity the user mentioned, fetch the real link using the entity enrichment table. Only enrich entities the user actually mentioned — do not go looking for extra things to link.
 
-- **GitHub PR** — use `github__pull_request_read` (method: `get`) to get the PR URL. Include as a plain URL (Slack auto-unfurls).
-- **GitLab MR** — use `gitlab__get_merge_request` to get the MR web URL. Include as a plain URL.
-- **Spacelift run** — use `spacelift_laravel__get_stack_run` or `spacelift_laravel__list_stack_runs` to get the run URL. Format: `<run_url|stack-name run #N>`.
-- **Spacelift stack** — use `spacelift_laravel__list_stacks` to find the stack. Link to the stack page.
-- **Code references** — use `github__get_file_contents` or `gitlab__get_file_contents` to verify the file and line exist. Build a permalink to the specific line(s):
-  - GitHub: `https://github.com/<owner>/<repo>/blob/<sha>/<path>#L<line>-L<end_line>`
-  - GitLab: `https://gitlab.com/<project_path>/-/blob/<sha>/<path>#L<line>-<end_line>`
-- **Commits** — use `github__get_commit` or `gitlab__get_commit` to get the commit URL.
-- **Issues** — use `github__issue_read` or `gitlab__get_issue` to get the issue URL.
-
-Only enrich entities that the user actually mentioned. Do not go looking for extra things to link.
+For Slack output specifically: use plain URLs for GitHub/GitLab (Slack auto-unfurls them). Use `<url|label>` format for non-unfurling links (Spacelift, Linear, etc.).
 
 #### Step 3: Compose the Message
 
@@ -93,22 +85,7 @@ Rules:
 
 #### Step 4: Add Appendix (if needed)
 
-If there are additional details that help but would clutter the main message, add an `## Appendix` section:
-
-```
-<core message>
-
-## Appendix
-<extra details — stack lists, full file paths, commit SHAs, config snippets, etc.>
-```
-
-Use the appendix for:
-- Lists of affected stacks or resources.
-- Full error messages or log snippets.
-- Detailed code paths or file references.
-- Anything that adds context without being essential to the main point.
-
-Skip the appendix if the message is already self-contained.
+Follow the appendix pattern from the `enrich-context` reference. Add an `## Appendix` section for details that help but would clutter the main message. Skip if the message is already self-contained.
 
 #### Step 5: Present Draft
 

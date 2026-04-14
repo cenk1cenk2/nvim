@@ -9,6 +9,7 @@ references:
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/output-diff.md
+  - ../references/enrich-context.md
 ---
 
 ## system
