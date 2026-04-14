@@ -563,7 +563,7 @@
       "command": "bunx",
       "disabled": false
     },
-    "slack": {
+    "slack/kilic": {
       "args": [
         "-y",
         "@modelcontextprotocol/server-slack@latest"
@@ -581,6 +581,16 @@
         "SLACK_BOT_TOKEN": "${NVIM_SLACK_TOKEN}",
         "SLACK_TEAM_ID": "${NVIM_SLACK_TEAM_ID}"
       }
+    },
+    "slack/laravel": {
+      "autoApprove": [],
+      "disabled": false,
+      "disabled_tools": [],
+      "oauth": {
+        "callbackPort": 3118,
+        "clientId": "1601185624273.8899143856786"
+      },
+      "url": "https://mcp.slack.com/mcp"
     },
     "spacelift/laravel": {
       "args": [

@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[slack-message-url] [what to do with it]"
 references:
   - ../references/slack.md
+  - ../references/slack-prerequisite.md
   - ../references/output-diff.md
 ---
 
@@ -14,6 +15,9 @@ references:
 ### Slack Message Processor
 
 > **DO NOT enter plan mode.** This skill gathers context and delegates to other skills or acts directly based on user instructions.
+
+> **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection rules.
+> A Slack workspace skill (`slack-kilic` or `slack-work`) MUST be active before this skill runs.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 

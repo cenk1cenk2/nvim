@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[channel-name-or-id] [optional: timeframe or instructions]"
 references:
   - ../references/slack.md
+  - ../references/slack-prerequisite.md
   - ../references/output-diff.md
 ---
 
@@ -14,6 +15,9 @@ references:
 ### Slack Channel Processor
 
 > **DO NOT enter plan mode.** This skill reads channel history, classifies messages, and acts on them directly or by composing with other skills.
+
+> **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection rules.
+> A Slack workspace skill (`slack-kilic` or `slack-work`) MUST be active before this skill runs.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
