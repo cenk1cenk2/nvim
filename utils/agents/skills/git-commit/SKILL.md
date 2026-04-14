@@ -1,0 +1,165 @@
+---
+name: git-commit
+description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit". Analyzes staged and unstaged changes, drafts a message following conventional commits format, and commits after approval. Do NOT use for PR descriptions (github-pr, gitlab-pr) or conflict resolution (git-conflict-resolve).
+interaction: chat
+argument-hint: "[optional: type or message hint — e.g., 'fix', 'feat: add retry']"
+references:
+  - ../references/scm-detect.md
+  - ../references/commit-style.md
+  - ../references/output-diff.md
+---
+
+## system
+
+### Git Commit
+
+> **DO NOT enter plan mode.** This is an interactive commit workflow — analyze, draft, approve, commit.
+
+> Read the `scm-detect` reference for git MCP tools and CLI fallbacks — resolve references from the `<References>` block via MCP filesystem tools.
+
+> Read the `commit-style` reference for conventional commit format, types, subject line rules, body rules, and examples.
+
+> Read the `output-diff` reference for presenting the draft commit message to the user before committing.
+
+### Process
+
+1. **Assess the working tree.**
+   - Use `git__git_status` to check staged, unstaged, and untracked files.
+   - If git MCP is unavailable, fall back to `git status` via CLI.
+   - If nothing is staged and nothing is modified, inform the user and stop.
+
+2. **Handle staging.**
+   - If changes are already staged — proceed to step 3.
+   - If nothing is staged but there are unstaged/untracked changes:
+     - If all changes are in a small, coherent set (≤5 files, single logical change) — suggest staging everything and ask for confirmation.
+     - Otherwise — list the changed files and ask the user what to stage.
+   - Stage files via `git__git_add`. If git MCP is unavailable, fall back to `git add` via CLI.
+   - After staging, re-check with `git__git_diff_staged` to confirm what will be committed.
+
+3. **Analyze the staged changes.**
+   - Read the staged diff via `git__git_diff_staged`.
+   - Read recent commit history via `git__git_log` (last 5-10 commits) to understand context and match existing message style.
+   - If the diff is large, read the changed files for surrounding context to understand the intent.
+
+4. **Draft the commit message.**
+   - Determine the commit **type** from the `commit-style` reference based on the nature of the changes:
+     - `feat` — new feature or capability.
+     - `fix` — bug fix or correction of wrong behavior.
+     - `refactor` — restructuring without behavior change.
+     - `perf` — performance improvement.
+     - `docs` — documentation only.
+     - `test` — adding or updating tests.
+     - `chore` — maintenance, dependency updates, tooling.
+     - `build` — build system or external dependency changes.
+     - `ci` — CI/CD pipeline changes.
+     - `style` — formatting, whitespace, missing semicolons (no logic change).
+     - `revert` — reverting a previous commit.
+   - If the user provided a hint (e.g., "fix" or "feat: add retry"), use it as a starting point.
+   - Determine the **scope** (optional) — the area of the codebase affected (e.g., `auth`, `api`, `config`).
+   - Write the **subject line** — imperative mood, ≤50 chars preferred, 72 hard cap, no trailing period.
+   - **Body** — by default, draft a subject-only commit. Add a body only when:
+     - The user explicitly requests a description/body (e.g., "commit with description", "add details", "verbose commit").
+     - The change is a security fix, data migration, or revert (per `commit-style` reference).
+     - The user explicitly flags a breaking change (see below).
+   - **Breaking changes** — only include when the user explicitly says so (e.g., "breaking change", "this is breaking", "commit with breaking change"). When flagged:
+     - Append `!` after the scope in the subject line: `feat(api)!: rename /v1/orders to /v1/checkout`.
+     - Add a `BREAKING CHANGE:` trailer in the footer describing what breaks and the migration path.
+     - Always include a body explaining the breaking change even if the user didn't request a verbose commit.
+   - **Issue/PR references** — when the user provides a GitHub/GitLab issue URL, PR URL, or issue ID:
+     - Fetch the issue/PR title and description via the appropriate MCP tool (`github__issue_read`, `github__pull_request_read`, `gitlab__get_issue`, `gitlab__get_merge_request`).
+     - Add a `Refs` or `Closes` trailer in the footer (e.g., `Closes #42`, `Refs https://github.com/org/repo/issues/123`).
+     - If the user also requested an extended description, weave relevant context from the issue/PR into the body — what the issue describes, why this commit addresses it.
+   - **NEVER add `Co-authored-by:` trailers.** This is forbidden — no exceptions.
+
+5. **Present the draft to the user.**
+   - Show the full commit message using the `output-diff` presentation format:
+     - Reasoning: brief explanation of why you chose this type, scope, and message.
+     - Content: the full commit message in a fenced code block.
+   - Ask for approval or feedback.
+   - Iterate until the user is satisfied.
+
+6. **Commit.**
+   - After explicit user approval, commit via `git__git_commit` with the approved message.
+   - If git MCP is unavailable, fall back to `git commit -m` via CLI.
+   - Confirm success by reporting the commit hash from the output.
+   - Do NOT push. If the user wants to push, they can do so separately.
+
+### Key Principles
+
+- **One logical change per commit.** If the staged changes span multiple unrelated concerns, suggest splitting into separate commits.
+- **The subject tells what, the body tells why.** Never restate the diff in the body — the commit content already shows what changed.
+- **Match the project.** Read recent commits to match the project's capitalization, scope conventions, and style.
+- **No AI attribution.** Never include "Generated with Claude" or similar.
+- **No Co-authored-by.** Never add `Co-authored-by:` trailers under any circumstances.
+- **Never push automatically.** Commit only. The user decides when to push.
+
+### Examples
+
+**User says:** "commit this"
+
+1. Check status — 3 files staged.
+2. Read staged diff — adds retry logic to API client.
+3. Draft: `feat(api): add retry logic for transient failures`.
+4. Present to user with reasoning.
+5. User approves → commit.
+
+**User says:** "commit" (nothing staged, 2 files modified)
+
+1. Check status — nothing staged, 2 files modified.
+2. Suggest staging both (small, coherent change).
+3. User confirms → stage both.
+4. Read staged diff — fixes typo in config parsing.
+5. Draft: `fix(config): correct typo in parser validation`.
+6. Present to user → approve → commit.
+
+**User says:** "commit fix"
+
+1. Check status — changes staged.
+2. Read staged diff — corrects off-by-one in pagination.
+3. Draft: `fix(pagination): correct off-by-one in page offset calculation`.
+4. Present to user → approve → commit.
+
+**User says:** "commit with description"
+
+1. Check status — 4 files staged.
+2. Read staged diff — replaces session auth with JWT tokens.
+3. Draft subject + body:
+   ```
+   feat(auth): replace session auth with JWT tokens
+
+   Mobile clients need stateless authentication for offline-first support.
+   Access tokens expire after 15 minutes; refresh tokens are stored in
+   httpOnly cookies with 7-day TTL.
+   ```
+4. Present to user → iterate → approve → commit.
+
+**User says:** "commit with description, closes https://github.com/org/repo/issues/42"
+
+1. Check status — 3 files staged.
+2. Fetch issue #42 via `github__issue_read` — "Token expiry check off by one".
+3. Read staged diff — fixes boundary condition in token validation.
+4. Draft subject + body + trailer:
+   ```
+   fix(auth): reject expired tokens at boundary
+
+   Token expiry check used < instead of <=, allowing a 1-second window
+   where expired tokens passed validation.
+
+   Closes #42
+   ```
+5. Present to user → iterate → approve → commit.
+
+**User says:** "commit this, breaking change"
+
+1. Check status — 2 files staged.
+2. Read staged diff — renames `/v1/orders` to `/v1/checkout`.
+3. Draft subject + body + trailer:
+   ```
+   feat(api)!: rename /v1/orders to /v1/checkout
+
+   Consolidates order and payment flows under a single checkout endpoint.
+
+   BREAKING CHANGE: clients on /v1/orders must migrate to /v1/checkout
+   before 2026-06-01. Old route returns 410 after that date.
+   ```
+4. Present to user → iterate → approve → commit.
