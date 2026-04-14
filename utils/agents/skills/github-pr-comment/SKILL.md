@@ -1,6 +1,6 @@
 ---
 name: github-pr-comment
-description: Post a companion skill's output as a comment on the current GitHub PR. Use when user says "comment on the PR", "post this to the PR", or invokes alongside another skill to comment its output on GitHub. Do NOT use for PR descriptions (github-pr), GitLab MR comments (gitlab-pr-comment), or issue comments (use GitHub MCP directly).
+description: Post a companion skill's output as a comment on the current GitHub PR. Use when user says "comment on the PR", "post this to the PR", or invokes alongside another skill to comment its output on GitHub. Do NOT use for PR descriptions (github-pr-create), GitLab MR comments (gitlab-pr-comment), or issue comments (use GitHub MCP directly).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[companion-skill] [PR number or URL]"

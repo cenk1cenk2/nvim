@@ -1,6 +1,6 @@
 ---
 name: github-ci-failed
-description: Diagnose failing CI actions on the current branch, research errors, and propose fixes. Use when user says "CI is failing", "fix the GitHub Actions", "why is the check red", or "debug the workflow". Do NOT use for creating/updating workflows (github-ci), GitLab failures (gitlab-failed-ci), or PR descriptions (github-pr).
+description: Diagnose failing CI actions on the current branch, research errors, and propose fixes. Use when user says "CI is failing", "fix the GitHub Actions", "why is the check red", or "debug the workflow". Do NOT use for creating/updating workflows (github-ci-create), GitLab failures (gitlab-ci-failed), or PR descriptions (github-pr-create).
 interaction: chat
 disable-model-invocation: true
 references:
@@ -41,4 +41,4 @@ references:
 
 ### Related Skills
 
-- **`github-ci`** (resource: `skills://skill/github-ci`) — for creating or modifying GitHub Actions workflows. Auto-invoke when the fix requires workflow changes rather than code changes.
+- **`github-ci-create`** (resource: `skills://skill/github-ci-create`) — for creating or modifying GitHub Actions workflows. Auto-invoke when the fix requires workflow changes rather than code changes.

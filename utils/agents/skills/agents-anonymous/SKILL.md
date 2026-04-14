@@ -6,6 +6,10 @@ disable-model-invocation: true
 argument-hint: "[goal or task list] [optional: 'without worktrees']"
 references:
   - ../references/scm-detect.md
+  - ../references/project-tooling.md
+  - ../references/agents-write-plans.md
+  - ../references/agents-conventions.md
+  - ../references/agents-completion.md
 ---
 
 ## system
@@ -20,6 +24,10 @@ references:
 > - Exit plan mode only when launching agents.
 
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `project-tooling` reference for discovering verification commands.
+> Read the `agents-write-plans` reference for plan quality criteria when creating plans.
+> Read the `agents-conventions` reference for discovering and agreeing on project conventions before dispatching agents.
+> Read the `agents-completion` reference for the completion handoff after verification passes.
 
 ### Context
 
@@ -32,12 +40,23 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
    - If the user provides a high-level goal, break it down into concrete tasks.
    - If the user provides pre-decomposed tasks, validate they are complete and clear.
 
-2. **Plan the implementation.**
-   - Create a full implementation plan as you normally would — architecture, approach, file changes, constraints.
+2. **Discover project tooling.**
+   - Follow the `project-tooling` reference to discover verification commands (lint, test, build, etc.).
+   - Present discovered commands to the user for confirmation.
+   - These commands will be included in each agent's prompt and run after merge.
+
+3. **Establish conventions.**
+   - Follow the `agents-conventions` reference — read existing code to discover testing framework, code style, patterns, formatting, commit style.
+   - Present the conventions block to the user for confirmation.
+   - This block will be included in every agent's prompt as the `## Conventions` section.
+
+4. **Plan the implementation.**
+   - Create a full implementation plan following the `agents-write-plans` reference — exact file paths, concrete steps, no placeholders.
    - Identify all files and areas of the codebase that will be touched.
+   - Self-review the plan (spec coverage, placeholder scan, consistency) before presenting.
    - Present the plan to the user and iterate.
 
-3. **Split into non-overlapping tasks.**
+5. **Split into non-overlapping tasks.**
    - Break the plan into logically independent units. Think of it as developers branching off — each works on a different part of the codebase.
    - **Non-overlapping is critical.** Each task must touch different files. If two tasks need to modify the same file, either:
      - Restructure the split so one task owns that file.
@@ -55,12 +74,12 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
      | 2 | ... | ... | none |
      | 3 | ... | ... | none |
 
-4. **Decide agent count.**
+6. **Decide agent count.**
    - Number of agents = number of independent tasks from the split.
    - Propose the count with reasoning. The user approves or adjusts.
    - Fewer agents with broader scope is better than many agents with tiny tasks — agent overhead is real.
 
-5. **Launch agents.**
+7. **Launch agents.**
    - Exit plan mode.
    - Record the current branch and HEAD commit as the baseline for later review.
    - Launch all agents in parallel using the Agent tool. Each agent prompt must include:
@@ -73,12 +92,16 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
    - Use `run_in_background: true` for all agents so they execute concurrently.
    - Track agent IDs for monitoring completion.
 
-6. **Monitor and collect results.**
-   - Wait for all agents to complete (you will be notified automatically).
-   - For each agent, review the result summary.
+8. **Monitor, guide, and collect results.**
+   - Agents run in the background — you will be notified when each completes.
+   - **While agents are running, the user can provide guidance at any time.** When the user gives new instructions, corrections, or context:
+     - Forward the guidance to the relevant agent(s) via `SendMessage({ to: "<agent-name>", message: "..." })`.
+     - If the guidance applies to all agents, send it to each one.
+     - If the guidance changes the scope or approach, inform the user which agents are affected.
+   - For each completed agent, review the result summary.
    - If any agent failed or reported issues, present them to the user before proceeding.
 
-7. **Merge.**
+9. **Merge.**
    - Agents run in isolated worktrees by default, each on its own branch.
    - Merge each worktree branch back to the original branch sequentially.
    - If merge conflicts occur:
@@ -87,10 +110,18 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
      - Do NOT auto-resolve conflicts — the user decides.
    - After all merges, verify the working tree is clean.
 
-8. **Review.**
+10. **Review.**
    - After all agents complete (and merges are done if worktree mode), run `code-review-changes` against the recorded baseline.
    - This catches integration issues, inconsistencies between agents' work, and individual mistakes.
    - Present findings to the user. Fix issues if asked.
+
+11. **Final verification.**
+    - Run the full verification command set from step 2.
+    - Read the output. Confirm pass with evidence.
+    - **Never claim completion without fresh verification output.**
+
+12. **Completion handoff.**
+    - Follow the `agents-completion` reference — summarize work, present options (commit, push, PR, leave uncommitted), execute the user's choice.
 
 ### Worktree Mode
 
@@ -126,10 +157,24 @@ You are agent [N] of [total] working in parallel on: [high-level goal].
 Do NOT modify files outside your write scope. Other agents are handling:
 - Agent [X]: [brief description of their task and files]
 
+## Verification Commands
+
+[Commands discovered in step 2 — run these after implementation to confirm your work.]
+
 ## Conventions
 
 [Project-specific conventions the agent should follow — naming, style, patterns]
 ```
+
+### Model Selection
+
+Set the `model` parameter on each agent based on task complexity:
+
+| Task type | Model | Signals |
+|-----------|-------|---------|
+| Mechanical implementation | `haiku` | 1-2 files, clear spec, isolated function. |
+| Integration work | `sonnet` | Multi-file, pattern matching, moderate judgment. |
+| Architecture/design | `opus` | Design decisions, broad codebase understanding. |
 
 ### Key Principles
 
@@ -138,9 +183,20 @@ Do NOT modify files outside your write scope. Other agents are handling:
 - **Fewer, larger agents over many small ones.** Agent startup and context have overhead. 2-4 agents is the sweet spot for most tasks.
 - **Always review after.** The `code-review-changes` pass at the end is mandatory, not optional. Parallel work introduces integration risk.
 - **Worktrees are the default.** Agents run isolated with full permissions. Opt out with "without worktrees".
+- **Verify before claiming completion.** After review, run the project's test/lint/build commands. Read the output. "Should pass" is not evidence — show the result.
+- **Don't trust agent success reports.** Check the VCS diff to verify agents actually made the expected changes.
+
+### Red Flags
+
+- Starting implementation on main/master without explicit user consent.
+- Claiming completion without running verification.
+- Trusting agent "success" reports without verifying the diff.
+- Assuming verification commands without checking the project's actual tooling.
+- Proceeding after review finds issues without fixing them.
 
 ### Related Skills
 
+- **`agents-sequential`** (resource: `skills://skill/agents-sequential`) — for sequential task-by-task execution with review gates. Use when task ordering or quality gates matter more than speed.
 - **`code-review-changes`** (resource: `skills://skill/code-review-changes`) — auto-invoked after all agents complete to review the combined result.
 - **`code-assistant`** (resource: `skills://skill/code-assistant`) — for guided planning where the user implements. This skill plans AND executes. Do not auto-invoke.
 - **`code-assistant-implement`** (resource: `skills://skill/code-assistant-implement`) — for sequential step-by-step execution with review gates. Use that when parallelism is not needed. Do not auto-invoke.

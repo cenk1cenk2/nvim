@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit". Analyzes staged and unstaged changes, drafts a message following conventional commits format, and commits after approval. Do NOT use for PR descriptions (github-pr, gitlab-pr) or conflict resolution (git-conflict-resolve).
+description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit". Analyzes staged and unstaged changes, drafts a message following conventional commits format, and commits after approval. Do NOT use for PR descriptions (github-pr-create, gitlab-pr-create) or conflict resolution (git-conflict-resolve).
 interaction: chat
 argument-hint: "[optional: type or message hint — e.g., 'fix', 'feat: add retry']"
 references:

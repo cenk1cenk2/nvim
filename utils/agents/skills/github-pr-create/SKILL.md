@@ -1,6 +1,6 @@
 ---
-name: github-pr
-description: Analyze and write GitHub pull request titles and descriptions. Use when user says "write a PR description", "create a PR", "improve the PR", or "describe what this branch does". Do NOT use for GitLab MRs (gitlab-pr), CI workflows (github-ci), or CI failures (github-ci-failed).
+name: github-pr-create
+description: Analyze and write GitHub pull request titles and descriptions. Use when user says "write a PR description", "create a PR", "improve the PR", or "describe what this branch does". Do NOT use for GitLab MRs (gitlab-pr-create), CI workflows (github-ci-create), or CI failures (github-ci-failed).
 interaction: chat
 references:
   - ../references/scm-github.md
@@ -147,5 +147,5 @@ references:
 ### Related Skills
 
 - **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — for reviewing the code quality of the branch before writing the PR description. Do not auto-invoke.
-- **`github-ci`** (resource: `skills://skill/github-ci`) — for creating or updating GitHub Actions workflows. Do not auto-invoke.
+- **`github-ci-create`** (resource: `skills://skill/github-ci-create`) — for creating or updating GitHub Actions workflows. Do not auto-invoke.
 - **`github-ci-failed`** (resource: `skills://skill/github-ci-failed`) — for diagnosing failing CI checks on the PR. Do not auto-invoke.

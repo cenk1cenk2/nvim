@@ -1,6 +1,6 @@
 ---
 name: gitlab-pr-review
-description: Autonomously review the current GitLab MR with inline code annotations and a summary comment. Use when user says "review the MR", "review this MR", "annotate the MR", or "do an MR review". Combines code-review-branch and code-review-changes analysis with native GitLab discussion annotations. On consecutive runs, evaluates delta since last review, resolves fixed threads, and reviews new changes. Do NOT use for MR descriptions (gitlab-pr), GitHub PR reviews (github-pr-review), or chat-only code review (code-review-branch, code-review-changes).
+description: Autonomously review the current GitLab MR with inline code annotations and a summary comment. Use when user says "review the MR", "review this MR", "annotate the MR", or "do an MR review". Combines code-review-branch and code-review-changes analysis with native GitLab discussion annotations. On consecutive runs, evaluates delta since last review, resolves fixed threads, and reviews new changes. Do NOT use for MR descriptions (gitlab-pr-create), GitHub PR reviews (github-pr-review), or chat-only code review (code-review-branch, code-review-changes).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[MR number or URL]"

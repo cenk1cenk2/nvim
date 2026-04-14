@@ -1,6 +1,6 @@
 ---
-name: gitlab-pr
-description: Analyze and write GitLab merge request titles and descriptions. Use when user says "write an MR description", "create an MR", "improve the MR", or "describe what this branch does". Do NOT use for GitHub PRs (github-pr), CI pipelines (gitlab-ci), or CI failures (gitlab-failed-ci).
+name: gitlab-pr-create
+description: Analyze and write GitLab merge request titles and descriptions. Use when user says "write an MR description", "create an MR", "improve the MR", or "describe what this branch does". Do NOT use for GitHub PRs (github-pr-create), CI pipelines (gitlab-ci-create), or CI failures (gitlab-ci-failed).
 interaction: chat
 references:
   - ../references/scm-gitlab.md
@@ -104,5 +104,5 @@ references:
 ### Related Skills
 
 - **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — for reviewing the code quality of the branch before writing the MR description. Do not auto-invoke.
-- **`gitlab-ci`** (resource: `skills://skill/gitlab-ci`) — for creating or updating GitLab CI/CD pipelines. Do not auto-invoke.
-- **`gitlab-failed-ci`** (resource: `skills://skill/gitlab-failed-ci`) — for diagnosing failing CI pipelines on the MR. Do not auto-invoke.
+- **`gitlab-ci-create`** (resource: `skills://skill/gitlab-ci-create`) — for creating or updating GitLab CI/CD pipelines. Do not auto-invoke.
+- **`gitlab-ci-failed`** (resource: `skills://skill/gitlab-ci-failed`) — for diagnosing failing CI pipelines on the MR. Do not auto-invoke.

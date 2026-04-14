@@ -1,6 +1,6 @@
 ---
 name: gitlab-pr-fix
-description: Fix all open review conversations on a GitLab MR by reading each thread, understanding the requested change, and applying fixes to the code. Use when user says "fix the MR comments", "resolve the review", "address MR feedback", or "fix review threads". Do NOT use for reviewing MRs (gitlab-pr-review), writing MR descriptions (gitlab-pr), or GitHub PR fixes (github-pr-fix).
+description: Fix all open review conversations on a GitLab MR by reading each thread, understanding the requested change, and applying fixes to the code. Use when user says "fix the MR comments", "resolve the review", "address MR feedback", or "fix review threads". Do NOT use for reviewing MRs (gitlab-pr-review), writing MR descriptions (gitlab-pr-create), or GitHub PR fixes (github-pr-fix).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[MR number or URL]"

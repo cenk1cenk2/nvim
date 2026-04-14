@@ -6,6 +6,10 @@ disable-model-invocation: true
 argument-hint: "[goal or task list] [optional: 'without worktrees']"
 references:
   - ../references/scm-detect.md
+  - ../references/project-tooling.md
+  - ../references/agents-write-plans.md
+  - ../references/agents-conventions.md
+  - ../references/agents-completion.md
 ---
 
 ## system
@@ -20,6 +24,10 @@ references:
 > - Exit plan mode only when launching the team.
 
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `project-tooling` reference for discovering verification commands.
+> Read the `agents-write-plans` reference for plan quality criteria when creating plans.
+> Read the `agents-conventions` reference for discovering and agreeing on project conventions before dispatching teammates.
+> Read the `agents-completion` reference for the completion handoff after verification passes.
 
 ### Context
 
@@ -32,12 +40,23 @@ This skill uses Agent Teams to coordinate parallel work. The lead agent (you) ac
    - If the user provides a high-level goal, break it down into concrete tasks.
    - If the user provides pre-decomposed tasks, validate they are complete and clear.
 
-2. **Plan the implementation.**
-   - Create a full implementation plan as you normally would — architecture, approach, file changes, constraints.
+2. **Discover project tooling.**
+   - Follow the `project-tooling` reference to discover verification commands (lint, test, build, etc.).
+   - Present discovered commands to the user for confirmation.
+   - These commands will be included in each teammate's prompt and run after merge.
+
+3. **Establish conventions.**
+   - Follow the `agents-conventions` reference — read existing code to discover testing framework, code style, patterns, formatting, commit style.
+   - Present the conventions block to the user for confirmation.
+   - This block will be included in every teammate's prompt as the `## Conventions` section.
+
+4. **Plan the implementation.**
+   - Create a full implementation plan following the `agents-write-plans` reference — exact file paths, concrete steps, no placeholders.
    - Identify all files and areas of the codebase that will be touched.
+   - Self-review the plan (spec coverage, placeholder scan, consistency) before presenting.
    - Present the plan to the user and iterate.
 
-3. **Split into non-overlapping tasks.**
+5. **Split into non-overlapping tasks.**
    - Break the plan into logically independent units. Think of it as developers branching off — each works on a different part of the codebase.
    - **Non-overlapping is critical.** Each task must touch different files. If two tasks need to modify the same file, either:
      - Restructure the split so one task owns that file.
@@ -55,12 +74,12 @@ This skill uses Agent Teams to coordinate parallel work. The lead agent (you) ac
      | worker-2 | ... | ... | none |
      | worker-3 | ... | ... | none |
 
-4. **Decide teammate count.**
+6. **Decide teammate count.**
    - Number of teammates = number of independent tasks from the split.
    - Propose the count with reasoning. The user approves or adjusts.
    - Fewer teammates with broader scope is better than many with tiny tasks — overhead is real.
 
-5. **Create team and launch.**
+7. **Create team and launch.**
    - Exit plan mode.
    - Record the current branch and HEAD commit as the baseline for later review.
    - Create the team with `TeamCreate`:
@@ -74,14 +93,18 @@ This skill uses Agent Teams to coordinate parallel work. The lead agent (you) ac
    - Create tasks for the team's shared task list, one per teammate assignment.
    - Assign tasks to teammates via task ownership.
 
-6. **Orchestrate and approve.**
+8. **Orchestrate, guide, and approve.**
    - Teammate permission requests bubble up to you (the lead). Review and approve or reject as they come in.
    - Teammates send messages when they complete tasks or need help — these arrive automatically.
    - If a teammate is blocked, help resolve or reassign work.
    - Monitor the shared task list for progress.
-   - Do NOT micromanage — let teammates work autonomously between approval requests.
+   - **The user can provide guidance at any time while teammates are running.** When the user gives new instructions, corrections, or context:
+     - Forward the guidance to the relevant teammate(s) via `SendMessage({ to: "<teammate-name>", message: "..." })`.
+     - If the guidance changes conventions or approach, send it to all active teammates.
+     - If the guidance changes scope, update the shared task list and inform affected teammates.
+   - Do NOT micromanage — let teammates work autonomously between approval requests and user guidance.
 
-7. **Merge (worktree mode).**
+9. **Merge (worktree mode).**
    - Teammates run in isolated worktrees by default, each on its own branch.
    - After all teammates complete, merge each worktree branch back to the original branch sequentially.
    - If merge conflicts occur:
@@ -90,12 +113,20 @@ This skill uses Agent Teams to coordinate parallel work. The lead agent (you) ac
      - Do NOT auto-resolve conflicts — the user decides.
    - After all merges, verify the working tree is clean.
 
-8. **Review.**
+10. **Review.**
    - Run `code-review-changes` against the recorded baseline.
    - This catches integration issues, inconsistencies between teammates' work, and individual mistakes.
    - Present findings to the user. Fix issues if asked.
 
-9. **Shutdown and cleanup.**
+11. **Final verification.**
+    - Run the full verification command set from step 2.
+    - Read the output. Confirm pass with evidence.
+    - **Never claim completion without fresh verification output.**
+
+12. **Completion handoff.**
+    - Follow the `agents-completion` reference — summarize work, present options (commit, push, PR, leave uncommitted), execute the user's choice.
+
+13. **Shutdown and cleanup.**
    - Send shutdown requests to all teammates: `SendMessage({ to: "<name>", message: { type: "shutdown_request" } })`.
    - Wait for shutdown confirmations.
    - Clean up with `TeamDelete`.
@@ -138,12 +169,26 @@ Do NOT modify files outside your write scope. Other teammates are handling:
 
 [Project-specific conventions the teammate should follow — naming, style, patterns]
 
+## Verification Commands
+
+[Commands discovered in step 2 — run these after implementation to confirm your work.]
+
 ## Coordination
 
 - Check the shared task list after completing each task for new work.
 - Mark tasks as completed via TaskUpdate when done.
 - Send a message to the lead if you are blocked or need a decision.
 ```
+
+### Model Selection
+
+Set the `model` parameter on each teammate based on task complexity:
+
+| Task type | Model | Signals |
+|-----------|-------|---------|
+| Mechanical implementation | `haiku` | 1-2 files, clear spec, isolated function. |
+| Integration work | `sonnet` | Multi-file, pattern matching, moderate judgment. |
+| Architecture/design | `opus` | Design decisions, broad codebase understanding. |
 
 ### Key Principles
 
@@ -153,9 +198,20 @@ Do NOT modify files outside your write scope. Other teammates are handling:
 - **Always review after.** The `code-review-changes` pass at the end is mandatory, not optional. Parallel work introduces integration risk.
 - **Worktrees are the default.** Teammates run isolated. Opt out with "without worktrees".
 - **Clean shutdown is mandatory.** Always send shutdown requests and call `TeamDelete` when done.
+- **Verify before claiming completion.** After review, run the project's test/lint/build commands. Read the output. "Should pass" is not evidence — show the result.
+- **Don't trust teammate success reports.** Check the VCS diff to verify teammates actually made the expected changes.
+
+### Red Flags
+
+- Starting implementation on main/master without explicit user consent.
+- Claiming completion without running verification.
+- Trusting teammate "success" reports without verifying the diff.
+- Assuming verification commands without checking the project's actual tooling.
+- Proceeding after review finds issues without fixing them.
 
 ### Related Skills
 
+- **`agents-sequential`** (resource: `skills://skill/agents-sequential`) — for sequential task-by-task execution with review gates. Use when task ordering or quality gates matter more than speed.
 - **`code-review-changes`** (resource: `skills://skill/code-review-changes`) — auto-invoked after all teammates complete to review the combined result.
 - **`code-assistant`** (resource: `skills://skill/code-assistant`) — for guided planning where the user implements. This skill plans AND executes. Do not auto-invoke.
 - **`code-assistant-implement`** (resource: `skills://skill/code-assistant-implement`) — for sequential step-by-step execution with review gates. Use that when parallelism is not needed. Do not auto-invoke.

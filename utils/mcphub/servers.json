@@ -1,7 +1,11 @@
 {
   "mcpServers": {
     "argocd/kilic": {
-      "args": ["-y", "argocd-mcp@latest", "stdio"],
+      "args": [
+        "-y",
+        "argocd-mcp@latest",
+        "stdio"
+      ],
       "autoApprove": [
         "list_applications",
         "get_application",
@@ -14,28 +18,49 @@
         "get_resource_actions"
       ],
       "command": "bunx",
-      "disabled_tools": ["create_application", "update_application", "delete_application"],
+      "disabled_tools": [
+        "create_application",
+        "update_application",
+        "delete_application"
+      ],
       "env": {
         "ARGOCD_API_TOKEN": "${NVIM_ARGOCD_KILIC_TOKEN}",
         "ARGOCD_BASE_URL": "${NVIM_ARGOCD_KILIC_URL}"
       }
     },
     "context7": {
-      "autoApprove": ["get-library-docs", "resolve-library-id", "query-docs"],
+      "autoApprove": [
+        "get-library-docs",
+        "resolve-library-id",
+        "query-docs"
+      ],
       "headers": {
         "CONTEXT7_API_KEY": "${NVIM_CONTEXT7}"
       },
       "url": "https://mcp.context7.com/mcp"
     },
     "exa": {
-      "autoApprove": ["get_code_context_exa", "web_search_exa"],
-      "disabled_prompts": ["web_search_help", "code_search_help"],
-      "disabled_resources": ["exa://tools/list"],
+      "autoApprove": [
+        "get_code_context_exa",
+        "web_search_exa",
+        "web_fetch_exa"
+      ],
+      "disabled_prompts": [
+        "web_search_help",
+        "code_search_help"
+      ],
+      "disabled_resources": [
+        "exa://tools/list"
+      ],
       "disabled_tools": [],
       "url": "https://mcp.exa.ai/mcp"
     },
     "filesystem": {
-      "args": ["-y", "@modelcontextprotocol/server-filesystem@latest", "${CWD}"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem@latest",
+        "${CWD}"
+      ],
       "autoApprove": [
         "directory_tree",
         "get_file_info",
@@ -50,7 +75,11 @@
       ],
       "command": "bunx",
       "disabled": true,
-      "disabled_tools": ["write_file", "edit_file", "list_directory_with_sizes"]
+      "disabled_tools": [
+        "write_file",
+        "edit_file",
+        "list_directory_with_sizes"
+      ]
     },
     "git": {
       "args": [
@@ -118,7 +147,10 @@
       "url": "https://api.githubcopilot.com/mcp/"
     },
     "gitlab": {
-      "args": ["-y", "@zereight/mcp-gitlab"],
+      "args": [
+        "-y",
+        "@zereight/mcp-gitlab"
+      ],
       "autoApprove": [
         "get_branch_diffs",
         "get_commit",
@@ -198,7 +230,9 @@
       }
     },
     "grafana/kilic": {
-      "args": ["mcp-grafana"],
+      "args": [
+        "mcp-grafana"
+      ],
       "autoApprove": [
         "query_prometheus_histogram",
         "query_prometheus",
@@ -255,7 +289,9 @@
       }
     },
     "grafana/laravel": {
-      "args": ["mcp-grafana"],
+      "args": [
+        "mcp-grafana"
+      ],
       "autoApprove": [
         "query_prometheus_histogram",
         "query_prometheus",
@@ -312,7 +348,11 @@
       }
     },
     "kubernetes": {
-      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only"],
+      "args": [
+        "-y",
+        "kubernetes-mcp-server@latest",
+        "--read-only"
+      ],
       "autoApprove": [
         "get_pod",
         "list_pods",
@@ -334,7 +374,9 @@
       ],
       "command": "bunx",
       "disabled": true,
-      "disabled_tools": ["helm_list"]
+      "disabled_tools": [
+        "helm_list"
+      ]
     },
     "linear/kilic-dev": {
       "autoApprove": [
@@ -365,6 +407,7 @@
         "get_authenticated_user",
         "research"
       ],
+      "disabled": false,
       "disabled_tools": [],
       "env": {
         "LINEAR_TOKEN": "${NVIM_LINEAR_KILIC}"
@@ -412,7 +455,10 @@
       "url": "https://mcp.linear.app/mcp"
     },
     "memory": {
-      "args": ["-y", "@modelcontextprotocol/server-memory@latest"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory@latest"
+      ],
       "autoApprove": [
         "create_relations",
         "delete_entities",
@@ -430,8 +476,15 @@
       }
     },
     "obsidian": {
-      "args": ["-y", "obsidian-mcp-server@latest"],
-      "autoApprove": ["obsidian_global_search", "obsidian_list_notes", "obsidian_read_note"],
+      "args": [
+        "-y",
+        "obsidian-mcp-server@latest"
+      ],
+      "autoApprove": [
+        "obsidian_global_search",
+        "obsidian_list_notes",
+        "obsidian_read_note"
+      ],
       "command": "bunx",
       "env": {
         "OBSIDIAN_API_KEY": "${NVIM_OBSIDIAN}",
@@ -441,7 +494,11 @@
       }
     },
     "playwright": {
-      "args": ["@playwright/mcp@latest", "--executable-path", "/usr/bin/brave"],
+      "args": [
+        "@playwright/mcp@latest",
+        "--executable-path",
+        "/usr/bin/brave"
+      ],
       "autoApprove": [
         "browser_take_screenshot",
         "browser_snapshot",
@@ -470,14 +527,29 @@
       "disabled_tools": []
     },
     "sequentialthinking": {
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking@latest"],
-      "autoApprove": ["sequentialthinking"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking@latest"
+      ],
+      "autoApprove": [
+        "sequentialthinking"
+      ],
       "command": "bunx",
       "disabled": false
     },
     "slack/kilic": {
-      "args": ["-y", "@modelcontextprotocol/server-slack@latest"],
-      "autoApprove": ["slack_list_channels", "slack_get_channel_history", "slack_get_thread_replies", "slack_get_users", "slack_get_user_profile", "slack_add_reaction"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-slack@latest"
+      ],
+      "autoApprove": [
+        "slack_list_channels",
+        "slack_get_channel_history",
+        "slack_get_thread_replies",
+        "slack_get_users",
+        "slack_get_user_profile",
+        "slack_add_reaction"
+      ],
       "command": "bunx",
       "env": {
         "SLACK_BOT_TOKEN": "${NVIM_SLACK_TOKEN}",
@@ -485,7 +557,10 @@
       }
     },
     "spacelift/laravel": {
-      "args": ["mcp", "server"],
+      "args": [
+        "mcp",
+        "server"
+      ],
       "autoApprove": [
         "get_api_key",
         "get_blueprint",
@@ -523,11 +598,21 @@
       ],
       "command": "spacectl",
       "disabled": true,
-      "disabled_tools": ["local_preview"],
+      "disabled_tools": [
+        "local_preview"
+      ],
       "env": {}
     },
     "tavily": {
-      "autoApprove": ["tavily-search", "tavily_search", "tavily_extract"],
+      "autoApprove": [
+        "tavily-search",
+        "tavily_search",
+        "tavily_extract",
+        "tavily_crawl",
+        "tavily_map",
+        "tavily_skill",
+        "tavily_research"
+      ],
       "disabled_tools": [],
       "env": {
         "TAVILY_API_KEY": "${NVIM_TAVILY_API_KEY}"
@@ -535,13 +620,31 @@
       "url": "https://mcp.tavily.com/mcp/?tavilyApiKey=${TAVILY_API_KEY}"
     },
     "tmux": {
-      "args": ["-y", "tmux-mcp", "--shell-type=zsh"],
-      "autoApprove": ["get-command-result", "list-panes", "list-sessions", "list-windows", "capture-pane", "find-session"],
+      "args": [
+        "-y",
+        "tmux-mcp",
+        "--shell-type=zsh"
+      ],
+      "autoApprove": [
+        "get-command-result",
+        "list-panes",
+        "list-sessions",
+        "list-windows",
+        "capture-pane",
+        "find-session"
+      ],
       "command": "bunx",
-      "disabled_tools": ["kill-window", "kill-session", "kill-pane", "create-session"]
+      "disabled_tools": [
+        "kill-window",
+        "kill-session",
+        "kill-pane",
+        "create-session"
+      ]
     },
     "treesitter": {
-      "args": ["mcp-server-tree-sitter@latest"],
+      "args": [
+        "mcp-server-tree-sitter@latest"
+      ],
       "autoApprove": [
         "check_language_available",
         "configure",
@@ -564,19 +667,30 @@
       ],
       "command": "uvx",
       "disabled": true,
-      "disabled_tools": ["analyze_complexity", "analyze_project", "adapt_query", "build_query", "clear_cache", "diagnose_config", "register_project_tool", "remove_project_tool"]
+      "disabled_tools": [
+        "analyze_complexity",
+        "analyze_project",
+        "adapt_query",
+        "build_query",
+        "clear_cache",
+        "diagnose_config",
+        "register_project_tool",
+        "remove_project_tool"
+      ]
     },
     "vectorcode": {
-      "autoApprove": ["files_ls", "files_rm", "ls", "query", "vectorise"],
+      "autoApprove": [
+        "files_ls",
+        "files_rm",
+        "ls",
+        "query",
+        "vectorise"
+      ],
       "command": "vectorcode-mcp-server",
       "disabled": true
     }
   },
   "nativeMCPServers": {
-    "open": {
-      "autoApprove": ["copy_to_clipboard", "open_in_browser", "open_in_obsidian"],
-      "disabled_tools": []
-    },
     "mcp-diagnostics": {
       "autoApprove": [
         "analyze_diagnostics",
@@ -599,20 +713,52 @@
       ]
     },
     "mcphub": {
-      "autoApprove": ["get_current_servers"],
-      "disabled_resources": ["mcphub://changelog"]
+      "autoApprove": [
+        "get_current_servers"
+      ],
+      "disabled_resources": [
+        "mcphub://changelog"
+      ]
     },
     "neovim": {
-      "autoApprove": ["find_files", "list_directory", "read_file", "read_multiple_files"],
+      "autoApprove": [
+        "find_files",
+        "list_directory",
+        "read_file",
+        "read_multiple_files"
+      ],
       "disabled": false,
-      "disabled_tools": ["edit_file", "write_file"]
+      "disabled_tools": [
+        "edit_file",
+        "write_file"
+      ]
+    },
+    "open": {
+      "autoApprove": [
+        "open_in_browser",
+        "open_in_obsidian",
+        "copy_to_clipboard"
+      ],
+      "disabled_tools": []
     },
     "skills": {
-      "autoApprove": ["list_skills", "read_reference", "read_skill", "load_reference", "list_references"],
+      "autoApprove": [
+        "list_skills",
+        "read_reference",
+        "read_skill",
+        "load_reference",
+        "list_references"
+      ],
       "disabled_tools": []
     },
     "vim": {
-      "autoApprove": ["vim_status", "vim_file_open", "vim_jump", "vim_select"],
+      "autoApprove": [
+        "vim_status",
+        "vim_file_open",
+        "vim_jump",
+        "vim_select",
+        "vim_format"
+      ],
       "disabled_tools": []
     }
   }

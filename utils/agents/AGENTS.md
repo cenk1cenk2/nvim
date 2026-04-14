@@ -106,7 +106,7 @@ User invokes specialized modes using personal slash commands (e.g., `/code-assis
 >   - The "References loaded" list is only shown when the skill declares references and they were successfully loaded. Omit if none.
 >   - Example:
 >     ```
->     Using **github-pr** skill to analyze and draft a PR description for the current branch.
+>     Using **github-pr-create** skill to analyze and draft a PR description for the current branch.
 >
 >     Additionally **linear-workspace-laravel** (prerequisite — workspace context needed for issue linking).
 >

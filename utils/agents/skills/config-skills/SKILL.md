@@ -225,6 +225,10 @@ When creating or updating a skill, always check:
 | `obsidian.md` | Vault location, tool access, file naming, frontmatter, writing style, vault exploration. | Obsidian family (4 skills). |
 | `slack.md` | Slack MCP tools, response conventions, `:dark_sunglasses:` pattern, large results handling. | Slack family (2 skills). |
 | `enrich-context.md` | Entity enrichment table (MCP tools → links), code permalinks, appendix pattern. | Skills that compile output for others (slack-work-compile, slack-channel). |
+| `project-tooling.md` | Task runner discovery order, verification command extraction, user confirmation flow. | Agent skills (agents-anonymous, agents-team, agents-sequential). |
+| `agents-write-plans.md` | Plan quality: exact file paths, no placeholders, concrete steps, self-review checklist. | Agent skills (agents-anonymous, agents-team, agents-sequential). |
+| `agents-conventions.md` | Project conventions discovery: testing, code style, patterns, formatting, commits. | Agent skills (agents-anonymous, agents-team, agents-sequential). |
+| `agents-completion.md` | Completion handoff: summarize, present options (commit/push/PR/leave), execute choice. | Agent skills (agents-anonymous, agents-team, agents-sequential). |
 | `output-diff.md` | Chunked change presentation — reasoning + content blocks before any write. | Config family (5 skills), Linear/Obsidian/Slack write skills. |
 
 ### Description Checklist
