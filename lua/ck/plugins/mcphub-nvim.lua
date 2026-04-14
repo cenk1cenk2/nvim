@@ -33,7 +33,7 @@ function M.config()
         },
         config = join_paths(get_config_dir(), "utils/mcphub/servers.json"),
         port = 37373,
-        mcp_request_timeout = 120000,
+        mcp_request_timeout = 240000,
         global_env = function(context)
           local env = {
             "DBUS_SESSION_BUS_ADDRESS",

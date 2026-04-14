@@ -17,8 +17,8 @@ references:
 > **PREREQUISITE:** The `notion-work` skill MUST be active before this skill runs.
 > If no Notion workspace context exists in the current session, auto-invoke `notion-work` first.
 
-> **Deferred tools:** Notion tools are claude.ai connector tools — load via `ToolSearch` before use:
-> `ToolSearch({ query: "select:notion-fetch,notion-search" })`
+> **Deferred tools:** Notion tools are claude.ai connector tools (`mcp__claude_ai_Notion__*`) — load via `ToolSearch` before use:
+> `ToolSearch({ query: "select:mcp__claude_ai_Notion__notion-fetch,mcp__claude_ai_Notion__notion-search" })`
 
 ### Process
 

@@ -93,7 +93,7 @@ function M.config()
           },
           opts = {
             default_servers = { "mcphub" },
-            timeout = 120000,
+            timeout = 240000,
           },
         },
         adapters = {

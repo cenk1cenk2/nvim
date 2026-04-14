@@ -14,13 +14,13 @@ references:
 
 ### Workspace Context
 
-- **Notion:** Available via **claude.ai connector** tools (deferred — load via `ToolSearch` before use).
-- **Tools are deferred** — they must be loaded before each use:
+- **Notion:** Available via **claude.ai connector** tools (prefix `mcp__claude_ai_Notion__*`, deferred).
+- **Tools are deferred** — load via `ToolSearch` before each use:
   ```
-  ToolSearch({ query: "select:notion-search,notion-fetch,notion-update-page" })
+  ToolSearch({ query: "select:mcp__claude_ai_Notion__notion-search,mcp__claude_ai_Notion__notion-fetch" })
   ```
 
-### Available Tools
+### Available Tools (`mcp__claude_ai_Notion__`)
 
 | Tool | Purpose |
 |------|---------|
@@ -38,6 +38,8 @@ references:
 | `notion-update-data-source` | Update a data source. |
 | `notion-duplicate-page` | Duplicate an existing page. |
 | `notion-move-pages` | Move pages to a different parent. |
+
+All tool names above are the short form. Full name: `mcp__claude_ai_Notion__<tool>` (e.g., `mcp__claude_ai_Notion__notion-search`).
 
 ### After Initialization
 

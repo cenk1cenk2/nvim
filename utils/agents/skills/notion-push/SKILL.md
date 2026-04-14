@@ -17,8 +17,8 @@ references:
 
 > **PREREQUISITE:** The `notion-work` skill MUST be active before this skill runs. If no Notion workspace context exists in the current session, auto-invoke `notion-work` first.
 
-> **Deferred tools:** Notion tools are claude.ai connector tools — load via `ToolSearch` before use:
-> `ToolSearch({ query: "select:notion-search,notion-update-page" })`
+> **Deferred tools:** Notion tools are claude.ai connector tools (`mcp__claude_ai_Notion__*`) — load via `ToolSearch` before use:
+> `ToolSearch({ query: "select:mcp__claude_ai_Notion__notion-search,mcp__claude_ai_Notion__notion-update-page" })`
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 

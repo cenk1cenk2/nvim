@@ -39,9 +39,13 @@ These tools are **deferred** — they must be loaded via `ToolSearch` before use
 | `slack_read_canvas` | Read an existing canvas. |
 | `slack_update_canvas` | Update an existing canvas. |
 
-**Loading tools:** Use `ToolSearch` with the tool name to load its schema before calling it:
+**Loading tools:** Use `ToolSearch` to load tools before calling them:
 ```
-ToolSearch({ query: "select:slack_search_public,slack_read_channel,slack_send_message" })
+ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message,mcp__claude_ai_Slack__slack_read_channel" })
+```
+Or search by keyword:
+```
+ToolSearch({ query: "+Slack send message" })
 ```
 
 ### Notable Differences from `slack-kilic`

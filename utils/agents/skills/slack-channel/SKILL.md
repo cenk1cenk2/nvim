@@ -32,18 +32,18 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
 
 Tool names differ per workspace. Use the correct tools based on which workspace skill is active:
 
-| Action | `slack-kilic` (mcphub) | `slack-work` (claude.ai deferred) |
-|--------|------------------------|-----------------------------------|
-| Read channel | `slack_kilic__slack_get_channel_history` | `slack_read_channel` |
-| Read thread | `slack_kilic__slack_get_thread_replies` | `slack_read_thread` |
-| List channels | `slack_kilic__slack_list_channels` | `slack_search_channels` |
-| Get users | `slack_kilic__slack_get_users` | `slack_search_users` |
-| Get user profile | `slack_kilic__slack_get_user_profile` | `slack_read_user_profile` |
-| Post message | `slack_kilic__slack_post_message` | `slack_send_message` |
-| Reply to thread | `slack_kilic__slack_reply_to_thread` | `slack_send_message` (with thread) |
+| Action | `slack-kilic` (mcphub) | `slack-work` (`mcp__claude_ai_Slack__*`, deferred) |
+|--------|------------------------|-----------------------------------------------------|
+| Read channel | `slack_kilic__slack_get_channel_history` | `mcp__claude_ai_Slack__slack_read_channel` |
+| Read thread | `slack_kilic__slack_get_thread_replies` | `mcp__claude_ai_Slack__slack_read_thread` |
+| List channels | `slack_kilic__slack_list_channels` | `mcp__claude_ai_Slack__slack_search_channels` |
+| Get users | `slack_kilic__slack_get_users` | `mcp__claude_ai_Slack__slack_search_users` |
+| Get user profile | `slack_kilic__slack_get_user_profile` | `mcp__claude_ai_Slack__slack_read_user_profile` |
+| Post message | `slack_kilic__slack_post_message` | `mcp__claude_ai_Slack__slack_send_message` |
+| Reply to thread | `slack_kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with thread) |
 | Add reaction | `slack_kilic__slack_add_reaction` | NOT available |
 
-**`slack-work` tools are deferred** — load via `ToolSearch` before use.
+**`slack-work` tools are deferred** — load via `ToolSearch` before use. See `claude-ai-connectors` reference.
 
 ### Process
 

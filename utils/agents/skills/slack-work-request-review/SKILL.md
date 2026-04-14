@@ -29,9 +29,9 @@ references:
 
 - **Channel:** `#cloud-infra` (ID: `C073JL6GDMF`).
 - **Slack workspace:** Laravel enterprise (`slack-work`).
-- **Slack tools:** Deferred claude.ai connector tools — load via `ToolSearch` before use:
+- **Slack tools:** Deferred claude.ai connector tools (`mcp__claude_ai_Slack__*`) — load via `ToolSearch` before use:
   ```
-  ToolSearch({ query: "select:slack_send_message" })
+  ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message" })
   ```
 
 ### Process
@@ -72,8 +72,8 @@ references:
    - Wait for explicit approval before posting.
 
 6. **Post to Slack.**
-   - Load the Slack send tool: `ToolSearch({ query: "select:slack_send_message" })`.
-   - Use `slack_send_message` to post to channel `C073JL6GDMF`.
+   - Load the Slack send tool: `ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message" })`.
+   - Use `mcp__claude_ai_Slack__slack_send_message` to post to channel `C073JL6GDMF`.
 
 ### Composing with Other Skills
 
