@@ -6,6 +6,7 @@ argument-hint: "[optional: type or message hint — e.g., 'fix', 'feat: add retr
 references:
   - ../references/scm-detect.md
   - ../references/commit-style.md
+  - ../references/commit-trailers.md
   - ../references/output-diff.md
 ---
 
@@ -18,6 +19,8 @@ references:
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks — resolve references from the `<References>` block via MCP filesystem tools.
 
 > Read the `commit-style` reference for conventional commit format, types, subject line rules, body rules, and examples.
+
+> Read the `commit-trailers` reference for issue linking conventions — platform detection (Linear, GitHub, GitLab), closing keywords, trailer format, and `refs` vs `closes` usage.
 
 > Read the `output-diff` reference for presenting the draft commit message to the user before committing.
 
@@ -65,10 +68,11 @@ references:
      - Append `!` after the scope in the subject line: `feat(api)!: rename /v1/orders to /v1/checkout`.
      - Add a `BREAKING CHANGE:` trailer in the footer describing what breaks and the migration path.
      - Always include a body explaining the breaking change even if the user didn't request a verbose commit.
-   - **Issue/PR references** — when the user provides a GitHub/GitLab issue URL, PR URL, or issue ID:
-     - Fetch the issue/PR title and description via the appropriate MCP tool (`github__issue_read`, `github__pull_request_read`, `gitlab__get_issue`, `gitlab__get_merge_request`).
-     - Add a `Refs` or `Closes` trailer in the footer (e.g., `Closes #42`, `Refs https://github.com/org/repo/issues/123`).
-     - If the user also requested an extended description, weave relevant context from the issue/PR into the body — what the issue describes, why this commit addresses it.
+   - **Issue/PR references** — when the user provides an issue URL, issue ID, or the branch name matches an issue pattern:
+     - Follow the `commit-trailers` reference for detection, keyword selection, and trailer format per platform.
+     - Fetch the issue via the appropriate MCP tool to understand context.
+     - Default to `refs` unless the user explicitly says "closes" / "completes" / "fixes" / "finishes".
+     - If the user also requested an extended description, weave relevant issue context into the body.
    - **NEVER add `Co-authored-by:` trailers.** This is forbidden — no exceptions.
 
 5. **Present the draft to the user.**
@@ -163,3 +167,16 @@ references:
    before 2026-06-01. Old route returns 410 after that date.
    ```
 4. Present to user → iterate → approve → commit.
+
+**User says:** "commit this" with `https://linear.app/kilic-dev/issue/K-219/...`
+
+1. Check status — 6 files staged.
+2. Detect `K-219` from URL, fetch via `linear_kilic-dev__get_issue`.
+3. Read staged diff — adds trojan-loki to inventory and caddy config.
+4. Draft:
+   ```
+   feat: provision trojan-loki
+
+   refs K-219
+   ```
+5. Present to user → approve → commit.

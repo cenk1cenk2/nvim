@@ -9,7 +9,7 @@ Shared conventions for writing commit messages and PR/MR titles.
 
 <body — only when why isn't obvious>
 
-<trailers — Closes #42, BREAKING CHANGE, Co-authored-by>
+<trailers — see commit-trailers reference for issue linking>
 ```
 
 ## Subject Line
@@ -27,7 +27,7 @@ Shared conventions for writing commit messages and PR/MR titles.
 - Add body only for: non-obvious *why*, breaking changes, migration notes, linked issues.
 - Wrap at 72 chars.
 - Bullets with `-` not `*`.
-- Reference issues/PRs at end: `Closes #42`, `Refs #17`.
+- Issue/PR trailers go in the footer — see `commit-trailers` reference for platform-specific conventions.
 
 ## What Never Goes In
 
@@ -51,8 +51,6 @@ feat(api): add GET /users/:id/profile
 
 Mobile client needs profile data without the full user payload
 to reduce LTE bandwidth on cold-launch screens.
-
-Closes #128
 ```
 
 ```
