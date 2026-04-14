@@ -53,10 +53,20 @@
       "disabled_tools": ["write_file", "edit_file", "list_directory_with_sizes"]
     },
     "git": {
-      "args": ["mcp-server-git@latest"],
-      "autoApprove": ["git_diff", "git_diff_staged", "git_diff_unstaged", "git_log", "git_show", "git_status", "git_branch"],
+      "args": [
+        "mcp-server-git@latest"
+      ],
+      "autoApprove": [
+        "git_diff",
+        "git_diff_staged",
+        "git_diff_unstaged",
+        "git_log",
+        "git_show",
+        "git_status",
+        "git_branch"
+      ],
       "command": "uvx",
-      "disabled_tools": ["git_checkout", "git_create_branch"]
+      "disabled_tools": []
     },
     "github": {
       "autoApprove": [
@@ -86,7 +96,10 @@
         "request_copilot_review"
       ],
       "disabled": false,
-      "disabled_prompts": ["AssignCodingAgent", "issue_to_fix_workflow"],
+      "disabled_prompts": [
+        "AssignCodingAgent",
+        "issue_to_fix_workflow"
+      ],
       "disabled_tools": [
         "assign_copilot_to_issue",
         "create_branch",
