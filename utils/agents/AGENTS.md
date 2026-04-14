@@ -174,23 +174,36 @@ skills/
 - **Loading skills:** Read `skills://skill/{name}` for each skill. For multiple skills, make parallel calls.
 - **Loading references:** When a skill declares references, read `skills://skill/{name}/references` to load all at once. For shared references outside a skill context, read `skills://reference/{name}`.
 
-### Skill Composition
+### Using Multiple Skills Together
 
-Multiple skills can be active at the same time. When skills are combined, they coordinate by passing context and output between each other. Each skill's SKILL.md defines how it composes — look for "Composing with Other Skills" sections, modifier/companion roles, or delegation instructions.
+The user may invoke multiple skills in a single message or across a session. Skills are not isolated — they can and should work together.
 
-**Common patterns:**
+**Loading:** When multiple skills are invoked, load all of them via parallel `ReadMcpResourceTool` calls. Load each skill's references as well. Announce all loaded skills in a single announcement block (primary skill first, then additionally loaded ones).
 
-- **Modifier + Companion** — one skill produces output, the other intercepts it and redirects (e.g., posts as comment, copies to clipboard). The companion runs fully but skips its write step; the modifier applies its own action to the output.
+**Coordination:** After loading, read each skill's SKILL.md for composition instructions. Look for:
+
+- "Composing with Other Skills" sections — explicit instructions on how skills interact.
+- Modifier/companion roles — one skill intercepts another's output.
+- Delegation — one skill hands off a step to another.
+- Shared context — one skill gathers information another needs.
+
+If a skill doesn't mention composition, it can still run alongside others — execute each skill's process independently, sharing context where it makes sense (e.g., a PR URL discovered by one skill is available to all).
+
+**Common composition patterns:**
+
+- **Modifier + Companion** — one skill produces output, the other intercepts and redirects it (e.g., posts as comment, copies to clipboard, compiles into message). The companion runs fully but skips its write step; the modifier applies its own action.
 - **Additive** — a skill adds a section to another skill's output while still performing its own action independently.
 - **Delegation** — a skill hands off its optional write step to another skill instead of calling MCP tools directly.
 - **Context passing** — a skill gathers information and passes it to another skill so it doesn't re-fetch.
+- **Sequential** — the user invokes skills one after another in a session, each building on the previous one's results (e.g., `github-pr-read` then `github-pr-review`).
 
 **Rules:**
 
 - When multiple skills are active, read each skill's composition instructions to understand how they interact.
-- If it's unclear which skill should act on what, ask the user.
+- If it's unclear which skill should act on what or how they should combine, ask the user.
 - Never execute a companion skill's write action when a modifier is intercepting its output.
 - When a skill delegates to another, follow the delegated skill's workflow (approval, formatting, etc.).
+- Don't force composition — if skills don't have explicit composition instructions for each other, run them independently.
 
 ### Claude Code Directory Structure
 
