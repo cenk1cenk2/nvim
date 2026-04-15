@@ -903,11 +903,7 @@ function M.config()
             "CodeCompanionRequestError",
           },
           callback = function()
-            local tty = vim.uv.new_tty(2, false)
-            if tty then
-              tty:write("\007")
-              tty:close()
-            end
+            require("ck.utils").bell()
           end,
         },
         {

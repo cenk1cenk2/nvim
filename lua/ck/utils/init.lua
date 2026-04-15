@@ -95,4 +95,12 @@ function M.ui_confirm(opts)
   end)
 end
 
+function M.bell()
+  local tty = vim.uv.new_tty(2, false)
+  if tty then
+    tty:write("\007")
+    tty:close()
+  end
+end
+
 return M
