@@ -123,11 +123,10 @@ references:
 **User says:** "commit" (nothing staged, 2 files modified)
 
 1. Check status — nothing staged, 2 files modified.
-2. Suggest staging both (small, coherent change).
-3. User confirms → stage both.
-4. Read staged diff — fixes typo in config parsing.
-5. Draft: `fix(config): correct typo in parser validation`.
-6. Present to user → approve → commit.
+2. Stage all with `.`.
+3. Read staged diff — fixes typo in config parsing.
+4. Draft: `fix(config): correct typo in parser validation`.
+5. Present to user → approve → commit.
 
 **User says:** "commit fix"
 
