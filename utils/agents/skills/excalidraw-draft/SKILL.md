@@ -5,6 +5,7 @@ interaction: chat
 disable-model-invocation: true
 argument-hint: "[description of what to draw]"
 references:
+  - ../references/excalidraw-mcp-preview.md
   - ../references/excalidraw-elements.md
   - ../references/excalidraw-template.md
   - ../references/obsidian.md
@@ -17,6 +18,8 @@ references:
 
 > **DO NOT enter plan mode.** This is an interactive, visual skill.
 
+> Read the `excalidraw-mcp-preview` reference FIRST — it contains the absolute rule on using the MCP server for visual feedback. This is non-negotiable.
+
 > Read the `excalidraw-elements` reference for the element format, color palette (onedarker), and layout conventions.
 
 > Read the `excalidraw-template` reference for the `.excalidraw.md` file structure, appState defaults, and naming conventions.
@@ -27,52 +30,39 @@ references:
 
 ### Context
 
-You generate Excalidraw diagrams in standard Excalidraw JSON and save them as `.excalidraw.md` files to the Obsidian vault. The Obsidian Excalidraw plugin renders these as interactive, editable drawings.
+You draft Excalidraw diagrams using a two-phase workflow:
 
-**Default mode: dark.** Use dark appState and dark fill colors from the palette unless the user requests light mode.
+1. **Draft visually** using the Excalidraw MCP server — live interactive preview in chat. Iterate until the user is happy.
+2. **Export to Obsidian** — convert to standard Excalidraw JSON and write as `.excalidraw.md` to the vault.
 
-**Tool selection:** Follow the `obsidian` reference — use built-in tools if CWD is `~/notes`, otherwise use `obsidian__*` MCP tools.
+**Default mode: dark.** Use dark appState and dark fill colors unless the user requests light mode.
+
+**Tool selection for vault:** Follow the `obsidian` reference — use built-in tools if CWD is `~/notes`, otherwise use `obsidian__*` MCP tools.
 
 ### Process
 
 1. **Understand the request.** Determine what to visualize — architecture, flow, sequence, concept map, or freeform. Ask if unclear.
-2. **Read references.** Load the element format, file template, and vault conventions.
-3. **Plan the layout.** Before generating elements:
-   - List the nodes (shapes) and connections (arrows) needed.
-   - Estimate total diagram size.
-   - Choose colors from the onedarker palette.
-4. **Generate elements.** Build the elements array in standard Excalidraw JSON:
-   - **Shapes**: rectangle, ellipse, diamond with `boundElements` for labels.
-   - **Bound text**: separate text elements with `containerId` linking back to shapes.
-   - **Arrows**: with `startBinding`/`endBinding` connecting shapes.
-   - **Standalone text**: for titles and annotations only.
-   - Include random `seed` values (1–999999999) for each element.
-   - Follow z-order: zones (back) → shapes → arrows (front).
-5. **Build the `.excalidraw.md` file.** Follow the `excalidraw-template` reference:
-   - Frontmatter, warning message, text elements section, drawing section.
-   - Use dark mode appState defaults.
-6. **Present to user.** Show a summary of what was drawn:
-   - Element count (shapes, arrows, text).
-   - List of labeled nodes.
-   - Chosen color scheme.
-   - Target filename and path.
-   - Do NOT dump raw JSON in chat — it's unreadable.
-7. **Write to vault.** After user approval, write the file to `Drawings/`.
+2. **Load references.** Read element format, file template, vault conventions, and MCP preview rules. Call `excalidraw__read_me` once.
+3. **Plan the layout.** List nodes and connections, estimate diagram size, choose onedarker colors.
+4. **Draft with MCP preview.** Follow the `excalidraw-mcp-preview` reference workflow:
+   - Call `excalidraw__create_view` with MCP format elements.
+   - Use `label` on shapes, `cameraUpdate` for viewport, arrow bindings.
+   - Draw progressively: zones → shapes with labels → arrows.
+5. **Iterate.** Based on user feedback, refine using checkpoints. Call `excalidraw__create_view` again. Repeat until satisfied.
+6. **Export to Obsidian.** Once approved, follow the `excalidraw-mcp-preview` conversion table:
+   - Expand `label` to bound text elements, strip pseudo-elements, add `seed` values.
+   - Use dark mode appState from the `excalidraw-template` reference.
+   - Build the `.excalidraw.md` file and write to `Drawings/` in the vault.
 
 ### Conventions
 
-- **Dark mode by default.** Use dark appState, `#abb2bf` for text, dark fill variants for shapes.
-- **Colors from onedarker.** `[600]` variants for strokes, dark fills (`[100]`/`[300]`) for shape backgrounds.
-- **Bound text, not shortcuts.** Labels on shapes must be separate text elements with `containerId`/`boundElements`. No `label` shortcut exists in the Excalidraw file format.
+- **Dark mode by default.** Dark appState, `#abb2bf` for text, dark fills for shapes.
+- **Colors from onedarker.** `[600]` for strokes, `[100]`/`[300]` for dark fills.
 - **Font sizes.** Titles: 28+. Labels: 20. Annotations: 16. Never below 14.
-- **Spacing.** 30–50px gaps between elements. 80–100px margin around diagram edges.
+- **Spacing.** 30–50px gaps. 80–100px margin around edges.
 - **IDs.** Descriptive prefixes: `rect_api`, `txt_api_label`, `arr_api_to_db`, `zone_backend`.
-- **Seeds.** Each element gets a unique random `seed` integer for rendering variation.
-- **Decompressed format.** Use `json` code block (not `compressed-json`). The plugin handles both.
 
 ### Composing with Obsidian Skills
 
-This skill outputs to the same vault as `obsidian-note`, `obsidian-repository`, and `obsidian-todo`. When composed:
-
-- **With `obsidian-note`**: the note can embed the drawing via `![[Drawings/filename.excalidraw.md]]`.
-- **With `obsidian-repository`**: architecture diagrams can be linked from repository knowledge notes.
+- **With `obsidian-note`**: embed via `![[Drawings/filename.excalidraw.md]]`.
+- **With `obsidian-repository`**: link architecture diagrams from repository knowledge notes.
