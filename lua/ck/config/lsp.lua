@@ -28,9 +28,6 @@ return {
   },
   ai = {
     debug = false,
-    vectorcode = {
-      enabled = false,
-    },
     chat = {
       ---@type ("codecompanion" | "avante")[]
       provider = { "codecompanion" },

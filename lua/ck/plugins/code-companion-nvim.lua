@@ -17,12 +17,6 @@ function M.config()
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         keys = { "<Space>c" },
         dependencies = {
-          {
-            -- "ravitemer/codecompanion-history.nvim",
-            "cenk1cenk2/codecompanion-history.nvim",
-            branch = "patch-1",
-            -- dir = "~/development/codecompanion-history.nvim",
-          },
           -- "ravitemer/mcphub.nvim",
           -- TODO: POINT TO ORIGINAL WHEN FORK MERGES OR IF MERGES?
           "cenk1cenk2/mcphub.nvim",
@@ -260,18 +254,25 @@ function M.config()
           },
         },
         interactions = {
-          -- background = {
-          --   chat = {
-          --     callbacks = {
-          --       ["on_ready"] = {
-          --         actions = {
-          --           "interactions.background.builtin.chat_make_title",
-          --         },
-          --         enabled = true,
-          --       },
-          --     },
-          --   },
-          -- },
+          background = {
+            adapter = {
+              name = "copilot",
+              model = "gpt-5-mini",
+            },
+            chat = {
+              callbacks = {
+                ["on_ready"] = {
+                  actions = {
+                    "interactions.background.builtin.chat_make_title",
+                  },
+                  enabled = true,
+                },
+              },
+              opts = {
+                enabled = true,
+              },
+            },
+          },
           chat = {
             adapter = nvim.lsp.ai.provider.chat,
             model = nvim.lsp.ai.model.chat,
@@ -646,118 +647,6 @@ function M.config()
               make_slash_commands = true, -- Add MCP prompts as /slash commands
             },
           },
-          history = {
-            enabled = true,
-            opts = {
-              -- Keymap to open history from chat buffer (default: gh)
-              -- keymap = fn.local_keystroke({ "f" }),
-              keymap = nil,
-              -- Keymap to save the current chat manually (when auto_save is disabled)
-              save_chat_keymap = fn.local_keystroke({ "W" }),
-              -- Save all chats by default (disable to save only manually using 'sc')
-              auto_save = true,
-              -- Number of days after which chats are automatically deleted (0 to disable)
-              expiration_days = 30,
-              -- Picker interface (auto resolved to a valid picker)
-              picker = "telescope", --- ("telescope", "snacks", "fzf-lua", or "default")
-              ---Optional filter function to control which chats are shown when browsing
-              chat_filter = nil, -- function(chat_data) return boolean end
-              -- Customize picker keymaps (optional)
-              picker_keymaps = {
-                rename = { n = "r", i = "<C-r>" },
-                delete = { n = "d", i = "<C-d>" },
-                duplicate = { n = "<C-y>", i = "<C-y>" },
-              },
-              ---Automatically generate titles for new chats
-              auto_generate_title = true,
-              title_generation_opts = {
-                ---Adapter for generating titles (defaults to current chat adapter)
-                adapter = "copilot", -- "copilot"
-                ---Model for generating titles (defaults to current chat model)
-                model = "gpt-5.1", -- "gpt-4o"
-                ---Number of user prompts after which to refresh the title (0 to disable)
-                refresh_every_n_prompts = 3, -- e.g., 3 to refresh after every 3rd user prompt
-                ---Maximum number of times to refresh the title (default: 3)
-                max_refreshes = 3,
-                format_title = function(original_title)
-                  -- this can be a custom function that applies some custom
-                  -- formatting to the title.
-                  return original_title
-                end,
-              },
-              ---On exiting and entering neovim, loads the last chat on opening chat
-              continue_last_chat = false,
-              ---When chat is cleared with `gx` delete the chat from history
-              delete_on_clearing_chat = false,
-              ---Directory path to save the chats
-              dir_to_save = join_paths(get_cache_dir(), "codecompanion-history"),
-              ---Enable detailed logging for history extension
-              enable_logging = false,
-
-              -- Summary system
-              summary = {
-                -- Keymap to generate summary for current chat (default: "gcs")
-                create_summary_keymap = fn.local_keystroke({ "s", "c" }),
-                -- Keymap to browse summaries (default: "gbs")
-                browse_summaries_keymap = fn.local_keystroke({ "s", "f" }),
-
-                generation_opts = {
-                  adapter = "copilot", -- defaults to current chat adapter
-                  model = "gpt-5.1", -- defaults to current chat model
-                  context_size = 90000, -- max tokens that the model supports
-                  include_references = true, -- include slash command content
-                  include_tool_outputs = true, -- include tool execution results
-                  system_prompt = nil, -- custom system prompt (string or function)
-                  format_summary = nil, -- custom function to format generated summary e.g to remove <think/> tags from summary
-                },
-              },
-              -- memory = {
-              --   -- Automatically index summaries when they are generated
-              --   auto_create_memories_on_summary_generation = true,
-              --   -- Path to the VectorCode executable
-              --   vectorcode_exe = "vectorcode",
-              --   -- Tool configuration
-              --   tool_opts = {
-              --     -- Default number of memories to retrieve
-              --     default_num = 10,
-              --   },
-              --   -- Enable notifications for indexing progress
-              --   notify = true,
-              --   -- Index all existing memories on startup
-              --   -- (requires VectorCode 0.6.12+ for efficient incremental indexing)
-              --   index_on_startup = false,
-              -- },
-            },
-          },
-          vectorcode = nvim.lsp.ai.vectorcode.enabled and {
-            ---@type VectorCode.CodeCompanion.ExtensionOpts
-            opts = {
-              tool_group = {
-                enabled = true,
-                extras = {},
-                collapse = false,
-              },
-              tool_opts = {
-                ---@type VectorCode.CodeCompanion.ToolOpts
-                ["*"] = {},
-                ---@type VectorCode.CodeCompanion.LsToolOpts
-                ls = {},
-                ---@type VectorCode.CodeCompanion.VectoriseToolOpts
-                vectorise = {},
-                ---@type VectorCode.CodeCompanion.QueryToolOpts
-                query = {
-                  max_num = { chunk = -1, document = -1 },
-                  default_num = { chunk = 50, document = 10 },
-                  include_stderr = false,
-                  use_lsp = true,
-                  no_duplicate = true,
-                  chunk_mode = false,
-                },
-                files_ls = {},
-                files_rm = {},
-              },
-            },
-          } or nil,
         },
       }
     end,
@@ -852,24 +741,6 @@ function M.config()
           end,
           desc = "actions [codecompanion]",
           mode = { "n", "v" },
-        },
-        {
-          fn.wk_keystroke({ categories.COPILOT, "f" }),
-          function()
-            require("codecompanion").extensions.history.browse_chats(function(chat_data)
-              return chat_data.project_root == require("codecompanion._extensions.history.utils").find_project_root()
-            end)
-          end,
-          desc = "chat history [cwd]",
-          mode = { "n" },
-        },
-        {
-          fn.wk_keystroke({ categories.COPILOT, "F" }),
-          function()
-            require("codecompanion").extensions.history.browse_chats()
-          end,
-          desc = "chat history [all]",
-          mode = { "n" },
         },
         {
           fn.wk_keystroke({ categories.COPILOT, "<Space>" }),
@@ -1037,6 +908,62 @@ function M.config()
               tty:write("\007")
               tty:close()
             end
+          end,
+        },
+        {
+          event = "User",
+          group = "_codecompanion_background_title_refresh",
+          pattern = "CodeCompanionChatDone",
+          callback = function(ev)
+            local bufnr = ev.data and ev.data.bufnr
+            if not bufnr then
+              return
+            end
+
+            local chat = require("codecompanion").buf_get_chat(bufnr)
+            if not chat then
+              return
+            end
+
+            if not chat._bg_title_state then
+              chat._bg_title_state = { count = 0, refreshes = 0 }
+            end
+
+            local state = chat._bg_title_state
+            state.count = state.count + 1
+
+            if state.count % 15 ~= 0 then
+              return
+            end
+
+            local Background = require("codecompanion.interactions.background")
+            local make_title = require("codecompanion.interactions.background.builtin.chat_make_title")
+
+            local background = Background.new()
+            if not background then
+              return
+            end
+
+            background:ask({
+              {
+                role = "system",
+                content = "You are an expert in crafting pithy titles for chatbot conversations. You are presented with a chat request, and you reply with a brief title that captures the main topic of that request. Keep your answers short and impersonal.\nThe title should not be wrapped in quotes or contain any sort of formatting such as Markdown or HTML syntax. It should be about 8 words or fewer.\nHere are some examples of good titles:\n- Git rebase question\n- Installing Python packages\n- Location of LinkedList implementation in codebase\n- Adding tests to Neovim plugin\n- React useState hook usage",
+              },
+              {
+                role = "user",
+                content = string.format("Please write a brief title for the following request:\n\n%s", make_title.format_messages(chat.messages)),
+              },
+            }, {
+              method = "async",
+              silent = true,
+              on_done = function(result)
+                local title = make_title.on_done(result)
+                if title then
+                  chat:set_title(title)
+                  log:debug("[Background] Chat title refreshed: %s", title)
+                end
+              end,
+            })
           end,
         },
       }

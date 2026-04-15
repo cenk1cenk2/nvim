@@ -37,7 +37,6 @@ function M.config()
             components.noice_message,
           },
           lualine_x = {
-            components.vectorcode,
             components.searchcount,
             components.snippet,
             components.noice_mode,
@@ -292,19 +291,6 @@ function M.components()
         end
 
         return table.concat(message, " ")
-      end,
-      color = { fg = nvim.ui.colors.fg, bg = nvim.ui.colors.bg[300] },
-    },
-    vectorcode = {
-      function()
-        return require("vectorcode.integrations").lualine()[1]()
-      end,
-      cond = function()
-        if package.loaded["vectorcode"] == nil then
-          return false
-        else
-          return require("vectorcode.integrations").lualine().cond()
-        end
       end,
       color = { fg = nvim.ui.colors.fg, bg = nvim.ui.colors.bg[300] },
     },
