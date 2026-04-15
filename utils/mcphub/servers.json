@@ -39,6 +39,17 @@
       },
       "url": "https://mcp.context7.com/mcp"
     },
+    "excalidraw": {
+      "autoApprove": [
+        "read_me",
+        "create_view",
+        "export_to_excalidraw",
+        "save_checkpoint",
+        "read_checkpoint"
+      ],
+      "disabled_tools": [],
+      "url": "https://mcp.excalidraw.com"
+    },
     "exa": {
       "autoApprove": [
         "get_code_context_exa",
