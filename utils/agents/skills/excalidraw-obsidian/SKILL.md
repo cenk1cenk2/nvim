@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[filename or description of drawing to pick up]"
 references:
   - ../references/excalidraw-mcp-preview.md
+  - ../references/excalidraw-conversion.md
   - ../references/excalidraw-elements.md
   - ../references/excalidraw-template.md
   - ../references/obsidian.md
@@ -19,6 +20,8 @@ references:
 > **DO NOT enter plan mode.** This is an interactive, visual skill.
 
 > Read the `excalidraw-mcp-preview` reference FIRST — it contains the absolute rule on using the MCP server for visual feedback. This is non-negotiable.
+
+> Read the `excalidraw-conversion` reference for the full MCP ↔ Obsidian conversion algorithm — critical for both directions (reading existing drawings into MCP and writing back to vault).
 
 > Read the `excalidraw-elements` reference for the element format, color palette (onedarker), and layout conventions.
 

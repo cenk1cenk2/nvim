@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[description of what to draw]"
 references:
   - ../references/excalidraw-mcp-preview.md
+  - ../references/excalidraw-conversion.md
   - ../references/excalidraw-elements.md
   - ../references/excalidraw-template.md
   - ../references/obsidian.md
@@ -19,6 +20,8 @@ references:
 > **DO NOT enter plan mode.** This is an interactive, visual skill.
 
 > Read the `excalidraw-mcp-preview` reference FIRST — it contains the absolute rule on using the MCP server for visual feedback. This is non-negotiable.
+
+> Read the `excalidraw-conversion` reference for the full MCP ↔ Obsidian conversion algorithm with before/after examples.
 
 > Read the `excalidraw-elements` reference for the element format, color palette (onedarker), and layout conventions.
 
@@ -60,7 +63,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 - **Colors from onedarker.** `[600]` for strokes, `[100]`/`[300]` for dark fills.
 - **Font sizes.** Titles: 28+. Labels: 20. Annotations: 16. Never below 14.
 - **Spacing.** 30–50px gaps. 80–100px margin around edges.
-- **IDs.** Descriptive prefixes: `rect_api`, `txt_api_label`, `arr_api_to_db`, `zone_backend`.
+- **IDs.** Exactly 8 chars alphanumeric (`[0-9a-zA-Z]{8}`). Descriptive prefix + random suffix: `rctApi3d`, `txtAp4Wq`, `arwAD8Pn`, `zonBk2Lm`.
 
 ### Composing with Obsidian Skills
 

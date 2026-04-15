@@ -73,7 +73,9 @@
 
 ## Element Types
 
-Every element needs at minimum: `type`, `id` (unique string), `x`, `y`, `width`, `height`.
+Every element needs at minimum: `type`, `id` (unique 8-char alphanumeric string), `x`, `y`, `width`, `height`.
+
+**IDs must be exactly 8 characters** (`[0-9a-zA-Z]{8}`). The Obsidian plugin enforces this — longer IDs get replaced. Use the same 8-char IDs in element `id`, `containerId`, `boundElements[].id`, and binding `elementId` fields.
 
 Include `seed` (random integer 1–999999999) for hand-drawn rendering variation. The plugin fills other defaults (`angle: 0`, `roughness: 1`, `opacity: 100`, `groupIds: []`, `isDeleted: false`, `locked: false`).
 
@@ -82,7 +84,7 @@ Include `seed` (random integer 1–999999999) for hand-drawn rendering variation
 ```json
 {
   "type": "rectangle",
-  "id": "rect1",
+  "id": "rct1Ab3d",
   "x": 100, "y": 100,
   "width": 200, "height": 80,
   "strokeColor": "#61afef",
@@ -90,7 +92,7 @@ Include `seed` (random integer 1–999999999) for hand-drawn rendering variation
   "fillStyle": "solid",
   "roundness": { "type": 3 },
   "seed": 481273645,
-  "boundElements": [{ "id": "rect1_label", "type": "text" }]
+  "boundElements": [{ "id": "rct1Lb3d", "type": "text" }]
 }
 ```
 
@@ -102,7 +104,7 @@ Include `seed` (random integer 1–999999999) for hand-drawn rendering variation
 ```json
 {
   "type": "ellipse",
-  "id": "ell1",
+  "id": "elp1Xk9z",
   "x": 100, "y": 100,
   "width": 150, "height": 150,
   "strokeColor": "#c678dd",
@@ -117,7 +119,7 @@ Include `seed` (random integer 1–999999999) for hand-drawn rendering variation
 ```json
 {
   "type": "diamond",
-  "id": "dia1",
+  "id": "dmd1Wq7r",
   "x": 100, "y": 100,
   "width": 150, "height": 150,
   "strokeColor": "#e5c07b",
@@ -130,7 +132,7 @@ Include `seed` (random integer 1–999999999) for hand-drawn rendering variation
 ```json
 {
   "type": "text",
-  "id": "txt_title",
+  "id": "ttl1Mn4p",
   "x": 200, "y": 50,
   "width": 250, "height": 35,
   "text": "Architecture Overview",
@@ -155,7 +157,7 @@ Create a separate text element linked to the container via `containerId` / `boun
 ```json
 {
   "type": "rectangle",
-  "id": "box1",
+  "id": "box1Hj6t",
   "x": 100, "y": 100,
   "width": 200, "height": 80,
   "strokeColor": "#98c379",
@@ -163,7 +165,7 @@ Create a separate text element linked to the container via `containerId` / `boun
   "fillStyle": "solid",
   "roundness": { "type": 3 },
   "seed": 582937461,
-  "boundElements": [{ "id": "box1_label", "type": "text" }]
+  "boundElements": [{ "id": "bx1lHj6t", "type": "text" }]
 }
 ```
 
@@ -172,7 +174,7 @@ Create a separate text element linked to the container via `containerId` / `boun
 ```json
 {
   "type": "text",
-  "id": "box1_label",
+  "id": "bx1lHj6t",
   "x": 150, "y": 120,
   "width": 100, "height": 25,
   "text": "API Server",
@@ -181,28 +183,28 @@ Create a separate text element linked to the container via `containerId` / `boun
   "textAlign": "center",
   "verticalAlign": "middle",
   "strokeColor": "#abb2bf",
-  "containerId": "box1",
+  "containerId": "box1Hj6t",
   "seed": 193847562
 }
 ```
 
 - `textAlign: "center"` + `verticalAlign: "middle"` for centered labels.
 - The plugin auto-adjusts text position within the container — `x`/`y` are approximate.
-- Convention: name bound text IDs as `{containerId}_label`.
+- Convention: use a related 8-char ID for bound text (e.g., container `box1Hj6t` → label `bx1lHj6t`).
 
 ### Arrow
 
 ```json
 {
   "type": "arrow",
-  "id": "arr1",
+  "id": "arw1Pf8n",
   "x": 300, "y": 140,
   "width": 150, "height": 0,
   "points": [[0, 0], [150, 0]],
   "strokeColor": "#abb2bf",
   "endArrowhead": "arrow",
-  "startBinding": { "elementId": "box1", "focus": 0, "gap": 5, "fixedPoint": [1, 0.5] },
-  "endBinding": { "elementId": "box2", "focus": 0, "gap": 5, "fixedPoint": [0, 0.5] },
+  "startBinding": { "elementId": "box1Hj6t", "focus": 0, "gap": 5, "fixedPoint": [1, 0.5] },
+  "endBinding": { "elementId": "box2Ry5m", "focus": 0, "gap": 5, "fixedPoint": [0, 0.5] },
   "seed": 847293615
 }
 ```
@@ -228,4 +230,4 @@ Same as arrow but `"type": "line"` and no arrowheads.
 - **Padding**: 80–100px margin around the entire diagram.
 - **Font sizes**: 28+ for titles, 20 for labels, 16 for annotations. Never below 14.
 - **Z-order**: array order = z-order (first = back). Draw zones → shapes → arrows.
-- **ID naming**: descriptive prefixes — `rect_`, `txt_`, `arr_`, `ell_`, `dia_`, `zone_`.
+- **ID naming**: 8-char alphanumeric. Use 3-4 char descriptive prefix + 4-5 char random suffix: `rctApSv3` (rectangle), `txtDb4Wq` (text), `arwXk9Pn` (arrow), `zonBe2Lm` (zone).

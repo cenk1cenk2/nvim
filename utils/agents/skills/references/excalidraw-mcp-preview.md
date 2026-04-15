@@ -46,19 +46,12 @@ These are stripped during conversion to Obsidian format.
 5. **Repeat** until the user is satisfied.
 6. **Only then** convert to Obsidian format and write to vault.
 
-## MCP → Obsidian Conversion
+## MCP ↔ Obsidian Conversion
 
-When converting from MCP preview to Obsidian `.excalidraw.md`:
+Read the `excalidraw-conversion` reference for the full step-by-step algorithm with before/after examples. Key operations:
 
-| MCP Format | Obsidian Format |
-|------------|-----------------|
-| `label: { text, fontSize }` on shape | Separate text element with `containerId`, shape gets `boundElements`. |
-| `cameraUpdate` pseudo-element | Strip — not part of the file format. |
-| `delete` pseudo-element | Strip — not part of the file format. |
-| `restoreCheckpoint` | Strip — not part of the file format. |
-| Minimal fields | Add `seed` (random int 1–999999999) per element. |
-| Arrow `startBinding`/`endBinding` | Carries over directly. |
-| Text `strokeColor` | Adjust for dark mode if needed (`#abb2bf` on dark). |
+- **MCP → Obsidian**: strip pseudo-elements, expand `label` to bound text, normalize to 8-char IDs, add `seed` values, tab-indent JSON.
+- **Obsidian → MCP**: collapse bound text to `label`, strip file-only fields, add `cameraUpdate`, render with `create_view`.
 
 ## Progressive Drawing Order
 
