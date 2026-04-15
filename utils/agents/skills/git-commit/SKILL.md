@@ -34,10 +34,23 @@ references:
 2. **Handle staging.**
    - If changes are already staged — proceed to step 3.
    - If nothing is staged but there are unstaged/untracked changes:
-     - If all changes are in a small, coherent set (≤5 files, single logical change) — suggest staging everything and ask for confirmation.
-     - Otherwise — list the changed files and ask the user what to stage.
-   - Stage files via `git__git_add`. If git MCP is unavailable, fall back to `git add` via CLI.
+     - **Default (no grouping requested):** stage everything with `git__git_add` using path `.`. No need to list or confirm individual files.
+     - **Grouped commits requested:** skip to step 2a instead.
+   - Stage files via `git__git_add` (path `.` for default, or individual paths for grouped commits). If git MCP is unavailable, fall back to `git add` via CLI.
    - After staging, re-check with `git__git_diff_staged` to confirm what will be committed.
+
+2a. **Grouped commits (multi-commit workflow).**
+    - Triggered when the user explicitly asks to split changes into multiple commits (e.g., "commit these separately", "group into multiple commits", "split this into commits by concern").
+    - Analyze all unstaged/untracked changes and propose logical groups based on:
+      - File proximity (same directory or module).
+      - Change purpose (feature vs fix vs refactor).
+      - User-provided grouping hints.
+    - Present the proposed groups to the user for approval. Adjust grouping based on feedback.
+    - For each approved group:
+      1. Stage only that group's files via `git__git_add` with individual file paths.
+      2. Continue to step 3 (analyze) → step 4 (draft message) → step 5 (present) → step 6 (commit).
+      3. After committing, return here for the next group.
+    - Repeat until all groups are committed.
 
 3. **Analyze the staged changes.**
    - Read the staged diff via `git__git_diff_staged`.
