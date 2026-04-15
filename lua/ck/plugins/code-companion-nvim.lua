@@ -932,7 +932,8 @@ function M.config()
             local state = chat._bg_title_state
             state.count = state.count + 1
 
-            if state.count % 15 ~= 0 then
+            local interval = state.count <= 15 and 3 or 15
+            if state.count % interval ~= 0 then
               return
             end
 
