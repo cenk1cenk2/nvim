@@ -192,3 +192,14 @@ references:
    refs K-219
    ```
 5. Present to user → approve → commit.
+
+**User says:** "commit these separately" (nothing staged, 6 files modified across auth and config)
+
+1. Check status — nothing staged, 6 files modified.
+2. Analyze changes — 3 files are auth-related, 3 are config cleanup.
+3. Propose groups:
+   - Group 1: `src/auth/token.ts`, `src/auth/middleware.ts`, `test/auth.test.ts` → auth changes.
+   - Group 2: `config/app.yaml`, `config/routes.yaml`, `config/defaults.yaml` → config cleanup.
+4. User approves grouping.
+5. Stage group 1 files individually → draft: `feat(auth): add token refresh mechanism` → present → approve → commit.
+6. Stage group 2 files individually → draft: `chore(config): clean up route and default configs` → present → approve → commit.
