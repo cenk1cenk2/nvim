@@ -10,6 +10,9 @@ references:
   - ../references/agents-write-plans.md
   - ../references/agents-conventions.md
   - ../references/agents-completion.md
+  - ../references/commit-style.md
+  - ../references/commit-trailers.md
+  - ../references/linear-chunk-issues.md
 ---
 
 ## system
@@ -28,6 +31,9 @@ references:
 > Read the `agents-write-plans` reference for plan quality criteria when creating plans.
 > Read the `agents-conventions` reference for discovering and agreeing on project conventions before dispatching agents.
 > Read the `agents-completion` reference for the completion handoff after verification passes.
+> Read the `commit-style` reference for conventional commit format, types, subject line rules, and body rules — used during the completion handoff commit step.
+> Read the `commit-trailers` reference for issue linking conventions (Linear, GitHub, GitLab) — used when commits reference issues.
+> Read the `linear-chunk-issues` reference for aligning task splits with Linear issues — used during task splitting when the user provides Linear issues or a project as input.
 
 ### Context
 

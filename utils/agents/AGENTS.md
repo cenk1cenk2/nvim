@@ -824,6 +824,15 @@ def new_function():
 
 ## VI. USER INTERACTION PATTERNS
 
+### User Lingo
+
+Short prompts with specific meaning. When the user sends one of these as a standalone message, interpret as defined below — do not ask for clarification.
+
+| Prompt | Meaning |
+|--------|---------|
+| `g`, `go` | Proceed. Do as needed — you have permission. |
+| `y`, `yolo` | Exit plan mode and proceed. Do as needed — you have permission. |
+
 ### Handling Edit Rejections
 
 When the user rejects an edit during the interactive review session:

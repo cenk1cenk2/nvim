@@ -10,6 +10,9 @@ references:
   - ../references/agents-write-plans.md
   - ../references/agents-conventions.md
   - ../references/agents-completion.md
+  - ../references/commit-style.md
+  - ../references/commit-trailers.md
+  - ../references/linear-chunk-issues.md
 ---
 
 ## system
@@ -23,6 +26,9 @@ references:
 > Read the `agents-write-plans` reference for plan quality criteria when creating plans.
 > Read the `agents-conventions` reference for discovering and agreeing on project conventions before dispatching subagents.
 > Read the `agents-completion` reference for the completion handoff after verification passes.
+> Read the `commit-style` reference for conventional commit format, types, subject line rules, and body rules — used during the completion handoff commit step and per-task commits.
+> Read the `commit-trailers` reference for issue linking conventions (Linear, GitHub, GitLab) — used when commits reference issues.
+> Read the `linear-chunk-issues` reference for aligning task splits with Linear issues — used during planning when the user provides Linear issues or a project as input.
 
 ### Context
 
@@ -150,7 +156,7 @@ Do NOT modify files outside your write scope.
 2. Implement the changes.
 3. If the project has tests for this area, write/update tests.
 4. Run verification commands and confirm they pass.
-5. Commit with a descriptive message.
+5. Stage all with `git__git_add` (path `.`) and commit following conventional commit format: `<type>(<scope>): <imperative summary>`. If an issue ID is known, add a trailer (`refs <ID>` or `closes <ID>`).
 
 ## Report
 When done, report one of:
