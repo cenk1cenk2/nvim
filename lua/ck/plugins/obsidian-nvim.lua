@@ -198,7 +198,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "o" }),
           function()
-            require("obsidian.commands.open")()
+            require("obsidian.commands.open")({})
           end,
           desc = "open in gui",
         },
@@ -274,7 +274,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.NOTES, "T" }),
           function()
-            require("obsidian.commands.template")({})
+            require("obsidian.commands.template")({ args = "" })
           end,
           desc = "paste from template",
         },
@@ -287,13 +287,6 @@ function M.config()
           desc = "rename note",
         },
 
-        {
-          fn.wk_keystroke({ categories.NOTES, "M" }),
-          function()
-            require("obsidian.commands.rename")({ args = { dry_run = true } })
-          end,
-          desc = "rename note [dry-run]",
-        },
       }
     end,
     autocmds = function()

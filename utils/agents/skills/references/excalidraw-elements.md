@@ -145,12 +145,36 @@ Include `seed` (random integer 1–999999999) for hand-drawn rendering variation
 ```
 
 - `fontFamily`: `1` = Virgil (hand-drawn), `2` = Helvetica, `3` = Cascadia (monospace), `5` = Excalidraw (default).
-- Estimate dimensions: `width ≈ text.length × fontSize × 0.5`, `height ≈ fontSize × 1.4`.
+- Estimate dimensions: `width ≈ text.length × fontSize × 0.6`, `height ≈ fontSize × 1.4`.
 - `x` is the LEFT edge. To center at `cx`: `x = cx - width / 2`.
 
 ### Bound Text (labels inside shapes)
 
 Create a separate text element linked to the container via `containerId` / `boundElements`.
+
+**Container sizing for bound text (CRITICAL):**
+
+The Obsidian Excalidraw plugin wraps bound text when it exceeds the container's inner width. Inner width = `container.width - fontSize` (padding is `fontSize / 2` per side). If text wraps, the label becomes multi-line and unreadable in small shapes.
+
+**Minimum container width for single-line text:**
+
+```
+min_width = text.length × fontSize × 0.6 + fontSize
+```
+
+| fontSize | 5-char label | 6-char label | 7-char label |
+|----------|-------------|-------------|-------------|
+| 14 | 56px | 64px | 73px |
+| 16 | 64px | 74px | 83px |
+| 20 | 80px | 92px | 104px |
+
+**If the container is too small for bound text**, use standalone text overlapping the shape instead — standalone text never wraps. Position the standalone text centered over the shape manually.
+
+> **Discrepancy warning:** excalidraw.com uses narrower font metrics than the Obsidian plugin. Text that fits on one line on excalidraw.com WILL wrap in Obsidian. Always size containers for the Obsidian plugin (the stricter renderer).
+
+> **Unicode characters** (`→`, `←`, `↔`, `━`) render significantly wider in the Obsidian plugin's Excalifont than in excalidraw.com. Each Unicode arrow occupies ~1.5-2x the width of an ASCII character. For labels containing Unicode, either increase the multiplier to `0.8` or use standalone text.
+
+**Practical rule for small labels (under 80px container width):** Always use standalone text overlapping the shape. Bound text in small containers is fragile across renderers. Reserve bound text for large shapes (140px+ width) where wrapping is unlikely.
 
 **Container shape:**
 
@@ -215,7 +239,11 @@ Create a separate text element linked to the container via `containerId` / `boun
 - `focus`: `-1` to `1`, controls arrow aim offset. `0` = center.
 - `gap`: pixel gap between arrow endpoint and shape border.
 
-**Labeled arrow** — bind text the same way as shapes: add `boundElements` to the arrow, create a text element with `containerId` pointing to the arrow.
+**Labeled arrow (PREFERRED for wires)** — bind text to the arrow the same way as shapes: add `boundElements` to the arrow, create a text element with `containerId` pointing to the arrow. The label auto-positions at the arrow's midpoint and moves with the arrow when rearranged. Unlike shape-bound text, arrow-bound text does NOT wrap — it renders as a single line at the midpoint, making it safe for any label length.
+
+Use this for identifying what a wire/connection carries: wire color, signal name, pin numbers, data type. This is the preferred approach because labels stay attached to their wires.
+
+**Fallback: standalone text near arrows.** Only use when you need a multi-line annotation or when the label applies to multiple arrows (e.g., a shared annotation for a group of wires). Standalone text does NOT move with the arrow.
 
 ### Line
 
@@ -231,3 +259,17 @@ Same as arrow but `"type": "line"` and no arrowheads.
 - **Font sizes**: 28+ for titles, 20 for labels, 16 for annotations. Never below 14.
 - **Z-order**: array order = z-order (first = back). Draw zones → shapes → arrows.
 - **ID naming**: 8-char alphanumeric. Use 3-4 char descriptive prefix + 4-5 char random suffix: `rctApSv3` (rectangle), `txtDb4Wq` (text), `arwXk9Pn` (arrow), `zonBe2Lm` (zone).
+
+## Wire Routing Conventions
+
+When drawing wiring diagrams or flow charts with many connecting lines:
+
+- **No wire crossings unless intentional.** Wires MUST NOT cross each other or overlap with components they don't connect to. Wires can take longer routes to avoid crossings — clarity is more important than shortest path.
+- **Use corridor-based routing.** Assign each wire a unique corridor (x-band for vertical segments, y-band for horizontal segments). Wires sharing the same corridor at different y/x levels don't cross. Plan corridors before drawing.
+- **Route long wires along the diagram perimeter.** For wires connecting distant components (e.g., bottom-left to top-right), route along the edges: go down to the bottom, right along the bottom, up the right side, etc. This keeps the center clear.
+- **Use multi-point arrow paths** with intermediate waypoints to create right-angle routing. Example: `points: [[0,0],[0,100],[300,100],[300,0]]` creates an L-shaped route.
+- **Use different colors** for different wire types/functions — even if wires run close together, color distinguishes them.
+- **Label wires with bound text on the arrow** (preferred). Bind a text element to each arrow via `containerId`/`boundElements` — the label auto-positions at the midpoint and moves with the wire. Include the wire's identity (color name, signal type, pin numbers). Arrow-bound text does NOT wrap, so it's safe regardless of label length.
+- **Space components generously.** More space between components = easier wire routing with fewer crossings. Plan the layout with wire routing in mind before placing components.
+- **Group related components** with zone rectangles (low-opacity background rects) — e.g., a push/pull pot grouped with its DPDT switch.
+- **No element overlap unless intentional.** Text labels, shapes, and wires should not overlap with other elements they don't belong to. Intentional overlaps: labels inside their container, zone backgrounds behind grouped elements, lug annotations near their pot edge.

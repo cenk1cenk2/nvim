@@ -74,6 +74,7 @@ The MCP format uses `label: { text, fontSize }` on shapes. The Obsidian format r
 - Set `fontFamily: 5` (Excalidraw default) unless specified otherwise.
 - Approximate `x`/`y` — the plugin auto-adjusts text position within the container.
 - Set `strokeColor` for text based on theme: `#abb2bf` (dark mode) or `#121212` (light mode).
+- **Verify container width** — the Obsidian plugin wraps bound text when it exceeds `container.width - fontSize`. Minimum container width for single-line text: `text.length × fontSize × 0.6 + fontSize`. If the container is too small, either widen it or use standalone text instead. See the `excalidraw-elements` reference for the full sizing table.
 
 ### Step 3: Expand Arrow Labels
 

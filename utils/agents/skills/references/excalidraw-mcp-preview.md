@@ -10,6 +10,7 @@
 
 - **`excalidraw__read_me`** — call once per conversation to load the MCP element format (color palettes, element types, camera controls, examples). Do NOT call again after the first time.
 - **`excalidraw__create_view`** — call to render diagrams. Returns an interactive preview and a `checkpointId` for iterating.
+- **`excalidraw__export_to_excalidraw`** — uploads diagram JSON to excalidraw.com, returns a shareable URL. Use for URL output mode. Pass the complete scene JSON (elements + appState). Strip pseudo-elements first but no MCP→Obsidian conversion needed.
 
 ## MCP Element Format
 
@@ -44,14 +45,26 @@ These are stripped during conversion to Obsidian format.
    - Append new/replacement elements.
    - Call `excalidraw__create_view` again.
 5. **Repeat** until the user is satisfied.
-6. **Only then** convert to Obsidian format and write to vault.
+6. **Only then** export — either convert to Obsidian format and write to vault, OR upload to excalidraw.com for a shareable URL. See the skill's Output Modes section for decision rules.
 
-## MCP ↔ Obsidian Conversion
+## Export Paths
 
-Read the `excalidraw-conversion` reference for the full step-by-step algorithm with before/after examples. Key operations:
+### MCP → Obsidian (`.excalidraw.md`)
 
-- **MCP → Obsidian**: strip pseudo-elements, expand `label` to bound text, normalize to 8-char IDs, add `seed` values, tab-indent JSON.
-- **Obsidian → MCP**: collapse bound text to `label`, strip file-only fields, add `cameraUpdate`, render with `create_view`.
+Read the `excalidraw-conversion` reference for the full step-by-step algorithm with before/after examples. Key operations: strip pseudo-elements, expand `label` to bound text, normalize to 8-char IDs, add `seed` values, tab-indent JSON.
+
+### MCP → excalidraw.com URL
+
+Lightweight export — no full conversion needed:
+
+1. Strip pseudo-elements (`cameraUpdate`, `delete`, `restoreCheckpoint`) from the elements array.
+2. Build the scene JSON: `{type: "excalidraw", version: 2, source: "...", elements: [...], appState: {...}, files: {}}`.
+3. Call `excalidraw__export_to_excalidraw` with the serialized JSON string.
+4. Returns a shareable URL. From the URL, users can export SVG/PNG via the excalidraw.com UI.
+
+### Obsidian → MCP
+
+Collapse bound text to `label`, strip file-only fields, add `cameraUpdate`, render with `create_view`.
 
 ## Progressive Drawing Order
 
