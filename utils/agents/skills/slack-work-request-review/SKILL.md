@@ -60,6 +60,11 @@ references:
    - Focus on **what** changed and **why** — not implementation details.
    - If the PR description is empty, summarize from the title and commit messages.
    - If infrastructure impact was found, append a one-line summary (e.g., "Spacelift: 5 stacks, +35 ~41 −10, all finished.").
+   - **Full Spacelift narrative (when requested)** — if the user says "include spacelift report", "include the spacelift analysis", or similar, replace the one-line infrastructure summary with a full narrative:
+     - Start with the one-line delta summary in italics (e.g., `_Spacelift: 1 stack, +5 ~5 ♻2, finished._`).
+     - Follow with a paragraph explaining the core intended change and its effect (e.g., what the tunnel cutover does, what service replaces what).
+     - Then a paragraph covering module-bump or incidental side effects — new resources added, secrets recreated, addon version bumps, AMI refreshes. Name specific resources, versions, and values so the reviewer understands the blast radius without opening the PR.
+     - Use Slack mrkdwn: backticks for resource names, service URLs, versions, and AMIs. Italics (`_text_`) for the delta line.
    - If unresolved review threads exist, append a one-line note (e.g., "1 unresolved review thread.").
    - **Composing with `*-pr-comment`** — if this skill is being used alongside `github-pr-comment` or `gitlab-pr-comment`, also output a `## Review Request` section containing the formatted Slack review request message (from Step 5). This section will be included in the PR/MR comment by the `*-pr-comment` skill. The Slack message is still posted separately to Slack — the `## Review Request` section is additional output for the PR/MR comment, not a replacement.
 
@@ -83,6 +88,18 @@ references:
      Cuts over Cloudflare tunnel traffic to envoy-gateway for 5 euc1 enterprise clusters. Bumps dedicated-cluster module to 3.4.0.
 
      _Spacelift: 5 stacks, +35 ~41 −10, all finished._
+     ```
+   - Example (with full Spacelift narrative):
+     ```
+     :review: https://github.com/laravel/cloud-infrastructure/pull/3847
+
+     Cuts over Cloudflare tunnel traffic to envoy-gateway for enterprise-portwest-dev in eu-west-1. Bumps dedicated-cluster module from 3.0.0 to 3.4.0, adding SQS queue management IAM, CloudWatch quota alarms, and updated Karpenter annotations.
+
+     _Spacelift: 1 stack (`cloud-prd-eu-west-1-enterprise-portwest`), +5 ~5 ♻2, finished._
+
+     The core change switches the Cloudflare tunnel backend from nginx-ingress (`http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80`) to envoy-gateway (`https://app-operator-gateway.envoy-gateway-system.svc:443`).
+
+     The module bump from 3.0.0 → 3.4.0 brings in three new IAM resources for web app SQS queue management (cross-account role assumed by `277707137550`), two CloudWatch alarms monitoring EIP and vCPU quota usage at 80% via GrafanaOnCall, and rotates the ArgoCD cluster registration secret with new Karpenter consolidation annotations (`karpenter-flex-consolidate-after: 24h`, `karpenter-pro-consolidate-after: 24h`). Incidentally picks up EKS addon bumps (EBS CSI driver `v1.57.1` → `v1.58.0`, Pod Identity Agent `eksbuild.2` → `eksbuild.3`) and a Tailscale subnet router AMI refresh (`ami-0476c6b26004a1760` → `ami-0f8493690c875fd2d`).
      ```
 
 6. **Present for approval.**
