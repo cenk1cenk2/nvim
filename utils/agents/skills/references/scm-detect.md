@@ -39,4 +39,4 @@ Use these for all local repository operations. Fall back to CLI equivalents if g
 | `git__git_commit` | Create a commit with staged changes. | `git commit -m "<msg>"` |
 | `git__git_reset` | Unstage files or reset to a ref. | `git reset` |
 | `git__git_checkout` | Switch branches or restore files. | `git checkout <ref>` |
-| `git__git_create_branch` | Create a new branch from current HEAD or a ref. | `git checkout -b <branch>` |
+| `git__git_create_branch` | Create a new branch from current HEAD or a ref. **Does NOT switch to it** — call `git__git_checkout` after. | `git branch <branch>` |
