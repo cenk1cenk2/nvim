@@ -240,7 +240,7 @@
         "get_alert_group"
       ],
       "command": "uvx",
-      "disabled": true,
+      "disabled": false,
       "disabled_tools": [
         "add_activity_to_incident",
         "create_alert_rule",
@@ -299,7 +299,7 @@
         "get_alert_rule_by_uid"
       ],
       "command": "uvx",
-      "disabled": true,
+      "disabled": false,
       "disabled_tools": [
         "add_activity_to_incident",
         "create_alert_rule",
@@ -508,7 +508,7 @@
         "browser_click"
       ],
       "command": "bunx",
-      "disabled": true,
+      "disabled": false,
       "disabled_tools": []
     },
     "sequentialthinking": {
