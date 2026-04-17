@@ -45,6 +45,7 @@ references:
    - Descriptive partial is **always kebab-case** (lowercase words joined by `-`, no spaces, no underscores).
    - If the user gave a descriptive hint (e.g., "token refresh logic"), convert it to kebab-case (`token-refresh-logic`).
    - Combine prefix + descriptive partial: `feature/token-refresh-logic`.
+   - **Flat kebab-case override** — when the user explicitly asks for a kebab-case-only name (e.g., "kebab-case only", "no slashes", "flat name", "single segment"), drop the `/` separator and flatten with `-`: `feature-token-refresh-logic`. Apply the same flattening to the repo-detected convention when the repo itself uses flat kebab-case names (no `/` seen in existing branches).
 
 4. **Determine the base branch.**
    - Default to the repository's default branch.
@@ -89,7 +90,7 @@ This skill is composable — other skills can delegate branch creation to it as 
 
 - **Repo convention beats default format.** Always inspect existing branches before proposing a name.
 - **Sticky style only for related chained branching.** Within one conversation, reuse the style of earlier branches when splitting the same work. Do not inherit styles across unrelated work or from semantic prefixes (`release/*`).
-- **Kebab-case always** for the descriptive partial.
+- **Kebab-case always** for the descriptive partial. When the user asks for kebab-case-only names, flatten `prefix/descriptive` to `prefix-descriptive` (drop the `/`).
 - **Default branch unless told otherwise** — never branch from a random HEAD silently.
 - **Fast-forward default unless told otherwise.** On any blocker, ask the user — never auto-resolve.
 - **Never push automatically.** Branch creation is local-only until the user explicitly asks to push.
@@ -155,6 +156,24 @@ This skill is composable — other skills can delegate branch creation to it as 
 4. User approves.
 5. Create `feat/payment-retry-cleanup` from `feat/payment-retry` → checkout.
 6. Confirm.
+
+---
+
+**User says:** "new branch for the onboarding redesign, kebab-case only"
+
+1. Current branch: `main`. Default branch: `main`. Repo uses `feature/*`.
+2. User explicitly asked for kebab-case-only — flatten `/` to `-`.
+3. Propose plan:
+
+   > User asked for kebab-case-only. Applying repo's `feature` prefix flattened with `-` instead of `/`.
+   >
+   > ```
+   > branch:        feature-onboarding-redesign
+   > base:          main
+   > fast-forward:  yes
+   > ```
+
+4. User approves → fast-forward, create, checkout, confirm.
 
 ---
 

@@ -52,24 +52,37 @@ references:
    - Read commit history via `github__list_commits` filtered to the PR branch
    - Note the existing PR title and body (may contain a template or prior content)
 
-3. **Draft the Description:**
-   - If the existing body contains a PR template (sections with `## ` headers or `<!-- -->` markers), fill in the template sections with analyzed content
-   - If no template exists, write a fresh description following the format below
-   - Analyze the diff for **logical changes only** — what behavior was added, removed, or changed
-   - Do NOT list changed files, line counts, or mechanical details
+3. **Discover the repository PR template:**
+   - If the existing PR body already contains a template (sections with `## ` headers or `<!-- -->` markers), skip the lookup — use what's there.
+   - Otherwise (new PR, empty body, or generic body like a branch name), **ALWAYS look for a PR template in the repo before drafting from scratch.** Use `github__get_file_contents` and try these paths in order on the PR's base branch:
+     1. `.github/PULL_REQUEST_TEMPLATE.md`
+     2. `.github/pull_request_template.md`
+     3. `.github/PULL_REQUEST_TEMPLATE/` (directory — list contents; if multiple templates exist, ask the user which one to use).
+     4. `PULL_REQUEST_TEMPLATE.md` (repo root).
+     5. `pull_request_template.md` (repo root).
+     6. `docs/PULL_REQUEST_TEMPLATE.md`.
+     7. `docs/pull_request_template.md`.
+   - Stop at the first match. If a template is found, announce the path (e.g., "Found template at `.github/PULL_REQUEST_TEMPLATE.md`") and use it as the starting scaffold.
+   - If no template is found in any of these locations, fall back to the standard description format below.
 
-4. **Draft the Title:**
+4. **Draft the Description:**
+   - **If a template was found** (either in the existing body or in the repo): fill in its sections with analyzed content. Preserve the template's structure, headings, and any HTML comments (`<!-- -->`) — only replace the placeholder content inside them. Do NOT remove sections the template defines, even if empty; leave them as-is with a minimal placeholder or the template's own guidance.
+   - **If no template was found**: write a fresh description following the format below.
+   - Analyze the diff for **logical changes only** — what behavior was added, removed, or changed.
+   - Do NOT list changed files, line counts, or mechanical details.
+
+5. **Draft the Title:**
    - If the existing title is already descriptive and clear, keep it
    - If the title is a branch name, ticket number, or otherwise non-descriptive, generate a new one
    - Use conventional commit format: `<type>(<scope>): <brief description>`
    - Types: feat, fix, docs, style, refactor, test, chore
 
-5. **Present to User:**
+6. **Present to User:**
    - Show the full drafted title and description in the chat
    - If the title was changed, explain why
    - Ask for feedback and iterate until the user is satisfied
 
-6. **Apply (Only After Approval):**
+7. **Apply (Only After Approval):**
    - When user explicitly approves, update the PR via `github__update_pull_request`
    - Update both `title` (if changed) and `body`
    - Confirm the update was successful
@@ -122,13 +135,14 @@ references:
 
 1. Enter plan mode.
 2. Get current branch `feat/add-retry-logic`, find open PR #42.
-3. Read PR diff and commit history.
-4. Draft title: `feat(api): add retry logic for transient failures`.
-5. Draft description with summary and bullet points.
-6. Present to user, iterate on feedback.
-7. After approval, update PR #42 via GitHub MCP.
+3. Read PR diff and commit history. Existing body is empty.
+4. Look up PR template in repo — found at `.github/PULL_REQUEST_TEMPLATE.md`.
+5. Draft title: `feat(api): add retry logic for transient failures`.
+6. Fill template sections with analyzed content (Summary, Changes, Testing).
+7. Present to user, iterate on feedback.
+8. After approval, update PR #42 via GitHub MCP.
 
-**Result:** PR title and description updated on GitHub.
+**Result:** PR title and description updated on GitHub using the repo template.
 
 ---
 
@@ -137,10 +151,11 @@ references:
 1. Enter plan mode.
 2. Detect no open PR for current branch.
 3. Ask user to confirm PR creation, target branch.
-4. Create PR via `github__create_pull_request`.
-5. Analyze diff, draft title and description.
-6. Present to user, iterate.
-7. After approval, update the PR.
+4. Look up PR template in repo — no template found in any standard location.
+5. Create PR via `github__create_pull_request`.
+6. Analyze diff, draft title and description using the fallback format.
+7. Present to user, iterate.
+8. After approval, update the PR.
 
 **Result:** New PR created with analyzed title and description.
 
