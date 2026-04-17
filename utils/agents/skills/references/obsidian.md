@@ -6,26 +6,28 @@ The Obsidian vault is at `~/notes`.
 
 ## Tool Access
 
-> **THIS IS NON-NEGOTIABLE. CHECK YOUR CWD BEFORE EVERY FILE OPERATION.**
+> **THIS IS NON-NEGOTIABLE. FILESYSTEM IS THE DEFAULT WHEN THE VAULT IS ACCESSIBLE.**
 
-### When CWD is `~/notes` (you are inside the vault)
+### When the vault (`~/notes`) is accessible on disk (default case)
 
-**Use built-in tools for all file operations.** You are already in the vault — obsidian MCP tools add unnecessary indirection.
+**Use built-in tools for all file operations, with absolute paths.** You do not need to be inside the vault — CWD is irrelevant as long as `~/notes` exists and is readable.
 
 | Operation | Tool | Example |
 |---|---|---|
-| Read note | `Read` (built-in) | `Read("Todo/20260310T143022.md")` |
-| Create note | `Write` (built-in) | `Write("Todo/20260310T143022.md", content)` |
-| Edit note | `Edit` (built-in) | `Edit("Todo/20260310T143022.md", old, new)` |
-| Delete note | `Bash` | `rm Todo/20260310T143022.md` |
-| Move/rename note | `Bash` | `mv Todo/old.md Work/new.md` |
-| Find files | `Glob` (built-in) | `Glob("Todo/*.md")` |
+| Read note | `Read` (built-in) | `Read("~/notes/Todo/20260310T143022.md")` |
+| Create note | `Write` (built-in) | `Write("~/notes/Todo/20260310T143022.md", content)` |
+| Edit note | `Edit` (built-in) | `Edit("~/notes/Todo/20260310T143022.md", old, new)` |
+| Delete note | `Bash` | `rm ~/notes/Todo/20260310T143022.md` |
+| Move/rename note | `Bash` | `mv ~/notes/Todo/old.md ~/notes/Work/new.md` |
+| Find files | `Glob` (built-in) | `Glob("~/notes/Todo/*.md")` |
 
-**Fallback:** If a built-in tool is unavailable or fails, fall back to the equivalent `obsidian__*` MCP tool.
+**Availability check:** the vault is considered accessible if `~/notes` exists and is readable. On the local machine this is almost always true — filesystem is the default path.
 
-### When CWD is NOT `~/notes` (you are outside the vault)
+**Fallback:** if a built-in tool is unavailable or the operation fails because the vault is not mounted, fall back to the equivalent `obsidian__*` MCP tool.
 
-Use `obsidian__*` MCP tools for all operations:
+### When the vault is not accessible on disk (fallback)
+
+Use `obsidian__*` MCP tools for all file operations:
 
 | Operation | Tool |
 |---|---|
@@ -34,14 +36,14 @@ Use `obsidian__*` MCP tools for all operations:
 | Delete note | `obsidian__obsidian_delete_note` |
 | Move/rename note | `filesystem__move_file` |
 
-### Always use regardless of CWD
+### Always use MCP regardless of vault availability
 
-These obsidian MCP tools are **always preferred** because they are better than their built-in equivalents:
+These obsidian MCP tools expose capabilities that built-in tools cannot replicate — they are the **default**, not fallbacks:
 
 | Operation | Tool | Why |
 |---|---|---|
-| List notes | `obsidian__obsidian_list_notes` | Returns structured tree with filtering and recursion control. |
-| Search vault | `obsidian__obsidian_global_search` | Searches across the entire vault with Obsidian's index. |
+| List notes | `obsidian__obsidian_list_notes` | Structured tree with filtering, recursion control, and Obsidian metadata. |
+| Search vault | `obsidian__obsidian_global_search` | Uses Obsidian's index — understands backlinks, tags, and frontmatter. |
 
 ## File Naming
 

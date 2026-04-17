@@ -39,17 +39,6 @@
       },
       "url": "https://mcp.context7.com/mcp"
     },
-    "excalidraw": {
-      "autoApprove": [
-        "read_me",
-        "create_view",
-        "export_to_excalidraw",
-        "save_checkpoint",
-        "read_checkpoint"
-      ],
-      "disabled_tools": [],
-      "url": "https://mcp.excalidraw.com"
-    },
     "exa": {
       "autoApprove": [
         "get_code_context_exa",
@@ -66,31 +55,16 @@
       "disabled_tools": [],
       "url": "https://mcp.exa.ai/mcp"
     },
-    "filesystem": {
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem@latest",
-        "${CWD}"
-      ],
+    "excalidraw": {
       "autoApprove": [
-        "directory_tree",
-        "get_file_info",
-        "list_allowed_directories",
-        "list_directory",
-        "list_directory_with_sizes",
-        "search_files",
-        "read_file",
-        "read_media_file",
-        "read_multiple_files",
-        "read_text_file"
+        "read_me",
+        "create_view",
+        "export_to_excalidraw",
+        "save_checkpoint",
+        "read_checkpoint"
       ],
-      "command": "bunx",
-      "disabled": true,
-      "disabled_tools": [
-        "write_file",
-        "edit_file",
-        "list_directory_with_sizes"
-      ]
+      "disabled_tools": [],
+      "url": "https://mcp.excalidraw.com"
     },
     "git": {
       "args": [
@@ -608,7 +582,7 @@
         "search_modules"
       ],
       "command": "spacectl",
-      "disabled": true,
+      "disabled": false,
       "disabled_tools": [
         "local_preview"
       ],
@@ -651,54 +625,6 @@
         "kill-pane",
         "create-session"
       ]
-    },
-    "treesitter": {
-      "args": [
-        "mcp-server-tree-sitter@latest"
-      ],
-      "autoApprove": [
-        "check_language_available",
-        "configure",
-        "find_similar_code",
-        "find_text",
-        "find_usage",
-        "get_ast",
-        "get_dependencies",
-        "get_file",
-        "get_file_metadata",
-        "get_node_at_position",
-        "get_node_types",
-        "get_query_template_tool",
-        "get_symbols",
-        "list_files",
-        "list_languages",
-        "list_projects_tool",
-        "list_query_templates_tool",
-        "run_query"
-      ],
-      "command": "uvx",
-      "disabled": true,
-      "disabled_tools": [
-        "analyze_complexity",
-        "analyze_project",
-        "adapt_query",
-        "build_query",
-        "clear_cache",
-        "diagnose_config",
-        "register_project_tool",
-        "remove_project_tool"
-      ]
-    },
-    "vectorcode": {
-      "autoApprove": [
-        "files_ls",
-        "files_rm",
-        "ls",
-        "query",
-        "vectorise"
-      ],
-      "command": "vectorcode-mcp-server",
-      "disabled": true
     }
   },
   "nativeMCPServers": {
