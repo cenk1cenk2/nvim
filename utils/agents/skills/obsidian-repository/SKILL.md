@@ -167,6 +167,40 @@ Freeform section for anything that doesn't fit above — recent decisions, migra
 
 Sections are optional — use only what the repository warrants. A small utility might only need Overview, Stack, and Development.
 
+### Plan Sections
+
+When a repository note tracks an ongoing plan (multi-phase work, migrations, rollouts), use this structure per phase so the plan reflects both the intent and what was actually done.
+
+**Each plan phase has:**
+
+- A short 1–2 sentence main body — brief, scannable description of what the phase accomplishes and why. Keep it concise; details go in sub-sections.
+
+**When a phase is completed, add these sub-sections under the phase (use `####`):**
+
+- **`#### Implementation`** — what was actually done. Files changed, PRs/commits, verification steps. Brief but specific.
+- **`#### Caveats`** — surprising behaviors, gotchas, or things that didn't match original assumptions. Omit if none.
+- **`#### Deviations`** — where actual implementation differed from the original plan and why. Omit if none.
+
+Omit any sub-section that has no content — don't write empty headers.
+
+**Example:**
+
+```markdown
+### Phase 1 — Converge use2 to karpenter-v0.5.0
+
+Bump the 5 remaining enterprise clusters (ent-cmsmax, davidsons, diagonal, foundry, govai) from `v0.3.6` to `v0.5.0` to match the rest of the use2 fleet.
+
+#### Implementation
+
+- PR #3909 (ent-foundry canary) and #3913 (remaining 4).
+- Single-line change per cluster: `karpenter-version: karpenter-v0.3.6` → `v0.5.0`.
+- Verified via `kubectl` on all 5 clusters: ArgoCD synced, controller pods healthy, NodePools on 300Gi disks, no errors.
+
+#### Caveats
+
+- Green/blue was already enabled on all 5 enterprise clusters — the earlier fleet audit incorrectly reported it as disabled.
+```
+
 ### Key Principles
 
 - **Explore before writing.** Read the repository thoroughly. Do not guess about structure or conventions.
