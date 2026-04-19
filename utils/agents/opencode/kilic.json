@@ -4,6 +4,7 @@
   "enabled_providers": ["kilic"],
   "autoupdate": false,
   "permission": {
+    "*": "ask",
     "edit": "ask",
     "bash": {
       "git status": "allow",
