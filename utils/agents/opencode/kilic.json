@@ -46,6 +46,9 @@
         },
         "gemma4:31b-cloud": {
           "name": "Gemma4 Cloud"
+        },
+        "gemma4:e2b": {
+          "name": "Gemma4 e2b"
         }
       }
     }
