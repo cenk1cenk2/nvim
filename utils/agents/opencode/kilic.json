@@ -5,8 +5,11 @@
   "autoupdate": false,
   "permission": {
     "*": "ask",
-    "edit": "ask",
+    "edit": {
+      "*": "ask"
+    },
     "bash": {
+      "*": "ask",
       "git status": "allow",
       "git log": "allow",
       "git diff": "allow",
