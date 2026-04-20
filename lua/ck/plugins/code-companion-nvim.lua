@@ -77,8 +77,8 @@ function M.config()
 
       return {
         opts = {
-          -- log_level = require("ck.log"):to_nvim_level(),
-          log_level = "TRACE",
+          log_level = require("ck.log"):to_nvim_level(),
+          -- log_level = "DEBUG",
         },
         mcp = {
           servers = {
