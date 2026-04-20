@@ -1134,7 +1134,7 @@ M.profiles = {
 }
 
 function M.select_profile(selected)
-  log:info("Switching to profile: %s", selected.name)
+  log:info("Switching to AI profile: %s", selected.name)
 
   for key, value in pairs(selected.env) do
     vim.env[key] = value
