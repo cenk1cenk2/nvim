@@ -127,8 +127,8 @@ function M.config()
                     mode = "plan",
                   },
                   commands = {
-                    default = { "bunx", "-y", "@agentclientprotocol/claude-agent-acp@latest" },
-                    yolo = { "bunx", "-y", "@agentclientprotocol/claude-agent-acp@latest", "--yolo" },
+                    default = { "bunx", "-y", "--bun", "@agentclientprotocol/claude-agent-acp@latest" },
+                    yolo = { "bunx", "-y", "--bun", "@agentclientprotocol/claude-agent-acp@latest", "--yolo" },
                   },
                 }
               )
@@ -220,7 +220,7 @@ function M.config()
                     mode = "plan",
                   },
                   commands = {
-                    default = { "bunx", "-y", "@agentclientprotocol/codex-acp@latest" },
+                    default = { "bunx", "-y", "--bun", "@agentclientprotocol/codex-acp@latest" },
                   },
                 }
               )

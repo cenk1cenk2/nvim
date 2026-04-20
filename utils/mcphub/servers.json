@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "argocd/kilic": {
-      "args": ["-y", "argocd-mcp@latest", "stdio"],
+      "args": ["-y", "--bun", "argocd-mcp@latest", "stdio"],
       "autoApprove": [
         "list_applications",
         "get_application",
@@ -286,7 +286,7 @@
       }
     },
     "kubernetes": {
-      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only"],
+      "args": ["-y", "--bun", "kubernetes-mcp-server@latest", "--read-only"],
       "autoApprove": [
         "get_pod",
         "list_pods",
@@ -387,7 +387,7 @@
       "url": "https://mcp.linear.app/mcp"
     },
     "memory": {
-      "args": ["-y", "@modelcontextprotocol/server-memory@latest"],
+      "args": ["-y", "--bun", "@modelcontextprotocol/server-memory@latest"],
       "autoApprove": [
         "create_relations",
         "delete_entities",
@@ -405,7 +405,7 @@
       }
     },
     "obsidian": {
-      "args": ["-y", "obsidian-mcp-server@latest"],
+      "args": ["-y", "--bun", "obsidian-mcp-server@latest"],
       "autoApprove": ["obsidian_global_search", "obsidian_list_notes", "obsidian_read_note"],
       "command": "bunx",
       "env": {
@@ -416,7 +416,7 @@
       }
     },
     "playwright": {
-      "args": ["@playwright/mcp@latest", "--executable-path", "/usr/bin/brave"],
+      "args": ["-y", "--bun", "@playwright/mcp@latest", "--executable-path", "/usr/bin/brave"],
       "autoApprove": [
         "browser_take_screenshot",
         "browser_snapshot",
@@ -445,13 +445,13 @@
       "disabled_tools": []
     },
     "sequentialthinking": {
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking@latest"],
+      "args": ["-y", "--bun", "@modelcontextprotocol/server-sequential-thinking@latest"],
       "autoApprove": ["sequentialthinking"],
       "command": "bunx",
       "disabled": false
     },
     "slack/kilic": {
-      "args": ["-y", "@modelcontextprotocol/server-slack@latest"],
+      "args": ["-y", "--bun", "@modelcontextprotocol/server-slack@latest"],
       "autoApprove": ["slack_list_channels", "slack_get_channel_history", "slack_get_thread_replies", "slack_get_users", "slack_get_user_profile", "slack_add_reaction"],
       "command": "bunx",
       "env": {
@@ -510,7 +510,7 @@
       "url": "https://mcp.tavily.com/mcp"
     },
     "tmux": {
-      "args": ["-y", "tmux-mcp", "--shell-type=zsh"],
+      "args": ["-y", "--bun", "tmux-mcp", "--shell-type=zsh"],
       "autoApprove": ["get-command-result", "list-panes", "list-sessions", "list-windows", "capture-pane", "find-session"],
       "command": "bunx",
       "disabled_tools": ["kill-window", "kill-session", "kill-pane", "create-session"]
