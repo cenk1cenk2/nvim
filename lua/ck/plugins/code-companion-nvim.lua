@@ -51,6 +51,12 @@ function M.config()
     setup = function(_, fn)
       local instance = require("mcphub").get_hub_instance()
 
+      if not vim.env["NVIM_CODECOMPANION_SELECTED_PROFILE"] then
+        M.select_profile(M.profiles.work)
+
+        log:info("Selected AI profile from environment: %s", vim.env["NVIM_CODECOMPANION_SELECTED_PROFILE"])
+      end
+
       local function get_mcphub_mcp_servers()
         log:info("Connecting to MCPHub...")
 
@@ -101,11 +107,6 @@ function M.config()
           acp = {
             ---@type fun (): CodeCompanion.ACPAdapter
             claude_code = function()
-              if vim.env["NVIM_CLAUDE_ACP"] == nil then
-                vim.env["NVIM_CLAUDE_ACP"] = vim.env["NVIM_CLAUDE_ACP_WORK"]
-                vim.env["NVIM_CODECOMPANION_SELECTED_PROFILE"] = "Work"
-              end
-
               log:debug("Setting up the AI Overlord...")
 
               return require("codecompanion.adapters.acp").extend(
@@ -193,10 +194,6 @@ function M.config()
             end,
             ---@type fun (): CodeCompanion.ACPAdapter
             codex = function()
-              if vim.env["NVIM_CODEX_ACP"] == nil then
-                vim.env["NVIM_CODEX_ACP"] = vim.env["NVIM_CODEX_ACP_KILIC"]
-              end
-
               log:debug("Setting up the AI Overlord...")
 
               return require("codecompanion.adapters.acp").extend(
@@ -846,35 +843,14 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "P" }),
           function()
-            vim.ui.select({
-              {
-                name = "Personal",
-                env = {
-                  NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_KILIC"],
-                  NVIM_CODEX_ACP = vim.env["NVIM_CODEX_ACP_KILIC"],
-                },
-              },
-              {
-                name = "Work",
-                env = {
-                  NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_WORK"],
-                },
-              },
-            }, {
-              prompt = "select ai profile",
-              format_item = function(item)
-                return item.name
-              end,
+            vim.ui.select(vim.tbl_keys(M.profiles), {
+              prompt = "select profile",
             }, function(selected)
               if not selected then
                 return
               end
 
-              log:info("Switching to Claude Code profile: %s", selected.name)
-
-              vim.env["NVIM_CLAUDE_ACP"] = selected.env["NVIM_CLAUDE_ACP"]
-              vim.env["NVIM_CODEX_ACP"] = selected.env["NVIM_CODEX_ACP"]
-              vim.env["NVIM_CODECOMPANION_SELECTED_PROFILE"] = selected.name
+              M.select_profile(M.profiles[selected])
             end)
           end,
           desc = "select profile [codecompanion]",
@@ -1142,6 +1118,31 @@ function M.browse_open_chats()
       end,
     })
     :find()
+end
+
+M.profiles = {
+  personal = {
+    name = "Personal",
+    env = {
+      NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_KILIC"],
+    },
+  },
+  work = {
+    name = "Work",
+    env = {
+      NVIM_CLAUDE_ACP = vim.env["NVIM_CLAUDE_ACP_WORK"],
+    },
+  },
+}
+
+function M.select_profile(selected)
+  log:info("Switching to profile: %s", selected.name)
+
+  for key, value in pairs(selected.env) do
+    vim.env[key] = value
+  end
+
+  vim.env.NVIM_CODECOMPANION_SELECTED_PROFILE = selected.name
 end
 
 return M
