@@ -77,8 +77,8 @@ function M.config()
 
       return {
         opts = {
-          log_level = require("ck.log"):to_nvim_level(),
-          -- log_level = "DEBUG",
+          -- log_level = require("ck.log"):to_nvim_level(),
+          log_level = "TRACE",
         },
         mcp = {
           servers = {
@@ -126,8 +126,8 @@ function M.config()
                     mode = "plan",
                   },
                   commands = {
-                    default = { "bunx", "-y", "--bun", "@agentclientprotocol/claude-agent-acp@latest" },
-                    yolo = { "bunx", "-y", "--bun", "@agentclientprotocol/claude-agent-acp@latest", "--yolo" },
+                    default = { "bunx", "-y", "--bun", "@agentclientprotocol/claude-agent-acp@v0.29.2" },
+                    yolo = { "bunx", "-y", "--bun", "@agentclientprotocol/claude-agent-acp@v0.29.2", "--yolo" },
                   },
                 }
               )
@@ -215,7 +215,7 @@ function M.config()
                     mode = "plan",
                   },
                   commands = {
-                    default = { "bunx", "-y", "--bun", "@agentclientprotocol/codex-acp@latest" },
+                    default = { "bunx", "-y", "--bun", "@zed-industries/codex-acp@latest" },
                   },
                 }
               )
