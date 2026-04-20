@@ -33,6 +33,7 @@ nvim.lsp.ai.provider.chat = "claude_code"
 nvim.lsp.ai.model.chat = nil
 nvim.lsp.ai.provider.completion = "copilot"
 nvim.lsp.ai.model.completion = nil
+nvim.lsp.ai.model.nes = nil
 
 nvim.lsp.ai.debug = false
 

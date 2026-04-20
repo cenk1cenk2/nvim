@@ -15,6 +15,7 @@ local config = {
       },
       nextEditSuggestions = {
         enabled = nvim.lsp.ai.copilot.nes.enabled,
+        preferredModel = nvim.lsp.ai.model.nes,
       },
     },
   },

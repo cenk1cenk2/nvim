@@ -68,6 +68,8 @@ return {
       chat = nil,
       ---@type string?
       completion = nil,
+      ---@type string?
+      nes = nil,
     },
     copilot = {
       debounce = 50,
