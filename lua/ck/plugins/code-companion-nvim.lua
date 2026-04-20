@@ -53,8 +53,6 @@ function M.config()
 
       if not vim.env["NVIM_CODECOMPANION_SELECTED_PROFILE"] then
         M.select_profile(M.profiles.work)
-
-        log:info("Selected AI profile from environment: %s", vim.env["NVIM_CODECOMPANION_SELECTED_PROFILE"])
       end
 
       local function get_mcphub_mcp_servers()
