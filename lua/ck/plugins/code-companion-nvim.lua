@@ -103,6 +103,7 @@ function M.config()
             claude_code = function()
               if vim.env["NVIM_CLAUDE_ACP"] == nil then
                 vim.env["NVIM_CLAUDE_ACP"] = vim.env["NVIM_CLAUDE_ACP_WORK"]
+                vim.env["NVIM_CODECOMPANION_SELECTED_PROFILE"] = "Work"
               end
 
               log:debug("Setting up the AI Overlord...")
@@ -417,7 +418,7 @@ function M.config()
                 end
 
                 if model then
-                  return ("AI Overlord - %s (%s)"):format(adapter.formatted_name, model)
+                  return ("AI Overlord - %s (%s) @ %s"):format(adapter.formatted_name, model, vim.env["NVIM_CODECOMPANION_SELECTED_PROFILE"])
                 end
 
                 return ("AI Overlord - %s"):format(adapter.formatted_name)
@@ -860,7 +861,7 @@ function M.config()
                 },
               },
             }, {
-              prompt = "Select Claude Code ACP Profile",
+              prompt = "select ai profile",
               format_item = function(item)
                 return item.name
               end,
@@ -873,9 +874,10 @@ function M.config()
 
               vim.env["NVIM_CLAUDE_ACP"] = selected.env["NVIM_CLAUDE_ACP"]
               vim.env["NVIM_CODEX_ACP"] = selected.env["NVIM_CODEX_ACP"]
+              vim.env["NVIM_CODECOMPANION_SELECTED_PROFILE"] = selected.name
             end)
           end,
-          desc = "select profile for claude [codecompanion]",
+          desc = "select profile [codecompanion]",
           mode = { "n" },
         },
       }
