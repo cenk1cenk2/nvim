@@ -24,6 +24,15 @@ references:
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
+### Merge Defaults
+
+When creating a new MR, always enable:
+
+- **Squash commits on merge** — `--squash-before-merge` (CLI) / `squash: true` (if MCP gains a create tool).
+- **Delete source branch on merge** — `--remove-source-branch` (CLI) / `remove_source_branch: true` (if MCP gains a create tool).
+
+These are team defaults for this workflow. Do not prompt the user to confirm them on each run; only skip them if the user explicitly opts out in the same message that requests MR creation.
+
 ### Process
 
 1. **Gather Context:**
@@ -31,7 +40,7 @@ references:
    - Get remote origin URL to extract the GitLab project path.
    - Find the open MR for the current branch via `gitlab__list_merge_requests` with `source_branch` filter and `state: opened`.
    - **Branch reuse:** Branches may have previously merged or closed MRs — this is normal. Only open MRs matter. If no open MR is found but `git log main..HEAD` shows commits ahead of the base branch, the branch needs a new MR. Do NOT search for or get confused by prior closed/merged MRs on the same branch.
-   - If no open MR exists, ask the user if they want to create one. Use GitLab MCP tools or fall back to `glab mr create` via CLI if MCP creation is not available.
+   - If no open MR exists, ask the user if they want to create one. GitLab MCP has no creation tool today, so fall back to `glab mr create` via CLI. **Always pass `--squash-before-merge` and `--remove-source-branch`** so the MR is preconfigured to squash on merge and delete the source branch. If a GitLab MCP creation tool becomes available and accepts `squash` / `remove_source_branch` parameters, set both to `true`.
 
 2. **Analyze the MR:**
    - Read MR details via `gitlab__get_merge_request`.
