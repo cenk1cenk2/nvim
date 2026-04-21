@@ -70,6 +70,31 @@ function M.config()
           pattern = "*",
           command = ":WindowsEqualize",
         },
+        -- Pause windows.nvim autowidth while diffview tabs are active. The
+        -- autowidth resize fires on BufWinEnter/WinEnter during diffview's
+        -- layout construction and can invalidate the throwaway `curwin`
+        -- before diffview closes it, causing "Invalid window id" errors
+        -- (notably via gitlab.nvim's reviewer).
+        {
+          event = "User",
+          group = "_windows_nvim_diffview_pause",
+          pattern = { "DiffviewViewOpened", "DiffviewViewEnter" },
+          callback = function()
+            pcall(function()
+              require("windows.autowidth").disable()
+            end)
+          end,
+        },
+        {
+          event = "User",
+          group = "_windows_nvim_diffview_pause",
+          pattern = { "DiffviewViewClosed", "DiffviewViewLeave" },
+          callback = function()
+            pcall(function()
+              require("windows.autowidth").enable()
+            end)
+          end,
+        },
       }
     end,
   })

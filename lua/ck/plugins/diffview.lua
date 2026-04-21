@@ -17,6 +17,7 @@ function M.config()
     configure = function(_, fn)
       fn.add_disabled_filetypes({
         "DiffviewFiles",
+        "DiffviewFileHistory",
       })
 
       fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
@@ -231,6 +232,35 @@ function M.config()
         self.panel:focus(not show_panel)
         self.emitter:emit("post_layout")
       end
+
+      -- Compat patch: guard `wipe_named_buffer` against E444 ("Cannot close
+      -- last window"). `_get_null_buffer` finds an orphan `diffview://null`
+      -- buffer from a prior session (or a previous open in the same session)
+      -- that's still attached to a last-window somewhere, and tries to close
+      -- that window, which fails. The rename+delete steps that follow don't
+      -- require the close to succeed — we just want the old buffer out of
+      -- the way so the new one can take its name.
+      -- TODO: remove once fixed upstream in dlyongemallo/diffview.nvim.
+      local diffview_utils = require("diffview.utils")
+      local orig_wipe_named_buffer = diffview_utils.wipe_named_buffer
+      function diffview_utils.wipe_named_buffer(name, opt)
+        local bn = diffview_utils.find_named_buffer(name, opt)
+        if bn then
+          local win_ids = vim.fn.win_findbuf(bn)
+          for _, id in ipairs(win_ids) do
+            if vim.fn.win_gettype(id) ~= "autocmd" then
+              pcall(api.nvim_win_close, id, true)
+            end
+          end
+
+          pcall(api.nvim_buf_set_name, bn, "")
+          vim.schedule(function()
+            pcall(api.nvim_buf_delete, bn, {})
+          end)
+        end
+      end
+      -- Retain reference for potential rollback.
+      diffview_utils._orig_wipe_named_buffer = orig_wipe_named_buffer
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
