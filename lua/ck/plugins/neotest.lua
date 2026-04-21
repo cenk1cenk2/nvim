@@ -20,8 +20,8 @@ function M.config()
             -- vim.system({ "go", "install", "gotest.tools/gotestsum@latest" }):wait() -- Optional, but recommended
             -- end,
           },
-          -- https://github.com/rouge8/neotest-rust
-          "rouge8/neotest-rust",
+          -- https://github.com/mrcjkb/rustaceanvim
+          "mrcjkb/rustaceanvim",
           -- https://github.com/haydenmeade/neotest-jest
           "haydenmeade/neotest-jest",
           -- https://github.com/nvim-contrib/nvim-ginkgo
@@ -139,7 +139,7 @@ function M.config()
           require("neotest-golang")({
             runner = "gotestsum",
           }),
-          require("neotest-rust"),
+          require("rustaceanvim.neotest"),
           require("neotest-jest")({
             jestCommand = "pnpm run test",
           }),
