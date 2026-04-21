@@ -68,6 +68,7 @@ For each task:
 
 **a. Dispatch implementer subagent.**
 - Use the `Agent` tool with a self-contained prompt (see Implementer Prompt Template).
+- Dispatch is **foreground/blocking** by default — this turn pauses until the subagent returns its result. Do NOT set `run_in_background: true`. See the `agents-delegate` reference's Blocking Dispatch section.
 - Include: task description, file list, codebase context, conventions, what adjacent tasks will do, **and the verification commands discovered in Step 2**.
 - Set `mode: "bypassPermissions"` for speed.
 - Select model based on task complexity (see Model Selection).

@@ -87,30 +87,27 @@ This skill uses Agent Teams to coordinate parallel work. The lead agent (you) ac
    - Propose the count with reasoning. The user approves or adjusts.
    - Fewer teammates with broader scope is better than many with tiny tasks — overhead is real.
 
-7. **Create team and launch.**
+7. **Create team and launch (parallel, blocking).**
    - Exit plan mode.
    - Record the current branch and HEAD commit as the baseline for later review.
    - Create the team with `TeamCreate`:
      ```
      TeamCreate({ team_name: "<descriptive-name>", description: "<goal>" })
      ```
-   - Spawn teammates using the `Agent` tool with `team_name` and `name` parameters:
+   - Spawn all teammates **in a single message with multiple `Agent` tool uses** — they run concurrently with the given `team_name` and this turn blocks until every teammate returns. For each teammate:
      - Set `isolation: "worktree"` by default (omit only if user explicitly opted out).
-     - Do NOT set `mode: "bypassPermissions"` — let permission requests bubble up to the lead.
+     - Do NOT set `mode: "bypassPermissions"` — let permission requests bubble up to the harness for interactive approval.
+     - Do NOT set `run_in_background: true` — blocking dispatch keeps results in this turn. See the `agents-delegate` reference's Blocking Dispatch section.
      - Set `subagent_type: "general-purpose"` for implementation work.
    - Create tasks for the team's shared task list, one per teammate assignment.
    - Assign tasks to teammates via task ownership.
 
-8. **Orchestrate, guide, and approve.**
-   - Teammate permission requests bubble up to you (the lead). Review and approve or reject as they come in.
-   - Teammates send messages when they complete tasks or need help — these arrive automatically.
-   - If a teammate is blocked, help resolve or reassign work.
-   - Monitor the shared task list for progress.
-   - **The user can provide guidance at any time while teammates are running.** When the user gives new instructions, corrections, or context:
-     - Forward the guidance to the relevant teammate(s) via `SendMessage({ to: "<teammate-name>", message: "..." })`.
-     - If the guidance changes conventions or approach, send it to all active teammates.
-     - If the guidance changes scope, update the shared task list and inform affected teammates.
-   - Do NOT micromanage — let teammates work autonomously between approval requests and user guidance.
+8. **Collect results and resolve escalations.**
+   - All teammates run concurrently; this turn blocks until every teammate returns.
+   - Permission requests during execution still bubble up — the harness surfaces them to the user for interactive approval while the lead is blocked.
+   - When the batch returns, review each teammate's report and the shared task list state.
+   - Present a consolidated update to the user in this same turn — per-teammate status, blockers, next steps.
+   - If a teammate escalated a blocker or needs follow-up, spawn a corrective teammate on the NEXT turn using the same `team_name`. No mid-execution `SendMessage` — teammates are blocked.
 
 9. **Merge (worktree mode).**
    - Teammates run in isolated worktrees by default, each on its own branch.

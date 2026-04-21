@@ -63,11 +63,12 @@ Use it when:
    - For implementation: `subagent_type: "general-purpose"`, include verification and write scope.
    - Present the prompt to the user for review before launching.
 
-6. **Launch the agent.**
+6. **Launch the agent (blocking).**
    - Call the `Agent` tool (or the user's configured dispatch mechanism for non-Anthropic ecosystems) with parameters resolved from the reference's Agent Tool Parameters table.
+   - Dispatch is **foreground/blocking** by default — this turn pauses until the agent returns. Results are pushed into this turn as a tool result and then summarised for the user. See the `agents-delegate` reference's Blocking Dispatch section.
    - `isolation`: `worktree` if the task modifies files — offer, confirm with user.
-   - `mode`: default (permissions bubble up). Use `bypassPermissions` only if the user explicitly opts in.
-   - `run_in_background`: only if the user wants to continue other work concurrently.
+   - `mode`: default (permissions bubble up to the harness). Use `bypassPermissions` only if the user explicitly opts in.
+   - `run_in_background`: leave unset (blocking). Only set it to `true` if the user explicitly asks for fire-and-forget.
 
 7. **Handle the result.**
    - Relay the agent's summary to the user.

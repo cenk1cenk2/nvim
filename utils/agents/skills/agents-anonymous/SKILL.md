@@ -87,27 +87,24 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
    - Propose the count with reasoning. The user approves or adjusts.
    - Fewer agents with broader scope is better than many agents with tiny tasks — agent overhead is real.
 
-7. **Launch agents.**
+7. **Launch agents (parallel, blocking).**
    - Exit plan mode.
    - Record the current branch and HEAD commit as the baseline for later review.
-   - Launch all agents in parallel using the Agent tool. Each agent prompt must include:
+   - Launch all agents **in a single message with multiple `Agent` tool uses** — they run concurrently and this turn blocks until every agent returns. Each agent prompt must include:
      - The full task description.
      - The list of files it owns.
      - Relevant codebase context (file paths, patterns, conventions).
      - Explicit boundary: "You are responsible for [X]. Do NOT modify files outside your scope: [list]."
    - Always set `isolation: "worktree"` and `mode: "bypassPermissions"` on every agent.
    - If the user explicitly opted out of worktrees, omit `isolation` but keep `mode: "bypassPermissions"`.
-   - Use `run_in_background: true` for all agents so they execute concurrently.
-   - Track agent IDs for monitoring completion.
+   - Do NOT set `run_in_background: true` — blocking dispatch keeps results in this turn. See the `agents-delegate` reference's Blocking Dispatch section.
 
-8. **Monitor, guide, and collect results.**
-   - Agents run in the background — you will be notified when each completes.
-   - **While agents are running, the user can provide guidance at any time.** When the user gives new instructions, corrections, or context:
-     - Forward the guidance to the relevant agent(s) via `SendMessage({ to: "<agent-name>", message: "..." })`.
-     - If the guidance applies to all agents, send it to each one.
-     - If the guidance changes the scope or approach, inform the user which agents are affected.
-   - For each completed agent, review the result summary.
-   - If any agent failed or reported issues, present them to the user before proceeding.
+8. **Collect results.**
+   - All agents run concurrently; this turn blocks until every agent returns.
+   - Review each agent's result summary when the batch completes.
+   - Present a consolidated update to the user in this same turn — per-agent status, failures, next steps.
+   - If any agent failed or reported issues, surface them before proceeding to merge.
+   - User guidance arrives on the NEXT turn; incorporate it then and re-dispatch if needed. No `SendMessage` mid-execution — agents are blocked.
 
 9. **Merge.**
    - Agents run in isolated worktrees by default, each on its own branch.

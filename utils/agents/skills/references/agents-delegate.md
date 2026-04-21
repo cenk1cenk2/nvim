@@ -16,7 +16,20 @@ The built-in `Agent` tool is Anthropic-only — its `model` parameter accepts `h
 | `mode` | no | `bypassPermissions` skips approvals (fire-and-forget). Default: let permission requests bubble up. |
 | `team_name` | no | Team context for coordinated work (agents-team). |
 | `name` | no | Agent name for `SendMessage` routing. |
-| `run_in_background` | no | Run concurrently without blocking the lead. Required for parallel dispatch. |
+| `run_in_background` | no | Background (non-blocking) execution. Default is foreground/blocking — see Blocking Dispatch below. |
+
+## Blocking Dispatch (default)
+
+Agent tool calls are **foreground and blocking** by default — the lead's turn pauses until the agent returns, and the result comes back as a normal tool result in the same conversation turn. This is the preferred mode.
+
+**Parallel blocking dispatch:** To run multiple agents concurrently while still blocking the lead's turn, issue **multiple `Agent` tool uses in a single message**. They execute in parallel, and their results are delivered together when all complete. The lead's turn blocks until the slowest one returns. This is how `agents-anonymous` and `agents-team` parallelise work without "dropping" the conversation into background mode.
+
+**When to use `run_in_background: true`:** Only when the user explicitly asks for fire-and-forget behaviour, or when the lead must remain responsive to mid-execution messages from a long-running agent. Prefer blocking — it keeps the conversation coherent and the user never misses updates.
+
+**Consequences of blocking:**
+- No `SendMessage` exchanges mid-execution — the lead is paused.
+- User guidance arrives on the NEXT turn; re-dispatch there if needed.
+- Permission requests (when `mode` is not `bypassPermissions`) are surfaced by the harness to the user for interactive approval while the lead is blocked.
 
 ## Model Selection
 
