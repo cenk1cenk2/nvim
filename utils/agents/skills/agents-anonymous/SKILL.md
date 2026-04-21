@@ -5,6 +5,7 @@ interaction: chat
 disable-model-invocation: true
 argument-hint: "[goal or task list] [optional: 'without worktrees']"
 references:
+  - ../references/agents-delegate.md
   - ../references/scm-detect.md
   - ../references/project-tooling.md
   - ../references/agents-write-plans.md
@@ -26,7 +27,8 @@ references:
 > - Present the plan and task split to the user for approval.
 > - Exit plan mode only when launching agents.
 
-> Read the `scm-detect` reference for git MCP tools and CLI fallbacks — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `agents-delegate` reference for agent dispatch parameters, tier selection (cheap/default/smart), ecosystem model mappings, and user shorthand — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `scm-detect` reference for git MCP tools and CLI fallbacks.
 > Read the `project-tooling` reference for discovering verification commands.
 > Read the `agents-write-plans` reference for plan quality criteria when creating plans.
 > Read the `agents-conventions` reference for discovering and agreeing on project conventions before dispatching agents.
@@ -174,13 +176,12 @@ Do NOT modify files outside your write scope. Other agents are handling:
 
 ### Model Selection
 
-Set the `model` parameter on each agent based on task complexity:
+See the `agents-delegate` reference for tier definitions, ecosystem mappings, user shorthand, and mismatch handling. Per-agent, pick a tier based on task complexity and resolve to a concrete model:
 
-| Task type | Model | Signals |
-|-----------|-------|---------|
-| Mechanical implementation | `haiku` | 1-2 files, clear spec, isolated function. |
-| Integration work | `sonnet` | Multi-file, pattern matching, moderate judgment. |
-| Architecture/design | `opus` | Design decisions, broad codebase understanding. |
+- **Anthropic via `Agent` tool:** cheap → `haiku`, default → `sonnet`, smart → `opus`.
+- **Other ecosystems:** user declares the tier mapping.
+- **Explicit model names from the user** override tiers — use verbatim.
+- **If a user request looks mismatched** to a task (cheap for architecture, smart for trivial mechanical work), ask before dispatching.
 
 ### Key Principles
 
@@ -202,6 +203,7 @@ Set the `model` parameter on each agent based on task complexity:
 
 ### Related Skills
 
+- **`agents-delegate`** (resource: `skills://skill/agents-delegate`) — for single-task, one-shot delegation to one agent at a user-chosen tier/model. Use when the work fits one agent and doesn't warrant splitting.
 - **`agents-sequential`** (resource: `skills://skill/agents-sequential`) — for sequential task-by-task execution with review gates. Use when task ordering or quality gates matter more than speed.
 - **`code-review-changes`** (resource: `skills://skill/code-review-changes`) — auto-invoked after all agents complete to review the combined result.
 - **`code-assistant`** (resource: `skills://skill/code-assistant`) — for guided planning where the user implements. This skill plans AND executes. Do not auto-invoke.
