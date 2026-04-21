@@ -48,7 +48,10 @@ function M.config()
     setup = function(_, fn)
       ---@type Settings
       return {
-        port = nil, -- The port of the Go server, which runs in the background, if omitted or `nil` the port will be chosen automatically
+        server = {
+          binary = nil,
+          port = nil, -- If nil the port is chosen automatically
+        },
         log_path = join_paths(vim.fn.stdpath("cache"), "gitlab.nvim.log"), -- Log path for the Go server
         config_path = nil, -- Custom path for `.gitlab.nvim` file, please read the "Connecting to Gitlab" section
         debug = {
@@ -84,7 +87,7 @@ function M.config()
             reply = fn.local_keystroke({ "r" }),
             toggle_resolved = fn.local_keystroke({ "R" }),
             jump_to_file = fn.local_keystroke({ "f" }),
-            jump_to_reviewer = fn.local_keystroke({ "r" }),
+            jump_to_reviewer = fn.local_keystroke({ "g" }),
             open_in_browser = fn.local_keystroke({ "o" }),
             copy_node_url = fn.local_keystroke({ "O" }),
             switch_view = fn.local_keystroke({ "w" }),
@@ -92,6 +95,7 @@ function M.config()
             publish_draft = fn.local_keystroke({ "P" }),
             toggle_draft_mode = fn.local_keystroke({ "D" }),
             toggle_sort_method = "zs",
+            toggle_date_format = "zd",
             toggle_node = "zo",
             toggle_all_discussions = "zR",
             toggle_resolved_discussions = "zT",
@@ -120,24 +124,12 @@ function M.config()
           },
         },
         discussion_signs = {
-          -- See :h sign_define for details about sign configuration.
           enabled = true,
           severity = "WARN",
           skip_resolved_discussion = false,
-          text = nvim.ui.icons.ui.Comment,
-          linehl = nil,
-          texthl = nil,
-          culhl = nil,
-          numhl = nil,
-          helper_signs = {
-            -- For multiline comments the helper signs are used to indicate the whole context
-            -- Priority of helper signs is lower than the main sign (-1).
-            enabled = true,
-            start = nvim.ui.icons.ui.ChevronShortUp,
-            mid = nvim.ui.icons.borderchars[1],
-            ["end"] = nvim.ui.icons.ui.ChevronShortDown,
-          },
-          virtual_text = false, -- Whether to show the comment text inline as floating virtual text
+          skip_old_revision_discussion = false,
+          use_diagnostic_signs = true,
+          virtual_text = true, -- Whether to show the comment text inline as floating virtual text
           priority = 100, -- Higher will override LSP warnings, etc
           icons = {
             comment = nvim.ui.icons.ui.Tab,
@@ -159,7 +151,7 @@ function M.config()
           discussion_tree = {
             username = "Keyword",
             date = "Comment",
-            chevron = "DiffviewNonText",
+            expander = "DiffviewNonText",
             directory = "Directory",
             directory_icon = "DiffviewFolderSign",
             file_name = "Normal",
@@ -193,13 +185,6 @@ function M.config()
             require("gitlab").review()
           end,
           desc = "gitlab review",
-        },
-        {
-          fn.wk_keystroke({ categories.GIT, "l", "D" }),
-          function()
-            require("gitlab").choose_merge_request()
-          end,
-          desc = "gitlab mr to review",
         },
         {
           fn.wk_keystroke({ categories.GIT, "l", "s" }),
@@ -328,7 +313,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.GIT, "l", "p", "A" }),
           function()
-            require("gitlab").remove_assignee()
+            require("gitlab").delete_assignee()
           end,
           desc = "remove assignee",
         },
@@ -342,9 +327,44 @@ function M.config()
         {
           fn.wk_keystroke({ categories.GIT, "l", "p", "R" }),
           function()
-            require("gitlab").remove_reviewer()
+            require("gitlab").delete_reviewer()
           end,
           desc = "remove reviewer",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "l", "u" }),
+          function()
+            require("gitlab").copy_mr_url()
+          end,
+          desc = "gitlab mr copy url",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "l", "a" }),
+          function()
+            require("gitlab").merge({ delete_branch = true, auto_merge = true })
+          end,
+          desc = "gitlab mr auto-merge",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "l", "S" }),
+          function()
+            require("gitlab").toggle_sort_method()
+          end,
+          desc = "gitlab toggle sort method",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "l", "r" }),
+          function()
+            require("gitlab").refresh_data()
+          end,
+          desc = "gitlab refresh data",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "l", "F" }),
+          function()
+            require("gitlab").choose_merge_request_by_username()
+          end,
+          desc = "choose mr by username",
         },
         {
           fn.wk_keystroke({ categories.GIT, "l", "Q" }),
