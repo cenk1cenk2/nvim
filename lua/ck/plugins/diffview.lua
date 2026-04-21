@@ -1,16 +1,16 @@
--- https://github.com/sindrets/diffview.nvim
+-- https://github.com/dlyongemallo/diffview.nvim (maintained fork of sindrets/diffview.nvim)
 local M = {}
 
 local log = require("ck.log")
 
-M.name = "sindrets/diffview.nvim"
+M.name = "dlyongemallo/diffview.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, false, {
+  require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
       ---@type Plugin
       return {
-        "sindrets/diffview.nvim",
+        "dlyongemallo/diffview.nvim",
         cmd = { "DiffviewFileHistory", "DiffviewOpen", "DiffviewClose" },
       }
     end,
@@ -59,6 +59,7 @@ function M.config()
 
       return {
         diff_binaries = false, -- Show diffs for binaries
+        enhanced_diff_hl = true, -- Better contrast between diff highlights (fork-recommended)
         use_icons = true, -- Requires nvim-web-devicons
         file_panel = { win_config = { width = 50 } },
         view = {
@@ -89,7 +90,7 @@ function M.config()
         keymaps = {
           disable_defaults = false, -- Disable the default keymaps
           view = {
-            { "n", "g?", actions.help, { desc = "help" } },
+            { "n", "g?", actions.help({ "view", "diff1" }), { desc = "help" } },
             -- The `view` bindings are active in the diff buffers, only when the current
             -- tabpage is a Diffview.
             { "n", "<C-n>", actions.select_next_entry, { desc = "open the diff for the next file" } },
@@ -115,26 +116,26 @@ function M.config()
             { "n", "]x", actions.next_conflict, { desc = "in the merge_tool: jump to the next conflict" } },
           },
           diff1 = { --[[ Mappings in single window diff layouts ]]
-            { "n", "g?", actions.help, { desc = "help" } },
+            { "n", "g?", actions.help({ "view", "diff1" }), { desc = "help" } },
           },
           diff2 = { --[[ Mappings in 2-way diff layouts ]]
-            { "n", "g?", actions.help, { desc = "help" } },
+            { "n", "g?", actions.help({ "view", "diff2" }), { desc = "help" } },
           },
           diff3 = {
-            { "n", "g?", actions.help, { desc = "help" } },
+            { "n", "g?", actions.help({ "view", "diff3" }), { desc = "help" } },
             -- Mappings in 3-way diff layouts
             { { "n", "x" }, "2do", actions.diffget("ours") }, -- Obtain the diff hunk from the OURS version of the file
             { { "n", "x" }, "3do", actions.diffget("theirs") }, -- Obtain the diff hunk from the THEIRS version of the file
           },
           diff4 = {
-            { "n", "g?", actions.help, { desc = "help" } },
+            { "n", "g?", actions.help({ "view", "diff4" }), { desc = "help" } },
             -- Mappings in 4-way diff layouts
             { { "n", "x" }, "1do", actions.diffget("base") }, -- Obtain the diff hunk from the BASE version of the file
             { { "n", "x" }, "2do", actions.diffget("ours") }, -- Obtain the diff hunk from the OURS version of the file
             { { "n", "x" }, "3do", actions.diffget("theirs") }, -- Obtain the diff hunk from the THEIRS version of the file
           },
           file_panel = {
-            { "n", "g?", actions.help, { desc = "help" } },
+            { "n", "g?", actions.help("file_panel"), { desc = "help" } },
             { "n", "<localleader>e", actions.toggle_files, { desc = "toggle the file panel." } },
             { "n", "<localleader>.", actions.focus_files, { desc = "bring focus to the file panel" } },
             { "n", "<localleader>w", actions.cycle_layout, { desc = "cycle through available layouts." } },
@@ -175,7 +176,7 @@ function M.config()
             { "n", "<localleader>o", actions.goto_file_edit, { desc = "open file" } },
             { "n", "<localleader>v", actions.goto_file_split, { desc = "goto file in split" } },
             { "n", "<localleader>n", actions.goto_file_tab, { desc = "goto file in tab" } },
-            { "n", "<localleader>o", actions.open_in_diffview, { desc = "open the entry under the cursor in a diffview" } },
+            { "n", "<localleader>d", actions.open_in_diffview, { desc = "open the entry under the cursor in a diffview" } },
             { "n", "y", actions.copy_hash, { desc = "copy the commit hash of the entry under the cursor" } },
             { "n", "L", actions.open_commit_log, { desc = "commit log" } },
             { "n", "zR", actions.open_all_folds, { desc = "open all folds" } },
@@ -194,7 +195,7 @@ function M.config()
             { "n", "<s-tab>", actions.select_prev_entry, { desc = "previous entry" } },
           },
           option_panel = {
-            { "n", "g?", actions.help, { desc = "help" } },
+            { "n", "g?", actions.help("option_panel"), { desc = "help" } },
             { "n", "<tab>", actions.select_entry, { desc = "select entry" } },
             { "n", "q", actions.close, { desc = "close" } },
           },
@@ -203,6 +204,33 @@ function M.config()
     end,
     on_setup = function(c)
       require("diffview").setup(c)
+
+      -- Compat patch: guard `nvim_win_close` in `init_layout` against an
+      -- already-invalid window id. Some callers (notably gitlab.nvim's
+      -- reviewer) invoke `:DiffviewOpen` from a window that gets reused or
+      -- closed during `cur_layout:create()`, leaving `curwin` invalid by
+      -- the time the close call runs — producing "Invalid window id" errors.
+      -- TODO: remove once fixed upstream in dlyongemallo/diffview.nvim.
+      local api = vim.api
+      local standard_view = require("diffview.scene.views.standard.standard_view")
+      local diffview_config = require("diffview.config")
+
+      function standard_view.StandardView:init_layout()
+        local first_init = not vim.t[self.tabpage].diffview_view_initialized
+        local curwin = api.nvim_get_current_win()
+
+        self:use_layout(standard_view.StandardView.get_temp_layout())
+        self.cur_layout:create()
+        vim.t[self.tabpage].diffview_view_initialized = true
+
+        if first_init and api.nvim_win_is_valid(curwin) then
+          api.nvim_win_close(curwin, false)
+        end
+
+        local show_panel = diffview_config.get_config().file_panel.show
+        self.panel:focus(not show_panel)
+        self.emitter:emit("post_layout")
+      end
     end,
     wk = function(_, categories, fn)
       ---@type WKMappings
