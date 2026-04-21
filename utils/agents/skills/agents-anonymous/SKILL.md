@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[goal or task list] [optional: 'without worktrees']"
 references:
   - ../references/agents-delegate.md
+  - ../references/agents-worktrees.md
   - ../references/scm-detect.md
   - ../references/project-tooling.md
   - ../references/agents-write-plans.md
@@ -28,6 +29,7 @@ references:
 > - Exit plan mode only when launching agents.
 
 > Read the `agents-delegate` reference for agent dispatch parameters, tier selection (cheap/default/smart), ecosystem model mappings, and user shorthand — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `agents-worktrees` reference for the mandatory worktree location rule (`.claude/worktrees/<name>/`), naming, verification, and cleanup — agent worktrees MUST live there, no exceptions.
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks.
 > Read the `project-tooling` reference for discovering verification commands.
 > Read the `agents-write-plans` reference for plan quality criteria when creating plans.
@@ -98,6 +100,7 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
    - Always set `isolation: "worktree"` and `mode: "bypassPermissions"` on every agent.
    - If the user explicitly opted out of worktrees, omit `isolation` but keep `mode: "bypassPermissions"`.
    - Do NOT set `run_in_background: true` — blocking dispatch keeps results in this turn. See the `agents-delegate` reference's Blocking Dispatch section.
+   - **Verify** each returned worktree path is absolute and under `<project_root>/.claude/worktrees/` per the `agents-worktrees` reference. If any path falls outside, abort that agent's result, recreate the worktree manually at the correct location (see the Manual Fallback section), and re-dispatch.
 
 8. **Collect results.**
    - All agents run concurrently; this turn blocks until every agent returns.
@@ -107,13 +110,14 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
    - User guidance arrives on the NEXT turn; incorporate it then and re-dispatch if needed. No `SendMessage` mid-execution — agents are blocked.
 
 9. **Merge.**
-   - Agents run in isolated worktrees by default, each on its own branch.
+   - Agents run in isolated worktrees under `.claude/worktrees/` by default, each on its own branch.
    - Merge each worktree branch back to the original branch sequentially.
    - If merge conflicts occur:
      - Present the conflicting files and both sides to the user.
      - Ask the user how to resolve, or propose a resolution.
      - Do NOT auto-resolve conflicts — the user decides.
    - After all merges, verify the working tree is clean.
+   - **Cleanup:** remove each worktree with `git worktree remove .claude/worktrees/<name>`. If removal fails (uncommitted state or locked worktree), surface the error to the user before force-removing — don't `--force` silently.
 
 10. **Review.**
    - After all agents complete (and merges are done if worktree mode), run `code-review-changes` against the recorded baseline.
@@ -130,7 +134,7 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
 
 ### Worktree Mode
 
-Worktree mode is the **default**. All agents run in isolated worktrees with `mode: "bypassPermissions"`. To disable worktrees, the user must explicitly say "without worktrees" or "same worktree".
+Worktree mode is the **default**. All agents run in isolated worktrees under `.claude/worktrees/` (see the `agents-worktrees` reference) with `mode: "bypassPermissions"`. To disable worktrees, the user must explicitly say "without worktrees" or "same worktree".
 
 **When to skip worktrees (user must opt out):**
 - Tasks are small and low-risk.

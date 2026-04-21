@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[plan file or goal]"
 references:
   - ../references/agents-delegate.md
+  - ../references/agents-worktrees.md
   - ../references/scm-detect.md
   - ../references/project-tooling.md
   - ../references/agents-write-plans.md
@@ -23,6 +24,7 @@ references:
 > **ALWAYS enter plan mode for the planning phase.** Exit when launching the first subagent.
 
 > Read the `agents-delegate` reference for agent dispatch parameters, tier selection (cheap/default/smart), ecosystem model mappings, and user shorthand.
+> Read the `agents-worktrees` reference for the mandatory worktree location rule (`.claude/worktrees/<name>/`), naming, verification, and cleanup — agent worktrees MUST live there, no exceptions.
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks.
 > Read the `project-tooling` reference for discovering verification commands.
 > Read the `agents-write-plans` reference for plan quality criteria when creating plans.
@@ -61,6 +63,7 @@ Follow the `agents-conventions` reference — read existing code to discover tes
 
 - Record the current branch and HEAD commit as the baseline.
 - Create a worktree if the user wants isolation (offer but don't force).
+- If a worktree is created, it MUST live at `<project_root>/.claude/worktrees/<name>/` per the `agents-worktrees` reference — no exceptions. Verify the path after creation; abort and recreate manually if it ends up elsewhere.
 
 #### Step 5: Execute Tasks Sequentially
 

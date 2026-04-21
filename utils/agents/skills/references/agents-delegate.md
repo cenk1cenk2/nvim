@@ -12,7 +12,7 @@ The built-in `Agent` tool is Anthropic-only — its `model` parameter accepts `h
 | `prompt` | yes | Full self-contained task prompt. Agents do not share context with you or each other. |
 | `subagent_type` | no | `general-purpose` (default), `Explore` for research-heavy work, or a specialized agent type. |
 | `model` | no | `haiku`, `sonnet`, or `opus` (Anthropic-only via this tool). See Model Selection below. |
-| `isolation` | no | `worktree` creates a temporary git worktree. Use for file-modifying work. |
+| `isolation` | no | `worktree` creates a temporary git worktree in `.claude/worktrees/` (harness default). See the `agents-worktrees` reference for naming, verification, and cleanup — agent worktrees MUST NOT live anywhere else. |
 | `mode` | no | `bypassPermissions` skips approvals (fire-and-forget). Default: let permission requests bubble up. |
 | `team_name` | no | Team context for coordinated work (agents-team). |
 | `name` | no | Agent name for `SendMessage` routing. |

@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[goal or task list] [optional: 'without worktrees']"
 references:
   - ../references/agents-delegate.md
+  - ../references/agents-worktrees.md
   - ../references/scm-detect.md
   - ../references/project-tooling.md
   - ../references/agents-write-plans.md
@@ -28,6 +29,7 @@ references:
 > - Exit plan mode only when launching the team.
 
 > Read the `agents-delegate` reference for agent dispatch parameters, tier selection (cheap/default/smart), ecosystem model mappings, and user shorthand — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `agents-worktrees` reference for the mandatory worktree location rule (`.claude/worktrees/<name>/`), naming, verification, and cleanup — team worktrees MUST live there, no exceptions.
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks.
 > Read the `project-tooling` reference for discovering verification commands.
 > Read the `agents-write-plans` reference for plan quality criteria when creating plans.
@@ -101,6 +103,7 @@ This skill uses Agent Teams to coordinate parallel work. The lead agent (you) ac
      - Set `subagent_type: "general-purpose"` for implementation work.
    - Create tasks for the team's shared task list, one per teammate assignment.
    - Assign tasks to teammates via task ownership.
+   - **Verify** each returned worktree path is absolute and under `<project_root>/.claude/worktrees/` per the `agents-worktrees` reference. If any path falls outside, abort that teammate's result, recreate the worktree manually at the correct location (see the Manual Fallback section), and re-dispatch.
 
 8. **Collect results and resolve escalations.**
    - All teammates run concurrently; this turn blocks until every teammate returns.
@@ -110,13 +113,14 @@ This skill uses Agent Teams to coordinate parallel work. The lead agent (you) ac
    - If a teammate escalated a blocker or needs follow-up, spawn a corrective teammate on the NEXT turn using the same `team_name`. No mid-execution `SendMessage` — teammates are blocked.
 
 9. **Merge (worktree mode).**
-   - Teammates run in isolated worktrees by default, each on its own branch.
+   - Teammates run in isolated worktrees under `.claude/worktrees/` by default, each on its own branch.
    - After all teammates complete, merge each worktree branch back to the original branch sequentially.
    - If merge conflicts occur:
      - Present the conflicting files and both sides to the user.
      - Ask the user how to resolve, or propose a resolution.
      - Do NOT auto-resolve conflicts — the user decides.
    - After all merges, verify the working tree is clean.
+   - **Cleanup:** remove each worktree with `git worktree remove .claude/worktrees/<name>`. If removal fails (uncommitted state or locked worktree), surface the error to the user before force-removing — don't `--force` silently.
 
 10. **Review.**
    - Run `code-review-changes` against the recorded baseline.
@@ -134,11 +138,12 @@ This skill uses Agent Teams to coordinate parallel work. The lead agent (you) ac
 13. **Shutdown and cleanup.**
    - Send shutdown requests to all teammates: `SendMessage({ to: "<name>", message: { type: "shutdown_request" } })`.
    - Wait for shutdown confirmations.
+   - Ensure every `.claude/worktrees/<name>/` tied to this team has been removed in step 9. If any remain (e.g., a teammate was aborted mid-run), remove them now or surface them to the user.
    - Clean up with `TeamDelete`.
 
 ### Worktree Mode
 
-Worktree mode is the **default**. All teammates run in isolated worktrees. To disable worktrees, the user must explicitly say "without worktrees" or "same worktree".
+Worktree mode is the **default**. All teammates run in isolated worktrees under `.claude/worktrees/` (see the `agents-worktrees` reference). To disable worktrees, the user must explicitly say "without worktrees" or "same worktree".
 
 **When to skip worktrees (user must opt out):**
 - Tasks are small and low-risk.

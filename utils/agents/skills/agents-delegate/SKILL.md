@@ -6,6 +6,7 @@ disable-model-invocation: true
 argument-hint: "[task description] [optional: tier 'cheap'|'default'|'smart' or explicit model name]"
 references:
   - ../references/agents-delegate.md
+  - ../references/agents-worktrees.md
   - ../references/project-tooling.md
   - ../references/agents-conventions.md
   - ../references/agents-completion.md
@@ -19,6 +20,7 @@ references:
 > **DO NOT enter plan mode.** This is an interactive skill for one-shot handoff — no splitting, no sequencing, no team.
 
 > Read the `agents-delegate` reference for tier definitions, ecosystem model mappings, user shorthand, agent parameters, and prompt structure — resolve references from the `<References>` block via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/agents-delegate/references" })`.
+> Read the `agents-worktrees` reference when dispatching with `isolation: "worktree"` — worktrees MUST live under `<project_root>/.claude/worktrees/<name>/`. Covers naming, verification, and cleanup.
 > Read the `agents-conventions` reference when the task modifies code — establishes conventions to include in the agent prompt. Skip for read-only research tasks.
 > Read the `project-tooling` reference when the task modifies code — for verification commands to include in the agent prompt. Skip for read-only research tasks.
 > Read the `agents-completion` reference if the user wants to commit/push/PR after the agent reports back.
@@ -69,6 +71,7 @@ Use it when:
    - `isolation`: `worktree` if the task modifies files — offer, confirm with user.
    - `mode`: default (permissions bubble up to the harness). Use `bypassPermissions` only if the user explicitly opts in.
    - `run_in_background`: leave unset (blocking). Only set it to `true` if the user explicitly asks for fire-and-forget.
+   - **If `isolation: "worktree"` is used**, verify the returned path is absolute and under `<project_root>/.claude/worktrees/` per the `agents-worktrees` reference. If it falls outside, abort the result and recreate the worktree manually at the correct location (see the Manual Fallback section), then re-dispatch without `isolation: "worktree"` and instruct the agent via the prompt to `cd` into the manual path.
 
 7. **Handle the result.**
    - Relay the agent's summary to the user.
