@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "kilic/minimax-m2.7:cloud",
+  "model": "kilic/kimi-k2.6:cloud",
   "enabled_providers": ["kilic"],
   "autoupdate": false,
   "permission": {
@@ -42,8 +42,8 @@
         "glm-5.1:cloud": {
           "name": "GLM-5.1 Cloud"
         },
-        "kimi-k2.5:cloud": {
-          "name": "Kimi K2.5 Cloud"
+        "kimi-k2.6:cloud": {
+          "name": "Kimi K2.6 Cloud"
         },
         "minimax-m2.7:cloud": {
           "name": "Minimax M2.7 Cloud"
