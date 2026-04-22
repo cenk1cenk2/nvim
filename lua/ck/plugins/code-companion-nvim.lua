@@ -252,7 +252,7 @@ function M.config()
           background = {
             adapter = {
               name = "copilot",
-              model = "gpt-5.4-nano",
+              model = "gpt-5.1-nano",
             },
             chat = {
               callbacks = {
@@ -897,7 +897,7 @@ function M.config()
             end
 
             if not chat._bg_title_state then
-              chat._bg_title_state = { count = 0, refreshes = 0 }
+              chat._bg_title_state = { count = 0 }
             end
 
             local state = chat._bg_title_state
