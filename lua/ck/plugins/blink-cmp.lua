@@ -9,10 +9,11 @@ function M.config()
       ---@type Plugin
       return {
         "Saghen/blink.cmp",
-        -- version = "*",
-        build = { "cargo build --release" },
+        version = "*",
+        -- build = { "cargo build --release" },
         event = { "InsertEnter", "CmdlineEnter" },
         dependencies = {
+          { "Saghen/blink.lib" },
           -- https://github.com/mikavilpas/blink-ripgrep.nvim
           { "mikavilpas/blink-ripgrep.nvim" },
           -- https://github.com/rafamadriz/friendly-snippets
