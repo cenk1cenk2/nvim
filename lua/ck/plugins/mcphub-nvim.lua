@@ -597,7 +597,7 @@ function M.config()
           local ref_name = vim.fn.fnamemodify(ref_file, ":t:r")
           mcphub.add_resource("skills", {
             name = "reference:" .. ref_name,
-            uri = "references://reference/" .. ref_name,
+            uri = "skills://reference/" .. ref_name,
             description = "Shared reference: " .. ref_name,
             mimeType = "text/markdown",
             handler = function(req, res)
