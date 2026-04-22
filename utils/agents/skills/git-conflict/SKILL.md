@@ -1,5 +1,5 @@
 ---
-name: git-conflict-resolve
+name: git-conflict
 description: Resolve git merge conflicts interactively. Use when user says "resolve conflicts", "fix merge conflicts", "there are conflicts", "help with rebase conflicts", or when git status shows unmerged paths. Detects conflicting files, analyzes each conflict, resolves clear cases autonomously, and asks the user for ambiguous or important conflicts. Do NOT use for general git operations (use git CLI or git MCP directly).
 interaction: chat
 references:
@@ -12,7 +12,7 @@ references:
 
 > **DO NOT enter plan mode.** This is an interactive, conflict-by-conflict resolution skill.
 
-> Read the `scm-detect` reference for git MCP tool availability and CLI fallback rules — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/git-conflict-resolve/references`.
+> Read the `scm-detect` reference for git MCP tool availability and CLI fallback rules — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/git-conflict/references`.
 
 ### Process
 

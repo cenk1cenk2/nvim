@@ -48,7 +48,7 @@ Read the user's message carefully. Identify:
 
 - **The core message** — what they want to communicate (a question, a finding, a status update, a concern).
 - **Entities mentioned** — PRs, MRs, Spacelift runs/stacks, code files, functions, branches, commits, issues.
-- **Companion skill output** — if used alongside another skill (e.g., `slack-work-request-review`, `github-pr-fix`), incorporate that skill's output as additional context.
+- **Companion skill output** — if used alongside another skill (e.g., `slack-work-review`, `github-pr-fix`), incorporate that skill's output as additional context.
 
 **Stay within the user's input.** Do not add information the user did not mention or imply. Do not bring in unrelated topics.
 
@@ -107,9 +107,9 @@ Only after user approval:
 
 This skill can be combined with any skill that produces output the user wants to share:
 
-- **`slack-work-request-review`** — the review request message becomes the companion output.
-- **`github-pr-fix` / `gitlab-pr-fix`** — the fix summary becomes the companion output.
-- **`github-pr-read` / `gitlab-pr-read`** — the PR/MR summary becomes the companion output.
+- **`slack-work-review`** — the review request message becomes the companion output.
+- **`github-pr-fix` / `gitlab-mr-fix`** — the fix summary becomes the companion output.
+- **`github-pr-read` / `gitlab-mr-read`** — the PR/MR summary becomes the companion output.
 - Any other skill — whatever the skill produced that the user wants to share.
 
 When composed, the companion skill's output is included under its own `##` section heading in the message.

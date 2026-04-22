@@ -1,6 +1,6 @@
 ---
-name: github-ci-create
-description: Create or update GitHub Actions workflows for the current repository. Use when user says "add CI", "set up GitHub Actions", or "modify the workflow". Do NOT use for diagnosing failures (github-ci-failed), GitLab pipelines (gitlab-ci-create), or PR descriptions (github-pr-create).
+name: github-ci
+description: Create or update GitHub Actions workflows for the current repository. Use when user says "add CI", "set up GitHub Actions", or "modify the workflow". Do NOT use for diagnosing failures (github-ci-fix), GitLab pipelines (gitlab-ci), or PR descriptions (github-pr-create).
 interaction: chat
 disable-model-invocation: true
 references:
@@ -48,4 +48,4 @@ references:
 
 ### Related Skills
 
-- **`github-ci-failed`** (resource: `skills://skill/github-ci-failed`) — for diagnosing failures in existing GitHub Actions workflows. Auto-invoke when the user reports CI failures instead of wanting to create/update workflows.
+- **`github-ci-fix`** (resource: `skills://skill/github-ci-fix`) — for diagnosing failures in existing GitHub Actions workflows. Auto-invoke when the user reports CI failures instead of wanting to create/update workflows.

@@ -1,6 +1,6 @@
 ---
-name: gitlab-ci-failed
-description: Diagnose failing CI pipelines on the current branch in GitLab, research errors, and propose fixes. Use when user says "pipeline is failing", "fix the GitLab CI", "why is the pipeline red", or "debug the pipeline". Do NOT use for creating/updating pipelines (gitlab-ci-create), GitHub failures (github-ci-failed), or MR descriptions (gitlab-pr-create).
+name: gitlab-ci-fix
+description: Diagnose failing CI pipelines on the current branch in GitLab, research errors, and propose fixes. Use when user says "pipeline is failing", "fix the GitLab CI", "why is the pipeline red", or "debug the pipeline". Do NOT use for creating/updating pipelines (gitlab-ci), GitHub failures (github-ci-fix), or MR descriptions (gitlab-mr-create).
 interaction: chat
 disable-model-invocation: true
 references:
@@ -41,4 +41,4 @@ references:
 
 ### Related Skills
 
-- **`gitlab-ci-create`** (resource: `skills://skill/gitlab-ci-create`) — for creating or modifying GitLab CI pipelines. Auto-invoke when the fix requires pipeline changes rather than code changes.
+- **`gitlab-ci`** (resource: `skills://skill/gitlab-ci`) — for creating or modifying GitLab CI pipelines. Auto-invoke when the fix requires pipeline changes rather than code changes.

@@ -1,6 +1,6 @@
 ---
-name: gitlab-pr-fix
-description: Fix all open review conversations on a GitLab MR by reading each thread, understanding the requested change, and applying fixes to the code. Use when user says "fix the MR comments", "resolve the review", "address MR feedback", or "fix review threads". Do NOT use for reviewing MRs (gitlab-pr-review), writing MR descriptions (gitlab-pr-create), or GitHub PR fixes (github-pr-fix).
+name: gitlab-mr-fix
+description: Fix all open review conversations on a GitLab MR by reading each thread, understanding the requested change, and applying fixes to the code. Use when user says "fix the MR comments", "resolve the review", "address MR feedback", or "fix review threads". Do NOT use for reviewing MRs (gitlab-mr-review), writing MR descriptions (gitlab-mr-create), or GitHub PR fixes (github-pr-fix).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[MR number or URL]"
@@ -113,7 +113,7 @@ After processing all threads, present a summary in chat:
 
 #### Step 8: Optional MR Comment
 
-If the user explicitly asks to post the summary on the MR (e.g., "post this to the MR", "comment the summary"), delegate to the `gitlab-pr-comment` skill. The fix summary from Step 7 becomes the companion output that `gitlab-pr-comment` drafts, presents for approval, and posts. Do not post directly via `gitlab__mr_discussions` — let `gitlab-pr-comment` handle the draft-approve-post workflow. **Only when explicitly requested** — do not invoke `gitlab-pr-comment` automatically.
+If the user explicitly asks to post the summary on the MR (e.g., "post this to the MR", "comment the summary"), delegate to the `gitlab-mr-comment` skill. The fix summary from Step 7 becomes the companion output that `gitlab-mr-comment` drafts, presents for approval, and posts. Do not post directly via `gitlab__mr_discussions` — let `gitlab-mr-comment` handle the draft-approve-post workflow. **Only when explicitly requested** — do not invoke `gitlab-mr-comment` automatically.
 
 ### Key Principles
 

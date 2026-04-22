@@ -1,6 +1,6 @@
 ---
 name: git-push
-description: Push the current branch to remote. Use when user says "push", "git push", "push this branch", "push my commits", or "push to origin". Verifies local state, reports what will be pushed, and pushes immediately (no extra approval — invoking the skill is the approval). Asks only on real blockers (diverged, behind, force, protected branches). Do NOT use for committing (git-commit), branch creation (git-branch), or opening PRs (github-pr-create, gitlab-pr-create).
+description: Push the current branch to remote. Use when user says "push", "git push", "push this branch", "push my commits", or "push to origin". Verifies local state, reports what will be pushed, and pushes immediately (no extra approval — invoking the skill is the approval). Asks only on real blockers (diverged, behind, force, protected branches). Do NOT use for committing (git-commit), branch creation (git-branch), or opening PRs (github-pr-create, gitlab-mr-create).
 interaction: chat
 argument-hint: "[optional: remote name or safety flag — e.g., 'upstream', '--force-with-lease']"
 references:
@@ -61,7 +61,7 @@ references:
 
 7. **Confirm and suggest.**
    - One-line confirmation: what was pushed, where.
-   - Passively mention follow-up skills when relevant: `github-pr-create` / `gitlab-pr-create` for opening a PR/MR. Do NOT auto-invoke them.
+   - Passively mention follow-up skills when relevant: `github-pr-create` / `gitlab-mr-create` for opening a PR/MR. Do NOT auto-invoke them.
 
 ### Composing with Other Skills
 
@@ -69,7 +69,7 @@ This skill is composable — other skills can hand off to it once their work is 
 
 - **After `git-commit`:** when the user chains both (e.g., "commit and push", "git-commit git-push"), `git-commit` runs its full workflow (analyze → draft → approve → commit). On successful commit, control hands off to this skill, which starts at step 1 with the post-commit state. No shared tool state is required — this skill re-inspects the tree.
 - **Skip the dirty-tree note in step 1** when called immediately after `git-commit` in the same turn — leftover untracked or deliberately-unstaged files are expected.
-- **Never mix responsibilities.** This skill does not stage, commit, resolve conflicts, pull, or open PRs. Those stay with the dedicated skills (`git-commit`, `git-conflict-resolve`, `code-pull`, `github-pr-create`, `gitlab-pr-create`).
+- **Never mix responsibilities.** This skill does not stage, commit, resolve conflicts, pull, or open PRs. Those stay with the dedicated skills (`git-commit`, `git-conflict`, `code-pull`, `github-pr-create`, `gitlab-mr-create`).
 
 ### Key Principles
 

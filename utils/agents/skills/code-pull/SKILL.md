@@ -1,6 +1,6 @@
 ---
 name: code-pull
-description: Pull changes from a reference GitHub/GitLab repository and adapt them to the current repository. Always manually invoked. Do NOT use for code review (code-review-branch), debugging (code-debug), or PR descriptions (github-pr-create, gitlab-pr-create).
+description: Pull changes from a reference GitHub/GitLab repository and adapt them to the current repository. Always manually invoked. Do NOT use for code review (code-review-branch), debugging (code-debug), or PR descriptions (github-pr-create, gitlab-mr-create).
 interaction: chat
 disable-model-invocation: true
 references:

@@ -1,6 +1,6 @@
 ---
 name: code-review-changes
-description: Quick, iterative code review of recent changes with a sharp eye. Use when user says "review my changes", "look at what I did", "check this code", or "review changes against main". Do NOT use for formal branch audits (code-review-branch), PR descriptions (github-pr-create, gitlab-pr-create), or debugging (code-debug).
+description: Quick, iterative code review of recent changes with a sharp eye. Use when user says "review my changes", "look at what I did", "check this code", or "review changes against main". Do NOT use for formal branch audits (code-review-branch), PR descriptions (github-pr-create, gitlab-mr-create), or debugging (code-debug).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[optional: baseline — branch, commit, or 'this conversation']"
