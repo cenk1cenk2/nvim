@@ -517,7 +517,7 @@ function M.config()
       for _, skill in ipairs(skills) do
         mcphub.add_resource("skills", {
           name = skill.name,
-          uri = "skill/" .. skill.name,
+          uri = "skills://skill/" .. skill.name,
           description = skill.description,
           mimeType = "text/markdown",
           handler = function(req, res)
@@ -536,7 +536,7 @@ function M.config()
       -- Resource template: read all declared references for a skill
       mcphub.add_resource_template("skills", {
         name = "Skill References (all)",
-        uriTemplate = "skill/{name}/references",
+        uriTemplate = "skills://skill/{name}/references",
         description = "Read all references declared in a skill's frontmatter.",
         mimeType = "text/markdown",
         handler = function(req, res)
@@ -597,7 +597,7 @@ function M.config()
           local ref_name = vim.fn.fnamemodify(ref_file, ":t:r")
           mcphub.add_resource("skills", {
             name = "reference:" .. ref_name,
-            uri = "reference/" .. ref_name,
+            uri = "references://reference/" .. ref_name,
             description = "Shared reference: " .. ref_name,
             mimeType = "text/markdown",
             handler = function(req, res)
