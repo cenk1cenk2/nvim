@@ -78,7 +78,14 @@
 
 User invokes specialized modes using personal slash commands (e.g., `/code-assistant`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
 
-**`#{mcp:skill/...}` references:** When the user passes `#{mcp:skill/<name>}`, this is an MCP skill resource reference. **ALWAYS** load it via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>" })`. Never use the `Skill` tool for these — the `Skill` tool is for Claude Code built-in skills only, not MCP skill resources. This is non-negotiable.
+**MCP skill resource references:** The user can invoke a skill or shared reference by pasting an MCP resource handle inside `#{...}`:
+
+- `#{mcp:skills://skill/<name>}` — load a skill.
+- `#{mcp:skills://reference/<name>}` — load a shared reference.
+
+**ALWAYS** load these via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>" })` (or `skills://reference/<name>` for shared references) — make parallel calls when multiple are passed in one message. Never use the Claude Code built-in `Skill` tool for these — it only handles Claude Code built-in skills, not MCP resource skills. This is non-negotiable.
+
+**Fallback:** If MCP resources are unavailable, load the `load-skills` skill (via filesystem at `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md`) — it documents the dependency resolution rules and filesystem fallback strategy for reading skills directly.
 
 ### Skill Cross-Loading (IMPORTANT)
 
@@ -160,6 +167,10 @@ skills/
 | Read shared reference   | `skills://reference/{name}`                | Read a shared reference by name. One static resource per reference file.                                       |
 
 **Access pattern:** `ReadMcpResourceTool({ server: "mcphub", uri: "<uri>" })`. For multiple skills, make parallel calls.
+
+**User invocation:** The user can paste `#{mcp:skills://skill/<name>}` or `#{mcp:skills://reference/<name>}` in a message to request loading — follow the MCP skill resource references rule in Section II.
+
+**Fallback:** If MCP resources are unavailable, fall back to reading `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` directly via filesystem tools. The `load-skills` skill documents full fallback rules.
 
 **Discovery:** `ListMcpResourcesTool({ server: "mcphub" })` returns all skills and shared references as static resources — use this instead of a separate listing resource.
 
