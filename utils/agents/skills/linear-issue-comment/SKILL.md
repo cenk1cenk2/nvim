@@ -5,6 +5,7 @@ interaction: chat
 argument-hint: "[issue-id or Linear URL] [what to comment]"
 references:
   - ../references/output-diff.md
+  - ../references/linear-state-transitions.md
 ---
 
 ## system
@@ -34,6 +35,8 @@ The current conversation context holds the most recent version of the issue's in
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
+> Read the `linear-state-transitions` reference — when the comment is a delivery / close-out note posted against a merged MR/PR, the skill also advances the issue to `Done` per the post-merge trigger.
+
 ### Process
 
 1. **Identify the issue:**
@@ -46,6 +49,12 @@ The current conversation context holds the most recent version of the issue's in
 
 3. **Post the comment:**
    - Use the Linear MCP `save_comment` tool from the appropriate workspace.
+
+4. **Transition to `Done` (when applicable):**
+   - If the comment is a delivery / close-out note AND a linked MR/PR is merged, follow the `linear-state-transitions` reference: call `save_issue` with `state: "Done"`, respecting the never-downgrade guard.
+   - Detect "delivery / close-out" from the comment shape: it announces the MR merge, links the merged MR/PR, or the user prompt says "close K-xxx", "mark K-xxx done", "K-xxx is merged". A plain findings / research comment does NOT trigger this.
+   - Report one line: `Linear state: moved K-xxx → Done.` Skip silently when the issue is already `Done` / `Canceled`.
+   - User opts out for the turn by saying "don't move the Linear state" or "leave the state alone".
 
 ### Comment Style
 

@@ -5,6 +5,7 @@ interaction: chat
 references:
   - ../references/scm-gitlab.md
   - ../references/output-diff.md
+  - ../references/linear-state-transitions.md
 ---
 
 ## system
@@ -23,6 +24,8 @@ references:
 > Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+
+> Read the `linear-state-transitions` reference for the auto-advance rules (target state, never-downgrade guard, id extraction, silent-with-report contract). Applied after MR create succeeds in step 7.
 
 ### Merge Defaults
 
@@ -68,6 +71,13 @@ These are team defaults for this workflow. Do not prompt the user to confirm the
 6. **Apply (Only After Approval):**
    - When the user explicitly approves, update the MR via GitLab MCP tools.
    - Confirm the update was successful.
+
+7. **Transition linked Linear issues to `In Review`:**
+   - Follow the `linear-state-transitions` reference. Extract Linear ids from the MR body (`refs K-xxx` / `closes K-xxx` trailers) and the branch's commit messages.
+   - For each unique id, fetch current `statusType` and call `save_issue` with `state: "In Review"` — skip when the issue is already `Done` / `Canceled` or at `In Review` already (never downgrade).
+   - Report one line per issue touched in the final summary: `Linear state: moved K-xxx → In Review (was Todo).`
+   - Silent-with-report: no confirmation prompt. User opts out for the turn by saying "don't move the Linear state" in the MR-create request.
+   - Skip this step entirely when zero Linear ids are found — not every branch is tied to an issue.
 
 ### Description Format (When No Template Exists)
 

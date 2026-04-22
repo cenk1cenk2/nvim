@@ -11,6 +11,7 @@ references:
   - ../references/agents-conventions.md
   - ../references/agents-completion.md
   - ../references/scm-detect.md
+  - ../references/linear-state-transitions.md
 ---
 
 ## system
@@ -25,6 +26,7 @@ references:
 > Read the `project-tooling` reference when the task modifies code — for verification commands to include in the agent prompt. Skip for read-only research tasks.
 > Read the `agents-completion` reference if the user wants to commit/push/PR after the agent reports back.
 > Read the `scm-detect` reference if the delegated task involves git operations.
+> Read the `linear-state-transitions` reference if the task is linked to a Linear issue — the dispatcher advances the issue to `In Progress` before launching the agent. Skip when the task has no Linear id.
 
 ### Context
 
@@ -65,7 +67,13 @@ Use it when:
    - For implementation: `subagent_type: "general-purpose"`, include verification and write scope.
    - Present the prompt to the user for review before launching.
 
-6. **Launch the agent (blocking).**
+6. **Transition linked Linear issue to `In Progress` (when applicable).**
+   - If the user's request mentions a Linear id (`K-xxx` / `CLOUD-xxx`) or a Linear URL, follow the `linear-state-transitions` reference: fetch current `statusType` and call `save_issue` with `state: "In Progress"` before dispatch, skipping when the issue is already at or past `In Progress` (never downgrade).
+   - Report one line in the dispatch summary: `Linear state: moved K-xxx → In Progress (was Todo).`
+   - Silent-with-report: no confirmation prompt. User opts out for the turn by saying "don't move the Linear state".
+   - Skip when no Linear id is in scope — not every delegate is Linear-linked.
+
+7. **Launch the agent (blocking).**
    - Call the `Agent` tool (or the user's configured dispatch mechanism for non-Anthropic ecosystems) with parameters resolved from the reference's Agent Tool Parameters table.
    - Dispatch is **foreground/blocking** by default — this turn pauses until the agent returns. Results are pushed into this turn as a tool result and then summarised for the user. See the `agents-delegate` reference's Blocking Dispatch section.
    - `isolation`: `worktree` if the task modifies files — offer, confirm with user.
@@ -73,7 +81,7 @@ Use it when:
    - `run_in_background`: leave unset (blocking). Only set it to `true` if the user explicitly asks for fire-and-forget.
    - **If `isolation: "worktree"` is used**, verify the returned path is absolute and under `<project_root>/.claude/worktrees/` per the `agents-worktrees` reference. If it falls outside, abort the result and recreate the worktree manually at the correct location (see the Manual Fallback section), then re-dispatch without `isolation: "worktree"` and instruct the agent via the prompt to `cd` into the manual path.
 
-7. **Handle the result.**
+8. **Handle the result.**
    - Relay the agent's summary to the user.
    - If files changed, verify the diff matches expectations — do not trust the agent's success report blindly.
    - If the user wants to commit/push/PR, follow the `agents-completion` reference or invoke the relevant SCM skill.

@@ -15,6 +15,7 @@ references:
   - ../references/commit-style.md
   - ../references/commit-trailers.md
   - ../references/linear-chunk-issues.md
+  - ../references/linear-state-transitions.md
 ---
 
 ## system
@@ -38,6 +39,7 @@ references:
 > Read the `commit-style` reference for conventional commit format, types, subject line rules, and body rules — used during the completion handoff commit step.
 > Read the `commit-trailers` reference for issue linking conventions (Linear, GitHub, GitLab) — used when commits reference issues.
 > Read the `linear-chunk-issues` reference for aligning task splits with Linear issues — used during task splitting when the user provides Linear issues or a project as input.
+> Read the `linear-state-transitions` reference for the auto-advance rules when tasks carry Linear ids. Applied just before agent launch (step 7) — each Linear-linked task advances to `In Progress`.
 
 ### Context
 
@@ -92,6 +94,7 @@ This skill plans work like a tech lead splitting tasks across developers. Each a
 7. **Launch agents (parallel, blocking).**
    - Exit plan mode.
    - Record the current branch and HEAD commit as the baseline for later review.
+   - **Transition linked Linear issues to `In Progress`** before launch. Follow the `linear-state-transitions` reference: for each task that carries a Linear id (from the task split or the user's prompt), fetch current `statusType` and call `save_issue` with `state: "In Progress"`, skipping when already at or past that state. Report one line per issue in the launch summary (`Linear state: moved K-xxx → In Progress (was Todo).`). Silent-with-report: no confirmation prompt; user opts out for the turn by saying "don't move the Linear state".
    - Launch all agents **in a single message with multiple `Agent` tool uses** — they run concurrently and this turn blocks until every agent returns. Each agent prompt must include:
      - The full task description.
      - The list of files it owns.

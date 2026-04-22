@@ -218,6 +218,7 @@ When creating or updating a skill, always check:
 | `linear-description-structure.md` | Issue/project/initiative description format. | Issue/project/initiative creation skills. |
 | `linear-research-documentation.md` | Research process, analysis, appendix, link management. | Research-heavy creation skills. |
 | `linear-issue-states.md` | State meanings, transition rules, dependency resolution, decision patterns. | State-transition skills (implement, triage, next-task, cycle). |
+| `linear-state-transitions.md` | Auto-advance triggers (pickup → In Progress, MR/PR open → In Review, merge → Done), never-downgrade guard, id extraction, silent-with-report contract. | Agent-dispatch skills (delegate, anonymous, team, sequential), PR/MR-create skills (gitlab-pr-create, github-pr-create), linear-issue-comment. |
 | `scm-detect.md` | SCM platform detection from remote URL, local git MCP tools, CLI fallback. | Cross-platform skills (code-pull, code-review-branch). |
 | `scm-github.md` | GitHub MCP tools, `gh` CLI fallback, platform-specific conventions. | GitHub CI/PR/failed-CI skills, cross-platform skills. |
 | `scm-gitlab.md` | GitLab MCP tools, `glab` CLI fallback, platform-specific conventions. | GitLab CI/PR/failed-CI skills, cross-platform skills. |

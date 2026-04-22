@@ -15,6 +15,7 @@ references:
   - ../references/commit-style.md
   - ../references/commit-trailers.md
   - ../references/linear-chunk-issues.md
+  - ../references/linear-state-transitions.md
 ---
 
 ## system
@@ -33,6 +34,7 @@ references:
 > Read the `commit-style` reference for conventional commit format, types, subject line rules, and body rules — used during the completion handoff commit step and per-task commits.
 > Read the `commit-trailers` reference for issue linking conventions (Linear, GitHub, GitLab) — used when commits reference issues.
 > Read the `linear-chunk-issues` reference for aligning task splits with Linear issues — used during planning when the user provides Linear issues or a project as input.
+> Read the `linear-state-transitions` reference for the auto-advance rules when per-task Linear ids are known. Applied before each implementer dispatch in step 5 — the current task's Linear id (if any) advances to `In Progress`.
 
 ### Context
 
@@ -69,20 +71,26 @@ Follow the `agents-conventions` reference — read existing code to discover tes
 
 For each task:
 
-**a. Dispatch implementer subagent.**
+**a. Transition linked Linear issue to `In Progress` (when applicable).**
+- If the current task carries a Linear id (from the plan or the user's prompt), follow the `linear-state-transitions` reference: fetch current `statusType` and call `save_issue` with `state: "In Progress"`, skipping when already at or past that state.
+- Report one line in the task summary: `Linear state: moved K-xxx → In Progress (was Todo).`
+- Silent-with-report: no confirmation prompt; user opts out for the turn by saying "don't move the Linear state".
+- Skip when no Linear id is tied to the task.
+
+**b. Dispatch implementer subagent.**
 - Use the `Agent` tool with a self-contained prompt (see Implementer Prompt Template).
 - Dispatch is **foreground/blocking** by default — this turn pauses until the subagent returns its result. Do NOT set `run_in_background: true`. See the `agents-delegate` reference's Blocking Dispatch section.
 - Include: task description, file list, codebase context, conventions, what adjacent tasks will do, **and the verification commands discovered in Step 2**.
 - Set `mode: "bypassPermissions"` for speed.
 - Select model based on task complexity (see Model Selection).
 
-**b. Handle implementer status.**
+**c. Handle implementer status.**
 - **DONE** — proceed to review.
 - **DONE_WITH_CONCERNS** — read concerns. If correctness/scope, address before review. If observational, note and proceed.
 - **NEEDS_CONTEXT** — provide missing context, re-dispatch.
 - **BLOCKED** — assess: provide more context, use a more capable model, break task smaller, or escalate to user. Never retry blindly without changing something.
 
-**c. Dispatch review subagent.**
+**d. Dispatch review subagent.**
 - Get the git diff since the task started.
 - Dispatch a review subagent using the Review Prompt Template below.
 - Spec compliance is the gating check — if the code doesn't match what the task specified, quality doesn't matter yet.
@@ -92,17 +100,17 @@ For each task:
   3. Repeat until the reviewer approves.
 - Do not skip re-review after fixes. Do not accept "close enough."
 
-**d. Run verification commands.**
+**e. Run verification commands.**
 - Run the commands from Step 2 (lint, test, build — whatever applies).
 - Read the full output. If anything fails, fix before proceeding.
 
-**e. Check for user guidance.**
+**f. Check for user guidance.**
 - Between tasks, present a brief status to the user: which task just completed, which is next.
 - The user may provide corrections, revised requirements, new context, or style feedback based on what they've seen so far.
 - **Accumulate all user guidance** across tasks. Maintain a running `## Accumulated Guidance` section that grows as the user provides input.
 - Include this section in every subsequent subagent prompt so later subagents benefit from everything learned earlier.
 
-**f. Mark task complete.** Update the todo list and proceed to the next task.
+**g. Mark task complete.** Update the todo list and proceed to the next task.
 
 #### Step 6: Final Review
 

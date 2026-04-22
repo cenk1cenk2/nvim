@@ -5,6 +5,7 @@ interaction: chat
 references:
   - ../references/scm-github.md
   - ../references/output-diff.md
+  - ../references/linear-state-transitions.md
 ---
 
 ## system
@@ -36,6 +37,8 @@ references:
 > Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+
+> Read the `linear-state-transitions` reference for the auto-advance rules (target state, never-downgrade guard, id extraction, silent-with-report contract). Applied after PR update succeeds in step 8.
 
 ### Process
 
@@ -86,6 +89,13 @@ references:
    - When user explicitly approves, update the PR via `github__update_pull_request`
    - Update both `title` (if changed) and `body`
    - Confirm the update was successful
+
+8. **Transition linked Linear issues to `In Review`:**
+   - Follow the `linear-state-transitions` reference. Extract Linear ids from the PR body (`refs K-xxx` / `closes K-xxx` trailers) and the branch's commit messages.
+   - For each unique id, fetch current `statusType` and call `save_issue` with `state: "In Review"` — skip when the issue is already `Done` / `Canceled` or already at `In Review` (never downgrade).
+   - Report one line per issue touched in the final summary: `Linear state: moved K-xxx → In Review (was Todo).`
+   - Silent-with-report: no confirmation prompt. User opts out for the turn by saying "don't move the Linear state" in the PR-create request.
+   - Skip this step entirely when zero Linear ids are found.
 
 ### Description Format (When No Template Exists)
 
