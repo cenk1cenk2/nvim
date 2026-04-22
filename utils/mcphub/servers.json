@@ -20,6 +20,16 @@
         "ARGOCD_BASE_URL": "${NVIM_ARGOCD_KILIC_URL}"
       }
     },
+    "aws-docs": {
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "autoApprove": ["read_documentation", "search_documentation", "read_sections", "recommend"],
+      "command": "uvx",
+      "disabled_tools": ["get_available_services"],
+      "env": {
+        "AWS_DOCUMENTATION_PARTITION": "aws",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      }
+    },
     "context7": {
       "autoApprove": ["get-library-docs", "resolve-library-id", "query-docs"],
       "headers": {
@@ -508,6 +518,22 @@
         "Authorization": "Bearer ${NVIM_TAVILY_API_KEY}"
       },
       "url": "https://mcp.tavily.com/mcp"
+    },
+    "terraform": {
+      "args": ["run", "-i", "--rm", "hashicorp/terraform-mcp-server:0.5.1", "stdio", "--toolsets=registry"],
+      "autoApprove": [
+        "search_providers",
+        "get_provider_details",
+        "get_latest_provider_version",
+        "get_provider_capabilities",
+        "search_modules",
+        "get_module_details",
+        "get_latest_module_version",
+        "search_policies",
+        "get_policy_details"
+      ],
+      "command": "docker",
+      "disabled_tools": []
     },
     "tmux": {
       "args": ["-y", "--bun", "tmux-mcp", "--shell-type=zsh"],
