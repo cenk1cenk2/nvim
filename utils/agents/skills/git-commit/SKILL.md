@@ -99,7 +99,7 @@ references:
    - After explicit user approval, commit via `git__git_commit` with the approved message.
    - If git MCP is unavailable, fall back to `git commit -m` via CLI.
    - Confirm success by reporting the commit hash from the output.
-   - Do NOT push. If the user wants to push, they can do so separately.
+   - Do NOT push. If the user wants to push, hand off to the `git-push` skill (invoked separately or as a compose step like "commit and push").
 
 ### Key Principles
 
@@ -109,6 +109,13 @@ references:
 - **No AI attribution.** Never include "Generated with Claude" or similar.
 - **No Co-authored-by.** Never add `Co-authored-by:` trailers under any circumstances.
 - **Never push automatically.** Commit only. The user decides when to push.
+
+### Composing with Other Skills
+
+This skill is composable — the commit step is a single, focused responsibility that other skills build on.
+
+- **Followed by `git-push`:** when the user chains both (e.g., "commit and push", "git-commit git-push"), this skill runs to completion (analyze → draft → approve → commit), then control hands off to `git-push`. Never push from within this skill.
+- **Never mix responsibilities.** This skill does not push, branch, pull, or open PRs. Those stay with the dedicated skills (`git-push`, `git-branch`, `code-pull`, `github-pr-create`, `gitlab-pr-create`).
 
 ### Examples
 
