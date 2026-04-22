@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit". Analyzes staged and unstaged changes, drafts a message following conventional commits format, and commits after approval. Do NOT use for PR descriptions (github-pr-create, gitlab-mr-create) or conflict resolution (git-conflict).
+description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit". Analyzes staged and unstaged changes, drafts a message following conventional commits format, and commits after approval. Do NOT use for PR descriptions (github-pr, gitlab-mr) or conflict resolution (git-conflict).
 interaction: chat
 argument-hint: "[optional: type or message hint — e.g., 'fix', 'feat: add retry']"
 references:
@@ -115,7 +115,7 @@ references:
 This skill is composable — the commit step is a single, focused responsibility that other skills build on.
 
 - **Followed by `git-push`:** when the user chains both (e.g., "commit and push", "git-commit git-push"), this skill runs to completion (analyze → draft → approve → commit), then control hands off to `git-push`. Never push from within this skill.
-- **Never mix responsibilities.** This skill does not push, branch, pull, or open PRs. Those stay with the dedicated skills (`git-push`, `git-branch`, `code-pull`, `github-pr-create`, `gitlab-mr-create`).
+- **Never mix responsibilities.** This skill does not push, branch, pull, or open PRs. Those stay with the dedicated skills (`git-push`, `git-branch`, `code-pull`, `github-pr`, `gitlab-mr`).
 
 ### Examples
 

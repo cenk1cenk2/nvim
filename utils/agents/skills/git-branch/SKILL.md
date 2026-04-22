@@ -1,6 +1,6 @@
 ---
 name: git-branch
-description: Create a new git branch following repository naming conventions. Use when user says "create a branch", "new branch", "branch off", "start a branch", "make a branch", or "cut a branch". Discovers the repo's prefix convention, fast-forwards the default branch, creates the new branch from it, and switches to it. Do NOT use for commits (git-commit), conflict resolution (git-conflict), pulling reference changes (code-pull), or PRs (github-pr-create, gitlab-mr-create).
+description: Create a new git branch following repository naming conventions. Use when user says "create a branch", "new branch", "branch off", "start a branch", "make a branch", or "cut a branch". Discovers the repo's prefix convention, fast-forwards the default branch, creates the new branch from it, and switches to it. Do NOT use for commits (git-commit), conflict resolution (git-conflict), pulling reference changes (code-pull), or PRs (github-pr, gitlab-mr).
 interaction: chat
 argument-hint: "[optional: branch name, prefix, or base branch]"
 references:
@@ -84,7 +84,7 @@ This skill is composable — other skills can delegate branch creation to it as 
 
 - **Calling skill responsibilities:** pass a descriptive hint or explicit name/prefix through the conversation context (e.g., Linear issue title, feature summary).
 - **This skill:** runs the process above, confirms with the user, and hands control back to the calling skill after the new branch is checked out.
-- **Never mix responsibilities.** This skill does not commit, push, or open PRs. Those stay with the calling skill or with the dedicated skills (`git-commit`, `github-pr-create`, `gitlab-mr-create`).
+- **Never mix responsibilities.** This skill does not commit, push, or open PRs. Those stay with the calling skill or with the dedicated skills (`git-commit`, `github-pr`, `gitlab-mr`).
 
 ### Key Principles
 

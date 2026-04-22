@@ -1,6 +1,6 @@
 ---
 name: slack-work-review
-description: "Post a PR review request in #cloud-infra on the Laravel enterprise Slack. Use when user says 'request review', 'post review request', or 'ask for review'. Can be composed with github-pr-create skill after PR creation. Always manually invoked."
+description: "Post a PR review request in #cloud-infra on the Laravel enterprise Slack. Use when user says 'request review', 'post review request', or 'ask for review'. Can be composed with github-pr skill after PR creation. Always manually invoked."
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[github-pr-url or PR number]"
@@ -112,7 +112,7 @@ references:
 
 ### Composing with Other Skills
 
-- **`github-pr-create`** — after creating a PR with the `github-pr-create` skill, this skill can be invoked to post the review request. The PR URL from the `github-pr-create` output can be passed directly — no need to re-detect from git state.
+- **`github-pr`** — after creating a PR with the `github-pr` skill, this skill can be invoked to post the review request. The PR URL from the `github-pr` output can be passed directly — no need to re-detect from git state.
 - **`github-pr-comment` / `gitlab-mr-comment`** — when composed with a `*-pr-comment` skill, the Slack review request message is included as a `## Review Request` section in the PR/MR comment. The `*-pr-comment` skill handles drafting, approval, and posting. The Slack message is still posted separately to Slack — the `## Review Request` section is additive output for the PR/MR comment, not a replacement for the Slack post.
 - **`slack-work`** — workspace prerequisite, must be loaded first.
 

@@ -1,6 +1,6 @@
 ---
 name: gitlab-mr-read
-description: Read and internalize the full state of a GitLab MR — description, comments, discussion threads, and diff. Use when user says "read this MR", "load the MR", "what's in this MR", or "summarize this MR". Purely informational — does not modify anything. Do NOT use for reviewing MRs (gitlab-mr-review), fixing MR threads (gitlab-mr-fix), or writing MR descriptions (gitlab-mr-create).
+description: Read and internalize the full state of a GitLab MR — description, comments, discussion threads, and diff. Use when user says "read this MR", "load the MR", "what's in this MR", or "summarize this MR". Purely informational — does not modify anything. Do NOT use for reviewing MRs (gitlab-mr-review), fixing MR threads (gitlab-mr-fix), or writing MR descriptions (gitlab-mr).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[MR number or URL]"

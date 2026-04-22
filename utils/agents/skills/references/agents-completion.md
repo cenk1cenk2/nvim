@@ -17,7 +17,7 @@ After all tasks are done, review passes, and verification succeeds, present the 
    What would you like to do?
    1. Commit (locally, no push)
    2. Commit and push
-   3. Create a PR/MR (invokes github-pr-create or gitlab-mr-create)
+   3. Create a PR/MR (invokes github-pr or gitlab-mr)
    4. Leave uncommitted (for manual review)
    ```
 
@@ -28,7 +28,7 @@ After all tasks are done, review passes, and verification succeeds, present the 
 3. **Execute the user's choice.**
    - **Commit:** Stage changed files with `git__git_add` using path `.`. Draft the commit message following the `commit-style` reference (conventional commit format, imperative mood, type + optional scope). If an issue ID or URL is known from the task context, add trailers following the `commit-trailers` reference. Present the message for approval first. After approval, commit via `git__git_commit`.
    - **Push:** Commit (as above) + push to remote.
-   - **PR/MR:** Invoke `github-pr-create` or `gitlab-mr-create` skill to draft the description and create the PR/MR.
+   - **PR/MR:** Invoke `github-pr` or `gitlab-mr` skill to draft the description and create the PR/MR.
    - **Leave uncommitted:** Confirm and stop. Note that changes are in the working tree.
 
 4. **Confirm completion.**

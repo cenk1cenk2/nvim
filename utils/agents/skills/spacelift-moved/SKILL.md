@@ -1,6 +1,6 @@
 ---
 name: spacelift-moved
-description: "Analyze Spacelift plan output for delete/create cycles that can be replaced with Terraform moved blocks. Use when user says 'spacelift moved', 'can we move instead of recreate', 'terraform moved blocks', 'avoid destroy/create', or 'migrate state'. Accepts a PR, branch, commit, or Actions link. Do NOT use for general Spacelift operations (spacelift-work), infrastructure impact reports (spacelift-report), or PR descriptions (github-pr-create)."
+description: "Analyze Spacelift plan output for delete/create cycles that can be replaced with Terraform moved blocks. Use when user says 'spacelift moved', 'can we move instead of recreate', 'terraform moved blocks', 'avoid destroy/create', or 'migrate state'. Accepts a PR, branch, commit, or Actions link. Do NOT use for general Spacelift operations (spacelift-work), infrastructure impact reports (spacelift-report), or PR descriptions (github-pr)."
 interaction: chat
 references:
   - ../references/scm-github.md
@@ -180,4 +180,4 @@ moved {
 
 - **`spacelift-work`** (resource: `skills://skill/spacelift-work`) — workspace initialization. Auto-invoked as prerequisite.
 - **`spacelift-report`** (resource: `skills://skill/spacelift-report`) — full infrastructure impact report. Do not auto-invoke.
-- **`github-pr-create`** (resource: `skills://skill/github-pr-create`) — for writing PR descriptions. Do not auto-invoke.
+- **`github-pr`** (resource: `skills://skill/github-pr`) — for writing PR descriptions. Do not auto-invoke.

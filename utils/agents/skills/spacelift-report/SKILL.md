@@ -1,6 +1,6 @@
 ---
 name: spacelift-report
-description: "Analyze Spacelift infrastructure changes triggered by a GitHub PR, branch, commit, or Actions run. Use when user says 'spacelift report', 'spacelift PR report', 'what infra changes', 'show spacelift changes', 'infrastructure impact', 'spacelift diff', or provides a GitHub Actions/commit/PR link expecting Spacelift analysis. Do NOT use for general Spacelift operations (spacelift-work), CI failures (github-ci-fix), or PR descriptions (github-pr-create)."
+description: "Analyze Spacelift infrastructure changes triggered by a GitHub PR, branch, commit, or Actions run. Use when user says 'spacelift report', 'spacelift PR report', 'what infra changes', 'show spacelift changes', 'infrastructure impact', 'spacelift diff', or provides a GitHub Actions/commit/PR link expecting Spacelift analysis. Do NOT use for general Spacelift operations (spacelift-work), CI failures (github-ci-fix), or PR descriptions (github-pr)."
 interaction: chat
 references:
   - ../references/scm-github.md
@@ -254,5 +254,5 @@ to indexed, rename, restructuring.>
 ### Related Skills
 
 - **`spacelift-work`** (resource: `skills://skill/spacelift-work`) — workspace initialization for Spacelift context. Auto-invoked as prerequisite.
-- **`github-pr-create`** (resource: `skills://skill/github-pr-create`) — for writing PR descriptions. Do not auto-invoke.
+- **`github-pr`** (resource: `skills://skill/github-pr`) — for writing PR descriptions. Do not auto-invoke.
 - **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — for reviewing code changes. Do not auto-invoke.

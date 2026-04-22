@@ -1,6 +1,6 @@
 ---
 name: gitlab-ci
-description: Create or update GitLab CI/CD pipelines using the devops/pipelines task-based model. Use when user says "add a pipeline", "set up GitLab CI", or "modify .gitlab-ci.yml". Do NOT use for diagnosing failures (gitlab-ci-fix), GitHub Actions (github-ci), or MR descriptions (gitlab-mr-create).
+description: Create or update GitLab CI/CD pipelines using the devops/pipelines task-based model. Use when user says "add a pipeline", "set up GitLab CI", or "modify .gitlab-ci.yml". Do NOT use for diagnosing failures (gitlab-ci-fix), GitHub Actions (github-ci), or MR descriptions (gitlab-mr).
 interaction: chat
 disable-model-invocation: true
 references:
