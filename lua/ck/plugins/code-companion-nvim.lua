@@ -486,6 +486,9 @@ function M.config()
               yolo_mode = {
                 modes = { n = fn.local_keystroke({ "a", "t" }) },
               },
+              _btw = {
+                modes = { n = fn.local_keystroke({ "m" }) },
+              },
               goto_file_under_cursor = {
                 modes = { n = "gf" },
               },
