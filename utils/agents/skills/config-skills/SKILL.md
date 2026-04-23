@@ -218,7 +218,7 @@ When creating or updating a skill, always check:
 | `linear-description-structure.md` | Issue/project/initiative description format. | Issue/project/initiative creation skills. |
 | `linear-research-documentation.md` | Research process, analysis, appendix, link management. | Research-heavy creation skills. |
 | `linear-issue-states.md` | State meanings, transition rules, dependency resolution, decision patterns. | State-transition skills (implement, triage, next-task, cycle). |
-| `linear-state-transitions.md` | Auto-advance triggers (pickup → In Progress, MR/PR open → In Review, merge → Done), never-downgrade guard, id extraction, silent-with-report contract. | Agent-dispatch skills (delegate, anonymous, team, sequential), PR/MR-create skills (gitlab-mr, github-pr), linear-issue-comment. |
+| `linear-state-transitions.md` | Auto-advance triggers (pickup → In Progress, MR/PR open → In Review, merge → Done), never-downgrade guard, id extraction, silent-with-report contract. | Agent-dispatch skills (agents-delegate, agents), PR/MR-create skills (gitlab-mr, github-pr), linear-issue-comment. |
 | `scm-detect.md` | SCM platform detection from remote URL, local git MCP tools, CLI fallback. | Cross-platform skills (code-pull, code-review-branch). |
 | `scm-github.md` | GitHub MCP tools, `gh` CLI fallback, platform-specific conventions. | GitHub CI/PR/failed-CI skills, cross-platform skills. |
 | `scm-gitlab.md` | GitLab MCP tools, `glab` CLI fallback, platform-specific conventions. | GitLab CI/PR/failed-CI skills, cross-platform skills. |
@@ -226,10 +226,12 @@ When creating or updating a skill, always check:
 | `obsidian.md` | Vault location, tool access, file naming, frontmatter, writing style, vault exploration. | Obsidian family (4 skills). |
 | `slack.md` | Slack MCP tools, response conventions, `:dark_sunglasses:` pattern, large results handling. | Slack family (2 skills). |
 | `enrich-context.md` | Entity enrichment table (MCP tools → links), code permalinks, appendix pattern. | Skills that compile output for others (slack-work-compile, slack-channel). |
-| `project-tooling.md` | Task runner discovery order, verification command extraction, user confirmation flow. | Agent skills (agents-anonymous, agents-team, agents-sequential). |
-| `agents-write-plans.md` | Plan quality: exact file paths, no placeholders, concrete steps, self-review checklist. | Agent skills (agents-anonymous, agents-team, agents-sequential). |
-| `agents-conventions.md` | Project conventions discovery: testing, code style, patterns, formatting, commits. | Agent skills (agents-anonymous, agents-team, agents-sequential). |
-| `agents-completion.md` | Completion handoff: summarize, present options (commit/push/PR/leave), execute choice. | Agent skills (agents-anonymous, agents-team, agents-sequential). |
+| `project-tooling.md` | Task runner discovery order, verification command extraction, user confirmation flow. | Agent skills (agents, agents-delegate). |
+| `agents-write-plans.md` | Plan quality: exact file paths, no placeholders, concrete steps, optional depends_on field, self-review checklist. | Agent skills (agents). |
+| `agents-conventions.md` | Project conventions discovery: testing, code style, patterns, formatting, commits. | Agent skills (agents, agents-delegate). |
+| `agents-completion.md` | Completion handoff: summarize, present options (commit/push/PR/leave), execute choice. | Agent skills (agents, agents-delegate). |
+| `agents-plan-split.md` | Planning phase: understand goal, tooling, conventions, plan, split tasks, declare depends_on, build layer schedule, verify file overlap. | Agent skills (agents). |
+| `agents-merge-review.md` | Per-layer merge + per-layer review, end-of-run review against run baseline, final verification with evidence, handoff. | Agent skills (agents). |
 | `output-diff.md` | Chunked change presentation — reasoning + content blocks before any write. | Config family (5 skills), Linear/Obsidian/Slack write skills. |
 
 ### Description Checklist

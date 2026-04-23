@@ -6,10 +6,15 @@ When agent skills create implementation plans (during plan mode), the plan must 
 
 Every plan task must have:
 
+- **Id:** Short stable identifier (e.g., `task-a`, `auth-core`). Used for dependency references.
 - **What:** Clear description of the change.
 - **Files:** Exact file paths — every file that will be created or modified. No "and related files."
 - **Steps:** Concrete actions. Each step is one thing to do, not a paragraph of intent.
 - **Verification:** How to confirm the task is done — which commands to run, what output to expect.
+
+Optional (used by DAG-scheduled skills like `agents`):
+
+- **Dependencies (`depends_on: [task-id, ...]`):** List of task ids this task must run after. Empty or absent = no dependencies (runs in the first layer). Use for semantic coupling — task B reads a schema defined by task A even though their file lists don't overlap.
 
 ## No Placeholders
 

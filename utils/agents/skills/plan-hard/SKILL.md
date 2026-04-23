@@ -40,11 +40,29 @@ references:
 
 6. **Continue until the user signals stop** (see Stop Conditions). Do NOT stop because questions feel repetitive — depth is the point.
 
-7. **Write the plan file** to `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md` using the standard structure from `AGENTS.md` Section II. Include:
+7. **Fact-check resolved + attempt auto-resolution of unresolved** (conditional — only on explicit hard-thinking triggers).
+
+   **Trigger condition:** run this step ONLY when the user's invocation included an explicit rigour signal — "plan hard", "think hard", "look hard", "deep plan", "thorough plan", "rigorous plan", or an equivalent phrase. If `plan-hard` was loaded as the default disposition for a generic plan-mode entry (no explicit rigour phrase), **skip this step** and proceed directly to step 8. The fact-check is a cost/latency investment that should only kick in when the user has asked for depth.
+
+   When the trigger applies, invoke `agents-review` type=`facts` with two payloads:
+
+   - **Resolved claims** — facts you self-answered from codebase exploration during the interview. Reviewer verifies (PASS/FAIL/QUESTION with evidence).
+   - **Unresolved items** — branches that required user intent/preference but also have factual components you could not confidently self-answer. Reviewer attempts to find evidence in the codebase; if found, those items move from "needs user input" to "auto-resolved" without a user question.
+
+   Dispatch (cheap tier by default). Parse verdicts:
+
+   - **FAIL on a resolved claim:** re-open the corresponding design-tree branch. Present the reviewer's evidence inline and ask the user whether to revise the decision. Update the plan accordingly.
+   - **Evidence found for an unresolved item:** auto-resolve the branch using the reviewer's findings; skip the pending user question for that branch and report the auto-resolution in the plan. If the user disagrees, they can override on the next turn.
+   - **One-pass correction loop:** if a second fact-check also returns FAILs, write the plan with the reviewer's concerns noted in the Design Decisions section. Do not loop indefinitely — user judgment is the tiebreaker.
+
+   **Opt-out:** even when the trigger condition applies, the user can skip this step by saying "skip fact-check" / "no review" / "skip review" in the same turn as the stop signal. When skipped, proceed directly to step 8.
+
+8. **Write the plan file** to `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md` using the standard structure from `AGENTS.md` Section II. Include:
    - Context, Requirements, Approach, Implementation Steps, Risks, Verification.
    - A **Design Decisions** subsection under Approach that records every decision reached during the interview, each with a one-line "Why".
+   - If step 7 produced unresolved concerns, include them under Design Decisions with the reviewer's evidence.
 
-8. **Present the plan** in chat and wait for the user's next instruction. Do NOT ask to exit plan mode — the user will say so when they are ready.
+9. **Present the plan** in chat and wait for the user's next instruction. Do NOT ask to exit plan mode — the user will say so when they are ready.
 
 ### Interview Protocol
 
@@ -133,6 +151,7 @@ Keep going until a stop condition is met.
 - **`code-assistant`** (`skills://skill/code-assistant`) — after `plan-hard` produces the plan file, the user may follow up with `code-assistant` for the ongoing-review phase during implementation. `plan-hard` handles design-tree interviewing; `code-assistant` handles tracking and reviewing the user's implementation.
 - **`plan-handoff`** (`skills://skill/plan-handoff`) — if the interviewed plan is intended for a different session or repository, compose with `plan-handoff` to produce a self-contained handoff plan.
 - **`code-assistant-implement`** (`skills://skill/code-assistant-implement`) — after `plan-hard` finishes, if the user wants step-by-step implementation with review gates, hand off to `code-assistant-implement`.
+- **`agents-review`** (`skills://skill/agents-review`) — conditionally auto-invoked in step 7 to fact-check resolved claims AND attempt to auto-resolve pending unresolved ones. Only runs when the user's invocation includes an explicit rigour phrase ("plan hard" / "think hard" / "look hard" / "deep" / "thorough" / "rigorous"). Default plan-mode entry skips this step. User opt-out: "skip fact-check".
 
 When composing, do NOT duplicate the interview — `plan-hard` runs once per plan, then the downstream skill takes over.
 
@@ -162,3 +181,4 @@ When composing, do NOT duplicate the interview — `plan-hard` runs once per pla
 - **`plan-handoff`** (resource: `skills://skill/plan-handoff`) — produce self-contained plans for other sessions or repositories.
 - **`plan-pickup`** (resource: `skills://skill/plan-pickup`) — load and execute an existing plan file.
 - **`code-assistant-implement`** (resource: `skills://skill/code-assistant-implement`) — step-by-step implementation with review gates.
+- **`agents-review`** (resource: `skills://skill/agents-review`) — conditionally auto-invoked before the plan is written (only on explicit rigour triggers) to fact-check resolved claims and auto-resolve unresolved branches where evidence is findable. Read-only reviewer dispatched at cheap tier by default.
