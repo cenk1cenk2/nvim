@@ -74,6 +74,8 @@
 
 **Evaluate complexity first** — the threshold is whether the task genuinely requires multi-file research and design decisions, not just whether it touches multiple files. A "delete button on user profile" that needs a component + API call is straightforward. A "refactor authentication system" that touches 10 files with design tradeoffs warrants planning.
 
+**Default disposition: `plan-hard`.** Whenever plan mode is entered, load and follow the `plan-hard` skill (resource: `skills://skill/plan-hard`) unless the user explicitly requests a lighter pass (e.g., "quick plan", "just outline it"). `plan-hard` walks the design tree branch by branch, self-answers from the codebase where possible, and recommends an answer for every open question. It stays in plan mode until the user explicitly signals "implement" or uses a proceed signal (`g`, `go`, `y`, `yolo`).
+
 ### Special Mode Triggers
 
 User invokes specialized modes using personal slash commands (e.g., `/code-assistant`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
@@ -462,7 +464,7 @@ After approval and exiting plan mode:
 
 ### Plan Updates During Implementation
 
-**When implementation reveals new information:**
+**Small updates (new info, minor course correction):**
 
 1. **Document the discovery** in the plan file
 2. **Update affected sections** (approach, steps, files)
@@ -478,6 +480,8 @@ After approval and exiting plan mode:
 
 Discovered existing token validation in `auth/validator.ts` that we can reuse. Updated Step 3 to integrate with existing code rather than reimplementing.
 ```
+
+**Major revisions (wrong direction, failed approach, scope change):** Use the `plan-revise` skill (resource: `skills://skill/plan-revise`). It re-interviews the user on the delta, factors in any implementation already done (keep/revert/reshape), and updates the plan file in place with a dated `## Revision History` entry. Trigger phrases: "plan revise", "back to the drawing board", "wrong plan", "change direction", "this approach isn't working".
 
 ### Plan Mode Best Practices
 
@@ -510,8 +514,12 @@ Discovered existing token validation in `auth/validator.ts` that we can reuse. U
 
 ```
 1. User requests complex implementation
-2. Use EnterPlanMode tool
-3. Explore codebase thoroughly using available tools
+2. Use EnterPlanMode tool, then load `plan-hard` as the default disposition
+   (unless the user explicitly asks for a lighter pass like "quick plan")
+3. Walk the design tree branch by branch:
+   - Self-answer via codebase exploration when possible
+   - Ask the user only for intent/preference/unknowable decisions
+   - Recommend an answer for every open question
 4. Draft detailed plan in ~/.claude/plans/YYYY-MM-DD-<project-name>-<name>.md
 5. Present plan to user
 6. Ask for feedback and refinement
