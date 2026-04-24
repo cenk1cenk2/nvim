@@ -252,7 +252,7 @@ function M.config()
           background = {
             adapter = {
               name = "copilot",
-              model = "gpt-5.1-nano",
+              model = "openai/gpt-5-nano",
             },
             chat = {
               callbacks = {
