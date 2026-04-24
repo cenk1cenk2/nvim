@@ -1,8 +1,8 @@
 ---
 name: config-repository
-description: Create or revise repository knowledge base files (CLAUDE.md, AGENTS.md, or .local variants). Use when user says "update CLAUDE.md", "create AGENTS.md", "write repo knowledge base", "document decisions", or "snapshot this session". Do NOT use for the central AGENTS.md guidelines (/config-agents), skills (/config-skills), or MCP server configs (/config-mcp).
+description: Create or revise repository knowledge base files (CLAUDE.md, AGENTS.md, or .local variants). Use when user says "update CLAUDE.md", "create AGENTS.md", "write repo knowledge base", "document decisions", or "snapshot this session" — OR when the assistant detects new durable conventions, dead ends, or rule drift during a session (see AGENTS.md §VII "Knowledge Base Updates (Proactive)"). Do NOT use for the central AGENTS.md guidelines (/config-agents), skills (/config-skills), or MCP server configs (/config-mcp).
 interaction: chat
-disable-model-invocation: true
+disable-model-invocation: false
 references:
   - ../references/output-diff.md
 argument-hint: "[local] [optional: what changed or focus area]"
@@ -19,6 +19,27 @@ argument-hint: "[local] [optional: what changed or focus area]"
 ### Purpose
 
 Maintain a structured knowledge base file in the repository root that helps future agent sessions understand the repo, avoid dead ends, and use the right tools. The file is not documentation for humans — it is context for agents.
+
+### Invocation Modes
+
+The skill runs in two invocation modes. Classify before proceeding.
+
+- **Manual invocation** (user typed `/config-repository` or asked to update the knowledge base): follow the full present-and-approve flow below.
+- **Proactive invocation** (assistant self-triggered per AGENTS.md §VII "Knowledge Base Updates (Proactive)"): behavior depends on severity and session mode — see below.
+
+**Proactive — fast-path criteria (skip present-and-approve, write directly):**
+
+ALL of the following must hold:
+
+1. Session is in **automatic mode** (user gave broad authorization via `go`/`y`/`yolo`/equivalent, or session runs under `/loop`/cron).
+2. Change is **additive only** — pure append to a list-shaped section (`Approaches Tried`, `Gotchas`, `Tools & MCP Usage`).
+3. Change does **not** touch `Decision Log`, `Overview`, `Conventions`, or `Stack & Structure`.
+4. Change does **not** conflict with, reshape, or partially overlap existing content.
+5. Target file is a per-repo `CLAUDE.md`/`AGENTS.md` (NOT the central `~/.config/nvim/utils/agents/AGENTS.md` — that file is always manual via `/config-agents`).
+
+When all five hold: apply the edit, report the change in one sentence (section + summary), continue the session.
+
+If any one fails: fall through to the full present-and-approve flow below.
 
 ### File Detection
 

@@ -1062,6 +1062,47 @@ Present ALL chunks before asking for approval. Do not interleave with approval p
 - **Project-scoped observations** → store on project entity (e.g., "cloud-mysql-operator uses Go modules", "this project's API uses camelCase")
 - **General observations** → store on general entities like `Coding-Style` (e.g., "user prefers snake_case in Python", "conventional commit format", "language-level conventions")
 
+### Knowledge Base Updates (Proactive)
+
+When the session produces durable facts the knowledge base should know, or when the agent is about to act against it, proactively update or propose an update to `CLAUDE.md` / `AGENTS.md` / Obsidian repo note. Composes with §VI "Learning from User Deviations" (code-level) and "Memory Updates" above (cross-session) — do not duplicate.
+
+**When to detect:**
+
+- **Rule drift** — about to do (or just did) something that contradicts a loaded rule in the repo's `CLAUDE.md`/`AGENTS.md` or central `~/.config/nvim/utils/agents/AGENTS.md`.
+- **New durable convention** — session established a decision, convention, gotcha, failed approach, or tool-usage fact worth persisting.
+- **Outdated entry** — session revealed a knowledge-base entry is wrong or stale (including the Obsidian repo note loaded at session start per §I step 4).
+- **Architecture / component drift** — session revealed the Obsidian repo note's `Structure` / `Key Components` / `Conventions` sections no longer match the repo.
+
+**Severity × Mode matrix:**
+
+| Severity | Interactive mode | Automatic mode |
+|----------|------------------|----------------|
+| **Critical** — contradicts a loaded rule, changes/removes existing convention, architectural pivot, touches Decision Log, any change to central `AGENTS.md` | STOP mid-session, surface conflict, ask before proceeding | Same — always ask |
+| **Additive + obvious** — appends to list-shaped section (Approaches Tried / Gotchas), no overlap with existing content | Offer at a natural break | Just do the update — no prompt |
+| **Additive + ambiguous** — reshapes existing section, partial overlap | Offer at a natural break | Offer, don't just do it |
+
+**Automatic mode** = user typed `g`/`go`/`y`/`yolo` or gave equivalent authorization ("proceed", "don't ask me"), session is running under `/loop` or a cron trigger, or user explicitly opted into auto-apply. When in doubt, treat as interactive.
+
+**Routing:**
+
+- Per-repo `CLAUDE.md` / `AGENTS.md` → `/config-repository` (model-invokable; auto-write allowed per matrix above).
+- Central `~/.config/nvim/utils/agents/AGENTS.md` → `/config-agents` (always manual — suggest only).
+- Obsidian repo note (`~/notes/Repositories/<path>/README.md` + sub-notes) → `/obsidian-repository` (**always propose — never auto-write**, regardless of session mode; Obsidian notes are long-form reference documents and benefit from user review).
+
+**Composition:**
+
+- Code-style deviation in a single file → §VI only; do NOT trigger this rule.
+- Cross-session fact not tied to a repo (language-level preference, user role) → Memory Updates.
+- Repo-scoped rule / decision / gotcha / dead end → this rule.
+
+**Examples:**
+
+- **Critical:** session decided to replace library X with Y; `CLAUDE.md` still documents X → STOP, surface, propose `/config-repository`.
+- **Additive + automatic + obvious:** user typed `go`; session tried approach Q that didn't work → append directly to `CLAUDE.md` "Approaches Tried", report briefly.
+- **Additive + interactive:** session discovered tool Z needs `--foo` flag → at end of turn, offer `/config-repository`.
+- **Obsidian drift (always propose):** Obsidian repo note `Key Components` lists a service that was removed in this session; session added a new module → at end of turn, propose `/obsidian-repository` with a summary of deltas. Never auto-write, even in automatic mode.
+- **Non-example:** user corrects indentation in one function → §VI only; not this rule.
+
 ### Project Management Integration
 
 **Linear and other PM tools:**
@@ -1241,6 +1282,21 @@ Handles token expiration gracefully with retry logic.
 2. Add observations about patterns/decisions
 3. Create entities for new components
 4. Establish relations between entities
+```
+
+**Session establishes new convention or reveals outdated CLAUDE.md/AGENTS.md/Obsidian-note entry:**
+
+```
+1. Classify: critical (rule conflict, Decision Log, central AGENTS.md) vs additive (new gotcha, new dead end, new tool quirk)
+2. Check mode: `go`/`y`/`/loop` / broad authorization → automatic; otherwise interactive
+3. Route by target:
+   - CLAUDE.md / per-repo AGENTS.md → `/config-repository` (auto-write allowed for additive+obvious+automatic)
+   - Central ~/.config/nvim/utils/agents/AGENTS.md → `/config-agents` (always propose, never auto-write)
+   - Obsidian repo note (~/notes/Repositories/<path>) → `/obsidian-repository` (always propose, never auto-write)
+4. Critical → STOP, surface conflict, propose the appropriate skill
+5. Additive + config-repository + automatic + obvious append → just do it (append, report briefly)
+6. Additive + any other case → propose the appropriate skill at end of turn
+7. Code-style-only deviations → handled by §VI, not this scenario
 ```
 
 ## Rule Priority
