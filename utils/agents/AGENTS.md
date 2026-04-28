@@ -66,15 +66,29 @@
 
 **Skip plan mode for:**
 
-- Single-file or few-file changes where the approach is clear
-- Tasks with explicit, detailed instructions provided by user
+- The task is genuinely trivial (typo fix, obvious one-line bug, single named config tweak)
+- User has given complete, unambiguous, step-by-step implementation instructions
+- User has explicitly authorized immediate implementation (`g`, `go`, `y`, `yolo`, "just do it", "implement now")
 - Pure research/exploration tasks (use Task tool with Explore agent)
-- Simple documentation updates
-- Adding a straightforward feature where the implementation path is obvious
+- Simple documentation updates with clear, named scope
+
+**When unsure, plan.** Bias toward planning. Do NOT skip plan mode just because the implementation path looks obvious — "obvious" plans frequently miss edge cases or user intent.
 
 **Evaluate complexity first** — the threshold is whether the task genuinely requires multi-file research and design decisions, not just whether it touches multiple files. A "delete button on user profile" that needs a component + API call is straightforward. A "refactor authentication system" that touches 10 files with design tradeoffs warrants planning.
 
 **Default disposition: `plan-hard`.** Whenever plan mode is entered, load and follow the `plan-hard` skill (resource: `skills://skill/plan-hard`) unless the user explicitly requests a lighter pass (e.g., "quick plan", "just outline it"). `plan-hard` walks the design tree branch by branch, self-answers from the codebase where possible, and recommends an answer for every open question. It stays in plan mode until the user explicitly signals "implement" or uses a proceed signal (`g`, `go`, `y`, `yolo`).
+
+### Discussion-First Default
+
+> **Default to discussion before touching code.** Even when full plan mode is overkill, do not start editing immediately — propose the approach in 1–2 lines in chat, name the files you would touch, and wait for the user's signal to proceed.
+>
+> **Skip the discussion step ONLY when:**
+>
+> - The task is genuinely trivial (typo, one-line obvious fix, README correction).
+> - User has explicitly authorized immediate implementation (`g`, `go`, `y`, `yolo`, "just do it", "implement now", "start coding").
+> - User has given complete, step-by-step instructions that leave no design space ("change X to Y in file Z, then add A to file B").
+>
+> **When unsure, ask first.** "Want me to discuss the approach first, or go ahead and implement?" The cost of one clarifying message is much smaller than the cost of unwanted code.
 
 ### Special Mode Triggers
 
@@ -440,19 +454,20 @@ Write plan to `~/.claude/plans/YYYY-MM-DD-<project-name>-<name>.md`
 
 **5. Exit Plan Mode (Only When Ready):**
 
-**ONLY** use `ExitPlanMode` when:
+**Be shy about exiting.** ExitPlanMode is a one-way door — once exited, the agent will start implementing. Stay in plan mode by default. Only exit when ALL of these are true:
 
 - Plan has all required sections filled out
-- User has explicitly approved the approach
 - You can explain each implementation step clearly
 - You understand what files need changes and why
-- User explicitly requests to move to implementation
+- **User has explicitly and unambiguously asked to implement** — words like "implement", "code it", "go ahead", "do it", "start coding", or a proceed signal (`g`, `go`, `y`, `yolo`)
 
-**Ask permission before exiting:**
+**Ask permission before exiting — don't lead the witness:**
 
-> "The plan is ready. Would you like me to proceed with implementation, or should we refine anything further?"
+> "The plan is drafted. Want to refine anything, or are you happy with this approach?"
 
-**Wait for explicit approval before using ExitPlanMode.**
+Frame it as a neutral choice. Do NOT say "ready to implement?" — that nudges the user toward yes. Wait for an explicit go-signal.
+
+**When in doubt, stay in plan mode.** A user who wants implementation will say so. A user who wants more discussion will get frustrated if the agent jumps to coding.
 
 **6. Implement from Plan:**
 
@@ -506,7 +521,7 @@ Discovered existing token validation in `auth/validator.ts` that we can reuse. U
 - Ignore the plan once implementation starts
 - Create plan files outside `~/.claude/plans/`
 - Delete plan files after implementation (keep for historical reference)
-- Use ExitPlanMode unless you feel absolutely ready
+- Use ExitPlanMode unless the user has explicitly and unambiguously asked to implement — when in doubt, stay
 
 ### Quick Reference: Planning Workflow
 
@@ -1173,9 +1188,10 @@ Handles token expiration gracefully with retry logic.
 3. Draft plan in ~/.claude/plans/YYYY-MM-DD-<project>-<name>.md
 4. Present plan to user
 5. Iterate based on feedback
-6. Ask permission to proceed
-7. Use ExitPlanMode (only after approval)
-8. Implement following the plan
+6. Ask permission with neutral framing (no leading questions)
+7. Wait for EXPLICIT implementation signal — when in doubt, stay in plan mode
+8. Use ExitPlanMode (only after explicit approval)
+9. Implement following the plan
 ```
 
 **User asks to read or edit a file:**
@@ -1308,6 +1324,7 @@ When rules appear to conflict, follow this priority order:
    - Example: User says "skip plan mode" for complex task
    - Response: "I notice this task involves [reasons why plan mode would help]. The guidelines recommend plan mode for this. Would you like me to proceed without planning, or would a quick plan be helpful?"
    - Wait for confirmation before proceeding against guidelines
-3. **MCP servers over CLIs — always** (when an MCP server exists for a service, use it; fall back to CLI only when the MCP server is unavailable or lacks the specific operation)
-4. **Follow coding style** (match project patterns)
-5. **Update memory** (maintain continuity)
+3. **Default to discussion before implementation** — never start editing code without an explicit signal (proceed words, full step-by-step instructions, or a trivial-scope task). When unsure, ask. ExitPlanMode requires unambiguous user approval.
+4. **MCP servers over CLIs — always** (when an MCP server exists for a service, use it; fall back to CLI only when the MCP server is unavailable or lacks the specific operation)
+5. **Follow coding style** (match project patterns)
+6. **Update memory** (maintain continuity)
