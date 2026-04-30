@@ -796,21 +796,27 @@ Use vim MCP navigation tools to navigate the user's editor when referring to spe
 - **Empty line before return** - Leave an empty line before the return statement when the function body has multiple statements. For single-statement functions or early-return guard clauses that are the only statement in their block, the empty line may be omitted.
 - **No trailing whitespace** - Never leave empty spaces at the end of lines
 - **YAML document separator** - Always start YAML files with `---` (document separator) unless explicitly stated otherwise or the other documents in the same folder do not follow this convention.
-- **Names carry no redundant context** — when an identifier lives inside a scope that already names the thing (a class instance, a composable's returned interface, a struct, a module, a component), its members drop the noun the scope provides. The scope IS the context.
+- **Names carry no redundant context** — when an identifier lives inside a scope that already names the thing (a struct/class instance, a function's returned interface, a module, a component, a config group), its members drop the noun the scope provides. The scope IS the context. Language-agnostic — applies equally to Rust, Go, TypeScript, Vue, Svelte, Python, Java, etc.
 
   | Surface | Right | Wrong |
   | --- | --- | --- |
-  | Method on a single-purpose type | `sandbox.resolve(path)` | `sandbox.resolveSandboxPath(path)` |
-  | Composable / hook return | `useToasts() → { push, dismiss, clear }` | `useToasts() → { pushToast, dismissToast }` |
-  | Composable with multiple setters | `useSessionInfo() → { setMode, setModel, setCwd }` | `useSessionInfo() → { setSessionInfoMode, setSessionInfoCwd }` |
-  | Component prop | `<Modal dismissable />` | `<Modal dismissableOnClickOutside />` |
-  | Component event | `@dismiss` | `@modalDismiss` / `@onModalClose` |
-  | Struct field | `Capabilities { load_session, set_mode }` | `Capabilities { capability_load_session }` |
-  | Config field nested under a group | `[ui.theme.surface] default` | `[ui.theme.surface] surface_default_color` |
+  | **Rust** method on a single-purpose type | `sandbox.resolve(path)` | `sandbox.resolve_sandbox_path(path)` |
+  | **Rust** struct field | `Capabilities { load_session, set_mode }` | `Capabilities { capability_load_session }` |
+  | **Rust** enum variant | `enum Decision { Allow, Deny, AskUser }` | `enum Decision { DecisionAllow, DecisionDeny }` |
+  | **Go** method receiver | `(s *Server) Start()` | `(s *Server) StartServer()` |
+  | **Go** package-level — type prefix when bare reads ambiguously | `http.Client` | `http.HTTPClient` (stutter) |
+  | **TypeScript** class method | `store.set(key, val)` | `store.setStoreEntry(key, val)` |
+  | **TS** factory return / hook | `useToasts() → { push, dismiss, clear }` | `useToasts() → { pushToast, dismissToast }` |
+  | **TS** factory with multiple setters | `useSessionInfo() → { setMode, setModel, setCwd }` | `useSessionInfo() → { setSessionInfoMode }` |
+  | **Vue/Svelte** component prop | `<Modal dismissable />` | `<Modal dismissableOnClickOutside />` |
+  | **Vue/Svelte** event | `dispatch('dismiss')` / `@dismiss` | `@modalDismiss` / `@onModalClose` |
+  | Config field nested under a group | `[ui.theme.surface] default` (TOML) | `[ui.theme.surface] surface_default_color` |
 
-  Smell signal: the name reads correctly in isolation but repeats redundantly at the call site (`useToasts().pushToast()`, `sandbox.resolveSandboxPath`, `<Modal :modalDismissable>`). Strip the qualifier; rely on the call-site grammar to do the work the namespace already did. Apply to every new identifier — naming has zero runtime cost, but bad names compound forever.
+  Smell signal: the name reads correctly in isolation but **repeats redundantly at the call site** (`useToasts().pushToast()`, `sandbox.resolve_sandbox_path`, `httpClient.HTTPClientSend`, `<Modal :modalDismissable>`). Strip the qualifier; rely on the call-site grammar to do the work the namespace already did.
 
-  Exception: when a scope hosts multiple verbs of the same shape and the noun is the only discriminator, keep the noun (`setMode` vs `setModel`). Repetition only kicks in when the noun is a tautology (`setSessionInfoMode` inside `useSessionInfo`).
+  Exception: when a scope hosts multiple verbs of the same shape and the noun is the **only** discriminator, keep the noun (`setMode` vs `setModel` — the verb is the same, the noun discriminates). Stuttering only kicks in when the noun is a tautology of the scope (`setSessionInfoMode` inside `useSessionInfo` — `SessionInfo` is already implied by the factory).
+
+  Apply to every new identifier — naming has zero runtime cost, but bad names compound forever. Rename over aliasing: when a name turns out to stutter, rename it in one commit + update every caller; never leave a `type AcpTurn = ChatTurn` shim.
 
 **Example:**
 
@@ -870,6 +876,78 @@ def new_function():
 ```
 
 **Output explanations to chat** - Don't use code comments to communicate with user. Write explanations directly in the chat window.
+
+### Architectural Patterns
+
+These rules apply to **every language** the user works with (Rust, TypeScript, Vue, Svelte, Go, Python, Java, …). They're language-shape rules — not syntax rules.
+
+#### No backwards-compatibility layers
+
+Personal projects with no external stability contract. **Delete and rewire** when a design stops fitting. Forbidden:
+
+- Typed-shim aliases (`type Old = New`).
+- Deprecated method aliases (`fn oldName() -> ... { newName() }`).
+- "Legacy" wrapped behind a feature flag / capability gate that nothing turns off.
+- Re-exports that survive the only consumer.
+
+When a refactor lands, every call site flips in the same commit. The codebase has one shape per concept at any time.
+
+#### Stubs fail loudly, don't pretend
+
+A function that isn't wired end-to-end yet **panics / throws / errors** with a clear message naming the gap. Never returns a fake-success value. `unimplemented!("X: not wired (issue ABC)")` in Rust; `throw new Error(...)` in TS; `panic("...")` in Go. A pretty-printed placeholder response that looks like success hides the gap and burns the user when they trust it.
+
+#### Compose behavior onto the owning type, not as free fns
+
+When a module defines a primary type (`AcpClient`, `StatusBroadcast`, a Vue composable), helpers that operate on that type's state — or touch its handles / channels / registries — go as **methods on it**, not module-level free functions. Free functions are for pure transformations that don't read or mutate the type's invariants.
+
+Smell: `do_thing(client: &Client, x)` everywhere; refactor to `client.do_thing(x)`.
+
+#### Structs / objects carry their invariants — don't re-pass context on every call
+
+When a helper needs the same configuration value on every invocation ("the sandbox root", "the registry handle", "the API client"), wrap it in a struct/class/object and make the helper a method. Constructor canonicalises once; methods reuse the validated state.
+
+```rust
+// Wrong: every call re-validates
+canonicalize_within(base, path);
+
+// Right: validate once at construction
+let sandbox = Sandbox::new(root)?;
+sandbox.resolve(path);
+```
+
+Same shape in TS (`new Sandbox(root).resolve(path)`), Go (`s := NewSandbox(root); s.Resolve(path)`), Vue/Svelte composables (factory captures config, returned methods reuse it).
+
+#### Components / types compose, they don't bag
+
+When a consumer needs rendering / behavior flexibility, accept a **slot / closure / render fn / callback** — not a structured prop bag of primitives the type pattern-matches over.
+
+| Anti-pattern | Compose instead |
+| --- | --- |
+| Vue/Svelte `actions: { label, tone, icon, run }[]` prop | `<slot name="actions" />` |
+| TS `pushToast(msg, { action: { label, run } })` | `pushToast(msg, () => h(...))` or `{ component, props }` |
+| Rust struct of `Box<dyn Fn>` callbacks per event | trait with one method per event; impl per consumer |
+| Go map of `func` per dispatch type | interface with a `Handle(...)` method |
+
+The smell: when a consumer says "I need an extra knob" and the answer is "extend the type", the type is hiding a slot/closure that wants to exist.
+
+Keep prop bags only for **uniform lists of identically-shaped items** with no rendering decision to defer (plan steps, breadcrumb counts, table rows where every row is the same shape).
+
+#### Inline single-use helpers
+
+A function with exactly one caller should be folded into that caller. Prefer `fn main() -> Result<()>` over a `try_main` wrapper; prefer unfolding a small setup step into the body (with a short comment if the why isn't obvious) over extracting a one-call helper. Extract when there's a second caller AND the extraction earns its name.
+
+#### Open extension points → trait/interface; closed sets → enum
+
+- **Trait / interface** when new implementers arrive from outside the decision: `WindowManager` for compositors (Hyprland / Sway / Gtk), `AcpAgent` for vendors (claude-code / codex / opencode), Go's `io.Reader` for any byte source.
+- **Closed enum / union** for known-at-compile-time alternatives: Rust's `enum Decision { Allow, Deny }`, TS `type Tone = 'ok' | 'warn' | 'err'`, Go's iota constants.
+
+Mix is fine: a closed enum (`AgentProvider`) drives a `match` that hands back a `Box<dyn Trait>` — the enum names the universe of variants; the trait is what the consumer holds.
+
+#### Hub-and-spokes dispatch
+
+When you have a forest of related closed enums each with its own `match self → method` body (clap subcommand trees, multi-namespace command routers, parent-enum-of-sub-enums shapes), lift the contract to a small shared trait — one method, takes the per-call context, returns `Result<()>` — and impl it once per sub-enum. Parent gets one delegating impl. Adding a new branch = one new file + one variant + one match arm.
+
+Earns its keep when there are **multiple non-trivial sub-enum match bodies**. Don't reach for it for a single-level command tree (just match the one enum), don't add it speculatively, don't apply it to families where each "implementer" is a one-line shell.
 
 ## VI. USER INTERACTION PATTERNS
 
