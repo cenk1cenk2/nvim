@@ -796,6 +796,21 @@ Use vim MCP navigation tools to navigate the user's editor when referring to spe
 - **Empty line before return** - Leave an empty line before the return statement when the function body has multiple statements. For single-statement functions or early-return guard clauses that are the only statement in their block, the empty line may be omitted.
 - **No trailing whitespace** - Never leave empty spaces at the end of lines
 - **YAML document separator** - Always start YAML files with `---` (document separator) unless explicitly stated otherwise or the other documents in the same folder do not follow this convention.
+- **Names carry no redundant context** — when an identifier lives inside a scope that already names the thing (a class instance, a composable's returned interface, a struct, a module, a component), its members drop the noun the scope provides. The scope IS the context.
+
+  | Surface | Right | Wrong |
+  | --- | --- | --- |
+  | Method on a single-purpose type | `sandbox.resolve(path)` | `sandbox.resolveSandboxPath(path)` |
+  | Composable / hook return | `useToasts() → { push, dismiss, clear }` | `useToasts() → { pushToast, dismissToast }` |
+  | Composable with multiple setters | `useSessionInfo() → { setMode, setModel, setCwd }` | `useSessionInfo() → { setSessionInfoMode, setSessionInfoCwd }` |
+  | Component prop | `<Modal dismissable />` | `<Modal dismissableOnClickOutside />` |
+  | Component event | `@dismiss` | `@modalDismiss` / `@onModalClose` |
+  | Struct field | `Capabilities { load_session, set_mode }` | `Capabilities { capability_load_session }` |
+  | Config field nested under a group | `[ui.theme.surface] default` | `[ui.theme.surface] surface_default_color` |
+
+  Smell signal: the name reads correctly in isolation but repeats redundantly at the call site (`useToasts().pushToast()`, `sandbox.resolveSandboxPath`, `<Modal :modalDismissable>`). Strip the qualifier; rely on the call-site grammar to do the work the namespace already did. Apply to every new identifier — naming has zero runtime cost, but bad names compound forever.
+
+  Exception: when a scope hosts multiple verbs of the same shape and the noun is the only discriminator, keep the noun (`setMode` vs `setModel`). Repetition only kicks in when the noun is a tautology (`setSessionInfoMode` inside `useSessionInfo`).
 
 **Example:**
 
