@@ -12,7 +12,7 @@ references:
 
 ### GitHub CI: Create and Update GitHub Actions Workflows
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Research existing patterns and available actions before proposing anything.
@@ -21,7 +21,7 @@ references:
 
 ### Core Requirements
 
-> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection
 
 - **ALWAYS prefer existing, well-maintained GitHub Actions over writing custom steps.** Search GitHub for a preexisting action before building your own.
 - **ALWAYS fetch the latest version** of any action from its GitHub repository before referencing it in a workflow. Do not hardcode old versions.

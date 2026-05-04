@@ -14,13 +14,13 @@ interaction: chat
 
 **FIRST ACTION** when this skill is invoked:
 
-1. Call `spacelift_laravel__list_stacks` to verify connectivity and list available stacks.
+1. Call `spacelift-laravel__list_stacks` to verify connectivity and list available stacks.
 2. Note the available stacks and their current states.
 3. Store the workspace context for the session.
 
 ### Workspace Context
 
-- **Spacelift MCP:** `spacelift_laravel` — ALWAYS use `spacelift_laravel__*` tools.
+- **Spacelift MCP:** `spacelift-laravel` — ALWAYS use `spacelift-laravel__*` tools.
 - **Common read operations:** `list_stacks`, `list_stack_runs`, `get_stack_run`, `get_stack_run_logs`, `get_stack_run_changes`, `list_resources`, `list_spaces`, `list_policies`, `list_modules`.
 - **Write operations:** `trigger_stack_run`, `confirm_stack_run`, `discard_stack_run` — always confirm with user before executing.
 - **Cross-reference style:** Reference stack names and run IDs when discussing Spacelift operations.

@@ -20,7 +20,7 @@ references:
 
 > **DO NOT enter plan mode.** This is an interactive skill for one-shot handoff — no splitting, no sequencing, no team.
 
-> Read the `agents-delegate` reference for tier definitions, ecosystem model mappings, user shorthand, agent parameters, and prompt structure — resolve references from the `<References>` block via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/agents-delegate/references" })`.
+> Read the `agents-delegate` reference for tier definitions, ecosystem model mappings, user shorthand, agent parameters, and prompt structure.
 > Read the `agents-worktrees` reference when dispatching with `isolation: "worktree"` — worktrees MUST live under `<project_root>/.claude/worktrees/<name>/`. Covers naming, verification, and cleanup.
 > Read the `agents-conventions` reference when the task modifies code — establishes conventions to include in the agent prompt. Skip for read-only research tasks.
 > Read the `project-tooling` reference when the task modifies code — for verification commands to include in the agent prompt. Skip for read-only research tasks.

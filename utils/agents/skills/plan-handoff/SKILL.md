@@ -12,7 +12,7 @@ references:
 
 ### Cross-Session / Cross-Repository Planning
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/plan-handoff/references`.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read the files listed in `references:` for the `plan-handoff` skill.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.

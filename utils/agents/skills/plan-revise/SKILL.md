@@ -10,7 +10,7 @@ references:
 
 ### Plan Revise — Going Back to the Drawing Board
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/plan-revise/references`.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read the files listed in `references:` for the `plan-revise` skill.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", `g`, `go`, `y`, or `yolo`.
@@ -37,8 +37,8 @@ This skill composes with `plan-hard` — the interview protocol is the same, but
    - Do NOT move on until the failure mode is clearly understood.
 
 4. **Check implementation state.**
-   - Use `git__git_log` and `git__git_diff` to see what has been committed since the plan was written (compare against the plan's creation date or initial commit on the branch).
-   - Use `git__git_status` to see uncommitted work.
+   - Use `git log` and `git diff` to see what has been committed since the plan was written (compare against the plan's creation date or initial commit on the branch).
+   - Use `git status` to see uncommitted work.
    - Report to the user: "You've committed X, Y, Z and have unstaged changes to A, B. Want me to factor these into the revision?"
    - Decide per change: **keep** (still valid), **revert** (wrong direction), or **reshape** (salvage but adjust). Ask the user when unclear.
 
@@ -117,8 +117,8 @@ Same as `plan-hard`: before asking the user, check if the codebase answers the q
 
 Extra sources specific to `plan-revise`:
 
-- `git__git_log --since=<plan-date>` — what has been done since the plan.
-- `git__git_diff` — concrete changes on the branch.
+- `git log --since=<plan-date>` — what has been done since the plan.
+- `git diff` — concrete changes on the branch.
 - Build / test output (via tmux) — to confirm whether the current approach actually fails.
 
 ### Stop Conditions

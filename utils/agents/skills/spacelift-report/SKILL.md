@@ -28,11 +28,11 @@ references:
 ### Prerequisite
 
 > **PREREQUISITE:** The `spacelift-work` skill MUST be active before this skill runs.
-> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-work` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/spacelift-work" })`.
+> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-work` via the `spacelift-work` skill (load it as defined in `load-skills`).
 
 ### Core Requirements
 
-> Read the `spacelift-github` reference for input parsing, PR resolution, and Spacelift run discovery — resolve references from the `<References>` block via MCP resources.
+> Read the `spacelift-github` reference for input parsing, PR resolution, and Spacelift run discovery
 
 > Read the `scm-github` reference for GitHub MCP tools, git MCP tools, and CLI fallback conventions.
 

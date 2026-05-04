@@ -16,16 +16,17 @@ references:
 
 ### Context
 
+> **This skill is specific to the [mcphub.nvim](https://github.com/ravitemer/mcphub.nvim) plugin.** It uses `mcphub__toggle_mcp_server` and `mcphub__get_current_servers` to flip servers on and off at runtime without editing config. If the user is using a different MCP client without a runtime toggle, this skill does not apply — they would need to edit their client config and restart.
+
 Some MCP servers are disabled by default to save resources. They can be toggled on/off at runtime using `mcphub__toggle_mcp_server` without modifying `servers.json`.
 
 **Known optional servers and their trigger signals:**
 
 | Server | Trigger signals |
 |--------|----------------|
-| `grafana/kilic` | Grafana dashboards, alerts, metrics for personal/kilic infrastructure. |
-| `grafana/laravel` | Grafana dashboards, alerts, metrics for Laravel/work infrastructure. |
-| `kubernetes` | Pods, deployments, services, namespaces, kubectl, k8s, cluster operations. |
-| `notion/laravel` | Notion pages, databases, work documentation in Notion. |
+| `grafana-kilic` | Grafana dashboards, alerts, metrics for personal/kilic infrastructure. |
+| `grafana-laravel` | Grafana dashboards, alerts, metrics for Laravel/work infrastructure. |
+| `notion-laravel` | Notion pages, databases, work documentation in Notion. |
 | `treesitter` | AST queries, syntax tree analysis, structural code patterns. |
 
 ### Process
@@ -68,4 +69,4 @@ When the user explicitly asks to enable or disable a server:
 - **Be suspicious of missing tools.** If the user asks about something and the tools aren't in your toolset, check if an optional server provides them before saying you can't help.
 - **Minimal disruption.** Only toggle servers when genuinely needed — don't speculatively enable everything.
 - **Clean up after yourself.** Always offer to disable servers you enabled once the task is done.
-- **Never toggle core servers.** Only toggle servers that are in the disabled/optional list. Never stop core servers (git, neovim, mcphub, etc.).
+- **Never toggle core servers.** Only toggle servers that are in the disabled/optional list. Never stop core servers (neovim, mcphub, etc.).

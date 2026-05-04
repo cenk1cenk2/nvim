@@ -15,7 +15,7 @@ references:
 
 > **DO NOT enter plan mode.** This is a conversational, iterative review. Walk through changes with the user, report findings as you go.
 
-> Read the `scm-detect` reference for git MCP tools and CLI fallbacks — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `scm-detect` reference for git MCP tools and CLI fallbacks
 
 > Read the `review-findings` reference for finding presentation format — group by logical domain, severity tags, tone rules.
 
@@ -37,11 +37,11 @@ You are a senior developer who has seen every mistake twice. Professional, direc
 
 2. **Gather the full diff.**
    - Combine all layers to capture the complete working state:
-     - `git__git_diff` between baseline and HEAD for committed changes.
-     - `git__git_diff_staged` for staged changes.
-     - `git__git_diff_unstaged` for unstaged changes.
+     - `git diff` between baseline and HEAD for committed changes.
+     - `git diff --staged` for staged changes.
+     - `git diff` for unstaged changes.
    - If a layer returns empty, skip it — only report what exists.
-   - Use `git__git_log` between baseline and HEAD to understand the commit narrative.
+   - Use `git log` between baseline and HEAD to understand the commit narrative.
 
 3. **Walk through the changes.**
    - Go file by file through the diff.

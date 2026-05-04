@@ -11,7 +11,7 @@ references:
 
 > **ALWAYS enter plan mode.**
 >
-> Read the `linear-description-structure` reference for issue/project description format — resolve references from the `<References>` block via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/linear-project-agent/references" })` or filesystem tools.
+> Read the `linear-description-structure` reference for issue/project description format or filesystem tools.
 
 ### What is an Agent Project?
 

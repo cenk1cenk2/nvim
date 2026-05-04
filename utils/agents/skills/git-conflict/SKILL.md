@@ -12,12 +12,12 @@ references:
 
 > **DO NOT enter plan mode.** This is an interactive, conflict-by-conflict resolution skill.
 
-> Read the `scm-detect` reference for git MCP tool availability and CLI fallback rules — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/git-conflict/references`.
+> Read the `scm-detect` reference for git MCP tool availability and CLI fallback rules — read the files listed in `references:` for the `git-conflict` skill.
 
 ### Process
 
 1. **Detect conflict state.**
-   - Use `git__git_status` to identify unmerged paths (files with conflicts).
+   - Use `git status` to identify unmerged paths (files with conflicts).
    - If git MCP is unavailable, fall back to `git status` via CLI.
    - If no conflicts are detected, inform the user and stop.
    - Note the operation in progress (merge, rebase, cherry-pick) from the status output.

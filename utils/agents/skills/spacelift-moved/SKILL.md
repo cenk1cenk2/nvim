@@ -28,11 +28,11 @@ references:
 ### Prerequisite
 
 > **PREREQUISITE:** The `spacelift-work` skill MUST be active before this skill runs.
-> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-work` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/spacelift-work" })`.
+> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-work` via the `spacelift-work` skill (load it as defined in `load-skills`).
 
 ### Core Requirements
 
-> Read the `spacelift-github` reference for input parsing, PR resolution, and Spacelift run discovery — resolve references from the `<References>` block via MCP resources.
+> Read the `spacelift-github` reference for input parsing, PR resolution, and Spacelift run discovery
 
 > Read the `scm-github` reference for GitHub MCP tools, git MCP tools, and CLI fallback conventions.
 
@@ -46,7 +46,7 @@ references:
 
 2. **Discover affected stacks and collect run changes:**
    - Follow the `spacelift-github` reference — list stacks, find proposed runs matching the branch/SHA. If the input was a check run or Spacelift URL, the stack and run ID are already known — skip discovery.
-   - For each affected stack, call `spacelift_laravel__get_stack_run_changes` to get the full resource change list.
+   - For each affected stack, call `spacelift-laravel__get_stack_run_changes` to get the full resource change list.
    - **If `get_stack_run_changes` returns empty** (common during APPLYING state and after completion), fall back to parsing the terraform plan output from `get_stack_run_logs` — see the "Log Parsing Fallback" section in the `spacelift-github` reference.
 
 3. **Identify moved block candidates:**

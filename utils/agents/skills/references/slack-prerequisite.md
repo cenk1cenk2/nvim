@@ -4,8 +4,8 @@ A Slack workspace skill **MUST** be active before any Slack message/channel skil
 
 If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
 
-- **kilic workspace:** Load skill `slack-kilic` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/slack-kilic" })`
-- **Laravel workspace:** Load skill `slack-work` via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/slack-work" })`
+- **kilic workspace:** Load skill `slack-kilic` via the `slack-kilic` skill (load it as defined in `load-skills`)
+- **Laravel workspace:** Load skill `slack-work` via the `slack-work` skill (load it as defined in `load-skills`)
 
 ## Workspace Identifiers
 

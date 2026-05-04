@@ -16,7 +16,7 @@ references:
 
 > **DO NOT enter plan mode.** This is an interactive commit workflow — analyze, draft, approve, commit.
 
-> Read the `scm-detect` reference for git MCP tools and CLI fallbacks — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `scm-detect` reference for git MCP tools and CLI fallbacks
 
 > Read the `commit-style` reference for conventional commit format, types, subject line rules, body rules, and examples.
 
@@ -27,17 +27,17 @@ references:
 ### Process
 
 1. **Assess the working tree.**
-   - Use `git__git_status` to check staged, unstaged, and untracked files.
+   - Use `git status` to check staged, unstaged, and untracked files.
    - If git MCP is unavailable, fall back to `git status` via CLI.
    - If nothing is staged and nothing is modified, inform the user and stop.
 
 2. **Handle staging.**
    - If changes are already staged — proceed to step 3.
    - If nothing is staged but there are unstaged/untracked changes:
-     - **Default (no grouping requested):** stage everything with `git__git_add` using path `.`. No need to list or confirm individual files.
+     - **Default (no grouping requested):** stage everything with `git add` using path `.`. No need to list or confirm individual files.
      - **Grouped commits requested:** skip to step 2a instead.
-   - Stage files via `git__git_add` (path `.` for default, or individual paths for grouped commits). If git MCP is unavailable, fall back to `git add` via CLI.
-   - After staging, re-check with `git__git_diff_staged` to confirm what will be committed.
+   - Stage files via `git add` (path `.` for default, or individual paths for grouped commits). If git MCP is unavailable, fall back to `git add` via CLI.
+   - After staging, re-check with `git diff --staged` to confirm what will be committed.
 
 2a. **Grouped commits (multi-commit workflow).**
     - Triggered when the user explicitly asks to split changes into multiple commits (e.g., "commit these separately", "group into multiple commits", "split this into commits by concern").
@@ -47,14 +47,14 @@ references:
       - User-provided grouping hints.
     - Present the proposed groups to the user for approval. Adjust grouping based on feedback.
     - For each approved group:
-      1. Stage only that group's files via `git__git_add` with individual file paths.
+      1. Stage only that group's files via `git add` with individual file paths.
       2. Continue to step 3 (analyze) → step 4 (draft message) → step 5 (present) → step 6 (commit).
       3. After committing, return here for the next group.
     - Repeat until all groups are committed.
 
 3. **Analyze the staged changes.**
-   - Read the staged diff via `git__git_diff_staged`.
-   - Read recent commit history via `git__git_log` (last 5-10 commits) to understand context and match existing message style.
+   - Read the staged diff via `git diff --staged`.
+   - Read recent commit history via `git log` (last 5-10 commits) to understand context and match existing message style.
    - If the diff is large, read the changed files for surrounding context to understand the intent.
 
 4. **Draft the commit message.**
@@ -96,7 +96,7 @@ references:
    - Iterate until the user is satisfied.
 
 6. **Commit.**
-   - After explicit user approval, commit via `git__git_commit` with the approved message.
+   - After explicit user approval, commit via `git commit` with the approved message.
    - If git MCP is unavailable, fall back to `git commit -m` via CLI.
    - Confirm success by reporting the commit hash from the output.
    - Do NOT push. If the user wants to push, hand off to the `git-push` skill (invoked separately or as a compose step like "commit and push").
@@ -190,7 +190,7 @@ This skill is composable — the commit step is a single, focused responsibility
 **User says:** "commit this" with `https://linear.app/kilic-dev/issue/K-219/...`
 
 1. Check status — 6 files staged.
-2. Detect `K-219` from URL, fetch via `linear_kilic-dev__get_issue`.
+2. Detect `K-219` from URL, fetch via `linear-kilic-dev__get_issue`.
 3. Read staged diff — adds trojan-loki to inventory and caddy config.
 4. Draft:
    ```

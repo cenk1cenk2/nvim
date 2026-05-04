@@ -11,7 +11,7 @@ references:
 
 ### Evaluation Mode: Progress Evaluation
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
 >
 > - Use `EnterPlanMode` tool if not currently in plan mode.
 > - Read and update the EXISTING plan file from Assistant Mode.

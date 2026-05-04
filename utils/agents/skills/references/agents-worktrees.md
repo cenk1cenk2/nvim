@@ -39,7 +39,7 @@ If `isolation: "worktree"` on the `Agent` tool returns a non-conforming path (or
 
 1. Create the worktree yourself:
    ```
-   git__git_create_branch <branch-name>
+   git branch <branch-name>
    ```
    then via Bash:
    ```

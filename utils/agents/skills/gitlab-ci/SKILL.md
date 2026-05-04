@@ -12,7 +12,7 @@ references:
 
 ### GitLab CI: Create and Update GitLab CI/CD Pipelines
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Research existing patterns and available templates before proposing anything.
@@ -21,7 +21,7 @@ references:
 
 ### Core Requirements
 
-> Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection
 
 ### Architecture: devops/pipelines + devops/pipes
 

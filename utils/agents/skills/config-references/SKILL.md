@@ -50,7 +50,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
    - Shared: the content applies to 2+ skills or is a general convention.
    - Skill-specific: the content supports only one skill and would clutter its SKILL.md.
 2. If shared, list files in `~/.config/nvim/utils/agents/skills/references/` to check for existing references and avoid duplication.
-3. If skill-specific, read the parent skill via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}" })` to understand context.
+3. If skill-specific, read the parent skill at `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` (or `skills://skill/<name>` via mcphub) to understand context.
 4. Name the file:
    - Shared: `<family>-<topic>.md` (e.g., `linear-prerequisite.md`, `scm-detect.md`).
    - Skill-specific: `<topic>.md` inside `<skill-name>/references/`.
@@ -61,7 +61,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 
 #### Update
 
-1. Read the existing reference via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://reference/{name}" })`.
+1. Read the existing reference at `~/.config/nvim/utils/agents/skills/references/<name>.md` (or `skills://reference/<name>` via mcphub).
 2. Read skills that declare it — search for the filename in skill frontmatter to understand consumers.
 3. Identify what needs to change based on conversation context.
 4. Present proposed changes using diff format.
@@ -86,6 +86,17 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 | Family shared | `<family>-<topic>.md` | `linear-prerequisite.md`, `scm-github.md` |
 | Cross-family shared | `<topic>.md` | `output-diff.md`, `plan-mode.md` |
 | Skill-specific | `<topic>.md` in `<skill>/references/` | `./references/template.md` |
+
+### MCP Tool Name Convention
+
+When references list MCP tool names in tables or inline, use the **`<server>__<tool>` short form** with **kebab-case server names**: `linear-kilic-dev__get_issue`, `slack-kilic__slack_list_channels`, `argocd-kilic__list_applications`, `grafana-laravel__query_prometheus`, `spacelift-laravel__list_stacks`. Server keys use `-` only; `/` and `_` are not valid separators inside server keys. Do NOT bake in a transport prefix (`mcp__...`, `mcp__mcphub__...`, etc.) — the runtime resolves the prefix at call time.
+
+**Removed servers — do NOT reference these in new or updated content:**
+
+- `git__*` tools — there is no `git` MCP. Reference raw `git` CLI (`git status`, `git diff`, `git log`, etc.) via `Bash` instead.
+- `kubernetes__*` tools — the `kubernetes` MCP has been removed. Reference `kubectl` CLI via `Bash` if needed.
+
+**Tmux MCP is read-only.** Only the read-only tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are usable. References must NOT include `execute-command`, `create-window`, `split-pane`, `kill-*`, or `create-session` as a recommended action. For command execution, reference the built-in `Bash` tool.
 
 ### Key Principles
 

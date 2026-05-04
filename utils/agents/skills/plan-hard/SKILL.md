@@ -10,7 +10,7 @@ references:
 
 ### Plan Hard — Interview-Driven Design-Tree Traversal
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/plan-hard/references`.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read the files listed in `references:` for the `plan-hard` skill.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", or an equally direct proceed signal (the user lingo `g`, `go`, `y`, `yolo` also count).

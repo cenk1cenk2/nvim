@@ -8,7 +8,7 @@ The user can provide context in several forms. Detect which form was given and e
 
 | Input Form | Detection | Extract |
 |---|---|---|
-| **No input** (current branch) | User invokes the skill without specifying a target. | Branch name via `git__git_status`. Owner/repo from git remote URL. |
+| **No input** (current branch) | User invokes the skill without specifying a target. | Branch name via `git status`. Owner/repo from git remote URL. |
 | **Branch name** | User names a branch (e.g., "check branch `feat/xyz`"). | Branch name directly. Owner/repo from git remote URL. |
 | **PR number or URL** | Input matches `#N` or contains `github.com/<owner>/<repo>/pull/<number>`. | Owner, repo, PR number from the URL or `#N` + local repo context. |
 | **GitHub Actions URL** | Input contains `github.com/<owner>/<repo>/actions/runs/<run-id>`. | Owner, repo, run ID. Use `gh run view <run-id> --repo <owner>/<repo> --json headBranch,headSha,event` via CLI to get branch and commit. |
@@ -65,11 +65,11 @@ Once you have a **head branch** and/or **head SHA**, find affected Spacelift sta
 
 ### Step 1: List Stacks
 
-`spacelift_laravel__list_stacks` — get all available stacks.
+`spacelift-laravel__list_stacks` — get all available stacks.
 
 ### Step 2: Find Proposed Runs
 
-For each stack, call `spacelift_laravel__list_stack_proposed_runs`.
+For each stack, call `spacelift-laravel__list_stack_proposed_runs`.
 
 A stack is **affected** if it has a proposed run whose branch or commit matches the resolved head branch or head SHA.
 
@@ -77,7 +77,7 @@ A stack is **affected** if it has a proposed run whose branch or commit matches 
 
 If `list_stack_proposed_runs` returns no matches for any stack:
 
-1. For each stack, call `spacelift_laravel__list_stack_runs`.
+1. For each stack, call `spacelift-laravel__list_stack_runs`.
 2. Filter runs by branch name or commit SHA in run metadata.
 3. Use the most recent matching run per stack.
 
@@ -91,9 +91,9 @@ For each affected stack's run:
 
 | Tool | Purpose |
 |---|---|
-| `spacelift_laravel__get_stack_run` | Run status, metadata, timing. The `delta` field gives aggregate counts (`addCount`, `changeCount`, `deleteCount`) but does **not** separate moved/imported/removed resources — those are only visible in plan output. |
-| `spacelift_laravel__get_stack_run_changes` | Full resource change list (the core data for reports). **May return empty** during APPLYING state or for completed runs — if empty, fall back to log parsing. |
-| `spacelift_laravel__get_stack_run_logs` | Full run logs including terraform plan output. Use as **primary fallback** when `get_stack_run_changes` returns empty, and for failed runs to extract error summaries. |
+| `spacelift-laravel__get_stack_run` | Run status, metadata, timing. The `delta` field gives aggregate counts (`addCount`, `changeCount`, `deleteCount`) but does **not** separate moved/imported/removed resources — those are only visible in plan output. |
+| `spacelift-laravel__get_stack_run_changes` | Full resource change list (the core data for reports). **May return empty** during APPLYING state or for completed runs — if empty, fall back to log parsing. |
+| `spacelift-laravel__get_stack_run_logs` | Full run logs including terraform plan output. Use as **primary fallback** when `get_stack_run_changes` returns empty, and for failed runs to extract error summaries. |
 
 ### Log Parsing Fallback
 

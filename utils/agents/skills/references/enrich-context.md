@@ -39,14 +39,14 @@ When compiling output for others (Slack messages, PR comments, summaries), enric
 
 | Entity | MCP tool | Link format |
 |--------|----------|-------------|
-| Stack | `spacelift_laravel__list_stacks` | Stack page URL from response. |
-| Run | `spacelift_laravel__get_stack_run` or `spacelift_laravel__list_stack_runs` | `<run_url\|stack-name run #N>` for Slack, `[stack-name run #N](url)` for markdown. |
-| Run changes | `spacelift_laravel__get_stack_run_changes` | Summarize resource changes (+/~/−) inline. Link to the run. |
-| Run logs | `spacelift_laravel__get_stack_run_logs` | Quote relevant log lines. Link to the run. |
-| Module | `spacelift_laravel__get_module` or `spacelift_laravel__get_module_version` | Module URL from response. |
-| Policy | `spacelift_laravel__get_policy` | Policy URL from response. |
-| Blueprint | `spacelift_laravel__get_blueprint` | Blueprint URL from response. |
-| Context | `spacelift_laravel__get_context` | Context URL from response. |
+| Stack | `spacelift-laravel__list_stacks` | Stack page URL from response. |
+| Run | `spacelift-laravel__get_stack_run` or `spacelift-laravel__list_stack_runs` | `<run_url\|stack-name run #N>` for Slack, `[stack-name run #N](url)` for markdown. |
+| Run changes | `spacelift-laravel__get_stack_run_changes` | Summarize resource changes (+/~/−) inline. Link to the run. |
+| Run logs | `spacelift-laravel__get_stack_run_logs` | Quote relevant log lines. Link to the run. |
+| Module | `spacelift-laravel__get_module` or `spacelift-laravel__get_module_version` | Module URL from response. |
+| Policy | `spacelift-laravel__get_policy` | Policy URL from response. |
+| Blueprint | `spacelift-laravel__get_blueprint` | Blueprint URL from response. |
+| Context | `spacelift-laravel__get_context` | Context URL from response. |
 
 ### Linear
 
@@ -63,16 +63,16 @@ When compiling output for others (Slack messages, PR comments, summaries), enric
 
 | Entity | MCP tool | Link format |
 |--------|----------|-------------|
-| Dashboard | `grafana_laravel__search_dashboards` to find, `grafana_laravel__get_dashboard_by_uid` for details | `grafana_laravel__generate_deeplink` to build URL with time range and variables. |
-| Alert | `grafana_laravel__list_alert_groups` or `grafana_laravel__get_alert_group` | Alert URL from response. |
-| Datasource | `grafana_laravel__get_datasource` | Datasource name and type for reference (no public URL). |
+| Dashboard | `grafana-laravel__search_dashboards` to find, `grafana-laravel__get_dashboard_by_uid` for details | `grafana-laravel__generate_deeplink` to build URL with time range and variables. |
+| Alert | `grafana-laravel__list_alert_groups` or `grafana-laravel__get_alert_group` | Alert URL from response. |
+| Datasource | `grafana-laravel__get_datasource` | Datasource name and type for reference (no public URL). |
 
 ## Code Permalinks
 
 When referencing specific lines of code, always build a permalink to the exact SHA — not to a branch (which moves). Steps:
 
 1. Use `github__get_file_contents` or `gitlab__get_file_contents` to verify the file exists and read the content around the target lines.
-2. Get the current commit SHA from the PR/MR head or from `git__git_log`.
+2. Get the current commit SHA from the PR/MR head or from `git log`.
 3. Build the permalink using the SHA, not the branch name.
 
 ## Appendix Pattern

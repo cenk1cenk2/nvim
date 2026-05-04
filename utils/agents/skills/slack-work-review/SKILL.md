@@ -19,7 +19,7 @@ references:
 > **DO NOT enter plan mode.** This skill fetches PR details and posts a message.
 
 > **PREREQUISITE:** The `slack-work` workspace skill MUST be active before this skill runs.
-> Load it via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/slack-work" })` if not already loaded.
+> Load it via the `slack-work` skill (load it as defined in `load-skills`) if not already loaded.
 
 > Read the `slack` reference for Slack mrkdwn formatting rules.
 > Read the `scm-github` reference for GitHub MCP tools.
@@ -39,7 +39,7 @@ references:
 1. **Identify the PR.**
    - If the user provides a GitHub PR URL or number, use it directly.
    - If not provided, detect from the current branch:
-     - Use `git__git_status` to get the current branch.
+     - Use `git status` to get the current branch.
      - Use `github__list_pull_requests` with `head: "owner:branch"` to find the open PR.
    - If no PR is found, ask the user.
 

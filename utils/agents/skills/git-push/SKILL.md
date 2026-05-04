@@ -13,12 +13,12 @@ references:
 
 > **DO NOT enter plan mode.** This is a quick-action workflow — inspect, report, push. Invoking this skill IS the approval to push; do NOT ask for separate confirmation on the happy path.
 
-> Read the `scm-detect` reference for git MCP tools and CLI fallbacks — resolve references from the `<References>` block via MCP filesystem tools (read all at once from `skills://skill/git-push/references`).
+> Read the `scm-detect` reference for git MCP tools and CLI fallbacks
 
 ### Process
 
 1. **Assess local state.**
-   - Use `git__git_status` to get the current branch.
+   - Use `git status` to get the current branch.
    - Detect the upstream via the built-in `Bash` tool (there is no git MCP tool for this): `git rev-parse --abbrev-ref --symbolic-full-name @{u}`. A non-zero exit means the branch has no upstream yet.
    - If the working tree is dirty, note it in the report — `git push` carries only committed history. Do NOT prompt on this; just report. **Skip this note when invoked immediately after `git-commit` in the same turn** (see "Composing with Other Skills").
 
@@ -35,7 +35,7 @@ references:
    - **Up to date:** inform the user there is nothing to push and stop.
 
 4. **List pending commits.**
-   - Use `git__git_log` to list commits between the upstream (or, for a new branch, an inferred base like the default branch) and `HEAD`.
+   - Use `git log` to list commits between the upstream (or, for a new branch, an inferred base like the default branch) and `HEAD`.
    - Include commit count and subject lines in the final report.
 
 5. **Safety checks (only these gate the push).**
@@ -84,7 +84,7 @@ This skill is composable — other skills can hand off to it once their work is 
 
 **User says:** "push"
 
-1. `git__git_status` → branch `feat/token-refresh-logic`, clean tree. Upstream is `origin/feat/token-refresh-logic`. Branch is 2 commits ahead, 0 behind.
+1. `git status` → branch `feat/token-refresh-logic`, clean tree. Upstream is `origin/feat/token-refresh-logic`. Branch is 2 commits ahead, 0 behind.
 2. Default remote: `origin`. No divergence blocker. No protected branch.
 3. Report + execute in one go:
 

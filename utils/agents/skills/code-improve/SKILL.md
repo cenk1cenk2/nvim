@@ -10,7 +10,7 @@ references:
 
 ### Code Improve — Codebase Audit and Improvement Proposals
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/code-improve/references`.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read the files listed in `references:` for the `code-improve` skill.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - **NEVER exit plan mode.** This skill produces proposals, not implementation. The user picks what to do, then invokes `plan-hard` (or similar) to plan the chosen work.

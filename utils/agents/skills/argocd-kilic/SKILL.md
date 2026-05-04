@@ -14,25 +14,25 @@ argument-hint: "[operation] [application-name] - e.g., 'rollover deployments for
 
 ### Context
 
-This skill uses the `argocd/kilic` MCP server to operate on ArgoCD applications. The server connects to the ArgoCD instance and exposes tools for reading application state, fetching logs, and running resource actions.
+This skill uses the `argocd-kilic` MCP server to operate on ArgoCD applications. The server connects to the ArgoCD instance and exposes tools for reading application state, fetching logs, and running resource actions.
 
-**MCP server:** `argocd/kilic` (stdio, `argocd-mcp`).
+**MCP server:** `argocd-kilic` (stdio, `argocd-mcp`).
 
 ### Tools
 
 | Tool | Auto-approved | Purpose |
 |------|--------------|---------|
-| `argocd/kilic__list_applications` | Yes | Find applications by name (supports partial search). |
-| `argocd/kilic__get_application` | Yes | Get app details — sync status, health, source, destination. |
-| `argocd/kilic__get_application_resource_tree` | Yes | List all Kubernetes resources managed by an app. |
-| `argocd/kilic__get_application_managed_resources` | Yes | Get managed resources with filtering (kind, namespace, name). |
-| `argocd/kilic__get_application_workload_logs` | Yes | Fetch logs for a workload (Deployment, StatefulSet, Pod). |
-| `argocd/kilic__get_application_events` | Yes | Get application-level events. |
-| `argocd/kilic__get_resource_events` | Yes | Get events for a specific managed resource. |
-| `argocd/kilic__get_resources` | Yes | Get full resource manifests. |
-| `argocd/kilic__get_resource_actions` | Yes | List available actions on a resource (restart, refresh, etc.). |
-| `argocd/kilic__run_resource_action` | **No — requires user approval** | Execute an action on a resource. |
-| `argocd/kilic__sync_application` | **No — requires user approval** | Trigger an application sync. |
+| `argocd-kilic__list_applications` | Yes | Find applications by name (supports partial search). |
+| `argocd-kilic__get_application` | Yes | Get app details — sync status, health, source, destination. |
+| `argocd-kilic__get_application_resource_tree` | Yes | List all Kubernetes resources managed by an app. |
+| `argocd-kilic__get_application_managed_resources` | Yes | Get managed resources with filtering (kind, namespace, name). |
+| `argocd-kilic__get_application_workload_logs` | Yes | Fetch logs for a workload (Deployment, StatefulSet, Pod). |
+| `argocd-kilic__get_application_events` | Yes | Get application-level events. |
+| `argocd-kilic__get_resource_events` | Yes | Get events for a specific managed resource. |
+| `argocd-kilic__get_resources` | Yes | Get full resource manifests. |
+| `argocd-kilic__get_resource_actions` | Yes | List available actions on a resource (restart, refresh, etc.). |
+| `argocd-kilic__run_resource_action` | **No — requires user approval** | Execute an action on a resource. |
+| `argocd-kilic__sync_application` | **No — requires user approval** | Trigger an application sync. |
 
 ### Process
 

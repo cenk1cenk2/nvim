@@ -21,7 +21,7 @@ references:
 
 ### Core Requirements
 
-> Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -39,7 +39,7 @@ These are team defaults for this workflow. Do not prompt the user to confirm the
 ### Process
 
 1. **Gather Context:**
-   - Get current branch name via `git__git_status`.
+   - Get current branch name via `git status`.
    - Get remote origin URL to extract the GitLab project path.
    - Find the open MR for the current branch via `gitlab__list_merge_requests` with `source_branch` filter and `state: opened`.
    - **Branch reuse:** Branches may have previously merged or closed MRs — this is normal. Only open MRs matter. If no open MR is found but `git log main..HEAD` shows commits ahead of the base branch, the branch needs a new MR. Do NOT search for or get confused by prior closed/merged MRs on the same branch.

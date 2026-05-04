@@ -28,30 +28,30 @@ When a skill has a **PREREQUISITE** block, the agent MUST ensure that prerequisi
 
 Two Linear workspaces exist. Deduce which one from context:
 
-| Signal                                 | Workspace | Skill resource                |
-| -------------------------------------- | --------- | ----------------------------- |
-| Issue ID prefix `K-xxx`                | kilic-dev | `skills://skill/linear-kilic` |
-| Issue ID prefix `CLOUD-xxx`            | Laravel   | `skills://skill/linear-work`  |
-| Linear URL containing `kilic-dev`      | kilic-dev | `skills://skill/linear-kilic` |
-| Linear URL containing `laravel`        | Laravel   | `skills://skill/linear-work`  |
-| GitLab repository (`gitlab.kilic.dev`) | kilic-dev | `skills://skill/linear-kilic` |
-| GitHub repository (Laravel org)        | Laravel   | `skills://skill/linear-work`  |
-| User says "work" or "laravel"          | Laravel   | `skills://skill/linear-work`  |
-| User says "personal" or "kilic"        | kilic-dev | `skills://skill/linear-kilic` |
-| No signal available                    | —         | Ask the user                  |
+| Signal                                 | Workspace | Skill                |
+| -------------------------------------- | --------- | -------------------- |
+| Issue ID prefix `K-xxx`                | kilic-dev | `linear-kilic`       |
+| Issue ID prefix `CLOUD-xxx`            | Laravel   | `linear-work`        |
+| Linear URL containing `kilic-dev`      | kilic-dev | `linear-kilic`       |
+| Linear URL containing `laravel`        | Laravel   | `linear-work`        |
+| GitLab repository (`gitlab.kilic.dev`) | kilic-dev | `linear-kilic`       |
+| GitHub repository (Laravel org)        | Laravel   | `linear-work`        |
+| User says "work" or "laravel"          | Laravel   | `linear-work`        |
+| User says "personal" or "kilic"        | kilic-dev | `linear-kilic`       |
+| No signal available                    | —         | Ask the user         |
 
 #### Skill Chaining
 
-Some skills reference other skills as follow-up actions. When a skill recommends invoking another skill, load it via `ReadMcpResourceTool`:
+Some skills reference other skills as follow-up actions. When a skill recommends invoking another skill, read its `SKILL.md`:
 
-| Context                                     | Skill resource                            |
-| ------------------------------------------- | ----------------------------------------- |
-| Need to create Linear issues                | `skills://skill/linear-issue-create`      |
-| Need to create a Linear project             | `skills://skill/linear-project-create`    |
-| Need to update/refine an issue description  | `skills://skill/linear-issue-update`      |
-| Need to create a Linear initiative          | `skills://skill/linear-initiative-create` |
-| Need to update a Linear initiative          | `skills://skill/linear-initiative-update` |
-| Need to organize a todo note into the vault | `skills://skill/obsidian-note`            |
+| Context                                     | Skill                       |
+| ------------------------------------------- | --------------------------- |
+| Need to create Linear issues                | `linear-issue-create`       |
+| Need to create a Linear project             | `linear-project-create`     |
+| Need to update/refine an issue description  | `linear-issue-update`       |
+| Need to create a Linear initiative          | `linear-initiative-create`  |
+| Need to update a Linear initiative          | `linear-initiative-update`  |
+| Need to organize a todo note into the vault | `obsidian-note`             |
 
 #### Multiple Instances
 
@@ -61,36 +61,51 @@ When a skill exists in multiple variants (e.g., `linear-kilic-project-argocd-sys
 - **Application workloads** (apps, services, CRD instances deployed to target clusters) → `linear-kilic-project-argocd-workload`
 - If unclear, ask the user.
 
-### Loading Skills Without a Skill Mechanism
+### Loading Skills
 
-For LLMs or environments that do not have a native skill invocation system (no `/slash-commands`), skills can be loaded using the **skills MCP resources** on the `mcphub` server:
+Skills live as plain Markdown files at `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`. The agent has two paths to access them. **Pick the path that matches the runtime, then stick with it for the whole session.**
 
-1. Use `ListMcpResourcesTool({ server: "mcphub" })` to discover available skills. Each skill resource is tagged `[auto]` (model can auto-invoke) or `[manual]` (explicit user request only).
-2. Read `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}" })` to read a skill. For multiple skills, make parallel calls.
-3. Follow the instructions in the file as if they were system instructions for the current task.
-4. If the loaded skill has its own prerequisites, resolve them recursively.
+#### Path A — mcphub is loaded
 
-**Fallback:** If skills MCP resources are unavailable, read the file directly at `~/.config/nvim/utils/agents/skills/<skill-name>/SKILL.md` using filesystem tools.
+Detection: `mcphub__*` tools are in your toolset, and `ListMcpResourcesTool` / `ReadMcpResourceTool` are available.
+
+When this path is active, **prefer the MCP resource interface** — it surfaces the `[auto]` / `[manual]` invocation tags and resolves a skill's references in a single call.
+
+1. **Discover:** `ListMcpResourcesTool({ server: "mcphub" })`. Skills appear at `skills://skill/<name>` (with their `description` and `[auto]` / `[manual]` flag); shared references appear at `skills://reference/<name>`.
+2. **Load a skill:** `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>" })`. For multiple skills, parallel calls.
+3. **Load all references for a skill:** `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>/references" })` — returns every file declared in the skill's `references:` frontmatter, regardless of whether the path is shared (`../references/...`) or skill-local (`./references/...`).
+4. **Load a shared reference standalone** (outside a skill load): `ReadMcpResourceTool({ server: "mcphub", uri: "skills://reference/<name>" })`.
+
+#### Path B — direct integration (no mcphub)
+
+Detection: no `mcphub__*` tools. The host is loading skills another way — Claude Code with a plugin/skills folder, OpenCode loading the directory, a generic MCP client without the mcphub bridge, or a plain shell session.
+
+There are two sub-cases:
+
+**B1. Skills are attached automatically** (Claude Code plugin, OpenCode skill folder, etc.). The host injects the relevant `SKILL.md` content into context as part of session setup or via an attachment when the user invokes the skill. Treat them as already loaded — follow the in-context instructions. No filesystem listing needed.
+
+**B2. Skills are not attached.** Read the file directly from the filesystem:
+
+1. **Discover:** list `~/.config/nvim/utils/agents/skills/` to enumerate skill directories. Read the frontmatter (first ~10 lines of each `SKILL.md`) for the `description` field. Skills with `disable-model-invocation: true` are the equivalent of `[manual]` — only load on explicit user request.
+2. **Load a skill:** read `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` directly. For multiple skills, read in parallel.
+3. **Load references:** the skill declares its references in frontmatter — resolve each path **relative to the skill's directory** (`../references/<file>.md` → `~/.config/nvim/utils/agents/skills/references/<file>.md`; `./references/<file>.md` → `~/.config/nvim/utils/agents/skills/<name>/references/<file>.md`).
+
+#### Both paths — common rules
+
+1. Follow the instructions in the loaded `SKILL.md` as if they were system instructions for the current task.
+2. If the loaded skill has its own prerequisites, resolve them recursively (re-enter the load procedure for each).
+3. **Do NOT auto-load references.** Only read a reference when the skill's body tells you to.
+4. Skills must work even when references fail to load (graceful degradation) — they contain enough inline context to function.
 
 ### Reference Files
 
-Skills may declare references to additional files for shared conventions and detailed context. References are declared in YAML frontmatter as comma-separated relative paths:
+Skills may declare references to additional files for shared conventions and detailed context. References are declared in YAML frontmatter as a YAML array of relative paths:
 
 ```yaml
 references:
   - ../references/linear-prerequisite.md
   - ../references/plan-mode.md
 ```
-
-**How references work:**
-
-1. When a skill is invoked, its declared references are resolved and listed in the XML `<References>` block.
-2. The SKILL.md body tells you which references to read and when (e.g., "Read the `slack` reference for available tools and conventions.").
-3. **Read reference files using `ReadMcpResourceTool`** from the `mcphub` server — read all references for a skill: `skills://skill/{name}/references`. For shared references outside a skill context: `skills://reference/{name}`.
-   - References resolve automatically — shared references and skill-local ones are both handled.
-4. Skills must work even without references (graceful degradation) — they contain enough inline context to function.
-
-**Fallback:** If skills MCP tools are unavailable, read reference files using `filesystem__read_file` or `neovim__read_file` at `~/.config/nvim/utils/agents/skills/references/<filename>`.
 
 **Reference locations:**
 
@@ -99,7 +114,7 @@ references:
 | `../references/<file>.md` | Shared across skills  | `../references/linear-prerequisite.md` |
 | `./references/<file>.md`  | Specific to one skill | `./references/research-workflow.md`    |
 
-**Do NOT auto-load references.** Only read them when the skill's instructions tell you to.
+**Resolution** depends on the runtime path (see "Loading Skills" above). On Path A, use `skills://skill/<name>/references` or `skills://reference/<name>`. On Path B, the absolute filesystem paths above apply.
 
 ### Dismissing Skills
 

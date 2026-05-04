@@ -50,8 +50,8 @@ Skills in this directory form an interconnected system. A skill may depend on or
 #### Create
 
 1. Determine what the skill should do. Ask the user if not clear from context.
-2. Read 2-3 existing skills in the same family to understand patterns, tone, and structure. Read each via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}" })` — make parallel calls for multiple skills.
-3. **Check references** — read shared references via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://reference/{name}" })`. If the skill belongs to a family (e.g., Linear, Obsidian), check whether sibling skills declare references in their frontmatter and reuse the same ones.
+2. Read 2-3 existing skills in the same family to understand patterns, tone, and structure. For each, read `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` (or `skills://skill/<name>` if mcphub is loaded) — issue reads in parallel.
+3. **Check references** — read shared references at `~/.config/nvim/utils/agents/skills/references/<name>.md` (or `skills://reference/<name>` via mcphub). If the skill belongs to a family (e.g., Linear, Obsidian), check whether sibling skills declare references in their frontmatter and reuse the same ones.
 4. Draft the full `SKILL.md`. Use reference directives for any shared conventions found in step 3. Add matching `references:` frontmatter field.
 5. **Validate** — run the description checklist (see below) and verify conventions before presenting.
 6. Present the draft in chat.
@@ -60,8 +60,8 @@ Skills in this directory form an interconnected system. A skill may depend on or
 
 #### Update
 
-1. Read the existing `SKILL.md` for the target skill via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{target-skill}" })`.
-2. **Read all declared references** — if the skill has a `references:` frontmatter field, load all references via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{target-skill}/references" })`. This ensures you understand the full context the skill operates in before making changes.
+1. Read the existing `SKILL.md` for the target skill at `~/.config/nvim/utils/agents/skills/<target-skill>/SKILL.md` (or `skills://skill/<target-skill>` via mcphub).
+2. **Read all declared references** — if the skill has a `references:` frontmatter field, load all references via `reading the files listed in `references:``. This ensures you understand the full context the skill operates in before making changes.
 3. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
 4. Identify what needs to change.
 5. **Check for deduplication** — if the skill contains blocks that are duplicated in sibling skills (prerequisite blocks, plan mode directives, description structures, research patterns), check whether a shared reference already exists in `~/.config/nvim/utils/agents/skills/references/`. If it does, replace the duplicated block with a reference directive. If it doesn't and the block appears in 2+ skills, propose extracting it to a new shared reference.
@@ -147,10 +147,11 @@ References implement progressive disclosure — SKILL.md stays lean with the cor
 #### How References Work
 
 1. Skills declare references in frontmatter as a YAML array of relative paths.
-2. The mcphub plugin resolves these paths and lists them in the XML `<References>` block when the skill is invoked.
-3. The SKILL.md body tells the model which references to read and when, using reference directives (blockquotes).
-4. The model reads reference files using `ReadMcpResourceTool` with the `mcphub` server — they are NOT auto-loaded into context. Read all references: `skills://skill/{name}/references`. For shared references outside a skill context: `skills://reference/{name}`. Fallback: `filesystem__read_file` or `neovim__read_file`.
-5. Skills must work even if references fail to load (graceful degradation).
+2. References are NOT loaded into context automatically — the SKILL.md body tells the model which references to read and when, using reference directives (blockquotes).
+3. The model reads reference files on demand (see Path Convention below — the loading mechanism depends on whether mcphub is loaded).
+4. Skills must work even if references fail to load (graceful degradation).
+
+When authoring a skill, **do not bake the loading mechanism into the SKILL.md**. The runtime decision (mcphub vs. direct filesystem) is made by the agent at session start (see `AGENTS.md` Section I, step 4, and `load-skills` skill). Reference directives in SKILL.md should name the reference and what it covers, not the tool used to fetch it.
 
 #### Path Convention
 
@@ -159,7 +160,10 @@ Paths are relative to the skill's own directory:
 - `../references/<file>.md` — shared references (up to `skills/`, into `references/`).
 - `./references/<file>.md` — skill-specific references (inside the skill's own directory).
 
-If a relative path fails to resolve, the model should try the absolute base: `~/.config/nvim/utils/agents/skills/references/`.
+The agent resolves these as follows depending on the runtime path:
+
+- **mcphub loaded:** read via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<skill>/references" })` to get all references for a skill at once, or `skills://reference/<name>` for a shared reference standalone.
+- **Direct filesystem (no mcphub):** the absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/references/<file>.md`, and `./references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`.
 
 #### Reference Directives in SKILL.md
 
@@ -173,7 +177,7 @@ Use blockquotes to instruct the model to read a reference:
 **Combined plan-mode + reference directive** (used when the skill declares `plan-mode.md`):
 
 ```markdown
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - [Skill-specific plan mode rules here.]
@@ -183,7 +187,6 @@ The directive should:
 - Name the reference clearly (matching the filename without extension).
 - State what the reference covers so the model knows why to read it.
 - Include a brief inline summary so the skill still works if the reference fails to load.
-- Include "read from the `mcphub` MCP server via `ReadMcpResourceTool`" so the model knows how to load them. Use `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}/references" })` to load all references at once. Fallback: filesystem tools if unavailable.
 
 #### When to Create a New Shared Reference
 
@@ -251,7 +254,7 @@ Run this checklist when creating, updating, or reviewing any skill description:
 - **Description** must follow the description checklist above.
 - **Plan mode** — use it for skills that need research or multi-step planning. Skip it for interactive or quick-turnaround skills.
 - **`disable-model-invocation: true`** — use when the skill should only be triggered by explicit user request, not auto-detected.
-- **MCP tools** — reference specific tool names (e.g., `github__*`) when the skill depends on them. Use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git__git_status`, `slack__slack_list_channels`) — see MCP Tool Name Convention below.
+- **MCP tools** — reference specific tool names (e.g., `github__*`) when the skill depends on them. Use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git status`, `slack__slack_list_channels`) — see MCP Tool Name Convention below.
 - **Be concise** — skills are instructions for an agent, not documentation for humans. Keep it actionable.
 - **End list items with `.`** — consistent punctuation across all skills.
 - **Examples** — workflow skills that orchestrate multi-step processes should include at least one example showing trigger → actions → result.
@@ -259,19 +262,22 @@ Run this checklist when creating, updating, or reviewing any skill description:
 
 ### MCP Tool Name Convention
 
-MCP tools are available under two prefixes: `mcp__mcphub__<server>__<tool>` (full) and `mcp__<server>__<tool>` (short). Both resolve to the same tool — **prefer `mcp__mcphub__` when both exist** as it routes through the mcphub hub.
+In skill files, reference files, and documentation, use the **`<server>__<tool>` short form** — the server name is the identifying factor. The harness/client may surface the tool under a longer prefix (`mcp__<server>__<tool>`, `mcp__<hub>__<server>__<tool>`, etc.); the agent resolves whatever prefix the runtime uses at call time. Documentation should NOT bake in a specific prefix.
 
-In skill files, reference files, and documentation, use the **`<server>__<tool>` short form** for readability — the server name is the identifying factor. Examples:
+**Server name rules** — server keys MUST use kebab-case with `-` separators only. Never use `/` in server keys (does not parse correctly through some MCP hubs) and avoid `_` for word separation inside the key. Workspace-suffixed servers follow the `<service>-<workspace>` pattern, e.g., `linear-kilic-dev`, `linear-laravel`, `grafana-kilic`, `grafana-laravel`, `argocd-kilic`, `slack-kilic`, `spacelift-laravel`.
+
+Examples:
 
 - `github__get_file_contents` (server: `github`, tool: `get_file_contents`)
 - `gitlab__get_merge_request` (server: `gitlab`, tool: `get_merge_request`)
-- `git__git_status` (server: `git`, tool: `git_status`)
-- `slack__slack_list_channels` (server: `slack`, tool: `slack_list_channels`)
-- `linear_kilic-dev__get_issue` (server: `linear_kilic-dev`, tool: `get_issue`)
+- `slack-kilic__slack_list_channels` (server: `slack-kilic`, tool: `slack_list_channels`)
+- `linear-kilic-dev__get_issue` (server: `linear-kilic-dev`, tool: `get_issue`)
 - `memory__add_observations` (server: `memory`, tool: `add_observations`)
 - `obsidian__obsidian_read_note` (server: `obsidian`, tool: `obsidian_read_note`)
 
-The agent resolves the correct `mcp__mcphub__` or `mcp__` prefix at call time. When writing tool tables in skills or references, use the `<server>__<tool>` form consistently.
+**There is no `git` MCP server.** For local git operations, reference raw `git` CLI commands (`git status`, `git diff`, `git log`, `git show`, `git commit`, etc.) called via `Bash`. Do NOT introduce a `git__*` tool reference into new or updated skills.
+
+**The `tmux` MCP server is read-only.** Write tools (`execute-command`, `create-window`, `split-pane`, `kill-*`, `create-session`) are disabled. Skills that need to execute commands MUST use the built-in `Bash` tool. The remaining tmux tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are still available for inspecting existing user panes.
 
 ### Examples
 

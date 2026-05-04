@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "argocd/kilic": {
+    "argocd-kilic": {
       "args": ["-y", "--bun", "argocd-mcp@latest", "stdio"],
       "autoApprove": [
         "list_applications",
@@ -76,16 +76,6 @@
       "url": "https://mcp.excalidraw.com",
       "hyprpilot": {
         "autoAcceptTools": ["read_me", "create_view", "export_to_excalidraw", "save_checkpoint", "read_checkpoint"],
-        "autoRejectTools": []
-      }
-    },
-    "git": {
-      "args": ["mcp-server-git@latest"],
-      "autoApprove": ["git_diff", "git_diff_staged", "git_diff_unstaged", "git_log", "git_show", "git_status", "git_branch"],
-      "command": "uvx",
-      "disabled_tools": [],
-      "hyprpilot": {
-        "autoAcceptTools": ["git_diff", "git_diff_staged", "git_diff_unstaged", "git_log", "git_show", "git_status", "git_branch"],
         "autoRejectTools": []
       }
     },
@@ -325,7 +315,7 @@
         ]
       }
     },
-    "grafana/kilic": {
+    "grafana-kilic": {
       "args": ["mcp-grafana"],
       "autoApprove": [
         "query_prometheus_histogram",
@@ -432,7 +422,7 @@
         ]
       }
     },
-    "grafana/laravel": {
+    "grafana-laravel": {
       "args": ["mcp-grafana"],
       "autoApprove": [
         "query_prometheus_histogram",
@@ -539,54 +529,7 @@
         ]
       }
     },
-    "kubernetes": {
-      "args": ["-y", "--bun", "kubernetes-mcp-server@latest", "--read-only"],
-      "autoApprove": [
-        "get_pod",
-        "list_pods",
-        "get_pod_logs",
-        "list_namespaces",
-        "get_resource",
-        "list_resources",
-        "pods_get",
-        "pods_list",
-        "pods_list_in_namespace",
-        "pods_log",
-        "pods_top",
-        "resources_get",
-        "resources_list",
-        "namespaces_list",
-        "events_list",
-        "configuration_view",
-        "configuration_contexts_list"
-      ],
-      "command": "bunx",
-      "disabled": true,
-      "disabled_tools": ["helm_list"],
-      "hyprpilot": {
-        "autoAcceptTools": [
-          "get_pod",
-          "list_pods",
-          "get_pod_logs",
-          "list_namespaces",
-          "get_resource",
-          "list_resources",
-          "pods_get",
-          "pods_list",
-          "pods_list_in_namespace",
-          "pods_log",
-          "pods_top",
-          "resources_get",
-          "resources_list",
-          "namespaces_list",
-          "events_list",
-          "configuration_view",
-          "configuration_contexts_list"
-        ],
-        "autoRejectTools": ["helm_list"]
-      }
-    },
-    "linear/kilic-dev": {
+    "linear-kilic-dev": {
       "autoApprove": [
         "list_issues",
         "list_projects",
@@ -656,7 +599,7 @@
         "autoRejectTools": []
       }
     },
-    "linear/laravel": {
+    "linear-laravel": {
       "autoApprove": [
         "get_attachment",
         "get_document",
@@ -853,7 +796,7 @@
         "autoRejectTools": []
       }
     },
-    "slack/kilic": {
+    "slack-kilic": {
       "args": ["-y", "--bun", "@modelcontextprotocol/server-slack@latest"],
       "autoApprove": ["slack_list_channels", "slack_get_channel_history", "slack_get_thread_replies", "slack_get_users", "slack_get_user_profile", "slack_add_reaction"],
       "command": "bunx",
@@ -866,7 +809,7 @@
         "autoRejectTools": []
       }
     },
-    "spacelift/laravel": {
+    "spacelift-laravel": {
       "args": ["mcp", "server"],
       "autoApprove": [
         "get_api_key",
@@ -992,10 +935,10 @@
       "args": ["-y", "--bun", "tmux-mcp", "--shell-type=zsh"],
       "autoApprove": ["get-command-result", "list-panes", "list-sessions", "list-windows", "capture-pane", "find-session"],
       "command": "bunx",
-      "disabled_tools": ["kill-window", "kill-session", "kill-pane", "create-session"],
+      "disabled_tools": ["kill-window", "kill-session", "kill-pane", "create-session", "create-window", "execute-command", "split-pane"],
       "hyprpilot": {
         "autoAcceptTools": ["get-command-result", "list-panes", "list-sessions", "list-windows", "capture-pane", "find-session"],
-        "autoRejectTools": ["kill-window", "kill-session", "kill-pane", "create-session"]
+        "autoRejectTools": ["kill-window", "kill-session", "kill-pane", "create-session", "create-window", "execute-command", "split-pane"]
       }
     }
   },

@@ -14,19 +14,19 @@ references:
 
 > **DO NOT enter plan mode.** This is an interactive quick-action workflow — discover, propose, approve, create.
 
-> Read the `scm-detect` reference for git MCP tools and CLI fallbacks — resolve references from the `<References>` block via MCP filesystem tools (read all at once from `skills://skill/git-branch/references`).
+> Read the `scm-detect` reference for git MCP tools and CLI fallbacks
 
 > Read the `output-diff` reference for presenting the proposed branch plan before creating it.
 
 ### Process
 
 1. **Discover the current state.**
-   - Use `git__git_status` to get the current branch and working tree state.
-   - Determine the default branch — try `git symbolic-ref refs/remotes/origin/HEAD` via CLI first, or list branches with `git__git_branch` and check which of `main`, `master`, `rolling`, `develop`, `trunk` exists.
+   - Use `git status` to get the current branch and working tree state.
+   - Determine the default branch — try `git symbolic-ref refs/remotes/origin/HEAD` via CLI first, or list branches with `git branch` and check which of `main`, `master`, `rolling`, `develop`, `trunk` exists.
    - If git MCP is unavailable, fall back to `git status`, `git branch`, and `git rev-parse --abbrev-ref HEAD` via CLI.
 
 2. **Discover the naming convention.**
-   - List local branches with `git__git_branch`.
+   - List local branches with `git branch`.
    - List remote branches via CLI (`git branch -r`) — the git MCP `git_branch` is oriented toward local branches, so remotes usually need CLI.
    - Infer the repo's prefix convention from the branch set. Common patterns:
      - `feature/*`, `feat/*` — features.
@@ -58,7 +58,7 @@ references:
    - Wait for explicit user approval before any write.
 
 6. **Fast-forward the default branch (unless opted out).**
-   - Default behavior: checkout the default branch via `git__git_checkout`, then fast-forward via `git pull --ff-only` (CLI; no MCP pull tool).
+   - Default behavior: checkout the default branch via `git checkout`, then fast-forward via `git pull --ff-only` (CLI; no MCP pull tool).
    - Skip this step only when the user explicitly opts out (e.g., "don't fast-forward", "skip pull", "branch as-is").
    - **On any blocker — never auto-resolve. Ask the user.** Blockers include:
      - Uncommitted changes that would block checkout.
@@ -67,11 +67,11 @@ references:
    - Present the specific situation and offer options (stash, abort, skip FF, rebase onto remote, commit first, etc.). Wait for instruction.
 
 7. **Create the branch.**
-   - Use `git__git_create_branch` from the chosen base.
+   - Use `git branch` from the chosen base.
    - If git MCP is unavailable, fall back to `git branch <name> <base>` via CLI.
 
 8. **Switch to the new branch.**
-   - `git__git_create_branch` does NOT switch — always follow with `git__git_checkout <new-branch>`.
+   - `git branch` does NOT switch — always follow with `git checkout <new-branch>`.
    - CLI fallback: `git checkout <new-branch>` (or `git switch <new-branch>`).
 
 9. **Confirm.**
@@ -113,7 +113,7 @@ This skill is composable — other skills can delegate branch creation to it as 
 
 4. User approves.
 5. Checkout `rolling`, `git pull --ff-only` succeeds.
-6. `git__git_create_branch feature/token-refresh-logic` → `git__git_checkout feature/token-refresh-logic`.
+6. `git branch feature/token-refresh-logic` → `git checkout feature/token-refresh-logic`.
 7. Confirm: "Created and switched to `feature/token-refresh-logic` from `rolling`. Not pushed."
 
 ---
@@ -179,7 +179,7 @@ This skill is composable — other skills can delegate branch creation to it as 
 
 **User says:** "new branch for jwt work" (working tree has uncommitted changes)
 
-1. `git__git_status` shows 3 modified files. Default branch: `main`.
+1. `git status` shows 3 modified files. Default branch: `main`.
 2. Propose plan (note the blocker):
 
    > Repo uses `feature/*`. Working tree has uncommitted changes — fast-forward will fail on checkout. Need your call before proceeding.

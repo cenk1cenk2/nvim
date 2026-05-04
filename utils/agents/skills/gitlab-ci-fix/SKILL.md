@@ -12,7 +12,7 @@ references:
 
 ### GitLab Failed CI: Diagnose and Fix Failing Pipelines
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Present findings and proposed fixes to the user.
@@ -20,11 +20,11 @@ references:
 
 ### Core Requirements
 
-> Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection
 
 ### Process
 
-1. **Identify failing pipelines.** Get the current branch via `git__git_status`. List recent pipelines for the branch using `gitlab__list_pipelines` with the branch ref. Identify pipelines with `failed` status.
+1. **Identify failing pipelines.** Get the current branch via `git status`. List recent pipelines for the branch using `gitlab__list_pipelines` with the branch ref. Identify pipelines with `failed` status.
 2. **Fetch failure details.** For each failing pipeline, use `gitlab__list_pipeline_jobs` to get the job list and identify failed jobs. Use `glab ci trace <job-id>` to extract the relevant job logs. Focus on the actual error messages, not boilerplate output.
 3. **Diagnose the error.** Analyze the error messages. Read relevant source files, config files, or pipeline definitions (`.gitlab-ci.yml`) as needed. If the error is unclear or unfamiliar, search the internet for the error message or related keywords.
 4. **Propose a fix.** Present findings to the user: what failed, why it failed, and how to fix it. Be specific — reference file paths, line numbers, and exact changes needed.

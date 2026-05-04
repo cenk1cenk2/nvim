@@ -22,7 +22,7 @@ references:
 
 ### Context
 
-> Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, and writing style conventions — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/obsidian-triage/references`.
+> Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, and writing style conventions — read the files listed in `references:` for the `obsidian-triage` skill.
 
 Todo notes in `Todo/` are quick captures — timestamped files with rough thoughts, checklists, and brain dumps. Over time they accumulate. This skill processes them one by one: organizing relevant notes into proper vault categories (like `obsidian-note` would), flagging stale or completed notes for removal, and refining what remains.
 

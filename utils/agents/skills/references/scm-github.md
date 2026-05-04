@@ -6,7 +6,7 @@
 - **ALWAYS use `git` MCP tools for local git operations.**
 - Use `gh` CLI as fallback when MCP tools lack the needed capability (e.g., `gh run list`, `gh run view`).
 - Determine repository owner and name from the git remote URL.
-- Determine the current branch from local git state via `git__git_status`.
+- Determine the current branch from local git state via `git status`.
 
 ## Available Tools by Category
 
@@ -57,18 +57,18 @@
 
 | Tool | Purpose |
 |------|---------|
-| `git__git_status` | Current branch, staged/unstaged changes. |
-| `git__git_branch` | List, create, or check branches. |
-| `git__git_diff` | Diff between refs (branches, commits). |
-| `git__git_diff_staged` | Staged changes only. |
-| `git__git_diff_unstaged` | Unstaged changes only. |
-| `git__git_log` | Commit history. |
-| `git__git_show` | Show a specific commit. |
-| `git__git_add` | Stage files for commit. |
-| `git__git_commit` | Create a commit with staged changes. |
-| `git__git_reset` | Unstage files or reset to a ref. |
-| `git__git_checkout` | Switch branches or restore files. |
-| `git__git_create_branch` | Create a new branch from current HEAD or a ref. |
+| `git status` | Current branch, staged/unstaged changes. |
+| `git branch` | List, create, or check branches. |
+| `git diff` | Diff between refs (branches, commits). |
+| `git diff --staged` | Staged changes only. |
+| `git diff` | Unstaged changes only. |
+| `git log` | Commit history. |
+| `git show` | Show a specific commit. |
+| `git add` | Stage files for commit. |
+| `git commit` | Create a commit with staged changes. |
+| `git reset` | Unstage files or reset to a ref. |
+| `git checkout` | Switch branches or restore files. |
+| `git branch` | Create a new branch from current HEAD or a ref. |
 
 ## CLI Fallback
 

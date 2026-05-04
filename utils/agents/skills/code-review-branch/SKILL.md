@@ -34,11 +34,11 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - Summarize your understanding of the intent before proceeding — confirm with the user if anything is unclear.
 
 2. **Discover Platform and Review Mode:**
-   - Read the `scm-detect` reference to detect the current branch and SCM platform — resolve from the `<References>` block via MCP filesystem tools. Then read the matching platform reference (`scm-github` or `scm-gitlab`) for provider-specific tools.
+   - Read the `scm-detect` reference to detect the current branch and SCM platform Then read the matching platform reference (`scm-github` or `scm-gitlab`) for provider-specific tools.
    - Check if a PR/MR is open for this branch.
    - If a PR/MR exists, ask the user: **"There's an open PR/MR. Would you like findings inline in chat, or annotated directly on the PR/MR?"**
    - If a PR/MR is open, use its target branch and diff. Otherwise diff against the default branch (`main`/`master`/`rolling`).
-   - Use `git__git_diff` for the full diff, or MCP PR/MR diff tools if available.
+   - Use `git diff` for the full diff, or MCP PR/MR diff tools if available.
 
 3. **Analyze the Changes:**
    - Use `sequentialthinking__sequentialthinking` to methodically work through the diff.
@@ -58,7 +58,7 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - The user may say "ignore that" without further explanation — respect it and drop the item.
 
 5. **Present Findings:**
-   - Read the `review-findings` reference for finding presentation format — resolve from the `<References>` block via MCP filesystem tools.
+   - Read the `review-findings` reference for finding presentation format
    - Group findings under `###` headings by logical domain/system (e.g., "Authentication", "Plugin System", "Database Layer"), not by severity.
    - Within each domain, order most critical findings first. Use severity tags (`**bug:**`, `**risk:**`, `**nit:**`, `**question:**`) when severity isn't obvious from context.
    - For each finding, show the code in question and the proposed change:

@@ -50,7 +50,7 @@ If the current working directory is under `~/development/`, derive the folder pa
 > - **Vault not accessible on disk** (fallback) → use `obsidian__*` MCP tools for file operations.
 > - **Always use** `obsidian__obsidian_list_notes` and `obsidian__obsidian_global_search` regardless of availability — they expose index-backed capabilities the built-ins cannot replicate.
 >
-> Read the `obsidian` reference for vault location and full tool access conventions — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/obsidian-repository/references`.
+> Read the `obsidian` reference for vault location and full tool access conventions — read the files listed in `references:` for the `obsidian-repository` skill.
 
 - Use codebase exploration tools (treesitter, Grep, Glob, git MCP) to analyze the repository.
 

@@ -22,7 +22,7 @@ references:
 > **DO NOT enter plan mode.** This is a draft-and-post workflow.
 
 > **PREREQUISITE:** The `slack-work` workspace skill MUST be active before this skill runs.
-> Load it via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/slack-work" })` if not already loaded.
+> Load it via the `slack-work` skill (load it as defined in `load-skills`) if not already loaded.
 
 > Read the `slack` reference for Slack mrkdwn formatting rules.
 > Read the `scm-github` and `scm-gitlab` references for SCM MCP tools.

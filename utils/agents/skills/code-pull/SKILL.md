@@ -15,7 +15,7 @@ argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 
 ### Code Pull: Adapt Changes from a Reference Repository
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Analyze the reference changes and plan how to adapt them before writing any code.
@@ -24,7 +24,7 @@ argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 
 ### Core Requirements
 
-> Read the `scm-detect` reference to detect the SCM platform and access local git MCP tools — resolve references from the `<References>` block via MCP filesystem tools. Then read the matching platform reference (`scm-github` or `scm-gitlab`) for provider-specific tools.
+> Read the `scm-detect` reference to detect the SCM platform and access local git MCP tools Then read the matching platform reference (`scm-github` or `scm-gitlab`) for provider-specific tools.
 
 - Determine the source platform (GitHub or GitLab) from the provided URL or remote origin.
 - The current repository and the reference repository are similar but NOT identical. Changes must be adapted, not blindly copied.

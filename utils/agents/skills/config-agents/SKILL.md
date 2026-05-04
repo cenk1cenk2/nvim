@@ -13,7 +13,7 @@ argument-hint: "[what to change or review in AGENTS.md]"
 
 ### Agents Guidelines Management
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Changes to AGENTS.md affect ALL future agent sessions — treat every change with care.

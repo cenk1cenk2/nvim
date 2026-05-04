@@ -24,7 +24,7 @@ references:
 
 ### Context
 
-> Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling
 
 The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `linear-issue-implement`, `obsidian-note`, `code-pull`) or performing direct actions (research, code changes, summarization).
 
@@ -32,16 +32,16 @@ The user provides a Slack message URL and a task. This skill reads the message a
 
 Tool names differ per workspace. Use the correct tools based on which workspace skill is active:
 
-| Action | `slack-kilic` (mcphub) | `slack-work` (`mcp__claude_ai_Slack__*`, deferred) |
+| Action | `slack-kilic` | `slack-work` (`mcp__claude_ai_Slack__*`, deferred) |
 |--------|------------------------|-----------------------------------------------------|
-| Read channel | `slack_kilic__slack_get_channel_history` | `mcp__claude_ai_Slack__slack_read_channel` |
-| Read thread | `slack_kilic__slack_get_thread_replies` | `mcp__claude_ai_Slack__slack_read_thread` |
-| List channels | `slack_kilic__slack_list_channels` | `mcp__claude_ai_Slack__slack_search_channels` |
-| Get users | `slack_kilic__slack_get_users` | `mcp__claude_ai_Slack__slack_search_users` |
-| Get user profile | `slack_kilic__slack_get_user_profile` | `mcp__claude_ai_Slack__slack_read_user_profile` |
-| Post message | `slack_kilic__slack_post_message` | `mcp__claude_ai_Slack__slack_send_message` |
-| Reply to thread | `slack_kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with thread) |
-| Add reaction | `slack_kilic__slack_add_reaction` | NOT available |
+| Read channel | `slack-kilic__slack_get_channel_history` | `mcp__claude_ai_Slack__slack_read_channel` |
+| Read thread | `slack-kilic__slack_get_thread_replies` | `mcp__claude_ai_Slack__slack_read_thread` |
+| List channels | `slack-kilic__slack_list_channels` | `mcp__claude_ai_Slack__slack_search_channels` |
+| Get users | `slack-kilic__slack_get_users` | `mcp__claude_ai_Slack__slack_search_users` |
+| Get user profile | `slack-kilic__slack_get_user_profile` | `mcp__claude_ai_Slack__slack_read_user_profile` |
+| Post message | `slack-kilic__slack_post_message` | `mcp__claude_ai_Slack__slack_send_message` |
+| Reply to thread | `slack-kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with thread) |
+| Add reaction | `slack-kilic__slack_add_reaction` | NOT available |
 
 **`slack-work` tools are deferred** — load via `ToolSearch` before use. See `claude-ai-connectors` reference.
 

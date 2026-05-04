@@ -4,7 +4,7 @@
 
 **Step 1: Get current branch and remote URL.**
 
-Use `git__git_status` to get the current branch name. If git MCP is unavailable, fall back to `git rev-parse --abbrev-ref HEAD` and `git remote get-url origin` via CLI.
+Use `git status` to get the current branch name. If git MCP is unavailable, fall back to `git rev-parse --abbrev-ref HEAD` and `git remote get-url origin` via CLI.
 
 **Step 2: Determine the SCM platform from the remote URL.**
 
@@ -18,7 +18,7 @@ Parse the remote URL to extract:
 - **GitHub:** `git@github.com:<owner>/<repo>.git` → `owner` + `repo`.
 - **GitLab:** `git@gitlab.example.com:<group>/<project>.git` → `project_path` (supports nested groups: `<group>/<subgroup>/<project>`).
 
-**Step 3: Read the matching platform reference** from the `<References>` block via MCP filesystem tools. The platform reference contains the full list of available MCP tools for that provider.
+**Step 3: Read the matching platform reference**. The platform reference contains the full list of available MCP tools for that provider.
 
 If the skill already knows the platform (e.g., user provided a URL, or it's a platform-specific skill), skip detection and read the platform reference directly.
 
@@ -28,15 +28,15 @@ Use these for all local repository operations. Fall back to CLI equivalents if g
 
 | Tool | Purpose | CLI fallback |
 |------|---------|--------------|
-| `git__git_status` | Current branch, staged/unstaged changes. | `git status` |
-| `git__git_branch` | List, create, or check branches. | `git branch` |
-| `git__git_diff` | Diff between refs (branches, commits). | `git diff <ref1> <ref2>` |
-| `git__git_diff_staged` | Staged changes only. | `git diff --cached` |
-| `git__git_diff_unstaged` | Unstaged changes only. | `git diff` |
-| `git__git_log` | Commit history. | `git log` |
-| `git__git_show` | Show a specific commit. | `git show <ref>` |
-| `git__git_add` | Stage files for commit. | `git add <path>` |
-| `git__git_commit` | Create a commit with staged changes. | `git commit -m "<msg>"` |
-| `git__git_reset` | Unstage files or reset to a ref. | `git reset` |
-| `git__git_checkout` | Switch branches or restore files. | `git checkout <ref>` |
-| `git__git_create_branch` | Create a new branch from current HEAD or a ref. **Does NOT switch to it** — call `git__git_checkout` after. | `git branch <branch>` |
+| `git status` | Current branch, staged/unstaged changes. | `git status` |
+| `git branch` | List, create, or check branches. | `git branch` |
+| `git diff` | Diff between refs (branches, commits). | `git diff <ref1> <ref2>` |
+| `git diff --staged` | Staged changes only. | `git diff --cached` |
+| `git diff` | Unstaged changes only. | `git diff` |
+| `git log` | Commit history. | `git log` |
+| `git show` | Show a specific commit. | `git show <ref>` |
+| `git add` | Stage files for commit. | `git add <path>` |
+| `git commit` | Create a commit with staged changes. | `git commit -m "<msg>"` |
+| `git reset` | Unstage files or reset to a ref. | `git reset` |
+| `git checkout` | Switch branches or restore files. | `git checkout <ref>` |
+| `git branch` | Create a new branch from current HEAD or a ref. **Does NOT switch to it** — call `git checkout` after. | `git branch <branch>` |

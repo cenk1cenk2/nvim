@@ -26,7 +26,7 @@ This skill reads all open review conversations on a GitHub pull request, interpr
 
 - If the user provides a GitHub PR URL or number, use it directly.
 - If not provided, detect from the current branch:
-  - Use `git__git_status` to get the current branch.
+  - Use `git status` to get the current branch.
   - Extract owner/repo from the remote URL.
   - Use `github__list_pull_requests` with `head: "owner:branch"` and `state: open` to find the open PR.
 - If no open PR is found, inform the user and stop.

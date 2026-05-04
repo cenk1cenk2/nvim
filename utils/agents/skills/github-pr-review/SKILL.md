@@ -30,7 +30,7 @@ This skill performs an autonomous code review on a GitHub pull request using nat
 
 - If the user provides a GitHub PR URL or number, use it directly.
 - If not provided, detect from the current branch:
-  - Use `git__git_status` to get the current branch.
+  - Use `git status` to get the current branch.
   - Extract owner/repo from the remote URL.
   - Use `github__list_pull_requests` with `head: "owner:branch"` and `state: open` to find the open PR.
 - If no open PR is found, inform the user and stop.
@@ -50,7 +50,7 @@ This skill performs an autonomous code review on a GitHub pull request using nat
 - Record the current HEAD commit SHA as the review baseline.
 
 **Consecutive run:**
-- Get the diff between the previously reviewed commit SHA and current HEAD via `git__git_diff`.
+- Get the diff between the previously reviewed commit SHA and current HEAD via `git diff`.
 - If no new changes exist since the last review, inform the user and stop.
 - Also re-read the full PR diff for context on existing annotations.
 

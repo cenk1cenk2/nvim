@@ -13,9 +13,9 @@ argument-hint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-clu
 
 ### ArgoCD Workload Deployment Project Generator
 
-> **PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/linear-kilic" })`. This skill is kilic-dev workspace specific.
+> **PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill (load it as defined in `load-skills`). This skill is kilic-dev workspace specific.
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Create plan file in `~/.claude/plans/YYYY-MM-DD-workload-<name>.md`.

@@ -73,11 +73,11 @@ Load only the tools needed for the current task. Each `ToolSearch` call can load
 ## Availability
 
 - **Direct Claude Code CLI sessions:** Available when logged in with OAuth and the connector is authorized on claude.ai/settings/connectors.
-- **mcphub/ACP sessions (Neovim):** NOT available. ACP sessions only have access to MCP servers passed via the `mcpServers` session parameter. claude.ai connectors do not sync to ACP.
+- **Sessions routed through an MCP hub (mcphub/ACP):** NOT available. Hub-routed sessions only have access to MCP servers passed via the `mcpServers` session parameter. claude.ai connectors do not sync through.
 
 ## Key Rules
 
 - **Always load before use.** Calling a deferred tool without loading it first will fail with `InputValidationError`.
 - **Load per task.** Load only what you need — do not bulk-load all tools from a connector.
 - **No reactions for Slack.** The claude.ai Slack connector does not have `slack_add_reaction`.
-- **Tool names vary.** claude.ai connector tool names differ from mcphub equivalents (e.g., `mcp__claude_ai_Notion__notion-fetch` vs `notion_laravel__notion-fetch`, `mcp__claude_ai_Slack__slack_read_channel` vs `slack_kilic__slack_get_channel_history`).
+- **Tool names vary.** claude.ai connector tool names differ from server-direct equivalents (e.g., `mcp__claude_ai_Notion__notion-fetch` vs `notion-laravel__notion-fetch`, `mcp__claude_ai_Slack__slack_read_channel` vs `slack-kilic__slack_get_channel_history`).

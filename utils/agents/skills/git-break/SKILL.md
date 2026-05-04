@@ -18,7 +18,7 @@ references:
 > - Do NOT create branches, commits, pushes, or PRs/MRs until the user approves the full split plan.
 > - Iterate on the plan with the user until they explicitly approve.
 
-> Read the `scm-detect` reference for SCM platform detection, git MCP tools, and CLI fallbacks — resolve references from the `<References>` block via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/git-break/references" })`.
+> Read the `scm-detect` reference for SCM platform detection, git MCP tools, and CLI fallbacks.
 
 > Read the `output-diff` reference for chunked split-plan presentation — show reasoning + content blocks per slice before any write.
 
@@ -38,9 +38,9 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
 ### Process
 
 1. **Detect input mode and SCM platform.**
-   - `git__git_status` for current branch and working-tree state.
+   - `git status` for current branch and working-tree state.
    - Detect the default/base branch (try `git symbolic-ref refs/remotes/origin/HEAD` via CLI; fall back to common names: `main`, `master`, `rolling`, `develop`, `trunk`).
-   - `git__git_log <base>..HEAD` to enumerate commits ahead of base.
+   - `git log <base>..HEAD` to enumerate commits ahead of base.
    - Detect SCM platform via `scm-detect` reference, then look up an open PR/MR for the current branch (`github__list_pull_requests` with `head: owner:branch, state: open` or `gitlab__list_merge_requests` with `source_branch, state: opened`).
    - Categorize: `dirty-tree`, `commits-ahead`, `open-pr-mr`, or a combination. Record commit SHAs and changed-file paths.
 
@@ -54,8 +54,8 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
    - Keep this conversation short — one round of clarification, then proceed.
 
 3. **Read diffs and group changes.**
-   - For tree-based input: `git__git_diff_unstaged`, `git__git_diff_staged`.
-   - For commit-based input: `git__git_diff <base>..HEAD` and `git__git_show <sha>` per commit when needed.
+   - For tree-based input: `git diff`, `git diff --staged`.
+   - For commit-based input: `git diff <base>..HEAD` and `git show <sha>` per commit when needed.
    - For PR/MR input: `github__pull_request_read` (`get_diff`) or `gitlab__get_merge_request_diffs`.
    - Group changes per the chosen axis. Order slices by dependency (refactors before features, tests after the feature they exercise).
 
@@ -150,7 +150,7 @@ This skill is the **caller** in a delegation chain. The composed skills run thei
 
 1. Enter plan mode. Detect: 8 commits ahead, clean tree, no PR.
 2. Surface state. User confirms axis: by concern.
-3. Read each commit via `git__git_show`. Group: 3 commits = refactor → 4 commits = feature → 1 commit = docs.
+3. Read each commit via `git show`. Group: 3 commits = refactor → 4 commits = feature → 1 commit = docs.
 4. Present 3 slices. User opts in for `push` globally, declines PRs. Approve.
 5. Slice 1: `git-branch refactor/extract-token-validator` from `main`, cherry-pick 3 commits, reuse messages, `git-push`.
 6. Slice 2: `git-branch feat/token-refresh` from `main`, cherry-pick 4 commits, `git-push`.

@@ -15,7 +15,7 @@ references:
 
 > **DO NOT enter plan mode.** Interactive single-dispatch skill — parse request, build prompt, dispatch, relay verdict.
 
-> Read the `agents-delegate` reference for tier selection (cheap/default/smart), ecosystem model mappings, user shorthand, and `Agent` tool parameters — resolve references from the `<References>` block via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/agents-review/references" })`.
+> Read the `agents-delegate` reference for tier selection (cheap/default/smart), ecosystem model mappings, user shorthand, and `Agent` tool parameters.
 > Read the `scm-detect` reference only if the review task requires git context (e.g., reviewing a diff or historical change).
 
 ### Context

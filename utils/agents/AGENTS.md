@@ -16,39 +16,42 @@
 
 1. **READ MEMORY** - to load repository context
 
-- Use `mcp__mcphub__memory__read_graph`,
+- Use `memory__read_graph`,
 - Understand project structure, coding standards, and past work
 - Review entity relationships and observations
 - Refresh knowledge of ongoing tasks
 
 2. **DISCOVER MCP TOOLS** - Use `ToolSearch` (Claude Code's internal tool discovery mechanism) to find available MCP server tools
-   - Search for key tool categories: `neovim`, `git`, `treesitter`, `mcp-diagnostics`, `context7`, `tmux`
+   - Search for key tool categories: `neovim`, `treesitter`, `mcp-diagnostics`, `context7`
    - Understand tool capabilities for this session
    - Note any tool limitations or unavailability
    - **If tools are unavailable, silently skip and continue** - tools may not always be loaded
 
-3. **DISCOVER TMUX SCRATCH PANE** - If tmux MCP is loaded, identify the scratch pane for the current neovim session
-   - List tmux sessions and find `root/nvim/<project-path>/scratch`
-   - Resolve the pane ID for command execution during the session
-   - **If no scratch session exists, CREATE one** — see "Creating a scratch session" below
-
-4. **LOAD REPOSITORY NOTE** - If obsidian MCP is available, check for a repository note
+3. **LOAD REPOSITORY NOTE** - If obsidian MCP is available, check for a repository note
    - Derive the note folder from the current working directory relative to `~/development/` (e.g., `~/development/laravel/cloud-app-operator/` → `Repositories/laravel/cloud-app-operator/`)
-   - Read the main note at `<folder>/README` via `mcp__mcphub__obsidian__obsidian_read_note` (e.g., `Repositories/laravel/cloud-app-operator/README`)
+   - Read the main note at `<folder>/README` via `obsidian__obsidian_read_note` (e.g., `Repositories/laravel/cloud-app-operator/README`)
    - The repository folder may contain additional detailed notes (e.g., `Repositories/laravel/cloud-app-operator/architecture`) — read these on demand when relevant to the task
    - If the main note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
    - **If the note does not exist or obsidian MCP is unavailable, silently skip and continue**
 
-5. **DISCOVER AVAILABLE SKILLS** - Use `ListMcpResourcesTool({ server: "mcphub" })` to list all skill and reference resources
-   - Each skill is a static resource at `skills://skill/{name}` with the skill's description.
-   - Each shared reference is a static resource at `skills://reference/{name}`.
-     - **`[auto]`** skills can be auto-invoked when context matches their description. Read via `ReadMcpResourceTool` and follow instructions.
-     - **`[manual]`** skills must NOT be auto-invoked. Only load when the user explicitly requests it. If relevant, **suggest** the skill to the user.
-   - **Do not read skill files during initialization** — just note what exists. Read skills on demand when needed.
-   - When a task matches a skill's description, read it: `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}" })`. For multiple skills, make parallel calls.
-   - When a loaded skill declares references in its frontmatter, read them via: `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}/references" })` to load all at once.
+4. **DISCOVER AVAILABLE SKILLS** - **First detect the runtime path** and use the matching discovery method:
+
+   **Path A — mcphub is in the toolset.** `ListMcpResourcesTool` and `ReadMcpResourceTool` are available, and `mcphub` is among the loaded MCP servers (look for `mcphub__*` tools in your toolset). In this case, prefer the MCP resource interface — it's tagged with `[auto]` / `[manual]` flags and resolves shared references automatically:
+     - Discovery: `ListMcpResourcesTool({ server: "mcphub" })`. Skills are at `skills://skill/{name}`; shared references at `skills://reference/{name}`.
+     - Loading a skill: `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}" })`. For multiple, parallel calls.
+     - Loading all references for a skill: `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}/references" })`.
+     - Loading a shared reference standalone: `ReadMcpResourceTool({ server: "mcphub", uri: "skills://reference/{name}" })`.
+
+   **Path B — direct integration without mcphub** (Claude Code with skills attached as plugin/folder, OpenCode loading them as a directory, any other client without the mcphub bridge). The skill files are accessed by their filesystem path:
+     - The host may attach skills automatically (Claude Code plugin model) — in that case, treat them as already loaded; skip the discovery step and follow the in-context skill instructions.
+     - Otherwise, list `~/.config/nvim/utils/agents/skills/` to enumerate skills, read frontmatter (first ~10 lines of each `SKILL.md`) to decide relevance.
+     - Loading a skill: read `~/.config/nvim/utils/agents/skills/{name}/SKILL.md` directly.
+     - Loading references: resolve the skill's `references:` frontmatter paths relative to the skill's directory (e.g., `../references/<file>.md` → `~/.config/nvim/utils/agents/skills/references/<file>.md`).
+
+   **Both paths — common rules:**
+   - Skills marked `disable-model-invocation: true` in frontmatter must NOT be auto-invoked — only load when the user explicitly requests them. If relevant, **suggest** the skill to the user.
+   - **Do not read full skill files during initialization** — just note what exists. Read skills on demand when needed.
    - See the **Skill Cross-Loading** section in Part II and `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md` for dependency resolution rules.
-   - **If skills resources are unavailable, silently skip and continue.**
 
 ## II. PLANNING AND IMPLEMENTATION
 
@@ -94,14 +97,19 @@
 
 User invokes specialized modes using personal slash commands (e.g., `/code-assistant`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
 
-**MCP skill resource references:** The user can invoke a skill or shared reference by pasting an MCP resource handle inside `#{...}`:
+**Skill / shared-reference resource references:** The user can invoke a skill or shared reference by pasting a resource handle inside `#{...}`:
 
 - `#{mcp:skills://skill/<name>}` — load a skill.
 - `#{mcp:skills://reference/<name>}` — load a shared reference.
 
-**ALWAYS** load these via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>" })` (or `skills://reference/<name>` for shared references) — make parallel calls when multiple are passed in one message. Never use the Claude Code built-in `Skill` tool for these — it only handles Claude Code built-in skills, not MCP resource skills. This is non-negotiable.
+**Resolution depends on the runtime path** (see Section I, step 4):
 
-**Fallback:** If MCP resources are unavailable, load the `load-skills` skill (via filesystem at `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md`) — it documents the dependency resolution rules and filesystem fallback strategy for reading skills directly.
+- **Path A (mcphub available):** call `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>" })` (or `skills://reference/<name>`). Make parallel calls when multiple handles are passed in one message.
+- **Path B (no mcphub):** read the matching file directly:
+  - `skills://skill/<name>` → `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`
+  - `skills://reference/<name>` → `~/.config/nvim/utils/agents/skills/references/<name>.md`
+
+Either way, never use the Claude Code built-in `Skill` tool for these — it only handles Claude Code built-in skills, not these custom skills.
 
 ### Skill Cross-Loading (IMPORTANT)
 
@@ -142,7 +150,7 @@ User invokes specialized modes using personal slash commands (e.g., `/code-assis
 
 ### Skills Architecture
 
-Skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a directory with a `SKILL.md` file parsed by the mcphub plugin at load time.
+Skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a directory with a `SKILL.md` file parsed by the skill loader at load time.
 
 ```
 skills/
@@ -165,47 +173,39 @@ skills/
 
 **Key conventions:**
 
-- `SKILL.md` is the only file automatically parsed and registered as an MCP prompt.
-- Skills declare references in frontmatter as comma-separated relative paths: `references: ../references/file.md`.
-- Declared references are listed in the XML `<References>` block but NOT loaded into context automatically.
-- The SKILL.md body tells the model which references to read and when.
+- `SKILL.md` is the only file automatically parsed by skill loaders.
+- Skills declare references in frontmatter as a YAML array of relative paths: `references: [../references/file.md]`.
+- Declared references are NOT loaded into context automatically — the `SKILL.md` body tells the model which references to read and when.
 - Skills must work even if references fail to load (graceful degradation).
 - Relative paths resolve from the skill's directory: `../references/` for shared, `./references/` for skill-local.
 - See `/load-skills` for dependency resolution and reference loading details.
 - See `/config-skills` for skill authoring conventions.
 
-**Skills MCP resources** (accessed via `ReadMcpResourceTool` with `server: "mcphub"`):
+**Reading skills and references — choose by runtime path:**
 
-| Resource                | URI Pattern                                | Purpose                                                                                                        |
-| ----------------------- | ------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
-| Read skill              | `skills://skill/{name}`                    | Read a skill's full SKILL.md content. One static resource per skill.                                           |
-| Skill references (all)  | `skills://skill/{name}/references`         | Read all declared references for a skill. Template resource.                                                   |
-| Read shared reference   | `skills://reference/{name}`                | Read a shared reference by name. One static resource per reference file.                                       |
+| Resource | Path A (mcphub available) | Path B (direct/filesystem) |
+|---|---|---|
+| Skill | `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>" })` | `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` |
+| All references for a skill | `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>/references" })` | resolve each path in the skill's `references:` frontmatter relative to the skill's directory |
+| Shared reference standalone | `ReadMcpResourceTool({ server: "mcphub", uri: "skills://reference/<name>" })` | `~/.config/nvim/utils/agents/skills/references/<name>.md` |
+| Skill-local reference | (loaded with the skill via `/references` URI above) | `~/.config/nvim/utils/agents/skills/<name>/references/<file>.md` |
 
-**Access pattern:** `ReadMcpResourceTool({ server: "mcphub", uri: "<uri>" })`. For multiple skills, make parallel calls.
+For multiple skills/references, batch reads in parallel either way.
 
-**User invocation:** The user can paste `#{mcp:skills://skill/<name>}` or `#{mcp:skills://reference/<name>}` in a message to request loading — follow the MCP skill resource references rule in Section II.
+**User invocation:** The user can paste `#{mcp:skills://skill/<name>}` or `#{mcp:skills://reference/<name>}` in a message — resolve via the matching column above (Section II covers this).
 
-**Fallback:** If MCP resources are unavailable, fall back to reading `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` directly via filesystem tools. The `load-skills` skill documents full fallback rules.
+**Discovery:**
 
-**Discovery:** `ListMcpResourcesTool({ server: "mcphub" })` returns all skills and shared references as static resources — use this instead of a separate listing resource.
+- **Path A:** `ListMcpResourcesTool({ server: "mcphub" })` returns all skills (`[auto]` / `[manual]` tagged) and shared references as static resources.
+- **Path B:** list `~/.config/nvim/utils/agents/skills/` for skill directories; read frontmatter (first ~10 lines of `SKILL.md`) to see the `description` field. `disable-model-invocation: true` in the frontmatter is the equivalent of `[manual]` in Path A.
 
-**ALWAYS use these resources** to read skills and references instead of filesystem MCP tools (`filesystem__read_file`) or built-in file tools (`read_file`). The skills resources are:
-
-- **Scoped** — only access the skills directory, cannot read arbitrary files.
-- **Correct** — resolve reference paths from the skill's directory automatically.
-
-**When to use each resource:**
-
-- **Discovering skills:** Use `ListMcpResourcesTool({ server: "mcphub" })` at session start.
-- **Loading skills:** Read `skills://skill/{name}` for each skill. For multiple skills, make parallel calls.
-- **Loading references:** When a skill declares references, read `skills://skill/{name}/references` to load all at once. For shared references outside a skill context, read `skills://reference/{name}`.
+If your host (Claude Code's plugin system, OpenCode's skill folder loader, etc.) **attaches** the skills automatically — they appear as already-loaded context — treat them as discovered. No filesystem listing needed.
 
 ### Using Multiple Skills Together
 
 The user may invoke multiple skills in a single message or across a session. Skills are not isolated — they can and should work together.
 
-**Loading:** When multiple skills are invoked, load all of them via parallel `ReadMcpResourceTool` calls. Load each skill's references as well. Announce all loaded skills in a single announcement block (primary skill first, then additionally loaded ones).
+**Loading:** When multiple skills are invoked, read each `SKILL.md` in parallel. Load each skill's references as well. Announce all loaded skills in a single announcement block (primary skill first, then additionally loaded ones).
 
 **Coordination:** After loading, read each skill's SKILL.md for composition instructions. Look for:
 
@@ -555,7 +555,7 @@ Discovered existing token validation in `auth/validator.ts` that we can reuse. U
 
 ### MCP Tool Name Convention
 
-MCP tools are available under two prefixes: `mcp__mcphub__<server>__<tool>` (full) and `mcp__<server>__<tool>` (short). Both resolve to the same tool — **prefer `mcp__mcphub__` when both exist** as it routes through the mcphub hub. In documentation and skill references, use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git__git_status`, `slack__slack_list_channels`) for readability — the server name is the identifying factor. The agent resolves the correct prefix at call time.
+In skill files and documentation, refer to MCP tools using the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `slack-kilic__slack_list_channels`, `linear-kilic-dev__get_issue`). The harness/client may surface the same tool under a longer prefix (`mcp__<server>__<tool>`, `mcp__<hub>__<server>__<tool>`, etc.) — the agent resolves whatever prefix the runtime uses at call time. Documentation should NOT bake in a specific prefix.
 
 ### MCP Tool Multiline Parameters
 
@@ -576,15 +576,15 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | **Renaming symbols**                                    | `mcp-diagnostics` (native) | **ALWAYS use `lsp_rename` instead of find-and-replace or manual edits.** Single tool call renames across the entire workspace via LSP — the fastest way to rename. Accepts `new_name`, optional `path`/`line`/`col` to target.                               |
 | Diagnostics (errors, warnings)                          | `mcp-diagnostics` (native) | Diagnostic analysis from running LSP servers. Tools: `document_diagnostics`, `workspace_diagnostics`, `diagnostics_summary`                                                                                                                                  |
 | Code structure analysis, AST queries                    | `treesitter`               | Need to understand syntax structure, find patterns                                                                                                                                                                                                           |
-| **Git operations**                                      | `git` MCP                  | **ALWAYS first choice** for any git operation. Never use raw `git` CLI when the MCP server is available. Tools: `git_status`, `git_diff_unstaged`, `git_diff_staged`, `git_diff`, `git_commit`, `git_add`, `git_reset`, `git_log`, `git_show`, `git_branch`, `git_checkout`, `git_create_branch` |
-| **GitHub operations** (PRs, issues, repos, code search) | `github` MCP               | **ALWAYS first choice** for any GitHub interaction. Fallback: `gh` CLI via tmux/Bash. Never use raw API calls                                                                                                                                                |
-| **GitLab operations** (MRs, issues, repos, pipelines)   | `gitlab` MCP               | **ALWAYS first choice** for any GitLab interaction. Fallback: `glab` CLI via tmux/Bash. Never use raw API calls                                                                                                                                              |
-| **Linear operations** (issues, projects, cycles, docs)  | `linear` MCP               | **ALWAYS first choice** for any Linear interaction. Two workspaces: `linear_kilic-dev` and `linear_laravel`. No CLI fallback                                                                                                                                 |
+| **Git operations**                                      | `git` CLI via Bash         | Use `git status`, `git diff`, `git log`, `git show`, `git commit`, `git add`, `git checkout`, etc. directly. There is no git MCP — use Bash for all local git work.                                                                                          |
+| **GitHub operations** (PRs, issues, repos, code search) | `github` MCP               | **ALWAYS first choice** for any GitHub interaction. Fallback: `gh` CLI via Bash. Never use raw API calls                                                                                                                                                     |
+| **GitLab operations** (MRs, issues, repos, pipelines)   | `gitlab` MCP               | **ALWAYS first choice** for any GitLab interaction. Fallback: `glab` CLI via Bash. Never use raw API calls                                                                                                                                                   |
+| **Linear operations** (issues, projects, cycles, docs)  | `linear` MCP               | **ALWAYS first choice** for any Linear interaction. Two workspaces: `linear-kilic-dev` and `linear-laravel`. No CLI fallback                                                                                                                                 |
 | **Obsidian operations** (notes, search, tags)           | `obsidian` MCP             | **ALWAYS first choice** for vault operations. No CLI fallback — do not manipulate vault files directly                                                                                                                                                       |
-| **Spacelift operations** (stacks, runs, resources)      | `spacelift` MCP            | **ALWAYS first choice** for Spacelift interaction. One workspace: `spacelift_laravel`. Fallback: `spacectl` CLI via tmux/Bash                                                                                                                                |
+| **Spacelift operations** (stacks, runs, resources)      | `spacelift` MCP            | **ALWAYS first choice** for Spacelift interaction. One workspace: `spacelift-laravel`. Fallback: `spacectl` CLI via Bash                                                                                                                                     |
 | **Filesystem operations** (beyond neovim scope)         | `filesystem` MCP           | Directory trees, file info, media files. Fallback: built-in Glob/Read, then shell commands                                                                                                                                                                   |
 | Documentation lookup                                    | `context7`                 | Need to reference official docs for libraries/frameworks                                                                                                                                                                                                     |
-| Shell command execution (visible to user)               | `tmux`                     | Long-running commands, builds, tests, and commands the user should see — via neovim session's scratch pane                                                                                                                                                   |
+| Shell command execution                                 | Built-in `Bash`            | All command execution. The `tmux` MCP write tools (`execute-command`, `create-window`, `split-pane`, `kill-*`) are disabled — use Bash for everything. The remaining tmux tools (`list-*`, `capture-pane`, `find-session`, `get-command-result`) are read-only and only useful for inspecting existing user panes. |
 | Web search                                              | `web_search` (built-in)    | **ALWAYS first choice** for any web search. Try this before anything else                                                                                                                                                                                    |
 | Fetch webpage content                                   | `fetch_webpage` (built-in) | **ALWAYS first choice** for extracting content from URLs                                                                                                                                                                                                     |
 | Web search / code context (caution)                     | `exa` MCP                  | **Use with caution.** Built-in `web_search` already exists — only use Exa when built-in search is unavailable or genuinely insufficient. Tools: `web_search_exa`, `get_code_context_exa`                                                                     |
@@ -616,61 +616,28 @@ Uses Neovim's running LSP clients — always prefer over Grep/treesitter for cod
 4. **When finding a symbol by name** → use `symbol_lookup` instead of Grep. It uses LSP workspace symbols and is more accurate for code navigation.
 5. **When debugging systematically** → follow this progression: `diagnostics_summary` → `diagnostic_hotspots` → `diagnostics_get` (on specific files) → `analyze_diagnostics` (deep dive on individual errors) → `correlate_diagnostics` (find root causes across files) → `lsp_code_actions` (check for automated fixes before manual editing).
 
-#### Tmux Scratch Pane (Command Runner)
+#### Tmux MCP (Read-Only Inspection)
 
-Each neovim session has attached tmux sessions following the pattern `root/nvim/<path>/<type>`. The `scratch` session is the command runner.
+The tmux MCP is configured **read-only**. Write actions (`execute-command`, `create-window`, `split-pane`, `kill-*`, `create-session`) are disabled — use built-in `Bash` for all command execution. Use the tmux MCP only to inspect existing panes the user has open.
 
-**Session types:**
+**Available read-only tools:**
 
-- `root/nvim/<path>/scratch` — **Command runner.** Use this for executing commands.
-- `root/nvim/<path>/lazygit`, `root/nvim/<path>/k9s`, etc. — **Observation panes.** Do NOT send commands to or capture output from these unless explicitly asked.
+| Tool | Use for |
+|------|---------|
+| `tmux__list-sessions`, `tmux__list-windows`, `tmux__list-panes` | Discover what the user has running. |
+| `tmux__find-session` | Locate a session by name pattern. |
+| `tmux__capture-pane` | Read current contents of an existing pane (e.g., to see what the user is looking at in lazygit, k9s, or a long-running process). |
+| `tmux__get-command-result` | Retrieve output of a previously-issued command (legacy — not useful since `execute-command` is disabled). |
 
-**Discovery:**
+**Use the tmux MCP for:**
 
-1. List tmux sessions (`mcp__mcphub__tmux__list-sessions`)
-2. Find the session ending in `/scratch` that matches the current project path (dots replaced with underscores in path)
-3. Get the pane ID from the session's active window
+- Inspecting the user's existing panes (`lazygit`, `k9s`, build output the user has running) when they reference them.
+- Reading state from a session the user describes verbally ("look at what's in my k9s window").
 
-**Use tmux scratch pane for:**
+**Do NOT use the tmux MCP to:**
 
-- Build commands: `make`, `go build`, `npm run build`
-- Test suites: `go test ./...`, `pytest`, `npm test`
-- Linters and formatters: `golangci-lint run`, `eslint`, `black`
-- Live config testing: `swaymsg reload`, `hyprctl reload`
-- Deploy or infrastructure commands
-- Any command the user should be able to observe in their terminal
-
-**Execution workflow:**
-
-1. Execute command via `mcp__mcphub__tmux__execute-command` with the pane ID
-2. The tool returns a command ID for tracking
-3. Retrieve results via `mcp__mcphub__tmux__get-command-result` using the command ID
-4. **IMPORTANT:** `get-command-result` may return partial output (only lines near the end marker). For full output, use `capture-pane` after the command completes.
-5. For long-running commands: poll `get-command-result` to detect completion (status changes from `pending` to `completed`), then use `capture-pane` if full output is needed.
-6. **Avoid firing multiple commands in rapid succession** to the same pane — `get-command-result` can return output from a different command. Wait for one command to complete before sending the next, or use separate panes for parallel execution.
-
-**Creating windows and panes:**
-
-**ALWAYS** create a dedicated window (`create-window`) in the scratch session for your own command execution. Do NOT use the user's existing window/pane. The user's window is their workspace — create your own and use it for the entire session. For parallel commands, split panes within your dedicated window as needed.
-
-**Use built-in Bash for:**
-
-- Quick and dirty investigative commands that only the LLM needs (not visible to user)
-- Short-lived lookups: `jq`, `wc`, `stat`, quick one-liners
-
-**CRITICAL:** Only use tmux sessions matching `root/nvim/<project-path>/scratch`. Do NOT use other tmux sessions (e.g., `root/scratch`) as substitutes — they are not associated with the neovim session.
-
-**Creating a scratch session:**
-
-If the scratch session does not exist but tmux MCP is loaded and you need to run a command:
-
-1. Derive the session name: `root/nvim/<path>/scratch` where `<path>` is the project directory with dots and special characters (except `/` and `-`) replaced by underscores. Slashes stay as-is.
-   - Example: `/home/cenk/.dotfiles` → `root/nvim//home/cenk/_dotfiles/scratch`
-   - Example: `/home/cenk/development/my-project` → `root/nvim//home/cenk/development/my-project/scratch`
-2. Create a new tmux session with that name using `mcp__mcphub__tmux__execute-command` via Bash: `tmux new-session -d -s 'root/nvim/<path>/scratch'`
-3. Then create your dedicated window in that session as usual, ideally named `agent` if you do not need multiple windows
-
-**Fallback:** If tmux MCP is not loaded, silently fall back to the built-in Bash tool.
+- Execute commands — use built-in `Bash` (foreground or `run_in_background`).
+- Create new windows or panes — the user manages their tmux layout.
 
 ### 2. Claude Code Built-in Tools
 
@@ -691,12 +658,11 @@ If the scratch session does not exist but tmux MCP is loaded and you need to run
 - `echo >` or heredocs for writing - use Write
 - `find` for file search - use Glob tool
 - `grep` or `rg` for text search - use Grep tool
-- Raw `git` commands — **ALWAYS** use `mcp__mcphub__git__*` MCP server tools instead
-- `gh` CLI for GitHub — **ALWAYS** use `mcp__mcphub__github__*` MCP tools instead
-- `glab` CLI for GitLab — **ALWAYS** use `mcp__mcphub__gitlab__*` MCP tools instead
-- `spacectl` CLI for Spacelift — **ALWAYS** use `mcp__mcphub__spacelift_laravel__*` MCP tools instead
-- Direct vault file manipulation for Obsidian — **ALWAYS** use `mcp__mcphub__obsidian__*` MCP tools instead
-- Slack CLI or API calls — **ALWAYS** use `mcp__mcphub__slack__*` MCP tools instead
+- `gh` CLI for GitHub — **ALWAYS** use `github__*` MCP tools instead
+- `glab` CLI for GitLab — **ALWAYS** use `gitlab__*` MCP tools instead
+- `spacectl` CLI for Spacelift — **ALWAYS** use `spacelift-laravel__*` MCP tools instead
+- Direct vault file manipulation for Obsidian — **ALWAYS** use `obsidian__*` MCP tools instead
+- Slack CLI or API calls — **ALWAYS** use `slack__*` MCP tools instead
 
 ### Graceful Degradation
 
@@ -719,16 +685,15 @@ Some MCP servers are disabled by default to save resources. When the user reques
 
 | Server            | Provides                                                     |
 | ----------------- | ------------------------------------------------------------ |
-| `grafana/kilic`   | Dashboards, alerts, metrics (personal/kilic).                |
-| `grafana/laravel` | Dashboards, alerts, metrics (Laravel/work).                  |
-| `kubernetes`      | Pods, deployments, services, namespaces, cluster operations. |
-| `notion/laravel`  | Notion pages, databases, work documentation.                 |
-| `spacelift/laravel` | Stacks, runs, resources, policies, modules (Laravel/work). |
+| `grafana-kilic`   | Dashboards, alerts, metrics (personal/kilic).                |
+| `grafana-laravel` | Dashboards, alerts, metrics (Laravel/work).                  |
+| `notion-laravel`  | Notion pages, databases, work documentation.                 |
+| `spacelift-laravel` | Stacks, runs, resources, policies, modules (Laravel/work). |
 | `treesitter`      | AST queries, syntax tree analysis, structural code patterns. |
 
 **When to invoke:**
 
-- User mentions grafana, kubernetes, notion, spacelift, treesitter, or similar and the tools are not in your toolset.
+- User mentions grafana, notion, spacelift, treesitter, or similar and the tools are not in your toolset.
 - You cannot find a tool you expect to exist — check if an optional server provides it before saying you can't help.
 - User explicitly asks to enable or disable an MCP server.
 
@@ -761,7 +726,7 @@ Use the builtin `create_file` tool for creating new files. Do not use the edit t
 
 **Priority:**
 
-1. `neovim` MCP - `mcp__mcphub__neovim__list_directory`, `mcp__mcphub__neovim__find_files`
+1. `neovim` MCP - `neovim__list_directory`, `neovim__find_files`
 2. Built-in `Glob` tool
 
 ### Editor Navigation (Showing Code to User)
@@ -772,11 +737,11 @@ Use vim MCP navigation tools to navigate the user's editor when referring to spe
 
 | Tool                              | Purpose                                                                   |
 | --------------------------------- | ------------------------------------------------------------------------- |
-| `mcp__mcphub__vim__vim_status`    | Get current editor state (cursor, mode, filename, open buffers).          |
-| `mcp__mcphub__vim__vim_file_open` | Open a file by path (reuses buffer if open), optionally jump to line/col. |
-| `mcp__mcphub__vim__vim_jump`      | Jump to a specific line/column, optionally target a path or bufnr.        |
-| `mcp__mcphub__vim__vim_select`    | Visually select a range of lines, optionally target a path or bufnr.      |
-| `mcp__mcphub__vim__vim_format`    | Format a file using LSP. Targets current buffer unless path or bufnr is provided. |
+| `vim__vim_status`    | Get current editor state (cursor, mode, filename, open buffers).          |
+| `vim__vim_file_open` | Open a file by path (reuses buffer if open), optionally jump to line/col. |
+| `vim__vim_jump`      | Jump to a specific line/column, optionally target a path or bufnr.        |
+| `vim__vim_select`    | Visually select a range of lines, optionally target a path or bufnr.      |
+| `vim__vim_format`    | Format a file using LSP. Targets current buffer unless path or bufnr is provided. |
 
 **Rules:**
 
@@ -1007,7 +972,7 @@ When the user overrides, rewrites, or modifies code you produced, treat it as a 
 - You are **free to edit any area**, including areas the user modified. Do not avoid those areas — just incorporate the user's style and choices into your edits.
 - Never silently revert a user's stylistic or logic choices when editing the same area.
 
-**Save to memory when critical** — use `mcp__mcphub__memory__add_observations` when the deviation reveals a project-wide convention, a strong user preference that applies across sessions, or an architectural decision. Do NOT save one-off or ambiguous deviations.
+**Save to memory when critical** — use `memory__add_observations` when the deviation reveals a project-wide convention, a strong user preference that applies across sessions, or an architectural decision. Do NOT save one-off or ambiguous deviations.
 
 ### Markdown Output Formatting
 
@@ -1159,11 +1124,11 @@ Present ALL chunks before asking for approval. Do not interleave with approval p
 - Issues encountered and resolutions
 - Architectural discoveries and assumptions corrected
 
-**Use the mcphub memory (Knowledge Graph):**
+**Use the memory MCP (Knowledge Graph):**
 
-- `mcp__mcphub__memory__create_entities` - Create new concepts/components
-- `mcp__mcphub__memory__add_observations` - Add observations to entities
-- `mcp__mcphub__memory__create_relations` - Create relationships between entities
+- `memory__create_entities` - Create new concepts/components
+- `memory__add_observations` - Add observations to entities
+- `memory__create_relations` - Create relationships between entities
 
 **Memory scope:**
 
@@ -1269,8 +1234,8 @@ Handles token expiration gracefully with retry logic.
 ```
 1. Read memory graph (skip silently if unavailable)
 2. Discover MCP tools (skip silently if unavailable)
-3. Discover tmux scratch pane (skip silently if unavailable)
-4. Load repository note from Obsidian (skip silently if unavailable)
+3. Load repository note from Obsidian (skip silently if unavailable)
+4. Discover available skills under `~/.config/nvim/utils/agents/skills/`
 ```
 
 **User requests complex implementation:**
@@ -1371,7 +1336,7 @@ Handles token expiration gracefully with retry logic.
 
 ```
 1. MCP tool for that service (ALWAYS first choice)
-2. Dedicated CLI tool (gh, glab) via tmux/Bash (fallback)
+2. Dedicated CLI tool (gh, glab) via Bash (fallback)
 3. Raw shell commands / API calls (last resort, avoid)
 4. For ANY write operation: present changes as logical chunks (reasoning + content/diff) and wait for approval
 ```

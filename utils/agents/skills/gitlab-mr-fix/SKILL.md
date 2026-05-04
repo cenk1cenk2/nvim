@@ -26,7 +26,7 @@ This skill reads all open discussion threads on a GitLab merge request, interpre
 
 - If the user provides a GitLab MR URL or number, use it directly.
 - If not provided, detect from the current branch:
-  - Use `git__git_status` to get the current branch.
+  - Use `git status` to get the current branch.
   - Extract the project path from the remote URL.
   - Use `gitlab__list_merge_requests` with `source_branch` filter and `state: opened` to find the open MR.
 - If no open MR is found, inform the user and stop.

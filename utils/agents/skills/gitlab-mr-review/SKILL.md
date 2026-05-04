@@ -30,7 +30,7 @@ This skill performs an autonomous code review on a GitLab merge request using na
 
 - If the user provides a GitLab MR URL or number, use it directly.
 - If not provided, detect from the current branch:
-  - Use `git__git_status` to get the current branch.
+  - Use `git status` to get the current branch.
   - Extract the project path from the remote URL.
   - Use `gitlab__list_merge_requests` with `source_branch` filter and `state: opened` to find the open MR.
 - If no open MR is found, inform the user and stop.
@@ -50,7 +50,7 @@ This skill performs an autonomous code review on a GitLab merge request using na
 - Record the current HEAD commit SHA as the review baseline.
 
 **Consecutive run:**
-- Get the diff between the previously reviewed commit SHA and current HEAD via `git__git_diff`.
+- Get the diff between the previously reviewed commit SHA and current HEAD via `git diff`.
 - If no new changes exist since the last review, inform the user and stop.
 - Also re-read the full MR diff for context on existing annotations.
 

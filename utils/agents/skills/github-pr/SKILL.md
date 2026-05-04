@@ -34,7 +34,7 @@ references:
 
 ### Core Requirements
 
-> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -43,7 +43,7 @@ references:
 ### Process
 
 1. **Gather Context:**
-   - Get current branch name via `git__git_status`
+   - Get current branch name via `git status`
    - Get remote origin URL to extract owner/repo
    - Find the open PR for the current branch via `github__list_pull_requests` with `head` filter (format: `owner:branch`) and `state: open`.
    - **Branch reuse:** Branches may have previously merged or closed PRs — this is normal. Only open PRs matter. If no open PR is found but `git log main..HEAD` shows commits ahead of the base branch, the branch needs a new PR. Do NOT search for or get confused by prior closed/merged PRs on the same branch.

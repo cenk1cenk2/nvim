@@ -17,7 +17,7 @@ references:
 - **Slack:** Available via **claude.ai connector** tools (prefix `mcp__claude_ai_Slack__*` in direct Claude Code CLI).
 - **Transport:** Remote HTTP (`https://mcp.slack.com/mcp`), OAuth via claude.ai.
 - **Linked SCM:** GitHub (Laravel organization).
-- **Linked Linear:** `linear_laravel` (Laravel workspace).
+- **Linked Linear:** `linear-laravel` (Laravel workspace).
 
 ### Available Tools
 
@@ -57,7 +57,7 @@ ToolSearch({ query: "+Slack send message" })
 
 ### Availability
 
-These tools are only available in **direct Claude Code CLI sessions** (not through mcphub/ACP). In mcphub/ACP sessions, the `slack/laravel` MCP server in `servers.json` is configured but cannot connect due to mcp-hub OAuth limitations.
+These tools are only available in **direct Claude Code CLI sessions** that have the claude.ai Slack connector enabled. In sessions routed through an MCP hub (mcphub or similar), the `slack-laravel` server in `servers.json` is configured but cannot connect due to OAuth limitations of the hub bridge.
 
 ### After Initialization
 

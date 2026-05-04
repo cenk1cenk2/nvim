@@ -12,23 +12,23 @@ interaction: chat
 
 ### Workspace Context
 
-- **Slack MCP:** `slack/kilic` — ALWAYS use `slack_kilic__*` tools for this workspace.
+- **Slack MCP:** `slack-kilic` — ALWAYS use `slack-kilic__*` tools for this workspace.
 - **Transport:** Stdio (`@modelcontextprotocol/server-slack`), bot token auth.
 - **Linked SCM:** GitLab (`gitlab.kilic.dev`).
-- **Linked Linear:** `linear_kilic-dev` (kilic-dev workspace).
+- **Linked Linear:** `linear-kilic-dev` (kilic-dev workspace).
 
 ### Available Tools
 
 | Tool | Purpose |
 |------|---------|
-| `slack_kilic__slack_list_channels` | Resolve channel name to ID. |
-| `slack_kilic__slack_get_channel_history` | Fetch recent messages from a channel. |
-| `slack_kilic__slack_get_thread_replies` | Fetch all replies in a message thread. |
-| `slack_kilic__slack_get_users` | List workspace users (resolve user IDs to names). |
-| `slack_kilic__slack_get_user_profile` | Get detailed profile for a specific user ID. |
-| `slack_kilic__slack_post_message` | Post a new message to a channel. |
-| `slack_kilic__slack_reply_to_thread` | Reply to a specific thread. |
-| `slack_kilic__slack_add_reaction` | Add an emoji reaction to a message. |
+| `slack-kilic__slack_list_channels` | Resolve channel name to ID. |
+| `slack-kilic__slack_get_channel_history` | Fetch recent messages from a channel. |
+| `slack-kilic__slack_get_thread_replies` | Fetch all replies in a message thread. |
+| `slack-kilic__slack_get_users` | List workspace users (resolve user IDs to names). |
+| `slack-kilic__slack_get_user_profile` | Get detailed profile for a specific user ID. |
+| `slack-kilic__slack_post_message` | Post a new message to a channel. |
+| `slack-kilic__slack_reply_to_thread` | Reply to a specific thread. |
+| `slack-kilic__slack_add_reaction` | Add an emoji reaction to a message. |
 
 ### After Initialization
 

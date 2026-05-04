@@ -16,7 +16,7 @@ references:
 
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools. This is a research and issue creation workflow ONLY — do NOT implement or write code unless the user EXPLICITLY asks.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives This is a research and issue creation workflow ONLY — do NOT implement or write code unless the user EXPLICITLY asks.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.

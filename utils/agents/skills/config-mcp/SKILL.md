@@ -18,7 +18,9 @@ argument-hint: "[add|remove|modify] [server-name] [optional description]"
 
 ### Context
 
-MCP servers are configured in `~/.config/nvim/utils/mcphub/servers.json`. The file has two top-level keys:
+> **This skill is specific to the [mcphub.nvim](https://github.com/ravitemer/mcphub.nvim) plugin.** It edits the mcphub `servers.json` file. If the user is using a different MCP client config (e.g., Claude Code's `~/.claude.json`, OpenCode's `opencode.json`), adjust the file path and JSON shape to that client's schema instead.
+
+MCP servers are configured in `~/.config/nvim/utils/mcphub/servers.json` (mcphub's config file). The file has two top-level keys:
 
 - `mcpServers` — external MCP servers (stdio or HTTP).
 - `nativeMCPServers` — built-in mcphub servers (do not modify unless explicitly asked).
@@ -54,11 +56,46 @@ Each server entry follows one of two transport patterns:
 
 **Environment variables** use `${VAR_NAME}` syntax and are resolved at runtime. Secrets MUST use env var references, never hardcoded values. The convention for env var names is `NVIM_<SERVICE>` (e.g., `NVIM_GITHUB`, `NVIM_GITLAB`).
 
+> **Cross-client env-var-syntax compatibility (no single common syntax exists):**
+>
+> | Client | `${VAR}` | `${env:VAR}` | `{env:VAR}` |
+> |---|---|---|---|
+> | mcphub.nvim | yes | yes (VS Code-style) | no |
+> | Claude Code (`.mcp.json`) | yes | no | no |
+> | OpenCode (`opencode.json`) | partial (headers only) | no | yes |
+>
+> This config uses **`${VAR}`** because it works in mcphub + Claude Code (the two clients used here). If the user wants to consume this config from OpenCode, run a one-shot conversion: `sed 's/${\([A-Z_][A-Z0-9_]*\)}/{env:\1}/g' servers.json`. Do NOT mix syntaxes inside a single file. Sources: <https://code.claude.com/docs/en/mcp>, <https://opencode.ai/docs/config/>, <https://ravitemer.github.io/mcphub.nvim/mcp/servers_json.html>.
+
+### Server Naming
+
+**Server keys MUST use kebab-case with `-` only.** Do NOT use `/` (does not parse correctly through some MCP hubs — gets flattened inconsistently in the tool prefix) and avoid `_` for word separation inside keys. For multi-workspace services, follow the `<service>-<workspace>` convention:
+
+- `linear-kilic-dev`, `linear-laravel`
+- `grafana-kilic`, `grafana-laravel`
+- `argocd-kilic`, `slack-kilic`, `spacelift-laravel`
+
+A clean kebab-case server key produces a clean, addressable tool prefix downstream regardless of whether tools are routed through a hub.
+
+### How `disabled_tools` Behaves Downstream
+
+`disabled_tools` is a property of the server entry, not of the downstream agent. When the MCP layer (mcphub, or another hub/proxy) honors it, disabled tools are **filtered at the source** — they never appear in the tool list exposed to the downstream agent. This means:
+
+- **Claude Code** (using mcphub or another MCP layer that filters): never sees a tool listed in `disabled_tools`. There is nothing additional to configure on the Claude Code side. (For agent-side denial — e.g., a tool that the MCP layer exposes but the user wants Claude Code to refuse — Claude Code's `permissions.deny` in `~/.claude/settings.json` accepts `mcp__<server>__<tool>` and `mcp__<server>__*` patterns. Priority is `deny > ask > allow`. Source: <https://code.claude.com/docs/en/permissions>.)
+- **OpenCode** (using mcphub or another filtering layer): receives the filtered tool list from the MCP layer. OpenCode's own `permission` field in `opencode.json` has a documented bug where MCP-tool permissions sometimes do not apply after the legacy `tools` config was merged into `permissions` — relying on the upstream `disabled_tools` is the more reliable layer. Source: <https://opencode.ai/docs/config/>.
+- **Direct client integration without a hub:** if the user wires the MCP server directly into Claude Code or OpenCode without going through a filtering hub, `disabled_tools` in the hub config has no effect — denial must be done at the client layer (`permissions.deny` or equivalent).
+
+**Conclusion:** when going through a hub, `disabled_tools` is the single source of truth for both downstream agents. When going direct, the client's own deny mechanism must mirror what would have been disabled.
+
+### Special Tool Categories
+
+- **Tmux MCP write tools.** `execute-command`, `create-window`, `split-pane`, `kill-window`, `kill-session`, `kill-pane`, `create-session` are disabled by policy — these grant the agent the ability to mutate the user's terminal layout and run arbitrary commands invisibly. Command execution belongs in the agent's built-in `Bash` tool, where it is visible and permission-prompted. When adding or modifying the tmux entry, keep these in `disabled_tools`.
+- **Removed servers.** The `git` MCP and `kubernetes` MCP have been removed from this config. Use `git` CLI and `kubectl` CLI via `Bash` for those operations. If a user asks to re-add either, raise the trade-off (extra surface area; commands are already accessible via Bash) before doing so.
+
 ### Process
 
 #### Add
 
-1. **Identify the server.** If the user provides a name or URL, use it. Otherwise, ask.
+1. **Identify the server.** If the user provides a name or URL, use it. Otherwise, ask. Pick a kebab-case server key (no `/`, prefer `-` over `_` inside the key) — see "Server Naming" above.
 2. **Research the server.**
    - Search the web for the official MCP server (prefer servers published by the service provider themselves, e.g., `mcp.linear.app`, `api.githubcopilot.com/mcp`).
    - Check the official MCP server registry and the service's own documentation.

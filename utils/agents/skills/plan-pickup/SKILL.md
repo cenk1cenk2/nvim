@@ -12,7 +12,7 @@ references:
 
 ### Plan Pickup — Loading and Executing Existing Plans
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (standard variant) for full directives — read from the `mcphub` server via `ReadMcpResourceTool` with URI `skills://skill/plan-pickup/references`.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (standard variant) for full directives — read the files listed in `references:` for the `plan-pickup` skill.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Present the plan assessment to the user before any implementation.

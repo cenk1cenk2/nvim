@@ -12,7 +12,7 @@ references:
 
 ### GitHub Failed CI: Diagnose and Fix Failing Actions
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — resolve references from the `<References>` block via MCP filesystem tools.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Present findings and proposed fixes to the user.
@@ -20,11 +20,11 @@ references:
 
 ### Core Requirements
 
-> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection — resolve references from the `<References>` block via MCP filesystem tools.
+> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection
 
 ### Process
 
-1. **Identify failing runs.** Get the current branch via `git__git_status`. List recent workflow runs for the branch using `gh run list --branch <branch>`. Identify runs with `failure` or `error` status.
+1. **Identify failing runs.** Get the current branch via `git status`. List recent workflow runs for the branch using `gh run list --branch <branch>`. Identify runs with `failure` or `error` status.
 2. **Fetch failure details.** For each failing run, use `gh run view <run-id>` to get the summary. Use `gh run view <run-id> --log-failed` to extract the relevant error logs. Focus on the actual error messages, not boilerplate output.
 3. **Diagnose the error.** Analyze the error messages. Read relevant source files, config files, or workflow definitions (`.github/workflows/`) as needed. If the error is unclear or unfamiliar, search the internet for the error message or related keywords.
 4. **Propose a fix.** Present findings to the user: what failed, why it failed, and how to fix it. Be specific — reference file paths, line numbers, and exact changes needed.
