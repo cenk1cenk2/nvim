@@ -566,7 +566,7 @@
       "headers": {
         "Authorization": "Bearer ${NVIM_LINEAR_KILIC}"
       },
-      "url": "https://mcp.linear.app/sse",
+      "url": "https://mcp.linear.app/mcp",
       "hyprpilot": {
         "autoAcceptTools": [
           "list_issues",
