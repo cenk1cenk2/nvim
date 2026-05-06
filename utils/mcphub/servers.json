@@ -51,7 +51,7 @@
     "context7": {
       "autoApprove": ["get-library-docs", "resolve-library-id", "query-docs"],
       "headers": {
-        "CONTEXT7_API_KEY": "${NVIM_CONTEXT7}"
+        "Authorization": "Bearer ${NVIM_CONTEXT7}"
       },
       "url": "https://mcp.context7.com/mcp",
       "hyprpilot": {
@@ -64,6 +64,9 @@
       "disabled_prompts": ["web_search_help", "code_search_help"],
       "disabled_resources": ["exa://tools/list"],
       "disabled_tools": [],
+      "headers": {
+        "x-api-key": "${NVIM_EXA_API_KEY}"
+      },
       "url": "https://mcp.exa.ai/mcp",
       "hyprpilot": {
         "autoAcceptTools": ["get_code_context_exa", "web_search_exa", "web_fetch_exa"],
@@ -560,9 +563,6 @@
       ],
       "disabled": false,
       "disabled_tools": [],
-      "env": {
-        "LINEAR_TOKEN": "${NVIM_LINEAR_KILIC}"
-      },
       "headers": {
         "Authorization": "Bearer ${NVIM_LINEAR_KILIC}"
       },
@@ -628,9 +628,6 @@
         "get_authenticated_user",
         "research"
       ],
-      "env": {
-        "LINEAR_TOKEN": "${NVIM_LINEAR_WORK}"
-      },
       "headers": {
         "Authorization": "Bearer ${NVIM_LINEAR_WORK}"
       },
@@ -892,7 +889,7 @@
     "tavily": {
       "autoApprove": ["tavily-search", "tavily_search", "tavily_extract", "tavily_crawl", "tavily_map", "tavily_skill", "tavily_research"],
       "disabled_tools": [],
-      "env": {
+      "headers": {
         "Authorization": "Bearer ${NVIM_TAVILY_API_KEY}"
       },
       "url": "https://mcp.tavily.com/mcp",
