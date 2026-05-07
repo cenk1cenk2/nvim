@@ -1,6 +1,6 @@
 ---
 name: agents-delegate
-description: Delegate a single task to one subagent at a user-chosen tier (cheap/default/smart) or explicit model. Use when user says "delegate this", "give this to an agent", "run this with opus/sonnet/haiku", "use a cheap/smart agent", or wants to hand off one focused task. Do NOT use for multi-task plans or DAG-scheduled work (use /agents).
+description: Delegate a single task to one subagent at a user-chosen tier (cheap/default/smart) or explicit model. Use when user says "delegate this", "give this to an agent", "run this with opus/sonnet/haiku", "use a cheap/smart agent", or wants to hand off one focused task. Do NOT use for multi-task plans or DAG-scheduled work (use /agents-plan).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[task description] [optional: tier 'cheap'|'default'|'smart' or explicit model name]"
@@ -97,7 +97,7 @@ See the `agents-delegate` reference for tier definitions, ecosystem mappings, an
 
 ### Key Principles
 
-- **One task, one agent.** Don't split or sequence — use `/agents` for multi-task DAG-scheduled work.
+- **One task, one agent.** Don't split or sequence — use `/agents-plan` for multi-task DAG-scheduled work.
 - **User picks the tier/model.** This skill exists because the user wants control over cost/capability. Honor explicit choices.
 - **User owns the mapping outside Anthropic.** For non-Anthropic ecosystems, ask the user what cheap/default/smart resolve to.
 - **Ask on mismatch.** If the chosen tier/model looks wrong for the task, ask — don't silently comply.
@@ -106,6 +106,6 @@ See the `agents-delegate` reference for tier definitions, ecosystem mappings, an
 
 ### Related Skills
 
-- **`agents`** — DAG-scheduled multi-task execution. Handles parallel, sequential, and mixed shapes via `depends_on` declarations. Modes: team (default, approval propagation) or fire-and-forget (bypass).
+- **`agents-plan`** — DAG-scheduled multi-task execution. Handles parallel, sequential, and mixed shapes via `depends_on` declarations. Modes: team (default, approval propagation) or fire-and-forget (bypass).
 - **`agents-review`** — dispatch a review subagent to cross-check an artifact (plan, DAG, facts, freeform). Uses the same dispatch mechanism but with review-specific prompt templates and a cheap default tier.
 - **`code-review-changes`** — review the diff after the delegate completes, if the result merits a review pass.

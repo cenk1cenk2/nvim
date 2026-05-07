@@ -22,7 +22,7 @@ The built-in `Agent` tool is Anthropic-only — its `model` parameter accepts `h
 
 Agent tool calls are **foreground and blocking** by default — the lead's turn pauses until the agent returns, and the result comes back as a normal tool result in the same conversation turn. This is the preferred mode.
 
-**Parallel blocking dispatch:** To run multiple agents concurrently while still blocking the lead's turn, issue **multiple `Agent` tool uses in a single message**. They execute in parallel, and their results are delivered together when all complete. The lead's turn blocks until the slowest one returns. This is how `agents` parallelises each DAG layer (in both team and fire-and-forget modes) without "dropping" the conversation into background mode.
+**Parallel blocking dispatch:** To run multiple agents concurrently while still blocking the lead's turn, issue **multiple `Agent` tool uses in a single message**. They execute in parallel, and their results are delivered together when all complete. The lead's turn blocks until the slowest one returns. This is how `agents-plan` parallelises each DAG layer (in both team and fire-and-forget modes) without "dropping" the conversation into background mode.
 
 **When to use `run_in_background: true`:** Only when the user explicitly asks for fire-and-forget behaviour, or when the lead must remain responsive to mid-execution messages from a long-running agent. Prefer blocking — it keeps the conversation coherent and the user never misses updates.
 

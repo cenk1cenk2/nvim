@@ -1,6 +1,6 @@
 ---
 name: gitlab-mr-comment
-description: Post a companion skill's output as a comment on the current GitLab MR. Use when user says "comment on the MR", "post this to the MR", or invokes alongside another skill to comment its output on GitLab. Do NOT use for MR descriptions (gitlab-mr), GitHub PR comments (github-pr-comment), or issue comments (use GitLab MCP directly).
+description: Post a companion skill's output as a comment on the current GitLab MR. Use when user says "comment on the MR", "post this to the MR", or invokes alongside another skill to comment its output on GitLab. Do NOT use for MR descriptions (gitlab-mr-create), GitHub PR comments (github-pr-comment), or issue comments (use GitLab MCP directly).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[companion-skill] [MR number or URL]"

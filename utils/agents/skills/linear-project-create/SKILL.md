@@ -1,6 +1,6 @@
 ---
 name: linear-project-create
-description: Create a new Linear project with research, planning, and issue breakdown. Use when user says "create a project", "plan a new project", or "break this down into a Linear project". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for updating existing projects (/linear-project-update) or posting status updates (/linear-project-post).
+description: Create a new Linear project with research, planning, and issue breakdown. Use when user says "create a project", "plan a new project", or "break this down into a Linear project". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for updating existing projects (/linear-project-update) or posting status updates (/linear-project-post).
 interaction: chat
 references:
   - ../references/output-diff.md
@@ -14,7 +14,7 @@ references:
 >
 > If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
 > - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-work` via the `linear-work` skill (load it as defined in `load-skills`)
+> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
 >
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous.
 

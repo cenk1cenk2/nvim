@@ -1,6 +1,6 @@
 # Agent Merge & Review
 
-Shared merge + review phase for agent orchestration skills. Covers **per-layer** merge (after each layer of the DAG completes) and **end-of-run** review + verification + handoff. Used by `agents`.
+Shared merge + review phase for agent orchestration skills. Covers **per-layer** merge (after each layer of the DAG completes) and **end-of-run** review + verification + handoff. Used by `agents-plan`.
 
 ## Process
 

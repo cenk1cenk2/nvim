@@ -1,6 +1,6 @@
 ---
 name: github-pr-read
-description: Read and internalize the full state of a GitHub PR — description, comments, review threads, and diff. Use when user says "read this PR", "load the PR", "what's in this PR", or "summarize this PR". Purely informational — does not modify anything. Do NOT use for reviewing PRs (github-pr-review), fixing PR threads (github-pr-fix), or writing PR descriptions (github-pr).
+description: Read and internalize the full state of a GitHub PR — description, comments, review threads, and diff. Use when user says "read this PR", "load the PR", "what's in this PR", or "summarize this PR". Purely informational — does not modify anything. Do NOT use for reviewing PRs (github-pr-review), fixing PR threads (github-pr-fix), or writing PR descriptions (github-pr-create).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[PR number or URL]"

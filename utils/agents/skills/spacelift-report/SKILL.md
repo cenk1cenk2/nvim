@@ -1,6 +1,6 @@
 ---
 name: spacelift-report
-description: "Analyze Spacelift infrastructure changes triggered by a GitHub PR, branch, commit, or Actions run. Use when user says 'spacelift report', 'spacelift PR report', 'what infra changes', 'show spacelift changes', 'infrastructure impact', 'spacelift diff', or provides a GitHub Actions/commit/PR link expecting Spacelift analysis. Do NOT use for general Spacelift operations (spacelift-work), CI failures (github-ci-fix), or PR descriptions (github-pr)."
+description: "Analyze Spacelift infrastructure changes triggered by a GitHub PR, branch, commit, or Actions run. Use when user says 'spacelift report', 'spacelift PR report', 'what infra changes', 'show spacelift changes', 'infrastructure impact', 'spacelift diff', or provides a GitHub Actions/commit/PR link expecting Spacelift analysis. Do NOT use for general Spacelift operations (spacelift-laravel), CI failures (github-ci-fix), or PR descriptions (github-pr-create)."
 interaction: chat
 references:
   - ../references/scm-github.md
@@ -27,8 +27,8 @@ references:
 
 ### Prerequisite
 
-> **PREREQUISITE:** The `spacelift-work` skill MUST be active before this skill runs.
-> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-work` via the `spacelift-work` skill (load it as defined in `load-skills`).
+> **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
+> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-laravel` via the `spacelift-laravel` skill (load it as defined in `load-skills`).
 
 ### Core Requirements
 
@@ -216,7 +216,7 @@ to indexed, rename, restructuring.>
 **User says:** "Show me the Spacelift changes for this PR"
 
 1. Enter plan mode.
-2. Auto-invoke `spacelift-work` if not already active.
+2. Auto-invoke `spacelift-laravel` if not already active.
 3. Get current branch `feat/add-redis-cache`, find open PR #87.
 4. List stacks, check proposed runs — find `staging-app` and `staging-redis` affected.
 5. Get run changes for both stacks.
@@ -253,6 +253,6 @@ to indexed, rename, restructuring.>
 
 ### Related Skills
 
-- **`spacelift-work`** (resource: `skills://skill/spacelift-work`) — workspace initialization for Spacelift context. Auto-invoked as prerequisite.
-- **`github-pr`** (resource: `skills://skill/github-pr`) — for writing PR descriptions. Do not auto-invoke.
+- **`spacelift-laravel`** (resource: `skills://skill/spacelift-laravel`) — workspace initialization for Spacelift context. Auto-invoked as prerequisite.
+- **`github-pr-create`** (resource: `skills://skill/github-pr-create`) — for writing PR descriptions. Do not auto-invoke.
 - **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — for reviewing code changes. Do not auto-invoke.

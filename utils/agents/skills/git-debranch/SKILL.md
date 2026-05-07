@@ -1,6 +1,6 @@
 ---
 name: git-debranch
-description: Session-persistent "skip the ceremony" mode — implement changes inline on the current branch without auto-creating branches, commits, or PRs/MRs. Overrides prior instructions to commit, branch, or open PRs/MRs from AGENTS.md, plans, or earlier in the conversation. Use when the user says "debranch", "debranch mode", "no branch", "no commit", "inline only", "stop branching", "uncomplicated mode", "implementer mode", or invokes /git-debranch. Do NOT use to create a branch (git-branch), to commit (git-commit), or to draft a PR/MR (github-pr, gitlab-mr).
+description: Session-persistent "skip the ceremony" mode — implement changes inline on the current branch without auto-creating branches, commits, or PRs/MRs. Overrides prior instructions to commit, branch, or open PRs/MRs from AGENTS.md, plans, or earlier in the conversation. Use when the user says "debranch", "debranch mode", "no branch", "no commit", "inline only", "stop branching", "uncomplicated mode", "implementer mode", or invokes /git-debranch. Do NOT use to create a branch (git-branch), to commit (git-commit), or to draft a PR/MR (github-pr-create, gitlab-mr-create).
 interaction: chat
 disable-model-invocation: true
 ---
@@ -28,8 +28,8 @@ While this mode is active, the agent does **not** auto-invoke any of:
 - `git-branch` (no new branches).
 - `git-commit` (no commits, no staging unless the user explicitly stages).
 - `git-push` (no pushes).
-- `github-pr` (no GitHub PR drafts).
-- `gitlab-mr` (no GitLab MR drafts).
+- `github-pr-create` (no GitHub PR drafts).
+- `gitlab-mr-create` (no GitLab MR drafts).
 
 Composite phrases route the same way:
 

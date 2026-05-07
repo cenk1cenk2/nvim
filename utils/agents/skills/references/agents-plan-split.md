@@ -1,6 +1,6 @@
 # Agent Planning & Task Split
 
-Shared planning phase for agent orchestration skills. Walks through understanding the goal, discovering project tooling, establishing conventions, writing the plan, splitting into non-overlapping tasks, declaring task dependencies, and building the execution schedule (layers). Used by `agents` (all steps).
+Shared planning phase for agent orchestration skills. Walks through understanding the goal, discovering project tooling, establishing conventions, writing the plan, splitting into non-overlapping tasks, declaring task dependencies, and building the execution schedule (layers). Used by `agents-plan` (all steps).
 
 ## Process
 

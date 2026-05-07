@@ -18,7 +18,7 @@ references:
 > **DO NOT enter plan mode.** This skill gathers context and delegates to other skills or acts directly based on user instructions.
 
 > **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection rules.
-> A Slack workspace skill (`slack-kilic` or `slack-work`) MUST be active before this skill runs.
+> A Slack workspace skill (`slack-kilic` or `slack-laravel`) MUST be active before this skill runs.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -32,7 +32,7 @@ The user provides a Slack message URL and a task. This skill reads the message a
 
 Tool names differ per workspace. Use the correct tools based on which workspace skill is active:
 
-| Action | `slack-kilic` | `slack-work` (`mcp__claude_ai_Slack__*`, deferred) |
+| Action | `slack-kilic` | `slack-laravel` (`mcp__claude_ai_Slack__*`, deferred) |
 |--------|------------------------|-----------------------------------------------------|
 | Read channel | `slack-kilic__slack_get_channel_history` | `mcp__claude_ai_Slack__slack_read_channel` |
 | Read thread | `slack-kilic__slack_get_thread_replies` | `mcp__claude_ai_Slack__slack_read_thread` |
@@ -43,7 +43,7 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
 | Reply to thread | `slack-kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with thread) |
 | Add reaction | `slack-kilic__slack_add_reaction` | NOT available |
 
-**`slack-work` tools are deferred** — load via `ToolSearch` before use. See `claude-ai-connectors` reference.
+**`slack-laravel` tools are deferred** — load via `ToolSearch` before use. See `claude-ai-connectors` reference.
 
 ### Process
 

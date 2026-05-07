@@ -31,12 +31,12 @@ Two Linear workspaces exist. Deduce which one from context:
 | Signal                                 | Workspace | Skill                |
 | -------------------------------------- | --------- | -------------------- |
 | Issue ID prefix `K-xxx`                | kilic-dev | `linear-kilic`       |
-| Issue ID prefix `CLOUD-xxx`            | Laravel   | `linear-work`        |
+| Issue ID prefix `CLOUD-xxx`            | Laravel   | `linear-laravel`        |
 | Linear URL containing `kilic-dev`      | kilic-dev | `linear-kilic`       |
-| Linear URL containing `laravel`        | Laravel   | `linear-work`        |
+| Linear URL containing `laravel`        | Laravel   | `linear-laravel`        |
 | GitLab repository (`gitlab.kilic.dev`) | kilic-dev | `linear-kilic`       |
-| GitHub repository (Laravel org)        | Laravel   | `linear-work`        |
-| User says "work" or "laravel"          | Laravel   | `linear-work`        |
+| GitHub repository (Laravel org)        | Laravel   | `linear-laravel`        |
+| User says "work" or "laravel"          | Laravel   | `linear-laravel`        |
 | User says "personal" or "kilic"        | kilic-dev | `linear-kilic`       |
 | No signal available                    | —         | Ask the user         |
 
@@ -55,10 +55,10 @@ Some skills reference other skills as follow-up actions. When a skill recommends
 
 #### Multiple Instances
 
-When a skill exists in multiple variants (e.g., `linear-kilic-project-argocd-system` and `linear-kilic-project-argocd-workload`), deduce from context:
+When a skill exists in multiple variants (e.g., `linear-project-argocd-system-kilic` and `linear-project-argocd-workload-kilic`), deduce from context:
 
-- **System components** (operators, controllers, CRDs deployed to `cluster-system` or `*-system` namespaces) → `linear-kilic-project-argocd-system`
-- **Application workloads** (apps, services, CRD instances deployed to target clusters) → `linear-kilic-project-argocd-workload`
+- **System components** (operators, controllers, CRDs deployed to `cluster-system` or `*-system` namespaces) → `linear-project-argocd-system-kilic`
+- **Application workloads** (apps, services, CRD instances deployed to target clusters) → `linear-project-argocd-workload-kilic`
 - If unclear, ask the user.
 
 ### Loading Skills

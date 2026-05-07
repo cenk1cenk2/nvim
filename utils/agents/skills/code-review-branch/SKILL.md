@@ -1,6 +1,6 @@
 ---
 name: code-review-branch
-description: Review the current branch's changes against the default or target branch with full conversation context. Always manually invoked. Do NOT use for PR/MR descriptions (github-pr, gitlab-mr), debugging (code-debug), or failed commands (code-task-failed).
+description: Review the current branch's changes against the default or target branch with full conversation context. Always manually invoked. Do NOT use for PR/MR descriptions (github-pr-create, gitlab-mr-create), debugging (code-debug), or failed commands (code-task-failed).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[optional: target-branch or PR URL]"
@@ -29,7 +29,7 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
 
 1. **Gather Intent:**
    - Review the full conversation for context: what is the user trying to achieve?
-   - Identify any prior skills invoked (`linear-issue-implement`, `code-assistant`, `linear-kilic`, etc.) and extract the goals, requirements, decisions, and constraints established there.
+   - Identify any prior skills invoked (`linear-issue-implement`, `code-assistant-plan`, `linear-kilic`, etc.) and extract the goals, requirements, decisions, and constraints established there.
    - If a Linear issue or plan file was discussed, re-read it for the acceptance criteria and agreed approach.
    - Summarize your understanding of the intent before proceeding — confirm with the user if anything is unclear.
 
@@ -109,6 +109,6 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
 
 ### Related Skills
 
-- **`github-pr`** (resource: `skills://skill/github-pr`) — for drafting PR descriptions after review. Do not auto-invoke.
-- **`gitlab-mr`** (resource: `skills://skill/gitlab-mr`) — for drafting MR descriptions after review. Do not auto-invoke.
+- **`github-pr-create`** (resource: `skills://skill/github-pr-create`) — for drafting PR descriptions after review. Do not auto-invoke.
+- **`gitlab-mr-create`** (resource: `skills://skill/gitlab-mr-create`) — for drafting MR descriptions after review. Do not auto-invoke.
 - **`code-deviations`** (resource: `skills://skill/code-deviations`) — when review reveals consistency deviations that are intentional user choices, apply the code-deviations handling pattern. Do not auto-invoke.

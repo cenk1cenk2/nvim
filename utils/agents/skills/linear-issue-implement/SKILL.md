@@ -16,7 +16,7 @@ references:
 > If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
 >
 > - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-work` via the `linear-work` skill (load it as defined in `load-skills`)
+> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
 >
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
 
@@ -41,7 +41,7 @@ This skill operates in two modes depending on how it was invoked:
 
 Plan first, then implement after user approval. Exit plan mode and begin implementation once the user approves the plan.
 
-#### Assistant Mode (invoked with `code-assistant`)
+#### Assistant Mode (invoked with `code-assistant-plan`)
 
 Plan and refine only — **NEVER implement, NEVER exit plan mode.** Stay in plan mode for the entire session. Follow the collaborative guidance principles from the assistant skill. Only produce plans, analysis, and recommendations.
 

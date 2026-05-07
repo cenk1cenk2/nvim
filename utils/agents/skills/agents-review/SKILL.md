@@ -1,6 +1,6 @@
 ---
 name: agents-review
-description: Dispatch a review subagent to cross-check an artifact (plan, DAG, facts, or free-form analysis) against the codebase or a devil's-advocate lens. Uses a cheap model by default for quick checks; opts up to a smarter model for hard reviews. Multiple artifacts in one invocation dispatch reviewers in parallel. Use when user says "review this", "fact-check", "cross-check", "second opinion", "peer review", "agents-review". Do NOT use for running a task (use /agents-delegate), for multi-task plans (use /agents), or to re-read code you've already seen (just read it yourself).
+description: Dispatch a review subagent to cross-check an artifact (plan, DAG, facts, or free-form analysis) against the codebase or a devil's-advocate lens. Uses a cheap model by default for quick checks; opts up to a smarter model for hard reviews. Multiple artifacts in one invocation dispatch reviewers in parallel. Use when user says "review this", "fact-check", "cross-check", "second opinion", "peer review", "agents-review". Do NOT use for running a task (use /agents-delegate), for multi-task plans (use /agents-plan), or to re-read code you've already seen (just read it yourself).
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[type=plan|dag|facts|freeform] [artifact or file path] [optional: 'hard' | 'deep' | 'thorough' | explicit model name]"
@@ -25,14 +25,14 @@ This skill externalises review: instead of self-evaluating an artifact you produ
 **When to use:**
 
 - Fact-checking self-answered claims (often invoked automatically by `plan-hard`).
-- Sanity-checking a DAG schedule before running `agents`.
+- Sanity-checking a DAG schedule before running `agents-plan`.
 - Peer-reviewing a plan before committing to it.
 - Getting a devil's-advocate take on a recommendation or analysis.
 
 **When NOT to use:**
 
 - Running a task (use `agents-delegate`).
-- Multi-task plans with file edits (use `agents`).
+- Multi-task plans with file edits (use `agents-plan`).
 - Reading code you haven't looked at (just use `Read` / `Grep`).
 
 ### Artifact Types
@@ -42,7 +42,7 @@ Four typed templates, each with a different checklist. The skill picks the right
 | Type | Use case | Reviewer's focus |
 |------|----------|------------------|
 | `plan` | Plan file or plan section | Requirement coverage, missing steps, overlooked risks, unclear acceptance criteria. |
-| `dag` | Layer schedule from `agents` | Dependency correctness, missed semantic deps, file collisions within layers, layering optimality. |
+| `dag` | Layer schedule from `agents-plan` | Dependency correctness, missed semantic deps, file collisions within layers, layering optimality. |
 | `facts` | List of factual claims | Per-claim verification against the codebase. PASS / FAIL / QUESTION with evidence. |
 | `freeform` | Analysis, recommendation, rationale | Devil's-advocate: counter-arguments, dismissed alternatives, load-bearing assumptions, failure modes. |
 
@@ -201,5 +201,5 @@ No merging across artifacts — each review keeps its own context.
 ### Related Skills
 
 - **`agents-delegate`** (resource: `skills://skill/agents-delegate`) — for running a task (not reviewing an artifact). Uses the same dispatch mechanism with a different prompt shape.
-- **`agents`** (resource: `skills://skill/agents`) — multi-task DAG execution. `agents-review` can sanity-check the DAG before launching.
+- **`agents-plan`** (resource: `skills://skill/agents-plan`) — multi-task DAG execution. `agents-review` can sanity-check the DAG before launching.
 - **`plan-hard`** (resource: `skills://skill/plan-hard`) — auto-invokes `agents-review` type=`facts` at the end of its interview to fact-check self-answered claims before writing the plan file.

@@ -95,7 +95,7 @@
 
 ### Special Mode Triggers
 
-User invokes specialized modes using personal slash commands (e.g., `/code-assistant`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
+User invokes specialized modes using personal slash commands (e.g., `/code-assistant-plan`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
 
 **Skill / shared-reference resource references:** The user can invoke a skill or shared reference by pasting a resource handle inside `#{...}`:
 
@@ -137,9 +137,9 @@ Either way, never use the Claude Code built-in `Skill` tool for these — it onl
 >   - The "References loaded" list is only shown when the skill declares references and they were successfully loaded. Omit if none.
 >   - Example:
 >     ```
->     Using **github-pr** skill to analyze and draft a PR description for the current branch.
+>     Using **github-pr-create** skill to analyze and draft a PR description for the current branch.
 >
->     Additionally **linear-workspace-laravel** (prerequisite — workspace context needed for issue linking).
+>     Additionally **linear-laravel** (prerequisite — workspace context needed for issue linking).
 >
 >     References loaded:
 >

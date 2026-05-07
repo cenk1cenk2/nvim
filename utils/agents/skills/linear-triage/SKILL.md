@@ -1,6 +1,6 @@
 ---
 name: linear-triage
-description: Process all Linear issues in triage status, recommending projects, priorities, teams, and refinements interactively. Use when user says "triage issues", "process the triage queue", or "review untriaged issues". Requires a workspace skill (linear-kilic or linear-work). Do NOT use for cycle planning (linear-cycle) or picking next tasks (linear-next-task).
+description: Process all Linear issues in triage status, recommending projects, priorities, teams, and refinements interactively. Use when user says "triage issues", "process the triage queue", or "review untriaged issues". Requires a workspace skill (linear-kilic or linear-laravel). Do NOT use for cycle planning (linear-cycle) or picking next tasks (linear-next-task).
 interaction: chat
 references:
   - ../references/output-diff.md
@@ -15,7 +15,7 @@ references:
 >
 > If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
 > - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-work` via the `linear-work` skill (load it as defined in `load-skills`)
+> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
 >
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous.
 

@@ -12,7 +12,7 @@ Every plan task must have:
 - **Steps:** Concrete actions. Each step is one thing to do, not a paragraph of intent.
 - **Verification:** How to confirm the task is done — which commands to run, what output to expect.
 
-Optional (used by DAG-scheduled skills like `agents`):
+Optional (used by DAG-scheduled skills like `agents-plan`):
 
 - **Dependencies (`depends_on: [task-id, ...]`):** List of task ids this task must run after. Empty or absent = no dependencies (runs in the first layer). Use for semantic coupling — task B reads a schema defined by task A even though their file lists don't overlap.
 

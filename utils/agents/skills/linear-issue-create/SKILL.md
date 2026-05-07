@@ -1,6 +1,6 @@
 ---
 name: linear-issue-create
-description: Create new Linear issues with comprehensive analysis and research. Use when user says "create an issue", "file a bug", "add a task to Linear", or "create a ticket". Requires a workspace skill (linear-kilic or linear-work). ALWAYS set state explicitly — do NOT let issues go to Triage (API default). Do NOT use for updating existing issues (linear-issue-update), commenting (linear-issue-comment), or picking up issues (linear-issue-implement).
+description: Create new Linear issues with comprehensive analysis and research. Use when user says "create an issue", "file a bug", "add a task to Linear", or "create a ticket". Requires a workspace skill (linear-kilic or linear-laravel). ALWAYS set state explicitly — do NOT let issues go to Triage (API default). Do NOT use for updating existing issues (linear-issue-update), commenting (linear-issue-comment), or picking up issues (linear-issue-implement).
 interaction: chat
 references:
   - ../references/linear-prerequisite.md

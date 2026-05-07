@@ -167,7 +167,7 @@ Do NOT auto-stop because questions feel repetitive. Keep going until a signal.
 - **`plan-hard`** (`skills://skill/plan-hard`) — the interview protocol this skill inherits from. If the user wants a full re-plan rather than a delta revision, defer to `plan-hard`.
 - **`plan-pickup`** (`skills://skill/plan-pickup`) — if the revised plan is to be executed immediately after revision, the user may invoke `plan-pickup` next.
 - **`plan-handoff`** (`skills://skill/plan-handoff`) — if the revised plan needs to be handed to a different session or repository, compose with `plan-handoff` after revision.
-- **`code-assistant`** (`skills://skill/code-assistant`) — if the user is mid-implementation and the code-assistant is tracking progress, update its TodoWrite state to match the revised plan.
+- **`code-assistant-plan`** (`skills://skill/code-assistant-plan`) — if the user is mid-implementation and the code-assistant-plan is tracking progress, update its TodoWrite state to match the revised plan.
 - **`code-deviations`** (`skills://skill/code-deviations`) — when the revision trigger was a discovered deviation between plan and reality, apply the code-deviations handling pattern to record the learning.
 
 ### Related Skills
@@ -175,4 +175,4 @@ Do NOT auto-stop because questions feel repetitive. Keep going until a signal.
 - **`plan-hard`** (resource: `skills://skill/plan-hard`) — build a plan from scratch via interview.
 - **`plan-pickup`** (resource: `skills://skill/plan-pickup`) — load and execute an existing plan file.
 - **`plan-handoff`** (resource: `skills://skill/plan-handoff`) — produce a self-contained plan for another session or repository.
-- **`code-assistant`** (resource: `skills://skill/code-assistant`) — collaborative guidance and progress tracking during user-driven implementation.
+- **`code-assistant-plan`** (resource: `skills://skill/code-assistant-plan`) — collaborative guidance and progress tracking during user-driven implementation.

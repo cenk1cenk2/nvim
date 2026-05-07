@@ -56,7 +56,7 @@ Once the agent's work is merged back to the original branch (or discarded):
 git worktree remove .claude/worktrees/<name>
 ```
 
-For `agents`, cleanup happens during per-layer merges (both team and fire-and-forget modes). For `agents-delegate`, cleanup happens after the user's completion-handoff choice.
+For `agents-plan`, cleanup happens during per-layer merges (both team and fire-and-forget modes). For `agents-delegate`, cleanup happens after the user's completion-handoff choice.
 
 On `git worktree remove` failure (uncommitted changes, for example), surface the error to the user and let them decide whether to force-remove (`--force`) or keep the worktree for manual recovery.
 

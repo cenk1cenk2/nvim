@@ -1,6 +1,6 @@
 ---
 name: notion-pull
-description: "Pull a Notion page into the current editor as markdown. Use when user says 'pull from Notion', 'fetch Notion page', 'import from Notion', or provides a Notion URL to pull. Converts title to # heading and metadata to frontmatter. Do NOT use for pushing (notion-push) or session init (notion-work)."
+description: "Pull a Notion page into the current editor as markdown. Use when user says 'pull from Notion', 'fetch Notion page', 'import from Notion', or provides a Notion URL to pull. Converts title to # heading and metadata to frontmatter. Do NOT use for pushing (notion-push) or session init (notion-laravel)."
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[notion-url or search description]"
@@ -14,8 +14,8 @@ references:
 
 > **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
 
-> **PREREQUISITE:** The `notion-work` skill MUST be active before this skill runs.
-> If no Notion workspace context exists in the current session, auto-invoke `notion-work` first.
+> **PREREQUISITE:** The `notion-laravel` skill MUST be active before this skill runs.
+> If no Notion workspace context exists in the current session, auto-invoke `notion-laravel` first.
 
 > **Deferred tools:** Notion tools are claude.ai connector tools (`mcp__claude_ai_Notion__*`) — load via `ToolSearch` before use:
 > `ToolSearch({ query: "select:mcp__claude_ai_Notion__notion-fetch,mcp__claude_ai_Notion__notion-search" })`

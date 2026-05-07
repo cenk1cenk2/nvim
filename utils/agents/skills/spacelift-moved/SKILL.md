@@ -1,6 +1,6 @@
 ---
 name: spacelift-moved
-description: "Analyze Spacelift plan output for delete/create cycles that can be replaced with Terraform moved blocks. Use when user says 'spacelift moved', 'can we move instead of recreate', 'terraform moved blocks', 'avoid destroy/create', or 'migrate state'. Accepts a PR, branch, commit, or Actions link. Do NOT use for general Spacelift operations (spacelift-work), infrastructure impact reports (spacelift-report), or PR descriptions (github-pr)."
+description: "Analyze Spacelift plan output for delete/create cycles that can be replaced with Terraform moved blocks. Use when user says 'spacelift moved', 'can we move instead of recreate', 'terraform moved blocks', 'avoid destroy/create', or 'migrate state'. Accepts a PR, branch, commit, or Actions link. Do NOT use for general Spacelift operations (spacelift-laravel), infrastructure impact reports (spacelift-report), or PR descriptions (github-pr-create)."
 interaction: chat
 references:
   - ../references/scm-github.md
@@ -27,8 +27,8 @@ references:
 
 ### Prerequisite
 
-> **PREREQUISITE:** The `spacelift-work` skill MUST be active before this skill runs.
-> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-work` via the `spacelift-work` skill (load it as defined in `load-skills`).
+> **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
+> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-laravel` via the `spacelift-laravel` skill (load it as defined in `load-skills`).
 
 ### Core Requirements
 
@@ -155,7 +155,7 @@ moved {
 **User says:** "Check if we can use moved blocks for this PR"
 
 1. Enter plan mode.
-2. Auto-invoke `spacelift-work` if not already active.
+2. Auto-invoke `spacelift-laravel` if not already active.
 3. Get current branch, find PR, discover affected stacks.
 4. Find 4 delete/create pairs across 2 stacks.
 5. Classify: 2 high confidence (module rename), 1 medium (index key change with tag drift), 1 not a move (AMI change).
@@ -178,6 +178,6 @@ moved {
 
 ### Related Skills
 
-- **`spacelift-work`** (resource: `skills://skill/spacelift-work`) — workspace initialization. Auto-invoked as prerequisite.
+- **`spacelift-laravel`** (resource: `skills://skill/spacelift-laravel`) — workspace initialization. Auto-invoked as prerequisite.
 - **`spacelift-report`** (resource: `skills://skill/spacelift-report`) — full infrastructure impact report. Do not auto-invoke.
-- **`github-pr`** (resource: `skills://skill/github-pr`) — for writing PR descriptions. Do not auto-invoke.
+- **`github-pr-create`** (resource: `skills://skill/github-pr-create`) — for writing PR descriptions. Do not auto-invoke.

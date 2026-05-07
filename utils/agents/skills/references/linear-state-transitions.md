@@ -17,8 +17,8 @@ post-merge comment). The issue itself does not drive state — the
 | Trigger | Target state | Applied by |
 |---|---|---|
 | User picks up an issue (`linear-issue-implement`, `linear-next-task`, `linear-triage` promote) | `In Progress` | the pickup skill itself (already wired). |
-| A worker is dispatched for a Linear-linked task (`agents-delegate`, `agents`) | `In Progress` | the dispatch skill before launching the agent. |
-| An MR/PR is created that references the issue (`refs K-xxx` / `closes K-xxx` in commit trailers or MR body) | `In Review` | `gitlab-mr` / `github-pr` after successful MR/PR create. |
+| A worker is dispatched for a Linear-linked task (`agents-delegate`, `agents-plan`) | `In Progress` | the dispatch skill before launching the agent. |
+| An MR/PR is created that references the issue (`refs K-xxx` / `closes K-xxx` in commit trailers or MR body) | `In Review` | `gitlab-mr-create` / `github-pr-create` after successful MR/PR create. |
 | An MR/PR merges | `Done` | `linear-issue-comment` when posting the delivery comment against a merged MR/PR. |
 | An MR/PR is closed without merging | *no change* | never auto-advance on close — user decides whether to cancel the issue. |
 
@@ -103,7 +103,7 @@ Per-session / persistent opt-out is out of scope — one-turn only.
 > an issue id:
 >
 > - **kilic-dev workspace** (K-xxx): `skills://skill/linear-kilic`
-> - **Laravel workspace** (CLOUD-xxx): `skills://skill/linear-work`
+> - **Laravel workspace** (CLOUD-xxx): `skills://skill/linear-laravel`
 >
 > Route through the workspace's own `save_issue` tool name — they
 > use the same API but different MCP server prefixes.

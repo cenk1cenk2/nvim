@@ -1,6 +1,6 @@
 ---
 name: code-assistant-implement
-description: Implement the next agreed-upon step from an assistant plan, self-evaluate, then stop for user review. Always manually invoked. Do NOT use for planning (code-assistant) or evaluating progress (code-assistant-evaluate).
+description: Implement the next agreed-upon step from an assistant plan, self-evaluate, then stop for user review. Always manually invoked. Do NOT use for planning (code-assistant-plan) or evaluating progress (code-assistant-evaluate).
 interaction: chat
 disable-model-invocation: true
 ---
@@ -12,14 +12,14 @@ disable-model-invocation: true
 > **DO NOT enter plan mode. Exit plan mode immediately if currently in it.**
 >
 > - Use `ExitPlanMode` if you are in plan mode.
-> - This skill is the implementation counterpart to the `code-assistant` skill.
-> - A plan from `code-assistant` mode MUST already exist before invoking this skill.
+> - This skill is the implementation counterpart to the `code-assistant-plan` skill.
+> - A plan from `code-assistant-plan` mode MUST already exist before invoking this skill.
 
 ### Prerequisites
 
-- The `code-assistant` skill must have been used to create and agree on a plan.
+- The `code-assistant-plan` skill must have been used to create and agree on a plan.
 - A plan file must exist in `~/.claude/plans/` for the current task.
-- If no plan exists, STOP and tell the user to run `code-assistant` first.
+- If no plan exists, STOP and tell the user to run `code-assistant-plan` first.
 
 ### Process
 
@@ -29,7 +29,7 @@ disable-model-invocation: true
 4. **Stop and present results.** Output what you implemented, the evaluation findings, and ask the user to review.
 5. **Wait for user decision.** After the user reviews:
    - If the user approves and asks to continue → repeat from step 1 for the next step.
-   - If the user rejects or wants to refine → enter plan mode and invoke the `code-assistant` skill to bring the next step up in detail before attempting it again.
+   - If the user rejects or wants to refine → enter plan mode and invoke the `code-assistant-plan` skill to bring the next step up in detail before attempting it again.
 
 ### Key Principles
 
@@ -40,5 +40,5 @@ disable-model-invocation: true
 
 ### Related Skills
 
-- **`code-assistant`** (resource: `skills://skill/code-assistant`) — prerequisite. A plan from assistant MUST exist before this skill runs. Auto-invoke if no plan file exists and the user requests step-by-step implementation.
+- **`code-assistant-plan`** (resource: `skills://skill/code-assistant-plan`) — prerequisite. A plan from assistant MUST exist before this skill runs. Auto-invoke if no plan file exists and the user requests step-by-step implementation.
 - **`code-assistant-evaluate`** (resource: `skills://skill/code-assistant-evaluate`) — self-evaluation after each step. Invoked automatically as part of the code-assistant-implement process.

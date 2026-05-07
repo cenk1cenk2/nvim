@@ -1,6 +1,6 @@
 ---
 name: git-break
-description: Break a large set of changes — uncommitted tree, branch commits ahead of base, or an open PR/MR — into smaller focused pieces, each on its own branch with its own commit(s), optional push, and optional PR/MR. Use when user says "git-break", "break this up", "split this PR", "split this MR", "split this branch", "break into smaller PRs", "break into smaller MRs", or "smaller chunks". Plans the split scope quickly, then orchestrates per-slice execution via existing skills. Do NOT use to commit as-is (git-commit), to create a single branch (git-branch), or to rewrite a PR/MR description (github-pr, gitlab-mr).
+description: Break a large set of changes — uncommitted tree, branch commits ahead of base, or an open PR/MR — into smaller focused pieces, each on its own branch with its own commit(s), optional push, and optional PR/MR. Use when user says "git-break", "break this up", "split this PR", "split this MR", "split this branch", "break into smaller PRs", "break into smaller MRs", or "smaller chunks". Plans the split scope quickly, then orchestrates per-slice execution via existing skills. Do NOT use to commit as-is (git-commit), to create a single branch (git-branch), or to rewrite a PR/MR description (github-pr-create, gitlab-mr-create).
 interaction: chat
 argument-hint: "[optional: slicing hint — e.g., 'by feature', 'separate refactor and feature', 'by file']"
 references:
@@ -31,7 +31,7 @@ references:
 | Create branch | `git-branch` |
 | Stage + commit | `git-commit` |
 | Push branch | `git-push` |
-| Open PR/MR | `github-pr` / `gitlab-mr` |
+| Open PR/MR | `github-pr-create` / `gitlab-mr-create` |
 
 The skill handles three input modes — uncommitted tree, branch commits ahead of base, open PR/MR — and any combination of them.
 
@@ -99,7 +99,7 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
      - Tree-based input → checkout slice files from the source branch (`git checkout <source-branch> -- <paths>`) or apply hunks via a saved patch (`git apply`). Partial-file splits use targeted patches built from the diff analysis.
    - **Commit** — delegate to `git-commit`. For cherry-pick paths where messages already exist, reuse them and skip the draft step unless the user requested a rewrite.
    - **Push** — delegate to `git-push` only when the slice opted in.
-   - **PR/MR** — delegate to `github-pr` / `gitlab-mr` only when the slice opted in. Platform is routed via `scm-detect`.
+   - **PR/MR** — delegate to `github-pr-create` / `gitlab-mr-create` only when the slice opted in. Platform is routed via `scm-detect`.
    - After each slice, return to the original branch (or stay on the slice if the user wanted a stack).
 
 9. **Final report.**
@@ -124,7 +124,7 @@ This skill is the **caller** in a delegation chain. The composed skills run thei
 - **`git-branch`** — branch creation per slice. Sticky prefix carries across slices.
 - **`git-commit`** — commit drafting per slice. Reuse cherry-picked messages where applicable.
 - **`git-push`** — push per slice (opt-in).
-- **`github-pr` / `gitlab-mr`** — draft PR/MR per slice (opt-in). Platform selected via `scm-detect`.
+- **`github-pr-create` / `gitlab-mr-create`** — draft PR/MR per slice (opt-in). Platform selected via `scm-detect`.
 
 **Conflict with `git-debranch`.** `git-debranch` suppresses branch / commit / push / PR-MR creation — the exact opposite of this skill's purpose. If `git-debranch` is active when `git-break` is invoked, surface the conflict and ask the user before proceeding. Do NOT silently override.
 
@@ -166,7 +166,7 @@ This skill is the **caller** in a delegation chain. The composed skills run thei
 3. User confirms 3-way split by concern.
 4. Group commits and files into 3 slices, ordered: refactor → feature → tests.
 5. Present plan. User opts in for push + PR globally. Approve.
-6. Slice 1: `git-branch` → cherry-pick refactor commits → `git-commit` (reuse messages) → `git-push` → `github-pr` (drafts title + description in plan mode, user approves, PR created).
+6. Slice 1: `git-branch` → cherry-pick refactor commits → `git-commit` (reuse messages) → `git-push` → `github-pr-create` (drafts title + description in plan mode, user approves, PR created).
 7. Slice 2: same flow for the feature.
 8. Slice 3: same flow for tests.
 9. Final report: 3 new PRs with URLs. PR #142 left untouched. Suggest marking #142 as draft or closing it as superseded.

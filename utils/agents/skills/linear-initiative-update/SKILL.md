@@ -1,6 +1,6 @@
 ---
 name: linear-initiative-update
-description: Revise a Linear initiative's description and review its project alignment. Use when user says "update the initiative", "review initiative alignment", or "revise initiative description". Requires a workspace skill (/linear-kilic or /linear-work). Do NOT use for creating initiatives (/linear-initiative-create).
+description: Revise a Linear initiative's description and review its project alignment. Use when user says "update the initiative", "review initiative alignment", or "revise initiative description". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for creating initiatives (/linear-initiative-create).
 interaction: chat
 argument-hint: "[initiative-name or ID]"
 references:
@@ -15,7 +15,7 @@ references:
 >
 > If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
 > - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-work` via the `linear-work` skill (load it as defined in `load-skills`)
+> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
 >
 > Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous.
 

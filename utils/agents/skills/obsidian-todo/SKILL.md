@@ -102,7 +102,7 @@ When this skill is invoked from or alongside another skill session, add an appen
 ```markdown
 ## Appendix: Session Context
 
-- **Origin:** [which skill/session triggered this — e.g., "review of kilic-cluster-chart skill"].
+- **Origin:** [which skill/session triggered this — e.g., "review of cluster-kilic-chart skill"].
 - **Key decisions:** [what was decided and why].
 - **Alternatives considered:** [options that were rejected and reasoning].
 - **Open threads:** [anything unresolved from the session].
