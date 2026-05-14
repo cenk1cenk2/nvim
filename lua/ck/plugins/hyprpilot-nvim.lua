@@ -71,7 +71,7 @@ function M.config()
           {
             mcps = {
               {
-                servers = {
+                mcpServers = {
                   ["hyprpilot-nvim"] = {
                     command = "uvx",
                     args = { "hyprpilot-nvim-mcp" },
