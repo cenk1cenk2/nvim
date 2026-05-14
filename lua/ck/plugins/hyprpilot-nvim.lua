@@ -125,13 +125,20 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "o" }),
           function()
-            require("hyprpilot.client").request("overlay/toggle", {}, nil, function(err)
-              if err ~= nil then
-                log:warn("hyprpilot: overlay/toggle failed: %s", err.message)
+            require("hyprpilot.client").request(
+              "overlay/show",
+              {
+                instanceId = require("hyprpilot.chat.window").active_instance(),
+              },
+              nil,
+              function(err)
+                if err ~= nil then
+                  log:warn("hyprpilot: overlay/show failed: %s", err.message)
+                end
               end
-            end)
+            )
           end,
-          desc = "toggle daemon overlay [hyprpilot]",
+          desc = "show daemon overlay [hyprpilot]",
           mode = { "n" },
         },
         {
