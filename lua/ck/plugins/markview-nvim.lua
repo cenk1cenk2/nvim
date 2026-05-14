@@ -17,6 +17,11 @@ function M.config()
           "vimwiki",
           "Avante",
           "codecompanion",
+          "hyprpilot",
+          "hyprpilot_header",
+          "hyprpilot_input",
+          "hyprpilot_permission_row",
+          "hyprpilot_queue_strip",
         },
       }
     end,
@@ -36,13 +41,26 @@ function M.config()
             "vimwiki",
             "Avante",
             "codecompanion",
+            "hyprpilot",
+            "hyprpilot_input",
           },
           ignore_buftypes = {},
           condition = function(bufnr)
             local ft = vim.bo[bufnr].ft
             local bt = vim.bo[bufnr].bt
 
-            if bt == "nofile" and vim.tbl_contains({ "codecompanion", "Avante" }, ft) then
+            if
+              bt == "nofile"
+              and vim.tbl_contains({
+                "codecompanion",
+                "Avante",
+                "hyprpilot",
+                "hyprpilot_header",
+                "hyprpilot_input",
+                "hyprpilot_permission_row",
+                "hyprpilot_queue_strip",
+              }, ft)
+            then
               return true
             elseif bt == "nofile" then
               return false
@@ -115,4 +133,3 @@ function M.config()
 end
 
 return M
-

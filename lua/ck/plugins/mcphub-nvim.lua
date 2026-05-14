@@ -4,7 +4,7 @@ local M = {}
 M.name = "ravitemer/mcphub.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, true, {
+  require("ck.setup").define_plugin(M.name, vim.tbl_contains(nvim.lsp.ai.chat.provider, "codecompanion") or vim.tbl_contains(nvim.lsp.ai.chat.provider, "avante"), {
     plugin = function()
       ---@type Plugin
       return {

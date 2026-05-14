@@ -29,7 +29,7 @@ return {
   ai = {
     debug = false,
     chat = {
-      ---@type ("codecompanion" | "avante")[]
+      ---@type ("codecompanion" | "avante" | "hyprpilot")[]
       provider = { "codecompanion" },
       ---@type table<string, any>
       options = {},
