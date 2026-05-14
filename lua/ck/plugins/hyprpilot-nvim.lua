@@ -123,6 +123,18 @@ function M.config()
           mode = { "n" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "o" }),
+          function()
+            require("hyprpilot.client").request("overlay/toggle", {}, nil, function(err)
+              if err ~= nil then
+                log:warn("hyprpilot: overlay/toggle failed: %s", err.message)
+              end
+            end)
+          end,
+          desc = "toggle daemon overlay [hyprpilot]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "n" }),
           function()
             require("hyprpilot.palettes.attention").open()
