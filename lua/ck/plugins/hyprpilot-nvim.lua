@@ -271,37 +271,37 @@ function M.config()
     end,
     autocmds = function()
       return {
-        {
-          event = "User",
-          group = "_hyprpilot_markview",
-          pattern = "HyprpilotComposerSubmitted",
-          callback = function(ev)
-            local bufnr = ev.data and ev.data.bufnr
-            if not bufnr then
-              return
-            end
-
-            -- Detach markview during streaming to avoid performance
-            -- issues and treesitter query race conditions.
-            pcall(require("markview.actions").detach, bufnr)
-          end,
-        },
-        {
-          event = "User",
-          group = "_hyprpilot_markview",
-          pattern = "HyprpilotChatRendered",
-          callback = function(ev)
-            local bufnr = ev.data and ev.data.bufnr
-            if not bufnr then
-              return
-            end
-
-            -- Re-attach markview and render after each transcript tick.
-            pcall(require("markview.actions").attach, bufnr)
-            pcall(require("markview.actions").set_query, bufnr)
-            pcall(require("markview.actions").render, bufnr)
-          end,
-        },
+        --   {
+        --     event = "User",
+        --     group = "_hyprpilot_markview",
+        --     pattern = "HyprpilotComposerSubmitted",
+        --     callback = function(ev)
+        --       local bufnr = ev.data and ev.data.bufnr
+        --       if not bufnr then
+        --         return
+        --       end
+        --
+        --       -- Detach markview during streaming to avoid performance
+        --       -- issues and treesitter query race conditions.
+        --       pcall(require("markview.actions").detach, bufnr)
+        --     end,
+        --   },
+        --   {
+        --     event = "User",
+        --     group = "_hyprpilot_markview",
+        --     pattern = "HyprpilotChatRendered",
+        --     callback = function(ev)
+        --       local bufnr = ev.data and ev.data.bufnr
+        --       if not bufnr then
+        --         return
+        --       end
+        --
+        --       -- Re-attach markview and render after each transcript tick.
+        --       pcall(require("markview.actions").attach, bufnr)
+        --       pcall(require("markview.actions").set_query, bufnr)
+        --       pcall(require("markview.actions").render, bufnr)
+        --     end,
+        --   },
       }
     end,
   })
