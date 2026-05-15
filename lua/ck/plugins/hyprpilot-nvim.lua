@@ -196,14 +196,6 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "D" }),
-          function()
-            require("hyprpilot.palettes.attachments").detach()
-          end,
-          desc = "detach attachment [hyprpilot]",
-          mode = { "n" },
-        },
-        {
           fn.wk_keystroke({ categories.COPILOT, "p" }),
           function()
             require("hyprpilot.composer").attach_clipboard_image()
