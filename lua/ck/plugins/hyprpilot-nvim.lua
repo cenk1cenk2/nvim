@@ -198,21 +198,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "D" }),
           function()
-            local composer = require("hyprpilot.composer")
-            local list = composer.attachments()
-            if #list == 0 then
-              return
-            end
-            vim.ui.select(list, {
-              prompt = "detach attachment",
-              format_item = function(a)
-                return a.title or a.slug
-              end,
-            }, function(choice)
-              if choice ~= nil then
-                composer.detach(choice.slug)
-              end
-            end)
+            require("hyprpilot.palettes.attachments").detach()
           end,
           desc = "detach attachment [hyprpilot]",
           mode = { "n" },
