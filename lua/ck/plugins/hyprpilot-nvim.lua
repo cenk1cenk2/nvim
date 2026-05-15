@@ -117,6 +117,22 @@ function M.config()
           mode = { "n" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "<CR>" }),
+          function()
+            require("hyprpilot.ui.window").scroll_to_end()
+          end,
+          desc = "jump to chat tail [hyprpilot]",
+          mode = { "n" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "<BS>" }),
+          function()
+            require("hyprpilot.ui.window").focus({ target = "permission" })
+          end,
+          desc = "focus permission row [hyprpilot]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "o" }),
           function()
             require("hyprpilot.client").request(
