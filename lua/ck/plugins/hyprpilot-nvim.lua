@@ -74,7 +74,7 @@ function M.config()
                 mcpServers = {
                   ["hyprpilot-nvim"] = {
                     command = "uvx",
-                    args = { "hyprpilot-nvim-mcp" },
+                    args = { "hyprpilot-nvim-mcp@latest" },
                     env = {
                       NVIM_LISTEN_ADDRESS = vim.v.servername,
                     },
