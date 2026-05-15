@@ -196,7 +196,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "a" }),
           function()
-            require("hyprpilot.ui.composer").attach_buffer()
+            require("hyprpilot.composer").attach_buffer()
           end,
           desc = "attach current buffer [hyprpilot]",
           mode = { "n" },
@@ -204,7 +204,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "D" }),
           function()
-            local composer = require("hyprpilot.ui.composer")
+            local composer = require("hyprpilot.composer")
             local list = composer.attachments()
             if #list == 0 then
               return
@@ -226,7 +226,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "p" }),
           function()
-            require("hyprpilot.ui.composer").attach_clipboard_image()
+            require("hyprpilot.composer").attach_clipboard_image()
           end,
           desc = "attach clipboard image [hyprpilot]",
           mode = { "n" },
@@ -234,7 +234,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "A" }),
           function()
-            require("hyprpilot.ui.composer").paste_buffer()
+            require("hyprpilot.composer").paste_buffer()
           end,
           desc = "paste buffer as code [hyprpilot]",
           mode = { "n" },
@@ -242,7 +242,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "A" }),
           function()
-            require("hyprpilot.ui.composer").paste_selection()
+            require("hyprpilot.composer").paste_selection()
           end,
           desc = "paste selection as code [hyprpilot]",
           mode = { "v" },
