@@ -18,33 +18,27 @@ function M.config()
       fn.add_disabled_filetypes({
         "hyprpilot",
         "hyprpilot_header",
-        "hyprpilot_input",
+        "hyprpilot_composer",
         "hyprpilot_permission_row",
         "hyprpilot_queue_strip",
       })
 
       fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
         vim.list_extend(c.right, {
+          { title = "Hyprpilot Header", ft = "hyprpilot_header", wo = { winbar = false } },
           {
-            title = "Hyprpilot",
-            ft = {
-              "hyprpilot_header",
-              "hyprpilot",
-              "hyprpilot_permission_row",
-              "hyprpilot_queue_strip",
-              "hyprpilot_input",
-            },
+            title = "Hyprpilot Chat",
+            ft = "hyprpilot",
             size = {
               width = function()
-                if vim.o.columns < 180 then
-                  return 0.4
-                end
-
-                return 180
+                return vim.o.columns < 180 and 0.5 or 180
               end,
             },
             wo = { winbar = false },
           },
+          { title = "Hyprpilot Permissions", ft = "hyprpilot_permission_row", wo = { winbar = false } },
+          { title = "Hyprpilot Queue", ft = "hyprpilot_queue_strip", wo = { winbar = false } },
+          { title = "Hyprpilot Composer", ft = "hyprpilot_composer.markdown", wo = { winbar = false } },
         })
 
         return c
@@ -56,8 +50,8 @@ function M.config()
           name = "hyprpilot",
         }
 
-        c.sources.per_filetype.hyprpilot_input = function()
-          return { "hyprpilot", "path", "ripgrep" }
+        c.sources.per_filetype.hyprpilot_composer = function()
+          return { "hyprpilot", "path", "ripgrep", "snippets" }
         end
 
         return c

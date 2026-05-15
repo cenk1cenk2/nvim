@@ -28,8 +28,8 @@ nvim.lsp.features.inlay_hints.toggled = false
 nvim.lsp.features.inlay_hints.mode = "eol"
 
 nvim.lsp.ai.chat.provider = {
-  "codecompanion",
-  -- "hyprpilot",
+  -- "codecompanion",
+  "hyprpilot",
 }
 nvim.lsp.ai.completion.provider = { "inline" }
 nvim.lsp.ai.provider.chat = "claude_code"

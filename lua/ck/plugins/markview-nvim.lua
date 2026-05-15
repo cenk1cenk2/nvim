@@ -19,7 +19,7 @@ function M.config()
           "codecompanion",
           "hyprpilot",
           "hyprpilot_header",
-          "hyprpilot_input",
+          "hyprpilot_composer",
           "hyprpilot_permission_row",
           "hyprpilot_queue_strip",
         },
@@ -42,7 +42,7 @@ function M.config()
             "Avante",
             "codecompanion",
             "hyprpilot",
-            "hyprpilot_input",
+            "hyprpilot_composer",
           },
           ignore_buftypes = {},
           condition = function(bufnr)
@@ -56,7 +56,7 @@ function M.config()
                 "Avante",
                 "hyprpilot",
                 "hyprpilot_header",
-                "hyprpilot_input",
+                "hyprpilot_composer",
                 "hyprpilot_permission_row",
                 "hyprpilot_queue_strip",
               }, ft)
