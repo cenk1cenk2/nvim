@@ -54,11 +54,11 @@ function M.config()
               and vim.tbl_contains({
                 "codecompanion",
                 "Avante",
-                "hyprpilot",
-                "hyprpilot_header",
+                "hyprpilot.markdown",
+                "hyprpilot_header.markdown",
                 "hyprpilot_composer.markdown",
-                "hyprpilot_permission_row",
-                "hyprpilot_queue_strip",
+                "hyprpilot_permission_row.markdown",
+                "hyprpilot_queue_strip.markdown",
               }, ft)
             then
               return true

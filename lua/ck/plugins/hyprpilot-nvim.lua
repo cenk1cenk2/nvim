@@ -16,19 +16,19 @@ function M.config()
     end,
     configure = function(_, fn)
       fn.add_disabled_filetypes({
-        "hyprpilot",
-        "hyprpilot_header",
+        "hyprpilot.markdown",
+        "hyprpilot_header.markdown",
         "hyprpilot_composer.markdown",
-        "hyprpilot_permission_row",
-        "hyprpilot_queue_strip",
+        "hyprpilot_permission_row.markdown",
+        "hyprpilot_queue_strip.markdown",
       })
 
       fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
         vim.list_extend(c.right, {
-          { title = "Hyprpilot Header", ft = "hyprpilot_header", wo = { winbar = false } },
+          { title = "Hyprpilot Header", ft = "hyprpilot_header.markdown", wo = { winbar = false } },
           {
             title = "Hyprpilot Chat",
-            ft = "hyprpilot",
+            ft = "hyprpilot.markdown",
             size = {
               width = function()
                 return vim.o.columns < 180 and 0.5 or 180
@@ -36,8 +36,8 @@ function M.config()
             },
             wo = { winbar = false },
           },
-          { title = "Hyprpilot Permissions", ft = "hyprpilot_permission_row", wo = { winbar = false } },
-          { title = "Hyprpilot Queue", ft = "hyprpilot_queue_strip", wo = { winbar = false } },
+          { title = "Hyprpilot Permissions", ft = "hyprpilot_permission_row.markdown", wo = { winbar = false } },
+          { title = "Hyprpilot Queue", ft = "hyprpilot_queue_strip.markdown", wo = { winbar = false } },
           { title = "Hyprpilot Composer", ft = "hyprpilot_composer.markdown", wo = { winbar = false } },
         })
 
@@ -198,9 +198,13 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "p" }),
           function()
-            require("hyprpilot.composer").attach_clipboard_image()
+            local path = vim.fn.input("attach file: ", "", "file")
+            if path == nil or path == "" then
+              return
+            end
+            require("hyprpilot.composer").attach_file(path)
           end,
-          desc = "attach clipboard image [hyprpilot]",
+          desc = "attach file by path [hyprpilot]",
           mode = { "n" },
         },
         {
