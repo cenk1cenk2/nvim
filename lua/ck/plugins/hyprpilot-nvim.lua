@@ -170,7 +170,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "r" }),
           function()
-            require("hyprpilot.instances").restart()
+            require("hyprpilot.rpc.instances").restart()
           end,
           desc = "restart current [hyprpilot]",
           mode = { "n" },
@@ -178,7 +178,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "X" }),
           function()
-            require("hyprpilot.instances").shutdown()
+            require("hyprpilot.rpc.instances").shutdown()
           end,
           desc = "shutdown current [hyprpilot]",
           mode = { "n" },
@@ -254,7 +254,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "m", "M" }),
+          fn.wk_keystroke({ categories.COPILOT, "m", "m" }),
           function()
             require("hyprpilot.palettes.modes").open()
           end,
