@@ -18,7 +18,7 @@ function M.config()
       fn.add_disabled_filetypes({
         "hyprpilot",
         "hyprpilot_header",
-        "hyprpilot_composer",
+        "hyprpilot_composer.markdown",
         "hyprpilot_permission_row",
         "hyprpilot_queue_strip",
       })
