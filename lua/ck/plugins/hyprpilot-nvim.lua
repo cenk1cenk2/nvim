@@ -224,6 +224,14 @@ function M.config()
           mode = { "n" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "P" }),
+          function()
+            require("hyprpilot.composer").attach_clipboard()
+          end,
+          desc = "attach from clipboard [hyprpilot]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "A" }),
           function()
             require("hyprpilot.composer").paste_buffer()
