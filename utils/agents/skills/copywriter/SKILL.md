@@ -15,13 +15,13 @@ argument-hint: "[optional: specific instructions]"
 ### Process
 
 1. **Get the current buffer content.**
-   - Use `vim__vim_status` to identify the current buffer.
-   - Read the file content via `neovim__read_file`.
+   - Use `hyprpilot-nvim__editor_status` to identify the current buffer.
+   - Read the file content via `hyprpilot-nvim__editor_read`.
    - If the buffer is empty, inform the user and stop.
 
 2. **Apply the cleanup rules below to the entire buffer content.**
 
-3. **Replace the buffer content** with the cleaned version via `neovim__edit_file`.
+3. **Replace the buffer content** with the cleaned version via the built-in `Edit` tool.
 
 4. **Confirm** to the user that the cleanup is done. Do NOT describe what changes you made unless asked.
 

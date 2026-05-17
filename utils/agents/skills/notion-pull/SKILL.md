@@ -51,13 +51,13 @@ Parse the fetched page content into markdown format:
 
 **Step 3: Determine the target.**
 
-- Use `vim__vim_status` to check the current buffer.
+- Use `hyprpilot-nvim__editor_status` to check the current buffer.
 - If the buffer is empty or unnamed, write the markdown content there.
 - If the buffer has existing content, ask the user: write to current buffer (replacing content) or create a new file?
 
 **Step 4: Write the file.**
 
-- Use `neovim__edit_file` to write the converted markdown to the target buffer.
+- Use the built-in `Edit` (or `Write` for new files) tool to write the converted markdown to the target buffer.
 - Confirm to the user: page title, number of properties converted, and where the file was written.
 
 ### Markdown Format

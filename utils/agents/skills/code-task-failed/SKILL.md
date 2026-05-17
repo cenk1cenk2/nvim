@@ -53,9 +53,9 @@ Wait for the user's response before proceeding. Their context narrows the search
 Based on the failure category and user context, investigate using available tools:
 
 **For all failures:**
-- Read the failing file(s) using neovim MCP.
+- Read the failing file(s) using `hyprpilot-nvim__editor_read` or the built-in `Read` tool.
 - Check `git diff` (unstaged and staged) for recent changes that could have introduced the failure.
-- Use `mcp-diagnostics` to check for LSP errors in the relevant files.
+- Use `hyprpilot-nvim__diagnostics_get` to check for LSP errors in the relevant files.
 
 **For dependency errors:**
 - Read lockfiles and dependency manifests.
@@ -64,13 +64,13 @@ Based on the failure category and user context, investigate using available tool
 
 **For test failures:**
 - Read the failing test and the code it tests.
-- Use treesitter or mcp-diagnostics to understand the call chain.
+- Use treesitter or `hyprpilot-nvim` LSP tools (`lsp_definition`, `lsp_references`) to understand the call chain.
 - If the test was passing before, use `git log` to find what changed in the tested code.
 
 **For build/compilation errors:**
 - Trace the error to the source — read the file and line referenced in the error.
 - Check imports and dependencies of the failing module.
-- Use mcp-diagnostics `lsp_hover` and `lsp_definition` to verify types and references.
+- Use `hyprpilot-nvim__lsp_hover` and `hyprpilot-nvim__lsp_definition` to verify types and references.
 
 **For upstream/external issues:**
 - Search GitHub/GitLab MCP for open issues on the relevant repository matching the error message or pattern.

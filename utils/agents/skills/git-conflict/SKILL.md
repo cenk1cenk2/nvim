@@ -54,8 +54,7 @@ references:
    - Wait for user response before proceeding.
 
 6. **Apply resolutions.**
-   - Edit the file to remove conflict markers and apply the chosen resolution using neovim MCP (`neovim__edit_file`).
-   - If neovim MCP is unavailable, fall back to built-in Edit tool.
+   - Edit the file to remove conflict markers and apply the chosen resolution using the built-in `Edit` tool.
    - After resolving all hunks in a file, re-read the file to verify no conflict markers remain.
 
 7. **Stage resolved files.**

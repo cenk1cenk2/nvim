@@ -20,7 +20,7 @@ Before dispatching agents or subagents, establish a shared conventions document 
 
 ### Code Style
 
-- **Formatting:** Does the project use a formatter? (gofmt, prettier, black, rustfmt) If so, agents should run it or use `vim__vim_format` MCP tool after editing.
+- **Formatting:** Does the project use a formatter? (gofmt, prettier, black, rustfmt) If so, agents should run it or use `hyprpilot-nvim__editor_format` MCP tool after editing.
 - **Whitespace patterns:** Blank line before returns? Blank lines between function groups? Match existing files.
 - **Naming:** camelCase vs snake_case vs PascalCase for functions, variables, types, files. Check what the codebase uses.
 - **Imports:** Grouped? Sorted? Aliased? Check existing files for the pattern.
@@ -40,7 +40,7 @@ Before dispatching agents or subagents, establish a shared conventions document 
 
 ### Tooling
 
-- **Formatter MCP:** If `vim__vim_format` is available and the project uses LSP-based formatting, agents should call it after editing files.
+- **Formatter MCP:** If `hyprpilot-nvim__editor_format` is available and the project uses LSP-based formatting, agents should call it after editing files.
 - **Linter:** What linter runs and what rules matter? Agents should not introduce linter violations.
 
 ## Output Format
@@ -51,7 +51,7 @@ Present the conventions to the user as a concise block ready to paste into agent
 ## Conventions
 
 - Tests: Ginkgo BDD style. Test files co-located as `*_test.go`.
-- Formatting: Run `vim__vim_format` after editing Go files. Blank line before return statements.
+- Formatting: Run `hyprpilot-nvim__editor_format` after editing Go files. Blank line before return statements.
 - Naming: PascalCase for exported, camelCase for unexported. Errors wrapped with `fmt.Errorf("context: %w", err)`.
 - Imports: stdlib first, external second, internal third. Blank line between groups.
 - Commits: Conventional commits with scope — `feat(auth): add token rotation`.

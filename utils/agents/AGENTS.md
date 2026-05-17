@@ -22,7 +22,7 @@
 - Refresh knowledge of ongoing tasks
 
 2. **DISCOVER MCP TOOLS** - Use `ToolSearch` (Claude Code's internal tool discovery mechanism) to find available MCP server tools
-   - Search for key tool categories: `neovim`, `treesitter`, `mcp-diagnostics`, `context7`
+   - Search for key tool categories: `hyprpilot-nvim`, `treesitter`, `context7`
    - Understand tool capabilities for this session
    - Note any tool limitations or unavailability
    - **If tools are unavailable, silently skip and continue** - tools may not always be loaded
@@ -557,9 +557,9 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 | **File reading**                                        | Built-in `Read`            | Use built-in Read tool for reading files                                                                                                                                                                                                                     |
 | **File editing**                                        | Built-in `Edit`            | Use built-in Edit tool for editing existing files. MUST read file first                                                                                                                                                                                      |
 | **File creation**                                       | Built-in `create_file`     | Use the builtin `create_file` tool for creating new files                                                                                                                                                                                                    |
-| Code navigation (definitions/references/hover)          | `mcp-diagnostics` (native) | **ALWAYS first choice** for LSP operations — uses Neovim's running LSP clients. Tools: `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, `lsp_workspace_symbols`, `lsp_code_actions`. Fallback: `treesitter` for structure, then Grep |
-| **Renaming symbols**                                    | `mcp-diagnostics` (native) | **ALWAYS use `lsp_rename` instead of find-and-replace or manual edits.** Single tool call renames across the entire workspace via LSP — the fastest way to rename. Accepts `new_name`, optional `path`/`line`/`col` to target.                               |
-| Diagnostics (errors, warnings)                          | `mcp-diagnostics` (native) | Diagnostic analysis from running LSP servers. Tools: `document_diagnostics`, `workspace_diagnostics`, `diagnostics_summary`                                                                                                                                  |
+| Code navigation (definitions/references/hover)          | `hyprpilot-nvim` MCP       | **ALWAYS first choice** for LSP operations — uses Neovim's running LSP clients. Tools: `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, `lsp_workspace_symbols`, `lsp_code_actions`. Fallback: `treesitter` for structure, then Grep |
+| **Renaming symbols**                                    | `hyprpilot-nvim` MCP       | **ALWAYS use `lsp_rename` instead of find-and-replace or manual edits.** Single tool call renames across the entire workspace via LSP — the fastest way to rename. Accepts `new_name`, optional `path`/`line`/`col` to target.                               |
+| Diagnostics (errors, warnings)                          | `hyprpilot-nvim` MCP       | Diagnostic analysis from running LSP servers. Tool: `diagnostics_get` (per file or workspace).                                                                                                                                                               |
 | Code structure analysis, AST queries                    | `treesitter`               | Need to understand syntax structure, find patterns                                                                                                                                                                                                           |
 | **Git operations**                                      | `git` CLI via Bash         | Use `git status`, `git diff`, `git log`, `git show`, `git commit`, `git add`, `git checkout`, etc. directly. There is no git MCP — use Bash for all local git work.                                                                                          |
 | **GitHub operations** (PRs, issues, repos, code search) | `github` MCP               | **ALWAYS first choice** for any GitHub interaction. Fallback: `gh` CLI via Bash. Never use raw API calls                                                                                                                                                     |
@@ -579,27 +579,29 @@ Use MCP tools when available - they integrate with the editor and user's workflo
 >
 > Tavily MUST NOT be used unless ALL other search tools (built-in `web_search`, built-in `fetch_webpage`, and `exa` MCP) have been tried and failed. Even then, only use Tavily if the user is explicitly insisting on further research. Tavily's only unique value is multi-page crawl/site mapping — for everything else, the other tools are sufficient. **Do NOT reach for Tavily out of convenience.**
 
-#### mcp-diagnostics (Native LSP Bridge)
+#### hyprpilot-nvim (Native Editor + LSP Bridge)
 
-Uses Neovim's running LSP clients — always prefer over Grep/treesitter for code intelligence.
+Single MCP server that exposes the running Neovim instance: editor state, file navigation, LSP, and diagnostics. Always prefer over Grep/treesitter for code intelligence — the LSP knows more than text search.
 
 **Tool inventory by purpose:**
 
 | Group | Tools | When to use |
 | ----- | ----- | ----------- |
+| **Editor state** | `editor_status`, `editor_buffers`, `editor_cursor`, `editor_files` | Inspect what the user is looking at, list open buffers, list project files |
+| **Editor navigation** | `editor_file_open`, `editor_jump`, `editor_select` | Open a file in the user's editor, jump to a line, visually select a range. Always ask before navigating |
+| **Editor I/O** | `editor_read`, `editor_grep`, `editor_format` | Read buffer contents, grep via editor, LSP-format a file after edits |
 | **LSP Navigation** | `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, `lsp_workspace_symbols` | Tracing symbols, understanding code structure, finding usages |
-| **LSP Actions** | `lsp_code_actions`, `lsp_rename` | Automated fixes, workspace-wide renames (always prefer `lsp_rename` over find-and-replace) |
-| **Power Analysis** | `analyze_symbol`, `symbol_lookup` | `analyze_symbol` combines hover+definition+references+document symbols in one call. `symbol_lookup` finds any symbol by name without knowing its location — prefer over Grep for code navigation |
-| **Diagnostics** | `diagnostics_get`, `diagnostics_summary`, `diagnostic_by_severity`, `diagnostic_hotspots`, `diagnostic_stats`, `analyze_diagnostics`, `correlate_diagnostics` | Error investigation, systematic debugging, pattern recognition across files |
-| **Buffer Management** | `buffer_status`, `ensure_files_loaded`, `refresh_after_external_changes` | LSP prerequisites and post-edit synchronization |
+| **LSP Actions** | `lsp_code_actions`, `lsp_rename`, `lsp_ensure_loaded` | Automated fixes, workspace-wide renames (always prefer `lsp_rename` over find-and-replace), prime LSP for a file before querying it |
+| **Diagnostics** | `diagnostics_get` | Errors/warnings for a file or the whole workspace |
+| **Misc** | `open_url`, `healthcheck`, `reload_dynamic_tools` | Open URLs in the user's browser, probe server health, reload runtime-registered tools |
 
 **Critical workflow rules:**
 
-1. **After editing files with Edit tool** → ALWAYS call `refresh_after_external_changes` with the edited file paths so neovim picks up changes and LSP diagnostics update. Without this, diagnostics are stale because edits happen outside neovim.
-2. **Before LSP operations on a file** → check if file is loaded with `buffer_status`. If not, call `ensure_files_loaded` first. LSP tools silently return empty results on unloaded files.
-3. **When investigating a symbol** → prefer `analyze_symbol` over individual `lsp_hover` + `lsp_definition` + `lsp_references` calls — one call instead of three.
-4. **When finding a symbol by name** → use `symbol_lookup` instead of Grep. It uses LSP workspace symbols and is more accurate for code navigation.
-5. **When debugging systematically** → follow this progression: `diagnostics_summary` → `diagnostic_hotspots` → `diagnostics_get` (on specific files) → `analyze_diagnostics` (deep dive on individual errors) → `correlate_diagnostics` (find root causes across files) → `lsp_code_actions` (check for automated fixes before manual editing).
+1. **Before LSP operations on a file** → if the file may not be loaded in a buffer, call `lsp_ensure_loaded` first. LSP tools silently return empty results when the LSP doesn't have the file.
+2. **When investigating a symbol** → combine `lsp_hover` + `lsp_definition` + `lsp_references` as needed; there is no single "analyze symbol" shortcut.
+3. **When finding a symbol by name** → prefer `lsp_workspace_symbols` over Grep for code navigation — it's structural, not textual.
+4. **When debugging systematically** → `diagnostics_get` (workspace-wide or per file) → drill into hot files → `lsp_code_actions` (check for automated fixes before manual editing).
+5. **After formatting/edits** → call `editor_format` when the project uses LSP-based formatting and you want the user's buffer to reflect canonical style.
 
 #### Tmux MCP (Read-Only Inspection)
 
@@ -711,27 +713,27 @@ Use the builtin `create_file` tool for creating new files. Do not use the edit t
 
 **Priority:**
 
-1. `neovim` MCP - `neovim__list_directory`, `neovim__find_files`
-2. Built-in `Glob` tool
+1. `hyprpilot-nvim` MCP — `editor_files` (project file listing via the running editor).
+2. Built-in `Glob` tool.
 
 ### Editor Navigation (Showing Code to User)
 
-Use vim MCP navigation tools to navigate the user's editor when referring to specific code locations or when the user wants to see something. **If these tools are unavailable, skip silently — do not fall back to other tools.**
+Use `hyprpilot-nvim` MCP navigation tools to navigate the user's editor when referring to specific code locations or when the user wants to see something. **If these tools are unavailable, skip silently — do not fall back to other tools.**
 
 **Available tools:**
 
 | Tool                              | Purpose                                                                   |
 | --------------------------------- | ------------------------------------------------------------------------- |
-| `vim__vim_status`    | Get current editor state (cursor, mode, filename, open buffers).          |
-| `vim__vim_file_open` | Open a file by path (reuses buffer if open), optionally jump to line/col. |
-| `vim__vim_jump`      | Jump to a specific line/column, optionally target a path or bufnr.        |
-| `vim__vim_select`    | Visually select a range of lines, optionally target a path or bufnr.      |
-| `vim__vim_format`    | Format a file using LSP. Targets current buffer unless path or bufnr is provided. |
+| `hyprpilot-nvim__editor_status`    | Get current editor state (cursor, mode, filename, open buffers).          |
+| `hyprpilot-nvim__editor_file_open` | Open a file by path (reuses buffer if open), optionally jump to line/col. |
+| `hyprpilot-nvim__editor_jump`      | Jump to a specific line/column, optionally target a path or bufnr.        |
+| `hyprpilot-nvim__editor_select`    | Visually select a range of lines, optionally target a path or bufnr.      |
+| `hyprpilot-nvim__editor_format`    | Format a file using LSP. Targets current buffer unless path or bufnr is provided. |
 
 **Rules:**
 
 - **Always ask before navigating.** The user's cursor position is their workspace — never move it without permission.
-- Use `vim_status` to understand where the user currently is before suggesting navigation.
+- Use `editor_status` to understand where the user currently is before suggesting navigation.
 - When referring to a specific line of code in chat, offer: _"Want me to jump to that line in the editor?"_
 - In assistant mode, when listing lines to change, offer to navigate to each location.
 - Skip asking when the user explicitly requests navigation (e.g., "show me that file", "go to line 42").
@@ -1281,40 +1283,29 @@ Handles token expiration gracefully with retry logic.
 **Need to navigate code:**
 
 ```
-1. Use mcp-diagnostics for definitions/references/hover (native server, always available)
-2. Use analyze_symbol for comprehensive lookup (hover+definition+references in one call)
-3. Use symbol_lookup to find any symbol by name (prefer over Grep)
+1. Use hyprpilot-nvim LSP tools for definitions/references/hover (native server, always available)
+2. Use lsp_workspace_symbols to find a symbol by name (prefer over Grep)
+3. Combine lsp_hover + lsp_definition + lsp_references when investigating a symbol
 4. Fall back to treesitter for structure analysis
 5. Use Grep only if others unavailable
-```
-
-**After editing files (refresh neovim):**
-
-```
-1. Call refresh_after_external_changes with edited file paths
-2. Wait for diagnostics to update
-3. Check diagnostics_summary to verify no new errors introduced
 ```
 
 **Debugging errors systematically:**
 
 ```
-1. diagnostics_summary → understand scope
-2. diagnostic_hotspots → find worst files
-3. diagnostics_get (filtered by file/severity) → see specific errors
-4. analyze_diagnostics → deep dive on complex errors
-5. correlate_diagnostics → find root causes across files
-6. lsp_code_actions → check for automated fixes before manual editing
+1. diagnostics_get (workspace-wide) → understand scope
+2. diagnostics_get (filtered to specific files) → drill into hot files
+3. lsp_code_actions → check for automated fixes before manual editing
 ```
 
 **Showing code to user in editor:**
 
 ```
-1. Use vim_status to check current editor state (skip silently if unavailable)
+1. Use hyprpilot-nvim__editor_status to check current editor state (skip silently if unavailable)
 2. Ask permission before navigating (unless user explicitly requested it)
-3. Use vim_file_open / vim_jump to navigate
-4. Use vim_select to highlight code ranges for the user
-5. Use vim_format for LSP formatting when needed
+3. Use hyprpilot-nvim__editor_file_open / editor_jump to navigate
+4. Use hyprpilot-nvim__editor_select to highlight code ranges for the user
+5. Use hyprpilot-nvim__editor_format for LSP formatting when needed
 ```
 
 **Interacting with external services (GitHub, GitLab, Linear, Obsidian):**
