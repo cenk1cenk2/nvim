@@ -123,6 +123,6 @@ references:
 
 ### Related Skills
 
-- **`code-assistant-evaluate`** (resource: `skills://skill/code-assistant-evaluate`) — paired evaluation skill. When the user asks to evaluate implemented work, invoke this skill. Do not auto-invoke.
-- **`code-assistant-implement`** (resource: `skills://skill/code-assistant-implement`) — step-by-step implementation counterpart. When the user wants the agent to implement one step at a time with review gates. Do not auto-invoke.
-- **`code-deviations`** (resource: `skills://skill/code-deviations`) — when reviewing the user's implementation and noticing deviations from the plan, apply the code-deviations handling pattern. Do not auto-invoke.
+- **`code-assistant-evaluate`** — paired evaluation skill. When the user asks to evaluate implemented work, invoke this skill. Do not auto-invoke.
+- **`code-assistant-implement`** — step-by-step implementation counterpart. When the user wants the agent to implement one step at a time with review gates. Do not auto-invoke.
+- **`code-deviations`** — when reviewing the user's implementation and noticing deviations from the plan, apply the code-deviations handling pattern. Do not auto-invoke.

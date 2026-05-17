@@ -50,8 +50,8 @@ Skills in this directory form an interconnected system. A skill may depend on or
 #### Create
 
 1. Determine what the skill should do. Ask the user if not clear from context.
-2. Read 2-3 existing skills in the same family to understand patterns, tone, and structure. For each, read `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` (or `skills://skill/<name>` if mcphub is loaded) — issue reads in parallel.
-3. **Check references** — read shared references at `~/.config/nvim/utils/agents/skills/references/<name>.md` (or `skills://reference/<name>` via mcphub). If the skill belongs to a family (e.g., Linear, Obsidian), check whether sibling skills declare references in their frontmatter and reuse the same ones.
+2. Read 2-3 existing skills in the same family to understand patterns, tone, and structure. For each, read `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` directly — issue reads in parallel.
+3. **Check references** — read shared references at `~/.config/nvim/utils/agents/skills/references/<name>.md`. If the skill belongs to a family (e.g., Linear, Obsidian), check whether sibling skills declare references in their frontmatter and reuse the same ones.
 4. Draft the full `SKILL.md`. Use reference directives for any shared conventions found in step 3. Add matching `references:` frontmatter field.
 5. **Validate** — run the description checklist (see below) and verify conventions before presenting.
 6. Present the draft in chat.
@@ -60,7 +60,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 
 #### Update
 
-1. Read the existing `SKILL.md` for the target skill at `~/.config/nvim/utils/agents/skills/<target-skill>/SKILL.md` (or `skills://skill/<target-skill>` via mcphub).
+1. Read the existing `SKILL.md` for the target skill at `~/.config/nvim/utils/agents/skills/<target-skill>/SKILL.md`.
 2. **Read all declared references** — if the skill has a `references:` frontmatter field, load all references via `reading the files listed in `references:``. This ensures you understand the full context the skill operates in before making changes.
 3. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
 4. Identify what needs to change.
@@ -148,10 +148,10 @@ References implement progressive disclosure — SKILL.md stays lean with the cor
 
 1. Skills declare references in frontmatter as a YAML array of relative paths.
 2. References are NOT loaded into context automatically — the SKILL.md body tells the model which references to read and when, using reference directives (blockquotes).
-3. The model reads reference files on demand (see Path Convention below — the loading mechanism depends on whether mcphub is loaded).
+3. The model reads reference files on demand via the built-in `Read` tool (filesystem path).
 4. Skills must work even if references fail to load (graceful degradation).
 
-When authoring a skill, **do not bake the loading mechanism into the SKILL.md**. The runtime decision (mcphub vs. direct filesystem) is made by the agent at session start (see `AGENTS.md` Section I, step 4, and `load-skills` skill). Reference directives in SKILL.md should name the reference and what it covers, not the tool used to fetch it.
+When authoring a skill, **do not bake the loading mechanism into the SKILL.md**. Reference directives should name the reference and what it covers, not the tool used to fetch it — the agent picks the right tool (filesystem `Read`, or `mcp__hyprpilot__load_skill_references` for the bundled view).
 
 #### Path Convention
 
@@ -160,10 +160,9 @@ Paths are relative to the skill's own directory:
 - `../references/<file>.md` — shared references (up to `skills/`, into `references/`).
 - `./references/<file>.md` — skill-specific references (inside the skill's own directory).
 
-The agent resolves these as follows depending on the runtime path:
+The absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/references/<file>.md`, and `./references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`.
 
-- **mcphub loaded:** read via `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<skill>/references" })` to get all references for a skill at once, or `skills://reference/<name>` for a shared reference standalone.
-- **Direct filesystem (no mcphub):** the absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/references/<file>.md`, and `./references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`.
+Hyprpilot's `mcp__hyprpilot__load_skill_references { slug }` tool returns every reference a skill declares in one response (concatenated with `--- <basename> ---` delimiters) — useful when you want the daemon to walk the frontmatter for you instead of reading paths one at a time.
 
 #### Reference Directives in SKILL.md
 

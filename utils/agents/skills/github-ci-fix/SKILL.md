@@ -41,4 +41,4 @@ references:
 
 ### Related Skills
 
-- **`github-ci-create`** (resource: `skills://skill/github-ci-create`) — for creating or modifying GitHub Actions workflows. Auto-invoke when the fix requires workflow changes rather than code changes.
+- **`github-ci-create`** — for creating or modifying GitHub Actions workflows. Auto-invoke when the fix requires workflow changes rather than code changes.

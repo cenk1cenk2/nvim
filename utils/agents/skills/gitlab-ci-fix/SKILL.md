@@ -41,4 +41,4 @@ references:
 
 ### Related Skills
 
-- **`gitlab-ci-create`** (resource: `skills://skill/gitlab-ci-create`) — for creating or modifying GitLab CI pipelines. Auto-invoke when the fix requires pipeline changes rather than code changes.
+- **`gitlab-ci-create`** — for creating or modifying GitLab CI pipelines. Auto-invoke when the fix requires pipeline changes rather than code changes.

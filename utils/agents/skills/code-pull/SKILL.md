@@ -63,4 +63,4 @@ argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 
 ### Related Skills
 
-- **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — for reviewing the adapted changes after applying them. Do not auto-invoke.
+- **`code-review-branch`** — for reviewing the adapted changes after applying them. Do not auto-invoke.

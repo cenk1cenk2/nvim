@@ -211,4 +211,4 @@ Bump the 5 remaining enterprise clusters (ent-cmsmax, davidsons, diagonal, found
 
 ### Related Skills
 
-- **`obsidian-note`** (resource: `skills://skill/obsidian-note`) — general-purpose note creation. This skill specializes the obsidian-note pattern for repository documentation. Do not auto-invoke.
+- **`obsidian-note`** — general-purpose note creation. This skill specializes the obsidian-note pattern for repository documentation. Do not auto-invoke.

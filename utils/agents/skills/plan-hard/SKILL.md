@@ -148,10 +148,10 @@ Keep going until a stop condition is met.
 
 `plan-hard` is the **default disposition** whenever plan mode is entered. It composes with other skills freely:
 
-- **`code-assistant-plan`** (`skills://skill/code-assistant-plan`) — after `plan-hard` produces the plan file, the user may follow up with `code-assistant-plan` for the ongoing-review phase during implementation. `plan-hard` handles design-tree interviewing; `code-assistant-plan` handles tracking and reviewing the user's implementation.
-- **`plan-handoff`** (`skills://skill/plan-handoff`) — if the interviewed plan is intended for a different session or repository, compose with `plan-handoff` to produce a self-contained handoff plan.
-- **`code-assistant-implement`** (`skills://skill/code-assistant-implement`) — after `plan-hard` finishes, if the user wants step-by-step implementation with review gates, hand off to `code-assistant-implement`.
-- **`agents-review`** (`skills://skill/agents-review`) — conditionally auto-invoked in step 7 to fact-check resolved claims AND attempt to auto-resolve pending unresolved ones. Only runs when the user's invocation includes an explicit rigour phrase ("plan hard" / "think hard" / "look hard" / "deep" / "thorough" / "rigorous"). Default plan-mode entry skips this step. User opt-out: "skip fact-check".
+- **`code-assistant-plan`** — after `plan-hard` produces the plan file, the user may follow up with `code-assistant-plan` for the ongoing-review phase during implementation. `plan-hard` handles design-tree interviewing; `code-assistant-plan` handles tracking and reviewing the user's implementation.
+- **`plan-handoff`** — if the interviewed plan is intended for a different session or repository, compose with `plan-handoff` to produce a self-contained handoff plan.
+- **`code-assistant-implement`** — after `plan-hard` finishes, if the user wants step-by-step implementation with review gates, hand off to `code-assistant-implement`.
+- **`agents-review`** — conditionally auto-invoked in step 7 to fact-check resolved claims AND attempt to auto-resolve pending unresolved ones. Only runs when the user's invocation includes an explicit rigour phrase ("plan hard" / "think hard" / "look hard" / "deep" / "thorough" / "rigorous"). Default plan-mode entry skips this step. User opt-out: "skip fact-check".
 
 When composing, do NOT duplicate the interview — `plan-hard` runs once per plan, then the downstream skill takes over.
 
@@ -177,8 +177,8 @@ When composing, do NOT duplicate the interview — `plan-hard` runs once per pla
 
 ### Related Skills
 
-- **`code-assistant-plan`** (resource: `skills://skill/code-assistant-plan`) — collaborative guidance and progress tracking during user-driven implementation.
-- **`plan-handoff`** (resource: `skills://skill/plan-handoff`) — produce self-contained plans for other sessions or repositories.
-- **`plan-pickup`** (resource: `skills://skill/plan-pickup`) — load and execute an existing plan file.
-- **`code-assistant-implement`** (resource: `skills://skill/code-assistant-implement`) — step-by-step implementation with review gates.
-- **`agents-review`** (resource: `skills://skill/agents-review`) — conditionally auto-invoked before the plan is written (only on explicit rigour triggers) to fact-check resolved claims and auto-resolve unresolved branches where evidence is findable. Read-only reviewer dispatched at cheap tier by default.
+- **`code-assistant-plan`** — collaborative guidance and progress tracking during user-driven implementation.
+- **`plan-handoff`** — produce self-contained plans for other sessions or repositories.
+- **`plan-pickup`** — load and execute an existing plan file.
+- **`code-assistant-implement`** — step-by-step implementation with review gates.
+- **`agents-review`** — conditionally auto-invoked before the plan is written (only on explicit rigour triggers) to fact-check resolved claims and auto-resolve unresolved branches where evidence is findable. Read-only reviewer dispatched at cheap tier by default.

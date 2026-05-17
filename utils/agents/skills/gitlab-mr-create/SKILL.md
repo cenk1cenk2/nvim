@@ -122,6 +122,6 @@ These are team defaults for this workflow. Do not prompt the user to confirm the
 
 ### Related Skills
 
-- **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — for reviewing the code quality of the branch before writing the MR description. Do not auto-invoke.
-- **`gitlab-ci-create`** (resource: `skills://skill/gitlab-ci-create`) — for creating or updating GitLab CI/CD pipelines. Do not auto-invoke.
-- **`gitlab-ci-fix`** (resource: `skills://skill/gitlab-ci-fix`) — for diagnosing failing CI pipelines on the MR. Do not auto-invoke.
+- **`code-review-branch`** — for reviewing the code quality of the branch before writing the MR description. Do not auto-invoke.
+- **`gitlab-ci-create`** — for creating or updating GitLab CI/CD pipelines. Do not auto-invoke.
+- **`gitlab-ci-fix`** — for diagnosing failing CI pipelines on the MR. Do not auto-invoke.

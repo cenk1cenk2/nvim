@@ -1,39 +1,20 @@
-# Hyprpilot Runtime Overlay
+# Hyprpilot Runtime Addendum
 
-This file is loaded as a system-prompt overlay alongside `AGENTS.md` when the agent is running under **Hyprpilot**. It overrides the runtime-detection sections of `AGENTS.md` (Section I.4 "Discover Available Skills" and the Skills Architecture in Section II) with the concrete Hyprpilot wiring.
+Loaded as a system-prompt sibling to `AGENTS.md` for hyprpilot sessions. `AGENTS.md` is now hyprpilot-native, so this file is small — it carries only the operational details `AGENTS.md` doesn't already spell out.
 
-> **Precedence:** when this file contradicts `AGENTS.md`, this file wins. `AGENTS.md` describes a generic runtime; Hyprpilot is one specific runtime — the one currently in use.
+## MCP tools are wired directly — no aggregator hub
 
-## Skills are attached, not loaded
+Every MCP server is wired straight into the agent — there is no upstream hub aggregating them.
 
-- Skills are attached into context **by the harness** when the session starts, or on demand when the user invokes a skill. Treat every attached skill as already loaded — follow its instructions directly.
-- **Do NOT attempt runtime discovery.** Path A (mcphub) does not exist in this runtime. There is no `mcphub` server, no `ListMcpResourcesTool`, no `ReadMcpResourceTool`, no `Skill` tool. Any reference to those in `AGENTS.md` or in a skill body should be read as "use the equivalent direct-filesystem path described below."
-- **Do NOT call mcphub-style URIs** like `skills://skill/<name>` or `skills://reference/<name>`. They will not resolve.
+- **Tool prefix is the bare server name.** `github__get_file_contents`, `linear-kilic-dev__get_issue`, `slack-kilic__slack_list_channels`, etc. Do NOT prepend `mcp__<hub>__` of any flavour; the harness does not surface tools that way here.
+- **`AGENTS.md` Section III convention applies** for the `<server>__<tool>` short-form — just skip the hub-prefix-resolution step.
+- **Per-server filtering is config-time, not runtime.** `hyprpilot.autoAcceptTools` / `autoRejectTools` on each catalog entry, plus per-profile `mcps` overrides, are the captain's knobs. There is no runtime toggle (see `AGENTS.md` "Missing MCP Servers").
 
-If a skill the user references has not been attached and you genuinely need it:
+## The in-tree `hyprpilot` MCP server
 
-- Read it directly from disk with the built-in `Read` tool. The base path is `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`.
+When the resolved `[[mcp.skills]]` catalog is non-empty, hyprpilot auto-injects its own MCP server (server name: `hyprpilot`) at `session/new`. It exposes:
 
-## Reference resolution
+- Resources: `hyprpilot://skills/<slug>`, `hyprpilot://skills/<slug>/references`.
+- Tools: `mcp__hyprpilot__list_skills`, `read_skill`, `load_skill_references`, `reload`.
 
-References declared in a skill's `references:` frontmatter are NOT auto-attached. When the skill body says "read the X reference", resolve relative to the skill's directory:
-
-| Path in skill frontmatter | Resolves to |
-|---|---|
-| `../references/<file>.md` | `~/.config/nvim/utils/agents/skills/references/<file>.md` |
-| `./references/<file>.md` | `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md` |
-
-The skills root is always `~/.config/nvim/utils/agents/skills/`. Read references via the built-in `Read` tool.
-
-## MCP tools are wired directly
-
-Every MCP server is wired directly to the agent in this runtime — there is no aggregator hub.
-
-- Tool prefix is the **bare server name**, not routed through any hub: `github__get_file_contents`, `linear-kilic-dev__get_issue`, `slack-kilic__slack_list_channels`, etc.
-- Do NOT prepend `mcp__mcphub__` or any other hub prefix. The harness does not surface tools that way here.
-- The MCP Tool Name Convention in `AGENTS.md` Section III still applies for the `<server>__<tool>` short-form — just skip the hub-prefix-resolution step.
-- `disabled_tools` filtering happens at the agent boundary directly; there is no upstream hub to filter through.
-
-## What still applies from AGENTS.md
-
-Everything else from `AGENTS.md` applies unchanged: Tool Selection Priority, File Operations, Code Style, User Interaction Patterns, Session Maintenance, Plan File Location, Memory Updates, Knowledge Base Updates, and the Rule Priority list. This file only reshapes the loading mechanics — not the behavior.
+`autoAcceptTools = ["*"]` is the seeded default, so `mcp__hyprpilot__*` calls short-circuit to Allow at `PermissionController::decide` lane 2 with zero prompts.

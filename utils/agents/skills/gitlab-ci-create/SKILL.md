@@ -79,4 +79,4 @@ node-install:
 
 ### Related Skills
 
-- **`gitlab-ci-fix`** (resource: `skills://skill/gitlab-ci-fix`) — for diagnosing failures in existing GitLab CI pipelines. Auto-invoke when the user reports CI failures instead of wanting to create/update pipelines.
+- **`gitlab-ci-fix`** — for diagnosing failures in existing GitLab CI pipelines. Auto-invoke when the user reports CI failures instead of wanting to create/update pipelines.

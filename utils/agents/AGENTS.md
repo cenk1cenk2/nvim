@@ -34,24 +34,14 @@
    - If the main note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
    - **If the note does not exist or obsidian MCP is unavailable, silently skip and continue**
 
-4. **DISCOVER AVAILABLE SKILLS** - **First detect the runtime path** and use the matching discovery method:
-
-   **Path A — mcphub is in the toolset.** `ListMcpResourcesTool` and `ReadMcpResourceTool` are available, and `mcphub` is among the loaded MCP servers (look for `mcphub__*` tools in your toolset). In this case, prefer the MCP resource interface — it's tagged with `[auto]` / `[manual]` flags and resolves shared references automatically:
-     - Discovery: `ListMcpResourcesTool({ server: "mcphub" })`. Skills are at `skills://skill/{name}`; shared references at `skills://reference/{name}`.
-     - Loading a skill: `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}" })`. For multiple, parallel calls.
-     - Loading all references for a skill: `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/{name}/references" })`.
-     - Loading a shared reference standalone: `ReadMcpResourceTool({ server: "mcphub", uri: "skills://reference/{name}" })`.
-
-   **Path B — direct integration without mcphub** (Claude Code with skills attached as plugin/folder, OpenCode loading them as a directory, any other client without the mcphub bridge). The skill files are accessed by their filesystem path:
-     - The host may attach skills automatically (Claude Code plugin model) — in that case, treat them as already loaded; skip the discovery step and follow the in-context skill instructions.
-     - Otherwise, list `~/.config/nvim/utils/agents/skills/` to enumerate skills, read frontmatter (first ~10 lines of each `SKILL.md`) to decide relevance.
-     - Loading a skill: read `~/.config/nvim/utils/agents/skills/{name}/SKILL.md` directly.
-     - Loading references: resolve the skill's `references:` frontmatter paths relative to the skill's directory (e.g., `../references/<file>.md` → `~/.config/nvim/utils/agents/skills/references/<file>.md`).
-
-   **Both paths — common rules:**
-   - Skills marked `disable-model-invocation: true` in frontmatter must NOT be auto-invoked — only load when the user explicitly requests them. If relevant, **suggest** the skill to the user.
-   - **Do not read full skill files during initialization** — just note what exists. Read skills on demand when needed.
-   - See the **Skill Cross-Loading** section in Part II and `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md` for dependency resolution rules.
+4. **DISCOVER AVAILABLE SKILLS** — skills live as `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` files on disk, plus shared references under `~/.config/nvim/utils/agents/skills/references/<name>.md`. The runtime is **hyprpilot**; skills are usually attached by the harness, and any that aren't can be read directly from disk via the built-in `Read` tool.
+   - **If the harness attaches the skill** (palette pick, `#{hyprpilot://skills/<name>}` token, auto-injection): treat it as already loaded and follow its instructions. No filesystem listing or extra read needed.
+   - **If you need a skill the harness didn't attach**: read its `SKILL.md` directly from `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`.
+   - **To enumerate available skills**: list `~/.config/nvim/utils/agents/skills/` and read the frontmatter (first ~10 lines) for each `SKILL.md` to see the `description` field. Skills marked `disable-model-invocation: true` are manual-only — only load on explicit user request; if relevant, **suggest** the skill to the user.
+   - **Do not read full skill bodies during initialization** — just note what exists. Read on demand.
+   - **References declared in a skill's `references:` frontmatter are NOT auto-attached.** Resolve relative to the skill's directory and `Read` them when the skill body says to: `../references/<file>.md` → `~/.config/nvim/utils/agents/skills/references/<file>.md`; `./references/<file>.md` → `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`.
+   - **The hyprpilot MCP server also exposes skills** as `hyprpilot://skills/<slug>` resources + `mcp__hyprpilot__list_skills` / `read_skill` / `load_skill_references` / `reload` tools. Either path (filesystem `Read` or `mcp__hyprpilot__read_skill`) is fine — filesystem is the canonical reference in skill bodies; the MCP tools exist for the agent's own lookups.
+   - See `~/.config/nvim/utils/agents/skills/load-skills/SKILL.md` for dependency resolution and cross-loading rules.
 
 ## II. PLANNING AND IMPLEMENTATION
 
@@ -79,7 +69,7 @@
 
 **Evaluate complexity first** — the threshold is whether the task genuinely requires multi-file research and design decisions, not just whether it touches multiple files. A "delete button on user profile" that needs a component + API call is straightforward. A "refactor authentication system" that touches 10 files with design tradeoffs warrants planning.
 
-**Default disposition: `plan-hard`.** Whenever plan mode is entered, load and follow the `plan-hard` skill (resource: `skills://skill/plan-hard`) unless the user explicitly requests a lighter pass (e.g., "quick plan", "just outline it"). `plan-hard` walks the design tree branch by branch, self-answers from the codebase where possible, and recommends an answer for every open question. It stays in plan mode until the user explicitly signals "implement" or uses a proceed signal (`g`, `go`, `y`, `yolo`).
+**Default disposition: `plan-hard`.** Whenever plan mode is entered, load and follow the `plan-hard` skill (read `~/.config/nvim/utils/agents/skills/plan-hard/SKILL.md` if it isn't already attached) unless the user explicitly requests a lighter pass (e.g., "quick plan", "just outline it"). `plan-hard` walks the design tree branch by branch, self-answers from the codebase where possible, and recommends an answer for every open question. It stays in plan mode until the user explicitly signals "implement" or uses a proceed signal (`g`, `go`, `y`, `yolo`).
 
 ### Discussion-First Default
 
@@ -97,19 +87,15 @@
 
 User invokes specialized modes using personal slash commands (e.g., `/code-assistant-plan`, `/linear`, `/note`). These are Claude Code personal skills stored in `~/.config/nvim/utils/agents/skills` directory. When a skill is invoked, follow the instructions in its SKILL.md — the skill instructions are the source of truth for each mode's behavior.
 
-**Skill / shared-reference resource references:** The user can invoke a skill or shared reference by pasting a resource handle inside `#{...}`:
+**Skill / shared-reference resource references:** The user can invoke a skill by pasting a resource handle inside `#{...}`:
 
-- `#{mcp:skills://skill/<name>}` — load a skill.
-- `#{mcp:skills://reference/<name>}` — load a shared reference.
+- `#{hyprpilot://skills/<name>}` — load a skill. Hyprpilot's palette autocomplete inserts this shape; the daemon resolves it as a hydration-blob attachment when the prompt submits.
 
-**Resolution depends on the runtime path** (see Section I, step 4):
+When the harness has already attached the skill, treat it as loaded. When you need to fetch one yourself, read `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` directly. Make parallel `Read` calls when multiple handles are passed in one message.
 
-- **Path A (mcphub available):** call `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>" })` (or `skills://reference/<name>`). Make parallel calls when multiple handles are passed in one message.
-- **Path B (no mcphub):** read the matching file directly:
-  - `skills://skill/<name>` → `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`
-  - `skills://reference/<name>` → `~/.config/nvim/utils/agents/skills/references/<name>.md`
+There is no standalone reference URI — shared references are accessed **through the skill that declares them** (via the skill's `references:` frontmatter → filesystem `Read`, or via `mcp__hyprpilot__load_skill_references`). To read a shared reference standalone, `Read` it from `~/.config/nvim/utils/agents/skills/references/<name>.md`.
 
-Either way, never use the Claude Code built-in `Skill` tool for these — it only handles Claude Code built-in skills, not these custom skills.
+Never use the Claude Code built-in `Skill` tool for these — it only handles Claude Code built-in skills, not the captain's custom skills.
 
 ### Skill Cross-Loading (IMPORTANT)
 
@@ -181,25 +167,24 @@ skills/
 - See `/load-skills` for dependency resolution and reference loading details.
 - See `/config-skills` for skill authoring conventions.
 
-**Reading skills and references — choose by runtime path:**
+**Reading skills and references** — filesystem paths are canonical; use the built-in `Read` tool:
 
-| Resource | Path A (mcphub available) | Path B (direct/filesystem) |
-|---|---|---|
-| Skill | `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>" })` | `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` |
-| All references for a skill | `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>/references" })` | resolve each path in the skill's `references:` frontmatter relative to the skill's directory |
-| Shared reference standalone | `ReadMcpResourceTool({ server: "mcphub", uri: "skills://reference/<name>" })` | `~/.config/nvim/utils/agents/skills/references/<name>.md` |
-| Skill-local reference | (loaded with the skill via `/references` URI above) | `~/.config/nvim/utils/agents/skills/<name>/references/<file>.md` |
+| Resource | Filesystem path |
+|---|---|
+| Skill | `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` |
+| All references for a skill | resolve each path in the skill's `references:` frontmatter relative to the skill's directory |
+| Shared reference standalone | `~/.config/nvim/utils/agents/skills/references/<name>.md` |
+| Skill-local reference | `~/.config/nvim/utils/agents/skills/<name>/references/<file>.md` |
 
-For multiple skills/references, batch reads in parallel either way.
+For multiple skills/references, batch `Read` calls in parallel.
 
-**User invocation:** The user can paste `#{mcp:skills://skill/<name>}` or `#{mcp:skills://reference/<name>}` in a message — resolve via the matching column above (Section II covers this).
+The hyprpilot MCP server also exposes `mcp__hyprpilot__list_skills`, `mcp__hyprpilot__read_skill`, and `mcp__hyprpilot__load_skill_references` — use them when you want the daemon's authoritative resolved view (e.g., to honour per-profile skill filters). For documentation reads inside this AGENTS file or any SKILL.md, filesystem paths are the convention.
 
-**Discovery:**
+**User invocation:** The user can paste `#{hyprpilot://skills/<name>}` in a message. Hyprpilot's daemon hydrates it as a markdown attachment; treat it as if the skill were just attached.
 
-- **Path A:** `ListMcpResourcesTool({ server: "mcphub" })` returns all skills (`[auto]` / `[manual]` tagged) and shared references as static resources.
-- **Path B:** list `~/.config/nvim/utils/agents/skills/` for skill directories; read frontmatter (first ~10 lines of `SKILL.md`) to see the `description` field. `disable-model-invocation: true` in the frontmatter is the equivalent of `[manual]` in Path A.
+**Discovery:** list `~/.config/nvim/utils/agents/skills/` for skill directories and read the frontmatter (first ~10 lines of `SKILL.md`) to see the `description` field. Skills with `disable-model-invocation: true` are manual-only.
 
-If your host (Claude Code's plugin system, OpenCode's skill folder loader, etc.) **attaches** the skills automatically — they appear as already-loaded context — treat them as discovered. No filesystem listing needed.
+If the harness **attaches** the skill (palette pick, `#{hyprpilot://skills/...}` paste, auto-injection) — they appear as already-loaded context — treat them as discovered. No filesystem listing needed.
 
 ### Using Multiple Skills Together
 
@@ -496,7 +481,7 @@ After approval and exiting plan mode:
 Discovered existing token validation in `auth/validator.ts` that we can reuse. Updated Step 3 to integrate with existing code rather than reimplementing.
 ```
 
-**Major revisions (wrong direction, failed approach, scope change):** Use the `plan-revise` skill (resource: `skills://skill/plan-revise`). It re-interviews the user on the delta, factors in any implementation already done (keep/revert/reshape), and updates the plan file in place with a dated `## Revision History` entry. Trigger phrases: "plan revise", "back to the drawing board", "wrong plan", "change direction", "this approach isn't working".
+**Major revisions (wrong direction, failed approach, scope change):** Use the `plan-revise` skill. It re-interviews the user on the delta, factors in any implementation already done (keep/revert/reshape), and updates the plan file in place with a dated `## Revision History` entry. Trigger phrases: "plan revise", "back to the drawing board", "wrong plan", "change direction", "this approach isn't working".
 
 ### Plan Mode Best Practices
 
@@ -677,27 +662,27 @@ The tmux MCP is configured **read-only**. Write actions (`execute-command`, `cre
 2. Ask the user for guidance before trying an alternative tool
 3. Wait for explicit permission before proceeding
 
-### Optional MCP Servers
+### Missing MCP Servers
 
-Some MCP servers are disabled by default to save resources. When the user requests functionality that maps to a disabled server, or when you cannot find expected tools in your toolset, **invoke the `config-mcp-update` skill** to offer toggling the server on.
+Some MCP servers may be absent from a session's toolset because hyprpilot's per-profile `mcps` filter (the `ignore` glob array on the catalog entry) dropped them, or because they are simply not in `~/.config/nvim/utils/mcphub/servers.json`. **Hyprpilot has no runtime toggle** — the MCP catalog is static after daemon boot, restart-to-reconfigure.
 
-**Known optional servers:**
+When the user requests functionality that maps to a missing server, or you cannot find a tool you expect to exist:
 
-| Server            | Provides                                                     |
-| ----------------- | ------------------------------------------------------------ |
-| `grafana-kilic`   | Dashboards, alerts, metrics (personal/kilic).                |
-| `grafana-laravel` | Dashboards, alerts, metrics (Laravel/work).                  |
-| `notion-laravel`  | Notion pages, databases, work documentation.                 |
-| `spacelift-laravel` | Stacks, runs, resources, policies, modules (Laravel/work). |
-| `treesitter`      | AST queries, syntax tree analysis, structural code patterns. |
+1. Surface the gap to the user — name the server, name the tool you expected.
+2. If they want it added/un-ignored, invoke the `config-mcp` skill to edit the catalog (it covers add/remove/modify with hyprpilot's permission-extension globs and reminds the captain about the daemon restart).
+3. Don't pretend the tool exists or try a fallback that obscures the gap.
 
-**When to invoke:**
+**Common servers worth checking** when something feels missing:
 
-- User mentions grafana, notion, spacelift, treesitter, or similar and the tools are not in your toolset.
-- You cannot find a tool you expect to exist — check if an optional server provides it before saying you can't help.
-- User explicitly asks to enable or disable an MCP server.
+| Server              | Provides                                                     |
+| ------------------- | ------------------------------------------------------------ |
+| `grafana-kilic`     | Dashboards, alerts, metrics (personal/kilic).                |
+| `grafana-laravel`   | Dashboards, alerts, metrics (Laravel/work).                  |
+| `notion-laravel`    | Notion pages, databases, work documentation.                 |
+| `spacelift-laravel` | Stacks, runs, resources, policies, modules (Laravel/work).   |
+| `treesitter`        | AST queries, syntax tree analysis, structural code patterns. |
 
-**Never auto-toggle.** Always ask the user before enabling or disabling a server.
+**Never silently fall back.** Surface the gap; let the captain decide.
 
 ## IV. FILE OPERATIONS
 
@@ -1341,12 +1326,12 @@ Handles token expiration gracefully with retry logic.
 4. For ANY write operation: present changes as logical chunks (reasoning + content/diff) and wait for approval
 ```
 
-**MCP server tools missing or user requests disabled server:**
+**MCP server tools missing or user requests an absent server:**
 
 ```
-1. Suspect an optional server — invoke config-mcp-update skill
-2. Ask the user before toggling (never auto-toggle)
-3. After task completion, offer to turn off servers you enabled
+1. Surface the gap — name the expected server + tool
+2. Hyprpilot has no runtime toggle; if the user wants it added, invoke `config-mcp` to edit the catalog
+3. Remind the captain about the daemon-restart requirement after edits
 ```
 
 **Completing a milestone:**

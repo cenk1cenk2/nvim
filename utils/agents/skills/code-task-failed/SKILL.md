@@ -123,4 +123,4 @@ Wait for user approval before applying any fix.
 
 ### Related Skills
 
-- **`code-debug`** (resource: `skills://skill/code-debug`) — for behavioral bugs where code runs but produces wrong results. Auto-invoke when the problem is incorrect behavior, not a command failure.
+- **`code-debug`** — for behavioral bugs where code runs but produces wrong results. Auto-invoke when the problem is incorrect behavior, not a command failure.

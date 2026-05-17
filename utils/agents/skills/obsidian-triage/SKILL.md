@@ -58,7 +58,7 @@ For each note, present its content summary and recommend one of:
    - Recommend a target category based on the vault structure.
    - Propose a kebab-case filename (replacing the timestamp name).
    - Propose updated frontmatter following the target category's conventions (read 1-2 existing notes in that category if not already familiar with its patterns).
-   - Propose restructured content to match the category's style — following the same approach as `obsidian-note` (resource: `skills://skill/obsidian-note`): concise, practical, flat `##` structure.
+   - Propose restructured content to match the category's style — following the same approach as `obsidian-note`: concise, practical, flat `##` structure.
    - Present the full proposed note for approval before writing.
 
 2. **Keep** — the note is still an active todo and should stay in `Todo/`.

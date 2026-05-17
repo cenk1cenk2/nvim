@@ -171,6 +171,6 @@ references:
 
 ### Related Skills
 
-- **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — for reviewing the code quality of the branch before writing the PR description. Do not auto-invoke.
-- **`github-ci-create`** (resource: `skills://skill/github-ci-create`) — for creating or updating GitHub Actions workflows. Do not auto-invoke.
-- **`github-ci-fix`** (resource: `skills://skill/github-ci-fix`) — for diagnosing failing CI checks on the PR. Do not auto-invoke.
+- **`code-review-branch`** — for reviewing the code quality of the branch before writing the PR description. Do not auto-invoke.
+- **`github-ci-create`** — for creating or updating GitHub Actions workflows. Do not auto-invoke.
+- **`github-ci-fix`** — for diagnosing failing CI checks on the PR. Do not auto-invoke.

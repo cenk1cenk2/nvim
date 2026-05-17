@@ -253,6 +253,6 @@ to indexed, rename, restructuring.>
 
 ### Related Skills
 
-- **`spacelift-laravel`** (resource: `skills://skill/spacelift-laravel`) — workspace initialization for Spacelift context. Auto-invoked as prerequisite.
-- **`github-pr-create`** (resource: `skills://skill/github-pr-create`) — for writing PR descriptions. Do not auto-invoke.
-- **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — for reviewing code changes. Do not auto-invoke.
+- **`spacelift-laravel`** — workspace initialization for Spacelift context. Auto-invoked as prerequisite.
+- **`github-pr-create`** — for writing PR descriptions. Do not auto-invoke.
+- **`code-review-branch`** — for reviewing code changes. Do not auto-invoke.

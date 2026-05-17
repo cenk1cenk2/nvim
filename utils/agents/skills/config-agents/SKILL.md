@@ -24,7 +24,7 @@ argument-hint: "[what to change or review in AGENTS.md]"
 
 ### Target File
 
-`~/.config/nvim/utils/agents/AGENTS.md` — the central guidelines document loaded into every CodeCompanion agent session.
+`~/.config/nvim/utils/agents/AGENTS.md` — the central guidelines document loaded into every hyprpilot agent session (injected via the `system_prompt` block on each profile in `~/.config/hyprpilot/config.yaml`).
 
 ### Process
 

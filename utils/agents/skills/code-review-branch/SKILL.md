@@ -109,6 +109,6 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
 
 ### Related Skills
 
-- **`github-pr-create`** (resource: `skills://skill/github-pr-create`) — for drafting PR descriptions after review. Do not auto-invoke.
-- **`gitlab-mr-create`** (resource: `skills://skill/gitlab-mr-create`) — for drafting MR descriptions after review. Do not auto-invoke.
-- **`code-deviations`** (resource: `skills://skill/code-deviations`) — when review reveals consistency deviations that are intentional user choices, apply the code-deviations handling pattern. Do not auto-invoke.
+- **`github-pr-create`** — for drafting PR descriptions after review. Do not auto-invoke.
+- **`gitlab-mr-create`** — for drafting MR descriptions after review. Do not auto-invoke.
+- **`code-deviations`** — when review reveals consistency deviations that are intentional user choices, apply the code-deviations handling pattern. Do not auto-invoke.

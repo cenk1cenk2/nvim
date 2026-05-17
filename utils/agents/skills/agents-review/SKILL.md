@@ -200,6 +200,6 @@ No merging across artifacts — each review keeps its own context.
 
 ### Related Skills
 
-- **`agents-delegate`** (resource: `skills://skill/agents-delegate`) — for running a task (not reviewing an artifact). Uses the same dispatch mechanism with a different prompt shape.
-- **`agents-plan`** (resource: `skills://skill/agents-plan`) — multi-task DAG execution. `agents-review` can sanity-check the DAG before launching.
-- **`plan-hard`** (resource: `skills://skill/plan-hard`) — auto-invokes `agents-review` type=`facts` at the end of its interview to fact-check self-answered claims before writing the plan file.
+- **`agents-delegate`** — for running a task (not reviewing an artifact). Uses the same dispatch mechanism with a different prompt shape.
+- **`agents-plan`** — multi-task DAG execution. `agents-review` can sanity-check the DAG before launching.
+- **`plan-hard`** — auto-invokes `agents-review` type=`facts` at the end of its interview to fact-check self-answered claims before writing the plan file.

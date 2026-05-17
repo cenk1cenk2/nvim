@@ -63,39 +63,23 @@ When a skill exists in multiple variants (e.g., `linear-project-argocd-system-ki
 
 ### Loading Skills
 
-Skills live as plain Markdown files at `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`. The agent has two paths to access them. **Pick the path that matches the runtime, then stick with it for the whole session.**
+Skills live as plain Markdown files at `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`. The hyprpilot harness usually attaches them for you; when it doesn't, read them directly from disk.
 
-#### Path A — mcphub is loaded
+**Discovery** — list `~/.config/nvim/utils/agents/skills/` to enumerate skill directories. Read the frontmatter (first ~10 lines of each `SKILL.md`) for the `description` field. Skills with `disable-model-invocation: true` are manual-only — only load on explicit user request.
 
-Detection: `mcphub__*` tools are in your toolset, and `ListMcpResourcesTool` / `ReadMcpResourceTool` are available.
+**Three ways a skill becomes loaded:**
 
-When this path is active, **prefer the MCP resource interface** — it surfaces the `[auto]` / `[manual]` invocation tags and resolves a skill's references in a single call.
+1. **Harness attachment.** The captain pastes `#{hyprpilot://skills/<name>}`, picks the skill from the palette, or hyprpilot auto-attaches it for the turn. The skill body lands in context as a markdown attachment with the bundle path. Treat it as loaded — follow the instructions in the attachment.
 
-1. **Discover:** `ListMcpResourcesTool({ server: "mcphub" })`. Skills appear at `skills://skill/<name>` (with their `description` and `[auto]` / `[manual]` flag); shared references appear at `skills://reference/<name>`.
-2. **Load a skill:** `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>" })`. For multiple skills, parallel calls.
-3. **Load all references for a skill:** `ReadMcpResourceTool({ server: "mcphub", uri: "skills://skill/<name>/references" })` — returns every file declared in the skill's `references:` frontmatter, regardless of whether the path is shared (`../references/...`) or skill-local (`./references/...`).
-4. **Load a shared reference standalone** (outside a skill load): `ReadMcpResourceTool({ server: "mcphub", uri: "skills://reference/<name>" })`.
+2. **Filesystem `Read`.** The skill isn't in context but you need it (recursive prerequisite resolution, cross-loading, etc.). Use the built-in `Read` tool against `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`. For multiple skills, read in parallel.
 
-#### Path B — direct integration (no mcphub)
+3. **MCP tool.** Hyprpilot's in-tree MCP server exposes `mcp__hyprpilot__list_skills` (discovery against the daemon's resolved per-instance catalog) and `mcp__hyprpilot__read_skill { slug }` (body fetch). Use these when you specifically want the daemon's filtered view (per-profile `[[mcp.skills]]` filtering / `ignore` globs honoured); use plain `Read` otherwise.
 
-Detection: no `mcphub__*` tools. The host is loading skills another way — Claude Code with a plugin/skills folder, OpenCode loading the directory, a generic MCP client without the mcphub bridge, or a plain shell session.
+**Recursive prerequisites:** if a loaded skill declares its own prerequisites, resolve them by re-entering this procedure for each.
 
-There are two sub-cases:
+**Graceful degradation:** skills must work even when references fail to load — they contain enough inline context to function.
 
-**B1. Skills are attached automatically** (Claude Code plugin, OpenCode skill folder, etc.). The host injects the relevant `SKILL.md` content into context as part of session setup or via an attachment when the user invokes the skill. Treat them as already loaded — follow the in-context instructions. No filesystem listing needed.
-
-**B2. Skills are not attached.** Read the file directly from the filesystem:
-
-1. **Discover:** list `~/.config/nvim/utils/agents/skills/` to enumerate skill directories. Read the frontmatter (first ~10 lines of each `SKILL.md`) for the `description` field. Skills with `disable-model-invocation: true` are the equivalent of `[manual]` — only load on explicit user request.
-2. **Load a skill:** read `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` directly. For multiple skills, read in parallel.
-3. **Load references:** the skill declares its references in frontmatter — resolve each path **relative to the skill's directory** (`../references/<file>.md` → `~/.config/nvim/utils/agents/skills/references/<file>.md`; `./references/<file>.md` → `~/.config/nvim/utils/agents/skills/<name>/references/<file>.md`).
-
-#### Both paths — common rules
-
-1. Follow the instructions in the loaded `SKILL.md` as if they were system instructions for the current task.
-2. If the loaded skill has its own prerequisites, resolve them recursively (re-enter the load procedure for each).
-3. **Do NOT auto-load references.** Only read a reference when the skill's body tells you to.
-4. Skills must work even when references fail to load (graceful degradation) — they contain enough inline context to function.
+**Do NOT auto-load references.** Only read a reference when the skill's body tells you to.
 
 ### Reference Files
 
@@ -109,12 +93,14 @@ references:
 
 **Reference locations:**
 
-| Path pattern              | Scope                 | Example                                |
-| ------------------------- | --------------------- | -------------------------------------- |
-| `../references/<file>.md` | Shared across skills  | `../references/linear-prerequisite.md` |
-| `./references/<file>.md`  | Specific to one skill | `./references/research-workflow.md`    |
+| Path pattern              | Scope                 | Filesystem resolution                                                              |
+| ------------------------- | --------------------- | ---------------------------------------------------------------------------------- |
+| `../references/<file>.md` | Shared across skills  | `~/.config/nvim/utils/agents/skills/references/<file>.md`                          |
+| `./references/<file>.md`  | Specific to one skill | `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`                  |
 
-**Resolution** depends on the runtime path (see "Loading Skills" above). On Path A, use `skills://skill/<name>/references` or `skills://reference/<name>`. On Path B, the absolute filesystem paths above apply.
+References are read via the built-in `Read` tool. Hyprpilot's `mcp__hyprpilot__load_skill_references { slug }` bundles every reference a skill declares into one response (concatenated with `--- <basename> ---` delimiters) — useful when you want the daemon to walk the frontmatter for you instead of reading paths one at a time.
+
+There is no standalone-reference URI; shared references are accessed through the skill that declares them, or by `Read`ing the file directly when you need it outside a skill load.
 
 ### Dismissing Skills
 

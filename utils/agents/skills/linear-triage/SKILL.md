@@ -45,7 +45,7 @@ Present the triage queue to the user:
 
 - Total number of issues in triage.
 - Grouping by theme if patterns are visible (e.g., "5 issues related to authentication, 3 related to monitoring").
-- **Project creation signal** — if 3+ issues cluster around a common theme and no existing project covers it, flag this to the user and recommend creating a project via `linear-project-create` (resource: `skills://skill/linear-project-create`). Do NOT create the project yourself — just recommend it and move on. The user can act on it after triage.
+- **Project creation signal** — if 3+ issues cluster around a common theme and no existing project covers it, flag this to the user and recommend creating a project via `linear-project-create`. Do NOT create the project yourself — just recommend it and move on. The user can act on it after triage.
 - Ask the user if they want to process all issues or focus on a specific group.
 
 #### Step 4: Process Each Issue
@@ -63,7 +63,7 @@ Present a recommendation covering:
 5. **Team** — confirm team assignment. Flag if the issue seems like it belongs to a different team.
 6. **Target state** — recommend `backlog` as the default. Recommend `todo` if the issue is urgent or the user wants it in the current cycle.
 7. **Cycle** — if recommending `todo`, suggest adding to the current cycle. Only if the user confirms.
-8. **Description refinement** — if the description is vague, incomplete, or could be improved, suggest specific changes. Follow the approach from the `linear-issue-update` skill (resource: `skills://skill/linear-issue-update`): identify what's missing or unclear, draft improvements, and present them for approval.
+8. **Description refinement** — if the description is vague, incomplete, or could be improved, suggest specific changes. Follow the approach from the `linear-issue-update` skill: identify what's missing or unclear, draft improvements, and present them for approval.
 9. **Estimate** — recommend an estimate if missing.
 
 **Present recommendations as a concise block per issue.** Example:

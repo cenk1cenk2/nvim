@@ -157,14 +157,14 @@ Subagents run in parallel — **dispatch all in a single message with multiple t
 
 ### Composition with Other Skills
 
-- **`plan-hard`** (`skills://skill/plan-hard`) — the natural follow-on for any picked improvement. Produce the plan. This skill stops at proposal.
-- **`plan-revise`** (`skills://skill/plan-revise`) — if a picked improvement reveals that an existing plan was wrong, route to `plan-revise` instead of `plan-hard`.
+- **`plan-hard`** — the natural follow-on for any picked improvement. Produce the plan. This skill stops at proposal.
+- **`plan-revise`** — if a picked improvement reveals that an existing plan was wrong, route to `plan-revise` instead of `plan-hard`.
 - **`code-review-branch`** / **`code-review-changes`** — for reviewing pending changes, not for codebase-wide audit. Different skill, different scope.
 - **`code-deviations`** — if the audit surfaces a deviation between intended and actual behavior, apply the deviations pattern when discussing with the user.
 
 ### Related Skills
 
-- **`plan-hard`** (resource: `skills://skill/plan-hard`) — build a plan from a picked improvement.
-- **`plan-revise`** (resource: `skills://skill/plan-revise`) — revise an existing plan when an audit finding invalidates it.
-- **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — review a specific branch's changes.
-- **`code-review-changes`** (resource: `skills://skill/code-review-changes`) — review uncommitted / pending changes.
+- **`plan-hard`** — build a plan from a picked improvement.
+- **`plan-revise`** — revise an existing plan when an audit finding invalidates it.
+- **`code-review-branch`** — review a specific branch's changes.
+- **`code-review-changes`** — review uncommitted / pending changes.

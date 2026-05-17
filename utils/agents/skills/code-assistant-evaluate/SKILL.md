@@ -115,5 +115,5 @@ references:
 
 ### Related Skills
 
-- **`code-assistant-plan`** (resource: `skills://skill/code-assistant-plan`) — paired planning skill. Evaluate reads and updates the plan created by assistant. Do not auto-invoke.
-- **`code-deviations`** (resource: `skills://skill/code-deviations`) — when evaluation reveals the user deviated from the plan, apply the code-deviations handling pattern. Do not auto-invoke.
+- **`code-assistant-plan`** — paired planning skill. Evaluate reads and updates the plan created by assistant. Do not auto-invoke.
+- **`code-deviations`** — when evaluation reveals the user deviated from the plan, apply the code-deviations handling pattern. Do not auto-invoke.

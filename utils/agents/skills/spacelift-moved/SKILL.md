@@ -178,6 +178,6 @@ moved {
 
 ### Related Skills
 
-- **`spacelift-laravel`** (resource: `skills://skill/spacelift-laravel`) — workspace initialization. Auto-invoked as prerequisite.
-- **`spacelift-report`** (resource: `skills://skill/spacelift-report`) — full infrastructure impact report. Do not auto-invoke.
-- **`github-pr-create`** (resource: `skills://skill/github-pr-create`) — for writing PR descriptions. Do not auto-invoke.
+- **`spacelift-laravel`** — workspace initialization. Auto-invoked as prerequisite.
+- **`spacelift-report`** — full infrastructure impact report. Do not auto-invoke.
+- **`github-pr-create`** — for writing PR descriptions. Do not auto-invoke.

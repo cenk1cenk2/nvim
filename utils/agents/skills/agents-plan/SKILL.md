@@ -338,8 +338,8 @@ See the `agents-delegate` reference for tier definitions, ecosystem mappings, us
 
 ### Related Skills
 
-- **`agents-delegate`** (resource: `skills://skill/agents-delegate`) — for single-task, one-shot delegation to one agent at a user-chosen tier/model. Use when the work fits one agent and doesn't warrant a plan + DAG.
-- **`code-review-changes`** (resource: `skills://skill/code-review-changes`) — invoked per-layer (default cadence) and at end-of-run for integration review.
-- **`code-assistant-plan`** (resource: `skills://skill/code-assistant-plan`) — for guided planning where the user implements. This skill plans AND executes. Do not auto-invoke.
-- **`code-assistant-implement`** (resource: `skills://skill/code-assistant-implement`) — for step-by-step human-driven implementation with review gates. Use when the user wants to drive the keyboard.
-- **`agents-review`** (resource: `skills://skill/agents-review`) — dispatch a reviewer to cross-check the DAG before launching. Suggested after step 6 (optional; cheap tier by default).
+- **`agents-delegate`** — for single-task, one-shot delegation to one agent at a user-chosen tier/model. Use when the work fits one agent and doesn't warrant a plan + DAG.
+- **`code-review-changes`** — invoked per-layer (default cadence) and at end-of-run for integration review.
+- **`code-assistant-plan`** — for guided planning where the user implements. This skill plans AND executes. Do not auto-invoke.
+- **`code-assistant-implement`** — for step-by-step human-driven implementation with review gates. Use when the user wants to drive the keyboard.
+- **`agents-review`** — dispatch a reviewer to cross-check the DAG before launching. Suggested after step 6 (optional; cheap tier by default).

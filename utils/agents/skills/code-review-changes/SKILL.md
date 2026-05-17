@@ -88,5 +88,5 @@ You are a senior developer who has seen every mistake twice. Professional, direc
 
 ### Related Skills
 
-- **`code-review-branch`** (resource: `skills://skill/code-review-branch`) — formal, intent-driven branch audit with plan mode and PR annotation. Use that when you need a thorough, documented review tied to a specific goal. Do not auto-invoke.
-- **`code-debug`** (resource: `skills://skill/code-debug`) — for investigating and fixing bugs. Do not auto-invoke.
+- **`code-review-branch`** — formal, intent-driven branch audit with plan mode and PR annotation. Use that when you need a thorough, documented review tied to a specific goal. Do not auto-invoke.
+- **`code-debug`** — for investigating and fixing bugs. Do not auto-invoke.

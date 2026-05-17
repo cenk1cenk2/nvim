@@ -48,4 +48,4 @@ references:
 
 ### Related Skills
 
-- **`github-ci-fix`** (resource: `skills://skill/github-ci-fix`) — for diagnosing failures in existing GitHub Actions workflows. Auto-invoke when the user reports CI failures instead of wanting to create/update workflows.
+- **`github-ci-fix`** — for diagnosing failures in existing GitHub Actions workflows. Auto-invoke when the user reports CI failures instead of wanting to create/update workflows.

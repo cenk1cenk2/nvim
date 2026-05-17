@@ -40,5 +40,5 @@ disable-model-invocation: true
 
 ### Related Skills
 
-- **`code-assistant-plan`** (resource: `skills://skill/code-assistant-plan`) — prerequisite. A plan from assistant MUST exist before this skill runs. Auto-invoke if no plan file exists and the user requests step-by-step implementation.
-- **`code-assistant-evaluate`** (resource: `skills://skill/code-assistant-evaluate`) — self-evaluation after each step. Invoked automatically as part of the code-assistant-implement process.
+- **`code-assistant-plan`** — prerequisite. A plan from assistant MUST exist before this skill runs. Auto-invoke if no plan file exists and the user requests step-by-step implementation.
+- **`code-assistant-evaluate`** — self-evaluation after each step. Invoked automatically as part of the code-assistant-implement process.

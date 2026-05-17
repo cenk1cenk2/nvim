@@ -102,8 +102,8 @@ Per-session / persistent opt-out is out of scope — one-turn only.
 > Auto-invoke the matching workspace skill when the trigger surfaces
 > an issue id:
 >
-> - **kilic-dev workspace** (K-xxx): `skills://skill/linear-kilic`
-> - **Laravel workspace** (CLOUD-xxx): `skills://skill/linear-laravel`
+> - **kilic-dev workspace** (K-xxx): `linear-kilic`
+> - **Laravel workspace** (CLOUD-xxx): `linear-laravel`
 >
 > Route through the workspace's own `save_issue` tool name — they
 > use the same API but different MCP server prefixes.
