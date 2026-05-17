@@ -11,7 +11,7 @@ function M.config()
       ---@type Plugin
       return {
         "hyprpilot/hyprpilot.nvim",
-        dir = "~/development/hyprpilot.nvim",
+        -- dir = "~/development/hyprpilot.nvim",
       }
     end,
     configure = function(_, fn)
@@ -60,7 +60,7 @@ function M.config()
     setup = function()
       ---@type hyprpilot.Config
       return {
-        log_level = vim.log.levels.DEBUG,
+        -- log_level = vim.log.levels.DEBUG,
         with_config = {
           {
             mcps = {
