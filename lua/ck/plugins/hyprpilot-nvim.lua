@@ -194,6 +194,14 @@ function M.config()
           mode = { "n" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "x" }),
+          function()
+            require("hyprpilot.rpc.instances").toggle_keep_alive()
+          end,
+          desc = "toggle keep-alive across nvim quit [hyprpilot]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "f" }),
           function()
             require("hyprpilot.palettes.instances").open()
