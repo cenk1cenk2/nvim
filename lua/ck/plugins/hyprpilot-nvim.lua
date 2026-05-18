@@ -186,7 +186,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "r" }),
+          fn.wk_keystroke({ categories.COPILOT, "R" }),
           function()
             require("hyprpilot.rpc.instances").restart()
           end,
