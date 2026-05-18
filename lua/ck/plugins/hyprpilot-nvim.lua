@@ -288,9 +288,9 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "m", "p" }),
           function()
-            require("hyprpilot.palettes.profiles").swap()
+            require("hyprpilot.palettes.profiles").set()
           end,
-          desc = "switch profile on active [hyprpilot]",
+          desc = "set profile on active (re-bootstrap + browse sessions) [hyprpilot]",
           mode = { "n" },
         },
 
