@@ -209,6 +209,14 @@ function M.config()
           desc = "pick instance [hyprpilot]",
           mode = { "n" },
         },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "s" }),
+          function()
+            require("hyprpilot.palettes.profiles").set()
+          end,
+          desc = "set active profile [hyprpilot]",
+          mode = { "n" },
+        },
 
         -- composer attachments
         {
@@ -283,23 +291,6 @@ function M.config()
             require("hyprpilot.palettes.effort").open()
           end,
           desc = "pick effort [hyprpilot]",
-          mode = { "n" },
-        },
-        {
-          fn.wk_keystroke({ categories.COPILOT, "m", "p" }),
-          function()
-            require("hyprpilot.palettes.profiles").set()
-          end,
-          desc = "set profile on active (re-bootstrap + browse sessions) [hyprpilot]",
-          mode = { "n" },
-        },
-
-        {
-          fn.wk_keystroke({ categories.COPILOT, "Q" }),
-          function()
-            vim.cmd([[Lazy reload hyprpilot.nvim]])
-          end,
-          desc = "reload [hyprpilot]",
           mode = { "n" },
         },
       }
