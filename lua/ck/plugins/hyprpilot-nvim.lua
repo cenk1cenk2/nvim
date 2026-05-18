@@ -285,6 +285,14 @@ function M.config()
           desc = "pick effort [hyprpilot]",
           mode = { "n" },
         },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "m", "p" }),
+          function()
+            require("hyprpilot.palettes.profiles").swap()
+          end,
+          desc = "switch profile on active [hyprpilot]",
+          mode = { "n" },
+        },
 
         {
           fn.wk_keystroke({ categories.COPILOT, "Q" }),
