@@ -170,11 +170,19 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "F" }),
+          fn.wk_keystroke({ categories.COPILOT, "s" }),
           function()
             require("hyprpilot.palettes.sessions").open()
           end,
           desc = "pick session [hyprpilot]",
+          mode = { "n" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "S" }),
+          function()
+            require("hyprpilot.palettes.sessions").open_with()
+          end,
+          desc = "pick session with profile [hyprpilot]",
           mode = { "n" },
         },
         {
@@ -207,14 +215,6 @@ function M.config()
             require("hyprpilot.palettes.instances").open()
           end,
           desc = "pick instance [hyprpilot]",
-          mode = { "n" },
-        },
-        {
-          fn.wk_keystroke({ categories.COPILOT, "s" }),
-          function()
-            require("hyprpilot.palettes.profiles").set()
-          end,
-          desc = "set active profile [hyprpilot]",
           mode = { "n" },
         },
 
