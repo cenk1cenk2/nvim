@@ -58,7 +58,7 @@ function M.config()
             -- lua = false, -- to disable a format, set to `false`
             lua = { pattern = "^:%s*lua%s+", icon = "", lang = "lua" },
             help = { pattern = "^:%s*he?l?p?%s+", icon = nvim.ui.icons.ui.CircleQuestion },
-            input = {}, -- Used by input()
+            -- input = {}, -- Used by input()
           },
         },
         messages = {
