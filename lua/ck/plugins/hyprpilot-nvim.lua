@@ -133,6 +133,14 @@ function M.config()
           mode = { "n" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "<DEL>" }),
+          function()
+            require("hyprpilot.ui.window").focus({ target = "queue" })
+          end,
+          desc = "focus queue row [hyprpilot]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "o" }),
           function()
             require("hyprpilot.client").request(
