@@ -225,6 +225,14 @@ function M.config()
           desc = "pick instance [hyprpilot]",
           mode = { "n" },
         },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "F" }),
+          function()
+            require("hyprpilot.palettes.instances").open_attached()
+          end,
+          desc = "pick attached instance [hyprpilot]",
+          mode = { "n" },
+        },
 
         -- composer attachments
         {
