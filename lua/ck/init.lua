@@ -70,7 +70,7 @@ function _G.is_directory(path)
   return stat and stat.type == "directory" or false
 end
 
-_G.OS_UNAME = string.lower(vim.loop.os_uname().sysname)
+_G.OS_UNAME = string.lower(vim.uv.os_uname().sysname)
 
 --- Checks if package is loaded.
 ---@param name string

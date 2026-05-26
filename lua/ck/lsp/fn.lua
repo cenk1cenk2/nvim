@@ -121,7 +121,7 @@ function M.document_diagonistics()
 end
 
 function M.workspace_diagonistics()
-  vim.lsp.workspace_diagonistics()
+  vim.lsp.buf.workspace_diagnostics()
   require("telescope.builtin").lsp_workspace_diagnostics()
 end
 
@@ -283,9 +283,9 @@ function M.restart_lsp(filter)
 end
 
 function M.fix_current()
-  local params = vim.lsp.util.make_range_params(vim.api.nvim_get_current_win(), "utf-8")
-  params.context = { diagnostics = vim.lsp.diagnostic.get_line_diagnostics() }
   local bufnr = vim.api.nvim_get_current_buf()
+  local params = vim.lsp.util.make_range_params(vim.api.nvim_get_current_win(), "utf-8")
+  params.context = { diagnostics = vim.lsp.diagnostic.from(vim.diagnostic.get(bufnr, { lnum = params.range.start.line })) }
 
   vim.lsp.buf_request_all(bufnr, "textDocument/codeAction", params, function(responses)
     local fixes = {}
@@ -363,9 +363,10 @@ end
 ---@param cb? fun(): nil
 ---@param ignored? table<string>
 function M.call_clients_for_code_action(context, cb, ignored)
+  local bufnr = vim.api.nvim_get_current_buf()
   local params = vim.lsp.util.make_range_params(vim.api.nvim_get_current_win(), "utf-8")
   params.context = {
-    diagnostics = vim.lsp.diagnostic.get_line_diagnostics(),
+    diagnostics = vim.lsp.diagnostic.from(vim.diagnostic.get(bufnr, { lnum = params.range.start.line })),
     only = context,
   }
 
