@@ -50,7 +50,7 @@ function M.config()
           name = "hyprpilot",
         }
 
-        c.sources.per_filetype.hyprpilot_composer = function()
+        c.sources.per_filetype["hyprpilot_composer.markdown"] = function()
           return { "hyprpilot", "path", "ripgrep", "snippets" }
         end
 

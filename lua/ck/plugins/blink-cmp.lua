@@ -103,8 +103,6 @@ function M.config()
           default = function(ctx)
             return {
               "lsp",
-              "lazydev",
-              "zsh",
               "omni",
               "snippets",
               "path",
@@ -121,6 +119,12 @@ function M.config()
             end,
             AvanteInput = function()
               return { "avante", "path" }
+            end,
+            zsh = function()
+              return { inherit_defaults = true, "zsh" }
+            end,
+            lua = function()
+              return { inherit_defaults = true, "lazydev" }
             end,
           },
           providers = {
