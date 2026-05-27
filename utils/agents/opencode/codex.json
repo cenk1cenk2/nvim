@@ -35,12 +35,12 @@
       "models": {
         "gpt-5.5": {
           "options": {
-            "reasoningEffort": "xhigh"
+            "reasoningEffort": "high"
           }
         },
         "gpt-5.3-codex-spark": {
           "options": {
-            "reasoningEffort": "xhigh"
+            "reasoningEffort": "high"
           }
         }
       }

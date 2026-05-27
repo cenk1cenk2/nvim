@@ -11,7 +11,7 @@ return {
       },
       check = {
         command = "clippy",
-        extraEnv = { CARGO_TARGET_DIR = "/tmp/rust-analyzer" },
+        extraEnv = { CARGO_TARGET_DIR = "target/rust-analyzer" },
       },
       checkOnSave = {
         command = "clippy",
@@ -19,7 +19,7 @@ return {
       },
       server = {
         extraEnv = {
-          CARGO_TARGET_DIR = "/tmp/rust-analyzer",
+          CARGO_TARGET_DIR = "target/rust-analyzer",
         },
       },
     },
