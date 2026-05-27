@@ -39,7 +39,11 @@ function M.config()
           },
           { title = "Hyprpilot Permissions", ft = "hyprpilot_permission_row.markdown", wo = { winbar = false } },
           { title = "Hyprpilot Queue", ft = "hyprpilot_queue_strip.markdown", wo = { winbar = false } },
-          { title = "Hyprpilot Composer", ft = "hyprpilot_composer.markdown", wo = { winbar = false } },
+          {
+            title = "Hyprpilot Composer",
+            ft = "hyprpilot_composer.markdown",
+            wo = { winbar = false },
+          },
         })
 
         return c
