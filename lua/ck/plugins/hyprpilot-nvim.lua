@@ -12,6 +12,7 @@ function M.config()
       return {
         "hyprpilot/hyprpilot.nvim",
         -- dir = "~/development/hyprpilot.nvim",
+        -- commit = "19599401c5723ffe25af90f5e3e82171d6dde71e",
       }
     end,
     configure = function(_, fn)
