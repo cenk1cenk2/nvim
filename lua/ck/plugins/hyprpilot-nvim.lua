@@ -26,7 +26,7 @@ function M.config()
 
       fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
         vim.list_extend(c.right, {
-          { title = "Hyprpilot Header", ft = "hyprpilot_header.markdown", wo = { winbar = false } },
+          { title = "Hyprpilot Header", ft = "hyprpilot_header.markdown", size = { height = 1 }, wo = { winbar = false } },
           {
             title = "Hyprpilot Chat",
             ft = "hyprpilot.markdown",
