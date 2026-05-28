@@ -21,7 +21,7 @@ function M.config()
             -- end,
           },
           -- https://github.com/mrcjkb/rustaceanvim
-          "mrcjkb/rustaceanvim",
+          -- "mrcjkb/rustaceanvim",
           -- https://github.com/haydenmeade/neotest-jest
           "haydenmeade/neotest-jest",
           -- https://github.com/nvim-contrib/nvim-ginkgo
@@ -139,7 +139,7 @@ function M.config()
           require("neotest-golang")({
             runner = "gotestsum",
           }),
-          require("rustaceanvim.neotest"),
+          -- require("rustaceanvim.neotest"),
           require("neotest-jest")({
             jestCommand = "pnpm run test",
           }),

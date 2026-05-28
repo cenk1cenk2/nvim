@@ -106,7 +106,6 @@ local plugins = {
   "urlview-nvim",
   "img-clip-nvim",
   "crates-nvim",
-  "rustaceanvim",
   "jq-nvim",
   "scratch-nvim",
 }
