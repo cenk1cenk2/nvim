@@ -126,11 +126,14 @@ To pick up this plan in a new session, use `/plan-pickup` with this file path.
 
 ### After Completion
 
-After the user approves the plan:
+After the skill finishes, always make the handoff location the first thing in the final response.
 
 1. Write the plan file to `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
-2. **Output the filename** to the user so they can reference it when starting the consuming session.
-3. Inform the user: "To pick up this plan in the new session, use `/plan-pickup <filename>`."
+2. Immediately output a compact handoff block before any other summary:
+   - `Plan handoff: ~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
+   - `Pick up with: /plan-pickup ~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
+3. If the skill exits without writing a file, explicitly say no handoff file exists yet and why.
+4. Any additional summary or caveats must come after the handoff block.
 
 ### Key Principles
 
