@@ -6,6 +6,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/linear-mandatory-fields.md
   - ../references/linear-issue-states.md
+  - ../references/linear-scm-discovery.md
   - ../references/plan-mode.md
   - ../references/output-diff.md
 ---
@@ -34,8 +35,11 @@ Additional rules for issue creation:
 - When creating multiple related issues, batch create them in a single response using parallel tool calls.
 - Use project names directly when creating issues — Linear MCP will resolve them, unless prompted to specifically search for it.
 - Keep issue titles concise and replicate the styling of encountered issues in the same project.
+- If the user creates an issue and also asks for a non-default status, create with the best matching explicit state or compose with `linear-issue-status` immediately after creation.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+
+> Read the `linear-scm-discovery` reference when the user explicitly asks to enrich the issue from GitHub/GitLab or repository context. Use discovered facts to make the issue easier to implement, but do not run broad SCM discovery by default.
 
 ### Issue Structure
 
@@ -62,7 +66,7 @@ Additional rules for issue creation:
 1. **Research Process:**
    - Use web search with sequential thinking to explore the problem space.
    - Use Context7 to analyze relevant framework/library documentation for implementation guidance.
-   - Use the active workspace's SCM MCP (GitLab or GitHub) to find relevant repositories.
+   - When explicitly requested, use the active workspace's SCM MCP (GitLab or GitHub) to discover relevant repositories, existing patterns, related PRs/MRs, implementation boundaries, and verification expectations.
 
 2. **Analysis Section:**
    - Add an `## Analysis` section before the Appendix.
@@ -100,6 +104,11 @@ Additional rules for issue creation:
 - Use `parentId` field for sub-issues.
 - NEVER put dependency chains, sub-issue tables, or "## Dependencies" sections in issue descriptions — Linear shows these natively.
 - Link to merge requests/pull requests and repositories as attachments for easy navigation.
+
+### Related Skills
+
+- **`linear-issue-status`** — lightweight status changes after creation or when the user verbally specifies a target state.
+- **`linear-issue-checklist`** — checklist updates for created issues when the user immediately provides completion criteria changes.
 
 ### Examples
 

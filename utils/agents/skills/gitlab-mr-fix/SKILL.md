@@ -111,6 +111,8 @@ After processing all threads, present a summary in chat:
 - Group by resolved vs deferred.
 - If all threads were resolved, omit the Deferred section.
 
+**Pickup workflow note:** When this skill is composed from `agents-kilic-pickup`, report any review fix that changes scope, approach, or follow-up requirements so the caller can update the Linear issue comment/checklist or project documentation.
+
 #### Step 8: Optional MR Comment
 
 If the user explicitly asks to post the summary on the MR (e.g., "post this to the MR", "comment the summary"), delegate to the `gitlab-mr-comment` skill. The fix summary from Step 7 becomes the companion output that `gitlab-mr-comment` drafts, presents for approval, and posts. Do not post directly via `gitlab__mr_discussions` — let `gitlab-mr-comment` handle the draft-approve-post workflow. **Only when explicitly requested** — do not invoke `gitlab-mr-comment` automatically.

@@ -30,6 +30,9 @@ All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a direct
 │   ├── linear-mandatory-fields.md       # Team, state, labels, estimate, priority, relations
 │   ├── linear-issue-philosophy.md       # Issue vs. conversation authority and timestamps
 │   ├── linear-description-structure.md  # Issue/project/initiative description format
+│   ├── linear-project-documents.md      # Project-scoped documents for shared Linear context
+│   ├── linear-pickup-execution.md       # Linear pickup implementation lifecycle
+│   ├── linear-scm-discovery.md          # Explicit opt-in GitHub/GitLab discovery for Linear context
 │   ├── linear-research-documentation.md # Research process, analysis, appendix, links
 │   ├── plan-mode.md                     # Plan mode directive variants (strict/standard)
 │   ├── obsidian.md                      # Vault conventions, tool access, writing style
@@ -57,6 +60,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 6. Present the draft in chat.
 7. Iterate based on user feedback.
 8. After approval, create the directory and write the file.
+9. Reload the skill catalog using the reloading guidance below.
 
 #### Update
 
@@ -69,6 +73,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 7. Present proposed changes to the user.
 8. Iterate based on feedback.
 9. After approval, apply the changes.
+10. Reload the skill catalog using the reloading guidance below.
 
 #### Review
 
@@ -79,6 +84,17 @@ Skills in this directory form an interconnected system. A skill may depend on or
 5. Ask clarifying questions to understand user intent.
 6. Propose specific improvements based on answers.
 7. After approval, apply the changes (or leave as-is if no changes needed).
+8. If files changed, reload the skill catalog using the reloading guidance below.
+
+### Reloading Skills
+
+After creating, updating, deleting, or moving skill files:
+
+1. Run `mcp__hyprpilot__reload` so Hyprpilot refreshes the skill catalog.
+2. Verify the reload result reports the expected skill count or succeeds without errors.
+3. For changed skills, re-read the affected skill with `mcp__hyprpilot__read_skill` when practical to confirm the daemon sees the latest content.
+4. If references changed, use `mcp__hyprpilot__load_skill_references` for an affected skill when practical to confirm reference resolution.
+5. Report the reload result to the user.
 
 ### SKILL.md Format
 
@@ -218,6 +234,9 @@ When creating or updating a skill, always check:
 | `linear-mandatory-fields.md` | Team, state, labels, estimate, priority, relations. | Issue/project creation skills. |
 | `linear-issue-philosophy.md` | Issue vs. conversation authority, timestamps. | Issue update/revisit/pick skills. |
 | `linear-description-structure.md` | Issue/project/initiative description format. | Issue/project/initiative creation skills. |
+| `linear-project-documents.md` | Project-scoped documents for shared Linear context, repetitive agent instructions, and lightweight issue references. | Linear project creation and agent project skills. |
+| `linear-pickup-execution.md` | Linear project/issue pickup lifecycle, agent/direct scheduling, state updates, PR/MR, pipelines, review fixes, and final reporting. | Linear pickup and agent orchestration skills. |
+| `linear-scm-discovery.md` | Explicit opt-in GitHub/GitLab discovery for repository inventory, implementation guidance, prior art, and agent-ready Linear context. | Linear creation, project agent, and pickup skills. |
 | `linear-research-documentation.md` | Research process, analysis, appendix, link management. | Research-heavy creation skills. |
 | `linear-issue-states.md` | State meanings, transition rules, dependency resolution, decision patterns. | State-transition skills (implement, triage, next-task, cycle). |
 | `linear-state-transitions.md` | Auto-advance triggers (pickup → In Progress, MR/PR open → In Review, merge → Done), never-downgrade guard, id extraction, silent-with-report contract. | Agent-dispatch skills (agents-delegate, agents), PR/MR-create skills (gitlab-mr-create, github-pr-create), linear-issue-comment. |

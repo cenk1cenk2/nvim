@@ -5,6 +5,7 @@ interaction: chat
 argument-hint: "[issue-id] - e.g., 'K-123', 'CLOUD-45'"
 references:
   - ../references/linear-issue-states.md
+  - ../references/linear-pickup-execution.md
 ---
 
 ## system
@@ -24,6 +25,8 @@ references:
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Create plan file in `~/.claude/plans/YYYY-MM-DD-<issue-id>.md`.
+
+> Read the `linear-pickup-execution` reference when the user wants agent-driven, multi-issue, or end-to-end execution. This skill remains the human-supervised single-issue planner; for autonomous pickup, hand off to `linear-issue-pickup` and `agents-kilic-pickup`.
 
 ### Core Principle
 
@@ -111,3 +114,8 @@ When the user asks to update an issue after alignment:
 - **Surface all ambiguity** — never silently skip unclear points.
 - **Respect user overrides** — if the user says "skip that", skip it without argument.
 - **Update the plan file** when the user provides feedback.
+
+### Related Skills
+
+- **`linear-issue-pickup`** — prepare one or more issues for execution without forcing a plan-mode-only workflow.
+- **`agents-kilic-pickup`** — execute a picked-up issue, issue set, project, or project slice with direct work and/or agents.

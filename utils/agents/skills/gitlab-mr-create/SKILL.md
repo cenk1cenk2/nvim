@@ -125,3 +125,4 @@ These are team defaults for this workflow. Do not prompt the user to confirm the
 - **`code-review-branch`** — for reviewing the code quality of the branch before writing the MR description. Do not auto-invoke.
 - **`gitlab-ci-create`** — for creating or updating GitLab CI/CD pipelines. Do not auto-invoke.
 - **`gitlab-ci-fix`** — for diagnosing failing CI pipelines on the MR. Do not auto-invoke.
+- **`agents-kilic-pickup`** — when this skill is composed from a pickup workflow, keep MR text focused on logical changes; the caller records broader deviations/findings on Linear issues or project documents.

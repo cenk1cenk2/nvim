@@ -138,6 +138,8 @@ Omit sections that have no findings. Keep bullets short — this is a survey, no
 ### Related Skills
 
 - **`linear-issue-revisit`** — per-issue deep reconciliation.
+- **`linear-project-pickup`** — prepare the project or a project slice for implementation after this read-only refresh.
+- **`agents-kilic-pickup`** — execute the refreshed project scope with direct work and/or agents.
 - **`linear-project-update`** — audit + modify project structure.
 - **`linear-project-post`** — draft a new status update post.
 - **`linear-project-match`** — reconcile issue states against external reality (merged MRs/PRs, user statements). Can be invoked as a follow-up when the revisit flags mismatched states.

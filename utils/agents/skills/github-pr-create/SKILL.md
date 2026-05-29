@@ -174,3 +174,4 @@ references:
 - **`code-review-branch`** — for reviewing the code quality of the branch before writing the PR description. Do not auto-invoke.
 - **`github-ci-create`** — for creating or updating GitHub Actions workflows. Do not auto-invoke.
 - **`github-ci-fix`** — for diagnosing failing CI checks on the PR. Do not auto-invoke.
+- **`agents-kilic-pickup`** — when this skill is composed from a pickup workflow, keep PR text focused on logical changes; the caller records broader deviations/findings on Linear issues or project documents.

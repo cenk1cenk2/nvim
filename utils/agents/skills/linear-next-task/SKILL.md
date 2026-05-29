@@ -5,6 +5,7 @@ interaction: chat
 argument-hint: "[project-name or Linear URL] (optional — omit to analyze all projects)"
 references:
   - ../references/linear-issue-states.md
+  - ../references/linear-pickup-execution.md
 ---
 
 ## system
@@ -12,6 +13,8 @@ references:
 ### Linear Pick Next Task
 
 > Read the `linear-issue-states` reference for state meanings, transition rules, and dependency resolution semantics.
+
+> Read the `linear-pickup-execution` reference when the user wants to immediately execute the recommended task set after selection.
 
 > **ALWAYS enter plan mode when this prompt is invoked.**
 >
@@ -137,6 +140,7 @@ Once the user agrees on the selection:
    - `backlog → in progress` or `todo → in progress` for the immediate task.
 2. **Wait for explicit approval** before making any changes.
 3. **Apply status changes** using parallel tool calls where possible.
+4. **Execution handoff** — if the user wants the selected work picked up immediately, hand off to `linear-issue-pickup` for specific issues or `agents-kilic-pickup` for a project slice/multiple issues.
 
 ### Recommendation Format
 
@@ -171,3 +175,4 @@ Once the user agrees on the selection:
 - **Show active work separately** — "In Review" and "In Progress" issues appear in an "Active Work" section. When picking a new issue, these are NOT blockers since "In Review" means essentially complete.
 - **Ask, don't assume** — if the user's availability or focus area is unclear, ask before recommending.
 - **Respect user overrides** — if the user wants to pick something different from the recommendation, accept it.
+- **Recommendation is not execution** — only hand off to pickup skills when the user asks to start work.

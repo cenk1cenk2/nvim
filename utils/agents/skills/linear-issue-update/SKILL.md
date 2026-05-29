@@ -68,3 +68,4 @@ Only include deviations that matter for future readers understanding *why* the i
 - **Never modify the issue without user approval.**
 - **Preserve content that hasn't changed** — only update what deviated.
 - **The Thoughts section documents *why*, not *what*** — the description itself reflects the *what*.
+- **Prefer comments for small deviations** — in autonomous agent workflows, update descriptions only when future agents need the rewritten description to stay aligned or when the issue requires a huge rewrite because it is materially out of whack.

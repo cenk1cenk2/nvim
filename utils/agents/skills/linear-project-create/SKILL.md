@@ -4,6 +4,8 @@ description: Create a new Linear project with research, planning, and issue brea
 interaction: chat
 references:
   - ../references/output-diff.md
+  - ../references/linear-project-documents.md
+  - ../references/linear-scm-discovery.md
 ---
 
 ## system
@@ -42,6 +44,10 @@ references:
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
+> Read the `linear-project-documents` reference for using Linear project documents as shared context. Use project documents for repeated guidance, research, matrices, and agent instructions; keep issues focused on task-specific details.
+
+> Read the `linear-scm-discovery` reference when the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or create agent-ready implementation context.
+
 ### Core Requirements
 
 #### Project Fields
@@ -69,6 +75,14 @@ After gathering project context, fetch available initiatives using `list_initiat
 - **`priority`** — Defaults to the project priority unless the user specifies otherwise or dependency order suggests a different priority.
 - **`assignee`** — Set to the current user.
 - **`project`** — Set to the newly created project.
+- **`description`** — Keep light when shared project documentation exists: include the specific task scope, checklist or delta, and a "Read first" reference to the relevant project document instead of duplicating shared instructions.
+
+#### Project Documents
+
+- Use the active Linear workspace's `save_document` tool to create or update project-scoped documents for shared information.
+- Prefer project documents for repeated agent instructions, migration guides, repository inventories, candidate matrices, research findings, shared verification commands, and acceptance criteria.
+- Create the project first, then create project documents attached to it, then create issues that reference those documents.
+- When issue work is repetitive, put the shared "how agents should execute this project" context in project documents and use issues only for the per-repo, per-layer, or per-candidate specifics.
 
 #### Relations
 
@@ -109,17 +123,19 @@ Keep issue titles concise and consistent in style across the project. Most issue
 1. **Research Process:**
    - Use web search with sequential thinking to explore the problem space.
    - Use Context7 to analyze relevant framework/library documentation.
-   - Use the active workspace's SCM MCP (GitLab or GitHub) to find relevant repositories.
+   - When explicitly requested, use the active workspace's SCM MCP (GitLab or GitHub) to discover relevant repositories, existing patterns, related PRs/MRs, implementation boundaries, and verification expectations.
 
 2. **Analysis Section:**
    - Synthesize research findings into actionable guidance.
    - Focus on "what we learned" and "how it fits together".
    - Keep it concise — this is guidance, not a detailed implementation plan.
+   - If the same analysis applies to many issues, place the full analysis in a project document and summarize it briefly in the project description.
 
 3. **Appendix Section:**
    - Group links by category (e.g., "Official Documentation", "Related Tools").
    - Write documentation links as **plain text** in the description.
    - For each link: bold title, URL on its own line, brief explanation.
+   - If many issues need the same documentation links, put the full appendix in a project document and reference it from the issues.
 
 ### Cross-referencing
 

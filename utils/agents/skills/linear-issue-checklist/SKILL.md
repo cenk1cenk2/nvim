@@ -14,6 +14,7 @@ references:
 > **DO NOT enter plan mode for this prompt.**
 >
 > - Quick checklist updates — confirm with user, then apply.
+> - When composed from `linear-issue-status` or `agents-kilic-pickup` for `In Review` / `Done` close-out, apply checklist updates directly when completion evidence is clear.
 
 ### Prerequisite
 
@@ -33,6 +34,7 @@ references:
 2. **Extract the current checklist** from the issue description.
 3. **Present the checklist to the user** and confirm which items to update.
 4. **Apply changes** only after user confirmation.
+5. **Status handoff** — if the checklist update completes the implementation or moves the issue into review, compose with `linear-issue-status` to move the issue to `In Review` or `Done`.
 
 ### Checklist Markup
 
@@ -44,6 +46,8 @@ Cancellation is only applied when the user explicitly says an item is cancelled 
 
 ### Key Rules
 
-- **Always confirm before updating** — show the user what will change.
-- **Never mark items done or cancelled without explicit user input.**
+- **Confirm before standalone updates** — show the user what will change.
+- **Close-out exception** — when composed from status or pickup workflows, clear implementation evidence can mark checklist items done without a second confirmation.
+- **Never cancel without explicit user input.**
 - **Preserve all other issue content** — only modify the checklist items discussed.
+- **Compose with status updates** — when checklist completion clearly implies `In Review` or `Done`, use `linear-issue-status` rather than editing state inline here.

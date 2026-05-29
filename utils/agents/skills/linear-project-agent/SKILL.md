@@ -5,6 +5,10 @@ interaction: chat
 argument-hint: "[create|update|review] [project-name] [description of what the project does]"
 references:
   - ../references/linear-description-structure.md
+  - ../references/output-diff.md
+  - ../references/linear-project-documents.md
+  - ../references/linear-scm-discovery.md
+  - ../references/linear-pickup-execution.md
 ---
 
 ## system
@@ -12,6 +16,14 @@ references:
 > **ALWAYS enter plan mode.**
 >
 > Read the `linear-description-structure` reference for issue/project description format or filesystem tools.
+
+> Read the `linear-project-documents` reference for using Linear project documents as shared agent context. When issues would repeat the same instructions, keep issues light and store the shared guidance in project documents.
+
+> Read the `linear-scm-discovery` reference when the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or make the project easier for agents to implement.
+
+> Read the `output-diff` reference before writing project documents or issues to Linear — present document drafts and issue content in logical chunks for user approval.
+
+> Read the `linear-pickup-execution` reference when the user wants the structured project executed after creation or review. Use `agents-kilic-pickup` for the execution phase instead of embedding implementation into this structure skill.
 
 ### What is an Agent Project?
 
@@ -35,11 +47,15 @@ LLM agents work best when:
 
 1. **Gather context** — Understand the work to be done. Ask the user what the project should accomplish.
 2. **Identify repositories** — Determine which repositories are involved. If multiple repos, consider splitting into sub-projects.
-3. **Break down into layers** — Group work by concern (infrastructure, workload, networking, DNS, etc.).
-4. **One issue per layer per repo** — Each issue touches ONE repository and ONE layer.
-5. **Set dependencies** — Use `blockedBy`, `blocks`, and `parentId` fields for dependency ordering. Never put this in descriptions.
-6. **Validate** — Run the issue checklist (see below).
-7. **Present to user** — Show the structured project for approval.
+3. **Discover implementation context** — If explicitly requested, run SCM discovery to identify involved repositories, existing implementation patterns, related MRs/PRs, likely file boundaries, and verification commands.
+4. **Break down into layers** — Group work by concern (infrastructure, workload, networking, DNS, etc.).
+5. **Extract shared context** — If many issues need the same instructions, candidate matrix, repository inventory, research, or verification commands, draft a project document for that shared information.
+6. **One issue per layer per repo** — Each issue touches ONE repository and ONE layer.
+7. **Keep repetitive issues light** — Put only the repo/scope, issue-specific checklist or delta, exceptions, and a "Read first" reference to the project document in each issue.
+8. **Set dependencies** — Use `blockedBy`, `blocks`, and `parentId` fields for dependency ordering. Never put this in descriptions.
+9. **Validate** — Run the issue checklist (see below).
+10. **Present to user** — Show the structured project, project documents, and issues for approval.
+11. **Execution handoff** — If the user wants work to start, hand off the approved project structure to `agents-kilic-pickup`.
 
 #### Update
 
@@ -67,6 +83,7 @@ For each issue, verify:
 | **Single concern** | Kubernetes manifests only | Manifests + DNS + routing |
 | **Named repo** | "**Repo:** `cluster/sun/argocd-sun`" | No repo mentioned at all |
 | **Clear boundary** | "Infrastructure layer" or "Workload layer" | Ambiguous scope |
+| **Shared context** | "Read first: project document `Migration guide`" | Repeated long guidance copied into every issue |
 
 ### Manual Tasks
 
@@ -108,22 +125,30 @@ Use this structure for Linear project descriptions:
 
 Set dependency ordering via `blockedBy` / `blocks` / `parentId` fields on each issue — never in the project description.
 
+Use project documents for shared agent instructions that would make the project or issue descriptions too long. Examples: `Agent execution guide`, `Candidate matrix`, `Migration guide`, or `Research and decisions`.
+
 ### Key Principles
 
 1. **Repository name in every issue** — Every issue description must state the repository explicitly (`**Repo:** path/to/repo`).
 
 2. **One repo per issue** — If work touches multiple repos, create separate issues for each.
 
-3. **External systems as tasks** — If an external step (Vault, manual migration) is needed for one issue's work, include it as a task within that issue, not a separate issue.
+3. **Project documents hold shared context** — If multiple issues need the same guide, matrix, research, or agent instructions, create a project document with `save_document` and reference it from the issues.
 
-4. **Separate issue per external repo** — If an external system requires its own PR/change, create a separate issue in the appropriate project.
+4. **Lightweight repetitive issues** — When a project document exists, each issue should only state the repo/scope, issue-specific work, exceptions, and the relevant project document to read first.
 
-5. **Ask about external dependencies** — When an issue touches external systems (Vault, external APIs, services), ask:
+5. **External systems as tasks** — If an external step (Vault, manual migration) is needed for one issue's work, include it as a task within that issue, not a separate issue.
+
+6. **Separate issue per external repo** — If an external system requires its own PR/change, create a separate issue in the appropriate project.
+
+7. **Ask about external dependencies** — When an issue touches external systems (Vault, external APIs, services), ask:
    - "Is this external system configured via code, or is it a manual operation?"
    - If code → Create separate issue in that repository
    - If manual → Include as a task within the related issue
 
-6. **Set dependencies via Linear fields** — Use `blockedBy`, `blocks`, and `parentId` for dependency ordering. Never put dependency chains or sub-issue tables in descriptions. Linear shows these relations natively.
+8. **Set dependencies via Linear fields** — Use `blockedBy`, `blocks`, and `parentId` for dependency ordering. Never put dependency chains or sub-issue tables in descriptions. Linear shows these relations natively.
+
+9. **Execution is a separate phase** — This skill structures projects for agents; `agents-kilic-pickup` executes them.
 
 ### Common Patterns
 
@@ -154,9 +179,10 @@ Set dependency ordering via `blockedBy` / `blocks` / `parentId` fields on each i
 
 1. Ask: "Which repositories are involved? Is this a new workload or adding to existing infrastructure?"
 2. Identify layers: Workload manifests, ArgoCD Application, Storage, Secrets, Networking
-3. Create one issue per layer per repo
-4. Check for external dependencies (Vault, S3, etc.) — ask about code vs manual
-5. Present structured project
+3. Create shared project documentation for common architecture, conventions, and verification if multiple issues need it
+4. Create one issue per layer per repo, keeping repetitive issues light and pointing them to the project document
+5. Check for external dependencies (Vault, S3, etc.) — ask about code vs manual
+6. Present structured project
 
 ---
 

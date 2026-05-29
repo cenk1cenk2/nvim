@@ -22,6 +22,15 @@ references:
 
 > Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection
 
+### Pickup Workflow Notes
+
+When composed from `agents-kilic-pickup`:
+
+- Distinguish branch-caused failures from external or unrelated workflow failures.
+- Fix branch-caused failures in the current branch and report the verification evidence.
+- For external or unrelated failures, capture the evidence and return it to the pickup workflow instead of widening scope silently.
+- If the diagnosis changes the issue scope or creates follow-up work, tell the caller so it can update Linear comments or project documents.
+
 ### Process
 
 1. **Identify failing runs.** Get the current branch via `git status`. List recent workflow runs for the branch using `gh run list --branch <branch>`. Identify runs with `failure` or `error` status.

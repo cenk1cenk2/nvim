@@ -116,6 +116,8 @@ After processing all threads, present a summary in chat:
 - Group by resolved vs deferred.
 - If all threads were resolved, omit the Deferred section.
 
+**Pickup workflow note:** When this skill is composed from `agents-kilic-pickup`, report any review fix that changes scope, approach, or follow-up requirements so the caller can update the Linear issue comment/checklist or project documentation.
+
 #### Step 8: Optional PR Comment
 
 If the user explicitly asks to post the summary on the PR (e.g., "post this to the PR", "comment the summary"), delegate to the `github-pr-comment` skill. The fix summary from Step 7 becomes the companion output that `github-pr-comment` drafts, presents for approval, and posts. Do not post directly via `github__add_issue_comment` — let `github-pr-comment` handle the draft-approve-post workflow. **Only when explicitly requested** — do not invoke `github-pr-comment` automatically.
