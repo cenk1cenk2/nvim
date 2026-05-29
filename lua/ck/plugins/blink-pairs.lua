@@ -11,7 +11,9 @@ function M.config()
       return {
         "saghen/blink.pairs",
         -- version = "*",
-        build = { "cargo build --release" },
+        build = function()
+          require("blink.pairs").download():pwait(60000)
+        end,
         event = { "InsertEnter", "CmdlineEnter" },
         -- dependencies = {
         --   "saghen/blink.download",
