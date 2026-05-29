@@ -10,10 +10,13 @@ function M.config()
       ---@type Plugin
       return {
         "saghen/blink.pairs",
-        -- version = "*",
         build = function()
-          require("blink.pairs").download():pwait(60000)
+          require("blink.pairs").build():pwait(60000)
         end,
+        -- version = "*",
+        -- build = function()
+        --   require("blink.pairs").download():pwait(60000)
+        -- end,
         event = { "InsertEnter", "CmdlineEnter" },
         -- dependencies = {
         --   "saghen/blink.download",
