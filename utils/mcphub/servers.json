@@ -806,6 +806,41 @@
         "autoRejectTools": []
       }
     },
+    "sourcebot-kilic": {
+      "autoApprove": [
+        "grep",
+        "list_repos",
+        "read_file",
+        "list_tree",
+        "list_commits",
+        "glob",
+        "get_diff",
+        "find_symbol_definitions",
+        "find_symbol_references",
+        "list_language_models",
+        "ask_codebase"
+      ],
+      "headers": {
+        "Authorization": "Bearer ${NVIM_SOURCEBOT_API_KEY}"
+      },
+      "url": "https://sourcebot.int.kilic.dev/api/mcp",
+      "hyprpilot": {
+        "autoAcceptTools": [
+          "grep",
+          "list_repos",
+          "read_file",
+          "list_tree",
+          "list_commits",
+          "glob",
+          "get_diff",
+          "find_symbol_definitions",
+          "find_symbol_references",
+          "list_language_models",
+          "ask_codebase"
+        ],
+        "autoRejectTools": []
+      }
+    },
     "spacelift-laravel": {
       "args": ["mcp", "server"],
       "autoApprove": [
