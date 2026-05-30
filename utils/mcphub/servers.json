@@ -823,7 +823,7 @@
       "headers": {
         "Authorization": "Bearer ${NVIM_SOURCEBOT_API_KEY}"
       },
-      "url": "https://sourcebot.int.kilic.dev/api/mcp",
+      "url": "https://sourcebot.kilic.dev/api/mcp",
       "hyprpilot": {
         "autoAcceptTools": [
           "grep",
