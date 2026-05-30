@@ -2,8 +2,8 @@
 
 ## Core Rules
 
-- **ALWAYS use `gitlab` MCP tools for all GitLab operations.**
-- **ALWAYS use `git` MCP tools for local git operations.**
+- Use Sourcebot first when available for broad repository/code discovery across `gitlab.kilic.dev`; switch to `gitlab` MCP for authoritative GitLab metadata and operations.
+- Use raw `git` CLI commands for local git operations.
 - Use `glab` CLI as fallback when MCP tools lack the needed capability (e.g., `glab ci trace` for job logs).
 - Determine project path from the git remote URL.
 - Determine the current branch from local git state via `git status`.

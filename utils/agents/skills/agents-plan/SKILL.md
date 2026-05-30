@@ -8,6 +8,7 @@ references:
   - ../references/agents-delegate.md
   - ../references/agents-worktrees.md
   - ../references/scm-detect.md
+  - ../references/sourcebot-discovery.md
   - ../references/project-tooling.md
   - ../references/agents-write-plans.md
   - ../references/agents-conventions.md
@@ -36,6 +37,7 @@ references:
 > Read the `agents-delegate` reference for agent dispatch parameters, tier selection (cheap/default/smart), ecosystem model mappings, and user shorthand.
 > Read the `agents-worktrees` reference for the mandatory worktree location rule (`.claude/worktrees/<name>/`), naming, verification, and cleanup — agent worktrees MUST live there, no exceptions.
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks.
+> Read the `sourcebot-discovery` reference when planning starts from an organization-wide question or the target repository is not yet known.
 > Read the `project-tooling` reference for discovering verification commands.
 > Read the `agents-write-plans` reference for plan quality criteria — including the optional `depends_on` field on tasks.
 > Read the `agents-conventions` reference for discovering and agreeing on project conventions before dispatching agents.

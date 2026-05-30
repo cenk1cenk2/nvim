@@ -8,6 +8,7 @@ references:
   - ../references/linear-pickup-execution.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
+  - ../references/sourcebot-discovery.md
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
 ---
@@ -22,7 +23,7 @@ references:
 
 > Read the `linear-pickup-execution` reference for issue pickup, early questions, Linear state updates, implementation handoff, and final reporting.
 > Read the `linear-project-documents` reference when issues belong to a project with shared documentation.
-> Read the `linear-scm-discovery` reference when the user explicitly asks to enrich pickup context from GitHub/GitLab or repository history.
+> Read the `linear-scm-discovery` reference when the user explicitly asks to enrich pickup context from GitHub/GitLab or repository history. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
 > Read the `linear-state-transitions` reference before moving issues to `In Progress`.
 > Read the `output-diff` reference before writing to Linear.
 

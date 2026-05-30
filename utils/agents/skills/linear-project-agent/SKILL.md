@@ -8,6 +8,7 @@ references:
   - ../references/output-diff.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
+  - ../references/sourcebot-discovery.md
   - ../references/linear-pickup-execution.md
 ---
 
@@ -19,7 +20,7 @@ references:
 
 > Read the `linear-project-documents` reference for using Linear project documents as shared agent context. When issues would repeat the same instructions, keep issues light and store the shared guidance in project documents.
 
-> Read the `linear-scm-discovery` reference when the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or make the project easier for agents to implement.
+> Read the `linear-scm-discovery` reference when the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or make the project easier for agents to implement. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
 
 > Read the `output-diff` reference before writing project documents or issues to Linear — present document drafts and issue content in logical chunks for user approval.
 

@@ -6,6 +6,7 @@ references:
   - ../references/output-diff.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
+  - ../references/sourcebot-discovery.md
 ---
 
 ## system
@@ -46,7 +47,7 @@ references:
 
 > Read the `linear-project-documents` reference for using Linear project documents as shared context. Use project documents for repeated guidance, research, matrices, and agent instructions; keep issues focused on task-specific details.
 
-> Read the `linear-scm-discovery` reference when the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or create agent-ready implementation context.
+> Read the `linear-scm-discovery` reference when the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or create agent-ready implementation context. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
 
 ### Core Requirements
 
@@ -123,7 +124,7 @@ Keep issue titles concise and consistent in style across the project. Most issue
 1. **Research Process:**
    - Use web search with sequential thinking to explore the problem space.
    - Use Context7 to analyze relevant framework/library documentation.
-   - When explicitly requested, use the active workspace's SCM MCP (GitLab or GitHub) to discover relevant repositories, existing patterns, related PRs/MRs, implementation boundaries, and verification expectations.
+   - When explicitly requested, use Sourcebot first when available to discover relevant repositories and existing patterns, then use the active workspace's SCM MCP (GitLab or GitHub) for related PRs/MRs, implementation boundaries, live metadata, and verification expectations.
 
 2. **Analysis Section:**
    - Synthesize research findings into actionable guidance.

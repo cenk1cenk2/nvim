@@ -7,6 +7,7 @@ Shared planning phase for agent orchestration skills. Walks through understandin
 ### 1. Understand the goal
 
 - Read the codebase, gather context, understand what needs to be done.
+- For organization-wide or unknown-repository investigations, use Sourcebot first when available to build an evidence-backed repo/file shortlist before provider-specific SCM calls.
 - If the user provides a high-level goal, break it down into concrete tasks.
 - If the user provides pre-decomposed tasks, validate they are complete and clear.
 

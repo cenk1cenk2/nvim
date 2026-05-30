@@ -25,7 +25,8 @@ interaction: chat
 ### Workspace Context
 
 - **Linear MCP:** `linear-kilic-dev` — ALWAYS use `linear-kilic-dev__*` tools unless prompted otherwise.
-- **SCM MCP:** `gitlab` — ALWAYS use `gitlab__*` tools for repository operations.
+- **Code discovery MCP:** `sourcebot-kilic` — prefer for fast organization-wide repository/code discovery and prior-art search when available.
+- **SCM MCP:** `gitlab` — use `gitlab__*` tools for authoritative GitLab metadata, MRs, pipelines, issues, project settings, permissions, live branch state, and writes.
 - **Repository link format:** `{"url": "https://gitlab.kilic.dev/...", "title": "repo-name"}`.
 - **MR link format:** `{"url": "https://gitlab.kilic.dev/.../merge_requests/123", "title": "MR !123"}`.
 - **Cross-reference style:** Use Linear issue identifiers (e.g., "See K-65 for similar work on nailbed cluster").

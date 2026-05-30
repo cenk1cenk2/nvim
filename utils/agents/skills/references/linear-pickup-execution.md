@@ -21,7 +21,7 @@ Always do an initial exploration phase before starting implementation:
 2. Inspect the target repository or repositories enough to know current branch state, origin provider, default branch, existing open PRs/MRs, and likely verification commands.
 3. Check prerequisites and blockers. Treat `In Review` blockers as mostly complete, but verify whether the linked PR/MR exists and is healthy when the next task depends on it.
 4. Detect stale or out-of-whack descriptions. If the issue/project says details are not finalized, or comments contradict the description, ask early.
-5. When explicitly requested, use `linear-scm-discovery` to enrich repository inventory, implementation guidance, prior art, file boundaries, and verification expectations.
+5. When explicitly requested, use `linear-scm-discovery` to enrich repository inventory, implementation guidance, prior art, file boundaries, and verification expectations. For broad or unknown-repo investigations, that discovery starts with Sourcebot when available and escalates to GitLab/GitHub for live SCM state.
 6. Use `agents-delegate` with a cheap or default Explore agent for unclear project details when it materially reduces risk.
 7. Use a private `plan-hard` style self-interview to resolve design branches, but do not enter plan mode solely because this reference is used.
 8. Use `agents-review` for a cheap review of task splits, prerequisite assumptions, file collisions, and stale external claims when the task is complicated or the user requests deeper research.

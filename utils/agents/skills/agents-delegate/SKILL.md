@@ -11,6 +11,7 @@ references:
   - ../references/agents-conventions.md
   - ../references/agents-completion.md
   - ../references/scm-detect.md
+  - ../references/sourcebot-discovery.md
   - ../references/linear-state-transitions.md
 ---
 
@@ -26,6 +27,7 @@ references:
 > Read the `project-tooling` reference when the task modifies code — for verification commands to include in the agent prompt. Skip for read-only research tasks.
 > Read the `agents-completion` reference if the user wants to commit/push/PR after the agent reports back.
 > Read the `scm-detect` reference if the delegated task involves git operations.
+> Read the `sourcebot-discovery` reference when the delegated task is read-only org-wide repository/code discovery or needs a repo shortlist before SCM calls.
 > Read the `linear-state-transitions` reference if the task is linked to a Linear issue — the dispatcher advances the issue to `In Progress` before launching the agent. Skip when the task has no Linear id.
 
 ### Context

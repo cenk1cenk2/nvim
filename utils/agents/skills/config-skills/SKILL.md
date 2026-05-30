@@ -32,8 +32,9 @@ All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a direct
 │   ├── linear-description-structure.md  # Issue/project/initiative description format
 │   ├── linear-project-documents.md      # Project-scoped documents for shared Linear context
 │   ├── linear-pickup-execution.md       # Linear pickup implementation lifecycle
-│   ├── linear-scm-discovery.md          # Explicit opt-in GitHub/GitLab discovery for Linear context
+│   ├── linear-scm-discovery.md          # Explicit opt-in Sourcebot/GitHub/GitLab discovery for Linear context
 │   ├── linear-research-documentation.md # Research process, analysis, appendix, links
+│   ├── sourcebot-discovery.md          # Sourcebot-first org-wide repository/code discovery
 │   ├── plan-mode.md                     # Plan mode directive variants (strict/standard)
 │   ├── obsidian.md                      # Vault conventions, tool access, writing style
 │   └── slack.md                         # Slack tools, response conventions, reaction rules
@@ -236,8 +237,9 @@ When creating or updating a skill, always check:
 | `linear-description-structure.md` | Issue/project/initiative description format. | Issue/project/initiative creation skills. |
 | `linear-project-documents.md` | Project-scoped documents for shared Linear context, repetitive agent instructions, and lightweight issue references. | Linear project creation and agent project skills. |
 | `linear-pickup-execution.md` | Linear project/issue pickup lifecycle, agent/direct scheduling, state updates, PR/MR, pipelines, review fixes, and final reporting. | Linear pickup and agent orchestration skills. |
-| `linear-scm-discovery.md` | Explicit opt-in GitHub/GitLab discovery for repository inventory, implementation guidance, prior art, and agent-ready Linear context. | Linear creation, project agent, and pickup skills. |
+| `linear-scm-discovery.md` | Explicit opt-in Sourcebot-first discovery for repository inventory, implementation guidance, prior art, and agent-ready Linear context before GitHub/GitLab metadata calls. | Linear creation, project agent, and pickup skills. |
 | `linear-research-documentation.md` | Research process, analysis, appendix, link management. | Research-heavy creation skills. |
+| `sourcebot-discovery.md` | Sourcebot-first organization-wide repository/code discovery before GitLab/GitHub metadata calls. | Agent planning/delegation and Linear discovery workflows. |
 | `linear-issue-states.md` | State meanings, transition rules, dependency resolution, decision patterns. | State-transition skills (implement, triage, next-task, cycle). |
 | `linear-state-transitions.md` | Auto-advance triggers (pickup → In Progress, MR/PR open → In Review, merge → Done), never-downgrade guard, id extraction, silent-with-report contract. | Agent-dispatch skills (agents-delegate, agents), PR/MR-create skills (gitlab-mr-create, github-pr-create), linear-issue-comment. |
 | `scm-detect.md` | SCM platform detection from remote URL, local git MCP tools, CLI fallback. | Cross-platform skills (code-pull, code-review-branch). |
@@ -288,6 +290,7 @@ Examples:
 
 - `github__get_file_contents` (server: `github`, tool: `get_file_contents`)
 - `gitlab__get_merge_request` (server: `gitlab`, tool: `get_merge_request`)
+- `sourcebot-kilic__grep` (server: `sourcebot-kilic`, tool: `grep`)
 - `slack-kilic__slack_list_channels` (server: `slack-kilic`, tool: `slack_list_channels`)
 - `linear-kilic-dev__get_issue` (server: `linear-kilic-dev`, tool: `get_issue`)
 - `memory__add_observations` (server: `memory`, tool: `add_observations`)

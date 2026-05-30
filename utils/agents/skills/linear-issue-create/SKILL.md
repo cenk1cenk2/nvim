@@ -7,6 +7,7 @@ references:
   - ../references/linear-mandatory-fields.md
   - ../references/linear-issue-states.md
   - ../references/linear-scm-discovery.md
+  - ../references/sourcebot-discovery.md
   - ../references/plan-mode.md
   - ../references/output-diff.md
 ---
@@ -39,7 +40,7 @@ Additional rules for issue creation:
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-> Read the `linear-scm-discovery` reference when the user explicitly asks to enrich the issue from GitHub/GitLab or repository context. Use discovered facts to make the issue easier to implement, but do not run broad SCM discovery by default.
+> Read the `linear-scm-discovery` reference when the user explicitly asks to enrich the issue from GitHub/GitLab or repository context. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available. Use discovered facts to make the issue easier to implement, but do not run broad SCM discovery by default.
 
 ### Issue Structure
 
@@ -66,7 +67,7 @@ Additional rules for issue creation:
 1. **Research Process:**
    - Use web search with sequential thinking to explore the problem space.
    - Use Context7 to analyze relevant framework/library documentation for implementation guidance.
-   - When explicitly requested, use the active workspace's SCM MCP (GitLab or GitHub) to discover relevant repositories, existing patterns, related PRs/MRs, implementation boundaries, and verification expectations.
+   - When explicitly requested, use Sourcebot first when available to discover relevant repositories and existing patterns, then use the active workspace's SCM MCP (GitLab or GitHub) for related PRs/MRs, implementation boundaries, live metadata, and verification expectations.
 
 2. **Analysis Section:**
    - Add an `## Analysis` section before the Appendix.

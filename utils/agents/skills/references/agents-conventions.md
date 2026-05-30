@@ -4,7 +4,7 @@ Before dispatching agents or subagents, establish a shared conventions document 
 
 ## Process
 
-1. **Read the codebase for existing patterns.** Don't invent conventions — discover them from the code that already exists.
+1. **Read the codebase for existing patterns.** Don't invent conventions — discover them from the code that already exists. When patterns may span many repos, use Sourcebot first when available to find comparable files and prior art, then inspect the target repo directly.
 2. **Build the conventions list** covering the categories below (skip categories that don't apply to the project).
 3. **Present to the user** for confirmation before including in agent prompts.
 4. **Include in every agent prompt** as a `## Conventions` section.

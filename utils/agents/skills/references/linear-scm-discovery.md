@@ -1,6 +1,6 @@
 # Linear SCM Discovery
 
-Use GitHub/GitLab MCP tools to enrich Linear issues, projects, and agent project documents when the user explicitly asks for discovery, enrichment, repository analysis, implementation guidance, or agent-ready context.
+Use Sourcebot first when available, then GitHub/GitLab MCP tools, to enrich Linear issues, projects, and agent project documents when the user explicitly asks for discovery, enrichment, repository analysis, implementation guidance, or agent-ready context.
 
 ## Trigger
 
@@ -34,10 +34,19 @@ Use the prompt to determine:
 Use the active workspace and SCM context:
 
 - Linear MCP for project/issue history, docs, comments, relations, and labels.
+- Sourcebot MCP for fast organization-wide repository/code discovery, repo shortlists, file patterns, symbols, dependencies, and prior art.
 - GitLab MCP for `gitlab.kilic.dev` repositories, MRs, pipelines, files, commits, and searches.
 - GitHub MCP for GitHub repositories, PRs, checks, files, commits, and searches.
 - Local repository checkout when available.
 - `context7` or web search only for external library/framework behavior, not for repository-specific facts.
+
+## Sourcebot-First Workflow
+
+When `sourcebot-kilic` is available and the target repository is unknown, broad, or cross-repository, read `sourcebot-discovery` and start there:
+
+1. Use Sourcebot to identify candidate repos and evidence-backed file/symbol matches.
+2. Use GitLab/GitHub only after the shortlist exists for live SCM metadata, MRs/PRs, pipelines, issues, permissions, and writes.
+3. If Sourcebot is unavailable or ignored by the active profile, fall back to the active workspace SCM tools and state that fallback.
 
 ## Output Placement
 

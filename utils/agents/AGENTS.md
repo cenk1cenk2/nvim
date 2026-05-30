@@ -168,6 +168,14 @@ Use the tools available in the session; don't hard-code assumptions about which 
 - For multiline MCP parameters, use actual line breaks. Do not pass literal `\n` escape sequences.
 - If a tool call is rejected by the user or permission layer, stop and ask before trying a fallback. Tool unavailability can degrade silently when a reasonable fallback exists.
 
+### Sourcebot
+
+When `sourcebot-kilic` is available, use it first for organization-wide repository/code discovery: finding repos, file patterns, config keys, symbols, dependencies, and prior art across indexed code.
+
+- Start with `sourcebot-kilic__list_repos`, `sourcebot-kilic__grep`, `sourcebot-kilic__glob`, `sourcebot-kilic__read_file`, `sourcebot-kilic__list_tree`, and symbol tools to build a fast evidence-backed repo shortlist.
+- Use GitLab/GitHub MCP tools after Sourcebot for authoritative SCM metadata: MRs/PRs, issues, pipelines, project settings, permissions, live branch state, and writes.
+- If Sourcebot is unavailable or ignored by the active profile, fall back to the active workspace SCM tools and say so.
+
 ### hyprpilot-nvim
 
 Use `hyprpilot-nvim` for editor-aware work when available:

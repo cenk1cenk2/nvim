@@ -12,6 +12,7 @@ references:
   - ../references/agents-delegate.md
   - ../references/agents-plan-split.md
   - ../references/scm-detect.md
+  - ../references/sourcebot-discovery.md
   - ../references/project-tooling.md
   - ../references/output-diff.md
 ---
@@ -32,6 +33,7 @@ references:
 > Read the `linear-chunk-issues` reference for aligning tasks with Linear issue boundaries.
 > Read the `agents-plan-split` and `agents-delegate` references for schedule construction, agent tier choice, and self-contained agent prompts.
 > Read the `scm-detect` and `project-tooling` references before touching repositories.
+> Read the `sourcebot-discovery` reference when pickup needs broad repository/code discovery before GitLab-specific metadata.
 > Read the `output-diff` reference before writing to Linear, GitHub, or GitLab.
 
 ### Purpose
