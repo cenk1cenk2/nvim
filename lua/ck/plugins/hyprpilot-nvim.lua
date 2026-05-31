@@ -183,6 +183,14 @@ function M.config()
           mode = { "n" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "N" }),
+          function()
+            require("hyprpilot.rpc.instances").fork()
+          end,
+          desc = "fork current session [hyprpilot]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "s" }),
           function()
             require("hyprpilot.palettes.sessions").open()
