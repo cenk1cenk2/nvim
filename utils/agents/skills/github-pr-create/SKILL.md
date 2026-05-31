@@ -4,6 +4,7 @@ description: Analyze and write GitHub pull request titles and descriptions. Use 
 interaction: chat
 references:
   - ../references/scm-github.md
+  - ../references/commit-trailers.md
   - ../references/output-diff.md
   - ../references/linear-state-transitions.md
 ---
@@ -35,6 +36,8 @@ references:
 ### Core Requirements
 
 > Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection
+
+> Read the `commit-trailers` reference for Linear/GitHub issue trailer selection. Use `closes <Linear-id>` for the single/final PR that should close a Linear issue; use `refs <Linear-id>` for partial, related, multi-PR, or unclear completion work.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -73,6 +76,7 @@ references:
    - **If no template was found**: write a fresh description following the format below.
    - Analyze the diff for **logical changes only** — what behavior was added, removed, or changed.
    - Do NOT list changed files, line counts, or mechanical details.
+   - If the PR links Linear issues, add or preserve body trailers using `commit-trailers`: `closes <ID>` only for issues this PR fully resolves, `refs <ID>` for partial or related work.
 
 5. **Draft the Title:**
    - If the existing title is already descriptive and clear, keep it

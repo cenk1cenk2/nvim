@@ -20,8 +20,20 @@ post-merge comment). The issue itself does not drive state — the
 | A worker is dispatched for a Linear-linked task (`agents-delegate`, `agents-plan`) | `In Progress` | the dispatch skill before launching the agent. |
 | User or workflow explicitly updates status (`linear-issue-status`) | requested state | `linear-issue-status`, respecting never-downgrade and terminal-state guards. |
 | An MR/PR is created that references the issue (`refs K-xxx` / `closes K-xxx` in commit trailers or MR body) | `In Review` | `gitlab-mr-create` / `github-pr-create` after successful MR/PR create. |
-| An MR/PR merges | `Done` | `linear-issue-comment` when posting the delivery comment against a merged MR/PR. |
+| A merged MR/PR contains a Linear closing keyword for the issue (`closes K-xxx`, `fixes K-xxx`, `resolves K-xxx`, `completes K-xxx`, etc.) | `Done` | `linear-issue-comment` when posting the delivery comment against a merged MR/PR, or `linear-project-match` when reconciling merged work. |
+| A merged MR/PR only references the issue with `refs K-xxx` | *no automatic Done transition* | `refs` means related or partial work; user decides whether remaining scope is complete. |
 | An MR/PR is closed without merging | *no change* | never auto-advance on close — user decides whether to cancel the issue. |
+
+## Closing vs reference semantics
+
+`refs K-xxx` and bare issue mentions are link signals only. They can
+advance an issue to `In Review` when an MR/PR opens, but they MUST NOT
+drive a `Done` transition when the MR/PR merges.
+
+`closes K-xxx` and equivalent closing keywords are close signals. When
+an MR/PR mentions multiple Linear IDs, apply `Done` only to IDs linked
+by a closing keyword; keep `refs` IDs out of the `Done` transition
+unless the user explicitly says to close them.
 
 ## Never-downgrade invariant
 
@@ -54,10 +66,11 @@ The rank order is: `backlog`/`unstarted` < `In Progress` < `In Review`
 When a skill processes a branch / MR / PR rather than a single issue,
 it extracts Linear ids from commit messages and MR/PR bodies:
 
-- **Commit trailer syntax:** `refs K-xxx`, `closes K-xxx`,
-  `fixes K-xxx`, `resolves K-xxx` — case-insensitive, stops at
-  newline. One id per line of trailer, but a line can repeat the
-  same id.
+- **Commit trailer syntax:** match both reference and closing trailers
+  case-insensitively, stopping at newline. Reference trailers include
+  `refs K-xxx` / `references K-xxx`. Closing trailers include
+  `closes K-xxx`, `fixes K-xxx`, `resolves K-xxx`, `completes K-xxx`,
+  and the other closing keywords from `commit-trailers`.
 - **MR/PR body:** the `closes K-xxx` / `refs K-xxx` trailer at the
   bottom, or a `K-xxx` mentioned inline (less reliable — only
   mentioned at the top near the summary is treated as a trigger id).
@@ -66,6 +79,9 @@ it extracts Linear ids from commit messages and MR/PR bodies:
   for the active workspace's id prefix.
 - Dedupe ids before transitioning — one `save_issue` call per unique
   id.
+- Preserve the match kind (`reference` vs `closing`) when the target
+  state is `Done`. Open MR/PR transitions to `In Review` use both
+  kinds; merged MR/PR transitions to `Done` use closing matches only.
 
 When zero Linear ids are found, the skill skips the transition step
 silently — no warning. Not every branch is tied to a Linear issue.

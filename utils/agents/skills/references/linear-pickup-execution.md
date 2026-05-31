@@ -64,7 +64,7 @@ Agent prompts must be self-contained. Use an extended handoff shape:
 - Owned files or owned area.
 - Relevant prior decisions, deviations, and constraints.
 - Verification commands.
-- Commit trailer expectations (`refs K-123` for partial, `closes K-123` only when fully resolved).
+- Commit trailer expectations (`refs K-123` for partial work, `closes K-123` for the single/final deliverable that fully resolves the issue).
 - Expected report format: status, changed behavior, verification evidence, PR/MR readiness, deviations, findings, and blockers.
 
 ## Linear State and Documentation

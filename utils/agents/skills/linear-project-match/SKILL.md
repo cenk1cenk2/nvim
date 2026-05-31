@@ -54,8 +54,8 @@ The skill accepts any combination:
 | Source | How to gather | Signals extracted |
 |--------|---------------|-------------------|
 | User statements | Inline in invocation ("I finished K-45, dropped K-67, still working on K-89") | Direct issue IDs + verbal state ("finished" → Done, "working on" → In Progress, "dropped" → Canceled candidate). |
-| Merged MRs | `gitlab__list_merge_requests` (filter: merged, recent) or user-provided URLs via `gitlab__get_merge_request` | Branch name, commit trailers (`refs K-xxx`, `closes K-xxx`), MR title/description, MR state (merged/open/closed). |
-| Merged PRs | `github__list_pull_requests` (filter: merged, recent) or user-provided URLs via `github__pull_request_read` | Branch name, commit trailers, PR title/body, PR state. |
+| Merged MRs | `gitlab__list_merge_requests` (filter: merged, recent) or user-provided URLs via `gitlab__get_merge_request` | Branch name, commit trailers (`refs K-xxx`, `closes K-xxx`), MR title/description, MR state (merged/open/closed), and whether each Linear id is reference-only or closing. |
+| Merged PRs | `github__list_pull_requests` (filter: merged, recent) or user-provided URLs via `github__pull_request_read` | Branch name, commit trailers, PR title/body, PR state, and whether each Linear id is reference-only or closing. |
 | Notes / docs | User pastes content or points to a file | Issue IDs mentioned inline + prose hints ("shipped X", "parked Y"). |
 
 ### Process
@@ -73,10 +73,10 @@ For each evidence source the user named (or offered), gather:
 - **User statements:** parse into `{issue-id: verbal-state}` pairs. If a statement references work without naming an issue (e.g., "I finished the auth migration"), attempt to match against issue titles by keyword; ask the user to confirm the match before using it.
 - **MRs/PRs:** fetch each one. Extract issue IDs from:
   - Branch name (regex: `/(K|CLOUD)-\d+/i` — use the workspace's id prefix from `linear-prerequisite`).
-  - Commit trailers in the MR/PR commits: `refs K-xxx`, `closes K-xxx`, `fixes K-xxx`, `resolves K-xxx` (case-insensitive).
-  - MR/PR body trailer lines.
-  - MR/PR title if it contains an issue id.
-  Dedupe per unique MR/PR. Record: `{mr-or-pr-url, state, issue-ids, title}`.
+  - Commit trailers in the MR/PR commits: `refs K-xxx` / `references K-xxx` as reference-only signals; `closes K-xxx`, `fixes K-xxx`, `resolves K-xxx`, `completes K-xxx` as closing signals (case-insensitive).
+  - MR/PR body trailer lines, preserving reference-only vs closing keywords.
+  - MR/PR title if it contains an issue id. Treat bare title IDs as reference-only unless the title uses a closing keyword.
+  Dedupe per unique MR/PR. Record: `{mr-or-pr-url, state, referenced-issue-ids, closing-issue-ids, title}`.
 - **Notes/docs:** grep for issue ids; capture surrounding prose as context.
 
 If no evidence source is named, ask the user what to use — don't silently fall back to "everything recent" (noisy and expensive).
@@ -96,7 +96,8 @@ Apply these rules, in order, per issue. Respect the **never-downgrade guard** fr
 
 | Evidence signal | Proposed state | Notes |
 |-----------------|---------------|-------|
-| Merged MR/PR references issue, issue is `In Progress` or `In Review` | `Done` | High-confidence forward move. |
+| Merged MR/PR closes issue with a Linear closing keyword, issue is `In Progress` or `In Review` | `Done` | High-confidence forward move. |
+| Merged MR/PR only references issue with `refs`, issue is not `Done` | no auto-proposal | `refs` is partial/related evidence, not completion evidence. |
 | Open MR/PR references issue, issue is `Todo` or `In Progress` | `In Review` | Forward move. |
 | User statement "finished/shipped/done with X", issue not already closed | `Done` | Requires user confirmation (user could be imprecise). |
 | User statement "working on X", issue is `Todo` or `Backlog` | `In Progress` | Forward move. |
@@ -134,6 +135,7 @@ At the bottom, summarise unchanged issues (not enough evidence) and explicit no-
 
 - **Never move backward.** Respect the never-downgrade guard from `linear-state-transitions`. Done/Canceled are terminal; don't propose transitions that would reverse them.
 - **Evidence over convenience.** Every proposed transition must cite an evidence source the user can verify. Unsourced proposals are a failure mode — flag and ask instead of guessing.
+- **`refs` is not completion.** Use `refs` evidence to propose `In Review` for open MRs/PRs, but only closing keywords such as `closes`, `fixes`, `resolves`, or `completes` can justify `Done` from merged work.
 - **Confirm cancellations.** `Canceled` is terminal. Always get explicit approval before cancelling, even when the user said "dropped".
 - **Keyword matches are candidates, not matches.** If you can't find a direct issue-id reference, surface it as a candidate for the user to confirm.
 - **Batch application.** Apply approved transitions in parallel `save_issue` calls to minimise round trips.

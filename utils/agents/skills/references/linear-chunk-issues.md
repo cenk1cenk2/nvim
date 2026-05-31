@@ -25,6 +25,7 @@ Map each Linear issue to exactly one agent task. This is the cleanest path — e
 - Read each issue's title and description to understand scope.
 - Use the issue scope to define the task's file boundaries.
 - Include the issue ID in the agent's prompt (see Agent Prompt Addition below).
+- If the task will create the single PR/MR that fully completes the issue, the final commit and PR/MR description should use `closes <ID>`.
 
 ### One issue → multiple tasks (large issue)
 
@@ -62,7 +63,7 @@ Add a `## Linear Issue` section to each agent's prompt:
 
 This task implements Linear issue <ID>: "<issue title>".
 - Use `refs <ID>` in commit trailers for partial progress.
-- Use `closes <ID>` only in the final commit if the issue is fully resolved by your work.
+- Use `closes <ID>` in the final commit and PR/MR description when this is the single/final deliverable that fully resolves the issue.
 - Do NOT use `#` prefix — write `refs K-219`, not `refs #K-219`.
 ```
 
@@ -75,7 +76,7 @@ This task covers multiple Linear issues:
 - <ID-1>: "<title-1>"
 - <ID-2>: "<title-2>"
 
-Commit per issue where possible. Use `refs <ID>` for partial progress, `closes <ID>` only when fully resolved.
+Commit per issue where possible. Use `refs <ID>` for partial progress, `closes <ID>` only when this task or PR/MR fully resolves that issue.
 ```
 
 ## Task Split Table
@@ -94,4 +95,4 @@ During the completion handoff (agents-completion reference):
 
 - If all issues are resolved, each commit should already have the correct trailers from the agents.
 - If the orchestrator creates a final combined commit instead, include trailers for all issues.
-- When creating a PR/MR, include all issue IDs in the description for cross-linking.
+- When creating a PR/MR, include Linear trailers in the description: `closes <ID>` for issues fully resolved by that PR/MR, and `refs <ID>` for partial or related work.

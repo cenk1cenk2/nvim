@@ -19,8 +19,17 @@ Trailers go in the commit footer — separated from the body by a blank line. On
 
 | Trailer | When to use |
 |---------|-------------|
-| `refs` | Work toward the issue but not completing it — partial progress, related work. **Default when intent is unclear.** |
-| `closes` | The commit fully resolves the issue. Only use when the user explicitly says "closes", "completes", "fixes", or "finishes". |
+| `refs` | Link or contribute without closing — partial progress, one commit/PR/MR in a multi-deliverable issue, related work, or unclear completion intent. |
+| `closes` | The commit/PR/MR is the single or final deliverable that should close the issue when merged. |
+
+For Linear IDs, choose the trailer from the delivery shape:
+
+- Use `closes <Linear-id>` when this commit, PR, or MR is expected to fully resolve and close the issue after merge.
+- Use `refs <Linear-id>` when the change only contributes to the issue, several PRs/MRs are needed and this is not the final one, or closing intent is unclear.
+- Single PR/MR completing one issue → `closes K-123`.
+- Multiple PRs/MRs for one issue → non-final PRs/MRs use `refs K-123`; only the final completing PR/MR uses `closes K-123`.
+- One PR/MR can close multiple independent issues by including one `closes <ID>` trailer per closed issue.
+- Mix `closes` and `refs` when some linked issues are closed and others are only related.
 
 ## Linear
 
@@ -39,19 +48,20 @@ Linear links commits to issues via **magic words** in commit messages, MR/PR tit
 
 ### Contributing Keywords (link without closing)
 
-`ref`, `references`, `part of`, `related to`, `contributes to`, `towards`.
+`ref`, `refs`, `references`, `part of`, `related to`, `contributes to`, `towards`.
 
 ### Behavior
 
 - Issue moves to **In Progress** when the branch is pushed.
-- Issue moves to **Done** when the commit is merged to the default branch (only with closing keywords).
-- Contributing keywords link the commit but do NOT close the issue on merge.
+- Issue moves to **Done** when the commit/PR/MR is merged to the default branch (only with closing keywords).
+- Contributing keywords such as `refs` link the work but do NOT close the issue on merge.
 - The issue ID must appear with a magic word — bare ID alone does not auto-link.
 
 ### Trailer Format
 
 ```
 refs K-219
+closes K-383
 closes CLOUD-4298
 ```
 

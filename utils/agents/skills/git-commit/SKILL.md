@@ -84,7 +84,7 @@ references:
    - **Issue/PR references** — when the user provides an issue URL, issue ID, or the branch name matches an issue pattern:
      - Follow the `commit-trailers` reference for detection, keyword selection, and trailer format per platform.
      - Fetch the issue via the appropriate MCP tool to understand context.
-     - Default to `refs` unless the user explicitly says "closes" / "completes" / "fixes" / "finishes".
+     - For Linear IDs, default to `refs` when closing intent is unclear or the work is partial. Use `closes` when the staged change is the single/final deliverable that should close the issue.
      - If the user also requested an extended description, weave relevant issue context into the body.
    - **NEVER add `Co-authored-by:` trailers.** This is forbidden — no exceptions.
 
@@ -192,11 +192,11 @@ This skill is composable — the commit step is a single, focused responsibility
 1. Check status — 6 files staged.
 2. Detect `K-219` from URL, fetch via `linear-kilic-dev__get_issue`.
 3. Read staged diff — adds trojan-loki to inventory and caddy config.
-4. Draft:
+4. Draft (the staged changes fully satisfy the issue):
    ```
    feat: provision trojan-loki
 
-   refs K-219
+   closes K-219
    ```
 5. Present to user → approve → commit.
 

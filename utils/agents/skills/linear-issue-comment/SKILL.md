@@ -51,7 +51,8 @@ The current conversation context holds the most recent version of the issue's in
    - Use the Linear MCP `save_comment` tool from the appropriate workspace.
 
 4. **Transition to `Done` (when applicable):**
-   - If the comment is a delivery / close-out note AND a linked MR/PR is merged, follow the `linear-state-transitions` reference: call `save_issue` with `state: "Done"`, respecting the never-downgrade guard.
+   - If the comment is a delivery / close-out note AND either the user explicitly says to close/mark the issue done or the linked merged MR/PR contains a Linear closing keyword for the issue, follow the `linear-state-transitions` reference: call `save_issue` with `state: "Done"`, respecting the never-downgrade guard.
+   - A merged MR/PR that only has `refs K-xxx` does NOT trigger `Done`; `refs` is partial or related work until the user or a closing trailer says otherwise.
    - Detect "delivery / close-out" from the comment shape: it announces the MR merge, links the merged MR/PR, or the user prompt says "close K-xxx", "mark K-xxx done", "K-xxx is merged". A plain findings / research comment does NOT trigger this.
    - Report one line: `Linear state: moved K-xxx → Done.` Skip silently when the issue is already `Done` / `Canceled`.
    - User opts out for the turn by saying "don't move the Linear state" or "leave the state alone".

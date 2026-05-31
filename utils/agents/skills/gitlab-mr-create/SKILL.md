@@ -4,6 +4,7 @@ description: Analyze and write GitLab merge request titles and descriptions. Use
 interaction: chat
 references:
   - ../references/scm-gitlab.md
+  - ../references/commit-trailers.md
   - ../references/output-diff.md
   - ../references/linear-state-transitions.md
 ---
@@ -22,6 +23,8 @@ references:
 ### Core Requirements
 
 > Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection
+
+> Read the `commit-trailers` reference for Linear/GitLab issue trailer selection. Use `closes <Linear-id>` for the single/final MR that should close a Linear issue; use `refs <Linear-id>` for partial, related, multi-MR, or unclear completion work.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -56,6 +59,7 @@ These are team defaults for this workflow. Do not prompt the user to confirm the
    - If no template exists, write a fresh description following the format below.
    - Analyze the diff for **logical changes only** — what behavior was added, removed, or changed.
    - Do NOT list changed files, line counts, or mechanical details.
+   - If the MR links Linear issues, add or preserve body trailers using `commit-trailers`: `closes <ID>` only for issues this MR fully resolves, `refs <ID>` for partial or related work.
 
 4. **Draft the Title:**
    - If the existing title is already descriptive and clear, keep it.
