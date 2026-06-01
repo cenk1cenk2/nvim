@@ -5,7 +5,7 @@ local M = {}
 M.name = "saghen/blink.pairs"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, false, {
+  require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
       ---@type Plugin
       return {
