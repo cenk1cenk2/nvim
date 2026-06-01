@@ -697,7 +697,7 @@
       }
     },
     "obsidian": {
-      "args": ["-y", "--bun", "obsidian-mcp-server@latest"],
+      "url": "http://127.0.0.1:27123/mcp/",
       "autoApprove": [
         "obsidian_global_search",
         "obsidian_list_notes",
@@ -707,13 +707,9 @@
         "obsidian_open_in_ui",
         "obsidian_search_notes"
       ],
-      "command": "bunx",
       "disabled_tools": [],
-      "env": {
-        "OBSIDIAN_API_KEY": "${NVIM_OBSIDIAN}",
-        "OBSIDIAN_BASE_URL": "https://127.0.0.1:27124",
-        "OBSIDIAN_ENABLE_CACHE": "true",
-        "OBSIDIAN_VERIFY_SSL": "false"
+      "headers": {
+        "Authorization": "Bearer ${NVIM_OBSIDIAN}"
       },
       "hyprpilot": {
         "autoAcceptTools": [
