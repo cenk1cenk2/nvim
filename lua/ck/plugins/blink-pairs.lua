@@ -7,7 +7,7 @@ M.name = "saghen/blink.pairs"
 function M.config()
   -- TODO: needs to be fixed
   -- https://github.com/saghen/blink.pairs/pull/107
-  require("ck.setup").define_plugin(M.name, false, {
+  require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
       ---@type Plugin
       return {
