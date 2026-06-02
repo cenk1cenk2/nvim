@@ -698,28 +698,22 @@
     },
     "obsidian": {
       "url": "http://127.0.0.1:27123/mcp/",
-      "autoApprove": [
-        "obsidian_global_search",
-        "obsidian_list_notes",
-        "obsidian_read_note",
-        "obsidian_get_note",
-        "obsidian_list_tags",
-        "obsidian_open_in_ui",
-        "obsidian_search_notes"
-      ],
-      "disabled_tools": [],
+      "autoApprove": ["active_file_get_path", "command_list", "open_file", "search_query", "search_simple", "tag_list", "vault_get_document_map", "vault_list", "vault_read"],
+      "disabled_tools": ["command_execute"],
       "headers": {
         "Authorization": "Bearer ${NVIM_OBSIDIAN}"
       },
       "hyprpilot": {
         "autoAcceptTools": [
-          "obsidian_global_search",
-          "obsidian_list_notes",
-          "obsidian_read_note",
-          "obsidian_get_note",
-          "obsidian_list_tags",
-          "obsidian_open_in_ui",
-          "obsidian_search_notes"
+          "active_file_get_path",
+          "command_list",
+          "open_file",
+          "search_query",
+          "search_simple",
+          "tag_list",
+          "vault_get_document_map",
+          "vault_list",
+          "vault_read"
         ],
         "autoRejectTools": []
       }
