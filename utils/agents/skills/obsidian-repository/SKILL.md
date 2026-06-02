@@ -17,7 +17,7 @@ references:
 
 ### Context
 
-You maintain structured reference notes about development repositories in `~/notes/Repositories/`. These notes capture architecture, conventions, key decisions, and gotchas — the knowledge that's hard to rediscover. They are living documents that get updated as repositories evolve.
+You maintain structured reference notes about development repositories in the vault's `Repositories/` folder (`~/notes/Repositories/` on disk). These notes capture architecture, conventions, key decisions, and gotchas — the knowledge that's hard to rediscover. They are living documents that get updated as repositories evolve.
 
 ### File Paths
 
@@ -25,11 +25,11 @@ Repositories live in `~/development/`. The note path mirrors the repository path
 
 Each repository gets a **folder**. The main overview note is `README.md` inside that folder. Detailed sub-topics get their own notes alongside it.
 
-| Repository path                             | Main note path                                              |
-| ------------------------------------------- | ----------------------------------------------------------- |
-| `~/development/ansible-playbooks/`          | `~/notes/Repositories/ansible-playbooks/README.md`          |
-| `~/development/laravel/cloud-app-operator/` | `~/notes/Repositories/laravel/cloud-app-operator/README.md` |
-| `~/development/kilic-dev/my-tool/`          | `~/notes/Repositories/kilic-dev/my-tool/README.md`          |
+| Repository path                             | Vault-relative note path                               |
+| ------------------------------------------- | ------------------------------------------------------ |
+| `~/development/ansible-playbooks/`          | `Repositories/ansible-playbooks/README.md`             |
+| `~/development/laravel/cloud-app-operator/` | `Repositories/laravel/cloud-app-operator/README.md`    |
+| `~/development/kilic-dev/my-tool/`          | `Repositories/kilic-dev/my-tool/README.md`             |
 
 **Sub-notes** live in the same folder:
 
@@ -44,11 +44,7 @@ If the current working directory is under `~/development/`, derive the folder pa
 
 ### Tools
 
-> **CRITICAL — Tool Selection (non-negotiable, check vault availability first):**
->
-> - **Vault accessible at `~/notes`** (default case) → use built-in tools with absolute paths: `Write` to create, `Read` to read, `Edit` to modify, `Bash rm` to delete, `Bash mv` to move. Do NOT use `obsidian__obsidian_update_note` / `obsidian__obsidian_read_note` / `obsidian__obsidian_delete_note` unless the built-in operation fails.
-> - **Vault not accessible on disk** (fallback) → use `obsidian__*` MCP tools for file operations.
-> - **Always use** `obsidian__obsidian_list_notes` and `obsidian__obsidian_global_search` regardless of availability — they expose index-backed capabilities the built-ins cannot replicate.
+> **Tool access:** Use the embedded `obsidian` MCP tools from the `obsidian` reference for all vault operations. Paths are vault-relative; filesystem is fallback only.
 >
 > Read the `obsidian` reference for vault location and full tool access conventions — read the files listed in `references:` for the `obsidian-repository` skill.
 
@@ -79,7 +75,7 @@ If the current working directory is under `~/development/`, derive the folder pa
 #### Update (note already exists)
 
 1. **Read the existing note.**
-2. **List existing sub-notes** in the repository folder via `obsidian__obsidian_list_notes`.
+2. **List existing sub-notes** in the repository folder via `obsidian__vault_list`.
 3. **Explore the repository** for current state.
 4. **Compare** the note against the repository:
    - Identify outdated information (changed structure, removed components, new patterns).

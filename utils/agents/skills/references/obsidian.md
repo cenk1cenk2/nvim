@@ -6,44 +6,44 @@ The Obsidian vault is at `~/notes`.
 
 ## Tool Access
 
-> **THIS IS NON-NEGOTIABLE. FILESYSTEM IS THE DEFAULT WHEN THE VAULT IS ACCESSIBLE.**
+> **THIS IS NON-NEGOTIABLE. THE EMBEDDED OBSIDIAN MCP SERVER IS THE DEFAULT.**
 
-### When the vault (`~/notes`) is accessible on disk (default case)
+Use the embedded `obsidian` MCP tools for vault operations. Tool names below use the stable short form; the runtime may surface them with a longer prefix such as `mcp__obsidian__vault_read`.
 
-**Use built-in tools for all file operations, with absolute paths.** You do not need to be inside the vault — CWD is irrelevant as long as `~/notes` exists and is readable.
+### Path Rules
 
-| Operation | Tool | Example |
+- MCP tools take **vault-relative paths** such as `Todo/20260310T143022.md`, `Repositories/example/README.md`, or `Drawings/system.excalidraw.md`.
+- Do not pass absolute `~/notes/...` paths to embedded Obsidian tools.
+- CWD is irrelevant for MCP operations; the server owns the vault root.
+- If a note path is ambiguous, list or search first and use the exact returned path.
+
+### Core Vault Operations
+
+| Operation | Tool | Notes |
 |---|---|---|
-| Read note | `Read` (built-in) | `Read("~/notes/Todo/20260310T143022.md")` |
-| Create note | `Write` (built-in) | `Write("~/notes/Todo/20260310T143022.md", content)` |
-| Edit note | `Edit` (built-in) | `Edit("~/notes/Todo/20260310T143022.md", old, new)` |
-| Delete note | `Bash` | `rm ~/notes/Todo/20260310T143022.md` |
-| Move/rename note | `Bash` | `mv ~/notes/Todo/old.md ~/notes/Work/new.md` |
-| Find files | `Glob` (built-in) | `Glob("~/notes/Todo/*.md")` |
+| Read note | `obsidian__vault_read` | Reads full content and metadata, or a targeted heading/block/frontmatter field. |
+| Create/overwrite note | `obsidian__vault_write` | Creates parent directories and overwrites existing files. Present changes first when overwriting. |
+| Append note | `obsidian__vault_append` | Creates the file if it does not exist. |
+| Patch note section | `obsidian__vault_patch` | Target a heading, block, or frontmatter key. Use idempotency guards for repeated appends. |
+| Move/rename note | `obsidian__vault_move` | Preserves Obsidian links and file history. |
+| Delete note | `obsidian__vault_delete` | Only delete after explicit confirmation unless the invoking skill says otherwise. |
+| List directory | `obsidian__vault_list` | Use for top-level folders and known directories like `Todo/` or `Drawings/`. |
+| Inspect note structure | `obsidian__vault_get_document_map` | Use before targeted reads or patches. |
+| Open note in Obsidian | `obsidian__open_file` | UI operation only; not needed for normal reads/writes. |
 
-**Availability check:** the vault is considered accessible if `~/notes` exists and is readable. On the local machine this is almost always true — filesystem is the default path.
+### Search and Metadata
 
-**Fallback:** if a built-in tool is unavailable or the operation fails because the vault is not mounted, fall back to the equivalent `obsidian__*` MCP tool.
-
-### When the vault is not accessible on disk (fallback)
-
-Use `obsidian__*` MCP tools for all file operations:
-
-| Operation | Tool |
-|---|---|
-| Read note | `obsidian__obsidian_read_note` |
-| Create/write note | `obsidian__obsidian_update_note` |
-| Delete note | `obsidian__obsidian_delete_note` |
-| Move/rename note | `filesystem__move_file` |
-
-### Always use MCP regardless of vault availability
-
-These obsidian MCP tools expose capabilities that built-in tools cannot replicate — they are the **default**, not fallbacks:
-
-| Operation | Tool | Why |
+| Operation | Tool | Notes |
 |---|---|---|
-| List notes | `obsidian__obsidian_list_notes` | Structured tree with filtering, recursion control, and Obsidian metadata. |
-| Search vault | `obsidian__obsidian_global_search` | Uses Obsidian's index — understands backlinks, tags, and frontmatter. |
+| Search by text | `obsidian__search_simple` | Use for content search and fuzzy user descriptions. |
+| Search by metadata/path | `obsidian__search_query` | Use JsonLogic for tags, frontmatter, backlinks, or path globs. |
+| List tags | `obsidian__tag_list` | Read-only tag inventory. |
+| Get active file | `obsidian__active_file_get_path` | Use only when the user references the currently open Obsidian note. |
+| Get periodic note | `obsidian__periodic_note_get_path` | Use for daily/weekly/monthly/quarterly/yearly notes. |
+
+### Filesystem Fallback
+
+If the embedded Obsidian MCP server is unavailable or a vault operation fails because the server cannot reach the vault, fall back to local filesystem operations under `~/notes` with absolute paths. Keep filesystem fallback secondary and report when it is used.
 
 ## File Naming
 

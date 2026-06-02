@@ -40,15 +40,15 @@ You pick up an existing `.excalidraw.md` drawing from the Obsidian vault and eit
 
 In both modes, the Excalidraw MCP server is your visual feedback tool. Render the drawing in chat so the user can see what they're working with.
 
-**Tool selection for vault:** Follow the `obsidian` reference — use built-in tools if CWD is `~/notes`, otherwise use `obsidian__*` MCP tools.
+**Tool selection for vault:** Follow the `obsidian` reference — use embedded `obsidian` MCP tools with vault-relative paths. Filesystem is fallback only.
 
 ### Process
 
 #### Finding the Drawing
 
 1. **Identify the drawing.** If the user provides a filename, use it. Otherwise:
-   - List drawings with `obsidian__obsidian_list_notes` on the `Drawings/` directory.
-   - If the user describes the drawing by content, search with `obsidian__obsidian_global_search`.
+   - List drawings with `obsidian__vault_list` on the `Drawings/` directory.
+   - If the user describes the drawing by content, search with `obsidian__search_simple` or `obsidian__search_query`.
    - Present matches and let the user choose.
 
 2. **Read the drawing.** Load the `.excalidraw.md` file from the vault:

@@ -294,7 +294,7 @@ Examples:
 - `slack-kilic__slack_list_channels` (server: `slack-kilic`, tool: `slack_list_channels`)
 - `linear-kilic-dev__get_issue` (server: `linear-kilic-dev`, tool: `get_issue`)
 - `memory__add_observations` (server: `memory`, tool: `add_observations`)
-- `obsidian__obsidian_read_note` (server: `obsidian`, tool: `obsidian_read_note`)
+- `obsidian__vault_read` (server: `obsidian`, tool: `vault_read`)
 
 **There is no `git` MCP server.** For local git operations, reference raw `git` CLI commands (`git status`, `git diff`, `git log`, `git show`, `git commit`, etc.) called via `Bash`. Do NOT introduce a `git__*` tool reference into new or updated skills.
 

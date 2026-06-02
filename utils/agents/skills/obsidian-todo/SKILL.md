@@ -19,11 +19,7 @@ references:
 > - Emphasize speed over perfection.
 > - Read the `obsidian` reference for vault location and tool access — read the files listed in `references:` for the `obsidian-todo` skill.
 
-> **CRITICAL — Tool Selection (non-negotiable, check vault availability first):**
->
-> - **Vault accessible at `~/notes`** (default case) → use built-in tools with absolute paths: `Write` to create, `Read` to read, `Edit` to modify, `Bash rm` to delete, `Bash mv` to move. Do NOT use `obsidian__obsidian_update_note` / `obsidian__obsidian_read_note` / `obsidian__obsidian_delete_note` unless the built-in operation fails.
-> - **Vault not accessible on disk** (fallback) → use `obsidian__*` MCP tools for file operations.
-> - **Always use** `obsidian__obsidian_list_notes` and `obsidian__obsidian_global_search` regardless of availability — they expose index-backed capabilities the built-ins cannot replicate.
+> **Tool access:** Use the embedded `obsidian` MCP tools from the `obsidian` reference for all vault operations. Paths are vault-relative; filesystem is fallback only.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 

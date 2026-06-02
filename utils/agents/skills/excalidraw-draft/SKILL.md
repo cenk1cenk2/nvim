@@ -40,7 +40,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 
 **Default mode: dark.** Use dark appState and dark fill colors unless the user requests light mode.
 
-**Tool selection for vault:** Follow the `obsidian` reference — use built-in tools if CWD is `~/notes`, otherwise use `obsidian__*` MCP tools.
+**Tool selection for vault:** Follow the `obsidian` reference — use embedded `obsidian` MCP tools with vault-relative paths. Filesystem is fallback only.
 
 ### Output Modes
 
