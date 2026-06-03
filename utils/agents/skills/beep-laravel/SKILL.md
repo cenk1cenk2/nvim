@@ -21,11 +21,15 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 
 2. **Settle the tone.**
    - If the user explicitly named a tone (in the arguments or message, e.g. "pirate", "do it noir", "weather report"), use it — including tones outside the roster.
-   - Otherwise, **propose a tone before narrating.** Lead with the three house tones and mention the rest of the deck is open:
-     - 🏴‍☠️ a pirate
-     - 🌿 a nature documentary
-     - 🔪 a cheap crime novel
-     - *…or pick from the full palette below.*
+   - Otherwise, **propose a tone before narrating.** Offer a few examples to spark ideas, then invite the user to name their own:
+     ```
+     What tone? Here are a few to spark ideas:
+     - 🏴‍☠️ pirate
+     - 🌿 nature documentary
+     - 🔪 cheap crime novel
+     - 🌦️ weather forecast
+     …or name your own.
+     ```
    - Wait for the user's pick (or a tone of their own) before delivering. Do not narrate until the tone is settled.
 
 3. **Narrate the check-in in the chosen tone**, keeping done and tomorrow unmistakably distinct (see **Done vs. Tomorrow**). Keep it short — a couple of punchy beats, not an essay. Every real item from the check-in must survive the styling; tone dresses the facts, it does not invent or drop them.
@@ -34,9 +38,9 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 
 ### Done vs. Tomorrow
 
-When the check-in has both buckets, the tone must make the line between them obvious — the reader should never confuse what landed with what's still coming. Render them as **two separate beats**:
+When the check-in has both buckets, distinguish them through tense and a natural paragraph break — no headers or labels needed. The line between them should be unmistakable:
 
-- **Done today** → past tense, settled, triumphant or grim-but-finished. The kill is made, the case is closed, the front has passed.
+- **Done** → past tense, settled, triumphant or grim-but-finished. The kill is made, the case is closed, the front has passed.
 - **Tomorrow** → future tense, anticipatory, foreshadowing. The hunt ahead, the storm moving in, the next job, uncharted space.
 
 If only one bucket exists, narrate just that one. Never let a planned item read as already done.
@@ -64,22 +68,27 @@ Each tone gets a *Done* voice (past/settled) and a *Tomorrow* voice (future/inco
 
 ### Example
 
-**User:** `/beep-laravel done: merged the billing API, fixed the flaky test. tomorrow: wire up webhooks, write the migration`
+**User:** `today i have done some random things on my side to just take time to look to the current state of stuff. region module versioning migration is coming to an end and is issued for request for comments. it will be a multistep migration as always but should be quick enough to not affect anybody. did my checkins with justin with hurting his head for an hour. tomorrow i will finalize the region module versioning migration in the morning when it is a bit more silent.`
 
 **Beep (proposes tone):**
-> What's tonight's flavor? 🏴‍☠️ pirate, 🌿 nature documentary, or 🔪 cheap crime novel — or pick anything from the deck (weather report, captain's log, trailer voice, horoscope, sports, heist, war room, cooking show).
+> What tone? Here are a few to spark ideas:
+> - 🏴‍☠️ pirate
+> - 🌿 nature documentary
+> - 🔪 cheap crime novel
+> - 🌦️ weather forecast
+> …or name your own.
 
-**User:** weather report
+**User:** weather forecast
 
 **Beep (narrates):**
-> **Today:** A strong high-pressure system of merged billing APIs settled in by midday, finally burning off the flaky-test fog that had lingered all morning. Clear skies over staging.
+> A mixed bag moved through — some light reconnaissance, a migration nearing landfall, and an hour of turbulence over Justin's mind with me talking non stop. RFC conditions for the region module monorepository are now in effect; the front should pass clean over everyone.
 >
-> **Tomorrow:** Expect scattered webhooks moving in overnight, with a migration system developing by evening — pack a coffee.
+> Quieter skies expected in the morning. The region module versioning migration will be finalized in a couple of steps.
 
 ### Key Principles
 
+- **Meaning survives the costume** — preserve the user's actual words, names, and technical terms wherever possible. Tone wraps around them; it does not replace them. Proper nouns, project names, and specific situations should appear in recognizable form, optionally with a tonal adjective or metaphor layered on top. Example: `"an hour of turbulence over Justin's mind with me talking non stop"` keeps Justin clear and the situation legible; `"a turbulent low-pressure system moved through Justin's office"` buries both.
 - **Tone first, always** — never narrate before the tone is settled.
 - **Done ≠ tomorrow** — past/settled for done, future/incoming for tomorrow; the line between them must be unmistakable.
-- **Facts survive the costume** — style the check-in, do not rewrite the events.
 - **Short and punchy** — a couple of beats, then a sign-off. No essays, no meta.
 - **Honor custom tones** — if the user names their own, run with it over the roster.
