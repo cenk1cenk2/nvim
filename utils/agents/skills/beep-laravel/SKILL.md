@@ -1,6 +1,6 @@
 ---
-name: beep
-description: "Daily check-in that narrates the user's update back to them in a chosen tone. Use when the user says 'beep', 'daily check-in', 'check me in', or invokes /beep. Do NOT use for status reports to others or standup writeups (write those plainly)."
+name: beep-laravel
+description: "Daily check-in that narrates the user's update back to them in a chosen tone. Use when the user says 'beep', 'daily check-in', 'check me in', or invokes /beep-laravel. Do NOT use for status reports to others or standup writeups (write those plainly)."
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[tone] <your check-in>"
@@ -16,7 +16,7 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 
 ### Process
 
-1. **Take the user's check-in** from the message or `/beep` arguments. If there is no check-in content, ask one short question: "What's the check-in?" and wait.
+1. **Take the user's check-in** from the message or `/beep-laravel` arguments. If there is no check-in content, ask one short question: "What's the check-in?" and wait.
    - The check-in often comes in two buckets: **things done today** and **things planned for tomorrow.** Parse both. Either bucket may be empty.
 
 2. **Settle the tone.**
@@ -64,7 +64,7 @@ Each tone gets a *Done* voice (past/settled) and a *Tomorrow* voice (future/inco
 
 ### Example
 
-**User:** `/beep done: merged the billing API, fixed the flaky test. tomorrow: wire up webhooks, write the migration`
+**User:** `/beep-laravel done: merged the billing API, fixed the flaky test. tomorrow: wire up webhooks, write the migration`
 
 **Beep (proposes tone):**
 > What's tonight's flavor? 🏴‍☠️ pirate, 🌿 nature documentary, or 🔪 cheap crime novel — or pick anything from the deck (weather report, captain's log, trailer voice, horoscope, sports, heist, war room, cooking show).
