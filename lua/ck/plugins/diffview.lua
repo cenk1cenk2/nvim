@@ -1,17 +1,29 @@
--- https://github.com/dlyongemallo/diffview.nvim (maintained fork of sindrets/diffview.nvim)
+-- https://github.com/dlyongemallo/diffview-plus.nvim (maintained fork of sindrets/diffview.nvim)
 local M = {}
 
 local log = require("ck.log")
 
-M.name = "dlyongemallo/diffview.nvim"
+M.name = "dlyongemallo/diffview-plus.nvim"
 
 function M.config()
   require("ck.setup").define_plugin(M.name, true, {
     plugin = function()
       ---@type Plugin
       return {
-        "dlyongemallo/diffview.nvim",
-        cmd = { "DiffviewFileHistory", "DiffviewOpen", "DiffviewClose" },
+        "dlyongemallo/diffview-plus.nvim",
+        cmd = {
+          "DiffviewClose",
+          "DiffviewDiffDirs",
+          "DiffviewDiffFiles",
+          "DiffviewFileHistory",
+          "DiffviewFocusFiles",
+          "DiffviewLog",
+          "DiffviewMergeFiles",
+          "DiffviewOpen",
+          "DiffviewRefresh",
+          "DiffviewToggle",
+          "DiffviewToggleFiles",
+        },
       }
     end,
     configure = function(_, fn)
@@ -211,7 +223,7 @@ function M.config()
       -- reviewer) invoke `:DiffviewOpen` from a window that gets reused or
       -- closed during `cur_layout:create()`, leaving `curwin` invalid by
       -- the time the close call runs — producing "Invalid window id" errors.
-      -- TODO: remove once fixed upstream in dlyongemallo/diffview.nvim.
+      -- TODO: remove once fixed upstream in dlyongemallo/diffview-plus.nvim.
       local api = vim.api
       local standard_view = require("diffview.scene.views.standard.standard_view")
       local diffview_config = require("diffview.config")
@@ -240,7 +252,7 @@ function M.config()
       -- that window, which fails. The rename+delete steps that follow don't
       -- require the close to succeed — we just want the old buffer out of
       -- the way so the new one can take its name.
-      -- TODO: remove once fixed upstream in dlyongemallo/diffview.nvim.
+      -- TODO: remove once fixed upstream in dlyongemallo/diffview-plus.nvim.
       local diffview_utils = require("diffview.utils")
       local orig_wipe_named_buffer = diffview_utils.wipe_named_buffer
       function diffview_utils.wipe_named_buffer(name, opt)
@@ -331,6 +343,20 @@ function M.config()
           end,
           desc = "compare buffer with branch",
         },
+        {
+          fn.wk_keystroke({ categories.GIT, "f" }),
+          function()
+            M.compare_files()
+          end,
+          desc = "compare files",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "F" }),
+          function()
+            M.compare_directories()
+          end,
+          desc = "compare directories",
+        },
       }
     end,
   })
@@ -377,6 +403,84 @@ function M.compare_buffer_with_branch()
     shada.set(store_key, branch)
 
     vim.cmd(":DiffviewOpen " .. branch .. " -- %")
+  end)
+end
+
+function M.compare_files()
+  vim.ui.input({
+    prompt = "First file path:",
+  }, function(file_a)
+    if file_a == nil or file_a == "" then
+      log:warn("No file selected.")
+
+      return
+    end
+
+    local expanded_a = vim.fn.expand(file_a)
+    if vim.fn.filereadable(expanded_a) == 0 then
+      log:error("File not found: %s", expanded_a)
+
+      return
+    end
+
+    vim.ui.input({
+      prompt = "Second file path:",
+    }, function(file_b)
+      if file_b == nil or file_b == "" then
+        log:warn("No file selected.")
+
+        return
+      end
+
+      local expanded_b = vim.fn.expand(file_b)
+      if vim.fn.filereadable(expanded_b) == 0 then
+        log:error("File not found: %s", expanded_b)
+
+        return
+      end
+
+      log:info("Comparing files: %s <-> %s", expanded_a, expanded_b)
+      vim.cmd(string.format(":DiffviewDiffFiles %s %s", vim.fn.fnameescape(expanded_a), vim.fn.fnameescape(expanded_b)))
+    end)
+  end)
+end
+
+function M.compare_directories()
+  vim.ui.input({
+    prompt = "First directory path:",
+  }, function(dir_a)
+    if dir_a == nil or dir_a == "" then
+      log:warn("No directory selected.")
+
+      return
+    end
+
+    local expanded_a = vim.fn.expand(dir_a)
+    if vim.fn.isdirectory(expanded_a) == 0 then
+      log:error("Directory not found: %s", expanded_a)
+
+      return
+    end
+
+    vim.ui.input({
+      prompt = "Second directory path:",
+    }, function(dir_b)
+      if dir_b == nil or dir_b == "" then
+        log:warn("No directory selected.")
+
+        return
+      end
+
+      local expanded_b = vim.fn.expand(dir_b)
+      if vim.fn.isdirectory(expanded_b) == 0 then
+        log:error("Directory not found: %s", expanded_b)
+
+        return
+      end
+
+      log:info("Comparing directories: %s <-> %s", expanded_a, expanded_b)
+      vim.cmd(string.format(":DiffviewDiffDirs %s %s", vim.fn.fnameescape(expanded_a), vim.fn.fnameescape(expanded_b)))
+    end)
   end)
 end
 

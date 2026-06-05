@@ -11,7 +11,7 @@ function M.config()
         "NeogitOrg/neogit",
         dependencies = {
           "nvim-lua/plenary.nvim",
-          "dlyongemallo/diffview.nvim",
+          "dlyongemallo/diffview-plus.nvim",
 
           "nvim-telescope/telescope.nvim",
         },
