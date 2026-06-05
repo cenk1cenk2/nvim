@@ -25,6 +25,12 @@ function M.config()
           wezterm = false, -- Flatten all instance in the current Wezterm session
         },
         hooks = {
+          guest_data = function()
+            return require("ck.modules.flatten").guest_data()
+          end,
+          pre_open = function(opts)
+            require("ck.modules.flatten").pre_open(opts)
+          end,
           should_block = function(argv)
             if vim.tbl_contains(argv, "--headless") then
               return false

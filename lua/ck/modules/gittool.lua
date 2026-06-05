@@ -25,10 +25,33 @@ local function exec(command, args)
   vim.cmd(command .. " " .. table.concat(escaped, " "))
 end
 
-function M.diff()
-  local left = env("DIFFVIEW_LEFT") or argv(0)
-  local right = env("DIFFVIEW_RIGHT") or argv(1)
-  local output = env("DIFFVIEW_OUTPUT") or argv(2)
+local function current_data()
+  return require("ck.modules.flatten").get_data("gittool") or {}
+end
+
+function M.flatten_guest_data()
+  if vim.env.DIFFVIEW_GITTOOL_MODE == nil then
+    return nil
+  end
+
+  return {
+    mode = vim.env.DIFFVIEW_GITTOOL_MODE,
+    left = vim.env.DIFFVIEW_LEFT,
+    right = vim.env.DIFFVIEW_RIGHT,
+    output = vim.env.DIFFVIEW_OUTPUT,
+    merged = vim.env.DIFFVIEW_MERGED,
+    base = vim.env.DIFFVIEW_BASE,
+    local_path = vim.env.DIFFVIEW_LOCAL,
+    remote = vim.env.DIFFVIEW_REMOTE,
+  }
+end
+
+function M.diff(data)
+  data = data or current_data()
+
+  local left = normalize(data.left) or env("DIFFVIEW_LEFT") or argv(0)
+  local right = normalize(data.right) or env("DIFFVIEW_RIGHT") or argv(1)
+  local output = normalize(data.output) or env("DIFFVIEW_OUTPUT") or argv(2)
 
   if not left or not right then
     vim.notify("diffview git difftool requires left and right paths.", vim.log.levels.ERROR)
@@ -50,15 +73,17 @@ function M.diff()
   exec("DiffviewDiffFiles", { left, right })
 end
 
-function M.merge()
-  local output = env("DIFFVIEW_MERGED") or argv(0)
-  local base = env("DIFFVIEW_BASE") or argv(1)
-  local left = env("DIFFVIEW_LOCAL") or argv(2)
-  local right = env("DIFFVIEW_REMOTE") or argv(3)
+function M.merge(data)
+  data = data or current_data()
+
+  local output = normalize(data.merged) or env("DIFFVIEW_MERGED") or argv(0)
+  local base = normalize(data.base) or env("DIFFVIEW_BASE") or argv(1)
+  local left = normalize(data.local_path) or env("DIFFVIEW_LOCAL") or argv(2)
+  local right = normalize(data.remote) or env("DIFFVIEW_REMOTE") or argv(3)
 
   if not right then
-    left = argv(1)
-    right = argv(2)
+    left = normalize(data.local_path) or env("DIFFVIEW_LOCAL") or argv(1)
+    right = normalize(data.remote) or env("DIFFVIEW_REMOTE") or argv(2)
     base = nil
   end
 
@@ -75,6 +100,28 @@ function M.merge()
   end
 
   exec("DiffviewMergeFiles", { output, left, right })
+end
+
+function M.open_from_gittool()
+  local data = current_data()
+  local blocker = vim.api.nvim_get_current_buf()
+
+  if data.mode == "merge" or vim.env.DIFFVIEW_GITTOOL_MODE == "merge" then
+    M.merge(data)
+  else
+    M.diff(data)
+  end
+
+  vim.api.nvim_create_autocmd("User", {
+    pattern = "DiffviewViewClosed",
+    once = true,
+    callback = function()
+      require("ck.modules.flatten").clear_data("gittool")
+      if vim.api.nvim_buf_is_valid(blocker) then
+        vim.api.nvim_buf_delete(blocker, { force = true })
+      end
+    end,
+  })
 end
 
 return M
