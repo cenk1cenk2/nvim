@@ -138,6 +138,22 @@ function M.config()
           mode = { "n" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "." }),
+          function()
+            require("hyprpilot.rpc.permissions").accept()
+          end,
+          desc = "accept permission [hyprpilot]",
+          mode = { "n" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "," }),
+          function()
+            require("hyprpilot.rpc.permissions").reject()
+          end,
+          desc = "reject permission [hyprpilot]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "<DEL>" }),
           function()
             require("hyprpilot.ui.window").focus({ target = "queue" })
