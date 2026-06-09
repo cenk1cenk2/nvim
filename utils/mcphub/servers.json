@@ -773,16 +773,6 @@
         "autoRejectTools": []
       }
     },
-    "sequentialthinking": {
-      "args": ["-y", "--bun", "@modelcontextprotocol/server-sequential-thinking@latest"],
-      "autoApprove": ["sequentialthinking"],
-      "command": "bunx",
-      "disabled": false,
-      "hyprpilot": {
-        "autoAcceptTools": ["sequentialthinking"],
-        "autoRejectTools": []
-      }
-    },
     "slack-kilic": {
       "args": ["-y", "--bun", "@modelcontextprotocol/server-slack@latest"],
       "autoApprove": ["slack_list_channels", "slack_get_channel_history", "slack_get_thread_replies", "slack_get_users", "slack_get_user_profile", "slack_add_reaction"],
