@@ -14,17 +14,17 @@ interaction: chat
 
 **FIRST ACTION** when this skill is invoked:
 
-1. Call `linear-kilic-dev__get_user` with `query: "me"` to identify the current user.
+1. Call `linear-kilic__get_user` with `query: "me"` to identify the current user.
 2. Note the user's **team(s)** from the response — this is your default team for issue creation.
 3. Store the user ID for assigning issues.
-4. Call `linear-kilic-dev__list_issue_labels` to fetch **all available labels** for the workspace.
+4. Call `linear-kilic__list_issue_labels` to fetch **all available labels** for the workspace.
    - Store the label list for the session.
    - **NEVER fabricate or guess label names** — only use labels that exist in this list.
    - If no label fits the issue, ASK the user which label to use rather than inventing one.
 
 ### Workspace Context
 
-- **Linear MCP:** `linear-kilic-dev` — ALWAYS use `linear-kilic-dev__*` tools unless prompted otherwise.
+- **Linear MCP:** `linear-kilic` — ALWAYS use `linear-kilic__*` tools unless prompted otherwise.
 - **Code discovery MCP:** `sourcebot-kilic` — prefer for fast organization-wide repository/code discovery and prior-art search when available.
 - **SCM MCP:** `gitlab` — use `gitlab__*` tools for authoritative GitLab metadata, MRs, pipelines, issues, project settings, permissions, live branch state, and writes.
 - **Repository link format:** `{"url": "https://gitlab.kilic.dev/...", "title": "repo-name"}`.

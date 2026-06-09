@@ -61,7 +61,7 @@ This skill edits the catalog file `~/.config/nvim/utils/mcphub/servers.json`. It
 
 **Server keys MUST use kebab-case with `-` only.** Do NOT use `/` (does not parse correctly through some MCP hubs — gets flattened inconsistently in the tool prefix) and avoid `_` for word separation inside keys. For multi-workspace services, follow the `<service>-<workspace>` convention:
 
-- `linear-kilic-dev`, `linear-laravel`
+- `linear-kilic`, `linear-laravel`
 - `grafana-kilic`, `grafana-laravel`
 - `argocd-kilic`, `slack-kilic`, `spacelift-laravel`
 

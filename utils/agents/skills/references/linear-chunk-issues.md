@@ -12,7 +12,7 @@ Check the user's input for Linear context:
 | Project URL or name | User provides a Linear project. | Fetch project via `linear_*__get_project`, then list its issues via `linear_*__list_issues` (filter by project). |
 | Multiple issues | User lists several issue IDs or URLs. | Fetch all issues. |
 
-Use the `linear-prerequisite` reference deduction rules to determine the workspace (`linear-kilic-dev` vs `linear-laravel`).
+Use the `linear-prerequisite` reference deduction rules to determine the workspace (`linear-kilic` vs `linear-laravel`).
 
 If no Linear context is detected, skip this reference entirely.
 

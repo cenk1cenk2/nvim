@@ -104,9 +104,9 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
    #### `issues` — Linear Issue Discussions
    - Messages reference Linear issues or contain issue discussions.
    - For each message thread, read the full thread via `slack__slack_get_thread_replies`.
-   - If the thread references a Linear issue, fetch it via `linear-kilic-dev__get_issue`.
+   - If the thread references a Linear issue, fetch it via `linear-kilic__get_issue`.
    - If the thread contains user comments with feedback or refinements:
-     - Use `linear-kilic-dev__list_comments` to see existing Linear comments.
+     - Use `linear-kilic__list_comments` to see existing Linear comments.
      - Compose with the `linear-kilic` skill to update the issue based on thread discussion.
    - Summarize: which issues were discussed, what feedback was given, what actions are needed.
 

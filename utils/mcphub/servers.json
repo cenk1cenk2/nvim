@@ -532,7 +532,7 @@
         ]
       }
     },
-    "linear-kilic-dev": {
+    "linear-kilic": {
       "autoApprove": [
         "list_issues",
         "list_projects",

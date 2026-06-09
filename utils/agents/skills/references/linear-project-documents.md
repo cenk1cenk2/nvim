@@ -1,6 +1,6 @@
 # Linear Project Documents
 
-Use the active Linear workspace's `save_document` tool, for example `linear-kilic-dev__save_document`, to create or update project-scoped documents when multiple issues need the same shared context.
+Use the active Linear workspace's `save_document` tool, for example `linear-kilic__save_document`, to create or update project-scoped documents when multiple issues need the same shared context.
 
 ## When to Use Project Documents
 

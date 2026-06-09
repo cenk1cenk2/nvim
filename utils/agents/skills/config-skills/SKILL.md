@@ -284,7 +284,7 @@ Run this checklist when creating, updating, or reviewing any skill description:
 
 In skill files, reference files, and documentation, use the **`<server>__<tool>` short form** — the server name is the identifying factor. The harness/client may surface the tool under a longer prefix (`mcp__<server>__<tool>`, `mcp__<hub>__<server>__<tool>`, etc.); the agent resolves whatever prefix the runtime uses at call time. Documentation should NOT bake in a specific prefix.
 
-**Server name rules** — server keys MUST use kebab-case with `-` separators only. Never use `/` in server keys (does not parse correctly through some MCP hubs) and avoid `_` for word separation inside the key. Workspace-suffixed servers follow the `<service>-<workspace>` pattern, e.g., `linear-kilic-dev`, `linear-laravel`, `grafana-kilic`, `grafana-laravel`, `argocd-kilic`, `slack-kilic`, `spacelift-laravel`.
+**Server name rules** — server keys MUST use kebab-case with `-` separators only. Never use `/` in server keys (does not parse correctly through some MCP hubs) and avoid `_` for word separation inside the key. Workspace-suffixed servers follow the `<service>-<workspace>` pattern, e.g., `linear-kilic`, `linear-laravel`, `grafana-kilic`, `grafana-laravel`, `argocd-kilic`, `slack-kilic`, `spacelift-laravel`.
 
 Examples:
 
@@ -292,7 +292,7 @@ Examples:
 - `gitlab__get_merge_request` (server: `gitlab`, tool: `get_merge_request`)
 - `sourcebot-kilic__grep` (server: `sourcebot-kilic`, tool: `grep`)
 - `slack-kilic__slack_list_channels` (server: `slack-kilic`, tool: `slack_list_channels`)
-- `linear-kilic-dev__get_issue` (server: `linear-kilic-dev`, tool: `get_issue`)
+- `linear-kilic__get_issue` (server: `linear-kilic`, tool: `get_issue`)
 - `memory__add_observations` (server: `memory`, tool: `add_observations`)
 - `obsidian__vault_read` (server: `obsidian`, tool: `vault_read`)
 

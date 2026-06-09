@@ -15,7 +15,7 @@ interaction: chat
 - **Slack MCP:** `slack-kilic` — ALWAYS use `slack-kilic__*` tools for this workspace.
 - **Transport:** Stdio (`@modelcontextprotocol/server-slack`), bot token auth.
 - **Linked SCM:** GitLab (`gitlab.kilic.dev`).
-- **Linked Linear:** `linear-kilic-dev` (kilic-dev workspace).
+- **Linked Linear:** `linear-kilic` (kilic-dev workspace).
 
 ### Available Tools
 

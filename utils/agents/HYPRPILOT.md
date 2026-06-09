@@ -6,7 +6,7 @@ Loaded as a system-prompt sibling to `AGENTS.md` for hyprpilot sessions. `AGENTS
 
 Every MCP server is wired straight into the agent. Use whatever concrete tool name the current harness exposes, but document tools in the `<server>__<tool>` short form so instructions stay stable across runtimes.
 
-- Prefer the documented short form in skill files and references: `github__get_file_contents`, `linear-kilic-dev__get_issue`, `slack-kilic__slack_list_channels`, etc.
+- Prefer the documented short form in skill files and references: `github__get_file_contents`, `linear-kilic__get_issue`, `slack-kilic__slack_list_channels`, etc.
 - At call time, use the actual surfaced tool name (some harnesses expose `mcp__<server>__<tool>`).
 - Per-server filtering is config-time, not runtime. `hyprpilot.autoAcceptTools` / `autoRejectTools` on each catalog entry, plus per-profile `mcps` overrides, are the captain's knobs.
 

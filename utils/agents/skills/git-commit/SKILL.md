@@ -190,7 +190,7 @@ This skill is composable — the commit step is a single, focused responsibility
 **User says:** "commit this" with `https://linear.app/kilic-dev/issue/K-219/...`
 
 1. Check status — 6 files staged.
-2. Detect `K-219` from URL, fetch via `linear-kilic-dev__get_issue`.
+2. Detect `K-219` from URL, fetch via `linear-kilic__get_issue`.
 3. Read staged diff — adds trojan-loki to inventory and caddy config.
 4. Draft (the staged changes fully satisfy the issue):
    ```

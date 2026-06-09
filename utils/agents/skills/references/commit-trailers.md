@@ -78,7 +78,7 @@ When the user provides a Linear reference, detect the issue ID from:
 | Branch name | Match issue prefix pattern | `k-219` branch → `K-219` |
 
 Fetch issue context via the appropriate Linear MCP tool:
-- `K-` prefix → `linear-kilic-dev__get_issue`.
+- `K-` prefix → `linear-kilic__get_issue`.
 - `CLOUD-` prefix → `linear-laravel__get_issue`.
 
 ## GitHub
