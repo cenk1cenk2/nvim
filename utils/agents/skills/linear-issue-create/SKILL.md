@@ -6,6 +6,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/linear-mandatory-fields.md
   - ../references/linear-issue-states.md
+  - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
   - ../references/sourcebot-discovery.md
   - ../references/plan-mode.md
@@ -39,6 +40,8 @@ Additional rules for issue creation:
 - If the user creates an issue and also asks for a non-default status, create with the best matching explicit state or compose with `linear-issue-status` immediately after creation.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+
+> Read the `linear-project-documents` reference for packaging local/file reference context into Linear documents or comments when an issue points an implementation agent at files, screenshots, examples, or other context that may not be available from the issue text alone.
 
 > Read the `linear-scm-discovery` reference when the user explicitly asks to enrich the issue from GitHub/GitLab or repository context. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available. Use discovered facts to make the issue easier to implement, but do not run broad SCM discovery by default.
 

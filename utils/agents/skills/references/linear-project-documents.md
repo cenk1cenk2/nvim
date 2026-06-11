@@ -14,12 +14,24 @@ Create a project document for shared information that would otherwise be duplica
 - Repeated acceptance criteria.
 - Repository inventory and common conventions.
 
+Create a document or issue comment for reference material when an issue points an implementation agent at context that is not self-contained in the issue:
+
+- Local files or directories, including `file://` references and paths under `~/development`.
+- Screenshots, generated artifacts, dashboard JSON, design examples, fixtures, logs, traces, or command output.
+- Examples from another repository that the agent should use as a style, structure, or behavior reference.
+- Any reference the receiving agent may need to inspect with its own MCP tools before implementing.
+
+If the user explicitly says the work is local-only or the reference is only for the current conversation, do not package it into Linear.
+
 ## How to Use Them
 
 - Create or update documents with `project`, `title`, and `content`.
 - When updating, list or fetch existing documents first and update by `id`.
 - Present document drafts via the `output-diff` convention before writing.
 - Create project documents after the project exists and before creating repetitive issues when possible.
+- For a single issue, attach the document to the issue or add a top-level issue comment that packages the needed reference context.
+- Prefer repository, MR, PR, and dashboard links as Linear attachments when they are authoritative and available.
+- For local-only references, include the absolute path, why it matters, relevant excerpts or a concise summary, and instructions for the implementation agent to use its own MCP/local filesystem tools for deeper inspection.
 
 ## Lightweight Issues
 
