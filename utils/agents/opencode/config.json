@@ -53,8 +53,8 @@
         "apiKey": "{env:AI_KILIC_DEV_API_KEY}"
       },
       "models": {
-        "glm-5.1:cloud": {
-          "name": "GLM-5.1 Cloud"
+        "deepseek-v4-pro": {
+          "name": "DeepSeek V4 Pro"
         },
         "kimi-k2.6:cloud": {
           "name": "Kimi K2.6 Cloud"
@@ -64,6 +64,9 @@
         },
         "gemma4:31b-cloud": {
           "name": "Gemma4 Cloud"
+        },
+        "deepseek-v4-flash": {
+          "name": "DeepSeek V4 Flash"
         },
         "gemma4:e2b": {
           "name": "Gemma4 e2b"
