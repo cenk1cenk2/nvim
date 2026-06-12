@@ -25,6 +25,13 @@ function M.config()
           wezterm = false, -- Flatten all instance in the current Wezterm session
         },
         hooks = {
+          pipe_path = function()
+            if vim.env.NVIM_FLATTEN_DISABLE == "1" then
+              return
+            end
+
+            return require("flatten").hooks.pipe_path()
+          end,
           guest_data = function()
             return require("ck.modules.flatten").guest_data()
           end,

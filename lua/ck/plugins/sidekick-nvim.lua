@@ -52,7 +52,11 @@ function M.config()
                   },
                 }),
               },
-              env = {},
+              env = {
+                EDITOR = "nvim",
+                NVIM_FLATTEN_DISABLE = "1",
+                VISUAL = "nvim",
+              },
               url = "https://github.com/hyprpilot/hyprpilot",
             },
           },
