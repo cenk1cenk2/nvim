@@ -27,9 +27,7 @@ function M.config()
         },
         ignore = { --			|windows.ignore|
           buftype = { "quickfix", "nofile" },
-          filetype = vim.list_extend(vim.deepcopy(nvim.disabled_filetypes), {
-            "sidekick_terminal",
-          }),
+          filetype = nvim.disabled_filetypes,
         },
         animation = {
           enable = false,

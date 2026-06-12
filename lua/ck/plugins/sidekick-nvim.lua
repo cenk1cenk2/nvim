@@ -14,6 +14,11 @@ function M.config()
         event = { "BufReadPost", "BufNewFile", "BufNew" },
       }
     end,
+    configure = function(_, fn)
+      fn.add_disabled_filetypes({
+        "sidekick_terminal",
+      })
+    end,
     setup = function()
       return {
         jump = {
