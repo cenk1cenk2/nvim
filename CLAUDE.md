@@ -18,6 +18,10 @@ This repository is a personal Neovim configuration forked from LunarVim. Startup
 ## Decision Log
 
 - **Sidekick CLI terminals use central Hyprpilot spawn**
-  - Chose: configure `folke/sidekick.nvim` with one Sidekick tool, `hyprpilot`; `<Leader>ctt` launches `hyprpilot spawn`, while `<Leader>ctr` uses the same tool with alternate startup args `hyprpilot spawn --restore`. Both commands append a dynamic `--with-config @<json>` profile patch that injects the current Neovim instance's `hyprpilot-nvim` MCP server via `vim.v.servername`.
-  - Why: Hyprpilot owns provider/profile selection for Claude, Codex, and opencode, and restore is just an alternate launch mode of that same tool rather than a distinct Sidekick tool. The Sidekick-spawned provider should still get the same live-editor MCP bridge as normal `hyprpilot.nvim` daemon instances.
-  - Rejected: direct `claude`/`claudectx` Sidekick commands and a separate `hyprrestore` tool — they either bypass the central provider picker or duplicate one tool under a second Sidekick name.
+  - Chose: configure `folke/sidekick.nvim` with one Sidekick tool, `hyprpilot`; `<Leader>ctt` launches `hyprpilot spawn` with a dynamic `--with-config @<json>` profile patch that injects the current Neovim instance's `hyprpilot-nvim` MCP server via `vim.v.servername`.
+  - Sidekick should run `hyprpilot spawn` directly in its Neovim terminal, without `cli.mux` and without an `is_proc` regex that matches provider CLIs. `hyprpilot spawn` `exec`s the selected provider into the same pty, so Sidekick keeps one terminal/session and context sends stay simple.
+  - Keep the Sidekick `hyprpilot spawn` command shape inline in the tool config and pass simple Sidekick target opts directly in mappings. Do not add one-use constants/helpers for the `hyprpilot-nvim` MCP server name, package name, config patch, or static session opts.
+  - Keep the right-side split at a stable 40% of the editor via `cli.win.split.width = 0.4`. Do not recompute from the current window on every terminal creation; that creeps smaller when focus starts from an already-split window.
+  - `windows.nvim` must ignore `sidekick_terminal`; otherwise its WinEnter autowidth logic fights Sidekick's fixed terminal split and the width creeps while moving with `<C-h>` / `<C-l>`.
+  - Why: Hyprpilot owns provider/profile selection for Claude, Codex, and opencode. Avoid Sidekick tmux/process discovery here; it can create duplicate/mirrored panes when the provider process replaces `hyprpilot`.
+  - Rejected: direct `claude`/`claudectx` Sidekick commands, Sidekick `cli.mux` for this tool, provider-process `is_proc` matching, restore-specific Sidekick mappings, and a separate `hyprrestore` tool.

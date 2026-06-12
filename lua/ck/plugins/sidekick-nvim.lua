@@ -25,23 +25,35 @@ function M.config()
         },
         cli = {
           watch = true,
-          mux = {
-            backend = "tmux",
-            enabled = true,
-            create = "terminal", ---@type "terminal"|"window"|"split"
-            split = {
-              vertical = true, -- vertical or horizontal split
-              size = 0.4, -- size of the split (0-1 for percentage)
-            },
-          },
           tools = {
             [M.SIDEKICK_TOOL] = {
-              cmd = M.sidekick_cmd(),
+              cmd = {
+                "hyprpilot",
+                "spawn",
+                "--with-config",
+                "@" .. vim.json.encode({
+                  mcps = {
+                    {
+                      mcpServers = {
+                        ["hyprpilot-nvim"] = {
+                          command = "uvx",
+                          args = { "hyprpilot-nvim-mcp@latest" },
+                          env = {
+                            NVIM_LISTEN_ADDRESS = vim.v.servername,
+                          },
+                        },
+                      },
+                    },
+                  },
+                }),
+              },
               url = "https://github.com/hyprpilot/hyprpilot",
-              is_proc = M.SIDEKICK_IS_PROC,
             },
           },
           win = {
+            split = {
+              width = 0.4,
+            },
             keys = {
               buffers = { "<c-b>", "buffers", mode = "nt", desc = "open buffer picker" },
               files = { "<c-f>", "files", mode = "nt", desc = "open file picker" },
@@ -91,32 +103,21 @@ function M.config()
       return {
         {
           fn.wk_keystroke({ categories.COPILOT, "t" }),
-          group = "terminals",
+          group = "sidekick",
           mode = { "n", "v" },
         },
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "t" }),
           function()
-            M.toggle_sidekick()
+            require("sidekick.cli").toggle({ name = M.SIDEKICK_TOOL, focus = true })
           end,
           desc = "toggle [hyprpilot]",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "t", "r" }),
-          function()
-            M.toggle_sidekick({ restore = true })
-          end,
-          desc = "restore cwd [hyprpilot]",
-          mode = { "n", "v" },
-        },
-        {
           fn.wk_keystroke({ categories.COPILOT, "t", "<Space>" }),
           function()
-            local opts = M.sidekick_session_opts()
-            if opts then
-              require("sidekick.cli").focus(opts)
-            end
+            require("sidekick.cli").focus({ name = M.SIDEKICK_TOOL, focus = true })
           end,
           desc = "focus [sidekick]",
           mode = { "n", "v" },
@@ -124,16 +125,11 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "<CR>" }),
           function()
-            local opts = M.sidekick_session_opts()
-            if not opts then
-              return
-            end
-
             local cli = require("sidekick.cli")
 
             cli.prompt(function(_, text)
               if text then
-                cli.send(vim.tbl_extend("force", opts, { text = text }))
+                cli.send({ name = M.SIDEKICK_TOOL, focus = true, text = text })
               end
             end)
           end,
@@ -143,10 +139,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "f" }),
           function()
-            local opts = M.sidekick_session_opts()
-            if opts then
-              require("sidekick.cli.picker").open("files", opts)
-            end
+            require("sidekick.cli.picker").open("files", { name = M.SIDEKICK_TOOL, focus = true })
           end,
           desc = "add file context [sidekick]",
           mode = { "n", "v" },
@@ -154,10 +147,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "b" }),
           function()
-            local opts = M.sidekick_session_opts()
-            if opts then
-              require("sidekick.cli.picker").open("buffers", opts)
-            end
+            require("sidekick.cli.picker").open("buffers", { name = M.SIDEKICK_TOOL, focus = true })
           end,
           desc = "add buffer context [sidekick]",
           mode = { "n", "v" },
@@ -165,10 +155,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "g" }),
           function()
-            local opts = M.sidekick_session_opts()
-            if opts then
-              require("sidekick.cli.picker").open("grep", opts)
-            end
+            require("sidekick.cli.picker").open("grep", { name = M.SIDEKICK_TOOL, focus = true })
           end,
           desc = "add grep context [sidekick]",
           mode = { "n", "v" },
@@ -176,10 +163,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "d" }),
           function()
-            local opts = M.sidekick_session_opts()
-            if opts then
-              require("sidekick.cli.picker").open("diagnostics", opts)
-            end
+            require("sidekick.cli.picker").open("diagnostics", { name = M.SIDEKICK_TOOL, focus = true })
           end,
           desc = "add diagnostics context [sidekick]",
           mode = { "n", "v" },
@@ -187,10 +171,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "q" }),
           function()
-            local opts = M.sidekick_session_opts()
-            if opts then
-              require("sidekick.cli.picker").open("qflist", opts)
-            end
+            require("sidekick.cli.picker").open("qflist", { name = M.SIDEKICK_TOOL, focus = true })
           end,
           desc = "add quickfix context [sidekick]",
           mode = { "n", "v" },
@@ -245,101 +226,5 @@ function M.config()
 end
 
 M.SIDEKICK_TOOL = "hyprpilot"
-M.SIDEKICK_IS_PROC = "\\<hyprpilot\\>\\|\\<claude\\>\\|\\<codex\\>\\|\\<opencode\\>"
-M.HYPRPILOT_NVIM_MCP_SERVER = "hyprpilot-nvim"
-M.HYPRPILOT_NVIM_MCP_PACKAGE = "hyprpilot-nvim-mcp@latest"
-
-function M.hyprpilot_nvim_mcp_patch()
-  return {
-    mcps = {
-      {
-        mcpServers = {
-          [M.HYPRPILOT_NVIM_MCP_SERVER] = {
-            command = "uvx",
-            args = { M.HYPRPILOT_NVIM_MCP_PACKAGE },
-            env = {
-              NVIM_LISTEN_ADDRESS = vim.v.servername,
-            },
-          },
-        },
-      },
-    },
-  }
-end
-
-function M.sidekick_cmd(opts)
-  opts = opts or {}
-
-  local cmd = { "hyprpilot", "spawn" }
-  if opts.restore then
-    cmd[#cmd + 1] = "--restore"
-  end
-  vim.list_extend(cmd, {
-    "--with-config",
-    "@" .. vim.json.encode(M.hyprpilot_nvim_mcp_patch()),
-  })
-
-  return cmd
-end
-
-function M.toggle_sidekick(opts)
-  opts = opts or {}
-
-  if not opts.restore then
-    require("sidekick.cli").toggle({ name = M.SIDEKICK_TOOL, focus = true })
-
-    return
-  end
-
-  require("sidekick.cli.ui.select").select({
-    auto = true,
-    filter = { name = M.SIDEKICK_TOOL },
-    cb = function(state)
-      if not state then
-        return
-      end
-
-      if state.session then
-        M.open_sidekick_state(state)
-
-        return
-      end
-
-      M.open_sidekick_state(M.sidekick_restore_state(state))
-    end,
-  })
-end
-
-function M.open_sidekick_state(state)
-  state = require("sidekick.cli.state").attach(state, { show = true, focus = true })
-
-  if not state.terminal then
-    return
-  end
-
-  if state.terminal:is_open() and not state.terminal:is_focused() then
-    state.terminal:focus()
-  end
-end
-
-function M.sidekick_restore_state(state)
-  local session = require("sidekick.cli.session").new({
-    tool = state.tool:clone({
-      cmd = M.sidekick_cmd({ restore = true }),
-    }),
-  })
-
-  return require("sidekick.cli.state").get_state(session)
-end
-
-function M.sidekick_session_opts()
-  if #require("sidekick.cli.state").get({ name = M.SIDEKICK_TOOL, attached = true }) == 0 then
-    log:warn("Start a Hyprpilot Sidekick terminal with <Leader>ctt or <Leader>ctr first.")
-
-    return
-  end
-
-  return { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } }
-end
 
 return M

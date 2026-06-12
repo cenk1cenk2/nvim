@@ -301,7 +301,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "A" }),
+          fn.wk_keystroke({ categories.COPILOT, "a" }),
           function()
             require("hyprpilot.composer").paste_selection()
           end,
