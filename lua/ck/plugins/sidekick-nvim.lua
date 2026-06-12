@@ -52,6 +52,7 @@ function M.config()
                   },
                 }),
               },
+              env = {},
               url = "https://github.com/hyprpilot/hyprpilot",
             },
           },
@@ -60,13 +61,13 @@ function M.config()
               width = 0.4,
             },
             keys = {
-              buffers = { "<c-b>", "buffers", mode = "nt", desc = "open buffer picker" },
-              files = { "<c-f>", "files", mode = "nt", desc = "open file picker" },
+              buffers = false,
+              files = false,
               hide_n = { "q", "hide", mode = "n", desc = "hide the terminal window" },
               hide_ctrl_q = { "<c-q>", "hide", mode = "n", desc = "hide the terminal window" },
-              hide_ctrl_dot = { "<c-.>", "hide", mode = "nt", desc = "hide the terminal window" },
-              hide_ctrl_z = { "<c-z>", "blur", mode = "nt", desc = "go back to the previous window without hiding the terminal" },
-              prompt = { "<c-p>", "prompt", mode = "t", desc = "insert prompt or context" },
+              hide_ctrl_dot = false,
+              hide_ctrl_z = { "<c- >", "blur", mode = "nt", desc = "go back to the previous window without hiding the terminal" },
+              prompt = false,
               stopinsert = { "<c-q>", "stopinsert", mode = "t", desc = "enter normal mode" },
               -- Navigate windows in terminal mode. Only active when:
               -- * layout is not "float"
@@ -122,7 +123,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "<Space>" }),
           function()
-            require("sidekick.cli").focus({ name = M.SIDEKICK_TOOL, focus = true })
+            require("sidekick.cli").focus({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
           desc = "focus [sidekick]",
           mode = { "n", "v" },
@@ -134,7 +135,7 @@ function M.config()
 
             cli.prompt(function(_, text)
               if text then
-                cli.send({ name = M.SIDEKICK_TOOL, focus = true, text = text })
+                cli.send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, text = text })
               end
             end)
           end,
@@ -144,7 +145,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "f" }),
           function()
-            require("sidekick.cli.picker").open("files", { name = M.SIDEKICK_TOOL, focus = true })
+            require("sidekick.cli.picker").open("files", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
           desc = "add file context [sidekick]",
           mode = { "n", "v" },
@@ -152,7 +153,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "b" }),
           function()
-            require("sidekick.cli.picker").open("buffers", { name = M.SIDEKICK_TOOL, focus = true })
+            require("sidekick.cli.picker").open("buffers", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
           desc = "add buffer context [sidekick]",
           mode = { "n", "v" },
@@ -160,7 +161,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "g" }),
           function()
-            require("sidekick.cli.picker").open("grep", { name = M.SIDEKICK_TOOL, focus = true })
+            require("sidekick.cli.picker").open("grep", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
           desc = "add grep context [sidekick]",
           mode = { "n", "v" },
@@ -168,7 +169,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "d" }),
           function()
-            require("sidekick.cli.picker").open("diagnostics", { name = M.SIDEKICK_TOOL, focus = true })
+            require("sidekick.cli.picker").open("diagnostics", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
           desc = "add diagnostics context [sidekick]",
           mode = { "n", "v" },
@@ -176,7 +177,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.COPILOT, "t", "q" }),
           function()
-            require("sidekick.cli.picker").open("qflist", { name = M.SIDEKICK_TOOL, focus = true })
+            require("sidekick.cli.picker").open("qflist", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
           desc = "add quickfix context [sidekick]",
           mode = { "n", "v" },
