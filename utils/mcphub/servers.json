@@ -914,7 +914,7 @@
       }
     },
     "terraform": {
-      "args": ["run", "-i", "--rm", "hashicorp/terraform-mcp-server:0.5.1", "stdio", "--toolsets=registry"],
+      "args": ["run", "-i", "--rm", "hashicorp/terraform-mcp-server", "stdio", "--toolsets=registry"],
       "autoApprove": [
         "search_providers",
         "get_provider_details",
