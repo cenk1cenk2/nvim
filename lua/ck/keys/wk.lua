@@ -5,6 +5,7 @@ local M = {}
 ---@field BOOKMARKS string
 ---@field BUFFER string
 ---@field COPILOT string
+---@field SIDEKICK string
 ---@field DEBUG string
 ---@field FIND string
 ---@field GIT string
@@ -27,6 +28,7 @@ M.CATEGORIES = {
   BOOKMARKS = "m",
   BUFFER = "b",
   COPILOT = "c",
+  SIDEKICK = "C",
   DEBUG = "d",
   FIND = "f",
   GIT = "g",

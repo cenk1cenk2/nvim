@@ -54,8 +54,8 @@ function M.config()
               },
               env = {
                 EDITOR = "nvim",
-                NVIM_FLATTEN_DISABLE = "1",
                 VISUAL = "nvim",
+                NVIM_FLATTEN_DISABLE = "1",
               },
               url = "https://github.com/hyprpilot/hyprpilot",
             },
@@ -112,12 +112,12 @@ function M.config()
       ---@type WKMappings
       return {
         {
-          fn.wk_keystroke({ categories.COPILOT, "t" }),
+          fn.wk_keystroke({ categories.SIDEKICK }),
           group = "sidekick",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "t", "t" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "c" }),
           function()
             require("sidekick.cli").toggle({ name = M.SIDEKICK_TOOL, focus = true })
           end,
@@ -125,7 +125,7 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "t", "<Space>" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "<Space>" }),
           function()
             require("sidekick.cli").focus({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
@@ -133,7 +133,7 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "t", "<CR>" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "<CR>" }),
           function()
             local cli = require("sidekick.cli")
 
@@ -147,7 +147,63 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "t", "f" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "a" }),
+          function()
+            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{file}" })
+          end,
+          desc = "send current file [sidekick]",
+          mode = { "n" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "a" }),
+          function()
+            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{selection}" })
+          end,
+          desc = "send selection [sidekick]",
+          mode = { "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "." }),
+          function()
+            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{this}" })
+          end,
+          desc = "send this [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "B" }),
+          function()
+            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{buffers}" })
+          end,
+          desc = "send buffers [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "D" }),
+          function()
+            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{diagnostics}" })
+          end,
+          desc = "send diagnostics [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "Q" }),
+          function()
+            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{quickfix}" })
+          end,
+          desc = "send quickfix [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "X" }),
+          function()
+            require("sidekick.cli").close({ name = M.SIDEKICK_TOOL, filter = { attached = true } })
+          end,
+          desc = "close [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "f" }),
           function()
             require("sidekick.cli.picker").open("files", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
@@ -155,7 +211,7 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "t", "b" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "b" }),
           function()
             require("sidekick.cli.picker").open("buffers", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
@@ -163,7 +219,7 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "t", "g" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "g" }),
           function()
             require("sidekick.cli.picker").open("grep", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
@@ -171,7 +227,7 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "t", "d" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "d" }),
           function()
             require("sidekick.cli.picker").open("diagnostics", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
@@ -179,7 +235,7 @@ function M.config()
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "t", "q" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "q" }),
           function()
             require("sidekick.cli.picker").open("qflist", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
           end,
