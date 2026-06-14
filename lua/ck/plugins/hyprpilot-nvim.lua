@@ -138,6 +138,14 @@ function M.config()
           mode = { "n" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "l" }),
+          function()
+            require("hyprpilot.chat.window").trim()
+          end,
+          desc = "trim chat buffer [hyprpilot]",
+          mode = { "n" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "." }),
           function()
             require("hyprpilot.rpc.permissions").accept()
