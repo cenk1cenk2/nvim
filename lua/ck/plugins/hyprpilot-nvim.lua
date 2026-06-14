@@ -138,14 +138,6 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "l" }),
-          function()
-            require("hyprpilot.chat.window").trim()
-          end,
-          desc = "trim chat buffer [hyprpilot]",
-          mode = { "n" },
-        },
-        {
           fn.wk_keystroke({ categories.COPILOT, "." }),
           function()
             require("hyprpilot.rpc.permissions").accept()
@@ -239,19 +231,27 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "X" }),
+          fn.wk_keystroke({ categories.COPILOT, "d" }),
           function()
-            require("hyprpilot.rpc.instances").shutdown()
+            require("hyprpilot.rpc.instances").toggle_keep_alive()
           end,
-          desc = "shutdown current [hyprpilot]",
+          desc = "toggle keep-alive across nvim quit [hyprpilot]",
           mode = { "n" },
         },
         {
           fn.wk_keystroke({ categories.COPILOT, "x" }),
           function()
-            require("hyprpilot.rpc.instances").toggle_keep_alive()
+            require("hyprpilot.chat.window").trim()
           end,
-          desc = "toggle keep-alive across nvim quit [hyprpilot]",
+          desc = "trim chat buffer [hyprpilot]",
+          mode = { "n" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "X" }),
+          function()
+            require("hyprpilot.rpc.instances").shutdown()
+          end,
+          desc = "shutdown current [hyprpilot]",
           mode = { "n" },
         },
         {
