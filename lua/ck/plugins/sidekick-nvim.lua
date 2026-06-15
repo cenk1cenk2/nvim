@@ -33,7 +33,7 @@ function M.config()
           tools = {},
           mux = {
             backend = "tmux",
-            enabled = false,
+            enabled = true,
             create = "terminal", ---@type "terminal"|"window"|"split"
             split = {
               vertical = true, -- vertical or horizontal split
