@@ -353,14 +353,23 @@ function M.instance_opts(opts)
   }, opts or {})
 end
 
+function M.show_instance(index)
+  local previous = M.current_instance
+
+  if previous > 0 and previous ~= index and M.instances[previous] then
+    require("sidekick.cli").hide({ name = M.instances[previous].name, filter = { attached = true } })
+  end
+
+  M.current_instance = index
+  M.get_current_instance()
+  require("sidekick.cli").show(M.instance_opts({ focus = true, filter = { attached = true } }))
+end
+
 function M.create_instance(index)
   index = index or #M.instances + 1
-  M.current_instance = index
-
   local instance = M.instances[index] or M.register_instance(index)
 
-  require("sidekick.cli").hide({ all = true, filter = { attached = true } })
-  require("sidekick.cli").toggle(M.instance_opts({ focus = true }))
+  M.show_instance(index)
 
   log:debug("Sidekick created: %s", instance.name)
 
@@ -409,9 +418,7 @@ function M.pick_instance()
       return
     end
 
-    M.current_instance = instance.index
-    require("sidekick.cli").hide({ all = true, filter = { attached = true } })
-    require("sidekick.cli").show(M.instance_opts({ focus = true, filter = { attached = true } }))
+    M.show_instance(instance.index)
   end)
 end
 
@@ -437,9 +444,7 @@ function M.select_instance(action)
     position = position == 1 and #instances or position - 1
   end
 
-  M.current_instance = instances[position].index
-  require("sidekick.cli").hide({ all = true, filter = { attached = true } })
-  require("sidekick.cli").show(M.instance_opts({ focus = true, filter = { attached = true } }))
+  M.show_instance(instances[position].index)
 
   log:debug("Sidekick switched: %s", M.get_current_instance().name)
 end
