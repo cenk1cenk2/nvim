@@ -31,6 +31,15 @@ function M.config()
         cli = {
           watch = true,
           tools = {},
+          mux = {
+            backend = "tmux",
+            enabled = false,
+            create = "split", ---@type "terminal"|"window"|"split"
+            split = {
+              vertical = true, -- vertical or horizontal split
+              size = 0.4, -- size of the split (0-1 for percentage)
+            },
+          },
           win = {
             split = {
               width = 0.4,
