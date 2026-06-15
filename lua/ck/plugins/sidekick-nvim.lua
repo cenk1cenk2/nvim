@@ -34,7 +34,7 @@ function M.config()
           mux = {
             backend = "tmux",
             enabled = false,
-            create = "split", ---@type "terminal"|"window"|"split"
+            create = "terminal", ---@type "terminal"|"window"|"split"
             split = {
               vertical = true, -- vertical or horizontal split
               size = 0.4, -- size of the split (0-1 for percentage)
@@ -62,6 +62,26 @@ function M.config()
               nav_up = { "<c-k>", "nav_up", expr = true, desc = "navigate to the above window" },
               nav_right = { "<c-l>", "nav_right", expr = true, desc = "navigate to the right window" },
             },
+          },
+          prompts = {
+            changes = false,
+            diagnostics = false,
+            diagnostics_all = false,
+            document = false,
+            explain = false,
+            fix = false,
+            optimize = false,
+            review = false,
+            tests = false,
+            -- simple context prompts
+            buffers = "{buffers}",
+            file = "{file}",
+            line = "{line}",
+            position = "{position}",
+            quickfix = "{quickfix}",
+            selection = "{selection}",
+            ["function"] = "{function}",
+            class = "{class}",
           },
         },
         nes = {
