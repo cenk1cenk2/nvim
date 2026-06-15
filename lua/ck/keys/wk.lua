@@ -299,11 +299,11 @@ function M.setup()
             mode = { "n", "v" },
           },
 
-          -- copilot
+          -- overlord
 
           {
             fn.wk_keystroke({ categories.COPILOT }),
-            group = "copilot",
+            group = "overlord",
             mode = { "n", "v" },
           },
 

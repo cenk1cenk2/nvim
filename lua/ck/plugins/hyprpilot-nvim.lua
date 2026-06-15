@@ -104,9 +104,15 @@ function M.config()
     wk = function(_, categories, fn)
       ---@type WKMappings
       return {
+        {
+          fn.wk_keystroke({ categories.SIDEKICK }),
+          group = "hyprpilot",
+          mode = { "n", "v" },
+        },
+
         -- chat window
         {
-          fn.wk_keystroke({ categories.COPILOT, "c" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "c" }),
           function()
             require("hyprpilot").toggle()
           end,
@@ -114,7 +120,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "<Space>" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "<Space>" }),
           function()
             require("hyprpilot.ui.window").focus()
           end,
@@ -122,7 +128,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "<CR>" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "<CR>" }),
           function()
             require("hyprpilot.ui.window").scroll_to_end()
           end,
@@ -130,7 +136,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "<BS>" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "<BS>" }),
           function()
             require("hyprpilot.ui.window").focus({ target = "permission" })
           end,
@@ -138,7 +144,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "." }),
+          fn.wk_keystroke({ categories.SIDEKICK, "." }),
           function()
             require("hyprpilot.rpc.permissions").accept()
           end,
@@ -146,7 +152,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "," }),
+          fn.wk_keystroke({ categories.SIDEKICK, "," }),
           function()
             require("hyprpilot.rpc.permissions").reject()
           end,
@@ -154,7 +160,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "<DEL>" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "<DEL>" }),
           function()
             require("hyprpilot.ui.window").focus({ target = "queue" })
           end,
@@ -162,7 +168,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "o" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "o" }),
           function()
             require("hyprpilot.client").request(
               "overlay/show",
@@ -181,7 +187,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "n" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "n" }),
           function()
             require("hyprpilot.palettes.attention").open()
           end,
@@ -191,7 +197,7 @@ function M.config()
 
         -- multi-instance
         {
-          fn.wk_keystroke({ categories.COPILOT, "C" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "C" }),
           function()
             require("hyprpilot.palettes.profiles").open()
           end,
@@ -199,7 +205,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "N" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "N" }),
           function()
             require("hyprpilot.rpc.instances").fork()
           end,
@@ -207,7 +213,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "s" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "s" }),
           function()
             require("hyprpilot.palettes.sessions").open()
           end,
@@ -215,7 +221,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "S" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "S" }),
           function()
             require("hyprpilot.palettes.sessions").open_with()
           end,
@@ -223,7 +229,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "R" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "R" }),
           function()
             require("hyprpilot.rpc.instances").restart()
           end,
@@ -231,7 +237,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "d" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "d" }),
           function()
             require("hyprpilot.rpc.instances").toggle_keep_alive()
           end,
@@ -239,7 +245,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "x" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "x" }),
           function()
             require("hyprpilot.chat.window").trim()
           end,
@@ -247,7 +253,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "X" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "X" }),
           function()
             require("hyprpilot.rpc.instances").shutdown()
           end,
@@ -255,7 +261,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "f" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "f" }),
           function()
             require("hyprpilot.palettes.instances").open()
           end,
@@ -263,7 +269,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "F" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "F" }),
           function()
             require("hyprpilot.palettes.instances").open_attached()
           end,
@@ -273,7 +279,7 @@ function M.config()
 
         -- composer attachments
         {
-          fn.wk_keystroke({ categories.COPILOT, "a" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "a" }),
           function()
             require("hyprpilot.composer").attach_buffer()
           end,
@@ -281,7 +287,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "p" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "p" }),
           function()
             local path = vim.fn.input("attach file: ", "", "file")
             if path == nil or path == "" then
@@ -293,7 +299,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "P" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "P" }),
           function()
             require("hyprpilot.composer").attach_clipboard()
           end,
@@ -301,7 +307,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "A" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "A" }),
           function()
             require("hyprpilot.composer").paste_buffer()
           end,
@@ -309,7 +315,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "a" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "a" }),
           function()
             require("hyprpilot.composer").paste_selection()
           end,
@@ -318,12 +324,12 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.COPILOT, "m" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "m" }),
           group = "adapter [hyprpilot]",
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "m", "m" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "m", "m" }),
           function()
             require("hyprpilot.palettes.modes").open()
           end,
@@ -331,7 +337,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "m", "a" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "m", "a" }),
           function()
             require("hyprpilot.palettes.models").open()
           end,
@@ -339,7 +345,7 @@ function M.config()
           mode = { "n" },
         },
         {
-          fn.wk_keystroke({ categories.COPILOT, "m", "e" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "m", "e" }),
           function()
             require("hyprpilot.palettes.effort").open()
           end,
