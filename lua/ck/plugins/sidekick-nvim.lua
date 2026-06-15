@@ -297,6 +297,37 @@ end
 M.instances = {}
 M.current_instance = 0
 
+function M.instance_config()
+  return {
+    cmd = {
+      "hyprpilot",
+      "spawn",
+      "--with-config",
+      "@" .. vim.json.encode({
+        mcps = {
+          {
+            mcpServers = {
+              ["hyprpilot-nvim"] = {
+                command = "uvx",
+                args = { "hyprpilot-nvim-mcp@latest" },
+                env = {
+                  NVIM_LISTEN_ADDRESS = vim.v.servername,
+                },
+              },
+            },
+          },
+        },
+      }),
+    },
+    env = {
+      EDITOR = "nvim",
+      VISUAL = "nvim",
+      NVIM_FLATTEN_DISABLE = "1",
+    },
+    url = "https://github.com/hyprpilot/hyprpilot",
+  }
+end
+
 function M.register_instance(index)
   local instance = {
     name = ("hyprpilot-%d"):format(index),
@@ -304,37 +335,8 @@ function M.register_instance(index)
 
   M.instances[index] = instance
 
-  local ok, config = pcall(require, "sidekick.config")
-  if ok then
-    config.cli.tools[instance.name] = {
-      cmd = {
-        "hyprpilot",
-        "spawn",
-        "--with-config",
-        "@" .. vim.json.encode({
-          mcps = {
-            {
-              mcpServers = {
-                ["hyprpilot-nvim"] = {
-                  command = "uvx",
-                  args = { "hyprpilot-nvim-mcp@latest" },
-                  env = {
-                    NVIM_LISTEN_ADDRESS = vim.v.servername,
-                  },
-                },
-              },
-            },
-          },
-        }),
-      },
-      env = {
-        EDITOR = "nvim",
-        VISUAL = "nvim",
-        NVIM_FLATTEN_DISABLE = "1",
-      },
-      url = "https://github.com/hyprpilot/hyprpilot",
-    }
-  end
+  local config = require("sidekick.config")
+  config.cli.tools[instance.name] = M.instance_config()
 
   return instance
 end
@@ -362,11 +364,16 @@ function M.show_instance(index)
 
   M.current_instance = index
   M.get_current_instance()
-  require("sidekick.cli").show(M.instance_opts({ focus = true, filter = { attached = true } }))
+  require("sidekick.cli").show(M.instance_opts({ focus = true }))
 end
 
 function M.create_instance(index)
-  index = index or #M.instances + 1
+  if not index then
+    index = 1
+    while M.instances[index] do
+      index = index + 1
+    end
+  end
   local instance = M.instances[index] or M.register_instance(index)
 
   M.show_instance(index)
@@ -380,7 +387,7 @@ function M.attached_instances()
   local state = require("sidekick.cli.state")
   local instances = {}
 
-  for index, instance in ipairs(M.instances) do
+  for index, instance in pairs(M.instances) do
     local matches = state.get({ name = instance.name, attached = true })
     if #matches > 0 then
       table.insert(
@@ -393,6 +400,10 @@ function M.attached_instances()
     end
   end
 
+  table.sort(instances, function(a, b)
+    return a.index < b.index
+  end)
+
   return instances
 end
 
@@ -400,33 +411,104 @@ function M.pick_instance()
   local instances = M.attached_instances()
 
   if vim.tbl_isempty(instances) then
-    M.create_instance(1)
+    log:warn("No sidekick instances.")
     return
   end
 
-  vim.ui.select(instances, {
-    prompt = "Select sidekick instance:",
-    format_item = function(instance)
-      local marker = instance.index == M.current_instance and "*" or " "
-      local cwd = instance.state.session and vim.fn.fnamemodify(instance.state.session.cwd, ":p:~") or ""
-      local buf = instance.state.terminal and instance.state.terminal.buf and ("buf:%d"):format(instance.state.terminal.buf) or ""
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+  local finders = require("telescope.finders")
+  local pickers = require("telescope.pickers")
+  local previewers = require("telescope.previewers")
+  local conf = require("telescope.config").values
 
-      return ("%s %d: %s %s %s"):format(marker, instance.index, instance.name, buf, cwd)
-    end,
-  }, function(instance)
-    if not instance then
-      return
-    end
+  local entry_maker = function(instance)
+    local marker = instance.index == M.current_instance and "*" or " "
+    local cwd = instance.state.session and vim.fn.fnamemodify(instance.state.session.cwd, ":p:~") or ""
+    local buf = instance.state.terminal and instance.state.terminal.buf and ("buf:%d"):format(instance.state.terminal.buf) or ""
+    local label = ("%s %d: %s %s %s"):format(marker, instance.index, instance.name, buf, cwd)
 
-    M.show_instance(instance.index)
-  end)
+    return {
+      value = instance,
+      display = label,
+      ordinal = label,
+    }
+  end
+
+  local finder = function()
+    return finders.new_table({
+      results = M.attached_instances(),
+      entry_maker = entry_maker,
+    })
+  end
+
+  pickers
+    .new({}, {
+      prompt_title = "Sidekick instances",
+      finder = finder(),
+      sorter = conf.generic_sorter({}),
+      previewer = previewers.new_buffer_previewer({
+        define_preview = function(self, entry)
+          local terminal = entry.value.state.terminal
+          local buf = terminal and terminal.buf
+          if not buf or not vim.api.nvim_buf_is_valid(buf) then
+            vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, { "No terminal buffer available." })
+            return
+          end
+
+          local line_count = vim.api.nvim_buf_line_count(buf)
+          local start = math.max(line_count - 200, 0)
+          local lines = vim.api.nvim_buf_get_lines(buf, start, -1, false)
+          vim.api.nvim_buf_set_lines(self.state.bufnr, 0, -1, false, lines)
+        end,
+      }),
+      attach_mappings = function(prompt_bufnr, map)
+        local delete = function()
+          local entry = action_state.get_selected_entry()
+          if not entry then
+            return
+          end
+
+          require("sidekick.cli").close({ name = entry.value.name, filter = { attached = true } })
+          M.instances[entry.value.index] = nil
+          if M.current_instance == entry.value.index then
+            M.current_instance = 0
+          end
+
+          local picker = action_state.get_current_picker(prompt_bufnr)
+          local remaining = M.attached_instances()
+          if vim.tbl_isempty(remaining) then
+            actions.close(prompt_bufnr)
+            log:warn("No sidekick instances.")
+            return
+          end
+
+          picker:refresh(finder(), { reset_prompt = true })
+        end
+
+        actions.select_default:replace(function()
+          local entry = action_state.get_selected_entry()
+          actions.close(prompt_bufnr)
+
+          if entry then
+            M.show_instance(entry.value.index)
+          end
+        end)
+
+        map({ "i", "n" }, "<C-d>", delete)
+        map({ "i", "n" }, "<C-x>", delete)
+
+        return true
+      end,
+    })
+    :find()
 end
 
 function M.select_instance(action)
   local instances = M.attached_instances()
 
   if vim.tbl_isempty(instances) then
-    M.create_instance(1)
+    log:warn("No sidekick instances.")
     return
   end
 
