@@ -30,36 +30,7 @@ function M.config()
         },
         cli = {
           watch = true,
-          tools = {
-            [M.SIDEKICK_TOOL] = {
-              cmd = {
-                "hyprpilot",
-                "spawn",
-                "--with-config",
-                "@" .. vim.json.encode({
-                  mcps = {
-                    {
-                      mcpServers = {
-                        ["hyprpilot-nvim"] = {
-                          command = "uvx",
-                          args = { "hyprpilot-nvim-mcp@latest" },
-                          env = {
-                            NVIM_LISTEN_ADDRESS = vim.v.servername,
-                          },
-                        },
-                      },
-                    },
-                  },
-                }),
-              },
-              env = {
-                EDITOR = "nvim",
-                VISUAL = "nvim",
-                NVIM_FLATTEN_DISABLE = "1",
-              },
-              url = "https://github.com/hyprpilot/hyprpilot",
-            },
-          },
+          tools = {},
           win = {
             split = {
               width = 0.4,
@@ -86,7 +57,7 @@ function M.config()
         },
         nes = {
           ---@type boolean|fun(buf:integer):boolean?
-          enabled = function(buf)
+          enabled = function(_)
             return vim.g.sidekick_nes ~= false and vim.b.sidekick_nes ~= false and nvim.lsp.ai.copilot.nes.enabled
           end,
           debounce = nvim.lsp.ai.copilot.nes.debounce,
@@ -119,7 +90,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.SIDEKICK, "c" }),
           function()
-            require("sidekick.cli").toggle({ name = M.SIDEKICK_TOOL, focus = true })
+            require("sidekick.cli").toggle(M.instance_opts({ focus = true }))
           end,
           desc = "toggle [hyprpilot]",
           mode = { "n", "v" },
@@ -127,9 +98,41 @@ function M.config()
         {
           fn.wk_keystroke({ categories.SIDEKICK, "<Space>" }),
           function()
-            require("sidekick.cli").focus({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
+            require("sidekick.cli").focus(M.instance_opts({ focus = true, filter = { attached = true } }))
           end,
           desc = "focus [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "C" }),
+          function()
+            M.create_instance()
+          end,
+          desc = "new [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "f" }),
+          function()
+            M.pick_instance()
+          end,
+          desc = "pick instance [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "n" }),
+          function()
+            M.select_instance("next")
+          end,
+          desc = "next [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.SIDEKICK, "p" }),
+          function()
+            M.select_instance("prev")
+          end,
+          desc = "previous [sidekick]",
           mode = { "n", "v" },
         },
         {
@@ -139,7 +142,7 @@ function M.config()
 
             cli.prompt(function(_, text)
               if text then
-                cli.send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, text = text })
+                cli.send(M.instance_opts({ focus = true, filter = { attached = true }, text = text }))
               end
             end)
           end,
@@ -149,7 +152,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.SIDEKICK, "a" }),
           function()
-            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{file}" })
+            require("sidekick.cli").send(M.instance_opts({ focus = true, filter = { attached = true }, msg = "{file}" }))
           end,
           desc = "send current file [sidekick]",
           mode = { "n" },
@@ -157,7 +160,7 @@ function M.config()
         {
           fn.wk_keystroke({ categories.SIDEKICK, "a" }),
           function()
-            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{selection}" })
+            require("sidekick.cli").send(M.instance_opts({ focus = true, filter = { attached = true }, msg = "{selection}" }))
           end,
           desc = "send selection [sidekick]",
           mode = { "v" },
@@ -165,31 +168,31 @@ function M.config()
         {
           fn.wk_keystroke({ categories.SIDEKICK, "." }),
           function()
-            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{this}" })
+            require("sidekick.cli").send(M.instance_opts({ focus = true, filter = { attached = true }, msg = "{this}" }))
           end,
           desc = "send this [sidekick]",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.SIDEKICK, "B" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "b" }),
           function()
-            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{buffers}" })
+            require("sidekick.cli").send(M.instance_opts({ focus = true, filter = { attached = true }, msg = "{buffers}" }))
           end,
           desc = "send buffers [sidekick]",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.SIDEKICK, "D" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "d" }),
           function()
-            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{diagnostics}" })
+            require("sidekick.cli").send(M.instance_opts({ focus = true, filter = { attached = true }, msg = "{diagnostics}" }))
           end,
           desc = "send diagnostics [sidekick]",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.SIDEKICK, "Q" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "q" }),
           function()
-            require("sidekick.cli").send({ name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true }, msg = "{quickfix}" })
+            require("sidekick.cli").send(M.instance_opts({ focus = true, filter = { attached = true }, msg = "{quickfix}" }))
           end,
           desc = "send quickfix [sidekick]",
           mode = { "n", "v" },
@@ -197,47 +200,47 @@ function M.config()
         {
           fn.wk_keystroke({ categories.SIDEKICK, "X" }),
           function()
-            require("sidekick.cli").close({ name = M.SIDEKICK_TOOL, filter = { attached = true } })
+            require("sidekick.cli").close(M.instance_opts({ filter = { attached = true } }))
           end,
           desc = "close [sidekick]",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.SIDEKICK, "f" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "A" }),
           function()
-            require("sidekick.cli.picker").open("files", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
+            require("sidekick.cli.picker").open("files", M.instance_opts({ focus = true, filter = { attached = true } }))
           end,
           desc = "add file context [sidekick]",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.SIDEKICK, "b" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "B" }),
           function()
-            require("sidekick.cli.picker").open("buffers", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
+            require("sidekick.cli.picker").open("buffers", M.instance_opts({ focus = true, filter = { attached = true } }))
           end,
           desc = "add buffer context [sidekick]",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.SIDEKICK, "g" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "G" }),
           function()
-            require("sidekick.cli.picker").open("grep", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
+            require("sidekick.cli.picker").open("grep", M.instance_opts({ focus = true, filter = { attached = true } }))
           end,
           desc = "add grep context [sidekick]",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.SIDEKICK, "d" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "D" }),
           function()
-            require("sidekick.cli.picker").open("diagnostics", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
+            require("sidekick.cli.picker").open("diagnostics", M.instance_opts({ focus = true, filter = { attached = true } }))
           end,
           desc = "add diagnostics context [sidekick]",
           mode = { "n", "v" },
         },
         {
-          fn.wk_keystroke({ categories.SIDEKICK, "q" }),
+          fn.wk_keystroke({ categories.SIDEKICK, "Q" }),
           function()
-            require("sidekick.cli.picker").open("qflist", { name = M.SIDEKICK_TOOL, focus = true, filter = { attached = true } })
+            require("sidekick.cli.picker").open("qflist", M.instance_opts({ focus = true, filter = { attached = true } }))
           end,
           desc = "add quickfix context [sidekick]",
           mode = { "n", "v" },
@@ -291,6 +294,154 @@ function M.config()
   })
 end
 
-M.SIDEKICK_TOOL = "hyprpilot"
+M.instances = {}
+M.current_instance = 0
+
+function M.register_instance(index)
+  local instance = {
+    name = ("hyprpilot-%d"):format(index),
+  }
+
+  M.instances[index] = instance
+
+  local ok, config = pcall(require, "sidekick.config")
+  if ok then
+    config.cli.tools[instance.name] = {
+      cmd = {
+        "hyprpilot",
+        "spawn",
+        "--with-config",
+        "@" .. vim.json.encode({
+          mcps = {
+            {
+              mcpServers = {
+                ["hyprpilot-nvim"] = {
+                  command = "uvx",
+                  args = { "hyprpilot-nvim-mcp@latest" },
+                  env = {
+                    NVIM_LISTEN_ADDRESS = vim.v.servername,
+                  },
+                },
+              },
+            },
+          },
+        }),
+      },
+      env = {
+        EDITOR = "nvim",
+        VISUAL = "nvim",
+        NVIM_FLATTEN_DISABLE = "1",
+      },
+      url = "https://github.com/hyprpilot/hyprpilot",
+    }
+  end
+
+  return instance
+end
+
+function M.get_current_instance()
+  if M.current_instance == 0 then
+    M.current_instance = 1
+  end
+
+  return M.instances[M.current_instance] or M.register_instance(M.current_instance)
+end
+
+function M.instance_opts(opts)
+  return vim.tbl_deep_extend("force", {
+    name = M.get_current_instance().name,
+  }, opts or {})
+end
+
+function M.create_instance(index)
+  index = index or #M.instances + 1
+  M.current_instance = index
+
+  local instance = M.instances[index] or M.register_instance(index)
+
+  require("sidekick.cli").hide({ all = true, filter = { attached = true } })
+  require("sidekick.cli").toggle(M.instance_opts({ focus = true }))
+
+  log:debug("Sidekick created: %s", instance.name)
+
+  return instance
+end
+
+function M.attached_instances()
+  local state = require("sidekick.cli.state")
+  local instances = {}
+
+  for index, instance in ipairs(M.instances) do
+    local matches = state.get({ name = instance.name, attached = true })
+    if #matches > 0 then
+      table.insert(
+        instances,
+        vim.tbl_extend("force", instance, {
+          index = index,
+          state = matches[1],
+        })
+      )
+    end
+  end
+
+  return instances
+end
+
+function M.pick_instance()
+  local instances = M.attached_instances()
+
+  if vim.tbl_isempty(instances) then
+    M.create_instance(1)
+    return
+  end
+
+  vim.ui.select(instances, {
+    prompt = "Select sidekick instance:",
+    format_item = function(instance)
+      local marker = instance.index == M.current_instance and "*" or " "
+      local cwd = instance.state.session and vim.fn.fnamemodify(instance.state.session.cwd, ":p:~") or ""
+      local buf = instance.state.terminal and instance.state.terminal.buf and ("buf:%d"):format(instance.state.terminal.buf) or ""
+
+      return ("%s %d: %s %s %s"):format(marker, instance.index, instance.name, buf, cwd)
+    end,
+  }, function(instance)
+    if not instance then
+      return
+    end
+
+    M.current_instance = instance.index
+    require("sidekick.cli").hide({ all = true, filter = { attached = true } })
+    require("sidekick.cli").show(M.instance_opts({ focus = true, filter = { attached = true } }))
+  end)
+end
+
+function M.select_instance(action)
+  local instances = M.attached_instances()
+
+  if vim.tbl_isempty(instances) then
+    M.create_instance(1)
+    return
+  end
+
+  local position = 1
+  for i, instance in ipairs(instances) do
+    if instance.index == M.current_instance then
+      position = i
+      break
+    end
+  end
+
+  if action == "next" then
+    position = position == #instances and 1 or position + 1
+  elseif action == "prev" then
+    position = position == 1 and #instances or position - 1
+  end
+
+  M.current_instance = instances[position].index
+  require("sidekick.cli").hide({ all = true, filter = { attached = true } })
+  require("sidekick.cli").show(M.instance_opts({ focus = true, filter = { attached = true } }))
+
+  log:debug("Sidekick switched: %s", M.get_current_instance().name)
+end
 
 return M
