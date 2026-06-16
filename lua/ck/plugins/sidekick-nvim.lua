@@ -121,7 +121,7 @@ function M.config()
           function()
             require("sidekick.cli").toggle(M.instance_opts({ focus = true }))
           end,
-          desc = "toggle [hyprpilot]",
+          desc = "toggle [sidekick]",
           mode = { "n", "v" },
         },
         {
