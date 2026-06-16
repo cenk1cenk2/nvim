@@ -1,4 +1,4 @@
--- https://github.com/dlyongemallo/diffview-plus.nvim (maintained fork of sindrets/diffview.nvim)
+-- https://github.com/dlyongemallo/diffview-plus.nvim
 local M = {}
 
 local log = require("ck.log")
@@ -108,7 +108,7 @@ function M.config()
             -- tabpage is a Diffview.
             { "n", "<C-n>", actions.select_next_entry, { desc = "open the diff for the next file" } },
             { "n", "<C-p>", actions.select_prev_entry, { desc = "open the diff for the previous file" } },
-            { "n", "gf", actions.goto_file, { desc = "goto file" } },
+            { "n", "gf", actions.goto_file_edit, { desc = "goto file" } },
             { "n", "<localleader>o", actions.goto_file_edit, { desc = "open file" } },
             { "n", "<localleader>v", actions.goto_file_split, { desc = "goto file in split" } },
             { "n", "<localleader>n", actions.goto_file_tab, { desc = "goto file in tab" } },
