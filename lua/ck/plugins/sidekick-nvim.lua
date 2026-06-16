@@ -18,6 +18,26 @@ function M.config()
       fn.add_disabled_filetypes({
         "sidekick_terminal",
       })
+
+      fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
+        vim.list_extend(c.right, {
+          {
+            ft = "sidekick_terminal",
+            title = "Sidekick",
+            size = {
+              width = function()
+                if vim.o.columns < 180 then
+                  return 0.5
+                end
+
+                return 180
+              end,
+            },
+          },
+        })
+
+        return c
+      end)
     end,
     setup = function()
       return {
