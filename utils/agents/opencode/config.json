@@ -56,6 +56,9 @@
         "deepseek-v4-pro": {
           "name": "DeepSeek V4 Pro"
         },
+        "glm-5.2:cloud": {
+          "name": "GLM 5.2 Cloud"
+        },
         "kimi-k2.7-code:cloud": {
           "name": "Kimi K2.7 Code Cloud"
         },
