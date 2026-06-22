@@ -40,11 +40,11 @@ function M.config()
             ft = { "Avante", "AvanteSelectedFiles", "AvanteInput", "AvanteTodos" },
             size = {
               width = function()
-                if vim.o.columns < 180 then
+                if vim.o.columns < 120 then
                   return 0.5
                 end
 
-                return 180
+                return 120
               end,
             },
             wo = {
