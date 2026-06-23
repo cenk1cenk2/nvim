@@ -26,7 +26,9 @@ function M.config()
             title = "Sidekick",
             size = {
               width = function()
-                if vim.o.columns < 120 then
+                if vim.o.columns > 300 then
+                  return 180
+                elseif vim.o.columns < 120 then
                   return 0.5
                 end
 
