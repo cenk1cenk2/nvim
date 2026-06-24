@@ -77,7 +77,29 @@ function M.config()
           -- func(new_bufs, argv) -> only open the files, allowing you to handle window opening yourself.
           -- Argument is an array of buffer numbers representing the newly opened files.
           -- open = "alternate",
-          open = "alternate",
+          open = function(opts)
+            local focus = opts.stdin_buf or opts.files[1]
+            if not focus then
+              return nil
+            end
+
+            local win = nvim.fn.pick_window()
+            if not win then
+              win = require("flatten.core").smart_open()
+            end
+
+            if win then
+              vim.api.nvim_win_set_buf(win, focus.bufnr)
+              vim.api.nvim_set_current_win(win)
+            else
+              win = vim.api.nvim_open_win(focus.bufnr, true, {
+                vertical = false,
+                win = 0,
+              })
+            end
+
+            return focus.bufnr, win
+          end,
           -- Affects which file gets focused when opening multiple at once
           -- Options:
           -- "first"        -> open first file of new files (default)
