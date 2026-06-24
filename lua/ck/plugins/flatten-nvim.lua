@@ -37,6 +37,10 @@ function M.config()
           end,
           pre_open = function(opts)
             require("ck.modules.flatten").pre_open(opts)
+
+            if os.execute([[tmux popup -c $(tmux display-message -pt "$TMUX_PANE" '#{client_tty}') -C]]) then
+              log:info("Closed popup windows.")
+            end
           end,
           should_block = function(argv)
             if vim.tbl_contains(argv, "--headless") then
@@ -53,10 +57,6 @@ function M.config()
             log:info("File returned to the blocking neovim instance.")
           end,
           post_open = function(opts)
-            if os.execute([[tmux popup -c $(tmux display-message -pt "$TMUX_PANE" '#{client_tty}') -C]]) then
-              log:info("Closed popup windows.")
-            end
-
             if opts.is_blocking then
               log:info("Blocking for another neovim instance...")
             end
