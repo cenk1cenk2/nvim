@@ -252,6 +252,20 @@ function M.config()
 
         {
           fn.wk_keystroke({ categories.GIT, "o" }),
+          group = "open",
+        },
+
+        {
+          fn.wk_keystroke({ categories.GIT, "o", "o" }),
+          function()
+            require("snacks").gitbrowse.open({ what = "branch" })
+          end,
+          desc = "open repo in browser",
+          mode = { "n", "v" },
+        },
+
+        {
+          fn.wk_keystroke({ categories.GIT, "o", "b" }),
           function()
             require("snacks").gitbrowse.open({ what = "branch" })
           end,
@@ -260,11 +274,20 @@ function M.config()
         },
 
         {
-          fn.wk_keystroke({ categories.GIT, "O" }),
+          fn.wk_keystroke({ categories.GIT, "o", "f" }),
           function()
             require("snacks").gitbrowse.open({ what = "file" })
           end,
           desc = "open file in browser",
+          mode = { "n", "v" },
+        },
+
+        {
+          fn.wk_keystroke({ categories.GIT, "o", "y" }),
+          function()
+            require("snacks").gitbrowse.open({ what = "permalink" })
+          end,
+          desc = "open permalink in browser",
           mode = { "n", "v" },
         },
 
