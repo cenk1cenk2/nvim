@@ -1,6 +1,6 @@
 ---
 name: slack-laravel-review
-description: "Post a PR review request in #cloud-infra on the Laravel enterprise Slack. Use when user says 'request review', 'post review request', or 'ask for review'. Can be composed with github-pr-create skill after PR creation. Always manually invoked."
+description: "Post a PR/MR review request in #cloud-infra-pr on the Laravel enterprise Slack, one PR per message. Use when user says 'request review', 'post review request', 'ask for review', 'post this/these to slack'. Can be composed with github-pr-create skill after PR creation. Always manually invoked."
 interaction: chat
 disable-model-invocation: true
 argument-hint: "[github-pr-url or PR number]"
@@ -27,7 +27,7 @@ references:
 
 ### Context
 
-- **Channel:** `#cloud-infra` (ID: `C073JL6GDMF`).
+- **Channel:** `#cloud-infra-pr` (ID: `C0B0XMD0HS4`).
 - **Slack workspace:** Laravel enterprise (`slack-laravel`).
 - **Slack tools:** Deferred claude.ai connector tools (`mcp__claude_ai_Slack__*`) — load via `ToolSearch` before use:
   ```
@@ -42,6 +42,7 @@ references:
      - Use `git status` to get the current branch.
      - Use `github__list_pull_requests` with `head: "owner:branch"` to find the open PR.
    - If no PR is found, ask the user.
+   - **Multiple PRs:** if the user provides several PRs (e.g., a wave rollout), process each independently and post a SEPARATE message per PR — repeat Steps 2-7 once per PR. Never combine multiple PRs into one message.
 
 2. **Fetch PR details.**
    - Use `github__pull_request_read` (method: `get`) to fetch the PR metadata.
@@ -55,8 +56,10 @@ references:
    - **Review threads** — scan review comments for unresolved threads or threads with unresolved decisions. Summarize any blocking or open items (e.g., "1 unresolved thread: security concern on IAM policy scope").
    - If no comments or reviews exist, skip these sections.
 
-4. **Compose the summary.**
-   - Write a short summary (1-3 sentences) of the PR description.
+4. **Compose the summary (only when details are requested).**
+   - **Default: no summary.** The base post is the title line alone (`{pr_url} :review:`) — skip to Step 5.
+   - Compose a summary ONLY when the user asks for details/a report (e.g., "add a summary", "with details", "include the spacelift report") or when composing with a `*-pr-comment` skill.
+   - When composing: write a short summary (1-3 sentences) of the PR description.
    - Focus on **what** changed and **why** — not implementation details.
    - If the PR description is empty, summarize from the title and commit messages.
    - If infrastructure impact was found, append a one-line summary (e.g., "Spacelift: 5 stacks, +35 ~41 −10, all finished.").
@@ -70,9 +73,11 @@ references:
 
 5. **Format the message.**
    - Use Slack mrkdwn syntax (NOT standard markdown).
-   - Template:
+   - **Title line (always, exact):** `{pr_url} :review:` — the URL first, then the `:review:` emoji.
+   - **Default — title only.** When no summary was requested, the entire message IS just that title line.
+   - **With details** — leave ONE blank line after the title line, then the summary/report:
      ```
-     :review: {pr_url}
+     {pr_url} :review:
 
      {short_summary}
 
@@ -81,9 +86,13 @@ references:
      {review_notes_line}
      ```
    - Omit the infrastructure and review lines if not applicable.
-   - Example:
+   - Example (default — title only):
      ```
-     :review: https://github.com/laravel/cloud-infrastructure/pull/3797
+     https://github.com/laravel/cloud-infrastructure/pull/7444 :review:
+     ```
+   - Example (with summary):
+     ```
+     https://github.com/laravel/cloud-infrastructure/pull/3797 :review:
 
      Cuts over Cloudflare tunnel traffic to envoy-gateway for 5 euc1 enterprise clusters. Bumps dedicated-cluster module to 3.4.0.
 
@@ -91,7 +100,7 @@ references:
      ```
    - Example (with full Spacelift narrative):
      ```
-     :review: https://github.com/laravel/cloud-infrastructure/pull/3847
+     https://github.com/laravel/cloud-infrastructure/pull/3847 :review:
 
      Cuts over Cloudflare tunnel traffic to envoy-gateway for enterprise-portwest-dev in eu-west-1. Bumps dedicated-cluster module from 3.0.0 to 3.4.0, adding SQS queue management IAM, CloudWatch quota alarms, and updated Karpenter annotations.
 
@@ -102,13 +111,14 @@ references:
      The module bump from 3.0.0 → 3.4.0 brings in three new IAM resources for web app SQS queue management (cross-account role assumed by `277707137550`), two CloudWatch alarms monitoring EIP and vCPU quota usage at 80% via GrafanaOnCall, and rotates the ArgoCD cluster registration secret with new Karpenter consolidation annotations (`karpenter-flex-consolidate-after: 24h`, `karpenter-pro-consolidate-after: 24h`). Incidentally picks up EKS addon bumps (EBS CSI driver `v1.57.1` → `v1.58.0`, Pod Identity Agent `eksbuild.2` → `eksbuild.3`) and a Tailscale subnet router AMI refresh (`ami-0476c6b26004a1760` → `ami-0f8493690c875fd2d`).
      ```
 
-6. **Present for approval.**
-   - Show the formatted message to the user in chat.
-   - Wait for explicit approval before posting.
+6. **Present for approval — unless the user already told you to post.**
+   - **If the user explicitly instructed the message(s) be posted** (e.g., "post this", "post these", "this has to be posted", "go ahead and post"), skip approval and post directly (Step 7).
+   - Otherwise, show the formatted message(s) in chat and wait for explicit approval before posting.
 
 7. **Post to Slack.**
    - Load the Slack send tool: `ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message" })`.
-   - Use `mcp__claude_ai_Slack__slack_send_message` to post to channel `C073JL6GDMF`.
+   - Use `mcp__claude_ai_Slack__slack_send_message` to post to channel `C0B0XMD0HS4` (`#cloud-infra-pr`).
+   - **One message per PR/MR** — when posting multiple, send each as its own separate message (one `slack_send_message` call per PR).
 
 ### Composing with Other Skills
 
@@ -118,6 +128,8 @@ references:
 
 ### Key Principles
 
-- **Always present before posting.** Never send without user approval.
+- **Present before posting — unless told to post.** Default to presenting for approval; when the user has explicitly said to post (e.g., "post this/these", "this has to be posted"), post directly without re-asking.
+- **One PR/MR per message.** Always exactly one PR/MR per Slack message. When posting multiple (e.g., a wave rollout), send a separate message per PR — never bundle.
+- **Title line is exact:** `{pr_url} :review:` — URL first, then the `:review:` emoji. Any summary/report is optional and goes after one blank line.
 - **Use Slack mrkdwn.** Use plain URLs for links (Slack auto-unfurls GitHub PRs). No markdown bold (`**`), use `*text*` instead.
 - **Keep the summary concise.** 1-3 sentences, focused on what and why.
