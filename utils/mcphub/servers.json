@@ -2,19 +2,7 @@
   "mcpServers": {
     "argocd-kilic": {
       "args": ["-y", "--bun", "argocd-mcp@latest", "stdio"],
-      "autoApprove": [
-        "list_applications",
-        "get_application",
-        "get_application_resource_tree",
-        "get_application_managed_resources",
-        "get_application_workload_logs",
-        "get_application_events",
-        "get_resource_events",
-        "get_resources",
-        "get_resource_actions"
-      ],
       "command": "bunx",
-      "disabled_tools": ["create_application", "update_application", "delete_application"],
       "env": {
         "ARGOCD_API_TOKEN": "${NVIM_ARGOCD_KILIC_TOKEN}",
         "ARGOCD_BASE_URL": "${NVIM_ARGOCD_KILIC_URL}"
@@ -36,9 +24,7 @@
     },
     "aws-docs": {
       "args": ["awslabs.aws-documentation-mcp-server@latest"],
-      "autoApprove": ["read_documentation", "search_documentation", "read_sections", "recommend"],
       "command": "uvx",
-      "disabled_tools": ["get_available_services"],
       "env": {
         "AWS_DOCUMENTATION_PARTITION": "aws",
         "FASTMCP_LOG_LEVEL": "ERROR"
@@ -49,7 +35,6 @@
       }
     },
     "context7": {
-      "autoApprove": ["get-library-docs", "resolve-library-id", "query-docs"],
       "headers": {
         "Authorization": "Bearer ${NVIM_CONTEXT7}"
       },
@@ -60,10 +45,6 @@
       }
     },
     "exa": {
-      "autoApprove": ["get_code_context_exa", "web_search_exa", "web_fetch_exa"],
-      "disabled_prompts": ["web_search_help", "code_search_help"],
-      "disabled_resources": ["exa://tools/list"],
-      "disabled_tools": [],
       "headers": {
         "x-api-key": "${NVIM_EXA_API_KEY}"
       },
@@ -74,8 +55,6 @@
       }
     },
     "excalidraw": {
-      "autoApprove": ["read_me", "create_view", "export_to_excalidraw", "save_checkpoint", "read_checkpoint"],
-      "disabled_tools": [],
       "url": "https://mcp.excalidraw.com",
       "hyprpilot": {
         "autoAcceptTools": ["read_me", "create_view", "export_to_excalidraw", "save_checkpoint", "read_checkpoint"],
@@ -83,45 +62,6 @@
       }
     },
     "github": {
-      "autoApprove": [
-        "get_me",
-        "issue_read",
-        "list_pull_requests",
-        "list_issues",
-        "list_issue_types",
-        "list_releases",
-        "list_tags",
-        "search_code",
-        "search_issues",
-        "search_pull_requests",
-        "search_repositories",
-        "search_users",
-        "list_commits",
-        "list_branches",
-        "get_teams",
-        "get_team_members",
-        "get_tag",
-        "get_release_by_tag",
-        "get_latest_release",
-        "get_label",
-        "get_file_contents",
-        "get_commit",
-        "pull_request_read",
-        "request_copilot_review"
-      ],
-      "disabled": false,
-      "disabled_prompts": ["AssignCodingAgent", "issue_to_fix_workflow"],
-      "disabled_tools": [
-        "assign_copilot_to_issue",
-        "create_branch",
-        "create_or_update_file",
-        "create_repository",
-        "delete_file",
-        "fork_repository",
-        "get_label",
-        "get_team_members",
-        "merge_pull_request"
-      ],
       "headers": {
         "Authorization": "Bearer ${NVIM_GITHUB}",
         "X-MCP-Insiders": "true"
@@ -169,77 +109,7 @@
     },
     "gitlab": {
       "args": ["-y", "@zereight/mcp-gitlab"],
-      "autoApprove": [
-        "get_branch_diffs",
-        "get_commit",
-        "get_commit_diff",
-        "get_file_contents",
-        "get_issue",
-        "get_issue_link",
-        "get_label",
-        "get_merge_request",
-        "get_merge_request_approval_state",
-        "get_merge_request_diffs",
-        "get_merge_request_version",
-        "get_namespace",
-        "get_project",
-        "get_project_events",
-        "get_release",
-        "get_repository_tree",
-        "get_users",
-        "list_commits",
-        "list_events",
-        "list_group_iterations",
-        "list_group_projects",
-        "list_issue_discussions",
-        "list_issue_links",
-        "list_issues",
-        "list_labels",
-        "list_merge_request_versions",
-        "list_merge_requests",
-        "list_namespaces",
-        "list_project_members",
-        "list_projects",
-        "list_releases",
-        "my_issues",
-        "search_repositories",
-        "verify_namespace",
-        "mr_discussions",
-        "list_pipelines",
-        "list_pipeline_trigger_jobs",
-        "list_pipeline_jobs",
-        "get_pipeline",
-        "get_pipeline_job",
-        "get_pipeline_job_output",
-        "get_merge_request_conflicts",
-        "get_merge_request_file_diff",
-        "get_merge_request_note",
-        "get_merge_request_notes",
-        "list_draft_notes",
-        "list_merge_request_changed_files",
-        "list_merge_request_diffs"
-      ],
       "command": "npx",
-      "disabled": false,
-      "disabled_tools": [
-        "download_attachment",
-        "download_release_asset",
-        "get_job_artifact_file",
-        "get_group_wiki_page",
-        "get_environment",
-        "get_deployment",
-        "download_job_artifacts",
-        "get_milestone",
-        "get_milestone_burndown_events",
-        "get_milestone_issue",
-        "get_milestone_merge_requests",
-        "list_deployments",
-        "list_environments",
-        "list_group_wiki_pages",
-        "list_job_artifacts",
-        "list_milestones",
-        "list_wiki_pages"
-      ],
       "env": {
         "GITLAB_API_URL": "https://gitlab.kilic.dev/api/v4/",
         "GITLAB_PERSONAL_ACCESS_TOKEN": "${NVIM_GITLAB}",
@@ -320,56 +190,7 @@
     },
     "grafana-kilic": {
       "args": ["mcp-grafana"],
-      "autoApprove": [
-        "query_prometheus_histogram",
-        "query_prometheus",
-        "query_loki_stats",
-        "query_loki_patterns",
-        "query_loki_logs",
-        "search_dashboards",
-        "search_folders",
-        "list_prometheus_label_names",
-        "list_prometheus_label_values",
-        "list_prometheus_metric_metadata",
-        "list_prometheus_metric_names",
-        "list_loki_label_values",
-        "list_loki_label_names",
-        "list_datasources",
-        "list_alert_rules",
-        "list_alert_groups",
-        "get_datasource",
-        "get_alert_rule_by_uid",
-        "get_alert_group"
-      ],
       "command": "uvx",
-      "disabled": false,
-      "disabled_tools": [
-        "add_activity_to_incident",
-        "create_alert_rule",
-        "create_annotation",
-        "create_folder",
-        "create_incident",
-        "delete_alert_rule",
-        "fetch_pyroscope_profile",
-        "get_current_oncall_users",
-        "get_incident",
-        "get_oncall_shift",
-        "get_panel_image",
-        "get_sift_analysis",
-        "get_sift_investigation",
-        "list_oncall_schedules",
-        "list_oncall_teams",
-        "list_oncall_users",
-        "list_pyroscope_label_names",
-        "list_pyroscope_label_values",
-        "list_pyroscope_profile_types",
-        "list_sift_investigations",
-        "update_alert_rule",
-        "update_annotation",
-        "update_dashboard",
-        "list_incidents",
-        "list_contact_points"
-      ],
       "env": {
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${NVIM_GRAFANA_KILIC_TOKEN}",
         "GRAFANA_URL": "${NVIM_GRAFANA_KILIC_URL}"
@@ -427,56 +248,7 @@
     },
     "grafana-laravel": {
       "args": ["mcp-grafana"],
-      "autoApprove": [
-        "query_prometheus_histogram",
-        "query_prometheus",
-        "query_loki_stats",
-        "query_loki_patterns",
-        "query_loki_logs",
-        "search_dashboards",
-        "search_folders",
-        "list_prometheus_label_names",
-        "list_prometheus_label_values",
-        "list_prometheus_metric_metadata",
-        "list_prometheus_metric_names",
-        "list_loki_label_values",
-        "list_loki_label_names",
-        "list_datasources",
-        "list_alert_rules",
-        "list_alert_groups",
-        "get_datasource",
-        "get_alert_group",
-        "get_alert_rule_by_uid"
-      ],
       "command": "uvx",
-      "disabled": false,
-      "disabled_tools": [
-        "add_activity_to_incident",
-        "create_alert_rule",
-        "create_annotation",
-        "create_folder",
-        "create_incident",
-        "delete_alert_rule",
-        "fetch_pyroscope_profile",
-        "get_current_oncall_users",
-        "get_incident",
-        "get_oncall_shift",
-        "get_panel_image",
-        "get_sift_analysis",
-        "get_sift_investigation",
-        "list_oncall_schedules",
-        "list_oncall_teams",
-        "list_oncall_users",
-        "list_pyroscope_label_names",
-        "list_pyroscope_label_values",
-        "list_pyroscope_profile_types",
-        "list_sift_investigations",
-        "update_alert_rule",
-        "update_annotation",
-        "update_dashboard",
-        "list_incidents",
-        "list_contact_points"
-      ],
       "env": {
         "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${NVIM_GRAFANA_LARAVEL_TOKEN}",
         "GRAFANA_URL": "${NVIM_GRAFANA_LARAVEL_URL}"
@@ -533,101 +305,44 @@
       }
     },
     "linear-kilic": {
-      "autoApprove": [
-        "list_issues",
-        "list_projects",
-        "list_project_labels",
-        "list_teams",
-        "list_users",
-        "search_documentation",
-        "list_issue_statuses",
-        "list_issue_labels",
-        "list_documents",
-        "list_cycles",
-        "list_comments",
-        "get_user",
-        "get_team",
-        "get_project",
-        "get_issue_status",
-        "get_issue",
-        "get_document",
-        "get_attachment",
-        "extract_images",
-        "get_initiative",
-        "get_milestone",
-        "get_status_updates",
-        "list_initiatives",
-        "list_milestones",
-        "get_authenticated_user",
-        "research"
-      ],
-      "disabled": false,
-      "disabled_tools": [],
       "headers": {
         "Authorization": "Bearer ${NVIM_LINEAR_KILIC}"
       },
       "url": "https://mcp.linear.app/mcp",
       "hyprpilot": {
         "autoAcceptTools": [
+          "extract_images",
+          "get_attachment",
+          "get_authenticated_user",
+          "get_document",
+          "get_initiative",
+          "get_issue",
+          "get_issue_status",
+          "get_milestone",
+          "get_project",
+          "get_status_updates",
+          "get_team",
+          "get_user",
+          "list_comments",
+          "list_customers",
+          "list_cycles",
+          "list_documents",
+          "list_initiatives",
+          "list_issue_labels",
+          "list_issue_statuses",
           "list_issues",
-          "list_projects",
+          "list_milestones",
           "list_project_labels",
+          "list_projects",
           "list_teams",
           "list_users",
-          "search_documentation",
-          "list_issue_statuses",
-          "list_issue_labels",
-          "list_documents",
-          "list_cycles",
-          "list_comments",
-          "get_user",
-          "get_team",
-          "get_project",
-          "get_issue_status",
-          "get_issue",
-          "get_document",
-          "get_attachment",
-          "extract_images",
-          "get_initiative",
-          "get_milestone",
-          "get_status_updates",
-          "list_initiatives",
-          "list_milestones",
-          "get_authenticated_user",
-          "research"
+          "research",
+          "search_documentation"
         ],
         "autoRejectTools": []
       }
     },
     "linear-laravel": {
-      "autoApprove": [
-        "get_attachment",
-        "get_document",
-        "get_initiative",
-        "get_issue",
-        "get_issue_status",
-        "get_milestone",
-        "get_project",
-        "get_status_updates",
-        "get_team",
-        "get_user",
-        "list_comments",
-        "list_cycles",
-        "list_documents",
-        "list_initiatives",
-        "list_issue_labels",
-        "list_issue_statuses",
-        "list_issues",
-        "list_milestones",
-        "list_project_labels",
-        "list_projects",
-        "list_teams",
-        "list_users",
-        "search_documentation",
-        "extract_images",
-        "get_authenticated_user",
-        "research"
-      ],
       "headers": {
         "Authorization": "Bearer ${NVIM_LINEAR_WORK}"
       },
@@ -666,17 +381,6 @@
     },
     "memory": {
       "args": ["-y", "--bun", "@modelcontextprotocol/server-memory@latest"],
-      "autoApprove": [
-        "create_relations",
-        "delete_entities",
-        "delete_observations",
-        "delete_relations",
-        "open_nodes",
-        "read_graph",
-        "search_nodes",
-        "add_observations",
-        "create_entities"
-      ],
       "command": "bunx",
       "env": {
         "MEMORY_FILE_PATH": "${HOME}/.local/state/nvim/memory.jsonl"
@@ -698,8 +402,6 @@
     },
     "obsidian": {
       "url": "http://127.0.0.1:27123/mcp/",
-      "autoApprove": ["active_file_get_path", "command_list", "open_file", "search_query", "search_simple", "tag_list", "vault_get_document_map", "vault_list", "vault_read"],
-      "disabled_tools": ["command_execute"],
       "headers": {
         "Authorization": "Bearer ${NVIM_OBSIDIAN}"
       },
@@ -720,32 +422,7 @@
     },
     "playwright": {
       "args": ["-y", "--bun", "@playwright/mcp@latest", "--executable-path", "/usr/bin/brave"],
-      "autoApprove": [
-        "browser_take_screenshot",
-        "browser_snapshot",
-        "browser_navigate",
-        "browser_navigate_back",
-        "browser_resize",
-        "browser_run_code",
-        "browser_wait_for",
-        "browser_type",
-        "browser_tabs",
-        "browser_select_option",
-        "browser_press_key",
-        "browser_network_requests",
-        "browser_hover",
-        "browser_handle_dialog",
-        "browser_fill_form",
-        "browser_file_upload",
-        "browser_evaluate",
-        "browser_drag",
-        "browser_console_messages",
-        "browser_close",
-        "browser_click"
-      ],
       "command": "bunx",
-      "disabled": false,
-      "disabled_tools": [],
       "hyprpilot": {
         "autoAcceptTools": [
           "browser_take_screenshot",
@@ -775,7 +452,6 @@
     },
     "slack-kilic": {
       "args": ["-y", "--bun", "@modelcontextprotocol/server-slack@latest"],
-      "autoApprove": ["slack_list_channels", "slack_get_channel_history", "slack_get_thread_replies", "slack_get_users", "slack_get_user_profile", "slack_add_reaction"],
       "command": "bunx",
       "env": {
         "SLACK_BOT_TOKEN": "${NVIM_SLACK_TOKEN}",
@@ -787,19 +463,6 @@
       }
     },
     "sourcebot-kilic": {
-      "autoApprove": [
-        "grep",
-        "list_repos",
-        "read_file",
-        "list_tree",
-        "list_commits",
-        "glob",
-        "get_diff",
-        "find_symbol_definitions",
-        "find_symbol_references",
-        "list_language_models",
-        "ask_codebase"
-      ],
       "headers": {
         "Authorization": "Bearer ${NVIM_SOURCEBOT_API_KEY}"
       },
@@ -823,44 +486,7 @@
     },
     "spacelift-laravel": {
       "args": ["mcp", "server"],
-      "autoApprove": [
-        "get_api_key",
-        "get_blueprint",
-        "get_context",
-        "get_graphql_type_details",
-        "get_module",
-        "get_module_guide",
-        "get_module_version",
-        "get_policy",
-        "get_policy_sample",
-        "get_space",
-        "get_stack_run",
-        "get_stack_run_changes",
-        "get_stack_run_logs",
-        "get_worker_pool",
-        "get_authentication_guide",
-        "introspect_graphql_schema",
-        "list_api_keys",
-        "list_blueprints",
-        "list_contexts",
-        "list_modules",
-        "list_module_versions",
-        "list_policies",
-        "list_policy_samples",
-        "list_policy_samples_indexed",
-        "list_resources",
-        "list_spaces",
-        "list_stack_proposed_runs",
-        "list_stack_runs",
-        "list_stacks",
-        "list_worker_pools",
-        "search_contexts",
-        "search_graphql_schema_fields",
-        "search_modules"
-      ],
       "command": "spacectl",
-      "disabled": false,
-      "disabled_tools": ["local_preview"],
       "env": {},
       "hyprpilot": {
         "autoAcceptTools": [
@@ -902,8 +528,6 @@
       }
     },
     "tavily": {
-      "autoApprove": ["tavily-search", "tavily_search", "tavily_extract", "tavily_crawl", "tavily_map", "tavily_skill", "tavily_research"],
-      "disabled_tools": [],
       "headers": {
         "Authorization": "Bearer ${NVIM_TAVILY_API_KEY}"
       },
@@ -915,19 +539,7 @@
     },
     "terraform": {
       "args": ["run", "-i", "--rm", "hashicorp/terraform-mcp-server", "stdio", "--toolsets=registry"],
-      "autoApprove": [
-        "search_providers",
-        "get_provider_details",
-        "get_latest_provider_version",
-        "get_provider_capabilities",
-        "search_modules",
-        "get_module_details",
-        "get_latest_module_version",
-        "search_policies",
-        "get_policy_details"
-      ],
       "command": "docker",
-      "disabled_tools": [],
       "hyprpilot": {
         "autoAcceptTools": [
           "search_providers",
@@ -945,57 +557,11 @@
     },
     "tmux": {
       "args": ["-y", "--bun", "tmux-mcp", "--shell-type=zsh"],
-      "autoApprove": ["get-command-result", "list-panes", "list-sessions", "list-windows", "capture-pane", "find-session"],
       "command": "bunx",
-      "disabled_tools": ["kill-window", "kill-session", "kill-pane", "create-session", "create-window", "execute-command", "split-pane"],
       "hyprpilot": {
         "autoAcceptTools": ["get-command-result", "list-panes", "list-sessions", "list-windows", "capture-pane", "find-session"],
         "autoRejectTools": ["kill-window", "kill-session", "kill-pane", "create-session", "create-window", "execute-command", "split-pane"]
       }
-    }
-  },
-  "nativeMCPServers": {
-    "mcp-diagnostics": {
-      "autoApprove": [
-        "analyze_diagnostics",
-        "analyze_symbol",
-        "buffer_status",
-        "correlate_diagnostics",
-        "diagnostic_by_severity",
-        "diagnostic_hotspots",
-        "diagnostic_stats",
-        "diagnostics_get",
-        "diagnostics_summary",
-        "ensure_files_loaded",
-        "lsp_definition",
-        "lsp_document_symbols",
-        "lsp_references",
-        "lsp_workspace_symbols",
-        "refresh_after_external_changes",
-        "symbol_lookup",
-        "lsp_hover"
-      ]
-    },
-    "mcphub": {
-      "autoApprove": ["get_current_servers"],
-      "disabled_resources": ["mcphub://changelog"]
-    },
-    "neovim": {
-      "autoApprove": ["find_files", "list_directory", "read_file", "read_multiple_files"],
-      "disabled": false,
-      "disabled_tools": ["edit_file", "write_file"]
-    },
-    "open": {
-      "autoApprove": ["open_in_browser", "open_in_obsidian", "copy_to_clipboard"],
-      "disabled_tools": []
-    },
-    "skills": {
-      "autoApprove": ["list_skills", "read_reference", "read_skill", "load_reference", "list_references"],
-      "disabled_tools": []
-    },
-    "vim": {
-      "autoApprove": ["vim_status", "vim_file_open", "vim_jump", "vim_select", "vim_format"],
-      "disabled_tools": []
     }
   }
 }
