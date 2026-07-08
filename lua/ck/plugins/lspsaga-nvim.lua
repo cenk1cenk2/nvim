@@ -120,7 +120,7 @@ function M.config()
           -- https://www.reddit.com/r/neovim/comments/11o68vz/text_appearing_on_the_corner_of_the_screen/?utm_source=share&utm_medium=android_app&utm_name=androidcss&utm_term=2&utm_content=share_button
           on_insert = false,
           on_insert_follow = true,
-          insert_winblend = 0,
+          insert_winblend = nvim.ui.winblend,
           twice_into = true,
           show_code_action = false,
           show_source = true,
@@ -151,7 +151,7 @@ function M.config()
           theme = "round",
           -- border type can be single,double,rounded,solid,shadow.
           border = nvim.ui.border,
-          winblend = 0,
+          winblend = nvim.ui.winblend,
           expand = nvim.ui.icons.ui.ChevronShortLeft,
           collaspe = nvim.ui.icons.ui.ChevronShortDown,
           preview = nvim.ui.icons.ui.FindFile,

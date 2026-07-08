@@ -135,7 +135,7 @@ function M.config()
           sorting_strategy = "descending",
           layout_strategy = "horizontal",
           path_display = {},
-          winblend = 0,
+          winblend = nvim.ui.winblend,
           -- border = {},
           -- borderchars = { "─", "│", "─", "│", "┍", "┒", "┙", "┕" },
           color_devicons = true,

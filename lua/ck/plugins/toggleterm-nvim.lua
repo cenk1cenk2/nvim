@@ -78,7 +78,7 @@ function M.config()
           height = function()
             return math.floor(vim.o.lines * nvim.ui.dimensions.overlay("height"))
           end,
-          winblend = 0,
+          winblend = nvim.ui.winblend,
           highlights = { border = "Normal", background = "Normal" },
         },
         winbar = {

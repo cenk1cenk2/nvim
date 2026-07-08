@@ -7,6 +7,7 @@ return {
     icons = require("ck.config.icons"),
     colors = require("onedarker.colors"),
     border = "single",
+    winblend = 0, -- pseudo-transparency for floating windows / popups (0 = opaque)
     transparent = false,
 
     ---@type table Shared UI dimension scale + emitters. Draw every plugin size from one
