@@ -1,10 +1,10 @@
 ---
 name: slack-laravel-review
 description: "Post a PR/MR review request in #cloud-infra-pr on the Laravel enterprise Slack, one PR per message. Use when user says 'request review', 'post review request', 'ask for review', 'post this/these to slack'. Can be composed with github-pr-create skill after PR creation. Always manually invoked."
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[github-pr-url or PR number]"
 references:
+  - ../references/present-first.md
   - ../references/claude-ai-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
@@ -12,20 +12,17 @@ references:
   - ../references/output-diff.md
 ---
 
-## system
+## Slack Review Request Poster
 
-### Slack Review Request Poster
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This skill fetches PR details and posts a message.
-
-> **PREREQUISITE:** The `slack-laravel` workspace skill MUST be active before this skill runs.
-> Load it via the `slack-laravel` skill (load it as defined in `load-skills`) if not already loaded.
+> **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection and activation. This skill operates on the Laravel enterprise workspace (`slack-laravel`), which MUST be active before it runs.
 
 > Read the `slack` reference for Slack mrkdwn formatting rules.
 > Read the `scm-github` reference for GitHub MCP tools.
 > Read the `output-diff` reference for presenting the message before posting.
 
-### Context
+## Context
 
 - **Channel:** `#cloud-infra-pr` (ID: `C0B0XMD0HS4`).
 - **Slack workspace:** Laravel enterprise (`slack-laravel`).
@@ -34,7 +31,7 @@ references:
   ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message" })
   ```
 
-### Process
+## Process
 
 1. **Identify the PR.**
    - If the user provides a GitHub PR URL or number, use it directly.
@@ -120,13 +117,13 @@ references:
    - Use `mcp__claude_ai_Slack__slack_send_message` to post to channel `C0B0XMD0HS4` (`#cloud-infra-pr`).
    - **One message per PR/MR** — when posting multiple, send each as its own separate message (one `slack_send_message` call per PR).
 
-### Composing with Other Skills
+## Composing with Other Skills
 
 - **`github-pr-create`** — after creating a PR with the `github-pr-create` skill, this skill can be invoked to post the review request. The PR URL from the `github-pr-create` output can be passed directly — no need to re-detect from git state.
 - **`github-pr-comment` / `gitlab-mr-comment`** — when composed with a `*-pr-comment` skill, the Slack review request message is included as a `## Review Request` section in the PR/MR comment. The `*-pr-comment` skill handles drafting, approval, and posting. The Slack message is still posted separately to Slack — the `## Review Request` section is additive output for the PR/MR comment, not a replacement for the Slack post.
 - **`slack-laravel`** — workspace prerequisite, must be loaded first.
 
-### Key Principles
+## Key Principles
 
 - **Present before posting — unless told to post.** Default to presenting for approval; when the user has explicitly said to post (e.g., "post this/these", "this has to be posted"), post directly without re-asking.
 - **One PR/MR per message.** Always exactly one PR/MR per Slack message. When posting multiple (e.g., a wave rollout), send a separate message per PR — never bundle.

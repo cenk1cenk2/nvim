@@ -1,23 +1,22 @@
 ---
 name: slack-kilic
 description: "Initialize a Slack session for the kilic workspace. Auto-invoked when kilic Slack context is detected (e.g., personal Slack URLs, kilic workspace channels, GitLab-related discussions)."
-interaction: chat
+references:
+  - ../references/present-first.md
 ---
 
-## system
+## Slack Workspace: kilic
 
-### Slack Workspace: kilic
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This skill initializes workspace context only.
-
-### Workspace Context
+## Workspace Context
 
 - **Slack MCP:** `slack-kilic` — ALWAYS use `slack-kilic__*` tools for this workspace.
 - **Transport:** Stdio (`@modelcontextprotocol/server-slack`), bot token auth.
 - **Linked SCM:** GitLab (`gitlab.kilic.dev`).
 - **Linked Linear:** `linear-kilic` (kilic-dev workspace).
 
-### Available Tools
+## Available Tools
 
 | Tool | Purpose |
 |------|---------|
@@ -30,6 +29,6 @@ interaction: chat
 | `slack-kilic__slack_reply_to_thread` | Reply to a specific thread. |
 | `slack-kilic__slack_add_reaction` | Add an emoji reaction to a message. |
 
-### After Initialization
+## After Initialization
 
 Once context is established, proceed with the user's request. If the user wants to process a message or channel, follow the `slack-message` or `slack-channel` skill workflow.

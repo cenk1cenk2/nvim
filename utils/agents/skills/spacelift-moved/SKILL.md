@@ -1,36 +1,23 @@
 ---
 name: spacelift-moved
 description: "Analyze Spacelift plan output for delete/create cycles that can be replaced with Terraform moved blocks. Use when user says 'spacelift moved', 'can we move instead of recreate', 'terraform moved blocks', 'avoid destroy/create', or 'migrate state'. Accepts a PR, branch, commit, or Actions link. Do NOT use for general Spacelift operations (spacelift-laravel), infrastructure impact reports (spacelift-report), or PR descriptions (github-pr-create)."
-interaction: chat
 references:
+  - ../references/present-first.md
   - ../references/scm-github.md
   - ../references/spacelift-github.md
   - ../references/output-diff.md
 ---
 
-## system
+## Spacelift Moved Block Analysis
 
-### Spacelift Moved Block Analysis
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Use `EnterPlanMode` tool immediately.
->
-> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
->
-> - You MUST stay in plan mode for the ENTIRE duration of this skill.
-> - Only the user saying the EXACT words "implement this", "start coding", "write the code", or an equally explicit and unambiguous direct instruction to implement should cause you to exit plan mode.
-> - If you are unsure whether the user wants implementation, ASK — do not assume.
-> - **When in doubt, STAY in plan mode.**
->
-> **CRITICAL: This is a research and reporting workflow. File writing happens ONLY after explicit user approval.**
-
-### Prerequisite
+## Prerequisite
 
 > **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
 > If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-laravel` via the `spacelift-laravel` skill (load it as defined in `load-skills`).
 
-### Core Requirements
+## Core Requirements
 
 > Read the `spacelift-github` reference for input parsing, PR resolution, and Spacelift run discovery
 
@@ -38,7 +25,7 @@ references:
 
 > Read the `output-diff` reference for presenting proposed file content before writing.
 
-### Process
+## Process
 
 1. **Parse input and resolve to PR + head commit:**
    - Follow the `spacelift-github` reference — detect input form (current branch, branch name, PR, Actions URL, commit SHA), extract identifiers, and resolve to owner/repo/PR/branch/SHA.
@@ -86,7 +73,7 @@ references:
    - Present the file content following `output-diff` conventions — show the full content, wait for explicit approval.
    - After approval, exit plan mode and write the file.
 
-### Report Format
+## Report Format
 
 ```markdown
 ## <Stack Name> — Moved Block Analysis
@@ -130,7 +117,7 @@ references:
 - Use inline code for resource addresses and attribute names.
 - Group related moves together (e.g., a module being renamed affects multiple resources — present them under one heading).
 
-### `moved.tf` Format
+## `moved.tf` Format
 
 ```hcl
 # Moved blocks generated from Spacelift plan analysis.
@@ -150,7 +137,7 @@ moved {
 - Group by stack with a comment header.
 - Use the exact Terraform address syntax (module paths, index keys, etc.).
 
-### Examples
+## Examples
 
 **User says:** "Check if we can use moved blocks for this PR"
 
@@ -176,7 +163,7 @@ moved {
 
 **Result:** Clean report, no file generated.
 
-### Related Skills
+## Related Skills
 
 - **`spacelift-laravel`** — workspace initialization. Auto-invoked as prerequisite.
 - **`spacelift-report`** — full infrastructure impact report. Do not auto-invoke.

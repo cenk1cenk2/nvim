@@ -6,7 +6,6 @@ description: >
   Use when user says "caveman mode", "talk like caveman", "use caveman", "less tokens",
   "be brief", or invokes /caveman. Do NOT use for commit messages (/caveman-commit)
   or code review comments (/caveman-review).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[full|ultra]"
 ---

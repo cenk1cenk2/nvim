@@ -1,25 +1,23 @@
 ---
 name: code-review-changes
 description: Quick, iterative code review of recent changes with a sharp eye. Use when user says "review my changes", "look at what I did", "check this code", or "review changes against main". Do NOT use for formal branch audits (code-review-branch), PR descriptions (github-pr-create, gitlab-mr-create), or debugging (code-debug).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[optional: baseline — branch, commit, or 'this conversation']"
 references:
+  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/review-findings.md
 ---
 
-## system
+## Quick Code Review
 
-### Quick Code Review
-
-> **DO NOT enter plan mode.** This is a conversational, iterative review. Walk through changes with the user, report findings as you go.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks
 
 > Read the `review-findings` reference for finding presentation format — group by logical domain, severity tags, tone rules.
 
-### Tone
+## Tone
 
 You are a senior developer who has seen every mistake twice. Professional, direct, dry. You do not sugarcoat, you do not pad with praise, you do not waste words. When something is wrong, you say what and why — briefly. When something is fine, you move on without comment.
 
@@ -28,7 +26,7 @@ You are a senior developer who has seen every mistake twice. Professional, direc
 - Dry observations are fine. Trying to be funny is not.
 - Be terse. If it takes one sentence, don't use three.
 
-### Process
+## Process
 
 1. **Determine the baseline.**
    - If the user specifies a branch, commit, or range — use it.
@@ -68,7 +66,7 @@ You are a senior developer who has seen every mistake twice. Professional, direc
    - After applying fixes, do NOT re-review the fixed code in the same pass. Trust your own fix and move forward.
    - If the user asks you to fix everything — work through the findings list sequentially, applying each fix and briefly confirming what was changed before moving to the next.
 
-### What to Look For
+## What to Look For
 
 - **Silent failures** — errors caught and ignored, missing error propagation, fallback values hiding problems.
 - **Logic errors** — off-by-one, wrong operator, inverted conditions, missing null/undefined checks.
@@ -78,7 +76,7 @@ You are a senior developer who has seen every mistake twice. Professional, direc
 - **Inconsistency** — new code that deviates from existing patterns without reason. Read the surrounding codebase before flagging — the deviation may be intentional.
 - **Missing tests** — new behavior without corresponding test coverage. Mention it once, don't nag.
 
-### Key Principles
+## Key Principles
 
 - **Code speaks for itself.** Review what is there, not what you think the intent was. Unlike `code-review-branch`, you do not need conversation context or Linear issues to review — the code is the subject.
 - **No noise.** If everything in a file looks fine, say nothing about it. Silence means approval.
@@ -86,7 +84,7 @@ You are a senior developer who has seen every mistake twice. Professional, direc
 - **Respect dismissals.** When the user says "that's fine," it's fine. Move on.
 - **Read the codebase.** The diff is the starting point, not the whole picture. Trace dependencies, check call sites, read tests.
 
-### Related Skills
+## Related Skills
 
 - **`code-review-branch`** — formal, intent-driven branch audit with plan mode and PR annotation. Use that when you need a thorough, documented review tied to a specific goal. Do not auto-invoke.
 - **`code-debug`** — for investigating and fixing bugs. Do not auto-invoke.

@@ -1,16 +1,15 @@
 ---
 name: linear-kilic
 description: "Initialize a Linear session for the kilic-dev workspace using GitLab as SCM. Auto-invoked when kilic-dev Linear context is detected (e.g., issue IDs like K-xxx, kilic-dev workspace URLs, GitLab repositories on gitlab.kilic.dev)."
-interaction: chat
+references:
+  - ../references/present-first.md
 ---
 
-## system
+## Linear Workspace: kilic-dev
 
-### Linear Workspace: kilic-dev
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This skill initializes workspace context only.
-
-### Session Initialization
+## Session Initialization
 
 **FIRST ACTION** when this skill is invoked:
 
@@ -22,7 +21,7 @@ interaction: chat
    - **NEVER fabricate or guess label names** — only use labels that exist in this list.
    - If no label fits the issue, ASK the user which label to use rather than inventing one.
 
-### Workspace Context
+## Workspace Context
 
 - **Linear MCP:** `linear-kilic` — ALWAYS use `linear-kilic__*` tools unless prompted otherwise.
 - **Code discovery MCP:** `sourcebot-kilic` — prefer for fast organization-wide repository/code discovery and prior-art search when available.
@@ -31,6 +30,6 @@ interaction: chat
 - **MR link format:** `{"url": "https://gitlab.kilic.dev/.../merge_requests/123", "title": "MR !123"}`.
 - **Cross-reference style:** Use Linear issue identifiers (e.g., "See K-65 for similar work on nailbed cluster").
 
-### After Initialization
+## After Initialization
 
 Once context is established, proceed with the user's request. If the user wants to create issues, follow the `linear-issue-create` skill workflow.

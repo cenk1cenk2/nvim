@@ -1,7 +1,6 @@
 ---
 name: agents-plan
 description: Plan work and execute it across agents using a dependency-aware DAG scheduler. Builds layers from task `depends_on` declarations plus file-overlap verification; runs each layer in parallel, pauses between layers for review and user guidance. Default mode is "team" (lead orchestrates, permissions bubble up); "fire-and-forget" mode opts into autonomous execution with bypass permissions. Use when user says "agents-plan", "run these tasks", "execute this plan", "run in parallel", "split into agents", "sequential agents", "create a team", "fire and forget", "agents-parallel", "agents-sequential". Do NOT use for single-task one-shot delegation (use /agents-delegate).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[plan file or goal] [optional: 'fire' | 'fire-and-forget' | 'without worktrees' | 'per-task review' | 'final-only review']"
 references:
@@ -21,9 +20,7 @@ references:
   - ../references/linear-state-transitions.md
 ---
 
-## system
-
-### Agent DAG Orchestration
+## Agent DAG Orchestration
 
 > **ALWAYS enter plan mode for the planning and scheduling phases.**
 >
@@ -47,7 +44,7 @@ references:
 > Read the `linear-chunk-issues` reference for aligning task splits with Linear issues — used when the user provides Linear issues or a project as input.
 > Read the `linear-state-transitions` reference for the auto-advance rules. Applied before each layer's launch — each Linear-linked task in the launching layer advances to `In Progress`.
 
-### Context
+## Context
 
 This skill takes a plan (explicit file or inferred from a goal), builds a dependency DAG from each task's `depends_on` field, partitions tasks into layers, and executes layer by layer. Within a layer, tasks run in parallel in isolated worktrees; between layers, worktrees merge back, review runs, and the user can inject guidance before the next layer starts.
 
@@ -66,7 +63,7 @@ The DAG subsumes the degenerate shapes:
 - All-sequential: N layers of 1 task + per-task cadence.
 - Mixed DAGs (most real work): 2–4 layers of 1–4 tasks each + per-layer cadence.
 
-### Mode & Cadence Resolution
+## Mode & Cadence Resolution
 
 Detect both axes from the user's wording before leaving plan mode.
 
@@ -87,13 +84,13 @@ Detect both axes from the user's wording before leaving plan mode.
 
 Present both resolutions in the plan summary. If either is ambiguous, default to the safer choice (`team` / `per-layer`) and state that explicitly.
 
-### Process
+## Process
 
-#### Steps 1–4 — Planning
+### Steps 1–4 — Planning
 
 Follow the `agents-plan-split` reference steps 1–4: understand the goal, discover tooling, establish conventions, write the plan. The plan must include a `depends_on: [task-id, ...]` field on each task (empty/absent = layer 0).
 
-#### Step 5 — Build the schedule
+### Step 5 — Build the schedule
 
 Follow the `agents-plan-split` reference's "Task dependencies" section:
 
@@ -107,7 +104,7 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
   | 0 | task-b | — | src/bar.ts |
   | 1 | task-c | task-a | src/foo-test.ts |
 
-#### Step 6 — Present the schedule
+### Step 6 — Present the schedule
 
 - Show the proposed layer table plus the resolved mode and review cadence.
 - User approves or adjusts (reshuffle layers, change mode, change cadence, add/remove tasks).
@@ -115,12 +112,12 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 
 > **Tip:** Want a second opinion on the DAG before launching? Suggest to the user: *"Invoke `/agents-review dag` with the schedule above to dispatch a reviewer (cheap by default)."* This is a nudge, not a step — the user decides whether to act on it.
 
-#### Step 7 — Decide agent count per layer
+### Step 7 — Decide agent count per layer
 
 - Number of agents in a layer = number of tasks in that layer.
 - 2–4 tasks per layer is the sweet spot. If a layer has >4 tasks, consider whether any should be merged; if a layer has 1 task, that's fine (sequential point in the DAG).
 
-#### Step 8 — Launch the first layer
+### Step 8 — Launch the first layer
 
 - Exit plan mode.
 - Record the **run-level baseline** (current branch + HEAD) for the final review pass.
@@ -153,13 +150,13 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 - Verify each returned worktree path is absolute and under `<project_root>/.claude/worktrees/` per the `agents-worktrees` reference.
 - Each agent prompt is self-contained. Use the template below. Include the running `## Accumulated Guidance` section (empty for layer 0).
 
-#### Step 9 — Collect layer results
+### Step 9 — Collect layer results
 
 - Blocking dispatch — this turn pauses until every agent in the layer returns.
 - Review each agent's result. Handle statuses (DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED) per the standard conventions.
 - If any task fails or is BLOCKED: **finish the in-flight layer, then halt before the next layer.** Surface all failures to the user in the same turn, with a consolidated summary. Wait for user guidance — do not retry or auto-advance.
 
-#### Step 10 — Merge this layer's worktrees
+### Step 10 — Merge this layer's worktrees
 
 Follow the `agents-merge-review` reference "Merge worktrees (per-layer)" section:
 
@@ -167,7 +164,7 @@ Follow the `agents-merge-review` reference "Merge worktrees (per-layer)" section
 - On merge conflicts: present to user, wait for resolution decision, do NOT auto-resolve.
 - Remove each worktree via `git worktree remove`. Surface failures; do not force-remove silently.
 
-#### Step 11 — Review this layer
+### Step 11 — Review this layer
 
 - If cadence is `per-layer`: run `code-review-changes` against the **layer baseline** (recorded before this layer's launch). This catches integration issues between parallel tasks within the layer.
 - If cadence is `per-task`: the per-task reviewer already ran during step 8; no separate layer review.
@@ -175,18 +172,18 @@ Follow the `agents-merge-review` reference "Merge worktrees (per-layer)" section
 
 Present findings. If the reviewer flags issues, fix them (directly or via a corrective agent) before proceeding.
 
-#### Step 12 — Pause for user guidance
+### Step 12 — Pause for user guidance
 
 - Present a brief layer summary: tasks completed, review findings, next layer preview.
 - Allow the user to provide corrections, revised requirements, or style feedback based on what they've seen.
 - **Append all user guidance to a running `## Accumulated Guidance` section**, which grows across layers. Every subsequent agent prompt includes this section verbatim — later layers benefit from everything learned earlier.
 
-#### Step 13 — Launch the next layer (loop)
+### Step 13 — Launch the next layer (loop)
 
 - Record the next layer's baseline (current HEAD after this layer's merges).
 - Loop back to step 8 for layer N+1 with updated accumulated guidance, fresh Linear transitions, and the same mode+cadence flags.
 
-#### Step 14 — Final review, verification, handoff
+### Step 14 — Final review, verification, handoff
 
 Follow the `agents-merge-review` reference steps 2–4:
 
@@ -194,7 +191,7 @@ Follow the `agents-merge-review` reference steps 2–4:
 - **Final verification.** Run the full verification command set from the planning phase. Read the output. Confirm with evidence.
 - **Completion handoff.** Summarize and present options (commit / push / PR / leave); execute the user's choice per the `agents-completion` reference.
 
-#### Step 15 — Shutdown (team mode only)
+### Step 15 — Shutdown (team mode only)
 
 - Send shutdown requests to all teammates: `SendMessage({ to: "<name>", message: { type: "shutdown_request" } })`.
 - Wait for shutdown confirmations.
@@ -203,7 +200,7 @@ Follow the `agents-merge-review` reference steps 2–4:
 
 Fire-and-forget mode has no shutdown — agents exit on their own when their task completes.
 
-### Worktree Mode
+## Worktree Mode
 
 Worktree mode is the **default**. Every agent in every layer runs in its own worktree under `.claude/worktrees/`. Worktree lifetime is one layer: created at layer launch, merged+removed at layer end.
 
@@ -211,7 +208,7 @@ Worktree mode is the **default**. Every agent in every layer runs in its own wor
 - Tasks are small and low-risk.
 - The overhead of per-layer merging is not worth it.
 
-### Agent Prompt Template
+## Agent Prompt Template
 
 Each agent receives a self-contained prompt:
 
@@ -267,7 +264,7 @@ When done, report one of:
 - Send a message to the lead if you are blocked or need a decision.
 ```
 
-### Per-Task Review Pattern (when cadence is `per-task`)
+## Per-Task Review Pattern (when cadence is `per-task`)
 
 For each task in a layer (still parallel across tasks within the layer):
 
@@ -302,7 +299,7 @@ Review the implementation of task [N]: [task name].
 Report: APPROVED or list specific issues to fix.
 ```
 
-### Model Selection
+## Model Selection
 
 See the `agents-delegate` reference for tier definitions, ecosystem mappings, user shorthand, and mismatch handling. Per-agent, pick a tier based on task complexity and resolve to a concrete model:
 
@@ -311,7 +308,7 @@ See the `agents-delegate` reference for tier definitions, ecosystem mappings, us
 - **Explicit model names from the user** override tiers — use verbatim.
 - **Mismatched choices:** ask before dispatching.
 
-### Key Principles
+## Key Principles
 
 - **DAG is the default model.** All-parallel and all-sequential are just degenerate shapes of a DAG — write plans with `depends_on` so the scheduler works correctly.
 - **Non-overlapping within a layer is non-negotiable.** Two agents in the same layer writing the same file = garbage output. Fix the split before launch.
@@ -325,7 +322,7 @@ See the `agents-delegate` reference for tier definitions, ecosystem mappings, us
 - **Don't trust agent success reports.** Check the VCS diff to verify agents actually made the expected changes.
 - **Clean shutdown is mandatory in team mode.** Always send shutdown requests and call `TeamDelete` when done.
 
-### Red Flags
+## Red Flags
 
 - Starting a layer without recording its baseline.
 - Defaulting to fire-and-forget without the user explicitly asking.
@@ -338,10 +335,8 @@ See the `agents-delegate` reference for tier definitions, ecosystem mappings, us
 - Starting implementation on main/master without explicit user consent.
 - Skipping the team shutdown step when in team mode.
 
-### Related Skills
+## Related Skills
 
 - **`agents-delegate`** — for single-task, one-shot delegation to one agent at a user-chosen tier/model. Use when the work fits one agent and doesn't warrant a plan + DAG.
 - **`code-review-changes`** — invoked per-layer (default cadence) and at end-of-run for integration review.
-- **`code-assistant-plan`** — for guided planning where the user implements. This skill plans AND executes. Do not auto-invoke.
-- **`code-assistant-implement`** — for step-by-step human-driven implementation with review gates. Use when the user wants to drive the keyboard.
 - **`agents-review`** — dispatch a reviewer to cross-check the DAG before launching. Suggested after step 6 (optional; cheap tier by default).

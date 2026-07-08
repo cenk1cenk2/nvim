@@ -1,10 +1,10 @@
 ---
 name: excalidraw-draft
 description: Draft hand-drawn Excalidraw diagrams and export to Obsidian vault or as shareable excalidraw.com URL. Use when user says "draw a diagram", "sketch this", "excalidraw", "make an architecture diagram", or wants a visual diagram. Do NOT use for revising existing drawings (excalidraw-obsidian) or text-only explanations.
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[description of what to draw]"
 references:
+  - ../references/present-first.md
   - ../references/excalidraw-mcp-preview.md
   - ../references/excalidraw-conversion.md
   - ../references/excalidraw-elements.md
@@ -13,11 +13,9 @@ references:
   - ../references/output-diff.md
 ---
 
-## system
+## Excalidraw Diagram Drafting
 
-### Excalidraw Diagram Drafting
-
-> **DO NOT enter plan mode.** This is an interactive, visual skill.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `excalidraw-mcp-preview` reference FIRST — it contains the absolute rule on using the MCP server for visual feedback. This is non-negotiable.
 
@@ -31,7 +29,7 @@ references:
 
 > Read the `output-diff` reference for presenting the diagram summary before writing.
 
-### Context
+## Context
 
 You draft Excalidraw diagrams using a two-phase workflow:
 
@@ -42,7 +40,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 
 **Tool selection for vault:** Follow the `obsidian` reference — use embedded `obsidian` MCP tools with vault-relative paths. Filesystem is fallback only.
 
-### Output Modes
+## Output Modes
 
 | Mode | Tool | When to Use |
 |------|------|-------------|
@@ -63,7 +61,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 - No MCP→Obsidian conversion needed — pass the scene JSON directly (strip pseudo-elements only).
 - The tool is `excalidraw__export_to_excalidraw` — takes a `json` parameter with the serialized scene.
 
-### Process
+## Process
 
 1. **Understand the request.** Determine what to visualize — architecture, flow, sequence, concept map, or freeform. Ask if unclear.
 2. **Load references.** Read element format, file template, vault conventions, and MCP preview rules. Call `excalidraw__read_me` once.
@@ -78,7 +76,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
    - **URL**: strip pseudo-elements (`cameraUpdate`, `delete`, `restoreCheckpoint`) from the elements array, build the scene JSON (`{type, version, source, elements, appState, files}`), call `excalidraw__export_to_excalidraw` with the serialized JSON. Return the URL to the user.
    - **If ambiguous**: ask the user before exporting.
 
-### Conventions
+## Conventions
 
 - **Dark mode by default.** Dark appState, `#abb2bf` for text, dark fills for shapes.
 - **Colors from onedarker.** `[600]` for strokes, `[100]`/`[300]` for dark fills.
@@ -86,7 +84,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 - **Spacing.** 30–50px gaps. 80–100px margin around edges.
 - **IDs.** Exactly 8 chars alphanumeric (`[0-9a-zA-Z]{8}`). Descriptive prefix + random suffix: `rctApi3d`, `txtAp4Wq`, `arwAD8Pn`, `zonBk2Lm`.
 
-### Obsidian vs excalidraw.com Rendering (CRITICAL)
+## Obsidian vs excalidraw.com Rendering (CRITICAL)
 
 Two known discrepancies between the Obsidian Excalidraw plugin and excalidraw.com:
 
@@ -94,13 +92,13 @@ Two known discrepancies between the Obsidian Excalidraw plugin and excalidraw.co
 
 **2. Bound text wrapping.** The Obsidian plugin wraps bound text more aggressively than excalidraw.com. Text that fits on one line on excalidraw.com may wrap to multiple lines in Obsidian, breaking small labels. **Always size containers for the Obsidian plugin** (the stricter renderer): `min_width = text.length × fontSize × 0.6 + fontSize`. See the `excalidraw-elements` reference for the full sizing table. If a container is too small for its label, use standalone text overlapping the shape instead of bound text.
 
-### Composing with Obsidian Skills
+## Composing with Obsidian Skills
 
 When composed with Obsidian skills, **always use Obsidian output mode** — do not ask.
 
 - **With `obsidian-note`**: embed via `![[Drawings/filename.excalidraw.md]]`.
 - **With `obsidian-repository`**: link architecture diagrams from repository knowledge notes.
 
-### Composing without Obsidian Skills
+## Composing without Obsidian Skills
 
 When invoked standalone (no obsidian skills co-invoked), the output mode depends on user intent. If the user explicitly requests a URL, link, or image export, use URL mode. Otherwise ask.

@@ -1,16 +1,15 @@
 ---
 name: linear-laravel
 description: "Initialize a Linear session for the Laravel workspace using GitHub as SCM. Auto-invoked when Laravel Linear context is detected (e.g., issue IDs like CLOUD-xxx, Laravel workspace URLs, GitHub Laravel organization repositories)."
-interaction: chat
+references:
+  - ../references/present-first.md
 ---
 
-## system
+## Linear Workspace: Laravel
 
-### Linear Workspace: Laravel
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This skill initializes workspace context only.
-
-### Session Initialization
+## Session Initialization
 
 **FIRST ACTION** when this skill is invoked:
 
@@ -22,7 +21,7 @@ interaction: chat
    - **NEVER fabricate or guess label names** — only use labels that exist in this list.
    - If no label fits the issue, ASK the user which label to use rather than inventing one.
 
-### Default Team
+## Default Team
 
 The current user is on multiple teams (`Infrastructure Foundations`, `Infrastructure`). For this workspace, override the generic multi-team rule in `linear-mandatory-fields`:
 
@@ -33,7 +32,7 @@ The current user is on multiple teams (`Infrastructure Foundations`, `Infrastruc
   - Works in a project/scope that lives on the Infrastructure team (e.g., Nginx replacement, envoy-gateway cutover).
 - **Do not ask** when these two are the only candidates — the default above resolves it. Still ASK if the user lists a third team or the request genuinely spans both.
 
-### Workspace Context
+## Workspace Context
 
 - **Linear MCP:** `linear-laravel` — ALWAYS use `linear-laravel__*` tools unless prompted otherwise.
 - **SCM MCP:** `github` — ALWAYS use `github__*` tools for repository operations.
@@ -41,6 +40,6 @@ The current user is on multiple teams (`Infrastructure Foundations`, `Infrastruc
 - **PR link format:** `{"url": "https://github.com/laravel/.../pull/123", "title": "PR #123"}`.
 - **Cross-reference style:** Use Linear issue identifiers (e.g., "See CLOUD-123 for related work").
 
-### After Initialization
+## After Initialization
 
 Once context is established, proceed with the user's request. If the user wants to create issues, follow the `linear-issue-create` skill workflow.

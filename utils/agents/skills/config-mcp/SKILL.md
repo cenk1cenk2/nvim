@@ -1,22 +1,20 @@
 ---
 name: config-mcp
 description: Add, remove, or modify MCP server entries in the hyprpilot MCP catalog. Researches servers online, prefers official sources and HTTP transport, prompts for variables and authentication. Always manually invoked. Do NOT use for skills (/config-skills), agent guidelines (/config-agents), or the captain's hyprpilot.yaml itself (/config-repository for per-repo changes; edit `~/.config/hyprpilot/config.yaml` directly for daemon settings).
-interaction: chat
 disable-model-invocation: true
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
 argument-hint: "[add|remove|modify] [server-name] [optional description]"
 ---
 
-## system
+## MCP Server Configuration Manager
 
-### MCP Server Configuration Manager
-
-> **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each configuration change before applying.
 
-### Context
+## Context
 
 The captain runs **hyprpilot** as the agent host. Hyprpilot loads MCP servers via the `[[mcps]]` array in `~/.config/hyprpilot/config.yaml` — each entry either points at a catalog file (`{ file = "..." }`) or declares inline `mcp_servers = { ... }`. The active catalog file today is `~/.config/nvim/utils/mcphub/servers.json` (the path is historical — the file is now consumed by hyprpilot, not mcphub.nvim). Per-profile `mcps` arrays wholesale-replace the global default.
 
@@ -57,7 +55,7 @@ This skill edits the catalog file `~/.config/nvim/utils/mcphub/servers.json`. It
 
 > **The catalog file is shared with other clients.** `~/.config/nvim/utils/mcphub/servers.json` is consumed by hyprpilot and may be referenced from other MCP clients too. `${VAR}` syntax works in hyprpilot, Claude Code, and Codex; for OpenCode (`{env:VAR}` style), keep a one-shot conversion at hand: `sed 's/${\([A-Z_][A-Z0-9_]*\)}/{env:\1}/g' servers.json`. Do NOT mix syntaxes inside a single file.
 
-### Server Naming
+## Server Naming
 
 **Server keys MUST use kebab-case with `-` only.** Do NOT use `/` (does not parse correctly through some MCP hubs — gets flattened inconsistently in the tool prefix) and avoid `_` for word separation inside keys. For multi-workspace services, follow the `<service>-<workspace>` convention:
 
@@ -67,7 +65,7 @@ This skill edits the catalog file `~/.config/nvim/utils/mcphub/servers.json`. It
 
 A clean kebab-case server key produces a clean, addressable tool prefix downstream (`mcp__<server>__<tool>`).
 
-### Hyprpilot Permission Extension
+## Hyprpilot Permission Extension
 
 The `hyprpilot` namespace key on each server entry is hyprpilot's typed extension over the standard `mcpServers` shape. It carries two glob arrays:
 
@@ -76,15 +74,15 @@ The `hyprpilot` namespace key on each server entry is hyprpilot's typed extensio
 
 The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<server>__read_*`. The `mcp__<server>__` prefix is implicit. Vendor-native tools (Bash, Read, …) skip this lane entirely.
 
-### Special Tool Categories
+## Special Tool Categories
 
 - **Tmux MCP write tools.** `execute-command`, `create-window`, `split-pane`, `kill-window`, `kill-session`, `kill-pane`, `create-session` are disabled by policy — these grant the agent the ability to mutate the user's terminal layout and run arbitrary commands invisibly. Command execution belongs in the agent's built-in `Bash` tool, where it is visible and permission-prompted. Keep these in `autoRejectTools` (server-relative globs).
 - **Removed servers.** The `git` MCP and `kubernetes` MCP have been removed from this config. Use `git` CLI and `kubectl` CLI via `Bash` for those operations. If a user asks to re-add either, raise the trade-off (extra surface area; commands are already accessible via Bash) before doing so.
 - **In-tree hyprpilot server.** Do NOT add a `hyprpilot` entry here. Hyprpilot auto-injects its own MCP server (named `hyprpilot`) at session/new time when the resolved `[[mcp.skills]]` catalog is non-empty — see `~/.config/hyprpilot/config.yaml` `[mcp]` block. The auto-injected server exposes skills as `hyprpilot://skills/<slug>` resources + `mcp__hyprpilot__list_skills` / `read_skill` / `load_skill_references` / `reload` tools.
 
-### Process
+## Process
 
-#### Add
+### Add
 
 1. **Identify the server.** If the user provides a name or URL, use it. Otherwise, ask. Pick a kebab-case server key (no `/`, prefer `-` over `_` inside the key) — see "Server Naming" above.
 2. **Research the server.**
@@ -120,14 +118,14 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
    - Validate that the resulting JSON is well-formed.
    - Remind the captain that hyprpilot's MCP catalog is static after daemon boot — they'll need to restart the daemon (`hyprpilot ctl daemon reload` reloads config; spawn-time MCP entries require a fresh `session/new`).
 
-#### Remove
+### Remove
 
 1. Read `servers.json` and list available servers if no specific server is named.
 2. Confirm with the user which server to remove.
 3. Remove the entry and write the file.
 4. Remind about the daemon-restart requirement.
 
-#### Modify
+### Modify
 
 1. Read `servers.json` and show the current configuration for the target server.
 2. Ask the user what they want to change (or apply the change they described).
@@ -136,7 +134,7 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 5. Present the updated entry and wait for approval.
 6. Apply and write the file.
 
-### Key Principles
+## Key Principles
 
 - **Never hardcode secrets.** Always use `${ENV_VAR}` references.
 - **Prefer official servers.** First-party MCP servers from service providers are more reliable and feature-complete.

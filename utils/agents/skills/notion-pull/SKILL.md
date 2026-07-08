@@ -1,18 +1,16 @@
 ---
 name: notion-pull
 description: "Pull a Notion page into the current editor as markdown. Use when user says 'pull from Notion', 'fetch Notion page', 'import from Notion', or provides a Notion URL to pull. Converts title to # heading and metadata to frontmatter. Do NOT use for pushing (notion-push) or session init (notion-laravel)."
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[notion-url or search description]"
 references:
+  - ../references/present-first.md
   - ../references/claude-ai-connectors.md
 ---
 
-## system
+## Notion Pull: Page to Markdown
 
-### Notion Pull: Page to Markdown
-
-> **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **PREREQUISITE:** The `notion-laravel` skill MUST be active before this skill runs.
 > If no Notion workspace context exists in the current session, auto-invoke `notion-laravel` first.
@@ -20,7 +18,7 @@ references:
 > **Deferred tools:** Notion tools are claude.ai connector tools (`mcp__claude_ai_Notion__*`) — load via `ToolSearch` before use:
 > `ToolSearch({ query: "select:mcp__claude_ai_Notion__notion-fetch,mcp__claude_ai_Notion__notion-search" })`
 
-### Process
+## Process
 
 **Step 1: Resolve the page.**
 
@@ -60,7 +58,7 @@ Parse the fetched page content into markdown format:
 - Use the built-in `Edit` (or `Write` for new files) tool to write the converted markdown to the target buffer.
 - Confirm to the user: page title, number of properties converted, and where the file was written.
 
-### Markdown Format
+## Markdown Format
 
 ```markdown
 ---
@@ -79,7 +77,7 @@ author: Jane Doe
 Body content here...
 ```
 
-### Key Principles
+## Key Principles
 
 - **Always include `notion-url` in frontmatter** — enables round-trip with `notion-push`.
 - **Search requires approval** — never auto-select a search result.

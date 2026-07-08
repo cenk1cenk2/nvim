@@ -1,10 +1,10 @@
 ---
 name: slack-laravel-compile
 description: "Compile a concise Slack message from the user's input, enriched with links and references from MCP tools. Use when user says 'compile this for Slack', 'write this up for the team', 'post this finding', or 'share this on Slack'. Enriches the user's question or finding with PR links, Spacelift run links, code line references, and other relevant links. Always drafts and presents for approval before posting."
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[what to compile — a question, finding, or topic]"
 references:
+  - ../references/present-first.md
   - ../references/claude-ai-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
@@ -15,14 +15,11 @@ references:
   - ../references/enrich-context.md
 ---
 
-## system
+## Slack Compile
 
-### Slack Compile
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This is a draft-and-post workflow.
-
-> **PREREQUISITE:** The `slack-laravel` workspace skill MUST be active before this skill runs.
-> Load it via the `slack-laravel` skill (load it as defined in `load-skills`) if not already loaded.
+> **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection and activation. This skill operates on the Laravel enterprise workspace (`slack-laravel`), which MUST be active before it runs.
 
 > Read the `slack` reference for Slack mrkdwn formatting rules.
 > Read the `scm-github` and `scm-gitlab` references for SCM MCP tools.
@@ -31,7 +28,7 @@ references:
 
 This skill takes the user's input — a question, finding, or topic — and compiles it into a concise Slack message enriched with real links and references. The goal is to make the message self-contained so others can understand it and reach the relevant resources without asking follow-up questions.
 
-### Context
+## Context
 
 - **Slack workspace:** Laravel enterprise (`slack-laravel`).
 - **Slack tools:** Deferred claude.ai connector tools (`mcp__claude_ai_Slack__*`) — load via `ToolSearch` before use:
@@ -40,9 +37,9 @@ This skill takes the user's input — a question, finding, or topic — and comp
   ```
 - **Target channel:** Ask the user which channel to post to. If already clear from context (e.g., combined with another skill that specifies a channel), use that.
 
-### Process
+## Process
 
-#### Step 1: Understand the User's Input
+### Step 1: Understand the User's Input
 
 Read the user's message carefully. Identify:
 
@@ -52,13 +49,13 @@ Read the user's message carefully. Identify:
 
 **Stay within the user's input.** Do not add information the user did not mention or imply. Do not bring in unrelated topics.
 
-#### Step 2: Enrich with Links and References
+### Step 2: Enrich with Links and References
 
 Follow the `enrich-context` reference. For each entity the user mentioned, fetch the real link using the entity enrichment table. Only enrich entities the user actually mentioned — do not go looking for extra things to link.
 
 For Slack output specifically: use plain URLs for GitHub/GitLab (Slack auto-unfurls them). Use `<url|label>` format for non-unfurling links (Spacelift, Linear, etc.).
 
-#### Step 3: Compose the Message
+### Step 3: Compose the Message
 
 Structure:
 
@@ -83,11 +80,11 @@ Rules:
 - **No markdown.** No `**bold**`, no `[text](url)`, no `###` headings. Use Slack conventions.
 - **Stick to what the user said.** Enrich with links and details, but do not add opinions, analysis, or information the user did not ask to share.
 
-#### Step 4: Add Appendix (if needed)
+### Step 4: Add Appendix (if needed)
 
 Follow the appendix pattern from the `enrich-context` reference. Add an `## Appendix` section for details that help but would clutter the main message. Skip if the message is already self-contained.
 
-#### Step 5: Present Draft
+### Step 5: Present Draft
 
 Show the complete message to the user in chat using `output-diff` conventions.
 
@@ -95,7 +92,7 @@ Show the complete message to the user in chat using `output-diff` conventions.
 - Wait for explicit approval before posting.
 - If the user wants changes, revise and re-present.
 
-#### Step 6: Post to Slack
+### Step 6: Post to Slack
 
 Only after user approval:
 
@@ -103,7 +100,7 @@ Only after user approval:
 - Post to the specified channel.
 - Confirm the message was posted.
 
-### Composing with Other Skills
+## Composing with Other Skills
 
 This skill can be combined with any skill that produces output the user wants to share:
 
@@ -114,7 +111,7 @@ This skill can be combined with any skill that produces output the user wants to
 
 When composed, the companion skill's output is included under its own `##` section heading in the message.
 
-### Key Principles
+## Key Principles
 
 - **Always draft first.** Never post without presenting to the user and getting approval.
 - **Stay within scope.** Only compile what the user asked about. Do not add unrelated information.

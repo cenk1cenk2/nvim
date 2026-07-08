@@ -1,28 +1,25 @@
 ---
 name: plan-revise
 description: Revise an existing plan file when it got something wrong or the initial direction isn't working. Reads the current plan, gathers what went wrong (and any partial implementation via git), re-interviews the user on the deltas, then updates the plan in-place with a dated revision history entry. Use when user says "plan revise", "revise the plan", "back to the drawing board", "we got it wrong", "wrong plan", "change direction", or "this approach isn't working". Do NOT use for creating new plans (use /plan-hard), picking up a plan unchanged (use /plan-pickup), or cross-session handoffs (use /plan-handoff).
-interaction: chat
 references:
   - ../references/plan-mode.md
 ---
 
-## system
+## Plan Revise — Going Back to the Drawing Board
 
-### Plan Revise — Going Back to the Drawing Board
-
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read the files listed in `references:` for the `plan-revise` skill.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference for full directives — read the files listed in `references:` for the `plan-revise` skill.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", `g`, `go`, `y`, or `yolo`.
 > - Do NOT undo, revert, or modify any implementation code during this skill. Revision happens in the plan file only.
 
-### Context
+## Context
 
 A plan was written, possibly some work was done against it, and now it is clear the plan got something wrong or the chosen direction is not working. This skill revises the plan **in place** so the plan file remains the single source of truth. The goal is NOT to throw away the plan — it is to correct course while preserving the reasoning history.
 
 This skill composes with `plan-hard` — the interview protocol is the same, but the scope is narrower: you are interviewing about the **delta** (what changed, what was wrong, what to do differently), not the full plan from scratch.
 
-### Process
+## Process
 
 1. **Locate the plan file.**
    - If the user provides a file path or name, use it directly.
@@ -58,7 +55,7 @@ This skill composes with `plan-hard` — the interview protocol is the same, but
 
 8. **Present the revised plan** in chat and stop. Wait for the user to signal next steps (implement, further revise, hand off).
 
-### Revision History Entry Format
+## Revision History Entry Format
 
 Prepend to the plan file's `## Revision History` section (create the section if missing, place it right after the title):
 
@@ -92,7 +89,7 @@ Prepend to the plan file's `## Revision History` section (create the section if 
 
 After the Revision History, the rest of the plan file reflects the **current** revised state — not a merge of old and new.
 
-### Interview Protocol (delta-scoped)
+## Interview Protocol (delta-scoped)
 
 Same Recommendation Format as `plan-hard`:
 
@@ -111,7 +108,7 @@ Same Recommendation Format as `plan-hard`:
 3. Then, walk the new branches that open up — depth-first, one at a time.
 4. Finally, confirm the updated end state.
 
-### Self-Answering Rule
+## Self-Answering Rule
 
 Same as `plan-hard`: before asking the user, check if the codebase answers the question. Use `hyprpilot-nvim` MCP (LSP + editor + diagnostics), `git` CLI via Bash, `Grep`, `Glob`, `Read`, `github__*` / `gitlab__*`, and `context7` for documentation. Only escalate to the user for intent, preference, or unknowable-from-code decisions.
 
@@ -121,7 +118,7 @@ Extra sources specific to `plan-revise`:
 - `git diff` — concrete changes on the branch.
 - Build / test output (via tmux) — to confirm whether the current approach actually fails.
 
-### Stop Conditions
+## Stop Conditions
 
 Write the revision to the plan file and stop the interview when:
 
@@ -131,7 +128,7 @@ Write the revision to the plan file and stop the interview when:
 
 Do NOT auto-stop because questions feel repetitive. Keep going until a signal.
 
-### Key Principles
+## Key Principles
 
 - **Preserve history.** The original plan is valuable context. Do not delete it — rewrite it, and record what changed in the Revision History.
 - **One plan file per task.** Always update in place. Do not create `plan-v2.md`. Git preserves earlier versions.
@@ -140,7 +137,7 @@ Do NOT auto-stop because questions feel repetitive. Keep going until a signal.
 - **Scope to the delta.** Do not re-interview decisions that are unaffected. Only revisit branches that the revision opens up.
 - **Compose, don't duplicate.** The interview protocol is `plan-hard`'s. This skill scopes it narrower.
 
-### Examples
+## Examples
 
 **Example 1 — Failed approach:**
 
@@ -162,17 +159,15 @@ Do NOT auto-stop because questions feel repetitive. Keep going until a signal.
 6. Append revision history. Update Approach and Implementation Steps to include the SAML work.
 7. Present. Stop.
 
-### Composition with Other Skills
+## Composition with Other Skills
 
 - **`plan-hard`** — the interview protocol this skill inherits from. If the user wants a full re-plan rather than a delta revision, defer to `plan-hard`.
 - **`plan-pickup`** — if the revised plan is to be executed immediately after revision, the user may invoke `plan-pickup` next.
 - **`plan-handoff`** — if the revised plan needs to be handed to a different session or repository, compose with `plan-handoff` after revision.
-- **`code-assistant-plan`** — if the user is mid-implementation and the code-assistant-plan is tracking progress, update its TodoWrite state to match the revised plan.
 - **`code-deviations`** — when the revision trigger was a discovered deviation between plan and reality, apply the code-deviations handling pattern to record the learning.
 
-### Related Skills
+## Related Skills
 
 - **`plan-hard`** — build a plan from scratch via interview.
 - **`plan-pickup`** — load and execute an existing plan file.
 - **`plan-handoff`** — produce a self-contained plan for another session or repository.
-- **`code-assistant-plan`** — collaborative guidance and progress tracking during user-driven implementation.

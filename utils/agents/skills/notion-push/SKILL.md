@@ -1,19 +1,17 @@
 ---
 name: notion-push
 description: "Push the current markdown file to a Notion page. Use when user says 'push to Notion', 'update Notion page', 'sync to Notion', or wants to update a Notion document from local markdown. Converts # heading to title and frontmatter to metadata. Do NOT use for pulling (notion-pull) or session init (notion-laravel)."
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[notion-url or search description]"
 references:
+  - ../references/present-first.md
   - ../references/claude-ai-connectors.md
   - ../references/output-diff.md
 ---
 
-## system
+## Notion Push: Markdown to Page
 
-### Notion Push: Markdown to Page
-
-> **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **PREREQUISITE:** The `notion-laravel` skill MUST be active before this skill runs. If no Notion workspace context exists in the current session, auto-invoke `notion-laravel` first.
 
@@ -22,7 +20,7 @@ references:
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Process
+## Process
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -72,7 +70,7 @@ Present a summary to the user before updating:
   - Body content from the markdown.
 - Confirm success to the user with the page URL.
 
-### Key Principles
+## Key Principles
 
 - **Always confirm before pushing** — show what will be updated and wait for approval.
 - **Prefer `notion-url` from frontmatter** — enables seamless round-trip with `notion-pull`.

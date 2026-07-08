@@ -1,20 +1,18 @@
 ---
 name: linear-issue-status
 description: Quickly update a Linear issue status from explicit user wording or clear workflow context. Use when user says "mark K-123 done", "move this to in review", "set the issue to in progress", "cancel this issue", or when composing status changes with issue creation/checklist work. Do NOT use for full issue edits or project reconciliation.
-interaction: chat
 argument-hint: "[issue-id or URL] [status]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-issue-states.md
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
+  - ../references/present-first.md
 ---
 
-## system
+## Linear Issue Status Update
 
-### Linear Issue Status Update
-
-> **DO NOT enter plan mode.** This is a lightweight status update workflow.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
@@ -22,11 +20,11 @@ references:
 > Read the `linear-state-transitions` reference for monotonic transition reporting and opt-out wording.
 > Read the `output-diff` reference when presenting non-obvious or inferred status changes before writing.
 
-### Purpose
+## Purpose
 
 This skill changes issue status only. It is meant to compose verbally and situationally with `linear-issue-create`, `linear-issue-checklist`, PR/MR creation, merged PR/MR close-out, and pickup workflows.
 
-### Process
+## Process
 
 1. **Identify the issue.**
    - Parse an issue ID or Linear URL from the prompt or active context.
@@ -62,14 +60,14 @@ This skill changes issue status only. It is meant to compose verbally and situat
    - Leave ambiguous, canceled, or out-of-scope items untouched and report them.
    - Never silently cancel checklist items; cancellation requires explicit user wording.
 
-### Key Rules
+## Key Rules
 
 - **Fast path for explicit status.** If the user says exactly what state to use, do it without a planning detour.
 - **Ask for ambiguity.** If the issue, target state, or terminal/cancel semantics are unclear, ask one focused question.
 - **Checklist is part of close-out.** Always try checklist reconciliation when moving to `In Review` or `Done`.
 - **Status only.** For title, description, labels, priority, or estimate changes, use `linear-issue-update`.
 
-### Related Skills
+## Related Skills
 
 - **`linear-issue-checklist`** — checklist reconciliation, especially when moving issues to `In Review` or `Done`.
 - **`linear-issue-comment`** — deviations and findings comments.

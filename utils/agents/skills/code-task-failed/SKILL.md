@@ -1,30 +1,25 @@
 ---
 name: code-task-failed
 description: Investigate a failed command (build, test, lint, etc.) by capturing terminal output, analyzing errors, and systematically isolating the root cause. Always manually invoked. Do NOT use for behavioral bugs (code-debug) or code review (code-review-branch).
-interaction: chat
 disable-model-invocation: true
+references:
+  - ../references/present-first.md
 argument-hint: "[brief description of what failed, e.g., 'build failed', 'test suite', 'lint errors']"
 ---
 
-## system
+## Code Failure Investigation
 
-### Code Failure Investigation
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Investigate before fixing.
-> - Present findings and proposed fix to the user before making changes.
-> - **Do NOT exit plan mode until the user explicitly approves a fix.**
+## Process
 
-### Process
-
-#### Step 1: Capture the Failure
+### Step 1: Capture the Failure
 
 - Use `tmux__capture-pane` on the scratch pane to grab the terminal output.
 - If the failure output is not visible in the pane (scrolled off or in a different pane), ask the user which pane or window contains the output.
 - Extract the **error messages, stack traces, and exit codes** from the captured output.
 
-#### Step 2: Classify the Failure
+### Step 2: Classify the Failure
 
 Identify what kind of failure this is:
 
@@ -38,7 +33,7 @@ Identify what kind of failure this is:
 
 The category determines the investigation path — don't apply build-error thinking to a dependency problem.
 
-#### Step 3: Ask the User
+### Step 3: Ask the User
 
 Before diving deep, ask:
 
@@ -48,7 +43,7 @@ Before diving deep, ask:
 
 Wait for the user's response before proceeding. Their context narrows the search significantly.
 
-#### Step 4: Investigate
+### Step 4: Investigate
 
 Based on the failure category and user context, investigate using available tools:
 
@@ -77,7 +72,7 @@ Based on the failure category and user context, investigate using available tool
 - Check if this is a known bug with a workaround.
 - Consult the user before assuming an external cause.
 
-#### Step 5: Isolate
+### Step 5: Isolate
 
 If the root cause isn't immediately clear:
 
@@ -87,7 +82,7 @@ If the root cause isn't immediately clear:
 
 Always consult the user before running commands — describe what you want to run and why.
 
-#### Step 6: Present Findings
+### Step 6: Present Findings
 
 Present a concise report:
 
@@ -112,15 +107,15 @@ Present a concise report:
 
 Wait for user approval before applying any fix.
 
-### Key Rules
+## Key Rules
 
 - **Capture first, investigate second** — always start by reading the actual error output.
 - **Never guess the error** — read it from the terminal. Don't assume what failed based on the user's description alone.
 - **Consult the user before running commands** — describe the command and its purpose, wait for approval.
 - **Consult the user before assuming external causes** — don't blame dependencies or upstream without evidence and user agreement.
 - **Don't fix before understanding** — the investigation must produce a clear root cause before proposing a fix.
-- **Stay in plan mode** — present findings and proposed fix, let the user decide when to proceed.
+- **Present findings first** — present findings and proposed fix, let the user decide when to proceed.
 
-### Related Skills
+## Related Skills
 
 - **`code-debug`** — for behavioral bugs where code runs but produces wrong results. Auto-invoke when the problem is incorrect behavior, not a command failure.

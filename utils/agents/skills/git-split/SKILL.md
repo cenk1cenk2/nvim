@@ -1,30 +1,25 @@
 ---
-name: git-break
-description: Break a large set of changes — uncommitted tree, branch commits ahead of base, or an open PR/MR — into smaller focused pieces, each on its own branch with its own commit(s), optional push, and optional PR/MR. Use when user says "git-break", "break this up", "split this PR", "split this MR", "split this branch", "break into smaller PRs", "break into smaller MRs", or "smaller chunks". Plans the split scope quickly, then orchestrates per-slice execution via existing skills. Do NOT use to commit as-is (git-commit), to create a single branch (git-branch), or to rewrite a PR/MR description (github-pr-create, gitlab-mr-create).
-interaction: chat
+name: git-split
+description: Break a large set of changes — uncommitted tree, branch commits ahead of base, or an open PR/MR — into smaller focused pieces, each on its own branch with its own commit(s), optional push, and optional PR/MR. Use when user says "git-split", "break this up", "split this PR", "split this MR", "split this branch", "break into smaller PRs", "break into smaller MRs", or "smaller chunks". Plans the split scope quickly, then orchestrates per-slice execution via existing skills. Do NOT use to commit as-is (git-commit), to create a single branch (git-branch), or to rewrite a PR/MR description (github-pr-create, gitlab-mr-create).
+disable-model-invocation: true
 argument-hint: "[optional: slicing hint — e.g., 'by feature', 'separate refactor and feature', 'by file']"
 references:
-  - ../references/plan-mode.md
+  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/output-diff.md
 ---
 
-## system
+## Git Break
 
-### Git Break
-
-> **ALWAYS enter plan mode when this prompt is invoked.** Use `EnterPlanMode` immediately. Read the `plan-mode` reference (standard variant) for full directives — plan, present, iterate, then execute only after explicit user approval.
->
-> - Do NOT create branches, commits, pushes, or PRs/MRs until the user approves the full split plan.
-> - Iterate on the plan with the user until they explicitly approve.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-detect` reference for SCM platform detection, git MCP tools, and CLI fallbacks.
 
 > Read the `output-diff` reference for chunked split-plan presentation — show reasoning + content blocks per slice before any write.
 
-### Context
+## Context
 
-`git-break` is a **delegation orchestrator**. It does not create branches, commit, push, or open PRs/MRs itself — it plans the split and then delegates each step to the dedicated skills:
+`git-split` is a **delegation orchestrator**. It does not create branches, commit, push, or open PRs/MRs itself — it plans the split and then delegates each step to the dedicated skills:
 
 | Slice action | Delegated skill |
 |---|---|
@@ -35,7 +30,7 @@ references:
 
 The skill handles three input modes — uncommitted tree, branch commits ahead of base, open PR/MR — and any combination of them.
 
-### Process
+## Process
 
 1. **Detect input mode and SCM platform.**
    - `git status` for current branch and working-tree state.
@@ -107,7 +102,7 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
    - Print the original branch HEAD SHA in case the user wants to discard or reset the original.
    - Suggest follow-up actions on the original PR/MR when one exists (mark draft, close, supersede). Do NOT execute these actions — the user decides.
 
-### Key Principles
+## Key Principles
 
 - **One concern per slice.** A "refactor + feature" PR becomes two slices.
 - **Slices stand alone.** Each should compile and pass tests independently when possible.
@@ -117,7 +112,7 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
 - **Coverage check is mandatory.** Before executing, verify the union of slices equals the original change set.
 - **Delegate, don't duplicate.** All branch / commit / push / PR / MR work goes through the dedicated skills.
 
-### Composing with Other Skills
+## Composing with Other Skills
 
 This skill is the **caller** in a delegation chain. The composed skills run their full workflows (analyze → draft → approve → act) for each slice.
 
@@ -126,9 +121,9 @@ This skill is the **caller** in a delegation chain. The composed skills run thei
 - **`git-push`** — push per slice (opt-in).
 - **`github-pr-create` / `gitlab-mr-create`** — draft PR/MR per slice (opt-in). Platform selected via `scm-detect`.
 
-**Conflict with `git-debranch`.** `git-debranch` suppresses branch / commit / push / PR-MR creation — the exact opposite of this skill's purpose. If `git-debranch` is active when `git-break` is invoked, surface the conflict and ask the user before proceeding. Do NOT silently override.
+**Conflict with `git-debranch`.** `git-debranch` suppresses branch / commit / push / PR-MR creation — the exact opposite of this skill's purpose. If `git-debranch` is active when `git-split` is invoked, surface the conflict and ask the user before proceeding. Do NOT silently override.
 
-### Examples
+## Examples
 
 **User says:** "break this up" (working tree has 6 modified files spanning `src/auth/`, `config/`, and `test/`)
 

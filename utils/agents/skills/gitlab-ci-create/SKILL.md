@@ -1,29 +1,21 @@
 ---
 name: gitlab-ci-create
 description: Create or update GitLab CI/CD pipelines using the devops/pipelines task-based model. Use when user says "add a pipeline", "set up GitLab CI", or "modify .gitlab-ci.yml". Do NOT use for diagnosing failures (gitlab-ci-fix), GitHub Actions (github-ci-create), or MR descriptions (gitlab-mr-create).
-interaction: chat
 disable-model-invocation: true
 references:
-  - ../references/plan-mode.md
+  - ../references/present-first.md
   - ../references/scm-gitlab.md
 ---
 
-## system
+## GitLab CI: Create and Update GitLab CI/CD Pipelines
 
-### GitLab CI: Create and Update GitLab CI/CD Pipelines
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
->
-> - Use `EnterPlanMode` tool immediately.
-> - Research existing patterns and available templates before proposing anything.
-> - Present findings and proposed pipeline to the user.
-> - Do NOT write files until the user explicitly approves.
-
-### Core Requirements
+## Core Requirements
 
 > Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection
 
-### Architecture: devops/pipelines + devops/pipes
+## Architecture: devops/pipelines + devops/pipes
 
 The CI/CD system has two layers:
 
@@ -54,7 +46,7 @@ node-install:
   extends: .node-install
 ```
 
-### Process
+## Process
 
 1. **Understand the requirement.** Clarify what the pipeline should do: build, test, lint, deploy, release, etc. Identify the language, framework, and runtime involved.
 2. **Analyze existing patterns.** Read `.gitlab-ci.yml` in the current repository. Note existing includes, stages, variables, and job structure. New additions must be consistent with existing patterns.
@@ -70,7 +62,7 @@ node-install:
 8. **Draft the pipeline.** Write the complete `.gitlab-ci.yml` and present it in chat. Explain what each include and job does. List the available environment variables the user can customize.
 9. **Ask to implement.** After user approval, exit plan mode and write the pipeline file.
 
-### Migration Guidance
+## Migration Guidance
 
 When modernizing an existing consumer:
 
@@ -83,7 +75,7 @@ When modernizing an existing consumer:
 7. **Modernize rules carefully.** Convert `only`/`except` to equivalent `rules` when touching the job. Add `workflow` rules only when they preserve or clarify the existing pipeline behavior, such as preventing duplicate branch/MR pipelines.
 8. **Validate through the MR pipeline.** CI lint is useful for syntax, but the merge request pipeline is the runtime validation source unless the user asks for another verification path.
 
-### Key Principles
+## Key Principles
 
 - **Always use devops/pipelines templates.** Never write raw scripts when a template exists for the job.
 - **Use only the current consumer model.** Keep `devops/pipes` as the CLI/flag source, not as a consumer template source.
@@ -94,6 +86,6 @@ When modernizing an existing consumer:
 - **Migrate instead of expanding non-current patterns.** If non-current consumer patterns are found during ordinary pipeline work, replace them with the current task-based model before adding new behavior.
 - **Match existing patterns.** If the repository already has a `.gitlab-ci.yml`, follow its conventions for stages, rules, and variable naming.
 
-### Related Skills
+## Related Skills
 
 - **`gitlab-ci-fix`** — for diagnosing failures in existing GitLab CI pipelines. Auto-invoke when the user reports CI failures instead of wanting to create/update pipelines.

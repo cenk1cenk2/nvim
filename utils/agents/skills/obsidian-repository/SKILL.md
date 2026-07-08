@@ -1,25 +1,23 @@
 ---
 name: obsidian-repository
 description: Document repository knowledge in Obsidian — key findings, architecture, conventions, and gotchas. Use when user says "document this repo", "update the repo note", "capture architecture in Obsidian", or "add a detailed note about X in this repo" — OR when the assistant detects that the Obsidian repo note has drifted from the actual repo state (architecture, conventions, components, gotchas) during a session (see AGENTS.md §VII "Knowledge Base Updates (Proactive)"); ALWAYS propose, never auto-apply regardless of session mode. Do NOT use for general notes (obsidian-note), quick todos (obsidian-todo), or triaging notes (obsidian-triage).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[repository name or path] [optional: what to document]"
 references:
+  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
 
-## system
+## Obsidian Repository: Repository Knowledge Base
 
-### Obsidian Repository: Repository Knowledge Base
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This skill explores the repository and writes/updates notes directly.
-
-### Context
+## Context
 
 You maintain structured reference notes about development repositories in the vault's `Repositories/` folder (`~/notes/Repositories/` on disk). These notes capture architecture, conventions, key decisions, and gotchas — the knowledge that's hard to rediscover. They are living documents that get updated as repositories evolve.
 
-### File Paths
+## File Paths
 
 Repositories live in `~/development/`. The note path mirrors the repository path relative to `~/development/`:
 
@@ -42,7 +40,7 @@ Repositories/laravel/cloud-app-operator/
 
 If the current working directory is under `~/development/`, derive the folder path automatically. Otherwise, ask the user which repository.
 
-### Tools
+## Tools
 
 > **Tool access:** Use the embedded `obsidian` MCP tools from the `obsidian` reference for all vault operations. Paths are vault-relative; filesystem is fallback only.
 >
@@ -52,9 +50,9 @@ If the current working directory is under `~/development/`, derive the folder pa
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Process
+## Process
 
-#### Create (note does not exist)
+### Create (note does not exist)
 
 1. **Explore the repository.**
    - Read key files: README, CONTRIBUTING, Makefile/Taskfile, CI config, main entrypoints.
@@ -72,7 +70,7 @@ If the current working directory is under `~/development/`, derive the folder pa
    - Each sub-note should have its own context — if it needs the README for context, it belongs in the README instead.
    - Draft sub-notes and present for approval alongside or after the README.
 
-#### Update (note already exists)
+### Update (note already exists)
 
 1. **Read the existing note.**
 2. **List existing sub-notes** in the repository folder via `obsidian__vault_list`.
@@ -87,7 +85,7 @@ If the current working directory is under `~/development/`, derive the folder pa
    - Wait for the user to confirm which updates to apply.
 6. **Apply approved updates** and present the final note.
 
-### Sub-Notes
+## Sub-Notes
 
 Sub-notes are detailed reference documents for standalone topics within a repository. They live alongside `README.md` in the repository folder.
 
@@ -109,7 +107,7 @@ Sub-notes are detailed reference documents for standalone topics within a reposi
 - **Linking:** README should link to sub-notes where relevant — inline in the appropriate section or in a dedicated section.
 - **Structure:** flat `##` headers, same style as README. No fixed template — structure fits the topic.
 
-### Note Structure (README.md)
+## Note Structure (README.md)
 
 ```yaml
 ---
@@ -163,7 +161,7 @@ Freeform section for anything that doesn't fit above — recent decisions, migra
 
 Sections are optional — use only what the repository warrants. A small utility might only need Overview, Stack, and Development.
 
-### Plan Sections
+## Plan Sections
 
 When a repository note tracks an ongoing plan (multi-phase work, migrations, rollouts), use this structure per phase so the plan reflects both the intent and what was actually done.
 
@@ -197,7 +195,7 @@ Bump the 5 remaining enterprise clusters (ent-cmsmax, davidsons, diagonal, found
 - Green/blue was already enabled on all 5 enterprise clusters — the earlier fleet audit incorrectly reported it as disabled.
 ```
 
-### Key Principles
+## Key Principles
 
 - **Explore before writing.** Read the repository thoroughly. Do not guess about structure or conventions.
 - **Ask before overwriting.** When updating, always present deviations and let the user decide what to change.
@@ -205,6 +203,6 @@ Bump the 5 remaining enterprise clusters (ent-cmsmax, davidsons, diagonal, found
 - **Extract when it grows.** If a README section becomes a standalone topic with its own references and context, extract it to a sub-note.
 - **Match the obsidian-note style.** Flat structure (`##` headers), kebab-case filenames, minimal prose, action-oriented.
 
-### Related Skills
+## Related Skills
 
 - **`obsidian-note`** — general-purpose note creation. This skill specializes the obsidian-note pattern for repository documentation. Do not auto-invoke.

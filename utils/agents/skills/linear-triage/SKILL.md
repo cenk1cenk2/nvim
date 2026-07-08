@@ -1,45 +1,38 @@
 ---
 name: linear-triage
 description: Process all Linear issues in triage status, recommending projects, priorities, teams, and refinements interactively. Use when user says "triage issues", "process the triage queue", or "review untriaged issues". Requires a workspace skill (linear-kilic or linear-laravel). Do NOT use for cycle planning (linear-cycle) or picking next tasks (linear-next-task).
-interaction: chat
 references:
+  - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-issue-states.md
+  - ../references/present-first.md
 ---
 
-## system
+## Linear Triage
 
-### Linear Triage
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
-> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
->
-> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
-> - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
->
-> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous.
-
-> **DO NOT enter plan mode.** This is an interactive, issue-by-issue workflow driven by user decisions.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 > Read the `linear-issue-states` reference for state meanings and transition rules when recommending target states.
 
-### Process
+## Process
 
-#### Step 1: Fetch Triage Issues
+### Step 1: Fetch Triage Issues
 
 - Use `list_issues` with `state: "triage"` to fetch all issues in triage status.
 - If there are many issues, paginate using `cursor`.
 - Group issues by theme, label, or apparent domain to make the review easier.
 
-#### Step 2: Fetch Context
+### Step 2: Fetch Context
 
 - Fetch all active projects using `list_projects` (exclude archived).
 - Fetch current cycle using `list_cycles` with `type: "current"`.
 - Keep these available throughout the session for recommendations.
 
-#### Step 3: Present Overview
+### Step 3: Present Overview
 
 Present the triage queue to the user:
 
@@ -48,7 +41,7 @@ Present the triage queue to the user:
 - **Project creation signal** — if 3+ issues cluster around a common theme and no existing project covers it, flag this to the user and recommend creating a project via `linear-project-create`. Do NOT create the project yourself — just recommend it and move on. The user can act on it after triage.
 - Ask the user if they want to process all issues or focus on a specific group.
 
-#### Step 4: Process Each Issue
+### Step 4: Process Each Issue
 
 For each issue:
 
@@ -84,7 +77,7 @@ Accept? (or tell me what to change)
 
 Wait for the user to accept, modify, or skip each issue before proceeding.
 
-#### Step 5: Apply Changes
+### Step 5: Apply Changes
 
 For each accepted issue:
 
@@ -92,7 +85,7 @@ For each accepted issue:
 - If description refinement was approved, update `description` in the same call.
 - Batch where possible — if the user approves multiple issues in a row, apply them together using parallel tool calls.
 
-#### Step 6: Summary
+### Step 6: Summary
 
 After processing all issues (or when the user stops), present a summary:
 
@@ -100,7 +93,7 @@ After processing all issues (or when the user stops), present a summary:
 - Any project creation recommendations that came up during the session.
 - Issues that were added to the current cycle.
 
-### Key Rules
+## Key Rules
 
 - **One issue at a time** — present, wait for user response, then proceed. Do not dump all recommendations at once.
 - **Never force a project** — some issues are standalone. Recommend but accept "no project".

@@ -1,24 +1,25 @@
 ---
 name: cluster-kilic-workload
 description: Create a new workload deployment repository in the cluster/workloads group on GitLab. Scaffolds the kustomize structure with Helm charts, ExternalSecrets, Gateway API routing, databases, SSO, and other common patterns. Always manually invoked. Do NOT use for ArgoCD workloads (/argocd-kilic-workload), LB routing (/argocd-kilic-loadbalancer), or Helm chart wrappers (/cluster-kilic-chart).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[workload-name] - e.g., 'seafile', 'immich', 'my-app'"
+references:
+  - ../references/present-first.md
 ---
 
-## system
-
-### Cluster Workload Creator
+## Cluster Workload Creator
 
 > **IMPORTANT: This skill creates or modifies a workload deployment repository in the `cluster/workloads` group on GitLab (`gitlab.kilic.dev`).**
 
-### How Workloads Work in This System
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+## How Workloads Work in This System
 
 Each application deployed to a cluster gets a workload repository at `cluster/workloads/<name>`. These repos contain **kustomize-based Kubernetes manifests** that ArgoCD syncs to the target cluster. The cluster's ArgoCD repo (`cluster/<cluster>/argocd-kilic-<cluster>`) has a workload service that points to this repo.
 
 Workload repos are self-contained — they define everything the application needs: deployments, services, routes, secrets, databases, storage, and monitoring.
 
-### Directory Structure
+## Directory Structure
 
 The deployment root is always `.deploy/<cluster>/` where `<cluster>` is the target cluster name (e.g., `rubik`, `neutrino`, `overseer`).
 
@@ -47,7 +48,7 @@ The deployment root is always `.deploy/<cluster>/` where `<cluster>` is the targ
     ...resources...
 ```
 
-### Gather Requirements
+## Gather Requirements
 
 Ask the user:
 
@@ -64,7 +65,7 @@ Ask the user:
 - **Helm chart?** Is there an upstream Helm chart, or plain Kubernetes manifests?
 - **Secrets?** What Vault secrets are needed?
 
-### Research Phase (MANDATORY)
+## Research Phase (MANDATORY)
 
 **BEFORE writing any code**, use GitLab MCP to read a similar existing workload:
 
@@ -82,9 +83,9 @@ Ask the user:
 
 Read the `.deploy/<cluster>/` tree and key files from the reference repo to match patterns exactly.
 
-### Kustomization Patterns
+## Kustomization Patterns
 
-#### Root kustomization (multi-component)
+### Root kustomization (multi-component)
 
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -101,7 +102,7 @@ resources:
   - ./<component-2>/
 ```
 
-#### Component kustomization (with Helm chart)
+### Component kustomization (with Helm chart)
 
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -135,7 +136,7 @@ key: value
 
 Find the link during the Research Phase — check the chart's GitHub/GitLab repository for the `values.yaml` file, or the chart's documentation page listing all configurable values. For custom charts from the `cluster/charts` group, link to that chart's `values.yaml` in GitLab.
 
-#### Component kustomization (plain manifests)
+### Component kustomization (plain manifests)
 
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -153,7 +154,7 @@ resources:
   - ./route-http.yaml
 ```
 
-#### Single-component kustomization (top-level, no subfolders)
+### Single-component kustomization (top-level, no subfolders)
 
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
@@ -169,13 +170,13 @@ resources:
 
 Can also have `helmCharts:` directly at the top level, and `configMapGenerator:` for config files.
 
-### Common Patterns
+## Common Patterns
 
 The following patterns are **standardized** across all workloads. Use these exact patterns — do not invent alternatives.
 
 ---
 
-#### ExternalSecret (Vault)
+### ExternalSecret (Vault)
 
 All secrets come from Vault via `ClusterSecretStore: secret.vault.int.kilic.dev`. Vault path convention: `<cluster>/<workload>/<component>`.
 
@@ -242,7 +243,7 @@ spec:
 
 ---
 
-#### S3 Credentials
+### S3 Credentials
 
 Always via ExternalSecret with templated key mapping. Vault path: `<cluster>/<workload>/s3`.
 
@@ -274,7 +275,7 @@ Adjust the template key names to match what the application expects (e.g., `GOSE
 
 ---
 
-#### Gateway API Routing (HTTPRoute)
+### Gateway API Routing (HTTPRoute)
 
 All public-facing workloads use Gateway API. The parent gateway reference is always to the cluster's gateway in `cluster-system` namespace.
 
@@ -366,7 +367,7 @@ spec:
 
 ---
 
-#### SSO/OIDC
+### SSO/OIDC
 
 Two approaches depending on whether the application natively supports OIDC:
 
@@ -423,7 +424,7 @@ The SSO provider is always **Zitadel** at `https://sso.kilic.dev`.
 
 ---
 
-#### PostgreSQL (CNPG)
+### PostgreSQL (CNPG)
 
 Always deployed via CloudNativePG `Cluster` CRD with S3 barman backup.
 
@@ -486,7 +487,7 @@ Place in a `postgresql/` subfolder with its own `kustomization.yaml`.
 
 ---
 
-#### MariaDB (Bitnami Helm)
+### MariaDB (Bitnami Helm)
 
 Deployed via Bitnami Helm chart through kustomize with `namePrefix`:
 
@@ -524,7 +525,7 @@ Place in a `db/` subfolder with its own `kustomization.yaml`.
 
 ---
 
-#### Monitoring Probe
+### Monitoring Probe
 
 Blackbox exporter probe for uptime monitoring:
 
@@ -548,7 +549,7 @@ spec:
 
 ---
 
-### Deployment Conventions
+## Deployment Conventions
 
 - **Keel auto-update:** For container images that should auto-update, add annotations:
 
@@ -578,7 +579,7 @@ spec:
 
 - **Kustomize nameReference:** When using `configMapGenerator` or `secretGenerator` with hash suffixes, add a `configurations:` entry pointing to a `config.yaml` that maps the generated name through ExternalSecret `templateFrom` or CronJob references
 
-### Key Principles
+## Key Principles
 
 - **Use GitLab MCP** to research existing workload patterns before creating
 - **Match the existing pattern exactly** — consistency across repos is critical
@@ -590,7 +591,7 @@ spec:
 - **MariaDB always via Bitnami Helm** with CronJob backup
 - **Vault path convention:** `<cluster>/<workload>/<component>`
 
-### Checklist
+## Checklist
 
 - [ ] Determine workload structure (single vs multi-component)
 - [ ] Read similar existing workload as reference

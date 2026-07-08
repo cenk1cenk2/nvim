@@ -1,18 +1,19 @@
 ---
 name: argocd-kilic-workload
 description: Create a new workload service in the current cluster's ArgoCD repository. Scaffolds the Pulumi service, registers it in the workloads module, and optionally configures gateway listeners. Always manually invoked. Do NOT use for LB routing (/argocd-kilic-loadbalancer), standalone workload repos (/cluster-kilic-workload), or Helm chart wrappers (/cluster-kilic-chart).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[workload-name] - e.g., 'my-app', 'html-cv3', 'notifications'"
+references:
+  - ../references/present-first.md
 ---
 
-## system
-
-### Cluster Workload Creator
+## Cluster Workload Creator
 
 > **IMPORTANT: This skill assumes you are already inside a cluster ArgoCD repository** (e.g., `cluster/rubik/argocd-kilic-rubik`).
 
-### How This Repository Works
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+## How This Repository Works
 
 This is a NestJS + Pulumi monorepo that generates Kubernetes manifests. When Pulumi runs, it executes all registered services which output YAML manifests to `workloads/*/1-manifest/`. ArgoCD watches this repo and syncs those manifests to the cluster.
 
@@ -22,7 +23,7 @@ Key files:
 - **`src/workloads/workloads.module.ts`** — NestJS module registering all workload services
 - **`src/workloads/<workload>/<workload>.service.ts`** — Individual workload Pulumi service
 
-### Gather Requirements
+## Gather Requirements
 
 Ask the user:
 
@@ -31,7 +32,7 @@ Ask the user:
 - **Gateway listener needed?** Does it need an HTTPS/TCP listener on the cluster gateway? If yes, what hostname/subdomain?
 - **Resource quota needed?** Only if the user explicitly requests it. What CPU/memory limits?
 
-### Research Phase (MANDATORY)
+## Research Phase (MANDATORY)
 
 **BEFORE writing any code**, read these files from the current repository:
 
@@ -42,7 +43,7 @@ Ask the user:
 
 This is mandatory because **each cluster has different constants and gateway names**.
 
-### Workload Service Pattern
+## Workload Service Pattern
 
 **Simple workload (no gateway):**
 
@@ -194,14 +195,14 @@ new k8s.core.v1.ResourceQuota(
 )
 ```
 
-### Registration
+## Registration
 
 After creating the service, register it in `src/workloads/workloads.module.ts`:
 
 1. Add import: `import { MyWorkloadService } from './<workload>/<workload>.service'`
 2. Add to `providers` array
 
-### Checklist
+## Checklist
 
 - [ ] Read `src/constants.ts` and `src/cluster/cluster.constants.ts`
 - [ ] Read a similar existing workload as reference

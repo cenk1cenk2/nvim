@@ -1,20 +1,18 @@
 ---
 name: git-conflict
 description: Resolve git merge conflicts interactively. Use when user says "resolve conflicts", "fix merge conflicts", "there are conflicts", "help with rebase conflicts", or when git status shows unmerged paths. Detects conflicting files, analyzes each conflict, resolves clear cases autonomously, and asks the user for ambiguous or important conflicts. Do NOT use for general git operations (use git CLI or git MCP directly).
-interaction: chat
 references:
+  - ../references/present-first.md
   - ../references/scm-detect.md
 ---
 
-## system
+## Git Conflict Resolution
 
-### Git Conflict Resolution
-
-> **DO NOT enter plan mode.** This is an interactive, conflict-by-conflict resolution skill.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-detect` reference for git MCP tool availability and CLI fallback rules — read the files listed in `references:` for the `git-conflict` skill.
 
-### Process
+## Process
 
 1. **Detect conflict state.**
    - Use `git status` to identify unmerged paths (files with conflicts).
@@ -65,7 +63,7 @@ references:
    - If a rebase or merge is in progress, inform the user of the next step (e.g., `git rebase --continue`, `git merge --continue`).
    - Do NOT run the continue command automatically — let the user decide when to proceed.
 
-### Key Principles
+## Key Principles
 
 - **Autonomy for the obvious, consultation for the ambiguous.** Resolve clear-cut conflicts without asking. Ask for anything that requires judgment.
 - **Respect user guidance.** If the user says "prefer theirs for X files", apply that consistently without re-asking.

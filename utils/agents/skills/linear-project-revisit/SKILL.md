@@ -1,38 +1,27 @@
 ---
 name: linear-project-revisit
 description: Refresh top-level knowledge of a Linear project — scan open issues and their statuses, re-read the project description, check the latest project update, and reconcile against prior understanding. Use when user says "refresh the project", "re-read the project", "what changed on this project", "catch me up on <project>", "project pulse", or "project overview". Do NOT use for auditing/modifying project structure (/linear-project-update), drafting a status post (/linear-project-post), or deep per-issue revisit (/linear-issue-revisit).
-interaction: chat
 argument-hint: "[project-name or Linear URL]"
+references:
+  - ../references/linear-prerequisite.md
+  - ../references/present-first.md
 ---
 
-## system
+## Linear Project Revisit
 
-### Linear Project Revisit
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Research the project thoroughly before presenting findings.
-> - Present a top-level reconciliation report to the user.
-> - **NEVER modify anything — this is a read-only survey.**
-> - **NEVER exit plan mode.**
+## Prerequisite
 
-### Prerequisite
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
-> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
->
-> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
-> - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
->
-> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
-
-### Core Principle
+## Core Principle
 
 > **THE PROJECT RECORD IS NOT THE ABSOLUTE TRUTH.**
 >
 > Project descriptions, issues, and status updates carry timestamps (`createdAt`, `updatedAt`). If the project description or most recent update predates the user's latest work, **the user's knowledge may be more current than what Linear shows.** When you detect a gap, **ask the user** rather than assuming Linear is authoritative. Use timestamps as the deciding factor — never treat stale records as truth.
 
-### Purpose
+## Purpose
 
 When you resume work on a project after time has passed — or when the user jumps back into a project after working elsewhere — your high-level understanding may be stale. This skill does a project-level sweep: description, latest update, open issues by status, recent comment activity. The goal is common-sense situational awareness, not a deep per-issue audit.
 
@@ -43,13 +32,13 @@ Compare to sibling skills:
 - `linear-project-update` — audit + modify project structure (priorities, estimates, labels, relations).
 - `linear-project-post` — draft a new status update post.
 
-### Process
+## Process
 
-#### Step 1: Fetch project issues
+### Step 1: Fetch project issues
 
 Use `list_issues` with the `project` parameter to pull every issue in the project. Do NOT use `get_project` / `list_projects` — they have complexity limits. Project metadata (name, description, status, initiative, milestone) can be inferred from the issues' `project` field when present, or fetched separately if needed.
 
-#### Step 2: Fetch prior status updates
+### Step 2: Fetch prior status updates
 
 Use `get_status_updates` on the project to pull the history of posted updates. Identify:
 
@@ -59,13 +48,13 @@ Use `get_status_updates` on the project to pull the history of posted updates. I
 
 If no updates exist, note that — the project has never had a posted status summary.
 
-#### Step 3: Re-read the project description
+### Step 3: Re-read the project description
 
 - Compare the current description against prior session knowledge (memory, conversation context).
 - Check the description's `updatedAt`. If older than the current session, flag it — the user may have moved past what's written there.
 - Note any description updates or scope changes since your last read.
 
-#### Step 4: Categorise open issues by status
+### Step 4: Categorise open issues by status
 
 Group the project's issues into buckets based on `statusType`:
 
@@ -81,7 +70,7 @@ Report counts + a brief list of titles per bucket. Flag:
 - "In Review" issues with no recent comment activity — possible forgotten merges or stuck reviews.
 - "Todo" issues with blockers that are already Done — newly actionable.
 
-#### Step 5: Scan recent comment activity
+### Step 5: Scan recent comment activity
 
 For the 5–10 most recently `updatedAt` issues, check comment streams briefly. Look for:
 
@@ -92,7 +81,7 @@ For the 5–10 most recently `updatedAt` issues, check comment streams briefly. 
 
 Don't read every comment on every issue — skim the recently active ones and summarise signals.
 
-#### Step 6: Present reconciliation report
+### Step 6: Present reconciliation report
 
 Format:
 
@@ -127,7 +116,7 @@ Format:
 
 Omit sections that have no findings. Keep bullets short — this is a survey, not an audit.
 
-### Key Rules
+## Key Rules
 
 - **Read-only.** Never modify issues, comments, the project, or status updates. For modifications, refer the user to `linear-project-update`.
 - **Never exit plan mode.**
@@ -135,11 +124,11 @@ Omit sections that have no findings. Keep bullets short — this is a survey, no
 - **Timestamps drive staleness.** Quote `updatedAt` when flagging anything as possibly stale.
 - **Brief over thorough.** If the user wants a deep dive on a specific issue, refer them to `linear-issue-revisit`.
 
-### Related Skills
+## Related Skills
 
 - **`linear-issue-revisit`** — per-issue deep reconciliation.
 - **`linear-project-pickup`** — prepare the project or a project slice for implementation after this read-only refresh.
-- **`agents-kilic-pickup`** — execute the refreshed project scope with direct work and/or agents.
+- **`agents-pickup`** — execute the refreshed project scope with direct work and/or agents.
 - **`linear-project-update`** — audit + modify project structure.
 - **`linear-project-post`** — draft a new status update post.
 - **`linear-project-match`** — reconcile issue states against external reality (merged MRs/PRs, user statements). Can be invoked as a follow-up when the revisit flags mismatched states.

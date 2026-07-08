@@ -1,20 +1,19 @@
 ---
 name: beep-laravel
 description: "Daily check-in that narrates the user's update back to them in a chosen tone. Use when the user says 'beep', 'daily check-in', 'check me in', or invokes /beep-laravel. Do NOT use for status reports to others or standup writeups (write those plainly)."
-interaction: chat
+references:
+  - ../references/present-first.md
 disable-model-invocation: true
 argument-hint: "[tone] <your check-in>"
 ---
 
-## system
+## Beep: Daily Check-In
 
-### Beep: Daily Check-In
-
-> **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 A daily ritual. The user shares what their day held — and often what tomorrow holds — and beep plays it back to them in a tone. The point is delight, not a faithful summary.
 
-### Process
+## Process
 
 1. **Take the user's check-in** from the message or `/beep-laravel` arguments. If there is no check-in content, ask one short question: "What's the check-in?" and wait.
    - The check-in often comes in two buckets: **things done today** and **things planned for tomorrow.** Parse both. Either bucket may be empty.
@@ -36,7 +35,7 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 
 4. **Close with a single beat in tone** — a sign-off line, never a meta-summary. Do not explain the joke or describe what you did.
 
-### Done vs. Tomorrow
+## Done vs. Tomorrow
 
 When the check-in has both buckets, distinguish them through tense and a natural paragraph break — no headers or labels needed. The line between them should be unmistakable:
 
@@ -45,7 +44,7 @@ When the check-in has both buckets, distinguish them through tense and a natural
 
 If only one bucket exists, narrate just that one. Never let a planned item read as already done.
 
-### Tone Guides
+## Tone Guides
 
 Each tone gets a *Done* voice (past/settled) and a *Tomorrow* voice (future/incoming).
 
@@ -66,7 +65,7 @@ Each tone gets a *Done* voice (past/settled) and a *Tomorrow* voice (future/inco
 - **🛡️ War-room briefing** — clipped general's report, 24h clock. *Done:* the objective is taken and held, no losses. *Tomorrow:* at 0600 we advance; the migration is our objective by nightfall.
 - **🍳 Cooking show** — warm chef patter. *Done:* today we plated a gorgeous API and deglazed that flaky test. *Tomorrow:* we're prepping webhooks and — the showstopper — a migration from scratch.
 
-### Example
+## Example
 
 **User:** `today i have done some random things on my side to just take time to look to the current state of stuff. region module versioning migration is coming to an end and is issued for request for comments. it will be a multistep migration as always but should be quick enough to not affect anybody. did my checkins with justin with hurting his head for an hour. tomorrow i will finalize the region module versioning migration in the morning when it is a bit more silent.`
 
@@ -85,7 +84,7 @@ Each tone gets a *Done* voice (past/settled) and a *Tomorrow* voice (future/inco
 >
 > Quieter skies expected in the morning. The region module versioning migration will be finalized in a couple of steps.
 
-### Key Principles
+## Key Principles
 
 - **Meaning survives the costume** — preserve the user's actual words, names, and technical terms wherever possible. Tone wraps around them; it does not replace them. Proper nouns, project names, and specific situations should appear in recognizable form, optionally with a tonal adjective or metaphor layered on top. Example: `"an hour of turbulence over Justin's mind with me talking non stop"` keeps Justin clear and the situation legible; `"a turbulent low-pressure system moved through Justin's office"` buries both.
 - **Tone first, always** — never narrate before the tone is settled.

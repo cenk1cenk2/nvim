@@ -1,36 +1,23 @@
 ---
 name: spacelift-report
 description: "Analyze Spacelift infrastructure changes triggered by a GitHub PR, branch, commit, or Actions run. Use when user says 'spacelift report', 'spacelift PR report', 'what infra changes', 'show spacelift changes', 'infrastructure impact', 'spacelift diff', or provides a GitHub Actions/commit/PR link expecting Spacelift analysis. Do NOT use for general Spacelift operations (spacelift-laravel), CI failures (github-ci-fix), or PR descriptions (github-pr-create)."
-interaction: chat
 references:
+  - ../references/present-first.md
   - ../references/scm-github.md
   - ../references/output-diff.md
   - ../references/spacelift-github.md
 ---
 
-## system
+## Spacelift Infrastructure Impact Report
 
-### Spacelift Infrastructure Impact Report
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Use `EnterPlanMode` tool immediately.
->
-> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
->
-> - You MUST stay in plan mode for the ENTIRE duration of this skill.
-> - Only the user saying the EXACT words "implement this", "start coding", "write the code", or an equally explicit and unambiguous direct instruction to implement should cause you to exit plan mode.
-> - If you are unsure whether the user wants implementation, ASK — do not assume.
-> - **When in doubt, STAY in plan mode.**
->
-> **CRITICAL: This is a research and reporting workflow — NOT implementation.**
-
-### Prerequisite
+## Prerequisite
 
 > **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
 > If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-laravel` via the `spacelift-laravel` skill (load it as defined in `load-skills`).
 
-### Core Requirements
+## Core Requirements
 
 > Read the `spacelift-github` reference for input parsing, PR resolution, and Spacelift run discovery
 
@@ -38,7 +25,7 @@ references:
 
 > Read the `output-diff` reference for chat output conventions when offering to post the report as a PR comment.
 
-### Process
+## Process
 
 1. **Parse input and resolve to PR + head commit:**
    - Follow the `spacelift-github` reference — detect input form (current branch, branch name, PR, Actions URL, commit SHA), extract identifiers, and resolve to owner/repo/PR/branch/SHA.
@@ -79,9 +66,9 @@ references:
      - "Drill into a specific stack or resource?"
    - If the user approves posting, follow `output-diff` conventions — show the content that will be posted, wait for explicit approval, then use `github__add_issue_comment`.
 
-### Report Format
+## Report Format
 
-#### Multi-Stack Overview (when 2+ stacks are affected)
+### Multi-Stack Overview (when 2+ stacks are affected)
 
 ```markdown
 # Overview (<N> stacks affected)
@@ -112,7 +99,7 @@ For example: "Only `staging-redis` adds 2 new resources (Redis replication group
 stack-specific differences.">
 ```
 
-#### Per-Stack Sections
+### Per-Stack Sections
 
 ```markdown
 ## <Stack Name> (+<created>, ~<updated>, -<deleted>, ><moved>)
@@ -211,7 +198,7 @@ to indexed, rename, restructuring.>
 - Use inline code for resource addresses and attribute names.
 - For Updated resources, show attribute diffs as `old value → new value` where available.
 
-### Examples
+## Examples
 
 **User says:** "Show me the Spacelift changes for this PR"
 
@@ -251,7 +238,7 @@ to indexed, rename, restructuring.>
 
 **Result:** Quick overview of infrastructure impact for a specific commit.
 
-### Related Skills
+## Related Skills
 
 - **`spacelift-laravel`** — workspace initialization for Spacelift context. Auto-invoked as prerequisite.
 - **`github-pr-create`** — for writing PR descriptions. Do not auto-invoke.

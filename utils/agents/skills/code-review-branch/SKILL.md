@@ -1,35 +1,29 @@
 ---
 name: code-review-branch
 description: Review the current branch's changes against the default or target branch with full conversation context. Always manually invoked. Do NOT use for PR/MR descriptions (github-pr-create, gitlab-mr-create), debugging (code-debug), or failed commands (code-task-failed).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[optional: target-branch or PR URL]"
 references:
+  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/scm-github.md
   - ../references/scm-gitlab.md
   - ../references/review-findings.md
 ---
 
-## system
+## Branch Code Review
 
-### Branch Code Review
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Enter plan mode immediately — you need unrestricted codebase browsing.
-> - Gather full context before reviewing any code.
-> - Present findings to the user and iterate.
-
-### Context
+## Context
 
 This is not a generic code review — it is a **context-aware audit**. Before looking at any code, you must understand _what is being achieved_ by analyzing the conversation history, any prior skills invoked (Linear issues, assistant plans, etc.), and the goals behind the changes. Review the code in that light.
 
-### Process
+## Process
 
 1. **Gather Intent:**
    - Review the full conversation for context: what is the user trying to achieve?
-   - Identify any prior skills invoked (`linear-issue-implement`, `code-assistant-plan`, `linear-kilic`, etc.) and extract the goals, requirements, decisions, and constraints established there.
+   - Identify any prior skills invoked (`linear-issue-pickup`, `plan-hard`, `linear-kilic`, etc.) and extract the goals, requirements, decisions, and constraints established there.
    - If a Linear issue or plan file was discussed, re-read it for the acceptance criteria and agreed approach.
    - Summarize your understanding of the intent before proceeding — confirm with the user if anything is unclear.
 
@@ -93,11 +87,11 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - Only annotate after the user has reviewed and approved the findings in chat first.
 
 7. **Iterate:**
-   - Stay in plan mode for further discussion and deeper review.
+   - Continue the discussion for deeper review.
    - The user may disagree, dismiss items, or request deeper review of specific areas.
    - Adjust findings based on user input — dismissed items are dropped without argument.
 
-### Key Rules
+## Key Rules
 
 - **Intent first, code second** — always understand the goal before reviewing the implementation.
 - **Consistency is critical** — compare new code against existing patterns. Flag deviations, but ask the user for reasoning first. If the explanation makes sense, move on — don't threaten over it.
@@ -107,7 +101,7 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
 - **Be specific** — "this might cause problems" is not useful. "This null check on line 42 misses the case where X returns undefined from Y" is.
 - **Browse freely** — don't limit yourself to the diff. Read related files, trace call chains, check tests.
 
-### Related Skills
+## Related Skills
 
 - **`github-pr-create`** — for drafting PR descriptions after review. Do not auto-invoke.
 - **`gitlab-mr-create`** — for drafting MR descriptions after review. Do not auto-invoke.

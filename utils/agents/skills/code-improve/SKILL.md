@@ -1,28 +1,26 @@
 ---
 name: code-improve
 description: Audit a codebase (or a scoped area of it) to surface architectural, testability, consistency, and clarity improvements. Dispatches parallel subagents across audit dimensions, produces a ranked shortlist with one-line reasoning per proposal, and can drill into picked candidates with parallel design alternatives. Use when user says "code improve", "improve the codebase", "audit this codebase", "find improvements", "suggest refactors", "architecture audit", "find refactoring opportunities", or "where could we improve". Do NOT use for reviewing a specific PR/branch (use /code-review-branch or /code-review-changes), for a single-file cleanup (just edit directly), or for building a plan from a chosen improvement (use /plan-hard after picking).
-interaction: chat
+disable-model-invocation: true
 references:
   - ../references/plan-mode.md
 ---
 
-## system
+## Code Improve — Codebase Audit and Improvement Proposals
 
-### Code Improve — Codebase Audit and Improvement Proposals
-
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read the files listed in `references:` for the `code-improve` skill.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference for full directives — read the files listed in `references:` for the `code-improve` skill.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - **NEVER exit plan mode.** This skill produces proposals, not implementation. The user picks what to do, then invokes `plan-hard` (or similar) to plan the chosen work.
 > - Do NOT modify any code during this skill. Read-only operations only.
 
-### Context
+## Context
 
 The goal of this skill is to proactively surface improvements the user may not have asked about specifically — architectural friction, testability gaps, consistency drift, dead code, clarity problems. The skill branches out using parallel subagents to cover multiple audit dimensions at once, collates findings into a ranked shortlist, and presents proposals with **short, concise arguments** so the user can triage quickly.
 
 This is an audit, not a review of pending changes. For reviewing a specific branch or PR, use `code-review-branch` or `code-review-changes`.
 
-### Process
+## Process
 
 1. **Enter plan mode.**
 
@@ -85,7 +83,7 @@ This is an audit, not a review of pending changes. For reviewing a specific bran
    - If the user wants to implement a picked improvement, suggest invoking `plan-hard` to build the implementation plan. Do NOT implement directly — `code-improve` stops at proposal.
    - Offer to save the audit shortlist to `~/.claude/plans/YYYY-MM-DD-<project>-code-improve-audit.md` for later reference. Only save if the user agrees.
 
-### Subagent Prompt Template (Phase 1)
+## Subagent Prompt Template (Phase 1)
 
 When dispatching Phase 1 audit subagents, use this shape:
 
@@ -101,7 +99,7 @@ When dispatching Phase 1 audit subagents, use this shape:
 
 Subagents run in parallel — **dispatch all in a single message with multiple tool calls**, not sequentially.
 
-### Subagent Prompt Template (Phase 3b, Design Alternatives)
+## Subagent Prompt Template (Phase 3b, Design Alternatives)
 
 > You are designing an interface for <module/concept> in the <scope> codebase. Your design constraint: **<constraint>**.
 >
@@ -117,7 +115,7 @@ Subagents run in parallel — **dispatch all in a single message with multiple t
 >
 > **Limits:** Under 250 words. Be opinionated — your constraint is a strong preference, lean into it.
 
-### Conciseness Rules (Non-Negotiable)
+## Conciseness Rules (Non-Negotiable)
 
 - **A couple of lines at most per proposal** in the shortlist. Never wrap to a paragraph.
 - **Arguments must fit in ≤ 25 words.** If the argument requires more, the improvement is too complex for the shortlist — drill down instead.
@@ -125,7 +123,7 @@ Subagents run in parallel — **dispatch all in a single message with multiple t
 - **No boilerplate.** Drop "Consider refactoring...", "It might be worth...", "You could potentially...". Just state the improvement.
 - **Rank ruthlessly.** If you have 20 candidates, pick the top 10. Don't pad.
 
-### Key Principles
+## Key Principles
 
 - **Friction is the signal.** When exploring, what feels awkward, what takes 3 jumps to understand, what has a test that clearly dodges the real behavior — those are candidates. Organic exploration beats rigid heuristics.
 - **Branch out with subagents.** Parallel audits across dimensions find more candidates faster, and each subagent's focus keeps it from drifting.
@@ -134,7 +132,7 @@ Subagents run in parallel — **dispatch all in a single message with multiple t
 - **Stop at proposal.** This skill does not implement. After picking, the user invokes `plan-hard` (or another skill) to plan the work.
 - **Respect scope.** If the user asks for auth-module improvements, don't drift into render pipeline findings. Save those for a later pass.
 
-### Examples
+## Examples
 
 **Example 1 — Whole-repo audit:**
 
@@ -155,14 +153,14 @@ Subagents run in parallel — **dispatch all in a single message with multiple t
 5. Present 3 interfaces compactly. Compare in prose. Recommend the common-case-optimized design — the render pipeline has one dominant caller.
 6. Offer to save audit + design notes to plan file. Stop.
 
-### Composition with Other Skills
+## Composition with Other Skills
 
 - **`plan-hard`** — the natural follow-on for any picked improvement. Produce the plan. This skill stops at proposal.
 - **`plan-revise`** — if a picked improvement reveals that an existing plan was wrong, route to `plan-revise` instead of `plan-hard`.
 - **`code-review-branch`** / **`code-review-changes`** — for reviewing pending changes, not for codebase-wide audit. Different skill, different scope.
 - **`code-deviations`** — if the audit surfaces a deviation between intended and actual behavior, apply the deviations pattern when discussing with the user.
 
-### Related Skills
+## Related Skills
 
 - **`plan-hard`** — build a plan from a picked improvement.
 - **`plan-revise`** — revise an existing plan when an audit finding invalidates it.

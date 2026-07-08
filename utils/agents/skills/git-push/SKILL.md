@@ -1,21 +1,19 @@
 ---
 name: git-push
 description: Push the current branch to remote. Use when user says "push", "git push", "push this branch", "push my commits", or "push to origin". Verifies local state, reports what will be pushed, and pushes immediately (no extra approval — invoking the skill is the approval). Asks only on real blockers (diverged, behind, force, protected branches). Do NOT use for committing (git-commit), branch creation (git-branch), or opening PRs (github-pr-create, gitlab-mr-create).
-interaction: chat
 argument-hint: "[optional: remote name or safety flag — e.g., 'upstream', '--force-with-lease']"
 references:
+  - ../references/present-first.md
   - ../references/scm-detect.md
 ---
 
-## system
+## Git Push
 
-### Git Push
-
-> **DO NOT enter plan mode.** This is a quick-action workflow — inspect, report, push. Invoking this skill IS the approval to push; do NOT ask for separate confirmation on the happy path.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks
 
-### Process
+## Process
 
 1. **Assess local state.**
    - Use `git status` to get the current branch.
@@ -63,7 +61,7 @@ references:
    - One-line confirmation: what was pushed, where.
    - Passively mention follow-up skills when relevant: `github-pr-create` / `gitlab-mr-create` for opening a PR/MR. Do NOT auto-invoke them.
 
-### Composing with Other Skills
+## Composing with Other Skills
 
 This skill is composable — other skills can hand off to it once their work is done.
 
@@ -71,7 +69,7 @@ This skill is composable — other skills can hand off to it once their work is 
 - **Skip the dirty-tree note in step 1** when called immediately after `git-commit` in the same turn — leftover untracked or deliberately-unstaged files are expected.
 - **Never mix responsibilities.** This skill does not stage, commit, resolve conflicts, pull, or open PRs. Those stay with the dedicated skills (`git-commit`, `git-conflict`, `code-pull`, `github-pr-create`, `gitlab-mr-create`).
 
-### Key Principles
+## Key Principles
 
 - **Invoking the skill is the approval.** Do NOT ask for a separate "are you sure?" on the happy path — just report and push.
 - **Ask only on real blockers.** Behind, diverged, `--force-with-lease`, protected-branch pushes. Everything else is automatic.
@@ -80,7 +78,7 @@ This skill is composable — other skills can hand off to it once their work is 
 - **Never auto-pull, auto-rebase, or auto-merge.** On divergence, ask.
 - **Push only — no PR creation.** Suggest a PR skill after success; never auto-invoke.
 
-### Examples
+## Examples
 
 **User says:** "push"
 

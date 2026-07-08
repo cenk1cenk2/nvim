@@ -33,7 +33,7 @@
    - If the main note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
    - **If the note does not exist or obsidian MCP is unavailable, silently skip and continue**
 
-4. **DISCOVER AVAILABLE SKILLS** — skills are exposed as `hyprpilot://skills/<slug>` resources. Use `mcp__hyprpilot__list_skills` for the session catalog, `mcp__hyprpilot__read_skill { slug }` to load a body, and `mcp__hyprpilot__load_skill_references { slug }` when the skill asks for references. Treat harness-attached skills as already loaded. Use filesystem paths under `~/.config/nvim/utils/agents/skills/` only as fallback or when editing skill source. Do not read full skill bodies during initialization; load on demand.
+4. **DISCOVER AVAILABLE SKILLS** — skills are exposed as `hyprpilot://skills/<slug>` resources. Use `mcp__hyprpilot__list_skills` for the session catalog, `mcp__hyprpilot__read_skill { slug }` to load a body, and `mcp__hyprpilot__load_skill_references { slug }` when the skill asks for references. The catalog is **profile-filtered** — the active hyprpilot profile ignores some skills (personal profiles drop `*-laravel`/`notion-*`/`spacelift-*`; work profiles drop `*-kilic`/`gitlab-*`), so treat `list_skills` as the source of truth for what exists this session. Match the user's request against each skill's `description`, and read its `disableModelInvocation` metadata to know whether you may invoke it yourself (see §II "Skills" for the tier semantics). Treat harness-attached skills as already loaded. Use filesystem paths under `~/.config/nvim/utils/agents/skills/` only as fallback or when editing skill source. Do not read full skill bodies during initialization; load on demand.
 
 ## II. PLANNING AND IMPLEMENTATION
 
@@ -85,6 +85,10 @@ Rules:
 - The skill body is the source of truth for that mode.
 - Announce the first time you load a skill: `Using **<skill-name>** skill to <purpose>.`
 - Resolve prerequisite skills recursively. If context identifies the prerequisite, load it automatically; if ambiguous, ask. `hyprpilot://skills/load-skills` defines dependency resolution.
+- **Invocation tiers** — a skill's `disableModelInvocation` metadata (from `list_skills`) tells you whether you may load it yourself:
+  - **Manual** (`disableModelInvocation: true`) — load only when the user explicitly asks or types `/name`. Never self-invoke; you may *suggest* it (e.g. `config-agents`, `obsidian-repository`).
+  - **Model-invocable** (flag absent/`false`) — load when the user's intent clearly matches, as a step within a flow.
+  - **Auto-invoke** — the workspace/session initializers (`linear-kilic`, `linear-laravel`, `slack-kilic`, `slack-laravel`, `spacelift-laravel`, `notion-laravel`). Load them the moment their context is detected (matching issue IDs, workspace URLs, org repos) without waiting to be asked; their descriptions say "Auto-invoked when …".
 - Load references only when the skill body asks for them. Prefer `mcp__hyprpilot__load_skill_references { slug }`; references are progressive-disclosure context, not startup context.
 - When multiple skills are active, read their composition instructions and let them share context. Ask only when it is unclear which skill should own an action.
 - Never use the Claude Code built-in `Skill` tool for these custom hyprpilot skills.

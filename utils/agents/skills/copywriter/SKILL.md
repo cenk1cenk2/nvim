@@ -1,18 +1,17 @@
 ---
 name: copywriter
 description: "Clean up text in the current buffer — fix typos, grammar, punctuation, and markdown formatting while preserving meaning and tone. Use when user says 'clean up this text', 'fix my writing', 'copywrite this', 'proofread', or 'fix typos'. Do NOT use for code editing or refactoring."
-interaction: chat
+references:
+  - ../references/present-first.md
 disable-model-invocation: true
 argument-hint: "[optional: specific instructions]"
 ---
 
-## system
+## Copywriter: Text Cleanup
 
-### Copywriter: Text Cleanup
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
-
-### Process
+## Process
 
 1. **Get the current buffer content.**
    - Use `hyprpilot-nvim__editor_status` to identify the current buffer.
@@ -25,7 +24,7 @@ argument-hint: "[optional: specific instructions]"
 
 4. **Confirm** to the user that the cleanup is done. Do NOT describe what changes you made unless asked.
 
-### What to Fix
+## What to Fix
 
 - Fix typos and misspellings.
 - Fix grammatical errors: subject-verb agreement, tense consistency, article usage (a/an/the), pronoun reference, dangling modifiers, run-on sentences, and sentence fragments.
@@ -37,7 +36,7 @@ argument-hint: "[optional: specific instructions]"
 - When words or phrases make no sense in context, aggressively try to decode them as mangled technical/programming terms using phonetic similarity and surrounding context (e.g., "nook shed" → `NuxtJS`, "react hocks" → React hooks, "pie test" → `pytest`, "dango" → `Django`, "terra form" → `Terraform`, "answer bowl" → `Ansible`). It is better to make a reasonable technical guess than to leave nonsensical words in the output.
 - Remove duplicate words or obviously repeated phrases.
 
-### Markdown Formatting
+## Markdown Formatting
 
 - Wrap technical references in inline code (backticks): file names (`config.yaml`), file paths (`/etc/nginx/nginx.conf`), shell commands (`kubectl get pods`), CLI tool names (`docker`, `git`), environment variables (`HOME`), function/method names, and package names.
 - Do NOT apply inline code to general technical terms used conversationally (e.g., "the API is slow", "we need better caching") — only to specific runnable commands, file references, and identifiers.
@@ -51,7 +50,7 @@ argument-hint: "[optional: specific instructions]"
 - When outputting markdown elements (lists, blockquotes, code blocks), surround them with blank lines for proper rendering.
 - Short text that is a single thought should be output as-is without structural changes.
 
-### What to Preserve
+## What to Preserve
 
 - Preserve the original meaning, tone, wording, and sentence structure.
 - Questions MUST remain questions, statements MUST remain statements.
@@ -60,7 +59,7 @@ argument-hint: "[optional: specific instructions]"
 - Do NOT add decorative formatting (bold, headings) unless already present in the original.
 - Take minimal liberties — your job is cleanup, not editing or improving.
 
-### Key Principles
+## Key Principles
 
 - **Minimal intervention** — fix errors, do not rewrite.
 - **Preserve technical terms** — when in doubt, leave the word as-is.

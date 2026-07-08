@@ -1,9 +1,10 @@
 ---
-name: agents-kilic-pickup
+name: agents-pickup
 description: Pick up Linear projects, project slices, multiple issues, or one issue and execute them with the lead and agents as appropriate. Use when user says "agents pick up this project", "work these Linear issues", "finish this project with agents", "pick up K-123", or "implement this Linear slice". Do NOT use for read-only project refreshes or choosing the next task only.
-interaction: chat
+disable-model-invocation: true
 argument-hint: "[Linear project, project slice, issue id(s), or URL] [optional: agent/direct/sequential/parallel/confirm]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-pickup-execution.md
   - ../references/linear-state-transitions.md
@@ -17,13 +18,9 @@ references:
   - ../references/output-diff.md
 ---
 
-## system
+## Agent Linear Pickup Orchestrator
 
-### Agent Linear Pickup Orchestrator
-
-> **DO NOT enter plan mode by default.** This is an execution orchestrator: explore first, report the execution plan, ask early for blocking ambiguity, then implement after the user has not requested a confirmation gate.
->
-> Enter plan mode only when the user explicitly asks for plan-only, feedback, confirmation before implementation, or a deep planning pass.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
@@ -36,16 +33,16 @@ references:
 > Read the `sourcebot-discovery` reference when pickup needs broad repository/code discovery before GitLab-specific metadata.
 > Read the `output-diff` reference before writing to Linear, GitHub, or GitLab.
 
-### Purpose
+## Purpose
 
 This skill carries Linear work from pickup to review. It can implement directly, delegate to agents, or mix both. The goal is not "agents for everything"; the goal is to choose the cheapest reliable execution model for the work in front of us.
 
-### Process
+## Process
 
 1. **Resolve the target.**
    - Accept a Linear project, project slice, multiple issues, one issue, or URL.
-   - Compose with `linear-project-pickup` for project or slice inputs.
-   - Compose with `linear-issue-pickup` for issue inputs.
+   - Compose with `linear-project-pickup` (load it as defined in `load-skills`) for project or slice inputs — do not re-implement its preparation logic.
+   - Compose with `linear-issue-pickup` (load it as defined in `load-skills`) for issue inputs — do not re-implement its preparation logic.
    - If the prompt can mean more than one scope, ask one focused question immediately.
 
 2. **Explore before implementation.**
@@ -94,7 +91,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
    - If all project issues are done, complete the project by default unless there is a reason to leave it open.
    - Report final status, PR/MR links, pipeline status, verification evidence, deviations, findings, and remaining work.
 
-### Key Principles
+## Key Principles
 
 - **Explore first, then execute.** Never start coding from a stale Linear description.
 - **Ask early, not often.** Ask only for blocking intent or unclear requirements.

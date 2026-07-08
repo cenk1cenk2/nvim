@@ -1,32 +1,27 @@
 ---
 name: config-references
 description: Create, update, or review reference files in the skills directory. Use when user says "create a reference", "add a reference", "update reference X", "review references", or "extract this to a reference". Do NOT use for skills themselves (use /config-skills) or loading skills (use /load-skills).
-interaction: chat
+disable-model-invocation: true
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
 argument-hint: "[create|update|review] [reference-name] [description or context]"
 ---
 
-## system
+## Reference Management
 
-### Reference Management
-
-> **ALWAYS enter plan mode for this prompt.**
->
-> - Present findings, drafts, or proposed changes to the user.
-> - Iterate based on feedback.
-> - Do NOT write files until the user explicitly approves the plan.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed reference change before writing.
 
-### Reference Directory Structure
+## Reference Directory Structure
 
 References live in two locations under `~/.config/nvim/utils/agents/skills/`:
 
 - `references/` — shared references consumed by multiple skills.
 - `<skill-name>/references/` — skill-specific references consumed only by that skill.
 
-### Reference Format
+## Reference Format
 
 Reference files are plain markdown. They do NOT have YAML frontmatter — only skills have frontmatter. Start with a `# Title` heading, then sections as needed.
 
@@ -42,9 +37,9 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 <Content — conventions, rules, patterns, examples.>
 ```
 
-### Process
+## Process
 
-#### Create
+### Create
 
 1. Determine the scope — **shared** or **skill-specific**.
    - Shared: the content applies to 2+ skills or is a general convention.
@@ -59,7 +54,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 7. Present the draft and the list of skills to update.
 8. After approval, write the file and update skill frontmatter as needed.
 
-#### Update
+### Update
 
 1. Read the existing reference at `~/.config/nvim/utils/agents/skills/references/<name>.md`.
 2. Read skills that declare it — search for the filename in skill frontmatter to understand consumers.
@@ -68,7 +63,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 5. After approval, apply changes.
 6. If the update changes the reference's scope or contract, notify about affected skills.
 
-#### Review
+### Review
 
 1. List all files in `~/.config/nvim/utils/agents/skills/references/`.
 2. For each reference (or a specific one if requested):
@@ -79,7 +74,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
    - Check for duplication across references.
 3. Present findings and propose improvements.
 
-### Naming Conventions
+## Naming Conventions
 
 | Type | Pattern | Examples |
 |------|---------|----------|
@@ -87,7 +82,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 | Cross-family shared | `<topic>.md` | `output-diff.md`, `plan-mode.md` |
 | Skill-specific | `<topic>.md` in `<skill>/references/` | `./references/template.md` |
 
-### MCP Tool Name Convention
+## MCP Tool Name Convention
 
 When references list MCP tool names in tables or inline, use the **`<server>__<tool>` short form** with **kebab-case server names**: `linear-kilic__get_issue`, `slack-kilic__slack_list_channels`, `argocd-kilic__list_applications`, `grafana-laravel__query_prometheus`, `spacelift-laravel__list_stacks`. Server keys use `-` only; `/` and `_` are not valid separators inside server keys. Do NOT bake in a transport prefix (`mcp__...`) — the runtime resolves the prefix at call time. Hyprpilot wires every MCP server directly (no aggregator hub), so the bare server name is the only thing that matters in references.
 
@@ -98,7 +93,7 @@ When references list MCP tool names in tables or inline, use the **`<server>__<t
 
 **Tmux MCP is read-only.** Only the read-only tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are usable. References must NOT include `execute-command`, `create-window`, `split-pane`, `kill-*`, or `create-session` as a recommended action. For command execution, reference the built-in `Bash` tool.
 
-### Key Principles
+## Key Principles
 
 - References are **progressive disclosure** — keep them focused on one topic.
 - A reference should be **self-contained** — readable without loading other references.

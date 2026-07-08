@@ -1,33 +1,25 @@
 ---
-name: linear-project-argocd-system-kilic
-description: Create a Linear project for deploying system-level components (operators, controllers, infrastructure tools) to Kubernetes clusters via ArgoCD. Use when user says "deploy cert-manager", "add renovate-operator", or "set up a system component". Do NOT use for application workloads (linear-project-argocd-workload-kilic) or generic projects (linear-project-create).
-interaction: chat
+name: linear-kilic-project-argocd-system
+description: Create a Linear project for deploying system-level components (operators, controllers, infrastructure tools) to Kubernetes clusters via ArgoCD. Use when user says "deploy cert-manager", "add renovate-operator", or "set up a system component". Do NOT use for application workloads (linear-kilic-project-argocd-workload) or generic projects (linear-project-create).
 references:
-  - ../references/plan-mode.md
+  - ../references/present-first.md
   - ../references/output-diff.md
 argument-hint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'velero'"
 ---
 
-## system
-
-### ArgoCD System Deployment Project Generator
+## ArgoCD System Deployment Project Generator
 
 > **PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill (load it as defined in `load-skills`). This skill is kilic-dev workspace specific.
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
->
-> - Use `EnterPlanMode` tool immediately.
-> - Create plan file in `~/.claude/plans/YYYY-MM-DD-argocd-system-<component>.md`.
-> - Research the component, existing patterns, and cluster requirements.
-> - Present the plan for user approval before creating issues.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Overview
+## Overview
 
 This skill creates a Linear project for deploying system-level Kubernetes components through ArgoCD. System components are operators, controllers, and infrastructure tools deployed to `cluster-system` or operator-specific namespaces (e.g., `cert-manager-system`, `operator-external-secrets-system`).
 
-### Architecture Pattern
+## Architecture Pattern
 
 All repositories are on `gitlab.kilic.dev`. The deployment involves these repository groups:
 
@@ -45,7 +37,7 @@ Vault: secret/<cluster>/<namespace>/...                                 # Secret
 
 Each cluster has its own ArgoCD repo at `cluster/<cluster>/argocd-kilic-<cluster>` and label/annotation files at `cluster/argocd-kilic-root/src/argocd-kilic/assets/cluster/<cluster>/`.
 
-### Workflow
+## Workflow
 
 **1. Gather Requirements from User:**
 
@@ -70,7 +62,7 @@ Use GitLab MCP to analyze existing deployments for reference:
 
 Create the Linear project with issues based on the template below. **Only include optional issues if the user confirmed they are needed during requirements gathering.**
 
-### Issue Template
+## Issue Template
 
 **Project:** `<Component-Name> Deployment`
 
@@ -141,7 +133,7 @@ The following issues form the deployment pipeline. Adjust based on what's actual
 - Repeat for each load balancer cluster if multiple are needed
 - **Blocked by:** Issue 5
 
-### Routing Architecture
+## Routing Architecture
 
 Routes, DNS, and gateway configuration are **all managed via Pulumi** in each cluster's argocd repo. The YAML manifests in `workloads/*/1-manifest/` are Pulumi-generated output — not hand-written.
 
@@ -167,7 +159,7 @@ Internet/LAN → LB cluster gateway → TLSRoute/HTTPRoute (LB cluster)
 - **External (Cloudflare):** label `provider.kilic.dev/external-dns-cloudflare: "true"`, annotation `external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"`
 - **Internal (OPNSense):** label `provider.kilic.dev/external-dns-opnsense-loki: "true"`, FQDN pattern `<name>.lb.int.loki.arpa`
 
-### Label Naming Convention
+## Label Naming Convention
 
 Feature labels in `labels.yml`:
 
@@ -186,7 +178,7 @@ values.system.feature.kilic.dev/<component>: |
 
 Both files are located at `cluster/argocd-kilic-root/src/argocd-kilic/assets/cluster/<cluster>/`.
 
-### Namespace Convention
+## Namespace Convention
 
 System operators typically use:
 
@@ -194,7 +186,7 @@ System operators typically use:
 - `cluster-system` for cluster-wide tools
 - `<component>` for some operators (e.g., `renovate-operator-system`)
 
-### Key Principles
+## Key Principles
 
 - **Use `gitlab` MCP** for researching existing patterns
 - **Always create Helm chart first** — ApplicationSet depends on it

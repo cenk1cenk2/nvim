@@ -1,24 +1,25 @@
 ---
 name: cluster-kilic-chart
 description: Create a new Helm chart wrapper in the cluster/charts group on GitLab. Scaffolds the chart repository with upstream dependency, values, optional custom templates (ExternalSecret, Gateway API resources, CRDs), and all standard boilerplate. Always manually invoked. Do NOT use for workload deployments (/cluster-kilic-workload), ArgoCD workloads (/argocd-kilic-workload), or LB routing (/argocd-kilic-loadbalancer).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[chart-name] - e.g., 'goldilocks', 'velero', 'cilium-l2-announcement'"
+references:
+  - ../references/present-first.md
 ---
 
-## system
-
-### Cluster Chart Creator
+## Cluster Chart Creator
 
 > **IMPORTANT: This skill creates a new Helm chart repository in the `cluster/charts` group on GitLab (`gitlab.kilic.dev`).**
 
-### How Charts Work in This System
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+## How Charts Work in This System
 
 Each system component deployed via ArgoCD gets a Helm chart in `cluster/charts/chart-<name>`. Charts are either **wrappers around upstream Helm charts** or **standalone custom-resource charts**. ArgoCD pulls from these repos to deploy components to clusters.
 
 The chart repos are thin — they pin upstream versions, provide default values, and optionally add custom templates for resources the upstream chart doesn't cover (ExternalSecrets, Gateway API resources, CRDs). Renovate handles automated upstream version bumps. Semantic-release handles chart versioning and publishing.
 
-### Chart Types
+## Chart Types
 
 There are **two main types**, with variations based on additional resources needed:
 
@@ -30,7 +31,7 @@ There are **two main types**, with variations based on additional resources need
 | **Standalone custom resources** | No | Yes | `chart-cilium-l2-announcement` |
 | **Standalone CR + ExternalSecret** | No | Yes | `chart-cert-manager-letsencrypt-dns01-cloudflare` |
 
-### Gather Requirements
+## Gather Requirements
 
 Ask the user:
 
@@ -40,7 +41,7 @@ Ask the user:
 - **Custom resources?** Does it need additional templates beyond the upstream chart? (e.g., GatewayClass, BackupStorageLocation, CiliumL2AnnouncementPolicy)
 - **Initial values:** What default values should be set?
 
-### Research Phase (MANDATORY)
+## Research Phase (MANDATORY)
 
 **BEFORE writing any code:**
 
@@ -52,7 +53,7 @@ Ask the user:
    - Standalone CRs → read `chart-cilium-l2-announcement`
 3. **Check upstream values** — Understand what the upstream chart exposes so you can set sensible defaults
 
-### Repository Structure
+## Repository Structure
 
 Every chart repo follows this structure:
 
@@ -72,9 +73,9 @@ chart-<name>/
     └── <custom-resource>.yaml
 ```
 
-### File Templates
+## File Templates
 
-#### Chart.yaml
+### Chart.yaml
 
 **With upstream dependency:**
 
@@ -106,7 +107,7 @@ type: application
 version: 1.0.0
 ```
 
-#### values.yaml
+### values.yaml
 
 **Upstream defaults reference:** When writing values for an upstream chart dependency, include a comment at the top of the dependency's values block with a link to the upstream chart's default `values.yaml` (GitHub raw link or documentation URL). This helps future maintainers understand what options are available.
 
@@ -140,7 +141,7 @@ name: <resource-name>
 # ... resource-specific values
 ```
 
-#### .gitlab-ci.yml
+### .gitlab-ci.yml
 
 Always identical:
 
@@ -162,7 +163,7 @@ include:
       - /semantic-release/publish.gitlab-ci.yml
 ```
 
-#### Taskfile.yml
+### Taskfile.yml
 
 Always identical:
 
@@ -177,7 +178,7 @@ includes:
     flatten: true
 ```
 
-#### renovate.json
+### renovate.json
 
 Always identical:
 
@@ -189,7 +190,7 @@ Always identical:
 }
 ```
 
-#### package.json
+### package.json
 
 Minimal — used by semantic-release:
 
@@ -199,7 +200,7 @@ Minimal — used by semantic-release:
 }
 ```
 
-#### release.config.mjs
+### release.config.mjs
 
 Always identical:
 
@@ -227,7 +228,7 @@ export default {
 }
 ```
 
-#### .gitignore
+### .gitignore
 
 Always identical:
 
@@ -237,11 +238,11 @@ dist/
 .task/
 ```
 
-#### .helmignore
+### .helmignore
 
 Standard Helm ignore file.
 
-### ExternalSecret Template Patterns
+## ExternalSecret Template Patterns
 
 **Single secret:**
 
@@ -304,7 +305,7 @@ secrets:
 
 **All secrets reference `ClusterSecretStore` named `secret.vault.int.kilic.dev`** — this is the standard Vault integration point across all clusters.
 
-### Key Principles
+## Key Principles
 
 - **Use GitLab MCP** to research existing chart patterns before creating
 - **Use web search / Context7** to find upstream chart repos and their values schema
@@ -315,7 +316,7 @@ secrets:
 - **Vault paths are left empty** in defaults — filled per-cluster via ApplicationSet annotations injection
 - **Only add templates that are needed** — pure wrappers have no `templates/` directory at all
 
-### Checklist
+## Checklist
 
 - [ ] Identify upstream chart (name, version, repository URL) or confirm standalone
 - [ ] Read a similar existing chart as reference

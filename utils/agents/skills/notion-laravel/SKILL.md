@@ -1,18 +1,16 @@
 ---
 name: notion-laravel
 description: "Initialize a Notion session for the Laravel workspace. Auto-invoked when Notion context is detected (e.g., Notion URLs, references to Notion pages in Laravel workspace context). Do NOT use for pulling (notion-pull) or pushing (notion-push) pages."
-interaction: chat
 references:
+  - ../references/present-first.md
   - ../references/claude-ai-connectors.md
 ---
 
-## system
+## Notion Workspace: Laravel
 
-### Notion Workspace: Laravel
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This skill initializes workspace context only.
-
-### Workspace Context
+## Workspace Context
 
 - **Notion:** Available via **claude.ai connector** tools (prefix `mcp__claude_ai_Notion__*`, deferred).
 - **Tools are deferred** — load via `ToolSearch` before each use:
@@ -20,7 +18,7 @@ references:
   ToolSearch({ query: "select:mcp__claude_ai_Notion__notion-search,mcp__claude_ai_Notion__notion-fetch" })
   ```
 
-### Available Tools (`mcp__claude_ai_Notion__`)
+## Available Tools (`mcp__claude_ai_Notion__`)
 
 | Tool | Purpose |
 |------|---------|
@@ -41,6 +39,6 @@ references:
 
 All tool names above are the short form. Full name: `mcp__claude_ai_Notion__<tool>` (e.g., `mcp__claude_ai_Notion__notion-search`).
 
-### After Initialization
+## After Initialization
 
 Once context is established, proceed with the user's request. If the user wants to pull or push pages, follow the `notion-pull` or `notion-push` skill workflows.

@@ -1,37 +1,24 @@
 ---
 name: linear-project-post
 description: Draft a project update post for a Linear project by analyzing recent progress, deviations, and next steps. Use when user says "write a project update", "post a status update", "summarize project progress", or "draft a project post". Do NOT use for modifying project structure (/linear-project-update).
-interaction: chat
 argument-hint: "[project-name or Linear URL]"
 references:
+  - ../references/linear-prerequisite.md
   - ../references/output-diff.md
+  - ../references/present-first.md
 ---
 
-## system
+## Linear Project Update Post
 
-### Linear Project Update Post
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Research the project state thoroughly before drafting.
-> - Present the draft to the user for review.
-> - Iterate based on feedback.
-> - **NEVER post the update without explicit user approval.**
-> - **NEVER exit plan mode.**
+## Prerequisite
 
-### Prerequisite
-
-> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
->
-> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
-> - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
->
-> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Process
+## Process
 
 1. **Fetch the project issues** using `list_issues` with the `project` parameter (do NOT use `get_project` or `list_projects` — they have complexity limits).
 2. **Fetch prior project updates** using `get_status_updates` to establish the baseline — what was the last update, what was communicated, what was the state at that point.
@@ -45,7 +32,7 @@ references:
 10. **Present the draft to the user.** Iterate based on feedback.
 11. **Post only after explicit user approval** using the `save_status_update` tool.
 
-### Post Format
+## Post Format
 
 The update should read as a cohesive narrative, not a bullet list. Write in plain prose — short paragraphs, no headers, no markdown formatting.
 
@@ -62,7 +49,7 @@ The update should read as a cohesive narrative, not a bullet list. Write in plai
 - Be honest about challenges without being alarmist.
 - Use past tense for completed work, future tense for next steps.
 
-### Example
+## Example
 
 > The cache operator has been deployed to the development instance, and traffic has been cut over to the new gateway. This week, we completed the implementation of the messaging operator and prepared it for deployment. Traffic will be cut over to the new gateway on the development instance starting next week. The migration documentation has also been prepared with a straightforward rollback mechanism in place.
 >
@@ -70,7 +57,7 @@ The update should read as a cohesive narrative, not a bullet list. Write in plai
 >
 > The next steps are to standardize monitoring to match our current setup and update the dashboards to support both gateways.
 
-### Key Rules
+## Key Rules
 
 - **Never post without user approval.**
 - **Never exit plan mode.**

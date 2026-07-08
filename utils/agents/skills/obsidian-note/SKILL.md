@@ -1,27 +1,21 @@
 ---
 name: obsidian-note
 description: Create structured notes in Obsidian vault following existing patterns and conventions. Use when user says "create a note", "document this", "write it up in Obsidian", or "save this to my vault". Do NOT use for repository docs (obsidian-repository), quick todos (obsidian-todo), or triaging notes (obsidian-triage).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[topic or description]"
 references:
+  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
 
-## system
+## Obsidian Note: Structured Knowledge Management
 
-### Obsidian Note: Structured Knowledge Management
-
-> **ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Research the topic thoroughly before writing.
-> - Explore the vault to find the right category and match existing patterns.
-> - Draft the note in chat and get approval before creating.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **Tool access:** Use the embedded `obsidian` MCP tools from the `obsidian` reference for all vault operations. Paths are vault-relative; filesystem is fallback only.
 
-### Context
+## Context
 
 > Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, writing style, and vault exploration conventions — read the files listed in `references:` for the `obsidian-note` skill.
 
@@ -34,7 +28,7 @@ Additional tools beyond the obsidian reference:
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Process
+## Process
 
 1. **Research the topic:**
    - Use WebSearch and Context7 as needed for accuracy.
@@ -51,7 +45,7 @@ Additional tools beyond the obsidian reference:
 4. **Create the note:**
    - After approval, write the file in the correct category directory.
 
-### Related Skills
+## Related Skills
 
 - **`obsidian-repository`** — for documenting repository-specific knowledge in the Repositories vault folder. Auto-invoke when the note topic is about a development repository.
 - **`obsidian-todo`** — for quick capture of tasks and thoughts. Auto-invoke when the user wants a quick note rather than a structured reference note.

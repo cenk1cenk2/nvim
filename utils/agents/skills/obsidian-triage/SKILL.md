@@ -1,22 +1,20 @@
 ---
 name: obsidian-triage
 description: Process todo notes in Obsidian vault. Organizes, moves, renames, or removes notes interactively. Use when user says "triage my notes", "clean up todos", or "organize the Todo folder". Do NOT use for creating notes (obsidian-note), repository docs (obsidian-repository), or adding todos (obsidian-todo).
-interaction: chat
 disable-model-invocation: true
 references:
+  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
 
-## system
+## Obsidian Triage
 
-### Obsidian Triage
-
-> **DO NOT enter plan mode.** This is an interactive, note-by-note workflow driven by user decisions.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **Tool access:** Use the embedded `obsidian` MCP tools from the `obsidian` reference for all vault operations. Paths are vault-relative; filesystem is fallback only.
 
-### Context
+## Context
 
 > Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, and writing style conventions — read the files listed in `references:` for the `obsidian-triage` skill.
 
@@ -24,20 +22,20 @@ Todo notes in `Todo/` are quick captures — timestamped files with rough though
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Process
+## Process
 
-#### Step 1: Fetch Todo Notes
+### Step 1: Fetch Todo Notes
 
 - List all files in `Todo/`.
 - Read each note to understand its content.
 - Group notes by apparent theme or category if patterns emerge.
 
-#### Step 2: Explore the Vault
+### Step 2: Explore the Vault
 
 - List top-level vault directories to understand available categories.
 - Keep the category list available throughout the session for placement recommendations.
 
-#### Step 3: Present Overview
+### Step 3: Present Overview
 
 Present the todo queue to the user:
 
@@ -46,7 +44,7 @@ Present the todo queue to the user:
 - Any notes that look obviously stale, completed, or empty.
 - Ask the user if they want to process all notes or focus on a specific group.
 
-#### Step 4: Process Each Note
+### Step 4: Process Each Note
 
 For each note, present its content summary and recommend one of:
 
@@ -80,7 +78,7 @@ What would you like to do?
 
 Wait for the user to decide before proceeding to the next note.
 
-#### Step 5: Apply Changes
+### Step 5: Apply Changes
 
 For each accepted action:
 
@@ -88,7 +86,7 @@ For each accepted action:
 - **Keep:** Update the note in place if refinements were approved.
 - **Remove:** Delete the note.
 
-#### Step 6: Summary
+### Step 6: Summary
 
 After processing all notes (or when the user stops):
 
@@ -96,7 +94,7 @@ After processing all notes (or when the user stops):
 - Which categories received new notes.
 - How many remain in `Todo/`.
 
-### Key Rules
+## Key Rules
 
 - **One note at a time** — present, wait for user response, then proceed.
 - **Always get confirmation** — never move, rename, or delete without the user saying so.

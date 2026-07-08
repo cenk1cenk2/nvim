@@ -1,34 +1,32 @@
 ---
 name: slack-message
 description: Process a Slack message link — reads the thread, understands context, and acts on user instructions by composing with other skills. Always manually invoked. Do NOT use for channel-wide catch-up (slack-channel).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[slack-message-url] [what to do with it]"
 references:
+  - ../references/present-first.md
   - ../references/claude-ai-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/output-diff.md
 ---
 
-## system
+## Slack Message Processor
 
-### Slack Message Processor
-
-> **DO NOT enter plan mode.** This skill gathers context and delegates to other skills or acts directly based on user instructions.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection rules.
 > A Slack workspace skill (`slack-kilic` or `slack-laravel`) MUST be active before this skill runs.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Context
+## Context
 
 > Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling
 
-The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `linear-issue-implement`, `obsidian-note`, `code-pull`) or performing direct actions (research, code changes, summarization).
+The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `linear-issue-pickup`, `obsidian-note`, `code-pull`) or performing direct actions (research, code changes, summarization).
 
-### Tool Mapping by Workspace
+## Tool Mapping by Workspace
 
 Tool names differ per workspace. Use the correct tools based on which workspace skill is active:
 
@@ -45,7 +43,7 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
 
 **`slack-laravel` tools are deferred** — load via `ToolSearch` before use. See `claude-ai-connectors` reference.
 
-### Process
+## Process
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -71,7 +69,7 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
    - If the user provided explicit instructions (e.g., "create a Linear issue from this", "summarize this in Obsidian"), follow them.
    - If the user's intent is unclear, present the summary and ask what they'd like to do.
    - Common actions:
-     - **Create a Linear issue** — invoke the appropriate Linear workspace skill and compose with `linear-issue-implement` or create directly.
+     - **Create a Linear issue** — invoke the appropriate Linear workspace skill and compose with `linear-issue-pickup` or create directly.
      - **Create an Obsidian note** — invoke `obsidian-note` with the thread context.
      - **Research a topic** — use web search, Context7, or codebase exploration based on what the thread discusses.
      - **Write or modify code** — use the thread context to inform implementation.
@@ -84,13 +82,13 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
    - Respect the invoked skill's workflow (plan mode, prompts, etc.).
    - If multiple skills are relevant, ask the user which to use.
 
-### Key Principles
+## Key Principles
 
 - **Read the full thread.** A single message without thread context is often insufficient. Always fetch the complete thread.
 - **Compose, don't duplicate.** When another skill handles the action better, invoke it with the gathered context rather than reimplementing its workflow.
 - Follow the response conventions (thread vs channel, `:dark_sunglasses:`, approval rules) from the slack reference.
 
-### Examples
+## Examples
 
 **User says:** `slack-message https://slack.com/archives/C123/p456 create a Linear issue from this`
 

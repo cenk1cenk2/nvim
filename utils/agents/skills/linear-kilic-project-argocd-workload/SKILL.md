@@ -1,34 +1,26 @@
 ---
-name: linear-project-argocd-workload-kilic
-description: Create a Linear project for deploying application workloads to Kubernetes clusters via ArgoCD. Use when user says "deploy my-app", "add a workload", or "deploy this service to the cluster". Do NOT use for system components (linear-project-argocd-system-kilic) or generic projects (linear-project-create).
-interaction: chat
+name: linear-kilic-project-argocd-workload
+description: Create a Linear project for deploying application workloads to Kubernetes clusters via ArgoCD. Use when user says "deploy my-app", "add a workload", or "deploy this service to the cluster". Do NOT use for system components (linear-kilic-project-argocd-system) or generic projects (linear-project-create).
 references:
-  - ../references/plan-mode.md
+  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/linear-mandatory-fields.md
 argument-hint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-cluster'"
 ---
 
-## system
-
-### ArgoCD Workload Deployment Project Generator
+## ArgoCD Workload Deployment Project Generator
 
 > **PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill (load it as defined in `load-skills`). This skill is kilic-dev workspace specific.
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
->
-> - Use `EnterPlanMode` tool immediately.
-> - Create plan file in `~/.claude/plans/YYYY-MM-DD-workload-<name>.md`.
-> - Research the workload, existing patterns, and cluster requirements.
-> - Present the plan for user approval before creating issues.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Overview
+## Overview
 
 This skill creates a Linear project for deploying application workloads through ArgoCD. Workloads are application deployments, CRDs, or services that run on target clusters (not system-level operators). They are deployed via `cluster/<cluster>/argocd-kilic-<cluster>` and optionally expose services through the load balancer cluster.
 
-### Architecture Pattern
+## Architecture Pattern
 
 All repositories are on `gitlab.kilic.dev`. Workload deployments involve these repository groups:
 
@@ -54,7 +46,7 @@ Vault: secret/<cluster>/<namespace>/...                      # Secrets (if neede
 
 Each cluster has its own ArgoCD repo at `cluster/<cluster>/argocd-kilic-<cluster>`.
 
-### Workflow
+## Workflow
 
 **1. Gather Requirements from User:**
 
@@ -84,7 +76,7 @@ Create the Linear project with issues based on the template below. **Only includ
 
 > **Blocking relations:** Use `blockedBy` to set dependency order between issues in a project. Think through the dependency graph and set blocking relations so work order is clear.
 
-### Issue Template
+## Issue Template
 
 **Project:** `<Workload-Name> Deployment`
 
@@ -142,7 +134,7 @@ The following issues form the deployment pipeline. Adjust based on what's actual
 - Repeat for each load balancer cluster if multiple are needed
 - **Blocked by:** Issue 4
 
-### Namespace Convention
+## Namespace Convention
 
 Workloads typically use:
 
@@ -150,7 +142,7 @@ Workloads typically use:
 - `<application>-<environment>` for multi-environment deployments
 - Application-specific namespaces (e.g., `mailrise`, `grafana`)
 
-### Workload Service Pattern (Pulumi)
+## Workload Service Pattern (Pulumi)
 
 ```typescript
 @Injectable()
@@ -173,7 +165,7 @@ export class MyWorkloadService implements OnModuleInit {
 }
 ```
 
-### Routing Architecture
+## Routing Architecture
 
 Routes, DNS, and gateway configuration are **all managed via Pulumi** in each cluster's argocd repo. The YAML manifests in `workloads/routes/1-manifest/` are Pulumi-generated output — not hand-written.
 
@@ -199,7 +191,7 @@ Internet/LAN → LB cluster gateway → TLSRoute/HTTPRoute (LB cluster)
 - **External (Cloudflare):** label `provider.kilic.dev/external-dns-cloudflare: "true"`, annotation `external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"`
 - **Internal (OPNSense):** label `provider.kilic.dev/external-dns-opnsense-loki: "true"`, FQDN pattern `<name>.lb.int.loki.arpa`
 
-### Key Principles
+## Key Principles
 
 - **Use `gitlab` MCP** for researching existing patterns
 - **Workloads go to target cluster** — deployed via `cluster/<cluster>/argocd-kilic-<cluster>`, not `argocd-system`
@@ -211,7 +203,7 @@ Internet/LAN → LB cluster gateway → TLSRoute/HTTPRoute (LB cluster)
 - **Set dependency relations** with `blockedBy` for sequential issues
 - **Workload repository** can be existing or created — clarify with user
 
-### Directory Structure Reference
+## Directory Structure Reference
 
 **Target Cluster (e.g., `cluster/rubik/argocd-kilic-rubik`):**
 

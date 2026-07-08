@@ -1,7 +1,6 @@
 ---
 name: linear-project-pickup
 description: Prepare a Linear project or project slice for implementation by fetching issues, documents, blockers, comments, and execution scope. Use when user says "pick up this project", "work part of this Linear project", "implement this project slice", or provides a Linear project URL for execution. Do NOT use for read-only project refreshes or project structure audits.
-interaction: chat
 argument-hint: "[project name or URL] [optional slice/filter]"
 references:
   - ../references/linear-prerequisite.md
@@ -12,28 +11,27 @@ references:
   - ../references/linear-chunk-issues.md
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
+  - ../references/present-first.md
 ---
 
-## system
+## Linear Project Pickup
 
-### Linear Project Pickup
-
-> **DO NOT enter plan mode by default.** This is a reconnaissance and execution-prep skill. Enter plan mode only when the user asks for plan-only, feedback, confirmation, or deep planning.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
-> Read the `linear-pickup-execution` reference for scope resolution, early questions, issue selection, state updates, and handoff to `agents-kilic-pickup`.
+> Read the `linear-pickup-execution` reference for scope resolution, early questions, issue selection, state updates, and handoff to `agents-pickup`.
 > Read the `linear-project-documents` reference for shared project document handling.
 > Read the `linear-scm-discovery` reference when the user explicitly asks to enrich pickup context from GitHub/GitLab, discover repositories, or produce agent-ready implementation guidance. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
 > Read the `linear-chunk-issues` reference for mapping project issues to executable tasks.
 > Read the `linear-state-transitions` reference before moving selected issues to `In Progress`.
 > Read the `output-diff` reference before writing to Linear.
 
-### Purpose
+## Purpose
 
-This skill turns a project or project slice into an execution-ready issue set. It does not have to implement by itself; by default it hands the prepared context to `agents-kilic-pickup`.
+This skill turns a project or project slice into an execution-ready issue set. It does not have to implement by itself; by default it hands the prepared context to `agents-pickup`.
 
-### Process
+## Process
 
 1. **Resolve project and slice.**
    - Parse the project name, slug, URL, or user-provided slice.
@@ -62,9 +60,9 @@ This skill turns a project or project slice into an execution-ready issue set. I
 5. **Report and hand off.**
    - Summarize selected issues, skipped issues, blockers, documents read, uncertainties, and recommended execution shape.
    - If the user requested confirmation, stop here.
-   - Otherwise compose with `agents-kilic-pickup` for implementation.
+   - Otherwise compose with `agents-pickup` for implementation.
 
-### Output Shape
+## Output Shape
 
 ```markdown
 ## Project Pickup: <project>
@@ -85,10 +83,10 @@ This skill turns a project or project slice into an execution-ready issue set. I
 - <blocking question or stale information>
 
 ### Next
-- Hand off to `agents-kilic-pickup` with <N> tasks.
+- Hand off to `agents-pickup` with <N> tasks.
 ```
 
-### Key Principles
+## Key Principles
 
 - **Project pickup is not project refresh.** For read-only survey, use `linear-project-revisit`.
 - **Do not duplicate project docs into every issue.** Reference shared documents instead.

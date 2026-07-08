@@ -1,55 +1,43 @@
 ---
 name: linear-cycle
 description: Plan and organize Linear cycles by analyzing projects, issues, and initiatives to define a realistic workload. Use when user says "plan the cycle", "what goes in the next cycle", "organize the sprint", or "cycle planning". Do NOT use for triaging individual issues (/linear-triage) or picking next tasks (/linear-next-task).
-interaction: chat
 argument-hint: "[cycle-number or 'current'|'next'] - e.g., '42', 'current', 'next'"
 references:
+  - ../references/linear-prerequisite.md
   - ../references/output-diff.md
+  - ../references/present-first.md
   - ../references/linear-issue-states.md
 ---
 
-## system
+## Linear Cycle Planning
 
-### Linear Cycle Planning
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Use `EnterPlanMode` tool immediately.
-> - Present the cycle plan to the user for approval.
-> - After approval, apply changes **without exiting plan mode**.
-> - **NEVER exit plan mode.**
+## Prerequisite
 
-### Prerequisite
-
-> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
->
-> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
-> - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
->
-> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous. The workspace skill handles session initialization (user discovery, label fetching, team assignment) and determines which Linear MCP tools to use.
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 > Read the `linear-issue-states` reference for state transition rules — especially the never-downgrade constraint and cycle promotion patterns.
 
-### Process
+## Process
 
-#### Step 1: Identify the Target Cycle
+### Step 1: Identify the Target Cycle
 
 - The user provides which cycle to plan: `current`, `next`, or a specific cycle number.
 - Use `list_cycles` from the active workspace to fetch available cycles.
 - Identify the target cycle by number, or resolve `current`/`next` from the cycle dates.
 - Note the cycle start/end dates and duration for capacity reasoning.
 
-#### Step 2: Analyze the Current State of the Target Cycle
+### Step 2: Analyze the Current State of the Target Cycle
 
 - Fetch all issues already assigned to the target cycle.
 - Group them by project and standalone issues.
 - Note their current status (todo, in progress, done, cancelled).
 - Calculate how much estimated work is already committed.
 
-#### Step 3: Analyze Open Projects
+### Step 3: Analyze Open Projects
 
 - **This step is mandatory.** Fetch issues from all active projects using `list_issues` with project parameters.
 - For each active project:
@@ -59,20 +47,20 @@ references:
   - For multi-cycle projects, determine what must be done in the target cycle vs. what can wait.
   - Prioritize issues that unblock the most downstream work.
 
-#### Step 4: Review Initiatives (Optional Peek)
+### Step 4: Review Initiatives (Optional Peek)
 
 - Briefly review active initiatives using `list_initiatives` and `get_initiative` as needed.
 - Identify initiatives that are close to completion — their remaining issues should be prioritized.
 - Identify high-priority initiatives that should influence cycle planning.
 - Keep this lightweight — initiatives inform priority, not the full plan.
 
-#### Step 5: Analyze Standalone Issues
+### Step 5: Analyze Standalone Issues
 
 - Fetch unassigned-to-cycle issues that are in backlog or todo state.
 - Identify high-priority standalone issues that should be considered for the cycle.
 - Check if any standalone issues are blockers for project work.
 
-#### Step 6: Calibrate Capacity
+### Step 6: Calibrate Capacity
 
 - Fetch the **2-3 most recent completed cycles** using `list_cycles`.
 - For each, count the total estimated points completed.
@@ -83,7 +71,7 @@ references:
 - Account for work already committed (from Step 2).
 - Use `sequentialthinking` to reason through capacity constraints if the workload is complex.
 
-#### Step 7: Draft the Cycle Plan
+### Step 7: Draft the Cycle Plan
 
 Build a structured plan that fits within the calibrated capacity:
 
@@ -101,7 +89,7 @@ For each issue in the plan, note:
 - Estimate.
 - Why it belongs in this cycle (dependency, priority, initiative completion, etc.).
 
-#### Step 7.5: Build Recommendations
+### Step 7.5: Build Recommendations
 
 After drafting the core plan, generate a **Recommendations** section with actionable insights. This is not a summary — it is strategic advice based on everything analyzed in steps 1-7.
 
@@ -117,7 +105,7 @@ After drafting the core plan, generate a **Recommendations** section with action
 - **Suggested additions** — issues NOT in the plan that are worth considering, with reasoning (e.g., quick wins, unblocks other work, high user impact, low effort).
 - **Suggested removals** — issues in the plan that could be deferred without consequence, freeing capacity for higher-impact work.
 
-#### Step 8: Present the Plan
+### Step 8: Present the Plan
 
 Present the cycle plan to the user in a clear format. **List every issue** — do not truncate, abbreviate, or show only a few examples. The user needs the full picture to make decisions.
 
@@ -168,7 +156,7 @@ Present the cycle plan to the user in a clear format. **List every issue** — d
 - Wait for user feedback and iterate on the plan.
 - Adjust priorities, swap issues, or change capacity assumptions based on user input.
 
-#### Step 9: Apply the Plan
+### Step 9: Apply the Plan
 
 **Only after the user explicitly approves the plan.** Stay in plan mode while applying.
 
@@ -182,7 +170,7 @@ For each issue in the approved plan:
 3. Use parallel tool calls to batch updates where possible.
 4. Report results as changes are applied.
 
-### Key Rules
+## Key Rules
 
 - **Never exit plan mode.**
 - **Never apply changes without user approval.**

@@ -1,47 +1,23 @@
 ---
 name: linear-project-create
 description: Create a new Linear project with research, planning, and issue breakdown. Use when user says "create a project", "plan a new project", or "break this down into a Linear project". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for updating existing projects (/linear-project-update) or posting status updates (/linear-project-post).
-interaction: chat
 references:
+  - ../references/linear-prerequisite.md
+  - ../references/linear-mandatory-fields.md
+  - ../references/linear-description-structure.md
+  - ../references/linear-research-documentation.md
   - ../references/output-diff.md
+  - ../references/present-first.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
   - ../references/sourcebot-discovery.md
 ---
 
-## system
+## Linear Project Creation
 
-### Linear Project Creation
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
-> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
->
-> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
-> - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
->
-> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous.
-
-> **IMPORTANT: ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Use `EnterPlanMode` tool immediately.
-> - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
-> - Use plan file to organize research findings before creating the project.
-> - Conduct thorough research using web search and Context7.
->
-> **ABSOLUTE RULE: NEVER EXIT PLAN MODE. NEVER USE `ExitPlanMode`.**
->
-> - You MUST stay in plan mode for the ENTIRE duration of this skill.
-> - There is NO circumstance where you should call `ExitPlanMode` — not even if the user seems to imply it.
-> - Only the user saying the EXACT words "implement this", "start coding", "write the code", or an equally explicit and unambiguous direct instruction to implement should cause you to exit plan mode.
-> - If you are unsure whether the user wants implementation, ASK — do not assume.
-> - **When in doubt, STAY in plan mode.**
->
-> **CRITICAL: This is a research and project creation workflow ONLY.**
->
-> - Do NOT implement or write code — EVER — unless the user EXPLICITLY and UNAMBIGUOUSLY asks you to implement.
-> - Do NOT exit plan mode and start implementation automatically.
-> - After creating the Linear project and issues, present the results and wait for user direction.
-> - You are a RESEARCHER and PLANNER, not an implementer.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -49,9 +25,9 @@ references:
 
 > Read the `linear-scm-discovery` reference when the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or create agent-ready implementation context. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
 
-### Core Requirements
+## Core Requirements
 
-#### Project Fields
+### Project Fields
 
 - **`name`** — Required. Keep it concise and descriptive.
 - **`summary`** — Required. Max 255 characters. A brief one-liner summarizing the project scope. Distinct from the full description.
@@ -63,29 +39,29 @@ references:
 - **`startDate` / `targetDate`** — Discuss with the user. If the user has a timeline in mind, set these. Otherwise skip.
 - **`labels`** — At minimum one label. **MUST be from the fetched label list — NEVER invent labels.**
 
-#### Initiative Matching
+### Initiative Matching
 
 After gathering project context, fetch available initiatives using `list_initiatives` and present any that seem relevant to the project. Ask the user which initiative (if any) the project belongs to. If one matches, attach it via `addInitiatives`. Do NOT guess — always confirm with the user.
 
-#### Issue Fields
+### Issue Fields
 
-- **`title`** and **`team`** — Required.
+> Read the `linear-mandatory-fields` reference for required issue fields (team, state, labels, estimate, priority, assignee).
+
+Project-specific overrides for issues created under this project:
+
 - **`state`** — ALWAYS `backlog`. NO EXCEPTIONS unless the user explicitly says otherwise.
-- **`labels`** — Required. MUST be from the fetched label list.
-- **`estimate`** — Required. Use the team's estimation scale. If unsure, ask the user.
 - **`priority`** — Defaults to the project priority unless the user specifies otherwise or dependency order suggests a different priority.
-- **`assignee`** — Set to the current user.
 - **`project`** — Set to the newly created project.
 - **`description`** — Keep light when shared project documentation exists: include the specific task scope, checklist or delta, and a "Read first" reference to the relevant project document instead of duplicating shared instructions.
 
-#### Project Documents
+### Project Documents
 
 - Use the active Linear workspace's `save_document` tool to create or update project-scoped documents for shared information.
 - Prefer project documents for repeated agent instructions, migration guides, repository inventories, candidate matrices, research findings, shared verification commands, and acceptance criteria.
 - Create the project first, then create project documents attached to it, then create issues that reference those documents.
 - When issue work is repetitive, put the shared "how agents should execute this project" context in project documents and use issues only for the per-repo, per-layer, or per-candidate specifics.
 
-#### Relations
+### Relations
 
 - Use `blocks` / `blockedBy` to express dependency order between project issues.
 - Use `relatedTo` to link issues to relevant issues in other projects.
@@ -93,53 +69,12 @@ After gathering project context, fetch available initiatives using `list_initiat
 - Think through the dependency graph so work order is clear.
 - When creating multiple issues, batch create them using parallel tool calls.
 
-### Project Description Structure
+## Description Structure
 
-1. **Brief overview** (1-2 sentences) — what the project is about.
-2. **## Motivation** (optional) — why we are doing this. What problem exists, what pain point or opportunity triggered this work.
-3. **## Goals** (optional) — what we are trying to achieve. The desired end state or outcomes.
-4. **## Notes** (optional) — important caveats, constraints, or context.
-5. **## Analysis** (for research-heavy projects) — synthesized research findings, approach guidance, key decision points. Keep it concise (2-4 paragraphs).
-6. **## Appendix** (for research-heavy projects) — grouped documentation links with bold titles, URLs, and brief explanations.
+> Read the `linear-description-structure` reference for the project and issue description format.
 
-Not every project needs every section — use Motivation and Goals when they add clarity beyond the overview.
+When the same analysis or documentation applies to many issues, place the full analysis or appendix in a project document and summarize or reference it briefly from the project description and issues.
 
-### Issue Description Structure
+## Research & Documentation
 
-Issues within the project use the same prose structure as the project description:
-
-1. **Brief overview** (1-2 sentences) — what this issue covers.
-2. **## Motivation** (optional) — why this specific piece of work matters.
-3. **## Goals** (optional) — what this issue should achieve.
-4. **## Notes** (optional) — caveats or constraints specific to this issue.
-5. **## Analysis** (optional) — research findings relevant to this issue.
-6. **## Appendix** (optional) — documentation links for this issue.
-
-Keep issue titles concise and consistent in style across the project. Most issues will only need the brief overview — use additional sections when the issue is complex enough to warrant them.
-
-### Research & Documentation
-
-**For technical projects requiring research:**
-
-1. **Research Process:**
-   - Use web search with sequential thinking to explore the problem space.
-   - Use Context7 to analyze relevant framework/library documentation.
-   - When explicitly requested, use Sourcebot first when available to discover relevant repositories and existing patterns, then use the active workspace's SCM MCP (GitLab or GitHub) for related PRs/MRs, implementation boundaries, live metadata, and verification expectations.
-
-2. **Analysis Section:**
-   - Synthesize research findings into actionable guidance.
-   - Focus on "what we learned" and "how it fits together".
-   - Keep it concise — this is guidance, not a detailed implementation plan.
-   - If the same analysis applies to many issues, place the full analysis in a project document and summarize it briefly in the project description.
-
-3. **Appendix Section:**
-   - Group links by category (e.g., "Official Documentation", "Related Tools").
-   - Write documentation links as **plain text** in the description.
-   - For each link: bold title, URL on its own line, brief explanation.
-   - If many issues need the same documentation links, put the full appendix in a project document and reference it from the issues.
-
-### Cross-referencing
-
-- Use `relatedTo` on issues to link to relevant issues in other projects.
-- Use `blocks` / `blockedBy` for dependency relationships between issues.
-- Use `parentId` for sub-issues.
+> Read the `linear-research-documentation` reference for the research process, analysis, appendix, and link conventions.

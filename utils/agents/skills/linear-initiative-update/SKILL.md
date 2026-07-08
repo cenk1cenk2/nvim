@@ -1,31 +1,21 @@
 ---
 name: linear-initiative-update
 description: Revise a Linear initiative's description and review its project alignment. Use when user says "update the initiative", "review initiative alignment", or "revise initiative description". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for creating initiatives (/linear-initiative-create).
-interaction: chat
 argument-hint: "[initiative-name or ID]"
 references:
+  - ../references/linear-prerequisite.md
+  - ../references/linear-description-structure.md
   - ../references/output-diff.md
+  - ../references/present-first.md
 ---
 
-## system
+## Linear Initiative Update
 
-### Linear Initiative Update
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
-> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
->
-> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
-> - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
->
-> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel), or ask the user if ambiguous.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Fetch and review the initiative before proposing changes.
-> - Present proposed changes to the user and get approval before applying.
-> - **NEVER exit plan mode.**
-
-### Core Principle
+## Core Principle
 
 > **THE CONVERSATION IS MORE RECENT THAN THE INITIATIVE.**
 >
@@ -33,7 +23,7 @@ references:
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Process
+## Process
 
 1. **Fetch the initiative** using `get_initiative` with `includeProjects: true`.
 2. **Check the timestamp** — note when the description was last updated. If stale, ask the user what has changed.
@@ -50,15 +40,13 @@ references:
    - For project linking/unlinking, use `save_project` with `addInitiatives` or `removeInitiatives`.
 8. **Present results** and wait for user direction.
 
-### Description Structure
+## Description Structure
 
-1. **Brief overview** (1-2 sentences) — what the initiative is about.
-2. **## Motivation** (optional) — why this initiative exists.
-3. **## Goals** (optional) — what we are trying to achieve.
+> Read the `linear-description-structure` reference for the initiative description format.
 
 Preserve sections that haven't changed. Only update what deviated.
 
-### Key Rules
+## Key Rules
 
 - **Never modify without user approval.**
 - **Conversation context wins over stale initiative content.**

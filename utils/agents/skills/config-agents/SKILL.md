@@ -1,32 +1,24 @@
 ---
 name: config-agents
 description: Update, refine, or review the central AGENTS.md guidelines file at ~/.config/nvim/utils/agents/AGENTS.md. Always manually invoked — the assistant should SUGGEST this skill when detecting rule drift or new durable conventions that belong in the central guidelines (see AGENTS.md §VII "Knowledge Base Updates (Proactive)"), but never self-invoke. Do NOT use for per-repo CLAUDE.md/AGENTS.md (/config-repository), skills (/config-skills), or MCP server configs (/config-mcp).
-interaction: chat
 disable-model-invocation: true
 references:
-  - ../references/plan-mode.md
+  - ../references/present-first.md
   - ../references/output-diff.md
 argument-hint: "[what to change or review in AGENTS.md]"
 ---
 
-## system
+## Agents Guidelines Management
 
-### Agents Guidelines Management
-
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
->
-> - Use `EnterPlanMode` tool immediately.
-> - Changes to AGENTS.md affect ALL future agent sessions — treat every change with care.
-> - Present proposed changes to the user before writing anything.
-> - Do NOT write changes until the user explicitly approves.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed change before asking for approval.
 
-### Target File
+## Target File
 
 `~/.config/nvim/utils/agents/AGENTS.md` — the central guidelines document loaded into every hyprpilot agent session (injected via the `system_prompt` block on each profile in `~/.config/hyprpilot/config.yaml`).
 
-### Process
+## Process
 
 1. **Read the current AGENTS.md.** Understand the full structure, existing sections, and conventions before proposing any changes.
 2. **Understand the request.** Determine what needs to change. Ask the user if the intent is ambiguous.
@@ -36,7 +28,7 @@ argument-hint: "[what to change or review in AGENTS.md]"
 6. **Iterate.** Refine based on user feedback until approved.
 7. **Apply changes.** After explicit approval, edit the file.
 
-### Key Principles
+## Key Principles
 
 - **Every change is high-impact.** AGENTS.md governs all future sessions. A bad rule propagates everywhere.
 - **No contradictions.** If a new rule conflicts with an existing one, resolve the conflict explicitly — don't leave both in place.

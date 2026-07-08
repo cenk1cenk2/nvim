@@ -1,10 +1,10 @@
 ---
 name: agents-delegate
 description: Delegate a single task to one subagent at a user-chosen tier (cheap/default/smart) or explicit model. Use when user says "delegate this", "give this to an agent", "run this with opus/sonnet/haiku", "use a cheap/smart agent", or wants to hand off one focused task. Do NOT use for multi-task plans or DAG-scheduled work (use /agents-plan).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[task description] [optional: tier 'cheap'|'default'|'smart' or explicit model name]"
 references:
+  - ../references/present-first.md
   - ../references/agents-delegate.md
   - ../references/agents-worktrees.md
   - ../references/project-tooling.md
@@ -15,11 +15,9 @@ references:
   - ../references/linear-state-transitions.md
 ---
 
-## system
+## Single-Task Delegation
 
-### Single-Task Delegation
-
-> **DO NOT enter plan mode.** This is an interactive skill for one-shot handoff — no splitting, no sequencing, no team.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `agents-delegate` reference for tier definitions, ecosystem model mappings, user shorthand, agent parameters, and prompt structure.
 > Read the `agents-worktrees` reference when dispatching with `isolation: "worktree"` — worktrees MUST live under `<project_root>/.claude/worktrees/<name>/`. Covers naming, verification, and cleanup.
@@ -30,7 +28,7 @@ references:
 > Read the `sourcebot-discovery` reference when the delegated task is read-only org-wide repository/code discovery or needs a repo shortlist before SCM calls.
 > Read the `linear-state-transitions` reference if the task is linked to a Linear issue — the dispatcher advances the issue to `In Progress` before launching the agent. Skip when the task has no Linear id.
 
-### Context
+## Context
 
 This skill delegates one focused task to one subagent. Unlike the sibling skills, it does NOT split work, does NOT run multiple agents, and does NOT sequence tasks. It's a one-shot handoff where the user picks the tier or model based on cost/capability trade-offs.
 
@@ -40,7 +38,7 @@ Use it when:
 - The user wants to pick the tier or model explicitly (cheap, default, smart, or a specific model name).
 - You want to offload a focused job from your own context.
 
-### Process
+## Process
 
 1. **Understand the task.**
    - Read the user's request. If ambiguous, ask ONE clarifying question before proceeding.
@@ -88,7 +86,7 @@ Use it when:
    - If files changed, verify the diff matches expectations — do not trust the agent's success report blindly.
    - If the user wants to commit/push/PR, follow the `agents-completion` reference or invoke the relevant SCM skill.
 
-### Model Selection
+## Model Selection
 
 See the `agents-delegate` reference for tier definitions, ecosystem mappings, and user shorthand. Summary:
 
@@ -97,7 +95,7 @@ See the `agents-delegate` reference for tier definitions, ecosystem mappings, an
 - **Other ecosystems:** user declares the tier mapping. Ask if unknown.
 - **Explicit model names** override tiers — use verbatim.
 
-### Key Principles
+## Key Principles
 
 - **One task, one agent.** Don't split or sequence — use `/agents-plan` for multi-task DAG-scheduled work.
 - **User picks the tier/model.** This skill exists because the user wants control over cost/capability. Honor explicit choices.
@@ -106,7 +104,7 @@ See the `agents-delegate` reference for tier definitions, ecosystem mappings, an
 - **Self-contained prompt.** The agent has no context outside its prompt.
 - **Verify the result.** Don't relay agent success blindly — check the diff.
 
-### Related Skills
+## Related Skills
 
 - **`agents-plan`** — DAG-scheduled multi-task execution. Handles parallel, sequential, and mixed shapes via `depends_on` declarations. Modes: team (default, approval propagation) or fire-and-forget (bypass).
 - **`agents-review`** — dispatch a review subagent to cross-check an artifact (plan, DAG, facts, freeform). Uses the same dispatch mechanism but with review-specific prompt templates and a cheap default tier.

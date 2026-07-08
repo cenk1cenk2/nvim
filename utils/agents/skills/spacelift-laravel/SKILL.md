@@ -1,16 +1,15 @@
 ---
 name: spacelift-laravel
 description: "Initialize a Spacelift session for the Laravel workspace. Auto-invoked when Spacelift context is detected (e.g., Spacelift URLs, stack names, references to Spacelift runs or infrastructure deployments in Laravel workspace context). Do NOT use for ArgoCD operations (argocd-kilic)."
-interaction: chat
+references:
+  - ../references/present-first.md
 ---
 
-## system
+## Spacelift Workspace: Laravel
 
-### Spacelift Workspace: Laravel
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This skill initializes workspace context only.
-
-### Session Initialization
+## Session Initialization
 
 **FIRST ACTION** when this skill is invoked:
 
@@ -18,14 +17,14 @@ interaction: chat
 2. Note the available stacks and their current states.
 3. Store the workspace context for the session.
 
-### Workspace Context
+## Workspace Context
 
 - **Spacelift MCP:** `spacelift-laravel` — ALWAYS use `spacelift-laravel__*` tools.
 - **Common read operations:** `list_stacks`, `list_stack_runs`, `get_stack_run`, `get_stack_run_logs`, `get_stack_run_changes`, `list_resources`, `list_spaces`, `list_policies`, `list_modules`.
 - **Write operations:** `trigger_stack_run`, `confirm_stack_run`, `discard_stack_run` — always confirm with user before executing.
 - **Cross-reference style:** Reference stack names and run IDs when discussing Spacelift operations.
 
-### After Initialization
+## After Initialization
 
 Once context is established, proceed with the user's request. Common tasks include:
 

@@ -1,10 +1,10 @@
 ---
 name: slack-channel
 description: Process a Slack channel — reads recent messages, analyzes automated and human messages, and acts per channel type. Always manually invoked. Do NOT use for individual Slack message links (slack-message).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[channel-name-or-id] [optional: timeframe or instructions]"
 references:
+  - ../references/present-first.md
   - ../references/claude-ai-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
@@ -12,24 +12,22 @@ references:
   - ../references/enrich-context.md
 ---
 
-## system
+## Slack Channel Processor
 
-### Slack Channel Processor
-
-> **DO NOT enter plan mode.** This skill reads channel history, classifies messages, and acts on them directly or by composing with other skills.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection rules.
 > A Slack workspace skill (`slack-kilic` or `slack-laravel`) MUST be active before this skill runs.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Context
+## Context
 
 > Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling
 
 The user wants to catch up on a Slack channel. This skill reads the channel's recent messages, classifies them by type, and takes appropriate action depending on the channel's purpose. The skill supports both automated channels (CI/CD, deployments, publishes) and human channels (issues, echo/thoughts).
 
-### Tool Mapping by Workspace
+## Tool Mapping by Workspace
 
 Tool names differ per workspace. Use the correct tools based on which workspace skill is active:
 
@@ -46,7 +44,7 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
 
 **`slack-laravel` tools are deferred** — load via `ToolSearch` before use. See `claude-ai-connectors` reference.
 
-### Process
+## Process
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -143,14 +141,14 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
    - The Slack summary also serves as a record that can be used to create Linear issues later.
    - Unless the user explicitly asks for chat-only output, always write back to Slack.
 
-### Composing with Other Skills
+## Composing with Other Skills
 
 - **`linear-kilic`** — for creating or updating Linear issues from channel content.
 - **`obsidian-note`** — for creating Obsidian notes from thoughts or discussions.
 - **`slack-message`** — if the user wants to deep-dive into a specific message thread.
 - When delegating, pass the gathered context — do not make the other skill re-fetch it.
 
-### Key Principles
+## Key Principles
 
 - **Always write back to Slack.** Default behavior is to respond in Slack, not just in chat. The posted content doubles as a record for creating Linear issues.
 - **Enrich with source tools.** Don't just summarize Slack text — use GitLab/Linear MCP tools to provide real context (diffs, MR details, issue state).

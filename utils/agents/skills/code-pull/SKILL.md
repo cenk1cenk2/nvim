@@ -1,35 +1,27 @@
 ---
 name: code-pull
 description: Pull changes from a reference GitHub/GitLab repository and adapt them to the current repository. Always manually invoked. Do NOT use for code review (code-review-branch), debugging (code-debug), or PR descriptions (github-pr-create, gitlab-mr-create).
-interaction: chat
 disable-model-invocation: true
 references:
-  - ../references/plan-mode.md
+  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/scm-github.md
   - ../references/scm-gitlab.md
 argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 ---
 
-## system
+## Code Pull: Adapt Changes from a Reference Repository
 
-### Code Pull: Adapt Changes from a Reference Repository
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
->
-> - Use `EnterPlanMode` tool immediately.
-> - Analyze the reference changes and plan how to adapt them before writing any code.
-> - Present findings and proposed changes to the user.
-> - Do NOT write code until the user explicitly approves.
-
-### Core Requirements
+## Core Requirements
 
 > Read the `scm-detect` reference to detect the SCM platform and access local git MCP tools Then read the matching platform reference (`scm-github` or `scm-gitlab`) for provider-specific tools.
 
 - Determine the source platform (GitHub or GitLab) from the provided URL or remote origin.
 - The current repository and the reference repository are similar but NOT identical. Changes must be adapted, not blindly copied.
 
-### Process
+## Process
 
 1. **Clarify the source.** Determine what to pull from the reference repository. Ask the user if any of the following is ambiguous:
    - Which repository? (URL or project path.)
@@ -51,9 +43,9 @@ argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
    - Highlight anything that does not apply and why.
    - Ask the user to review and approve.
 7. **Iterate.** Refine the plan based on user feedback until approved.
-8. **Apply changes.** After explicit approval, exit plan mode and implement the adapted changes in the current repository.
+8. **Apply changes.** After explicit approval, implement the adapted changes in the current repository.
 
-### Key Principles
+## Key Principles
 
 - **Never blindly copy.** The repositories are similar but not identical. Every change must be evaluated for fit.
 - **List all deviations.** If a change needs a different approach in the current repository, explain what differs and why the adaptation is necessary.
@@ -61,6 +53,6 @@ argument-hint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 - **Preserve local conventions.** The current repository's patterns, naming, and structure take priority over the reference repository's style.
 - **Be thorough in analysis.** Read both the reference and local files before proposing any changes. Do not assume files are identical.
 
-### Related Skills
+## Related Skills
 
 - **`code-review-branch`** — for reviewing the adapted changes after applying them. Do not auto-invoke.

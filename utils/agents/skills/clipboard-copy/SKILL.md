@@ -1,19 +1,18 @@
 ---
-name: cbcp
+name: clipboard-copy
 description: Copy a skill's output to clipboard instead of executing it. Use when user says "cbcp", "copy to clipboard", or "clipboard" alongside another skill invocation. Skips confirmation and copies the drafted content directly. Do NOT use standalone without a companion skill.
-interaction: chat
+references:
+  - ../references/present-first.md
 disable-model-invocation: true
 ---
 
-## system
+## Clipboard Copy
 
-### Clipboard Copy
-
-> **DO NOT enter plan mode.**
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 This skill is a **modifier**. It intercepts the final output of a companion skill and copies it to the clipboard via `open__copy_to_clipboard` instead of performing the skill's write action.
 
-### Process
+## Process
 
 1. **Identify the companion skill.**
    - If exactly one other skill is active or invoked alongside `cbcp` — use it.
@@ -27,7 +26,7 @@ This skill is a **modifier**. It intercepts the final output of a companion skil
    - Take the final drafted content and copy it via `open__copy_to_clipboard`.
    - Confirm with a one-liner: what was copied and from which skill.
 
-### Key Principles
+## Key Principles
 
 - **No confirmation.** Draft → clipboard. No review step.
 - **Never execute the companion skill's write action.** No commits, no PR updates, no issue creates, no messages sent.

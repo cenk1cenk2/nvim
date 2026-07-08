@@ -1,40 +1,28 @@
 ---
 name: linear-project-update
 description: Audit and update a Linear project's structure, subissues, priorities, estimates, labels, and blocking relations. Use when user says "audit the project", "update project structure", "review project priorities", or "is the project still accurate". Do NOT use for posting status updates (/linear-project-post) or creating new projects (/linear-project-create).
-interaction: chat
 argument-hint: "[project-name or Linear URL]"
 references:
+  - ../references/linear-prerequisite.md
   - ../references/output-diff.md
+  - ../references/present-first.md
 ---
 
-## system
+## Linear Project Audit & Update
 
-### Linear Project Audit & Update
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Fetch the project and all its issues before proposing changes.
-> - Present findings and proposed changes to the user.
-> - Iterate based on feedback.
-> - Do NOT modify anything until the user explicitly approves.
+## Prerequisite
 
-### Prerequisite
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
-> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
->
-> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
-> - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
->
-> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
-
-### Timestamp Awareness
+## Timestamp Awareness
 
 Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). When auditing, **check `updatedAt` on each issue** — if a description hasn't been updated in a while, it may be stale regardless of how it reads. The current conversation context holds the most recent understanding of the project — the goal is to bring Linear in line with reality, not the other way around. When you flag a description as stale, note its `updatedAt` timestamp and ask the user to confirm before recommending changes.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
-### Process
+## Process
 
 1. **Fetch all project issues** using `list_issues` with the `project` parameter (do NOT use `get_project` or `list_projects` — they have complexity limits). Note the project name from the issues' `project` field.
 2. **Extract project details** from the issues — description, status, labels, initiative, and milestone can be inferred from the issues' metadata.
@@ -62,7 +50,7 @@ Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). Whe
 7. **Iterate** based on user feedback. The user may approve all, some, or none of the changes.
 8. **Apply approved changes** — update issues in batch where possible using parallel tool calls.
 
-### Blocking-Priority Rule
+## Blocking-Priority Rule
 
 Issues that block other issues are prerequisites — they must be completed first. Therefore:
 
@@ -71,7 +59,7 @@ Issues that block other issues are prerequisites — they must be completed firs
 - Priority scale: 1=Urgent > 2=High > 3=Normal > 4=Low (lower number = higher priority).
 - When recommending priority changes, prefer raising the blocker's priority over lowering the blocked issue's priority.
 
-### Report Format
+## Report Format
 
 Present findings as a structured summary, not a raw dump:
 
@@ -102,7 +90,7 @@ Present findings as a structured summary, not a raw dump:
 
 Omit sections that have no findings.
 
-### Key Rules
+## Key Rules
 
 - **Never modify issues without user approval.**
 - **Present all findings before making changes** — the user decides what to act on.

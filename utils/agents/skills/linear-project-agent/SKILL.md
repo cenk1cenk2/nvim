@@ -1,21 +1,19 @@
 ---
 name: linear-project-agent
-description: Structure and manage Linear projects for autonomous agent execution. Use when creating project plans, breaking down work into issues, or reviewing project structure. Do NOT use for loading or chaining other skills.
-interaction: chat
+description: Structure and manage Linear projects for autonomous agent execution — write agent-ready project plans, break work into self-contained issues, and review project structure for agent handoff. Use when user says "set up this project for agents", "structure the project for autonomous execution", or "review the project for agent readiness". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for generic project creation (/linear-project-create) or status updates (/linear-project-post).
 argument-hint: "[create|update|review] [project-name] [description of what the project does]"
 references:
   - ../references/linear-description-structure.md
   - ../references/output-diff.md
+  - ../references/present-first.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
   - ../references/sourcebot-discovery.md
   - ../references/linear-pickup-execution.md
 ---
 
-## system
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode.**
->
 > Read the `linear-description-structure` reference for issue/project description format or filesystem tools.
 
 > Read the `linear-project-documents` reference for using Linear project documents as shared agent context. When issues would repeat the same instructions, keep issues light and store the shared guidance in project documents.
@@ -24,9 +22,9 @@ references:
 
 > Read the `output-diff` reference before writing project documents or issues to Linear — present document drafts and issue content in logical chunks for user approval.
 
-> Read the `linear-pickup-execution` reference when the user wants the structured project executed after creation or review. Use `agents-kilic-pickup` for the execution phase instead of embedding implementation into this structure skill.
+> Read the `linear-pickup-execution` reference when the user wants the structured project executed after creation or review. Use `agents-pickup` for the execution phase instead of embedding implementation into this structure skill.
 
-### What is an Agent Project?
+## What is an Agent Project?
 
 An **agent project** is a Linear project designed for autonomous execution by LLM agents. Each issue must be:
 
@@ -34,7 +32,7 @@ An **agent project** is a Linear project designed for autonomous execution by LL
 2. **Single PR** — Doable as one logical, self-contained change
 3. **Single concern** — Touches one section/layer of the project
 
-### Why This Matters
+## Why This Matters
 
 LLM agents work best when:
 - Each issue has a clear scope and boundaries
@@ -42,9 +40,9 @@ LLM agents work best when:
 - No cross-repository orchestration is needed
 - PR reviews can focus on one area of concern
 
-### Process
+## Process
 
-#### Create
+### Create
 
 1. **Gather context** — Understand the work to be done. Ask the user what the project should accomplish.
 2. **Identify repositories** — Determine which repositories are involved. If multiple repos, consider splitting into sub-projects.
@@ -56,9 +54,9 @@ LLM agents work best when:
 8. **Set dependencies** — Use `blockedBy`, `blocks`, and `parentId` fields for dependency ordering. Never put this in descriptions.
 9. **Validate** — Run the issue checklist (see below).
 10. **Present to user** — Show the structured project, project documents, and issues for approval.
-11. **Execution handoff** — If the user wants work to start, hand off the approved project structure to `agents-kilic-pickup`.
+11. **Execution handoff** — If the user wants work to start, hand off the approved project structure to `agents-pickup`.
 
-#### Update
+### Update
 
 1. **Read existing issues** — Get current project state from Linear.
 2. **Identify changes needed** — What's new, changed, or removed.
@@ -66,14 +64,14 @@ LLM agents work best when:
 4. **Validate** — Run the issue checklist.
 5. **Present changes** — Show what's changing.
 
-#### Review
+### Review
 
 1. **List all issues** — Get all issues in the project.
 2. **Check each against principles** — Single repo? Single PR? Single concern?
 3. **Identify violations** — Flag issues that span repos or concerns.
 4. **Propose restructuring** — Suggest splits or merges.
 
-### Issue Structure Checklist
+## Issue Structure Checklist
 
 For each issue, verify:
 
@@ -86,7 +84,7 @@ For each issue, verify:
 | **Clear boundary** | "Infrastructure layer" or "Workload layer" | Ambiguous scope |
 | **Shared context** | "Read first: project document `Migration guide`" | Repeated long guidance copied into every issue |
 
-### Manual Tasks
+## Manual Tasks
 
 Small manual steps can be **tasks within an issue** if:
 - They are dependencies for the main work
@@ -103,7 +101,7 @@ Small manual steps can be **tasks within an issue** if:
 
 **Ask the user** when uncertain if a manual step should be separate or included.
 
-### Agent Project Template
+## Agent Project Template
 
 Use this structure for Linear project descriptions:
 
@@ -128,7 +126,7 @@ Set dependency ordering via `blockedBy` / `blocks` / `parentId` fields on each i
 
 Use project documents for shared agent instructions that would make the project or issue descriptions too long. Examples: `Agent execution guide`, `Candidate matrix`, `Migration guide`, or `Research and decisions`.
 
-### Key Principles
+## Key Principles
 
 1. **Repository name in every issue** — Every issue description must state the repository explicitly (`**Repo:** path/to/repo`).
 
@@ -149,9 +147,9 @@ Use project documents for shared agent instructions that would make the project 
 
 8. **Set dependencies via Linear fields** — Use `blockedBy`, `blocks`, and `parentId` for dependency ordering. Never put dependency chains or sub-issue tables in descriptions. Linear shows these relations natively.
 
-9. **Execution is a separate phase** — This skill structures projects for agents; `agents-kilic-pickup` executes them.
+9. **Execution is a separate phase** — This skill structures projects for agents; `agents-pickup` executes them.
 
-### Common Patterns
+## Common Patterns
 
 | Pattern | Structure |
 |---------|-----------|
@@ -160,7 +158,7 @@ Use project documents for shared agent instructions that would make the project 
 | **DNS changes** | One repo for DNS provider (Terraform, ExternalDNS, etc.) |
 | **Secrets** | If Vault managed via code → separate repo issue; If manual → task in workload issue |
 
-### Anti-Patterns
+## Anti-Patterns
 
 ❌ **Don't create issues like:**
 - "Set up TeamSpeak" (spans multiple repos, too vague)
@@ -172,7 +170,7 @@ Use project documents for shared agent instructions that would make the project 
 - "Configure load balancer routes for teamspeak3" (one repo, one PR)
 - "Create SRV records in tf-config-cloudflare" (one repo, one PR)
 
-### Examples
+## Examples
 
 ---
 

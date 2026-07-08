@@ -1,26 +1,24 @@
 ---
 name: config-repository
 description: Create or revise repository knowledge base files (CLAUDE.md, AGENTS.md, or .local variants). Use when user says "update CLAUDE.md", "create AGENTS.md", "write repo knowledge base", "document decisions", or "snapshot this session" — OR when the assistant detects new durable conventions, dead ends, or rule drift during a session (see AGENTS.md §VII "Knowledge Base Updates (Proactive)"). Do NOT use for the central AGENTS.md guidelines (/config-agents), skills (/config-skills), or MCP server configs (/config-mcp).
-interaction: chat
 disable-model-invocation: false
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
 argument-hint: "[local] [optional: what changed or focus area]"
 ---
 
-## system
+## Repository Knowledge Base
 
-### Repository Knowledge Base
-
-> **DO NOT enter plan mode.** This skill explores the repository and session context, then writes directly.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed section change before writing.
 
-### Purpose
+## Purpose
 
 Maintain a structured knowledge base file in the repository root that helps future agent sessions understand the repo, avoid dead ends, and use the right tools. The file is not documentation for humans — it is context for agents.
 
-### Invocation Modes
+## Invocation Modes
 
 The skill runs in two invocation modes. Classify before proceeding.
 
@@ -41,7 +39,7 @@ When all five hold: apply the edit, report the change in one sentence (section +
 
 If any one fails: fall through to the full present-and-approve flow below.
 
-### File Detection
+## File Detection
 
 1. **Check the repo root** for existing files in this order: `CLAUDE.md`, `AGENTS.md`.
 2. **If the user says "local"** — target the `.local.md` variant instead (`CLAUDE.local.md` or `AGENTS.local.md`).
@@ -49,7 +47,7 @@ If any one fails: fall through to the full present-and-approve flow below.
 4. **If no file exists** — ask the user which to create (`CLAUDE.md` or `AGENTS.md`). Default suggestion: `CLAUDE.md`.
 5. **Respect the existing filename** — if the repo has `AGENTS.md`, do not create a parallel `CLAUDE.md`. Work with what exists.
 
-### Create Mode
+## Create Mode
 
 When no knowledge base file exists yet:
 
@@ -69,7 +67,7 @@ When no knowledge base file exists yet:
 5. **Iterate** based on user feedback.
 6. **After approval**, create the file.
 
-### Revise Mode
+## Revise Mode
 
 When the knowledge base file already exists:
 
@@ -95,7 +93,7 @@ When the knowledge base file already exists:
 5. **Iterate** based on user feedback.
 6. **After approval**, apply the changes. Delete outdated content without hesitation — this file must stay accurate and lean.
 
-### Document Structure
+## Document Structure
 
 The knowledge base file should contain these sections. All sections are optional — use only what the repository warrants. Order matters: general context first, decision history in the middle, tooling at the bottom.
 
@@ -144,7 +142,7 @@ Which tools (MCP servers, CLI tools, scripts) are used in this repo, what for, a
 Non-obvious things that trip up agents or developers. Things that look like they should work but don't.
 ```
 
-### Writing Rules
+## Writing Rules
 
 - **Always write how and why** — not just what. "We use X" is useless. "We use X because Y, and Z didn't work because W" is useful.
 - **Be concise** — this file is loaded into agent context windows. Every line must earn its place.
@@ -154,7 +152,7 @@ Non-obvious things that trip up agents or developers. Things that look like they
 - **No fluff** — no "this file was last updated on...", no meta-commentary, no TODOs about what to document later. If you know it, write it. If you don't, skip the section.
 - **Match existing style** — if the file already exists with a different structure, adapt to it rather than forcing the template. The sections above are a starting point, not a rigid schema.
 
-### Key Principles
+## Key Principles
 
 - **Session-aware.** The primary input for revisions is the current conversation — what was learned, what was decided, what failed. Read the session carefully before proposing changes.
 - **Destructive updates are fine.** This is not a changelog. If a section is wrong, rewrite it. If a convention changed, update it. If an approach that "failed" now works, move it out of Approaches Tried.

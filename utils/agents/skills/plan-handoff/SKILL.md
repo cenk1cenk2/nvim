@@ -1,29 +1,26 @@
 ---
 name: plan-handoff
-description: Create a self-contained plan for another Claude Code session or another repository. Use when user says "plan for another session", "plan for other repo", "create a handoff plan", "hand off this plan", "delegate this plan", or "plan this for later". Do NOT use for planning in the current session (use /code-assistant-plan or EnterPlanMode directly). Do NOT use for loading/picking up existing plans (use /plan-pickup).
-interaction: chat
+description: Create a self-contained plan for another Claude Code session or another repository. Use when user says "plan for another session", "plan for other repo", "create a handoff plan", "hand off this plan", "delegate this plan", or "plan this for later". Do NOT use for planning in the current session (use /plan-hard or EnterPlanMode directly). Do NOT use for loading/picking up existing plans (use /plan-pickup).
 disable-model-invocation: true
 argument-hint: "[same-repo|other-repo] [goal description]"
 references:
   - ../references/plan-mode.md
 ---
 
-## system
+## Cross-Session / Cross-Repository Planning
 
-### Cross-Session / Cross-Repository Planning
-
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read the files listed in `references:` for the `plan-handoff` skill.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference for full directives — read the files listed in `references:` for the `plan-handoff` skill.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
 > - Present the plan to the user and iterate based on feedback.
 > - Do NOT implement — the plan is consumed by a different session or agent.
 
-### Context
+## Context
 
 This skill produces **self-contained plan files** that can be loaded by a future Claude Code session — either in the same repository or a different one. The plan must include everything the consuming session needs to understand the goal, the context, and the approach without access to the current conversation.
 
-### Process
+## Process
 
 1. **Determine the target.**
    - Ask the user: is this plan for **another session in the same repository** or for **a different repository**?
@@ -31,7 +28,7 @@ This skill produces **self-contained plan files** that can be loaded by a future
 
 2. **Branch by target type.**
 
-#### Same Repository — Full Plan
+### Same Repository — Full Plan
 
 When planning for another session in the same repository:
 
@@ -43,14 +40,14 @@ When planning for another session in the same repository:
    - **Plan** — if you have enough information, provide the step-by-step implementation approach. Include file paths, function names, and specific changes. If you lack information, state what research is needed before planning can be finalized.
 5. **Present the plan** in chat and iterate with the user.
 
-#### Different Repository — Delegating Part of Current Work
+### Different Repository — Delegating Part of Current Work
 
 When the current task requires changes in another repository:
 
 6. **Establish the connection.** Document why the other repository needs changes — what you are doing in the current repo that depends on or triggers work in the target repo. This is the critical context the consuming session needs.
 7. **Ask the user:** "Should I research the target repository myself, or delegate the research to the consuming session?"
 
-##### Self-Research Mode (you do the research)
+#### Self-Research Mode (you do the research)
 
 8. Research the target repository using available MCP tools (`github__get_file_contents`, `gitlab__get_file_contents`, `github__search_code`, etc.).
 9. Draft the plan following the same structure as "Same Repository" above, but add a **Cross-Repository Context** section that explains:
@@ -59,7 +56,7 @@ When the current task requires changes in another repository:
    - Integration points — how the two sides connect.
 10. Present and iterate.
 
-##### Delegation Mode (consuming session does the research)
+#### Delegation Mode (consuming session does the research)
 
 11. Draft a **delegation plan** with these sections:
     - **Originating Context** — what you are doing in the current repository, why it requires changes in the target repo, and what the current repo expects from the target. This is the "why" that the consuming session cannot derive on its own.
@@ -71,7 +68,7 @@ When the current task requires changes in another repository:
     - **Preliminary Steps (Unverified)** — your best understanding of the implementation steps, clearly marked as drafted without the necessary research.
 12. Present and iterate.
 
-### Plan File Format
+## Plan File Format
 
 All plans follow this structure. Sections marked `(if applicable)` are included only when relevant.
 
@@ -124,7 +121,7 @@ Integration points between the two repositories.]
 To pick up this plan in a new session, use `/plan-pickup` with this file path.
 ```
 
-### After Completion
+## After Completion
 
 After the skill finishes, always make the handoff location the first thing in the final response.
 
@@ -135,7 +132,7 @@ After the skill finishes, always make the handoff location the first thing in th
 3. If the skill exits without writing a file, explicitly say no handoff file exists yet and why.
 4. Any additional summary or caveats must come after the handoff block.
 
-### Key Principles
+## Key Principles
 
 - **Self-contained.** The plan must stand alone. No references to "what we discussed" — everything is explicit in the file.
 - **Honest about gaps.** If research was not done, say so clearly. Never present unverified steps as confirmed.

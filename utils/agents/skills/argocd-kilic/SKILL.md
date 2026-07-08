@@ -1,24 +1,23 @@
 ---
 name: argocd-kilic
 description: Operate ArgoCD interactively — rollover deployments, refresh external secrets, fetch logs, investigate sync errors, sync apps, and browse resources. Use when user says "use argocd mcp for", "rollover deployments", "refresh external secret", "check argocd", "sync the app", or "get logs from argocd". Do NOT use for creating ArgoCD workload configs (/argocd-kilic-workload) or MCP server setup (/config-mcp).
-interaction: chat
+references:
+  - ../references/present-first.md
 disable-model-invocation: true
 argument-hint: "[operation] [application-name] - e.g., 'rollover deployments for my-app', 'logs for notifications', 'investigate sync error on cert-manager'"
 ---
 
-## system
+## ArgoCD Operator
 
-### ArgoCD Operator
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This is an interactive, quick-turnaround skill.
-
-### Context
+## Context
 
 This skill uses the `argocd-kilic` MCP server to operate on ArgoCD applications. The server connects to the ArgoCD instance and exposes tools for reading application state, fetching logs, and running resource actions.
 
 **MCP server:** `argocd-kilic` (stdio, `argocd-mcp`).
 
-### Tools
+## Tools
 
 | Tool | Auto-approved | Purpose |
 |------|--------------|---------|
@@ -34,9 +33,9 @@ This skill uses the `argocd-kilic` MCP server to operate on ArgoCD applications.
 | `argocd-kilic__run_resource_action` | **No — requires user approval** | Execute an action on a resource. |
 | `argocd-kilic__sync_application` | **No — requires user approval** | Trigger an application sync. |
 
-### Process
+## Process
 
-#### Step 1: Understand the Request
+### Step 1: Understand the Request
 
 Parse the user's message to determine:
 
@@ -46,7 +45,7 @@ Parse the user's message to determine:
 
 If any of these are unclear, ask. Do not guess.
 
-#### Step 2: Resolve the Application
+### Step 2: Resolve the Application
 
 If the user provides an application name:
 
@@ -60,7 +59,7 @@ If the user describes the app indirectly (e.g., "the cert-manager app on rubik")
 - Search by the descriptive term.
 - Check the `destination` field to match cluster context if mentioned.
 
-#### Step 3: Execute the Workflow
+### Step 3: Execute the Workflow
 
 Route to the appropriate workflow based on the operation:
 
@@ -151,7 +150,7 @@ Route to the appropriate workflow based on the operation:
 2. `get_resource_events` with the resource details.
 3. Present events chronologically.
 
-### Key Principles
+## Key Principles
 
 - **Ask, don't guess.** When the application or resource is ambiguous, use search tools to present options rather than assuming.
 - **Confirm before mutating.** Always summarize what `run_resource_action` or `sync_application` will do and get explicit user confirmation.

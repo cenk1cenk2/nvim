@@ -1,24 +1,22 @@
 ---
 name: git-branch
 description: Create a new git branch following repository naming conventions. Use when user says "create a branch", "new branch", "branch off", "start a branch", "make a branch", or "cut a branch". Discovers the repo's prefix convention, fast-forwards the default branch, creates the new branch from it, and switches to it. Do NOT use for commits (git-commit), conflict resolution (git-conflict), pulling reference changes (code-pull), or PRs (github-pr-create, gitlab-mr-create).
-interaction: chat
 argument-hint: "[optional: branch name, prefix, or base branch]"
 references:
+  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/output-diff.md
 ---
 
-## system
+## Git Branch
 
-### Git Branch
-
-> **DO NOT enter plan mode.** This is an interactive quick-action workflow — discover, propose, approve, create.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks
 
 > Read the `output-diff` reference for presenting the proposed branch plan before creating it.
 
-### Process
+## Process
 
 1. **Discover the current state.**
    - Use `git status` to get the current branch and working tree state.
@@ -78,7 +76,7 @@ references:
    - Report the new branch name, the base it was created from, and whether the default was fast-forwarded.
    - Remind the user that the branch is **not pushed** to origin. They can ask explicitly when ready.
 
-### Composing with Other Skills
+## Composing with Other Skills
 
 This skill is composable — other skills can delegate branch creation to it as a prerequisite step.
 
@@ -86,7 +84,7 @@ This skill is composable — other skills can delegate branch creation to it as 
 - **This skill:** runs the process above, confirms with the user, and hands control back to the calling skill after the new branch is checked out.
 - **Never mix responsibilities.** This skill does not commit, push, or open PRs. Those stay with the calling skill or with the dedicated skills (`git-commit`, `github-pr-create`, `gitlab-mr-create`).
 
-### Key Principles
+## Key Principles
 
 - **Repo convention beats default format.** Always inspect existing branches before proposing a name.
 - **Sticky style only for related chained branching.** Within one conversation, reuse the style of earlier branches when splitting the same work. Do not inherit styles across unrelated work or from semantic prefixes (`release/*`).
@@ -95,7 +93,7 @@ This skill is composable — other skills can delegate branch creation to it as 
 - **Fast-forward default unless told otherwise.** On any blocker, ask the user — never auto-resolve.
 - **Never push automatically.** Branch creation is local-only until the user explicitly asks to push.
 
-### Examples
+## Examples
 
 **User says:** "create a branch for token refresh logic"
 

@@ -1,28 +1,37 @@
 ---
 name: plan-hard
 description: Deep, interview-driven plan mode. Walks every branch of the design tree one decision at a time, self-answers via codebase exploration, and recommends an answer for every open question. Default disposition whenever plan mode is entered. Use when user says "plan hard", "plan deeply", "interview me", "hard plan", "walk the design tree", or any time plan mode is entered. Do NOT use for picking up existing plans (use /plan-pickup) or cross-session handoffs (use /plan-handoff).
-interaction: chat
 references:
   - ../references/plan-mode.md
 ---
 
-## system
+## Plan Hard — Interview-Driven Design-Tree Traversal
 
-### Plan Hard — Interview-Driven Design-Tree Traversal
-
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives — read the files listed in `references:` for the `plan-hard` skill.
+> **ALWAYS enter plan mode.** Read the `plan-mode` reference for full directives — read the files listed in `references:` for the `plan-hard` skill.
 >
 > - Use `EnterPlanMode` tool immediately.
 > - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", or an equally direct proceed signal (the user lingo `g`, `go`, `y`, `yolo` also count).
 > - When in doubt about whether the user wants implementation, ASK. Do not assume.
 
-### Core Disposition
+## Core Disposition
 
 **Interview the user relentlessly until shared understanding is reached.** Every design decision has downstream consequences. Collapsing a decision into an assumption is how plans produce code that misses the target. Your job is to make every decision explicit, walk its branch, and only move on when the current branch is resolved.
 
 **Be understanding of deviations.** The user's answer may differ from your recommendation. If the reasoning makes sense, accept it and move on — do not re-litigate.
 
-### Process
+## Modes
+
+**Default — interview mode.** Traverse the design tree one question at a time with the user (the Process below). This is the disposition unless the user asks to delegate.
+
+**Delegated refinement mode.** Triggered when the user says "delegate", "delegate review", "delegate the plan", "review and refine the plan", or similar. Instead of walking every branch with the user:
+
+1. Build the design tree and **self-answer aggressively** from the codebase (Self-Answering Rule) to produce a complete DRAFT plan — choose your recommended answer for every branch that is not pure user intent.
+2. Dispatch `agents-review` on the draft to refine it: run `type=plan` (devil's-advocate + gap analysis) and, when the draft rests on factual claims, also `type=facts`. Lenses may run in parallel. Fold the reviewer's findings back into the plan; re-open any branch it faults.
+3. Bring **only the residual to the user**: the genuine open questions the reviewer could not resolve (pure intent/preference), plus the final approval and a concise summary of what was decided and why. Do not replay the full interview.
+
+Delegated mode trades interview depth for a review pass — use it when the user wants a fast, refined plan rather than a guided walkthrough.
+
+## Process
 
 1. **Enter plan mode** immediately via `EnterPlanMode`.
 
@@ -64,9 +73,9 @@ references:
 
 9. **Present the plan** in chat and wait for the user's next instruction. Do NOT ask to exit plan mode — the user will say so when they are ready.
 
-### Interview Protocol
+## Interview Protocol
 
-#### Recommendation Format
+### Recommendation Format
 
 Every user-facing question follows this shape:
 
@@ -80,13 +89,13 @@ Every user-facing question follows this shape:
 
 Keep it tight. One question per turn. Wait for the answer before continuing.
 
-#### Branch Ordering
+### Branch Ordering
 
 - **Resolve dependencies first.** If decision B depends on decision A, ask A first.
 - **Hard constraints before preferences.** Things the code/environment forces come before stylistic choices.
 - **Cheap-to-reverse decisions last.** If a decision can be changed later without pain, defer it.
 
-#### Handling Deviations
+### Handling Deviations
 
 When the user picks something different from your recommendation:
 
@@ -95,7 +104,7 @@ When the user picks something different from your recommendation:
 3. Update your mental model. Do NOT revisit the decision later in the plan.
 4. If the deviation affects downstream branches, flag the ripple effect before continuing.
 
-### Self-Answering Rule
+## Self-Answering Rule
 
 **Before asking any question, ask yourself: can the codebase answer this?**
 
@@ -118,7 +127,7 @@ When you self-answer, **report the finding briefly** so the user sees what you d
 
 > I checked — the validation helper already lives at `src/auth/validate.ts:34` and exports `validateToken(input)`. Using that directly instead of a new helper.
 
-### Stop Conditions
+## Stop Conditions
 
 Write the plan file and stop interviewing when **any** of these are true:
 
@@ -134,7 +143,7 @@ Write the plan file and stop interviewing when **any** of these are true:
 
 Keep going until a stop condition is met.
 
-### Key Principles
+## Key Principles
 
 - **Depth over speed.** A slow, thorough interview beats a fast plan with hidden assumptions.
 - **One question per turn.** Never dump multiple questions at once. The user will either pick one and ignore the rest, or feel overwhelmed.
@@ -144,18 +153,17 @@ Keep going until a stop condition is met.
 - **Flag, don't gate.** When you notice a pitfall, raise it as information. Let the user decide whether to explore it as a branch.
 - **Stay in plan mode.** The strict plan-mode directive is non-negotiable — only a direct, explicit proceed signal exits plan mode.
 
-### Composition with Other Skills
+## Composition with Other Skills
 
 `plan-hard` is the **default disposition** whenever plan mode is entered. It composes with other skills freely:
 
-- **`code-assistant-plan`** — after `plan-hard` produces the plan file, the user may follow up with `code-assistant-plan` for the ongoing-review phase during implementation. `plan-hard` handles design-tree interviewing; `code-assistant-plan` handles tracking and reviewing the user's implementation.
 - **`plan-handoff`** — if the interviewed plan is intended for a different session or repository, compose with `plan-handoff` to produce a self-contained handoff plan.
-- **`code-assistant-implement`** — after `plan-hard` finishes, if the user wants step-by-step implementation with review gates, hand off to `code-assistant-implement`.
-- **`agents-review`** — conditionally auto-invoked in step 7 to fact-check resolved claims AND attempt to auto-resolve pending unresolved ones. Only runs when the user's invocation includes an explicit rigour phrase ("plan hard" / "think hard" / "look hard" / "deep" / "thorough" / "rigorous"). Default plan-mode entry skips this step. User opt-out: "skip fact-check".
+- **`plan-pickup`** — after the plan file is written, the user runs `plan-pickup` to load and execute it.
+- **`agents-review`** — used two ways: (1) in **Delegated refinement mode** to refine the draft plan without a full interview, and (2) conditionally in step 7 to fact-check resolved claims AND auto-resolve pending unresolved ones (only on an explicit rigour phrase — "plan hard" / "think hard" / "deep" / "thorough" / "rigorous"; default plan-mode entry skips it; opt-out "skip fact-check").
 
 When composing, do NOT duplicate the interview — `plan-hard` runs once per plan, then the downstream skill takes over.
 
-### Examples
+## Examples
 
 **Example 1 — User asks to refactor auth:**
 
@@ -175,10 +183,8 @@ When composing, do NOT duplicate the interview — `plan-hard` runs once per pla
 4. User says "good, plan it" after the second answer.
 5. Write minimal plan file. Present. Stop.
 
-### Related Skills
+## Related Skills
 
-- **`code-assistant-plan`** — collaborative guidance and progress tracking during user-driven implementation.
 - **`plan-handoff`** — produce self-contained plans for other sessions or repositories.
 - **`plan-pickup`** — load and execute an existing plan file.
-- **`code-assistant-implement`** — step-by-step implementation with review gates.
-- **`agents-review`** — conditionally auto-invoked before the plan is written (only on explicit rigour triggers) to fact-check resolved claims and auto-resolve unresolved branches where evidence is findable. Read-only reviewer dispatched at cheap tier by default.
+- **`agents-review`** — refines the draft in Delegated refinement mode, and (on explicit rigour triggers) fact-checks resolved claims and auto-resolves unresolved branches where evidence is findable. Read-only reviewer dispatched at cheap tier by default.

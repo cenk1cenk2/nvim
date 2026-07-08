@@ -1,20 +1,18 @@
 ---
 name: git-commit
 description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit". Analyzes staged and unstaged changes, drafts a message following conventional commits format, and commits after approval. Do NOT use for PR descriptions (github-pr-create, gitlab-mr-create) or conflict resolution (git-conflict).
-interaction: chat
 argument-hint: "[optional: type or message hint — e.g., 'fix', 'feat: add retry']"
 references:
+  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/commit-style.md
   - ../references/commit-trailers.md
   - ../references/output-diff.md
 ---
 
-## system
+## Git Commit
 
-### Git Commit
-
-> **DO NOT enter plan mode.** This is an interactive commit workflow — analyze, draft, approve, commit.
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks
 
@@ -24,7 +22,7 @@ references:
 
 > Read the `output-diff` reference for presenting the draft commit message to the user before committing.
 
-### Process
+## Process
 
 1. **Assess the working tree.**
    - Use `git status` to check staged, unstaged, and untracked files.
@@ -101,7 +99,7 @@ references:
    - Confirm success by reporting the commit hash from the output.
    - Do NOT push. If the user wants to push, hand off to the `git-push` skill (invoked separately or as a compose step like "commit and push").
 
-### Key Principles
+## Key Principles
 
 - **One logical change per commit.** If the staged changes span multiple unrelated concerns, suggest splitting into separate commits.
 - **The subject tells what, the body tells why.** Never restate the diff in the body — the commit content already shows what changed.
@@ -110,14 +108,14 @@ references:
 - **No Co-authored-by.** Never add `Co-authored-by:` trailers under any circumstances.
 - **Never push automatically.** Commit only. The user decides when to push.
 
-### Composing with Other Skills
+## Composing with Other Skills
 
 This skill is composable — the commit step is a single, focused responsibility that other skills build on.
 
 - **Followed by `git-push`:** when the user chains both (e.g., "commit and push", "git-commit git-push"), this skill runs to completion (analyze → draft → approve → commit), then control hands off to `git-push`. Never push from within this skill.
 - **Never mix responsibilities.** This skill does not push, branch, pull, or open PRs. Those stay with the dedicated skills (`git-push`, `git-branch`, `code-pull`, `github-pr-create`, `gitlab-mr-create`).
 
-### Examples
+## Examples
 
 **User says:** "commit this"
 

@@ -1,25 +1,17 @@
 ---
 name: github-ci-create
 description: Create or update GitHub Actions workflows for the current repository. Use when user says "add CI", "set up GitHub Actions", or "modify the workflow". Do NOT use for diagnosing failures (github-ci-fix), GitLab pipelines (gitlab-ci-create), or PR descriptions (github-pr-create).
-interaction: chat
 disable-model-invocation: true
 references:
-  - ../references/plan-mode.md
+  - ../references/present-first.md
   - ../references/scm-github.md
 ---
 
-## system
+## GitHub CI: Create and Update GitHub Actions Workflows
 
-### GitHub CI: Create and Update GitHub Actions Workflows
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference (strict variant) for full directives
->
-> - Use `EnterPlanMode` tool immediately.
-> - Research existing patterns and available actions before proposing anything.
-> - Present findings and proposed workflow to the user.
-> - Do NOT write files until the user explicitly approves.
-
-### Core Requirements
+## Core Requirements
 
 > Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection
 
@@ -27,7 +19,7 @@ references:
 - **ALWAYS fetch the latest version** of any action from its GitHub repository before referencing it in a workflow. Do not hardcode old versions.
 - **ALWAYS consult documentation** for actions and tools via GitHub MCP when unsure about configuration options.
 
-### Process
+## Process
 
 1. **Understand the requirement.** Clarify what the workflow should do: build, test, lint, deploy, release, etc. Identify the language, framework, and runtime involved.
 2. **Analyze existing patterns.** Read `.github/workflows/` in the current repository for existing workflows. Note naming conventions, reusable patterns, shared secrets, matrix strategies, and runner choices. New workflows must be consistent with existing ones.
@@ -38,7 +30,7 @@ references:
 7. **Draft the workflow.** Write the complete workflow YAML and present it in chat. Explain the purpose of each job and step. Highlight any decisions or trade-offs made.
 8. **Ask to implement.** After user approval, exit plan mode and write the workflow file to `.github/workflows/`.
 
-### Key Principles
+## Key Principles
 
 - **Never reinvent the wheel.** Always search for an existing action before writing custom shell steps.
 - **Always use latest versions.** Fetch and verify the current version tag from the action's repository.
@@ -46,6 +38,6 @@ references:
 - **Match existing patterns.** If the repository already has workflows, follow their conventions for naming, triggers, runners, and structure.
 - **Be explicit.** Pin action versions to exact tags (e.g., `v4.1.0`), not major-only refs (e.g., `v4`), unless the repository's existing workflows use major-only refs.
 
-### Related Skills
+## Related Skills
 
 - **`github-ci-fix`** — for diagnosing failures in existing GitHub Actions workflows. Auto-invoke when the user reports CI failures instead of wanting to create/update workflows.

@@ -1,18 +1,19 @@
 ---
 name: argocd-kilic-loadbalancer
 description: Create or extend routing workloads in a load balancer cluster's ArgoCD repository. Scaffolds Pulumi services for cross-cluster routing, VM routing, or direct LB routes. Always manually invoked. Do NOT use for non-LB ArgoCD workloads (/argocd-kilic-workload), standalone workload repos (/cluster-kilic-workload), or Helm chart wrappers (/cluster-kilic-chart).
-interaction: chat
 disable-model-invocation: true
 argument-hint: "[workload-name or 'add route to <existing>'] - e.g., 'cluster-rubik', 'vm-gitlab', 'add route to cluster-rubik'"
+references:
+  - ../references/present-first.md
 ---
 
-## system
-
-### LB Cluster Routing Workload Creator
+## LB Cluster Routing Workload Creator
 
 > **IMPORTANT: This skill assumes you are already inside a load balancer cluster ArgoCD repository** (e.g., `cluster/sun/argocd-kilic-sun`).
 
-### How This Repository Works
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+## How This Repository Works
 
 This is a NestJS + Pulumi monorepo that generates Kubernetes manifests for a **load balancer cluster**. Unlike target cluster repos where workloads are application deployments, here workloads are **routing services** — they define how traffic reaches target clusters, VMs, or services.
 
@@ -24,7 +25,7 @@ Key files:
 - **`src/cluster/gateway.service.ts`** — Defines the actual gateways (external + internal), EnvoyProxy, BackendTrafficPolicy, L2 DNSEndpoints for gateway IPs
 - **`src/workloads/workloads.module.ts`** — NestJS module registering all workload services
 
-### Workload Types
+## Workload Types
 
 There are three types of routing workloads in an LB cluster:
 
@@ -34,7 +35,7 @@ There are three types of routing workloads in an LB cluster:
 
 3. **`routes`** — Direct HTTPRoutes handled by the LB cluster itself (e.g., domain redirects). No Backend needed — routes go directly to in-cluster services.
 
-### Two Modes of Operation
+## Two Modes of Operation
 
 This skill supports both **creating new workload services** and **adding routes to existing ones**:
 
@@ -43,7 +44,7 @@ This skill supports both **creating new workload services** and **adding routes 
 
 When adding to an existing service, **do NOT create a new file** — modify the existing `src/workloads/<workload>/<workload>.service.ts` directly.
 
-### Gather Requirements
+## Gather Requirements
 
 Ask the user:
 
@@ -55,7 +56,7 @@ Ask the user:
 - **OPNSense instances:** Which OPNSense instances? (`loki`, `thor`, or both)
 - **Protocol:** TLS passthrough (TLSRoute), HTTP (HTTPRoute), or TCP (TCPRoute)?
 
-### Research Phase (MANDATORY)
+## Research Phase (MANDATORY)
 
 **BEFORE writing any code**, read these files from the current repository:
 
@@ -67,9 +68,9 @@ Ask the user:
 
 This is mandatory because **each LB cluster has different gateway names, IPs, and OPNSense configurations**.
 
-### DNS Configuration
+## DNS Configuration
 
-#### How DNS Works in This System
+### How DNS Works in This System
 
 There are **two separate mechanisms** for creating DNS records:
 
@@ -79,7 +80,7 @@ There are **two separate mechanisms** for creating DNS records:
 
 **The `loki.kilic.dev` pivot point:** The DEFAULT gateway has annotation `external-dns.alpha.kubernetes.io/target: 'loki.kilic.dev'`. This tells external-dns: "when creating Cloudflare DNS records for routes on this gateway, point them at `loki.kilic.dev`". `loki.kilic.dev` resolves to the WAN/public IP that NATs to the DEFAULT gateway's Cilium LB IP. The INTERNAL gateway has **no such annotation** — routes on it don't get Cloudflare records through this mechanism.
 
-#### DNS Providers
+### DNS Providers
 
 There are **three** external-dns provider instances, each controlled by a label:
 
@@ -98,7 +99,7 @@ labels: {
 }
 ```
 
-#### Cloudflare DNS Patterns
+### Cloudflare DNS Patterns
 
 There are **three** Cloudflare DNS patterns depending on the use case:
 
@@ -149,13 +150,13 @@ this.gateway.newDNSEndpoint(
 // → Creates un-proxied CNAME: mailrise.kilic.dev → loki.kilic.dev
 ```
 
-#### Wildcard Hostnames and DNS
+### Wildcard Hostnames and DNS
 
 - **Specific hostnames** on routes create individual DNS records (e.g., `cenk.kilic.dev`, `gitlab.kilic.dev`)
 - **Wildcard hostnames** like `*.s3.kilic.dev` create wildcard DNS records — these **must be un-proxied** (Cloudflare free plan doesn't proxy wildcards)
 - **Internal wildcards** like `*.rubik.int.kilic.dev` on the INTERNAL gateway have **no external-dns labels** on the route — internal DNS for these is handled via separate OPNSense DNSEndpoints
 
-#### OPNSense DNS Patterns
+### OPNSense DNS Patterns
 
 **1. L2 Announcement records:** Register target cluster gateway IPs in OPNSense DNS. These enable the LB cluster to resolve target cluster gateways by FQDN.
 
@@ -227,7 +228,7 @@ this.gateway.newDNSEndpoint(
 
 **OPNSense description convention:** Always include `providerSpecific` with `external-dns.alpha.kubernetes.io/opnsense-description` for human-readable context. Format: `[<lb-cluster>] <purpose>`.
 
-#### Gateway ↔ DNS Decision Matrix
+### Gateway ↔ DNS Decision Matrix
 
 | Traffic Type | Gateway | DNS Mechanism | Provider Labels on Route | Annotations on Route | Separate DNSEndpoint? |
 |-------------|---------|--------------|--------------------------|---------------------|-----------------------|
@@ -237,7 +238,7 @@ this.gateway.newDNSEndpoint(
 | Internal service | `INTERNAL` | Explicit DNSEndpoint | None on route | None | Yes (A record, OPNSense loki/thor) |
 | L2 announcement | N/A | Explicit DNSEndpoint | N/A | N/A | Yes (A record, OPNSense loki) |
 
-#### FQDN Naming Conventions
+### FQDN Naming Conventions
 
 | Pattern | Format | Example | Used For |
 |---------|--------|---------|----------|
@@ -247,7 +248,7 @@ this.gateway.newDNSEndpoint(
 | External domain | Direct domain name | `gitlab.kilic.dev`, `s3.kilic.dev` | Public-facing hostnames via Cloudflare |
 | WAN endpoint | `loki.kilic.dev` | `loki.kilic.dev` | Gateway target for all Cloudflare DNS — resolves to public IP |
 
-### L2 Announcements
+## L2 Announcements
 
 Target cluster gateways have L2-announced IPs (via Cilium LB-IPAM). The LB cluster needs to know these IPs to route traffic. The flow:
 
@@ -260,7 +261,7 @@ The LB cluster's own gateways also have L2-announced IPs registered in OPNSense 
 - `cluster-<lb>-gateway-default.lb.int.loki.arpa` → DEFAULT gateway IP
 - `cluster-<lb>-gateway-internal.lb.int.loki.arpa` → INTERNAL gateway IP
 
-### Cross-Cluster Routing Pattern (`cluster-<target>`)
+## Cross-Cluster Routing Pattern (`cluster-<target>`)
 
 ```typescript
 import {
@@ -409,7 +410,7 @@ export class ClusterTargetService implements OnModuleInit {
 }
 ```
 
-### TCPRoute Pattern (Custom Port)
+## TCPRoute Pattern (Custom Port)
 
 For TCP services (SMTP, databases, etc.) that need a dedicated port on the gateway:
 
@@ -475,7 +476,7 @@ this.gateway.newDNSEndpoint(
 )
 ```
 
-### VM/Host Routing Pattern (`vm-<name>`)
+## VM/Host Routing Pattern (`vm-<name>`)
 
 ```typescript
 // Same imports as cross-cluster pattern, but typically simpler — external-only routing
@@ -520,7 +521,7 @@ export class VmNameService implements OnModuleInit {
 }
 ```
 
-### Direct Routes Pattern (`routes`)
+## Direct Routes Pattern (`routes`)
 
 ```typescript
 // For routes handled directly by the LB cluster (e.g., redirects)
@@ -556,7 +557,7 @@ this.gateway.newHTTPRoute(
 )
 ```
 
-### Adding Routes to an Existing Service
+## Adding Routes to an Existing Service
 
 When adding a new route to an existing workload service (e.g., adding a new domain to `cluster-rubik`):
 
@@ -570,7 +571,7 @@ When adding a new route to an existing workload service (e.g., adding a new doma
 4. **For internal routes:** Ask which OPNSense instances (loki, thor, or both) should handle DNS
 5. **For TCP routes:** Remember to add a `clusterGateway.listen()` call for the new port
 
-### Key API Methods
+## Key API Methods
 
 | Method | Purpose |
 |--------|---------|
@@ -584,7 +585,7 @@ When adding a new route to an existing workload service (e.g., adding a new doma
 | `gateway.newTCPRoute(name, spec, opts)` | Creates TCP route (custom ports) |
 | `gateway.newDNSEndpoint(name, spec, opts)` | Creates DNSEndpoint for external-dns |
 
-### Registration
+## Registration
 
 After creating a **new** service, register it in `src/workloads/workloads.module.ts`:
 
@@ -593,7 +594,7 @@ After creating a **new** service, register it in `src/workloads/workloads.module
 
 **Not needed when adding routes to an existing service.**
 
-### Checklist
+## Checklist
 
 - [ ] Read `src/constants.ts` and `src/cluster/cluster.constants.ts`
 - [ ] Read `src/cluster/gateway.service.ts` for gateway definitions and IPs

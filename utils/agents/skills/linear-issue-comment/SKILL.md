@@ -1,33 +1,23 @@
 ---
 name: linear-issue-comment
 description: Record critical findings, deviations, and decisions as concise comments on Linear issues. Use when user says "comment on the issue", "log this to Linear", "document this finding", or "add a note to the issue". Do NOT use for updating the issue description (/linear-issue-update) or checklist (/linear-issue-checklist).
-interaction: chat
 argument-hint: "[issue-id or Linear URL] [what to comment]"
 references:
+  - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-state-transitions.md
+  - ../references/present-first.md
 ---
 
-## system
+## Linear Comment: Issue Documentation
 
-### Linear Comment: Issue Documentation
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode for this prompt.**
->
-> - These are quick documentation captures — comment immediately.
-> - Keep comments short and factual.
+## Prerequisite
 
-### Prerequisite
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
-> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
->
-> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
-> - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
->
-> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
-
-### Context
+## Context
 
 You record critical findings and deviations as comments on Linear issues. Comments are **not summaries or status updates** — they document specific things that changed from the original plan: decisions made, approaches rejected, blockers discovered, or assumptions corrected.
 
@@ -37,7 +27,7 @@ The current conversation context holds the most recent version of the issue's in
 
 > Read the `linear-state-transitions` reference — when the comment is a delivery / close-out note posted against a merged MR/PR, the skill also advances the issue to `Done` per the post-merge trigger.
 
-### Process
+## Process
 
 1. **Identify the issue:**
    - If given an issue ID (e.g., `K-123`), use the active workspace's Linear MCP tools.
@@ -57,14 +47,14 @@ The current conversation context holds the most recent version of the issue's in
    - Report one line: `Linear state: moved K-xxx → Done.` Skip silently when the issue is already `Done` / `Canceled`.
    - User opts out for the turn by saying "don't move the Linear state" or "leave the state alone".
 
-### Comment Style
+## Comment Style
 
 - **Lead with what changed** — "Switched from X to Y because Z."
 - **No filler** — no greetings, no restating the issue, no "just wanted to note".
 - **Facts and decisions only.**
 - **Length matches the finding** — a single deviation is one sentence. A complex research session with multiple findings gets bullets and an appendix.
 
-### Appendix
+## Appendix
 
 When the session produced significant research, reasoning, or context worth preserving:
 

@@ -1,40 +1,27 @@
 ---
 name: linear-next-task
-description: Analyze Linear projects and issues to recommend the best next task(s) to pick up. Use when user says "what should I work on", "pick next task", "what's the priority", or "recommend a task". Do NOT use for picking up a specific known issue (/linear-issue-implement) or cycle planning (/linear-cycle).
-interaction: chat
+description: Analyze Linear projects and issues to recommend the best next task(s) to pick up. Use when user says "what should I work on", "pick next task", "what's the priority", or "recommend a task". Do NOT use for picking up a specific known issue (/linear-issue-pickup) or cycle planning (/linear-cycle).
 argument-hint: "[project-name or Linear URL] (optional — omit to analyze all projects)"
 references:
+  - ../references/linear-prerequisite.md
   - ../references/linear-issue-states.md
   - ../references/linear-pickup-execution.md
+  - ../references/present-first.md
 ---
 
-## system
-
-### Linear Pick Next Task
+## Linear Pick Next Task
 
 > Read the `linear-issue-states` reference for state meanings, transition rules, and dependency resolution semantics.
 
 > Read the `linear-pickup-execution` reference when the user wants to immediately execute the recommended task set after selection.
 
-> **ALWAYS enter plan mode when this prompt is invoked.**
->
-> - Research project state and issue dependencies before recommending.
-> - Present recommendations to the user and get approval before making changes.
-> - **NEVER move issues without explicit user approval.**
-> - **NEVER exit plan mode.**
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-### Prerequisite
+## Prerequisite
 
-> **PREREQUISITE: A Linear workspace skill MUST be active before this skill runs.**
->
-> If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
->
-> - **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-> - **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
->
-> Deduce the workspace from context: issue ID prefixes (K-xxx → kilic-dev, CLOUD-xxx → Laravel), Linear URLs, repository hosting (GitLab → kilic-dev, GitHub → Laravel). If a full Linear URL is provided, deduce the workspace from the URL directly.
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
-### Project Discovery (IMPORTANT)
+## Project Discovery (IMPORTANT)
 
 **DO NOT use `list_projects` or `get_project`** — these tools have complexity limits and lookup issues.
 
@@ -52,9 +39,9 @@ If user provides a Linear URL like `https://linear.app/kilic-dev/project/renovat
 - Extract the project name: `renovate-operator-migration`
 - Use `list_issues` with `project: "renovate-operator-migration"`
 
-### Process
+## Process
 
-#### Step 1: Determine Scope
+### Step 1: Determine Scope
 
 If a project was provided (name or URL), extract the project identifier and skip to Step 3.
 
@@ -63,7 +50,7 @@ If no project was specified, ask the user:
 - **"Should I look across all your projects, or do you have a specific project in mind?"**
 - If the user names a project or provides a URL, use that. If they want a broad view, proceed to Step 2.
 
-#### Step 2: Cross-Project Analysis (all projects)
+### Step 2: Cross-Project Analysis (all projects)
 
 1. **Fetch issues from all projects** using `list_issues` with broad query terms (e.g., user's name or team).
 2. Group issues by project from the response.
@@ -71,7 +58,7 @@ If no project was specified, ask the user:
 4. **Present the project overview** to the user with a recommendation of which project to focus on.
 5. Wait for the user to confirm a project before proceeding to Step 3.
 
-#### Step 3: Issue Analysis (within a project)
+### Step 3: Issue Analysis (within a project)
 
 1. **Fetch all issues** using `list_issues` with `project` parameter.
 2. **Separate issues by status:**
@@ -90,7 +77,7 @@ If no project was specified, ask the user:
    - Third tier: issues with unmet prerequisites — note what needs to happen first.
 5. **Present the ranked list** to the user with reasoning for the ordering.
 
-#### Step 4: Choose Work Type
+### Step 4: Choose Work Type
 
 Ask the user:
 
@@ -116,14 +103,14 @@ If the user lets you decide:
 1. If there's active work that needs attention (e.g., failing CI, awaiting review), highlight it.
 2. Otherwise, recommend the highest-priority actionable issue from "Ready to Pick Up".
 
-#### Step 5: Open in Browser (Optional)
+### Step 5: Open in Browser (Optional)
 
 If the user asks to open the issue:
 
 - Use `browser__open_in_browser` with the issue URL: `https://linear.app/<workspace>/issue/<identifier>`
 - If opening multiple issues, ask the user which one to open first.
 
-#### Step 6: Session Planning
+### Step 6: Session Planning
 
 Ask the user:
 
@@ -131,7 +118,7 @@ Ask the user:
 - Based on the answer, recommend either a single issue or a set of issues that fit the session.
 - For multi-issue sessions, respect dependency order — if issue A blocks issue B, both can be in the session but A comes first.
 
-#### Step 7: Confirm and Move Issues
+### Step 7: Confirm and Move Issues
 
 Once the user agrees on the selection:
 
@@ -140,9 +127,9 @@ Once the user agrees on the selection:
    - `backlog → in progress` or `todo → in progress` for the immediate task.
 2. **Wait for explicit approval** before making any changes.
 3. **Apply status changes** using parallel tool calls where possible.
-4. **Execution handoff** — if the user wants the selected work picked up immediately, hand off to `linear-issue-pickup` for specific issues or `agents-kilic-pickup` for a project slice/multiple issues.
+4. **Execution handoff** — if the user wants the selected work picked up immediately, hand off to `linear-issue-pickup` for specific issues or `agents-pickup` for a project slice/multiple issues.
 
-### Recommendation Format
+## Recommendation Format
 
 ```
 ## Project: <name>
@@ -166,7 +153,7 @@ Once the user agrees on the selection:
 - Then: <issue-id> (if time permits)
 ```
 
-### Key Rules
+## Key Rules
 
 - **Never move issues without user approval.**
 - **Never exit plan mode.**

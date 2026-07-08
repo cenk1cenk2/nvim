@@ -1,20 +1,15 @@
 ---
 name: load-skills
-description: Cross-load and chain skills automatically based on context. Reference this skill to understand how to resolve skill dependencies and auto-invoke prerequisite skills.
-interaction: chat
+description: Resolve skill dependencies and chain or auto-invoke prerequisite skills based on context. Background knowledge the agent reads to understand cross-loading — not a user action. Read it when a skill declares prerequisites or when multiple skills are active together. Do NOT invoke it to perform a task.
 ---
 
-## system
+## Skill Cross-Loading
 
-### Skill Cross-Loading
-
-> **DO NOT enter plan mode.** This is a reference skill — it defines how skill dependencies are resolved.
-
-### Purpose
+## Purpose
 
 Skills in `~/.config/nvim/utils/agents/skills/` form an interconnected ecosystem. Many skills depend on others being active first (e.g., Linear issue skills need a workspace skill). This skill defines how to **automatically resolve and load dependencies** without requiring the user to manually invoke each prerequisite.
 
-### How It Works
+## How It Works
 
 When a skill has a **PREREQUISITE** block, the agent MUST ensure that prerequisite is satisfied before proceeding. If the prerequisite skill has not been invoked in the current session:
 
@@ -22,9 +17,9 @@ When a skill has a **PREREQUISITE** block, the agent MUST ensure that prerequisi
 2. **Load and execute the prerequisite skill** before continuing with the requested skill.
 3. **If ambiguous, ask the user** — never guess when multiple options are equally valid.
 
-### Deduction Rules
+## Deduction Rules
 
-#### Linear Workspace Detection
+### Linear Workspace Detection
 
 Two Linear workspaces exist. Deduce which one from context:
 
@@ -40,7 +35,7 @@ Two Linear workspaces exist. Deduce which one from context:
 | User says "personal" or "kilic"        | kilic-dev | `linear-kilic`       |
 | No signal available                    | —         | Ask the user         |
 
-#### Skill Chaining
+### Skill Chaining
 
 Some skills reference other skills as follow-up actions. When a skill recommends invoking another skill, read its `SKILL.md`:
 
@@ -53,15 +48,15 @@ Some skills reference other skills as follow-up actions. When a skill recommends
 | Need to update a Linear initiative          | `linear-initiative-update`  |
 | Need to organize a todo note into the vault | `obsidian-note`             |
 
-#### Multiple Instances
+### Multiple Instances
 
-When a skill exists in multiple variants (e.g., `linear-project-argocd-system-kilic` and `linear-project-argocd-workload-kilic`), deduce from context:
+When a skill exists in multiple variants (e.g., `linear-kilic-project-argocd-system` and `linear-kilic-project-argocd-workload`), deduce from context:
 
-- **System components** (operators, controllers, CRDs deployed to `cluster-system` or `*-system` namespaces) → `linear-project-argocd-system-kilic`
-- **Application workloads** (apps, services, CRD instances deployed to target clusters) → `linear-project-argocd-workload-kilic`
+- **System components** (operators, controllers, CRDs deployed to `cluster-system` or `*-system` namespaces) → `linear-kilic-project-argocd-system`
+- **Application workloads** (apps, services, CRD instances deployed to target clusters) → `linear-kilic-project-argocd-workload`
 - If unclear, ask the user.
 
-### Loading Skills
+## Loading Skills
 
 Skills live as plain Markdown files at `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`. The hyprpilot harness usually attaches them for you; when it doesn't, read them directly from disk.
 
@@ -81,14 +76,14 @@ Skills live as plain Markdown files at `~/.config/nvim/utils/agents/skills/<name
 
 **Do NOT auto-load references.** Only read a reference when the skill's body tells you to.
 
-### Reference Files
+## Reference Files
 
 Skills may declare references to additional files for shared conventions and detailed context. References are declared in YAML frontmatter as a YAML array of relative paths:
 
 ```yaml
 references:
   - ../references/linear-prerequisite.md
-  - ../references/plan-mode.md
+  - ../references/present-first.md
 ```
 
 **Reference locations:**
@@ -102,7 +97,7 @@ References are read via the built-in `Read` tool. Hyprpilot's `mcp__hyprpilot__l
 
 There is no standalone-reference URI; shared references are accessed through the skill that declares them, or by `Read`ing the file directly when you need it outside a skill load.
 
-### Dismissing Skills
+## Dismissing Skills
 
 When the user explicitly asks to unload a skill (e.g., "unload the obsidian skill", "dismiss the linear skill", "drop the slack skill"):
 
@@ -111,7 +106,7 @@ When the user explicitly asks to unload a skill (e.g., "unload the obsidian skil
 3. **Drop orphaned prerequisites** — if the dismissed skill was the only reason a prerequisite was loaded, mark the prerequisite as obsolete too. Ask if unclear.
 4. **Re-invocation is allowed** — if context later matches the dismissed skill, it can be auto-invoked again normally. Dismissal is not permanent.
 
-### Key Rules
+## Key Rules
 
 - **Announce loaded skills.** When a skill is loaded, give a one-line summary: `Using <skill-name> — <what it does>.` (e.g., `Using config-agents — updates the AGENTS.md guidelines file.`).
 - **Auto-invoke when unambiguous.** If context clearly identifies the prerequisite, load it without asking.

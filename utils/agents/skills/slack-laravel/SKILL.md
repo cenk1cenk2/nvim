@@ -1,25 +1,23 @@
 ---
 name: slack-laravel
 description: "Initialize a Slack session for the Laravel enterprise workspace. Auto-invoked when enterprise Slack context is detected (e.g., work Slack URLs, Laravel organization channels, GitHub Laravel repositories)."
-interaction: chat
 references:
+  - ../references/present-first.md
   - ../references/claude-ai-connectors.md
 ---
 
-## system
+## Slack Workspace: Laravel
 
-### Slack Workspace: Laravel
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.** This skill initializes workspace context only.
-
-### Workspace Context
+## Workspace Context
 
 - **Slack:** Available via **claude.ai connector** tools (prefix `mcp__claude_ai_Slack__*` in direct Claude Code CLI).
 - **Transport:** Remote HTTP (`https://mcp.slack.com/mcp`), OAuth via claude.ai.
 - **Linked SCM:** GitHub (Laravel organization).
 - **Linked Linear:** `linear-laravel` (Laravel workspace).
 
-### Available Tools
+## Available Tools
 
 These tools are **deferred** — they must be loaded via `ToolSearch` before use. Load only the tools you need for the current task.
 
@@ -51,13 +49,13 @@ Or search by keyword:
 ToolSearch({ query: "+Slack send message" })
 ```
 
-### Notable Differences from `slack-kilic`
+## Notable Differences from `slack-kilic`
 
 - Has powerful **search** capabilities (not available in kilic workspace).
 - Has **canvas** support for document creation.
 - Has **message scheduling** and **draft** support.
 - Does **NOT** have `slack_add_reaction` — no emoji reaction support.
 
-### After Initialization
+## After Initialization
 
 Once context is established, proceed with the user's request. If the user wants to process a message or channel, follow the `slack-message` or `slack-channel` skill workflow.

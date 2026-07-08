@@ -1,23 +1,20 @@
 ---
 name: code-deviations
 description: Handle user overrides to agent edits. Use when the user modifies, rejects, or rewrites code that the agent produced, to learn their intent and align future edits. Always manually invoked.
-interaction: chat
+references:
+  - ../references/present-first.md
 disable-model-invocation: true
 ---
 
-## system
+## User Deviation Handling
 
-### User Deviation Handling
+> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> **DO NOT enter plan mode.**
->
-> This is a reactive skill — respond inline when deviations are detected.
-
-### Context
+## Context
 
 When the user overrides, rewrites, or modifies code that you produced, this is a **teaching signal** — not a disagreement to resolve. Your job is to understand the deviation, internalize it, and apply it going forward. Never fight back, revert, or silently undo user changes on subsequent edits.
 
-### Process
+## Process
 
 1. **Detect the deviation.**
    - Compare what you wrote against what the user changed it to.
@@ -49,7 +46,7 @@ When the user overrides, rewrites, or modifies code that you produced, this is a
      - An architectural decision or pattern choice.
    - Do NOT save one-off or ambiguous deviations — only patterns confirmed through the conversation.
 
-### Key Principles
+## Key Principles
 
 - **User edits are corrections, not conflicts.** Treat them as authoritative.
 - **Never revert style or logic choices.** You can and should edit any code area freely — just carry forward the user's preferences when you do.
