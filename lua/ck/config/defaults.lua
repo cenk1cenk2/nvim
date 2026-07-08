@@ -13,65 +13,72 @@ return {
     -- shared window-option presets for docked panels (referenced as nvim.ui.wo.panel)
     wo = { panel = { winbar = false } },
 
-    ---@type table Shared UI dimension scale + emitters. Draw every plugin size from one
-    --- t-shirt scale (xs..xl); each helper emits the form a given plugin accepts.
+    ---@type table Shared UI dimension scale; helpers emit the form each plugin needs.
     dimensions = {
-      -- flip points match the predominant current config: columns<180 / lines<60.
-      threshold = { width = 180, height = 60 },
+      -- named screen-size flip points, ascending per axis.
+      breakpoints = {
+        width = { narrow = 120, normal = 180, wide = 240 },
+        height = { normal = 60, wide = 80 },
+      },
       width = {
-        xs = { ratio = 0.15, cells = 30 }, -- file trees (neotree, diffview, codediff)
-        sm = { ratio = 0.2, cells = 50 }, -- outline / nav (aerial), edgy left default
-        md = { ratio = 0.25, cells = 80 }, -- data / debug tools (dap-ui, dbee), edgy right default
-        lg = { ratio = 0.35, cells = 120 }, -- wide tools
-        -- AI / chat panels: three-branch (<80 -> 0.5 ratio, mid -> 80, >300 -> 180).
-        xl = { ratio = 0.5, cells = 120, wide = 180, wide_at = 240, lo = 120 },
+        xs = { ratio = 0.15, cells = 30 },
+        sm = { ratio = 0.2, cells = 50 },
+        md = { ratio = 0.25, cells = 80 },
+        lg = { ratio = 0.35, cells = 120 },
+        -- AI / chat panels: three-branch (ratio -> cells -> wide).
+        xl = { ratio = 0.5, cells = 120, wide = 180, ratio_below = "narrow", wide_above = "wide" },
       },
       height = {
-        xs = { ratio = 0.15, cells = 15 }, -- compact bottom (qf, edgy bottom/top default)
-        sm = { ratio = 0.2, cells = 20 }, -- standard bottom (dap, toggleterm, gitlab, neotest)
-        md = { ratio = 0.25, cells = 25 }, -- tall bottom (docs-view)
-        lg = { ratio = 0.35, cells = 35 }, -- help
-        xl = { ratio = 0.5, cells = 50 }, -- large (hurl popup height)
+        xs = { ratio = 0.15, cells = 15 },
+        sm = { ratio = 0.2, cells = 20 },
+        md = { ratio = 0.25, cells = 25 },
+        lg = { ratio = 0.35, cells = 35 },
+        xl = { ratio = 0.5, cells = 50 },
       },
-      float = { xs = 0.25, sm = 0.5, md = 0.6, lg = 0.8, xl = 0.9 }, -- centered floats, per axis
-      -- special near-fullscreen terminal overlays (toggleterm float, tmux popup). Deliberately
-      -- INVERTED vs docks: below `small_at` the popup grows toward fullscreen (`small`), at/above
-      -- it settles at `ratio`. `small_at` is the terminal's own breakpoint (analogous to xl's
-      -- `wide_at`) — independent of the dock `threshold` so the two can be tuned separately.
+      float = { xs = 0.25, sm = 0.5, md = 0.6, lg = 0.8, xl = 0.9 },
+      -- terminal overlays, inverted vs docks: grow toward fullscreen below `grow_below`.
       terminal = {
-        width = { ratio = 0.9, small = 0.975, small_at = 240 },
-        height = { ratio = 0.9, small = 0.95, small_at = 80 },
+        width = { ratio = 0.9, small = 0.975, grow_below = "wide" },
+        height = { ratio = 0.9, small = 0.95, grow_below = "wide" },
       },
       lsp = { min_width = 40, max_width = 120, max_height = 15, menu_max_height = 10 },
 
-      -- edgy dock size: returns a FUNCTION (edgy evals it lazily on VimResized). Ratio (<1)
-      -- on small screens so edgy scales it down; fixed cells on large. `wide_at`/`lo`
-      -- reproduce the AI-panel three-branch. edgy floors ratios at 1 and clamps oversize.
-      ---@param axis "width"|"height"
-      ---@param size "xs"|"sm"|"md"|"lg"|"xl"
-      dock = function(axis, size)
-        local e = nvim.ui.dimensions[axis][size]
+      -- pick the first band whose `below` cutoff the screen is under; the `below`-less band is the fallback.
+      resolve = function(axis, bands)
+        local total = axis == "width" and vim.o.columns or vim.o.lines
+        local bp = nvim.ui.dimensions.breakpoints[axis]
 
-        return function()
-          local total = axis == "width" and vim.o.columns or vim.o.lines
-          if e.wide_at and total > e.wide_at then
-            return e.wide
+        for _, band in ipairs(bands) do
+          local at = type(band.below) == "string" and bp[band.below] or band.below
+          if at == nil or total < at then
+            return band.value
           end
-          if total < (e.lo or nvim.ui.dimensions.threshold[axis]) then
-            return e.ratio
-          end
-
-          return e.cells
         end
       end,
 
-      -- terminal overlay ratio (INVERTED vs dock): larger below the terminal's own `small_at`
-      -- breakpoint, smaller at/above it.
+      -- edgy dock size: lazy fn, ratio on small screens, cells on large.
+      dock = function(axis, size)
+        local e = nvim.ui.dimensions[axis][size]
+        local bands = { { below = e.ratio_below or "normal", value = e.ratio } }
+        if e.wide then
+          table.insert(bands, { below = e.wide_above, value = e.cells })
+          table.insert(bands, { value = e.wide })
+        else
+          table.insert(bands, { value = e.cells })
+        end
+
+        return function()
+          return nvim.ui.dimensions.resolve(axis, bands)
+        end
+      end,
+
       overlay = function(axis)
         local t = nvim.ui.dimensions.terminal[axis]
-        local total = axis == "width" and vim.o.columns or vim.o.lines
 
-        return total < t.small_at and t.small or t.ratio
+        return nvim.ui.dimensions.resolve(axis, {
+          { below = t.grow_below, value = t.small },
+          { value = t.ratio },
+        })
       end,
 
       cells = function(axis, size)
