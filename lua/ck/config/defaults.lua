@@ -24,7 +24,7 @@ return {
         md = { ratio = 0.25, cells = 80 }, -- data / debug tools (dap-ui, dbee), edgy right default
         lg = { ratio = 0.35, cells = 120 }, -- wide tools
         -- AI / chat panels: three-branch (<80 -> 0.5 ratio, mid -> 80, >300 -> 180).
-        xl = { ratio = 0.5, cells = 120, wide = 180, wide_at = 300, lo = 120 },
+        xl = { ratio = 0.5, cells = 120, wide = 180, wide_at = 240, lo = 120 },
       },
       height = {
         xs = { ratio = 0.15, cells = 15 }, -- compact bottom (qf, edgy bottom/top default)
@@ -35,11 +35,12 @@ return {
       },
       float = { xs = 0.25, sm = 0.5, md = 0.6, lg = 0.8, xl = 0.9 }, -- centered floats, per axis
       -- special near-fullscreen terminal overlays (toggleterm float, tmux popup). Deliberately
-      -- INVERTED vs docks: smaller screens get a LARGER popup (closer to fullscreen), big
-      -- screens a slightly smaller one. `small` applies below `threshold`, `ratio` at/above.
+      -- INVERTED vs docks: below `small_at` the popup grows toward fullscreen (`small`), at/above
+      -- it settles at `ratio`. `small_at` is the terminal's own breakpoint (analogous to xl's
+      -- `wide_at`) — independent of the dock `threshold` so the two can be tuned separately.
       terminal = {
-        width = { ratio = 0.9, small = 0.975 },
-        height = { ratio = 0.9, small = 0.95 },
+        width = { ratio = 0.9, small = 0.975, small_at = 240 },
+        height = { ratio = 0.9, small = 0.95, small_at = 80 },
       },
       lsp = { min_width = 40, max_width = 120, max_height = 15, menu_max_height = 10 },
 
@@ -64,12 +65,13 @@ return {
         end
       end,
 
-      -- terminal overlay ratio (INVERTED vs dock): larger on small screens, smaller on big ones.
+      -- terminal overlay ratio (INVERTED vs dock): larger below the terminal's own `small_at`
+      -- breakpoint, smaller at/above it.
       overlay = function(axis)
         local t = nvim.ui.dimensions.terminal[axis]
         local total = axis == "width" and vim.o.columns or vim.o.lines
 
-        return total < nvim.ui.dimensions.threshold[axis] and t.small or t.ratio
+        return total < t.small_at and t.small or t.ratio
       end,
 
       cells = function(axis, size)
