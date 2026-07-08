@@ -26,21 +26,21 @@ function M.config()
 
       fn.setup_callback(require("ck.plugins.edgy-nvim").name, function(c)
         vim.list_extend(c.right, {
-          { title = "Hyprpilot Header", ft = "hyprpilot_header.markdown", size = { height = 1 }, wo = { winbar = false } },
+          { title = "Hyprpilot Header", ft = "hyprpilot_header.markdown", size = { height = 1 }, wo = nvim.ui.wo.panel },
           {
             title = "Hyprpilot Chat",
             ft = "hyprpilot.markdown",
             size = {
               width = nvim.ui.dimensions.dock("width", "xl"),
             },
-            wo = { winbar = false },
+            wo = nvim.ui.wo.panel,
           },
-          { title = "Hyprpilot Permissions", ft = "hyprpilot_permission_row.markdown", wo = { winbar = false } },
-          { title = "Hyprpilot Queue", ft = "hyprpilot_queue_strip.markdown", wo = { winbar = false } },
+          { title = "Hyprpilot Permissions", ft = "hyprpilot_permission_row.markdown", wo = nvim.ui.wo.panel },
+          { title = "Hyprpilot Queue", ft = "hyprpilot_queue_strip.markdown", wo = nvim.ui.wo.panel },
           {
             title = "Hyprpilot Composer",
             ft = "hyprpilot_composer.markdown",
-            wo = { winbar = false },
+            wo = nvim.ui.wo.panel,
           },
         })
 

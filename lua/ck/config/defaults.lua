@@ -10,6 +10,9 @@ return {
     winblend = 0, -- pseudo-transparency for floating windows / popups (0 = opaque)
     transparent = false,
 
+    -- shared window-option presets for docked panels (referenced as nvim.ui.wo.panel)
+    wo = { panel = { winbar = false } },
+
     ---@type table Shared UI dimension scale + emitters. Draw every plugin size from one
     --- t-shirt scale (xs..xl); each helper emits the form a given plugin accepts.
     dimensions = {

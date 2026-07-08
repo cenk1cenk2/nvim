@@ -41,9 +41,7 @@ function M.config()
             size = {
               width = nvim.ui.dimensions.dock("width", "xl"),
             },
-            wo = {
-              winbar = false,
-            },
+            wo = nvim.ui.wo.panel,
           },
         })
 
