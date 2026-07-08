@@ -31,9 +31,7 @@ function M.config()
             title = "Hyprpilot Chat",
             ft = "hyprpilot.markdown",
             size = {
-              width = function()
-                return vim.o.columns < 180 and 0.5 or 180
-              end,
+              width = nvim.ui.dimensions.dock("width", "xl"),
             },
             wo = { winbar = false },
           },

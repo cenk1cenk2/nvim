@@ -30,13 +30,7 @@ function M.config()
           {
             ft = "help",
             size = {
-              height = function()
-                if vim.o.lines < 60 then
-                  return 0.35
-                end
-
-                return 35
-              end,
+              height = nvim.ui.dimensions.dock("height", "lg"),
             },
             -- only show help buffers
             filter = function(buf)
@@ -48,40 +42,16 @@ function M.config()
         ---@type table<Edgy.Pos, {size:integer, wo?:vim.wo}>
         options = {
           left = {
-            size = function()
-              if vim.o.columns < 180 then
-                return 0.2
-              end
-
-              return 50
-            end,
+            size = nvim.ui.dimensions.dock("width", "sm"),
           },
           bottom = {
-            size = function()
-              if vim.o.lines < 60 then
-                return 0.15
-              end
-
-              return 15
-            end,
+            size = nvim.ui.dimensions.dock("height", "xs"),
           },
           right = {
-            size = function()
-              if vim.o.columns < 180 then
-                return 0.2
-              end
-
-              return 75
-            end,
+            size = nvim.ui.dimensions.dock("width", "md"),
           },
           top = {
-            size = function()
-              if vim.o.lines < 60 then
-                return 0.15
-              end
-
-              return 15
-            end,
+            size = nvim.ui.dimensions.dock("height", "xs"),
           },
         },
         -- edgebar animations

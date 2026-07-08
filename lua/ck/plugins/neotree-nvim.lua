@@ -31,13 +31,7 @@ function M.config()
             title = "Neo-Tree",
             ft = "neo-tree",
             size = {
-              width = function()
-                if vim.o.columns < 180 then
-                  return 0.25
-                end
-
-                return 50
-              end,
+              width = nvim.ui.dimensions.dock("width", "sm"),
             },
             filter = function(buf)
               return vim.b[buf].neo_tree_source == "filesystem" or vim.b[buf].neo_tree_source == "remote"
@@ -252,6 +246,22 @@ function M.config()
               conflict = nvim.ui.icons.git.FileConflict,
             },
           },
+          -- If you don't want to use these columns, you can set `enabled = false` for each of them individually
+          file_size = {
+            enabled = true,
+          },
+          type = {
+            enabled = true,
+          },
+          last_modified = {
+            enabled = true,
+          },
+          created = {
+            enabled = false,
+          },
+          symlink_target = {
+            enabled = false,
+          },
         },
         document_symbols = {
           follow_cursor = true,
@@ -276,7 +286,7 @@ function M.config()
         },
         window = {
           position = "left",
-          width = 50,
+          width = nvim.ui.dimensions.cells("width", "sm"),
           mapping_options = {
             noremap = true,
             nowait = true,

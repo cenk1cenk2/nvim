@@ -25,15 +25,7 @@ function M.config()
             ft = "sidekick_terminal",
             title = "Sidekick",
             size = {
-              width = function()
-                if vim.o.columns > 300 then
-                  return 180
-                elseif vim.o.columns < 120 then
-                  return 0.5
-                end
-
-                return 120
-              end,
+              width = nvim.ui.dimensions.dock("width", "xl"),
             },
           },
         })

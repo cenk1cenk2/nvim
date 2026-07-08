@@ -291,8 +291,8 @@ function M.config()
           },
           menu = {
             border = nvim.ui.border,
-            min_width = 40,
-            max_height = 10,
+            min_width = nvim.ui.dimensions.lsp.min_width,
+            max_height = nvim.ui.dimensions.lsp.menu_max_height,
             draw = {
               components = {
                 label = {
@@ -330,9 +330,9 @@ function M.config()
           documentation = {
             window = {
               border = nvim.ui.border,
-              max_height = 15,
-              min_width = 40,
-              max_width = 120,
+              max_height = nvim.ui.dimensions.lsp.max_height,
+              min_width = nvim.ui.dimensions.lsp.min_width,
+              max_width = nvim.ui.dimensions.lsp.max_width,
             },
             auto_show = true,
             -- auto_show_delay_ms = 150,
@@ -344,9 +344,9 @@ function M.config()
           enabled = true,
           window = {
             border = nvim.ui.border,
-            max_height = 15,
-            min_width = 40,
-            max_width = 120,
+            max_height = nvim.ui.dimensions.lsp.max_height,
+            min_width = nvim.ui.dimensions.lsp.min_width,
+            max_width = nvim.ui.dimensions.lsp.max_width,
             treesitter_highlighting = true,
           },
         },

@@ -31,13 +31,7 @@ function M.config()
             ft = "gitlab",
             title = "Gitlab",
             size = {
-              height = function()
-                if vim.o.lines < 60 then
-                  return 0.2
-                end
-
-                return 20
-              end,
+              height = nvim.ui.dimensions.dock("height", "sm"),
             },
           },
         })

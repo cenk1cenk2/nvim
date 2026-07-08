@@ -60,13 +60,7 @@ function M.config()
             ft = "dbee",
             title = "Database",
             size = {
-              width = function()
-                if vim.o.columns < 180 then
-                  return math.floor(vim.o.columns * 0.3)
-                end
-
-                return 80
-              end,
+              width = nvim.ui.dimensions.dock("width", "md"),
             },
             filter = function(buf)
               return not vim.api.nvim_buf_get_name(buf):find("^dbee-result.*")
@@ -79,13 +73,7 @@ function M.config()
             ft = "dbee-result",
             title = "Database",
             size = {
-              width = function()
-                if vim.o.rows < 60 then
-                  return math.floor(vim.o.columns * 0.25)
-                end
-
-                return 50
-              end,
+              height = nvim.ui.dimensions.dock("height", "sm"),
             },
             filter = function(buf)
               return vim.api.nvim_buf_get_name(buf):find("^dbee-result.*")

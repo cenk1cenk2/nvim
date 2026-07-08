@@ -113,7 +113,7 @@ function M.config()
           },
         },
         hover = {
-          max_width = 120,
+          max_width = nvim.ui.dimensions.lsp.max_width,
         },
         diagnostic = {
           -- maybe disable this later on

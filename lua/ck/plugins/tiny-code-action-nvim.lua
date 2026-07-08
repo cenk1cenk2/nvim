@@ -25,16 +25,16 @@ function M.config()
           layout_config = {
             width = function()
               if vim.o.columns < 360 then
-                return math.floor(vim.o.columns * 0.90)
+                return math.floor(vim.o.columns * nvim.ui.dimensions.float.xl)
               end
 
-              return math.floor(vim.o.columns * 0.5)
+              return math.floor(vim.o.columns * nvim.ui.dimensions.float.sm)
             end,
             height = function()
-              return math.floor(vim.o.lines * 0.75)
+              return math.floor(vim.o.lines * nvim.ui.dimensions.float.lg)
             end,
             preview_height = function(_, _, max_lines)
-              return math.floor(max_lines * 0.5)
+              return math.floor(max_lines * nvim.ui.dimensions.float.sm)
             end,
             preview_cutoff = 1,
             mirror = true,

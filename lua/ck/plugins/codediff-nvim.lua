@@ -27,13 +27,7 @@ function M.config()
             ft = "codediff-explorer",
             title = "CodeDiff",
             size = {
-              width = function()
-                if vim.o.columns < 180 then
-                  return 0.25
-                end
-
-                return 50
-              end,
+              width = nvim.ui.dimensions.dock("width", "sm"),
             },
           },
         })
@@ -79,8 +73,8 @@ function M.config()
         },
         explorer = {
           position = "left",
-          width = 50,
-          height = 15,
+          width = nvim.ui.dimensions.cells("width", "sm"),
+          height = nvim.ui.dimensions.cells("height", "xs"),
           indent_markers = true,
           icons = {
             folder_closed = "",

@@ -29,13 +29,7 @@ function M.config()
           {
             ft = "toggleterm",
             size = {
-              height = function()
-                if vim.o.lines < 60 then
-                  return 0.25
-                end
-
-                return 20
-              end,
+              height = nvim.ui.dimensions.dock("height", "sm"),
             },
             -- exclude floating windows
             filter = function(_, win)
@@ -52,9 +46,9 @@ function M.config()
         -- size can be a number or function which is passed the current terminal
         size = function(term)
           if term.direction == "horizontal" then
-            return math.floor(vim.o.lines * 0.25)
+            return math.floor(vim.o.lines * nvim.ui.dimensions.ratio("height", "md"))
           elseif term.direction == "vertical" then
-            return math.floor(vim.o.columns * 0.25)
+            return math.floor(vim.o.columns * nvim.ui.dimensions.ratio("width", "md"))
           end
         end,
         -- open_mapping = [[<c-\>]],
@@ -79,18 +73,10 @@ function M.config()
           -- border = 'single' | 'double' | 'shadow' | 'curved' | ... other options supported by win open
           border = nvim.ui.border,
           width = function()
-            if vim.o.columns < 180 then
-              return math.floor(vim.o.columns * 0.975)
-            end
-
-            return math.floor(vim.o.columns * 0.9)
+            return math.floor(vim.o.columns * nvim.ui.dimensions.overlay("width"))
           end,
           height = function()
-            if vim.o.lines < 60 then
-              return math.floor(vim.o.lines * 0.95)
-            end
-
-            return math.floor(vim.o.lines * 0.9)
+            return math.floor(vim.o.lines * nvim.ui.dimensions.overlay("height"))
           end,
           winblend = 0,
           highlights = { border = "Normal", background = "Normal" },

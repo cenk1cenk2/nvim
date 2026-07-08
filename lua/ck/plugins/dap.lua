@@ -45,13 +45,7 @@ function M.config()
             ft = "dap-repl",
             title = "Dap Replication",
             size = {
-              height = function()
-                if vim.o.lines < 60 then
-                  return 0.25
-                end
-
-                return 20
-              end,
+              height = nvim.ui.dimensions.dock("height", "sm"),
             },
           },
         })

@@ -50,8 +50,8 @@ function M.config()
         end,
         ui = {
           window = {
-            width = 0.8, -- 0-1 (ratio); "50%" (percentage); 50 (raw number)
-            height = 0.8, -- 0-1 (ratio); "50%" (percentage); 50 (raw number)
+            width = nvim.ui.dimensions.float.lg, -- 0-1 (ratio); "50%" (percentage); 50 (raw number)
+            height = nvim.ui.dimensions.float.lg, -- 0-1 (ratio); "50%" (percentage); 50 (raw number)
             align = "center", -- "center", "top-left", "top-right", "bottom-left", "bottom-right", "top", "bottom", "left", "right"
             relative = "editor",
             zindex = 50,

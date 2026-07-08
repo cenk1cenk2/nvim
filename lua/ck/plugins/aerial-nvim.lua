@@ -23,13 +23,7 @@ function M.config()
             title = "LSP Outline",
             ft = "aerial",
             size = {
-              width = function()
-                if vim.o.columns < 180 then
-                  return 0.3
-                end
-
-                return 75
-              end,
+              width = nvim.ui.dimensions.dock("width", "md"),
             },
           },
         })
@@ -50,7 +44,7 @@ function M.config()
           -- max_width = { 50, 0.2 },
           max_width = nil,
           width = nil,
-          min_width = 50,
+          min_width = nvim.ui.dimensions.cells("width", "sm"),
 
           -- Determines the default direction to open the aerial window. The 'prefer'
           -- options will open the window in the other direction *if* there is a
@@ -205,8 +199,8 @@ function M.config()
           aerial = {
             theme = "dropdown",
             layout_config = {
-              width = 0.5,
-              height = 0.25,
+              width = nvim.ui.dimensions.float.sm,
+              height = nvim.ui.dimensions.float.xs,
               prompt_position = "bottom",
             },
             -- Display symbols as <root>.<parent>.<symbol>

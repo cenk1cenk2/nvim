@@ -197,8 +197,8 @@ function M.config()
               col = "50%",
             },
             size = {
-              width = "80%",
-              height = "60%",
+              width = nvim.ui.dimensions.float_pct("lg"),
+              height = nvim.ui.dimensions.float_pct("md"),
             },
             win_options = {
               winhighlight = { Normal = "NoicePopup", FloatBorder = "NoicePopupBorder" },

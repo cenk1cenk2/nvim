@@ -35,13 +35,13 @@ function M.config()
         mode = "popup",
         -- Split settings
         split_position = "right",
-        split_size = "50%",
+        split_size = nvim.ui.dimensions.float_pct("sm"),
 
         -- Popup settings
         popup_position = "50%",
         popup_size = {
-          width = 180,
-          height = 50,
+          width = nvim.ui.dimensions.float_pct("lg"),
+          height = nvim.ui.dimensions.float_pct("lg"),
         },
         -- Default environment file name
         env_file = { ".env", "hurl.env", ".hurl/hurl.env" },

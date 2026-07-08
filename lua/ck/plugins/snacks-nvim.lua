@@ -127,8 +127,8 @@ function M.config()
             trace = nvim.ui.icons.diagnostics.Trace .. " ",
           },
           style = "compact",
-          width = { min = 50, max = 0.25 },
-          height = { min = 1, max = 0.25 },
+          width = nvim.ui.dimensions.minmax("width", "sm", "md"),
+          height = { min = 1, max = nvim.ui.dimensions.ratio("height", "md") },
           more_format = " " .. nvim.ui.icons.ui.BoldArrowDown .. " %d lines ",
         },
         quickfile = {
@@ -162,7 +162,7 @@ function M.config()
             enabled = false,
           },
           win = {
-            width = 180,
+            width = nvim.ui.dimensions.width.xl.wide,
             backdrop = { transparent = false },
           },
         },

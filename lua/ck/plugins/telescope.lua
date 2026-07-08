@@ -69,32 +69,32 @@ function M.config()
           find_command = "rg",
           layout_config = {
             bottom_pane = {
-              height = 25,
+              height = nvim.ui.dimensions.cells("height", "md"),
               preview_cutoff = 120,
               prompt_position = "top",
             },
             center = {
-              height = 0.5,
+              height = nvim.ui.dimensions.float.sm,
               preview_cutoff = 40,
               prompt_position = "top",
-              width = 0.5,
+              width = nvim.ui.dimensions.float.sm,
             },
             cursor = {
-              height = 0.9,
+              height = nvim.ui.dimensions.float.xl,
               preview_cutoff = 40,
-              width = 0.8,
+              width = nvim.ui.dimensions.float.lg,
             },
             horizontal = {
               preview_width = 0.55,
               mirror = true,
-              width = 0.9,
-              height = 0.9,
+              width = nvim.ui.dimensions.float.xl,
+              height = nvim.ui.dimensions.float.xl,
               prompt_position = "bottom",
             },
             vertical = {
               mirror = false,
-              width = 0.9,
-              height = 0.9,
+              width = nvim.ui.dimensions.float.xl,
+              height = nvim.ui.dimensions.float.xl,
               prompt_position = "bottom",
             },
           },
@@ -163,8 +163,8 @@ function M.config()
             theme = "dropdown",
             previewer = true,
             layout_config = {
-              width = 0.5,
-              height = 0.25,
+              width = nvim.ui.dimensions.float.sm,
+              height = nvim.ui.dimensions.float.xs,
               prompt_position = "bottom",
             },
             mappings = {
@@ -179,16 +179,16 @@ function M.config()
             previewer = false,
             shorten_path = false,
             layout_config = {
-              width = 0.5,
-              height = 0.25,
+              width = nvim.ui.dimensions.float.sm,
+              height = nvim.ui.dimensions.float.xs,
               prompt_position = "bottom",
             },
           },
           oldfiles = {
             theme = "dropdown",
             layout_config = {
-              width = 0.5,
-              height = 0.25,
+              width = nvim.ui.dimensions.float.sm,
+              height = nvim.ui.dimensions.float.xs,
               prompt_position = "bottom",
             },
           },

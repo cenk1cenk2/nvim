@@ -22,13 +22,7 @@ function M.config()
           {
             ft = "grug-far",
             size = {
-              width = function()
-                if vim.o.columns < 180 then
-                  return 0.4
-                end
-
-                return 120
-              end,
+              width = nvim.ui.dimensions.dock("width", "xl"),
             },
           },
         })

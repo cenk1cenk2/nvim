@@ -23,13 +23,7 @@ function M.config()
             ft = "nvim-docs-view",
             title = "LSP Documentation",
             size = {
-              height = function()
-                if vim.o.lines < 60 then
-                  return 0.2
-                end
-
-                return 25
-              end,
+              height = nvim.ui.dimensions.dock("height", "md"),
             },
           },
         })
@@ -40,8 +34,8 @@ function M.config()
     setup = function()
       return {
         position = "bottom",
-        width = 75,
-        height = 18,
+        width = nvim.ui.dimensions.cells("width", "md"),
+        height = nvim.ui.dimensions.cells("height", "md"),
       }
     end,
     on_setup = function(c)

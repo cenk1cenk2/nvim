@@ -33,6 +33,13 @@ function M.config()
         log_level = require("ck.log"):to_nvim_level(),
         inherit_vim_env = false,
         inherit_env = true,
+        -- terminal overlay: near-fullscreen, larger on small screens (see nvim.ui.dimensions.overlay).
+        width = function(columns)
+          return math.floor(columns * nvim.ui.dimensions.overlay("width"))
+        end,
+        height = function(lines)
+          return math.floor(lines * nvim.ui.dimensions.overlay("height"))
+        end,
         env = function()
           local all = vim.fn.environ()
           local env = {}

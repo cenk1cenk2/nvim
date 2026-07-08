@@ -30,39 +30,21 @@ function M.config()
             title = "Dap Watches",
             ft = "dapui_watches",
             size = {
-              width = function()
-                if vim.o.columns < 180 then
-                  return 0.25
-                end
-
-                return 75
-              end,
+              width = nvim.ui.dimensions.dock("width", "md"),
             },
           },
           {
             title = "Dap Stacks",
             ft = "dapui_stacks",
             size = {
-              width = function()
-                if vim.o.columns < 180 then
-                  return 0.25
-                end
-
-                return 75
-              end,
+              width = nvim.ui.dimensions.dock("width", "md"),
             },
           },
           {
             title = "Dap Breakpoints",
             ft = "dapui_breakpoints",
             size = {
-              width = function()
-                if vim.o.columns < 180 then
-                  return 0.25
-                end
-
-                return 75
-              end,
+              width = nvim.ui.dimensions.dock("width", "md"),
             },
           },
         })
@@ -72,13 +54,7 @@ function M.config()
             ft = "dapui_scopes",
             title = "Dap Scopes",
             size = {
-              height = function()
-                if vim.o.lines < 60 then
-                  return 0.25
-                end
-
-                return 20
-              end,
+              height = nvim.ui.dimensions.dock("height", "sm"),
             },
           },
         })
@@ -124,7 +100,7 @@ function M.config()
                 size = 0.3,
               },
             },
-            size = 60,
+            size = nvim.ui.dimensions.cells("width", "md"),
             position = "right",
           },
           {
@@ -138,7 +114,7 @@ function M.config()
                 size = 0.5, -- Can be float or integer > 1
               },
             },
-            size = 20,
+            size = nvim.ui.dimensions.cells("height", "sm"),
             position = "bottom",
           },
         },

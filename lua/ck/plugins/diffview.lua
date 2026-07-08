@@ -38,13 +38,7 @@ function M.config()
             ft = "DiffviewFiles",
             title = "Diffview",
             size = {
-              width = function()
-                if vim.o.columns < 180 then
-                  return 0.25
-                end
-
-                return 50
-              end,
+              width = nvim.ui.dimensions.dock("width", "sm"),
             },
           },
         })
@@ -74,7 +68,7 @@ function M.config()
         diff_binaries = false, -- Show diffs for binaries
         enhanced_diff_hl = true, -- Better contrast between diff highlights (fork-recommended)
         use_icons = true, -- Requires nvim-web-devicons
-        file_panel = { win_config = { width = 50 } },
+        file_panel = { win_config = { width = nvim.ui.dimensions.cells("width", "sm") } },
         view = {
           -- Configure the layout and behavior of different types of views.
           -- Available layouts:
