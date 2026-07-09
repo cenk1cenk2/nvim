@@ -271,6 +271,28 @@ function M.config()
           end,
           desc = "yazi",
         },
+        {
+          fn.wk_keystroke({ categories.TERMINAL, "l" }),
+          function()
+            M.create_terminal({
+              name = "linear-kilic",
+              env = M.editor_async(),
+              command = { "zsh -ic 'linear-k'" },
+            })
+          end,
+          desc = "linear-kilic",
+        },
+        {
+          fn.wk_keystroke({ categories.TERMINAL, "L" }),
+          function()
+            M.create_terminal({
+              name = "linear-laravel",
+              env = M.editor_async(),
+              command = { "zsh -ic 'linear-l'" },
+            })
+          end,
+          desc = "linear-laravel",
+        },
       }
     end,
   })
