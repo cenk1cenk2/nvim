@@ -179,6 +179,8 @@ function M.config()
         { cmd = "lazydocker", keymap = "d", label = "LazyDocker" },
         { cmd = "dust", keymap = "n", label = "dust" },
         { cmd = "k9s", keymap = "k", label = "k9s" },
+        { cmd = "linear-k", keymap = "l", label = "linear-kilic" },
+        { cmd = "linear-l", keymap = "L", label = "linear-laravel" },
       }
 
       for i, exec in pairs(togglers) do
