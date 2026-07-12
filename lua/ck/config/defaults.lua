@@ -24,16 +24,16 @@ return {
         xs = { ratio = 0.15, cells = 30 },
         sm = { ratio = 0.2, cells = 50 },
         md = { ratio = 0.25, cells = 80 },
-        lg = { ratio = 0.35, cells = 120 },
+        lg = { ratio = 0.35, cells = 90 },
         -- AI / chat panels: three-branch (ratio -> cells -> wide).
-        xl = { ratio = 0.5, cells = 120, wide = 180, ratio_below = "narrow", wide_above = "wide" },
+        xl = { ratio = 0.4, cells = 100, wide = 120, ratio_below = "narrow", wide_above = "wide" },
       },
       height = {
         xs = { ratio = 0.15, cells = 15 },
         sm = { ratio = 0.2, cells = 20 },
         md = { ratio = 0.25, cells = 25 },
         lg = { ratio = 0.35, cells = 35 },
-        xl = { ratio = 0.5, cells = 50 },
+        xl = { ratio = 0.4, cells = 50 },
       },
       float = { xs = 0.25, sm = 0.5, md = 0.6, lg = 0.8, xl = 0.9 },
       -- terminal overlays, inverted vs docks: grow toward fullscreen below `grow_below`.
