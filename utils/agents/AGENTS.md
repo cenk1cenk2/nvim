@@ -63,14 +63,18 @@ Rules:
 - The skill body is the source of truth for that mode.
 - Announce the first time you load a skill: `Using **<skill-name>** skill to <purpose>.`
 - Resolve prerequisite skills recursively. If context identifies the prerequisite, load it automatically; if ambiguous, ask. `hyprpilot://skills/load-skills` defines dependency resolution.
-- **Invocation tiers** — a skill's `disableModelInvocation` metadata (from `list_skills`) tells you whether you may load it yourself:
-  - **Manual** (`disableModelInvocation: true`) — load only when the user explicitly asks or types `/name`. Never self-invoke; you may *suggest* it (e.g. `config-agents`, `obsidian-repository`).
-  - **Model-invocable** (flag absent/`false`) — load when the user's intent clearly matches, as a step within a flow.
-  - **Auto-invoke** — the workspace/session initializers (`linear-kilic`, `linear-laravel`, `slack-kilic`, `slack-laravel`, `spacelift-laravel`, `notion-laravel`). Load them the moment their context is detected (matching issue IDs, workspace URLs, org repos) without waiting to be asked; their descriptions say "Auto-invoked when …".
 - Load references only when the skill body asks for them. Prefer `mcp__hyprpilot__load_skill_references { slug }`; references are progressive-disclosure context, not startup context.
 - When multiple skills are active, read their composition instructions and let them share context. Ask only when it is unclear which skill should own an action.
 - Never use the Claude Code built-in `Skill` tool for these custom hyprpilot skills.
 - Use `mcp__hyprpilot__reload` (or the `/hyprpilot-reload` skill) after editing skill source so the daemon refreshes its resource catalog.
+
+**Invocation tiers** — a skill's `disableModelInvocation` metadata (from `list_skills`) says whether you may load it yourself:
+
+| Tier | When to load it | Examples |
+|------|-----------------|----------|
+| Manual (`disableModelInvocation: true`) | Only on explicit ask or `/name`; never self-invoke, but you may *suggest* it | config-agents, obsidian-repository |
+| Model-invocable (flag absent/`false`) | When the user's intent clearly matches, mid-flow | git-commit, plan-hard |
+| Auto-invoke (workspace/session initializers) | The moment its context is detected (issue IDs, workspace URLs, org repos), unprompted | linear-kilic, slack-kilic, spacelift-laravel |
 
 Skill source lives under `~/.config/nvim/utils/agents/skills/`. Use `hyprpilot://skills/config-skills` for skill authoring conventions; keep skill bodies lean, move repeated policy blocks into shared references, and use clear trigger/negative-trigger descriptions.
 
@@ -215,33 +219,18 @@ When you notice a file doesn't match what you expected (e.g., your previous edit
 
 When the user overrides, rewrites, or modifies code you produced, treat it as a **teaching signal** — not a disagreement to resolve. Never fight back, revert, or silently undo user changes on subsequent edits.
 
-**Detection — identify the category:**
+| Deviation | What it is | Respond by |
+|-----------|-----------|------------|
+| Style | formatting, naming, structure, ordering | adopt it silently in future edits |
+| Logic | different approach, edge case, algorithm choice | understand why; ask if the reason isn't obvious |
+| Removal | deleted something you added (comment, guard, abstraction) | don't re-add it; treat the removal as intent |
 
-- **Style:** formatting, naming, structure, indentation, ordering.
-- **Logic:** different approach, edge case handling, algorithm choice.
-- **Removal:** user deleted something you added (a comment, a guard clause, an abstraction).
+Then:
 
-**Analysis — before reacting:**
-
-- Read surrounding code for context.
-- Check if the user's change aligns with existing patterns in the file or project.
-- Consider whether the deviation is a one-off fix or a recurring preference.
-
-**Ask questions when the reasoning is not obvious:**
-
-- Be specific: _"I see you changed X to Y — is this because of Z, or is there a different reason?"_
-- Do NOT assume you understand the motivation. If there is any ambiguity, ask.
-- Accept short answers — the user may say "preference" or "just cleaner" without elaboration. Respect that.
-
-**Acknowledge briefly** — one sentence is enough: _"Got it — you prefer early returns over nested conditionals. I'll follow that pattern."_
-
-**Apply to future edits:**
-
-- Follow the learned pattern when editing the same file or similar code.
-- You are **free to edit any area**, including areas the user modified. Do not avoid those areas — just incorporate the user's style and choices into your edits.
-- Never silently revert a user's stylistic or logic choices when editing the same area.
-
-**Save to memory when critical** — update memory when the deviation reveals a project-wide convention, a strong user preference that applies across sessions, or an architectural decision. Do NOT save one-off or ambiguous deviations.
+- **Analyze** — read surrounding code; check whether the change matches existing patterns; judge one-off vs recurring preference.
+- **Ask when unclear** — be specific (_"changed X to Y — because of Z?"_); don't assume motivation; accept short answers ("preference", "cleaner") without pushing.
+- **Acknowledge** in one line, then **apply** the pattern going forward. You may edit any area, including what the user changed — just incorporate their choices; never silently revert them.
+- **Save to memory** only when the deviation reveals a project-wide convention, a strong cross-session preference, or an architectural decision — not one-offs.
 
 ### Markdown Output Formatting
 
