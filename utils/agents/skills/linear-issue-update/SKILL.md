@@ -6,6 +6,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/present-first.md
+  - ../references/linear-document-handling.md
 ---
 
 ## Linear Issue Update
@@ -23,6 +24,8 @@ references:
 > Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). The user's session knowledge and the current conversation context hold the most recent version of the issue's intent. The goal of this skill is to apply deviations from the conversation back to the issue in Linear. When the issue's `updatedAt` is older than the current conversation context, **treat the conversation as the source of truth** and update the issue to match — always confirming with the user before applying.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+
+> Read the `linear-document-handling` reference before touching any attached/linked document: glimpse always, classify plan-like vs external, and edit only plan-like documents with explicit user agreement. External docs stay read-only unless the user says otherwise.
 
 ## Process
 

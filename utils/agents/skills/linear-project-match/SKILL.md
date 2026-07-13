@@ -1,6 +1,6 @@
 ---
 name: linear-project-match
-description: Reconcile Linear issue states in a project against external reality — user statements, merged GitLab MRs, merged GitHub PRs, or user-provided notes/docs. Extract signals (issue ids in trailers/branch names, title keyword matches, user's verbal reports), propose state transitions per issue with evidence, apply in batch after approval. Use when user says "match linear to reality", "clean up issue states", "reconcile with recent MRs/PRs", "I did X, Y, Z — update linear", or when composing with /linear-project-revisit to act on mismatches. Do NOT use for auditing project structure/priorities/estimates (/linear-project-update) or deep per-issue revisit (/linear-issue-revisit).
+description: Match Linear issue states in a project to external evidence — user statements, merged GitLab MRs, merged GitHub PRs, or user-provided notes/docs. Extract signals (issue ids in trailers/branch names, title keyword matches, user's verbal reports), propose state transitions per issue with evidence, apply in batch after approval. This is state-only sync from evidence. Use when user says "match linear to reality", "clean up issue states", "sync with recent MRs/PRs", "I did X, Y, Z — update linear", or when composing with /linear-project-read to act on mismatches. Do NOT use for auditing project structure/priorities/estimates (/linear-project-reconcile) or deep per-issue read (/linear-issue-read).
 argument-hint: "[project-name or Linear URL] [evidence sources: MR/PR URLs, repo names, 'recent merged', user statements, notes]"
 references:
   - ../references/linear-prerequisite.md
@@ -32,7 +32,7 @@ Linear's ground truth drifts from reality: an MR merges but the issue stays `In 
 **Composability:**
 
 - **Standalone:** user invokes with evidence sources ("check these merged PRs", "I finished X Y Z, clean up states").
-- **After `linear-project-revisit`:** that skill flags mismatched states; `linear-project-match` is the natural follow-up to act on them.
+- **After `linear-project-read`:** that skill flags mismatched states; `linear-project-match` is the natural follow-up to act on them.
 - **Inside other workflows:** can be chained from PR/MR-close hooks or cycle cleanup flows.
 
 ## Evidence Sources
@@ -127,7 +127,7 @@ At the bottom, summarise unchanged issues (not enough evidence) and explicit no-
 - **Confirm cancellations.** `Canceled` is terminal. Always get explicit approval before cancelling, even when the user said "dropped".
 - **Keyword matches are candidates, not matches.** If you can't find a direct issue-id reference, surface it as a candidate for the user to confirm.
 - **Batch application.** Apply approved transitions in parallel `save_issue` calls to minimise round trips.
-- **No scope creep.** This skill only moves issue states. For priority/estimate/label/description changes, refer the user to `linear-project-update`.
+- **No scope creep.** This skill only moves issue states. For priority/estimate/label/relation changes, refer the user to `linear-project-reconcile`; for description/document edits, `linear-project-update`.
 
 ## Report Format (final summary after apply)
 
@@ -149,7 +149,7 @@ At the bottom, summarise unchanged issues (not enough evidence) and explicit no-
 
 ## Related Skills
 
-- **`linear-project-revisit`** — read-only project survey. Surfaces mismatched states; this skill acts on them.
-- **`linear-project-update`** — audit + modify project structure (priorities, estimates, labels). Complementary scope.
+- **`linear-project-read`** — read-only project survey. Surfaces mismatched states; this skill acts on them.
+- **`linear-project-reconcile`** — audit + modify project structure (priorities, estimates, labels, relations). Complementary scope.
 - **`linear-issue-update`** — update a single issue's fields (any field, not just state). Use when the match involves more than a state transition.
 - **`linear-state-transitions`** (reference) — defines the forward-move rank order and the never-downgrade guard.

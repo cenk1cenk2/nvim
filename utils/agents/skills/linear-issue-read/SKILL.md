@@ -1,13 +1,14 @@
 ---
-name: linear-issue-revisit
-description: Refresh and reconcile knowledge of a Linear issue by re-reading its description, comments, relations, and project context. Use when user says "refresh the issue", "re-read the issue", "what changed on this issue", or "catch me up on K-123". Do NOT use for starting work (/linear-issue-pickup) or updating the issue (/linear-issue-update).
+name: linear-issue-read
+description: Read-only refresh of a Linear issue — re-read its description, comments, relations, and project context, and surface what changed since you last looked. Use when user says "read the issue", "refresh the issue", "re-read the issue", "what changed on this issue", or "catch me up on K-123". Do NOT use for starting work (/linear-issue-pickup) or updating the issue (/linear-issue-update).
 argument-hint: "[issue-id or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/present-first.md
+  - ../references/linear-document-handling.md
 ---
 
-## Linear Issue Revisit
+## Linear Issue Read
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
@@ -20,6 +21,8 @@ references:
 > **THE ISSUE IS NOT THE ABSOLUTE TRUTH.**
 >
 > Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). If the description was last updated or comments were posted before the current conversation context or the user's latest work, **the user's knowledge may be more current than what Linear shows.** When you detect a gap between the issue's timestamps and the current session, **ask the user** to clarify rather than assuming the issue is authoritative. Timestamps are the deciding factor — always check when the description was last updated and when the most recent comment was posted.
+
+> Read the `linear-document-handling` reference — in this read-only skill, glimpse any attached/linked documents for context, surface what's relevant, and flag stale ones with their timestamps. Never edit; hand off actionable edits to `linear-issue-update`.
 
 ## Purpose
 

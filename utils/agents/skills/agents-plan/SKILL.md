@@ -31,7 +31,7 @@ references:
 
 > Read the `agents-plan-split` reference for the planning phase — understand goal, discover tooling, establish conventions, write the plan. Also covers `depends_on` declarations, layer assignment, and file-overlap verification.
 > Read the `agents-merge-review` reference for between-layer and end-of-run phases — per-layer worktree merge, per-layer review, final `code-review-changes` against the run-level baseline, final verification, completion handoff.
-> Read the `agents-delegate` reference for agent dispatch parameters, tier selection (cheap/default/smart), ecosystem model mappings, and user shorthand.
+> Read the `agents-delegate` reference for agent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
 > Read the `agents-worktrees` reference for the mandatory worktree location rule (`.claude/worktrees/<name>/`), naming, verification, and cleanup — agent worktrees MUST live there, no exceptions.
 > Read the `scm-detect` reference for git MCP tools and CLI fallbacks.
 > Read the `sourcebot-discovery` reference when planning starts from an organization-wide question or the target repository is not yet known.
@@ -301,10 +301,10 @@ Report: APPROVED or list specific issues to fix.
 
 ## Model Selection
 
-See the `agents-delegate` reference for tier definitions, ecosystem mappings, user shorthand, and mismatch handling. Per-agent, pick a tier based on task complexity and resolve to a concrete model:
+See the `agents-tiers` skill for tier definitions, per-provider model lists, user shorthand, and mismatch handling. Per-agent, pick a tier based on task complexity and resolve to a concrete model:
 
-- **Anthropic via `Agent` tool:** cheap → `haiku`, default → `sonnet`, smart → `opus` (also for review subagents under per-task cadence).
-- **Other ecosystems:** user declares the tier mapping.
+- **Concrete model depends on the provider** — resolve via the `agents-tiers` skill (Claude: cheap→`haiku`, default→`sonnet`, smart→`opus`, max→`fable`; OpenCode / Codex per its references). Same mapping applies to review subagents under per-task cadence.
+- **Other providers:** if the mapping is unknown, ask the user.
 - **Explicit model names from the user** override tiers — use verbatim.
 - **Mismatched choices:** ask before dispatching.
 

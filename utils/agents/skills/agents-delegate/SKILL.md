@@ -1,8 +1,8 @@
 ---
 name: agents-delegate
-description: Delegate a single task to one subagent at a user-chosen tier (cheap/default/smart) or explicit model. Use when user says "delegate this", "give this to an agent", "run this with opus/sonnet/haiku", "use a cheap/smart agent", or wants to hand off one focused task. Do NOT use for multi-task plans or DAG-scheduled work (use /agents-plan).
+description: Delegate a single task to one subagent at a user-chosen tier (cheap/default/smart/max) or explicit model. Use when user says "delegate this", "give this to an agent", "run this with opus/sonnet/haiku/fable", "use a cheap/smart agent", or wants to hand off one focused task. Do NOT use for multi-task plans or DAG-scheduled work (use /agents-plan).
 disable-model-invocation: true
-argument-hint: "[task description] [optional: tier 'cheap'|'default'|'smart' or explicit model name]"
+argument-hint: "[task description] [optional: tier 'cheap'|'default'|'smart'|'max' or explicit model name]"
 references:
   - ../references/present-first.md
   - ../references/agents-delegate.md
@@ -19,7 +19,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `agents-delegate` reference for tier definitions, ecosystem model mappings, user shorthand, agent parameters, and prompt structure.
+> Read the `agents-delegate` reference for agent parameters, dispatch mechanics, and prompt structure. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
 > Read the `agents-worktrees` reference when dispatching with `isolation: "worktree"` — worktrees MUST live under `<project_root>/.claude/worktrees/<name>/`. Covers naming, verification, and cleanup.
 > Read the `agents-conventions` reference when the task modifies code — establishes conventions to include in the agent prompt. Skip for read-only research tasks.
 > Read the `project-tooling` reference when the task modifies code — for verification commands to include in the agent prompt. Skip for read-only research tasks.
@@ -48,8 +48,7 @@ Use it when:
    - Parse the user's input per the `agents-delegate` reference:
      - **Explicit model name** (e.g., `haiku`, `opus`, `gpt-4o`, `gemini-2.5-pro`) → use verbatim, no remapping.
      - **Tier shorthand** (`cheap`, `smart`, `lesser`, `higher`, etc.) → resolve to a concrete model via the ecosystem's mapping.
-   - **Anthropic via `Agent` tool:** cheap → `haiku`, default → `sonnet`, smart → `opus`.
-   - **Other ecosystems** (OpenAI, Gemini, mixed, custom): the user declares the tier mapping. If unknown, ask; persist to memory if stable across sessions.
+   - Resolve the tier to a concrete model via the **`agents-tiers`** skill (read the active provider's `agents-tiers-<provider>` reference) — the mapping depends on the active provider (Claude, OpenCode, Codex, …), not just Anthropic. If the provider's mapping is unknown, ask; persist to memory if stable across sessions.
    - If no preference is stated, infer the tier from task complexity and propose with reasoning.
    - **If the user's pick seems mismatched to the task** (e.g., cheap for architectural design, smart for a trivial rename), **ask before dispatching** — state the mismatch and propose an alternative. Do not silently comply.
 
@@ -88,11 +87,10 @@ Use it when:
 
 ## Model Selection
 
-See the `agents-delegate` reference for tier definitions, ecosystem mappings, and user shorthand. Summary:
+See the `agents-tiers` skill for tier definitions, per-provider model lists, and user shorthand. Summary:
 
-- **Tiers:** `cheap` (mechanical), `default` (integration), `smart` (architectural).
-- **Anthropic defaults** (via `Agent` tool): cheap → `haiku`, default → `sonnet`, smart → `opus`.
-- **Other ecosystems:** user declares the tier mapping. Ask if unknown.
+- **Tiers:** `cheap` (mechanical), `default` (integration), `smart` (architectural), `max` (absolute ceiling).
+- **Concrete model depends on the provider** — resolve via the `agents-tiers` skill (Claude: `haiku`/`sonnet`/`opus`/`fable`; OpenCode / Codex per its references). Ask if the provider's mapping is unknown.
 - **Explicit model names** override tiers — use verbatim.
 
 ## Key Principles

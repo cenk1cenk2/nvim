@@ -13,7 +13,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `agents-delegate` reference for tier selection (cheap/default/smart), ecosystem model mappings, user shorthand, and `Agent` tool parameters.
+> Read the `agents-delegate` reference for `Agent` tool parameters and dispatch mechanics. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
 > Read the `scm-detect` reference only if the review task requires git context (e.g., reviewing a diff or historical change).
 
 ## Context
@@ -46,7 +46,7 @@ Four typed templates, each with a different checklist. The skill picks the right
 
 ## Model Tier
 
-**Default tier: `cheap` (haiku) for all types.** The default review is a quick sanity pass — the cost/latency balance favours a cheap model.
+**Default tier: `cheap` for all types** (Claude resolves this to `haiku`; get the concrete model for the active provider from the `agents-tiers` skill). The default review is a quick sanity pass — the cost/latency balance favours a cheap model.
 
 **User override:**
 

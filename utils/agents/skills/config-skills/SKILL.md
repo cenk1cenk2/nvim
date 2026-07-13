@@ -25,8 +25,12 @@ All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a direct
 │   ├── linear-mandatory-fields.md       # Team, state, labels, estimate, priority, relations
 │   ├── linear-issue-philosophy.md       # Issue vs. conversation authority and timestamps
 │   ├── linear-description-structure.md  # Issue/project/initiative description format
-│   ├── linear-project-documents.md      # Project-scoped documents for shared Linear context
+│   ├── linear-project-documents.md      # Authoring project-scoped documents for shared Linear context
+│   ├── linear-document-handling.md      # Reading/updating existing attached documents (glimpse, classify, edit-with-agreement)
 │   ├── linear-pickup-execution.md       # Linear pickup implementation lifecycle
+│   ├── agents-tiers-claude.md           # Claude tier→model table + Agent tool dispatch
+│   ├── agents-tiers-opencode.md         # OpenCode tier→model table + task tool dispatch
+│   ├── agents-tiers-codex.md            # Codex/OpenAI role models + dispatch
 │   ├── linear-scm-discovery.md          # Explicit opt-in Sourcebot/GitHub/GitLab discovery for Linear context
 │   ├── linear-research-documentation.md # Research process, analysis, appendix, links
 │   ├── sourcebot-discovery.md          # Sourcebot-first org-wide repository/code discovery
@@ -271,6 +275,10 @@ When creating or updating a skill, always check:
 | `slack.md` | Slack MCP tools, response conventions, `:dark_sunglasses:` pattern, large results handling. | Slack family (2 skills). |
 | `enrich-context.md` | Entity enrichment table (MCP tools → links), code permalinks, appendix pattern. | Skills that compile output for others (slack-laravel-compile, slack-channel). |
 | `project-tooling.md` | Task runner discovery order, verification command extraction, user confirmation flow. | Agent skills (agents-plan, agents-delegate). |
+| `agents-tiers-claude.md` | Claude tier→model table (`haiku`/`sonnet`/`opus`/`fable`) + `Agent` tool dispatch. | `agents-tiers` skill; agent delegation skills on demand. |
+| `agents-tiers-opencode.md` | OpenCode tier→model table (`kilic/*` models) + `task` tool dispatch. | `agents-tiers` skill; agent delegation skills on demand. |
+| `agents-tiers-codex.md` | Codex/OpenAI role models (`gpt-*`) + dispatch. | `agents-tiers` skill; agent delegation skills on demand. |
+| `linear-document-handling.md` | Reading/updating existing attached documents: glimpse, classify plan-like vs external, edit only with agreement. | Linear read/update skills (issue-read, project-read, issue-update, project-update). |
 | `agents-write-plans.md` | Plan quality: exact file paths, no placeholders, concrete steps, optional depends_on field, self-review checklist. | Agent skills (agents-plan). |
 | `agents-conventions.md` | Project conventions discovery: testing, code style, patterns, formatting, commits. | Agent skills (agents-plan, agents-delegate). |
 | `agents-completion.md` | Completion handoff: summarize, present options (commit/push/PR/leave), execute choice. | Agent skills (agents-plan, agents-delegate). |

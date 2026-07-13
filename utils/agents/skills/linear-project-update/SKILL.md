@@ -1,14 +1,16 @@
 ---
 name: linear-project-update
-description: Audit and update a Linear project's structure, subissues, priorities, estimates, labels, and blocking relations. Use when user says "audit the project", "update project structure", "review project priorities", or "is the project still accurate". Do NOT use for posting status updates (/linear-project-post) or creating new projects (/linear-project-create).
+description: Update a Linear project's description and its documents to reflect deviations and refinements from the conversation. Use when user says "update the project", "the project description is outdated", "sync the project with what we agreed", or "the project docs are stale". Do NOT use for structural audit of issues/priorities/estimates (/linear-project-reconcile), state sync from merged MRs/PRs (/linear-project-match), posting a status update (/linear-project-post), or creating a project (/linear-project-create).
 argument-hint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/present-first.md
+  - ../references/linear-project-documents.md
+  - ../references/linear-document-handling.md
 ---
 
-## Linear Project Audit & Update
+## Linear Project Update
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
@@ -16,84 +18,54 @@ references:
 
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
-## Timestamp Awareness
+## Core Principle
 
-Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). When auditing, **check `updatedAt` on each issue** — if a description hasn't been updated in a while, it may be stale regardless of how it reads. The current conversation context holds the most recent understanding of the project — the goal is to bring Linear in line with reality, not the other way around. When you flag a description as stale, note its `updatedAt` timestamp and ask the user to confirm before recommending changes.
+> **THE PROJECT RECORD IS NOT THE ABSOLUTE TRUTH. THE CONVERSATION IS.**
+>
+> The project description and its documents carry timestamps (`createdAt`, `updatedAt`). The user's session knowledge and the current conversation hold the most recent version of the project's intent. This skill applies deviations from the conversation back to the project's **prose** — the description and any plan-like documents. When the record's `updatedAt` is older than the current conversation, treat the conversation as the source of truth and update to match — always confirming with the user before applying.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
+> Read the `linear-document-handling` reference before touching any document: glimpse always, classify plan-like vs external, and edit only plan-like documents with explicit user agreement. External docs stay read-only unless the user says otherwise.
+
+## Scope
+
+This skill edits the project's **own prose** — description and documents. It does NOT audit issue structure, priorities, estimates, or relations (that is `linear-project-reconcile`), and it does not post status updates (that is `linear-project-post`).
+
 ## Process
 
-1. **Fetch all project issues** using `list_issues` with the `project` parameter (do NOT use `get_project` or `list_projects` — they have complexity limits). Note the project name from the issues' `project` field.
-2. **Extract project details** from the issues — description, status, labels, initiative, and milestone can be inferred from the issues' metadata.
-3. **Audit the project-level configuration:**
-   - Does the project description still accurately reflect the goal and scope?
-   - Is the project status correct (backlog, planned, started, paused, completed, cancelled)?
-   - Are the labels and initiative assignments still relevant?
-   - Is the milestone appropriate given current progress?
-4. **Audit each subissue:**
-   - **Status accuracy** — does each issue's status reflect reality? Are completed issues marked done? Are stale "in progress" issues actually being worked on?
-   - **Estimate validity** — are estimates reasonable given what we now know? Flag issues with missing or clearly wrong estimates.
-   - **Label consistency** — do all issues have appropriate labels? Are labels consistent across the project?
-   - **Priority correctness** — apply the blocking-priority rule: issues that block others should generally have equal or higher priority than the issues they block. Flag violations.
-   - **Blocking relations** — are dependency chains correct? Are there missing `blocks`/`blockedBy` relations? Are there stale relations to issues that are already done?
-   - **Description freshness** — flag issues whose descriptions are clearly outdated or no longer match the current approach. Use the `updatedAt` timestamp as evidence.
-5. **Build a change report** organized by category:
-   - **Project-level changes** (description, status, labels, initiative, milestone).
-   - **Priority adjustments** with rationale (especially blocking-priority violations).
-   - **Estimate corrections** with reasoning.
-   - **Missing or incorrect relations** to add/remove.
-   - **Status corrections** for issues that don't reflect reality.
-   - **Description updates** for stale issues.
-   - **Label changes** for consistency.
-6. **Present the report to the user.** Group changes by severity — things that are clearly wrong first, then improvements, then suggestions.
-7. **Iterate** based on user feedback. The user may approve all, some, or none of the changes.
-8. **Apply approved changes** — update issues in batch where possible using parallel tool calls.
+1. **Fetch the project** using the appropriate Linear MCP tools. Note the description's `updatedAt`.
+2. **List and glimpse the project's documents** (`list_documents` / `get_document`), per the `linear-document-handling` reference. Classify each as plan-like or external.
+3. **Check timestamps** — if the description or a plan-like document is older than the current session context, ask the user what has changed before assuming the stored content is current.
+4. **Review the conversation** for deviations from the recorded project intent — changed goals, rejected approaches, new decisions, corrected assumptions, scope shifts.
+5. **Flag outdated or contradicted sections** in the description and in plan-like documents. Warn the user; get explicit approval before modifying or removing them. Leave external documents read-only.
+6. **Draft the updates** and present them via `output-diff` — one chunk per target (description, each document), highlighting what changed and why.
+7. **Iterate** based on user feedback until the prose accurately reflects the current understanding.
+8. **Apply changes** only after user approval — `save_project` for the description, `save_document` for each approved document.
 
-## Blocking-Priority Rule
+## What to Update
 
-Issues that block other issues are prerequisites — they must be completed first. Therefore:
+- **Project description** — rewrite sections that no longer reflect the agreed goal, scope, or approach.
+- **Plan-like documents** — bring agent-authored plans/specs in line with the conversation (with agreement).
+- **`## Thoughts` section** — append to the description a markdown list of key deviations and the reasoning behind them.
 
-- A blocking issue should have **equal or higher** priority than the issues it blocks.
-- If issue A blocks issue B, and A has lower priority than B, flag this as a violation.
-- Priority scale: 1=Urgent > 2=High > 3=Normal > 4=Low (lower number = higher priority).
-- When recommending priority changes, prefer raising the blocker's priority over lowering the blocked issue's priority.
+## Thoughts Section Format
 
-## Report Format
+```markdown
+## Thoughts
 
-Present findings as a structured summary, not a raw dump:
-
-```
-## Project: <name>
-
-### Project-Level
-- [status/description/label changes if any]
-
-### Priority Violations
-- <issue-id>: priority <current> → <recommended> (blocks <blocked-issue-id> which is priority <X>)
-
-### Estimate Issues
-- <issue-id>: [missing | needs adjustment] — <reasoning>
-
-### Missing Relations
-- <issue-id> should block <issue-id> — <reasoning>
-
-### Status Corrections
-- <issue-id>: <current-status> → <recommended-status> — <reasoning>
-
-### Stale Descriptions
-- <issue-id>: <brief note on what's outdated>
-
-### Label Inconsistencies
-- <issue-id>: [missing | wrong] label — <recommendation>
+- Narrowed scope to X after deciding Y was out of band.
+- Dropped the Z workstream — superseded by the new approach.
+- Added milestone C which was missing from the original plan.
 ```
 
-Omit sections that have no findings.
+Only include deviations that matter for future readers understanding *why* the project prose looks different from what was originally written.
 
 ## Key Rules
 
-- **Never modify issues without user approval.**
-- **Present all findings before making changes** — the user decides what to act on.
-- **Batch updates** — apply approved changes efficiently using parallel tool calls.
-- **Preserve content that hasn't changed** — only update fields discussed and approved.
-- **Be opinionated but not rigid** — flag issues clearly but accept the user's judgment.
+- **Never modify the project or its documents without user approval.**
+- **Prose only.** For issue-level structure, priorities, estimates, and relations, use `linear-project-reconcile`.
+- **Documents follow the handling policy.** Plan-like → editable with agreement; external → read-only unless the user explicitly says to edit.
+- **Preserve content that hasn't changed** — only update what deviated.
+- **The Thoughts section documents *why*, not *what*** — the description itself reflects the *what*.
+- **Prefer a status post for progress narratives** — use `linear-project-post` when the user wants to communicate progress rather than correct the recorded intent.

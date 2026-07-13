@@ -1,12 +1,12 @@
 ---
-name: git-debranch
-description: Session-persistent "skip the ceremony" mode — implement changes inline on the current branch without auto-creating branches, commits, or PRs/MRs. Overrides prior instructions to commit, branch, or open PRs/MRs from AGENTS.md, plans, or earlier in the conversation. Use when the user says "debranch", "debranch mode", "no branch", "no commit", "inline only", "stop branching", "uncomplicated mode", "implementer mode", or invokes /git-debranch. Do NOT use to create a branch (git-branch), to commit (git-commit), or to draft a PR/MR (github-pr-create, gitlab-mr-create).
+name: git-manual
+description: Session-persistent "skip the ceremony" mode — implement changes inline on the current branch and leave all version control to the user. No auto-created branches, commits, pushes, or PRs/MRs. Overrides prior instructions to commit, branch, or open PRs/MRs from AGENTS.md, plans, or earlier in the conversation. Use when the user says "manual mode", "git-manual", "no branch", "no commit", "inline only", "stop branching", "skip the ceremony", "I'll handle git", or invokes /git-manual. Do NOT use to create a branch (git-branch), to commit (git-commit), or to draft a PR/MR (github-pr-create, gitlab-mr-create).
 references:
   - ../references/present-first.md
 disable-model-invocation: true
 ---
 
-## Git Debranch
+## Git Manual
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
@@ -19,6 +19,8 @@ When active, the agent:
 - Does **not** stage or commit changes. Leaves the working tree dirty for the user to review and commit themselves.
 - Does **not** push. Does **not** open or update PRs/MRs.
 - **Ignores prior instructions** to branch / commit / push / open PRs that came from `AGENTS.md`, an earlier turn in the conversation, a loaded plan, or another skill's description.
+
+The user owns version control while this mode is active — the agent only edits.
 
 ## Suppressed Skills
 
@@ -38,7 +40,7 @@ Composite phrases route the same way:
 
 ## Explicit User Requests Win
 
-If the user explicitly asks for one of the suppressed actions while the mode is active — by skill name (`/git-commit`, `/github-pr`) or by unambiguous direct command ("commit this now", "push this", "open the PR for me") — comply, but report briefly: _"Debranch mode is active — committing because you asked explicitly."_ The mode stays on for subsequent turns.
+If the user explicitly asks for one of the suppressed actions while the mode is active — by skill name (`/git-commit`, `/github-pr`) or by unambiguous direct command ("commit this now", "push this", "open the PR for me") — comply, but report briefly: _"Manual mode is active — committing because you asked explicitly."_ The mode stays on for subsequent turns.
 
 ## What This Mode Does NOT Affect
 
@@ -52,13 +54,13 @@ If the user explicitly asks for one of the suppressed actions while the mode is 
 
 When invoked, announce the mode briefly:
 
-> _"Debranch mode active. Edits will be inline on `<current-branch>`. No branches, commits, or PR drafts unless you explicitly ask."_
+> _"Manual mode active. Edits will be inline on `<current-branch>`. No branches, commits, or PR drafts unless you explicitly ask."_
 
 Then continue with whatever the user asked next. Do not require additional confirmation.
 
 ## Exit
 
-User says any of: "rebranch", "exit debranch", "stop debranch", "normal mode", "back to normal" → mode off, default behavior resumes.
+User says any of: "exit manual", "stop manual", "manual off", "normal mode", "back to normal" → mode off, default behavior resumes.
 
 The mode otherwise persists until the session ends.
 

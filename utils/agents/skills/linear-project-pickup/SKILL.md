@@ -88,7 +88,7 @@ This skill turns a project or project slice into an execution-ready issue set. I
 
 ## Key Principles
 
-- **Project pickup is not project refresh.** For read-only survey, use `linear-project-revisit`.
+- **Project pickup is not project refresh.** For read-only survey, use `linear-project-read`.
 - **Do not duplicate project docs into every issue.** Reference shared documents instead.
 - **Ask early when project scope is not final.** Do not let agents discover missing intent mid-implementation.
 - **Preserve issue boundaries unless there is a strong reason to merge or split.**

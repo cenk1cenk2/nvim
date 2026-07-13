@@ -1,13 +1,14 @@
 ---
-name: linear-project-revisit
-description: Refresh top-level knowledge of a Linear project — scan open issues and their statuses, re-read the project description, check the latest project update, and reconcile against prior understanding. Use when user says "refresh the project", "re-read the project", "what changed on this project", "catch me up on <project>", "project pulse", or "project overview". Do NOT use for auditing/modifying project structure (/linear-project-update), drafting a status post (/linear-project-post), or deep per-issue revisit (/linear-issue-revisit).
+name: linear-project-read
+description: Read-only refresh of a Linear project — scan open issues and their statuses, re-read the project description, check the latest project update, and surface what changed since you last looked. Use when user says "read the project", "refresh the project", "re-read the project", "what changed on this project", "catch me up on the project", "project pulse", or "project overview". Do NOT use for auditing/modifying project structure (/linear-project-reconcile), drafting a status post (/linear-project-post), or deep per-issue read (/linear-issue-read).
 argument-hint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/present-first.md
+  - ../references/linear-document-handling.md
 ---
 
-## Linear Project Revisit
+## Linear Project Read
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
@@ -21,15 +22,17 @@ references:
 >
 > Project descriptions, issues, and status updates carry timestamps (`createdAt`, `updatedAt`). If the project description or most recent update predates the user's latest work, **the user's knowledge may be more current than what Linear shows.** When you detect a gap, **ask the user** rather than assuming Linear is authoritative. Use timestamps as the deciding factor — never treat stale records as truth.
 
+> Read the `linear-document-handling` reference — in this read-only skill, glimpse the project's documents for context, surface what's relevant, and flag stale ones with their timestamps. Never edit; hand off actionable edits to `linear-project-update`.
+
 ## Purpose
 
 When you resume work on a project after time has passed — or when the user jumps back into a project after working elsewhere — your high-level understanding may be stale. This skill does a project-level sweep: description, latest update, open issues by status, recent comment activity. The goal is common-sense situational awareness, not a deep per-issue audit.
 
 Compare to sibling skills:
 
-- `linear-issue-revisit` — deep per-issue reconciliation (one issue, all comments, all relations).
-- `linear-project-revisit` (this skill) — top-level project sweep (all issues, just statuses + titles; latest update; description).
-- `linear-project-update` — audit + modify project structure (priorities, estimates, labels, relations).
+- `linear-issue-read` — deep per-issue reconciliation (one issue, all comments, all relations).
+- `linear-project-read` (this skill) — top-level project sweep (all issues, just statuses + titles; latest update; description).
+- `linear-project-reconcile` — audit + modify project structure (priorities, estimates, labels, relations).
 - `linear-project-post` — draft a new status update post.
 
 ## Process
@@ -118,17 +121,18 @@ Omit sections that have no findings. Keep bullets short — this is a survey, no
 
 ## Key Rules
 
-- **Read-only.** Never modify issues, comments, the project, or status updates. For modifications, refer the user to `linear-project-update`.
+- **Read-only.** Never modify issues, comments, the project, or status updates. For modifications, refer the user to `linear-project-reconcile`.
 - **Never exit plan mode.**
 - **Highlight deltas, not full restatements.** The value is in surfacing *what changed since I last looked*, not describing the project from scratch.
 - **Timestamps drive staleness.** Quote `updatedAt` when flagging anything as possibly stale.
-- **Brief over thorough.** If the user wants a deep dive on a specific issue, refer them to `linear-issue-revisit`.
+- **Brief over thorough.** If the user wants a deep dive on a specific issue, refer them to `linear-issue-read`.
 
 ## Related Skills
 
-- **`linear-issue-revisit`** — per-issue deep reconciliation.
+- **`linear-issue-read`** — per-issue deep reconciliation.
 - **`linear-project-pickup`** — prepare the project or a project slice for implementation after this read-only refresh.
 - **`agents-pickup`** — execute the refreshed project scope with direct work and/or agents.
-- **`linear-project-update`** — audit + modify project structure.
+- **`linear-project-update`** — edit the project description and documents to match the conversation.
+- **`linear-project-reconcile`** — audit + modify project structure.
 - **`linear-project-post`** — draft a new status update post.
-- **`linear-project-match`** — reconcile issue states against external reality (merged MRs/PRs, user statements). Can be invoked as a follow-up when the revisit flags mismatched states.
+- **`linear-project-match`** — sync issue states against external reality (merged MRs/PRs, user statements). Can be invoked as a follow-up when this read flags mismatched states.

@@ -121,7 +121,7 @@ This skill is the **caller** in a delegation chain. The composed skills run thei
 - **`git-push`** — push per slice (opt-in).
 - **`github-pr-create` / `gitlab-mr-create`** — draft PR/MR per slice (opt-in). Platform selected via `scm-detect`.
 
-**Conflict with `git-debranch`.** `git-debranch` suppresses branch / commit / push / PR-MR creation — the exact opposite of this skill's purpose. If `git-debranch` is active when `git-split` is invoked, surface the conflict and ask the user before proceeding. Do NOT silently override.
+**Conflict with `git-manual`.** `git-manual` suppresses branch / commit / push / PR-MR creation — the exact opposite of this skill's purpose. If `git-manual` is active when `git-split` is invoked, surface the conflict and ask the user before proceeding. Do NOT silently override.
 
 ## Examples
 
