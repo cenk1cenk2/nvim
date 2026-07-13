@@ -37,48 +37,26 @@
 
 ## II. PLANNING AND IMPLEMENTATION
 
-### When to Use Plan Mode
+### Default posture: investigate and discuss before implementing
 
-**ALWAYS** use plan mode (`EnterPlanMode` tool) for complex implementation work.
+Do not be eager to implement. For anything beyond a trivial change, the default is: **investigate the codebase, surface what you found, discuss the approach, and iron out the details with the user — then implement.** One round of "here's what I see, here's what I'd do, here are the files I'd touch" costs a message; unwanted code costs far more.
 
-**Enter plan mode when:**
+- Propose the approach in 1–2 lines and name the files you'd touch; wait for the user's signal before editing.
+- Prefer questions and options over assumptions when requirements or the approach are unclear. Lean toward understanding over guessing.
+- **Implement immediately only when:** the task is genuinely trivial (typo, one-line fix, single named tweak); the user gave complete step-by-step instructions that leave no design space; or the user authorized it (`g`, `go`, `y`, `yolo`, "just do it", or `autopilot` after its upfront questions).
+- When unsure, ask first — "discuss the approach, or go ahead?"
 
-- Task spans multiple files across different areas of the codebase
-- User asks you to research, read remote code, or explore before implementing
-- Task has multiple valid approaches or unclear requirements
-- Making architectural changes or significant refactoring
-- You would normally ask clarifying questions about approach
+### Plan mode and `plan-hard` (genuinely complex work)
 
-**Skip plan mode for:**
+Escalate to formal plan mode (`EnterPlanMode`) with the `plan-hard` skill when the work genuinely needs multi-file research and design decisions — changes across areas, architectural choices, significant refactors, or multiple valid approaches with real trade-offs. The threshold is design complexity, not file count: a delete-button needing a component + API call is straightforward; a 10-file auth refactor with trade-offs warrants it.
 
-- The task is genuinely trivial (typo fix, obvious one-line bug, single named config tweak)
-- User has given complete, unambiguous, step-by-step implementation instructions
-- User has explicitly authorized immediate implementation (`g`, `go`, `y`, `yolo`, "just do it", "implement now")
-- Pure research/exploration tasks (delegate to explorers/subagents when useful)
-- Simple documentation updates with clear, named scope
-
-**When unsure, plan.** Bias toward planning. Do NOT skip plan mode just because the implementation path looks obvious — "obvious" plans frequently miss edge cases or user intent.
-
-**Evaluate complexity first** — the threshold is whether the task genuinely requires multi-file research and design decisions, not just whether it touches multiple files. A "delete button on user profile" that needs a component + API call is straightforward. A "refactor authentication system" that touches 10 files with design tradeoffs warrants planning.
-
-**Default disposition: `plan-hard`.** Whenever plan mode is entered, load and follow the `plan-hard` skill (use `mcp__hyprpilot__read_skill { slug: "plan-hard" }` / `hyprpilot://skills/plan-hard` if it isn't already attached) unless the user explicitly requests a lighter pass (e.g., "quick plan", "just outline it"). `plan-hard` walks the design tree branch by branch, self-answers from the codebase where possible, and recommends an answer for every open question. It stays in plan mode until the user explicitly signals "implement" or uses a proceed signal (`g`, `go`, `y`, `yolo`).
-
-### Discussion-First Default
-
-> **Default to discussion before touching code.** Even when full plan mode is overkill, do not start editing immediately — propose the approach in 1–2 lines in chat, name the files you would touch, and wait for the user's signal to proceed.
->
-> **Skip the discussion step ONLY when:**
->
-> - The task is genuinely trivial (typo, one-line obvious fix, README correction).
-> - User has explicitly authorized immediate implementation (`g`, `go`, `y`, `yolo`, "just do it", "implement now", "start coding").
-> - User has asked for `autopilot` and you have completed the upfront analysis/questions.
-> - User has given complete, step-by-step instructions that leave no design space ("change X to Y in file Z, then add A to file B").
->
-> **When unsure, ask first.** "Want me to discuss the approach first, or go ahead and implement?" The cost of one clarifying message is much smaller than the cost of unwanted code.
+- `plan-hard` walks the design tree branch by branch, self-answers from the codebase, and recommends an answer for every open question. Load via `hyprpilot://skills/plan-hard` unless the user asks for a lighter pass ("quick plan", "just outline it").
+- Stay in plan mode until the user signals implement (`implement`, `code it`, `go ahead`, `do it`, `g`, `go`, `y`, `yolo`) or requested `autopilot`.
+- Skip formal plan mode for trivial work, complete step-by-step instructions, pure research/exploration (delegate to explorers/subagents when useful), or simple named-scope doc updates.
 
 ### Skills
 
-Skills are personal workflows exposed as `hyprpilot://skills/<slug>` resources. A skill can arrive already attached by the harness (`#{hyprpilot://skills/<slug>}`, palette pick, or auto-injection); treat that as loaded. Otherwise load it via `mcp__hyprpilot__read_skill { slug }`.
+Skills are personal workflows exposed as `hyprpilot://skills/<slug>` resources. A skill can arrive already attached by the harness (`#{hyprpilot://skills/<slug>}`, palette pick, or auto-injection); treat that as loaded. Otherwise load it via `mcp__hyprpilot__read_skill { slug }`. Hyprpilot auto-injects its own `hyprpilot` MCP server for this — tools `list_skills`, `read_skill`, `load_skill_references`, `reload`, auto-accepted so they never prompt.
 
 Rules:
 
@@ -107,68 +85,23 @@ Important locations:
 
 Only inspect session transcripts when the user explicitly asks to recover prior-session context (for example "what did we do last session?") or when memory/plan files are insufficient.
 
-### Plan File Location
+### Plans on disk
 
-**CRITICAL:** All plan files MUST be created in `~/.claude/plans/`
+When you write a plan (`plan-hard` and the other plan skills):
 
-**Never create plan files in:**
-
-- Project directories
-- Working directory
-- Temporary locations
-
-**File naming convention:**
-
-```
-~/.claude/plans/YYYY-MM-DD-<project-name>-<descriptive-name>.md
-```
-
-**Include the project name to make plans easier to find across different projects.**
-
-**Examples:**
-
-```
-~/.claude/plans/2026-02-03-myapp-implement-auth-tokens.md
-~/.claude/plans/2026-02-03-nvim-config-refactor-plugin-system.md
-~/.claude/plans/2026-02-03-api-gateway-add-kubernetes-integration.md
-```
-
-**How to determine project name:**
-
-- Use the repository name (e.g., `nvim-config`, `my-api`)
-- Use the project directory name if no repository
-- Keep it short and lowercase with hyphens
-- Be consistent across plans for the same project
-
-### Plan Structure
-
-Every plan must include: context, requirements/acceptance criteria, approach and trade-offs, concrete implementation steps, risks/mitigations, and testing strategy. Keep steps specific enough that another agent can resume the work without rediscovery.
-
-### Planning Workflow
-
-When planning is warranted:
-
-1. Enter plan mode and load `plan-hard` unless the user asked for a lighter pass.
-2. Explore until you understand the change, existing patterns, affected files, dependencies, and likely side effects.
-3. Write the plan to `~/.claude/plans/YYYY-MM-DD-<project-name>-<name>.md`.
-4. Keep the plan specific: decisions, file/function targets, implementation steps, risks, and verification.
-5. Update memory with the plan path, date, and short task summary. Keep at least the last three recent plan references; old references beyond roughly three months can be removed.
-6. Stay in plan mode until the user explicitly asks to implement (`implement`, `code it`, `go ahead`, `do it`, `g`, `go`, `y`, `yolo`) or has requested `autopilot`.
-
-### Plan Updates During Implementation
-
-- Update the plan when implementation reveals new facts, changed steps, or scope shifts.
-- For small discoveries, add a dated note and continue.
-- For major direction changes, use `hyprpilot://skills/plan-revise` and update the existing plan with a revision entry.
-- Follow the plan during implementation, but let verified discoveries improve it.
+- **Location:** always `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md` — never in the project or working directory. `<project>` is the repo/dir name, short and hyphenated (e.g. `2026-07-13-nvim-config-refactor-plugins.md`).
+- **Contents:** context, requirements/acceptance criteria, approach and trade-offs, concrete steps with file/function targets, risks, and verification — specific enough that another agent can resume without rediscovery.
+- **Memory:** record the plan path, date, and a one-line summary; keep ~3 recent references.
+- **During implementation:** follow the plan but let verified discoveries improve it — a dated note for small changes, `hyprpilot://skills/plan-revise` for a direction change.
 
 ## III. TOOL USE
 
-Use the tools available in the session; don't hard-code assumptions about which MCP servers exist beyond the hyprpilot runtime. Prefer purpose-built MCP tools when they are available for the thing being done, and use CLI commands for local git, shells, tests, builds, and cases where no tool exists.
+Use the tools available in the session. Prefer purpose-built MCP tools when one fits; use CLI commands for local git, shells, tests, builds, and anything with no dedicated tool.
 
 ### MCP Conventions
 
-- In skill files and documentation, refer to MCP tools using the `<server>__<tool>` short form unless the runtime exposes a different concrete name.
+- **Every MCP server is wired directly into the agent** — no proxy, hub, or editor/ACP indirection. Refer to tools by the `<server>__<tool>` short form in skill files and docs (e.g. `github__get_file_contents`); at call time use whatever concrete name the harness surfaces (some expose `mcp__<server>__<tool>`).
+- Availability is **config-time, not runtime**: `autoAcceptTools` / `autoRejectTools` per catalog entry and per-profile `mcps` overrides decide what's present. Don't hard-code assumptions about which servers exist.
 - For multiline MCP parameters, use actual line breaks. Do not pass literal `\n` escape sequences.
 - If a tool call is rejected by the user or permission layer, stop and ask before trying a fallback. Tool unavailability can degrade silently when a reasonable fallback exists.
 
@@ -411,27 +344,6 @@ feat(auth): implement token refresh mechanism
 Add automatic token refresh using refresh tokens stored in httpOnly cookies.
 Handles token expiration gracefully with retry logic.
 ```
-
-## VIII. HYPRPILOT RUNTIME
-
-Operational details of the hyprpilot runtime this configuration targets exclusively.
-
-### MCP tools are wired directly
-
-Every MCP server is wired straight into the agent. Use whatever concrete tool name the current harness exposes, but document tools in the `<server>__<tool>` short form so instructions stay stable across runtimes.
-
-- Prefer the documented short form in skill files and references: `github__get_file_contents`, `linear-kilic__get_issue`, `slack-kilic__slack_list_channels`, etc.
-- At call time, use the actual surfaced tool name (some harnesses expose `mcp__<server>__<tool>`).
-- Per-server filtering is config-time, not runtime. `hyprpilot.autoAcceptTools` / `autoRejectTools` on each catalog entry, plus per-profile `mcps` overrides, are the captain's knobs.
-
-### The in-tree `hyprpilot` MCP server
-
-When the resolved `[[mcp.skills]]` catalog is non-empty, hyprpilot auto-injects its own MCP server (server name: `hyprpilot`) at `session/new`. It exposes:
-
-- Resources: `hyprpilot://skills/<slug>`, `hyprpilot://skills/<slug>/references`.
-- Tools: `list_skills`, `read_skill`, `load_skill_references`, `reload` (possibly surfaced with a runtime prefix such as `mcp__hyprpilot__*`). See the `/hyprpilot-reload` skill for the refresh workflow.
-
-`autoAcceptTools = ["*"]` is the seeded default, so hyprpilot skill-tool calls short-circuit to Allow at `PermissionController::decide` lane 2 with zero prompts.
 
 ## Rule Priority
 
