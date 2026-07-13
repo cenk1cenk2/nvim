@@ -12,6 +12,7 @@ Every Linear issue MUST have these fields set. Do NOT create issues with missing
 
 - **MANDATORY** — you MUST explicitly send `state` on EVERY `save_issue` call. The Linear API defaults to `Triage` which is WRONG.
 - **Default for new issues:** `state: "Backlog"`. Ask the user about timing — if they want it in the current cycle, use `state: "Todo"`.
+- **`Triage` is opt-in only** — never set it as a default or fallback. Use `Triage` ONLY when the user explicitly asks for it.
 - **Field name:** Use `state`, NOT `status`.
 - **Spelling:** `Canceled` (American, one 'l'). NOT `Cancelled`.
 - **Valid values:** `Backlog`, `Todo`, `In Progress`, `In Review`, `Done`, `Canceled`.

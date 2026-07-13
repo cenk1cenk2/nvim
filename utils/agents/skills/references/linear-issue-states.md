@@ -13,7 +13,7 @@ Triage → Backlog → Todo → In Progress → In Review → Done
 
 | State | Meaning | Semantic Role |
 |-------|---------|---------------|
-| `Triage` | Unprocessed — needs classification. | API default when state is not specified. **NEVER intentionally set this state** — always specify an explicit state. |
+| `Triage` | Unprocessed — needs classification. | API default when state is not specified. Never set it as a default or fallback — always specify an explicit state. Set `Triage` ONLY when the user explicitly asks for it. |
 | `Backlog` | Planned but not committed to a cycle. | Default for new issues. Safe parking state. |
 | `Todo` | Committed to the current cycle. | Signals intent to work on it soon. |
 | `In Progress` | Actively being worked on. | Someone is writing code or doing the work right now. |
