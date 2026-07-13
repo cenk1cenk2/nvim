@@ -92,7 +92,7 @@ Rules:
 - Load references only when the skill body asks for them. Prefer `mcp__hyprpilot__load_skill_references { slug }`; references are progressive-disclosure context, not startup context.
 - When multiple skills are active, read their composition instructions and let them share context. Ask only when it is unclear which skill should own an action.
 - Never use the Claude Code built-in `Skill` tool for these custom hyprpilot skills.
-- Use `mcp__hyprpilot__reload` after editing skill source so the daemon refreshes its resource catalog.
+- Use `mcp__hyprpilot__reload` (or the `/hyprpilot-reload` skill) after editing skill source so the daemon refreshes its resource catalog.
 
 Skill source lives under `~/.config/nvim/utils/agents/skills/`. Use `hyprpilot://skills/config-skills` for skill authoring conventions; keep skill bodies lean, move repeated policy blocks into shared references, and use clear trigger/negative-trigger descriptions.
 
@@ -411,6 +411,27 @@ feat(auth): implement token refresh mechanism
 Add automatic token refresh using refresh tokens stored in httpOnly cookies.
 Handles token expiration gracefully with retry logic.
 ```
+
+## VIII. HYPRPILOT RUNTIME
+
+Operational details of the hyprpilot runtime this configuration targets exclusively.
+
+### MCP tools are wired directly
+
+Every MCP server is wired straight into the agent. Use whatever concrete tool name the current harness exposes, but document tools in the `<server>__<tool>` short form so instructions stay stable across runtimes.
+
+- Prefer the documented short form in skill files and references: `github__get_file_contents`, `linear-kilic__get_issue`, `slack-kilic__slack_list_channels`, etc.
+- At call time, use the actual surfaced tool name (some harnesses expose `mcp__<server>__<tool>`).
+- Per-server filtering is config-time, not runtime. `hyprpilot.autoAcceptTools` / `autoRejectTools` on each catalog entry, plus per-profile `mcps` overrides, are the captain's knobs.
+
+### The in-tree `hyprpilot` MCP server
+
+When the resolved `[[mcp.skills]]` catalog is non-empty, hyprpilot auto-injects its own MCP server (server name: `hyprpilot`) at `session/new`. It exposes:
+
+- Resources: `hyprpilot://skills/<slug>`, `hyprpilot://skills/<slug>/references`.
+- Tools: `list_skills`, `read_skill`, `load_skill_references`, `reload` (possibly surfaced with a runtime prefix such as `mcp__hyprpilot__*`). See the `/hyprpilot-reload` skill for the refresh workflow.
+
+`autoAcceptTools = ["*"]` is the seeded default, so hyprpilot skill-tool calls short-circuit to Allow at `PermissionController::decide` lane 2 with zero prompts.
 
 ## Rule Priority
 
