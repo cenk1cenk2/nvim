@@ -56,9 +56,10 @@ references:
 4. **Compose the summary (only when details are requested).**
    - **Default: no summary.** The base post is the title line alone (`{pr_url} :review:`) — skip to Step 5.
    - Compose a summary ONLY when the user asks for details/a report (e.g., "add a summary", "with details", "include the spacelift report") or when composing with a `*-pr-comment` skill.
-   - When composing: write a short summary (1-3 sentences) of the PR description.
-   - Focus on **what** changed and **why** — not implementation details.
-   - If the PR description is empty, summarize from the title and commit messages.
+   - When composing: write a short, direct summary that states **the GOAL only** — what this change accomplishes and why, framed by its role in the rollout (e.g. "Phase 0 (converge): normalize the stacks to the latest module version to clear drift ahead of the Karpenter swap in the next phase"). 1-2 sentences, direct.
+   - **State the goal, not a changelog.** Do NOT itemize incidental resource changes in the prose (addon/AMI/policy tweaks, a single SQS ARN variant, etc.) — the Spacelift delta line and the PR diff already carry those. Reviewers want the intent, not a per-resource list.
+   - **Link related prior PRs** of the same environment / cluster-type when known (from memory or the conversation), for reviewer continuity — e.g. "same change as the earlier waves <urls>".
+   - If the PR description is empty, derive the goal from the title, commit messages, and rollout context.
    - If infrastructure impact was found, append a one-line summary (e.g., "Spacelift: 5 stacks, +35 ~41 −10, all finished.").
    - **Full Spacelift narrative (when requested)** — if the user says "include spacelift report", "include the spacelift analysis", or similar, replace the one-line infrastructure summary with a full narrative:
      - Start with the one-line delta summary in italics (e.g., `_Spacelift: 1 stack, +5 ~5 ♻2, finished._`).
@@ -87,13 +88,13 @@ references:
      ```
      https://github.com/laravel/cloud-infrastructure/pull/7444 :review:
      ```
-   - Example (with summary):
+   - Example (with summary — goal-first, rollout phase; note: states the goal + links prior same-type PRs, does NOT itemize the incidental resource changes):
      ```
-     https://github.com/laravel/cloud-infrastructure/pull/3797 :review:
+     https://github.com/laravel/cloud-infrastructure/pull/8069 :review:
 
-     Cuts over Cloudflare tunnel traffic to envoy-gateway for 5 euc1 enterprise clusters. Bumps dedicated-cluster module to 3.4.0.
+     Phase 0 (converge): normalize the cac1 + apne1 enterprise stacks to the latest dedicated-cluster version to clear drift and get to latest ahead of the Karpenter controller-policy swap in the next phase. Same as the earlier customer-eks waves (https://github.com/laravel/cloud-infrastructure/pull/8009, https://github.com/laravel/cloud-infrastructure/pull/8022).
 
-     _Spacelift: 5 stacks, +35 ~41 −10, all finished._
+     _Spacelift: 3 stacks, +0 ~3 −0 each, finished._
      ```
    - Example (with full Spacelift narrative):
      ```
@@ -129,4 +130,4 @@ references:
 - **One PR/MR per message.** Always exactly one PR/MR per Slack message. When posting multiple (e.g., a wave rollout), send a separate message per PR — never bundle.
 - **Title line is exact:** `{pr_url} :review:` — URL first, then the `:review:` emoji. Any summary/report is optional and goes after one blank line.
 - **Use Slack mrkdwn.** Use plain URLs for links (Slack auto-unfurls GitHub PRs). No markdown bold (`**`), use `*text*` instead.
-- **Keep the summary concise.** 1-3 sentences, focused on what and why.
+- **Summary states the GOAL, not a changelog.** 1-2 direct sentences on what the change accomplishes and why (its role/phase in the rollout). Do NOT itemize incidental resource changes in the prose — the Spacelift delta line carries the impact. Link related prior PRs of the same environment/cluster-type when known.
