@@ -5,6 +5,7 @@ disable-model-invocation: true
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
+  - ../references/redact-private-data.md
 argument-hint: "[create|update|review] [skill-name] [description of what the skill should do]"
 ---
 
@@ -13,6 +14,8 @@ argument-hint: "[create|update|review] [skill-name] [description of what the ski
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed skill change before writing.
+
+> **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into skills, references, or examples unless the user explicitly allows it; use placeholders instead.
 
 ## Skills Directory
 
@@ -285,6 +288,7 @@ When creating or updating a skill, always check:
 | `agents-plan-split.md` | Planning phase: understand goal, tooling, conventions, plan, split tasks, declare depends_on, build layer schedule, verify file overlap. | Agent skills (agents-plan). |
 | `agents-merge-review.md` | Per-layer merge + per-layer review, end-of-run review against run baseline, final verification with evidence, handoff. | Agent skills (agents-plan). |
 | `output-diff.md` | Chunked change presentation — reasoning + content blocks before any write. | Config family (5 skills), Linear/Obsidian/Slack write skills. |
+| `redact-private-data.md` | No private specifics in authored content — treat-as-private list, placeholders to use, functional identifiers to keep; use only with explicit permission. | Config family (5 skills). |
 
 ## Description Checklist
 

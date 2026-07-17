@@ -5,6 +5,7 @@ disable-model-invocation: true
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
+  - ../references/redact-private-data.md
 argument-hint: "[what to change or review in AGENTS.md]"
 ---
 
@@ -13,6 +14,8 @@ argument-hint: "[what to change or review in AGENTS.md]"
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed change before asking for approval.
+
+> **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into the guidelines or its examples unless the user explicitly allows it; use placeholders instead.
 
 ## Target File
 

@@ -5,6 +5,7 @@ disable-model-invocation: true
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
+  - ../references/redact-private-data.md
 argument-hint: "[add|remove|modify] [server-name] [optional description]"
 ---
 
@@ -13,6 +14,8 @@ argument-hint: "[add|remove|modify] [server-name] [optional description]"
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each configuration change before applying.
+
+> **No private specifics.** Read the `redact-private-data` reference — beyond the never-hardcode-secrets rule below, never write real private/sensitive specifics (account IDs, internal hostnames, tokens) into the config or its examples unless the user explicitly allows it; use `${ENV_VAR}` references and placeholders instead.
 
 ## Context
 

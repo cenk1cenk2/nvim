@@ -5,6 +5,7 @@ disable-model-invocation: false
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
+  - ../references/redact-private-data.md
 argument-hint: "[local] [optional: what changed or focus area]"
 ---
 
@@ -13,6 +14,8 @@ argument-hint: "[local] [optional: what changed or focus area]"
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed section change before writing.
+
+> **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into the knowledge base or its examples unless the user explicitly allows it; use placeholders instead.
 
 ## Purpose
 
