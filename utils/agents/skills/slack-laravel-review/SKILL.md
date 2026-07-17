@@ -86,27 +86,27 @@ references:
    - Omit the infrastructure and review lines if not applicable.
    - Example (default — title only):
      ```
-     https://github.com/laravel/cloud-infrastructure/pull/7444 :review:
+     https://github.com/<owner>/<repo>/pull/<number> :review:
      ```
    - Example (with summary — goal-first, rollout phase; note: states the goal + links prior same-type PRs, does NOT itemize the incidental resource changes):
      ```
-     https://github.com/laravel/cloud-infrastructure/pull/8069 :review:
+     https://github.com/<owner>/<repo>/pull/<number> :review:
 
-     Phase 0 (converge): normalize the cac1 + apne1 enterprise stacks to the latest dedicated-cluster version to clear drift and get to latest ahead of the Karpenter controller-policy swap in the next phase. Same as the earlier customer-eks waves (https://github.com/laravel/cloud-infrastructure/pull/8009, https://github.com/laravel/cloud-infrastructure/pull/8022).
+     <Phase / goal>: <what this change accomplishes and why, framed by its role in the rollout>. Same as the earlier <cluster-type> waves (<prior-pr-url>, <prior-pr-url>).
 
-     _Spacelift: 3 stacks, +0 ~3 −0 each, finished._
+     _Spacelift: <N> stacks, +<a> ~<c> −<d> each, finished._
      ```
    - Example (with full Spacelift narrative):
      ```
-     https://github.com/laravel/cloud-infrastructure/pull/3847 :review:
+     https://github.com/<owner>/<repo>/pull/<number> :review:
 
-     Cuts over Cloudflare tunnel traffic to envoy-gateway for enterprise-portwest-dev in eu-west-1. Bumps dedicated-cluster module from 3.0.0 to 3.4.0, adding SQS queue management IAM, CloudWatch quota alarms, and updated Karpenter annotations.
+     <One-line goal: what this change accomplishes and why>.
 
-     _Spacelift: 1 stack (`cloud-prd-eu-west-1-enterprise-portwest`), +5 ~5 ♻2, finished._
+     _Spacelift: <N> stack(s) (`<stack-name>`), +<a> ~<c> ♻<r>, finished._
 
-     The core change switches the Cloudflare tunnel backend from nginx-ingress (`http://ingress-nginx-controller.ingress-nginx.svc.cluster.local:80`) to envoy-gateway (`https://app-operator-gateway.envoy-gateway-system.svc:443`).
+     <Paragraph explaining the core intended change and its effect — e.g. what a cutover does, what service replaces what. Use backticks for service URLs and resource names.>
 
-     The module bump from 3.0.0 → 3.4.0 brings in three new IAM resources for web app SQS queue management (cross-account role assumed by `277707137550`), two CloudWatch alarms monitoring EIP and vCPU quota usage at 80% via GrafanaOnCall, and rotates the ArgoCD cluster registration secret with new Karpenter consolidation annotations (`karpenter-flex-consolidate-after: 24h`, `karpenter-pro-consolidate-after: 24h`). Incidentally picks up EKS addon bumps (EBS CSI driver `v1.57.1` → `v1.58.0`, Pod Identity Agent `eksbuild.2` → `eksbuild.3`) and a Tailscale subnet router AMI refresh (`ami-0476c6b26004a1760` → `ami-0f8493690c875fd2d`).
+     <Paragraph covering module-bump / incidental side effects — new resources, recreated secrets, addon/AMI version bumps. Name the specific resources, versions, and values so the reviewer sees the blast radius, e.g. `<module> <old-version> → <new-version>`, `<addon> <old> → <new>`, `<old-ami> → <new-ami>`.>
      ```
 
 6. **Present for approval — unless the user already told you to post.**

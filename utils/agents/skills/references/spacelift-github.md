@@ -41,7 +41,7 @@ All input forms must converge to: **owner**, **repo**, **PR number**, **head bra
 **From GitHub Check Run URL:**
 
 1. `gh api repos/<owner>/<repo>/check-runs/<id> --jq '{name: .name, status: .status, conclusion: .conclusion, head_sha: .head_sha, details_url: .details_url, app_name: .app.name}'` via CLI.
-2. The `name` field contains the stack name (e.g., `spacelift/cloud-prd-eu-central-1-thunderdome-2/tracked`). Extract the stack ID from between the first and last `/`.
+2. The `name` field contains the stack name (e.g., `spacelift/cloud-prd-eu-central-1-acme-2/tracked`). Extract the stack ID from between the first and last `/`.
 3. The `details_url` field is a direct Spacelift URL (e.g., `https://<account>.app.spacelift.io/stack/<stack-id>/run/<run-id>`). Parse it to extract stack ID and run ID — then skip Spacelift discovery entirely and go straight to run detail collection.
 4. Use `head_sha` to find the associated PR (same as "from commit SHA" below).
 
