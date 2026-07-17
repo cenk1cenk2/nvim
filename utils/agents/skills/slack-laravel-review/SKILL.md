@@ -53,13 +53,13 @@ references:
    - **Review threads** — scan review comments for unresolved threads or threads with unresolved decisions. Summarize any blocking or open items (e.g., "1 unresolved thread: security concern on IAM policy scope").
    - If no comments or reviews exist, skip these sections.
 
-4. **Compose the summary (only when details are requested).**
-   - **Default: no summary.** The base post is the title line alone (`{pr_url} :review:`) — skip to Step 5.
-   - Compose a summary ONLY when the user asks for details/a report (e.g., "add a summary", "with details", "include the spacelift report") or when composing with a `*-pr-comment` skill.
-   - When composing: write a short, direct summary that states **the GOAL only** — what this change accomplishes and why, framed by its role in the rollout (e.g. "Phase 0 (converge): normalize the stacks to the latest module version to clear drift ahead of the Karpenter swap in the next phase"). 1-2 sentences, direct.
+4. **Compose the summary (default).**
+   - **Default: title + description.** Every post carries a short title stating what was done, followed by an extended description of the goal.
+   - **Title (what was done):** one short bold line summarizing the change. Combine the PR title with contextual detail — when the conversation, commits, or PR body give you a clearer picture of what is being done, fold that in so the title is more descriptive than the raw PR title alone. Keep it to one line.
+   - **Extended description (the goal):** 1-2 direct sentences stating what this change accomplishes and why, framed by its role in the rollout (e.g. "Phase 0 (converge): normalize the stacks to the latest module version to clear drift ahead of the Karpenter swap in the next phase").
    - **State the goal, not a changelog.** Do NOT itemize incidental resource changes in the prose (addon/AMI/policy tweaks, a single SQS ARN variant, etc.) — the Spacelift delta line and the PR diff already carry those. Reviewers want the intent, not a per-resource list.
    - **Link related prior PRs** of the same environment / cluster-type when known (from memory or the conversation), for reviewer continuity — e.g. "same change as the earlier waves <urls>".
-   - If the PR description is empty, derive the goal from the title, commit messages, and rollout context.
+   - If the PR description is empty, derive the title and goal from the PR title, commit messages, and rollout context.
    - If infrastructure impact was found, append a one-line summary (e.g., "Spacelift: 5 stacks, +35 ~41 −10, all finished.").
    - **Full Spacelift narrative (when requested)** — if the user says "include spacelift report", "include the spacelift analysis", or similar, replace the one-line infrastructure summary with a full narrative:
      - Start with the one-line delta summary in italics (e.g., `_Spacelift: 1 stack, +5 ~5 ♻2, finished._`).
@@ -67,34 +67,39 @@ references:
      - Then a paragraph covering module-bump or incidental side effects — new resources added, secrets recreated, addon version bumps, AMI refreshes. Name specific resources, versions, and values so the reviewer understands the blast radius without opening the PR.
      - Use Slack mrkdwn: backticks for resource names, service URLs, versions, and AMIs. Italics (`_text_`) for the delta line.
    - If unresolved review threads exist, append a one-line note (e.g., "1 unresolved review thread.").
+   - **Title-only (very rare, on request).** Only when the user explicitly asks for just the link (e.g. "title only", "no summary", or a bulk wave rollout where they want minimal noise), post the bare title line `{pr_url} :review:` and skip the summary. This is the exception, not the default.
    - **Composing with `*-pr-comment`** — if this skill is being used alongside `github-pr-comment` or `gitlab-mr-comment`, also output a `## Review Request` section containing the formatted Slack review request message (from Step 5). This section will be included in the PR/MR comment by the `*-pr-comment` skill. The Slack message is still posted separately to Slack — the `## Review Request` section is additional output for the PR/MR comment, not a replacement.
 
 5. **Format the message.**
    - Use Slack mrkdwn syntax (NOT standard markdown).
-   - **Title line (always, exact):** `{pr_url} :review:` — the URL first, then the `:review:` emoji.
-   - **Default — title only.** When no summary was requested, the entire message IS just that title line.
-   - **With details** — leave ONE blank line after the title line, then the summary/report:
+   - **Review line (always, exact):** `{pr_url} :review:` — the URL first, then the `:review:` emoji.
+   - **Default — title + description.** Leave ONE blank line after the review line, then the bold what-was-done title, then the extended description:
      ```
      {pr_url} :review:
 
-     {short_summary}
+     *{what_was_done_title}*
+
+     {extended_description}
 
      {infrastructure_line}
 
      {review_notes_line}
      ```
    - Omit the infrastructure and review lines if not applicable.
-   - Example (default — title only):
+   - **Title-only (very rare, on request):** the entire message is just the review line `{pr_url} :review:`.
+   - Example (default — title + description; note: title blends the PR title with contextual detail, description states the goal + links prior same-type PRs, does NOT itemize the incidental resource changes):
      ```
      https://github.com/<owner>/<repo>/pull/<number> :review:
-     ```
-   - Example (with summary — goal-first, rollout phase; note: states the goal + links prior same-type PRs, does NOT itemize the incidental resource changes):
-     ```
-     https://github.com/<owner>/<repo>/pull/<number> :review:
+
+     *<what was done — PR title enriched with context>*
 
      <Phase / goal>: <what this change accomplishes and why, framed by its role in the rollout>. Same as the earlier <cluster-type> waves (<prior-pr-url>, <prior-pr-url>).
 
      _Spacelift: <N> stacks, +<a> ~<c> −<d> each, finished._
+     ```
+   - Example (title-only — very rare):
+     ```
+     https://github.com/<owner>/<repo>/pull/<number> :review:
      ```
    - Example (with full Spacelift narrative):
      ```
@@ -128,6 +133,7 @@ references:
 
 - **Present before posting — unless told to post.** Default to presenting for approval; when the user has explicitly said to post (e.g., "post this/these", "this has to be posted"), post directly without re-asking.
 - **One PR/MR per message.** Always exactly one PR/MR per Slack message. When posting multiple (e.g., a wave rollout), send a separate message per PR — never bundle.
-- **Title line is exact:** `{pr_url} :review:` — URL first, then the `:review:` emoji. Any summary/report is optional and goes after one blank line.
+- **Review line is exact:** `{pr_url} :review:` — URL first, then the `:review:` emoji.
+- **Default carries title + description.** Every post leads with the review line, then a bold one-line title of what was done (PR title blended with contextual detail), then a 1-2 sentence extended description of the goal. Title-only is a very rare opt-out (bulk waves, "just the link").
 - **Use Slack mrkdwn.** Use plain URLs for links (Slack auto-unfurls GitHub PRs). No markdown bold (`**`), use `*text*` instead.
 - **Summary states the GOAL, not a changelog.** 1-2 direct sentences on what the change accomplishes and why (its role/phase in the rollout). Do NOT itemize incidental resource changes in the prose — the Spacelift delta line carries the impact. Link related prior PRs of the same environment/cluster-type when known.
