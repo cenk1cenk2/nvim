@@ -1,8 +1,9 @@
 ---
 name: beep-laravel
-description: "Daily check-in that narrates the user's update back to them in a chosen tone. Use when the user says 'beep', 'daily check-in', 'check me in', or invokes /beep-laravel. Do NOT use for status reports to others or standup writeups (write those plainly)."
+description: "Daily check-in that narrates the user's update back to them in a chosen tone, then DMs the styled check-in to the beep bot/app in the Laravel Slack on approval — never to a channel. Use when the user says 'beep', 'daily check-in', 'check me in', or invokes /beep-laravel. Do NOT use for status reports to others or standup writeups (write those plainly)."
 references:
   - ../references/present-first.md
+  - ../references/claude-ai-connectors.md
 disable-model-invocation: true
 argument-hint: "[tone] <your check-in>"
 ---
@@ -10,6 +11,10 @@ argument-hint: "[tone] <your check-in>"
 ## Beep: Daily Check-In
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+> **NEVER post to a channel — absolute rule.** The beep check-in is only ever a **direct message to the beep bot/app**. Do not post it to any Slack channel under any circumstances. If you cannot resolve the bot/app DM, stop and ask — never fall back to a channel.
+
+> Read the `claude-ai-connectors` reference to load the Laravel Slack tools (`mcp__claude_ai_Slack__*`, deferred) via `ToolSearch` — `slack_search_users`, `slack_send_message_draft`, `slack_send_message`.
 
 A daily ritual. The user shares what their day held — and often what tomorrow holds — and beep plays it back to them in a tone. The point is delight, not a faithful summary.
 
@@ -34,6 +39,13 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 3. **Narrate the check-in in the chosen tone**, keeping done and tomorrow unmistakably distinct (see **Done vs. Tomorrow**). Keep it short — a couple of punchy beats, not an essay. Every real item from the check-in must survive the styling; tone dresses the facts, it does not invent or drop them.
 
 4. **Close with a single beat in tone** — a sign-off line, never a meta-summary. Do not explain the joke or describe what you did.
+
+5. **Send to beep (DM only, on approval).** The styled narration from steps 3-4 is the message body — do not re-style it.
+   - **Resolve the target** — find the **beep bot/app** user with `slack_search_users`; its `user_id` is the `channel_id` for the DM. Confirm if ambiguous. NEVER a channel.
+   - **Draft it** — create a real Slack draft with `slack_send_message_draft` (`channel_id` = the bot/app `user_id`). If it returns `draft_already_exists`, replace the previous draft rather than stacking. Present the styled text plus "DM to the beep bot/app" for approval.
+   - **Send only on an explicit go-word** — `post`, `send`, or `go`. Then send with `slack_send_message` (`channel_id` = the bot/app `user_id`, passing the `draft_id` so the draft clears on send). Without a go-word, leave the draft in place — invoking the skill produces the draft, the go-word posts it.
+   - **If the app cannot be DM'd** (`cannot_dm_bot` / `channel_not_found`), STOP and tell the user — the beep app must have direct messages enabled. Never fall back to a channel.
+   - **Report** the sent message link (or the draft link) and that it went to the bot/app DM.
 
 ## Done vs. Tomorrow
 
@@ -91,3 +103,5 @@ Each tone gets a *Done* voice (past/settled) and a *Tomorrow* voice (future/inco
 - **Done ≠ tomorrow** — past/settled for done, future/incoming for tomorrow; the line between them must be unmistakable.
 - **Short and punchy** — a couple of beats, then a sign-off. No essays, no meta.
 - **Honor custom tones** — if the user names their own, run with it over the roster.
+- **DM the bot/app, never a channel** — the beep check-in goes only to the beep bot/app as a direct message. Posting it to a channel is never allowed.
+- **Draft, then send on the go-word** — produce the Slack draft on invocation; only `post` / `send` / `go` actually sends it.
