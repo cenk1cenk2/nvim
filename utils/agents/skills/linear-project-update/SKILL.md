@@ -6,6 +6,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/present-first.md
+  - ../references/linear-absolute-approval.md
   - ../references/linear-project-documents.md
   - ../references/linear-document-handling.md
 ---
@@ -13,6 +14,8 @@ references:
 ## Linear Project Update
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+> **Absolute approval required.** Read the `linear-absolute-approval` reference — project writes always require explicit approval for the specific change; the present-first blessing shortcut (`g` / `go` / autopilot) does NOT clear them. Never call `save_project` / `save_document` before the user approves the drafted change.
 
 ## Prerequisite
 
@@ -63,7 +66,7 @@ Only include deviations that matter for future readers understanding *why* the p
 
 ## Key Rules
 
-- **Never modify the project or its documents without user approval.**
+- **Never modify the project or its documents without explicit, per-change user approval** — see the `linear-absolute-approval` reference; no blessing/autopilot shortcut applies.
 - **Prose only.** For issue-level structure, priorities, estimates, and relations, use `linear-project-reconcile`.
 - **Documents follow the handling policy.** Plan-like → editable with agreement; external → read-only unless the user explicitly says to edit.
 - **Preserve content that hasn't changed** — only update what deviated.

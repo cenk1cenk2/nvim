@@ -7,6 +7,7 @@ references:
   - ../references/linear-description-structure.md
   - ../references/output-diff.md
   - ../references/present-first.md
+  - ../references/linear-absolute-approval.md
 ---
 
 ## Linear Initiative Update
@@ -14,6 +15,8 @@ references:
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+> **Absolute approval required.** Read the `linear-absolute-approval` reference — initiative writes always require explicit approval for the specific change; the present-first blessing shortcut (`g` / `go` / autopilot) does NOT clear them. Never call `save_initiative` / `save_project` before the user approves the drafted change.
 
 ## Core Principle
 
@@ -48,7 +51,7 @@ Preserve sections that haven't changed. Only update what deviated.
 
 ## Key Rules
 
-- **Never modify without user approval.**
+- **Never modify without explicit, per-change user approval** — see the `linear-absolute-approval` reference; no blessing/autopilot shortcut applies.
 - **Conversation context wins over stale initiative content.**
 - **Always review project alignment** — this is not optional, it is a core part of the update workflow.
 - **Be specific when flagging misalignment** — explain why a project no longer fits or why an orphan project does fit, referencing the updated goals.
