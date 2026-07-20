@@ -4,7 +4,7 @@
 >
 > ALWAYS KEEP THESE RULES IN YOUR CONTEXT WINDOW.
 >
-> WHEN COMPACTING CONTEXT, DO NOT REMOVE THESE RULES.
+> THESE GUIDELINES MUST SURVIVE ANY COMPACTION OR SUMMARIZATION — NEVER DROP, TRIM, OR PARAPHRASE THEM. AFTER ANY COMPACTION, STAY AWARE OF THEM AND RE-READ `~/.config/nvim/utils/agents/AGENTS.md` IF THEY ARE NOT FULLY IN CONTEXT.
 >
 > These guidelines define how to work effectively in future sessions.
 >
@@ -33,7 +33,7 @@
    - If the main note exists, treat its content as **established context** — architecture, conventions, stack, and gotchas documented there have already been verified and should inform your work throughout the session
    - **If the note does not exist or obsidian MCP is unavailable, silently skip and continue**
 
-4. **DISCOVER AVAILABLE SKILLS** — skills are exposed as `hyprpilot://skills/<slug>` resources. Use `mcp__hyprpilot__list_skills` for the session catalog, `mcp__hyprpilot__read_skill { slug }` to load a body, and `mcp__hyprpilot__load_skill_references { slug }` when the skill asks for references. The catalog is **profile-filtered** — the active hyprpilot profile ignores some skills (personal profiles drop `*-laravel`/`notion-*`/`spacelift-*`; work profiles drop `*-kilic`/`gitlab-*`), so treat `list_skills` as the source of truth for what exists this session. Match the user's request against each skill's `description`, and read its `disableModelInvocation` metadata to know whether you may invoke it yourself (see §II "Skills" for the tier semantics). Treat harness-attached skills as already loaded. Use filesystem paths under `~/.config/nvim/utils/agents/skills/` only as fallback or when editing skill source. Do not read full skill bodies during initialization; load on demand.
+4. **DISCOVER AVAILABLE SKILLS** — skills are exposed as `hyprpilot://skills/<slug>` resources. Use `mcp__hyprpilot__list_skills` for the session catalog, `mcp__hyprpilot__read_skill { slug }` to load a body, and `mcp__hyprpilot__load_skill_references { slug }` when the skill asks for references. The catalog is **profile-filtered** — the active hyprpilot profile ignores some skills (personal profiles drop `*-laravel`/`notion-*`/`spacelift-*`; work profiles drop `*-kilic`/`gitlab-*`), so treat `list_skills` as the source of truth for what exists this session. Match the user's request against each skill's `description`, and read its `disableModelInvocation` metadata to know whether you may invoke it yourself (see §II "Skills" for the tier semantics). Treat harness-attached skills as already loaded. Use filesystem paths under `~/.config/nvim/utils/agents/skills/` only as fallback or when editing skill source. Do not read full skill bodies during initialization; load on demand. Cache the catalog for the session — knowing which operations are skill-covered lets you route through the right skill before acting (see §II, skill-first).
 
 ## II. PLANNING AND IMPLEMENTATION
 
@@ -56,10 +56,13 @@ Escalate to formal plan mode (`EnterPlanMode`) with the `plan-hard` skill when t
 
 ### Skills
 
+> **ABSOLUTE RULE — LOAD THE SKILL FIRST.** For any task a catalog skill covers — above all external/MCP operations (Linear, GitHub/GitLab PR/MR, Slack, Obsidian, Notion), but also commits, planning, reviews, and other covered work — you MUST load and follow that skill's flow BEFORE acting. Never hand-roll the MCP calls or improvise a flow a skill already defines. Match against the cached catalog; proceed directly ONLY when no skill covers the action. This is not optional.
+
 Skills are personal workflows exposed as `hyprpilot://skills/<slug>` resources. A skill can arrive already attached by the harness (`#{hyprpilot://skills/<slug>}`, palette pick, or auto-injection); treat that as loaded. Otherwise load it via `mcp__hyprpilot__read_skill { slug }`. Hyprpilot auto-injects its own `hyprpilot` MCP server for this — tools `list_skills`, `read_skill`, `load_skill_references`, `reload`, auto-accepted so they never prompt.
 
 Rules:
 
+- **Skill-first (see the absolute rule above).** The covering skill owns the mandatory fields, conventions, and approval gates — skipping it drops them. Respect tiers: invoke model-invocable skills yourself; for Manual ones, follow on explicit ask and otherwise suggest. Concrete matches: `linear-issue-create`, `github-pr-create`, `git-commit`, `slack-message`, `obsidian-note`, ….
 - The skill body is the source of truth for that mode.
 - Announce the first time you load a skill: `Using **<skill-name>** skill to <purpose>.`
 - Resolve prerequisite skills recursively. If context identifies the prerequisite, load it automatically; if ambiguous, ask. `hyprpilot://skills/load-skills` defines dependency resolution.
@@ -238,7 +241,7 @@ When writing project updates, docs, or external messages, wrap technical identif
 
 ### External Writes
 
-Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. Read-only calls and lightweight reactions do not need approval.
+Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. Read-only calls and lightweight reactions do not need approval. If a catalog skill covers the write (Linear, PR/MR, Slack, Obsidian, commit), route through it per §II "skill-first" — it carries the required fields and the approval gate.
 
 ### Information Accuracy
 
@@ -344,6 +347,6 @@ When rules appear to conflict, follow this priority order:
    - Response: "I notice this task involves [reasons why plan mode would help]. The guidelines recommend plan mode for this. Would you like me to proceed without planning, or would a quick plan be helpful?"
    - Wait for confirmation before proceeding against guidelines
 3. **Default to discussion before implementation** — never start editing code without an explicit signal (proceed words, full step-by-step instructions, or a trivial-scope task). When unsure, ask. ExitPlanMode requires unambiguous user approval.
-4. **Use the best available tool** — prefer purpose-built tools when available; use CLI for local shell/git/test/build work and when no better tool exists
+4. **Load the covering skill, then use the best available tool** — when a catalog skill covers the task (especially external/MCP operations), load and follow it before acting (§II absolute rule); otherwise prefer purpose-built tools, and use CLI for local shell/git/test/build work
 5. **Follow coding style** (match project patterns)
 6. **Update durable context** (memory, plans, and repository guidance when appropriate)
