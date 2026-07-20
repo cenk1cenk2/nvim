@@ -29,7 +29,7 @@ references:
    - **No upstream (new branch):** plan a first push with `-u <remote> <branch>`. No extra confirmation needed.
    - **Ahead only:** plan a fast-forward push. No extra confirmation needed.
    - **Behind only:** **stop and ask.** The local branch is behind remote — pushing would fail. Tell the user to pull first (suggest `code-pull`). Do NOT auto-pull.
-   - **Diverged (ahead + behind):** **stop and ask.** Offer options: rebase, merge, abort, `--force-with-lease` (only if the user explicitly asks).
+   - **Diverged (ahead + behind):** **stop and ask.** Offer rebase, merge, abort, or `--force-with-lease`. When the divergence is your own rewritten history (you amended or rebased your own commits on this non-protected branch), `--force-with-lease` is the normal, safe choice — it aborts if the remote moved unexpectedly. Lead with rebase/merge instead when the remote may carry commits you did not author. Execute `--force-with-lease` only on the user's explicit choice (step 5).
    - **Up to date:** inform the user there is nothing to push and stop.
 
 4. **List pending commits.**
@@ -37,8 +37,8 @@ references:
    - Include commit count and subject lines in the final report.
 
 5. **Safety checks (only these gate the push).**
-   - **Refuse `--force` outright.** If the user asks for `--force`, push back and offer `--force-with-lease` instead.
-   - **`--force-with-lease`** is used only when the user explicitly asks. Stop and confirm once before executing, with a one-line note on what gets overwritten.
+   - **Refuse plain `--force` outright.** If the user asks for `--force`, push back and offer `--force-with-lease` instead.
+   - **`--force-with-lease` is allowed on your own non-protected branch** — it is the safe way to push history you rewrote yourself (amend/rebase), because it aborts if the remote moved unexpectedly. Confirm once with a one-line note on what gets overwritten, then execute. Do NOT force-push a protected branch, and prefer rebase/merge when the remote may carry commits you did not author.
    - **Protected-branch guard:** if the target branch is `main`, `master`, `rolling`, `develop`, or `trunk`, **stop and ask** for an explicit ack before pushing. This is the one mandatory confirmation on a branch that would otherwise be a happy-path push.
 
 6. **Report and execute in a single step.**
@@ -73,7 +73,7 @@ This skill is composable — other skills can hand off to it once their work is 
 
 - **Invoking the skill is the approval.** Do NOT ask for a separate "are you sure?" on the happy path — just report and push.
 - **Ask only on real blockers.** Behind, diverged, `--force-with-lease`, protected-branch pushes. Everything else is automatic.
-- **Never `--force`.** Only `--force-with-lease` on explicit user request.
+- **Never plain `--force`.** Use `--force-with-lease` — fine on your own non-protected branch (e.g. after amending or rebasing your own commits), since it aborts if the remote moved. Never force-push a protected branch or over commits you did not author.
 - **Always list pending commits** in the report so the user sees what landed on remote.
 - **Never auto-pull, auto-rebase, or auto-merge.** On divergence, ask.
 - **Push only — no PR creation.** Suggest a PR skill after success; never auto-invoke.

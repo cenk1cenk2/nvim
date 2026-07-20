@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit"; or to split changes into separate scoped commits — "commit these separately", "split into commits", "group by concern". Analyzes staged and unstaged changes, drafts conventional-commit messages, and commits after approval — always as new commits, never amending or force-pushing. Do NOT use for PR descriptions (github-pr-create, gitlab-mr-create) or conflict resolution (git-conflict).
+description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit"; or to split changes into separate scoped commits — "commit these separately", "split into commits", "group by concern". Analyzes staged and unstaged changes, drafts conventional-commit messages, and commits after approval — new commits by default, amending your own unshared commits only when it is the right move. Do NOT use for PR descriptions (github-pr-create, gitlab-mr-create) or conflict resolution (git-conflict).
 argument-hint: "[optional: type or message hint — e.g., 'fix', 'feat: add retry']"
 references:
   - ../references/present-first.md
@@ -95,6 +95,7 @@ references:
 
 6. **Commit.**
    - After explicit user approval, commit via `git commit` with the approved message.
+   - **Amend (your own branch only):** if the change is a fixup to the commit you just made, or the user asks to amend, use `git commit --amend` instead of a new commit — present the updated message first, and note that pushing the rewrite needs `--force-with-lease` via `git-push`. Never amend a commit that is already shared or on a protected branch.
    - Confirm success by reporting the commit hash from the output.
    - Do NOT push. If the user wants to push, hand off to the `git-push` skill (invoked separately or as a compose step like "commit and push").
 
@@ -106,7 +107,7 @@ references:
 - **No AI attribution.** Never include "Generated with Claude" or similar.
 - **No Co-authored-by.** Never add `Co-authored-by:` trailers under any circumstances.
 - **Never push automatically.** Commit only. The user decides when to push.
-- **New commits only — never amend or force-push.** Each commit is a fresh commit; grouped commits produce several new commits. Never rewrite, amend, or force-push existing history unless the user explicitly asks for it as a separate action.
+- **New commits by default; amend your own work when it fits.** Default to a fresh commit (and separate commits for separate concerns). Amend or rewrite only your own commits on your own branch — a fixup to the commit you just made, or tidying unshared history — or when the user asks; pushing the rewrite uses `--force-with-lease` via `git-push`. Never amend or rewrite shared or protected-branch history.
 - **Different tasks → different commits.** Don't collapse unrelated work into one commit. A branch that carries several meaningful commits should keep them: squash can be applied later at merge time, but when the branch holds multiple distinct commits keep squash OFF on the PR/MR so the history survives (see `github-pr-create` / `gitlab-mr-create`).
 
 ## Composing with Other Skills
