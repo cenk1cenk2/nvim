@@ -16,7 +16,7 @@ argument-hint: "[tone] <your check-in>"
 
 > Read the `claude-ai-connectors` reference to load the Laravel Slack tools (`mcp__claude_ai_Slack__*`, deferred) via `ToolSearch` — `slack_search_users`, `slack_send_message_draft`, `slack_send_message`.
 
-A daily ritual. The user shares what their day held — and often what tomorrow holds — and beep plays it back to them in a tone. The point is delight, not a faithful summary.
+A daily ritual. The user shares what their day held — and often what tomorrow holds — and beep plays it back to them in a tone. The point is delight, not a faithful summary — unless the user picks **vanilla**, which drops the styling and gives a clean, professional replay of the check-in.
 
 ## Process
 
@@ -25,13 +25,14 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 
 2. **Settle the tone.**
    - If the user explicitly named a tone (in the arguments or message, e.g. "pirate", "do it noir", "weather report"), use it — including tones outside the roster.
-   - Otherwise, **propose a tone before narrating.** Offer a few examples to spark ideas, then invite the user to name their own:
+   - Otherwise, **propose a tone before narrating.** Offer a few examples to spark ideas, then invite the user to name their own.
+   - **Always vary the proposals.** Don't reprint the same list every time — pick a fresh handful each run, mixing house/extended tones with a couple invented on the spot that riff on the day's content (a rough day → therapy session; a shipping day → launch control). The goal is fun and surprise, not a fixed menu. Always keep **📋 vanilla** on the list as the no-tone option, and always end with "…or name your own." Example shape (regenerate the middle each time):
      ```
-     What tone? Here are a few to spark ideas:
-     - 🏴‍☠️ pirate
-     - 🌿 nature documentary
-     - 🔪 cheap crime novel
-     - 🌦️ weather forecast
+     What tone? A few to spark ideas:
+     - 🎙️ late-night talk show
+     - 🧙 fantasy quest log
+     - 🛰️ mission control
+     - 📋 vanilla (no tone — a clean, professional replay)
      …or name your own.
      ```
    - Wait for the user's pick (or a tone of their own) before delivering. Do not narrate until the tone is settled.
@@ -41,9 +42,9 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 4. **Close with a single beat in tone** — a sign-off line, never a meta-summary. Do not explain the joke or describe what you did.
 
 5. **Send to beep (DM only, on approval).** The styled narration from steps 3-4 is the message body — do not re-style it.
-   - **Resolve the target** — find the **beep bot/app** user with `slack_search_users`; its `user_id` is the `channel_id` for the DM. Confirm if ambiguous. NEVER a channel.
-   - **Draft it** — create a real Slack draft with `slack_send_message_draft` (`channel_id` = the bot/app `user_id`). If it returns `draft_already_exists`, replace the previous draft rather than stacking. Present the styled text plus "DM to the beep bot/app" for approval.
-   - **Send only on an explicit go-word** — `post`, `send`, or `go`. Then send with `slack_send_message` (`channel_id` = the bot/app `user_id`, passing the `draft_id` so the draft clears on send). Without a go-word, leave the draft in place — invoking the skill produces the draft, the go-word posts it.
+   - **Resolve the target (confirmed method)** — the beep app does **not** surface in `slack_search_users` (queries like `beep`, `beep bot`, `standup` return nothing). Use the known beep **DM channel** directly: `channel_id` `D0B5SBB8QUF` (the `beep2` direct message, member `U08MDLB9U0Z`). This is a DM, never a channel. If that DM ever stops resolving, stop and ask — never fall back to a channel.
+   - **Draft it** — create a real Slack draft with `slack_send_message_draft` (`channel_id` = the beep DM above). Confirmed working. If it returns `draft_already_exists`, replace the previous draft rather than stacking. Present the styled text plus "DM to the beep app" for approval.
+   - **Send only on an explicit go-word** — `post`, `send`, or `go`. Then send with `slack_send_message` (`channel_id` = the beep DM, passing the `draft_id` so the draft clears on send). Without a go-word, leave the draft in place — invoking the skill produces the draft, the go-word posts it.
    - **If the app cannot be DM'd** (`cannot_dm_bot` / `channel_not_found`), STOP and tell the user — the beep app must have direct messages enabled. Never fall back to a channel.
    - **Report** the sent message link (or the draft link) and that it went to the bot/app DM.
 
@@ -58,7 +59,11 @@ If only one bucket exists, narrate just that one. Never let a planned item read 
 
 ## Tone Guides
 
-Each tone gets a *Done* voice (past/settled) and a *Tomorrow* voice (future/incoming).
+These are **examples, not a fixed menu** — a reference palette to show the range and the done/tomorrow split. Invent tones freely beyond this list; each tone just needs a *Done* voice (past/settled) and a *Tomorrow* voice (future/incoming). Vanilla is the one fixed option that's always offered.
+
+**No tone**
+
+- **📋 Vanilla** — no styling. Replay the check-in professionally in the user's own words: tidy grammar and phrasing, keep every fact, name, and technical term intact, no metaphors or costume. Still split done (past tense) from tomorrow (future tense) with a paragraph break, and close with a plain sign-off. This is the one tone where a faithful summary is the goal.
 
 **House tones**
 
@@ -103,5 +108,6 @@ Each tone gets a *Done* voice (past/settled) and a *Tomorrow* voice (future/inco
 - **Done ≠ tomorrow** — past/settled for done, future/incoming for tomorrow; the line between them must be unmistakable.
 - **Short and punchy** — a couple of beats, then a sign-off. No essays, no meta.
 - **Honor custom tones** — if the user names their own, run with it over the roster.
-- **DM the bot/app, never a channel** — the beep check-in goes only to the beep bot/app as a direct message. Posting it to a channel is never allowed.
+- **Vanilla is the opt-out** — when the user picks vanilla, drop the costume and give a clean professional replay; it is the only mode where a faithful summary wins over delight.
+- **DM the beep app, never a channel** — the beep check-in goes only to the beep DM (`D0B5SBB8QUF`, member `U08MDLB9U0Z`) as a direct message; `slack_search_users` won't find the app, so use that DM directly. Posting it to a channel is never allowed.
 - **Draft, then send on the go-word** — produce the Slack draft on invocation; only `post` / `send` / `go` actually sends it.
