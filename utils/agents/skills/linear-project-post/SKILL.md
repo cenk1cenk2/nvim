@@ -25,7 +25,7 @@ references:
 3. **Analyze the last update** — identify the cutoff point. Everything after this update is "recent" for the purpose of the new post.
 4. **Check timestamps** — use `updatedAt` on issues and `createdAt` on comments to build an accurate timeline of what happened since the last update. If timestamps suggest the user's session knowledge may be more recent than what's recorded in Linear, ask the user to fill in gaps before drafting.
 5. **Categorize issues** by status from the `list_issues` response.
-6. **Investigate completed issues since the last update** — these form the first paragraph. Understand what was accomplished, not just the issue titles. Read descriptions if needed to summarize the work meaningfully.
+6. **Investigate completed issues since the last update** — these inform the opening paragraph. Understand what was *accomplished* so you can describe the outcome in prose. Read descriptions if needed. Never name the issues, PRs, or MRs themselves — the update describes progress and current status, not a list of merged work.
 7. **Investigate cancelled or descoped issues since the last update** — these form the deviations section. Summarize why they were dropped or changed in a concise manner.
 8. **Investigate in-progress and upcoming issues** — identify the immediate next steps for the closing sentence(s).
 9. **Draft the update post** following the format below.
@@ -35,6 +35,8 @@ references:
 ## Post Format
 
 The update should read as a cohesive narrative, not a bullet list. Write in plain prose — short paragraphs, no headers, no markdown formatting.
+
+Describe the current status and momentum in flowing language — never enumerate specific issues, pull/merge requests, or phrasings like "X was merged". A reader should come away understanding what has moved since the last update and what is next, not read a changelog of closed tickets.
 
 **Structure:**
 
@@ -64,4 +66,5 @@ The update should read as a cohesive narrative, not a bullet list. Write in plai
 - **Read prior updates first** — the post must build on the last update, not repeat it.
 - **Keep it concise** — a good update is 3-6 sentences, not a wall of text.
 - **No bullet lists or markdown** — plain prose paragraphs only.
+- **Never name issues, PRs, or MRs.** The update is a flowing description of status — what has progressed since the last update and what is next — not a record of what was merged or which tickets closed.
 - **Skip the deviations section** if there are none — don't force it.

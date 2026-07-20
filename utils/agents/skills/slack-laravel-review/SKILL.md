@@ -58,7 +58,7 @@ references:
    - **Title (what was done):** one short bold line summarizing the change. Combine the PR title with contextual detail — when the conversation, commits, or PR body give you a clearer picture of what is being done, fold that in so the title is more descriptive than the raw PR title alone. Keep it to one line.
    - **Extended description (the goal):** 1-2 direct sentences stating what this change accomplishes and why, framed by its role in the rollout (e.g. "Phase 0 (converge): normalize the stacks to the latest module version to clear drift ahead of the Karpenter swap in the next phase").
    - **State the goal, not a changelog.** Do NOT itemize incidental resource changes in the prose (addon/AMI/policy tweaks, a single SQS ARN variant, etc.) — the Spacelift delta line and the PR diff already carry those. Reviewers want the intent, not a per-resource list.
-   - **Link related prior PRs** of the same environment / cluster-type when known (from memory or the conversation), for reviewer continuity — e.g. "same change as the earlier waves <urls>".
+   - **Avoid listing sibling PRs.** Do NOT paste links to related/prior PRs of the same wave, environment, or cluster-type. If continuity genuinely helps the reviewer, mention *where* the change is being applied in prose (e.g. "same change as the earlier prod waves") — without the PR URLs. Prefer omitting even that unless it adds real context.
    - If the PR description is empty, derive the title and goal from the PR title, commit messages, and rollout context.
    - If infrastructure impact was found, append a one-line summary (e.g., "Spacelift: 5 stacks, +35 ~41 −10, all finished.").
    - **Full Spacelift narrative (when requested)** — if the user says "include spacelift report", "include the spacelift analysis", or similar, replace the one-line infrastructure summary with a full narrative:
@@ -87,13 +87,13 @@ references:
      ```
    - Omit the infrastructure and review lines if not applicable.
    - **Title-only (very rare, on request):** the entire message is just the review line `{pr_url} :review:`.
-   - Example (default — title + description; note: title blends the PR title with contextual detail, description states the goal + links prior same-type PRs, does NOT itemize the incidental resource changes):
+   - Example (default — title + description; note: title blends the PR title with contextual detail, description states the goal, no sibling PR links, does NOT itemize the incidental resource changes):
      ```
      https://github.com/<owner>/<repo>/pull/<number> :review:
 
      *<what was done — PR title enriched with context>*
 
-     <Phase / goal>: <what this change accomplishes and why, framed by its role in the rollout>. Same as the earlier <cluster-type> waves (<prior-pr-url>, <prior-pr-url>).
+     <Phase / goal>: <what this change accomplishes and why, framed by its role in the rollout>. Same change as the earlier <cluster-type> waves.
 
      _Spacelift: <N> stacks, +<a> ~<c> −<d> each, finished._
      ```
@@ -136,4 +136,4 @@ references:
 - **Review line is exact:** `{pr_url} :review:` — URL first, then the `:review:` emoji.
 - **Default carries title + description.** Every post leads with the review line, then a bold one-line title of what was done (PR title blended with contextual detail), then a 1-2 sentence extended description of the goal. Title-only is a very rare opt-out (bulk waves, "just the link").
 - **Use Slack mrkdwn.** Use plain URLs for links (Slack auto-unfurls GitHub PRs). No markdown bold (`**`), use `*text*` instead.
-- **Summary states the GOAL, not a changelog.** 1-2 direct sentences on what the change accomplishes and why (its role/phase in the rollout). Do NOT itemize incidental resource changes in the prose — the Spacelift delta line carries the impact. Link related prior PRs of the same environment/cluster-type when known.
+- **Summary states the GOAL, not a changelog.** 1-2 direct sentences on what the change accomplishes and why (its role/phase in the rollout). Do NOT itemize incidental resource changes in the prose — the Spacelift delta line carries the impact. Do NOT paste sibling PR links; at most mention where the change is applied in prose when it genuinely aids continuity.
