@@ -158,7 +158,8 @@ These are language-shape preferences; apply them across Rust, TypeScript, Vue/Sv
 - Avoid trailing whitespace.
 - Start YAML files with `---` unless the directory consistently does otherwise.
 - In multi-statement functions, leave a blank line before the final return when the language/style supports it. Single-statement functions and guard returns do not need the extra line.
-- Do not add comments/docstrings unless requested or the surrounding file already uses them. Existing comment density and style wins. Use chat, not code comments, to explain your changes to the user.
+- **Match the surrounding comment style, or add none.** Before writing any comment, look at the neighboring code and mirror its density, tone, and format — including when that means no comments at all. Do not add comments/docstrings unless the surrounding file already uses them or the user asks.
+- **Never state the obvious — this is absolute.** A comment must explain *why* (a non-obvious constraint, trade-off, edge case, or gotcha), never restate *what* the code already says. `// increment i`, `// loop over users`, `// set the name` are noise; if a comment only paraphrases the line below it, delete it. Explain your changes to the user in chat, not in code comments.
 
 ### Naming
 

@@ -8,6 +8,7 @@ references:
   - ../references/commit-style.md
   - ../references/commit-trailers.md
   - ../references/output-diff.md
+  - ../references/release-convention.md
 ---
 
 ## Git Commit
@@ -19,6 +20,8 @@ references:
 > Read the `commit-style` reference for conventional commit format, types, subject line rules, body rules, and examples.
 
 > Read the `commit-trailers` reference for issue linking conventions — platform detection (Linear, GitHub, GitLab), closing keywords, trailer format, and `refs` vs `closes` usage.
+
+> Read the `release-convention` reference — when the repo has release automation (release-please / semantic-release / changesets / commitlint), the commit type drives the version bump; pick it deliberately, mark breaking changes with `!` plus a `BREAKING CHANGE:` footer, and note when a changeset file is required.
 
 > Read the `output-diff` reference for presenting the draft commit message to the user before committing.
 
@@ -69,13 +72,14 @@ references:
      - `style` — formatting, whitespace, missing semicolons (no logic change).
      - `revert` — reverting a previous commit.
    - If the user provided a hint (e.g., "fix" or "feat: add retry"), use it as a starting point.
+   - **Release automation (when detected).** Per `release-convention`, if the repo releases from commits (release-please / semantic-release), the **type drives the bump** — `feat` (minor) vs `fix`/`perf` (patch) vs other (no release) — so choose it deliberately. If the repo uses changesets, the commit does not set the version — remind the user a `.changeset/*.md` is needed and offer to add one.
    - Determine the **scope** (optional) — the area of the codebase affected (e.g., `auth`, `api`, `config`).
    - Write the **subject line** — imperative mood, ≤50 chars preferred, 72 hard cap, no trailing period.
    - **Body** — by default, draft a subject-only commit. Add a body only when:
      - The user explicitly requests a description/body (e.g., "commit with description", "add details", "verbose commit").
      - The change is a security fix, data migration, or revert (per `commit-style` reference).
      - The user explicitly flags a breaking change (see below).
-   - **Breaking changes** — only include when the user explicitly says so (e.g., "breaking change", "this is breaking", "commit with breaking change"). When flagged:
+   - **Breaking changes** — include when the user explicitly says so (e.g., "breaking change", "this is breaking", "commit with breaking change"), or when the repo has commit-driven release automation and the change is genuinely breaking (flag it and propose the markers — an unmarked breaking change ships as a wrong version bump). When flagged:
      - Append `!` after the scope in the subject line: `feat(api)!: rename /v1/orders to /v1/checkout`.
      - Add a `BREAKING CHANGE:` trailer in the footer describing what breaks and the migration path.
      - Always include a body explaining the breaking change even if the user didn't request a verbose commit.

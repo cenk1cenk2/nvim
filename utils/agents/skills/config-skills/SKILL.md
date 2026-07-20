@@ -272,6 +272,7 @@ When creating or updating a skill, always check:
 | `scm-read-summary.md` | Shared read-only PR/MR summary workflow: identify, read metadata/threads/diff, structured summary, principles. | `github-pr-read`, `gitlab-mr-read`. |
 | `scm-create-description.md` | Shared PR/MR title+description workflow: branch reuse, drafting, format templates, writing style. | `github-pr-create`, `gitlab-mr-create`. |
 | `scm-ci-fix.md` | Shared CI-failure diagnosis workflow: pickup notes, diagnose, propose, ask-to-implement, principles. | `github-ci-fix`, `gitlab-ci-fix`. |
+| `release-convention.md` | Detect the repo's release automation (release-please, semantic-release, changesets, commitlint) and match commit/title convention, breaking-change markers, and changeset files. | `git-push`, PR/MR-create skills (github-pr-create, gitlab-mr-create). |
 | `plan-mode.md` | Strict plan-mode directive — planning/analysis only, implementation disabled, never exit. | Planning-only skills (`plan-hard`, `plan-revise`, `plan-handoff`). |
 | `present-first.md` | Present-first posture — draft, present before writing, proceed on approval or upfront blessing; no plan mode. | Every skill that writes (Linear / SCM / config / obsidian / scaffolding / code — ~80 skills). |
 | `obsidian.md` | Vault location, tool access, file naming, frontmatter, writing style, vault exploration. | Obsidian family (4 skills). |

@@ -5,6 +5,7 @@ argument-hint: "[optional: remote name or safety flag — e.g., 'upstream', '--f
 references:
   - ../references/present-first.md
   - ../references/scm-detect.md
+  - ../references/release-convention.md
 ---
 
 ## Git Push
@@ -12,6 +13,8 @@ references:
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
+
+> Read the `release-convention` reference to detect the repo's release automation and check the pending commits satisfy the convention it consumes (advisory).
 
 ## Process
 
@@ -35,6 +38,7 @@ references:
 4. **List pending commits.**
    - Use `git log` to list commits between the upstream (or, for a new branch, an inferred base like the default branch) and `HEAD`.
    - Include commit count and subject lines in the final report.
+   - **Release-convention check (advisory).** Detect the repo's release automation per `release-convention`. If it is commit-driven (release-please / semantic-release / commitlint) and a pending commit is not a valid Conventional Commit — or a breaking change is missing its `!` / `BREAKING CHANGE:` marker — flag it in the report and offer to reword it via `git-commit`'s amend (your own branch) before pushing. If the repo uses changesets and no changeset is present for user-facing changes, note it. Advisory only — never block the push.
 
 5. **Safety checks (only these gate the push).**
    - **Refuse plain `--force` outright.** If the user asks for `--force`, push back and offer `--force-with-lease` instead.
