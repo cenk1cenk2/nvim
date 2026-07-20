@@ -6,11 +6,14 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/present-first.md
+  - ../references/linear-absolute-approval.md
 ---
 
 ## Linear Project Reconcile
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+> **Project/initiative status updates: offer, don't auto-post.** Read the `linear-absolute-approval` reference. Reconciliation covers **issues + structure only** — it does NOT post a project or initiative status update on its own. When progress is genuinely update-worthy, finish all the issue work first, then **proactively offer** one — briefly note what happened and that it may be worth an update (e.g. "X and Y landed — I can post a project update if you'd like") — and post via `/linear-project-post` or `/linear-initiative-post` **only after the user explicitly says yes**. A general blessing / `g` / autopilot does NOT clear this.
 
 ## Prerequisite
 
@@ -92,6 +95,7 @@ Omit sections that have no findings.
 
 ## Key Rules
 
+- **Never post a project/initiative status update on your own** — when it's warranted, proactively OFFER it (note what happened, that it's update-worthy) after everything else, and post only on the user's explicit yes (see `linear-absolute-approval`); reconcile itself only touches issues/structure.
 - **Never modify issues without user approval.**
 - **Present all findings before making changes** — the user decides what to act on.
 - **Batch updates** — apply approved changes efficiently using parallel tool calls.
