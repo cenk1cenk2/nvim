@@ -64,7 +64,6 @@ Describe the current status and momentum in flowing language — never enumerate
 ## Key Rules
 
 - **Never post without user approval** — initiative writes require explicit, per-change approval; no blessing/autopilot shortcut applies (see `linear-absolute-approval`).
-- **Never exit plan mode.**
 - **Read prior updates first** — the post must build on the last update, not repeat it.
 - **Keep it concise** — a good update is 3-6 sentences, not a wall of text.
 - **No bullet lists or markdown** — plain prose paragraphs only.

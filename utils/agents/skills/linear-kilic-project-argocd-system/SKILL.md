@@ -184,7 +184,7 @@ System operators typically use:
 
 - `<component>-system` for operators (e.g., `operator-external-secrets-system`)
 - `cluster-system` for cluster-wide tools
-- `<component>` for some operators (e.g., `renovate-operator-system`)
+- `<component>` for some operators (e.g., `renovate-operator`)
 
 ## Key Principles
 

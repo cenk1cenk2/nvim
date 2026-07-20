@@ -6,6 +6,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/present-first.md
+  - ../references/linear-absolute-approval.md
 ---
 
 ## Linear Project Update Post
@@ -15,6 +16,8 @@ references:
 ## Prerequisite
 
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+
+> **Absolute approval required.** Read the `linear-absolute-approval` reference — status-update writes always require explicit approval for the specific change; the present-first blessing shortcut (`g` / `go` / autopilot) does NOT clear them. Never call `save_status_update` before the user approves the drafted post.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
@@ -61,8 +64,7 @@ Describe the current status and momentum in flowing language — never enumerate
 
 ## Key Rules
 
-- **Never post without user approval.**
-- **Never exit plan mode.**
+- **Never post without user approval** — status-update writes require explicit, per-change approval; no blessing/autopilot shortcut applies (see `linear-absolute-approval`).
 - **Read prior updates first** — the post must build on the last update, not repeat it.
 - **Keep it concise** — a good update is 3-6 sentences, not a wall of text.
 - **No bullet lists or markdown** — plain prose paragraphs only.

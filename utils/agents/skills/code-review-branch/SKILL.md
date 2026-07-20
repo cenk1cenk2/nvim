@@ -35,7 +35,7 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - Use `git diff` for the full diff, or MCP PR/MR diff tools if available.
 
 3. **Analyze the Changes:**
-   - Use `sequentialthinking__sequentialthinking` to methodically work through the diff.
+   - Reason through the diff step by step, working methodically through each change.
    - Browse the full codebase freely — read surrounding files, check call sites, trace dependencies. The diff alone is never enough.
    - For each logical group of changes, evaluate against the established intent:
      - **Does this achieve what was agreed?** — missing requirements, incomplete implementation.

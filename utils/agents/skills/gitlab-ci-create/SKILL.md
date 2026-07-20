@@ -13,7 +13,7 @@ references:
 
 ## Core Requirements
 
-> Read the `scm-gitlab` reference for GitLab MCP tools, git MCP tools, CLI fallback, and platform detection
+> Read the `scm-gitlab` reference for GitLab MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection
 
 ## Architecture: devops/pipelines + devops/pipes
 
@@ -60,7 +60,7 @@ node-install:
    - Follow subtask imports to find all available environment variables.
 7. **Ask for reference implementation (optional).** Ask the user if they have a reference repository or `.gitlab-ci.yml` they want to base the pipeline on. If provided, read it via `gitlab__get_file_contents` and adapt its patterns to the current repository's conventions.
 8. **Draft the pipeline.** Write the complete `.gitlab-ci.yml` and present it in chat. Explain what each include and job does. List the available environment variables the user can customize.
-9. **Ask to implement.** After user approval, exit plan mode and write the pipeline file.
+9. **Ask to implement.** After approval, write the pipeline file.
 
 ## Migration Guidance
 

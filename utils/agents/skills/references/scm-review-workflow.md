@@ -39,7 +39,7 @@ The full run is: identify the PR/MR → detect previous reviews → determine sc
 Apply the review methodology from `code-review-branch` and `code-review-changes`:
 
 - **Read surrounding code** — the diff alone is never enough. Trace call sites, check types, read related files.
-- **Use `sequentialthinking__sequentialthinking`** to methodically work through the diff.
+- **Work through the diff methodically** — reason through each change in sequence rather than skimming.
 - **Cross-PR/MR consistency** — if the user provides a reference PR/MR (URL or number), fetch its diff via the platform's diff tool and compare both for structural consistency: same variable ordering, same formatting patterns, same parameter additions/removals across analogous files. Flag deviations as `**nit:**` inline annotations on the specific lines that diverge.
 - **What to look for:**
   - **Silent failures** — errors caught and ignored, missing error propagation, fallback values hiding problems.

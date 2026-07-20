@@ -1,6 +1,6 @@
 ---
 name: git-conflict
-description: Resolve git merge conflicts interactively. Use when user says "resolve conflicts", "fix merge conflicts", "there are conflicts", "help with rebase conflicts", or when git status shows unmerged paths. Detects conflicting files, analyzes each conflict, resolves clear cases autonomously, and asks the user for ambiguous or important conflicts. Do NOT use for general git operations (use git CLI or git MCP directly).
+description: Resolve git merge conflicts interactively. Use when user says "resolve conflicts", "fix merge conflicts", "there are conflicts", "help with rebase conflicts", or when git status shows unmerged paths. Detects conflicting files, analyzes each conflict, resolves clear cases autonomously, and asks the user for ambiguous or important conflicts. Do NOT use for general git operations (use the `git` CLI directly).
 references:
   - ../references/present-first.md
   - ../references/scm-detect.md
@@ -10,13 +10,12 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `scm-detect` reference for git MCP tool availability and CLI fallback rules — read the files listed in `references:` for the `git-conflict` skill.
+> Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage — read the files listed in `references:` for the `git-conflict` skill.
 
 ## Process
 
 1. **Detect conflict state.**
    - Use `git status` to identify unmerged paths (files with conflicts).
-   - If git MCP is unavailable, fall back to `git status` via CLI.
    - If no conflicts are detected, inform the user and stop.
    - Note the operation in progress (merge, rebase, cherry-pick) from the status output.
 
@@ -56,7 +55,7 @@ references:
    - After resolving all hunks in a file, re-read the file to verify no conflict markers remain.
 
 7. **Stage resolved files.**
-   - After all conflicts in a file are resolved, stage it with `git add <file>` via git MCP or CLI.
+   - After all conflicts in a file are resolved, stage it with `git add <file>`.
 
 8. **Final summary.**
    - List all resolved files and the strategy used for each.

@@ -32,7 +32,7 @@ This skill produces **self-contained plan files** that can be loaded by a future
 
 When planning for another session in the same repository:
 
-3. **Gather context.** Research the current repository state, relevant files, architecture, and any related work. Use all available MCP tools (LSP, git, file reading) to build a complete picture.
+3. **Gather context.** Research the current repository state, relevant files, architecture, and any related work. Use all available MCP tools (LSP, raw `git` CLI, file reading) to build a complete picture.
 4. **Draft the plan file** with these sections in order:
    - **Issue / Problem Statement** — what is the problem or goal, recorded in full detail as if the reader has zero context from this conversation.
    - **Repository Context** — critical information about the repository: architecture, relevant files, conventions, stack, dependencies, gotchas. Include specific file paths and code references. The consuming session starts from scratch — give it what it needs to orient quickly.

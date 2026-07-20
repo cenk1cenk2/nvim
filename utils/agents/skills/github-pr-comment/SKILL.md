@@ -15,7 +15,7 @@ references:
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-comment-poster` reference for the full draft-and-post workflow and key principles.
-> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, and platform detection.
+> Read the `scm-github` reference for GitHub MCP tools, local git (raw `git` CLI), and platform detection.
 > Read the `output-diff` reference for presenting the comment before posting.
 
 ## Platform specifics

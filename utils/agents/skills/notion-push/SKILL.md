@@ -22,8 +22,6 @@ references:
 
 ## Process
 
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
-
 **Step 1: Read the current file.**
 
 - Use `hyprpilot-nvim__editor_status` to identify the current buffer.

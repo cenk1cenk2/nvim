@@ -105,7 +105,9 @@ GitLab MCP, or local git before acting.
 
 ### Local Git Operations
 
-| Tool | Purpose |
+Raw `git` CLI commands via `Bash` (there is no git MCP server):
+
+| Command | Purpose |
 |------|---------|
 | `git status` | Current branch, staged/unstaged changes. |
 | `git branch` | List, create, or check branches. |
@@ -122,7 +124,7 @@ GitLab MCP, or local git before acting.
 
 ## CLI Fallback
 
-When MCP tools lack the needed capability, use `glab` CLI via tmux or Bash:
+When MCP tools lack the needed capability, use `glab` CLI via `Bash`:
 
 - `glab ci trace <job-id>` — stream job logs (more complete than MCP output).
 - `glab ci list` — list recent pipelines.

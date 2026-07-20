@@ -107,7 +107,7 @@ If the user lets you decide:
 
 If the user asks to open the issue:
 
-- Use `browser__open_in_browser` with the issue URL: `https://linear.app/<workspace>/issue/<identifier>`
+- Use `hyprpilot__open` with the issue URL: `https://linear.app/<workspace>/issue/<identifier>`
 - If opening multiple issues, ask the user which one to open first.
 
 ### Step 6: Session Planning
@@ -155,8 +155,7 @@ Once the user agrees on the selection:
 
 ## Key Rules
 
-- **Never move issues without user approval.**
-- **Never exit plan mode.**
+- **Never move issues without user approval.** Draft and present the transitions before writing; apply only after approval.
 - **Prerequisites are hard constraints for "Todo" and "In Progress" blockers** — but "In Review" blockers are considered complete. Issues blocked by "In Review" work CAN be picked up.
 - **Blockers first** — issues that unblock other work take priority over isolated tasks.
 - **Show active work separately** — "In Review" and "In Progress" issues appear in an "Active Work" section. When picking a new issue, these are NOT blockers since "In Review" means essentially complete.

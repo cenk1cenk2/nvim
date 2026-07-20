@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-This skill is a **modifier**. It intercepts the final output of a companion skill and copies it to the clipboard via `open__copy_to_clipboard` instead of performing the skill's write action.
+This skill is a **modifier**. It intercepts the final output of a companion skill and copies it to the clipboard by piping the content to `wl-copy` via the `Bash` tool (Wayland clipboard) instead of performing the skill's write action.
 
 ## Process
 
@@ -23,7 +23,7 @@ This skill is a **modifier**. It intercepts the final output of a companion skil
 
 3. **Copy to clipboard immediately.**
    - Do NOT present a draft for approval. Do NOT ask "does this look good?".
-   - Take the final drafted content and copy it via `open__copy_to_clipboard`.
+   - Take the final drafted content and copy it by piping it to `wl-copy` via the `Bash` tool.
    - Confirm with a one-liner: what was copied and from which skill.
 
 ## Key Principles

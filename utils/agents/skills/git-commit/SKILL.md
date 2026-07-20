@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit". Analyzes staged and unstaged changes, drafts a message following conventional commits format, and commits after approval. Do NOT use for PR descriptions (github-pr-create, gitlab-mr-create) or conflict resolution (git-conflict).
+description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit"; or to split changes into separate scoped commits — "commit these separately", "split into commits", "group by concern". Analyzes staged and unstaged changes, drafts conventional-commit messages, and commits after approval — always as new commits, never amending or force-pushing. Do NOT use for PR descriptions (github-pr-create, gitlab-mr-create) or conflict resolution (git-conflict).
 argument-hint: "[optional: type or message hint — e.g., 'fix', 'feat: add retry']"
 references:
   - ../references/present-first.md
@@ -14,7 +14,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `scm-detect` reference for git MCP tools and CLI fallbacks
+> Read the `scm-detect` reference for platform/branch detection and raw `git` CLI usage.
 
 > Read the `commit-style` reference for conventional commit format, types, subject line rules, body rules, and examples.
 
@@ -26,7 +26,6 @@ references:
 
 1. **Assess the working tree.**
    - Use `git status` to check staged, unstaged, and untracked files.
-   - If git MCP is unavailable, fall back to `git status` via CLI.
    - If nothing is staged and nothing is modified, inform the user and stop.
 
 2. **Handle staging.**
@@ -34,11 +33,12 @@ references:
    - If nothing is staged but there are unstaged/untracked changes:
      - **Default (no grouping requested):** stage everything with `git add` using path `.`. No need to list or confirm individual files.
      - **Grouped commits requested:** skip to step 2a instead.
-   - Stage files via `git add` (path `.` for default, or individual paths for grouped commits). If git MCP is unavailable, fall back to `git add` via CLI.
+   - Stage files via `git add` (path `.` for default, or individual paths for grouped commits).
    - After staging, re-check with `git diff --staged` to confirm what will be committed.
 
 2a. **Grouped commits (multi-commit workflow).**
     - Triggered when the user explicitly asks to split changes into multiple commits (e.g., "commit these separately", "group into multiple commits", "split this into commits by concern").
+    - **Different tasks are different commits.** Changes serving unrelated concerns belong in separate commits, not one blob — group by task/concern and give each its own conventional message.
     - Analyze all unstaged/untracked changes and propose logical groups based on:
       - File proximity (same directory or module).
       - Change purpose (feature vs fix vs refactor).
@@ -95,7 +95,6 @@ references:
 
 6. **Commit.**
    - After explicit user approval, commit via `git commit` with the approved message.
-   - If git MCP is unavailable, fall back to `git commit -m` via CLI.
    - Confirm success by reporting the commit hash from the output.
    - Do NOT push. If the user wants to push, hand off to the `git-push` skill (invoked separately or as a compose step like "commit and push").
 
@@ -107,6 +106,8 @@ references:
 - **No AI attribution.** Never include "Generated with Claude" or similar.
 - **No Co-authored-by.** Never add `Co-authored-by:` trailers under any circumstances.
 - **Never push automatically.** Commit only. The user decides when to push.
+- **New commits only — never amend or force-push.** Each commit is a fresh commit; grouped commits produce several new commits. Never rewrite, amend, or force-push existing history unless the user explicitly asks for it as a separate action.
+- **Different tasks → different commits.** Don't collapse unrelated work into one commit. A branch that carries several meaningful commits should keep them: squash can be applied later at merge time, but when the branch holds multiple distinct commits keep squash OFF on the PR/MR so the history survives (see `github-pr-create` / `gitlab-mr-create`).
 
 ## Composing with Other Skills
 

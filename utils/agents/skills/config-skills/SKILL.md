@@ -130,7 +130,7 @@ Hyprpilot honors only `name` and `description` (required), plus `disable-model-i
 ```markdown
 > **Plan-mode posture** (choose one per skill)
 >
-> - **Strict** — declare `plan-mode.md` and open with the strict directive. ONLY for skills that plan/analyze and write nothing (e.g. `plan-hard`, `code-improve`).
+> - **Strict** — declare `plan-mode.md` and open with the strict directive. ONLY for skills that plan/analyze and write nothing (e.g. `plan-hard`, `plan-revise`).
 > - **Present-first** — declare `present-first.md` and open with the present-first directive. For every skill that writes anything (code, files, Linear/PR resources); it drafts, presents, and proceeds on approval or upfront blessing.
 
 > **Reference directives** (when the skill uses shared conventions)
@@ -262,8 +262,8 @@ When creating or updating a skill, always check:
 | `linear-research-documentation.md` | Research process, analysis, appendix, link management. | Research-heavy creation skills. |
 | `sourcebot-discovery.md` | Sourcebot-first organization-wide repository/code discovery before GitLab/GitHub metadata calls. | Agent planning/delegation and Linear discovery workflows. |
 | `linear-issue-states.md` | State meanings, transition rules, dependency resolution, decision patterns. | State-transition skills (implement, triage, next-task, cycle). |
-| `linear-state-transitions.md` | Auto-advance triggers (pickup → In Progress, MR/PR open → In Review, merge → Done), never-downgrade guard, id extraction, silent-with-report contract. | Agent-dispatch skills (agents-delegate, agents), PR/MR-create skills (gitlab-mr-create, github-pr-create), linear-issue-comment. |
-| `scm-detect.md` | SCM platform detection from remote URL, local git MCP tools, CLI fallback. | Cross-platform skills (code-pull, code-review-branch). |
+| `linear-state-transitions.md` | Auto-advance triggers (pickup → In Progress, MR/PR open → In Review, merge → Done), never-downgrade guard, id extraction, silent-with-report contract. | Agent-dispatch skills (agents-delegate, agents-plan), PR/MR-create skills (gitlab-mr-create, github-pr-create), linear-issue-comment. |
+| `scm-detect.md` | SCM platform detection from remote URL, local git via raw `git` CLI. | Cross-platform skills (code-pull, code-review-branch). |
 | `scm-github.md` | GitHub MCP tools, `gh` CLI fallback, platform-specific conventions. | GitHub CI/PR/failed-CI skills, cross-platform skills. |
 | `scm-gitlab.md` | GitLab MCP tools, `glab` CLI fallback, platform-specific conventions. | GitLab CI/PR/failed-CI skills, cross-platform skills. |
 | `scm-comment-poster.md` | Shared draft-and-post-comment workflow for the current PR/MR. | `github-pr-comment`, `gitlab-mr-comment`. |
@@ -272,7 +272,7 @@ When creating or updating a skill, always check:
 | `scm-read-summary.md` | Shared read-only PR/MR summary workflow: identify, read metadata/threads/diff, structured summary, principles. | `github-pr-read`, `gitlab-mr-read`. |
 | `scm-create-description.md` | Shared PR/MR title+description workflow: branch reuse, drafting, format templates, writing style. | `github-pr-create`, `gitlab-mr-create`. |
 | `scm-ci-fix.md` | Shared CI-failure diagnosis workflow: pickup notes, diagnose, propose, ask-to-implement, principles. | `github-ci-fix`, `gitlab-ci-fix`. |
-| `plan-mode.md` | Strict plan-mode directive — planning/analysis only, implementation disabled, never exit. | Planning-only skills (`plan-hard`, `plan-revise`, `plan-handoff`, `code-improve`). |
+| `plan-mode.md` | Strict plan-mode directive — planning/analysis only, implementation disabled, never exit. | Planning-only skills (`plan-hard`, `plan-revise`, `plan-handoff`). |
 | `present-first.md` | Present-first posture — draft, present before writing, proceed on approval or upfront blessing; no plan mode. | Every skill that writes (Linear / SCM / config / obsidian / scaffolding / code — ~80 skills). |
 | `obsidian.md` | Vault location, tool access, file naming, frontmatter, writing style, vault exploration. | Obsidian family (4 skills). |
 | `slack.md` | Slack MCP tools, response conventions, `:dark_sunglasses:` pattern, large results handling. | Slack family (2 skills). |

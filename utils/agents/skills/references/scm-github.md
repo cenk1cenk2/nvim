@@ -3,7 +3,7 @@
 ## Core Rules
 
 - **ALWAYS use `github` MCP tools for all GitHub operations.**
-- **ALWAYS use `git` MCP tools for local git operations.**
+- **Use the raw `git` CLI (via `Bash`) for local git operations — there is no git MCP server.**
 - Use `gh` CLI as fallback when MCP tools lack the needed capability (e.g., `gh run list`, `gh run view`).
 - Determine repository owner and name from the git remote URL.
 - Determine the current branch from local git state via `git status`.
@@ -55,7 +55,9 @@
 
 ### Local Git Operations
 
-| Tool | Purpose |
+Raw `git` CLI commands via `Bash` (there is no git MCP server):
+
+| Command | Purpose |
 |------|---------|
 | `git status` | Current branch, staged/unstaged changes. |
 | `git branch` | List, create, or check branches. |
@@ -72,7 +74,7 @@
 
 ## CLI Fallback
 
-When MCP tools lack the needed capability, use `gh` CLI via tmux or Bash:
+When MCP tools lack the needed capability, use `gh` CLI via `Bash`:
 
 - `gh run list --branch <branch>` — list workflow runs (no MCP equivalent).
 - `gh run view <run-id>` — view run summary.

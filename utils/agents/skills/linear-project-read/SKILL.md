@@ -122,7 +122,6 @@ Omit sections that have no findings. Keep bullets short — this is a survey, no
 ## Key Rules
 
 - **Read-only.** Never modify issues, comments, the project, or status updates. For modifications, refer the user to `linear-project-reconcile`.
-- **Never exit plan mode.**
 - **Highlight deltas, not full restatements.** The value is in surfacing *what changed since I last looked*, not describing the project from scratch.
 - **Timestamps drive staleness.** Quote `updatedAt` when flagging anything as possibly stale.
 - **Brief over thorough.** If the user wants a deep dive on a specific issue, refer them to `linear-issue-read`.

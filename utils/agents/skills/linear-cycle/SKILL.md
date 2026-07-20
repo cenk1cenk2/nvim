@@ -69,7 +69,7 @@ references:
 - **Calculate remaining time** — determine how many days/weeks remain from today until the target cycle's end date. For cycles already in progress, capacity should reflect only the remaining time, not the full cycle length.
 - Use this as a baseline for realistic capacity in the target cycle.
 - Account for work already committed (from Step 2).
-- Use `sequentialthinking` to reason through capacity constraints if the workload is complex.
+- Reason through capacity constraints step by step if the workload is complex.
 
 ### Step 7: Draft the Cycle Plan
 
@@ -158,7 +158,7 @@ Present the cycle plan to the user in a clear format. **List every issue** — d
 
 ### Step 9: Apply the Plan
 
-**Only after the user explicitly approves the plan.** Stay in plan mode while applying.
+**Only after the user explicitly approves the plan.**
 
 For each issue in the approved plan:
 
@@ -172,7 +172,6 @@ For each issue in the approved plan:
 
 ## Key Rules
 
-- **Never exit plan mode.**
 - **Never apply changes without user approval.**
 - **Never change issue state downward** — only promote `triage`/`backlog` to `todo`. Everything else stays as-is.
 - **Always explicitly set the cycle number** — do not rely on defaults or implicit assignment.

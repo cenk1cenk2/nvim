@@ -11,7 +11,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `scm-detect` reference for git MCP tools and CLI fallbacks
+> Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
 
 ## Process
 

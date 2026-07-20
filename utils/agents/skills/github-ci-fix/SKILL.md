@@ -13,7 +13,7 @@ references:
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-ci-fix` reference for the shared CI-diagnosis workflow and key principles.
-> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, CLI fallback, and platform detection.
+> Read the `scm-github` reference for GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection.
 
 ## Platform specifics
 

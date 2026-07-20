@@ -40,11 +40,11 @@ This skill is the counterpart to `/plan-handoff`. It picks up a self-contained p
    - Implementation steps overview.
    - Any originating context or cross-repo dependencies.
 6. **Ask the user to confirm** before proceeding with implementation.
-7. After approval, exit plan mode and implement step by step.
+7. After approval, implement step by step.
 
 ### Incomplete Plan (pending research or delegation mode)
 
-5. **Complete all "Research Needed" items.** Use available MCP tools (LSP, git, GitHub/GitLab file reading, code search) to research each item.
+5. **Complete all "Research Needed" items.** Use available MCP tools (LSP, raw `git` CLI, GitHub/GitLab file reading, code search) to research each item.
 6. **Revise the plan** based on research findings:
    - Replace "Preliminary Steps (Unverified)" with verified, concrete implementation steps.
    - Update "Repository Context" with discoveries.
@@ -56,7 +56,7 @@ This skill is the counterpart to `/plan-handoff`. It picks up a self-contained p
    - Updated implementation steps.
    - Any issues, risks, or deviations from the original plan.
 9. **Ask the user to confirm** before proceeding with implementation.
-10. After approval, exit plan mode and implement step by step.
+10. After approval, implement step by step.
 
 ## During Implementation
 

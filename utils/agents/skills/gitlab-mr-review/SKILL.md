@@ -16,7 +16,7 @@ references:
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-review-workflow` reference for the full review workflow, tone, and key principles.
-> Read the `scm-gitlab` reference for GitLab MCP tools and git MCP tools.
+> Read the `scm-gitlab` reference for GitLab MCP tools and local git (raw `git` CLI).
 > Read the `scm-detect` reference for platform detection and local git operations.
 > Read the `review-findings` reference for finding format, severity tags, and tone rules.
 

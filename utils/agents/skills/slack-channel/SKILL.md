@@ -40,13 +40,11 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
 | Get user profile | `slack-kilic__slack_get_user_profile` | `mcp__claude_ai_Slack__slack_read_user_profile` |
 | Post message | `slack-kilic__slack_post_message` | `mcp__claude_ai_Slack__slack_send_message` |
 | Reply to thread | `slack-kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with thread) |
-| Add reaction | `slack-kilic__slack_add_reaction` | NOT available |
+| Add reaction | `slack-kilic__slack_add_reaction` | `mcp__claude_ai_Slack__slack_add_reaction` |
 
 **`slack-laravel` tools are deferred** — load via `ToolSearch` before use. See `claude-ai-connectors` reference.
 
 ## Process
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 1. **Resolve the channel.**
    - If the user provides a channel name, use `slack__slack_list_channels` to resolve it to a channel ID.

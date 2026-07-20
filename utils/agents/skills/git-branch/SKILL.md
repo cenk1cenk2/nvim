@@ -12,7 +12,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `scm-detect` reference for git MCP tools and CLI fallbacks
+> Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
 
 > Read the `output-diff` reference for presenting the proposed branch plan before creating it.
 
@@ -21,11 +21,10 @@ references:
 1. **Discover the current state.**
    - Use `git status` to get the current branch and working tree state.
    - Determine the default branch — try `git symbolic-ref refs/remotes/origin/HEAD` via CLI first, or list branches with `git branch` and check which of `main`, `master`, `rolling`, `develop`, `trunk` exists.
-   - If git MCP is unavailable, fall back to `git status`, `git branch`, and `git rev-parse --abbrev-ref HEAD` via CLI.
 
 2. **Discover the naming convention.**
    - List local branches with `git branch`.
-   - List remote branches via CLI (`git branch -r`) — the git MCP `git_branch` is oriented toward local branches, so remotes usually need CLI.
+   - List remote branches with `git branch -r`.
    - Infer the repo's prefix convention from the branch set. Common patterns:
      - `feature/*`, `feat/*` — features.
      - `fix/*`, `hotfix/*`, `bugfix/*` — fixes.
@@ -65,8 +64,7 @@ references:
    - Present the specific situation and offer options (stash, abort, skip FF, rebase onto remote, commit first, etc.). Wait for instruction.
 
 7. **Create the branch.**
-   - Use `git branch` from the chosen base.
-   - If git MCP is unavailable, fall back to `git branch <name> <base>` via CLI.
+   - Create it with `git branch <name> <base>` from the chosen base.
 
 8. **Switch to the new branch.**
    - `git branch` does NOT switch — always follow with `git checkout <new-branch>`.

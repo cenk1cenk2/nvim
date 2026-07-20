@@ -33,7 +33,7 @@ references:
 > Read the `agents-merge-review` reference for between-layer and end-of-run phases — per-layer worktree merge, per-layer review, final `code-review-changes` against the run-level baseline, final verification, completion handoff.
 > Read the `agents-delegate` reference for agent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
 > Read the `agents-worktrees` reference for the mandatory worktree location rule (`.claude/worktrees/<name>/`), naming, verification, and cleanup — agent worktrees MUST live there, no exceptions.
-> Read the `scm-detect` reference for git MCP tools and CLI fallbacks.
+> Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
 > Read the `sourcebot-discovery` reference when planning starts from an organization-wide question or the target repository is not yet known.
 > Read the `project-tooling` reference for discovering verification commands.
 > Read the `agents-write-plans` reference for plan quality criteria — including the optional `depends_on` field on tasks.

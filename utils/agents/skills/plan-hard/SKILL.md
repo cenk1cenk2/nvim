@@ -117,7 +117,7 @@ Escalate to the user **only** when:
 Self-answer for everything else. Use:
 
 - `hyprpilot-nvim` MCP LSP tools (`lsp_workspace_symbols`, `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`) for code navigation.
-- `git` MCP for history, diffs, and blame.
+- raw `git` CLI (via `Bash`) for history, diffs, and blame.
 - `github__*` / `gitlab__*` for remote repository details.
 - `Grep` / `Glob` for pattern and file search.
 - `context7` for library documentation.

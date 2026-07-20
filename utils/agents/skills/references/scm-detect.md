@@ -4,7 +4,7 @@
 
 **Step 1: Get current branch and remote URL.**
 
-Use `git status` to get the current branch name. If git MCP is unavailable, fall back to `git rev-parse --abbrev-ref HEAD` and `git remote get-url origin` via CLI.
+Use `git status` to get the current branch name, and `git rev-parse --abbrev-ref HEAD` / `git remote get-url origin` for scripted parsing. Local git is always the raw `git` CLI via `Bash` — there is no git MCP server.
 
 **Step 2: Determine the SCM platform from the remote URL.**
 
@@ -22,21 +22,21 @@ Parse the remote URL to extract:
 
 If the skill already knows the platform (e.g., user provided a URL, or it's a platform-specific skill), skip detection and read the platform reference directly.
 
-## Local Git MCP Tools
+## Local Git Operations
 
-Use these for all local repository operations. Fall back to CLI equivalents if git MCP is unavailable.
+Local git is the raw `git` CLI via `Bash` — there is no git MCP server. Common commands:
 
-| Tool | Purpose | CLI fallback |
-|------|---------|--------------|
-| `git status` | Current branch, staged/unstaged changes. | `git status` |
-| `git branch` | List, create, or check branches. | `git branch` |
-| `git diff` | Diff between refs (branches, commits). | `git diff <ref1> <ref2>` |
-| `git diff --staged` | Staged changes only. | `git diff --cached` |
-| `git diff` | Unstaged changes only. | `git diff` |
-| `git log` | Commit history. | `git log` |
-| `git show` | Show a specific commit. | `git show <ref>` |
-| `git add` | Stage files for commit. | `git add <path>` |
-| `git commit` | Create a commit with staged changes. | `git commit -m "<msg>"` |
-| `git reset` | Unstage files or reset to a ref. | `git reset` |
-| `git checkout` | Switch branches or restore files. | `git checkout <ref>` |
-| `git branch` | Create a new branch from current HEAD or a ref. **Does NOT switch to it** — call `git checkout` after. | `git branch <branch>` |
+| Command | Purpose |
+|---------|---------|
+| `git status` | Current branch, staged/unstaged changes. |
+| `git branch` | List branches. |
+| `git diff <ref1> <ref2>` | Diff between refs (branches, commits). |
+| `git diff --cached` | Staged changes only. |
+| `git diff` | Unstaged changes only. |
+| `git log` | Commit history. |
+| `git show <ref>` | Show a specific commit. |
+| `git add <path>` | Stage files for commit. |
+| `git commit -m "<msg>"` | Create a commit with staged changes. |
+| `git reset` | Unstage files or reset to a ref. |
+| `git checkout <ref>` | Switch branches or restore files. |
+| `git branch <branch>` | Create a branch from HEAD or a ref. **Does NOT switch** — run `git checkout` after. |

@@ -50,6 +50,8 @@ Load only the tools needed for the current task. Each `ToolSearch` call can load
 | `slack_create_canvas`             | Create a new Slack canvas document.                 |
 | `slack_read_canvas`               | Read an existing canvas.                            |
 | `slack_update_canvas`             | Update an existing canvas.                          |
+| `slack_add_reaction`              | Add an emoji reaction to a message.                 |
+| `slack_get_reactions`             | Get the reactions on a message.                     |
 
 ### Notion (`mcp__claude_ai_Notion__`)
 
@@ -74,5 +76,4 @@ Load only the tools needed for the current task. Each `ToolSearch` call can load
 
 - **Always load before use.** Calling a deferred tool without loading it first will fail with `InputValidationError`.
 - **Load per task.** Load only what you need — do not bulk-load all tools from a connector.
-- **No reactions for Slack.** The claude.ai Slack connector does not have `slack_add_reaction`.
 - **Tool names vary.** claude.ai connector tool names differ from server-direct equivalents (e.g., `mcp__claude_ai_Notion__notion-fetch` vs `notion-laravel__notion-fetch`, `mcp__claude_ai_Slack__slack_read_channel` vs `slack-kilic__slack_get_channel_history`).

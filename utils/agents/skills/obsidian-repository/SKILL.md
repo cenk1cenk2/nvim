@@ -46,7 +46,7 @@ If the current working directory is under `~/development/`, derive the folder pa
 >
 > Read the `obsidian` reference for vault location and full tool access conventions — read the files listed in `references:` for the `obsidian-repository` skill.
 
-- Use codebase exploration tools (treesitter, Grep, Glob, git MCP) to analyze the repository.
+- Use codebase exploration tools (treesitter, Grep, Glob, raw `git` CLI) to analyze the repository.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 

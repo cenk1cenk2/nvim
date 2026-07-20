@@ -13,7 +13,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `scm-detect` reference for SCM platform detection, git MCP tools, and CLI fallbacks.
+> Read the `scm-detect` reference for SCM detection and raw `git` CLI.
 
 > Read the `output-diff` reference for chunked split-plan presentation — show reasoning + content blocks per slice before any write.
 
@@ -127,7 +127,7 @@ This skill is the **caller** in a delegation chain. The composed skills run thei
 
 **User says:** "break this up" (working tree has 6 modified files spanning `src/auth/`, `config/`, and `test/`)
 
-1. Enter plan mode. Detect: clean commit history, dirty tree, no PR. Branch `main`.
+1. Detect: clean commit history, dirty tree, no PR. Branch `main`.
 2. Surface state: "6 modified files: 3 in `src/auth/`, 2 in `config/`, 1 in `test/`. No commits ahead. No open PR. Slice axis?"
 3. User: "by concern".
 4. Group: auth feature (3 files) → config cleanup (2 files) → tests-for-auth (1 file).
@@ -143,7 +143,7 @@ This skill is the **caller** in a delegation chain. The composed skills run thei
 
 **User says:** "split this branch by concern, push everything" (8 commits ahead of `main`, no PR)
 
-1. Enter plan mode. Detect: 8 commits ahead, clean tree, no PR.
+1. Detect: 8 commits ahead, clean tree, no PR.
 2. Surface state. User confirms axis: by concern.
 3. Read each commit via `git show`. Group: 3 commits = refactor → 4 commits = feature → 1 commit = docs.
 4. Present 3 slices. User opts in for `push` globally, declines PRs. Approve.
@@ -156,12 +156,12 @@ This skill is the **caller** in a delegation chain. The composed skills run thei
 
 **User says:** "split this PR into 3, draft PRs for each" (open GitHub PR with mixed refactor + feature + tests)
 
-1. Enter plan mode. Detect: GitHub, open PR #142, 12 commits, 14 files.
+1. Detect: GitHub, open PR #142, 12 commits, 14 files.
 2. Read PR diff via `github__pull_request_read get_diff`. Surface state.
 3. User confirms 3-way split by concern.
 4. Group commits and files into 3 slices, ordered: refactor → feature → tests.
 5. Present plan. User opts in for push + PR globally. Approve.
-6. Slice 1: `git-branch` → cherry-pick refactor commits → `git-commit` (reuse messages) → `git-push` → `github-pr-create` (drafts title + description in plan mode, user approves, PR created).
+6. Slice 1: `git-branch` → cherry-pick refactor commits → `git-commit` (reuse messages) → `git-push` → `github-pr-create` (drafts and presents title + description, user approves, PR created).
 7. Slice 2: same flow for the feature.
 8. Slice 3: same flow for tests.
 9. Final report: 3 new PRs with URLs. PR #142 left untouched. Suggest marking #142 as draft or closing it as superseded.

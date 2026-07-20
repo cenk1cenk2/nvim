@@ -15,7 +15,7 @@ references:
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `scm-fix-threads` reference for the full thread-fixing workflow and key principles.
-> Read the `scm-github` reference for GitHub MCP tools and git MCP tools.
+> Read the `scm-github` reference for GitHub MCP tools and local git (raw `git` CLI).
 > Read the `scm-detect` reference for platform detection and local git operations.
 
 ## Platform specifics

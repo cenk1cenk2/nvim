@@ -101,7 +101,6 @@ Present findings to the user in this structure:
 ## Key Rules
 
 - **This is a read-only reconnaissance skill** — never modify the issue, comments, or relations.
-- **Never exit plan mode.**
 - **Compare against prior knowledge** — the value is in surfacing *what changed*, not restating what's already known.
 - **Follow every relation** — don't skip related issues even if they seem tangential. A change in a "related-to" issue can shift priorities.
 - **Be concise in the report** — highlight deltas, not full re-descriptions.

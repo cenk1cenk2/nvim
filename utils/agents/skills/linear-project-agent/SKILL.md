@@ -3,6 +3,7 @@ name: linear-project-agent
 description: Structure and manage Linear projects for autonomous agent execution — write agent-ready project plans, break work into self-contained issues, and review project structure for agent handoff. Use when user says "set up this project for agents", "structure the project for autonomous execution", or "review the project for agent readiness". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for generic project creation (/linear-project-create) or status updates (/linear-project-post).
 argument-hint: "[create|update|review] [project-name] [description of what the project does]"
 references:
+  - ../references/linear-prerequisite.md
   - ../references/linear-description-structure.md
   - ../references/output-diff.md
   - ../references/present-first.md
@@ -11,6 +12,8 @@ references:
   - ../references/sourcebot-discovery.md
   - ../references/linear-pickup-execution.md
 ---
+
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 

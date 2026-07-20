@@ -58,11 +58,10 @@ Additional rules for issue creation:
 **User says:** "Create an issue for adding cert-manager to cluster-rubik"
 
 1. Auto-invoke `linear-kilic` (GitLab context detected).
-2. Enter plan mode.
-3. Research cert-manager deployment patterns via web search and Context7.
-4. Fetch labels and team from Linear workspace.
-5. Draft issue with checklist, analysis, and appendix links.
-6. Present draft to user for review.
+2. Research cert-manager deployment patterns via web search and Context7.
+3. Fetch labels and team from Linear workspace.
+4. Draft the issue with checklist, analysis, and appendix links.
+5. Present the draft to the user for review before writing.
 
 **Result:** Linear issue created in backlog with labels, estimate, priority, and research appendix.
 
@@ -71,9 +70,8 @@ Additional rules for issue creation:
 **User says:** "File a bug — the webhook handler returns 500 on empty payloads"
 
 1. Auto-invoke workspace skill based on repo context.
-2. Enter plan mode.
-3. Research the webhook handler in the codebase.
-4. Draft bug issue with reproduction steps and checklist.
-5. Present draft to user.
+2. Research the webhook handler in the codebase.
+3. Draft the bug issue with reproduction steps and checklist.
+4. Present the draft to the user before writing.
 
 **Result:** Bug issue created in backlog with clear reproduction steps and fix checklist.

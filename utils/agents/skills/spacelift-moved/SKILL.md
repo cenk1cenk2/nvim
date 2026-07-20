@@ -21,7 +21,7 @@ references:
 
 > Read the `spacelift-github` reference for input parsing, PR resolution, and Spacelift run discovery
 
-> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, and CLI fallback conventions.
+> Read the `scm-github` reference for GitHub MCP tools, local git (raw `git` CLI), and CLI fallback conventions.
 
 > Read the `output-diff` reference for presenting proposed file content before writing.
 
@@ -71,7 +71,7 @@ references:
    - Ask the user where to place the file — suggest the repository root or the relevant module directory.
    - Generate `moved` blocks for approved candidates only.
    - Present the file content following `output-diff` conventions — show the full content, wait for explicit approval.
-   - After approval, exit plan mode and write the file.
+   - After approval, write the file.
 
 ## Report Format
 
@@ -141,14 +141,13 @@ moved {
 
 **User says:** "Check if we can use moved blocks for this PR"
 
-1. Enter plan mode.
-2. Auto-invoke `spacelift-laravel` if not already active.
-3. Get current branch, find PR, discover affected stacks.
-4. Find 4 delete/create pairs across 2 stacks.
-5. Classify: 2 high confidence (module rename), 1 medium (index key change with tag drift), 1 not a move (AMI change).
-6. Present reasoning report.
-7. User approves — generate `moved.tf` with 3 moved blocks.
-8. Present file content, wait for approval, write the file.
+1. Auto-invoke `spacelift-laravel` if not already active.
+2. Get current branch, find PR, discover affected stacks.
+3. Find 4 delete/create pairs across 2 stacks.
+4. Classify: 2 high confidence (module rename), 1 medium (index key change with tag drift), 1 not a move (AMI change).
+5. Present reasoning report.
+6. User approves — generate `moved.tf` with 3 moved blocks.
+7. Present file content, wait for approval, write the file.
 
 **Result:** Reasoning report + `moved.tf` written to the repository.
 
@@ -156,10 +155,9 @@ moved {
 
 **User says:** "spacelift moved for https://github.com/org/repo/actions/runs/12345"
 
-1. Enter plan mode.
-2. Parse Actions URL, resolve to branch/SHA.
-3. Discover affected stacks, analyze changes.
-4. No delete/create pairs found — report "No moved block candidates detected."
+1. Parse Actions URL, resolve to branch/SHA.
+2. Discover affected stacks, analyze changes.
+3. No delete/create pairs found — report "No moved block candidates detected."
 
 **Result:** Clean report, no file generated.
 

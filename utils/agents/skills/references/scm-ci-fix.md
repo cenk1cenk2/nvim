@@ -18,7 +18,7 @@ When composed from `agents-pickup`:
 3. **Diagnose the error.** Analyze the error messages. Read relevant source files, config files, or CI definitions as needed. If the error is unclear or unfamiliar, search the internet for the error message or related keywords.
 4. **Propose a fix.** Present findings to the user: what failed, why it failed, and how to fix it. Be specific — reference file paths, line numbers, and exact changes needed.
 5. **Ask to implement.** Ask the user: "Would you like me to fix this, or would you prefer to do it yourself?"
-   - If the user approves → exit plan mode and implement the fix.
+   - If the user approves → implement the fix.
    - If the user declines → provide a detailed step-by-step guide the user can follow to fix it manually. Include exact commands, file edits, and verification steps.
 
 ## Key Principles

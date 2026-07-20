@@ -54,7 +54,7 @@ ToolSearch({ query: "+Slack send message" })
 - Has powerful **search** capabilities (not available in kilic workspace).
 - Has **canvas** support for document creation.
 - Has **message scheduling** and **draft** support.
-- Does **NOT** have `slack_add_reaction` — no emoji reaction support.
+- Has `slack_add_reaction` — emoji reactions are supported (connector tool `mcp__claude_ai_Slack__slack_add_reaction`).
 
 ## After Initialization
 

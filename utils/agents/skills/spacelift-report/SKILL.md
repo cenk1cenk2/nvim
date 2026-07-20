@@ -21,7 +21,7 @@ references:
 
 > Read the `spacelift-github` reference for input parsing, PR resolution, and Spacelift run discovery
 
-> Read the `scm-github` reference for GitHub MCP tools, git MCP tools, and CLI fallback conventions.
+> Read the `scm-github` reference for GitHub MCP tools, local git (raw `git` CLI), and CLI fallback conventions.
 
 > Read the `output-diff` reference for chat output conventions when offering to post the report as a PR comment.
 
@@ -202,16 +202,15 @@ to indexed, rename, restructuring.>
 
 **User says:** "Show me the Spacelift changes for this PR"
 
-1. Enter plan mode.
-2. Auto-invoke `spacelift-laravel` if not already active.
-3. Get current branch `feat/add-redis-cache`, find open PR #87.
-4. List stacks, check proposed runs — find `staging-app` and `staging-redis` affected.
-5. Get run changes for both stacks.
-6. Generate report:
+1. Auto-invoke `spacelift-laravel` if not already active.
+2. Get current branch `feat/add-redis-cache`, find open PR #87.
+3. List stacks, check proposed runs — find `staging-app` and `staging-redis` affected.
+4. Get run changes for both stacks.
+5. Generate report:
    - `staging-app (+1, ~3)`: narrative explains Redis connection config is being added, summary table groups IAM and application config changes, detail sections show the new secret + updated env vars together.
    - `staging-redis (+2)`: narrative explains a new Redis replication group is being provisioned, detail shows the cluster and its subnet group as related resources.
-7. Present in chat.
-8. User asks to post as PR comment — show draft, get approval, post via `github__add_issue_comment`.
+6. Present in chat.
+7. User asks to post as PR comment — show draft, get approval, post via `github__add_issue_comment`.
 
 **Result:** Structured infrastructure impact report with narrative and grouped changes.
 
@@ -219,11 +218,10 @@ to indexed, rename, restructuring.>
 
 **User says:** "Check spacelift for https://github.com/org/repo/actions/runs/12345"
 
-1. Enter plan mode.
-2. Parse Actions URL — extract run ID `12345`, owner `org`, repo `repo`.
-3. `gh run view 12345` to get head branch and SHA.
-4. Find PR for that branch, discover affected stacks.
-5. Generate and present the report.
+1. Parse Actions URL — extract run ID `12345`, owner `org`, repo `repo`.
+2. `gh run view 12345` to get head branch and SHA.
+3. Find PR for that branch, discover affected stacks.
+4. Generate and present the report.
 
 **Result:** Report derived from a specific Actions run.
 
@@ -231,10 +229,9 @@ to indexed, rename, restructuring.>
 
 **User says:** "What does commit abc123 touch in spacelift?"
 
-1. Enter plan mode.
-2. Resolve SHA `abc123` — find associated PR or use commit directly.
-3. Discover affected stacks via branch/SHA matching.
-4. Generate and present the report.
+1. Resolve SHA `abc123` — find associated PR or use commit directly.
+2. Discover affected stacks via branch/SHA matching.
+3. Generate and present the report.
 
 **Result:** Quick overview of infrastructure impact for a specific commit.
 
