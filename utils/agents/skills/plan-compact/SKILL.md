@@ -1,15 +1,18 @@
 ---
 name: plan-compact
-description: Keep a compaction-resilient working anchor during a long in-session task. Activated explicitly once, it then automatically checkpoints progress — the task, methodology, caveats, source documents, and standing watches (e.g. PRs/CI being monitored) — and, the moment the context is compacted, reconciles from the anchor and every source it lists before doing anything else, then resumes the exact task. Use when user says "plan compact", "keep a working anchor", "stay compaction-safe", or "track this so we survive compaction". Do NOT use for cross-session or cross-repo handoff (use /plan-handoff), building a new plan (use /plan-hard), or loading an existing plan file (use /plan-pickup).
+description: Keep a compaction-resilient working anchor during a long in-session task. Activated explicitly once, it then automatically checkpoints progress — the task, methodology, caveats, source documents, and standing watches (e.g. PRs/CI being monitored) — cross-checks those sources for drift and flags inconsistencies before a compaction, and the moment the context is compacted reconciles from the anchor and every source it lists before doing anything else, then resumes the exact task. Use when user says "plan compact", "keep a working anchor", "stay compaction-safe", or "track this so we survive compaction". Do NOT use for cross-session or cross-repo handoff (use /plan-handoff), building a new plan (use /plan-hard), or loading an existing plan file (use /plan-pickup).
 disable-model-invocation: true
 argument-hint: "[optional task note]"
 references:
   - ../references/present-first.md
+  - ../references/agents-delegate.md
 ---
 
 ## Plan Compact — In-Session Compaction Anchor
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+> Read the `agents-delegate` reference for dispatching the pre-compaction consistency check to a cheap-tier read-only subagent. Resolve tiers via the `agents-tiers` skill.
 
 ## Context
 
@@ -45,6 +48,14 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
 - **Caveats & constraints** and **Open decisions / blockers**.
 
 Restate the anchor path in chat each time so it survives the next compaction summary.
+
+### Consistency check — drift detection (before compaction)
+
+Before an anticipated compaction — when the context is growing long, or on the checkpoint you expect to be the last before a summary — verify the documentation agrees with itself:
+
+1. **Cross-check for drift.** Compare the anchor against every source document, and the sources against each other: stale status, contradictory decisions, facts that have diverged, an anchor that no longer matches Linear / the plan file / live PR-MR state.
+2. **Delegate when there are several sources.** This is a read-only comparison — dispatch it to a cheap-tier subagent (via the `agents-delegate` mechanics; resolve the tier with `agents-tiers`), handing it the anchor plus the source list and asking it to report only the inconsistencies. Keeps the diffing out of the main context.
+3. **Report inconsistencies to the user before continuing.** Do not silently reconcile material drift — surface which sources disagree and on what, and let the user decide. Fold agreed resolutions into the anchor and the affected source.
 
 ### Reconcile — rebuild after compaction (automatic, first task)
 
@@ -109,6 +120,7 @@ criteria, gotchas. Enough that a fresh agent could run it with no conversation h
 
 Reconcile reads the source documents and re-checks watches automatically through their owning tools — no user coordination.
 
+- **`agents-delegate`** — dispatches the pre-compaction consistency check to a cheap-tier read-only subagent that diffs the anchor against the source documents and reports drift, keeping the comparison out of the main context.
 - **`plan-hard`** — builds the internal plan file; `plan-compact` tracks its execution and lists it as a source.
 - **`plan-handoff`** — for handing work to a *different* session or repo; `plan-compact` is same-session compaction survival.
 - **`plan-pickup`** — loads a plan file; the anchor's internal plan file can be one, but reconcile reads it directly.
@@ -131,6 +143,7 @@ Reconcile reads the source documents and re-checks watches automatically through
 
 - **Activate once, then autonomous.** The user turns it on a single time; checkpointing and reconciling never need to be asked for again.
 - **Reconcile first, act second.** After compaction, the reconcile pass runs before any other work.
+- **Check consistency before compaction.** When several documents describe the task, cross-check them (delegating to a cheap subagent when there are many) and surface any drift to the user before the context is compacted — never bury it.
 - **Capture the how, not just the what.** Methodology, caveats, and standing watches are exactly what a summary drops — record them so the resuming agent works the same way and drops nothing it was monitoring.
 - **Source documents are truth.** Rebuild from the listed sources via their owning tools — never from the summary alone.
 - **The anchor path is the lifeline.** Restate it at every checkpoint so it survives the compaction summary.
