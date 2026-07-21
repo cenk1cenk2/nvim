@@ -39,6 +39,8 @@ function M.config()
             before = "", -- "fg" or "bg" or empty
             keyword = "wide", -- "fg", "bg", "wide" or empty. (wide is the same as bg, but will also highlight surrounding characters)
             after = "fg", -- "fg" or "bg" or empty
+            -- allow an optional scope like TODO(cenk): while keeping the keyword as the only capture group
+            pattern = [[.*<(KEYWORDS)%(\(.{-}\))?\s*:]],
           },
           -- list of named colors where we try to extract the guifg from the
           -- list of highlight groups or use the hex color if hl not found as a fallback
@@ -52,10 +54,12 @@ function M.config()
           search = {
             command = "rg",
             args = nvim.fn.get_telescope_args(true, { "--no-ignore-dot" }),
+            -- ripgrep regex; mirror highlight.pattern so TODO(scope): is picked up by TodoTelescope and Trouble
+            pattern = [[\b(KEYWORDS)(\([^)]*\))?:]],
           },
           -- regex that will be used to match keywords.
           -- don't replace the (KEYWORDS) placeholder
-          pattern = "@?(KEYWORDS):",
+          -- pattern = "@?(KEYWORDS):",
           -- pattern = "(KEYWORDS)", -- match without the extra colon. You'll likely get false positives
           -- pattern = "-- (KEYWORDS):", -- only match in lua comments
         },
