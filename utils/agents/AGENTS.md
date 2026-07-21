@@ -35,6 +35,13 @@
 
 4. **DISCOVER AVAILABLE SKILLS** — skills are exposed as `hyprpilot://skills/<slug>` resources. Use `mcp__hyprpilot__list_skills` for the session catalog, `mcp__hyprpilot__read_skill { slug }` to load a body, and `mcp__hyprpilot__load_skill_references { slug }` when the skill asks for references. The catalog is **profile-filtered** — the active hyprpilot profile ignores some skills (personal profiles drop `*-laravel`/`notion-*`/`spacelift-*`; work profiles drop `*-kilic`/`gitlab-*`), so treat `list_skills` as the source of truth for what exists this session. Match the user's request against each skill's `description`, and read its `disableModelInvocation` metadata to know whether you may invoke it yourself (see §II "Skills" for the tier semantics). Treat harness-attached skills as already loaded. Use filesystem paths under `~/.config/nvim/utils/agents/skills/` only as fallback or when editing skill source. Do not read full skill bodies during initialization; load on demand. Cache the catalog for the session — knowing which operations are skill-covered lets you route through the right skill before acting (see §II, skill-first).
 
+5. **LOAD DEFAULT COMMUNICATION MODE** *(optional toggle — delete this whole step to revert)*
+   <!-- CAVEMAN-DEFAULT:START -->
+   - Load `hyprpilot://skills/caveman` at session start and apply it as the default communication style (level: full).
+   - This overrides the skill's manual-only gate: caveman is the standing default for this setup, not a per-request invocation.
+   - The skill's own Boundaries still apply — code/commits/PRs written normal, Auto-Clarity suspends caveman for security/destructive/confusing moments, and "stop caveman" / "normal mode" reverts for the session.
+   <!-- CAVEMAN-DEFAULT:END -->
+
 ## II. PLANNING AND IMPLEMENTATION
 
 ### Default posture: investigate and discuss before implementing
