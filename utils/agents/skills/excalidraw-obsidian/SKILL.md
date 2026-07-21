@@ -51,6 +51,7 @@ In both modes, the Excalidraw MCP server is your visual feedback tool. Render th
 
 2. **Read the drawing.** Load the `.excalidraw.md` file from the vault:
    - Parse the `## Drawing` section — extract the JSON from the code block.
+   - If that block is `compressed-json` (legacy files — the vault's `compress` setting is off, so new saves are plain `json`), decompress it natively first: `open_file` the drawing, then `command_execute` `obsidian-excalidraw-plugin:excalidraw-unzip-file`, then re-read. See the `excalidraw-conversion` reference.
    - Parse the `## Text Elements` section — note existing text content and IDs.
    - Identify the appState (dark/light mode, background color).
 
@@ -118,6 +119,6 @@ If the user wants to revise the drawing:
 
 ## Composing with Obsidian Skills
 
-- **With `obsidian-note`**: when understanding a drawing, the explanation can be added to a note that embeds the drawing.
+- **With `obsidian-note`**: when understanding a drawing, the explanation can be added to a note that embeds the drawing. Embedding is native — write `![[<drawing>.excalidraw]]` transclusion into any note and the plugin renders it (this vault: `embedType`/`previewImageType` = SVG, `renderImageInMarkdownReadingMode` on, plus an auto-exported `.svg` sidecar from `autoexportSVG`). No format conversion needed for display; conversion is only for editing the scene JSON.
 - **With `obsidian-repository`**: revising architecture diagrams that are linked from repository notes.
 - **With `excalidraw-draft`**: if the user wants a completely new drawing instead of revising, delegate to `excalidraw-draft`.

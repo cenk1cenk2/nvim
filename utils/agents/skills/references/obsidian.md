@@ -41,6 +41,15 @@ Use the embedded `obsidian` MCP tools for vault operations. Tool names below use
 | Get active file | `obsidian__active_file_get_path` | Use only when the user references the currently open Obsidian note. |
 | Get periodic note | `obsidian__periodic_note_get_path` | Use for daily/weekly/monthly/quarterly/yearly notes. |
 
+### Command Execution
+
+| Operation | Tool | Notes |
+|---|---|---|
+| List commands | `obsidian__command_list` | Read-only inventory of every registered command id (core + plugins). |
+| Run a command | `obsidian__command_execute` | Runs a command by id against the **currently active file/pane**. `open_file` the target first to focus it. Not auto-accepted — it can mutate the vault, so expect a prompt. |
+
+Use this to drive plugin actions that have no dedicated tool. Example — the Excalidraw plugin's `obsidian-excalidraw-plugin:excalidraw-unzip-file` ("Decompress current Excalidraw file") converts a legacy `compressed-json` drawing to plain `json` in place so it can be parsed.
+
 ### Filesystem Fallback
 
 If the embedded Obsidian MCP server is unavailable or a vault operation fails because the server cannot reach the vault, fall back to local filesystem operations under `~/notes` with absolute paths. Keep filesystem fallback secondary and report when it is used.

@@ -119,7 +119,7 @@ Follow the `excalidraw-template` reference for the complete `.excalidraw.md` str
 Extract the JSON from the `## Drawing` section:
 
 - Look for `` ```json `` or `` ```compressed-json `` code block after `## Drawing`.
-- If compressed, the data is LZ-string encoded — **cannot decompress from the agent**. Fall back to reading the `## Text Elements` section for content understanding.
+- If compressed (`compressed-json`), the data is LZ-string encoded — the agent cannot decode it in-context, but it **can** decompress natively through the Obsidian Excalidraw plugin. See **Handling Compressed Files** below.
 - If decompressed (`json`), parse the JSON directly.
 
 ### Step 2: Collapse Bound Text to `label`
@@ -176,14 +176,20 @@ Call `excalidraw__create_view` with the converted elements array.
 
 ## Handling Compressed Files
 
-Some existing `.excalidraw.md` files use `compressed-json` (LZ-string compression). The agent cannot decompress or compress this format.
+This vault has the Excalidraw plugin's **`compress` setting disabled** (`.obsidian/plugins/obsidian-excalidraw-plugin/data.json` → `compress: false`), so drawings saved or re-saved now use a plain `` ```json `` block the agent can read and write directly. Only **legacy** drawings saved before the flag was flipped still carry `compressed-json` (LZ-string), which the agent cannot decode in-context.
 
-**Reading compressed files:**
+**Reading a `compressed-json` (legacy) file — decompress natively, no user hand-off:**
 
-- The `## Text Elements` section is always in plain text — use it to understand diagram content.
-- For full element access, ask the user to run the Obsidian command: `Decompress current Excalidraw file` — this converts `compressed-json` to `json` in place.
+1. `obsidian__open_file` the `.excalidraw.md` path — the decompress command acts on the **active** file, not on a path, so the target must be focused first.
+2. Optionally confirm with `obsidian__active_file_get_path` that the intended drawing is active.
+3. `obsidian__command_execute` with commandId `obsidian-excalidraw-plugin:excalidraw-unzip-file` ("Decompress current Excalidraw file") — rewrites `compressed-json` → plain `json` in place.
+4. `obsidian__vault_read` again to load the decompressed JSON, then parse normally.
+
+Notes:
+- `command_execute` is not auto-accepted (it mutates the vault) — expect a permission prompt.
+- If the native path is unavailable (plugin/command missing, or the user declines), fall back to the `## Text Elements` section — always plain text — for content understanding, or ask the user to run the command manually.
 
 **Writing files:**
 
-- Always write with `json` code block (decompressed). The plugin handles both formats.
-- The user can compress later via the command palette if desired.
+- Always write with a `json` code block (decompressed). With `compress: false` this matches the vault default and stays agent-readable on the next round-trip; the plugin still renders it fine.
+- The user can re-compress a specific file later via the command palette if desired.
