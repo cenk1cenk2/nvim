@@ -39,17 +39,9 @@ When the user overrides, rewrites, or modifies code that you produced, this is a
    - You are free to edit any area of the code, including areas the user modified. Do not avoid those areas — just incorporate the user's style and choices into your edits.
    - Never silently revert a user's stylistic or logic choices when editing the same area. Your new code should reflect their preferences.
 
-6. **Save to memory when critical.**
-   - Save to memory MCP (`memory__add_observations`) when the deviation reveals:
-     - A project-wide coding convention you didn't know about.
-     - A strong user preference that will apply across sessions.
-     - An architectural decision or pattern choice.
-   - Do NOT save one-off or ambiguous deviations — only patterns confirmed through the conversation.
-
 ## Key Principles
 
 - **User edits are corrections, not conflicts.** Treat them as authoritative.
 - **Never revert style or logic choices.** You can and should edit any code area freely — just carry forward the user's preferences when you do.
 - **Ask, don't assume.** A changed variable name might be a naming convention or a domain correction — you won't know unless you ask.
 - **Proportional response.** Small style tweaks get a brief acknowledgment. Significant logic rewrites warrant deeper questions.
-- **Memory is for patterns, not incidents.** Only persist deviations that represent repeatable preferences or conventions.

@@ -379,27 +379,6 @@
         "autoRejectTools": []
       }
     },
-    "memory": {
-      "args": ["-y", "--bun", "@modelcontextprotocol/server-memory@latest"],
-      "command": "bunx",
-      "env": {
-        "MEMORY_FILE_PATH": "${HOME}/.local/state/nvim/memory.jsonl"
-      },
-      "hyprpilot": {
-        "autoAcceptTools": [
-          "create_relations",
-          "delete_entities",
-          "delete_observations",
-          "delete_relations",
-          "open_nodes",
-          "read_graph",
-          "search_nodes",
-          "add_observations",
-          "create_entities"
-        ],
-        "autoRejectTools": []
-      }
-    },
     "obsidian": {
       "url": "http://127.0.0.1:27123/mcp/",
       "headers": {
