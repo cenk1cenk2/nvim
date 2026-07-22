@@ -35,6 +35,20 @@ Open with executable thing — command, file path, or concrete task. Explanation
 
 Answer is list → list. No cap on item count. Every relevant item earn a line. Do not trim to hit a number.
 
+Flow or causal chain also count as list. Number the steps — do NOT arrow-string them (`A → B → C`). One step per line. Standing lead-in + trailing status stay as prose around the list.
+
+Example — status update:
+
+> Not: "Watcher j7x2q still polling 8 prod jobs → all-FINISHED → auto rebase+force-push #4821 → re-verify build-only. Standing by."
+>
+> Yes: Watcher j7x2q still polling 8 prod jobs.
+>
+> 1. when all-FINISHED
+> 2. auto rebase+force-push #4821
+> 3. re-verify build-only
+>
+> Now standing by.
+
 Two shapes, use as fit:
 
 - **Do** — steps or things to include.
@@ -55,17 +69,20 @@ Example:
 | Level     | What change                                                                                                                   |
 | --------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | **full**  | Drop articles, fragments OK, short synonyms. Classic caveman.                                                                 |
-| **ultra** | Abbreviate (DB/auth/config/req/res/fn/impl), strip conjunctions, arrows for causality (X → Y), one word when one word enough. |
+| **ultra** | Abbreviate (DB/auth/config/req/res/fn/impl), strip conjunctions, one word when one word enough. Causal chain → numbered list, not arrow string. |
 
 Example — "Why React component re-render?"
 
 - full: "New object ref each render. Inline object prop = new ref = re-render. Wrap in `useMemo`."
-- ultra: "Inline obj prop → new ref → re-render. `useMemo`."
+- ultra:
+  1. Inline obj prop = new ref.
+  2. New ref = re-render.
+  3. Fix: `useMemo`.
 
 Example — "Explain database connection pooling."
 
 - full: "Pool reuse open DB connections. No new connection per request. Skip handshake overhead."
-- ultra: "Pool = reuse DB conn. Skip handshake → fast under load."
+- ultra: "Pool = reuse DB conn. Skip handshake, fast under load." (two clauses, no chain — inline stays)
 
 ## Auto-Clarity
 
