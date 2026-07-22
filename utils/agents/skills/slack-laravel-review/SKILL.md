@@ -21,6 +21,7 @@ references:
 > Read the `slack` reference for Slack mrkdwn formatting rules.
 > Read the `scm-github` reference for GitHub MCP tools.
 > Read the `output-diff` reference for presenting the message before posting.
+> Read the `caveman` skill for the terse goal-line lingo — drop articles and filler, fragments fine, technical terms exact.
 
 ## Context
 
@@ -56,11 +57,11 @@ references:
 4. **Compose the summary (default).**
    - **Default: title + description.** Every post carries a short title stating what was done, followed by an extended description of the goal.
    - **Title (what was done):** one short bold line summarizing the change. Combine the PR title with contextual detail — when the conversation, commits, or PR body give you a clearer picture of what is being done, fold that in so the title is more descriptive than the raw PR title alone. Keep it to one line.
-   - **Extended description (the goal):** 1-2 direct sentences stating what this change accomplishes and why, framed by its role in the rollout (e.g. "Phase 0 (converge): normalize the stacks to the latest module version to clear drift ahead of the Karpenter swap in the next phase").
+   - **Extended description (the goal):** ONE terse line stating what the change does — the goal, nothing else. Use a light touch of the `caveman` skill's lingo: drop articles and filler, fragments fine, keep technical terms exact. Strip prior-phase history, canary/drift/verification notes, lockfile/provider-version minutiae, and parenthetical sub-detail. A phase label may prefix it if it adds clarity (e.g. "Control-plane module `<version>` + k8s `<old>` → `<new>`, all `<N>` prod control-planes.").
    - **State the goal, not a changelog.** Do NOT itemize incidental resource changes in the prose (addon/AMI/policy tweaks, a single SQS ARN variant, etc.) — the Spacelift delta line and the PR diff already carry those. Reviewers want the intent, not a per-resource list.
    - **Avoid listing sibling PRs.** Do NOT paste links to related/prior PRs of the same wave, environment, or cluster-type. If continuity genuinely helps the reviewer, mention *where* the change is being applied in prose (e.g. "same change as the earlier prod waves") — without the PR URLs. Prefer omitting even that unless it adds real context.
    - If the PR description is empty, derive the title and goal from the PR title, commit messages, and rollout context.
-   - If infrastructure impact was found, append a one-line summary (e.g., "Spacelift: 5 stacks, +35 ~41 −10, all finished.").
+   - **Source footer (optional, pluggable).** Append a one-line summary from an available source. Spacelift is the common example (e.g., "Spacelift: 5 stacks, +35 ~41 −10, all finished."); use other sources — CI/pipeline status, another infra report, or one the user names — when the user instructs or the source is present. Omit if no source applies.
    - **Full Spacelift narrative (when requested)** — if the user says "include spacelift report", "include the spacelift analysis", or similar, replace the one-line infrastructure summary with a full narrative:
      - Start with the one-line delta summary in italics (e.g., `_Spacelift: 1 stack, +5 ~5 ♻2, finished._`).
      - Follow with a paragraph explaining the core intended change and its effect (e.g., what the tunnel cutover does, what service replaces what).
@@ -87,16 +88,19 @@ references:
      ```
    - Omit the infrastructure and review lines if not applicable.
    - **Title-only (very rare, on request):** the entire message is just the review line `{pr_url} :review:`.
-   - Example (default — title + description; note: title blends the PR title with contextual detail, description states the goal, no sibling PR links, does NOT itemize the incidental resource changes):
+   - Example (default — title + one-line goal + source footer):
      ```
      https://github.com/<owner>/<repo>/pull/<number> :review:
 
      *<what was done — PR title enriched with context>*
 
-     <Phase / goal>: <what this change accomplishes and why, framed by its role in the rollout>. Same change as the earlier <cluster-type> waves.
+     <One terse line stating the goal — light caveman lingo, drop articles/filler>.
 
-     _Spacelift: <N> stacks, +<a> ~<c> −<d> each, finished._
+     _Spacelift: <N> stacks, +<a> ~<c> ♻<r> each (<in-place upgrade, node roll; no replacements>), all planned clean._
      ```
+   - Example (brevity — shrink the goal to ONE terse line):
+     - Too long: "Phase 1 of the control-plane rollout: adopt control-plane module `<v>` (parameters-sourced add-on versions + the `<repo>#<n>` CNI node-role grant) and step k8s `<old>` → `<new>` on all `<N>` prod control-planes in one apply. ArgoCD decoupled in P0 so no helm op runs behind the node roll; canary-verified on `<region>`, drift cleared, lockfiles regenerated to `<provider> <ver>`."
+     - Right: "Control-plane module `<v>` + k8s `<old>` → `<new>`, all `<N>` prod control-planes."
    - Example (title-only — very rare):
      ```
      https://github.com/<owner>/<repo>/pull/<number> :review:
@@ -136,4 +140,5 @@ references:
 - **Review line is exact:** `{pr_url} :review:` — URL first, then the `:review:` emoji.
 - **Default carries title + description.** Every post leads with the review line, then a bold one-line title of what was done (PR title blended with contextual detail), then a 1-2 sentence extended description of the goal. Title-only is a very rare opt-out (bulk waves, "just the link").
 - **Use Slack mrkdwn.** Use plain URLs for links (Slack auto-unfurls GitHub PRs). No markdown bold (`**`), use `*text*` instead.
-- **Summary states the GOAL, not a changelog.** 1-2 direct sentences on what the change accomplishes and why (its role/phase in the rollout). Do NOT itemize incidental resource changes in the prose — the Spacelift delta line carries the impact. Do NOT paste sibling PR links; at most mention where the change is applied in prose when it genuinely aids continuity.
+- **Summary states the GOAL in ONE terse line, not a changelog.** Use a light touch of the `caveman` skill's lingo — drop articles and filler, fragments fine, technical terms exact. State only what the change does. Strip prior-phase history, canary/drift/verification notes, version minutiae, and parentheticals. Do NOT itemize incidental resource changes — the source footer carries the impact. Do NOT paste sibling PR links.
+- **Source footer is optional and pluggable.** Spacelift is the common source line; use other sources (CI/pipeline status, another infra report, or one the user names) when available or requested. Omit when none applies.
