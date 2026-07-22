@@ -21,7 +21,7 @@ references:
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
 
 > Read the `linear-pickup-execution` reference for scope resolution, early questions, issue selection, state updates, and handoff to `agents-pickup`.
-> Read the `linear-project-documents` reference for shared project document handling.
+> Read the `linear-project-documents` reference for shared project document handling and for propagating investigations, solved problems, and deviations as tightly focused documents via the `linear-document` skill.
 > Read the `linear-scm-discovery` reference when the user explicitly asks to enrich pickup context from GitHub/GitLab, discover repositories, or produce agent-ready implementation guidance. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
 > Read the `linear-chunk-issues` reference for mapping project issues to executable tasks.
 > Read the `linear-state-transitions` reference before moving selected issues to `In Progress`.

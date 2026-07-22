@@ -26,7 +26,7 @@ references:
 
 > Read the `linear-pickup-execution` reference for the pickup lifecycle: exploration, pre-implementation report, scheduling, Linear updates, branching, PR/MR creation, pipelines, review fixes, project documentation, and final report.
 > Read the `linear-state-transitions` reference for monotonic Linear status updates.
-> Read the `linear-project-documents` reference for project-scoped shared context and documenting deviations.
+> Read the `linear-project-documents` reference for project-scoped shared context and for propagating investigations, plans, solved problems, and deviations as documents. Attach these on demand with the `linear-document` skill — one tightly focused concern per document, like obsidian repository notes.
 > Read the `linear-chunk-issues` reference for aligning tasks with Linear issue boundaries.
 > Read the `agents-plan-split` and `agents-delegate` references for schedule construction, agent tier choice, and self-contained agent prompts.
 > Read the `scm-detect` and `project-tooling` references before touching repositories.
@@ -97,5 +97,5 @@ This skill carries Linear work from pickup to review. It can implement directly,
 - **Ask early, not often.** Ask only for blocking intent or unclear requirements.
 - **Agents are a tool, not a default.** Direct implementation is fine for small, serial, or high-context work.
 - **Keep tasks issue-aligned.** This keeps Linear states, commits, and PR/MR descriptions clean.
-- **Document deviations where future agents will read them.** Use issue comments for local deviations and project documents for shared findings.
+- **Document deviations where future agents will read them.** Use issue comments for local deviations and, for shared findings — investigations, solved problems, plans, deviations — attach a tightly focused document per concern via the `linear-document` skill (issue- or project-scoped by reach).
 - **Verify locally before review.** The branch should pass the equivalent of the PR/MR pipeline before opening review when possible.

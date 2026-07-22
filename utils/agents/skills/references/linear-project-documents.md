@@ -1,6 +1,6 @@
 # Linear Project Documents
 
-Use the active Linear workspace's `save_document` tool, for example `linear-kilic__save_document`, to create or update project-scoped documents when multiple issues need the same shared context.
+Use the active Linear workspace's `save_document` tool, for example `linear-kilic__save_document`, to create or update project-scoped documents when multiple issues need the same shared context. To author or attach a document on demand — one per concern — use the `linear-document` skill, which owns the drafting, scoping, and present-first flow; this reference covers *when* documents earn their place and *how* to scope them.
 
 ## When to Use Project Documents
 
@@ -23,6 +23,13 @@ Create a document or issue comment for reference material when an issue points a
 
 If the user explicitly says the work is local-only or the reference is only for the current conversation, do not package it into Linear.
 
+During agent execution, capture durable findings as their own documents so they propagate to future agents and reviewers:
+
+- Investigations and their conclusions.
+- Plans and design decisions.
+- Solved problems and the fix that worked.
+- Deviations from the original plan and why.
+
 ## How to Use Them
 
 - Create or update documents with `project`, `title`, and `content`.
@@ -32,6 +39,16 @@ If the user explicitly says the work is local-only or the reference is only for 
 - For a single issue, attach the document to the issue or add a top-level issue comment that packages the needed reference context.
 - Prefer repository, MR, PR, and dashboard links as Linear attachments when they are authoritative and available.
 - For local-only references, include the absolute path, why it matters, relevant excerpts or a concise summary, and instructions for the implementation agent to use its own MCP/local filesystem tools for deeper inspection.
+
+## Keep Documents Tightly Focused
+
+Prefer many small, self-contained documents over one growing blob — the same way obsidian repository sub-notes split standalone topics out of the README:
+
+- **One concern per document.** Separate investigations, plans, solved problems, or deviations each become their own document with its own title. Never fold unrelated concerns together.
+- **Self-contained.** Makes sense to a reader or implementing agent with no conversation history — include the paths, links, and rationale it needs.
+- **Scope picks the parent.** Issue-specific detail attaches to the issue; context shared across issues attaches to the project.
+
+The `linear-document` skill applies this split when attaching documents on demand.
 
 ## Lightweight Issues
 

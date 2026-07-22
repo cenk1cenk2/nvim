@@ -19,7 +19,7 @@ references:
 
 > Read the `linear-description-structure` reference for issue/project description format or filesystem tools.
 
-> Read the `linear-project-documents` reference for using Linear project documents as shared agent context. When issues would repeat the same instructions, keep issues light and store the shared guidance in project documents.
+> Read the `linear-project-documents` reference for using Linear documents as shared agent context and for propagating investigations, plans, solved problems, and deviations. When issues would repeat the same instructions, keep issues light and store the shared guidance in project documents. Attach these documents on demand with the `linear-document` skill, kept tightly focused — one concern per document, like obsidian repository notes.
 
 > Read the `linear-scm-discovery` reference when the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or make the project easier for agents to implement. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
 
@@ -127,7 +127,7 @@ Use this structure for Linear project descriptions:
 
 Set dependency ordering via `blockedBy` / `blocks` / `parentId` fields on each issue — never in the project description.
 
-Use project documents for shared agent instructions that would make the project or issue descriptions too long. Examples: `Agent execution guide`, `Candidate matrix`, `Migration guide`, or `Research and decisions`.
+Use documents for shared agent instructions or durable findings that would make the project or issue descriptions too long — authored on demand via the `linear-document` skill, one focused concern each. Examples: `Agent execution guide`, `Candidate matrix`, `Migration guide`, `Research and decisions`, `Investigation: <topic>`, or `Deviations`.
 
 ## Key Principles
 
@@ -135,7 +135,7 @@ Use project documents for shared agent instructions that would make the project 
 
 2. **One repo per issue** — If work touches multiple repos, create separate issues for each.
 
-3. **Project documents hold shared context** — If multiple issues need the same guide, matrix, research, or agent instructions, create a project document with `save_document` and reference it from the issues.
+3. **Documents hold shared and durable context** — If multiple issues need the same guide, matrix, research, or agent instructions, or the work surfaces an investigation, solved problem, or deviation worth propagating, capture it as a document via the `linear-document` skill — one tightly focused concern per document, like obsidian repository notes — and reference it from the issues.
 
 4. **Lightweight repetitive issues** — When a project document exists, each issue should only state the repo/scope, issue-specific work, exceptions, and the relevant project document to read first.
 
