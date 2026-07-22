@@ -16,7 +16,7 @@ argument-hint: "[tone] <your check-in>"
 
 > Read the `claude-ai-connectors` reference to load the Laravel Slack tools (`mcp__claude_ai_Slack__*`, deferred) via `ToolSearch` — `slack_search_users`, `slack_send_message_draft`, `slack_send_message`.
 
-A daily ritual. The user shares what their day held — and often what tomorrow holds — and beep plays it back to them in a tone. The point is delight, not a faithful summary — unless the user picks **vanilla**, which drops the styling and gives a clean, professional replay of the check-in.
+A daily ritual. The user shares what their day held — and often what tomorrow holds — and beep plays it back to them. **Vanilla is the default** — a clean, professional replay of the check-in. When the user picks a tone, the point shifts to delight: beep dresses the facts in that voice. Offer a rich, varied menu of tones, but absent a pick, vanilla wins.
 
 ## Process
 
@@ -25,21 +25,23 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 
 2. **Settle the tone.**
    - If the user explicitly named a tone (in the arguments or message, e.g. "pirate", "do it noir", "weather report"), use it — including tones outside the roster.
-   - Otherwise, **propose a tone before narrating.** Offer a few examples to spark ideas, then invite the user to name their own.
-   - **Always vary the proposals.** Don't reprint the same list every time — pick a fresh handful each run, mixing house/extended tones with a couple invented on the spot that riff on the day's content (a rough day → therapy session; a shipping day → launch control). The goal is fun and surprise, not a fixed menu. Always keep **📋 vanilla** on the list as the no-tone option, and always end with "…or name your own." Example shape (regenerate the middle each time):
+   - Otherwise, **propose tones before narrating.** Offer a generous, varied handful to spark ideas, then invite the user to name their own.
+   - **Always vary the proposals, and reach wide.** Don't reprint the same list — regenerate a fresh set each run (5-7 options), mixing house/extended tones with several invented on the spot that riff on the day's content (a rough day → therapy session; a shipping day → launch control). Pull from far afield — genres, eras, formats, voices — so the menu surprises. Always keep **📋 vanilla** on the list as the no-tone option, and always end with "…or name your own." Example shape (regenerate the tones each time):
      ```
      What tone? A few to spark ideas:
      - 🎙️ late-night talk show
      - 🧙 fantasy quest log
      - 🛰️ mission control
+     - 🕵️ film noir
+     - 🎡 carnival barker
      - 📋 vanilla (no tone — a clean, professional replay)
      …or name your own.
      ```
-   - Wait for the user's pick (or a tone of their own) before delivering. Do not narrate until the tone is settled.
+   - **Vanilla is the absolute default.** A tone the user names always wins. If they don't pick one — they just say go/beep, or ignore the menu — narrate in 📋 vanilla rather than choosing a costume for them.
 
-3. **Narrate the check-in in the chosen tone**, keeping done and tomorrow unmistakably distinct (see **Done vs. Tomorrow**). Keep it short — a couple of punchy beats, not an essay. Every real item from the check-in must survive the styling; tone dresses the facts, it does not invent or drop them.
+3. **Narrate the check-in in the chosen tone** — just the narration itself, no preamble or framing sentence (never "here's your day as a weather report:"), keeping done and tomorrow unmistakably distinct (see **Done vs. Tomorrow**). Keep it short, understandable, and concise — a couple of punchy beats, not an essay. **ABSOLUTE: never lose important information the user passed.** Every real item, name, and technical detail must survive the styling; tone dresses the facts, it never invents, drops, or buries them.
 
-4. **Close with a single beat in tone** — a sign-off line, never a meta-summary. Do not explain the joke or describe what you did.
+4. **End naturally** — let the narration land on its own last beat. No canned sign-off or catchphrase ("that's a wrap", "and scene", "signing off"), no meta-summary, no explaining the joke.
 
 5. **Send to beep (DM only, on approval).** The styled narration from steps 3-4 is the message body — do not re-style it.
    - **Resolve the target (confirmed method)** — the beep app does **not** surface in `slack_search_users` (queries like `beep`, `beep bot`, `standup` return nothing). Use the known beep **DM channel** directly: `channel_id` `D0B5SBB8QUF` (the `beep2` direct message, member `U08MDLB9U0Z`). This is a DM, never a channel. If that DM ever stops resolving, stop and ask — never fall back to a channel.
@@ -103,11 +105,13 @@ These are **examples, not a fixed menu** — a reference palette to show the ran
 
 ## Key Principles
 
-- **Meaning survives the costume** — preserve the user's actual words, names, and technical terms wherever possible. Tone wraps around them; it does not replace them. Proper nouns, project names, and specific situations should appear in recognizable form, optionally with a tonal adjective or metaphor layered on top. Example: `"an hour of turbulence over Justin's mind with me talking non stop"` keeps Justin clear and the situation legible; `"a turbulent low-pressure system moved through Justin's office"` buries both.
-- **Tone first, always** — never narrate before the tone is settled.
+- **Never lose important information — ABSOLUTE.** Every real item, name, and technical detail the user passed must survive the styling. Preserve their actual words, names, and technical terms; tone wraps around the facts, it never replaces, drops, or buries them. Proper nouns, project names, and specific situations appear in recognizable form, optionally with a tonal adjective or metaphor on top. Example: `"an hour of turbulence over Justin's mind with me talking non stop"` keeps Justin clear and the situation legible; `"a turbulent low-pressure system moved through Justin's office"` buries both.
+- **Understandable and concise** — tone never costs clarity or brevity; if the styling makes the check-in harder to follow, dial it back.
+- **Just the narration** — no preamble, framing sentence, or tacked-on sign-off; deliver the styled check-in itself, nothing wrapped around it.
+- **Settle the tone first** — never narrate before it's settled; absent a pick, the tone is vanilla.
 - **Done ≠ tomorrow** — past/settled for done, future/incoming for tomorrow; the line between them must be unmistakable.
-- **Short and punchy** — a couple of beats, then a sign-off. No essays, no meta.
+- **Short and punchy** — a couple of beats, then let it land. No essays, no meta.
 - **Honor custom tones** — if the user names their own, run with it over the roster.
-- **Vanilla is the opt-out** — when the user picks vanilla, drop the costume and give a clean professional replay; it is the only mode where a faithful summary wins over delight.
+- **Vanilla is the default** — it's what beep uses when no tone is named: drop the costume and give a clean professional replay. A named tone opts into delight; vanilla is the faithful baseline.
 - **DM the beep app, never a channel** — the beep check-in goes only to the beep DM (`D0B5SBB8QUF`, member `U08MDLB9U0Z`) as a direct message; `slack_search_users` won't find the app, so use that DM directly. Posting it to a channel is never allowed.
 - **Draft, then send on the go-word** — produce the Slack draft on invocation; only `post` / `send` / `go` actually sends it.

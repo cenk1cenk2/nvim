@@ -19,6 +19,7 @@ Shared conventions for writing commit messages and PR/MR titles.
 - Imperative mood: "add", "fix", "remove" — not "added", "adds", "adding".
 - ≤50 chars preferred, 72 hard cap.
 - No trailing period.
+- **Pure ASCII — no special characters.** No em/en dashes (`—`, `–`), smart quotes, or ellipsis (`…`); use a plain hyphen `-`. Applies equally to PR/MR titles.
 - Match project convention for capitalization after the colon.
 
 ## Body
@@ -35,6 +36,7 @@ Shared conventions for writing commit messages and PR/MR titles.
 - "As requested by..." — use `Co-authored-by` trailer.
 - "Generated with Claude Code" or any AI attribution.
 - Emoji (unless project convention requires).
+- Em-dashes or fancy Unicode punctuation (`—`, `–`, `“ ”`, `…`) — plain ASCII and a hyphen `-` only.
 - Restating the file name when scope already says it.
 
 ## Always Include Body For

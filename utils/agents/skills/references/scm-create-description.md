@@ -18,9 +18,11 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 
 - If the existing title is already descriptive and clear, keep it.
 - If the title is a branch name, ticket number, or otherwise non-descriptive, generate a new one.
-- Use conventional commit format: `<type>(<scope>): <brief description>`.
-- Types: feat, fix, docs, style, refactor, test, chore.
-- If the repo has release automation (release-please, semantic-release, …), the title must satisfy it — see the `release-convention` reference. On a squash-merge repo the title becomes the release commit; mark breaking changes with `type(scope)!:` and a `BREAKING CHANGE:` footer.
+- **The title is a semantic (conventional) commit — this matters:** `<type>(<scope>): <brief description>`. On a squash-merge repo it becomes the commit, so it must be a valid conventional-commit subject.
+- Types: feat, fix, docs, style, refactor, test, chore, perf, build, ci, revert.
+- **Keep it concise** — one line, well within the platform's title limit (aim ≤ ~100 chars, hard ~120); tighter than the description, no fluff.
+- **Pure ASCII, no special chars** — no em/en dashes (`—`, `–`), smart quotes, or ellipsis (`…`); use a plain hyphen `-`. Same subject rules as the `commit-style` reference.
+- If the repo has release automation (release-please, semantic-release, …), the title must satisfy it — see the `release-convention` reference. Mark breaking changes with `type(scope)!:` and a `BREAKING CHANGE:` footer.
 
 ## Description Format (When No Template Exists)
 
