@@ -59,13 +59,14 @@ Before an anticipated compaction — when the context is growing long, or on the
 
 ### Reconcile — rebuild after compaction (automatic, first task)
 
-The moment the context has been compacted — the summary says so, or you notice you have lost specifics the summary references — run this **before any other action**, without waiting to be asked:
+The moment the context has been compacted — the summary says so, or you notice you have lost specifics the summary references — run this **before any other action**, without waiting to be asked. **This is absolute: the first task after compaction is ALWAYS to run this ENTIRE pass — re-ground the guidelines, then re-read the anchor and every source document, and re-check every standing watch — rediscovering all of it from source. Every step below is mandatory and runs in order: never skip a step, never trust the summary in place of a source, never deviate, and never start the task work first. Everything the compaction passed through gets rediscovered, not just the system prompt.**
 
-1. **Read the anchor document fully.**
-2. **Re-read every source document it lists**, each via its owning tool — Linear via `linear-*` (issues, projects, attached documents), Obsidian via `obsidian__*`, plan/internal files via `Read`, PRs/MRs via `scm-*`. Do NOT trust the summary — go back to source.
-3. **Re-establish standing watches.** For every item under Standing Watches, re-check its live state (PR/MR status, pipeline result, background agent, awaited thread) so nothing being monitored is dropped.
-4. **Rebuild and reconcile.** Reconstruct the working model, including the methodology and caveats. Where the anchor and a live source disagree, the source wins — update the anchor to match.
-5. **Report the reconstructed state** (task, methodology in brief, done, next task, active watches) in a few lines, then **resume** the exact task from the next-task handoff.
+1. **Re-ground EVERYTHING first — run `agent-read` (absolute, never deviate).** Before touching the task, do the full discovery as if starting a new session: re-read the central `AGENTS.md` / system prompt fresh, rediscover the skills catalog, reload caveman, and re-read the local instructions — all via the `agent-read` skill. The guidelines and catalog that compaction summarized away come back inline before anything else. This is the mandatory first task; do not begin any task work until it is done. Only after `agent-read` completes do you work through the rest of this compaction documentation — the anchor and every source below.
+2. **Read the anchor document fully.**
+3. **Re-read every source document it lists**, each via its owning tool — Linear via `linear-*` (issues, projects, attached documents), Obsidian via `obsidian__*`, plan/internal files via `Read`, PRs/MRs via `scm-*`. Do NOT trust the summary — go back to source.
+4. **Re-establish standing watches.** For every item under Standing Watches, re-check its live state (PR/MR status, pipeline result, background agent, awaited thread) so nothing being monitored is dropped.
+5. **Rebuild and reconcile.** Reconstruct the working model, including the methodology and caveats. Where the anchor and a live source disagree, the source wins — update the anchor to match.
+6. **Report the reconstructed state** (task, methodology in brief, done, next task, active watches) in a few lines, then **resume** the exact task from the next-task handoff.
 
 ## Anchor Document Format
 
@@ -73,9 +74,9 @@ The moment the context has been compacted — the summary says so, or you notice
 # [Task title] — Compaction Anchor
 
 > ⚠️ POST-COMPACTION: if you are resuming here with a summarized context, STOP and
-> reconcile FIRST — read this file, re-read every Source Document below via its owning
-> tool, and re-check every Standing Watch before taking any action. Then resume the
-> task from Next-Task Handoff.
+> re-ground FIRST — run `agent-read` (re-read AGENTS.md + rediscover skills), then read
+> this file, re-read every Source Document below via its owning tool, and re-check every
+> Standing Watch before taking any action. Then resume the task from Next-Task Handoff.
 >
 > **Project:** <project> · **Created:** YYYY-MM-DD · **Updated:** YYYY-MM-DD
 
@@ -120,6 +121,7 @@ criteria, gotchas. Enough that a fresh agent could run it with no conversation h
 
 Reconcile reads the source documents and re-checks watches automatically through their owning tools — no user coordination.
 
+- **`agent-read`** — runs first in the reconcile pass to re-read the central `AGENTS.md` / system prompt and rediscover skills, so the guidelines survive compaction before the task is rebuilt.
 - **`agents-delegate`** — dispatches the pre-compaction consistency check to a cheap-tier read-only subagent that diffs the anchor against the source documents and reports drift, keeping the comparison out of the main context.
 - **`plan-hard`** — builds the internal plan file; `plan-compact` tracks its execution and lists it as a source.
 - **`plan-handoff`** — for handing work to a *different* session or repo; `plan-compact` is same-session compaction survival.
@@ -143,6 +145,7 @@ Reconcile reads the source documents and re-checks watches automatically through
 
 - **Activate once, then autonomous.** The user turns it on a single time; checkpointing and reconciling never need to be asked for again.
 - **Reconcile first, act second.** After compaction, the reconcile pass runs before any other work.
+- **Rediscover EVERYTHING first — absolute, never deviate.** After compaction the mandatory first task is the whole reconcile pass, in order: `agent-read` (system prompt, guidelines, skills catalog, caveman, local instructions), then the anchor, then every source document, then every standing watch — all re-read from source. Everything compaction touched gets rediscovered; none of it is optional and the summary never substitutes for a source. No task work until the full pass is done.
 - **Check consistency before compaction.** When several documents describe the task, cross-check them (delegating to a cheap subagent when there are many) and surface any drift to the user before the context is compacted — never bury it.
 - **Capture the how, not just the what.** Methodology, caveats, and standing watches are exactly what a summary drops — record them so the resuming agent works the same way and drops nothing it was monitoring.
 - **Source documents are truth.** Rebuild from the listed sources via their owning tools — never from the summary alone.

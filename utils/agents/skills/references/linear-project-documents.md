@@ -46,7 +46,7 @@ Prefer many small, self-contained documents over one growing blob — the same w
 
 - **One concern per document.** Separate investigations, plans, solved problems, or deviations each become their own document with its own title. Never fold unrelated concerns together.
 - **Self-contained.** Makes sense to a reader or implementing agent with no conversation history — include the paths, links, and rationale it needs.
-- **Scope picks the parent.** Issue-specific detail attaches to the issue; context shared across issues attaches to the project.
+- **Scope picks the parent — tightest level that covers it.** Detail specific to one issue → that issue; context shared across a parent's sub-issues → the parent issue; context shared project-wide → the project.
 
 The `linear-document` skill applies this split when attaching documents on demand.
 
