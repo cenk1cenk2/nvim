@@ -26,6 +26,26 @@ echo "RESULT: not met after N cycles"   # backstop — report and re-arm
 
 The long, user-dependent wait collapses into a single silent process. You get one wake, not N.
 
+## Ways to Wait and Wake — by mechanism and provider
+
+The bash wait-loop above is the portable default, but it is not the only way, and not every runtime supports every method. Pick the mechanism that fits the case AND the active runtime — discover the runtime's own facilities rather than assuming this harness's.
+
+**Mechanisms (best-fit first):**
+
+1. **Harness auto-reinvoke on subagent/task completion** — if the wait is on work YOU launched via the runtime's subagent/Workflow dispatch, do NOT poll: the harness re-invokes you when it finishes. Only arm a watcher when the state changes *outside* anything the harness tracks.
+2. **Background exec + wake** — run the poll/command detached and get woken when it exits. The bash-loop pattern above, on runtimes with a background shell.
+3. **Scheduled / deferred wakeup** — schedule the session to resume after a delay when there is no clean signal to poll (interval prep, self-pacing).
+4. **Recurring schedule (cron)** — for work that must run on a repeating cadence, outliving the session.
+5. **Sleep-in-a-loop** — a bounded loop around an interruptible sleep, where the runtime offers a real sleep primitive.
+
+**Per-runtime facilities (verified from source — keep in sync):**
+
+- **Claude Code (this harness):** background shell via `Bash run_in_background: true` (re-invokes on exit); deferred wakeup via `ScheduleWakeup` (dynamic `/loop`); `Monitor` until-loop; recurring via `CronCreate` / the `/schedule` skill; subagent/Workflow completion auto-reinvokes (never poll it). Foreground `sleep` is blocked — use the background loop or `Monitor`.
+- **OpenCode:** background *subagents* via the `task` tool with `background: true` (experimental — needs `OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true`), which auto-notify the parent on completion (do not poll them). No native deferred-wakeup or cron (third-party plugins only, e.g. `opencode-scheduler`). No sleep tool — the `shell` tool kills a command at its timeout (~2 min default), so long foreground sleeps fail; use a bounded background shell loop under that timeout.
+- **Codex:** background *terminals* via `unified_exec` (persistent PTY that keeps running); completion is NOT auto-reinvoked — poll it with an empty `write_stdin`. First-class interruptible sleep via `clock.sleep` (≤ 12h) for a bounded sleep-loop. No native deferred-wakeup or cron — wrap `codex exec` in an OS cron / CI job for recurring runs.
+
+Do not attribute this harness's tools (`ScheduleWakeup`, `Monitor`, `CronCreate`) to another runtime; if a runtime's mechanism is unknown, discover it before assuming.
+
 ## Process
 
 1. **Confirm it's external state.** If you started the work with `Agent`/`Workflow`, do NOT poll — the harness re-invokes you on completion. Only loop for state the harness can't see.
@@ -47,7 +67,7 @@ The long, user-dependent wait collapses into a single silent process. You get on
 
 ## Fallback
 
-If no bash-reachable signal exists at all, use `ScheduleWakeup` (dynamic `/loop`) or a `Monitor` until-loop — but prefer the background bash loop for concrete external conditions. `CronCreate` is for recurring scheduled work, not one-shot polling.
+If no bash-reachable signal exists at all, drop to a deferred wakeup or a monitor loop — on this harness, `ScheduleWakeup` (dynamic `/loop`) or a `Monitor` until-loop; on other runtimes, their equivalent from **Ways to Wait and Wake**. Prefer the background bash loop for concrete external conditions, and use a recurring scheduler (`CronCreate` / `/schedule`) only for repeating work, never one-shot polling.
 
 ## Example
 

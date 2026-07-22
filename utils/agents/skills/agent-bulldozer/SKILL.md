@@ -73,12 +73,16 @@ If a hold blocks the main track entirely and there's nothing else to push, say s
 
 ## When to Reach for Each Watcher
 
+Arming a watcher or background wait is the **`agent-background`** skill's job — use it for the mechanics (the bash wait-loop, bounding the loop, re-verifying on wake). Pick the tool by the shape of the wait:
+
 - **One-shot external condition with a bash-reachable signal** — a PR/MR merge, a CI or pipeline run, a deploy converging, a remote queue draining, a human apply/approval visible via CLI or HTTP: use `agent-background` (background bash wait-loop that wakes the session once when the condition is met). This is the DEFAULT way to survive a concrete blocker without idling.
 - **No single bash-reachable signal, but periodic re-check/prep is useful** — polling state only reachable via MCP with no clean bash proxy, or interval prep passes: use `/loop` (ScheduleWakeup) for self-paced recurring re-invocation.
 - **Genuinely recurring scheduled cadence** — e.g. a daily prep pass that should outlive the session: use `/schedule` (cron routine). Never for one-shot waits.
 - **Work you started via harness-tracked subagents or Workflows** — do NOT poll it at all; the harness re-invokes you automatically on completion. Use the wait to prep, not to watch.
 
 **Keep cadence TIGHT for fast signals.** Infer each watcher's cadence from how fast its signal realistically turns over — but bias tight. A merged PR, a finished Spacelift/CI run, or a completed apply should be caught within seconds — poll tight (~15–30s), not multi-minute intervals. The whole point of bulldozing is momentum; never leave the work idle for minutes after the blocker already cleared. Reserve long cadences only for genuinely slow jobs where early checks are pure waste — and even then, tighten as the expected finish approaches.
+
+**One watcher per independent condition — separate, don't bundle.** Evaluate each blocker on its own. Ten Spacelift stacks applying, or five MRs to land, are individual tasks — arm an individual watcher for each so each is tracked, re-verified, and advanced independently (one stalling never blinds you to the rest). Combine several conditions into a single watcher only when the task genuinely needs them as a unit — a gate that can't move until ALL of them clear together.
 
 ## Boundaries
 
@@ -110,6 +114,7 @@ Stopping the mode: the user saying "stop", "hold", "pause bulldozer", or "normal
 - Always have a next action queued; an idle turn while work remains is the failure mode.
 - A blocking wait is prep time, not stop time — arm a watcher and build the next stage.
 - A dead watcher is not a stop — if it exits without the goal met, diagnose why and re-arm; never stall on a lapsed watcher.
+- One watcher per independent condition — separate watchers for separate tasks (10 stacks, 5 MRs = individual watchers), each evaluated on its own; bundle only when the task needs them all as a unit. Arm them via the `agent-background` skill.
 - Speculative prep must stay cheap and reversible; drafts and staging, never premature irreversible acts.
 - Momentum is not recklessness: Boundaries hold, and one gated action never stalls the unblocked rest.
 - Situational holds the driver sets (sequencing gates, no-go zones, timing waits) are absolute — bulldozing never crosses a hold; when unsure whether something is held, ask.
