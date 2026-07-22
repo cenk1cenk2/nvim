@@ -9,7 +9,7 @@ references:
 
 > **ALWAYS enter plan mode.** Read the `plan-mode` reference for full directives — read the files listed in `references:` for the `plan-revise` skill.
 >
-> - Use `EnterPlanMode` tool immediately.
+> - Enter plan mode immediately.
 > - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", `g`, `go`, `y`, or `yolo`.
 > - Do NOT undo, revert, or modify any implementation code during this skill. Revision happens in the plan file only.
 
@@ -23,7 +23,7 @@ This skill composes with `plan-hard` — the interview protocol is the same, but
 
 1. **Locate the plan file.**
    - If the user provides a file path or name, use it directly.
-   - Otherwise, list recent plan files in `~/.claude/plans/` filtered to the current project (prefix match on project name), sorted by modification time, and ask the user to pick one.
+   - Otherwise, list recent plan files in your internal plans directory filtered to the current project (prefix match on project name), sorted by modification time, and ask the user to pick one.
    - If the current working directory has a matching recent plan, offer it as the default.
 
 2. **Read the plan file completely.** Do not skim. Understand the original problem statement, requirements, approach, and implementation steps. Note any existing `## Revision History` section.

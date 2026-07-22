@@ -10,7 +10,7 @@ During read and update flows, list and skim the attached/linked documents for co
 
 ## Classify Before Touching
 
-- **Plan-like / LLM-authored** — an agent-written plan or spec, a `~/.claude/plans`-style file, a document this or a prior agent generated. Editing it to stay in sync with the conversation is reasonable.
+- **Plan-like / LLM-authored** — an agent-written plan or spec, a plan file from your internal plans directory, a document this or a prior agent generated. Editing it to stay in sync with the conversation is reasonable.
 - **External / human-authored reference** — a design doc, shared spec, research writeup, or customer-facing doc. **Read-only by default.** Editing is not automatically appropriate even when it looks stale.
 
 When the type is unclear, treat it as external (read-only) and ask.

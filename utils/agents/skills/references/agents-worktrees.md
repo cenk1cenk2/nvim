@@ -1,12 +1,12 @@
 # Agent Worktree Convention
 
-All worktrees created by any `agents-*` skill MUST live inside `.claude/worktrees/` within the current project. This is an absolute rule — no agent worktree is allowed to exist anywhere else in the filesystem.
+All worktrees created by any `agents-*` skill MUST live in the active runtime's designated agent-worktrees directory — see the `provider-paths` reference (Claude Code: `<project>/.claude/worktrees/`; OpenCode: its native worktree dir; otherwise `<project>/.agents/worktrees/`). This is an absolute rule — use the one known location for the runtime and never scatter agent worktrees elsewhere in the filesystem.
 
-## Why `.claude/worktrees/`
+## Why a fixed worktrees directory
 
-- **Harness convention.** Claude Code's built-in `EnterWorktree` tool creates worktrees here by default; co-locating agent worktrees keeps everything in one place.
-- **Inside the repo.** Worktrees live under the project root, making them easy to find, list (`ls .claude/worktrees/`), and prune.
-- **Gitignored.** Assuming `.claude/` (or `.claude/worktrees/`) is in `.gitignore`, the worktrees don't pollute `git status` on the parent repo.
+- **Harness convention.** If your runtime has a built-in worktree-isolation feature, it creates worktrees under a known directory by default; co-locating all agent worktrees there keeps everything in one place.
+- **Inside the repo.** Worktrees live under the project root, making them easy to find, list (`ls .agents/worktrees/`), and prune.
+- **Gitignored.** Assuming the worktrees directory (`.agents/` or `.claude/`) is in `.gitignore`, the worktrees don't pollute `git status` on the parent repo.
 - **Predictable for scripts.** Tooling that cleans up stale worktrees, measures disk usage, or reports status knows exactly where to look.
 
 ## Naming
@@ -18,14 +18,14 @@ Format: `<role>-<short-id>`
 
 Examples: `worker-1-a3f`, `task-02-b91`, `review-fix-c47`, `delegate-d12`.
 
-Keep names ≤ 64 chars total (matches `EnterWorktree`'s constraint) and use only letters, digits, dots, underscores, dashes.
+Keep names ≤ 64 chars total and use only letters, digits, dots, underscores, dashes.
 
 ## Verification (mandatory after dispatch)
 
-When the `Agent` tool returns a worktree path, verify it:
+When your subagent-dispatch tool returns a worktree path, verify it:
 
 1. Is absolute.
-2. Starts with `<project_root>/.claude/worktrees/`.
+2. Is in the runtime's agent-worktrees directory (per the `provider-paths` reference).
 
 If verification fails, treat it as an error:
 
@@ -35,7 +35,7 @@ If verification fails, treat it as an error:
 
 ## Manual Fallback
 
-If `isolation: "worktree"` on the `Agent` tool returns a non-conforming path (or is unavailable for some reason):
+If your runtime's worktree-isolation returns a non-conforming path (or is unavailable for some reason):
 
 1. Create the worktree yourself:
    ```
@@ -43,9 +43,9 @@ If `isolation: "worktree"` on the `Agent` tool returns a non-conforming path (or
    ```
    then via Bash:
    ```
-   git worktree add .claude/worktrees/<name> <branch-name>
+   git worktree add .agents/worktrees/<name> <branch-name>
    ```
-2. Dispatch the agent WITHOUT `isolation: "worktree"`. Include the absolute worktree path in the prompt under a `## Workspace` section and instruct the agent to `cd` into it before any file operations.
+2. Dispatch the agent WITHOUT worktree isolation. Include the absolute worktree path in the prompt under a `## Workspace` section and instruct the agent to `cd` into it before any file operations.
 3. Track the path yourself for later merge and cleanup.
 
 ## Cleanup
@@ -53,7 +53,7 @@ If `isolation: "worktree"` on the `Agent` tool returns a non-conforming path (or
 Once the agent's work is merged back to the original branch (or discarded):
 
 ```
-git worktree remove .claude/worktrees/<name>
+git worktree remove .agents/worktrees/<name>
 ```
 
 For `agents-plan`, cleanup happens during per-layer merges (both team and fire-and-forget modes). For `agents-delegate`, cleanup happens after the user's completion-handoff choice.
@@ -62,8 +62,8 @@ On `git worktree remove` failure (uncommitted changes, for example), surface the
 
 ## Gitignore
 
-Ensure `.claude/` or `.claude/worktrees/` is in the project's `.gitignore`. If not, the worktrees will pollute `git status`. This is a user-level concern — the skill should NOT modify `.gitignore` automatically, but MAY warn the user if `.claude/worktrees/` is not gitignored when a worktree is first created.
+Ensure the worktrees directory (`.agents/worktrees/`, or `.claude/worktrees/` on Claude Code) is in the project's `.gitignore`. If not, the worktrees will pollute `git status`. This is a user-level concern — the skill should NOT modify `.gitignore` automatically, but MAY warn the user if the worktrees directory is not gitignored when a worktree is first created.
 
 ## Key Rule
 
-**If a worktree is about to be created anywhere other than `.claude/worktrees/`, STOP.** This is non-negotiable. The rule exists to keep agent work contained and predictable. Every agent skill follows it.
+**If a worktree is about to be created anywhere other than the agent worktrees directory, STOP.** This is non-negotiable. The rule exists to keep agent work contained and predictable. Every agent skill follows it.

@@ -32,7 +32,7 @@ references:
 > Read the `agents-plan-split` reference for the planning phase — understand goal, discover tooling, establish conventions, write the plan. Also covers `depends_on` declarations, layer assignment, and file-overlap verification.
 > Read the `agents-merge-review` reference for between-layer and end-of-run phases — per-layer worktree merge, per-layer review, final `code-review-changes` against the run-level baseline, final verification, completion handoff.
 > Read the `agents-delegate` reference for agent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
-> Read the `agents-worktrees` reference for the mandatory worktree location rule (`.claude/worktrees/<name>/`), naming, verification, and cleanup — agent worktrees MUST live there, no exceptions.
+> Read the `agents-worktrees` reference for the mandatory worktree location rule, naming, verification, and cleanup — agent worktrees MUST live in the runtime's agent-worktrees directory, no exceptions.
 > Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
 > Read the `sourcebot-discovery` reference when planning starts from an organization-wide question or the target repository is not yet known.
 > Read the `project-tooling` reference for discovering verification commands.
@@ -127,27 +127,27 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 **Team mode (default):**
 
 - Create the team with `TeamCreate({ team_name, description })` on the very first layer only (reused across layers).
-- Spawn all teammates for this layer in a single message with multiple `Agent` tool uses. For each:
-  - `isolation: "worktree"` (unless user opted out).
+- Spawn all teammates for this layer in a single message with multiple subagent dispatches. For each:
+  - Worktree isolation (unless user opted out).
   - `team_name` set to the team created above.
   - No `bypassPermissions` — permissions bubble up.
   - No `run_in_background` — blocking dispatch.
-  - `subagent_type: "general-purpose"`.
+  - A general-purpose subagent.
 
 **Fire-and-forget mode:**
 
 - No `TeamCreate`.
-- Spawn all agents for this layer in a single message with multiple `Agent` tool uses. For each:
-  - `isolation: "worktree"` (unless user opted out).
+- Spawn all agents for this layer in a single message with multiple subagent dispatches. For each:
+  - Worktree isolation (unless user opted out).
   - `mode: "bypassPermissions"`.
   - No `run_in_background` — blocking dispatch.
-  - `subagent_type: "general-purpose"`.
+  - A general-purpose subagent.
 
 **Per-task cadence override:** if the user chose `per-task` cadence, each layer still runs in parallel, but every task is implemented + reviewed by a pair (two dispatches — one implementer, one reviewer) before the layer considers itself done. See the "Per-Task Review Pattern" section below. This is heavier than per-layer review.
 
 **Shared:**
 
-- Verify each returned worktree path is absolute and under `<project_root>/.claude/worktrees/` per the `agents-worktrees` reference.
+- Verify each returned worktree path is absolute and in the runtime's agent-worktrees directory per the `agents-worktrees` reference.
 - Each agent prompt is self-contained. Use the template below. Include the running `## Accumulated Guidance` section (empty for layer 0).
 
 ### Step 9 — Collect layer results
@@ -195,14 +195,14 @@ Follow the `agents-merge-review` reference steps 2–4:
 
 - Send shutdown requests to all teammates: `SendMessage({ to: "<name>", message: { type: "shutdown_request" } })`.
 - Wait for shutdown confirmations.
-- Ensure every `.claude/worktrees/<name>/` tied to this team has been removed.
+- Ensure every agent worktree tied to this team has been removed.
 - Clean up with `TeamDelete`.
 
 Fire-and-forget mode has no shutdown — agents exit on their own when their task completes.
 
 ## Worktree Mode
 
-Worktree mode is the **default**. Every agent in every layer runs in its own worktree under `.claude/worktrees/`. Worktree lifetime is one layer: created at layer launch, merged+removed at layer end.
+Worktree mode is the **default**. Every agent in every layer runs in its own worktree in the runtime's agent-worktrees directory. Worktree lifetime is one layer: created at layer launch, merged+removed at layer end.
 
 **When to skip worktrees (user must opt out with "without worktrees" or "same worktree"):**
 - Tasks are small and low-risk.

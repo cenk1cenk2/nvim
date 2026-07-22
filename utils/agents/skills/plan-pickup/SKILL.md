@@ -19,8 +19,8 @@ This skill is the counterpart to `/plan-handoff`. It picks up a self-contained p
 
 1. **Locate the plan file.**
    - If the user provides a file path, use it directly.
-   - If the user provides a plan name or partial match, search `~/.claude/plans/` for matching files.
-   - If no path is given, list recent plan files from `~/.claude/plans/` (sorted by modification time) and ask the user to pick one.
+   - If the user provides a plan name or partial match, search your internal plans directory for matching files.
+   - If no path is given, list recent plan files from your internal plans directory (sorted by modification time) and ask the user to pick one.
 
 2. **Read the plan file completely.** Do not skim — read every section.
 

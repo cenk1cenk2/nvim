@@ -1,6 +1,6 @@
 ---
 name: plan-handoff
-description: Create a self-contained plan for another Claude Code session or another repository. Use when user says "plan for another session", "plan for other repo", "create a handoff plan", "hand off this plan", "delegate this plan", or "plan this for later". Do NOT use for planning in the current session (use /plan-hard or EnterPlanMode directly). Do NOT use for loading/picking up existing plans (use /plan-pickup).
+description: Create a self-contained plan for another Claude Code session or another repository. Use when user says "plan for another session", "plan for other repo", "create a handoff plan", "hand off this plan", "delegate this plan", or "plan this for later". Do NOT use for planning in the current session (use /plan-hard or enter plan mode directly). Do NOT use for loading/picking up existing plans (use /plan-pickup).
 disable-model-invocation: true
 argument-hint: "[same-repo|other-repo] [goal description]"
 references:
@@ -11,8 +11,8 @@ references:
 
 > **ALWAYS enter plan mode.** Read the `plan-mode` reference for full directives — read the files listed in `references:` for the `plan-handoff` skill.
 >
-> - Use `EnterPlanMode` tool immediately.
-> - Create plan file in `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
+> - Enter plan mode immediately.
+> - Create plan file in your internal plans directory as `YYYY-MM-DD-<project>-<name>.md`.
 > - Present the plan to the user and iterate based on feedback.
 > - Do NOT implement — the plan is consumed by a different session or agent.
 
@@ -125,10 +125,10 @@ To pick up this plan in a new session, use `/plan-pickup` with this file path.
 
 After the skill finishes, always make the handoff location the first thing in the final response.
 
-1. Write the plan file to `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
+1. Write the plan file to your internal plans directory as `YYYY-MM-DD-<project>-<name>.md`.
 2. Immediately output a compact handoff block before any other summary:
-   - `Plan handoff: ~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
-   - `Pick up with: /plan-pickup ~/.claude/plans/YYYY-MM-DD-<project>-<name>.md`.
+   - `Plan handoff: <plans-dir>/YYYY-MM-DD-<project>-<name>.md`.
+   - `Pick up with: /plan-pickup <plans-dir>/YYYY-MM-DD-<project>-<name>.md`.
 3. If the skill exits without writing a file, explicitly say no handoff file exists yet and why.
 4. Any additional summary or caveats must come after the handoff block.
 

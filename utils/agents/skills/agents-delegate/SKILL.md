@@ -20,7 +20,7 @@ references:
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `agents-delegate` reference for agent parameters, dispatch mechanics, and prompt structure. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
-> Read the `agents-worktrees` reference when dispatching with `isolation: "worktree"` — worktrees MUST live under `<project_root>/.claude/worktrees/<name>/`. Covers naming, verification, and cleanup.
+> Read the `agents-worktrees` reference when dispatching with worktree isolation — worktrees MUST live in the runtime's agent-worktrees directory. Covers naming, verification, and cleanup.
 > Read the `agents-conventions` reference when the task modifies code — establishes conventions to include in the agent prompt. Skip for read-only research tasks.
 > Read the `project-tooling` reference when the task modifies code — for verification commands to include in the agent prompt. Skip for read-only research tasks.
 > Read the `agents-completion` reference if the user wants to commit/push/PR after the agent reports back.
@@ -62,8 +62,8 @@ Use it when:
 
 5. **Draft the agent prompt.**
    - Build a self-contained prompt per the `agents-delegate` reference's Self-Contained Prompt Structure section.
-   - For research: `subagent_type: "Explore"`, omit verification, omit write scope.
-   - For implementation: `subagent_type: "general-purpose"`, include verification and write scope.
+   - For research: an exploration subagent, omit verification, omit write scope.
+   - For implementation: a general-purpose subagent, include verification and write scope.
    - Present the prompt to the user for review before launching.
 
 6. **Transition linked Linear issue to `In Progress` (when applicable).**
@@ -73,12 +73,12 @@ Use it when:
    - Skip when no Linear id is in scope — not every delegate is Linear-linked.
 
 7. **Launch the agent (blocking).**
-   - Call the `Agent` tool (or the user's configured dispatch mechanism for non-Anthropic ecosystems) with parameters resolved from the reference's Agent Tool Parameters table.
+   - Dispatch the subagent via your runtime's dispatch mechanism, with parameters resolved from the reference's parameter table.
    - Dispatch is **foreground/blocking** by default — this turn pauses until the agent returns. Results are pushed into this turn as a tool result and then summarised for the user. See the `agents-delegate` reference's Blocking Dispatch section.
    - `isolation`: `worktree` if the task modifies files — offer, confirm with user.
    - `mode`: default (permissions bubble up to the harness). Use `bypassPermissions` only if the user explicitly opts in.
    - `run_in_background`: leave unset (blocking). Only set it to `true` if the user explicitly asks for fire-and-forget.
-   - **If `isolation: "worktree"` is used**, verify the returned path is absolute and under `<project_root>/.claude/worktrees/` per the `agents-worktrees` reference. If it falls outside, abort the result and recreate the worktree manually at the correct location (see the Manual Fallback section), then re-dispatch without `isolation: "worktree"` and instruct the agent via the prompt to `cd` into the manual path.
+   - **If worktree isolation is used**, verify the returned path is absolute and in the runtime's agent-worktrees directory per the `agents-worktrees` reference. If it falls outside, abort the result and recreate the worktree manually at the correct location (see the Manual Fallback section), then re-dispatch without worktree isolation and instruct the agent via the prompt to `cd` into the manual path.
 
 8. **Handle the result.**
    - Relay the agent's summary to the user.

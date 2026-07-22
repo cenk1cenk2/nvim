@@ -24,7 +24,7 @@ Unlike `plan-handoff` (a self-contained plan for a *different* session or repo),
 
 ## The Anchor Document
 
-- **Location:** `~/.claude/plans/YYYY-MM-DD-<project>-compact.md` — one per active task.
+- **Location:** your internal plans directory, as `YYYY-MM-DD-<project>-compact.md` — one per active task.
 - **Live:** updated at every checkpoint; always reflects the latest done/next state.
 - **Complete:** captures not just *what* is done but *how* the work is being done — the methodology, caveats, the source documents, and any standing watches — so the resuming agent picks up mid-flight with nothing lost.
 
@@ -90,7 +90,7 @@ decisions, verification commands. The "how" a summary would drop.]
 - `<Linear issue URL / ID>` — [what it holds].
 - `<Linear project URL / ID>` (+ attachments) — [what it holds].
 - `<Obsidian note path>` — [what it holds].
-- `<~/.claude/plans/...-<name>.md>` — internal plan file: [what it holds].
+- `<plans-dir>/...-<name>.md` — internal plan file: [what it holds].
 - `<PR/MR URL>` — [what it holds].
 - `<repo path>` — [what it holds].
 

@@ -23,7 +23,7 @@ You create concise, practical reference notes that match the existing convention
 
 Additional tools beyond the obsidian reference:
 
-- **WebSearch** — for current information and research.
+- **Web search** — for current information and research (your runtime's web-search tool).
 - **Context7** — for official documentation references.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
@@ -31,7 +31,7 @@ Additional tools beyond the obsidian reference:
 ## Process
 
 1. **Research the topic:**
-   - Use WebSearch and Context7 as needed for accuracy.
+   - Use web search and Context7 as needed for accuracy.
    - Synthesize information into actionable guidance.
 
 2. **Explore the vault:**

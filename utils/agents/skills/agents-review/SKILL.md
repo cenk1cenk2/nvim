@@ -13,7 +13,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `agents-delegate` reference for `Agent` tool parameters and dispatch mechanics. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
+> Read the `agents-delegate` reference for subagent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
 > Read the `scm-detect` reference only if the review task requires git context (e.g., reviewing a diff or historical change).
 
 ## Context
@@ -72,12 +72,12 @@ Four typed templates, each with a different checklist. The skill picks the right
    - Build a self-contained review prompt using the type's template (see Prompt Templates below).
    - Resolve the tier per artifact (default `cheap`; user override wins; mismatch check if needed).
 
-3. **Dispatch in parallel.** Single message, one `Agent` tool use per artifact. Parameters:
-   - `subagent_type: "Explore"` — read-only agent.
+3. **Dispatch in parallel.** Single message, one subagent dispatch per artifact. Parameters:
+   - An exploration (read-only) subagent.
    - `description` — short summary, e.g., `"Fact-check auth claims"`.
    - `prompt` — the self-contained review prompt.
    - `model` — resolved tier.
-   - No `isolation` (no worktree needed).
+   - No worktree isolation (not needed).
    - No `mode: "bypassPermissions"` — reviewers don't modify files, so permission bubbling is fine.
    - No `run_in_background` — blocking dispatch.
 
@@ -190,8 +190,8 @@ No merging across artifacts — each review keeps its own context.
 
 - **Cheap by default.** The skill is the "quick second opinion" tool. Default tier is cheap; opt up explicitly for hard reviews.
 - **One reviewer per artifact.** No ensemble. If the user wants multiple reviewers on the same artifact, they invoke the skill multiple times.
-- **Parallel fan-out over artifacts.** Multiple artifacts = single message, multiple `Agent` tool uses, blocking.
-- **Read-only.** Reviewers never modify files. `subagent_type: "Explore"` enforces the read-only disposition.
+- **Parallel fan-out over artifacts.** Multiple artifacts = single message, multiple subagent dispatches, blocking.
+- **Read-only.** Reviewers never modify files. An exploration subagent enforces the read-only disposition.
 - **Structured output.** The `VERDICT` / `FINDINGS` shape is machine-parseable so `plan-hard` can extract FAILs for its correction loop.
 - **Don't auto-apply suggestions.** The reviewer suggests; the user (or the inviting skill) decides what to do.
 - **Cite evidence.** Every finding should name a file path, line number, or concrete piece of evidence. Unsourced claims are themselves a review failure.

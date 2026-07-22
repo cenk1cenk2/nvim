@@ -1,6 +1,6 @@
 # Agent Delegation
 
-Shared logic for creating and dispatching subagents via the `Agent` tool (or other delegation mechanisms). Used by all `agents-*` skills.
+Shared logic for creating and dispatching subagents via your runtime's dispatch mechanism. Used by all `agents-*` skills.
 
 ## Agent Tool Parameters
 
@@ -29,7 +29,7 @@ Whatever the mechanism, the flow is the same: pick a tier from task complexity, 
 
 Agent tool calls are **foreground and blocking** by default — the lead's turn pauses until the agent returns, and the result comes back as a normal tool result in the same conversation turn. This is the preferred mode.
 
-**Parallel blocking dispatch:** To run multiple agents concurrently while still blocking the lead's turn, issue **multiple `Agent` tool uses in a single message**. They execute in parallel, and their results are delivered together when all complete. The lead's turn blocks until the slowest one returns. This is how `agents-plan` parallelises each DAG layer (in both team and fire-and-forget modes) without "dropping" the conversation into background mode.
+**Parallel blocking dispatch:** To run multiple agents concurrently while still blocking the lead's turn, issue **multiple subagent dispatches in a single message**. They execute in parallel, and their results are delivered together when all complete. The lead's turn blocks until the slowest one returns. This is how `agents-plan` parallelises each DAG layer (in both team and fire-and-forget modes) without "dropping" the conversation into background mode.
 
 **When to use `run_in_background: true`:** Only when the user explicitly asks for fire-and-forget behaviour, or when the lead must remain responsive to mid-execution messages from a long-running agent. Prefer blocking — it keeps the conversation coherent and the user never misses updates.
 
@@ -67,7 +67,7 @@ Before dispatching the agent:
 2. Is the tier right for the task? Is the concrete model resolved correctly for the target ecosystem?
 3. Are file boundaries explicit? No "and related files."
 4. Are verification commands included when the task modifies code?
-5. Is isolation right? `worktree` for file mods, omit for read-only.
+5. Is isolation right? Worktree isolation for file mods, omit for read-only.
 6. Is permission mode right? `bypassPermissions` only for fire-and-forget with user consent.
 
 ## Key Principles

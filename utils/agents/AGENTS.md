@@ -24,9 +24,9 @@
    - Treat more specific/nested instructions as applying to that area. If instructions conflict, surface the conflict and ask before proceeding.
    - **If no local instruction files exist, silently continue.**
 
-1. **READ MEMORY** - load repository context with `memory__read_graph` when available. Understand project structure, coding standards, past work, and ongoing tasks.
+1. **READ MEMORY** - consult memory for repository context when your runtime provides one. Understand project structure, coding standards, past work, and ongoing tasks.
 
-2. **DISCOVER TASK-RELEVANT TOOLS** - Use `tool_search` when you need tool capabilities that are not already visible in the active tool list. Prefer discovering only the categories needed for the task (for example `hyprpilot-nvim`, `context7`, or service-specific MCPs). If a tool is unavailable, silently continue with the best available option.
+2. **DISCOVER TASK-RELEVANT TOOLS** - Use your tool-discovery/search mechanism when you need tool capabilities that are not already visible in the active tool list. Prefer discovering only the categories needed for the task (for example `hyprpilot-nvim`, `context7`, or service-specific MCPs). If a tool is unavailable, silently continue with the best available option.
 
 3. **LOAD REPOSITORY NOTE** - If obsidian MCP is available, check for a repository note
    - Derive the note folder from the current working directory relative to `~/development/` (e.g., `~/development/laravel/cloud-app-operator/` → `Repositories/laravel/cloud-app-operator/`)
@@ -57,7 +57,7 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 
 ### Plan mode and `plan-hard` (genuinely complex work)
 
-Escalate to formal plan mode (`EnterPlanMode`) with the `plan-hard` skill when the work genuinely needs multi-file research and design decisions — changes across areas, architectural choices, significant refactors, or multiple valid approaches with real trade-offs. The threshold is design complexity, not file count: a delete-button needing a component + API call is straightforward; a 10-file auth refactor with trade-offs warrants it.
+Escalate to formal plan mode with the `plan-hard` skill when the work genuinely needs multi-file research and design decisions — changes across areas, architectural choices, significant refactors, or multiple valid approaches with real trade-offs. The threshold is design complexity, not file count: a delete-button needing a component + API call is straightforward; a 10-file auth refactor with trade-offs warrants it.
 
 - `plan-hard` walks the design tree branch by branch, self-answers from the codebase, and recommends an answer for every open question. Load via `hyprpilot://skills/plan-hard` unless the user asks for a lighter pass ("quick plan", "just outline it").
 - Stay in plan mode until the user signals implement (`implement`, `code it`, `go ahead`, `do it`, `g`, `go`, `y`, `yolo`) or requested `autopilot`.
@@ -77,7 +77,7 @@ Rules:
 - Resolve prerequisite skills recursively. If context identifies the prerequisite, load it automatically; if ambiguous, ask. `hyprpilot://skills/load-skills` defines dependency resolution.
 - Load references only when the skill body asks for them. Prefer `mcp__hyprpilot__load_skill_references { slug }`; references are progressive-disclosure context, not startup context.
 - When multiple skills are active, read their composition instructions and let them share context. Ask only when it is unclear which skill should own an action.
-- Never use the Claude Code built-in `Skill` tool for these custom hyprpilot skills.
+- Never use the runtime's own built-in skill tool for these custom hyprpilot skills.
 - Use `mcp__hyprpilot__reload` (or the `/hyprpilot-reload` skill) after editing skill source so the daemon refreshes its resource catalog.
 
 **Invocation tiers** — a skill's `disableModelInvocation` metadata (from `list_skills`) says whether you may load it yourself:
@@ -90,14 +90,14 @@ Rules:
 
 Skill source lives under `~/.config/nvim/utils/agents/skills/`. Use `hyprpilot://skills/config-skills` for skill authoring conventions; keep skill bodies lean, move repeated policy blocks into shared references, and use clear trigger/negative-trigger descriptions.
 
-### Claude Code Persistent Files
+### Persistent Agent Files
 
-Claude Code stores persistent agent files under `~/.claude/`. Do not rely on transcript internals during normal work; use memory, local instruction files, plans, and repository notes for durable context.
+Your runtime keeps persistent agent files in its own state directory. Do not rely on transcript internals during normal work; use memory, local instruction files, plans, and repository notes for durable context.
 
 Important locations:
 
-- `~/.claude/plans/` — all implementation plans across projects.
-- `~/.claude/projects/<sanitized-path>/CLAUDE.md` — project-specific instructions when present. The sanitized path is the absolute project path with `/` replaced by `-` and a leading `-`.
+- **Internal plans directory** — all implementation plans across projects live here; the concrete per-runtime path is in the `provider-paths` reference.
+- **Project-specific instructions** — some runtimes keep per-project instruction files in their state directory; read them when present.
 
 Only inspect session transcripts when the user explicitly asks to recover prior-session context (for example "what did we do last session?") or when memory/plan files are insufficient.
 
@@ -105,7 +105,7 @@ Only inspect session transcripts when the user explicitly asks to recover prior-
 
 When you write a plan (`plan-hard` and the other plan skills):
 
-- **Location:** always `~/.claude/plans/YYYY-MM-DD-<project>-<name>.md` — never in the project or working directory. `<project>` is the repo/dir name, short and hyphenated (e.g. `2026-07-13-nvim-config-refactor-plugins.md`).
+- **Location:** always your **internal plans directory** (concrete per-runtime paths in the `provider-paths` reference) — never in the project or working directory. Default filename `YYYY-MM-DD-<project>-<name>.md` (whatever the runtime writes is fine); `<project>` is the repo/dir name, short and hyphenated (e.g. `2026-07-13-nvim-config-refactor-plugins.md`).
 - **Contents:** context, requirements/acceptance criteria, approach and trade-offs, concrete steps with file/function targets, risks, and verification — specific enough that another agent can resume without rediscovery.
 - **Memory:** record the plan path, date, and a one-line summary; keep ~3 recent references.
 - **During implementation:** follow the plan but let verified discoveries improve it — a dated note for small changes, `hyprpilot://skills/plan-revise` for a direction change.
@@ -154,12 +154,12 @@ CLI commands are appropriate for local git, project scripts, tests, builds, form
 - If an expected file is missing, search for a rename, move, or consolidation before assuming it was never created. Ask only when the repository does not answer the question.
 - Match existing file conventions for formatting, imports, comments, tests, and structure.
 - For generated, vendored, or lock files, edit through the owning tool when possible.
-- For `.claude/` and `~/.claude/` paths, treat them as agent configuration/state and edit deliberately; plans still belong in `~/.claude/plans/`.
+- For your runtime's state/config directory, treat those paths as agent configuration/state and edit deliberately; plans still belong in your internal plans directory.
 - When showing code in the user's editor, ask before navigation unless the user explicitly requested it.
 
 ## V. CODE STYLE AND DESIGN
 
-These are language-shape preferences; apply them across Rust, TypeScript, Vue/Svelte, Go, Python, Java, and other languages while still matching the local project first.
+Language-shape preferences — apply across languages and frameworks, while matching the local project first.
 
 ### Style Defaults
 
@@ -168,13 +168,11 @@ These are language-shape preferences; apply them across Rust, TypeScript, Vue/Sv
 - Start YAML files with `---` unless the directory consistently does otherwise.
 - In multi-statement functions, leave a blank line before the final return when the language/style supports it. Single-statement functions and guard returns do not need the extra line.
 - **Match the surrounding comment style, or add none.** Before writing any comment, look at the neighboring code and mirror its density, tone, and format — including when that means no comments at all. Do not add comments/docstrings unless the surrounding file already uses them or the user asks.
-- **Never state the obvious — this is absolute.** A comment must explain *why* (a non-obvious constraint, trade-off, edge case, or gotcha), never restate *what* the code already says. `// increment i`, `// loop over users`, `// set the name` are noise; if a comment only paraphrases the line below it, delete it. Explain your changes to the user in chat, not in code comments.
+- **Never state the obvious — this is absolute.** A comment must explain *why* (a non-obvious constraint, trade-off, edge case, or gotcha), never restate *what* the code already says. A comment that names the operation its line already performs is noise; if it only paraphrases the line below it, delete it. Explain your changes to the user in chat, not in code comments.
 
 ### Naming
 
-Names should not repeat context already provided by their scope. Prefer `sandbox.resolve(path)` over `sandbox.resolve_sandbox_path(path)`, `useToasts().push()` over `useToasts().pushToast()`, and `<Modal dismissable />` over `<Modal modalDismissable />`.
-
-Keep the noun only when it is the real discriminator among similar operations (`setMode` vs. `setModel`). If a name stutters, rename the concept and update call sites rather than adding aliases.
+Names should not repeat context already provided by their scope — drop the qualifier the receiver, module, or component already implies (a `resolve` method on a `sandbox` needs no `sandbox` in its name). Keep the discriminating noun only when it is what actually distinguishes similar operations. If a name stutters, rename the concept and update call sites rather than adding aliases.
 
 ### Design Defaults
 
@@ -182,9 +180,21 @@ Keep the noun only when it is the real discriminator among similar operations (`
 - **Stubs fail loudly:** unfinished code should throw/error/panic with a clear message, never return fake success.
 - **Behavior lives with the owner:** helpers that operate on a type's state, handles, channels, or invariants should be methods/composable methods, not detached functions. Pure transformations can stay free.
 - **Carry invariants in objects:** if every call passes the same base/config/client, wrap it once and make methods use the validated state.
-- **Compose instead of bagging:** use slots, closures, render functions, callbacks, traits, or interfaces when consumers need behavior/rendering flexibility. Keep prop/config bags for uniform data.
+- **Compose instead of bagging:** when consumers need behavior or rendering flexibility, use the language's composition mechanism (closures, callbacks, interfaces, traits, slots, …). Keep config bags for uniform data.
 - **Inline single-use helpers:** extract only when there is a second caller or the abstraction clearly earns its name.
-- **Trait/interface for open sets, enum/union for closed sets:** use a shared one-method dispatch trait only when multiple non-trivial enum routers would otherwise repeat the same match shape.
+- **Polymorphism for open sets, unions for closed sets:** reach for a shared one-method abstraction only when multiple concrete branches would otherwise repeat the same dispatch shape.
+
+### Proactive Improvement
+
+Beyond the change you were asked for, watch for improvements the user didn't request and raise the worthwhile ones as short proposals — never act on them unprompted, never bury the main task under them. Worth flagging:
+
+- **Architectural friction** — a boundary in the wrong place, a dependency cycle, a leaky abstraction.
+- **Testability gaps** — untested critical paths, logic reachable only through heavy mocking.
+- **Consistency drift** — the same thing done three different ways.
+- **Dead code** — unreferenced exports, unreachable branches, obsolete flags.
+- **Clarity problems** — a function doing five things, a name that misleads.
+
+One or two high-value flags beat an exhaustive list. For a focused audit of these dimensions across an area or the whole repo, use the `code-improve` skill.
 
 ## VI. USER INTERACTION PATTERNS
 
@@ -279,12 +289,12 @@ Never guess technical details that come from outside the current repository: cal
 
 ### Memory Updates
 
-Update memory at meaningful milestones and immediately for breakthroughs that would change future decisions. Record durable facts only: architectural discoveries, corrected assumptions, project conventions, implementation strategies, and important user preferences. Avoid saving one-off or ambiguous observations.
+Memory here means whatever durable-memory mechanism your runtime brings — each agent provides its own; use it when available, skip when there is none. Update memory at meaningful milestones and immediately for breakthroughs that would change future decisions. Record durable facts only: architectural discoveries, corrected assumptions, project conventions, implementation strategies, and important user preferences. Avoid saving one-off or ambiguous observations.
 
 Scope observations appropriately:
 
-- Project facts go on the project entity.
-- Cross-project preferences or language conventions go on a general entity such as `Coding-Style`.
+- Project facts stay scoped to the project.
+- Cross-project preferences or language conventions go under a general scope (e.g. coding style).
 
 ### Knowledge Base Updates
 
@@ -356,7 +366,7 @@ When rules appear to conflict, follow this priority order:
    - Example: User says "skip plan mode" for complex task
    - Response: "I notice this task involves [reasons why plan mode would help]. The guidelines recommend plan mode for this. Would you like me to proceed without planning, or would a quick plan be helpful?"
    - Wait for confirmation before proceeding against guidelines
-3. **Default to discussion before implementation** — never start editing code without an explicit signal (proceed words, full step-by-step instructions, or a trivial-scope task). When unsure, ask. ExitPlanMode requires unambiguous user approval.
+3. **Default to discussion before implementation** — never start editing code without an explicit signal (proceed words, full step-by-step instructions, or a trivial-scope task). When unsure, ask. Exiting plan mode requires unambiguous user approval.
 4. **Load the covering skill, then use the best available tool** — when a catalog skill covers the task (especially external/MCP operations), load and follow it before acting (§II absolute rule); otherwise prefer purpose-built tools, and use CLI for local shell/git/test/build work
 5. **Follow coding style** (match project patterns)
 6. **Update durable context** (memory, plans, and repository guidance when appropriate)
