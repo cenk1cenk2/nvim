@@ -31,7 +31,6 @@ function M.config()
       -- per-tool policy.
       require("hyprpilot.mcp.lsp").register_all()
       require("hyprpilot.mcp.editor").register_all()
-      require("hyprpilot.mcp.open").register_all()
 
       if vim.v.servername == nil or vim.v.servername == "" then
         log:warn("hyprpilot: v:servername is empty — MCP bridge will not connect")
