@@ -49,7 +49,6 @@ local plugins = {
   "avante-nvim",
   "mcphub-nvim",
   "code-companion-nvim",
-  "hyprpilot-nvim",
   "aerial-nvim",
   "nvim-treesitter-textobjects",
   "nvim-treesitter-context",
