@@ -12,7 +12,7 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 - If no template exists, write a fresh description following the format below.
 - Analyze the diff for **logical changes only** — what behavior was added, removed, or changed.
 - Do NOT list changed files, line counts, or mechanical details.
-- If the PR/MR links Linear issues, add or preserve body trailers using `commit-trailers`: `closes <ID>` only for issues this PR/MR fully resolves, `refs <ID>` for partial or related work.
+- If the PR/MR links Linear issues, add or preserve body trailers using `commit-trailers`: default to `closes <ID>` when this PR/MR resolves the issue and nothing else is pending (so it auto-closes on merge); use `refs <ID>` only for genuinely partial or related work.
 
 ## Draft the title
 

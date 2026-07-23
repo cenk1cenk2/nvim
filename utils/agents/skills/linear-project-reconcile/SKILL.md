@@ -40,6 +40,7 @@ Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). Whe
    - **Label consistency** — do all issues have appropriate labels? Are labels consistent across the project?
    - **Priority correctness** — apply the blocking-priority rule: issues that block others should generally have equal or higher priority than the issues they block. Flag violations.
    - **Blocking relations** — are dependency chains correct? Are there missing `blocks`/`blockedBy` relations? Are there stale relations to issues that are already done?
+   - **Parent / sub-issue structure** — resolve each issue's parent and its sub-issues. Are issues that should be sub-issues of a parent (or a parent that should own them) actually linked? Flag orphaned sub-issues, a parent missing children, and wrong or missing `parentId` links. This is the most-missed relation — check it explicitly every time.
    - **Description freshness** — flag issues whose descriptions are clearly outdated or no longer match the current approach. Use the `updatedAt` timestamp as evidence.
 5. **Build a change report** organized by category:
    - **Project-level changes** (description, status, labels, initiative, milestone).

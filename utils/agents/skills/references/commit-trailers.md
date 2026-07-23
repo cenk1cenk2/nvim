@@ -19,13 +19,17 @@ Trailers go in the commit footer — separated from the body by a blank line. On
 
 | Trailer | When to use |
 |---------|-------------|
-| `refs` | Link or contribute without closing — partial progress, one commit/PR/MR in a multi-deliverable issue, related work, or unclear completion intent. |
-| `closes` | The commit/PR/MR is the single or final deliverable that should close the issue when merged. |
+| `closes` | **Default.** This commit/PR/MR resolves the issue and nothing else is pending on it — let it auto-close on merge. |
+| `refs` | Only when the work is genuinely partial — one of several deliverables, related work, or the issue is still waiting on something after this merges. |
+
+**Default to `closes` (autoclose) — same rule for Linear, GitHub, and GitLab issue links.** If this commit/PR/MR completes the issue's work and nothing else is waiting on the issue, use a closing keyword (`closes`) so the issue auto-closes on merge — do NOT fall back to `refs`/reference-only just because closing intent wasn't spelled out.
+
+**Defer `closes` to the final deliverable.** If additional work, PRs/MRs, or steps are still needed before the issue can actually close, use `refs` (or reference-only) on this one and put the closing keyword ONLY on the last piece that completes it. Never put `closes` on a commit/PR/MR that isn't the final thing — that closes the issue early. Reach for `refs` whenever there is genuinely more to do: another PR/MR pending, a follow-up step, or an explicit hold/wait.
 
 For Linear IDs, choose the trailer from the delivery shape:
 
-- Use `closes <Linear-id>` when this commit, PR, or MR is expected to fully resolve and close the issue after merge.
-- Use `refs <Linear-id>` when the change only contributes to the issue, several PRs/MRs are needed and this is not the final one, or closing intent is unclear.
+- **Default:** `closes <Linear-id>` — this commit/PR/MR fully resolves the issue and nothing else is pending.
+- Use `refs <Linear-id>` only when the change is one of several deliverables (this is not the final one) or the issue still has open work after this merges.
 - Single PR/MR completing one issue → `closes K-123`.
 - Multiple PRs/MRs for one issue → non-final PRs/MRs use `refs K-123`; only the final completing PR/MR uses `closes K-123`.
 - One PR/MR can close multiple independent issues by including one `closes <ID>` trailer per closed issue.
@@ -101,16 +105,18 @@ Case-insensitive. Can be followed by a colon: `closes: #10`.
 
 ### Referencing Without Closing
 
-Mention `#NUMBER` in the body without a closing keyword — GitHub auto-links it.
+Mention `#NUMBER` in the body without a closing keyword — GitHub auto-links it. GitHub has NO dedicated `refs` / `references` keyword: a bare `#N` (optionally after a phrase like "part of") links but never closes; only the closing keywords above close.
+
+Follow the **Refs vs Closes** default above: use a closing keyword (`closes #N`) by default when this PR resolves the issue and nothing else is pending; reference-only (a bare `#N`) when the work is partial — deferring the closing keyword to the final PR.
 
 ### Trailer Format
 
 ```
 closes #42
-refs #17
+#17
 ```
 
-Fetch issue context via `github__issue_read` or `github__pull_request_read`.
+(`#17` is reference-only — links, does not close.) Fetch issue context via `github__issue_read` or `github__pull_request_read`.
 
 ## GitLab
 
@@ -134,6 +140,8 @@ Case-insensitive.
 ### Referencing Without Closing
 
 `related to #5` — marks as related but does not close.
+
+Follow the **Refs vs Closes** default above: use a closing keyword (`closes #N`) by default when this MR resolves the issue and nothing else is pending; `related to #N` when the work is partial — deferring the closing keyword to the final MR.
 
 ### Trailer Format
 

@@ -64,12 +64,13 @@ Agent prompts must be self-contained. Use an extended handoff shape:
 - Owned files or owned area.
 - Relevant prior decisions, deviations, and constraints.
 - Verification commands.
-- Commit trailer expectations (`refs K-123` for partial work, `closes K-123` for the single/final deliverable that fully resolves the issue).
+- Commit trailer expectations: default to `closes K-123` when the PR/MR resolves the issue and nothing else is pending (so it auto-closes on merge); use `refs K-123` only for partial work or when the issue is still waiting on something.
 - Expected report format: status, changed behavior, verification evidence, PR/MR readiness, deviations, findings, and blockers.
 
 ## Linear State and Documentation
 
 - Move each picked-up issue to `In Progress` before implementation starts, respecting `linear-state-transitions`.
+- Reconcile the issue's relations on pickup and again at wrap-up: resolve its parent and sub-issues (plus `blocks`/`blockedBy`) so ordering and completion aren't missed — parent/sub-issue links are the most-missed part. Flag or fix gaps per `linear-document-handling`.
 - Use `linear-issue-status` for explicit or situational status changes outside the automatic pickup/PR/MR triggers.
 - When an issue reaches `In Review` or `Done`, always try checklist reconciliation with `linear-issue-checklist`.
 - In autonomous agent workflows, comment on the issue by default when there are deviations, decisions, blockers, findings, reviewer-driven scope changes, or non-obvious implementation notes. Keep comments short and factual.

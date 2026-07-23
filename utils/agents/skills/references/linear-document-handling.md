@@ -24,3 +24,12 @@ When the type is unclear, treat it as external (read-only) and ask.
 
 - **Read mode:** glimpse → summarize what's relevant → flag stale/contradicted docs with their timestamps → recommend (don't perform) any follow-up edits.
 - **Update mode:** glimpse → classify each document → for plan-like ones, propose edits that reflect the agreed conversation → get agreement → write. Leave external docs untouched unless told otherwise.
+
+## Also Reconcile Relations
+
+Reading or reconciling a Linear issue or project is not only about descriptions and documents — check the **relations**, which are the most-missed part:
+
+- **Parent / sub-issue structure** — resolve the issue's parent and its sub-issues. Flag orphaned sub-issues, a parent missing children, and wrong or missing `parentId` links. This is missed a lot — check it explicitly every time you read or reconcile.
+- **Blocks / blockedBy** — resolve dependency relations; flag missing or stale ones.
+
+Surface relation gaps the same way you surface doc drift: recommend in read mode; propose-then-write (with agreement) in update mode.
