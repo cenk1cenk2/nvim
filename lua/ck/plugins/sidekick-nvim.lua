@@ -344,7 +344,6 @@ function M.instance_config()
   return {
     cmd = {
       "hyprpilot",
-      "spawn",
       "--with-config",
       "@" .. vim.json.encode({
         mcps = {
