@@ -19,23 +19,6 @@ function M.config()
       ---@type hyprpilot.Config
       return {
         -- log_level = vim.log.levels.DEBUG,
-        with_config = {
-          {
-            mcps = {
-              {
-                mcpServers = {
-                  ["hyprpilot-nvim"] = {
-                    command = "uvx",
-                    args = { "hyprpilot-nvim-mcp@latest" },
-                    env = {
-                      NVIM_LISTEN_ADDRESS = vim.v.servername,
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
       }
     end,
     on_setup = function(c)
