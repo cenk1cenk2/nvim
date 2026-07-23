@@ -45,14 +45,12 @@ references:
 2. **Fetch PR details.**
    - Use `github__pull_request_read` (method: `get`) to fetch the PR metadata.
    - Extract: title, URL, description/body.
-   - Use `github__pull_request_read` (method: `get_comments`) to fetch PR comments.
-   - Use `github__pull_request_read` (method: `get_review_comments`) to fetch review threads.
+   - Use `github__pull_request_read` (method: `get_comments`) to fetch PR comments (for an infra/Spacelift source, if any).
 
 3. **Analyze PR context.**
    - **PR description** — extract the core intent (what changed and why).
    - **Infrastructure impact** — scan PR comments for Spacelift reports or infrastructure analysis (look for headings like "Spacelift Infrastructure Impact Report", "Overview", stack tables, or resource change summaries). Extract: number of stacks affected, total resource counts (+/~/−), and the 1-2 sentence overview.
-   - **Review threads** — scan review comments for unresolved threads or threads with unresolved decisions. Summarize any blocking or open items (e.g., "1 unresolved thread: security concern on IAM policy scope").
-   - If no comments or reviews exist, skip these sections.
+   - If no infra source is present, skip it.
 
 4. **Compose the summary (default).**
    - **Default: title + description.** Every post carries a short title stating what was done, followed by an extended description of the goal.
@@ -67,7 +65,6 @@ references:
      - Follow with a paragraph explaining the core intended change and its effect (e.g., what the tunnel cutover does, what service replaces what).
      - Then a paragraph covering module-bump or incidental side effects — new resources added, secrets recreated, addon version bumps, AMI refreshes. Name specific resources, versions, and values so the reviewer understands the blast radius without opening the PR.
      - Use Slack mrkdwn: backticks for resource names, service URLs, versions, and AMIs. Italics (`_text_`) for the delta line.
-   - If unresolved review threads exist, append a one-line note (e.g., "1 unresolved review thread.").
    - **Title-only (very rare, on request).** Only when the user explicitly asks for just the link (e.g. "title only", "no summary", or a bulk wave rollout where they want minimal noise), post the bare title line `{pr_url} :review:` and skip the summary. This is the exception, not the default.
    - **Composing with `*-pr-comment`** — if this skill is being used alongside `github-pr-comment` or `gitlab-mr-comment`, also output a `## Review Request` section containing the formatted Slack review request message (from Step 5). This section will be included in the PR/MR comment by the `*-pr-comment` skill. The Slack message is still posted separately to Slack — the `## Review Request` section is additional output for the PR/MR comment, not a replacement.
 
@@ -83,10 +80,8 @@ references:
      {extended_description}
 
      {infrastructure_line}
-
-     {review_notes_line}
      ```
-   - Omit the infrastructure and review lines if not applicable.
+   - Omit the infrastructure line if not applicable.
    - **Title-only (very rare, on request):** the entire message is just the review line `{pr_url} :review:`.
    - Example (default — title + one-line goal + source footer):
      ```
