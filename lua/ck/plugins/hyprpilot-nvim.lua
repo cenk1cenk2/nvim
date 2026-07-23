@@ -24,13 +24,11 @@ function M.config()
     on_setup = function(c)
       require("hyprpilot").setup(c)
 
-      -- Register built-in MCP tool categories so the daemon-side
-      -- agent (Claude / opencode / ...) can call into our live LSP,
-      -- editor state, and `vim.ui.open` through the `hyprpilot-nvim`
-      -- MCP bridge. Daemon-side profile allow / deny lists gate
-      -- per-tool policy.
-      require("hyprpilot.mcp.lsp").register_all()
-      require("hyprpilot.mcp.editor").register_all()
+      require("hyprpilot.mcp.lsp").register()
+      require("hyprpilot.mcp.editor").register({
+        disabled_filetypes = nvim.disabled_filetypes,
+        disabled_buffer_types = nvim.disabled_buffer_types,
+      })
 
       if vim.v.servername == nil or vim.v.servername == "" then
         log:warn("hyprpilot: v:servername is empty — MCP bridge will not connect")
