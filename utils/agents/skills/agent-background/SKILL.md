@@ -1,6 +1,6 @@
 ---
 name: agent-background
-description: agent-background Run a background wait-loop that polls an external condition and re-invokes the session once, when the condition is met — instead of ending the turn to ask the user to ping, or sleeping one cycle at a time. Use when waiting on async state the harness cannot notify you about — a PR/MR merge, a CI or pipeline run, a deploy, a remote queue, a job, or a human approval/apply. Do NOT use to poll background Agent/Workflow work you started (the harness re-invokes you automatically), and do NOT use for self-paced loop iteration (use /loop with ScheduleWakeup).
+description: 'agent-background Arm a background wait-loop that polls an external condition (PR/MR merge, CI or deploy run, human approval) and re-invokes the session once when it is met, instead of sleeping or asking the user to ping. Do NOT use to poll background Agent/Workflow work you started (the harness re-invokes automatically) or for self-paced loop iteration (use /loop).'
 references:
   - ../references/present-first.md
 ---

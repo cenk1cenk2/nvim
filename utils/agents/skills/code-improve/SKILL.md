@@ -1,6 +1,6 @@
 ---
 name: code-improve
-description: code-improve Audit a codebase (or a scoped area) to surface architectural, testability, consistency, and clarity improvements. Fans out parallel subagents across audit dimensions and returns a ranked shortlist with one-line reasoning, optionally drilling into picks with parallel design alternatives. Use when user says "code improve", "improve the codebase", "audit this codebase", "find improvements", "suggest refactors", or "find refactoring opportunities". Do NOT use for reviewing a specific PR/branch (use /code-review-branch or /code-review-changes), single-file cleanup (edit directly), or building a plan from a pick (use /plan-hard).
+description: 'code-improve Audit a codebase or scoped area for architectural, testability, consistency, and clarity improvements; fans out parallel subagents and returns a ranked shortlist, optionally drilling into picks. Use on "improve the codebase", "audit this codebase", "find refactors". Do NOT use for reviewing a PR/branch (/code-review-branch, /code-review-changes), single-file cleanup (edit directly), or planning a pick (/plan-hard).'
 disable-model-invocation: true
 references:
   - ../references/present-first.md

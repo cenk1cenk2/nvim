@@ -1,6 +1,6 @@
 ---
 name: linear-issue-pickup
-description: linear-issue-pickup Pick up one or more Linear issues and prepare them for implementation — fetch issue details, comments, relations, project documents, blockers, and repo context, then wait for an explicit go before writing code. Use when user says "pick up K-123", "work on this issue", "start CLOUD-45", "work these issues", or provides issue URLs. Do NOT use for read-only issue refreshes (linear-issue-read) or choosing the next task (linear-next-task).
+description: 'linear-issue-pickup Pick up one or more Linear issues and prep them for implementation - fetch details, comments, relations, docs, and repo context, then wait for an explicit go. Triggers: "pick up K-123", "work on this issue", issue URLs. Do NOT use for read-only refreshes (linear-issue-read) or choosing the next task (linear-next-task).'
 argument-hint: "[issue id(s) or URL(s)]"
 references:
   - ../references/linear-prerequisite.md

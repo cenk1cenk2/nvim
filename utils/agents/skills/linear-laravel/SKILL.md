@@ -1,6 +1,6 @@
 ---
 name: linear-laravel
-description: "linear-laravel Initialize a Linear session for the Laravel workspace using GitHub as SCM. Auto-invoked when Laravel Linear context is detected (e.g., issue IDs like CLOUD-xxx, Laravel workspace URLs, GitHub Laravel organization repositories)."
+description: 'linear-laravel Initialize a Linear session for the Laravel workspace with GitHub as SCM. Auto-invoked on Laravel context: CLOUD-xxx issue IDs, Laravel workspace URLs, GitHub Laravel org repos.'
 references:
   - ../references/present-first.md
 ---

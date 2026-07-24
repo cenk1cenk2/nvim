@@ -1,6 +1,6 @@
 ---
 name: config-repository
-description: config-repository Create or revise repository knowledge base files (CLAUDE.md, AGENTS.md, or .local variants). Use when user says "update CLAUDE.md", "create AGENTS.md", "write repo knowledge base", "document decisions", or "snapshot this session" — OR when the assistant detects new durable conventions, dead ends, or rule drift during a session (see AGENTS.md §VII "Knowledge Base Updates (Proactive)"). Do NOT use for the central AGENTS.md guidelines (/config-agents), skills (/config-skills), or MCP server configs (/config-mcp).
+description: 'config-repository Create or revise repo knowledge base files (CLAUDE.md, AGENTS.md, .local variants). Triggers: "update CLAUDE.md", "create AGENTS.md", "document decisions", or detected durable conventions/rule drift mid-session. Do NOT use for the central AGENTS.md guidelines (config-agents), skills (config-skills), or MCP configs (config-mcp).'
 disable-model-invocation: false
 references:
   - ../references/present-first.md

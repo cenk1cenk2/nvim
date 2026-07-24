@@ -1,6 +1,6 @@
 ---
 name: agent-bulldozer
-description: agent-bulldozer Push-through work mode — drive the work forward relentlessly until told to stop. Always have the next action queued, never idle on a blocking wait (arm a watcher instead), prep follow-on work speculatively, and report momentum tersely each turn. Invoking it is the user's standing blessing to keep pushing autonomously; hard stops (destructive actions, credentials, unapproved external writes) still apply. Use when user says "bulldoze", "bulldozer mode", "push through", "keep pushing", "keep going until done", "prep ahead until I stop you", or invokes /agent-bulldozer. Do NOT use for the default investigate-discuss-wait posture, and not for one-off tasks that finish in a single step.
+description: 'agent-bulldozer Push-through mode: drive work forward autonomously until told to stop - always queue the next action, never idle on blocking waits (arm a watcher), report momentum tersely. Hard stops (destructive actions, credentials) still apply. Use on "bulldoze", "push through", "keep going until done". Do NOT use for the default investigate-discuss-wait posture or one-step tasks.'
 disable-model-invocation: true
 argument-hint: "[scope of the push]"
 references:

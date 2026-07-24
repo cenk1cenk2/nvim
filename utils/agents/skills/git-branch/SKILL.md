@@ -1,6 +1,6 @@
 ---
 name: git-branch
-description: git-branch Create a new git branch following repository naming conventions. Use when user says "create a branch", "new branch", "branch off", "start a branch", "make a branch", or "cut a branch". Discovers the repo's prefix convention, fast-forwards the default branch, creates the new branch from it, and switches to it. Do NOT use for commits (git-commit), conflict resolution (git-conflict), pulling reference changes (code-pull), or PRs (github-pr-create, gitlab-mr-create).
+description: 'git-branch Create a new git branch following repo naming conventions; fast-forwards the default branch, branches off it, and switches. Triggers: "create/new/cut a branch", "branch off". Do NOT use for commits (git-commit), conflicts (git-conflict), pulling reference changes (code-pull), or PRs/MRs (github-pr-create, gitlab-mr-create).'
 argument-hint: "[optional: branch name, prefix, or base branch]"
 references:
   - ../references/present-first.md

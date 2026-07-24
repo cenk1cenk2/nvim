@@ -1,6 +1,6 @@
 ---
 name: argocd-kilic
-description: argocd-kilic Operate ArgoCD interactively — rollover deployments, refresh external secrets, fetch logs, investigate sync errors, sync apps, and browse resources. Use when user says "use argocd mcp for", "rollover deployments", "refresh external secret", "check argocd", "sync the app", or "get logs from argocd". Do NOT use for creating ArgoCD workload configs (/argocd-kilic-workload) or MCP server setup (/config-mcp).
+description: 'argocd-kilic Operate ArgoCD interactively - rollover deployments, refresh external secrets, sync apps, fetch logs, investigate sync errors, browse resources. Use on "check argocd", "sync the app", "rollover deployments". Do NOT use for creating ArgoCD workload configs (/argocd-kilic-workload) or MCP server setup (/config-mcp).'
 references:
   - ../references/present-first.md
 disable-model-invocation: true

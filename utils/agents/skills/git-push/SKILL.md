@@ -1,6 +1,6 @@
 ---
 name: git-push
-description: git-push Push the current branch to remote. Use when user says "push", "git push", "push this branch", "push my commits", or "push to origin". Verifies local state, reports what will be pushed, and pushes immediately (no extra approval — invoking the skill is the approval). Asks only on real blockers (diverged, behind, force, protected branches). Do NOT use for committing (git-commit), branch creation (git-branch), or opening PRs (github-pr-create, gitlab-mr-create).
+description: 'git-push Push the current branch to remote immediately (invoking is the approval); asks only on real blockers (diverged, behind, force, protected). Triggers: "push", "git push", "push to origin". Do NOT use for committing (git-commit), branch creation (git-branch), or opening PRs (github-pr-create, gitlab-mr-create).'
 argument-hint: "[optional: remote name or safety flag — e.g., 'upstream', '--force-with-lease']"
 references:
   - ../references/present-first.md

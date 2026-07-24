@@ -1,6 +1,6 @@
 ---
 name: notion-pull
-description: "notion-pull Pull a Notion page into the current editor as markdown. Use when user says 'pull from Notion', 'fetch Notion page', 'import from Notion', or provides a Notion URL to pull. Converts title to # heading and metadata to frontmatter. Do NOT use for pushing (notion-push) or session init (notion-laravel)."
+description: 'notion-pull Pull a Notion page into the current editor as markdown (title to # heading, metadata to frontmatter). Triggers: "pull from Notion", a Notion URL to pull. Do NOT use for pushing (notion-push) or session init (notion-laravel).'
 disable-model-invocation: true
 argument-hint: "[notion-url or search description]"
 references:

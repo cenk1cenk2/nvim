@@ -1,6 +1,6 @@
 ---
 name: copywriter
-description: "copywriter Clean up text in the current buffer — fix typos, grammar, punctuation, and markdown formatting while preserving meaning and tone. Use when user says 'clean up this text', 'fix my writing', 'copywrite this', 'proofread', or 'fix typos'. Do NOT use for code editing or refactoring."
+description: 'copywriter Clean up text in the current buffer - fix typos, grammar, punctuation, and markdown formatting while preserving meaning and tone. Triggers: "clean up this text", "proofread", "fix typos". Do NOT use for code editing or refactoring.'
 references:
   - ../references/present-first.md
 disable-model-invocation: true

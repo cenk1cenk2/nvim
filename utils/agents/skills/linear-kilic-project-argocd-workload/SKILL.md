@@ -1,6 +1,6 @@
 ---
 name: linear-kilic-project-argocd-workload
-description: linear-kilic-project-argocd-workload Create a Linear project for deploying application workloads to Kubernetes clusters via ArgoCD. Use when user says "deploy my-app", "add a workload", or "deploy this service to the cluster". Do NOT use for system components (linear-kilic-project-argocd-system) or generic projects (linear-project-create).
+description: 'linear-kilic-project-argocd-workload Create a Linear project for deploying application workloads to Kubernetes via ArgoCD. Triggers: "deploy my-app", "add a workload". Do NOT use for system components (linear-kilic-project-argocd-system) or generic projects (linear-project-create).'
 references:
   - ../references/present-first.md
   - ../references/output-diff.md

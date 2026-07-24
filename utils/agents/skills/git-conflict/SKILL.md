@@ -1,6 +1,6 @@
 ---
 name: git-conflict
-description: git-conflict Resolve git merge conflicts interactively. Use when user says "resolve conflicts", "fix merge conflicts", "there are conflicts", "help with rebase conflicts", or when git status shows unmerged paths. Detects conflicting files, analyzes each conflict, resolves clear cases autonomously, and asks the user for ambiguous or important conflicts. Do NOT use for general git operations (use the `git` CLI directly).
+description: 'git-conflict Resolve git merge conflicts interactively - resolves clear cases autonomously, asks on ambiguous ones. Triggers: "resolve conflicts", "fix merge conflicts", unmerged paths in git status. Do NOT use for general git operations (use the git CLI directly).'
 references:
   - ../references/present-first.md
   - ../references/scm-detect.md

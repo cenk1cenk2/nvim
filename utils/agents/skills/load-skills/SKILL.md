@@ -1,6 +1,6 @@
 ---
 name: load-skills
-description: load-skills Resolve skill dependencies and chain or auto-invoke prerequisite skills based on context. Background knowledge the agent reads to understand cross-loading — not a user action. Read it when a skill declares prerequisites or when multiple skills are active together. Do NOT invoke it to perform a task.
+description: 'load-skills Background knowledge on resolving skill dependencies and chaining or auto-invoking prerequisite skills - read when a skill declares prerequisites or multiple skills are active together. Not a user action; do NOT invoke to perform a task.'
 ---
 
 ## Skill Cross-Loading

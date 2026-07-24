@@ -1,6 +1,6 @@
 ---
 name: spacelift-laravel
-description: "spacelift-laravel Initialize a Spacelift session for the Laravel workspace. Auto-invoked when Spacelift context is detected (e.g., Spacelift URLs, stack names, references to Spacelift runs or infrastructure deployments in Laravel workspace context). Do NOT use for ArgoCD operations (argocd-kilic)."
+description: 'spacelift-laravel Initialize a Spacelift session for the Laravel workspace. Auto-invoked on Spacelift context (Spacelift URLs, stack names, run references). Do NOT use for ArgoCD operations (argocd-kilic).'
 references:
   - ../references/present-first.md
 ---

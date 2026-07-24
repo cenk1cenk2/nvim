@@ -1,6 +1,6 @@
 ---
 name: plan-pickup
-description: plan-pickup Load and execute a plan file from a previous session. Use when user says "pick up this plan", "load the plan", "continue from this plan file", "apply the plan from", or "resume the plan". Do NOT use for creating plans (use /plan-handoff).
+description: 'plan-pickup Load and execute a plan file from a previous session. Triggers: "pick up this plan", "load the plan", "resume the plan". Do NOT use for creating plans (/plan-handoff).'
 disable-model-invocation: true
 argument-hint: "[plan-file-path or plan-name]"
 references:

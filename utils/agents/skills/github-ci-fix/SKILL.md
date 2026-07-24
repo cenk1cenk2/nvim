@@ -1,6 +1,6 @@
 ---
 name: github-ci-fix
-description: github-ci-fix Diagnose failing CI actions on the current branch, research errors, and propose fixes. Use when user says "CI is failing", "fix the GitHub Actions", "why is the check red", or "debug the workflow". Do NOT use for creating/updating workflows (github-ci-create), GitLab failures (gitlab-ci-fix), or PR descriptions (github-pr-create).
+description: 'github-ci-fix Diagnose failing GitHub Actions on the current branch, research errors, and propose fixes. Triggers: "CI is failing", "why is the check red", "debug the workflow". Do NOT use for creating/updating workflows (github-ci-create), GitLab failures (gitlab-ci-fix), or PR descriptions (github-pr-create).'
 disable-model-invocation: true
 references:
   - ../references/scm-ci-fix.md

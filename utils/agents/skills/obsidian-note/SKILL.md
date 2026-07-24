@@ -1,6 +1,6 @@
 ---
 name: obsidian-note
-description: obsidian-note Create structured notes in Obsidian vault following existing patterns and conventions. Use when user says "create a note", "document this", "write it up in Obsidian", or "save this to my vault". Do NOT use for repository docs (obsidian-repository), quick todos (obsidian-todo), or triaging notes (obsidian-triage).
+description: 'obsidian-note Create structured notes in the Obsidian vault following existing conventions. Triggers: "create a note", "write it up in Obsidian". Do NOT use for repo docs (obsidian-repository), quick todos (obsidian-todo), or triage (obsidian-triage).'
 disable-model-invocation: true
 argument-hint: "[topic or description]"
 references:

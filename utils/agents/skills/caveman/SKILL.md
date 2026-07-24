@@ -1,6 +1,6 @@
 ---
 name: caveman
-description: 'caveman Ultra-compressed, action-first communication mode. Cuts token usage ~75% by speaking like caveman while keeping full technical accuracy — lead with action, number steps, show progress. Supports intensity levels: full (default), ultra. Use when user says "caveman mode", "talk like caveman", "use caveman", "less tokens", "be brief", or invokes /caveman.'
+description: 'caveman Ultra-compressed, action-first communication mode - cuts token usage ~75% while keeping full technical accuracy; intensity levels full (default) and ultra. Use on "caveman mode", "be brief", "less tokens".'
 disable-model-invocation: true
 argument-hint: "[full|ultra]"
 ---

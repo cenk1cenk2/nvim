@@ -1,6 +1,6 @@
 ---
 name: agents-plan
-description: agents-plan Plan work and execute it across agents using a dependency-aware DAG scheduler. Builds layers from task `depends_on` declarations plus file-overlap verification; runs each layer in parallel, pauses between layers for review and user guidance. Default mode is "team" (lead orchestrates, permissions bubble up); "fire-and-forget" mode opts into autonomous execution with bypass permissions. Use when user says "agents-plan", "run these tasks", "execute this plan", "run in parallel", "split into agents", "sequential agents", "create a team", "fire and forget", "agents-parallel", "agents-sequential". Do NOT use for single-task one-shot delegation (use /agents-delegate).
+description: 'agents-plan Plan and execute multi-task work across agents via a dependency-aware DAG scheduler; layers run in parallel with review pauses between them. Modes: "team" (default, lead orchestrates) or "fire-and-forget" (autonomous, bypass permissions). Use on "agents-plan", "run these tasks in parallel", "fire and forget". Do NOT use for single-task delegation (use /agents-delegate).'
 disable-model-invocation: true
 argument-hint: "[plan file or goal] [optional: 'fire' | 'fire-and-forget' | 'without worktrees' | 'per-task review' | 'final-only review']"
 references:

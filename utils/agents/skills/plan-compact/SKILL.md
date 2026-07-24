@@ -1,6 +1,6 @@
 ---
 name: plan-compact
-description: plan-compact Keep a compaction-resilient working anchor during a long in-session task. Activated explicitly once, it then automatically checkpoints progress — the task, methodology, caveats, source documents, and standing watches (e.g. PRs/CI being monitored) — cross-checks those sources for drift and flags inconsistencies before a compaction, and the moment the context is compacted reconciles from the anchor and every source it lists before doing anything else, then resumes the exact task. Use when user says "plan compact", "keep a working anchor", "stay compaction-safe", or "track this so we survive compaction". Do NOT use for cross-session or cross-repo handoff (use /plan-handoff), building a new plan (use /plan-hard), or loading an existing plan file (use /plan-pickup).
+description: 'plan-compact Keep a compaction-resilient working anchor for a long in-session task - checkpoints progress, sources, and standing watches, then reconciles from them and resumes after compaction. Triggers: "plan compact", "stay compaction-safe". Do NOT use for cross-session handoff (/plan-handoff), new plans (/plan-hard), or loading plan files (/plan-pickup).'
 disable-model-invocation: true
 argument-hint: "[optional task note]"
 references:

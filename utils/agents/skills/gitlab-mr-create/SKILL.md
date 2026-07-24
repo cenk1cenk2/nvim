@@ -1,6 +1,6 @@
 ---
 name: gitlab-mr-create
-description: gitlab-mr-create Analyze and write GitLab merge request titles and descriptions. Use when user says "write an MR description", "create an MR", "improve the MR", or "describe what this branch does". Do NOT use for GitHub PRs (github-pr-create), CI pipelines (gitlab-ci-create), or CI failures (gitlab-ci-fix).
+description: 'gitlab-mr-create Analyze and write GitLab MR titles and descriptions. Use for "write an MR description", "create an MR", "improve the MR". Do NOT use for GitHub PRs (github-pr-create) or CI pipelines/failures (gitlab-ci-create, gitlab-ci-fix).'
 references:
   - ../references/present-first.md
   - ../references/scm-create-description.md

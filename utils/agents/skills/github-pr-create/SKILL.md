@@ -1,6 +1,6 @@
 ---
 name: github-pr-create
-description: github-pr-create Analyze and write GitHub pull request titles and descriptions. Use when user says "write a PR description", "create a PR", "improve the PR", or "describe what this branch does". Do NOT use for GitLab MRs (gitlab-mr-create), CI workflows (github-ci-create), or CI failures (github-ci-fix).
+description: 'github-pr-create Analyze and write GitHub PR titles and descriptions. Use for "write a PR description", "create a PR", "improve the PR". Do NOT use for GitLab MRs (gitlab-mr-create) or CI workflows/failures (github-ci-create, github-ci-fix).'
 references:
   - ../references/scm-create-description.md
   - ../references/present-first.md

@@ -1,6 +1,6 @@
 ---
 name: code-task-failed
-description: code-task-failed Investigate a failed command (build, test, lint, etc.) by capturing terminal output, analyzing errors, and systematically isolating the root cause. Always manually invoked. Do NOT use for behavioral bugs (code-debug) or code review (code-review-branch).
+description: 'code-task-failed Investigate a failed command (build, test, lint) by capturing output and isolating the root cause. Always manually invoked. Do NOT use for behavioral bugs (code-debug) or code review (code-review-branch).'
 disable-model-invocation: true
 references:
   - ../references/present-first.md

@@ -1,6 +1,6 @@
 ---
 name: linear-project-read
-description: linear-project-read Read-only refresh of a Linear project — scan open issues and their statuses, re-read the project description, check the latest project update, and surface what changed since you last looked. Use when user says "read the project", "refresh the project", "re-read the project", "what changed on this project", "catch me up on the project", "project pulse", or "project overview". Do NOT use for auditing/modifying project structure (/linear-project-reconcile), drafting a status post (/linear-project-post), or deep per-issue read (/linear-issue-read).
+description: 'linear-project-read Read-only refresh of a Linear project - scan issues and statuses, re-read description and latest update, surface what changed. Triggers: "read/refresh the project", "project pulse". Do NOT use for structure audits (/linear-project-reconcile), status posts (/linear-project-post), or per-issue reads (/linear-issue-read).'
 argument-hint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md

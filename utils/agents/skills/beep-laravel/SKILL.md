@@ -1,6 +1,6 @@
 ---
 name: beep-laravel
-description: "beep-laravel Daily check-in that narrates the user's update back to them in a chosen tone, then DMs the styled check-in to the beep bot/app in the Laravel Slack on approval — never to a channel. Use when the user says 'beep', 'daily check-in', 'check me in', or invokes /beep-laravel. Do NOT use for status reports to others or standup writeups (write those plainly)."
+description: 'beep-laravel Daily check-in that restyles the user''s update in a chosen tone, then DMs it to the beep bot in the Laravel Slack on approval - never to a channel. Use on "beep", "daily check-in", "check me in". Do NOT use for status reports to others or standup writeups (write those plainly).'
 references:
   - ../references/present-first.md
   - ../references/claude-ai-connectors.md

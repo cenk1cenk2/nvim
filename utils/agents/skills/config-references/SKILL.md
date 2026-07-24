@@ -1,6 +1,6 @@
 ---
 name: config-references
-description: config-references Create, update, or review reference files in the skills directory. Use when user says "create a reference", "add a reference", "update reference X", "review references", or "extract this to a reference". Do NOT use for skills themselves (use /config-skills) or loading skills (use /load-skills).
+description: 'config-references Create, update, or review reference files in the skills directory. Triggers: "create/add/update a reference", "extract this to a reference". Do NOT use for skills themselves (config-skills) or loading skills (load-skills).'
 disable-model-invocation: true
 references:
   - ../references/present-first.md
