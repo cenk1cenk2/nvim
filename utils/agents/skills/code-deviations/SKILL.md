@@ -3,7 +3,7 @@ name: code-deviations
 description: 'code-deviations Handle user overrides to agent edits - when the user modifies, rejects, or rewrites agent-produced code, learn their intent and align future edits. Always manually invoked.'
 references:
   - ../references/present-first.md
-disable-model-invocation: true
+disableModelInvocation: true
 ---
 
 ## User Deviation Handling

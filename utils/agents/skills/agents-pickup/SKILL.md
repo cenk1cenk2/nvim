@@ -1,8 +1,8 @@
 ---
 name: agents-pickup
 description: 'agents-pickup Pick up Linear projects, project slices, or issues and execute them with the lead and agents as appropriate. Use on "agents pick up this project", "work these Linear issues", "pick up K-123". Do NOT use for read-only project refreshes or choosing the next task only.'
-disable-model-invocation: true
-argument-hint: "[Linear project, project slice, issue id(s), or URL] [optional: agent/direct/sequential/parallel/confirm]"
+disableModelInvocation: true
+argumentHint: "[Linear project, project slice, issue id(s), or URL] [optional: agent/direct/sequential/parallel/confirm]"
 references:
   - ../references/present-first.md
   - ../references/linear-prerequisite.md

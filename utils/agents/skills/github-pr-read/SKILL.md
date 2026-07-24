@@ -1,8 +1,8 @@
 ---
 name: github-pr-read
 description: 'github-pr-read Read the full state of a GitHub PR - description, comments, review threads, diff. Informational only. Use for "read this PR", "summarize this PR". Do NOT use for reviewing (github-pr-review), fixing threads (github-pr-fix), or descriptions (github-pr-create).'
-disable-model-invocation: true
-argument-hint: "[PR number or URL]"
+disableModelInvocation: true
+argumentHint: "[PR number or URL]"
 references:
   - ../references/present-first.md
   - ../references/scm-read-summary.md

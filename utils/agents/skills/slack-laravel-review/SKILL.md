@@ -1,8 +1,8 @@
 ---
 name: slack-laravel-review
 description: 'slack-laravel-review Post a PR/MR review request in #cloud-infra-pr on the Laravel Slack, one PR per message. Triggers: "request review", "post review request". Composable with github-pr-create. Always manually invoked.'
-disable-model-invocation: true
-argument-hint: "[github-pr-url or PR number]"
+disableModelInvocation: true
+argumentHint: "[github-pr-url or PR number]"
 references:
   - ../references/present-first.md
   - ../references/claude-ai-connectors.md

@@ -1,12 +1,12 @@
 ---
 name: config-mcp
 description: 'config-mcp Add, remove, or modify MCP server entries in the hyprpilot MCP catalog; researches servers, prefers official/HTTP sources, prompts for vars and auth. Always manually invoked. Do NOT use for skills (config-skills), agent guidelines (config-agents), or repo configs (config-repository; edit ~/.config/hyprpilot/config.yaml directly for daemon settings).'
-disable-model-invocation: true
+disableModelInvocation: true
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
-argument-hint: "[add|remove|modify] [server-name] [optional description]"
+argumentHint: "[add|remove|modify] [server-name] [optional description]"
 ---
 
 ## MCP Server Configuration Manager

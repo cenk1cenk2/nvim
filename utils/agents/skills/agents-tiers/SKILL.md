@@ -5,7 +5,7 @@ references:
   - ../references/agents-tiers-claude.md
   - ../references/agents-tiers-opencode.md
   - ../references/agents-tiers-codex.md
-disable-model-invocation: true
+disableModelInvocation: true
 ---
 
 ## Agent Tiers

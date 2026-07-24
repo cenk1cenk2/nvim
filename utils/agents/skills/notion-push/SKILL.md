@@ -1,8 +1,8 @@
 ---
 name: notion-push
 description: 'notion-push Push the current markdown file to a Notion page (# heading to title, frontmatter to metadata). Triggers: "push to Notion", "sync to Notion". Do NOT use for pulling (notion-pull) or session init (notion-laravel).'
-disable-model-invocation: true
-argument-hint: "[notion-url or search description]"
+disableModelInvocation: true
+argumentHint: "[notion-url or search description]"
 references:
   - ../references/present-first.md
   - ../references/claude-ai-connectors.md

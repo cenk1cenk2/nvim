@@ -1,8 +1,8 @@
 ---
 name: obsidian-repository
 description: 'obsidian-repository Document repository knowledge (architecture, conventions, gotchas) in Obsidian. Triggers: "document this repo", "update the repo note", or detected repo-note drift (always propose, never auto-apply). Do NOT use for general notes (obsidian-note), todos (obsidian-todo), or triage (obsidian-triage).'
-disable-model-invocation: true
-argument-hint: "[repository name or path] [optional: what to document]"
+disableModelInvocation: true
+argumentHint: "[repository name or path] [optional: what to document]"
 references:
   - ../references/present-first.md
   - ../references/obsidian.md

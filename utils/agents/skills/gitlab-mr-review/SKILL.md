@@ -1,8 +1,8 @@
 ---
 name: gitlab-mr-review
 description: 'gitlab-mr-review Autonomously review the current GitLab MR with inline annotations and a summary comment; on rerun reviews only the delta and resolves fixed threads. Use for "review the MR", "annotate the MR". Do NOT use for MR descriptions (gitlab-mr-create), GitHub PRs (github-pr-review), or chat-only review (code-review-branch, code-review-changes).'
-disable-model-invocation: true
-argument-hint: "[MR number or URL]"
+disableModelInvocation: true
+argumentHint: "[MR number or URL]"
 references:
   - ../references/present-first.md
   - ../references/scm-review-workflow.md

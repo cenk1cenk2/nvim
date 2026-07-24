@@ -1,7 +1,7 @@
 ---
 name: linear-project-post
 description: 'linear-project-post Draft a Linear project status update from recent progress, deviations, and next steps. Triggers: "write a project update", "post a status update". Do NOT use for editing description/docs (/linear-project-update) or structure changes (/linear-project-reconcile).'
-argument-hint: "[project-name or Linear URL]"
+argumentHint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md

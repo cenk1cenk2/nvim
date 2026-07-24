@@ -1,8 +1,8 @@
 ---
 name: cluster-kilic-workload
 description: 'cluster-kilic-workload Create a new workload deployment repo in the cluster/workloads GitLab group - kustomize structure with Helm charts, ExternalSecrets, Gateway API routing, databases, SSO. Always manually invoked. Do NOT use for ArgoCD workloads (/argocd-kilic-workload), LB routing (/argocd-kilic-loadbalancer), or chart wrappers (/cluster-kilic-chart).'
-disable-model-invocation: true
-argument-hint: "[workload-name] - e.g., 'seafile', 'immich', 'my-app'"
+disableModelInvocation: true
+argumentHint: "[workload-name] - e.g., 'seafile', 'immich', 'my-app'"
 references:
   - ../references/present-first.md
 ---

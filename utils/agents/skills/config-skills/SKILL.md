@@ -1,12 +1,12 @@
 ---
 name: config-skills
 description: 'config-skills Create, update, or review skills in the skills directory. Triggers: "create a skill", "update skill X", "add a new slash command", "improve this skill". Do NOT use for loading or chaining skills (load-skills).'
-disable-model-invocation: true
+disableModelInvocation: true
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
-argument-hint: "[create|update|review] [skill-name] [description of what the skill should do]"
+argumentHint: "[create|update|review] [skill-name] [description of what the skill should do]"
 ---
 
 ## Skill Management
@@ -116,14 +116,14 @@ description: What it does, key use case first. Use when user says "trigger phras
 **Optional frontmatter fields:**
 
 ```yaml
-disable-model-invocation: true # Manual-only. Omit for model-invocable/auto-invoke. See Invocation Tiers.
-argument-hint: "[args]" # Shown to user as usage hint.
+disableModelInvocation: true # Manual-only. Omit for model-invocable/auto-invoke. See Invocation Tiers.
+argumentHint: "[args]" # Shown to user as usage hint.
 references: # YAML array of relative paths to reference files.
   - ../references/file.md
   - ./references/local.md
 ```
 
-Hyprpilot honors only `name` and `description` (required), plus `disable-model-invocation`, `argument-hint`, and `references` (optional). It still parses a legacy `interaction` key but does nothing with it — **omit it**; existing skills are being cleaned of it. Every other Claude Code frontmatter key (`when_to_use`, `user-invocable`, `paths`, `model`, `effort`, `allowed-tools`, `context`, `agent`, `hooks`, `shell`) is **silently dropped** — parses without error but never surfaces or takes effect. Do not add them; they are dead weight that misleads readers.
+Hyprpilot honors only `name` and `description` (required), plus `disableModelInvocation`, `argumentHint`, and `references` (optional). It still parses a legacy `interaction` key but does nothing with it — **omit it**; existing skills are being cleaned of it. Every other Claude Code frontmatter key (`when_to_use`, `user-invocable`, `paths`, `model`, `effort`, `allowed-tools`, `context`, `agent`, `hooks`, `shell`) is **silently dropped** — parses without error but never surfaces or takes effect. Do not add them; they are dead weight that misleads readers.
 
 **Body structure:** the body starts directly with the plan-mode directive and top-level `##` sections — there is **no `## system` wrapper** (a retired convention; skills that still carry it are being cleaned up).
 
@@ -160,11 +160,11 @@ Guiding rules for the skill's behavior.
 
 ## Invocation Tiers
 
-How a skill can be invoked is set by `disable-model-invocation` — the only invocation lever hyprpilot honors. Choose the tier deliberately when authoring.
+How a skill can be invoked is set by `disableModelInvocation` — the only invocation lever hyprpilot honors. Choose the tier deliberately when authoring.
 
 | Tier | Frontmatter | Behavior | Description should |
 |------|-------------|----------|--------------------|
-| **Manual** | `disable-model-invocation: true` | Fires only on explicit `/name` or a direct user request; the model never self-invokes it. | Lead with the action; triggers are the phrases a user types. |
+| **Manual** | `disableModelInvocation: true` | Fires only on explicit `/name` or a direct user request; the model never self-invokes it. | Lead with the action; triggers are the phrases a user types. |
 | **Model-invocable** | omit (default `false`) | The model MAY invoke it when the user's intent clearly matches, as a step within a flow. | Lead with the action + "Use when user says …". |
 | **Auto-invoke** *(a Model-invocable sub-case)* | omit (default `false`) | Same runtime state as Model-invocable, but meant to fire the moment its context is detected without the user naming it. No separate flag — the intent is carried by the description wording. | Start with "Auto-invoked when … detected (e.g. …)". |
 
@@ -173,9 +173,9 @@ Assignment guidance:
 - **Manual** — reviews, reads, fixes, CI, scaffolding, config-authoring (`config-*`), personality modes, plan handoff/pickup, and any heavy or destructive orchestration the user should trigger deliberately (`git-split`, `code-improve`, `agents-*`).
 - **Model-invocable** — routine actions the agent legitimately reaches for mid-task: git basics (`git-commit`, `git-branch`, `git-push`), PR/MR creation, most Linear operations, `plan-hard`.
 - **Auto-invoke** — workspace/session initializers only (`linear-kilic`, `linear-laravel`, `slack-kilic`, `slack-laravel`, `spacelift-laravel`, `notion-laravel`).
-- **Proactive-suggest overlay** — a Manual skill whose body tells the assistant to *recommend* itself on a trigger (rule drift, user deviations) but never self-invoke (`config-agents`, `obsidian-repository`). `config-repository` is the one skill kept Model-invocable with an explicit `disable-model-invocation: false` because autopilot may auto-apply it.
+- **Proactive-suggest overlay** — a Manual skill whose body tells the assistant to *recommend* itself on a trigger (rule drift, user deviations) but never self-invoke (`config-agents`, `obsidian-repository`). `config-repository` is the one skill kept Model-invocable with an explicit `disableModelInvocation: false` because autopilot may auto-apply it.
 
-Note: omitting the flag and writing `disable-model-invocation: false` are behaviorally identical (default is `false`). Write it explicitly only when the autoload intent is the skill's defining feature and you want it legible in source (e.g. `config-repository`).
+Note: omitting the flag and writing `disableModelInvocation: false` are behaviorally identical (default is `false`). Write it explicitly only when the autoload intent is the skill's defining feature and you want it legible in source (e.g. `config-repository`).
 
 ## References
 
@@ -308,7 +308,7 @@ Run this checklist when creating, updating, or reviewing any skill description:
 - **Directory name** must match the `name` field in frontmatter, both in kebab-case.
 - **Description** must follow the description checklist above.
 - **Plan mode** — use it for skills that need research or multi-step planning. Skip it for interactive or quick-turnaround skills.
-- **Invocation tier** — set `disable-model-invocation` deliberately per the Invocation Tiers section above: `true` for manual-only skills; omit it for model-invocable and auto-invoke skills.
+- **Invocation tier** — set `disableModelInvocation` deliberately per the Invocation Tiers section above: `true` for manual-only skills; omit it for model-invocable and auto-invoke skills.
 - **MCP tools** — reference specific tool names (e.g., `github__*`) when the skill depends on them. Use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git status`, `slack__slack_list_channels`) — see MCP Tool Name Convention below.
 - **Be concise** — skills are instructions for an agent, not documentation for humans. Keep it actionable.
 - **End list items with `.`** — consistent punctuation across all skills.

@@ -1,8 +1,8 @@
 ---
 name: plan-handoff
 description: 'plan-handoff Create a self-contained plan for another Claude Code session or repository. Triggers: "create a handoff plan", "plan for another session", "plan this for later". Do NOT use for planning in the current session (/plan-hard) or loading existing plans (/plan-pickup).'
-disable-model-invocation: true
-argument-hint: "[same-repo|other-repo] [goal description]"
+disableModelInvocation: true
+argumentHint: "[same-repo|other-repo] [goal description]"
 references:
   - ../references/plan-mode.md
 ---

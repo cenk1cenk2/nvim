@@ -1,7 +1,7 @@
 ---
 name: linear-issue-pickup
 description: 'linear-issue-pickup Pick up one or more Linear issues and prep them for implementation - fetch details, comments, relations, docs, and repo context, then wait for an explicit go. Triggers: "pick up K-123", "work on this issue", issue URLs. Do NOT use for read-only refreshes (linear-issue-read) or choosing the next task (linear-next-task).'
-argument-hint: "[issue id(s) or URL(s)]"
+argumentHint: "[issue id(s) or URL(s)]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-pickup-execution.md

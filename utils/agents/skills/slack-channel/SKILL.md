@@ -1,8 +1,8 @@
 ---
 name: slack-channel
 description: 'slack-channel Process a Slack channel - reads recent messages, analyzes automated and human messages, and acts per channel type. Always manually invoked. Do NOT use for individual message links (slack-message).'
-disable-model-invocation: true
-argument-hint: "[channel-name-or-id] [optional: timeframe or instructions]"
+disableModelInvocation: true
+argumentHint: "[channel-name-or-id] [optional: timeframe or instructions]"
 references:
   - ../references/present-first.md
   - ../references/claude-ai-connectors.md

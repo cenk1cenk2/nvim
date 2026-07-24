@@ -1,7 +1,7 @@
 ---
 name: linear-project-match
 description: 'linear-project-match State-only sync of Linear issue states to external evidence (merged MRs/PRs, user reports) - proposes transitions with evidence, applies in batch after approval. Triggers: "match linear to reality", "sync with recent MRs/PRs", "I did X, update linear". Do NOT use for structure/priority audits (/linear-project-reconcile) or deep issue reads (/linear-issue-read).'
-argument-hint: "[project-name or Linear URL] [evidence sources: MR/PR URLs, repo names, 'recent merged', user statements, notes]"
+argumentHint: "[project-name or Linear URL] [evidence sources: MR/PR URLs, repo names, 'recent merged', user statements, notes]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/scm-detect.md

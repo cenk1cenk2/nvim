@@ -1,8 +1,8 @@
 ---
 name: git-split
 description: 'git-split Break a large change set - uncommitted tree, branch commits, or an open PR/MR - into smaller focused pieces, each on its own branch/commit with optional push and PR/MR. Triggers: "split this PR/MR/branch", "break into smaller PRs", "smaller chunks". Do NOT use to commit as-is (git-commit), create a single branch (git-branch), or rewrite a PR/MR description (github-pr-create, gitlab-mr-create).'
-disable-model-invocation: true
-argument-hint: "[optional: slicing hint — e.g., 'by feature', 'separate refactor and feature', 'by file']"
+disableModelInvocation: true
+argumentHint: "[optional: slicing hint — e.g., 'by feature', 'separate refactor and feature', 'by file']"
 references:
   - ../references/present-first.md
   - ../references/scm-detect.md
@@ -41,7 +41,7 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
 
 2. **Surface the state and ask for split intent.**
    - Report what was found (branch, base, commit count, modified file count, PR/MR if any) in a short summary.
-   - Ask the user for the slicing axis if not given via `argument-hint`. Common axes:
+   - Ask the user for the slicing axis if not given via `argumentHint`. Common axes:
      - **By concern** — refactor / feature / tests / docs / fix.
      - **By feature area** — auth / api / config / ui / etc.
      - **By commit groups** — pick which commits belong together.

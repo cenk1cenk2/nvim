@@ -1,8 +1,8 @@
 ---
 name: agents-review
 description: 'agents-review Dispatch review subagents to cross-check artifacts (plan, DAG, facts, analysis) against the codebase or a devil''s-advocate lens; cheap model by default, parallel reviewers for multiple artifacts. Use on "review this", "fact-check", "second opinion". Do NOT use to run a task (/agents-delegate), for multi-task plans (/agents-plan), or to re-read code you''ve already seen.'
-disable-model-invocation: true
-argument-hint: "[type=plan|dag|facts|freeform] [artifact or file path] [optional: 'hard' | 'deep' | 'thorough' | explicit model name]"
+disableModelInvocation: true
+argumentHint: "[type=plan|dag|facts|freeform] [artifact or file path] [optional: 'hard' | 'deep' | 'thorough' | explicit model name]"
 references:
   - ../references/present-first.md
   - ../references/agents-delegate.md

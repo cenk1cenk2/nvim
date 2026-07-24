@@ -1,7 +1,7 @@
 ---
 name: linear-issue-status
 description: 'linear-issue-status Quick Linear issue status change from explicit wording or clear workflow context. Triggers: "mark K-123 done", "move to in review", "cancel this issue". Do NOT use for full issue edits or project reconciliation.'
-argument-hint: "[issue-id or URL] [status]"
+argumentHint: "[issue-id or URL] [status]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-issue-states.md

@@ -1,8 +1,8 @@
 ---
 name: github-pr-review
 description: 'github-pr-review Autonomously review the current GitHub PR with inline annotations and a summary comment; on rerun reviews only the delta and resolves fixed threads. Use for "review the PR", "annotate the PR". Do NOT use for PR descriptions (github-pr-create), GitLab MRs (gitlab-mr-review), or chat-only review (code-review-branch, code-review-changes).'
-disable-model-invocation: true
-argument-hint: "[PR number or URL]"
+disableModelInvocation: true
+argumentHint: "[PR number or URL]"
 references:
   - ../references/present-first.md
   - ../references/scm-review-workflow.md

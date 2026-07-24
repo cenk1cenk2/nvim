@@ -1,7 +1,7 @@
 ---
 name: linear-issue-update
 description: 'linear-issue-update Update a Linear issue''s description to reflect deviations and refinements from the conversation. Triggers: "update the issue", "issue description is outdated". Do NOT use for comments (/linear-issue-comment), checklists (/linear-issue-checklist), or new issues (/linear-issue-create).'
-argument-hint: "[issue-id or Linear URL]"
+argumentHint: "[issue-id or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md

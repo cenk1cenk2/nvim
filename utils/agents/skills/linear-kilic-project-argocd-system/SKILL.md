@@ -4,7 +4,7 @@ description: 'linear-kilic-project-argocd-system Create a Linear project for dep
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
-argument-hint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'velero'"
+argumentHint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'velero'"
 ---
 
 ## ArgoCD System Deployment Project Generator

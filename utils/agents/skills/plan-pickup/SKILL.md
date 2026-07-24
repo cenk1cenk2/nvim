@@ -1,8 +1,8 @@
 ---
 name: plan-pickup
 description: 'plan-pickup Load and execute a plan file from a previous session. Triggers: "pick up this plan", "load the plan", "resume the plan". Do NOT use for creating plans (/plan-handoff).'
-disable-model-invocation: true
-argument-hint: "[plan-file-path or plan-name]"
+disableModelInvocation: true
+argumentHint: "[plan-file-path or plan-name]"
 references:
   - ../references/present-first.md
 ---

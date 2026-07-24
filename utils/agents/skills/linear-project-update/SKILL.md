@@ -1,7 +1,7 @@
 ---
 name: linear-project-update
 description: 'linear-project-update Update a Linear project''s description and documents to reflect deviations and refinements. Triggers: "update the project", "project docs are stale". Do NOT use for structural audits (/linear-project-reconcile), state sync (/linear-project-match), status posts (/linear-project-post), or creation (/linear-project-create).'
-argument-hint: "[project-name or Linear URL]"
+argumentHint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md

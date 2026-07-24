@@ -1,8 +1,8 @@
 ---
 name: argocd-kilic-loadbalancer
 description: 'argocd-kilic-loadbalancer Create or extend routing workloads in a load balancer cluster''s ArgoCD repo - Pulumi services for cross-cluster routing, VM routing, or direct LB routes. Always manually invoked. Do NOT use for non-LB ArgoCD workloads (/argocd-kilic-workload), standalone workload repos (/cluster-kilic-workload), or chart wrappers (/cluster-kilic-chart).'
-disable-model-invocation: true
-argument-hint: "[workload-name or 'add route to <existing>'] - e.g., 'cluster-rubik', 'vm-gitlab', 'add route to cluster-rubik'"
+disableModelInvocation: true
+argumentHint: "[workload-name or 'add route to <existing>'] - e.g., 'cluster-rubik', 'vm-gitlab', 'add route to cluster-rubik'"
 references:
   - ../references/present-first.md
 ---

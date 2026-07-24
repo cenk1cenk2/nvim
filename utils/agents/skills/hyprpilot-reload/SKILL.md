@@ -1,7 +1,7 @@
 ---
 name: hyprpilot-reload
 description: 'hyprpilot-reload Reload the hyprpilot skill catalog after skill or reference files change on disk. Use for "reload skills", "refresh skills", or after creating/editing a SKILL.md or reference. Do NOT use to edit skills (/config-skills), guidelines (/config-agents), or MCP config (/config-mcp).'
-disable-model-invocation: true
+disableModelInvocation: true
 ---
 
 ## Hyprpilot Reload

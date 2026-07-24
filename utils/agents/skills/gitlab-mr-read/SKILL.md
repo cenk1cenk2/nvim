@@ -1,8 +1,8 @@
 ---
 name: gitlab-mr-read
 description: 'gitlab-mr-read Read the full state of a GitLab MR - description, comments, discussion threads, diff. Informational only. Use for "read this MR", "summarize this MR". Do NOT use for reviewing (gitlab-mr-review), fixing threads (gitlab-mr-fix), or descriptions (gitlab-mr-create).'
-disable-model-invocation: true
-argument-hint: "[MR number or URL]"
+disableModelInvocation: true
+argumentHint: "[MR number or URL]"
 references:
   - ../references/present-first.md
   - ../references/scm-read-summary.md

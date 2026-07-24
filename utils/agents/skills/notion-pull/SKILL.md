@@ -1,8 +1,8 @@
 ---
 name: notion-pull
 description: 'notion-pull Pull a Notion page into the current editor as markdown (title to # heading, metadata to frontmatter). Triggers: "pull from Notion", a Notion URL to pull. Do NOT use for pushing (notion-push) or session init (notion-laravel).'
-disable-model-invocation: true
-argument-hint: "[notion-url or search description]"
+disableModelInvocation: true
+argumentHint: "[notion-url or search description]"
 references:
   - ../references/present-first.md
   - ../references/claude-ai-connectors.md

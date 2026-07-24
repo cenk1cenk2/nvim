@@ -60,7 +60,7 @@ When a skill exists in multiple variants (e.g., `linear-kilic-project-argocd-sys
 
 Skills live as plain Markdown files at `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`. The hyprpilot harness usually attaches them for you; when it doesn't, read them directly from disk.
 
-**Discovery** — list `~/.config/nvim/utils/agents/skills/` to enumerate skill directories. Read the frontmatter (first ~10 lines of each `SKILL.md`) for the `description` field. Skills with `disable-model-invocation: true` are manual-only — only load on explicit user request.
+**Discovery** — list `~/.config/nvim/utils/agents/skills/` to enumerate skill directories. Read the frontmatter (first ~10 lines of each `SKILL.md`) for the `description` field. Skills with `disableModelInvocation: true` are manual-only — only load on explicit user request.
 
 **Three ways a skill becomes loaded:**
 

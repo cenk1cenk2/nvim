@@ -1,7 +1,7 @@
 ---
 name: linear-project-pickup
 description: 'linear-project-pickup Prepare a Linear project or slice for implementation - fetch issues, documents, blockers, comments, and execution scope. Triggers: "pick up this project", "implement this project slice", project URL for execution. Do NOT use for read-only refreshes or structure audits.'
-argument-hint: "[project name or URL] [optional slice/filter]"
+argumentHint: "[project name or URL] [optional slice/filter]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-pickup-execution.md

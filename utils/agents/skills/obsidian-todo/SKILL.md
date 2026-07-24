@@ -1,8 +1,8 @@
 ---
 name: obsidian-todo
 description: 'obsidian-todo Create quick todo notes for task tracking in Obsidian. Triggers: "add a todo", "remind me to", "jot this down". Do NOT use for structured notes (obsidian-note), repo docs (obsidian-repository), or triage (obsidian-triage).'
-disable-model-invocation: true
-argument-hint: "[task or thought to capture]"
+disableModelInvocation: true
+argumentHint: "[task or thought to capture]"
 references:
   - ../references/present-first.md
   - ../references/obsidian.md

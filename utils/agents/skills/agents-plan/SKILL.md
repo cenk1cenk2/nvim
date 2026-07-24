@@ -1,8 +1,8 @@
 ---
 name: agents-plan
 description: 'agents-plan Plan and execute multi-task work across agents via a dependency-aware DAG scheduler; layers run in parallel with review pauses between them. Modes: "team" (default, lead orchestrates) or "fire-and-forget" (autonomous, bypass permissions). Use on "agents-plan", "run these tasks in parallel", "fire and forget". Do NOT use for single-task delegation (use /agents-delegate).'
-disable-model-invocation: true
-argument-hint: "[plan file or goal] [optional: 'fire' | 'fire-and-forget' | 'without worktrees' | 'per-task review' | 'final-only review']"
+disableModelInvocation: true
+argumentHint: "[plan file or goal] [optional: 'fire' | 'fire-and-forget' | 'without worktrees' | 'per-task review' | 'final-only review']"
 references:
   - ../references/agents-delegate.md
   - ../references/agents-worktrees.md

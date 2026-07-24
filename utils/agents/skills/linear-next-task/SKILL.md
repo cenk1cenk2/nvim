@@ -1,7 +1,7 @@
 ---
 name: linear-next-task
 description: 'linear-next-task Analyze Linear projects and issues to recommend the best next task(s). Triggers: "what should I work on", "pick next task". Do NOT use for picking up a known issue (/linear-issue-pickup) or cycle planning (/linear-cycle).'
-argument-hint: "[project-name or Linear URL] (optional — omit to analyze all projects)"
+argumentHint: "[project-name or Linear URL] (optional — omit to analyze all projects)"
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-issue-states.md

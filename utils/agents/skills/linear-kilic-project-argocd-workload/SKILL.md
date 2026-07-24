@@ -5,7 +5,7 @@ references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/linear-mandatory-fields.md
-argument-hint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-cluster'"
+argumentHint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-cluster'"
 ---
 
 ## ArgoCD Workload Deployment Project Generator

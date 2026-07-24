@@ -1,10 +1,10 @@
 ---
 name: code-task-failed
 description: 'code-task-failed Investigate a failed command (build, test, lint) by capturing output and isolating the root cause. Always manually invoked. Do NOT use for behavioral bugs (code-debug) or code review (code-review-branch).'
-disable-model-invocation: true
+disableModelInvocation: true
 references:
   - ../references/present-first.md
-argument-hint: "[brief description of what failed, e.g., 'build failed', 'test suite', 'lint errors']"
+argumentHint: "[brief description of what failed, e.g., 'build failed', 'test suite', 'lint errors']"
 ---
 
 ## Code Failure Investigation

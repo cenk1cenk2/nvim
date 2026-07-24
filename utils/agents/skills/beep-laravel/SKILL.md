@@ -4,8 +4,8 @@ description: 'beep-laravel Daily check-in that restyles the user''s update in a 
 references:
   - ../references/present-first.md
   - ../references/claude-ai-connectors.md
-disable-model-invocation: true
-argument-hint: "[tone] <your check-in>"
+disableModelInvocation: true
+argumentHint: "[tone] <your check-in>"
 ---
 
 ## Beep: Daily Check-In

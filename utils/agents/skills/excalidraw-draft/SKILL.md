@@ -1,8 +1,8 @@
 ---
 name: excalidraw-draft
 description: 'excalidraw-draft Draft hand-drawn Excalidraw diagrams and export to the Obsidian vault or a shareable excalidraw.com URL. Triggers: "draw a diagram", "sketch this", "make an architecture diagram". Do NOT use for revising existing drawings (excalidraw-obsidian).'
-disable-model-invocation: true
-argument-hint: "[description of what to draw]"
+disableModelInvocation: true
+argumentHint: "[description of what to draw]"
 references:
   - ../references/present-first.md
   - ../references/excalidraw-mcp-preview.md

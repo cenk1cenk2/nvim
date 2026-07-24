@@ -1,7 +1,7 @@
 ---
 name: github-ci-create
 description: 'github-ci-create Create or update GitHub Actions workflows for the current repo. Triggers: "add CI", "set up GitHub Actions", "modify the workflow". Do NOT use for diagnosing failures (github-ci-fix), GitLab pipelines (gitlab-ci-create), or PR descriptions (github-pr-create).'
-disable-model-invocation: true
+disableModelInvocation: true
 references:
   - ../references/present-first.md
   - ../references/scm-github.md

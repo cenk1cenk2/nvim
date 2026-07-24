@@ -1,8 +1,8 @@
 ---
 name: excalidraw-obsidian
 description: 'excalidraw-obsidian Open an existing Excalidraw drawing from the Obsidian vault to revise or explain it. Triggers: "update this drawing", "revise the diagram", "explain this excalidraw", or a referenced .excalidraw.md file. Do NOT use for creating new drawings (excalidraw-draft).'
-disable-model-invocation: true
-argument-hint: "[filename or description of drawing to pick up]"
+disableModelInvocation: true
+argumentHint: "[filename or description of drawing to pick up]"
 references:
   - ../references/present-first.md
   - ../references/excalidraw-mcp-preview.md

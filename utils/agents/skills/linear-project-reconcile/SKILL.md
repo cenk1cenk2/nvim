@@ -1,7 +1,7 @@
 ---
 name: linear-project-reconcile
 description: 'linear-project-reconcile Audit and fix a Linear project''s structure, subissues, priorities, estimates, labels, and blocking relations in one pass. Triggers: "reconcile/audit the project", "review project priorities". Do NOT use for description/doc edits (/linear-project-update), state sync from MRs/PRs (/linear-project-match), status posts (/linear-project-post), or new projects (/linear-project-create).'
-argument-hint: "[project-name or Linear URL]"
+argumentHint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md

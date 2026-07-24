@@ -1,8 +1,8 @@
 ---
 name: slack-laravel-compile
 description: 'slack-laravel-compile Compile a concise Slack message from the user''s input, enriched with PR, Spacelift, and code references via MCP tools; always drafts for approval before posting. Triggers: "compile this for Slack", "share this on Slack".'
-disable-model-invocation: true
-argument-hint: "[what to compile — a question, finding, or topic]"
+disableModelInvocation: true
+argumentHint: "[what to compile — a question, finding, or topic]"
 references:
   - ../references/present-first.md
   - ../references/claude-ai-connectors.md

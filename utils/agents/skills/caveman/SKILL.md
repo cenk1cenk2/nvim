@@ -1,8 +1,8 @@
 ---
 name: caveman
 description: 'caveman Ultra-compressed, action-first communication mode - cuts token usage ~75% while keeping full technical accuracy; intensity levels full (default) and ultra. Use on "caveman mode", "be brief", "less tokens".'
-disable-model-invocation: true
-argument-hint: "[full|ultra]"
+disableModelInvocation: true
+argumentHint: "[full|ultra]"
 ---
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die. Lead with action, not context.

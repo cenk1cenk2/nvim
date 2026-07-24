@@ -1,8 +1,8 @@
 ---
 name: github-pr-fix
 description: 'github-pr-fix Fix all open review conversations on a GitHub PR by applying the requested code changes. Use for "fix the PR comments", "address PR feedback". Do NOT use for reviewing (github-pr-review), PR descriptions (github-pr-create), or GitLab MRs (gitlab-mr-fix).'
-disable-model-invocation: true
-argument-hint: "[PR number or URL]"
+disableModelInvocation: true
+argumentHint: "[PR number or URL]"
 references:
   - ../references/present-first.md
   - ../references/scm-fix-threads.md

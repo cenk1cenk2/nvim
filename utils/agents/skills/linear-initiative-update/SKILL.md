@@ -1,7 +1,7 @@
 ---
 name: linear-initiative-update
 description: 'linear-initiative-update Revise a Linear initiative''s description and review its project alignment. Use for "update the initiative", "revise initiative description". Requires /linear-kilic or /linear-laravel. Do NOT use for creating initiatives (/linear-initiative-create) or status posts (/linear-initiative-post).'
-argument-hint: "[initiative-name or ID]"
+argumentHint: "[initiative-name or ID]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-description-structure.md
