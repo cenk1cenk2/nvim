@@ -1,6 +1,6 @@
 ---
 name: excalidraw-draft
-description: Draft hand-drawn Excalidraw diagrams and export to Obsidian vault or as shareable excalidraw.com URL. Use when user says "draw a diagram", "sketch this", "excalidraw", "make an architecture diagram", or wants a visual diagram. Do NOT use for revising existing drawings (excalidraw-obsidian) or text-only explanations.
+description: excalidraw-draft Draft hand-drawn Excalidraw diagrams and export to Obsidian vault or as shareable excalidraw.com URL. Use when user says "draw a diagram", "sketch this", "excalidraw", "make an architecture diagram", or wants a visual diagram. Do NOT use for revising existing drawings (excalidraw-obsidian) or text-only explanations.
 disable-model-invocation: true
 argument-hint: "[description of what to draw]"
 references:

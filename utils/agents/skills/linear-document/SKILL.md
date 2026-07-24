@@ -1,6 +1,6 @@
 ---
 name: linear-document
-description: Attach a document capturing the current task's details, findings, or investigation to a Linear issue or project, on demand — one document per distinct concern, so separate investigations become separate documents. Use when user says "attach a document", "document this on the issue", "write this up in Linear", "add a doc for these findings", or "capture this investigation in Linear". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for editing the issue/project description or fields (use /linear-issue-update or /linear-project-update), for a short discussion comment (use /linear-issue-comment), or for creating a project and its docs from scratch (use /linear-project-create).
+description: linear-document Attach a document capturing the current task's details, findings, or investigation to a Linear issue or project, on demand — one document per distinct concern, so separate investigations become separate documents. Use when user says "attach a document", "document this on the issue", "write this up in Linear", "add a doc for these findings", or "capture this investigation in Linear". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for editing the issue/project description or fields (use /linear-issue-update or /linear-project-update), for a short discussion comment (use /linear-issue-comment), or for creating a project and its docs from scratch (use /linear-project-create).
 references:
   - ../references/linear-prerequisite.md
   - ../references/present-first.md

@@ -1,6 +1,6 @@
 ---
 name: slack-message
-description: Process a Slack message link — reads the thread, understands context, and acts on user instructions by composing with other skills. Always manually invoked. Do NOT use for channel-wide catch-up (slack-channel).
+description: slack-message Process a Slack message link — reads the thread, understands context, and acts on user instructions by composing with other skills. Always manually invoked. Do NOT use for channel-wide catch-up (slack-channel).
 disable-model-invocation: true
 argument-hint: "[slack-message-url] [what to do with it]"
 references:

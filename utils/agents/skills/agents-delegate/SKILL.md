@@ -1,6 +1,6 @@
 ---
 name: agents-delegate
-description: Delegate a single task to one subagent at a user-chosen tier (cheap/default/smart/max) or explicit model. Use when user says "delegate this", "give this to an agent", "run this with opus/sonnet/haiku/fable", "use a cheap/smart agent", or wants to hand off one focused task. Do NOT use for multi-task plans or DAG-scheduled work (use /agents-plan).
+description: agents-delegate Delegate a single task to one subagent at a user-chosen tier (cheap/default/smart/max) or explicit model. Use when user says "delegate this", "give this to an agent", "run this with opus/sonnet/haiku/fable", "use a cheap/smart agent", or wants to hand off one focused task. Do NOT use for multi-task plans or DAG-scheduled work (use /agents-plan).
 disable-model-invocation: true
 argument-hint: "[task description] [optional: tier 'cheap'|'default'|'smart'|'max' or explicit model name]"
 references:

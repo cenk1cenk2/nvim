@@ -1,6 +1,6 @@
 ---
 name: code-deviations
-description: Handle user overrides to agent edits. Use when the user modifies, rejects, or rewrites code that the agent produced, to learn their intent and align future edits. Always manually invoked.
+description: code-deviations Handle user overrides to agent edits. Use when the user modifies, rejects, or rewrites code that the agent produced, to learn their intent and align future edits. Always manually invoked.
 references:
   - ../references/present-first.md
 disable-model-invocation: true

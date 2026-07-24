@@ -1,6 +1,6 @@
 ---
 name: spacelift-moved
-description: "Analyze Spacelift plan output for delete/create cycles that can be replaced with Terraform moved blocks. Use when user says 'spacelift moved', 'can we move instead of recreate', 'terraform moved blocks', 'avoid destroy/create', or 'migrate state'. Accepts a PR, branch, commit, or Actions link. Do NOT use for general Spacelift operations (spacelift-laravel), infrastructure impact reports (spacelift-report), or PR descriptions (github-pr-create)."
+description: "spacelift-moved Analyze Spacelift plan output for delete/create cycles that can be replaced with Terraform moved blocks. Use when user says 'spacelift moved', 'can we move instead of recreate', 'terraform moved blocks', 'avoid destroy/create', or 'migrate state'. Accepts a PR, branch, commit, or Actions link. Do NOT use for general Spacelift operations (spacelift-laravel), infrastructure impact reports (spacelift-report), or PR descriptions (github-pr-create)."
 references:
   - ../references/present-first.md
   - ../references/scm-github.md

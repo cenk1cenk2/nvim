@@ -1,6 +1,6 @@
 ---
 name: git-commit
-description: Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit"; or to split changes into separate scoped commits — "commit these separately", "split into commits", "group by concern". Analyzes staged and unstaged changes, drafts conventional-commit messages, and commits after approval — new commits by default, amending your own unshared commits only when it is the right move. Do NOT use for PR descriptions (github-pr-create, gitlab-mr-create) or conflict resolution (git-conflict).
+description: git-commit Commit current changes with a conventional commit message. Use when user says "commit this", "commit my changes", "git commit", "write a commit message", or "commit"; or to split changes into separate scoped commits — "commit these separately", "split into commits", "group by concern". Analyzes staged and unstaged changes, drafts conventional-commit messages, and commits after approval — new commits by default, amending your own unshared commits only when it is the right move. Do NOT use for PR descriptions (github-pr-create, gitlab-mr-create) or conflict resolution (git-conflict).
 argument-hint: "[optional: type or message hint — e.g., 'fix', 'feat: add retry']"
 references:
   - ../references/present-first.md

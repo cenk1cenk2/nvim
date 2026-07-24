@@ -1,6 +1,6 @@
 ---
 name: linear-project-create
-description: Create a new Linear project with research, planning, and issue breakdown. Use when user says "create a project", "plan a new project", or "break this down into a Linear project". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for reconciling existing projects (/linear-project-reconcile) or posting status updates (/linear-project-post).
+description: linear-project-create Create a new Linear project with research, planning, and issue breakdown. Use when user says "create a project", "plan a new project", or "break this down into a Linear project". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for reconciling existing projects (/linear-project-reconcile) or posting status updates (/linear-project-post).
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-mandatory-fields.md

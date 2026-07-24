@@ -1,6 +1,6 @@
 ---
 name: linear-initiative-post
-description: Draft an initiative status update post for a Linear initiative by analyzing recent progress across its projects and the next steps ahead. Use when user says "write an initiative update", "post an initiative status update", "summarize initiative progress", or "draft an initiative post". Do NOT use for editing the initiative description (/linear-initiative-update) or for project status updates (/linear-project-post).
+description: linear-initiative-post Draft an initiative status update post for a Linear initiative by analyzing recent progress across its projects and the next steps ahead. Use when user says "write an initiative update", "post an initiative status update", "summarize initiative progress", or "draft an initiative post". Do NOT use for editing the initiative description (/linear-initiative-update) or for project status updates (/linear-project-post).
 argument-hint: "[initiative-name or ID]"
 references:
   - ../references/linear-prerequisite.md

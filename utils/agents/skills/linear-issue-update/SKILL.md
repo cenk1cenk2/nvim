@@ -1,6 +1,6 @@
 ---
 name: linear-issue-update
-description: Update a Linear issue's description to reflect deviations and refinements from the conversation. Use when user says "update the issue", "the issue description is outdated", or "sync the issue with what we agreed". Do NOT use for commenting (/linear-issue-comment), checklist updates (/linear-issue-checklist), or creating new issues (/linear-issue-create).
+description: linear-issue-update Update a Linear issue's description to reflect deviations and refinements from the conversation. Use when user says "update the issue", "the issue description is outdated", or "sync the issue with what we agreed". Do NOT use for commenting (/linear-issue-comment), checklist updates (/linear-issue-checklist), or creating new issues (/linear-issue-create).
 argument-hint: "[issue-id or Linear URL]"
 references:
   - ../references/linear-prerequisite.md

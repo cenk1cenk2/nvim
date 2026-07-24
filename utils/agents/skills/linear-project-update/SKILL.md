@@ -1,6 +1,6 @@
 ---
 name: linear-project-update
-description: Update a Linear project's description and its documents to reflect deviations and refinements from the conversation. Use when user says "update the project", "the project description is outdated", "sync the project with what we agreed", or "the project docs are stale". Do NOT use for structural audit of issues/priorities/estimates (/linear-project-reconcile), state sync from merged MRs/PRs (/linear-project-match), posting a status update (/linear-project-post), or creating a project (/linear-project-create).
+description: linear-project-update Update a Linear project's description and its documents to reflect deviations and refinements from the conversation. Use when user says "update the project", "the project description is outdated", "sync the project with what we agreed", or "the project docs are stale". Do NOT use for structural audit of issues/priorities/estimates (/linear-project-reconcile), state sync from merged MRs/PRs (/linear-project-match), posting a status update (/linear-project-post), or creating a project (/linear-project-create).
 argument-hint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md

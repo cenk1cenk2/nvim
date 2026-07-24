@@ -1,6 +1,6 @@
 ---
 name: plan-revise
-description: Revise an existing plan file when it got something wrong or the initial direction isn't working. Reads the current plan, gathers what went wrong (and any partial implementation via git), re-interviews the user on the deltas, then updates the plan in-place with a dated revision history entry. Use when user says "plan revise", "revise the plan", "back to the drawing board", "we got it wrong", "wrong plan", "change direction", or "this approach isn't working". Do NOT use for creating new plans (use /plan-hard), picking up a plan unchanged (use /plan-pickup), or cross-session handoffs (use /plan-handoff).
+description: plan-revise Revise an existing plan file when it got something wrong or the initial direction isn't working. Reads the current plan, gathers what went wrong (and any partial implementation via git), re-interviews the user on the deltas, then updates the plan in-place with a dated revision history entry. Use when user says "plan revise", "revise the plan", "back to the drawing board", "we got it wrong", "wrong plan", "change direction", or "this approach isn't working". Do NOT use for creating new plans (use /plan-hard), picking up a plan unchanged (use /plan-pickup), or cross-session handoffs (use /plan-handoff).
 references:
   - ../references/plan-mode.md
 ---

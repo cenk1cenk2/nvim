@@ -1,6 +1,6 @@
 ---
 name: config-agents
-description: Update, refine, or review the central AGENTS.md guidelines file at ~/.config/nvim/utils/agents/AGENTS.md. Always manually invoked — the assistant should SUGGEST this skill when detecting rule drift or new durable conventions that belong in the central guidelines (see AGENTS.md §VII "Knowledge Base Updates (Proactive)"), but never self-invoke. Do NOT use for per-repo CLAUDE.md/AGENTS.md (/config-repository), skills (/config-skills), or MCP server configs (/config-mcp).
+description: config-agents Update, refine, or review the central AGENTS.md guidelines file at ~/.config/nvim/utils/agents/AGENTS.md. Always manually invoked — the assistant should SUGGEST this skill when detecting rule drift or new durable conventions that belong in the central guidelines (see AGENTS.md §VII "Knowledge Base Updates (Proactive)"), but never self-invoke. Do NOT use for per-repo CLAUDE.md/AGENTS.md (/config-repository), skills (/config-skills), or MCP server configs (/config-mcp).
 disable-model-invocation: true
 references:
   - ../references/present-first.md

@@ -1,6 +1,6 @@
 ---
 name: github-ci-create
-description: Create or update GitHub Actions workflows for the current repository. Use when user says "add CI", "set up GitHub Actions", or "modify the workflow". Do NOT use for diagnosing failures (github-ci-fix), GitLab pipelines (gitlab-ci-create), or PR descriptions (github-pr-create).
+description: github-ci-create Create or update GitHub Actions workflows for the current repository. Use when user says "add CI", "set up GitHub Actions", or "modify the workflow". Do NOT use for diagnosing failures (github-ci-fix), GitLab pipelines (gitlab-ci-create), or PR descriptions (github-pr-create).
 disable-model-invocation: true
 references:
   - ../references/present-first.md

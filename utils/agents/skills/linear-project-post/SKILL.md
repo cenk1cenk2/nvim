@@ -1,6 +1,6 @@
 ---
 name: linear-project-post
-description: Draft a project update post for a Linear project by analyzing recent progress, deviations, and next steps. Use when user says "write a project update", "post a status update", "summarize project progress", or "draft a project post". Do NOT use for editing the project description/documents (/linear-project-update) or modifying project structure (/linear-project-reconcile).
+description: linear-project-post Draft a project update post for a Linear project by analyzing recent progress, deviations, and next steps. Use when user says "write a project update", "post a status update", "summarize project progress", or "draft a project post". Do NOT use for editing the project description/documents (/linear-project-update) or modifying project structure (/linear-project-reconcile).
 argument-hint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md

@@ -1,6 +1,6 @@
 ---
 name: excalidraw-obsidian
-description: Pick up an existing Excalidraw drawing from the Obsidian vault to revise or understand it. Use when user says "update this drawing", "revise the diagram", "explain this excalidraw", "what does this diagram show", or references an existing .excalidraw.md file. Do NOT use for creating new drawings from scratch (excalidraw-draft).
+description: excalidraw-obsidian Pick up an existing Excalidraw drawing from the Obsidian vault to revise or understand it. Use when user says "update this drawing", "revise the diagram", "explain this excalidraw", "what does this diagram show", or references an existing .excalidraw.md file. Do NOT use for creating new drawings from scratch (excalidraw-draft).
 disable-model-invocation: true
 argument-hint: "[filename or description of drawing to pick up]"
 references:

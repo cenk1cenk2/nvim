@@ -1,6 +1,6 @@
 ---
 name: slack-laravel-compile
-description: "Compile a concise Slack message from the user's input, enriched with links and references from MCP tools. Use when user says 'compile this for Slack', 'write this up for the team', 'post this finding', or 'share this on Slack'. Enriches the user's question or finding with PR links, Spacelift run links, code line references, and other relevant links. Always drafts and presents for approval before posting."
+description: "slack-laravel-compile Compile a concise Slack message from the user's input, enriched with links and references from MCP tools. Use when user says 'compile this for Slack', 'write this up for the team', 'post this finding', or 'share this on Slack'. Enriches the user's question or finding with PR links, Spacelift run links, code line references, and other relevant links. Always drafts and presents for approval before posting."
 disable-model-invocation: true
 argument-hint: "[what to compile — a question, finding, or topic]"
 references:

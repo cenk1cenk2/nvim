@@ -1,6 +1,6 @@
 ---
 name: linear-project-reconcile
-description: Reconcile a Linear project's records with reality — audit and fix structure, subissues, priorities, estimates, labels, and blocking relations in one pass. Use when user says "reconcile the project", "audit the project", "clean up the project", "review project priorities", or "is the project still accurate". Do NOT use for editing the project description/documents (/linear-project-update), state-only sync from merged MRs/PRs (/linear-project-match), posting status updates (/linear-project-post), or creating new projects (/linear-project-create).
+description: linear-project-reconcile Reconcile a Linear project's records with reality — audit and fix structure, subissues, priorities, estimates, labels, and blocking relations in one pass. Use when user says "reconcile the project", "audit the project", "clean up the project", "review project priorities", or "is the project still accurate". Do NOT use for editing the project description/documents (/linear-project-update), state-only sync from merged MRs/PRs (/linear-project-match), posting status updates (/linear-project-post), or creating new projects (/linear-project-create).
 argument-hint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md

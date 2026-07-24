@@ -1,6 +1,6 @@
 ---
 name: linear-issue-comment
-description: Record critical findings, deviations, and decisions as concise comments on Linear issues. Use when user says "comment on the issue", "log this to Linear", "document this finding", or "add a note to the issue". Do NOT use for updating the issue description (/linear-issue-update) or checklist (/linear-issue-checklist).
+description: linear-issue-comment Record critical findings, deviations, and decisions as concise comments on Linear issues. Use when user says "comment on the issue", "log this to Linear", "document this finding", or "add a note to the issue". Do NOT use for updating the issue description (/linear-issue-update) or checklist (/linear-issue-checklist).
 argument-hint: "[issue-id or Linear URL] [what to comment]"
 references:
   - ../references/linear-prerequisite.md

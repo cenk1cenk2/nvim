@@ -1,6 +1,6 @@
 ---
 name: linear-project-pickup
-description: Prepare a Linear project or project slice for implementation by fetching issues, documents, blockers, comments, and execution scope. Use when user says "pick up this project", "work part of this Linear project", "implement this project slice", or provides a Linear project URL for execution. Do NOT use for read-only project refreshes or project structure audits.
+description: linear-project-pickup Prepare a Linear project or project slice for implementation by fetching issues, documents, blockers, comments, and execution scope. Use when user says "pick up this project", "work part of this Linear project", "implement this project slice", or provides a Linear project URL for execution. Do NOT use for read-only project refreshes or project structure audits.
 argument-hint: "[project name or URL] [optional slice/filter]"
 references:
   - ../references/linear-prerequisite.md

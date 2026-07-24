@@ -1,6 +1,6 @@
 ---
 name: code-review-branch
-description: Review the current branch's changes against the default or target branch with full conversation context. Always manually invoked. Do NOT use for PR/MR descriptions (github-pr-create, gitlab-mr-create), debugging (code-debug), or failed commands (code-task-failed).
+description: code-review-branch Review the current branch's changes against the default or target branch with full conversation context. Always manually invoked. Do NOT use for PR/MR descriptions (github-pr-create, gitlab-mr-create), debugging (code-debug), or failed commands (code-task-failed).
 disable-model-invocation: true
 argument-hint: "[optional: target-branch or PR URL]"
 references:

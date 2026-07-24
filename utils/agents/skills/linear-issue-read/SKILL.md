@@ -1,6 +1,6 @@
 ---
 name: linear-issue-read
-description: Read-only refresh of a Linear issue — re-read its description, comments, relations, and project context, and surface what changed since you last looked. Use when user says "read the issue", "refresh the issue", "re-read the issue", "what changed on this issue", or "catch me up on K-123". Do NOT use for starting work (/linear-issue-pickup) or updating the issue (/linear-issue-update).
+description: linear-issue-read Read-only refresh of a Linear issue — re-read its description, comments, relations, and project context, and surface what changed since you last looked. Use when user says "read the issue", "refresh the issue", "re-read the issue", "what changed on this issue", or "catch me up on K-123". Do NOT use for starting work (/linear-issue-pickup) or updating the issue (/linear-issue-update).
 argument-hint: "[issue-id or Linear URL]"
 references:
   - ../references/linear-prerequisite.md

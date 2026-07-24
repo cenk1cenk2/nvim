@@ -1,6 +1,6 @@
 ---
 name: linear-project-agent
-description: Structure and manage Linear projects for autonomous agent execution — write agent-ready project plans, break work into self-contained issues, and review project structure for agent handoff. Use when user says "set up this project for agents", "structure the project for autonomous execution", or "review the project for agent readiness". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for generic project creation (/linear-project-create) or status updates (/linear-project-post).
+description: linear-project-agent Structure and manage Linear projects for autonomous agent execution — write agent-ready project plans, break work into self-contained issues, and review project structure for agent handoff. Use when user says "set up this project for agents", "structure the project for autonomous execution", or "review the project for agent readiness". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for generic project creation (/linear-project-create) or status updates (/linear-project-post).
 argument-hint: "[create|update|review] [project-name] [description of what the project does]"
 references:
   - ../references/linear-prerequisite.md

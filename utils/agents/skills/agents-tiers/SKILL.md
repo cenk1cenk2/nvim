@@ -1,6 +1,6 @@
 ---
 name: agents-tiers
-description: Explain and resolve the delegation tier-to-model mapping per provider (Claude, OpenCode, Codex). Use when user says "agents-tiers", "what are my tiers", "delegation tiers", "which model is cheap/smart/max", or when a delegation skill needs to resolve a tier to a concrete model for the active provider. Do NOT use to dispatch an agent (/agents-delegate) or plan a multi-agent DAG (/agents-plan).
+description: agents-tiers Explain and resolve the delegation tier-to-model mapping per provider (Claude, OpenCode, Codex). Use when user says "agents-tiers", "what are my tiers", "delegation tiers", "which model is cheap/smart/max", or when a delegation skill needs to resolve a tier to a concrete model for the active provider. Do NOT use to dispatch an agent (/agents-delegate) or plan a multi-agent DAG (/agents-plan).
 references:
   - ../references/agents-tiers-claude.md
   - ../references/agents-tiers-opencode.md

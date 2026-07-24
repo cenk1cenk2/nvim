@@ -1,6 +1,6 @@
 ---
 name: config-skills
-description: Create, update, or review skills in the skills directory. Use when user says "create a skill", "update skill X", "review my skills", "add a new slash command", or "improve this skill". Do NOT use for loading or chaining skills (use /load-skills).
+description: config-skills Create, update, or review skills in the skills directory. Use when user says "create a skill", "update skill X", "review my skills", "add a new slash command", or "improve this skill". Do NOT use for loading or chaining skills (use /load-skills).
 disable-model-invocation: true
 references:
   - ../references/present-first.md

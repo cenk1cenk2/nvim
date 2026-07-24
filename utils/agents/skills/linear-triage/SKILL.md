@@ -1,6 +1,6 @@
 ---
 name: linear-triage
-description: Process all Linear issues in triage status, recommending projects, priorities, teams, and refinements interactively. Use when user says "triage issues", "process the triage queue", or "review untriaged issues". Requires a workspace skill (linear-kilic or linear-laravel). Do NOT use for cycle planning (linear-cycle) or picking next tasks (linear-next-task).
+description: linear-triage Process all Linear issues in triage status, recommending projects, priorities, teams, and refinements interactively. Use when user says "triage issues", "process the triage queue", or "review untriaged issues". Requires a workspace skill (linear-kilic or linear-laravel). Do NOT use for cycle planning (linear-cycle) or picking next tasks (linear-next-task).
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md

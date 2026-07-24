@@ -1,6 +1,6 @@
 ---
 name: agents-review
-description: Dispatch a review subagent to cross-check an artifact (plan, DAG, facts, or free-form analysis) against the codebase or a devil's-advocate lens. Uses a cheap model by default for quick checks; opts up to a smarter model for hard reviews. Multiple artifacts in one invocation dispatch reviewers in parallel. Use when user says "review this", "fact-check", "cross-check", "second opinion", "peer review", "agents-review". Do NOT use for running a task (use /agents-delegate), for multi-task plans (use /agents-plan), or to re-read code you've already seen (just read it yourself).
+description: agents-review Dispatch a review subagent to cross-check an artifact (plan, DAG, facts, or free-form analysis) against the codebase or a devil's-advocate lens. Uses a cheap model by default for quick checks; opts up to a smarter model for hard reviews. Multiple artifacts in one invocation dispatch reviewers in parallel. Use when user says "review this", "fact-check", "cross-check", "second opinion", "peer review", "agents-review". Do NOT use for running a task (use /agents-delegate), for multi-task plans (use /agents-plan), or to re-read code you've already seen (just read it yourself).
 disable-model-invocation: true
 argument-hint: "[type=plan|dag|facts|freeform] [artifact or file path] [optional: 'hard' | 'deep' | 'thorough' | explicit model name]"
 references:

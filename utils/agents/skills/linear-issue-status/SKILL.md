@@ -1,6 +1,6 @@
 ---
 name: linear-issue-status
-description: Quickly update a Linear issue status from explicit user wording or clear workflow context. Use when user says "mark K-123 done", "move this to in review", "set the issue to in progress", "cancel this issue", or when composing status changes with issue creation/checklist work. Do NOT use for full issue edits or project reconciliation.
+description: linear-issue-status Quickly update a Linear issue status from explicit user wording or clear workflow context. Use when user says "mark K-123 done", "move this to in review", "set the issue to in progress", "cancel this issue", or when composing status changes with issue creation/checklist work. Do NOT use for full issue edits or project reconciliation.
 argument-hint: "[issue-id or URL] [status]"
 references:
   - ../references/linear-prerequisite.md

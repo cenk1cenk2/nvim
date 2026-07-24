@@ -1,6 +1,6 @@
 ---
 name: obsidian-repository
-description: Document repository knowledge in Obsidian — key findings, architecture, conventions, and gotchas. Use when user says "document this repo", "update the repo note", "capture architecture in Obsidian", or "add a detailed note about X in this repo" — OR when the assistant detects that the Obsidian repo note has drifted from the actual repo state (architecture, conventions, components, gotchas) during a session (see AGENTS.md §VII "Knowledge Base Updates (Proactive)"); ALWAYS propose, never auto-apply regardless of session mode. Do NOT use for general notes (obsidian-note), quick todos (obsidian-todo), or triaging notes (obsidian-triage).
+description: obsidian-repository Document repository knowledge in Obsidian — key findings, architecture, conventions, and gotchas. Use when user says "document this repo", "update the repo note", "capture architecture in Obsidian", or "add a detailed note about X in this repo" — OR when the assistant detects that the Obsidian repo note has drifted from the actual repo state (architecture, conventions, components, gotchas) during a session (see AGENTS.md §VII "Knowledge Base Updates (Proactive)"); ALWAYS propose, never auto-apply regardless of session mode. Do NOT use for general notes (obsidian-note), quick todos (obsidian-todo), or triaging notes (obsidian-triage).
 disable-model-invocation: true
 argument-hint: "[repository name or path] [optional: what to document]"
 references:
