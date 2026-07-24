@@ -77,9 +77,9 @@ Rules:
 
 - The covering skill owns the mandatory fields, conventions, and approval gates — skipping it drops them. Respect tiers (table below): invoke model-invocable skills yourself; for Manual ones, follow on explicit ask and otherwise suggest.
 - The skill body is the source of truth for that mode.
-- Announce the first time you load a skill: `Using **<skill-name>** skill to <purpose>.`
-- Resolve prerequisite skills recursively. If context identifies the prerequisite, load it automatically; if ambiguous, ask. `hyprpilot://skills/load-skills` defines dependency resolution.
-- Load references only when the skill body asks for them — they're progressive-disclosure context, not startup context.
+- **Announce every skill and its references as you load them, with a short relation ack.** The first time you load a skill, print `Using **<skill-name>** skill to <purpose>.` When it pulls in references, name them on the same line and ack in a few words what they're for right now — e.g. `Using **git-commit** skill to commit — refs: commit-style, commit-trailers (message format + issue links).` If no references load, just the skill line. The point is to make the loaded context visible: one glance shows which skill and which references are in play and why, so the user (and a resumed agent) can see what's driving the work.
+- Resolve prerequisite skills recursively. If context identifies the prerequisite, load it automatically; if ambiguous, ask. `hyprpilot://skills/load-skills` defines dependency resolution. Announce a loaded prerequisite the same way, noting it was pulled in for the parent skill.
+- Load references only when the skill body asks for them — they're progressive-disclosure context, not startup context — and when you do, ack them per the rule above rather than loading them silently.
 - When multiple skills are active, read their composition instructions and let them share context. Ask only when it is unclear which skill should own an action.
 - Never use the runtime's own built-in skill tool for these custom hyprpilot skills.
 
