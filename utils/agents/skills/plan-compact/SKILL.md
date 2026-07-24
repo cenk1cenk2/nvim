@@ -42,6 +42,7 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
 - **Methodology & approach** — *how* we are doing it: the working method, sequencing, conventions adopted, tooling/agent decisions, verification commands. The habits that would be silently dropped by a summary.
 - **Source documents** — every authoritative external context, each as `identifier — what it holds` (Linear project/issue URLs+IDs and their attachments, Obsidian note paths, plan/handoff/internal-plan file paths, PR/MR URLs, key repo paths).
 - **Standing watches / ongoing** — anything that must keep running after resume: PRs/MRs and CI/pipelines being monitored, background agents in flight, polling loops, review threads awaited — each with its identifier and what you are waiting for.
+- **Scratchpad scripts & watchers** — any watcher command, poll loop, or helper script you wrote to the scratchpad/temp dir does NOT survive compaction and is NOT reliably shared across sessions or agents. Capture it in the anchor **verbatim**: the full command/script body, its scratchpad path, and where and how it was used (which watch it drives, how to re-run it). The scratchpad copy is disposable — the anchor is the durable one. Never leave a running watcher or a script that produced state referenced only by a path the next agent cannot read.
 - **Done so far** — completed steps and decisions.
 - **Next up** — planned steps, in order.
 - **Next-task handoff** — a cold-executable brief for the immediate next task.
@@ -64,7 +65,7 @@ The moment the context has been compacted — the summary says so, or you notice
 1. **Re-ground EVERYTHING first — run `agent-read` (absolute, never deviate).** Before touching the task, do the full discovery as if starting a new session: re-read the central `AGENTS.md` / system prompt fresh, rediscover the skills catalog, reload caveman, and re-read the local instructions — all via the `agent-read` skill. The guidelines and catalog that compaction summarized away come back inline before anything else. This is the mandatory first task; do not begin any task work until it is done. Only after `agent-read` completes do you work through the rest of this compaction documentation — the anchor and every source below.
 2. **Read the anchor document fully.**
 3. **Re-read every source document it lists**, each via its owning tool — Linear via `linear-*` (issues, projects, attached documents), Obsidian via `obsidian__*`, plan/internal files via `Read`, PRs/MRs via `scm-*`. Do NOT trust the summary — go back to source.
-4. **Re-establish standing watches.** For every item under Standing Watches, re-check its live state (PR/MR status, pipeline result, background agent, awaited thread) so nothing being monitored is dropped.
+4. **Re-establish standing watches and scripts.** For every item under Standing Watches, re-check its live state (PR/MR status, pipeline result, background agent, awaited thread) so nothing being monitored is dropped. For every scratchpad script or watcher recorded in the anchor, treat the scratchpad as gone — re-materialize the script from the anchor's verbatim copy (rewrite it to the scratchpad if needed) and re-arm the watch. Never assume a scratchpad path from before compaction still exists.
 5. **Rebuild and reconcile.** Reconstruct the working model, including the methodology and caveats. Where the anchor and a live source disagree, the source wins — update the anchor to match.
 6. **Report the reconstructed state** (task, methodology in brief, done, next task, active watches) in a few lines, then **resume** the exact task from the next-task handoff.
 
@@ -75,8 +76,9 @@ The moment the context has been compacted — the summary says so, or you notice
 
 > ⚠️ POST-COMPACTION: if you are resuming here with a summarized context, STOP and
 > re-ground FIRST — run `agent-read` (re-read AGENTS.md + rediscover skills), then read
-> this file, re-read every Source Document below via its owning tool, and re-check every
-> Standing Watch before taking any action. Then resume the task from Next-Task Handoff.
+> this file, re-read every Source Document below via its owning tool, re-check every
+> Standing Watch, and re-materialize every Scratchpad Script/Watcher (scratchpad is gone)
+> before taking any action. Then resume the task from Next-Task Handoff.
 >
 > **Project:** <project> · **Created:** YYYY-MM-DD · **Updated:** YYYY-MM-DD
 
@@ -99,6 +101,16 @@ decisions, verification commands. The "how" a summary would drop.]
 - `<PR/MR URL>` — [what we are watching for, e.g. CI green + review approval].
 - `<pipeline / CI ref>` — [awaited result].
 - `<background agent / loop>` — [what it is doing, how to check].
+
+## Scratchpad Scripts & Watchers
+[Scratchpad/temp files do NOT survive compaction and are NOT reliably shared — inline
+anything that lives there so this section is the durable copy. For each: what it does,
+its scratchpad path, and where/how it was used. Include the full body so it can be
+re-materialized after compaction.]
+- `<scratchpad path>` — [what it does; which watch it drives / how to re-run].
+  ```
+  <full command or script body, verbatim>
+  ```
 
 ## Done So Far
 - [Completed step / decision.]
@@ -148,6 +160,7 @@ Reconcile reads the source documents and re-checks watches automatically through
 - **Rediscover EVERYTHING first — absolute, never deviate.** After compaction the mandatory first task is the whole reconcile pass, in order: `agent-read` (system prompt, guidelines, skills catalog, caveman, local instructions), then the anchor, then every source document, then every standing watch — all re-read from source. Everything compaction touched gets rediscovered; none of it is optional and the summary never substitutes for a source. No task work until the full pass is done.
 - **Check consistency before compaction.** When several documents describe the task, cross-check them (delegating to a cheap subagent when there are many) and surface any drift to the user before the context is compacted — never bury it.
 - **Capture the how, not just the what.** Methodology, caveats, and standing watches are exactly what a summary drops — record them so the resuming agent works the same way and drops nothing it was monitoring.
+- **Scratchpad is not durable — inline it.** Watchers, poll loops, and helper scripts written to the scratchpad/temp dir vanish on compaction and are not shared across sessions or agents. Record their full body, path, and use in the anchor, and re-materialize them from the anchor on resume — never leave the anchor pointing at a scratchpad path the next agent cannot read.
 - **Source documents are truth.** Rebuild from the listed sources via their owning tools — never from the summary alone.
 - **The anchor path is the lifeline.** Restate it at every checkpoint so it survives the compaction summary.
 - **Terse and current.** The anchor is working memory, not a report — update in place, don't append history.

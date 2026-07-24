@@ -52,7 +52,7 @@ Do not attribute this harness's tools (`ScheduleWakeup`, `Monitor`, `CronCreate`
 2. **Pick a bash-reachable signal.** A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (bash cannot call MCP), poll a **proxy** bash CAN see, and do the authoritative MCP check yourself on wake.
 3. **Bound the loop.** Always cap iterations (`seq 1 N`) as a runaway backstop; on exhaustion print a clear "not met" line and re-arm rather than looping forever.
 4. **Choose cadence by how fast the state changes** — short (~60s) for a human action, longer for a slow job (one check near the expected finish beats many early ones). Never poll faster than the state can plausibly change.
-5. **Launch one watcher**, note its task id, and tell the user what it's waiting on.
+5. **Launch one watcher**, note its task id, and tell the user what it's waiting on. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. State the watcher (what it polls, its cadence, its task id, and the command to re-arm it) out loud in chat, and if `plan-compact` is active write it verbatim into the anchor's Scratchpad Scripts & Watchers section. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
 6. **On wake: re-verify the real state before acting.** External APIs lag — a signal can read "done" slightly before/after the truth, and a proxy firing does not mean the downstream state converged. Do the authoritative check now.
 7. **Continue or re-arm.** If a follow-on condition isn't satisfied yet (e.g. the proxy fired but the real work is still settling), launch the next watcher. Never assume the proxy equals the end state.
 
@@ -64,6 +64,7 @@ Do not attribute this harness's tools (`ScheduleWakeup`, `Monitor`, `CronCreate`
 - **`run_in_background` shells are not in `TaskList`** (that lists the task-management system, not local shells). Track the returned task id yourself; stop one with `TaskStop <id>`.
 - **Avoid redundant watchers.** Mutating the thing a watcher polls usually doesn't invalidate it (it keys on a stable id). Re-arm only when unsure the old one is alive; a duplicate merely double-wakes (harmless — re-verify and no-op).
 - **Persistence:** background shells survive across turns until they exit or you stop them; you're re-invoked on exit. Size cap × cadence to a sane ceiling (e.g. 45 × 60s ≈ 45 min) and re-arm past it.
+- **Compaction does not preserve watchers.** The background task id, the loop's script body, and anything it wrote to the scratchpad are session/scratchpad state — a compaction summary drops them and they do not transfer to another agent. Anything armed for longer than a checkpoint must be recorded in durable text (chat + the `plan-compact` anchor), so a resumed agent re-materializes the script and re-arms the watch instead of losing it. Never rely on a background handle or a scratchpad path outliving a compaction.
 
 ## Fallback
 
