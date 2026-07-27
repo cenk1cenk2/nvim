@@ -288,6 +288,7 @@ When creating or updating a skill, always check:
 | `agents-completion.md` | Completion handoff: summarize, present options (commit/push/PR/leave), execute choice. | Agent skills (agents-plan, agents-delegate). |
 | `agents-plan-split.md` | Planning phase: understand goal, tooling, conventions, plan, split tasks, declare depends_on, build layer schedule, verify file overlap. | Agent skills (agents-plan). |
 | `agents-merge-review.md` | Per-layer merge + per-layer review, end-of-run review against run baseline, final verification with evidence, handoff. | Agent skills (agents-plan). |
+| `agent-target-capability.md` | Capability axes of a target agent (skills, MCP, repo, memory, shell, write authority), tier defaults, mixed/unknown handling, declaration line. | `agent-aware`, `agent-unaware`. |
 | `output-diff.md` | Chunked change presentation — reasoning + content blocks before any write. | Config family (5 skills), Linear/Obsidian/Slack write skills. |
 | `redact-private-data.md` | No private specifics in authored content — treat-as-private list, placeholders to use, functional identifiers to keep; use only with explicit permission. | Config family (5 skills). |
 
