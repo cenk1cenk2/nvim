@@ -1,6 +1,6 @@
 ---
 name: beep-laravel
-description: 'beep-laravel Daily check-in that restyles the user''s update in a chosen tone, then DMs it to the beep bot in the Laravel Slack on approval - never to a channel. Use on "beep", "daily check-in", "check me in". Do NOT use for status reports to others or standup writeups (write those plainly).'
+description: 'beep-laravel Daily check-in that restyles the user''s update in a chosen tone, then always creates a Slack draft DM to the beep bot in the Laravel Slack for the user to review and send themselves - never sends directly, never to a channel. Use on "beep", "daily check-in", "check me in". Do NOT use for status reports to others or standup writeups (write those plainly).'
 references:
   - ../references/present-first.md
   - ../references/claude-ai-connectors.md
@@ -14,6 +14,8 @@ argumentHint: "[tone] <your check-in>"
 
 > **NEVER post to a channel — absolute rule.** The beep check-in is only ever a **direct message to the beep bot/app**. Do not post it to any Slack channel under any circumstances. If you cannot resolve the bot/app DM, stop and ask — never fall back to a channel.
 
+> **NEVER send directly — draft only, absolute rule.** This skill only ever creates a Slack draft. It never calls a send tool for the beep check-in, regardless of what the user says ("send", "post", "go", "yes"). The user reviews the draft and sends it themselves from Slack.
+
 > Read the `claude-ai-connectors` reference to load the Laravel Slack tools (`mcp__claude_ai_Slack__*`, deferred) via `ToolSearch` — `slack_search_users`, `slack_send_message_draft`, `slack_send_message`.
 
 A daily ritual. The user shares what their day held — and often what tomorrow holds — and beep plays it back to them. **Vanilla is the default** — a clean, professional replay of the check-in. When the user picks a tone, the point shifts to delight: beep dresses the facts in that voice. Offer a rich, varied menu of tones, but absent a pick, vanilla wins.
@@ -26,7 +28,7 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 2. **Settle the tone.**
    - If the user explicitly named a tone (in the arguments or message, e.g. "pirate", "do it noir", "weather report"), use it — including tones outside the roster.
    - Otherwise, **propose tones before narrating.** Offer a generous, varied handful to spark ideas, then invite the user to name their own.
-   - **Always vary the proposals, and reach wide.** Don't reprint the same list — regenerate a fresh set each run (5-7 options), mixing house/extended tones with several invented on the spot that riff on the day's content (a rough day → therapy session; a shipping day → launch control). Pull from far afield — genres, eras, formats, voices — so the menu surprises. Always keep **📋 vanilla** on the list as the no-tone option, and always end with "…or name your own." Example shape (regenerate the tones each time):
+   - **Always vary the proposals, and reach wide.** Don't reprint the same list — regenerate a fresh set each run (5-7 options), mixing house/extended/wildcard tones with several invented on the spot that riff on the day's content (a rough day → therapy session; a shipping day → launch control). Pull from far afield — genres, eras, formats, voices — so the menu surprises. Treat the **Wildcard palette** in Tone Guides as a springboard, not a script: remix it, combine it with the day's content, or invent adjacent ones — don't recite the same handful run after run. Always keep **📋 vanilla** on the list as the no-tone option, and always end with "…or name your own." Example shape (regenerate the tones each time):
      ```
      What tone? A few to spark ideas:
      - 🎙️ late-night talk show
@@ -43,16 +45,16 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 
 4. **End naturally** — let the narration land on its own last beat. No canned sign-off or catchphrase ("that's a wrap", "and scene", "signing off"), no meta-summary, no explaining the joke.
 
-5. **Send to beep (DM only, on approval).** The styled narration from steps 3-4 is the message body — do not re-style it.
+5. **Send to beep — draft only, ABSOLUTE. Never send directly, ever.** The styled narration from steps 3-4 is the message body — do not re-style it.
    - **Resolve the target (confirmed method)** — the beep app does **not** surface in `slack_search_users` (queries like `beep`, `beep bot`, `standup` return nothing). Use the known beep **DM channel** directly: `channel_id` `D0B5SBB8QUF` (the `beep2` direct message, member `U08MDLB9U0Z`). This is a DM, never a channel. If that DM ever stops resolving, stop and ask — never fall back to a channel.
    - **Draft it** — create a real Slack draft with `slack_send_message_draft` (`channel_id` = the beep DM above). Confirmed working. If it returns `draft_already_exists`, replace the previous draft rather than stacking. Present the styled text plus "DM to the beep app" for approval.
-   - **Send only on an explicit go-word** — `post`, `send`, or `go`. Then send with `slack_send_message` (`channel_id` = the beep DM, passing the `draft_id` so the draft clears on send). Without a go-word, leave the draft in place — invoking the skill produces the draft, the go-word posts it.
+   - **Never call `slack_send_message` for this skill — not on any go-word.** `post` / `send` / `go` / `yes` from the user do NOT trigger an actual send; the deliverable is always the draft, full stop. If the user asks to send or post it, tell them the check-in only ever lands as a draft — they open it in Slack and hit send themselves.
    - **If the app cannot be DM'd** (`cannot_dm_bot` / `channel_not_found`), STOP and tell the user — the beep app must have direct messages enabled. Never fall back to a channel.
-   - **Report** the sent message link (or the draft link) and that it went to the bot/app DM.
+   - **Report** the draft link and that it's sitting in Drafts & Sent for the beep DM, ready for the user to review and send.
 
 ## Done vs. Tomorrow
 
-When the check-in has both buckets, distinguish them through tense and a natural paragraph break — no headers or labels needed. The line between them should be unmistakable:
+When the check-in has both buckets, distinguish them through tense and a natural paragraph break — no headers or labels needed. **Never write literal labels** like "Today:", "Tomorrow:", "Done:", "Up next:" — in vanilla or any tone. Say it as natural flowing prose; tense plus the paragraph break alone must carry the split. The line between them should be unmistakable:
 
 - **Done** → past tense, settled, triumphant or grim-but-finished. The kill is made, the case is closed, the front has passed.
 - **Tomorrow** → future tense, anticipatory, foreshadowing. The hunt ahead, the storm moving in, the next job, uncharted space.
@@ -65,7 +67,7 @@ These are **examples, not a fixed menu** — a reference palette to show the ran
 
 **No tone**
 
-- **📋 Vanilla** — no styling. Replay the check-in professionally in the user's own words: tidy grammar and phrasing, keep every fact, name, and technical term intact, no metaphors or costume. Still split done (past tense) from tomorrow (future tense) with a paragraph break, and close with a plain sign-off. This is the one tone where a faithful summary is the goal.
+- **📋 Vanilla** — no styling. Replay the check-in professionally in the user's own words, as natural prose — never "Today: ... Tomorrow: ..." labels. Tidy grammar and phrasing, keep every fact, name, and technical term intact, no metaphors or costume. Still split done (past tense) from tomorrow (future tense) with a paragraph break, and close with a plain sign-off. This is the one tone where a faithful summary is the goal.
 
 **House tones**
 
@@ -83,6 +85,19 @@ These are **examples, not a fixed menu** — a reference palette to show the ran
 - **🃏 Heist briefing** — cool crew-leader brief. *Done:* the crew cracked it clean, no alarms. *Tomorrow:* we hit the webhooks at dawn; then the big one — the migration.
 - **🛡️ War-room briefing** — clipped general's report, 24h clock. *Done:* the objective is taken and held, no losses. *Tomorrow:* at 0600 we advance; the migration is our objective by nightfall.
 - **🍳 Cooking show** — warm chef patter. *Done:* today we plated a gorgeous API and deglazed that flaky test. *Tomorrow:* we're prepping webhooks and — the showstopper — a migration from scratch.
+
+**Wildcard palette**
+
+Further-flung sources — genres, eras, formats, voices — to keep the menu surprising. Remix these, don't just recite them.
+
+- **🕵️ Spy dossier** — redacted-intelligence-briefing voice, clipped and classified. *Done:* Asset neutralized the flaky test; extraction clean, no trace left in the logs. *Tomorrow:* new target acquired — the migration — surveillance begins at first light.
+- **📻 Old-time radio drama** — booming announcer, dramatic organ-sting pauses. *Done:* And so, dear listener, the API bug met its end — vanquished before the credits rolled! *Tomorrow:* Tune in tomorrow, when our hero faces... the migration!
+- **🎲 Tabletop RPG log** — DM narrating a session, stats and rolls. *Done:* Rolled a natural 20 against the flaky test — one hit, it's dead, XP awarded. *Tomorrow:* Next session opens on the migration dungeon; the party is under-leveled and knows it.
+- **⚖️ Courtroom closing argument** — lawyerly, rhetorical, building to a verdict. *Done:* The evidence is clear, the API bug stands convicted, case closed. *Tomorrow:* tomorrow we bring a new case before the court — the migration — and we intend to win it.
+- **🏛️ Museum audio guide** — hushed, reverent docent voice. *Done:* Before you, visitor, the fossilized remains of a once-flaky test, now extinct. *Tomorrow:* in the next gallery, still under construction: the migration exhibit.
+- **📜 Bardic saga** — epic verse, archaic cadence. *Done:* Lo, the bug that plagued the realm was slain, and peace returned to the kingdom's tests. *Tomorrow:* at dawn the hero rides again, toward the migration that awaits beyond the hills.
+- **🧾 Earnings call** — corporate investor-relations voice, confident numbers talk. *Done:* We're pleased to report the flaky-test liability has been fully resolved this quarter. *Tomorrow:* guidance for tomorrow calls for continued investment in the migration workstream.
+- **🛸 First-contact report** — xenobiologist logging an alien encounter. *Done:* The specimen — the bug — was studied, understood, and successfully removed from the habitat. *Tomorrow:* scans indicate a larger structure ahead, the migration; approach planned for morning.
 
 ## Example
 
@@ -110,8 +125,9 @@ These are **examples, not a fixed menu** — a reference palette to show the ran
 - **Just the narration** — no preamble, framing sentence, or tacked-on sign-off; deliver the styled check-in itself, nothing wrapped around it.
 - **Settle the tone first** — never narrate before it's settled; absent a pick, the tone is vanilla.
 - **Done ≠ tomorrow** — past/settled for done, future/incoming for tomorrow; the line between them must be unmistakable.
+- **No "Today:"/"Tomorrow:" labels — ABSOLUTE.** Never prefix a line with a literal label ("Today:", "Tomorrow:", "Done:", "Up next:"), in vanilla or any tone. Tense and the paragraph break alone carry the split, in natural flowing prose.
 - **Short and punchy** — a couple of beats, then let it land. No essays, no meta.
 - **Honor custom tones** — if the user names their own, run with it over the roster.
 - **Vanilla is the default** — it's what beep uses when no tone is named: drop the costume and give a clean professional replay. A named tone opts into delight; vanilla is the faithful baseline.
 - **DM the beep app, never a channel** — the beep check-in goes only to the beep DM (`D0B5SBB8QUF`, member `U08MDLB9U0Z`) as a direct message; `slack_search_users` won't find the app, so use that DM directly. Posting it to a channel is never allowed.
-- **Draft, then send on the go-word** — produce the Slack draft on invocation; only `post` / `send` / `go` actually sends it.
+- **Draft only, never send — ABSOLUTE.** This skill always produces a Slack draft and never calls a send tool for it, regardless of go-words ("post" / "send" / "go" / "yes"). The user reviews and sends it themselves from Slack.
