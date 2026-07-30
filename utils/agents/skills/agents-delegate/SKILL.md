@@ -108,4 +108,5 @@ See the `agents-tiers` skill for tier definitions, per-provider model lists, and
 
 - **`agents-plan`** — DAG-scheduled multi-task execution. Handles parallel, sequential, and mixed shapes via `depends_on` declarations. Modes: team (default, approval propagation) or fire-and-forget (bypass).
 - **`agents-review`** — dispatch a review subagent to cross-check an artifact (plan, DAG, facts, freeform). Uses the same dispatch mechanism but with review-specific prompt templates and a cheap default tier.
+- **`agent-coordinator`** — standing posture where dispatching is the default and the lead's context stays clean; uses this skill for each individual handoff.
 - **`code-review-changes`** — review the diff after the delegate completes, if the result merits a review pass.
