@@ -127,9 +127,26 @@ Thread commands (Slack blocks native slash commands inside threads, so Hermes ac
 - **Reply into the existing thread** when the work is rooted in one — an alert, an incident, a discussion. Posting there gives labrat the whole thread as context for free and keeps the answer where the people watching it are. This is the case for "look at that alert and investigate": the handoff is a reply to the alert, mentioning `@labrat` once.
 - **Never open a second thread for work that already has one.** Two threads on one task means two contexts, and the watcher only follows one.
 
-## Two modes: delegate, or converse
+## Engagement level — the user sets it
 
-Decide this **before arming anything** — it sets what the watcher listens for and how much of your turn budget the handoff costs.
+**How involved you stay is the user's call, not yours.** Three levels, and they say which:
+
+| Level | They say | You do | Watcher |
+|---|---|---|---|
+| **Fire and forget** | "hand it to labrat", "just give it to it", "don't babysit this" | Post the brief, capture the thread `ts`, report the link, **stop**. Pick it up again only when they ask. | None. |
+| **End to end** | "see it through", "own this until it's done", "come back when it's finished" | Drive it to completion: answer its questions, clear blockers, verify the deliverable, report once at the end rather than narrating every step. | Armed. Terminal-signal cadence, tightened while an exchange is live. |
+| **Watch and control** | "stay on top of it", "check its claims", "verify its work", "i want to steer this" | Read every reply, verify each claim against its artifact as it lands, steer and queue continuously, validate the MR before anyone acts on it. | Armed tight — 2-3 min, every reply. |
+
+Rules:
+
+- **Ask when it is unstated and the levels would differ materially** — a throwaway investigation and a production-touching change deserve different answers, and one line settles it.
+- **The level can change mid-run, in either direction.** "actually keep an eye on it" upgrades; "that's enough, let it run" downgrades. Re-arm or reap accordingly, and say which you did.
+- **Fire and forget still captures the thread `ts`.** Not watching is not the same as losing the handle — without it, picking the work back up later means hunting for the thread.
+- **Fire and forget does not mean unverified.** When the result eventually matters, verification happens when the user comes back to it, not never.
+
+### Delegate or converse
+
+Within an engaged handoff, decide this **before arming anything** — it sets what the watcher listens for and how much of your turn budget the handoff costs.
 
 | | **Delegate and collect** | **Steer in-thread** |
 |---|---|---|
@@ -202,6 +219,18 @@ On each wake, run the awareness cycle from `agent-watchers`: read what is new, v
 
 Judge liveness by task-relevant replies, not message count. If two or three consecutive checks bring only housekeeping, ask for a one-line status in-thread rather than assuming either progress or death.
 
+**The last message tells you whether it is still running — decide the watcher from it, every check.** Hermes marks its own state:
+
+| Last message | Meaning | Watcher |
+|---|---|---|
+| Progress line (`⏳ Working — N min — iteration x/y`) | Mid-run | Keep armed. |
+| A phase narration ("let me dig into…", "opus dispatched") | Mid-run | Keep armed. |
+| Housekeeping or empty | Alive, not advancing | Keep armed; status-ping after 2-3 such checks. |
+| A verdict, a report, an MR link, "done" | **Terminal** | Verify the claim, then **reap the watcher** — the run is over and every further tick is a wasted turn. |
+| Gateway restarting / offline notice | Interrupted | Re-send or re-steer once it is back; do not treat as failure. |
+
+A terminal report is the signal to stop watching, not to keep watching in case something else arrives. If more work follows, that is a new steer and, if the user wants it, a new watcher.
+
 **A quiet thread is not a verdict.** It can mean working, blocked on an approval prompt, or a stalled run. Check the thread before concluding anything, and if it is waiting on approval, answer it — that is a reply you owe, not an event to observe.
 
 ## Steer and queue mid-run
@@ -216,6 +245,18 @@ Judge liveness by task-relevant replies, not message count. If two or three cons
 **Hand over the question, do not answer it yourself.** A steer is a pointer, not an analysis: "the pipeline looks red — check it and fold it in" is the whole message. Digging through job logs, diffs, and traces on this side to hand it a finished diagnosis burns your context to produce something it can get faster on its host, from the machine that actually runs the thing.
 
 The only verification you owe first is the cheap sanity kind — enough that you are not sending it after a stale run or a wrong link. Where even that is uncertain, say what you saw and let it confirm: "there was a failure earlier, latest run may be green — confirm which."
+
+## Closing out a handoff
+
+When the terminal report lands:
+
+1. **Verify from the artifact it cited, not from its restatement.** If it says "CI plan is clean", open that job's output and find the line. A capable agent summarising honestly and a capable agent summarising optimistically produce identical-looking messages.
+2. **Expect credential asymmetry, and treat it as information.** Its host is not your host: it may be blocked where CI is not (here, Vault returned 403 for its delegate while the pipeline had full auth). An agent that says "I could not reach X, but Y covers it" is doing exactly what the brief asked; an agent that quietly works around it is the failure mode.
+3. **Reap the watcher** — the run is over.
+4. **Report the verdict with its evidence**, and leave the decision the user reserved (merging, applying, deploying) with them.
+5. **A "nothing to fix" verdict is a successful outcome of an investigate-then-fix flow**, not a wasted run. The branch point existed precisely so the fix phase could be skipped.
+
+**It evolves between runs.** Hermes writes its own skills and memory from experience — it created a reusable skill for this task shape mid-run. So its behaviour is not fixed: something it needed spelled out last week may already be internalised, and a brief that over-explains is wasted twice.
 
 ## Boundaries
 
@@ -247,7 +288,9 @@ The only verification you owe first is the cheap sanity kind — enough that you
 - Ambiguity handed offsite costs hours; make the source agent-ready before the handoff.
 - Pass the user's runtime and model through verbatim; invent neither.
 - Steer inside the thread, never by opening a new one.
-- Verify its claims against artifacts — distance does not make a report evidence.
+- Verify its claims from the artifact it cited — distance does not make a report evidence.
+- A terminal report ends the watch; reap it rather than ticking on in case more arrives.
+- The user sets the engagement level — fire and forget, end to end, or watch and control; ask when it is unstated and the stakes differ.
 - Watchers are armed on the user's ask, never by default — and when armed, tight (2-3 min), because a stalled question is the real cost.
 - Steer and queue mid-run: reply the moment you have something, `!queue` while it is busy, `!stop` when the premise collapses.
 - Hand over questions, not finished diagnoses — it investigates faster from the host that runs the thing.
