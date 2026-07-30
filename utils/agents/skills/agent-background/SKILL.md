@@ -3,12 +3,15 @@ name: agent-background
 description: 'agent-background Arm a background wait-loop that polls an external condition (PR/MR merge, CI or deploy run, human approval) and re-invokes the session once when it is met, instead of sleeping or asking the user to ping. Do NOT use to poll background Agent/Workflow work you started (the harness re-invokes automatically) or for self-paced loop iteration (use /loop).'
 references:
   - ../references/present-first.md
+  - ../references/agent-watchers.md
   - ../references/harness-claude-agent-background.md
   - ../references/harness-opencode-agent-background.md
   - ../references/harness-codex-agent-background.md
 ---
 
 > **Present-first.** Read the `present-first` reference — arm the loop when it's the obvious next step or the user blessed it; surface it first if spawning it is itself the decision.
+
+> Read the `agent-watchers` reference for the watching discipline, cadence table, and concrete check recipes (PR/MR merged, pipeline finished, app converged, endpoint live, MCP-only truth via proxy).
 
 > **⛔ Read the active runtime's `harness-<provider>-agent-background` reference BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that file owns the tool names, parameters, and defaults.
 

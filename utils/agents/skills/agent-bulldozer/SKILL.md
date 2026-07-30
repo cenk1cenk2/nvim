@@ -6,6 +6,7 @@ argumentHint: "[scope of the push]"
 references:
   - ../references/present-first.md
   - ../references/mode-toggle.md
+  - ../references/agent-watchers.md
 ---
 
 > **Present-first.** Read the `present-first` reference — draft and act on blessing. Invoking bulldozer IS a standing blessing to push: skip per-step approval ceremony and act, but still surface anything that crosses a Boundary before doing it. No plan mode.
@@ -98,18 +99,15 @@ Bulldozing fast is dangerous if you fire work in the wrong order. Reason about t
 7. **Report momentum tersely each turn.** Three lines max: what just finished, what is now in flight (including armed watchers and their task ids), what is queued next. No essays.
 8. **Stop only when stopped.** Keep the loop running across turns until the user says "stop", "hold", "pause bulldozer", or "normal mode" — or the stated scope is fully done, in which case report completion and stand down. Hitting a Boundary pauses that action for approval, not the whole mode: surface it, keep pushing on everything else.
 
-## When to Reach for Each Watcher
+## Watchers — the bulldozer's use of them
 
-Arming a watcher or background wait is the **`agent-background`** skill's job — use it for the mechanics (the bash wait-loop, bounding the loop, re-verifying on wake). Pick the tool by the shape of the wait:
+> Read the `agent-watchers` reference for the discipline, cadence table, and check recipes; `agent-background` owns the arming mechanics, and the active `harness-<provider>-agent-background` reference names the runtime facility. Do not restate those here — what follows is only what bulldozing adds.
 
-- **One-shot external condition with a bash-reachable signal** — a PR/MR merge, a CI or pipeline run, a deploy converging, a remote queue draining, a human apply/approval visible via CLI or HTTP: use `agent-background` (background bash wait-loop that wakes the session once when the condition is met). This is the DEFAULT way to survive a concrete blocker without idling.
-- **No single bash-reachable signal, but periodic re-check/prep is useful** — polling state only reachable via MCP with no clean bash proxy, or interval prep passes: use `/loop` (ScheduleWakeup) for self-paced recurring re-invocation.
-- **Genuinely recurring scheduled cadence** — e.g. a daily prep pass that should outlive the session: use `/schedule` (cron routine). Never for one-shot waits.
-- **Work you started via harness-tracked subagents or Workflows** — do NOT poll it at all; the harness re-invokes you automatically on completion. Use the wait to prep, not to watch.
-
-**Keep cadence TIGHT for fast signals.** Infer each watcher's cadence from how fast its signal realistically turns over — but bias tight. A merged PR, a finished Spacelift/CI run, or a completed apply should be caught within seconds — poll tight (~15–30s), not multi-minute intervals. The whole point of bulldozing is momentum; never leave the work idle for minutes after the blocker already cleared. Reserve long cadences only for genuinely slow jobs where early checks are pure waste — and even then, tighten as the expected finish approaches.
-
-**One watcher per independent condition — separate, don't bundle.** Evaluate each blocker on its own. Ten Spacelift stacks applying, or five MRs to land, are individual tasks — arm an individual watcher for each so each is tracked, re-verified, and advanced independently (one stalling never blinds you to the rest). Combine several conditions into a single watcher only when the task genuinely needs them as a unit — a gate that can't move until ALL of them clear together.
+- **Every blocker gets one, immediately.** Ending a turn blocked with nothing armed is the anti-pattern this whole mode exists to kill.
+- **Bias the cadence tight.** A merge, a finished CI run, or a completed apply should be caught within seconds, not minutes — the point of bulldozing is momentum, and idling after the blocker already cleared wastes it. Long cadences only for genuinely slow jobs, tightened as the expected finish approaches.
+- **The wake is a starting gun**, not a notification: re-verify, fire the already-staged next step, arm the following watcher.
+- **A dead watcher is not a stop.** Diagnose why it exited and re-arm — unless the cause needs the driver (auth, credentials, an unknown breakage), in which case surface it.
+- **Work the harness already tracks is not a blocker to watch** — it reports itself where the runtime supports it. Spend that wait on prep instead.
 
 ## Boundaries
 

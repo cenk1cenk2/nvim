@@ -6,6 +6,7 @@ argumentHint: "[project, scope, or Linear target to supervise]"
 references:
   - ../references/present-first.md
   - ../references/mode-toggle.md
+  - ../references/agent-watchers.md
   - ../references/linear-prerequisite.md
   - ../references/linear-state-transitions.md
   - ../references/linear-absolute-approval.md
@@ -54,6 +55,7 @@ Supervisor does not change the turn rhythm: investigate, present, report, wait f
 - **Project-management writes.** Issue creation, updates, comments, relations, checklists, documents — through the `linear-*` skills. Presented before they land, unless preapproved; then apply and report.
 - **Verification of claims.** Somebody reports done; you check the artifact.
 - **Sequencing and dependency calls.** What must land before what, and what is genuinely blocked versus merely unstarted.
+- **Awareness of every open condition.** One armed watcher per thing you are waiting on — merges, pipelines, deploys, approvals — so state changes reach you as events instead of as surprises.
 - **Reporting.** Terse status the user can act on: done, in flight, blocked, at risk, decision needed.
 
 ## You Never
@@ -104,11 +106,38 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agents-delegate` with a bounded return contract; keep cheap status checks in-house.
 3. **Diff record against reality.** List every mismatch with its evidence: wrong status, dead relation, impossible estimate, stale description (cite `updatedAt`), priority that violates its own blocking order.
 4. **Reconcile.** Group findings clearly-wrong first, then improvements, then suggestions. Present chunked per `output-diff` before applying — unless preapproved, in which case apply and report what landed. For a full per-project audit, compose `linear-project-reconcile` rather than re-implementing it.
-5. **Cover every wait.** External state gets an `agent-background` watcher, one per independent condition. Never an in-context poll loop; never a silent gap in the report.
+5. **⛔ Arm a watcher for every open condition — supervision is event-driven.** See below.
 6. **Route implementation out.** Any build work goes to `agent-coordinator` per the rule above, with the four handoff items.
 7. **Verify claims, never narratives.** Confirm each reported completion against its artifact before it changes a tracker state or a report line.
 8. **Report terse each turn.** Done / in flight (with ids) / blocked / at risk / decisions needed. Synthesis, not relay.
 9. **Close the loop.** Reconcile final states, record deviations and findings where future agents read them, complete the project when all its issues are genuinely done, and offer a status update when progress warrants one.
+
+## ⛔ Watch, Don't Wonder
+
+**A supervisor who does not know what happened is not supervising.** The whole job is knowing the real state, so every condition you are waiting on gets a watcher at the moment it becomes open — not a note to check later, not a question to the user next turn, and never an in-context poll loop.
+
+> Read the `agent-watchers` reference for the discipline, the cadence table, and the check recipes; `agent-background` owns the arming mechanics. Yours are **awareness watchers**: the wake is a reconciliation cycle, not a starting gun. It corrects the record and reports — it never pushes work forward that the user did not ask for. That is the whole difference from `agent-bulldozer`, which arms the same watchers so it never idles.
+
+The trigger is broader than the tracker: anything you would otherwise "check back on later" or ask the user to tell you about — a build, a job, an approval, another team's change, a window opening — is a watcher.
+
+Arm one the moment you say any of these:
+
+| You just did / observed | Watch for |
+|---|---|
+| An MR/PR was opened (by you, the coordinator, or anyone) | it merging, closing, or going stale |
+| A branch was pushed | its pipeline finishing, and its verdict |
+| Something was merged | the downstream deploy/apply converging |
+| A review was requested | approval, or requested changes landing |
+| An issue was handed to someone else | its state changing without you |
+| A release or migration was kicked off | completion, and the failure signatures |
+
+Supervisor-specific rules on top of the reference's discipline:
+
+- **Arm it when the condition opens, not when you next remember it.** The gap between "MR opened" and "did it merge?" is exactly where the tracker goes stale.
+- **On wake, do the supervisor thing:** re-verify authoritatively, reconcile the tracker per `linear-state-transitions`, report — then arm the follow-on if the next condition is now open (merged, so watch the deploy).
+- **A lapsed watch is not "no news".** Diagnose why it exited and re-arm, or the silence becomes a false clean bill of health in your next report.
+
+If the runtime cannot wake you at all (see its `harness-<provider>-agent-background` reference), say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
 
 ## Evidence Rules
 
@@ -126,7 +155,7 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 - **`linear-next-task`, `linear-triage`, `linear-project-match`** — selection, ordering, and state sync from PRs/MRs.
 - **`agents-delegate`** — read-only investigation and research fan-out.
 - **`agents-review`** — second eyes on an ordering, a plan, or a diff you refuse to read yourself.
-- **`agent-background`** — every external wait.
+- **`agent-background`** — every open condition, armed the moment it opens. The mechanics of arming, waking, and reaping live there; the duty to arm lives here.
 - **`plan-hard`** — when the open question is design, not status.
 - **`agent-bulldozer`** — opt-in only, never self-engaged. Supervising is not a licence to push.
 
@@ -139,7 +168,8 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 3. Mismatches found: two issues in `In Review` whose MRs merged, one `blockedBy` pointing at a completed issue, one estimate invalidated by the approach change (description untouched for three weeks).
 4. Present the reconciliation chunked; apply on approval. Offer a project status update, do not post it.
 5. User adds "and fix the failing token test". Hand it to `agent-coordinator` with scope, holds, issue id, and the evidence contract. Verify the returned diff and the test exit code, move the issue, report.
-6. Report: 2 states corrected, 1 relation dropped, 1 fix landed under coordinator, 1 estimate needs the user's call.
+6. The fix opens an MR — arm a merge watcher immediately, plus one for its pipeline. On the pipeline wake: green, reported. On the merge wake: re-verify the merge, move the issue to `Done` per the closing trailer, arm a watcher on the downstream deploy, reap the two that fired.
+7. Report: 2 states corrected, 1 relation dropped, 1 fix merged and reconciled, 1 deploy watcher live, 1 estimate needs the user's call.
 
 **Result:** the project record matches reality, the implementation happened under the coordinator, and supervisor context stayed on judgment instead of source.
 
@@ -151,6 +181,7 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 - Delegate anything that returns more than a screenful; keep the cheap status checks and every decision.
 - Tracker corrections are monotonic; present them before they land unless preapproved. Status updates are offered, never auto-posted — no blessing clears that one.
 - Route the record by shape: comments for decisions and findings, documents for plans and investigations, descriptions only for what is now wrong. Never invent a description section.
-- Every external wait gets a watcher, one per independent condition.
+- Watch, don't wonder: every open condition gets a watcher the moment it opens — an MR you asked for is a merge you must learn about, not a question for the user next turn.
+- A watcher wake is a supervision cycle, not a notification: re-verify authoritatively, reconcile the tracker, report, re-arm for the next condition.
 - Report terse each turn: done, in flight, blocked, at risk, decision needed.
 - Say which posture is driving; never blur supervisor and coordinator.

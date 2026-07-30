@@ -113,7 +113,7 @@ Break posture out loud: say you are doing this one yourself and why, so the mode
 - **`agents-plan`** — hand it the whole multi-task run when the work has real dependencies; it owns the DAG, the layer merges, and review cadence.
 - **`agents-delegate`** — single dispatch, tier selection.
 - **`agents-review`** — second eyes on a plan, a DAG ordering, or a diff you refuse to read yourself.
-- **`agent-background`** — every external wait.
+- **`agent-background`** — every external wait; see the `agent-watchers` reference for what to watch, cadence, and recipes. Yours are routing wakes: re-verify, then decide what gets dispatched next.
 - **`agents-pickup`** — Linear-scoped orchestration; coordinator posture layers over it.
 - **`plan-compact`** — when your context fills anyway, compact to the state file rather than letting the run die.
 
