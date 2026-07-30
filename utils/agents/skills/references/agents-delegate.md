@@ -23,11 +23,17 @@ Whatever the mechanism, the flow is the same: pick a tier from task complexity, 
 | `mode` | no | `bypassPermissions` skips approvals (fire-and-forget). Default: let permission requests bubble up. |
 | `team_name` | no | Team context for coordinated work (agents in team mode). |
 | `name` | no | Agent name for `SendMessage` routing. |
-| `run_in_background` | no | Background (non-blocking) execution. Default is foreground/blocking — see Blocking Dispatch below. |
+| `run_in_background` | no | Detached execution. **Background is the preferred mode** — see Dispatch Mode below. Provider defaults differ; check `agents-tiers-<provider>`. |
 
-## Blocking Dispatch (default)
+## Dispatch Mode — background by default
 
-Agent tool calls are **foreground and blocking** by default — the lead's turn pauses until the agent returns, and the result comes back as a normal tool result in the same conversation turn. This is the preferred mode.
+> **★ BACKGROUND IS THE DEFAULT AND PREFERRED MODE (operator directive 2026-07-30).** Dispatch detached so the lead stays free — the user can keep talking and you keep working while the agent runs. **Blocking is reserved for when you are essentially just waiting on the result** and would otherwise idle.
+
+**Blocking**, when you do choose it, pauses the lead's turn and returns the agent's output as a normal tool result in the same turn. For a fan-out you need complete before proceeding, issue **several dispatches in one message**, all blocking — they run concurrently and land together when the slowest finishes. This is how `agents-plan` parallelises a DAG layer.
+
+> **⛔ PROVIDER DISPATCH SEMANTICS DIFFER — read the active provider's `agents-tiers-<provider>` reference before your first dispatch.** The flag name, its default, and **how a background agent's result actually reaches you** are provider-specific: `agents-tiers-claude`, `agents-tiers-opencode`, `agents-tiers-codex`. Never assume one provider's behaviour carries to another.
+>
+> **The recurring trap is collection, not mode choice.** A background agent's final text may not be pushed into the lead's turn on its own; on Claude Code you can instead receive an `idle_notification` that reads exactly like an agent that gave up. It usually has not. Read its task output, or `SendMessage` its `name` to have it deliver — never re-dispatch assuming it did nothing. `agents-tiers-claude` documents the full failure mode.
 
 **Parallel blocking dispatch:** To run multiple agents concurrently while still blocking the lead's turn, issue **multiple subagent dispatches in a single message**. They execute in parallel, and their results are delivered together when all complete. The lead's turn blocks until the slowest one returns. This is how `agents-plan` parallelises each DAG layer (in both team and fire-and-forget modes) without "dropping" the conversation into background mode.
 

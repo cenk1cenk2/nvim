@@ -72,12 +72,14 @@ Use it when:
    - Silent-with-report: no confirmation prompt. User opts out for the turn by saying "don't move the Linear state".
    - Skip when no Linear id is in scope — not every delegate is Linear-linked.
 
-7. **Launch the agent (blocking).**
+7. **Launch the agent — background by default.**
    - Dispatch the subagent via your runtime's dispatch mechanism, with parameters resolved from the reference's parameter table.
-   - Dispatch is **foreground/blocking** by default — this turn pauses until the agent returns. Results are pushed into this turn as a tool result and then summarised for the user. See the `agents-delegate` reference's Blocking Dispatch section.
+   - **Dispatch in the BACKGROUND by default — this is the preferred mode.** The lead stays free, so the conversation keeps moving and you keep working while the agent runs. See the `agents-delegate` reference's Dispatch Mode section.
+   - **Read the active provider's `agents-tiers-<provider>` reference for the flag name, its default, and how a background result actually reaches you.** This differs per provider, and mis-collecting the result is the common failure — not agent flakiness.
+   - **Block only when you are essentially just waiting on the result** and have nothing else to push. For a fan-out you need complete before proceeding, issue several dispatches in one message, all blocking.
    - `isolation`: `worktree` if the task modifies files — offer, confirm with user.
    - `mode`: default (permissions bubble up to the harness). Use `bypassPermissions` only if the user explicitly opts in.
-   - `run_in_background`: leave unset (blocking). Only set it to `true` if the user explicitly asks for fire-and-forget.
+   - **Collect a background result deliberately** — read its task output, or `SendMessage` its `name` to have it deliver. An idle notification is not proof it failed; never re-dispatch assuming it did nothing.
    - **If worktree isolation is used**, verify the returned path is absolute and in the runtime's agent-worktrees directory per the `agents-worktrees` reference. If it falls outside, abort the result and recreate the worktree manually at the correct location (see the Manual Fallback section), then re-dispatch without worktree isolation and instruct the agent via the prompt to `cd` into the manual path.
 
 8. **Handle the result.**

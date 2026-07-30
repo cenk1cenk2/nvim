@@ -131,7 +131,7 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
   - Worktree isolation (unless user opted out).
   - `team_name` set to the team created above.
   - No `bypassPermissions` — permissions bubble up.
-  - No `run_in_background` — blocking dispatch.
+  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `agents-tiers-<provider>`.
   - A general-purpose subagent.
 
 **Fire-and-forget mode:**
@@ -140,7 +140,7 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 - Spawn all agents for this layer in a single message with multiple subagent dispatches. For each:
   - Worktree isolation (unless user opted out).
   - `mode: "bypassPermissions"`.
-  - No `run_in_background` — blocking dispatch.
+  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `agents-tiers-<provider>`.
   - A general-purpose subagent.
 
 **Per-task cadence override:** if the user chose `per-task` cadence, each layer still runs in parallel, but every task is implemented + reviewed by a pair (two dispatches — one implementer, one reviewer) before the layer considers itself done. See the "Per-Task Review Pattern" section below. This is heavier than per-layer review.
@@ -152,7 +152,7 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 
 ### Step 9 — Collect layer results
 
-- Blocking dispatch — this turn pauses until every agent in the layer returns.
+- Blocking dispatch (`run_in_background: false` on every agent) — this turn pauses until every agent in the layer returns. **If results did not arrive as tool results, the dispatch was not actually blocking** — check the flag before concluding an agent failed.
 - Review each agent's result. Handle statuses (DONE / DONE_WITH_CONCERNS / NEEDS_CONTEXT / BLOCKED) per the standard conventions.
 - If any task fails or is BLOCKED: **finish the in-flight layer, then halt before the next layer.** Surface all failures to the user in the same turn, with a consolidated summary. Wait for user guidance — do not retry or auto-advance.
 
