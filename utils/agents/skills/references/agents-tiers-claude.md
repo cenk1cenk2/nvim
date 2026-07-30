@@ -6,7 +6,7 @@ Tier → model mapping for delegation running on Claude. Mirrors the `*/claude/*
 
 ## Dispatch semantics — Claude Code
 
-> **★ BACKGROUND IS THE DEFAULT AND THE PREFERRED WAY — operator directive 2026-07-30.** Omit `run_in_background` and let the agent run detached. The lead stays free, so the user can keep talking and you keep working. **Blocking is the exception, not the norm.**
+> **★ BACKGROUND IS THE DEFAULT AND THE PREFERRED WAY — standing operator preference.** Omit `run_in_background` and let the agent run detached. The lead stays free, so the user can keep talking and you keep working. **Blocking is the exception, not the norm.**
 
 Claude Code's `Agent` tool already runs subagents in the background unless you pass `run_in_background: false`, so the preferred posture is also the tool's own default — just leave the flag off.
 
@@ -20,7 +20,7 @@ Claude Code's `Agent` tool already runs subagents in the background unless you p
 - **Check `run_in_background` and how you expected the result to arrive** — misreading an idle notification as failure is the common error, not agent flakiness.
 - **Read the agent's own output** rather than waiting to be told: background work writes to the task output file reported at dispatch.
 - **`SendMessage` to the agent's `name`** resumes it from its transcript and asks it to deliver. Ask for the partial result explicitly and tell it not to start new work.
-- **Never re-dispatch on the assumption it did nothing.** Observed 2026-07-30: five consecutive delegates looked failed this way and every one had actually completed its task — nudging and re-dispatching only wasted it.
+- **Diagnose BEFORE you re-dispatch — then re-dispatch freely.** Re-dispatching is the right move once you know the cause and have fixed it (wrong flag, bad prompt, genuinely dead agent). What wastes work is re-dispatching *blind*, on the assumption the agent did nothing: this has burned a whole run of consecutive delegates that all looked failed while every one had actually completed its task. Collect first, fix the cause, then fire again.
 
 **Worktrees:** `isolation: "worktree"` creates them under `<project>/.claude/worktrees/` — the harness default and the required location per `agents-worktrees`.
 

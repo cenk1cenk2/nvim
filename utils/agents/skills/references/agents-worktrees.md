@@ -2,6 +2,19 @@
 
 All worktrees created by any `agents-*` skill MUST live in the active runtime's designated agent-worktrees directory — see the `provider-paths` reference (Claude Code: `<project>/.claude/worktrees/`; OpenCode: its native worktree dir; otherwise `<project>/.agents/worktrees/`). This is an absolute rule — use the one known location for the runtime and never scatter agent worktrees elsewhere in the filesystem.
 
+## ⛔ Worktree isolation follows the SESSION's repo, not the task's repo
+
+**`isolation: worktree` creates a worktree of the repository the session is running in — the cwd project — NOT the repository the delegated task targets.** In a multi-repo workspace those are frequently different, and then the agent lands in a worktree where **its target files do not exist**.
+
+Concretely: a session running in `<repo-a>` delegates an edit that lives in `<repo-b>` and passes `isolation: worktree`. The agent is handed `<repo-a>/.claude/worktrees/agent-<id>/`, where none of its target paths exist. A careful agent reports the mismatch; a careless one edits the wrong tree or creates files that do not belong.
+
+**So, before passing `isolation: worktree`:**
+
+- **Confirm the task's repo IS the session's repo.** If it is not, do NOT rely on the flag.
+- **For a cross-repo task, create the worktree yourself in the TARGET repo** per the Manual Fallback below, and pass its absolute path in the prompt under a `## Workspace` section telling the agent to `cd` there first. Dispatch without `isolation`.
+- **Say which repo the work belongs to in the prompt**, explicitly. An agent that knows the target repo can recover from a wrong worktree; one that assumes will edit the wrong tree or create files that do not belong.
+- **Verify after dispatch** where the branch and commit actually landed — check the target repo's `git worktree list` and `git branch`, not the agent's own account of it.
+
 ## Why a fixed worktrees directory
 
 - **Harness convention.** If your runtime has a built-in worktree-isolation feature, it creates worktrees under a known directory by default; co-locating all agent worktrees there keeps everything in one place.

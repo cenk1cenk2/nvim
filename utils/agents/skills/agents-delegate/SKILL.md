@@ -79,7 +79,7 @@ Use it when:
    - **Block only when you are essentially just waiting on the result** and have nothing else to push. For a fan-out you need complete before proceeding, issue several dispatches in one message, all blocking.
    - `isolation`: `worktree` if the task modifies files — offer, confirm with user.
    - `mode`: default (permissions bubble up to the harness). Use `bypassPermissions` only if the user explicitly opts in.
-   - **Collect a background result deliberately** — read its task output, or `SendMessage` its `name` to have it deliver. An idle notification is not proof it failed; never re-dispatch assuming it did nothing.
+   - **Collect a background result deliberately** — read its task output, or `SendMessage` its `name` to have it deliver. An idle notification is not proof it failed. Diagnose the cause first, then re-dispatch freely; only blind re-dispatch wastes completed work.
    - **If worktree isolation is used**, verify the returned path is absolute and in the runtime's agent-worktrees directory per the `agents-worktrees` reference. If it falls outside, abort the result and recreate the worktree manually at the correct location (see the Manual Fallback section), then re-dispatch without worktree isolation and instruct the agent via the prompt to `cd` into the manual path.
 
 8. **Handle the result.**
