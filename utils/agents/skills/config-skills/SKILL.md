@@ -238,6 +238,27 @@ Do NOT extract:
 - Descriptions or examples — these are unique per skill.
 - Short inline rules that would lose context when separated.
 
+### Provider-Specific Behavior — generic body, per-provider reference
+
+A skill is authored once and runs under whichever agent runtime is active. Keep that split explicit:
+
+- **The SKILL.md body stays runtime-agnostic.** Describe the *intent* — "dispatch a subagent", "run it detached", "write the plan to the internal plans directory" — and never name one runtime's tool, parameter, default, or filesystem path.
+- **Runtime mechanics live in a per-provider reference** (`agents-tiers-<provider>.md` for dispatch, `provider-paths.md` for directories). That is where the concrete tool name, its parameters, its defaults, and the collection semantics belong.
+- **A skill that spawns subagents MUST send the reader to the active provider's reference BEFORE the first dispatch**, as a hard directive rather than optional background. Write the directive so it cannot be read as "nice to have".
+
+> **⛔ The expensive failure mode is result COLLECTION, not dispatch.** Whether detached is the default, and above all **how a finished agent's output actually reaches the caller**, vary per runtime. On at least one runtime a completed agent is announced by a signal that is indistinguishable from one that gave up — so an author who omits the collection guidance produces a skill whose users silently discard finished work and re-run it. Any skill that dispatches subagents must therefore cover: how to read a detached agent's output, how to resume it by name to make it deliver, and **diagnose the cause before re-dispatching** (blind re-dispatch is what throws work away, not re-dispatch itself).
+
+Checklist for any skill that dispatches subagents:
+
+1. The body names no runtime-specific tool, parameter, or default value.
+2. A directive points at `agents-tiers-<provider>` **before** the first dispatch step.
+3. Blocking vs detached is expressed as intent; the provider reference owns the flag and its default.
+4. Result collection is covered explicitly, including diagnose-before-re-dispatch.
+5. If it isolates writes, it points at `agents-worktrees` — including that isolation follows the **session's** repo, not the task's, which breaks cross-repo dispatch.
+6. Anything else that differs per runtime (plans directory, state directory, worktree location) points at `provider-paths` instead of hardcoding a path.
+
+When a runtime's behavior turns out to contradict a generic skill body, fix it in that provider's reference — do not special-case the runtime inside the shared body.
+
 ### Checking for Deduplication
 
 When creating or updating a skill, always check:
@@ -279,7 +300,9 @@ When creating or updating a skill, always check:
 | `slack.md` | Slack MCP tools, response conventions, `:dark_sunglasses:` pattern, large results handling. | Slack family (2 skills). |
 | `enrich-context.md` | Entity enrichment table (MCP tools → links), code permalinks, appendix pattern. | Skills that compile output for others (slack-laravel-compile, slack-channel). |
 | `project-tooling.md` | Task runner discovery order, verification command extraction, user confirmation flow. | Agent skills (agents-plan, agents-delegate). |
-| `agents-tiers-claude.md` | Claude tier→model table (`haiku`/`sonnet`/`opus`/`fable`) + `Agent` tool dispatch. | `agents-tiers` skill; agent delegation skills on demand. |
+| `agents-delegate.md` | Dispatch parameters, blocking vs detached posture, self-contained prompt structure, dispatch checklist. **Points at the per-provider reference for the mechanics — see Provider-Specific Behavior.** | Every agent skill that spawns a subagent (`agents-delegate`, `agents-plan`, `agents-review`, `agent-coordinator`). |
+| `agents-worktrees.md` | Agent worktree location rule, naming, mandatory post-dispatch verification, manual fallback, cleanup. Covers the trap that isolation follows the **session's** repo, not the task's. | Any agent skill dispatching writers in parallel. |
+| `agents-tiers-claude.md` | Claude tier→model table (`haiku`/`sonnet`/`opus`/`fable`) + `Agent` tool dispatch, detached-by-default semantics, and the result-collection failure mode. | `agents-tiers` skill; agent delegation skills on demand. |
 | `agents-tiers-opencode.md` | OpenCode tier→model table (`kilic/*` models) + `task` tool dispatch. | `agents-tiers` skill; agent delegation skills on demand. |
 | `agents-tiers-codex.md` | Codex/OpenAI role models (`gpt-*`) + dispatch. | `agents-tiers` skill; agent delegation skills on demand. |
 | `linear-document-handling.md` | Reading/updating existing attached documents: glimpse, classify plan-like vs external, edit only with agreement. | Linear read/update skills (issue-read, project-read, issue-update, project-update). |

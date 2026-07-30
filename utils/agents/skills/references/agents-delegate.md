@@ -27,7 +27,11 @@ Whatever the mechanism, the flow is the same: pick a tier from task complexity, 
 
 ## Dispatch Mode — background by default
 
-> **★ BACKGROUND IS THE DEFAULT AND PREFERRED MODE (standing operator preference).** Dispatch detached so the lead stays free — the user can keep talking and you keep working while the agent runs. **Blocking is reserved for when you are essentially just waiting on the result** and would otherwise idle.
+> **★ BACKGROUND IS THE DEFAULT AND PREFERRED MODE (standing operator preference).** Dispatch detached so the lead stays free — the user can keep talking and you keep working while the agent runs.
+>
+> **⛔ With one hard exception: if the agent's REPORT is the deliverable, dispatch BLOCKING.** Research, verification, audits, log digging, "go find out X" — work that leaves no artifact to inspect, where the text is the whole point. Detached reports are **unreliable to collect** (see the per-provider reference: on at least one runtime, completed agents routinely fail to deliver, and the resume path can fail too). Blocking such an agent costs no parallelism — several blocking dispatches in ONE message run concurrently and land together.
+>
+> Decide by asking **what you will inspect afterwards.** A side effect you can verify yourself (files changed, resources written) means background is safe. Nothing to inspect but prose means blocking. **Never treat a detached agent's silence as a verdict** — no report is not a pass.
 
 **Blocking**, when you do choose it, pauses the lead's turn and returns the agent's output as a normal tool result in the same turn. For a fan-out you need complete before proceeding, issue **several dispatches in one message**, all blocking — they run concurrently and land together when the slowest finishes. This is how `agents-plan` parallelises a DAG layer.
 

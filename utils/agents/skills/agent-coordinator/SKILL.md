@@ -70,6 +70,8 @@ Context discipline is enforced in the **prompt**, not by hoping. Every dispatch 
 
 An agent that returns a wall of text has failed the task even if the work is right. Say so in the prompt.
 
+**⛔ Dispatch report-deliverable agents BLOCKING.** Coordinator mode runs almost entirely on agent reports — for a research, verification, or log-digging dispatch the report IS the product, with no artifact left behind to inspect. Detached reports are unreliable to collect (see the active provider's `agents-tiers-<provider>` reference), and a coordinator that loses one ends up with neither the answer nor the context it was protecting. Blocking costs no parallelism: issue the whole fan-out in a single message. Keep background for agents whose product is a side effect you will verify yourself. **A silent verification agent is not a pass** — and when collection fails twice, take that one check back in-house rather than dispatching a seventh time.
+
 ## Process
 
 1. **Set the scope and present the routing plan.** One line on what done means, then the split: which pieces go out, in what order, which stay with you, and what you are NOT touching. Present once; then run.
