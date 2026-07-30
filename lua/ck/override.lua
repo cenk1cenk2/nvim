@@ -181,7 +181,6 @@ nvim.treesitter.parsers = {
   "jsdoc",
   "json",
   "json5",
-  "jsonc",
   "jsonnet",
   "latex",
   "lua",
@@ -204,7 +203,6 @@ nvim.treesitter.parsers = {
   "sql",
   "svelte",
   "terraform",
-  "tmux",
   "toml",
   "tsx",
   "typescript",
@@ -219,6 +217,7 @@ nvim.treesitter.custom_parsers = {}
 
 nvim.treesitter.ft_parsers = {
   ["yaml"] = { "yaml.ansible", "yaml.compose", "yaml.gitlab-ci" },
+  ["json"] = { "jsonc" },
   ["bash"] = { "zsh" },
   ["ini"] = { "confini", "conf" },
 }

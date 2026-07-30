@@ -37,16 +37,7 @@ function M.config()
     on_setup = function(c)
       require("nvim-treesitter").setup(c)
 
-      local installed = require("nvim-treesitter.config").get_installed("parsers")
-      local not_installed = vim.tbl_filter(function(parser)
-        return not vim.tbl_contains(installed, parser)
-      end, nvim.treesitter.parsers)
-
-      if #not_installed > 0 then
-        require("nvim-treesitter").install(not_installed, { summary = false })
-      end
-    end,
-    on_done = function()
+      -- has to be registered before installing, since `install()` drops the parser table and reads it back through this event
       if next(nvim.treesitter.custom_parsers) then
         vim.api.nvim_create_autocmd("User", {
           pattern = "TSUpdate",
@@ -61,6 +52,16 @@ function M.config()
         })
       end
 
+      local installed = require("nvim-treesitter.config").get_installed("parsers")
+      local not_installed = vim.tbl_filter(function(parser)
+        return not vim.tbl_contains(installed, parser)
+      end, nvim.treesitter.parsers)
+
+      if #not_installed > 0 then
+        require("nvim-treesitter").install(not_installed, { summary = false })
+      end
+    end,
+    on_done = function()
       for parser, filetypes in pairs(nvim.treesitter.ft_parsers) do
         vim.treesitter.language.register(parser, filetypes)
       end
