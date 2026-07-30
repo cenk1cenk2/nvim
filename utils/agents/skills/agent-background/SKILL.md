@@ -66,6 +66,15 @@ Do not attribute this harness's tools (`ScheduleWakeup`, `Monitor`, `CronCreate`
 5. **Launch one watcher through the runtime's background facility** — never by detaching inside the command (see the boxed warning under *The pattern*). Confirm the launch returned a **task id / handle**; if it did not, you detached instead of arming, and nothing will wake you. Note that id and tell the user what it's waiting on. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. State the watcher (what it polls, its cadence, its task id, and the command to re-arm it) out loud in chat, and if `plan-compact` is active write it verbatim into the anchor's Scratchpad Scripts & Watchers section. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
 6. **On wake: re-verify the real state before acting.** External APIs lag — a signal can read "done" slightly before/after the truth, and a proxy firing does not mean the downstream state converged. Do the authoritative check now.
 7. **Continue or re-arm.** If a follow-on condition isn't satisfied yet (e.g. the proxy fired but the real work is still settling), launch the next watcher. Never assume the proxy equals the end state.
+8. **⛔ REAP IT.** A watcher is not finished when its condition is met — it is finished when it is **stopped**. Kill it the moment it stops earning its keep, which is **not only on success**:
+   - its condition was satisfied and you have acted on it,
+   - you learned the answer another way (checked the real state directly),
+   - **its signal turned out to be unreliable** — a lagging or wrong proxy makes the watcher worse than nothing, because it will fire late or report a stale verdict,
+   - the work it was guarding was superseded, abandoned, or re-scoped,
+   - you are replacing it — **reap before re-arming**, or duplicates poll the same condition and an old one can wake you with an obsolete answer.
+
+   **Completion does not self-clean.** A loop whose command exited can still occupy the runtime's task list, and a finished watcher looks identical to a live one in a process list. Stop it explicitly via the runtime's own mechanism (per the active provider's reference), then confirm nothing is left: enumerate what you armed and check each is gone.
+9. **Reap checkpoint before you call the work done.** List every watcher you armed and state, for each, that it is stopped — or that it is *deliberately* still armed and exactly what it is waiting for. An unexplained live watcher at the end of a flow is a bug, not diligence.
 
 ## Caveats
 

@@ -308,8 +308,17 @@ See the `agents-tiers` skill for tier definitions, per-provider model lists, use
 - **Explicit model names from the user** override tiers — use verbatim.
 - **Mismatched choices:** ask before dispatching.
 
+## Reaping Between Layers
+
+**⛔ Reap each layer's agents before launching the next.** A DAG run accumulates agents fastest of anything here, and a layer boundary is exactly where stale ones do damage: an unreaped agent from layer N can still be writing while layer N+1 starts, and two concurrent writers on one file clobber each other silently. Worktree cleanup is not the same as agent cleanup — do both.
+
+Reap an agent when it delivered and its layer merged, when it went idle and you took its task back, when its task was superseded or dropped from the plan, or when you are re-dispatching it after a failed review — **reap before the re-dispatch**, never alongside it. Completion does not self-clean: finished agents linger in the runtime's task list, indistinguishable from live ones, which makes the layer's real state unreadable.
+
+At the end of the run, and at every layer boundary, enumerate what is still alive and confirm each is stopped or *deliberately* still running with a stated reason.
+
 ## Key Principles
 
+- **Reap each layer before the next launches.** Stale agents from a merged layer can still write and collide with the new one; a live agent list you cannot account for means you do not know what the run is doing.
 - **DAG is the default model.** All-parallel and all-sequential are just degenerate shapes of a DAG — write plans with `depends_on` so the scheduler works correctly.
 - **Non-overlapping within a layer is non-negotiable.** Two agents in the same layer writing the same file = garbage output. Fix the split before launch.
 - **Per-layer merge is mandatory when layers have dependencies.** Layer N+1 must branch from the post-layer-N state to see earlier work.

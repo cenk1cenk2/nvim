@@ -17,6 +17,21 @@ argumentHint: "[create|update|review] [skill-name] [description of what the skil
 
 > **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into skills, references, or examples unless the user explicitly allows it; use placeholders instead.
 
+## ⛔ ABSOLUTE RULE — change the RELEVANT skills, not this one
+
+**When you learn something that should change agent behaviour, discover and edit the skills that actually govern that behaviour. Do NOT write it into `config-skills`.** This file is *authoring guidance* — how to write, structure, and validate a skill. It is not where operational rules live, and nothing reads it at the moment the behaviour is needed.
+
+A rule about dispatching subagents belongs in the dispatch skills and their per-provider references. A rule about waiting on external state belongs in the background/watcher skill. A rule about a rollout's sequencing belongs in that flow's own skill or repository note. Putting any of those here means the agent that needed it never sees it.
+
+So, before editing:
+
+1. **Find the skills that own the behaviour** — search `~/.config/nvim/utils/agents/skills/` for the ones whose process steps actually perform it. There is usually more than one (a family of skills plus a shared reference).
+2. **Edit every one of them**, not just the first. A rule present in one sibling and absent in the others fails exactly when a different entry point is used.
+3. **Put runtime-specific mechanics in the per-provider reference**, and the runtime-agnostic principle in the body (see *Provider-Specific Behavior*).
+4. **Only touch `config-skills` when the lesson is genuinely about how skills are authored** — a new frontmatter field, a validation rule, a structural convention — or when the user explicitly asks for `config-skills` itself.
+
+**This is absolute.** "I'll record it in config-skills so future authors know" is the failure mode: it documents the lesson where nobody acts on it and leaves the real skills wrong.
+
 ## Skills Directory
 
 All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a directory containing a `SKILL.md` file. Shared reference files live in `references/` at the skills root.

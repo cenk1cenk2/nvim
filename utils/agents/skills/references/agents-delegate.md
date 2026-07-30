@@ -61,6 +61,24 @@ Consequences to internalise:
 - User guidance arrives on the NEXT turn; re-dispatch there if needed.
 - **⚠ Do NOT assume a permission request will be surfaced to the user just because the lead is blocked.** On at least one runtime the subagent's gate cannot reach the parent UI at all, so blocking buys you nothing: the agent waits invisibly and the lead waits on the agent. Blocking is **not** a mitigation for the permission trap — set the permission mode on the dispatch instead.
 
+## ⛔ Reaping — spawning without retiring is an incomplete dispatch
+
+**An agent is finished when it is stopped, not when it has answered.** Leaving them alive costs resources and, worse, makes the run state unreadable: a stale agent is indistinguishable from a working one, so you cannot tell what is actually in flight.
+
+Reap when the agent stops earning its keep — **not only on success**:
+
+- it delivered and you acted on the result,
+- you got the answer another way (inspected the artifact directly),
+- it went idle without delivering and you took the work back in-house,
+- its task was superseded, re-scoped, or abandoned,
+- **you are about to replace it — reap BEFORE re-dispatching.**
+
+**Completion does not self-clean.** A finished agent, and a background task whose command already exited, can both linger in the runtime's task list. Stop them explicitly using the runtime's own mechanism (per the active provider's `agents-tiers-<provider>` reference).
+
+**★ The concrete hazard is two concurrent writers.** Re-dispatching over the same files, document, or resource without reaping the first agent lets the later write silently clobber the earlier one — and neither agent reports the collision. Reap, verify the target's current state, then dispatch again.
+
+**Reap checkpoint:** before declaring the work done, enumerate everything you spawned and confirm each is stopped, or state explicitly that one is *deliberately* still running and what it waits on.
+
 ## Model Selection
 
 Delegation picks a **tier** from task complexity, then resolves it to a **concrete model** for the active provider. The tier system, user-wording mapping, and per-provider model lists live in the **`agents-tiers`** skill and its `agents-tiers-<provider>` references — load `agents-tiers` (or read the active provider's reference: `agents-tiers-claude`, `agents-tiers-opencode`, `agents-tiers-codex`) to resolve.

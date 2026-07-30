@@ -88,6 +88,19 @@ Use it when:
    - If files changed, verify the diff matches expectations — do not trust the agent's success report blindly.
    - If the user wants to commit/push/PR, follow the `agents-completion` reference or invoke the relevant SCM skill.
 
+9. **⛔ REAP THE AGENT.** Dispatching is half the job; an agent is done when it is **stopped**, not when it has answered. Stop it as soon as it stops earning its keep — and that is **not only on success**:
+   - it delivered and you have acted on the result,
+   - you obtained the answer another way (inspected the artifact yourself),
+   - it went idle without delivering and you took the work back in-house,
+   - the task was superseded, re-scoped, or abandoned,
+   - you are replacing it — **reap before re-dispatching**, so two agents are not writing the same files or racing on the same resource.
+
+   **Completion does not self-clean.** A finished agent can linger in the runtime's task list, indistinguishable from a working one, and a stale entry makes the whole run state unreadable. Stop it explicitly with the runtime's own mechanism (see the active provider's `agents-tiers-<provider>` reference).
+
+   **Reap checkpoint before declaring the work done:** enumerate every agent you spawned and confirm each is stopped — or say out loud that one is *deliberately* still running and what it is waiting for. An unexplained live agent at the end of a flow is a bug.
+
+   **★ Two concurrent writers on one target is the real hazard.** If you re-dispatch or run a second agent over the same files, document, or resource without reaping the first, the later write can silently clobber the earlier one. Reap, then verify the target, then dispatch again.
+
 ## Model Selection
 
 See the `agents-tiers` skill for tier definitions, per-provider model lists, and user shorthand. Summary:

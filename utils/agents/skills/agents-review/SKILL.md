@@ -188,6 +188,7 @@ No merging across artifacts — each review keeps its own context.
 
 ## Key Principles
 
+- **⛔ Reap the reviewer once its verdict is in.** A review agent's whole product is its report, so the moment you have the verdict — or have obtained the judgement another way, or the artifact under review has changed and the review is moot — stop it. Completion does not self-clean: a finished reviewer lingers in the runtime's task list looking identical to a live one. Reap before re-dispatching a reviewer on a revised artifact, so an old verdict cannot arrive after the new one and be mistaken for it.
 - **Cheap by default.** The skill is the "quick second opinion" tool. Default tier is cheap; opt up explicitly for hard reviews.
 - **One reviewer per artifact.** No ensemble. If the user wants multiple reviewers on the same artifact, they invoke the skill multiple times.
 - **Parallel fan-out over artifacts.** Multiple artifacts = single message, multiple subagent dispatches, blocking.
