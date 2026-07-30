@@ -16,7 +16,7 @@ references:
 
 ## Handing Work to labrat
 
-> **Present-first.** Read the `present-first` reference — the brief is drafted and presented before it is posted. Posting into Slack is an external write and reaches other people.
+> **Present-first, and blessing skips the gate.** Read the `present-first` reference. Posting into Slack reaches other people, so an unblessed brief is drafted and presented first — but **when the user has already blessed it, post directly and report what you sent.** "hand this to labrat", "send it", `g` / `go`, or a standing instruction for this class of handoff all clear the gate; do not stage a draft they have to approve twice. Present anyway when the content itself is the uncertain part — a claim you are unsure of, an irreversible instruction, or a channel the user did not choose.
 
 > **PREREQUISITE:** Read the `slack-prerequisite` reference — a Slack workspace skill MUST be active before posting. Read the `slack` reference for mrkdwn formatting, thread conventions, and the **absolute rule that the harness-provided Slack integration is used over the standalone workspace server**. Slack does not render normal markdown.
 
@@ -192,7 +192,7 @@ If the user names a runtime, pass it through verbatim — labrat knows how to dr
    - a degradation line: what it should say if something is unreachable from its host, instead of guessing.
 
    Leave out anything it can find on its own host, and leave out the commands entirely.
-4. **Present the draft, then post.** Chunked per `output-diff`, in Slack mrkdwn per the `slack` reference. One `@labrat` mention, in this message only.
+4. **Post it** — directly when blessed, after presenting when not (see the directive above). Format for the **active integration**: the harness connector takes standard markdown, the workspace server takes mrkdwn — check the `slack` reference rather than assuming. One `@labrat` mention, in this message only.
 5. **Capture the thread `ts`** from the post result and state it in chat, per the rule above.
 6. **Arm a watcher only if the user asked to follow it** — see below. Otherwise read the thread on demand.
 7. **Steer in-thread, never by re-briefing.** Follow-ups, corrections, and answers to its questions go into the same thread as plain replies.
@@ -260,7 +260,7 @@ When the terminal report lands:
 
 ## Boundaries
 
-- **Posting is an external write.** Draft, present, post — unless the user already blessed this specific handoff.
+- **Posting is an external write, but blessing is real.** Blessed means post and report; unblessed means draft, present, post. Do not manufacture an approval step the user already gave.
 - **Never post secrets** into the thread. If the work needs a credential, say how to obtain it, never what it is.
 - **Destructive or production-touching work needs explicit approval before handoff**, not after. The remote runs with its own permissions and you cannot pull it back mid-flight.
 - **Scope drift is the user's call.** If labrat proposes going beyond the brief, bring it back rather than approving it in-thread on your own.

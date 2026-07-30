@@ -33,7 +33,16 @@ Workspace-scoped skills still decide *which* workspace and *which* channel; that
 | `slack__slack_reply_to_thread` | Reply to a specific thread. |
 | `slack__slack_add_reaction` | Add an emoji reaction to a message. |
 
-## Message Formatting (mrkdwn)
+## Message Formatting
+
+**Which format to write depends on the integration you are sending through:**
+
+- **Harness connector** (`mcp__claude_ai_Slack__slack_send_message`) — takes **standard markdown** (`**bold**`, `_italic_`, fenced blocks with a language hint, `[label](url)`) and converts it. Writing mrkdwn here renders literally.
+- **Workspace server** (`slack__slack_post_message` / `slack__slack_reply_to_thread`) — takes **mrkdwn**, per the table below.
+
+Mentions (`<@U123>`), channel links (`<#C123>`), and emoji shortcodes are the same in both. When unsure, keep the message plain — short lines, hyphen lists, raw URLs — which renders correctly either way.
+
+### mrkdwn (workspace server)
 
 Slack does NOT render standard markdown. It uses its own format called **mrkdwn**. All messages sent via `slack__slack_post_message` and `slack__slack_reply_to_thread` MUST use Slack mrkdwn syntax.
 
