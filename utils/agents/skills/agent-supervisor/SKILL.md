@@ -16,7 +16,7 @@ references:
 
 ## Supervisor Posture
 
-> **Present-first.** Read the `present-first` reference — invoking supervisor IS a standing blessing to investigate, verify, and report; tracker and external writes are still presented before they land. No plan mode.
+> **Present-first.** Read the `present-first` reference — invoking supervisor IS a standing blessing to investigate, verify, and report. Tracker and external writes are presented before they land **unless the user has given a standing preapproval** ("you're preapproved", "don't show me diffs", "just apply it"), in which case apply directly and report what landed. Project and initiative status updates are exempt from any blessing and always need an explicit yes. No plan mode.
 
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before any Linear operation.
 
@@ -51,7 +51,7 @@ Supervisor does not change the turn rhythm: investigate, present, report, wait f
 - **Investigation.** The real state of the work — tracker, repo, branches, pipelines, PRs/MRs, conversation history.
 - **Research.** Docs, prior art, options and trade-offs — enough to inform a decision, never enough to start building it.
 - **Reconciliation.** Record against reality: statuses, estimates, priorities, blocking relations, parent/sub-issue structure, stale descriptions.
-- **Project-management writes.** Issue creation, updates, comments, relations, checklists, documents — through the `linear-*` skills, presented before they land.
+- **Project-management writes.** Issue creation, updates, comments, relations, checklists, documents — through the `linear-*` skills. Presented before they land, unless preapproved; then apply and report.
 - **Verification of claims.** Somebody reports done; you check the artifact.
 - **Sequencing and dependency calls.** What must land before what, and what is genuinely blocked versus merely unstarted.
 - **Reporting.** Terse status the user can act on: done, in flight, blocked, at risk, decision needed.
@@ -62,6 +62,19 @@ Supervisor does not change the turn rhythm: investigate, present, report, wait f
 - **Dispatch implementation agents from here.** Implementation dispatch belongs to `agent-coordinator`.
 - **Post a project or initiative status update on your own.** Offer it, post only on an explicit yes.
 - **Accept a narrative as evidence.** A report of done is a claim; the artifact is the proof.
+
+## Where the Record Goes
+
+Recording is the supervisor's product. Route it by shape rather than piling everything into one place.
+
+- **Issue comments** — decisions taken, research conclusions, deviations from the issue as written, and the reasoning a future reader needs in order not to re-derive it wrong. This is the **default** for anything learned mid-session.
+- **Documents** — plans, investigations, cost models, candidate matrices, runbooks: content that outlives one issue and is referenced from several. Scope each to the tightest parent that covers it, per `linear-project-documents`, and keep one concern per document.
+- **Issue descriptions** — correct what is now factually wrong, tick what is genuinely done. Do not restructure them.
+- **Project descriptions** — goal and scope only.
+
+**Never invent a section.** Do not add a heading to a project or issue description for something the description was not already about — costs, caps, research findings, session notes. If it does not fit an existing section, it is a comment or a document. A description that grows a new section per session stops describing the work and starts logging it.
+
+**A reference is a commitment.** When a description or comment points at a document, that document must exist. Write it before, or in the same batch as, the thing that cites it — a dangling reference is worse than no reference.
 
 ## ⛔ Implementation Goes Through agent-coordinator
 
@@ -90,7 +103,7 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 1. **Set the scope.** One line on what you are supervising, what done looks like, and what you are not touching. Present once, then run.
 2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agents-delegate` with a bounded return contract; keep cheap status checks in-house.
 3. **Diff record against reality.** List every mismatch with its evidence: wrong status, dead relation, impossible estimate, stale description (cite `updatedAt`), priority that violates its own blocking order.
-4. **Present the reconciliation, then apply.** Chunked per `output-diff`, grouped clearly-wrong first, then improvements, then suggestions. For a full per-project audit, compose `linear-project-reconcile` rather than re-implementing it.
+4. **Reconcile.** Group findings clearly-wrong first, then improvements, then suggestions. Present chunked per `output-diff` before applying — unless preapproved, in which case apply and report what landed. For a full per-project audit, compose `linear-project-reconcile` rather than re-implementing it.
 5. **Cover every wait.** External state gets an `agent-background` watcher, one per independent condition. Never an in-context poll loop; never a silent gap in the report.
 6. **Route implementation out.** Any build work goes to `agent-coordinator` per the rule above, with the four handoff items.
 7. **Verify claims, never narratives.** Confirm each reported completion against its artifact before it changes a tracker state or a report line.
@@ -136,7 +149,8 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 - Supervising is reading, asking, and routing — the moment you build, you are no longer supervising.
 - Implementation goes through `agent-coordinator`, always, with scope, holds, ids, and an evidence contract.
 - Delegate anything that returns more than a screenful; keep the cheap status checks and every decision.
-- Tracker corrections are monotonic and presented before they land; status updates are offered, never auto-posted.
+- Tracker corrections are monotonic; present them before they land unless preapproved. Status updates are offered, never auto-posted — no blessing clears that one.
+- Route the record by shape: comments for decisions and findings, documents for plans and investigations, descriptions only for what is now wrong. Never invent a description section.
 - Every external wait gets a watcher, one per independent condition.
 - Report terse each turn: done, in flight, blocked, at risk, decision needed.
 - Say which posture is driving; never blur supervisor and coordinator.
