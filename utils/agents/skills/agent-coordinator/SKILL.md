@@ -70,6 +70,8 @@ Context discipline is enforced in the **prompt**, not by hoping. Every dispatch 
 
 An agent that returns a wall of text has failed the task even if the work is right. Say so in the prompt.
 
+**⛔ Settle the permission mode before anything else.** Coordinator mode fails hardest here: a subagent may run with **independent permissions**, so a gate the runtime cannot surface leaves it waiting silently with no error — and a coordinator that reads that silence as a verdict has routed the work, spent the turn, and learned nothing. A task targeting a repo other than the session's is the highest-risk case, which in a multi-repo workspace is most of them. Set the mode on the dispatch (user opt-in first for autonomous access), and **diagnose by inspecting the artifact, never the notification**: nothing touched means it stalled and must be re-dispatched; work present means only the report was lost, so verify rather than re-run. See the active provider's `agents-tiers-<provider>` reference.
+
 **⛔ Dispatch report-deliverable agents BLOCKING.** Coordinator mode runs almost entirely on agent reports — for a research, verification, or log-digging dispatch the report IS the product, with no artifact left behind to inspect. Detached reports are unreliable to collect (see the active provider's `agents-tiers-<provider>` reference), and a coordinator that loses one ends up with neither the answer nor the context it was protecting. Blocking costs no parallelism: issue the whole fan-out in a single message. Keep background for agents whose product is a side effect you will verify yourself. **A silent verification agent is not a pass** — and when collection fails twice, take that one check back in-house rather than dispatching a seventh time.
 
 ## Process

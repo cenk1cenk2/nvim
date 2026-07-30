@@ -25,6 +25,19 @@ Whatever the mechanism, the flow is the same: pick a tier from task complexity, 
 | `name` | no | Agent name for `SendMessage` routing. |
 | `run_in_background` | no | Detached execution. **Background is the preferred mode** — see Dispatch Mode below. Provider defaults differ; check `agents-tiers-<provider>`. |
 
+## ⛔ FIRST: a subagent may not inherit your permissions
+
+**Before mode, tier, or prompt shape — settle the permission context.** On some runtimes a subagent runs with **independent permissions**: tools pre-approved in the parent session are not pre-approved for it. When it then hits a gate the runtime cannot surface to the parent, it **waits forever on an approval nobody can see** — and the symptom is indistinguishable from a broken agent: an idle/available signal, no tool calls, no response to follow-up messages, no error, no timeout.
+
+Consequences to internalise:
+
+- **Pre-allowing tools in settings is not a substitute** — the failure is that the allowlist is *not inherited*. Set the permission mode **on the dispatch**.
+- **A task targeting a directory or repo other than the session's is the highest-risk case** — in a multi-repo workspace that is the normal case, not an edge case. Isolation flags can make it worse when settings are scoped to a filesystem path.
+- **Granting autonomous permission is a security decision, not a default.** Get the user's explicit opt-in, scope the prompt to exact paths with an explicit do-not-touch list, and keep irreversible steps on the main loop.
+- **Diagnose by inspecting the artifact, never the notification.** No files/resources touched means a permission stall and nothing was done — re-dispatch with the mode fixed. Work present but no report means only the report was stranded — verify and move on, do **not** re-run. **Silence is neither success nor failure.**
+
+**Read the active provider's `agents-tiers-<provider>` reference for that runtime's permission-mode parameter, whether it inherits, and the known failure signature.** Do not assume one runtime's behaviour carries to another.
+
 ## Dispatch Mode — background by default
 
 > **★ BACKGROUND IS THE DEFAULT AND PREFERRED MODE (standing operator preference).** Dispatch detached so the lead stays free — the user can keep talking and you keep working while the agent runs.
@@ -37,16 +50,16 @@ Whatever the mechanism, the flow is the same: pick a tier from task complexity, 
 
 > **⛔ PROVIDER DISPATCH SEMANTICS DIFFER — read the active provider's `agents-tiers-<provider>` reference before your first dispatch.** The flag name, its default, and **how a background agent's result actually reaches you** are provider-specific: `agents-tiers-claude`, `agents-tiers-opencode`, `agents-tiers-codex`. Never assume one provider's behaviour carries to another.
 >
-> **The recurring trap is collection, not mode choice.** A background agent's final text may not be pushed into the lead's turn on its own; on Claude Code you can instead receive an `idle_notification` that reads exactly like an agent that gave up. It usually has not. Read its task output, or `SendMessage` its `name` to have it deliver. Diagnose the cause before re-dispatching — then re-dispatch freely; it is blind re-dispatch, not re-dispatch itself, that throws away completed work. `agents-tiers-claude` documents the full failure mode.
+> **Two distinct traps, in order of how much damage they do.** First, **permission context** (see the section above): a subagent that stalls on an unsurfaced gate does no work at all and looks identical to one that finished. Second, **collection**: an agent that *did* the work may fail to deliver its final text, showing an idle/available signal that reads exactly like giving up. Distinguish them by **inspecting the artifact**, then act — re-dispatch with the mode fixed for the first, verify-and-move-on for the second. Diagnose before re-dispatching; blind re-dispatch is what throws away completed work. The active provider's `agents-tiers-<provider>` reference documents both signatures.
 
 **Parallel blocking dispatch:** To run multiple agents concurrently while still blocking the lead's turn, issue **multiple subagent dispatches in a single message**. They execute in parallel, and their results are delivered together when all complete. The lead's turn blocks until the slowest one returns. This is how `agents-plan` parallelises each DAG layer (in both team and fire-and-forget modes) without "dropping" the conversation into background mode.
 
-**When to use `run_in_background: true`:** Only when the user explicitly asks for fire-and-forget behaviour, or when the lead must remain responsive to mid-execution messages from a long-running agent. Prefer blocking — it keeps the conversation coherent and the user never misses updates.
+**When to background vs block:** background is the default and preferred mode (see above); block when the agent's **report is the deliverable**, or when you are simply waiting with nothing else to push. Decide by asking what you will inspect when it finishes — a side effect you can verify yourself means background is safe; prose only means block.
 
 **Consequences of blocking:**
-- No `SendMessage` exchanges mid-execution — the lead is paused.
+- No mid-execution message exchanges — the lead is paused.
 - User guidance arrives on the NEXT turn; re-dispatch there if needed.
-- Permission requests (when `mode` is not `bypassPermissions`) are surfaced by the harness to the user for interactive approval while the lead is blocked.
+- **⚠ Do NOT assume a permission request will be surfaced to the user just because the lead is blocked.** On at least one runtime the subagent's gate cannot reach the parent UI at all, so blocking buys you nothing: the agent waits invisibly and the lead waits on the agent. Blocking is **not** a mitigation for the permission trap — set the permission mode on the dispatch instead.
 
 ## Model Selection
 

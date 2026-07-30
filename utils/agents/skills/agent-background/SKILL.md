@@ -26,6 +26,16 @@ echo "RESULT: not met after N cycles"   # backstop — report and re-arm
 
 The long, user-dependent wait collapses into a single silent process. You get one wake, not N.
 
+> ### ⛔ Detaching INSIDE the command is NOT the same as the runtime's background facility
+>
+> Backgrounding within the shell — `&`, `nohup`, `disown`, `setsid` — hands the process to the OS. **The runtime never learns it exists, so it will never wake you.** The loop runs, polls correctly, writes its output, exits into silence, and nothing happens. You have created a log file, not a watcher.
+>
+> The wake comes from the runtime's **own** background-exec mechanism (the tool flag / parameter / API named in *Per-runtime facilities*), set **on the invocation**, not from anything inside the command string.
+>
+> **Symptom to recognise, because it is easy to miss for a long time:** you find yourself re-reading a watcher's log or output file each turn to check whether it fired. **If you are polling the watcher, the watcher is not waking you.** Same for reporting "watchers armed" and then continuing to inspect their state by hand — that is a detached process, and every turn spent checking it is the cost this skill exists to remove. Re-arm through the runtime facility.
+>
+> Corollary: `ps` cannot tell you whether a running watcher will wake you — a detached loop and a runtime-managed one look identical in a process list. Judge by **how it was launched**, not by whether the process is alive.
+
 ## Ways to Wait and Wake — by mechanism and provider
 
 The bash wait-loop above is the portable default, but it is not the only way, and not every runtime supports every method. Pick the mechanism that fits the case AND the active runtime — discover the runtime's own facilities rather than assuming this harness's.
@@ -41,6 +51,7 @@ The bash wait-loop above is the portable default, but it is not the only way, an
 **Per-runtime facilities (verified from source — keep in sync):**
 
 - **Claude Code (this harness):** background shell via `Bash run_in_background: true` (re-invokes on exit); deferred wakeup via `ScheduleWakeup` (dynamic `/loop`); `Monitor` until-loop; recurring via `CronCreate` / the `/schedule` skill; subagent/Workflow completion auto-reinvokes (never poll it). Foreground `sleep` is blocked — use the background loop or `Monitor`.
+  **★ `run_in_background: true` must be set as a parameter ON the tool call.** Putting `&` or `nohup` in the command string instead produces a detached process with **no** task id, **no** output-file registration and **no** task-notification — it will never wake the session (see the boxed warning above). One launch per condition, each its own call; a single call that backgrounds several loops internally yields one wake at best and usually none.
 - **OpenCode:** background *subagents* via the `task` tool with `background: true` (experimental — needs `OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true`), which auto-notify the parent on completion (do not poll them). No native deferred-wakeup or cron (third-party plugins only, e.g. `opencode-scheduler`). No sleep tool — the `shell` tool kills a command at its timeout (~2 min default), so long foreground sleeps fail; use a bounded background shell loop under that timeout.
 - **Codex:** background *terminals* via `unified_exec` (persistent PTY that keeps running); completion is NOT auto-reinvoked — poll it with an empty `write_stdin`. First-class interruptible sleep via `clock.sleep` (≤ 12h) for a bounded sleep-loop. No native deferred-wakeup or cron — wrap `codex exec` in an OS cron / CI job for recurring runs.
 
@@ -52,7 +63,7 @@ Do not attribute this harness's tools (`ScheduleWakeup`, `Monitor`, `CronCreate`
 2. **Pick a bash-reachable signal.** A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (bash cannot call MCP), poll a **proxy** bash CAN see, and do the authoritative MCP check yourself on wake.
 3. **Bound the loop.** Always cap iterations (`seq 1 N`) as a runaway backstop; on exhaustion print a clear "not met" line and re-arm rather than looping forever.
 4. **Choose cadence by how fast the state changes** — short (~60s) for a human action, longer for a slow job (one check near the expected finish beats many early ones). Never poll faster than the state can plausibly change.
-5. **Launch one watcher**, note its task id, and tell the user what it's waiting on. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. State the watcher (what it polls, its cadence, its task id, and the command to re-arm it) out loud in chat, and if `plan-compact` is active write it verbatim into the anchor's Scratchpad Scripts & Watchers section. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
+5. **Launch one watcher through the runtime's background facility** — never by detaching inside the command (see the boxed warning under *The pattern*). Confirm the launch returned a **task id / handle**; if it did not, you detached instead of arming, and nothing will wake you. Note that id and tell the user what it's waiting on. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. State the watcher (what it polls, its cadence, its task id, and the command to re-arm it) out loud in chat, and if `plan-compact` is active write it verbatim into the anchor's Scratchpad Scripts & Watchers section. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
 6. **On wake: re-verify the real state before acting.** External APIs lag — a signal can read "done" slightly before/after the truth, and a proxy firing does not mean the downstream state converged. Do the authoritative check now.
 7. **Continue or re-arm.** If a follow-on condition isn't satisfied yet (e.g. the proxy fired but the real work is still settling), launch the next watcher. Never assume the proxy equals the end state.
 
