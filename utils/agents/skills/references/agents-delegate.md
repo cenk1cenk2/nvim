@@ -61,19 +61,25 @@ Consequences to internalise:
 - User guidance arrives on the NEXT turn; re-dispatch there if needed.
 - **⚠ Do NOT assume a permission request will be surfaced to the user just because the lead is blocked.** On at least one runtime the subagent's gate cannot reach the parent UI at all, so blocking buys you nothing: the agent waits invisibly and the lead waits on the agent. Blocking is **not** a mitigation for the permission trap — set the permission mode on the dispatch instead.
 
-## ⛔ Reaping — spawning without retiring is an incomplete dispatch
+## ⛔ Reaping — terminal, so COLLECT FIRST
 
-**An agent is finished when it is stopped, not when it has answered.** Leaving them alive costs resources and, worse, makes the run state unreadable: a stale agent is indistinguishable from a working one, so you cannot tell what is actually in flight.
+> **⛔⛔ REAPING IS IRREVERSIBLE AND DESTROYS THE AGENT'S REPORT.** Stopping an agent kills any remaining chance of getting its answer — you cannot message it, resume it, or read its result afterwards. So **reap ONLY when you are completely finished with it**: you have everything you need, you have no further question for it, the work has moved on, and it is genuinely stale.
+>
+> **An idle/available agent is a candidate for COLLECTION, not for reaping.** Idle usually means the work is done and only the report is stranded. Killing it there is the worst possible move: it converts a recoverable report into a permanent loss. **Collect first** — read its output, or message it to deliver. Only once you hold the answer (or have obtained it another way and are sure you will never need the agent again) do you reap.
 
-Reap when the agent stops earning its keep — **not only on success**:
+**Order, always:** collect → confirm you have what you need → *then* reap. Never the reverse.
 
-- it delivered and you acted on the result,
-- you got the answer another way (inspected the artifact directly),
-- it went idle without delivering and you took the work back in-house,
-- its task was superseded, re-scoped, or abandoned,
-- **you are about to replace it — reap BEFORE re-dispatching.**
+Reap when — and only when — **all** of these hold: you have the result or no longer need it, you will ask it nothing further, and the work it belonged to has moved on. Typical genuinely-safe cases:
 
-**Completion does not self-clean.** A finished agent, and a background task whose command already exited, can both linger in the runtime's task list. Stop them explicitly using the runtime's own mechanism (per the active provider's `agents-tiers-<provider>` reference).
+- it delivered, you acted on the result, and the task is closed,
+- you obtained the answer another way **and have already verified it**, so its report is redundant,
+- its task was superseded, re-scoped, or abandoned outright,
+- **you are about to replace it** — reap before re-dispatching, so two agents do not write the same target (but collect anything salvageable first),
+- it is demonstrably stale: guarding work that no longer exists, or polling a signal now known to be wrong.
+
+**Do NOT reap** an agent merely because it went quiet, because you are unsure whether it finished, or to tidy up mid-flow. Uncertainty is a reason to collect, not to kill.
+
+**Completion does not self-clean.** A finished agent, and a background task whose command already exited, can both linger in the runtime's task list. Stop them explicitly using the runtime's own mechanism (per the active provider's `agents-tiers-<provider>` reference) — once you are done with them.
 
 **★ The concrete hazard is two concurrent writers.** Re-dispatching over the same files, document, or resource without reaping the first agent lets the later write silently clobber the earlier one — and neither agent reports the collision. Reap, verify the target's current state, then dispatch again.
 

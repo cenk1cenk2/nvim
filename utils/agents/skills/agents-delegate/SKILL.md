@@ -88,18 +88,13 @@ Use it when:
    - If files changed, verify the diff matches expectations — do not trust the agent's success report blindly.
    - If the user wants to commit/push/PR, follow the `agents-completion` reference or invoke the relevant SCM skill.
 
-9. **⛔ REAP THE AGENT.** Dispatching is half the job; an agent is done when it is **stopped**, not when it has answered. Stop it as soon as it stops earning its keep — and that is **not only on success**:
-   - it delivered and you have acted on the result,
-   - you obtained the answer another way (inspected the artifact yourself),
-   - it went idle without delivering and you took the work back in-house,
-   - the task was superseded, re-scoped, or abandoned,
-   - you are replacing it — **reap before re-dispatching**, so two agents are not writing the same files or racing on the same resource.
-
-   **Completion does not self-clean.** A finished agent can linger in the runtime's task list, indistinguishable from a working one, and a stale entry makes the whole run state unreadable. Stop it explicitly with the runtime's own mechanism (see the active provider's `agents-tiers-<provider>` reference).
-
-   **Reap checkpoint before declaring the work done:** enumerate every agent you spawned and confirm each is stopped — or say out loud that one is *deliberately* still running and what it is waiting for. An unexplained live agent at the end of a flow is a bug.
-
-   **★ Two concurrent writers on one target is the real hazard.** If you re-dispatch or run a second agent over the same files, document, or resource without reaping the first, the later write can silently clobber the earlier one. Reap, then verify the target, then dispatch again.
+9. **⛔ REAP ONLY WHEN COMPLETELY DONE — reaping is terminal.**
+   - **Stopping an agent destroys any chance of getting its report.** You cannot message, resume, or read it afterwards. So reap only when you have everything you need, have no further question for it, and the work has moved on.
+   - **An idle/available agent is a candidate for COLLECTION, not reaping.** Idle usually means the work finished and only the report is stranded — killing it there turns a recoverable report into a permanent loss. **Order: collect → confirm you have what you need → then reap.** Never reap because it went quiet or because you are unsure whether it finished; uncertainty means collect.
+   - Genuinely safe to reap: it delivered and the task is closed; you obtained and **verified** the answer another way so its report is redundant; its task was superseded or abandoned; it is demonstrably stale; or you are replacing it — **reap before re-dispatching** so two agents never write the same target (collect anything salvageable first).
+   - **Completion does not self-clean.** A finished agent lingers in the runtime's task list, indistinguishable from a working one. Stop it explicitly via the runtime's own mechanism (see the active provider's `agents-tiers-<provider>` reference).
+   - **Reap checkpoint at the end of the flow:** enumerate every agent you spawned and confirm each is stopped, or state that one is *deliberately* still running and what it waits on.
+   - **★ Two concurrent writers on one target is the real hazard.** Re-dispatching over the same files, document, or resource without reaping the first lets the later write silently clobber the earlier one. Reap, verify the target's current state, then dispatch again.
 
 ## Model Selection
 
