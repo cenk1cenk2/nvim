@@ -293,6 +293,19 @@ function M.config()
     on_setup = function(config)
       require("sidekick").setup(config)
     end,
+    autocmds = function()
+      ---@type Autocmds
+      return {
+        {
+          event = { "User" },
+          pattern = "SidekickCliDetach",
+          group = "sidekick.cleanup",
+          callback = function(args)
+            M.forget_instance(args.data and args.data.id)
+          end,
+        },
+      }
+    end,
     keymaps = function()
       ---@type KeymapMappings
       return {
@@ -424,6 +437,33 @@ function M.create_instance(index)
   log:debug("Sidekick created: %s", instance.name)
 
   return instance
+end
+
+-- session ids are `<tool> <cwd-hash>`, optionally wrapped as `terminal: <tool> <cwd-hash>` by a mux
+-- backend. Match on the tool prefix so a session started in another cwd is still recognized.
+function M.instance_owns_session(instance, session_id)
+  local id = session_id:gsub("^terminal: ", "")
+
+  return id:sub(1, #instance.name + 1) == instance.name .. " "
+end
+
+function M.forget_instance(session_id)
+  if not session_id then
+    return
+  end
+
+  for index, instance in pairs(M.instances) do
+    if M.instance_owns_session(instance, session_id) then
+      M.instances[index] = nil
+      require("sidekick.config").cli.tools[instance.name] = nil
+
+      if M.current_instance == index then
+        M.current_instance = 0
+      end
+
+      log:debug("Sidekick instance reaped: %s", instance.name)
+    end
+  end
 end
 
 function M.attached_instances()
