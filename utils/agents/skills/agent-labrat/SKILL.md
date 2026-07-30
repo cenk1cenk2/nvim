@@ -198,6 +198,10 @@ The thread is the only signal, and thread replies are reachable only through Sla
 
 On each wake, run the awareness cycle from `agent-watchers`: read what is new, verify any claim against its artifact, reconcile the tracker, report terse, then re-arm — until the work reaches a terminal state or the user stops it.
 
+**Not every message is progress.** Hermes posts its own housekeeping into the thread — gateway online/restarting notices, cron job responses, and `:floppy_disk: Self-improvement review` lines where it patches its own skills and memory mid-run. Read those as "still alive, not advancing the task": they are not a stall to escalate on, and they are not work to report as progress either. An **empty message** is the same class of signal — a turn that produced no visible text.
+
+Judge liveness by task-relevant replies, not message count. If two or three consecutive checks bring only housekeeping, ask for a one-line status in-thread rather than assuming either progress or death.
+
 **A quiet thread is not a verdict.** It can mean working, blocked on an approval prompt, or a stalled run. Check the thread before concluding anything, and if it is waiting on approval, answer it — that is a reply you owe, not an event to observe.
 
 ## Steer and queue mid-run
