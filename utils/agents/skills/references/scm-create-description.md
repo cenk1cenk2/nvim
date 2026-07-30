@@ -2,6 +2,27 @@
 
 Shared description/title drafting workflow for opening or updating a pull/merge request. Used by `github-pr-create` (GitHub) and `gitlab-mr-create` (GitLab). The platform reference (`scm-github` / `scm-gitlab`) and each skill's "Platform specifics" supply the exact detect/create/update tools; this reference covers only the parts that are identical across platforms.
 
+## ⛔ Never open it as a draft
+
+**Default is ready for review. Opening a draft requires the user to have explicitly asked for a draft PR/MR, in those terms.** "Open it as a draft", "make it a draft MR", "draft PR please" — that is the only trigger.
+
+**"Draft" describing the WORK is not a request for a draft PR.** These are not triggers, and treating them as one is the mistake this rule exists to stop:
+
+- the implementation is exploratory, a first cut, a spike, or "trying things out",
+- the user said "let's draft something" or "this is a draft implementation" while iterating,
+- tests are failing, CI has not run, or the scope is partial,
+- you want feedback before it is finished,
+- you are unsure the approach is right.
+
+By the time the user says "open a PR", the work has converged — that is what the request means. Opening a draft then hides the change from reviewers and its pipeline from the one person who asked to see it.
+
+When the work genuinely is not ready, the answer is **not** a draft:
+
+1. **Do not open it yet** — say what is outstanding and wait.
+2. Or **open it ready** and state the outstanding items in the description.
+
+If a request is genuinely ambiguous — the word "draft" appears but you cannot tell whether it describes the PR or the work — ask the single question before opening. Never guess toward draft. When a draft was opened at the user's request and they later say it is ready, mark it ready for review; do not leave it sitting in draft.
+
 ## Branch reuse
 
 Branches may have previously merged or closed PRs/MRs — this is normal. Only open PRs/MRs matter. If no open PR/MR is found but `git log main..HEAD` shows commits ahead of the base branch, the branch needs a new one. Do NOT search for or get confused by prior closed/merged PRs/MRs on the same branch.

@@ -11,6 +11,7 @@ references:
   - ../references/linear-project-documents.md
   - ../references/linear-chunk-issues.md
   - ../references/agents-delegate.md
+  - ../references/agents-conventions.md
   - ../references/agents-plan-split.md
   - ../references/scm-detect.md
   - ../references/sourcebot-discovery.md
@@ -29,6 +30,7 @@ references:
 > Read the `linear-project-documents` reference for project-scoped shared context and for propagating investigations, plans, solved problems, and deviations as documents. Attach these on demand with the `linear-document` skill — one tightly focused concern per document, like obsidian repository notes.
 > Read the `linear-chunk-issues` reference for aligning tasks with Linear issue boundaries.
 > Read the `agents-plan-split` and `agents-delegate` references for schedule construction, agent tier choice, and self-contained agent prompts.
+> Read the `agents-conventions` reference before any implementation — direct or delegated. Pickup work lands in existing repos, so the code must read as though the repo's own authors wrote it: study the neighbouring files first, copy the local naming and structure, and add no comments the surrounding code would not have.
 > Read the `scm-detect` and `project-tooling` references before touching repositories.
 > Read the `sourcebot-discovery` reference when pickup needs broad repository/code discovery before GitLab-specific metadata.
 > Read the `output-diff` reference before writing to Linear, GitHub, or GitLab.
@@ -64,7 +66,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
 5. **Implement.**
    - Move picked-up issues to `In Progress`.
    - Use `git-branch` before implementation unless intentionally continuing a branch.
-   - Implement directly and/or dispatch agents with focused prompts.
+   - Implement directly and/or dispatch agents with focused prompts, each carrying the `agents-conventions` block with concrete pattern-reference files.
    - Keep branches current with known merges at convenient checkpoints.
    - Run local verification equivalent to the PR/MR pipeline.
 

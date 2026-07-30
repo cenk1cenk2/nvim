@@ -11,6 +11,7 @@ Every plan task must have:
 - **Files:** Exact file paths — every file that will be created or modified. No "and related files."
 - **Steps:** Concrete actions. Each step is one thing to do, not a paragraph of intent.
 - **Verification:** How to confirm the task is done — which commands to run, what output to expect.
+- **Pattern reference:** For any task that writes code, the concrete existing file(s) it should be modelled on — the nearest sibling and the closest implementation of the same kind of thing. The executing agent reads those before writing (see `agents-conventions`). "Follow project conventions" is a placeholder, not a pattern reference.
 
 Optional (used by DAG-scheduled skills like `agents-plan`):
 
@@ -57,5 +58,6 @@ After writing the plan, review it before presenting to the user:
 2. **Placeholder scan** — search for any patterns from the "No Placeholders" table. Fix them.
 3. **Consistency** — do types, function names, and file paths used in later tasks match what earlier tasks define?
 4. **Completeness** — does every task have Files, Steps, and Verification? Are file paths exact?
+5. **Pattern references** — does every code-writing task name the existing file it should be modelled on? A task without one produces code in the agent's own dialect.
 
 Fix issues inline. If a requirement has no task, add one.

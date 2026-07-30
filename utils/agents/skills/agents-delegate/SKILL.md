@@ -52,9 +52,10 @@ Use it when:
    - If no preference is stated, infer the tier from task complexity and propose with reasoning.
    - **If the user's pick seems mismatched to the task** (e.g., cheap for architectural design, smart for a trivial rename), **ask before dispatching** — state the mismatch and propose an alternative. Do not silently comply.
 
-3. **Establish conventions** (when the task modifies code).
-   - Follow the `agents-conventions` reference — only the conventions relevant to the task scope.
-   - Skip entirely for read-only research.
+3. **⛔ Establish conventions — mandatory whenever the task writes code.**
+   - Follow the `agents-conventions` reference: discover the local patterns, then build the prompt block that makes the agent study its neighbours first, copy the local naming and structure, match comment density (usually none), and stay in scope.
+   - Name the concrete files the agent should use as its pattern reference — the nearest siblings and the closest existing implementation of the same kind of thing. A generic "follow project conventions" line does nothing.
+   - Skip only for genuinely read-only research.
 
 4. **Discover verification commands** (when the task modifies code).
    - Follow the `project-tooling` reference to find lint/test/build commands.
@@ -86,6 +87,7 @@ Use it when:
 8. **Handle the result.**
    - Relay the agent's summary to the user.
    - If files changed, verify the diff matches expectations — do not trust the agent's success report blindly.
+   - **Check the diff for style drift**, per `agents-conventions`: naming that matches the neighbours, no comments restating the code, no docstrings or banners the surrounding files lack, no reformatting or refactors outside the task, no new abstraction where a local one existed. Bounce a mismatch back to the agent with the specific line — it still holds the context; fix by hand only when it is a one-liner.
    - If the user wants to commit/push/PR, follow the `agents-completion` reference or invoke the relevant SCM skill.
 
 9. **⛔ REAP ONLY WHEN COMPLETELY DONE — reaping is terminal.**

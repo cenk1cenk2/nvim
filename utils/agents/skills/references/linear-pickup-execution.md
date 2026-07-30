@@ -63,6 +63,7 @@ Agent prompts must be self-contained. Use an extended handoff shape:
 - Branch and base expectations.
 - Owned files or owned area.
 - Relevant prior decisions, deviations, and constraints.
+- Conventions block per `agents-conventions`, naming the concrete files to model the work on — mandatory for any code-writing handoff.
 - Verification commands.
 - Commit trailer expectations: default to `closes K-123` when the PR/MR resolves the issue and nothing else is pending (so it auto-closes on merge); use `refs K-123` only for partial work or when the issue is still waiting on something.
 - Expected report format: status, changed behavior, verification evidence, PR/MR readiness, deviations, findings, and blockers.

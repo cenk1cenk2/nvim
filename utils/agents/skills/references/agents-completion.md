@@ -28,7 +28,7 @@ After all tasks are done, review passes, and verification succeeds, present the 
 3. **Execute the user's choice.**
    - **Commit:** Stage changed files with `git add` using path `.`. Draft the commit message following the `commit-style` reference (conventional commit format, imperative mood, type + optional scope). If an issue ID or URL is known from the task context, add trailers following the `commit-trailers` reference. Present the message for approval first. After approval, commit via `git commit`.
    - **Push:** Commit (as above) + push to remote.
-   - **PR/MR:** Invoke `github-pr-create` or `gitlab-mr-create` skill to draft the description and create the PR/MR.
+   - **PR/MR:** Invoke `github-pr-create` or `gitlab-mr-create` skill to draft the description and create the PR/MR. **Open it ready for review, never as a draft** — the user asking for a PR means the work has converged (see `scm-create-description`).
    - **Leave uncommitted:** Confirm and stop. Note that changes are in the working tree.
 
 4. **Confirm completion.**

@@ -235,9 +235,16 @@ You are agent [N] in layer [L] of [total] working on: [high-level goal].
 Do NOT modify files outside your write scope. Other agents in this layer:
 - Agent [X]: [brief description]
 
-## Conventions
+## Conventions — match the house style
 
-[Project-specific conventions — naming, style, patterns]
+FIRST, before writing anything: read [nearest sibling files] and [closest existing implementation of the same kind], and follow them. Extend the existing pattern rather than introducing a new one.
+
+[Filled-in block from the `agents-conventions` reference — naming, formatting, errors, imports, tests, architecture]
+
+- Comments: match the surrounding density — [none | why-only]. Never restate what the code does. No banners, no narration, no added docstrings, no TODOs.
+- Scope: modify only your write scope. No refactors, renames, reformatting, or dependency changes outside the task. A convention you dislike is still the convention — flag it, don't fix it.
+
+Before reporting, self-check your diff against [reference file]: if a reader could tell your code apart from its neighbours, fix it.
 
 ## Accumulated Guidance
 
@@ -249,7 +256,7 @@ Do NOT modify files outside your write scope. Other agents in this layer:
 
 ## Report
 
-When done, report one of:
+State which files you used as your pattern reference, and anything you had to invent for lack of local precedent. Then report one of:
 - **DONE** — implemented and verified.
 - **DONE_WITH_CONCERNS** — implemented but [describe concern].
 - **NEEDS_CONTEXT** — cannot proceed without [what's missing].

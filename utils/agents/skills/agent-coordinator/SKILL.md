@@ -76,6 +76,7 @@ Context discipline is enforced in the **prompt**, not by hoping. Every dispatch 
 - **Verdict plus evidence** — the conclusion first, then what supports it.
 - **Status token** — `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, `BLOCKED` (per the `agents-delegate` reference).
 - **No transcript** — "do not include the commands you ran or their raw output unless a command failed".
+- **Pattern reference** — for code dispatches, the prompt carries the `agents-conventions` block naming the files to model the work on, and the report names what it actually followed. A coordinator who never reads the code is exactly the one who ships a foreign-looking diff.
 
 An agent that returns a wall of text has failed the task even if the work is right. Say so in the prompt.
 

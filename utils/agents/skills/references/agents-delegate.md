@@ -99,8 +99,8 @@ Agents start with a fresh context window — no conversation history, no files y
 4. **Context** — relevant architecture, patterns, conventions, adjacent work.
 5. **Boundaries** — what NOT to touch (other agents' scope, read-only files).
 6. **Verification** — commands to run after implementation (from `project-tooling` discovery).
-7. **Conventions** — project-specific patterns (from `agents-conventions`).
-8. **Report** — expected status format (DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED) and its length bound.
+7. **Conventions** — ⛔ **mandatory for any prompt that writes code.** Paste the filled-in block from `agents-conventions`: study the neighbouring files first, copy the local naming/structure/error idiom, match comment density (usually none), stay in scope, and self-check the diff before reporting. An agent given no conventions writes its own dialect, and the result reads as foreign even when it works.
+8. **Report** — expected status format (DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED) and its length bound. For code work, also require: which files it used as its pattern reference, and anything it had to invent for lack of local precedent.
 
 Point at skills and tools by name rather than inlining them when the target shares your access — see `agent-target-capability`.
 
@@ -110,6 +110,7 @@ Point at skills and tools by name rather than inlining them when the target shar
 2. Is the tier right for the task, and resolved to a concrete model for the active runtime?
 3. Are file boundaries explicit? No "and related files."
 4. Are verification commands included when the task modifies code?
+4b. Does the prompt carry the `agents-conventions` block — prior-art study, naming, comment discipline, scope limits, and the pre-report self-check?
 5. Is isolation right? Worktree for parallel writers; omit for read-only work.
 6. Does the dispatch mode match the runtime's delivery behavior (per `harness-<provider>-agents-delegate`), and does the agent have the tools it needs in that mode?
 7. Does the session's own permission posture actually allow the work you are asking for?
@@ -121,4 +122,4 @@ Point at skills and tools by name rather than inlining them when the target shar
 - **`max` is the ceiling — use sparingly.** `smart` covers most heavy work.
 - **The harness reference owns the mechanics.** Permission handling, background defaults, delivery, and limits are runtime properties — never carry one runtime's behavior to another.
 - **Match tier to task**, and **ask on mismatch** rather than silently complying.
-- **Verify results.** Agent summaries describe intent, not outcomes. Check the artifact.
+- **Verify results.** Agent summaries describe intent, not outcomes. Check the artifact — and for code, check that it matches the house style, not just that it works (`agents-conventions`).
