@@ -241,10 +241,12 @@ FIRST, before writing anything: read [nearest sibling files] and [closest existi
 
 [Filled-in block from the `agents-conventions` reference — naming, formatting, errors, imports, tests, architecture]
 
+Idiom above binds regardless of how novel the task is. For shape (decomposition, abstractions, signatures): mirror [analogous implementation] where one exists; where the task has no analogue, design it against the codebase's architecture and state in your report what you chose and why.
+
 - Comments: match the surrounding density — [none | why-only]. Never restate what the code does. No banners, no narration, no added docstrings, no TODOs.
 - Scope: modify only your write scope. No refactors, renames, reformatting, or dependency changes outside the task. A convention you dislike is still the convention — flag it, don't fix it.
 
-Before reporting, self-check your diff against [reference file]: if a reader could tell your code apart from its neighbours, fix it.
+Before reporting, self-check your diff against [reference file]: if it reads as though someone outside this codebase wrote it, fix it. New functionality may look new; it may not look foreign.
 
 ## Accumulated Guidance
 

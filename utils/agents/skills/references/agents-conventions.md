@@ -2,11 +2,27 @@
 
 **⛔ MANDATORY for every dispatch that writes code.** Not an optional enrichment step. Skip it only for genuinely read-only work (research, audits, reviews).
 
-A subagent starts with a fresh context and no taste for this codebase. Left to itself it writes generically-correct code in its own dialect: different naming, invented helpers, explanatory comments nobody asked for, a structure that mirrors no existing file. It passes the tests and reads as foreign — and that *is* the defect, because the next person to touch it cannot tell what the codebase's pattern actually is.
+A subagent starts with a fresh context and no taste for this codebase. Left to itself it writes generically-correct code in its own dialect: different naming, its own vocabulary for concepts that already have names, explanatory comments nobody asked for, a second way to do something the codebase already does. It passes the tests and reads as foreign — and that *is* the defect, because the next person to touch it cannot tell what the codebase's pattern actually is.
 
-## The acceptance test
+## Two levels — do not confuse them
 
-**A reader without `git blame` must not be able to tell which file the agent wrote.** If the diff stands out from its neighbours, the task is not done, however well it works.
+**Idiom always binds. Shape binds only when a precedent exists.**
+
+| Level | What it covers | When it applies |
+|-------|----------------|-----------------|
+| **Idiom** | Naming and vocabulary, comment density, imports, formatting, error handling, logging, config, test style, where files live. | **Always** — new feature or not. There is no such thing as code too novel to be named and formatted like its codebase. |
+| **Shape** | Decomposition, abstractions, interfaces, control flow, how the pieces fit together. | **Only when an analogous implementation exists** — migrating something, adding the Nth of a kind, redoing an existing thing in a different form. |
+
+The acceptance test follows the same split: **the code must read as though this codebase's authors wrote it.** That is a claim about idiom, not about the design being derivative. A genuinely new feature is expected to look new — it is not expected to look foreign.
+
+## When there is no precedent
+
+Real for a genuinely new feature, a first-of-its-kind integration, or a new subsystem. Then:
+
+- **Idiom still binds in full.** Sections 1 and 3 apply unchanged.
+- **Design deliberately**, against the codebase's architectural grain — its layering, its boundaries, how it passes dependencies — rather than copying an unrelated file for the sake of copying. Forcing a mismatched pattern onto new work is its own failure mode.
+- **Say so in the report:** what had no precedent, what you chose, and why. That is the sentence the reviewer needs. Inventing silently is what makes a diff unreviewable.
+- **Do not invent a second way to do something the codebase already does.** No precedent for the *feature* rarely means no precedent for its parts — config loading, errors, tests, and wiring almost always have one.
 
 ## 1. Study the examples BEFORE writing
 
@@ -26,21 +42,28 @@ Make this the agent's mandatory first action, stated in the prompt. Authority ru
 
 Skip anything unrelated: a commit that merely touched the file for a rename or a formatting sweep teaches nothing.
 
-**Extend an existing pattern rather than introducing a new one.** Where no precedent exists at any level, say so in the report instead of inventing one silently.
+**Extend an existing pattern when one fits the work.** Where none does, design it deliberately and say so in the report — the failure is inventing silently, not inventing.
 
-## 2. Copy, don't design
+## 2. Follow the examples
 
-Mirror what the examples already do:
+**Idiom — always, regardless of how novel the work is:**
 
 - **Naming scheme** — casing per symbol kind, how the codebase abbreviates versus spells out, the words it uses for recurring concepts, how files are named. Reuse the codebase's vocabulary; do not introduce a synonym for a concept that already has a name.
-- **Inlining versus extracting** — does this codebase inline a single-use helper, or pull it out? Does behavior hang off the type as a method, or sit in a free function? Match that. Do not extract an abstraction the neighbours would have inlined, and do not inline what they consistently factor out.
-- **Structure** — declaration order, file layout, module boundaries, where a new thing of this kind belongs.
-- **Signature shape** — parameter order and grouping, options-object versus positional, what gets returned, how optionality is expressed.
 - **Error handling, logging, configuration, dependency passing** — the local idiom, not the language's most popular one.
 - **Imports** — grouping, ordering, aliasing.
+- **Comment density** — see section 3.
 - **Tests** — framework, style, location, fixture and assertion patterns.
+- **File placement** — where a thing of this kind lives.
 
-When the user pointed at an example, this list is measured against **that** example first.
+**Shape — when an analogous implementation exists (migration, the Nth of a kind, the same thing in a different form), mirror it:**
+
+- **Inlining versus extracting** — does this codebase inline a single-use helper, or pull it out? Does behavior hang off the type as a method, or sit in a free function? Match that.
+- **Decomposition and structure** — declaration order, file layout, how the analogous implementation splits its parts.
+- **Signature shape** — parameter order and grouping, options-object versus positional, what gets returned, how optionality is expressed.
+
+Where the work has no analogue, design it — see *When there is no precedent* above — and keep the idiom list binding throughout.
+
+When the user pointed at an example, both lists are measured against **that** example first, including shape.
 
 **A convention you find suboptimal is still the convention.** Flag it in the report; do not "fix" it as a side effect. Unrequested refactors and renames are the fastest way to make a diff unrecognizable.
 
@@ -85,7 +108,7 @@ Then check how this kind of change was made around here: `git log -p -- <path>`,
 Extend the existing pattern rather than introducing a new one.
 
 - Naming: <per-symbol-kind rules discovered above>. Reuse the codebase's existing vocabulary — no synonyms for concepts that already have a name.
-- Shape: match the local habit on inlining versus extracting helpers, methods versus free functions, and signature style. Do not add an abstraction the neighbours would have inlined.
+- Shape: <analogous implementation, if one exists> — mirror its decomposition, inlining-versus-extracting habit, and signature style. If this work has no analogue, design it against the codebase's architecture and say in your report what you chose and why. Do not force an unrelated file's structure onto genuinely new work, and do not invent a second way to do something the codebase already does (config, errors, wiring, tests almost always have a precedent even when the feature does not).
 - Formatting: <formatter + when to run it>. <whitespace habits>.
 - Errors: <local idiom>.
 - Imports: <grouping/ordering>.
@@ -94,7 +117,7 @@ Extend the existing pattern rather than introducing a new one.
 - Comments: match the surrounding density — <none | why-only>. Never restate what the code does. No banners, no narration, no added docstrings, no TODOs.
 - Scope: modify only <paths>. No refactors, renames, reformatting, or dependency changes outside the task. A convention you dislike is still the convention — flag it, don't fix it.
 
-Before you report, self-check your diff against <reference file>: if a reader could tell your code apart from its neighbours, fix it. If the codebase had no precedent for something you needed, say so in the report rather than inventing one silently.
+Before you report, self-check your diff against <reference file>: if it reads as though someone outside this codebase wrote it — different naming, unfamiliar vocabulary, comments the neighbours would not have, a foreign error or import style — fix it. New functionality is allowed to look new; it is not allowed to look foreign.
 ```
 
 ## On return — check the diff, not the summary
@@ -102,7 +125,7 @@ Before you report, self-check your diff against <reference file>: if a reader co
 The agent's report describes intent. Read the actual diff and check:
 
 1. Naming matches the examples, per symbol kind, reusing existing vocabulary — and matches any example the user pointed at above all.
-1b. Inlining/extraction and signature shape match the local habit; no abstraction introduced where the neighbours inline.
+1b. Where an analogous implementation exists, inlining/extraction and signature shape match it. Where none exists, the report says what was designed and why — silence here is the actual defect.
 2. No comments that restate the code; no docstrings or banners the siblings do not have.
 3. No reformatting, renames, or refactors outside the task.
 4. No new helper or abstraction where a local one already existed.
