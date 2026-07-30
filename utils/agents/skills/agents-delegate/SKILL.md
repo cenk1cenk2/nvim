@@ -19,7 +19,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `agents-delegate` reference for agent parameters, dispatch mechanics, and prompt structure. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
+> Read the `agents-delegate` reference for agent parameters, dispatch mechanics, and prompt structure. Resolve tiers to concrete models via the `agent-harness` skill (and its per-provider references).
 > Read the `agents-worktrees` reference when dispatching with worktree isolation — worktrees MUST live in the runtime's agent-worktrees directory. Covers naming, verification, and cleanup.
 > Read the `agents-conventions` reference when the task modifies code — establishes conventions to include in the agent prompt. Skip for read-only research tasks.
 > Read the `project-tooling` reference when the task modifies code — for verification commands to include in the agent prompt. Skip for read-only research tasks.
@@ -48,7 +48,7 @@ Use it when:
    - Parse the user's input per the `agents-delegate` reference:
      - **Explicit model name** (e.g., `haiku`, `opus`, `gpt-4o`, `gemini-2.5-pro`) → use verbatim, no remapping.
      - **Tier shorthand** (`cheap`, `smart`, `lesser`, `higher`, etc.) → resolve to a concrete model via the ecosystem's mapping.
-   - Resolve the tier to a concrete model via the **`agents-tiers`** skill (read the active provider's `agents-tiers-<provider>` reference) — the mapping depends on the active provider (Claude, OpenCode, Codex, …), not just Anthropic. If the provider's mapping is unknown, ask; persist to memory if stable across sessions.
+   - Resolve the tier to a concrete model via the **`agent-harness`** skill (read the active provider's `harness-<provider>-agents-delegate` reference) — the mapping depends on the active provider (Claude, OpenCode, Codex, …), not just Anthropic. If the provider's mapping is unknown, ask; persist to memory if stable across sessions.
    - If no preference is stated, infer the tier from task complexity and propose with reasoning.
    - **If the user's pick seems mismatched to the task** (e.g., cheap for architectural design, smart for a trivial rename), **ask before dispatching** — state the mismatch and propose an alternative. Do not silently comply.
 
@@ -75,12 +75,12 @@ Use it when:
 7. **Launch the agent — background by default.**
    - Dispatch the subagent via your runtime's dispatch mechanism, with parameters resolved from the reference's parameter table.
    - **Dispatch in the BACKGROUND by default — this is the preferred mode.** The lead stays free, so the conversation keeps moving and you keep working while the agent runs. See the `agents-delegate` reference's Dispatch Mode section.
-   - **Read the active provider's `agents-tiers-<provider>` reference for the flag name, its default, and how a background result actually reaches you.** This differs per provider, and mis-collecting the result is the common failure — not agent flakiness.
-   - **⛔ Block when the agent's REPORT is the deliverable** — research, verification, audits, log digging, anything that leaves no artifact for you to inspect afterwards. Detached reports are unreliable to collect, so a verification agent dispatched detached can return nothing at all, and **its silence is not a pass.** Decide by asking what you will inspect when it finishes: a side effect you can check yourself means background is safe; prose only means blocking.
-   - Also block when you are simply waiting with nothing else to push. For a fan-out you need complete before proceeding, issue several dispatches in one message, all blocking — they still run concurrently and land together.
+   - **Read the active `harness-<provider>-agents-delegate` reference for the flag name, its default, and how a background result actually reaches you.** This differs per runtime: current Claude Code wakes you with a completion notification, Codex does not wake you at all.
+   - **⛔ Block when the runtime will not deliver a detached result**, and when you simply need the answer to continue. For a fan-out you need complete before proceeding, issue several dispatches in one message, all blocking — they still run concurrently and land together.
+   - **Never pre-empt a pending agent and never read its silence as a verdict.** A verification agent that has not reported has not passed anything. Equally, do not declare it broken on a runtime where delivery works — check the harness reference first.
    - `isolation`: `worktree` if the task modifies files — offer, confirm with user.
-   - **⛔ `mode`: settle this FIRST — it is the top cause of silently dead agents.** Subagents may run with **independent permissions**, so tools approved in your session are not approved for them, and a gate the runtime cannot surface to the parent leaves the agent waiting forever with no error. **Highest risk: a task targeting a directory or repo other than the session's.** Do not rely on `settings.json` allowlists — they are not inherited. Set the permission mode on the dispatch, get the user's explicit opt-in before granting autonomous access, and scope the prompt to exact paths with a do-not-touch list. See the active provider's `agents-tiers-<provider>` reference for the parameter and the failure signature.
-   - **Collect a background result deliberately** — read its task output, or `SendMessage` its `name` to have it deliver. An idle notification is not proof it failed; the work is usually done and only the report is stranded. **After two failed collection attempts, stop negotiating** — verify the underlying artifact yourself, or re-dispatch blocking. Diagnose the cause first, then re-dispatch freely; only blind re-dispatch wastes completed work.
+   - **⛔ Permissions: settle the context FIRST, but do not try to set it on the dispatch.** On current Claude Code the `mode` parameter is deprecated and ignored — subagents inherit the session's permission mode, so you cannot grant an agent more autonomy than the session already has. If the task needs more, raise it with the user; do not dispatch and hope. On runtimes with independent permissions, an unsurfaced gate stalls the agent silently — **highest risk: a task targeting a directory or repo other than the session's.** See the active `harness-<provider>-agents-delegate` reference.
+   - **Collect deliberately.** On Claude Code, a background agent's result arrives as a completion notification — wait for it rather than polling, and note that a completed agent can be resumed by `SendMessage` to its name if you need more. Do NOT read a local agent's task-output file: it is a symlink to the full transcript and will overflow your context. **After two failed collection attempts, stop negotiating** — verify the underlying artifact yourself, or re-dispatch blocking. Diagnose the cause first; only blind re-dispatch wastes completed work.
    - **If worktree isolation is used**, verify the returned path is absolute and in the runtime's agent-worktrees directory per the `agents-worktrees` reference. If it falls outside, abort the result and recreate the worktree manually at the correct location (see the Manual Fallback section), then re-dispatch without worktree isolation and instruct the agent via the prompt to `cd` into the manual path.
 
 8. **Handle the result.**
@@ -92,16 +92,16 @@ Use it when:
    - **Stopping an agent destroys any chance of getting its report.** You cannot message, resume, or read it afterwards. So reap only when you have everything you need, have no further question for it, and the work has moved on.
    - **An idle/available agent is a candidate for COLLECTION, not reaping.** Idle usually means the work finished and only the report is stranded — killing it there turns a recoverable report into a permanent loss. **Order: collect → confirm you have what you need → then reap.** Never reap because it went quiet or because you are unsure whether it finished; uncertainty means collect.
    - Genuinely safe to reap: it delivered and the task is closed; you obtained and **verified** the answer another way so its report is redundant; its task was superseded or abandoned; it is demonstrably stale; or you are replacing it — **reap before re-dispatching** so two agents never write the same target (collect anything salvageable first).
-   - **Completion does not self-clean.** A finished agent lingers in the runtime's task list, indistinguishable from a working one. Stop it explicitly via the runtime's own mechanism (see the active provider's `agents-tiers-<provider>` reference).
+   - **Completion does not self-clean.** A finished agent lingers in the runtime's task list, indistinguishable from a working one. Stop it explicitly via the runtime's own mechanism (see the active provider's `harness-<provider>-agents-delegate` reference).
    - **Reap checkpoint at the end of the flow:** enumerate every agent you spawned and confirm each is stopped, or state that one is *deliberately* still running and what it waits on.
    - **★ Two concurrent writers on one target is the real hazard.** Re-dispatching over the same files, document, or resource without reaping the first lets the later write silently clobber the earlier one. Reap, verify the target's current state, then dispatch again.
 
 ## Model Selection
 
-See the `agents-tiers` skill for tier definitions, per-provider model lists, and user shorthand. Summary:
+See the `agent-harness` skill for tier definitions, per-provider model lists, and user shorthand. Summary:
 
 - **Tiers:** `cheap` (mechanical), `default` (integration), `smart` (architectural), `max` (absolute ceiling).
-- **Concrete model depends on the provider** — resolve via the `agents-tiers` skill (Claude: `haiku`/`sonnet`/`opus`/`fable`; OpenCode / Codex per its references). Ask if the provider's mapping is unknown.
+- **Concrete model depends on the provider** — resolve via the `agent-harness` skill (Claude: `haiku`/`sonnet`/`opus`/`fable`; OpenCode / Codex per its references). Ask if the provider's mapping is unknown.
 - **Explicit model names** override tiers — use verbatim.
 
 ## Key Principles

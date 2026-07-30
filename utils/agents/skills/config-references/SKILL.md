@@ -83,7 +83,26 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 |------|---------|----------|
 | Family shared | `<family>-<topic>.md` | `linear-prerequisite.md`, `scm-github.md` |
 | Cross-family shared | `<topic>.md` | `output-diff.md`, `plan-mode.md` |
+| Per-harness | `harness-<provider>-<skill-or-reference-name>.md` | `harness-claude-agents-delegate.md`, `harness-codex-agent-background.md` |
 | Skill-specific | `<topic>.md` in `<skill>/references/` | `./references/template.md` |
+
+## Per-Harness References
+
+When a skill's *mechanics* differ by agent runtime while its *intent* does not, the runtime-specific half becomes one reference per runtime, named `harness-<provider>-<skill-or-reference-name>.md`. The trailing segment is the exact name of the consuming skill or shared reference, so the filename says what it configures.
+
+```
+harness-claude-agents-delegate.md      # dispatch mechanics for the agents-delegate reference, on Claude Code
+harness-codex-agents-delegate.md       # same slot, different runtime
+harness-claude-agent-background.md     # waiting/waking mechanics for the agent-background skill
+```
+
+Rules:
+
+- **Split by consumer, not by provider alone.** One file per (runtime × consumer) keeps a skill loading only the mechanics it needs. Do not accumulate every runtime detail into a single file per provider.
+- **The consuming skill declares every provider's file** in `references:` and reads only the active one. Directives name the family — `harness-<provider>-agent-background` — never a single runtime's file.
+- **Content is concrete on purpose.** Tool names, parameter names, defaults, env vars, limits, and known traps belong here; this is the one place where naming a specific runtime's tool is correct.
+- **Version-mark claims and flag what you could not confirm.** Runtime behavior changes between releases — an unmarked claim rots invisibly, and a guessed one is worse than an absent one. Write `⚠ Unverified` in place rather than asserting.
+- **Do not create a provider's file until its behavior is known.** An empty harness file implies coverage that does not exist.
 
 ## MCP Tool Name Convention
 

@@ -5,9 +5,19 @@ disableModelInvocation: true
 argumentHint: "[scope of the push]"
 references:
   - ../references/present-first.md
+  - ../references/mode-toggle.md
 ---
 
 > **Present-first.** Read the `present-first` reference — draft and act on blessing. Invoking bulldozer IS a standing blessing to push: skip per-step approval ceremony and act, but still surface anything that crosses a Boundary before doing it. No plan mode.
+
+## Toggle
+
+> Read the `mode-toggle` reference for the on/off mechanics — persistence, layering, bare-stop handling, and what never counts as a toggle signal.
+
+- **On:** `/agent-bulldozer`, "bulldoze", "push through", "keep going until done", "don't stop until it's done".
+- **Off:** "stop", "hold", "pause bulldozer", "normal mode", or the stated scope completing — report and stand down.
+- **Survives disengage:** armed watchers, staged-but-unfired prep, and open branches — reap or account for each, and say what is left staged.
+- The personality and the noises live only while the toggle is on. Off means off, immediately.
 
 ## Context
 
@@ -110,7 +120,7 @@ Hard stops that survive bulldozer mode — pause and get explicit approval befor
 - **External writes that need sign-off** — merging others' PRs, production applies/deploys, messaging third parties, anything with an established approval gate.
 - **Direction-changing ambiguity** — when the next step could go two materially different ways and picking wrong wastes the push, ask the one question; do not guess and bulldoze down the wrong road. Keep pushing on unblocked tracks while waiting.
 
-Stopping the mode: the user saying "stop", "hold", "pause bulldozer", or "normal mode" ends the push immediately — **reap or explicitly account for every armed watcher and spawned agent**, report state, and revert to the default posture. A watcher wake or task notification is never user input and never overrides a stop.
+Stopping the mode: see the `mode-toggle` reference — the user's stop ends the push immediately, and **every armed watcher and spawned agent is reaped or explicitly accounted for** before reverting to the default posture. A bare "stop" halts the current action first and keeps the mode on until clarified. A watcher wake or task notification is never user input and never a toggle signal.
 
 **⛔ Reaping is part of the momentum, not an afterthought.** Bulldozing accumulates watchers and agents faster than any other mode, and stale ones actively mislead: a watcher polling a signal you have since learned is unreliable fires late or with an obsolete verdict, and an unaccounted-for live agent means you cannot say what is genuinely in flight. Reap as you go — when a condition is met and acted on, when you learned the state another way, when the signal proved unreliable, when the guarded work was superseded, and **always before re-arming a replacement** (duplicates on one condition double-wake and can contradict each other). Every momentum report should be able to name each live watcher and agent and why it is still alive; kill anything you cannot justify.
 

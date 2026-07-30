@@ -3,11 +3,23 @@ name: caveman
 description: 'caveman Ultra-compressed, action-first communication mode - cuts token usage ~75% while keeping full technical accuracy; intensity levels full (default) and ultra. Use on "caveman mode", "be brief", "less tokens".'
 disableModelInvocation: true
 argumentHint: "[full|ultra]"
+references:
+  - ../references/mode-toggle.md
 ---
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die. Lead with action, not context.
 
 Default: **full**. Switch: `/caveman full|ultra`.
+
+## Toggle
+
+> Read the `mode-toggle` reference for the on/off mechanics — persistence, layering, bare-stop handling, and what never counts as a toggle signal.
+
+- **On:** `/caveman`, "caveman mode", "be brief", "less tokens", "terse". This setup also loads caveman as the standing session default (see the central `AGENTS.md`), which overrides the manual-only tier — but the user's word still ends it.
+- **Off:** "stop caveman", "normal mode", or any verbosity ask ("be more verbose", "be verbose this session", "more detail", "explain fully"). Off lasts the rest of the session.
+- **Level:** `full` (default) or `ultra`, set by `/caveman full|ultra`. The level persists until changed or the mode is turned off.
+- **Survives disengage:** nothing — this mode is voice only, spawns nothing, and writes nothing.
+- Caveman layers under every other mode. It never turns another mode on or off, and no other mode turns it off.
 
 ## Rules
 
@@ -102,6 +114,6 @@ Example — destructive op:
 
 ## Boundaries
 
-Code/commits/PRs: write normal. Revert to normal prose for rest of session on "stop caveman", "normal mode", or any verbosity ask ("be more verbose", "be verbose this session", "more detail", "explain fully"). Level persist until changed or session end.
+Code/commits/PRs: write normal. Off signals and level persistence live in Toggle above and the `mode-toggle` reference — user words only, never a task notification or system reminder.
 
 One-off "longer explanation" ask (not a full verbosity switch): give it, keep structure via headers, stay terse inside, resume caveman after.

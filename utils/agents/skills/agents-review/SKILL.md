@@ -1,6 +1,6 @@
 ---
 name: agents-review
-description: 'agents-review Dispatch review subagents to cross-check artifacts (plan, DAG, facts, analysis) against the codebase or a devil''s-advocate lens; cheap model by default, parallel reviewers for multiple artifacts. Use on "review this", "fact-check", "second opinion". Do NOT use to run a task (/agents-delegate), for multi-task plans (/agents-plan), or to re-read code you''ve already seen.'
+description: 'agents-review Dispatch review subagents to cross-check artifacts (plan, DAG, facts, analysis) against the codebase or a devil''s-advocate lens; tier chosen from what the review demands, parallel reviewers for multiple artifacts. Use on "review this", "fact-check", "second opinion". Do NOT use to run a task (/agents-delegate), for multi-task plans (/agents-plan), or to re-read code you''ve already seen.'
 disableModelInvocation: true
 argumentHint: "[type=plan|dag|facts|freeform] [artifact or file path] [optional: 'hard' | 'deep' | 'thorough' | explicit model name]"
 references:
@@ -13,7 +13,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `agents-delegate` reference for subagent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
+> Read the `agents-delegate` reference for subagent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agent-harness` skill (and its per-provider references).
 > Read the `scm-detect` reference only if the review task requires git context (e.g., reviewing a diff or historical change).
 
 ## Context
@@ -46,18 +46,29 @@ Four typed templates, each with a different checklist. The skill picks the right
 
 ## Model Tier
 
-**Default tier: `cheap` for all types** (Claude resolves this to `haiku`; get the concrete model for the active provider from the `agents-tiers` skill). The default review is a quick sanity pass — the cost/latency balance favours a cheap model.
+**Pick the tier from what the review actually demands — there is no blanket default.** A cheap model can grep, cite, and check a claim against a file; it cannot weigh a trade-off, spot the missing dependency in a DAG, or build the strongest counter-argument. Under-tiering a judgment review produces a confident `APPROVED` that means nothing — worse than no review, because it gets trusted. Resolve the concrete model for the active runtime via the `agent-harness` skill.
+
+Starting points by artifact type:
+
+| Type | Starting tier | Why |
+|------|---------------|-----|
+| `facts` | `cheap` | Mechanical verification — grep, read, cite. Escalate when the claims are architectural rather than factual. |
+| `plan` | `default` | Coverage and gap-finding needs the whole plan held in view at once. |
+| `dag` | `default` | Dependency and collision reasoning; escalate to `smart` for a large or heavily coupled DAG. |
+| `freeform` | `smart` | Counter-arguments, load-bearing assumptions, failure modes — the reasoning IS the product. |
+
+Then adjust for the artifact in front of you: its size, how coupled it is, and how expensive a wrong verdict would be. State the chosen tier and the reason in the dispatch summary.
 
 **User override:**
 
 | User wording | Resolved tier |
 |--------------|---------------|
-| nothing specified | `cheap` (default) |
+| nothing specified | per-type starting tier above |
 | "hard", "deep", "thorough", "rigorous", "careful" | `smart` |
 | "default", "balanced" | `default` |
 | Explicit model name (e.g., `opus`, `sonnet`) | Use verbatim — do not remap |
 
-**Mismatch check:** if the user picks `cheap` for `freeform` (nuanced argument review) or `smart` for `facts` (grep/read verification work), ask before dispatching. See the `agents-delegate` reference's Mismatched Choice section.
+**Mismatch check:** if the user picks a tier the artifact will defeat — `cheap` for `freeform` or for a large coupled plan — say so before dispatching; likewise flag `smart` for plain `facts` grep work as overspend. See the `agents-delegate` reference's Mismatched Choice section.
 
 ## Process
 
@@ -70,7 +81,7 @@ Four typed templates, each with a different checklist. The skill picks the right
 2. **For each artifact:**
    - Read the artifact content (from file, or inline from the user's message).
    - Build a self-contained review prompt using the type's template (see Prompt Templates below).
-   - Resolve the tier per artifact (default `cheap`; user override wins; mismatch check if needed).
+   - Resolve the tier per artifact from what that review demands (see Model Tier; user override wins; mismatch check if needed).
 
 3. **Dispatch in parallel.** Single message, one subagent dispatch per artifact. Parameters:
    - An exploration (read-only) subagent.
@@ -78,7 +89,7 @@ Four typed templates, each with a different checklist. The skill picks the right
    - `prompt` — the self-contained review prompt.
    - `model` — resolved tier.
    - No worktree isolation (not needed).
-   - No `mode: "bypassPermissions"` — reviewers don't modify files, so permission bubbling is fine.
+   - No permission-mode parameter — it is deprecated and ignored on current Claude Code; reviewers are read-only and run under the session's own posture.
    - No `run_in_background` — blocking dispatch.
 
 4. **Collect verdicts.** This turn blocks until every reviewer returns.
@@ -189,7 +200,7 @@ No merging across artifacts — each review keeps its own context.
 ## Key Principles
 
 - **⛔ Reap the reviewer once its verdict is in.** A review agent's whole product is its report, so the moment you have the verdict — or have obtained the judgement another way, or the artifact under review has changed and the review is moot — stop it. Completion does not self-clean: a finished reviewer lingers in the runtime's task list looking identical to a live one. Reap before re-dispatching a reviewer on a revised artifact, so an old verdict cannot arrive after the new one and be mistaken for it.
-- **Cheap by default.** The skill is the "quick second opinion" tool. Default tier is cheap; opt up explicitly for hard reviews.
+- **Tier by demand, not by habit.** Mechanical verification goes cheap; judgment work does not. A cheap reviewer on a nuanced artifact returns a verdict it was never able to reach.
 - **One reviewer per artifact.** No ensemble. If the user wants multiple reviewers on the same artifact, they invoke the skill multiple times.
 - **Parallel fan-out over artifacts.** Multiple artifacts = single message, multiple subagent dispatches, blocking.
 - **Read-only.** Reviewers never modify files. An exploration subagent enforces the read-only disposition.

@@ -12,7 +12,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
-> Read the `agents-delegate` reference for dispatching the pre-compaction consistency check to a cheap-tier read-only subagent. Resolve tiers via the `agents-tiers` skill.
+> Read the `agents-delegate` reference for dispatching the pre-compaction consistency check to a cheap-tier read-only subagent. Resolve tiers via the `agent-harness` skill.
 
 ## Context
 
@@ -72,7 +72,7 @@ Concretely: an approach the user rejected is worth a line so it is not re-propos
 Before an anticipated compaction — when the context is growing long, or on the checkpoint you expect to be the last before a summary — verify the documentation agrees with itself:
 
 1. **Cross-check for drift.** Compare the anchor against every source document, and the sources against each other: stale status, contradictory decisions, facts that have diverged, an anchor that no longer matches Linear / the plan file / live PR-MR state.
-2. **Delegate when there are several sources.** This is a read-only comparison — dispatch it to a cheap-tier subagent (via the `agents-delegate` mechanics; resolve the tier with `agents-tiers`), handing it the anchor plus the source list and asking it to report only the inconsistencies. Keeps the diffing out of the main context.
+2. **Delegate when there are several sources.** This is a read-only comparison — dispatch it to a cheap-tier subagent (via the `agents-delegate` mechanics; resolve the tier with `agent-harness`), handing it the anchor plus the source list and asking it to report only the inconsistencies. Keeps the diffing out of the main context.
 3. **Report inconsistencies to the user before continuing.** Do not silently reconcile material drift — surface which sources disagree and on what, and let the user decide. Fold agreed resolutions into the anchor and the affected source.
 4. **Self-check the anchor MECHANICALLY, not by reading it.** Reading misses these — a stale line reads as true, and a missing section reads as absent rather than wrong. `grep` for:
    - every scratchpad script named anywhere in prose has its **full body** inlined (a script mentioned but not inlined is unrecoverable after compaction);

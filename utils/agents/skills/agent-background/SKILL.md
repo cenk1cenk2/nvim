@@ -3,9 +3,14 @@ name: agent-background
 description: 'agent-background Arm a background wait-loop that polls an external condition (PR/MR merge, CI or deploy run, human approval) and re-invokes the session once when it is met, instead of sleeping or asking the user to ping. Do NOT use to poll background Agent/Workflow work you started (the harness re-invokes automatically) or for self-paced loop iteration (use /loop).'
 references:
   - ../references/present-first.md
+  - ../references/harness-claude-agent-background.md
+  - ../references/harness-opencode-agent-background.md
+  - ../references/harness-codex-agent-background.md
 ---
 
 > **Present-first.** Read the `present-first` reference — arm the loop when it's the obvious next step or the user blessed it; surface it first if spawning it is itself the decision.
+
+> **⛔ Read the active runtime's `harness-<provider>-agent-background` reference BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that file owns the tool names, parameters, and defaults.
 
 ## Context
 
@@ -13,7 +18,7 @@ Some work blocks on state that changes **outside the session** and that the harn
 
 ## The pattern
 
-Launch via the `Bash` tool with `run_in_background: true`. The loop polls a **bash-reachable** signal and `exit`s the moment it's satisfied; on exit the harness delivers a task-notification that re-invokes the main loop.
+Launch a shell loop through the runtime's own background-exec facility (named in the active `harness-<provider>-agent-background` reference). The loop polls a **bash-reachable** signal and `exit`s the moment it's satisfied; where the runtime supports it, that exit delivers a notification which re-invokes the main loop.
 
 ```
 for i in $(seq 1 N); do
@@ -30,7 +35,7 @@ The long, user-dependent wait collapses into a single silent process. You get on
 >
 > Backgrounding within the shell — `&`, `nohup`, `disown`, `setsid` — hands the process to the OS. **The runtime never learns it exists, so it will never wake you.** The loop runs, polls correctly, writes its output, exits into silence, and nothing happens. You have created a log file, not a watcher.
 >
-> The wake comes from the runtime's **own** background-exec mechanism (the tool flag / parameter / API named in *Per-runtime facilities*), set **on the invocation**, not from anything inside the command string.
+> The wake comes from the runtime's **own** background-exec mechanism (the tool flag / parameter / API named in its `harness-<provider>-agent-background` reference), set **on the invocation**, not from anything inside the command string.
 >
 > **Symptom to recognise, because it is easy to miss for a long time:** you find yourself re-reading a watcher's log or output file each turn to check whether it fired. **If you are polling the watcher, the watcher is not waking you.** Same for reporting "watchers armed" and then continuing to inspect their state by hand — that is a detached process, and every turn spent checking it is the cost this skill exists to remove. Re-arm through the runtime facility.
 >
@@ -48,14 +53,14 @@ The bash wait-loop above is the portable default, but it is not the only way, an
 4. **Recurring schedule (cron)** — for work that must run on a repeating cadence, outliving the session.
 5. **Sleep-in-a-loop** — a bounded loop around an interruptible sleep, where the runtime offers a real sleep primitive.
 
-**Per-runtime facilities (verified from source — keep in sync):**
+**Which mechanisms exist, and what they are called, is a runtime property.** The active runtime's `harness-<provider>-agent-background` reference is the authority: it names the facility for each mechanism above, its parameters, its defaults, and its traps. Read it before arming.
 
-- **Claude Code (this harness):** background shell via `Bash run_in_background: true` (re-invokes on exit); deferred wakeup via `ScheduleWakeup` (dynamic `/loop`); `Monitor` until-loop; recurring via `CronCreate` / the `/schedule` skill; subagent/Workflow completion auto-reinvokes (never poll it). Foreground `sleep` is blocked — use the background loop or `Monitor`.
-  **★ `run_in_background: true` must be set as a parameter ON the tool call.** Putting `&` or `nohup` in the command string instead produces a detached process with **no** task id, **no** output-file registration and **no** task-notification — it will never wake the session (see the boxed warning above). One launch per condition, each its own call; a single call that backgrounds several loops internally yields one wake at best and usually none.
-- **OpenCode:** background *subagents* via the `task` tool with `background: true` (experimental — needs `OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS=true`), which auto-notify the parent on completion (do not poll them). No native deferred-wakeup or cron (third-party plugins only, e.g. `opencode-scheduler`). No sleep tool — the `shell` tool kills a command at its timeout (~2 min default), so long foreground sleeps fail; use a bounded background shell loop under that timeout.
-- **Codex:** background *terminals* via `unified_exec` (persistent PTY that keeps running); completion is NOT auto-reinvoked — poll it with an empty `write_stdin`. First-class interruptible sleep via `clock.sleep` (≤ 12h) for a bounded sleep-loop. No native deferred-wakeup or cron — wrap `codex exec` in an OS cron / CI job for recurring runs.
+Two runtime differences big enough to change the plan, not just the syntax:
 
-Do not attribute this harness's tools (`ScheduleWakeup`, `Monitor`, `CronCreate`) to another runtime; if a runtime's mechanism is unknown, discover it before assuming.
+- **Some runtimes do not wake you at all.** Where completion never re-invokes the session, arming and ending the turn silently drops the work — you must block, poll explicitly, or have the work leave an artifact you read later.
+- **Some runtimes cap how long a command may run**, which bounds every loop and forces re-arming rather than one long watch.
+
+Never attribute one runtime's tools to another, and if a mechanism is unknown, discover it from the running build rather than assuming.
 
 ## Process
 
@@ -78,17 +83,17 @@ Do not attribute this harness's tools (`ScheduleWakeup`, `Monitor`, `CronCreate`
 
 ## Caveats
 
-- **Foreground `sleep` is blocked** by the harness. Use `run_in_background: true`, or a `Monitor` until-loop. Do not chain short foreground sleeps to fake a wait.
+- **Foreground sleeping may be blocked or capped** depending on the runtime — never chain short foreground sleeps to fake a wait. See the harness reference for what this runtime allows.
 - **Bash cannot call MCP tools.** Poll a bash-visible proxy; keep the MCP/authoritative confirmation on the main loop.
 - **Task-notifications are NOT user input.** A background-completion event is not approval or consent — never treat it as the user answering a pending question.
-- **`run_in_background` shells are not in `TaskList`** (that lists the task-management system, not local shells). Track the returned task id yourself; stop one with `TaskStop <id>`.
+- **A watcher may not appear in the runtime's task list** even while running. Track the handle the launch returned, and stop it through the mechanism the harness reference names.
 - **Avoid redundant watchers.** Mutating the thing a watcher polls usually doesn't invalidate it (it keys on a stable id). Re-arm only when unsure the old one is alive; a duplicate merely double-wakes (harmless — re-verify and no-op).
 - **Persistence:** background shells survive across turns until they exit or you stop them; you're re-invoked on exit. Size cap × cadence to a sane ceiling (e.g. 45 × 60s ≈ 45 min) and re-arm past it.
 - **Compaction does not preserve watchers.** The background task id, the loop's script body, and anything it wrote to the scratchpad are session/scratchpad state — a compaction summary drops them and they do not transfer to another agent. Anything armed for longer than a checkpoint must be recorded in durable text (chat + the `plan-compact` anchor), so a resumed agent re-materializes the script and re-arms the watch instead of losing it. Never rely on a background handle or a scratchpad path outliving a compaction.
 
 ## Fallback
 
-If no bash-reachable signal exists at all, drop to a deferred wakeup or a monitor loop — on this harness, `ScheduleWakeup` (dynamic `/loop`) or a `Monitor` until-loop; on other runtimes, their equivalent from **Ways to Wait and Wake**. Prefer the background bash loop for concrete external conditions, and use a recurring scheduler (`CronCreate` / `/schedule`) only for repeating work, never one-shot polling.
+If no bash-reachable signal exists at all, drop to a deferred wakeup or a monitor loop — whichever the active runtime provides, per its `harness-<provider>-agent-background` reference. Prefer the background loop for concrete external conditions, and use a recurring scheduler only for genuinely repeating work, never one-shot polling. On a runtime that provides neither, the fallback is a blocking wait or an artifact the work leaves behind for you to read.
 
 ## Example
 

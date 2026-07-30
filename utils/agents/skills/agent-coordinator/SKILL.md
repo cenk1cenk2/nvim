@@ -5,6 +5,7 @@ disableModelInvocation: true
 argumentHint: "[scope to coordinate] [optional: 'bulldozer' to also engage push-through mode]"
 references:
   - ../references/present-first.md
+  - ../references/mode-toggle.md
   - ../references/agents-delegate.md
   - ../references/agents-worktrees.md
   - ../references/agent-target-capability.md
@@ -14,9 +15,17 @@ references:
 
 > **Present-first.** Read the `present-first` reference — invoking coordinator IS a standing blessing to dispatch within the agreed scope; present the routing plan once, then run it. No plan mode.
 
-> Read the `agents-delegate` reference for dispatch parameters, blocking vs background, and self-contained prompt structure. Resolve tiers via the `agents-tiers` skill.
+> Read the `agents-delegate` reference for dispatch parameters, blocking vs background, and self-contained prompt structure. Resolve tiers via the `agent-harness` skill.
 > Read the `agents-worktrees` reference before any parallel dispatch that writes files.
 > Read the `agent-target-capability` reference — subagents in this harness are **aware** targets, so dispatch prompts point at skills and tools instead of inlining them.
+
+## Toggle
+
+> Read the `mode-toggle` reference for the on/off mechanics — persistence, layering, bare-stop handling, and what never counts as a toggle signal.
+
+- **On:** `/agent-coordinator`, "coordinate this", "orchestrate this", "delegate everything", "stay a coordinator".
+- **Off:** "stop coordinating", "drop coordinator", "normal mode", "do it yourself from here", or the coordinated scope completing.
+- **Survives disengage:** the state file, plus every spawned agent and watcher — collect pending reports first, then reap or justify each.
 
 ## Context
 
@@ -70,9 +79,9 @@ Context discipline is enforced in the **prompt**, not by hoping. Every dispatch 
 
 An agent that returns a wall of text has failed the task even if the work is right. Say so in the prompt.
 
-**⛔ Settle the permission mode before anything else.** Coordinator mode fails hardest here: a subagent may run with **independent permissions**, so a gate the runtime cannot surface leaves it waiting silently with no error — and a coordinator that reads that silence as a verdict has routed the work, spent the turn, and learned nothing. A task targeting a repo other than the session's is the highest-risk case, which in a multi-repo workspace is most of them. Set the mode on the dispatch (user opt-in first for autonomous access), and **diagnose by inspecting the artifact, never the notification**: nothing touched means it stalled and must be re-dispatched; work present means only the report was lost, so verify rather than re-run. See the active provider's `agents-tiers-<provider>` reference.
+**⛔ Settle the permission context before anything else.** How permissions reach a subagent is a runtime property. On current Claude Code they are **inherited from your session and cannot be widened on the dispatch** — so work needing more autonomy than the session has is a conversation with the user, not a parameter you set. On runtimes with independent permissions, a gate the runtime cannot surface leaves the agent waiting silently with no error, and a coordinator that reads that silence as a verdict has routed the work, spent the turn, and learned nothing. Cross-repo dispatch is the riskiest case either way. **Diagnose by inspecting the artifact, never the notification**: nothing touched means it never ran; work present means only delivery failed, so verify rather than re-run. See the active `harness-<provider>-agents-delegate` reference.
 
-**⛔ Dispatch report-deliverable agents BLOCKING.** Coordinator mode runs almost entirely on agent reports — for a research, verification, or log-digging dispatch the report IS the product, with no artifact left behind to inspect. Detached reports are unreliable to collect (see the active provider's `agents-tiers-<provider>` reference), and a coordinator that loses one ends up with neither the answer nor the context it was protecting. Blocking costs no parallelism: issue the whole fan-out in a single message. Keep background for agents whose product is a side effect you will verify yourself. **A silent verification agent is not a pass** — and when collection fails twice, take that one check back in-house rather than dispatching a seventh time.
+**⛔ Match the dispatch mode to the runtime's delivery.** Coordinator mode runs almost entirely on agent reports — for research, verification, or log digging there is no artifact left behind, so the report IS the product. On a runtime that wakes you on completion (current Claude Code), background is safe and that notification is the collection mechanism: wait for it, never pre-empt it, and never read a pending agent's silence as a verdict. On a runtime that does **not** wake you (Codex today), detached work finishes into silence — block, poll explicitly, or have the agent write its findings to a file. Block regardless whenever you simply need the answer to continue; it costs no parallelism, since a whole fan-out issued in one message runs concurrently. **A silent verification agent is not a pass** — and when collection genuinely fails twice, take that one check back in-house rather than dispatching a seventh time. See the active `harness-<provider>-agents-delegate` reference.
 
 ## Process
 
@@ -114,7 +123,7 @@ Break posture out loud: say you are doing this one yourself and why, so the mode
 - Engage it **only** on an explicit additional signal: `/agent-coordinator bulldozer`, "coordinate and bulldoze", or a separate `/agent-bulldozer` invocation.
 - **Never self-engage it.** Coordinating is not a licence to push. Without that signal, run the default rhythm: dispatch, verify, report, wait for the user.
 - When both are engaged, bulldozer owns the momentum rules and its own Boundaries and situational holds bind unchanged; coordinator still owns the routing and the return contract.
-- The user stopping bulldozer ("stop", "hold", "normal mode") ends the push but leaves coordinator posture in place.
+- Toggles are independent per the `mode-toggle` reference: stopping bulldozer ends the push and leaves coordinator posture in place, and stopping coordinator leaves any bulldozer push running.
 
 ## Example
 

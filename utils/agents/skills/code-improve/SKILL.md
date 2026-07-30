@@ -15,7 +15,7 @@ references:
 > - Delegate discovery to subagents so the audit stays out of the main context.
 > - This skill produces proposals, not implementation. The user picks what to do, then invokes `plan-hard` (or similar) to plan the chosen work.
 
-> Read the `agents-delegate` reference for subagent dispatch mechanics. Resolve tiers to concrete models via the `agents-tiers` skill.
+> Read the `agents-delegate` reference for subagent dispatch mechanics. Resolve tiers to concrete models via the `agent-harness` skill.
 
 > Read the `project-tooling` reference to discover the project's format / lint / test commands (Taskfile, `package.json`, Makefile, Cargo, …). The audit grounds its proposals in what keeps those tasks green.
 
@@ -41,7 +41,7 @@ This is an audit, not a review of pending changes. For reviewing a specific bran
 
    Then discover the project's task tooling per the `project-tooling` reference — scan for `Taskfile.yml`, `package.json`, `Makefile`, `Cargo.toml`, and the like, and note the format / lint / test commands. These anchor the audit: proposals must not break them, and the consistency dimension defers to whatever the formatter already normalizes.
 
-2. **Phase 1 — Parallel Audit.** Dispatch 3-5 audit subagents in parallel (single message, multiple subagent dispatches) at **`cheap` tier** — resolve via the `agents-tiers` skill, use an exploration subagent. Each subagent takes a focused audit dimension and returns a **short report (under 300 words)** listing candidates with file paths and 1-line rationale per candidate.
+2. **Phase 1 — Parallel Audit.** Dispatch 3-5 audit subagents in parallel (single message, multiple subagent dispatches) at **`cheap` tier** — resolve via the `agent-harness` skill, use an exploration subagent. Each subagent takes a focused audit dimension and returns a **short report (under 300 words)** listing candidates with file paths and 1-line rationale per candidate.
 
    **Default dimensions** (skip or merge based on user filter):
 

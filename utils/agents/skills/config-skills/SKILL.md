@@ -46,9 +46,12 @@ All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a direct
 │   ├── linear-project-documents.md      # Authoring project-scoped documents for shared Linear context
 │   ├── linear-document-handling.md      # Reading/updating existing attached documents (glimpse, classify, edit-with-agreement)
 │   ├── linear-pickup-execution.md       # Linear pickup implementation lifecycle
-│   ├── agents-tiers-claude.md           # Claude tier→model table + Agent tool dispatch
-│   ├── agents-tiers-opencode.md         # OpenCode tier→model table + task tool dispatch
-│   ├── agents-tiers-codex.md            # Codex/OpenAI role models + dispatch
+│   ├── harness-claude-agents-delegate.md   # per-harness: dispatch mechanics + tier→model
+│   ├── harness-opencode-agents-delegate.md
+│   ├── harness-codex-agents-delegate.md
+│   ├── harness-claude-agent-background.md  # per-harness: waiting and waking mechanics
+│   ├── harness-opencode-agent-background.md
+│   ├── harness-codex-agent-background.md
 │   ├── linear-scm-discovery.md          # Explicit opt-in Sourcebot/GitHub/GitLab discovery for Linear context
 │   ├── linear-research-documentation.md # Research process, analysis, appendix, links
 │   ├── sourcebot-discovery.md          # Sourcebot-first org-wide repository/code discovery
@@ -253,20 +256,40 @@ Do NOT extract:
 - Descriptions or examples — these are unique per skill.
 - Short inline rules that would lose context when separated.
 
-### Provider-Specific Behavior — generic body, per-provider reference
+### Provider-Specific Behavior — generic body, per-harness reference
 
 A skill is authored once and runs under whichever agent runtime is active. Keep that split explicit:
 
 - **The SKILL.md body stays runtime-agnostic.** Describe the *intent* — "dispatch a subagent", "run it detached", "write the plan to the internal plans directory" — and never name one runtime's tool, parameter, default, or filesystem path.
-- **Runtime mechanics live in a per-provider reference** (`agents-tiers-<provider>.md` for dispatch, `provider-paths.md` for directories). That is where the concrete tool name, its parameters, its defaults, and the collection semantics belong.
+- **Runtime mechanics live in a per-harness reference**, named **`harness-<provider>-<skill-or-reference-name>.md`** — one file per (runtime × consuming skill). That is where the concrete tool name, its parameters, its defaults, and the collection semantics belong. Cross-cutting paths stay in `provider-paths.md`.
+
+**The per-harness naming convention.** A skill that behaves differently per runtime gets one reference per runtime, named after the runtime *and* the thing it configures:
+
+```
+references/harness-claude-agents-delegate.md      # dispatch mechanics + tier→model, Claude Code
+references/harness-opencode-agents-delegate.md
+references/harness-codex-agents-delegate.md
+references/harness-claude-agent-background.md     # waiting/waking mechanics, Claude Code
+references/harness-opencode-agent-background.md
+references/harness-codex-agent-background.md
+```
+
+Rules for this family:
+
+1. **`<skill-or-reference-name>` is the exact name of the consumer** — the skill (`agent-background`) or the shared reference (`agents-delegate`) whose mechanics the file carries. A reader seeing the filename knows what it configures without opening it.
+2. **The skill declares every provider's file** in its `references:` frontmatter and reads only the active one at runtime. Never assume the session's runtime in the body.
+3. **The directive names the family, not one file:** *"Read the active runtime's `harness-<provider>-agent-background` reference before arming anything."*
+4. **Split by consumer, not by topic size.** Do not pile every runtime mechanic into one file per provider — a skill should load the mechanics it needs and nothing else.
+5. **Add a new provider file only when its behavior is known.** An empty or guessed harness file is worse than none; mark anything unconfirmed as **unverified** in place.
+6. **Version-mark behavioral claims.** Runtime behavior changes between releases; a claim without a version marker rots invisibly. When behavior contradicts a file, verify against the running build and fix the file rather than special-casing the runtime in a skill body.
 - **A skill that spawns subagents MUST send the reader to the active provider's reference BEFORE the first dispatch**, as a hard directive rather than optional background. Write the directive so it cannot be read as "nice to have".
 
-> **⛔ The expensive failure mode is result COLLECTION, not dispatch.** Whether detached is the default, and above all **how a finished agent's output actually reaches the caller**, vary per runtime. On at least one runtime a completed agent is announced by a signal that is indistinguishable from one that gave up — so an author who omits the collection guidance produces a skill whose users silently discard finished work and re-run it. Any skill that dispatches subagents must therefore cover: how to read a detached agent's output, how to resume it by name to make it deliver, and **diagnose the cause before re-dispatching** (blind re-dispatch is what throws work away, not re-dispatch itself).
+> **⛔ The expensive failure mode is result COLLECTION, not dispatch.** Whether detached is the default, and above all **how a finished agent's output actually reaches the caller**, vary per runtime and change between versions. One runtime wakes the caller with a completion notification; another never wakes it at all, so detached work finishes into silence. An author who omits the collection guidance produces a skill whose users either discard finished work and re-run it, or wait forever for a wake that was never coming. Any skill that dispatches subagents must therefore cover: how a finished agent's output reaches the caller on the active runtime, how to resume or poll it, and **diagnose the cause before re-dispatching** (blind re-dispatch is what throws work away, not re-dispatch itself).
 
 Checklist for any skill that dispatches subagents:
 
 1. The body names no runtime-specific tool, parameter, or default value.
-2. A directive points at `agents-tiers-<provider>` **before** the first dispatch step.
+2. A directive points at `harness-<provider>-agents-delegate` **before** the first dispatch step.
 3. Blocking vs detached is expressed as intent; the provider reference owns the flag and its default.
 4. Result collection is covered explicitly, including diagnose-before-re-dispatch.
 5. If it isolates writes, it points at `agents-worktrees` — including that isolation follows the **session's** repo, not the task's, which breaks cross-repo dispatch.
@@ -317,9 +340,12 @@ When creating or updating a skill, always check:
 | `project-tooling.md` | Task runner discovery order, verification command extraction, user confirmation flow. | Agent skills (agents-plan, agents-delegate). |
 | `agents-delegate.md` | Dispatch parameters, blocking vs detached posture, self-contained prompt structure, dispatch checklist. **Points at the per-provider reference for the mechanics — see Provider-Specific Behavior.** | Every agent skill that spawns a subagent (`agents-delegate`, `agents-plan`, `agents-review`, `agent-coordinator`). |
 | `agents-worktrees.md` | Agent worktree location rule, naming, mandatory post-dispatch verification, manual fallback, cleanup. Covers the trap that isolation follows the **session's** repo, not the task's. | Any agent skill dispatching writers in parallel. |
-| `agents-tiers-claude.md` | Claude tier→model table (`haiku`/`sonnet`/`opus`/`fable`) + `Agent` tool dispatch, detached-by-default semantics, and the result-collection failure mode. | `agents-tiers` skill; agent delegation skills on demand. |
-| `agents-tiers-opencode.md` | OpenCode tier→model table (`kilic/*` models) + `task` tool dispatch. | `agents-tiers` skill; agent delegation skills on demand. |
-| `agents-tiers-codex.md` | Codex/OpenAI role models (`gpt-*`) + dispatch. | `agents-tiers` skill; agent delegation skills on demand. |
+| `harness-claude-agents-delegate.md` | Claude Code dispatch: tier→model (`haiku`/`sonnet`/`opus`/`fable`), permission inheritance, foreground/background and result delivery, reduced background tool set, limits, worktrees. | `agent-harness` skill; delegation skills on demand. |
+| `harness-opencode-agents-delegate.md` | OpenCode dispatch: tier→model (`kilic/*`), blocking `task` tool, timeout behavior. | `agent-harness` skill; delegation skills on demand. |
+| `harness-codex-agents-delegate.md` | Codex dispatch: role models (`gpt-*`), and that background work never wakes the caller. | `agent-harness` skill; delegation skills on demand. |
+| `harness-claude-agent-background.md` | Claude Code waiting/waking: background shell, monitor, deferred wakeup, cron, reading and stopping watchers, compaction loss. | `agent-background`. |
+| `harness-opencode-agent-background.md` | OpenCode waiting/waking: shell-timeout ceiling bounding every loop, absent scheduler facilities. | `agent-background`. |
+| `harness-codex-agent-background.md` | Codex waiting/waking: nothing wakes you — block, poll, or leave an artifact. | `agent-background`. |
 | `linear-document-handling.md` | Reading/updating existing attached documents: glimpse, classify plan-like vs external, edit only with agreement. | Linear read/update skills (issue-read, project-read, issue-update, project-update). |
 | `agents-write-plans.md` | Plan quality: exact file paths, no placeholders, concrete steps, optional depends_on field, self-review checklist. | Agent skills (agents-plan). |
 | `agents-conventions.md` | Project conventions discovery: testing, code style, patterns, formatting, commits. | Agent skills (agents-plan, agents-delegate). |

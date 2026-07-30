@@ -31,7 +31,7 @@ references:
 
 > Read the `agents-plan-split` reference for the planning phase — understand goal, discover tooling, establish conventions, write the plan. Also covers `depends_on` declarations, layer assignment, and file-overlap verification.
 > Read the `agents-merge-review` reference for between-layer and end-of-run phases — per-layer worktree merge, per-layer review, final `code-review-changes` against the run-level baseline, final verification, completion handoff.
-> Read the `agents-delegate` reference for agent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agents-tiers` skill (and its per-provider references).
+> Read the `agents-delegate` reference for agent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agent-harness` skill (and its per-provider references).
 > Read the `agents-worktrees` reference for the mandatory worktree location rule, naming, verification, and cleanup — agent worktrees MUST live in the runtime's agent-worktrees directory, no exceptions.
 > Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
 > Read the `sourcebot-discovery` reference when planning starts from an organization-wide question or the target repository is not yet known.
@@ -50,9 +50,11 @@ This skill takes a plan (explicit file or inferred from a goal), builds a depend
 
 **Two orthogonal axes** control behaviour:
 
-- **Mode** (permission model):
-  - **`team` (default)** — `TeamCreate` coordinates the run. Permission requests bubble up to the lead (you) for interactive approval. Lead orchestrates.
-  - **`fire-and-forget`** — agents dispatch with `mode: "bypassPermissions"`. No team coordination. Autonomous execution.
+- **Mode** (coordination model):
+  - **`team` (default)** — `TeamCreate` coordinates the run. The lead orchestrates and stays in the loop between layers.
+  - **`fire-and-forget`** — no team coordination; agents run to completion and report. Use when the layer needs no lead involvement mid-flight.
+
+  **Note:** mode no longer controls permissions. On current Claude Code, subagents inherit the session's permission mode and the dispatch parameter is ignored — so autonomy is a property of the session you are running in, not of this axis. See `harness-<provider>-agents-delegate`.
 - **Review cadence** (when `code-review-changes` runs):
   - **`per-layer` (default)** — review after each layer merges, before the next launches. Catches integration issues layer by layer.
   - **`per-task`** — implementer + reviewer pair for every task. Strictest. Use for risky refactors.
@@ -110,7 +112,7 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 - User approves or adjusts (reshuffle layers, change mode, change cadence, add/remove tasks).
 - Iterate until approved.
 
-> **Tip:** Want a second opinion on the DAG before launching? Suggest to the user: *"Invoke `/agents-review dag` with the schedule above to dispatch a reviewer (cheap by default)."* This is a nudge, not a step — the user decides whether to act on it.
+> **Tip:** Want a second opinion on the DAG before launching? Suggest to the user: *"Invoke `/agents-review dag` with the schedule above to dispatch a reviewer (it picks the tier from the DAG's size and coupling)."* This is a nudge, not a step — the user decides whether to act on it.
 
 ### Step 7 — Decide agent count per layer
 
@@ -130,8 +132,8 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 - Spawn all teammates for this layer in a single message with multiple subagent dispatches. For each:
   - Worktree isolation (unless user opted out).
   - `team_name` set to the team created above.
-  - No `bypassPermissions` — permissions bubble up.
-  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `agents-tiers-<provider>`.
+  - No permission-mode parameter — deprecated and ignored on current Claude Code; teammates run under the session's own posture.
+  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `harness-<provider>-agents-delegate`.
   - A general-purpose subagent.
 
 **Fire-and-forget mode:**
@@ -139,8 +141,8 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 - No `TeamCreate`.
 - Spawn all agents for this layer in a single message with multiple subagent dispatches. For each:
   - Worktree isolation (unless user opted out).
-  - `mode: "bypassPermissions"`.
-  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `agents-tiers-<provider>`.
+  - No permission-mode parameter — it is ignored; agents run under the session's posture.
+  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `harness-<provider>-agents-delegate`.
   - A general-purpose subagent.
 
 **Per-task cadence override:** if the user chose `per-task` cadence, each layer still runs in parallel, but every task is implemented + reviewed by a pair (two dispatches — one implementer, one reviewer) before the layer considers itself done. See the "Per-Task Review Pattern" section below. This is heavier than per-layer review.
@@ -301,9 +303,9 @@ Report: APPROVED or list specific issues to fix.
 
 ## Model Selection
 
-See the `agents-tiers` skill for tier definitions, per-provider model lists, user shorthand, and mismatch handling. Per-agent, pick a tier based on task complexity and resolve to a concrete model:
+See the `agent-harness` skill for tier definitions, per-provider model lists, user shorthand, and mismatch handling. Per-agent, pick a tier based on task complexity and resolve to a concrete model:
 
-- **Concrete model depends on the provider** — resolve via the `agents-tiers` skill (Claude: cheap→`haiku`, default→`sonnet`, smart→`opus`, max→`fable`; OpenCode / Codex per its references). Same mapping applies to review subagents under per-task cadence.
+- **Concrete model depends on the provider** — resolve via the `agent-harness` skill (Claude: cheap→`haiku`, default→`sonnet`, smart→`opus`, max→`fable`; OpenCode / Codex per its references). Same mapping applies to review subagents under per-task cadence.
 - **Other providers:** if the mapping is unknown, ask the user.
 - **Explicit model names from the user** override tiers — use verbatim.
 - **Mismatched choices:** ask before dispatching.

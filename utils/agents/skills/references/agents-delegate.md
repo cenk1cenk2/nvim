@@ -1,93 +1,89 @@
 # Agent Delegation
 
-Shared logic for creating and dispatching subagents via your runtime's dispatch mechanism. Used by all `agents-*` skills.
+Shared logic for creating and dispatching subagents via the active runtime's dispatch mechanism. Used by all `agents-*` skills.
 
-## Agent Tool Parameters
+**This file is runtime-agnostic on purpose.** It covers what every dispatch needs — parameters, prompt shape, reaping discipline. Every mechanic that varies per runtime (permission handling, background defaults, how a result reaches you, limits) lives in `harness-<provider>-agents-delegate` and is authoritative there. When the two disagree, the harness reference wins.
 
-Delegation is **not Claude-specific** — each provider exposes its own subagent-spawning mechanism, and the tier → model resolution (see Model Selection) applies to whichever one is active:
+## Dispatch mechanisms
 
-- **Claude / Anthropic** — the built-in `Agent` tool. Its `model` parameter accepts `haiku`, `sonnet`, `opus`, or `fable`. The parameter table below is specific to this tool.
-- **OpenCode** — the `task` tool (subagent dispatch, allowed in `opencode.jsonc`). Spawn a subagent and set its model to the resolved `kilic/*` slug.
+- **Claude Code** — the built-in `Agent` tool. The parameter table below describes it.
+- **OpenCode** — the `task` tool (subagent dispatch, allowed in `opencode.jsonc`). Set the subagent's model to the resolved `kilic/*` slug.
 - **Codex** — its own task/subagent spawning. Set the resolved `gpt-*` model.
 - **Other / custom** — Claude API SDK, OpenAI SDK, or a custom dispatch; the `model` value is whatever that mechanism expects.
 
-Whatever the mechanism, the flow is the same: pick a tier from task complexity, resolve it to a concrete model via the active provider's list, build a self-contained prompt, dispatch.
+Whatever the mechanism, the flow is the same: pick a tier from task complexity, resolve it to a concrete model via the active harness's list, build a self-contained prompt, dispatch.
+
+## Agent Tool Parameters (Claude Code)
 
 | Param | Required | Purpose |
 |-------|----------|---------|
 | `description` | yes | Short (3-5 word) task summary. Shown in telemetry and to the user. |
 | `prompt` | yes | Full self-contained task prompt. Agents do not share context with you or each other. |
 | `subagent_type` | no | `general-purpose` (default), `Explore` for research-heavy work, or a specialized agent type. |
-| `model` | no | `haiku`, `sonnet`, `opus`, or `fable` (Anthropic-only via this tool). See Model Selection below. |
-| `isolation` | no | `worktree` creates a temporary git worktree in `.claude/worktrees/` (harness default). See the `agents-worktrees` reference for naming, verification, and cleanup — agent worktrees MUST NOT live anywhere else. |
-| `mode` | no | `bypassPermissions` skips approvals (fire-and-forget). Default: let permission requests bubble up. |
-| `team_name` | no | Team context for coordinated work (agents in team mode). |
-| `name` | no | Agent name for `SendMessage` routing. |
-| `run_in_background` | no | Detached execution. **Background is the preferred mode** — see Dispatch Mode below. Provider defaults differ; check `agents-tiers-<provider>`. |
+| `model` | no | `haiku`, `sonnet`, `opus`, `fable`, a full model ID, or `inherit`. See Model Selection below. |
+| `effort` | no | Reasoning effort for this agent (`low`…`max`); overrides the session level. |
+| `isolation` | no | `worktree` runs the agent in a temporary git worktree branched from the **default branch**, auto-removed if it changes nothing. Costs disk and setup time — use it only when parallel writers would collide. See `agents-worktrees`. |
+| `name` | no | Agent name for `SendMessage` routing and for resuming it later. |
+| `run_in_background` | no | Detached execution. **Default is background on Claude Code**; other runtimes differ — check `harness-<provider>-agents-delegate`. |
+| `mode` | — | **Deprecated and ignored** on current Claude Code. See the permission section below. |
 
-## ⛔ FIRST: a subagent may not inherit your permissions
+## ⛔ FIRST: settle the permission context
 
-**Before mode, tier, or prompt shape — settle the permission context.** On some runtimes a subagent runs with **independent permissions**: tools pre-approved in the parent session are not pre-approved for it. When it then hits a gate the runtime cannot surface to the parent, it **waits forever on an approval nobody can see** — and the symptom is indistinguishable from a broken agent: an idle/available signal, no tool calls, no response to follow-up messages, no error, no timeout.
+**How a subagent gets its permissions is a runtime property, and getting it wrong is the most expensive dispatch mistake.** Read the active `harness-<provider>-agents-delegate` reference before the first dispatch. Two shapes exist in the wild:
 
-Consequences to internalise:
+- **Inherited** — the subagent runs with the parent session's permission mode (current Claude Code). You therefore **cannot grant an agent more autonomy than the session has**; a task needing more is a conversation with the user about the session, not a dispatch parameter. Attempting to pass a permission mode on the dispatch is a no-op.
+- **Independent** — the subagent has its own permission context and a gate it hits may not surface to the parent, so it can wait forever with no error, no timeout, and no tool calls. Older Claude Code builds behaved this way; assume any unfamiliar runtime might.
 
-- **Pre-allowing tools in settings is not a substitute** — the failure is that the allowlist is *not inherited*. Set the permission mode **on the dispatch**.
-- **A task targeting a directory or repo other than the session's is the highest-risk case** — in a multi-repo workspace that is the normal case, not an edge case. Isolation flags can make it worse when settings are scoped to a filesystem path.
-- **Granting autonomous permission is a security decision, not a default.** Get the user's explicit opt-in, scope the prompt to exact paths with an explicit do-not-touch list, and keep irreversible steps on the main loop.
-- **Diagnose by inspecting the artifact, never the notification.** No files/resources touched means a permission stall and nothing was done — re-dispatch with the mode fixed. Work present but no report means only the report was stranded — verify and move on, do **not** re-run. **Silence is neither success nor failure.**
+Rules that hold either way:
 
-**Read the active provider's `agents-tiers-<provider>` reference for that runtime's permission-mode parameter, whether it inherits, and the known failure signature.** Do not assume one runtime's behaviour carries to another.
+- **Granting autonomous access is a security decision, not a default.** Get the user's explicit opt-in, scope the prompt to exact paths with a do-not-touch list, and keep irreversible steps on the main loop.
+- **Cross-repo and cross-directory dispatch is the riskiest case** on any runtime — settings and isolation are usually scoped to a filesystem path.
+- **Diagnose by inspecting the artifact, never the notification.** Nothing touched means the agent never ran — fix the cause and re-dispatch. Work present but no report means only the delivery failed — verify and move on, do **not** re-run. **Silence is neither success nor failure.**
 
-## Dispatch Mode — background by default
+## Dispatch Mode — background by default, where the runtime supports it
 
-> **★ BACKGROUND IS THE DEFAULT AND PREFERRED MODE (standing operator preference).** Dispatch detached so the lead stays free — the user can keep talking and you keep working while the agent runs.
+> **★ Background is the preferred posture where the runtime delivers results reliably** (Claude Code: background is the tool default, and a finished agent's result arrives as a completion notification in a later turn). The lead stays free, the user keeps talking, you keep working.
 >
-> **⛔ With one hard exception: if the agent's REPORT is the deliverable, dispatch BLOCKING.** Research, verification, audits, log digging, "go find out X" — work that leaves no artifact to inspect, where the text is the whole point. Detached reports are **unreliable to collect** (see the per-provider reference: on at least one runtime, completed agents routinely fail to deliver, and the resume path can fail too). Blocking such an agent costs no parallelism — several blocking dispatches in ONE message run concurrently and land together.
+> **Block when you need the result to continue** — the next step depends on it and you would otherwise sit idle. Blocking costs no parallelism: several dispatches in ONE message run concurrently and land together.
 >
-> Decide by asking **what you will inspect afterwards.** A side effect you can verify yourself (files changed, resources written) means background is safe. Nothing to inspect but prose means blocking. **Never treat a detached agent's silence as a verdict** — no report is not a pass.
+> **⛔ On a runtime that does NOT wake you on completion (Codex today), background is a trap** — the work finishes into silence and nobody re-invokes you. There, block, or poll explicitly, or have the agent write its result to a file you read afterwards.
 
-**Blocking**, when you do choose it, pauses the lead's turn and returns the agent's output as a normal tool result in the same turn. For a fan-out you need complete before proceeding, issue **several dispatches in one message**, all blocking — they run concurrently and land together when the slowest finishes. This is how `agents-plan` parallelises a DAG layer.
+**Decide with two questions:**
 
-> **⛔ PROVIDER DISPATCH SEMANTICS DIFFER — read the active provider's `agents-tiers-<provider>` reference before your first dispatch.** The flag name, its default, and **how a background agent's result actually reaches you** are provider-specific: `agents-tiers-claude`, `agents-tiers-opencode`, `agents-tiers-codex`. Never assume one provider's behaviour carries to another.
+1. **Does this runtime deliver a detached result?** If no, block or poll. `harness-<provider>-agents-delegate` answers this.
+2. **What will you inspect when it finishes?** A side effect you can verify yourself (files changed, resources written) is safe to background — you confirm it directly. If the agent's prose is the entire deliverable and the runtime's delivery is unreliable, block.
+
+**Never treat silence as a verdict.** A quiet verification agent has not passed anything. Equally, do not assume delivery is broken on a runtime where it works — check the harness reference before concluding an agent failed.
+
+**Consequences of blocking:** no mid-execution message exchange (the lead is paused), and user guidance only arrives on the next turn.
+
+## ⛔ Reaping — terminal for the run, so COLLECT FIRST
+
+> **Stopping an agent ends its run.** Reap only when you are finished with it: you have what you need, you have no further question, and the work has moved on.
 >
-> **Two distinct traps, in order of how much damage they do.** First, **permission context** (see the section above): a subagent that stalls on an unsurfaced gate does no work at all and looks identical to one that finished. Second, **collection**: an agent that *did* the work may fail to deliver its final text, showing an idle/available signal that reads exactly like giving up. Distinguish them by **inspecting the artifact**, then act — re-dispatch with the mode fixed for the first, verify-and-move-on for the second. Diagnose before re-dispatching; blind re-dispatch is what throws away completed work. The active provider's `agents-tiers-<provider>` reference documents both signatures.
+> **A quiet agent is a candidate for COLLECTION, not for reaping.** Quiet usually means the work is done and only the delivery is pending. Collect first — read its result, or message it. On runtimes where a completed agent can be resumed by message (Claude Code), killing it is the one move that forecloses that.
 
-**Parallel blocking dispatch:** To run multiple agents concurrently while still blocking the lead's turn, issue **multiple subagent dispatches in a single message**. They execute in parallel, and their results are delivered together when all complete. The lead's turn blocks until the slowest one returns. This is how `agents-plan` parallelises each DAG layer (in both team and fire-and-forget modes) without "dropping" the conversation into background mode.
+**Order, always:** collect → confirm you have what you need → *then* reap.
 
-**When to background vs block:** background is the default and preferred mode (see above); block when the agent's **report is the deliverable**, or when you are simply waiting with nothing else to push. Decide by asking what you will inspect when it finishes — a side effect you can verify yourself means background is safe; prose only means block.
-
-**Consequences of blocking:**
-- No mid-execution message exchanges — the lead is paused.
-- User guidance arrives on the NEXT turn; re-dispatch there if needed.
-- **⚠ Do NOT assume a permission request will be surfaced to the user just because the lead is blocked.** On at least one runtime the subagent's gate cannot reach the parent UI at all, so blocking buys you nothing: the agent waits invisibly and the lead waits on the agent. Blocking is **not** a mitigation for the permission trap — set the permission mode on the dispatch instead.
-
-## ⛔ Reaping — terminal, so COLLECT FIRST
-
-> **⛔⛔ REAPING IS IRREVERSIBLE AND DESTROYS THE AGENT'S REPORT.** Stopping an agent kills any remaining chance of getting its answer — you cannot message it, resume it, or read its result afterwards. So **reap ONLY when you are completely finished with it**: you have everything you need, you have no further question for it, the work has moved on, and it is genuinely stale.
->
-> **An idle/available agent is a candidate for COLLECTION, not for reaping.** Idle usually means the work is done and only the report is stranded. Killing it there is the worst possible move: it converts a recoverable report into a permanent loss. **Collect first** — read its output, or message it to deliver. Only once you hold the answer (or have obtained it another way and are sure you will never need the agent again) do you reap.
-
-**Order, always:** collect → confirm you have what you need → *then* reap. Never the reverse.
-
-Reap when — and only when — **all** of these hold: you have the result or no longer need it, you will ask it nothing further, and the work it belonged to has moved on. Typical genuinely-safe cases:
+Genuinely safe to reap:
 
 - it delivered, you acted on the result, and the task is closed,
-- you obtained the answer another way **and have already verified it**, so its report is redundant,
-- its task was superseded, re-scoped, or abandoned outright,
-- **you are about to replace it** — reap before re-dispatching, so two agents do not write the same target (but collect anything salvageable first),
+- you obtained the answer another way **and verified it**, so its report is redundant,
+- its task was superseded, re-scoped, or abandoned,
+- **you are about to replace it** — reap before re-dispatching, so two agents never write the same target,
 - it is demonstrably stale: guarding work that no longer exists, or polling a signal now known to be wrong.
 
-**Do NOT reap** an agent merely because it went quiet, because you are unsure whether it finished, or to tidy up mid-flow. Uncertainty is a reason to collect, not to kill.
+**Do NOT reap** because it went quiet, because you are unsure whether it finished, or to tidy up mid-flow. Uncertainty means collect.
 
-**Completion does not self-clean.** A finished agent, and a background task whose command already exited, can both linger in the runtime's task list. Stop them explicitly using the runtime's own mechanism (per the active provider's `agents-tiers-<provider>` reference) — once you are done with them.
+**Completion does not self-clean.** A finished agent, and a background task whose command already exited, can linger in the runtime's task list. Stop them explicitly via the runtime's own mechanism (per `harness-<provider>-agents-delegate`) once you are done.
 
-**★ The concrete hazard is two concurrent writers.** Re-dispatching over the same files, document, or resource without reaping the first agent lets the later write silently clobber the earlier one — and neither agent reports the collision. Reap, verify the target's current state, then dispatch again.
+**★ The concrete hazard is two concurrent writers.** Re-dispatching over the same files, document, or resource without reaping the first lets the later write silently clobber the earlier one — and neither agent reports the collision.
 
-**Reap checkpoint:** before declaring the work done, enumerate everything you spawned and confirm each is stopped, or state explicitly that one is *deliberately* still running and what it waits on.
+**Reap checkpoint:** before declaring the work done, enumerate everything you spawned and confirm each is stopped, or state that one is *deliberately* still running and what it waits on.
 
 ## Model Selection
 
-Delegation picks a **tier** from task complexity, then resolves it to a **concrete model** for the active provider. The tier system, user-wording mapping, and per-provider model lists live in the **`agents-tiers`** skill and its `agents-tiers-<provider>` references — load `agents-tiers` (or read the active provider's reference: `agents-tiers-claude`, `agents-tiers-opencode`, `agents-tiers-codex`) to resolve.
+Delegation picks a **tier** from task complexity, then resolves it to a **concrete model** for the active runtime. The tier system, user-wording mapping, and per-harness model lists live in the **`agent-harness`** skill and its references (`harness-claude-agents-delegate`, `harness-opencode-agents-delegate`, `harness-codex-agents-delegate`).
 
 - **Tiers:** `cheap` (mechanical), `default` (integration), `smart` (architecture/review), `max` (absolute ceiling — use sparingly).
 - **Explicit model names override tiers** — use verbatim.
@@ -95,34 +91,34 @@ Delegation picks a **tier** from task complexity, then resolves it to a **concre
 
 ## Self-Contained Prompt Structure
 
-Agents have zero context outside their prompt. Every dispatch prompt must include:
+Agents start with a fresh context window — no conversation history, no files you already read, no skills you already loaded. Every dispatch prompt must include:
 
 1. **Role and scope** — one-sentence framing of what the agent is responsible for.
-2. **Task** — concrete description, detailed enough that another engineer could execute.
+2. **Task** — concrete description, detailed enough that another engineer could execute it.
 3. **Files** — exact paths the agent owns (reads anywhere, writes only within scope).
 4. **Context** — relevant architecture, patterns, conventions, adjacent work.
 5. **Boundaries** — what NOT to touch (other agents' scope, read-only files).
 6. **Verification** — commands to run after implementation (from `project-tooling` discovery).
 7. **Conventions** — project-specific patterns (from `agents-conventions`).
-8. **Report** — expected status format (DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED).
+8. **Report** — expected status format (DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED) and its length bound.
+
+Point at skills and tools by name rather than inlining them when the target shares your access — see `agent-target-capability`.
 
 ## Dispatch Checklist
 
-Before dispatching the agent:
-
 1. Is the prompt self-contained? Could someone execute it with no other context?
-2. Is the tier right for the task? Is the concrete model resolved correctly for the target ecosystem?
+2. Is the tier right for the task, and resolved to a concrete model for the active runtime?
 3. Are file boundaries explicit? No "and related files."
 4. Are verification commands included when the task modifies code?
-5. Is isolation right? Worktree isolation for file mods, omit for read-only.
-6. Is permission mode right? `bypassPermissions` only for fire-and-forget with user consent.
+5. Is isolation right? Worktree for parallel writers; omit for read-only work.
+6. Does the dispatch mode match the runtime's delivery behavior (per `harness-<provider>-agents-delegate`), and does the agent have the tools it needs in that mode?
+7. Does the session's own permission posture actually allow the work you are asking for?
 
 ## Key Principles
 
-- **Self-contained prompts.** Agents do not share context — everything must be in the prompt.
-- **Tiers, not model names.** Think in cheap/default/smart/max; resolve to a concrete model at dispatch time via the `agents-tiers` skill / per-provider reference.
-- **`max` is the ceiling — use sparingly.** Reserve it for the single hardest problems; `smart` covers most heavy work.
-- **User owns the mapping for unlisted providers.** For providers not in `agents-tiers`, the user decides what cheap/default/smart/max mean.
-- **Match tier to task.** Don't over-invest in smart for trivial work; don't under-invest in cheap for complex work.
-- **Ask on mismatch.** If the user's choice seems wrong for the task, ask before dispatching. Don't silently comply.
-- **Verify results.** Agent summaries describe intent, not outcomes. Check the diff.
+- **Self-contained prompts.** Agents share no context — everything must be in the prompt.
+- **Tiers, not model names.** Think cheap/default/smart/max; resolve at dispatch time via `agent-harness`.
+- **`max` is the ceiling — use sparingly.** `smart` covers most heavy work.
+- **The harness reference owns the mechanics.** Permission handling, background defaults, delivery, and limits are runtime properties — never carry one runtime's behavior to another.
+- **Match tier to task**, and **ask on mismatch** rather than silently complying.
+- **Verify results.** Agent summaries describe intent, not outcomes. Check the artifact.

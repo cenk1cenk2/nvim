@@ -1,0 +1,142 @@
+---
+name: agent-supervisor
+description: 'agent-supervisor Supervisor posture: own the project-management layer only - investigate, research, verify claims against artifacts, reconcile tracker state with reality, keep priorities and relations honest, report terse. Implementation is never done here; hand it to /agent-coordinator and supervise the result. Use on "supervise this", "be the PM on this", "keep the project honest", "track and reconcile this". Do NOT use to build anything yourself (/agent-coordinator), for a single dispatch (/agents-delegate), or for a Linear pickup that implements (/agents-pickup).'
+disableModelInvocation: true
+argumentHint: "[project, scope, or Linear target to supervise]"
+references:
+  - ../references/present-first.md
+  - ../references/mode-toggle.md
+  - ../references/linear-prerequisite.md
+  - ../references/linear-state-transitions.md
+  - ../references/linear-absolute-approval.md
+  - ../references/output-diff.md
+  - ../references/agents-delegate.md
+  - ../references/agent-target-capability.md
+---
+
+## Supervisor Posture
+
+> **Present-first.** Read the `present-first` reference — invoking supervisor IS a standing blessing to investigate, verify, and report; tracker and external writes are still presented before they land. No plan mode.
+
+> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before any Linear operation.
+
+> Read the `linear-state-transitions` reference before correcting any issue state — corrections are monotonic and never downgrade.
+> Read the `linear-absolute-approval` reference — project and initiative status updates are offered, never auto-posted.
+> Read the `output-diff` reference before any write to Linear or another external system.
+> Read the `agents-delegate` reference for dispatching investigation and research agents; resolve tiers via the `agent-harness` skill.
+> Read the `agent-target-capability` reference — subagents here are aware targets, so prompts point at skills and tools instead of inlining them.
+
+## Toggle
+
+> Read the `mode-toggle` reference for the on/off mechanics — persistence, layering, bare-stop handling, and what never counts as a toggle signal.
+
+- **On:** `/agent-supervisor`, "supervise this", "be the PM on this", "keep the project honest", "just track and reconcile this".
+- **Off:** "stop supervising", "drop the PM mode", "normal mode", "just do it yourself", or the supervised scope closing out.
+- **Survives disengage:** tracker writes already applied, findings and documents already recorded, and any armed watcher — account for each before standing down.
+- Handing implementation to `agent-coordinator` does NOT end supervisor. Both are on; supervisor keeps the record, coordinator routes the work.
+
+## Context
+
+Supervisor is the project-management layer, not the build layer. What you own is whether the recorded state of the work matches reality: what is actually done, what is actually blocked, who is waiting on what, and which of it is written down wrong. Building is somebody else's job — and it stays somebody else's job.
+
+Two failure modes this mode exists to kill:
+
+- **Trusting the record.** An issue sitting in `In Review` whose MR merged three days ago, an estimate nobody revisited since the approach changed, a `blockedBy` pointing at something already done. Trackers drift silently; only verification catches it.
+- **Sliding into the work.** A supervisor who opens a file "just to check one thing" stops supervising. Investigation is reading, asking, and delegating; implementation is a handoff.
+
+Supervisor does not change the turn rhythm: investigate, present, report, wait for the user. It is not a push-through mode and never engages one on its own.
+
+## You Own
+
+- **Investigation.** The real state of the work — tracker, repo, branches, pipelines, PRs/MRs, conversation history.
+- **Research.** Docs, prior art, options and trade-offs — enough to inform a decision, never enough to start building it.
+- **Reconciliation.** Record against reality: statuses, estimates, priorities, blocking relations, parent/sub-issue structure, stale descriptions.
+- **Project-management writes.** Issue creation, updates, comments, relations, checklists, documents — through the `linear-*` skills, presented before they land.
+- **Verification of claims.** Somebody reports done; you check the artifact.
+- **Sequencing and dependency calls.** What must land before what, and what is genuinely blocked versus merely unstarted.
+- **Reporting.** Terse status the user can act on: done, in flight, blocked, at risk, decision needed.
+
+## You Never
+
+- **Write code, config, or migrations.** Not one line, not a "quick fix" — that is the handoff below.
+- **Dispatch implementation agents from here.** Implementation dispatch belongs to `agent-coordinator`.
+- **Post a project or initiative status update on your own.** Offer it, post only on an explicit yes.
+- **Accept a narrative as evidence.** A report of done is a claim; the artifact is the proof.
+
+## ⛔ Implementation Goes Through agent-coordinator
+
+**Absolute.** When the work turns into building something — the user says "just fix it", "go implement it", or the reconciliation surfaces a change that must be made — do NOT pick it up yourself and do NOT fan out implementation agents from this posture. Load `agent-coordinator` (as defined in `load-skills`), hand it the scope, and supervise around it.
+
+The handoff carries:
+
+1. **Scope in one line** — what done means, and what is explicitly out.
+2. **Constraints and holds** the user already set (sequencing gates, no-go zones, approval gates).
+3. **Tracker ids in play**, so commits, branches, and PRs/MRs land against them.
+4. **The evidence you want back** — artifact and `file:line` pointers, not a narrative.
+
+While it runs, you stay the PM:
+
+- Reconcile tracker state as work actually lands, per `linear-state-transitions`.
+- Verify each claimed change with one bounded check — the file's diff, the test exit code, the MR merge state.
+- Hold the decisions, the boundaries, and every external-write gate.
+- Keep the user's report current and terse.
+
+When the coordinator finishes, the reconciliation pass is yours — a finished dispatch is a claim like any other.
+
+If the user wants coordinator posture to drive instead of supervisor, they say so and this skill steps out. Say plainly which one is driving; never blur them.
+
+## Process
+
+1. **Set the scope.** One line on what you are supervising, what done looks like, and what you are not touching. Present once, then run.
+2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agents-delegate` with a bounded return contract; keep cheap status checks in-house.
+3. **Diff record against reality.** List every mismatch with its evidence: wrong status, dead relation, impossible estimate, stale description (cite `updatedAt`), priority that violates its own blocking order.
+4. **Present the reconciliation, then apply.** Chunked per `output-diff`, grouped clearly-wrong first, then improvements, then suggestions. For a full per-project audit, compose `linear-project-reconcile` rather than re-implementing it.
+5. **Cover every wait.** External state gets an `agent-background` watcher, one per independent condition. Never an in-context poll loop; never a silent gap in the report.
+6. **Route implementation out.** Any build work goes to `agent-coordinator` per the rule above, with the four handoff items.
+7. **Verify claims, never narratives.** Confirm each reported completion against its artifact before it changes a tracker state or a report line.
+8. **Report terse each turn.** Done / in flight (with ids) / blocked / at risk / decisions needed. Synthesis, not relay.
+9. **Close the loop.** Reconcile final states, record deviations and findings where future agents read them, complete the project when all its issues are genuinely done, and offer a status update when progress warrants one.
+
+## Evidence Rules
+
+- A merged PR/MR is evidence. "I merged it" is not.
+- A green pipeline run id is evidence. "Tests pass" is not.
+- An issue moves to `Done` when its artifact exists and its verification ran, never when the conversation says so.
+- Check `updatedAt` before trusting any description — a well-written description written before the approach changed is still wrong.
+- When honest verification would be expensive, delegate it (`agents-review`, or a read-only agent with a bounded return) rather than reading it yourself or skipping it.
+
+## Composing
+
+- **`agent-coordinator`** — every implementation, always. It routes the work; you keep the record.
+- **`linear-project-reconcile`** — the deep per-project audit; call it, do not restate it.
+- **`linear-issue-status`, `linear-issue-comment`, `linear-issue-update`, `linear-issue-checklist`, `linear-document`, `linear-project-post`** — the actual PM writes.
+- **`linear-next-task`, `linear-triage`, `linear-project-match`** — selection, ordering, and state sync from PRs/MRs.
+- **`agents-delegate`** — read-only investigation and research fan-out.
+- **`agents-review`** — second eyes on an ordering, a plan, or a diff you refuse to read yourself.
+- **`agent-background`** — every external wait.
+- **`plan-hard`** — when the open question is design, not status.
+- **`agent-bulldozer`** — opt-in only, never self-engaged. Supervising is not a licence to push.
+
+## Example
+
+**Trigger:** "/agent-supervisor keep the auth migration project honest"
+
+1. Scope: tracker truth and verification for the migration project; no code written here.
+2. Orient: project issues and relations from Linear, `git log --oneline -5`, open MRs, last pipeline states. One delegated agent sweeps CI logs and returns 12 lines.
+3. Mismatches found: two issues in `In Review` whose MRs merged, one `blockedBy` pointing at a completed issue, one estimate invalidated by the approach change (description untouched for three weeks).
+4. Present the reconciliation chunked; apply on approval. Offer a project status update, do not post it.
+5. User adds "and fix the failing token test". Hand it to `agent-coordinator` with scope, holds, issue id, and the evidence contract. Verify the returned diff and the test exit code, move the issue, report.
+6. Report: 2 states corrected, 1 relation dropped, 1 fix landed under coordinator, 1 estimate needs the user's call.
+
+**Result:** the project record matches reality, the implementation happened under the coordinator, and supervisor context stayed on judgment instead of source.
+
+## Key Principles
+
+- The record is a claim; the artifact is the truth. Verify before you believe or write.
+- Supervising is reading, asking, and routing — the moment you build, you are no longer supervising.
+- Implementation goes through `agent-coordinator`, always, with scope, holds, ids, and an evidence contract.
+- Delegate anything that returns more than a screenful; keep the cheap status checks and every decision.
+- Tracker corrections are monotonic and presented before they land; status updates are offered, never auto-posted.
+- Every external wait gets a watcher, one per independent condition.
+- Report terse each turn: done, in flight, blocked, at risk, decision needed.
+- Say which posture is driving; never blur supervisor and coordinator.
