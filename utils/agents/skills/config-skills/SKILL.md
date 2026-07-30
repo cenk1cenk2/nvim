@@ -383,6 +383,8 @@ Run this checklist when creating, updating, or reviewing any skill description:
 
 ## MCP Tool Name Convention
 
+**⛔ ABSOLUTE — the harness-provided integration outranks any server a skill names.** When the running harness supplies an integration for a service (on Claude Code, a `mcp__claude_ai_<Connector>__*` connector), it is used for that service and the standalone MCP server is not. A server name in a skill body identifies *which service and workspace*, never *which transport wins* — see the `harness-connectors` reference. When authoring: name the server for identification, and for any service with a harness connector, add a directive pointing at that reference rather than implying the standalone server is the default. Falling back to the standalone server is allowed only when the harness offers nothing for that service or lacks a needed capability, and it is stated out loud.
+
 In skill files, reference files, and documentation, use the **`<server>__<tool>` short form** — the server name is the identifying factor. The harness/client may surface the tool under a longer prefix (`mcp__<server>__<tool>`, `mcp__<hub>__<server>__<tool>`, etc.); the agent resolves whatever prefix the runtime uses at call time. Documentation should NOT bake in a specific prefix.
 
 **Server name rules** — server keys MUST use kebab-case with `-` separators only. Never use `/` in server keys (does not parse correctly through some MCP hubs) and avoid `_` for word separation inside the key. Workspace-suffixed servers follow the `<service>-<workspace>` pattern, e.g., `linear-kilic`, `linear-laravel`, `grafana-kilic`, `grafana-laravel`, `argocd-kilic`, `slack-kilic`, `spacelift-laravel`.

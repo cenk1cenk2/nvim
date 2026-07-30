@@ -96,6 +96,11 @@ harness-codex-agents-delegate.md       # same slot, different runtime
 harness-claude-agent-background.md     # waiting/waking mechanics for the agent-background skill
 ```
 
+**Two shapes, do not confuse them:**
+
+- `harness-<provider>-<consumer>.md` — mechanics of one runtime for one consuming skill (`harness-claude-agent-background`). Per (runtime × consumer).
+- `harness-<topic>.md` — a cross-harness policy plus a per-harness inventory (`harness-connectors`). One file, all runtimes, because the rule is the same everywhere and only the inventory differs.
+
 Rules:
 
 - **Split by consumer, not by provider alone.** One file per (runtime × consumer) keeps a skill loading only the mechanics it needs. Do not accumulate every runtime detail into a single file per provider.
@@ -105,6 +110,8 @@ Rules:
 - **Do not create a provider's file until its behavior is known.** An empty harness file implies coverage that does not exist.
 
 ## MCP Tool Name Convention
+
+**⛔ ABSOLUTE — the harness-provided integration outranks the standalone server.** Where the running harness supplies an integration for a service (on Claude Code, `mcp__claude_ai_<Connector>__*`), references must present it as the one that is used, with the standalone MCP server as the stated fallback — not the other way round. A reference that tabulates only the standalone server's tools reads as an instruction to use it; when a harness connector exists for that service, pair the table with the mapping and point at `harness-connectors`. See `slack.md` for the shape.
 
 When references list MCP tool names in tables or inline, use the **`<server>__<tool>` short form** with **kebab-case server names**: `linear-kilic__get_issue`, `slack-kilic__slack_list_channels`, `argocd-kilic__list_applications`, `grafana-laravel__query_prometheus`, `spacelift-laravel__list_stacks`. Server keys use `-` only; `/` and `_` are not valid separators inside server keys. Do NOT bake in a transport prefix (`mcp__...`) — the runtime resolves the prefix at call time. Hyprpilot wires every MCP server directly (no aggregator hub), so the bare server name is the only thing that matters in references.
 

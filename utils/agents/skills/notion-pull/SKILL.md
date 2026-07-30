@@ -5,7 +5,7 @@ disableModelInvocation: true
 argumentHint: "[notion-url or search description]"
 references:
   - ../references/present-first.md
-  - ../references/claude-ai-connectors.md
+  - ../references/harness-connectors.md
 ---
 
 ## Notion Pull: Page to Markdown

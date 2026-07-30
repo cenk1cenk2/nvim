@@ -1,6 +1,26 @@
 # Slack MCP Tools and Conventions
 
-## Available Tools
+## ⛔ ABSOLUTE: use the harness-provided Slack integration
+
+**When the running harness provides Slack, use it — never the standalone workspace server for the same work.** On Claude Code that is the claude.ai connector (`mcp__claude_ai_Slack__*`); see the `harness-connectors` reference for the full rule and for loading deferred tools. The workspace server (`slack-kilic` / `slack-laravel`) is the fallback for when the harness provides no Slack integration, or lacks a capability the task needs — and falling back is stated out loud, once, never silently and never mixed inside one flow.
+
+The tool names below are the workspace-server names. Map them to the harness equivalent at call time:
+
+| Intent | Harness connector | Workspace server |
+|--------|-------------------|------------------|
+| Find a channel | `slack_search_channels` | `slack__slack_list_channels` |
+| Read a channel | `slack_read_channel` | `slack__slack_get_channel_history` |
+| Read a thread | `slack_read_thread` | `slack__slack_get_thread_replies` |
+| Find users | `slack_search_users` | `slack__slack_get_users` |
+| Read a profile | `slack_read_user_profile` | `slack__slack_get_user_profile` |
+| Post to a channel | `slack_send_message` | `slack__slack_post_message` |
+| Reply in a thread | `slack_send_message` (with the thread) | `slack__slack_reply_to_thread` |
+| React | `slack_add_reaction` | `slack__slack_add_reaction` |
+| Search messages | `slack_search_public` / `slack_search_public_and_private` | — (no equivalent) |
+
+Workspace-scoped skills still decide *which* workspace and *which* channel; that is independent of which integration carries the call.
+
+## Available Tools (workspace server)
 
 | Tool | Purpose |
 |------|---------|

@@ -3,7 +3,7 @@ name: notion-laravel
 description: 'notion-laravel Initialize a Notion session for the Laravel workspace. Auto-invoked on Notion context: Notion URLs or Notion page references in Laravel context. Do NOT use for pulling (notion-pull) or pushing (notion-push) pages.'
 references:
   - ../references/present-first.md
-  - ../references/claude-ai-connectors.md
+  - ../references/harness-connectors.md
 ---
 
 ## Notion Workspace: Laravel

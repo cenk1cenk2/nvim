@@ -3,12 +3,14 @@ name: slack-laravel
 description: 'slack-laravel Initialize a Slack session for the Laravel enterprise workspace. Auto-invoked on enterprise Slack context (work Slack URLs, Laravel org channels, GitHub Laravel repos).'
 references:
   - ../references/present-first.md
-  - ../references/claude-ai-connectors.md
+  - ../references/harness-connectors.md
 ---
 
 ## Slack Workspace: Laravel
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+> **⛔ This skill selects the workspace, not the transport.** Read the `harness-connectors` reference — the harness-provided Slack integration is used for this service; a standalone Slack MCP server would be a stated fallback only.
 
 ## Workspace Context
 

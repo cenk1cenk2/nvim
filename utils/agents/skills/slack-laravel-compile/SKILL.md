@@ -5,7 +5,7 @@ disableModelInvocation: true
 argumentHint: "[what to compile — a question, finding, or topic]"
 references:
   - ../references/present-first.md
-  - ../references/claude-ai-connectors.md
+  - ../references/harness-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/scm-github.md

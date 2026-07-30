@@ -114,6 +114,7 @@ Skills are delivered by the `hyprpilot` MCP server — the current, preferred me
 
 ### MCP Conventions
 
+- **⛔ ABSOLUTE — a harness-provided integration outranks an external MCP server for the same service.** When the running harness supplies one (on Claude Code, the claude.ai connectors `mcp__claude_ai_<Connector>__*` for Slack, Notion, Linear, …), every call for that service goes through it; the standalone server is not used alongside it. A server named in a skill identifies the *service and workspace*, never the transport. Fall back to the standalone server only when the harness provides nothing for that service or it lacks a needed capability — state which in one line, and never mix the two within one flow. Details: `harness-connectors`.
 - **Every MCP server is wired directly into the agent** — no proxy, hub, or editor/ACP indirection. Refer to tools by the `<server>__<tool>` short form in skill files and docs (e.g. `github__get_file_contents`); at call time use whatever concrete name the harness surfaces (some expose `mcp__<server>__<tool>`).
 - Availability is **config-time, not runtime**: `autoAcceptTools` / `autoRejectTools` per catalog entry and per-profile `mcps` overrides decide what's present. Don't hard-code assumptions about which servers exist.
 - For multiline MCP parameters, use actual line breaks. Do not pass literal `\n` escape sequences.

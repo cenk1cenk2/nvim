@@ -3,20 +3,23 @@ name: slack-kilic
 description: 'slack-kilic Initialize a Slack session for the kilic workspace. Auto-invoked on kilic Slack context (personal Slack URLs, kilic channels, GitLab-related discussions).'
 references:
   - ../references/present-first.md
+  - ../references/harness-connectors.md
 ---
 
 ## Slack Workspace: kilic
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
+> **⛔ This skill selects the workspace, not the transport.** Read the `harness-connectors` reference: when the harness provides Slack (on Claude Code, `mcp__claude_ai_Slack__*`), the calls go through it. `slack-kilic__*` is the fallback for when the harness offers no Slack integration or lacks a needed capability — and using it is stated out loud, never mixed into a flow that started on the connector.
+
 ## Workspace Context
 
-- **Slack MCP:** `slack-kilic` — ALWAYS use `slack-kilic__*` tools for this workspace.
-- **Transport:** Stdio (`@modelcontextprotocol/server-slack`), bot token auth.
+- **Workspace:** kilic (`kilic-dev.slack.com`).
+- **Fallback Slack MCP:** `slack-kilic` — stdio (`@modelcontextprotocol/server-slack`), bot token auth.
 - **Linked SCM:** GitLab (`gitlab.kilic.dev`).
 - **Linked Linear:** `linear-kilic` (kilic-dev workspace).
 
-## Available Tools
+## Fallback Tools (workspace server)
 
 | Tool | Purpose |
 |------|---------|

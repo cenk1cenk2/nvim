@@ -5,7 +5,7 @@ disableModelInvocation: true
 argumentHint: "[github-pr-url or PR number]"
 references:
   - ../references/present-first.md
-  - ../references/claude-ai-connectors.md
+  - ../references/harness-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/scm-github.md

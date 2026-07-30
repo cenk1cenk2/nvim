@@ -5,7 +5,7 @@ disableModelInvocation: true
 argumentHint: "[slack-message-url] [what to do with it]"
 references:
   - ../references/present-first.md
-  - ../references/claude-ai-connectors.md
+  - ../references/harness-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/output-diff.md
@@ -22,7 +22,7 @@ references:
 
 ## Context
 
-> Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling
+> Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling. **The `slack__*` names in the steps below are intents, not transport choices** — route every call through the harness-provided Slack integration per the absolute rule in that reference and in `harness-connectors`; the workspace server is the stated fallback.
 
 The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `linear-issue-pickup`, `obsidian-note`, `code-pull`) or performing direct actions (research, code changes, summarization).
 
@@ -41,7 +41,7 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
 | Reply to thread | `slack-kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with thread) |
 | Add reaction | `slack-kilic__slack_add_reaction` | `mcp__claude_ai_Slack__slack_add_reaction` |
 
-**`slack-laravel` tools are deferred** — load via `ToolSearch` before use. See `claude-ai-connectors` reference.
+**`slack-laravel` tools are deferred** — load via `ToolSearch` before use. See `harness-connectors` reference.
 
 ## Process
 

@@ -5,7 +5,7 @@ disableModelInvocation: true
 argumentHint: "[channel-name-or-id] [optional: timeframe or instructions]"
 references:
   - ../references/present-first.md
-  - ../references/claude-ai-connectors.md
+  - ../references/harness-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/output-diff.md
@@ -23,7 +23,7 @@ references:
 
 ## Context
 
-> Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling
+> Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling. **The `slack__*` names in the steps below are intents, not transport choices** — route every call through the harness-provided Slack integration per the absolute rule in that reference and in `harness-connectors`; the workspace server is the stated fallback.
 
 The user wants to catch up on a Slack channel. This skill reads the channel's recent messages, classifies them by type, and takes appropriate action depending on the channel's purpose. The skill supports both automated channels (CI/CD, deployments, publishes) and human channels (issues, echo/thoughts).
 
@@ -42,7 +42,7 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
 | Reply to thread | `slack-kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with thread) |
 | Add reaction | `slack-kilic__slack_add_reaction` | `mcp__claude_ai_Slack__slack_add_reaction` |
 
-**`slack-laravel` tools are deferred** — load via `ToolSearch` before use. See `claude-ai-connectors` reference.
+**`slack-laravel` tools are deferred** — load via `ToolSearch` before use. See `harness-connectors` reference.
 
 ## Process
 
