@@ -41,7 +41,7 @@ All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a direct
 
 ```
 ~/.config/nvim/utils/agents/skills/
-├── references/                          # Shared reference files (read on demand)
+├── references/                          # Shared reference files (read on demand) — EXCERPT below, not the full list
 │   ├── linear-prerequisite.md           # Workspace detection and auto-invoke rules
 │   ├── linear-mandatory-fields.md       # Team, state, labels, estimate, priority, relations
 │   ├── linear-issue-philosophy.md       # Issue vs. conversation authority and timestamps
@@ -90,7 +90,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 ### Update
 
 1. Read the existing `SKILL.md` for the target skill at `~/.config/nvim/utils/agents/skills/<target-skill>/SKILL.md`.
-2. **Read all declared references** — if the skill has a `references:` frontmatter field, load all references via `reading the files listed in `references:``. This ensures you understand the full context the skill operates in before making changes.
+2. **Read all declared references** — if the skill has a `references:` frontmatter field, read every path it lists. This ensures you understand the full context the skill operates in before making changes.
 3. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
 4. Identify what needs to change.
 5. **Check for deduplication** — if the skill contains blocks that are duplicated in sibling skills (prerequisite blocks, plan mode directives, description structures, research patterns), check whether a shared reference already exists in `~/.config/nvim/utils/agents/skills/references/`. If it does, replace the duplicated block with a reference directive. If it doesn't and the block appears in 2+ skills, propose extracting it to a new shared reference.
@@ -148,9 +148,20 @@ references: # YAML array of relative paths to reference files.
   - ./references/local.md
 ```
 
-Hyprpilot honors only `name` and `description` (required), plus `disableModelInvocation`, `argumentHint`, and `references` (optional). It still parses a legacy `interaction` key but does nothing with it — **omit it**; existing skills are being cleaned of it. Every other Claude Code frontmatter key (`when_to_use`, `user-invocable`, `paths`, `model`, `effort`, `allowed-tools`, `context`, `agent`, `hooks`, `shell`) is **silently dropped** — parses without error but never surfaces or takes effect. Do not add them; they are dead weight that misleads readers.
+Hyprpilot keeps the **whole frontmatter block verbatim** and hands it to the agent — as `metadata` in `list_skills` / `read_skill` output, and as the `io.hyprpilot/skill` key in resource `_meta`. Only `title` and `description` are stripped from that block, because they already ride as the spec `Resource.title` / `Resource.description` fields.
 
-**Body structure:** the body starts directly with the plan-mode directive and top-level `##` sections — there is **no `## system` wrapper** (a retired convention; skills that still carry it are being cleaned up).
+What hyprpilot itself *acts on* is small:
+
+| Key | What hyprpilot does with it |
+|-----|------------------------------|
+| `description` | Becomes `Resource.description`. Falls back to `Guidance for <slug>` when absent — always write one anyway. |
+| `title` | Becomes `Resource.title`. Optional; the slug stands in when absent. |
+| `references` | Resolved relative to the skill's own `bundleDir` and bundled by `load_skill_references`. |
+| `name` | Passed through only — the **directory name is the slug**. A mismatch changes nothing at runtime, so keep them equal for the reader. |
+
+Everything else — `disableModelInvocation`, `argumentHint`, and any key you invent — is **passed through untouched**. Hyprpilot enforces none of it; those are conventions the agent reads out of the metadata block, and the central `AGENTS.md` is what turns `disableModelInvocation` into an actual invocation rule. A stray Claude Code key (`when_to_use`, `allowed-tools`, `model`, `hooks`, …) therefore does not error — it just reaches the agent as noise. Do not add them.
+
+**Body structure:** the body starts directly with the plan-mode directive and top-level `##` sections — there is **no `## system` wrapper** (a retired convention, fully removed).
 
 ```markdown
 > **Plan-mode posture** (choose one per skill)
@@ -185,7 +196,7 @@ Guiding rules for the skill's behavior.
 
 ## Invocation Tiers
 
-How a skill can be invoked is set by `disableModelInvocation` — the only invocation lever hyprpilot honors. Choose the tier deliberately when authoring.
+How a skill *should* be invoked is declared by `disableModelInvocation`. Hyprpilot does not enforce it — it passes the key through in the metadata block, and the agent honors it per the central `AGENTS.md`. Choose the tier deliberately when authoring: a wrong value is a real behavior change even though nothing validates it.
 
 | Tier | Frontmatter | Behavior | Description should |
 |------|-------------|----------|--------------------|
@@ -311,58 +322,30 @@ When creating or updating a skill, always check:
 1. **Read existing references** — list files in `~/.config/nvim/utils/agents/skills/references/` and read their content.
 2. **Compare against the skill** — identify any blocks in the skill that overlap with existing references.
 3. **Check sibling skills** — read 2-3 skills in the same family and look for blocks duplicated across them.
-4. **Propose extraction** — if a duplicated block has no matching reference, propose creating one. Name it `<family>-<topic>.md` (e.g., `linear-prerequisite.md`, `cluster-naming.md`).
+4. **Propose extraction** — if a duplicated block has no matching reference, propose creating one. Name it `<family>-<topic>.md` (e.g., `linear-prerequisite.md`, `scm-detect.md`).
 5. **Present findings** — show the user which blocks can be replaced with references and which new references should be created.
 
-### Available Shared References
+### Shared Reference Families
 
-| File | Covers | Used by |
-|------|--------|---------|
-| `linear-prerequisite.md` | Workspace detection, auto-invoke rules. | Linear family (14 skills). |
-| `linear-mandatory-fields.md` | Team, state, labels, estimate, priority, relations. | Issue/project creation skills. |
-| `linear-issue-philosophy.md` | Issue vs. conversation authority, timestamps. | Issue update/revisit/pick skills. |
-| `linear-description-structure.md` | Issue/project/initiative description format. | Issue/project/initiative creation skills. |
-| `linear-project-documents.md` | Project-scoped documents for shared Linear context, repetitive agent instructions, and lightweight issue references. | Linear project creation and agent project skills. |
-| `linear-pickup-execution.md` | Linear project/issue pickup lifecycle, agent/direct scheduling, state updates, PR/MR, pipelines, review fixes, and final reporting. | Linear pickup and agent orchestration skills. |
-| `linear-scm-discovery.md` | Explicit opt-in Sourcebot-first discovery for repository inventory, implementation guidance, prior art, and agent-ready Linear context before GitHub/GitLab metadata calls. | Linear creation, project agent, and pickup skills. |
-| `linear-research-documentation.md` | Research process, analysis, appendix, link management. | Research-heavy creation skills. |
-| `sourcebot-discovery.md` | Sourcebot-first organization-wide repository/code discovery before GitLab/GitHub metadata calls. | Agent planning/delegation and Linear discovery workflows. |
-| `linear-issue-states.md` | State meanings, transition rules, dependency resolution, decision patterns. | State-transition skills (implement, triage, next-task, cycle). |
-| `linear-state-transitions.md` | Auto-advance triggers (pickup → In Progress, MR/PR open → In Review, merge → Done), never-downgrade guard, id extraction, silent-with-report contract. | Agent-dispatch skills (agents-delegate, agents-plan), PR/MR-create skills (gitlab-mr-create, github-pr-create), linear-issue-comment. |
-| `scm-detect.md` | SCM platform detection from remote URL, local git via raw `git` CLI. | Cross-platform skills (code-pull, code-review-branch). |
-| `scm-github.md` | GitHub MCP tools, `gh` CLI fallback, platform-specific conventions. | GitHub CI/PR/failed-CI skills, cross-platform skills. |
-| `scm-gitlab.md` | GitLab MCP tools, `glab` CLI fallback, platform-specific conventions. | GitLab CI/PR/failed-CI skills, cross-platform skills. |
-| `scm-comment-poster.md` | Shared draft-and-post-comment workflow for the current PR/MR. | `github-pr-comment`, `gitlab-mr-comment`. |
-| `scm-review-workflow.md` | Shared PR/MR review workflow: previous-review detection, delta scope, thread resolution, analysis checklist, summary template, tone, principles. | `github-pr-review`, `gitlab-mr-review`. |
-| `scm-fix-threads.md` | Shared review-thread fixing workflow: thread analysis categories, triage, apply, reply/resolve, report, principles. | `github-pr-fix`, `gitlab-mr-fix`. |
-| `scm-read-summary.md` | Shared read-only PR/MR summary workflow: identify, read metadata/threads/diff, structured summary, principles. | `github-pr-read`, `gitlab-mr-read`. |
-| `scm-create-description.md` | Shared PR/MR title+description workflow: branch reuse, drafting, format templates, writing style. | `github-pr-create`, `gitlab-mr-create`. |
-| `scm-ci-fix.md` | Shared CI-failure diagnosis workflow: pickup notes, diagnose, propose, ask-to-implement, principles. | `github-ci-fix`, `gitlab-ci-fix`. |
-| `release-convention.md` | Detect the repo's release automation (release-please, semantic-release, changesets, commitlint) and match commit/title convention, breaking-change markers, and changeset files. | `git-push`, PR/MR-create skills (github-pr-create, gitlab-mr-create). |
-| `plan-mode.md` | Strict plan-mode directive — planning/analysis only, implementation disabled, never exit. | Planning-only skills (`plan-hard`, `plan-revise`, `plan-handoff`). |
-| `present-first.md` | Present-first posture — draft, present before writing, proceed on approval or upfront blessing; no plan mode. | Every skill that writes (Linear / SCM / config / obsidian / scaffolding / code — ~80 skills). |
-| `obsidian.md` | Vault location, tool access, file naming, frontmatter, writing style, vault exploration. | Obsidian family (4 skills). |
-| `slack.md` | Slack MCP tools, response conventions, `:dark_sunglasses:` pattern, large results handling. | Slack family (2 skills). |
-| `enrich-context.md` | Entity enrichment table (MCP tools → links), code permalinks, appendix pattern. | Skills that compile output for others (slack-laravel-compile, slack-channel). |
-| `project-tooling.md` | Task runner discovery order, verification command extraction, user confirmation flow. | Agent skills (agents-plan, agents-delegate). |
-| `agents-delegate.md` | Dispatch parameters, blocking vs detached posture, self-contained prompt structure, dispatch checklist. **Points at the per-provider reference for the mechanics — see Provider-Specific Behavior.** | Every agent skill that spawns a subagent (`agents-delegate`, `agents-plan`, `agents-review`, `agent-coordinator`). |
-| `agents-worktrees.md` | Agent worktree location rule, naming, mandatory post-dispatch verification, manual fallback, cleanup. Covers the trap that isolation follows the **session's** repo, not the task's. | Any agent skill dispatching writers in parallel. |
-| `harness-claude-agents-delegate.md` | Claude Code dispatch: tier→model (`haiku`/`sonnet`/`opus`/`fable`), permission inheritance, foreground/background and result delivery, reduced background tool set, limits, worktrees. | `agent-harness` skill; delegation skills on demand. |
-| `harness-opencode-agents-delegate.md` | OpenCode dispatch: tier→model (`kilic/*`), blocking `task` tool, timeout behavior. | `agent-harness` skill; delegation skills on demand. |
-| `harness-codex-agents-delegate.md` | Codex dispatch: role models (`gpt-*`), and that background work never wakes the caller. | `agent-harness` skill; delegation skills on demand. |
-| `harness-claude-agent-background.md` | Claude Code waiting/waking: background shell, monitor, deferred wakeup, cron, reading and stopping watchers, compaction loss. | `agent-background`. |
-| `harness-opencode-agent-background.md` | OpenCode waiting/waking: shell-timeout ceiling bounding every loop, absent scheduler facilities. | `agent-background`. |
-| `harness-codex-agent-background.md` | Codex waiting/waking: nothing wakes you — block, poll, or leave an artifact. | `agent-background`. |
-| `linear-document-handling.md` | Reading/updating existing attached documents: glimpse, classify plan-like vs external, edit only with agreement. | Linear read/update skills (issue-read, project-read, issue-update, project-update). |
-| `agents-write-plans.md` | Plan quality: exact file paths, no placeholders, concrete steps, optional depends_on field, self-review checklist. | Agent skills (agents-plan). |
-| `agents-conventions.md` | Project conventions discovery: testing, code style, patterns, formatting, commits. | Agent skills (agents-plan, agents-delegate). |
-| `agents-completion.md` | Completion handoff: summarize, present options (commit/push/PR/leave), execute choice. | Agent skills (agents-plan, agents-delegate). |
-| `agents-plan-split.md` | Planning phase: understand goal, tooling, conventions, plan, split tasks, declare depends_on, build layer schedule, verify file overlap. | Agent skills (agents-plan). |
-| `agents-merge-review.md` | Per-layer merge + per-layer review, end-of-run review against run baseline, final verification with evidence, handoff. | Agent skills (agents-plan). |
-| `agent-target-capability.md` | Capability axes of a target agent (skills, MCP, repo, memory, shell, write authority), tier defaults, mixed/unknown handling, declaration line. | `agent-aware`, `agent-unaware`. |
-| `output-diff.md` | Chunked change presentation — reasoning + content blocks before any write. | Config family (5 skills), Linear/Obsidian/Slack write skills. |
-| `redact-private-data.md` | No private specifics in authored content — treat-as-private list, placeholders to use, functional identifiers to keep; use only with explicit permission. | Config family (5 skills). |
-| `commit-push-scoped.md` | Commit/push handoff for authored file edits: ask-by-default vs upfront blessing, stage only the files this run touched, protected-branch ack resolution. | `config-skills`, `config-agents`, `config-references`. |
+⛔ **This is a map, not an inventory.** The live list is the directory — run `ls ~/.config/nvim/utils/agents/skills/references/` before proposing a new reference or claiming one does not exist. A hand-maintained file list here rots the moment anyone adds a file.
+
+| Family | Prefix | Covers |
+|--------|--------|--------|
+| Linear | `linear-*` | Prerequisite/workspace detection, mandatory fields, description structure, issue philosophy, states and transitions, pickup execution, documents, chunking, approval gates, SCM discovery, research. |
+| SCM | `scm-*` | Platform detection, GitHub/GitLab tool sets, and the shared PR/MR workflows — review, fix-threads, read-summary, create-description, comment-poster, ci-fix. |
+| Agents | `agents-*`, `agent-*` | Dispatch posture, worktrees, plan splitting, plan quality, project conventions, merge/review, completion handoff, watchers, target capability. |
+| Per-harness | `harness-<provider>-<consumer>` | Runtime mechanics for one consuming skill. See Provider-Specific Behavior. |
+| Cross-harness | `harness-<topic>` | One policy across all runtimes plus a per-runtime inventory (`harness-connectors`). |
+| Git | `commit-*`, `release-convention` | Commit message style, trailers, release-automation detection. |
+| Posture | `plan-mode`, `present-first`, `mode-toggle` | How a skill behaves before it writes; voice-mode on/off mechanics. |
+| Authoring policy | `output-diff`, `output-chunks`, `redact-private-data`, `commit-push-scoped`, `review-findings` | How authored output is presented, chunked, redacted, and committed. |
+| Service | `obsidian`, `slack*`, `sourcebot-discovery`, `enrich-context`, `excalidraw-*`, `spacelift-github` | Per-service tool sets and conventions. |
+| Runtime paths | `provider-paths` | Plans / state / worktree directories per runtime. Never hardcode these in a body. |
+
+Two carry a hard rule worth knowing without opening the file:
+
+- `agents-delegate` points at the per-provider reference for dispatch mechanics — a skill that spawns subagents must send the reader there **before** the first dispatch.
+- `agents-worktrees` covers the trap that isolation follows the **session's** repo, not the task's, which breaks cross-repo dispatch.
 
 ## Description Checklist
 
@@ -373,7 +356,7 @@ Run this checklist when creating, updating, or reviewing any skill description:
 3. **Negative triggers** — includes "Do NOT use for X" when the skill shares vocabulary with sibling skills (e.g., Linear family, cluster family).
 4. **Specificity** — not too vague ("Helps with projects" is bad) and not too technical ("Implements the entity model" is bad).
 5. **Plain text, key use case first** — brief plain-text prose only. No markdown headers and no YAML block scalars (`|`, `>`) in the description; structured what/when/do-not content belongs in the skill **body**, not the description. Put the primary use case first so it survives truncation.
-6. **Length** — well under the 1,536-character cap (the runtime truncates the combined `description` text at 1,536 chars in the listing). Shorter is better: descriptions load into context **every turn** against a small budget, and overflow is trimmed — which can strip the trigger keywords the model needs to match.
+6. **Length** — keep it short. Hyprpilot applies no cap and truncates nothing, so length is a budget problem, not a correctness one: `list_skills` returns **every** skill's description in one payload, so each description is paid for by the whole catalog. Lead with the primary use case and cut anything that is not a trigger.
 7. **No XML tags** — no `<` or `>` characters in the description (security restriction).
 
 ## Conventions

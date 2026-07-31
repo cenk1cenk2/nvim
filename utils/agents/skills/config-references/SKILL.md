@@ -43,6 +43,12 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 <Content — conventions, rules, patterns, examples.>
 ```
 
+## How References Resolve
+
+Hyprpilot resolves a skill's declared `references:` paths **relative to that skill's own bundle directory** — the directory holding its `SKILL.md`. There is no separate references root. A path that does not resolve from there is simply absent from the bundle: the sidecar logs nothing to the agent and does not error, so a typo fails silently and the skill runs without the convention it declared.
+
+`load_skill_references { slug }` — equivalently the `hyprpilot://references/<slug>` resource — returns every declared reference concatenated with `--- <basename> ---` delimiters. Run it after editing a reference or a consumer's frontmatter: a missing delimiter block is the only signal that a path is wrong.
+
 ## Process
 
 ### Create
@@ -75,6 +81,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 2. For each reference (or a specific one if requested):
    - Read its content.
    - Check which skills declare it in their frontmatter.
+   - Bundle one consuming skill's references and confirm this file appears — a declared path that silently fails to resolve looks identical to a correct one in the frontmatter.
    - Identify orphaned references (declared by no skill).
    - Identify stale content (conventions that no longer apply).
    - Check for duplication across references.

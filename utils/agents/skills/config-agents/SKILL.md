@@ -22,7 +22,9 @@ argumentHint: "[what to change or review in AGENTS.md]"
 
 ## Target File
 
-`~/.config/nvim/utils/agents/AGENTS.md` — the central guidelines document loaded into every hyprpilot agent session (injected via the `system_prompt` block on each profile in `~/.config/hyprpilot/config.yaml`).
+`~/.config/nvim/utils/agents/AGENTS.md` — the central guidelines document loaded into every hyprpilot agent session.
+
+It is injected by an **unscoped root `[[patches]]` entry** in `~/.config/hyprpilot/config.yaml` — a `system_prompt: [{ file: ... }]` overlay with no `$match`, so it folds onto whichever profile resolves. Individual profiles do NOT declare it. Changing which file is loaded is a patch edit, not a per-profile edit.
 
 ## Process
 
