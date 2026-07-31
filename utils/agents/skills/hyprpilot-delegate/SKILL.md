@@ -60,24 +60,24 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - Record the returned `session` handle and report it to the user. It is how every later turn addresses this agent.
 
 4. **Run detached with `wait: false`** — when the job is long, when fanning out several agents at once, or when the user says "check on it later".
-   - It returns immediately with `status: running`, `nextOffset: 0`, and **`vendorSessionId: null`** — the vendor id does not exist until the turn produces it. The handle itself is usable straight away.
+   - It returns immediately with `status: running`, a `nextCursor` to resume from, and **`vendorSessionId: null`** — the vendor id does not exist until the turn produces it. The handle itself is usable straight away.
    - **Nothing wakes you when it finishes.** Detached work completes into silence; you must come back with `session_read` or block on a follow. Never leave a detached agent unread — that is how a finished result gets thrown away and the job re-run.
 
 5. **⛔ A timeout is NOT a failure and NOT a cancellation.**
    - If the turn outlives `timeout_seconds` the result returns `status: running` and **the agent keeps working.**
    - **Poll or follow `session_read` with the handle. NEVER call `spawn` again** — that starts a second, unrelated agent and abandons the first. This is the single most common way to get this wrong.
-   - Follow live with `session_read { session, wait: true, offset: <nextOffset>, timeout_seconds? }`. A follow returns everything it saw and ends when the agent finishes, when the request is cancelled, or at `timeout_seconds`.
+   - Follow live with `session_read { session, wait: true, cursor: <nextCursor>, timeout_seconds? }`. A follow returns everything it saw and ends when the agent finishes, when the request is cancelled, or at `timeout_seconds`.
 
 6. **Collect the result deliberately — this is where the work gets lost.**
    - `session_read` returns the vendor's raw JSON event stream, and **the answer sits in a different event per vendor** — a terminal `type: "result"` event carrying the final text and run totals on some, the last `type: "text"` event on others. Scan from the end for whichever the vendor emits; the `tool_use` events in between can be enormous.
-   - **Page with `nextOffset` on a long run.** A read caps its payload and reports `truncated: true` when more remains; `nextOffset` is the first byte NOT returned, so reading again from it continues exactly where the last one stopped. Keep paging until `truncated` is false rather than pulling one huge window.
+   - **Page with `nextCursor`.** MCP pagination: pass a result's `nextCursor` back **verbatim** as `cursor` to continue exactly where that read stopped. It is opaque — never parse or construct one. **No `nextCursor` means the session is finished and you have all of it**; a running session always returns one, so a poller never loses its place. An unrecognised cursor is an error, not a silent reset.
    - **Read the result BEFORE sending the next turn.** A new turn appends to the same transcript and pushes the previous answer out of the tail.
-   - `tail` (default 200 lines) returns the trailing lines when `offset` is omitted — the quick way to ask "is it done, and what did it say".
+   - `tail` (default 200 lines) returns the trailing lines when `cursor` is omitted — the quick way to ask "is it done, and what did it say".
 
 7. **Steer across turns with `session_send`, not `spawn`.**
    - **A conversation is ONE session.** `session_send { session, prompt }` reuses the handle and appends to the same transcript, so the agent retains everything from earlier turns.
    - Each turn runs as a **fresh process resumed against the vendor's own session store** — the pid changes, `startedAt` stays put, `lastTurnAt` moves. That is why a session that already exited can still be steered rather than lost; the result's `delivery` field reports what happened (`resumed`).
-   - **It replays the original launch.** Profile, `cwd`, `mode`, `with_config` and `args` all carry forward from the `spawn`; pass any of them explicitly to override for that turn. How a conversation was launched is part of its identity, so you do not re-specify it every turn.
+   - **It replays the original launch and will not let you change it.** `cwd`, `args` and `with_config` are inherited from the `spawn` and are **rejected** if you pass them — how a conversation was launched is part of its identity. Only `prompt`/`file`, `mode`, `wait` and `timeout_seconds` are per-turn. To launch differently, start a new session.
    - **One turn at a time.** A `session_send` against a session that is still working comes back as a tool **error** — "already has a turn in flight" — not a queued message. Poll `session_read` until it exits, or `session_kill` it first.
 
 8. **Recover a lost handle with `session_list`.** It returns every session this server owns — handle, profile, status, exit code, cwd, timestamps. Use it when the user refers to "that agent" and the handle is not in context, and present the list so they can pick.
@@ -124,7 +124,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 1. Resolve the profile, present, then `spawn { …, wait: false, mode: "plan" }` — detached, and read-only because the job only needs to look.
 2. Returns instantly: handle `s-91c4`, `status: running`, `vendorSessionId: null`. Report that it is running and followable.
-3. On "how's it going?" → `session_read { session: "s-91c4", offset: <nextOffset> }`. **Not** a second `spawn`.
+3. On "how's it going?" → `session_read { session: "s-91c4", cursor: <nextCursor> }`. **Not** a second `spawn`.
 4. When `status` reads `exited`, read the tail for the final `text` event and relay the answer before sending any further turn.
 
 **Result:** Long job tracked to completion without abandoning it, duplicating it, or burying its result under a later turn.
