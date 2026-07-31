@@ -1,6 +1,6 @@
 ---
-name: hyprpilot-harness
-description: 'hyprpilot-harness Delegate a task to a separate hyprpilot agent session (claude/codex/opencode) over the hyprpilot_harness MCP server, then steer it across turns. Use on "delegate this to hyprpilot", "spawn a hyprpilot agent", "send this to personal/claude/opus", "list hyprpilot sessions", "steer that session", "kill that agent". Covers profile discovery, spawning blocking or detached, multi-turn steering, following output live, and cleanup. Do NOT use for subagents inside this harness (use /agents-delegate) or to reload the skill catalog (use /hyprpilot-reload).'
+name: hyprpilot-delegate
+description: 'hyprpilot-delegate Delegate a task to a separate hyprpilot agent session (claude/codex/opencode) over the hyprpilot_harness MCP server, then steer it across turns. Use on "delegate this to hyprpilot", "spawn a hyprpilot agent", "send this to personal/claude/opus", "list hyprpilot sessions", "steer that session", "kill that agent". Covers profile discovery, spawning blocking or detached, multi-turn steering, following output live, and cleanup. Do NOT use for subagents inside this harness (use /agents-delegate) or to reload the skill catalog (use /hyprpilot-reload).'
 disableModelInvocation: true
 argumentHint: "[task] [optional: profile name or fragment, e.g. 'personal glm-5.2']"
 references:
@@ -10,7 +10,7 @@ references:
   - ../references/agents-completion.md
 ---
 
-## Hyprpilot Agent Harness
+## Hyprpilot Delegation
 
 > **Present-first.** Read the `present-first` reference — draft the delegation and present it before spawning; proceed on approval or upfront blessing. `spawn` runs a profile's `command` as this user, so it is never a silent action.
 
@@ -41,6 +41,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 1. **Discover the profile — never hardcode an id.**
    - Call `list_profiles` first, every time. Profile ids are captain-defined and change; a hardcoded id silently breaks.
+   - **The listing is the whole available set.** The harness is opt-in per profile (`[profiles.harness]`), so a profile the captain configured but did not nominate is absent here AND refused by `spawn`. If the user names one that is missing, say it is not on the harness rather than guessing a neighbour.
    - **Match the user's phrasing loosely.** Ids are path-like (`personal/claude/opus`, `work/claude/sonnet`, `personal/kilic/glm-5.2:cloud`) and users say them in fragments. "delegate this to hyprpilot personal glm-5.2" means the id containing both `personal` and `glm-5.2`.
    - **Ambiguous match → ask.** If a fragment matches two profiles, list the candidates and ask; do not guess. If it matches none, show what is available.
    - **A row carrying an `error` field failed to resolve — do not launch it.** Report the error instead.
@@ -69,14 +70,14 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 6. **Collect the result deliberately — this is where the work gets lost.**
    - `session_read` returns the vendor's raw JSON event stream, and **the answer sits in a different event per vendor** — a terminal `type: "result"` event carrying the final text and run totals on some, the last `type: "text"` event on others. Scan from the end for whichever the vendor emits; the `tool_use` events in between can be enormous.
-   - **Read in modest windows.** A read caps its own payload and reports `truncated: true`; when it trims it keeps the newest part of the window and drops the oldest, while `nextOffset` still advances past what was dropped. Offsets only move forward, so follow with a short `timeout_seconds` or page with `tail` rather than pulling one huge window.
+   - **Page with `nextOffset` on a long run.** A read caps its payload and reports `truncated: true` when more remains; `nextOffset` is the first byte NOT returned, so reading again from it continues exactly where the last one stopped. Keep paging until `truncated` is false rather than pulling one huge window.
    - **Read the result BEFORE sending the next turn.** A new turn appends to the same transcript and pushes the previous answer out of the tail.
    - `tail` (default 200 lines) returns the trailing lines when `offset` is omitted — the quick way to ask "is it done, and what did it say".
 
 7. **Steer across turns with `session_send`, not `spawn`.**
    - **A conversation is ONE session.** `session_send { session, prompt }` reuses the handle and appends to the same transcript, so the agent retains everything from earlier turns.
    - Each turn runs as a **fresh process resumed against the vendor's own session store** — the pid changes, `startedAt` stays put, `lastTurnAt` moves. That is why a session that already exited can still be steered rather than lost; the result's `delivery` field reports what happened (`resumed`).
-   - It inherits only the **profile**. `cwd`, `mode`, `with_config` and `args` are NOT carried forward — pass them again on each turn if the work needs them.
+   - **It replays the original launch.** Profile, `cwd`, `mode`, `with_config` and `args` all carry forward from the `spawn`; pass any of them explicitly to override for that turn. How a conversation was launched is part of its identity, so you do not re-specify it every turn.
    - **One turn at a time.** A `session_send` against a session that is still working comes back as a tool **error** — "already has a turn in flight" — not a queued message. Poll `session_read` until it exits, or `session_kill` it first.
 
 8. **Recover a lost handle with `session_list`.** It returns every session this server owns — handle, profile, status, exit code, cwd, timestamps. Use it when the user refers to "that agent" and the handle is not in context, and present the list so they can pick.
