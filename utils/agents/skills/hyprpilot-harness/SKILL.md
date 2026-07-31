@@ -68,7 +68,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - Follow live with `session_read { session, wait: true, offset: <nextOffset>, timeout_seconds? }`. A follow returns everything it saw and ends when the agent finishes, when the request is cancelled, or at `timeout_seconds`.
 
 6. **Collect the result deliberately — this is where the work gets lost.**
-   - `session_read` returns the vendor's raw JSON event stream. The agent's actual answer is the last `type: "text"` event; the `tool_use` events between can be enormous.
+   - `session_read` returns the vendor's raw JSON event stream, and **the answer sits in a different event per vendor** — a terminal `type: "result"` event carrying the final text and run totals on some, the last `type: "text"` event on others. Scan from the end for whichever the vendor emits; the `tool_use` events in between can be enormous.
    - **Read in modest windows.** A read caps its own payload and reports `truncated: true`; when it trims it keeps the newest part of the window and drops the oldest, while `nextOffset` still advances past what was dropped. Offsets only move forward, so follow with a short `timeout_seconds` or page with `tail` rather than pulling one huge window.
    - **Read the result BEFORE sending the next turn.** A new turn appends to the same transcript and pushes the previous answer out of the tail.
    - `tail` (default 200 lines) returns the trailing lines when `offset` is omitted — the quick way to ask "is it done, and what did it say".
