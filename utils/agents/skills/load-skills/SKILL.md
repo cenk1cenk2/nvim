@@ -68,7 +68,7 @@ Skills live as plain Markdown files at `~/.config/nvim/utils/agents/skills/<name
 
 2. **Filesystem `Read`.** The skill isn't in context but you need it (recursive prerequisite resolution, cross-loading, etc.). Use the built-in `Read` tool against `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`. For multiple skills, read in parallel.
 
-3. **MCP tool.** Hyprpilot's in-tree MCP server exposes `mcp__hyprpilot__list_skills` (discovery against the daemon's resolved per-instance catalog) and `mcp__hyprpilot__read_skill { slug }` (body fetch). Use these when you specifically want the daemon's filtered view (per-profile `[[mcp.skills]]` filtering / `ignore` globs honoured); use plain `Read` otherwise.
+3. **MCP tool.** Hyprpilot's in-tree MCP server exposes `mcp__hyprpilot_skills__list_skills` (discovery against the daemon's resolved per-instance catalog) and `mcp__hyprpilot_skills__read_skill { slug }` (body fetch). Use these when you specifically want the daemon's filtered view (per-profile `[[mcp.skills.dirs]]` filtering / `ignore` globs honoured); use plain `Read` otherwise.
 
 **Recursive prerequisites:** if a loaded skill declares its own prerequisites, resolve them by re-entering this procedure for each.
 
@@ -93,7 +93,7 @@ references:
 | `../references/<file>.md` | Shared across skills  | `~/.config/nvim/utils/agents/skills/references/<file>.md`                          |
 | `./references/<file>.md`  | Specific to one skill | `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`                  |
 
-References are read via the built-in `Read` tool. Hyprpilot's `mcp__hyprpilot__load_skill_references { slug }` bundles every reference a skill declares into one response (concatenated with `--- <basename> ---` delimiters) — useful when you want the daemon to walk the frontmatter for you instead of reading paths one at a time.
+References are read via the built-in `Read` tool. Hyprpilot's `mcp__hyprpilot_skills__load_skill_references { slug }` bundles every reference a skill declares into one response (concatenated with `--- <basename> ---` delimiters) — useful when you want the daemon to walk the frontmatter for you instead of reading paths one at a time.
 
 There is no standalone-reference URI; shared references are accessed through the skill that declares them, or by `Read`ing the file directly when you need it outside a skill load.
 

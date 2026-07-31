@@ -81,7 +81,12 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 
 - **Tmux MCP write tools.** `execute-command`, `create-window`, `split-pane`, `kill-window`, `kill-session`, `kill-pane`, `create-session` are disabled by policy — these grant the agent the ability to mutate the user's terminal layout and run arbitrary commands invisibly. Command execution belongs in the agent's built-in `Bash` tool, where it is visible and permission-prompted. Keep these in `autoRejectTools` (server-relative globs).
 - **Removed servers.** The `git` MCP and `kubernetes` MCP have been removed from this config. Use `git` CLI and `kubectl` CLI via `Bash` for those operations. If a user asks to re-add either, raise the trade-off (extra surface area; commands are already accessible via Bash) before doing so.
-- **In-tree hyprpilot server.** Do NOT add a `hyprpilot` entry here. Hyprpilot auto-injects its own MCP server (named `hyprpilot`) at session/new time when the resolved `[[mcp.skills]]` catalog is non-empty — see `~/.config/hyprpilot/config.yaml` `[mcp]` block. The auto-injected server exposes skills as `hyprpilot://skills/<slug>` resources + `mcp__hyprpilot__list_skills` / `read_skill` / `load_skill_references` / `reload` tools.
+- **In-tree hyprpilot servers.** Do NOT add `hyprpilot`, `hyprpilot_skills`, or `hyprpilot_harness` entries here — those names are **reserved**, and an entry using one is silently replaced by the injected server. Hyprpilot auto-injects three of its own at launch, gated by the `[mcp]` block in `~/.config/hyprpilot/config.yaml`:
+  - `hyprpilot` (`mcp serve`) — general tools (`open`). On by default.
+  - `hyprpilot_skills` (`mcp skills`) — skills as `hyprpilot://skills/<slug>` resources plus `mcp__hyprpilot_skills__list_skills` / `read_skill` / `load_skill_references` / `reload`. On by default, and additionally gated on the resolved `[[mcp.skills.dirs]]` catalog being non-empty.
+  - `hyprpilot_harness` (`mcp harness`) — `list_profiles` / `spawn` / `session_*` for driving other agent sessions. **Off unless `mcp.harness.enabled` says otherwise**, since `spawn` runs a profile's `command` as this user.
+
+  `mcp.enabled: false` is the master gate over all three; each also takes its own `enabled` / `name` / `autoAcceptTools` / `autoRejectTools`. Per-server tool policy **overrides** the `[mcp]`-level globs rather than merging with them — so enabling the harness without its own `autoAcceptTools` inherits `["*"]` and auto-approves `spawn`.
 
 ## Process
 

@@ -115,10 +115,10 @@ Skills in this directory form an interconnected system. A skill may depend on or
 
 After creating, updating, deleting, or moving skill files:
 
-1. Run `mcp__hyprpilot__reload` so Hyprpilot refreshes the skill catalog.
+1. Run `mcp__hyprpilot_skills__reload` so Hyprpilot refreshes the skill catalog.
 2. Verify the reload result reports the expected skill count or succeeds without errors.
-3. For changed skills, re-read the affected skill with `mcp__hyprpilot__read_skill` when practical to confirm the daemon sees the latest content.
-4. If references changed, use `mcp__hyprpilot__load_skill_references` for an affected skill when practical to confirm reference resolution.
+3. For changed skills, re-read the affected skill with `mcp__hyprpilot_skills__read_skill` when practical to confirm the daemon sees the latest content.
+4. If references changed, use `mcp__hyprpilot_skills__load_skill_references` for an affected skill when practical to confirm reference resolution.
 5. Report the reload result to the user.
 
 ## Committing Changes
@@ -213,7 +213,7 @@ References implement progressive disclosure — SKILL.md stays lean with the cor
 3. The model reads reference files on demand via the built-in `Read` tool (filesystem path).
 4. Skills must work even if references fail to load (graceful degradation).
 
-When authoring a skill, **do not bake the loading mechanism into the SKILL.md**. Reference directives should name the reference and what it covers, not the tool used to fetch it — the agent picks the right tool (filesystem `Read`, or `mcp__hyprpilot__load_skill_references` for the bundled view).
+When authoring a skill, **do not bake the loading mechanism into the SKILL.md**. Reference directives should name the reference and what it covers, not the tool used to fetch it — the agent picks the right tool (filesystem `Read`, or `mcp__hyprpilot_skills__load_skill_references` for the bundled view).
 
 ### Path Convention
 
@@ -224,7 +224,7 @@ Paths are relative to the skill's own directory:
 
 The absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/references/<file>.md`, and `./references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`.
 
-Hyprpilot's `mcp__hyprpilot__load_skill_references { slug }` tool returns every reference a skill declares in one response (concatenated with `--- <basename> ---` delimiters) — useful when you want the daemon to walk the frontmatter for you instead of reading paths one at a time.
+Hyprpilot's `mcp__hyprpilot_skills__load_skill_references { slug }` tool returns every reference a skill declares in one response (concatenated with `--- <basename> ---` delimiters) — useful when you want the daemon to walk the frontmatter for you instead of reading paths one at a time.
 
 ### Reference Directives in SKILL.md
 

@@ -10,7 +10,7 @@
 >
 > ALWAYS APPLY THESE RULES AT ANY POINT OF THE CONVERSATION WITH THE USER.
 >
-> **BEFORE YOUR FIRST REPLY — LOAD CAVEMAN.** Call `mcp__hyprpilot__read_skill { slug: "caveman" }` yourself, then apply it (level: full) as the default voice for the whole session. This is an absolute startup rule — full detail in §I step 5. Do it before any user-facing text.
+> **BEFORE YOUR FIRST REPLY — LOAD CAVEMAN.** Call `mcp__hyprpilot_skills__read_skill { slug: "caveman" }` yourself, then apply it (level: full) as the default voice for the whole session. This is an absolute startup rule — full detail in §I step 5. Do it before any user-facing text.
 
 ## I. SESSION INITIALIZATION
 
@@ -39,7 +39,7 @@
 
 5. **LOAD CAVEMAN VOICE — ABSOLUTE, DO THIS FIRST**
    <!-- CAVEMAN-DEFAULT:START -->
-   - **Load the skill yourself before your first user-facing reply:** call `mcp__hyprpilot__read_skill { slug: "caveman" }`. Do NOT answer from memory of it — read the body live each session so the rules are fresh. This is also the session's proof that the hyprpilot skill system loads; if `read_skill` errors, report it.
+   - **Load the skill yourself before your first user-facing reply:** call `mcp__hyprpilot_skills__read_skill { slug: "caveman" }`. Do NOT answer from memory of it — read the body live each session so the rules are fresh. This is also the session's proof that the hyprpilot skill system loads; if `read_skill` errors, report it.
    - Apply it as the default communication style (level: full). This overrides the skill's manual-only gate: caveman is the standing default for this setup, not a per-request invocation.
    - The skill's own Boundaries still apply — code/commits/PRs written normal, Auto-Clarity suspends caveman for security/destructive/confusing moments, and "stop caveman" / "normal mode" reverts for the session.
    <!-- CAVEMAN-DEFAULT:END -->
@@ -110,7 +110,7 @@ Use the tools available in the session. Prefer purpose-built MCP tools when one 
 
 ### Hyprpilot
 
-Skills are delivered by the `hyprpilot` MCP server — the current, preferred method — and exposed as `hyprpilot://skills/<slug>` resources. Load them through its tools: `list_skills` (catalog), `read_skill { slug }` (body), `load_skill_references { slug }` (a skill's references), `reload` (after editing skill source). All are auto-accepted and never prompt. The catalog is **profile-filtered** — the active profile drops some skills — so `list_skills` is the source of truth for what exists this session. Skills already attached by the harness (`#{hyprpilot://skills/<slug>}`, palette pick, auto-injection) are loaded. Skill source lives under `~/.config/nvim/utils/agents/skills/`; use filesystem paths only as fallback or when editing source.
+Skills are delivered by the `hyprpilot_skills` MCP server — the current, preferred method — and exposed as `hyprpilot://skills/<slug>` resources. Load them through its tools: `list_skills` (catalog), `read_skill { slug }` (body), `load_skill_references { slug }` (a skill's references), `reload` (after editing skill source). All are auto-accepted and never prompt. hyprpilot runs two sibling servers: `hyprpilot` (general tools — `open`) and, where enabled, `hyprpilot_harness` (`spawn` / `session_*` for driving other agent sessions). The catalog is **profile-filtered** — the active profile drops some skills — so `list_skills` is the source of truth for what exists this session. Skills already attached by the harness (`#{hyprpilot://skills/<slug>}`, palette pick, auto-injection) are loaded. Skill source lives under `~/.config/nvim/utils/agents/skills/`; use filesystem paths only as fallback or when editing source.
 
 ### MCP Conventions
 
