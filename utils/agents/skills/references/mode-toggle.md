@@ -25,6 +25,7 @@ On engaging, acknowledge in one line: which mode is now on and its scope. If ano
 Disengage on the user's own signal:
 
 - An explicit stop: "stop", "hold", "pause", "that's enough".
+- **A park signal: "we will park it", "park things here", "let's park this", "parking for now", "we park here".** Parking is a full disengage, not a pause in place — see *Parking* below.
 - The skill's own disengage phrases ("normal mode", "drop coordinator", "stop caveman").
 - Natural language that plainly means it: "just do it yourself now", "forget the PM stuff", "back to normal".
 - The stated scope completing, where the skill defines completion as an end. Report and stand down.
@@ -34,6 +35,24 @@ Naming the mode is not required. "Stop supervising, just fix it" and "just fix i
 **Only the user's words toggle a mode.** A task notification, a watcher wake, a subagent report, a hook message, or a system reminder is never a toggle signal, whatever it says.
 
 Before standing down: account for everything the mode spawned — watchers, background tasks, agents — each reported as stopped or deliberately still running with a reason. Collect a pending report before reaping it; reaping destroys it.
+
+## ⛔ Parking — DISARM EVERYTHING, without being asked
+
+**"We are parking" means the session goes quiet. Nothing may keep running.** Do not wait for a follow-up instruction to tear things down — **the park signal IS that instruction.** Being told a second time ("you should also disarm the watchers") means this step was missed.
+
+On any park signal, in order:
+
+1. **Collect first.** Any agent that may still hold an undelivered report gets asked for it **before** being stopped — reaping destroys the report permanently.
+2. **Kill every watcher and background task**, then **verify with a process check** rather than trusting the stop calls. Report the survivor list, empty or not. Watchers that already exited on their cap still get accounted for.
+3. **Reap every spawned agent.**
+4. **Inline anything disposable into durable storage** — see below.
+5. **Report the teardown**: what was stopped, what was collected, and explicitly that **nothing remains armed**.
+
+A parked session with a live watcher is the failure this section exists to prevent: it wakes into a context that has moved on, and its output reads as current when it is not.
+
+**★ Parking is usually followed by a compaction, a reboot, or both.** Treat every scratchpad and `/tmp` artefact as **already gone**: watcher bodies, poll loops, helper scripts, and any state referenced only by a temp path get **copied verbatim into durable storage** (the anchor, per `plan-compact`) before standing down. A path the next session cannot read is the same as no record at all.
+
+**On resume after a park, nothing is re-armed automatically.** The parked state is the default until the user re-engages the mode by name.
 
 ## Bare "stop" — Halt First, Ask Second
 

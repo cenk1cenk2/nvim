@@ -16,8 +16,10 @@ references:
 > Read the `mode-toggle` reference for the on/off mechanics — persistence, layering, bare-stop handling, and what never counts as a toggle signal.
 
 - **On:** `/agent-bulldozer`, "bulldoze", "push through", "keep going until done", "don't stop until it's done".
-- **Off:** "stop", "hold", "pause bulldozer", "normal mode", or the stated scope completing — report and stand down.
-- **Survives disengage:** armed watchers, staged-but-unfired prep, and open branches — reap or account for each, and say what is left staged.
+- **Off:** "stop", "hold", "pause bulldozer", "normal mode", **any park signal ("we will park it", "park things here", "we park here", "parking for now")**, or the stated scope completing — report and stand down.
+- **⛔ A park signal DISARMS EVERYTHING, unasked.** Bulldozer accumulates more watchers and agents than any other mode, so parking it is when they all come down: **collect** any undelivered agent report first, **kill** every watcher and background task, **verify with a process check**, **reap** every agent, and report that **nothing remains armed**. **Do not wait to be told a second time** — being asked again means this was missed. See the `mode-toggle` reference's *Parking* section.
+- **Survives disengage:** staged-but-unfired prep and open branches — say what is left staged. **Armed watchers do NOT survive a park** — they are torn down as part of it.
+- **After a park, nothing is re-armed automatically.** The parked state holds until the user says "bulldozer" again by name.
 - The personality and the noises live only while the toggle is on. Off means off, immediately.
 
 ## Context

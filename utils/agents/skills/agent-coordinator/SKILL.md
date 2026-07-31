@@ -24,8 +24,9 @@ references:
 > Read the `mode-toggle` reference for the on/off mechanics — persistence, layering, bare-stop handling, and what never counts as a toggle signal.
 
 - **On:** `/agent-coordinator`, "coordinate this", "orchestrate this", "delegate everything", "stay a coordinator".
-- **Off:** "stop coordinating", "drop coordinator", "normal mode", "do it yourself from here", or the coordinated scope completing.
-- **Survives disengage:** the state file, plus every spawned agent and watcher — collect pending reports first, then reap or justify each.
+- **Off:** "stop coordinating", "drop coordinator", "normal mode", "do it yourself from here", **any park signal ("we will park it", "park things here", "we park here", "parking for now")**, or the coordinated scope completing.
+- **⛔ A park signal DISARMS EVERYTHING, unasked.** A router accumulates agents and watchers faster than a worker does, so parking is when they all come down: **collect** every pending report first (reaping destroys it, and in coordinator mode the report IS the product), **kill** every watcher and background task, **verify with a process check**, **reap** every agent, and report that **nothing remains armed**. **Do not wait to be told a second time.** See the `mode-toggle` reference's *Parking* section.
+- **Survives disengage:** the state file only. **Spawned agents and armed watchers do NOT survive a park** — they are collected and torn down as part of it, and nothing is re-armed on resume until the mode is re-engaged by name.
 
 ## Context
 
