@@ -1,6 +1,6 @@
 ---
 name: hyprpilot-harness
-description: 'hyprpilot-harness Delegate a task to a separate hyprpilot agent session (claude/codex/opencode) over the hyprpilot_harness MCP server, then steer it across turns. Use on "delegate this to hyprpilot", "spawn a hyprpilot agent", "send this to personal/claude/opus", "list hyprpilot sessions", "steer that session", "kill that agent". Covers profile discovery, spawning, multi-turn steering, following output, and cleanup. Do NOT use for subagents inside this harness (use /agents-delegate) or to reload the skill catalog (use /hyprpilot-reload).'
+description: 'hyprpilot-harness Delegate a task to a separate hyprpilot agent session (claude/codex/opencode) over the hyprpilot_harness MCP server, then steer it across turns. Use on "delegate this to hyprpilot", "spawn a hyprpilot agent", "send this to personal/claude/opus", "list hyprpilot sessions", "steer that session", "kill that agent". Covers profile discovery, spawning blocking or detached, multi-turn steering, following output live, and cleanup. Do NOT use for subagents inside this harness (use /agents-delegate) or to reload the skill catalog (use /hyprpilot-reload).'
 disableModelInvocation: true
 argumentHint: "[task] [optional: profile name or fragment, e.g. 'personal glm-5.2']"
 references:
@@ -48,33 +48,46 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 2. **Brief the agent properly.** The spawned agent has NO access to this conversation. Its prompt must be self-contained: the goal, the repo/paths, the constraints, and what "done" looks like. If it writes code, include the conventions and verification commands from the references above. A thin prompt produces a thin result and costs a whole session.
 
-3. **Present, then spawn.** Show the resolved profile, the cwd, and the prompt. On approval call `spawn { profile, prompt, cwd?, wait?, timeout_seconds? }`.
+3. **Present, then spawn.** Show the resolved profile, the working directory, and the prompt. On approval call `spawn { profile, prompt|file, cwd?, mode?, wait?, timeout_seconds?, args?, with_config? }`.
+   - **Use the dedicated parameters first.** `cwd`, `mode`, `wait`, `timeout_seconds`, `file`, and `args` are all top-level parameters — reach for them directly. `with_config` is the last resort, for the settings that have no dedicated parameter of their own (`model`, `effort`).
    - `wait` defaults `true`; `timeout_seconds` defaults `300`.
-   - Set `cwd` deliberately — it defaults to the profile's, not yours.
-   - `with_config` accepts **only** `model`, `effort`, `mode`. Anything else is rejected by design.
-   - `args` forwards raw flags to the vendor CLI, equivalent to the CLI's trailing `-- <args>`.
+   - **`prompt` and `file` are mutually exclusive.** `file` takes a path (`~` and `$VAR` expanded) whose contents become the prompt — prefer it for a long brief instead of inlining one.
+   - **`mode` overrides the profile's mode.** `mode: "plan"` yields a genuinely read-only agent that refuses to edit. **Reach for it on every read-only delegation** — it is the cheapest safety lever this tool has and costs nothing to add.
+   - `with_config` is an **array of overlay objects** — `with_config: [{ "model": "…" }]`, not a flat object. It accepts **only** `model`, `effort`, `mode`; every other key is refused by design, because an overlay reaching the command, its arguments, its environment, or the MCP servers it launches would turn `spawn` into arbitrary command execution. To run something else, add a profile for it.
+   - **An overridden model is not visible as the profile.** Results and `session_list` keep reporting the profile id; only `sessionInfo.model` carries what actually ran. Check it before reporting which model did the work.
+   - **Address files by absolute path in the prompt.** Do not make the agent's output depend on resolving anything relative to the working directory.
    - Record the returned `session` handle and report it to the user. It is how every later turn addresses this agent.
 
-4. **⛔ A timeout is NOT a failure and NOT a cancellation.**
+4. **Run detached with `wait: false`** — when the job is long, when fanning out several agents at once, or when the user says "check on it later".
+   - It returns immediately with `status: running`, `nextOffset: 0`, and **`vendorSessionId: null`** — the vendor id does not exist until the turn produces it. The handle itself is usable straight away.
+   - **Nothing wakes you when it finishes.** Detached work completes into silence; you must come back with `session_read` or block on a follow. Never leave a detached agent unread — that is how a finished result gets thrown away and the job re-run.
+
+5. **⛔ A timeout is NOT a failure and NOT a cancellation.**
    - If the turn outlives `timeout_seconds` the result returns `status: running` and **the agent keeps working.**
    - **Poll or follow `session_read` with the handle. NEVER call `spawn` again** — that starts a second, unrelated agent and abandons the first. This is the single most common way to get this wrong.
-   - Follow live with `session_read { session, wait: true, offset: <nextOffset> }`; pass the previous call's `nextOffset` to stream only new output instead of re-reading the whole transcript.
+   - Follow live with `session_read { session, wait: true, offset: <nextOffset>, timeout_seconds? }`. A follow returns everything it saw and ends when the agent finishes, when the request is cancelled, or at `timeout_seconds`.
 
-5. **Steer across turns with `session_send`, not `spawn`.**
+6. **Collect the result deliberately — this is where the work gets lost.**
+   - `session_read` returns the vendor's raw JSON event stream. The agent's actual answer is the last `type: "text"` event; the `tool_use` events between can be enormous.
+   - **Read in modest windows.** A read caps its own payload and reports `truncated: true`; when it trims it keeps the newest part of the window and drops the oldest, while `nextOffset` still advances past what was dropped. Offsets only move forward, so follow with a short `timeout_seconds` or page with `tail` rather than pulling one huge window.
+   - **Read the result BEFORE sending the next turn.** A new turn appends to the same transcript and pushes the previous answer out of the tail.
+   - `tail` (default 200 lines) returns the trailing lines when `offset` is omitted — the quick way to ask "is it done, and what did it say".
+
+7. **Steer across turns with `session_send`, not `spawn`.**
    - **A conversation is ONE session.** `session_send { session, prompt }` reuses the handle and appends to the same transcript, so the agent retains everything from earlier turns.
-   - It is **state-aware**: on a finished session it resumes the vendor session first, so a session that already exited is woken rather than lost.
+   - Each turn runs as a **fresh process resumed against the vendor's own session store** — the pid changes, `startedAt` stays put, `lastTurnAt` moves. That is why a session that already exited can still be steered rather than lost; the result's `delivery` field reports what happened (`resumed`).
    - It inherits only the **profile**. `cwd`, `mode`, `with_config` and `args` are NOT carried forward — pass them again on each turn if the work needs them.
-   - **One turn at a time.** A `session_send` against a session that is still working is rejected rather than interleaved. Wait for the current turn, or `session_read` until it exits.
+   - **One turn at a time.** A `session_send` against a session that is still working comes back as a tool **error** — "already has a turn in flight" — not a queued message. Poll `session_read` until it exits, or `session_kill` it first.
 
-6. **Recover a lost handle with `session_list`.** It returns every session this server owns — handle, profile, status, exit code, timestamps. Use it when the user refers to "that agent" and the handle is not in context, and present the list so they can pick.
+8. **Recover a lost handle with `session_list`.** It returns every session this server owns — handle, profile, status, exit code, cwd, timestamps. Use it when the user refers to "that agent" and the handle is not in context, and present the list so they can pick.
 
-7. **Finish deliberately with `session_kill`.**
-   - **Running** → terminates the agent and everything it started, **keeping the transcript** so you can still read why.
-   - **Already finished** → reaps the session and its transcript.
-   - Calling it twice is the natural stop-then-clean-up; the result's `action` says which happened.
-   - Kill runaway sessions, and kill a finished one to free a slot when `spawn` reports the concurrency ceiling.
+9. **Finish deliberately with `session_kill`.**
+   - **Running** → `action: "terminated"`. The agent and everything it started is stopped, and **the transcript is kept** so you can still read why.
+   - **Already finished** → `action: "reaped"`. The transcript and the handle both go, and any later read fails with `unknown session`.
+   - Calling it twice is the natural stop-then-clean-up. Read anything you care about before the reap.
+   - Kill runaway sessions, and reap a finished one to free a slot when `spawn` reports the concurrency ceiling.
 
-8. **Report back.** Give the user the outcome, the handle (so they can continue), and the exit status. If the session is still running, say so plainly and tell them it can be followed or steered — do not present a timed-out turn as a finished result.
+10. **Report back.** Give the user the outcome, the handle (so they can continue), and the exit status. If the session is still running, say so plainly and tell them it can be followed or steered — do not present a timed-out turn as a finished result. **A non-zero `exitCode` is not automatically the agent's fault**: the transcript may carry an upstream `error` event (auth, quota, model availability). Read it and say which before re-dispatching.
 
 ## Semantics that bite
 
@@ -108,18 +121,21 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 **User says:** "delegate this to hyprpilot and check on it later"
 
-1. Resolve the profile, present, then `spawn { …, wait: true, timeout_seconds: 300 }`.
-2. Result returns `status: running` — the agent is still working.
-3. Report: still running, handle `s-91c4`, followable.
-4. On "how's it going?" → `session_read { session: "s-91c4", offset: <nextOffset> }`. **Not** a second `spawn`.
+1. Resolve the profile, present, then `spawn { …, wait: false, mode: "plan" }` — detached, and read-only because the job only needs to look.
+2. Returns instantly: handle `s-91c4`, `status: running`, `vendorSessionId: null`. Report that it is running and followable.
+3. On "how's it going?" → `session_read { session: "s-91c4", offset: <nextOffset> }`. **Not** a second `spawn`.
+4. When `status` reads `exited`, read the tail for the final `text` event and relay the answer before sending any further turn.
 
-**Result:** Long job tracked to completion without abandoning or duplicating it.
+**Result:** Long job tracked to completion without abandoning it, duplicating it, or burying its result under a later turn.
 
 ## Key Principles
 
 - **`list_profiles` first, always.** Never hardcode an id; never guess an ambiguous fragment.
 - **`spawn` once per conversation; `session_send` for every follow-up.**
+- **Dedicated parameters before `with_config`.** Reach for `with_config` only for `model` and `effort`.
+- **`mode: "plan"` for anything read-only.** Free, and it removes write authority instead of asking for it.
 - **A timeout means still working.** Follow it; never re-spawn.
-- **Self-contained prompts.** The agent cannot see this conversation.
+- **Detached work finishes into silence.** Read every session you start; collect the answer before steering it again.
+- **Self-contained prompts, absolute paths.** The agent cannot see this conversation.
 - **Present before spawning.** It runs commands as this user.
 - **Report the handle.** A handle the user does not have is a session they cannot steer.
