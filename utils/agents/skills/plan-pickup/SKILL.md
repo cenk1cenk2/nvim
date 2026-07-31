@@ -5,11 +5,14 @@ disableModelInvocation: true
 argumentHint: "[plan-file-path or plan-name]"
 references:
   - ../references/present-first.md
+  - ../references/provider-paths.md
 ---
 
 ## Plan Pickup — Loading and Executing Existing Plans
 
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+
+> Read the `provider-paths` reference to resolve the concrete internal plans directory for the active runtime before searching for plan files. Never hardcode a path.
 
 ## Context
 

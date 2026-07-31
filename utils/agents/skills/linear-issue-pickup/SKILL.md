@@ -11,6 +11,7 @@ references:
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
   - ../references/present-first.md
+  - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Issue Pickup
@@ -18,6 +19,8 @@ references:
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+
+> **THE ISSUE IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.** Read the `linear-issue-philosophy` reference before treating any part of the issue as a requirement. Issues go stale — written before the work started, by someone who did not yet know what implementation would reveal. The user may skip, reorder, add, or override anything in it; never push back with "but the issue says…".
 
 > Read the `linear-pickup-execution` reference for issue pickup, early questions, Linear state updates, implementation handoff, and final reporting.
 > Read the `linear-project-documents` reference when issues belong to a project with shared documentation.

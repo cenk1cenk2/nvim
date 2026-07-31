@@ -18,6 +18,7 @@ references:
   - ../references/commit-trailers.md
   - ../references/linear-chunk-issues.md
   - ../references/linear-state-transitions.md
+  - ../references/provider-paths.md
 ---
 
 ## Agent DAG Orchestration
@@ -33,6 +34,7 @@ references:
 > Read the `agents-merge-review` reference for between-layer and end-of-run phases — per-layer worktree merge, per-layer review, final `code-review-changes` against the run-level baseline, final verification, completion handoff.
 > Read the `agents-delegate` reference for agent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agent-harness` skill (and its per-provider references).
 > Read the `agents-worktrees` reference for the mandatory worktree location rule, naming, verification, and cleanup — agent worktrees MUST live in the runtime's agent-worktrees directory, no exceptions.
+> Read the `provider-paths` reference alongside it — that is where the runtime's concrete worktrees and plans directories resolve. Never hardcode either path.
 > Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
 > Read the `sourcebot-discovery` reference when planning starts from an organization-wide question or the target repository is not yet known.
 > Read the `project-tooling` reference for discovering verification commands.

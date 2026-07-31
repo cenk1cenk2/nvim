@@ -6,6 +6,7 @@ references:
   - ../references/present-first.md
   - ../references/agents-delegate.md
   - ../references/project-tooling.md
+  - ../references/provider-paths.md
 ---
 
 ## Code Improve — Codebase Audit and Improvement Proposals
@@ -18,6 +19,8 @@ references:
 > Read the `agents-delegate` reference for subagent dispatch mechanics. Resolve tiers to concrete models via the `agent-harness` skill.
 
 > Read the `project-tooling` reference to discover the project's format / lint / test commands (Taskfile, `package.json`, Makefile, Cargo, …). The audit grounds its proposals in what keeps those tasks green.
+
+> Read the `provider-paths` reference before the optional audit-file save — it resolves the internal plans directory for the active runtime. Never hardcode a path.
 
 ## Context
 

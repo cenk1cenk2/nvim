@@ -9,6 +9,7 @@ references:
   - ../references/linear-absolute-approval.md
   - ../references/linear-project-documents.md
   - ../references/linear-document-handling.md
+  - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Project Update
@@ -25,7 +26,7 @@ references:
 
 > **THE PROJECT RECORD IS NOT THE ABSOLUTE TRUTH. THE CONVERSATION IS.**
 >
-> The project description and its documents carry timestamps (`createdAt`, `updatedAt`). The user's session knowledge and the current conversation hold the most recent version of the project's intent. This skill applies deviations from the conversation back to the project's **prose** — the description and any plan-like documents. When the record's `updatedAt` is older than the current conversation, treat the conversation as the source of truth and update to match — always confirming with the user before applying.
+> Read the `linear-issue-philosophy` reference for the full rule — record vs conversation authority, and the timestamp check that decides it. This skill applies deviations from the conversation back to the project's **prose** — the description and any plan-like documents — always confirming with the user before applying.
 
 > Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 

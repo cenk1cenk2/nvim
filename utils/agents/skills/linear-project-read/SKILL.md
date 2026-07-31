@@ -6,6 +6,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/present-first.md
   - ../references/linear-document-handling.md
+  - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Project Read
@@ -20,7 +21,7 @@ references:
 
 > **THE PROJECT RECORD IS NOT THE ABSOLUTE TRUTH.**
 >
-> Project descriptions, issues, and status updates carry timestamps (`createdAt`, `updatedAt`). If the project description or most recent update predates the user's latest work, **the user's knowledge may be more current than what Linear shows.** When you detect a gap, **ask the user** rather than assuming Linear is authoritative. Use timestamps as the deciding factor — never treat stale records as truth.
+> Read the `linear-issue-philosophy` reference for the full rule — record vs conversation authority, and the timestamp check that decides it. Here "the record" is the project description, its issues, and its status updates. This skill is read-only, so it stops at surfacing the gap: flag stale records with their timestamps and ask the user. Hand actionable edits to `linear-project-update`.
 
 > Read the `linear-document-handling` reference — in this read-only skill, glimpse the project's documents for context, surface what's relevant, and flag stale ones with their timestamps. Never edit; hand off actionable edits to `linear-project-update`.
 

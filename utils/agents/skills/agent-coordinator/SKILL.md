@@ -9,6 +9,7 @@ references:
   - ../references/agents-delegate.md
   - ../references/agents-worktrees.md
   - ../references/agent-target-capability.md
+  - ../references/provider-paths.md
 ---
 
 ## Coordinator Posture
@@ -16,7 +17,7 @@ references:
 > **Present-first.** Read the `present-first` reference — invoking coordinator IS a standing blessing to dispatch within the agreed scope; present the routing plan once, then run it. No plan mode.
 
 > Read the `agents-delegate` reference for dispatch parameters, blocking vs background, and self-contained prompt structure. Resolve tiers via the `agent-harness` skill.
-> Read the `agents-worktrees` reference before any parallel dispatch that writes files.
+> Read the `agents-worktrees` reference before any parallel dispatch that writes files, and the `provider-paths` reference alongside it — that is where the runtime's concrete worktrees directory resolves. Never hardcode the path.
 > Read the `agent-target-capability` reference — subagents in this harness are **aware** targets, so dispatch prompts point at skills and tools instead of inlining them.
 
 ## Toggle

@@ -12,6 +12,7 @@ references:
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
   - ../references/present-first.md
+  - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Project Pickup
@@ -19,6 +20,8 @@ references:
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+
+> **THE PROJECT RECORD IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.** Read the `linear-issue-philosophy` reference before treating the project's issues or description as requirements. Records go stale — written before the work started, by someone who did not yet know what implementation would reveal. The user may skip, reorder, add, or override anything in them; never push back with "but the project says…".
 
 > Read the `linear-pickup-execution` reference for scope resolution, early questions, issue selection, state updates, and handoff to `agents-pickup`.
 > Read the `linear-project-documents` reference for shared project document handling and for propagating investigations, solved problems, and deviations as tightly focused documents via the `linear-document` skill.

@@ -13,6 +13,7 @@ references:
   - ../references/scm-detect.md
   - ../references/sourcebot-discovery.md
   - ../references/linear-state-transitions.md
+  - ../references/provider-paths.md
 ---
 
 ## Single-Task Delegation
@@ -21,6 +22,7 @@ references:
 
 > Read the `agents-delegate` reference for agent parameters, dispatch mechanics, and prompt structure. Resolve tiers to concrete models via the `agent-harness` skill (and its per-provider references).
 > Read the `agents-worktrees` reference when dispatching with worktree isolation — worktrees MUST live in the runtime's agent-worktrees directory. Covers naming, verification, and cleanup.
+> Read the `provider-paths` reference alongside it — that is where the runtime's concrete worktrees directory resolves. Never hardcode the path.
 > Read the `agents-conventions` reference when the task modifies code — establishes conventions to include in the agent prompt. Skip for read-only research tasks.
 > Read the `project-tooling` reference when the task modifies code — for verification commands to include in the agent prompt. Skip for read-only research tasks.
 > Read the `agents-completion` reference if the user wants to commit/push/PR after the agent reports back.

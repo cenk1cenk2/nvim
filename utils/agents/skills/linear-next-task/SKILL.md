@@ -7,11 +7,14 @@ references:
   - ../references/linear-issue-states.md
   - ../references/linear-pickup-execution.md
   - ../references/present-first.md
+  - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Pick Next Task
 
 > Read the `linear-issue-states` reference for state meanings, transition rules, and dependency resolution semantics.
+
+> Read the `linear-issue-philosophy` reference — records go stale, so rank on what the user knows now, not only on what Linear shows. Where a timestamp suggests the record predates the user's latest work, surface the gap instead of ranking on it silently.
 
 > Read the `linear-pickup-execution` reference when the user wants to immediately execute the recommended task set after selection.
 

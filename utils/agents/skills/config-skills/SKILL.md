@@ -338,7 +338,7 @@ When creating or updating a skill, always check:
 | Cross-harness | `harness-<topic>` | One policy across all runtimes plus a per-runtime inventory (`harness-connectors`). |
 | Git | `commit-*`, `release-convention` | Commit message style, trailers, release-automation detection. |
 | Posture | `plan-mode`, `present-first`, `mode-toggle` | How a skill behaves before it writes; voice-mode on/off mechanics. |
-| Authoring policy | `output-diff`, `output-chunks`, `redact-private-data`, `commit-push-scoped`, `review-findings` | How authored output is presented, chunked, redacted, and committed. |
+| Authoring policy | `output-diff`, `redact-private-data`, `commit-push-scoped`, `review-findings` | How authored output is presented, redacted, and committed. |
 | Service | `obsidian`, `slack*`, `sourcebot-discovery`, `enrich-context`, `excalidraw-*`, `spacelift-github` | Per-service tool sets and conventions. |
 | Runtime paths | `provider-paths` | Plans / state / worktree directories per runtime. Never hardcode these in a body. |
 

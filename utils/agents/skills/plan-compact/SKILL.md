@@ -6,6 +6,7 @@ argumentHint: "[optional task note]"
 references:
   - ../references/present-first.md
   - ../references/agents-delegate.md
+  - ../references/provider-paths.md
 ---
 
 ## Plan Compact — In-Session Compaction Anchor
@@ -13,6 +14,8 @@ references:
 > **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > Read the `agents-delegate` reference for dispatching the pre-compaction consistency check to a cheap-tier read-only subagent. Resolve tiers via the `agent-harness` skill.
+
+> Read the `provider-paths` reference to resolve the concrete internal plans directory for the active runtime before creating the anchor file. Never hardcode a path.
 
 ## Context
 

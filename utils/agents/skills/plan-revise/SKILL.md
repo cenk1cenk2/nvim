@@ -3,6 +3,7 @@ name: plan-revise
 description: 'plan-revise Revise an existing plan file when the direction was wrong - gathers what went wrong (and partial implementation via git), re-interviews on the deltas, updates the plan in place with a dated revision entry. Triggers: "revise the plan", "we got it wrong", "change direction". Do NOT use for new plans (/plan-hard), unchanged pickup (/plan-pickup), or handoffs (/plan-handoff).'
 references:
   - ../references/plan-mode.md
+  - ../references/provider-paths.md
 ---
 
 ## Plan Revise — Going Back to the Drawing Board
@@ -12,6 +13,8 @@ references:
 > - Enter plan mode immediately.
 > - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", `g`, `go`, `y`, or `yolo`.
 > - Do NOT undo, revert, or modify any implementation code during this skill. Revision happens in the plan file only.
+
+> Read the `provider-paths` reference to resolve the concrete internal plans directory for the active runtime before listing or rewriting plan files. Never hardcode a path.
 
 ## Context
 

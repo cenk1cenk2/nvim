@@ -5,6 +5,7 @@ disableModelInvocation: true
 argumentHint: "[workload-name] - e.g., 'seafile', 'immich', 'my-app'"
 references:
   - ../references/present-first.md
+  - ../references/kilic-argocd-pvc-restore.md
 ---
 
 ## Cluster Workload Creator
@@ -522,6 +523,14 @@ ExternalSecrets needed:
 Place in a `db/` subfolder with its own `kustomization.yaml`.
 
 **Read the reference repo** (`cluster/workloads/seafile`) for the full MariaDB pattern including CronJob, backup ConfigMap, and ExternalSecret details.
+
+---
+
+### Restore (data and databases)
+
+> Read the `kilic-argocd-pvc-restore` reference when the workload needs to restore PVC data or a database from an S3 archive — it carries the suspended-CronJob templates for file data, PostgreSQL (`jkaninda/pg-bkup`), and MariaDB/MySQL (`jkaninda/mysql-bkup`), plus the S3 URL sources and naming conventions.
+
+Restore is the counterpart to the backup patterns above and uses the same tooling. Restore jobs are **always** `suspend: true` — they ship dormant via kustomize and are triggered by hand.
 
 ---
 

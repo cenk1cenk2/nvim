@@ -3,6 +3,7 @@ name: plan-hard
 description: 'plan-hard Deep interview-driven plan mode - walks the design tree one decision at a time, self-answers via codebase exploration, and recommends answers. Default whenever plan mode is entered. Triggers: "plan hard", "interview me". Do NOT use for existing plans (/plan-pickup) or cross-session handoffs (/plan-handoff).'
 references:
   - ../references/plan-mode.md
+  - ../references/provider-paths.md
 ---
 
 ## Plan Hard — Interview-Driven Design-Tree Traversal
@@ -12,6 +13,8 @@ references:
 > - Enter plan mode immediately.
 > - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", or an equally direct proceed signal (the user lingo `g`, `go`, `y`, `yolo` also count).
 > - When in doubt about whether the user wants implementation, ASK. Do not assume.
+
+> Read the `provider-paths` reference to resolve the concrete internal plans directory for the active runtime before writing the plan file. Never hardcode a path.
 
 ## Core Disposition
 

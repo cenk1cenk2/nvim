@@ -6,6 +6,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/present-first.md
   - ../references/linear-document-handling.md
+  - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Issue Read
@@ -20,7 +21,7 @@ references:
 
 > **THE ISSUE IS NOT THE ABSOLUTE TRUTH.**
 >
-> Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). If the description was last updated or comments were posted before the current conversation context or the user's latest work, **the user's knowledge may be more current than what Linear shows.** When you detect a gap between the issue's timestamps and the current session, **ask the user** to clarify rather than assuming the issue is authoritative. Timestamps are the deciding factor — always check when the description was last updated and when the most recent comment was posted.
+> Read the `linear-issue-philosophy` reference for the full rule — record vs conversation authority, and the timestamp check that decides it. This skill is read-only, so it stops at surfacing the gap: flag a stale issue with its timestamps and ask the user, never present it as definitive. Hand actionable edits to `linear-issue-update`.
 
 > Read the `linear-document-handling` reference — in this read-only skill, glimpse any attached/linked documents for context, surface what's relevant, and flag stale ones with their timestamps. Never edit; hand off actionable edits to `linear-issue-update`.
 

@@ -5,6 +5,7 @@ disableModelInvocation: true
 argumentHint: "[same-repo|other-repo] [goal description]"
 references:
   - ../references/plan-mode.md
+  - ../references/provider-paths.md
 ---
 
 ## Cross-Session / Cross-Repository Planning
@@ -15,6 +16,8 @@ references:
 > - Create plan file in your internal plans directory as `YYYY-MM-DD-<project>-<name>.md`.
 > - Present the plan to the user and iterate based on feedback.
 > - Do NOT implement — the plan is consumed by a different session or agent.
+
+> Read the `provider-paths` reference to resolve the concrete internal plans directory for the active runtime, and the filename default. Never hardcode a path.
 
 ## Context
 
