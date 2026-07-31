@@ -6,6 +6,7 @@ references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
+  - ../references/commit-push-scoped.md
 argumentHint: "[what to change or review in AGENTS.md]"
 ---
 
@@ -16,6 +17,8 @@ argumentHint: "[what to change or review in AGENTS.md]"
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed change before asking for approval.
 
 > **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into the guidelines or its examples unless the user explicitly allows it; use placeholders instead.
+
+> **Commit and push.** Read the `commit-push-scoped` reference — after the edit lands, stage ONLY `AGENTS.md` and nothing else in the repo, then commit and push to `rolling` via `git-commit` and `git-push`. Ask first by default; skip the ask when the request already blessed the push.
 
 ## Target File
 
@@ -30,6 +33,7 @@ argumentHint: "[what to change or review in AGENTS.md]"
 5. **Validate conciseness.** AGENTS.md is loaded into every session's context window. Every line must earn its place. Remove redundancy, prefer tables over prose, and avoid restating what's already implied by other rules.
 6. **Iterate.** Refine based on user feedback until approved.
 7. **Apply changes.** After explicit approval, edit the file.
+8. **Commit and push.** Follow the `commit-push-scoped` reference — stage only `AGENTS.md`, then compose with `git-commit` and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
 
 ## Key Principles
 

@@ -6,6 +6,7 @@ references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
+  - ../references/commit-push-scoped.md
 argumentHint: "[create|update|review] [skill-name] [description of what the skill should do]"
 ---
 
@@ -16,6 +17,8 @@ argumentHint: "[create|update|review] [skill-name] [description of what the skil
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed skill change before writing.
 
 > **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into skills, references, or examples unless the user explicitly allows it; use placeholders instead.
+
+> **Commit and push.** Read the `commit-push-scoped` reference — after edits land, stage ONLY the skill and reference files this run touched, then commit and push to `rolling` via `git-commit` and `git-push`. Ask first by default; skip the ask when the request already blessed the push.
 
 ## ⛔ ABSOLUTE RULE — change the RELEVANT skills, not this one
 
@@ -117,6 +120,10 @@ After creating, updating, deleting, or moving skill files:
 3. For changed skills, re-read the affected skill with `mcp__hyprpilot__read_skill` when practical to confirm the daemon sees the latest content.
 4. If references changed, use `mcp__hyprpilot__load_skill_references` for an affected skill when practical to confirm reference resolution.
 5. Report the reload result to the user.
+
+## Committing Changes
+
+After the reload, hand off per the `commit-push-scoped` reference — stage only the files this run touched, then compose with `git-commit` and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
 
 ## SKILL.md Format
 
@@ -355,6 +362,7 @@ When creating or updating a skill, always check:
 | `agent-target-capability.md` | Capability axes of a target agent (skills, MCP, repo, memory, shell, write authority), tier defaults, mixed/unknown handling, declaration line. | `agent-aware`, `agent-unaware`. |
 | `output-diff.md` | Chunked change presentation — reasoning + content blocks before any write. | Config family (5 skills), Linear/Obsidian/Slack write skills. |
 | `redact-private-data.md` | No private specifics in authored content — treat-as-private list, placeholders to use, functional identifiers to keep; use only with explicit permission. | Config family (5 skills). |
+| `commit-push-scoped.md` | Commit/push handoff for authored file edits: ask-by-default vs upfront blessing, stage only the files this run touched, protected-branch ack resolution. | `config-skills`, `config-agents`, `config-references`. |
 
 ## Description Checklist
 

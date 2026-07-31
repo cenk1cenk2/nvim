@@ -6,6 +6,7 @@ references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
+  - ../references/commit-push-scoped.md
 argumentHint: "[create|update|review] [reference-name] [description or context]"
 ---
 
@@ -16,6 +17,8 @@ argumentHint: "[create|update|review] [reference-name] [description or context]"
 > Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed reference change before writing.
 
 > **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into references or their examples unless the user explicitly allows it; use placeholders instead.
+
+> **Commit and push.** Read the `commit-push-scoped` reference — after edits land, stage ONLY the reference files and the consuming skills whose frontmatter this run changed, then commit and push to `rolling` via `git-commit` and `git-push`. Ask first by default; skip the ask when the request already blessed the push.
 
 ## Reference Directory Structure
 
@@ -121,6 +124,10 @@ When references list MCP tool names in tables or inline, use the **`<server>__<t
 - `kubernetes__*` tools — the `kubernetes` MCP has been removed. Reference `kubectl` CLI via `Bash` if needed.
 
 **Tmux MCP is read-only.** Only the read-only tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are usable. References must NOT include `execute-command`, `create-window`, `split-pane`, `kill-*`, or `create-session` as a recommended action. For command execution, reference the built-in `Bash` tool.
+
+## Committing Changes
+
+After applying reference edits and any consumer frontmatter updates, hand off per the `commit-push-scoped` reference — stage only the touched files, then compose with `git-commit` and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
 
 ## Key Principles
 
