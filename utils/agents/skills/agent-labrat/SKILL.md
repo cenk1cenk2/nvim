@@ -88,6 +88,57 @@ Name the branch point explicitly when there is one: *investigate first, and only
 - **Do NOT choreograph its delegation.** How many sessions it spawns, how it splits the work, how it collects results — that coordination lives in the Hermes harness. You state which runtime and roughly which phases; it runs the orchestration.
 - **Silence means it decides.** If the user named no runtime, say nothing about runtimes rather than inventing one.
 
+## Tell it to load hyprpilot skills by slug
+
+**It reaches the same hyprpilot skill catalog you do, so a slug is a working instruction, not a hint.** This is the single highest-leverage line you can put in a brief: naming a skill hands over a whole workflow — its conventions, its approval gates, its mandatory fields — in four words, and it stays correct as that skill evolves because it loads the current version rather than your paraphrase.
+
+- **Name the slug and say to follow it.** "Load `git-commit` and follow it for the commit message." "Follow `gitlab-mr-create` for the MR." "Use `plan-hard` before writing any code."
+- **Point at references too** when a convention lives in one — it can load a skill's references the same way.
+- **Verify the slug exists before naming it.** Resolve it against `hyprpilot__list_skills`; the catalog is profile-filtered, so a slug present for you may be absent for it. A pointer to a skill it cannot load is worse than no pointer.
+- **Do not paraphrase a skill you could name.** A paraphrase forks on the day you write it. If you find yourself explaining a process that already has a slug, replace the explanation with the slug.
+- **Tell it to reload when freshness matters.** `hyprpilot__reload` if the catalog may be stale — and note escalation stops at restarting the hyprpilot MCP server itself, never the gateway.
+
+## Its background work is prompt-driven — just ask for it
+
+**It has the same autonomy postures you do, and they are reachable by asking.** You do not wire anything up: you say what should keep happening, and it runs that on its host. The mechanics are its business.
+
+- **Watching and following through** — "watch the pipeline and fold the result in", "keep an eye on that MR and react when review lands". Point it at `agent-background` and the `agent-watchers` reference and it arms its own watcher, with its own cadence, on its own host.
+- **Push-through posture** — when you want it to keep driving rather than stopping at the first blocker, say so and name `agent-bulldozer`. That is the difference between an agent that reports "blocked on X" and one that clears X and continues.
+- **Standing goals across turns** — `!goal <text>` in-thread sets an objective it keeps working toward, which composes with the above: "keep delegating opus sessions until you rule it out."
+- **Its watchers are not yours.** It arming a watcher on its host does not tell *you* anything — your visibility is still only the thread, and your own watcher is a separate decision under the user's engagement level.
+
+The framing that matters: **asking for follow-through is cheaper than a round trip.** A brief that says "investigate and report" gets you a report and a stall; one that says "investigate, and if the pipeline is red chase it down and fix forward" gets the work finished while you are elsewhere.
+
+## Scheduled work — cron and one-shot jobs
+
+It can schedule work to fire later or repeatedly, through a `cronjob` tool with `create` / `list` / `update` / `pause` / `resume` / `run` / `remove` actions. **Treat the mechanics below as the documented shape as of 2026-07 and let it confirm against its own build** — this is its host, its version, and it reads its own docs faster than you can.
+
+Schedule shapes worth knowing, because they change what you can ask for:
+
+| Shape | Example | Use |
+|---|---|---|
+| One-shot delay | `30m`, `2h`, `1d` | "check back on this in two hours" |
+| Absolute one-shot | ISO timestamp | a deadline, a release window |
+| Recurring interval | `every 30m`, `every 6h` | polling something that moves |
+| Cron expression | `0 9 * * 1-5` | weekday reports, nightly audits |
+
+**Prefer explicit interval or cron syntax over a natural-language phrase.** The docs disagree with each other on whether phrases like "daily at 9am" are interpreted or rejected, so treat natural-language scheduling as **unverified** and write the unambiguous form.
+
+Three properties change how you brief a scheduled job, and all three bite:
+
+- **⛔ A scheduled job runs in a fresh session with no memory of your thread.** The prompt must be entirely self-contained — everything the cross-thread section says about pointing at context applies double here, because there is not even an ambient conversation to search from. This is the most common way a scheduled job produces confident nonsense.
+- **⛔ A cron-run session cannot create further cron jobs.** Recursive scheduling is blocked to prevent loops, so never brief a job whose plan is to schedule its own follow-ups. Chain instead: a job can consume an upstream job's most recent output rather than re-fetching it.
+- **Skills attach to a job and load in order.** This is the cron equivalent of the section above — a scheduled job can be handed hyprpilot skills by slug, and the order matters when one teaches what the next one acts on.
+
+Two more worth knowing when you want a quiet job rather than a chatty one:
+
+- **A no-agent script mode** runs a script and delivers its stdout verbatim, skipping the model entirely — the right shape for a watchdog that already knows how to format its own alert. Empty output means a silent tick.
+- **A suppression marker** stops a run from delivering when there is nothing to say, while still recording the output. Failed runs always deliver, so silence means "nothing to report", never "it broke quietly".
+
+**Delivery is where this meets you.** A job can deliver back to the originating chat, to a named Slack channel, to every connected channel, or only to local storage. Ask for delivery **into the thread you are watching** when you want the result to reach you — a job whose output lands only on its host is a result you will never see. Where the platform supports it, deliveries can be made continuable so you can reply to them.
+
+**Failure mode to know about:** an unpinned job snapshots its inference configuration at creation and **fails closed** if the global default later changes — it skips the run and makes no call. So a scheduled job going quiet is not proof it ran and found nothing. If a recurring job you rely on stops reporting, have it check the job's execution state rather than assuming the world got boring.
+
 ## Plan handoff, delivered in-thread
 
 For anything beyond a one-liner, hand off a **plan**, not a sentence — the `plan-handoff` shape (problem statement, repository context, goal with acceptance criteria, approach, research needed, end state) is the right amount of structure for a target with zero conversation.
@@ -126,6 +177,36 @@ Thread commands (Slack blocks native slash commands inside threads, so Hermes ac
 - **Default `#agents`** for a handoff that has no existing home. Resolve the channel through the active Slack integration rather than assuming an id.
 - **Reply into the existing thread** when the work is rooted in one — an alert, an incident, a discussion. Posting there gives labrat the whole thread as context for free and keeps the answer where the people watching it are. This is the case for "look at that alert and investigate": the handoff is a reply to the alert, mentioning `@labrat` once.
 - **Never open a second thread for work that already has one.** Two threads on one task means two contexts, and the watcher only follows one.
+
+## Threads do not share context — point at the other one
+
+**Each thread is its own conversation. labrat carries nothing between them unless you say so.** Two handoffs in the same channel, minutes apart, share nothing: it will not know what it concluded in the other thread, and it will not know the second task relates to the first. Assuming otherwise is the quiet failure — you write a brief that reads fine to you and lands context-free on its side.
+
+**But the context is retrievable, not lost.** Hermes can research and search its own older conversations, bounded by a retention window — so a fact from an earlier thread is something it can go and fetch. Treat the window as **unverified**: how far back it reaches is not established here, so never build a brief on the assumption that something old is still reachable.
+
+That combination sets the rule: **point at the other thread, do not paste it, and do not assume it will look unprompted.**
+
+- **Name the thread explicitly** — its permalink, or the channel plus the `ts` — and say **what to take from it**. "You investigated the ordering behaviour in \<thread\>; reuse that verdict rather than redoing it" is the whole instruction.
+- **Do not paste the earlier thread's content.** Same reason you do not inline a skill body: it forks, and your copy is the stale one the moment that thread moves on. It can read the original.
+- **Retrieval is an instruction, not a reflex.** It searches when told to. A brief that merely alludes to earlier work ("as established previously") gets you a fresh, contradictory investigation.
+- **Never let a thread be the only copy of anything load-bearing.** Retention is bounded, so a decision, an invariant, or an approved policy wording that matters beyond this run belongs in Linear, the MR description, or a repo file. The thread is the *handle* to the work; it is not durable storage for its conclusions.
+- **An empty retrieval means out of retention, not out of luck.** If it comes back with "cannot find that conversation", restate the fact yourself rather than sending it hunting again.
+
+**How to actually ask.** Three parts, and all three are load-bearing:
+
+> Related to the renovate-config automerge work in \<thread permalink\> — **search that conversation** rather than re-deriving it. What I need from it: the ordering finding about the rule factory emitting `automerge: false`. Do not repeat the investigation; if you cannot find the thread, say so and I will restate it.
+
+1. **Which conversation** — a permalink, or channel plus `ts`. Never "the earlier discussion".
+2. **An explicit instruction to go and search it.** This is the part people leave out, and without it the pointer reads as background colour.
+3. **What to extract, and what not to redo.** Bound it, or it re-runs the whole earlier task from the top.
+
+Add the fallback line every time. An agent that says "that conversation is not reachable" has done the right thing; one that quietly reconstructs a plausible version of it has not, and you will not be able to tell from the reply.
+
+**A scheduled job has it worse.** Cron runs in a fresh session with no ambient conversation at all — see the scheduling section. A prompt that assumes thread context is broken there in a way it merely degrades here.
+
+**This is what makes separate threads safe, and separate threads are usually right.** Genuinely unrelated tasks get their own threads — that is not a violation of the one-thread-per-task rule above, it is the same rule. Do not merge unrelated work into a single thread just to preserve context: a shared thread mixes two contexts, and the watcher only follows one. Cross-reference instead.
+
+**With two live threads, say which one the report belongs in.** "Report in this thread" stops being boilerplate the moment a second handoff exists — it is the instruction that keeps a verdict from landing where nobody is watching for it.
 
 ## Engagement level — the user sets it
 
@@ -288,6 +369,12 @@ When the terminal report lands:
 - Ambiguity handed offsite costs hours; make the source agent-ready before the handoff.
 - Pass the user's runtime and model through verbatim; invent neither.
 - Steer inside the thread, never by opening a new one.
+- Threads share no context: point at the other thread and say what to take from it, because it can search older conversations but will not do it unprompted.
+- A thread is a handle, not durable storage — anything load-bearing also lives in Linear, an MR, or a repo.
+- Name hyprpilot skills by slug instead of paraphrasing them; a slug hands over a whole workflow and cannot go stale.
+- Its autonomy is prompt-driven: ask for the watcher, the follow-through, the bulldozer posture — it arms them on its own host.
+- Ask for follow-through rather than a report and a stall; a round trip costs hours, a sentence costs nothing.
+- A scheduled job has no conversation at all: self-contained prompt, no recursive scheduling, and delivery aimed where you will actually see it.
 - Verify its claims from the artifact it cited — distance does not make a report evidence.
 - A terminal report ends the watch; reap it rather than ticking on in case more arrives.
 - The user sets the engagement level — fire and forget, end to end, or watch and control; ask when it is unstated and the stakes differ.
