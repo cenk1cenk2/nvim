@@ -4,9 +4,9 @@ Handoff for any skill that edits files in a repository and then commits them: co
 and push **only what this run touched**, gated on the user's word. Read it after the
 edits are written and any post-write verification (reload, format, lint) succeeded.
 
-The calling skill decides the target branch and states it in its own directive. This
-reference decides the gate, the staging scope, and how the protected-branch ack is
-resolved.
+The calling skill decides the target branch and the commit scope, and states both in
+its own directive. This reference decides the gate, the staging scope, and how the
+protected-branch ack is resolved.
 
 ## Gate
 
@@ -35,8 +35,8 @@ unrelated work, and staging everything sweeps up changes that are not yours.
 ## Flow
 
 1. Compose with `git-commit`, handing it the explicit touched paths so it skips its
-   default `.` staging. Match the repo's history — conventional subject, scoped to
-   the thing that changed.
+   default `.` staging, and the commit scope the calling skill named. Match the
+   repo's history for type and subject style.
 2. Compose with `git-push`. Target the branch the calling skill named; default to the
    current branch when it named none.
 3. **Protected-branch ack.** `git-push` stops on protected branches (`main`,

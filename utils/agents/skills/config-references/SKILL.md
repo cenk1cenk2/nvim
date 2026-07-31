@@ -18,7 +18,7 @@ argumentHint: "[create|update|review] [reference-name] [description or context]"
 
 > **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into references or their examples unless the user explicitly allows it; use placeholders instead.
 
-> **Commit and push.** Read the `commit-push-scoped` reference — after edits land, stage ONLY the reference files and the consuming skills whose frontmatter this run changed, then commit and push to `rolling` via `git-commit` and `git-push`. Ask first by default; skip the ask when the request already blessed the push.
+> **Commit and push.** Read the `commit-push-scoped` reference — after edits land, stage ONLY the reference files and the consuming skills whose frontmatter this run changed, then commit as `<type>(agents): <subject>` and push to `rolling` via `git-commit` and `git-push`. Ask first by default; skip the ask when the request already blessed the push.
 
 ## Reference Directory Structure
 
@@ -127,7 +127,7 @@ When references list MCP tool names in tables or inline, use the **`<server>__<t
 
 ## Committing Changes
 
-After applying reference edits and any consumer frontmatter updates, hand off per the `commit-push-scoped` reference — stage only the touched files, then compose with `git-commit` and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
+After applying reference edits and any consumer frontmatter updates, hand off per the `commit-push-scoped` reference — stage only the touched files, then compose with `git-commit` (scope `agents`, e.g. `feat(agents): ...`) and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
 
 ## Key Principles
 

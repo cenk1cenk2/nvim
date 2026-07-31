@@ -18,7 +18,7 @@ argumentHint: "[create|update|review] [skill-name] [description of what the skil
 
 > **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into skills, references, or examples unless the user explicitly allows it; use placeholders instead.
 
-> **Commit and push.** Read the `commit-push-scoped` reference — after edits land, stage ONLY the skill and reference files this run touched, then commit and push to `rolling` via `git-commit` and `git-push`. Ask first by default; skip the ask when the request already blessed the push.
+> **Commit and push.** Read the `commit-push-scoped` reference — after edits land, stage ONLY the skill and reference files this run touched, then commit as `<type>(agents): <subject>` and push to `rolling` via `git-commit` and `git-push`. Ask first by default; skip the ask when the request already blessed the push.
 
 ## ⛔ ABSOLUTE RULE — change the RELEVANT skills, not this one
 
@@ -123,7 +123,7 @@ After creating, updating, deleting, or moving skill files:
 
 ## Committing Changes
 
-After the reload, hand off per the `commit-push-scoped` reference — stage only the files this run touched, then compose with `git-commit` and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
+After the reload, hand off per the `commit-push-scoped` reference — stage only the files this run touched, then compose with `git-commit` (scope `agents`, e.g. `feat(agents): ...`) and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
 
 ## SKILL.md Format
 
