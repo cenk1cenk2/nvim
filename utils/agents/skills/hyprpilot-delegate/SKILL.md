@@ -5,6 +5,7 @@ disableModelInvocation: true
 argumentHint: "[task] [optional: profile name or fragment, e.g. 'personal glm-5.2']"
 references:
   - ../references/present-first.md
+  - ../references/hyprpilot-sessions.md
   - ../references/agents-conventions.md
   - ../references/project-tooling.md
   - ../references/agents-completion.md
@@ -13,6 +14,8 @@ references:
 ## Hyprpilot Delegation
 
 > **Present-first.** Read the `present-first` reference — draft the delegation and present it before spawning; proceed on approval or upfront blessing. `spawn` runs a profile's `command` as this user, so it is never a silent action.
+
+> Read the `hyprpilot-sessions` reference for the full session surface — the three completion signals and which applies to you, `sessionInfo.files`, per-vendor answer extraction, and the limits. **Read it before arming any wait**: a hyprpilot session is NOT an in-harness subagent, so the `agent-*` rule that dispatched work wakes you does not apply here.
 
 > Read the `agents-conventions` reference when the delegated task writes code — the spawned agent needs the local patterns named in its prompt.
 > Read the `project-tooling` reference when the task writes code — for the verification commands to hand the agent.
@@ -34,6 +37,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 | `hyprpilot_harness__spawn` | Start a NEW session from a profile. Returns a `session` handle. |
 | `hyprpilot_harness__session_send` | Send another turn to an existing session. The steering tool. |
 | `hyprpilot_harness__session_read` | Read or follow a session's transcript. |
+| `hyprpilot_harness__session_status` | **The cheap poll.** State without reading the transcript. |
 | `hyprpilot_harness__session_list` | List sessions — recover a handle you lost. |
 | `hyprpilot_harness__session_kill` | Stop a running session, or reap a finished one. |
 
@@ -61,18 +65,23 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 4. **Run detached with `wait: false`** — when the job is long, when fanning out several agents at once, or when the user says "check on it later".
    - It returns immediately with `status: running`, a `nextCursor` to resume from, and **`vendorSessionId: null`** — the vendor id does not exist until the turn produces it. The handle itself is usable straight away.
-   - **Nothing wakes you when it finishes.** Detached work completes into silence; you must come back with `session_read` or block on a follow. Never leave a detached agent unread — that is how a finished result gets thrown away and the job re-run.
+   - **Whether anything wakes you depends on your client.** Where you are an interactive Claude Code lead with the channel registered, the harness pushes a completion event and you are woken. **Everywhere else — a headless `claude -p` lead, a codex or opencode lead, or any client that has not registered — nothing arrives, and no error says so.** Assume silence unless you have seen a channel event in this session.
+   - So the rule stands unless proven otherwise: **never leave a detached agent unread.** Poll `session_status` (cheap), or watch `done.json` from a shell, or block on a `session_read` follow. An unread agent is how a finished result gets thrown away and the job re-run.
 
 5. **⛔ A timeout is NOT a failure and NOT a cancellation.**
    - If the turn outlives `timeout_seconds` the result returns `status: running` and **the agent keeps working.**
-   - **Poll or follow `session_read` with the handle. NEVER call `spawn` again** — that starts a second, unrelated agent and abandons the first. This is the single most common way to get this wrong.
-   - Follow live with `session_read { session, wait: true, cursor: <nextCursor>, timeout_seconds? }`. A follow returns everything it saw and ends when the agent finishes, when the request is cancelled, or at `timeout_seconds`.
+   - **Poll with the handle. NEVER call `spawn` again** — that starts a second, unrelated agent and abandons the first. This is the single most common way to get this wrong.
+   - **`session_status { session }` is the poll.** It reads no transcript, so it costs almost nothing to repeat: `status`, `exitCode`, `transcriptBytes`, `hasResult`. Reach for `session_read` when you want the *output*, not to answer "is it done".
+   - **`transcriptBytes` tells you working from wedged.** It climbs while the agent produces output and plateaus while it thinks or runs a long tool. Flat for minutes with `status: running` is a hung agent — something `status` alone can never show you. Report it; do not kill on it reflexively.
+   - Follow live instead with `session_read { session, wait: true, cursor: <nextCursor>, timeout_seconds? }` when you actually want the stream. A follow ends when the agent finishes, when the request is cancelled, or at `timeout_seconds`.
 
 6. **Collect the result deliberately — this is where the work gets lost.**
-   - `session_read` returns the vendor's raw JSON event stream, and **the answer sits in a different event per vendor** — a terminal `type: "result"` event carrying the final text and run totals on some, the last `type: "text"` event on others. Scan from the end for whichever the vendor emits; the `tool_use` events in between can be enormous.
+   - **`hasResult` on `session_status` already did the per-vendor scan** — tail-scoped to the latest turn. Use it instead of hand-rolling one; getting it wrong is easy, because opencode emits a `text` part for every completed sentence and has no terminal event at all.
+   - `session_read` returns the vendor's raw JSON event stream, and **the answer sits in a different event per vendor**. The `tool_use` events between can be enormous.
+   - **Or skip the paging entirely.** `sessionInfo.files.transcript` is the path to `turns.jsonl` — `jq` the answer straight out rather than pulling 60 kB of tool traffic through your context. The `hyprpilot-sessions` reference carries a one-liner per vendor. `files.stderr` is where the real failure text lives when `exitCode != 0`; report that rather than a bare code.
    - **Page with `nextCursor`.** MCP pagination: pass a result's `nextCursor` back **verbatim** as `cursor` to continue exactly where that read stopped. It is opaque — never parse or construct one. **No `nextCursor` means the session is finished and you have all of it**; a running session always returns one, so a poller never loses its place. An unrecognised cursor is an error, not a silent reset.
    - **Read the result BEFORE sending the next turn.** A new turn appends to the same transcript and pushes the previous answer out of the tail.
-   - `tail` (default 200 lines) returns the trailing lines when `cursor` is omitted — the quick way to ask "is it done, and what did it say".
+   - `tail` (default 200 lines) returns the trailing lines when `cursor` is omitted — the quick way to see *what it said*. For *whether it is done*, `session_status` is cheaper.
 
 7. **Steer across turns with `session_send`, not `spawn`.**
    - **A conversation is ONE session.** `session_send { session, prompt }` reuses the handle and appends to the same transcript, so the agent retains everything from earlier turns.
