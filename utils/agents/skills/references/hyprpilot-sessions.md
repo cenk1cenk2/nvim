@@ -22,26 +22,21 @@ So the `agent-*` "never poll harness-tracked work" rule does not cover these, an
 
 Three mechanisms, and the right choice depends on **who is waiting** and **how**.
 
-### 1. Channels — a real push wake-up. Interactive Claude Code only.
+### 1. Channels — a push wake-up that does NOT work here. Assume silence.
 
-When a turn ends the harness pushes `notifications/claude/channel`, which Claude Code renders as a channel block in the lead's next turn, naming the session and exit code. `mcp.harness.notifyOnComplete` defaults **true**.
+The harness pushes `notifications/claude/channel` when a turn ends, and `mcp.harness.notifyOnComplete` defaults **true**, so the server side is live. The *client* side is what fails.
 
-**Do not build on it without confirming it reaches you:**
+**Registration was tried on this setup and did not work; the launch flag has been reverted.** Nothing registers the channel today, so no completion event reaches anyone. Treat the mechanism as unavailable rather than untested — it is not a knob you can turn on by remembering a flag.
+
+Why it stays documented at all: the server keeps emitting, so if a future client registers successfully it becomes strictly better than polling — no loop, no interval. Until something demonstrates a channel block actually arriving, it is not a wake-up you may build on.
+
+Even where it does work it is narrow:
 
 - **Interactive only** — a headless `claude -p` lead never receives one.
 - **Claude Code only** — codex and opencode leads get nothing; it is a Claude Code protocol extension.
-- **Registration is a launch flag** (`--dangerously-load-development-channels server:hyprpilot_harness`); there is no settings key.
-- A client that has not registered **drops it silently and returns no error**, so a watcher built on it untested simply never fires — and looks exactly like a hung agent.
+- A client that has not registered **drops it silently and returns no error** — which is exactly why the failure went unnoticed long enough to be worth this warning. An unfired watcher looks identical to a hung agent.
 
-**Verify it rather than assuming it**, because the failure is invisible: read your own process argv and look for the flag.
-
-```bash
-tr '\0' '\n' < /proc/$PPID/cmdline | grep -c -- --dangerously-load-development-channels
-```
-
-`0` means no completion event will ever reach you and every detached session must be watched or polled. A verified session where a detached agent ran to completion produced **no channel block at all** with the flag absent — silence is the normal case, not a malfunction.
-
-Where it does work it is strictly better than polling: no loop, no interval.
+**So: every detached session must be watched or polled.** Silence after a spawn is the normal case here, not a malfunction — do not read it as the agent still working, and do not wait on a push that is never coming.
 
 ### 2. `session_status` — the cheap poll. Any MCP caller.
 

@@ -65,7 +65,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 4. **Detached is the normal mode, and the default.** It suits anything long, fanning out several agents at once, and every "check on it later".
    - It returns immediately with `status: running`, the `session` handle, and a `nextCursor` to resume reading from. **The handle is the whole identity** — minted before the agent produces a byte, unchanged across turns, and the only thing any tool accepts. There is no second id to wait for.
-   - **Do not expect a completion push.** The harness emits one, but it lands only on an interactive Claude Code lead launched with the channel registered — and a client without it **drops the event silently, with no error**, which looks exactly like a hung agent. **Verify instead of assuming: grep your own process argv for `--dangerously-load-development-channels`.** Absent means nothing will ever wake you, and that is the common case.
+   - **⛔ Nothing will wake you. There is no completion push here.** The harness emits one, but it only lands on an interactive Claude Code lead with the channel registered — and registration was tried on this setup, did not work, and has been reverted. A client without it **drops the event silently, with no error**, which looks exactly like a hung agent. Plan for silence from the moment you spawn: arm a watcher or poll. Never treat "no news" as "still working".
    - **So watch `done.json` yourself.** A turn ending writes `done.json` into the session directory (`sessionInfo.files.dir`), and it is the one MCP-only truth a plain shell can reach. Arm it through your runtime's **own** background-exec facility — the one that re-invokes you when the command exits. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
 
      ```bash
@@ -170,7 +170,7 @@ Rules that hold whichever vendor you target:
 
 1. Resolve the profile, present, then `spawn { …, mode: "plan" }` — detached by default, and read-only because the job only needs to look.
 2. Returns instantly: handle `s-91c4`, `status: running`. Report that it is running and followable, and by which handle.
-3. Arm the `done.json` watcher on `sessionInfo.files.dir` through the runtime's background exec — the channel flag is not on this session's argv, so nothing would wake you otherwise.
+3. Arm the `done.json` watcher on `sessionInfo.files.dir` through the runtime's background exec — nothing wakes you here, so without it the session finishes into silence.
 4. On wake: `session_status` → `exited`, `hasResult: true`. **Not** a second `spawn`.
 5. `jq` the answer out of `files.transcript` (plus the `error` query), relay it, and only then send any further turn.
 
@@ -186,7 +186,7 @@ Rules that hold whichever vendor you target:
 - **Stay detached.** `wait` already defaults false; opting into a blocking call dumps the whole raw transcript into your context with no way to trim it, and still returns `running` on a long turn. Poll `session_status`, then `jq` the answer out of `files.transcript`.
 - **The handle is the only id.** It arrives with the first result and never changes. Nothing else addresses a session.
 - **A timeout means still working.** Follow it; never re-spawn.
-- **Detached work finishes into silence.** Assume no completion push unless you have verified the channel flag is on your own argv. Watch `done.json`, or poll — but read every session you start, and collect the answer before steering it again.
+- **Detached work finishes into silence.** There is no completion push here — watch `done.json` or poll. Read every session you start, and collect the answer before steering it again.
 - **Check both failure locations.** `stderr` holds launch failures, `turns.jsonl` holds runtime ones. A bare exit code is never the report.
 - **Self-contained prompts, absolute paths.** The agent cannot see this conversation.
 - **Present before spawning.** It runs commands as this user.
