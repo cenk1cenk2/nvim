@@ -104,10 +104,12 @@ Everything under `files` points into a directory that can vanish. Treat a missin
 The terminal event differs per vendor — all three verified against the installed CLIs:
 
 ```sh
-jq -r 'select(.type=="result") | .result' "$T"                                                   # claude
-jq -r 'select(.type=="item.completed") | select(.item.type=="agent_message") | .item.text' "$T"  # codex
-jq -r 'select(.type=="text") | .part.text' "$T"                                                  # opencode
+jq -r 'select(.type=="result") | .result' "$T" | tail -n1                                                   # claude
+jq -r 'select(.type=="item.completed") | select(.item.type=="agent_message") | .item.text' "$T" | tail -n1   # codex
+jq -r 'select(.type=="text") | .part.text' "$T" | tail -n1                                                   # opencode
 ```
+
+**⛔ The `tail -n1` is not cosmetic.** `session_send` **appends to the same `turns.jsonl`**, so on turn N these queries match every turn's answer, oldest first. Drop the tail and a caller taking the first line reports turn 1's answer as the reply to turn 5 — confidently, and forever. (opencode is worse: it emits a `text` part per *sentence*, so even within one turn the query returns many lines.) This is the same trap `hasResult` avoids by scanning the tail rather than the whole file; a hand-rolled query gets no such protection.
 
 **opencode emits no terminal event at all** — its stream ends `step_finish(reason=stop)`, and it emits a `text` part for *every* completed sentence. So "a text part exists" does not mean "finished"; only `status: exited` does. This is why `hasResult` exists and why hand-rolling it goes wrong.
 
@@ -126,6 +128,8 @@ Payment Required: this model uses extra usage only … your extra usage balance 
 ```
 
 The split to remember: **launch failure → `stderr.log`, transcript empty. Runtime failure → transcript `error` event, `stderr.log` empty.** Check both before reporting an exit code.
+
+**That split is a turn-1 reading.** `stderr.log` is opened in append mode on every resume, exactly like the transcript, so from turn 2 onward "`stderr.log` is non-empty" no longer means *this* turn failed to launch — it may be an earlier turn's wreckage. On a multi-turn session, size it before the turn and compare, or trust the transcript's `error` events, which at least carry their own ordering.
 
 ## Limits
 
