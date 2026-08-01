@@ -49,8 +49,7 @@ Where it does work it is strictly better than polling: no loop, no interval.
 { "status": "running" | "exited",
   "exitCode": 0,          // omitted while running
   "transcriptBytes": 41233,
-  "hasResult": true,
-  "vendorSessionId": "…" }
+  "hasResult": true }
 ```
 
 Costs a handle lookup and one `stat`. Prefer it over `session_list` (returns every session) and over `session_read` (returns up to 60 kB of transcript) whenever the question is "is it done".
@@ -133,7 +132,7 @@ The split to remember: **launch failure → `stderr.log`, transcript empty. Runt
 | | |
 | --- | --- |
 | Concurrent running sessions | 8 |
-| Spawn nesting depth | 2 (`HYPRPILOT_SPAWN_DEPTH`) |
+| Spawn nesting depth | 1 (`HYPRPILOT_SPAWN_DEPTH`) — a session you spawn cannot spawn its own |
 | Sessions retained | 64 — oldest **finished** evicted, with their transcripts |
 | Bytes per read | 60 000 |
 | Default tail | 200 lines |
@@ -147,7 +146,7 @@ The split to remember: **launch failure → `stderr.log`, transcript empty. Runt
 - **Sessions die with the sidecar.** No persistence. If it restarts, running agents are killed and transcripts are lost — capture anything that must outlive the connection.
 - **`session_send` replays the launch.** `cwd` / `args` / `with_config` are inherited and **rejected** if passed; only the prompt, `mode`, `wait` and `timeout_seconds` are per-turn.
 - **Paging is MCP-style.** `cursor` in, `nextCursor` out, opaque. **No `nextCursor` means finished AND fully read.** An unrecognised cursor is an error, not a silent reset.
-- **`wait: true` has no way to trim its output.** `spawn` / `session_send` return the whole raw event stream inline — no `tail`, no `cursor`. Measured on one trivial three-item task: 14 kB on opencode, 121 kB on claude. Detach with `wait: false` and pull the answer out of `files.transcript` instead.
-- **`vendorSessionId` never backfills on a detached spawn.** It is `null` from `wait: false` and stays `null` on `session_read` even after the session exits, though the id is present inside the events. Only `session_send` populates it. Use the handle.
+- **Launches are detached — `wait` defaults to false.** `spawn` / `session_send` return as soon as the turn starts. Opting into `wait: true` is rarely right: it returns the whole raw event stream inline with no `tail` and no `cursor` to trim it (measured on one trivial three-item task: 14 kB on opencode, 121 kB on claude), and it still comes back `running` if the turn outlives `timeout_seconds`, so it never even guarantees an answer. Poll `session_status`, then pull the answer out of `files.transcript`.
+- **The handle is the only id.** It is minted at `spawn`, arrives in the first result, never changes, and is what every tool takes. There is no vendor session id on the wire — hyprpilot keeps the vendor's own id internally as the token `session_send` resumes with, and that is all it ever meant.
 - **`sessionInfo.mode` reports the profile's mode, not the launched one.** A mode imposed through `args` (opencode `--agent plan`) does not show up there; `sessionInfo.argv` is the honest record. The same caveat as `model` under a `with_config` overlay.
 - **`spawn` runs a profile's `command` as this user.** The `provider` picks a flag projection, not a sandbox.

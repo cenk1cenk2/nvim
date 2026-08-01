@@ -55,7 +55,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 3. **Present, then spawn.** Show the resolved profile, the working directory, and the prompt. On approval call `spawn { profile, prompt|file, cwd?, mode?, wait?, timeout_seconds?, args?, with_config? }`.
    - **Use the dedicated parameters first.** `cwd`, `mode`, `wait`, `timeout_seconds`, `file`, and `args` are all top-level parameters — reach for them directly. `with_config` is the last resort, for the settings that have no dedicated parameter of their own (`model`, `effort`).
-   - **`wait` defaults `true` — blocking — and that default is the wrong one for most delegations. Pass `wait: false` deliberately.** A blocking call returns the **entire raw event stream inline**, every `tool_use` payload included, with no `tail` and no `cursor` to trim it. The same trivial three-item read-only task produced a **14 kB** transcript on opencode and a **121 kB** one on claude — all of which a blocking spawn pushes through your context to deliver three lines of answer. Detaching costs nothing and lets you collect just the answer (step 6). Reserve `wait: true` for a genuinely short turn whose full trace you actually want. `timeout_seconds` defaults `300`.
+   - **`wait` defaults `false` — detached — and that is the right default. Leave it alone.** Opting into `wait: true` returns the **entire raw event stream inline**, every `tool_use` payload included, with no `tail` and no `cursor` to trim it: the same trivial three-item read-only task produced a **14 kB** transcript on opencode and a **121 kB** one on claude, all of it pushed through your context to deliver three lines of answer. It does not even buy certainty — a turn outliving `timeout_seconds` (default `300`) comes back `running` anyway. Reserve it for a genuinely short turn whose full trace you actually want; otherwise detach and collect just the answer (step 6).
    - **`prompt` and `file` are mutually exclusive.** `file` takes a path (`~` and `$VAR` expanded) whose contents become the prompt — prefer it for a long brief instead of inlining one.
    - **`mode` overrides the profile's mode.** `mode: "plan"` yields a read-only agent that refuses to edit — the cheapest safety lever here, and the default for a delegation that only needs to look. **Verified on opencode: plan mode keeps every MCP server.** The plan agent saw *more* servers than the same profile's build agent and called them freely; only file mutation was refused. Do not generalise that to claude or codex, where a mode can gate whole tool groups — on an unverified vendor, have the agent report its own tool registry in its first turn rather than assuming a read-only job can still reach its MCP servers.
    - `with_config` is an **array of overlay objects** — `with_config: [{ "model": "…" }]`, not a flat object. It accepts **only** `model`, `effort`, `mode`; every other key is refused by design, because an overlay reaching the command, its arguments, its environment, or the MCP servers it launches would turn `spawn` into arbitrary command execution. To run something else, add a profile for it.
@@ -63,8 +63,8 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - **Address files by absolute path in the prompt.** Do not make the agent's output depend on resolving anything relative to the working directory.
    - Record the returned `session` handle and report it to the user. It is how every later turn addresses this agent.
 
-4. **Detached is the normal mode — `wait: false`.** Use it for anything long, for fanning out several agents at once, and whenever the user says "check on it later".
-   - It returns immediately with `status: running`, a `nextCursor` to resume from, and **`vendorSessionId: null`**. That null **never backfills**: a detached session still reports `vendorSessionId: null` from `session_read` long after it exited, even though the vendor id is sitting inside the event stream. Only `session_send` populates it. Address the agent by its handle and do not wait on the vendor id.
+4. **Detached is the normal mode, and the default.** It suits anything long, fanning out several agents at once, and every "check on it later".
+   - It returns immediately with `status: running`, the `session` handle, and a `nextCursor` to resume reading from. **The handle is the whole identity** — minted before the agent produces a byte, unchanged across turns, and the only thing any tool accepts. There is no second id to wait for.
    - **Do not expect a completion push.** The harness emits one, but it lands only on an interactive Claude Code lead launched with the channel registered — and a client without it **drops the event silently, with no error**, which looks exactly like a hung agent. **Verify instead of assuming: grep your own process argv for `--dangerously-load-development-channels`.** Absent means nothing will ever wake you, and that is the common case.
    - **So watch `done.json` yourself.** A turn ending writes `done.json` into the session directory (`sessionInfo.files.dir`), and it is the one MCP-only truth a plain shell can reach. Arm it through your runtime's **own** background-exec facility — the one that re-invokes you when the command exits. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
 
@@ -137,8 +137,8 @@ Rules that hold whichever vendor you target:
 
 - **Sessions die with the MCP server and do not survive a restart.** There is no persistence. If the sidecar restarts, running agents are killed and transcripts are lost. Treat a chain as living only as long as this MCP connection — capture anything that must outlive it before the turn ends.
 - **Bounded retention.** The oldest **finished** sessions are evicted along with their transcripts (default ceiling 64). A running session is never evicted. Read a transcript you care about before it ages out.
-- **Bounded breadth and depth.** A session-count ceiling bounds concurrency; `HYPRPILOT_SPAWN_DEPTH` bounds how deep a spawned agent can itself spawn (a child launched from here runs at depth 1, its own grandchild at depth 2, and that grandchild's spawn is refused). Hitting either returns an error — free a slot with `session_kill` rather than retrying blindly.
-- **A spawned agent's own children are invisible to you.** The child runs its own harness sidecar, so a grandchild it spawns never appears in your `session_list`, cannot be killed with your handles, and its transcript dies with the child. If a delegation is allowed to fan out, make its prompt report what it spawned and what came back — that report is the only record you will ever get.
+- **Bounded breadth and depth.** A session-count ceiling bounds concurrency; `HYPRPILOT_SPAWN_DEPTH` bounds nesting at **1**, so an agent you spawn cannot spawn its own — you delegate, it works. Hitting either returns an error — free a slot with `session_kill` rather than retrying blindly.
+- **So the fan-out is yours to run.** A delegate cannot sub-delegate, and asking it to would just earn a refusal it has to report back. Split the work here and spawn the pieces yourself, where `session_list` sees them and `session_kill` can stop them.
 - **`spawn` executes as this user.** A profile's `command` is an arbitrary binary and its `provider` picks a flag projection, not a sandbox. This is why the skill is present-first and manual.
 
 ## Examples
@@ -148,7 +148,7 @@ Rules that hold whichever vendor you target:
 1. `list_profiles` → the fragment matches `personal/kilic/glm-5.2:cloud` (opencode, mode `build`).
 2. Read the conventions/tooling references; build a self-contained prompt naming the file, the neighbouring patterns, and the test command.
 3. Present the profile, cwd, and prompt → user approves.
-4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…", wait: false }` → handle `s-3f2a`, `status: running`.
+4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` → returns at once with handle `s-3f2a`, `status: running`.
 5. Watch `done.json` in `sessionInfo.files.dir` through the runtime's background exec; on wake, `session_status` reports `exited` / `hasResult: true`.
 6. `jq` the answer out of `files.transcript`, then report the result and the handle.
 
@@ -167,8 +167,8 @@ Rules that hold whichever vendor you target:
 
 **User says:** "delegate this to hyprpilot and check on it later"
 
-1. Resolve the profile, present, then `spawn { …, wait: false, mode: "plan" }` — detached, and read-only because the job only needs to look.
-2. Returns instantly: handle `s-91c4`, `status: running`, `vendorSessionId: null`. Report that it is running and followable.
+1. Resolve the profile, present, then `spawn { …, mode: "plan" }` — detached by default, and read-only because the job only needs to look.
+2. Returns instantly: handle `s-91c4`, `status: running`. Report that it is running and followable, and by which handle.
 3. Arm the `done.json` watcher on `sessionInfo.files.dir` through the runtime's background exec — the channel flag is not on this session's argv, so nothing would wake you otherwise.
 4. On wake: `session_status` → `exited`, `hasResult: true`. **Not** a second `spawn`.
 5. `jq` the answer out of `files.transcript` (plus the `error` query), relay it, and only then send any further turn.
@@ -182,7 +182,8 @@ Rules that hold whichever vendor you target:
 - **Dedicated parameters before `with_config`.** Reach for `with_config` only for `model` and `effort`.
 - **`with_config` before `args`.** hyprpilot converts an overlay onto the target vendor; `args` is raw vendor argv you have to get right yourself. Drop to `args` only for knobs hyprpilot does not model, and check the vendor's `--help` first.
 - **`mode: "plan"` for anything read-only.** Free, and it removes write authority instead of asking for it.
-- **`wait: false` by default.** Blocking dumps the whole raw transcript into your context with no way to trim it; detach, then collect with `session_status` plus a `jq` on `files.transcript`.
+- **Stay detached.** `wait` already defaults false; opting into a blocking call dumps the whole raw transcript into your context with no way to trim it, and still returns `running` on a long turn. Poll `session_status`, then `jq` the answer out of `files.transcript`.
+- **The handle is the only id.** It arrives with the first result and never changes. Nothing else addresses a session.
 - **A timeout means still working.** Follow it; never re-spawn.
 - **Detached work finishes into silence.** Assume no completion push unless you have verified the channel flag is on your own argv. Watch `done.json`, or poll — but read every session you start, and collect the answer before steering it again.
 - **Check both failure locations.** `stderr` holds launch failures, `turns.jsonl` holds runtime ones. A bare exit code is never the report.
