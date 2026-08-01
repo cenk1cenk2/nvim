@@ -18,9 +18,57 @@ So the `agent-*` "never poll harness-tracked work" rule does not cover these, an
 | `session_list` | Recover a handle you lost. |
 | `session_kill` | Stop a running session, or reap a finished one. |
 
+## Two ways to drive a session — pick by what your client supports
+
+The **session tools** (`spawn` / `session_*`) are the path that always works, on every
+client. Everything below in this document describes them.
+
+There is also a **SEP-2663 Tasks path**, served on the same server, for clients that
+declare `io.modelcontextprotocol/tasks`. It is not a different feature — it is the same
+launch, addressed by a standard protocol instead of hyprpilot's own tools.
+
+**How to tell which one you got:** look at the `spawn` result. `resultType: "task"` means
+you are on the task path; anything else means you are on the session tools. Do not check
+capabilities and guess — the server decides per request, and a client that declared
+nothing gets the ordinary result whatever it believes about itself.
+
+| | Session tools | Tasks |
+| --- | --- | --- |
+| Start | `spawn` → `session` handle | `spawn` → `resultType: "task"`, `taskId` |
+| Poll | `session_status` | `tasks/get` |
+| Stop | `session_kill` | `tasks/cancel` |
+| Read output | `session_read`, or `jq` the transcript | the `result` inside a `completed` task |
+
+**As of claude 2.1.220, codex 0.146.0 and opencode 1.18.11, no vendor CLI declares the
+extension** — measured against a real handshake. So in practice you are on the session
+tools. The task path exists so that a client which grows support works immediately.
+
+### If you are on the task path
+
+- **A task id is `<session-handle>:<turn>` — it names ONE TURN, not the conversation.**
+  Terminal states are immutable per the spec, so turn 1's task keeps reporting
+  `completed` forever, while the session handle moves on. `session_send` mints a new task.
+- **Do not parse the id to get the handle.** It rides `_meta["io.hyprpilot/session"]` on
+  both the `spawn` result and every `tasks/get`. You need the handle for any session tool.
+- **The session tools still work on a task-created session.** `session_status`,
+  `session_read` and `session_kill` all take the handle as usual — the two paths address
+  the same thing.
+- **Every exit is `completed`, including a non-zero one.** `failed` is reserved for a
+  JSON-RPC error; an agent that ran and failed is a *successful call reporting a failure*.
+  Read `status_message` and the `exitCode` in the result before calling it a success.
+- **`tasks/cancel` cancels that TURN.** Cancelling an already-terminal task is a no-op and
+  leaves the conversation alone — it will not stop a later turn that is running.
+- **`tasks/update` is unimplemented** (`-32601`). The harness never emits `input_required`,
+  so no task can have outstanding input requests.
+- **Task ids die with the sidecar**, and finished ones are dropped by session eviction.
+  SEP-2663 presents a task id as a durable handle you can resume polling after a restart;
+  that does not hold here. `ttl_ms` is `null` because retention is bounded by count and
+  process lifetime, not by a duration.
+- **`notifications/tasks` is pushed, but do not build on it** — see below.
+
 ## Completion signals — which one applies to you
 
-Three mechanisms, and the right choice depends on **who is waiting** and **how**.
+Four mechanisms, and the right choice depends on **who is waiting** and **how**.
 
 ### 1. Channels — a push wake-up that does NOT work here. Assume silence.
 
@@ -38,11 +86,26 @@ Even where it does work it is narrow:
 
 **So: every detached session must be watched or polled.** Silence after a spawn is the normal case here, not a malfunction — do not read it as the agent still working, and do not wait on a push that is never coming.
 
+### 1b. `notifications/tasks` — spec-named, same silence problem.
+
+On the task path the harness also pushes `notifications/tasks` when a turn ends, carrying
+the full task state. It is real and it is standard — but treat it exactly like channels:
+
+- **It cannot be subscribed to.** SEP-2663 has clients opt in via `subscriptions/listen`,
+  and rmcp refuses to route task notifications through a subscription (its
+  `SubscriptionFilter` has no `taskIds` field). Only resource notifications are routable.
+  So this arrives unsolicited on the peer channel.
+- A client that does not handle the method **drops it silently**, exactly as with channels.
+
+**Poll `tasks/get` and honour its `pollIntervalMs`.** Treat any push you happen to receive
+as a bonus that lets you poll sooner, never as the thing you are waiting on.
+
 ### 2. `session_status` — the cheap poll. Any MCP caller.
 
 ```jsonc
 { "status": "running" | "exited",
   "exitCode": 0,          // omitted while running
+  "turn": 2,              // which turn of the conversation
   "transcriptBytes": 41233,
   "hasResult": true }
 ```

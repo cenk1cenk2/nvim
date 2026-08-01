@@ -15,7 +15,7 @@ references:
 
 > **Present-first.** Read the `present-first` reference — draft the delegation and present it before spawning; proceed on approval or upfront blessing. `spawn` runs a profile's `command` as this user, so it is never a silent action.
 
-> Read the `hyprpilot-sessions` reference for the full session surface — the three completion signals and which applies to you, `sessionInfo.files`, per-vendor answer extraction, and the limits. **Read it before arming any wait**: a hyprpilot session is NOT an in-harness subagent, so the `agent-*` rule that dispatched work wakes you does not apply here.
+> Read the `hyprpilot-sessions` reference for the full session surface — the two ways to drive a session (the session tools, and the SEP-2663 Tasks path for clients that support it), the completion signals and which applies to you, `sessionInfo.files`, per-vendor answer extraction, and the limits. **Read it before arming any wait**: a hyprpilot session is NOT an in-harness subagent, so the `agent-*` rule that dispatched work wakes you does not apply here.
 
 > Read the `agents-conventions` reference when the delegated task writes code — the spawned agent needs the local patterns named in its prompt.
 > Read the `project-tooling` reference when the task writes code — for the verification commands to hand the agent.
@@ -65,6 +65,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 4. **Detached is the normal mode, and the default.** It suits anything long, fanning out several agents at once, and every "check on it later".
    - It returns immediately with `status: running`, the `session` handle, and a `nextCursor` to resume reading from. **The handle is the whole identity** — minted before the agent produces a byte, unchanged across turns, and the only thing any tool accepts. There is no second id to wait for.
+   - **Unless your client speaks SEP-2663 Tasks**, in which case the same `spawn` returns `resultType: "task"` and a `taskId` instead. That is the standard-protocol path to the same session, and it changes which tools you poll with. **Check the result, do not assume** — `resultType: "task"` means you are on it. No vendor CLI declares the extension today, so normally you are not. The `hyprpilot-sessions` reference has the full comparison and the rules that differ.
    - **⛔ Nothing will wake you. There is no completion push here.** The harness emits one, but it only lands on an interactive Claude Code lead with the channel registered — and registration was tried on this setup, did not work, and has been reverted. A client without it **drops the event silently, with no error**, which looks exactly like a hung agent. Plan for silence from the moment you spawn: arm a watcher or poll. Never treat "no news" as "still working".
    - **So watch `done.json` yourself.** A turn ending writes `done.json` into the session directory (`sessionInfo.files.dir`), and it is the one MCP-only truth a plain shell can reach. Arm it through your runtime's **own** background-exec facility — the one that re-invokes you when the command exits. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
 
@@ -85,6 +86,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - If the turn outlives `timeout_seconds` the result returns `status: running` and **the agent keeps working.**
    - **Poll with the handle. NEVER call `spawn` again** — that starts a second, unrelated agent and abandons the first. This is the single most common way to get this wrong.
    - **`session_status { session }` is the poll.** It reads no transcript, so it costs almost nothing to repeat: `status`, `exitCode`, `transcriptBytes`, `hasResult`. Reach for `session_read` when you want the *output*, not to answer "is it done".
+   - On the Tasks path this is `tasks/get` instead, honouring its `pollIntervalMs`. Same discipline, different method.
    - **`transcriptBytes` tells you working from wedged.** It climbs while the agent produces output and plateaus while it thinks or runs a long tool. Flat for minutes with `status: running` is a hung agent — something `status` alone can never show you. Report it; do not kill on it reflexively.
    - Follow live instead with `session_read { session, wait: true, cursor: <nextCursor>, timeout_seconds? }` when you actually want the stream. A follow ends when the agent finishes, when the request is cancelled, or at `timeout_seconds`.
 
@@ -184,7 +186,7 @@ Rules that hold whichever vendor you target:
 - **`with_config` before `args`.** hyprpilot converts an overlay onto the target vendor; `args` is raw vendor argv you have to get right yourself. Drop to `args` only for knobs hyprpilot does not model, and check the vendor's `--help` first.
 - **`mode: "plan"` for anything read-only.** Free, and it removes write authority instead of asking for it.
 - **Stay detached.** `wait` already defaults false; opting into a blocking call dumps the whole raw transcript into your context with no way to trim it, and still returns `running` on a long turn. Poll `session_status`, then `jq` the answer out of `files.transcript`.
-- **The handle is the only id.** It arrives with the first result and never changes. Nothing else addresses a session.
+- **The handle is the only id.** It arrives with the first result and never changes. Nothing else addresses a session — and on the Tasks path it still rides `_meta`, so you never parse a task id to recover it.
 - **A timeout means still working.** Follow it; never re-spawn.
 - **Detached work finishes into silence.** There is no completion push here — watch `done.json` or poll. Read every session you start, and collect the answer before steering it again.
 - **Check both failure locations.** `stderr` holds launch failures, `turns.jsonl` holds runtime ones. A bare exit code is never the report.
