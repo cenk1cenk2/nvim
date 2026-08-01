@@ -53,7 +53,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - **Use the dedicated parameters first.** `cwd`, `mode`, `wait`, `timeout_seconds`, `file`, and `args` are all top-level parameters — reach for them directly. `with_config` is the last resort, for the settings that have no dedicated parameter of their own (`model`, `effort`).
    - `wait` defaults `true`; `timeout_seconds` defaults `300`.
    - **`prompt` and `file` are mutually exclusive.** `file` takes a path (`~` and `$VAR` expanded) whose contents become the prompt — prefer it for a long brief instead of inlining one.
-   - **`mode` overrides the profile's mode.** `mode: "plan"` yields a genuinely read-only agent that refuses to edit. **Reach for it on every read-only delegation** — it is the cheapest safety lever this tool has and costs nothing to add.
+   - **`mode` overrides the profile's mode.** `mode: "plan"` yields a read-only agent that refuses to edit — the cheapest safety lever here, and the default for a delegation that only needs to look. **On some vendors it also blocks whole MCP servers**, with nothing the child can do to clear it, so a read-only job that must still *call* MCP servers is better served by restricting tools (see `Restricting the spawned agent`) than by plan mode.
    - `with_config` is an **array of overlay objects** — `with_config: [{ "model": "…" }]`, not a flat object. It accepts **only** `model`, `effort`, `mode`; every other key is refused by design, because an overlay reaching the command, its arguments, its environment, or the MCP servers it launches would turn `spawn` into arbitrary command execution. To run something else, add a profile for it.
    - **An overridden model is not visible as the profile.** Results and `session_list` keep reporting the profile id; only `sessionInfo.model` carries what actually ran. Check it before reporting which model did the work.
    - **Address files by absolute path in the prompt.** Do not make the agent's output depend on resolving anything relative to the working directory.
@@ -89,6 +89,24 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - Kill runaway sessions, and reap a finished one to free a slot when `spawn` reports the concurrency ceiling.
 
 10. **Report back.** Give the user the outcome, the handle (so they can continue), and the exit status. If the session is still running, say so plainly and tell them it can be followed or steered — do not present a timed-out turn as a finished result. **A non-zero `exitCode` is not automatically the agent's fault**: the transcript may carry an upstream `error` event (auth, quota, model availability). Read it and say which before re-dispatching.
+
+## Restricting the spawned agent
+
+**Prefer `with_config`.** It is a hyprpilot config overlay, so hyprpilot projects it onto whichever vendor the profile runs — you state the intent once and it lands correctly on claude, opencode, or codex. Reach for it for anything it covers.
+
+**What it covers today is `model`, `effort`, `mode`.** Every other profile key (`command`, `args`, `env`, `agent`, `mcps`, `mcp`, `system_prompt`, `harness`, `headless`, `cwd`) and every `$`-directive is refused, because an overlay reaching them turns `spawn` into arbitrary command execution. A refused key fails the whole spawn — it does not degrade to "setting ignored".
+
+**`args` covers everything hyprpilot does not model** — tool allow/deny lists, spend caps, sandbox modes. It is forwarded verbatim to the vendor CLI, so it is per-vendor by nature and hyprpilot converts nothing. **Read the target's `provider` from `list_profiles` first**; a flag the vendor does not know is a launch error, not a warning.
+
+Typical uses: restricting which MCP tools the agent may call, capping spend, choosing a sandbox mode. **Confirm the flag against the vendor's own `--help` before passing it** — spelling, argument shape, and whether the knob exists at all differ per vendor and change between releases. Never assume a knob exists because another vendor has one.
+
+Rules that hold whichever vendor you target:
+
+- **A flag you pass REPLACES the one hyprpilot would have generated — it does not add to it.** The launcher suppresses its own flag when yours is present, so a narrow-looking restriction can silently discard the profile's whole policy and end up *widening* the agent's authority. State the complete value you want, not the delta.
+- **Not every vendor exposes every knob.** When the target has no flag for what you need, restrict through a profile that already carries the policy, or send the job to a vendor that does — and say which, rather than delegating unrestricted and calling it restricted.
+- **`args` is launch identity.** `session_send` rejects it, so what you set at spawn governs every later turn of that conversation. Changing it means a new session.
+- **`args` is unvalidated and cuts both ways.** Every vendor has flags that bypass its guardrails entirely. Use `args` to narrow what the captain granted, never to reach past it.
+- **A restriction usually removes the tool from the agent's registry** rather than failing its call, so expect the agent to report the tool missing rather than refused. Do not read that as a broken MCP server.
 
 ## Semantics that bite
 
@@ -134,6 +152,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 - **`list_profiles` first, always.** Never hardcode an id; never guess an ambiguous fragment.
 - **`spawn` once per conversation; `session_send` for every follow-up.**
 - **Dedicated parameters before `with_config`.** Reach for `with_config` only for `model` and `effort`.
+- **`with_config` before `args`.** hyprpilot converts an overlay onto the target vendor; `args` is raw vendor argv you have to get right yourself. Drop to `args` only for knobs hyprpilot does not model, and check the vendor's `--help` first.
 - **`mode: "plan"` for anything read-only.** Free, and it removes write authority instead of asking for it.
 - **A timeout means still working.** Follow it; never re-spawn.
 - **Detached work finishes into silence.** Read every session you start; collect the answer before steering it again.
