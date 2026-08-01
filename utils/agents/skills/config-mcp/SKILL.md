@@ -1,6 +1,6 @@
 ---
 name: config-mcp
-description: 'config-mcp Add, remove, or modify MCP server entries in the hyprpilot MCP catalog; researches servers, prefers official/HTTP sources, prompts for vars and auth. Always manually invoked. Do NOT use for skills (config-skills), agent guidelines (config-agents), or repo configs (config-repository; edit ~/.config/hyprpilot/config.yaml directly for daemon settings).'
+description: 'config-mcp Add, remove, or modify MCP server entries in the hyprpilot MCP catalog; researches servers, prefers official/HTTP sources, prompts for vars and auth. Always manually invoked. Do NOT use for skills (config-skills), agent guidelines (config-agents), or repo configs (config-repository; edit ~/.config/hyprpilot/config.yaml directly for launcher settings).'
 disableModelInvocation: true
 references:
   - ../references/present-first.md
@@ -124,7 +124,7 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 8. **Apply the configuration.**
    - Read `servers.json`, add the new entry under `mcpServers`, and write the file.
    - Validate that the resulting JSON is well-formed.
-   - Remind the captain that hyprpilot's MCP catalog is static after daemon boot — they'll need to restart the daemon (`hyprpilot ctl daemon reload` reloads config; spawn-time MCP entries require a fresh `session/new`).
+   - Remind the captain that the MCP catalog is read once per launch. There is no daemon and no reload command — hyprpilot resolves the config, projects it onto the vendor CLI, and `exec()`s into it. A catalog edit reaches an agent on the **next** `hyprpilot <profile>`; a session already running keeps the catalog it launched with.
 
 ### Remove
 
@@ -151,4 +151,4 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 - **Validate JSON.** Always ensure `servers.json` remains valid after edits.
 - **Preserve existing structure.** Do not reformat or reorder unrelated entries when adding/modifying a server.
 - **Ask, don't assume.** When multiple options exist (auth method, transport, permission globs), present them to the user.
-- **Hyprpilot is restart-to-reconfigure.** No runtime toggle — captain restarts the daemon after edits.
+- **Hyprpilot is relaunch-to-reconfigure.** Config is read once at launch and projected onto the vendor CLI; there is no daemon to restart and no runtime toggle. Edits apply to the next launched session.
