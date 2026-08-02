@@ -32,6 +32,30 @@ echo "RESULT: not met after N cycles"   # backstop — report and re-arm
 
 Monitor's own guidance applies when you use it instead: every pipe stage must flush per line (`grep --line-buffered`, `awk` + `fflush()`), poll remote APIs no faster than ~30 s, and the filter must match failure signatures as well as success — a monitor that greps only the happy path stays silent through a crashloop.
 
+## ⛔ MCP calls cannot be backgrounded — watch their filesystem artifacts instead
+
+`run_in_background` is a parameter on **`Bash`**. There is no equivalent on an MCP tool call: every MCP invocation runs inline and blocks the turn, and a backgrounded shell cannot call MCP tools either. So a long-running thing owned by an MCP server (a hyprpilot session, a remote job behind an MCP API) can never be waited on by backgrounding its own MCP call — including a purpose-built follow call like `hyprpilot_harness__session_read { wait: true }`.
+
+**Watch whatever it writes to disk, and keep the authoritative MCP check on the main loop.** Two shapes, by how many notifications you need:
+
+| Want | Mechanism | Shape |
+|------|-----------|-------|
+| One wake when it finishes | `Bash` + `run_in_background` | until-loop on a marker file, exits when present |
+| An event per unit of progress | `Monitor` | `tail -F` the append-only output/transcript file, filtered |
+
+```bash
+# progress streaming — Monitor
+tail -c +$((OFF+1)) -F "$FILE" | jq -r --unbuffered '<select + truncate>'
+```
+
+Rules that bite on this pattern:
+
+- **Capture the byte offset BEFORE triggering the work**, then `tail -c +$((OFF+1))`. `tail -n0` drops everything written between the trigger returning and the tail attaching — a measured run lost the first step of a job that way.
+- **Arm AFTER the call that starts the work returns, not before.** A marker file from the *previous* run is usually still on disk until the new one starts, so a watcher armed early fires immediately on stale state.
+- **`jq --unbuffered`** (and `grep --line-buffered`) or the events arrive in blocks, or never.
+- **Verify the field paths against a real line of the file first.** A filter keyed on the wrong shape emits nothing, which looks exactly like a quiet job.
+- **A `Monitor` on `tail -F` never exits by itself.** Pair it with a background loop that kills the tail once the marker appears, or it burns to `timeout_ms`.
+
 ## Reading and stopping
 
 - **`TaskStop <task-id>`** stops a watcher. It also accepts a named background agent's name or a teammate's `name@team`.

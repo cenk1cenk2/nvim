@@ -141,7 +141,42 @@ This is the one MCP-only truth that has a first-class **bash** signal, which mat
 
 **Both halves are required.** The marker is advisory — reap, eviction and sidecar shutdown delete the whole directory, so testing only for the file waits forever on a session that was cleaned up. A missing **directory** means finished-and-gone.
 
-**The marker is cleared when a turn STARTS**, not only written when one ends. `session_send` reuses the handle and directory, so a watcher armed for the next turn does not fire on the previous turn's leftover. Corollary: absence means *not finished*, never *error*.
+**The marker is cleared when a turn STARTS**, not only written when one ends. `session_send` reuses the handle and directory, so once the next turn is running the previous turn's marker is gone. Corollary: absence means *not finished*, never *error*.
+
+**⛔ Which makes arm ORDER load-bearing: arm the watcher AFTER `session_send` returns, never before.** The clear happens when the turn starts, not when you decide to watch, so anything armed ahead of the send sees the previous turn's leftover `done.json` and fires instantly on stale state. Measured: a watcher armed before a `session_send` reported "turn finished" before the new turn had produced a single event. `session_send` returns once the turn is running and the marker is already cleared, so its result is the correct arming point.
+
+## Watching a turn live — stream the transcript file
+
+`session_status` and `done.json` both answer *is it done*. Neither shows a turn **in progress**, and `session_read { wait: true }` blocks your own call to do it. The third option: `turns.jsonl` is an append-only JSONL file, so tailing it gives per-event notifications while the agent works, with no blocking call and no raw payloads in context.
+
+**Whether that can run in the background is a property of YOUR runtime, not of hyprpilot** — see `harness-<provider>-agent-background`. What is hyprpilot's side is the file, its event vocabulary, and the two ways a naive tail goes wrong.
+
+```bash
+# BEFORE the send — capture the byte offset
+OFF=$(wc -c < "$T")
+# ...session_send...
+# AFTER it returns — arm on the offset, not on `tail -n0`
+tail -c +$((OFF+1)) -F "$T" | jq -r --unbuffered '
+  if .type=="tool_use" then "TOOL: " + .part.tool
+  elif .type=="text" then "TEXT: " + (.part.text | .[0:160])
+  elif .type=="error" then "ERROR: " + (.error.data.message // .error.name)
+  else empty end'
+```
+
+- **`tail -n0` silently loses the head of the turn.** Everything written between `session_send` returning and the tail attaching is skipped — one measured run lost the agent's entire first step that way. The byte offset captured before the send is the only gap-free start.
+- **Every pipe stage must flush per line** — `jq --unbuffered`, `grep --line-buffered`. Without it events arrive in blocks or not at all.
+- **Filter, never pipe raw.** `tool_use` payloads are the bulk of the file; emitting them whole defeats the point of not using `wait: true`.
+
+### The opencode event vocabulary — get the field paths right
+
+Verified against opencode 1.18.11. A filter keyed on the wrong shape matches nothing and emits nothing, which is indistinguishable from a quiet agent:
+
+| `.type` | Where the payload is | Note |
+| --- | --- | --- |
+| `tool_use` | `.part.tool` — the tool name | **Not** `.type=="tool"`, and the name is not at the top level. One measured run had 9 `tool_use` events and a filter on `.type=="tool"` emitted zero. |
+| `text` | `.part.text` | One per emitted text block, several per turn. |
+| `step_start` / `step_finish` | — | Bracket each step; `step_finish` is the last event of a turn. |
+| `error` | `.error.data.message` // `.error.name` | Upstream failures (auth, quota) land here, not in `stderr.log`. |
 
 ## `sessionInfo.files` — the session's own directory
 
@@ -167,9 +202,9 @@ jq -r 'select(.type=="item.completed") | select(.item.type=="agent_message") | .
 jq -r 'select(.type=="text") | .part.text' "$T" | tail -n1                                                   # opencode
 ```
 
-**⛔ The `tail -n1` is not cosmetic.** `session_send` **appends to the same `turns.jsonl`**, so on turn N these queries match every turn's answer, oldest first. Drop the tail and a caller taking the first line reports turn 1's answer as the reply to turn 5 — confidently, and forever. (opencode is worse: it emits a `text` part per *sentence*, so even within one turn the query returns many lines.) This is the same trap `hasResult` avoids by scanning the tail rather than the whole file; a hand-rolled query gets no such protection.
+**⛔ The `tail -n1` is not cosmetic.** `session_send` **appends to the same `turns.jsonl`**, so on turn N these queries match every turn's answer, oldest first. Drop the tail and a caller taking the first line reports turn 1's answer as the reply to turn 5 — confidently, and forever. (opencode is worse: it emits one `text` part per emitted block, so even within one turn the query returns several lines.) This is the same trap `hasResult` avoids by scanning the tail rather than the whole file; a hand-rolled query gets no such protection.
 
-**opencode emits no terminal event at all** — its stream ends `step_finish(reason=stop)`, and it emits a `text` part for *every* completed sentence. So "a text part exists" does not mean "finished"; only `status: exited` does. This is why `hasResult` exists and why hand-rolling it goes wrong.
+**opencode emits no terminal event at all** — its stream ends `step_finish`, and it emits a `text` part per block of prose rather than one per turn (a measured 4-turn session held 5 `text` events total, 2 of them in one turn). So "a text part exists" does not mean "finished"; only `status: exited` does. This is why `hasResult` exists and why hand-rolling it goes wrong.
 
 ### ⛔ The answer query goes blind on a failed run — always pair it with the error query
 
@@ -203,6 +238,7 @@ The split to remember: **launch failure → `stderr.log`, transcript empty. Runt
 ## Rules that bite
 
 - **A session is `exited` after every TURN**, not only when the conversation ends. "Is it done" always means "is this turn done".
+- **⛔ `exitCode: 0` and `hasResult: true` mean the TURN ended cleanly, never that the TASK was completed.** They are process and transcript facts; neither inspects whether the agent did what it was asked. A measured run gave a 4-step prompt to a small model, which answered steps 1 and 2, stopped, and exited 0 with `hasResult: true` and no error event anywhere — the harness reported that success faithfully. Read the answer against what you asked for before relaying it, and re-`session_send` the remainder rather than treating the exit status as an acceptance test.
 - **One turn at a time.** `session_send` to a running session is refused; no vendor supports two concurrent turns on one conversation. `session_kill` still works on it.
 - **A timeout is not a failure.** The turn returning `running` means the agent is still working — poll, never re-`spawn`.
 - **Sessions die with the sidecar.** No persistence. If it restarts, running agents are killed and transcripts are lost — capture anything that must outlive the connection.
