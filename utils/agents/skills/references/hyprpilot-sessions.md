@@ -43,6 +43,15 @@ nothing gets the ordinary result whatever it believes about itself.
 extension** — measured against a real handshake. So in practice you are on the session
 tools. The task path exists so that a client which grows support works immediately.
 
+**Do not plan around it arriving.** Tasks became an official extension in the 2026-07-28
+spec, but the reference implementation still carries an experimental disclaimer, the
+official client support matrix does not track the extension at all, and neither Claude
+Code nor opencode has announced work on it — Claude Code shipped its own auto-backgrounding
+for long MCP calls instead, which removes most of the pressure to adopt the spec. Neither
+project publishes a roadmap, so this is *no signal* rather than a commitment either way:
+re-check the handshake when it matters, and never write a skill step that assumes the task
+path is available.
+
 ### If you are on the task path
 
 - **A task id is `<session-handle>:<turn>` — it names ONE TURN, not the conversation.**

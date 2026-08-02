@@ -32,9 +32,21 @@ echo "RESULT: not met after N cycles"   # backstop — report and re-arm
 
 Monitor's own guidance applies when you use it instead: every pipe stage must flush per line (`grep --line-buffered`, `awk` + `fflush()`), poll remote APIs no faster than ~30 s, and the filter must match failure signatures as well as success — a monitor that greps only the happy path stays silent through a crashloop.
 
-## ⛔ MCP calls cannot be backgrounded — watch their filesystem artifacts instead
+## MCP calls background automatically, but you cannot ask them to
 
-`run_in_background` is a parameter on **`Bash`**. There is no equivalent on an MCP tool call: every MCP invocation runs inline and blocks the turn, and a backgrounded shell cannot call MCP tools either. So a long-running thing owned by an MCP server (a hyprpilot session, a remote job behind an MCP API) can never be waited on by backgrounding its own MCP call — including a purpose-built follow call like `hyprpilot_harness__session_read { wait: true }`.
+Two separate facts, and conflating them produces the wrong plan:
+
+- **You cannot request it.** `run_in_background` is a parameter on **`Bash`** alone; no MCP tool call accepts one, and a backgrounded shell cannot call MCP tools either. There is no way to *choose* that a given MCP call runs detached.
+- **The runtime does it for you past a threshold.** Since **v2.1.212**, an MCP call in the main conversation that outlives the auto-background threshold moves to a background task on its own: the call returns a task id, the turn continues, and the result arrives later as a task notification. It appears in `/tasks` and can be stopped there.
+
+Consequences worth planning around:
+
+- **Below the threshold, an MCP call blocks the turn** — there is no way to shorten that except finishing sooner.
+- **A backgrounded task does not survive leaving the session.** Anything that must outlive the session needs a durable artifact, not a task id.
+- **Per-call limits still apply while it runs backgrounded** — the wall-clock limit from the per-server timeout or `MCP_TOOL_TIMEOUT`, and the idle limit from `CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT`.
+- **The threshold is configurable per install** via `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` (`0` disables auto-backgrounding; `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` disables it along with every other background-task feature). **Never assume the default** — read the value in play before reasoning about whether a given call will block, and lower it only deliberately: every call that starts backgrounding costs a round trip it did not previously need.
+
+**So a purpose-built blocking follow — `hyprpilot_harness__session_read { wait: true }` — is viable for a genuinely long wait** (it backgrounds itself) and a poor choice for a short one (it blocks, and returns the whole raw stream regardless). For progress you want to *filter*, the filesystem route below still wins, because a backgrounded MCP call delivers one result at the end rather than an event per step.
 
 **Watch whatever it writes to disk, and keep the authoritative MCP check on the main loop.** Two shapes, by how many notifications you need:
 
