@@ -46,7 +46,18 @@ Consequences worth planning around:
 - **Per-call limits still apply while it runs backgrounded** — the wall-clock limit from the per-server timeout or `MCP_TOOL_TIMEOUT`, and the idle limit from `CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT`.
 - **The threshold is configurable per install** via `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` (`0` disables auto-backgrounding; `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` disables it along with every other background-task feature). **Never assume the default** — read the value in play before reasoning about whether a given call will block, and lower it only deliberately: every call that starts backgrounding costs a round trip it did not previously need.
 
-**So a purpose-built blocking follow — `hyprpilot_harness__session_read { wait: true }` — is viable for a genuinely long wait** (it backgrounds itself) and a poor choice for a short one (it blocks, and returns the whole raw stream regardless). For progress you want to *filter*, the filesystem route below still wins, because a backgrounded MCP call delivers one result at the end rather than an event per step.
+**⛔ Auto-backgrounding fixes the blocking, NOT the context cost — do not read it as permission to use a blocking follow.** A backgrounded call still delivers its full payload later, whole, into the notification. Measured on `hyprpilot_harness__session_read { wait: true }` against a 45 000 ms threshold: it backgrounded at exactly 45 s and the turn stayed usable, then the notification landed carrying a 60 kB slice of raw event stream — to answer a question that `jq` against the same transcript answered in fourteen lines.
+
+So the ranking is unchanged, and the filesystem route below is still the default:
+
+| Want | Use | Why |
+|------|-----|-----|
+| The answer | `jq` the artifact on disk | Costs what the answer costs |
+| Progress, as it happens | `Monitor` + filtered `tail -F` | One small event per step |
+| Only "is it done" | the cheap status poll | No payload at all |
+| The entire raw stream, deliberately | a blocking follow | The only case it wins |
+
+Deferred cost is still cost. The threshold decides whether your *turn* stalls; it has no effect on how many tokens the result spends.
 
 **Watch whatever it writes to disk, and keep the authoritative MCP check on the main loop.** Two shapes, by how many notifications you need:
 

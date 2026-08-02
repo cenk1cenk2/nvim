@@ -203,6 +203,19 @@ Everything under `files` points into a directory that can vanish. Treat a missin
 
 ## Extracting the answer
 
+**Pick by what you actually want — this ranking is the whole point, and every row below the first costs more tokens for the same answer:**
+
+| Want | Use | Cost |
+| --- | --- | --- |
+| The answer | `jq` on `files.transcript` | The answer's own size |
+| Progress while it runs | filtered tail of `turns.jsonl` (see *Watching a turn live*) | One small event per step |
+| Only "is it done" | `session_status` | A `stat` |
+| The whole raw stream, on purpose | `session_read`, or `wait: true` | Up to 60 kB per read, untrimmable |
+
+**⛔ Never reach for `session_read` to answer "what did it say".** It pages the vendor's raw event stream, and the `tool_use` events dwarf the answer.
+
+**On opencode the amplification is extreme, and it is not proportional to the work.** Its `read` tool embeds the file's entire contents in the event *and* re-attaches every loaded instruction file (`AGENTS.md`, `CLAUDE.md`) as a system-reminder on each call. Measured: a ten-file read survey produced a **389 kB** transcript whose actual answer was twelve lines. Transcript size therefore tracks how many tools the agent called and how big the instruction files are — never treat it as a proxy for how much the agent produced.
+
 The terminal event differs per vendor — all three verified against the installed CLIs:
 
 ```sh
@@ -253,7 +266,8 @@ The split to remember: **launch failure → `stderr.log`, transcript empty. Runt
 - **Sessions die with the sidecar.** No persistence. If it restarts, running agents are killed and transcripts are lost — capture anything that must outlive the connection.
 - **`session_send` replays the launch.** `cwd` / `args` / `with_config` are inherited and **rejected** if passed; only the prompt, `mode`, `wait` and `timeout_seconds` are per-turn.
 - **Paging is MCP-style.** `cursor` in, `nextCursor` out, opaque. **No `nextCursor` means finished AND fully read.** An unrecognised cursor is an error, not a silent reset.
-- **Launches are detached — `wait` defaults to false.** `spawn` / `session_send` return as soon as the turn starts. Opting into `wait: true` is rarely right: it returns the whole raw event stream inline with no `tail` and no `cursor` to trim it (measured on one trivial three-item task: 14 kB on opencode, 121 kB on claude), and it still comes back `running` if the turn outlives `timeout_seconds`, so it never even guarantees an answer. Poll `session_status`, then pull the answer out of `files.transcript`.
+- **Launches are detached — `wait` defaults to false.** `spawn` / `session_send` return as soon as the turn starts. Opting into `wait: true` is rarely right: it returns the whole raw event stream with no `tail` and no `cursor` to trim it (measured on one trivial three-item task: 14 kB on opencode, 121 kB on claude), and it still comes back `running` if the turn outlives `timeout_seconds`, so it never even guarantees an answer. Poll `session_status`, then pull the answer out of `files.transcript`.
+- **⛔ A runtime that auto-backgrounds slow MCP calls does NOT make `wait: true` cheap.** Some runtimes move an MCP call that outlives a threshold into a background task — the turn stops stalling, and the payload arrives later in a notification. **Later is not smaller.** Measured: a `wait: true` follow backgrounded on schedule and then delivered a 60 kB slice of raw events to answer what `jq` on the same transcript answered in fourteen lines. Read the auto-background threshold as a fix for *blocking* only; the token cost is identical either way, and the ranking below is unchanged by it.
 - **The handle is the only id.** It is minted at `spawn`, arrives in the first result, never changes, and is what every tool takes. There is no vendor session id on the wire — hyprpilot keeps the vendor's own id internally as the token `session_send` resumes with, and that is all it ever meant.
 - **`sessionInfo.mode` reports the profile's mode, not the launched one.** A mode imposed through `args` (opencode `--agent plan`) does not show up there; `sessionInfo.argv` is the honest record. The same caveat as `model` under a `with_config` overlay.
 - **`spawn` runs a profile's `command` as this user.** The `provider` picks a flag projection, not a sandbox.
