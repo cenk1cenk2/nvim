@@ -184,7 +184,7 @@ Verified against opencode 1.18.11. A filter keyed on the wrong shape matches not
 | --- | --- | --- |
 | `tool_use` | `.part.tool` — the tool name | **Not** `.type=="tool"`, and the name is not at the top level. One measured run had 9 `tool_use` events and a filter on `.type=="tool"` emitted zero. |
 | `text` | `.part.text` | One per emitted text block, several per turn. |
-| `step_start` / `step_finish` | — | Bracket each step; `step_finish` is the last event of a turn. |
+| `step_start` / `step_finish` | `.part.reason` on `step_finish` | Bracket each step. **`reason: "stop"` marks the end of a TURN; `reason: "tool-calls"` is an intermediate step.** That field is the only turn boundary in the file — see *Extracting the answer*. |
 | `error` | `.error.data.message` // `.error.name` | Upstream failures (auth, quota) land here, not in `stderr.log`. |
 
 ## `sessionInfo.files` — the session's own directory
@@ -210,23 +210,33 @@ Everything under `files` points into a directory that can vanish. Treat a missin
 | The answer | `jq` on `files.transcript` | The answer's own size |
 | Progress while it runs | filtered tail of `turns.jsonl` (see *Watching a turn live*) | One small event per step |
 | Only "is it done" | `session_status` | A `stat` |
-| The whole raw stream, on purpose | `session_read`, or `wait: true` | Up to 60 kB per read, untrimmable |
+| The raw stream, or a shell you cannot reach | `session_read`, or `wait: true` | Up to 60 kB per read, untrimmable |
 
-**⛔ Never reach for `session_read` to answer "what did it say".** It pages the vendor's raw event stream, and the `tool_use` events dwarf the answer.
+**`session_read` is situational, not forbidden.** `jq` is the cheap default and should be the reflex, but the ranking is about cost, not permission. Reach for `session_read` when you actually want the event stream, when the run was small enough that the difference does not matter, when you need the vendor's raw shape to diagnose something, or when no shell is available to `jq` with. The rule is *know which one you are paying for* — not "never page".
+
+**What it costs when you do page it:** it returns the vendor's raw event stream, and the `tool_use` events can dwarf the answer.
 
 **On opencode the amplification is extreme, and it is not proportional to the work.** Its `read` tool embeds the file's entire contents in the event *and* re-attaches every loaded instruction file (`AGENTS.md`, `CLAUDE.md`) as a system-reminder on each call. Measured: a ten-file read survey produced a **389 kB** transcript whose actual answer was twelve lines. Transcript size therefore tracks how many tools the agent called and how big the instruction files are — never treat it as a proxy for how much the agent produced.
 
-The terminal event differs per vendor — all three verified against the installed CLIs:
+The terminal event differs per vendor. **Scope to the latest turn inside `jq`, never with `tail`:**
 
 ```sh
-jq -r 'select(.type=="result") | .result' "$T" | tail -n1                                                   # claude
-jq -r 'select(.type=="item.completed") | select(.item.type=="agent_message") | .item.text' "$T" | tail -n1   # codex
-jq -r 'select(.type=="text") | .part.text' "$T" | tail -n1                                                   # opencode
+jq -rs '[ .[] | select(.type=="result") | .result ] | last' "$T"                                          # claude
+jq -rs '[ .[] | select(.type=="item.completed" and .item.type=="agent_message") | .item.text ] | last' "$T" # codex
+jq -rs '                                                                                                   # opencode
+  [ .[] | select(.type=="text" or (.type=="step_finish" and .part.reason=="stop")) ] as $e
+  | ($e | map(.type) | rindex("step_finish")) as $end
+  | ($e[:$end] | map(.type) | rindex("step_finish")) as $prev
+  | $e[(($prev // -1) + 1):$end] | map(.part.text) | join("\n")' "$T"
 ```
 
-**⛔ The `tail -n1` is not cosmetic.** `session_send` **appends to the same `turns.jsonl`**, so on turn N these queries match every turn's answer, oldest first. Drop the tail and a caller taking the first line reports turn 1's answer as the reply to turn 5 — confidently, and forever. (opencode is worse: it emits one `text` part per emitted block, so even within one turn the query returns several lines.) This is the same trap `hasResult` avoids by scanning the tail rather than the whole file; a hand-rolled query gets no such protection.
+**⛔ `| tail -n1` is WRONG here and the earlier version of this file had it.** `tail` counts **lines**, not events — so it truncates any multi-line answer down to its final line. Measured: a three-paragraph opencode answer came back as the single word `DONE-TURN-TWO.`, the other two paragraphs silently gone. The scoping has to happen where the events are still events, which is inside `jq` — hence `-s` (slurp) plus `last`. Same correction applies to all three vendors; the selects themselves are unchanged and still verified, only the way the latest one is picked was broken. The opencode slice is measured against a 2-turn transcript; the claude and codex lines are the same mechanical line-to-element fix, not a fresh measurement.
 
-**opencode emits no terminal event at all** — its stream ends `step_finish`, and it emits a `text` part per block of prose rather than one per turn (a measured 4-turn session held 5 `text` events total, 2 of them in one turn). So "a text part exists" does not mean "finished"; only `status: exited` does. This is why `hasResult` exists and why hand-rolling it goes wrong.
+**Why scoping is needed at all:** `session_send` **appends to the same `turns.jsonl`**, so on turn N an unscoped query matches every turn's answer, oldest first. Take the first match and you report turn 1's answer as the reply to turn 5 — confidently, and forever.
+
+**opencode needs the extra work because it emits no terminal event and no per-turn event.** Its stream ends `step_finish`, and it emits a `text` part per block of prose — a measured turn produced one `text` part mid-turn (before its tool calls) and another at the end, so "the last `text` part" is one block of the answer, not the answer. The turn boundary is **`step_finish` with `.part.reason == "stop"`**; intermediate steps carry `reason: "tool-calls"`. That is what the slice above keys on. Other stop reasons exist (length, error), so treat a turn with no `reason: "stop"` as unfinished or failed and check `session_status` / the `error` query rather than widening the match.
+
+Corollary: "a text part exists" never means "finished"; only `status: exited` does. This is why `hasResult` exists and why hand-rolling it goes wrong.
 
 ### ⛔ The answer query goes blind on a failed run — always pair it with the error query
 
