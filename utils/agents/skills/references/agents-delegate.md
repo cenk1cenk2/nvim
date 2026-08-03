@@ -38,7 +38,19 @@ Rules that hold either way:
 
 - **Granting autonomous access is a security decision, not a default.** Get the user's explicit opt-in, scope the prompt to exact paths with a do-not-touch list, and keep irreversible steps on the main loop.
 - **Cross-repo and cross-directory dispatch is the riskiest case** on any runtime — settings and isolation are usually scoped to a filesystem path.
-- **Diagnose by inspecting the artifact, never the notification.** Nothing touched means the agent never ran — fix the cause and re-dispatch. Work present but no report means only the delivery failed — verify and move on, do **not** re-run. **Silence is neither success nor failure.**
+- **Diagnose by inspecting the artifact, never the notification.** Work present but no report means the work happened and only the delivery failed — verify it and move on, do **not** re-run. **Silence is neither success nor failure.**
+- **⛔ An ABSENT artifact proves nothing.** It does not mean the agent never ran, never worked, or is broken. Most agents write once near the end, so one that has read twenty files and formed its entire answer looks **identical on disk** to one that never started. Treating an empty disk as "it never ran" and reaping on that basis **destroys real work**, and reaping is terminal. When there is nothing to inspect you have learned nothing — steer it (below) rather than concluding.
+
+## ⛔ A quiet or stuck agent — STEER FIRST, escalate in this order
+
+**You have control over your agents.** An agent that has gone quiet, looks stuck, or has produced nothing is a thing you can **talk to**, and that is nearly always the cheapest fix. Work the ladder in order and do not skip a rung — each later rung costs more and destroys more.
+
+1. **Steer it.** Message it. Ask for whatever it has right now, even partial. Nudge it, narrow its scope, tell it to write incrementally to disk, remind it of the output path, or redirect it if it has wandered. **This resolves most cases**, and it costs one message and no work.
+2. **Debug the cause.** If steering gets nothing, look for a concrete reason: an auth or credential failure, a tool erroring, a path it cannot reach, a permission gate the runtime is not surfacing, a scope so large it cannot finish. Inspect what it *can* see. A named cause is what makes the next rung a fix rather than a guess.
+3. **Re-dispatch — only when the cause was YOURS.** If your brief was the problem — missing context, a wrong path, an impossible or unbounded scope, a tool it was never going to have — fix the brief and dispatch again. **Reap before re-dispatching** so two agents never write the same target. Re-dispatching without a diagnosed cause just repeats the failure with fresh tokens.
+4. **Ask the user.** If steering produced nothing, you cannot name a cause, and your brief looks sound, **stop and surface it.** Do not loop re-dispatching, and do not quietly take the work in-house without saying so — an unexplained agent failure is information the user needs.
+
+**Reaping is never the first response to silence.** It is terminal: it destroys the report, and on runtimes where a finished agent can be resumed by message it also forecloses that. Steering is reversible; reaping is not.
 
 ## Dispatch Mode — background by default, where the runtime supports it
 
