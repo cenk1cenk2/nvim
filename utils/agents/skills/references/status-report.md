@@ -6,13 +6,14 @@ The problem it solves: a long-running mode produces a mix of durable state, fres
 
 ## ⛔ NOT every turn — this is the full-report shape, not the default reply
 
-**Do not emit the full four-part report on every turn.** It is for when a status report is actually wanted:
+**Do not emit the full four-part report on every turn.** Two triggers, and nothing else:
 
-- the user asks for status, a summary, or "where are we",
-- a milestone lands (a stage completes, a wave finishes, a verdict is reached),
-- enough has changed that the standing picture genuinely moved.
+1. **The user asks** — status, a summary, "where are we", "give me the full picture".
+2. **You judge it warranted, having CONVERGED INTO A STATE** — the work reached a settled point worth summarizing rather than a moment mid-flight. **A milestone is the canonical case**: a stage completed, a wave finished, a verdict reached, a phase closed out.
 
-**Otherwise answer tersely** — a line or two on what happened and what is next. A watcher firing, one agent reporting, or a single check completing is a **terse update**, not a full report. Re-tabulating unchanged state every turn buries the one thing that actually moved and costs the reader more attention than it returns.
+**Converged is the operative word.** The report describes a state that has settled, so emitting one mid-transition is both premature and misleading — half the rows are in motion and will read as stale within a minute. If the picture is still moving, give the terse update and report properly once it lands.
+
+**Otherwise match the tone of the conversation.** A line or two on what happened and what is next, in whatever register the exchange is already in. A watcher firing, one agent reporting, or a single check completing is a **terse update**, not a report. Re-tabulating unchanged state every turn buries the one thing that actually moved and costs the reader more attention than it returns.
 
 **Any active voice or brevity mode still governs.** This reference sets the *structure* of a report; it never licenses more words than the active voice mode allows. Under a terse mode, a full report keeps these sections but fills them tightly — short rows, clipped bullets, no restatement.
 
