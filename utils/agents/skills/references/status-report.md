@@ -4,6 +4,20 @@ Shape for the recurring status report a persistent posture mode gives the user e
 
 The problem it solves: a long-running mode produces a mix of durable state, fresh findings, explanation, and asks. Delivered as prose they blur together, and the reader cannot separate what is true *now* from what just *changed* from what is *wanted from them*. A stable layout keeps those apart and lets the reader's eye learn where to look instead of re-parsing every report.
 
+## ⛔ NOT every turn — this is the full-report shape, not the default reply
+
+**Do not emit the full four-part report on every turn.** It is for when a status report is actually wanted:
+
+- the user asks for status, a summary, or "where are we",
+- a milestone lands (a stage completes, a wave finishes, a verdict is reached),
+- enough has changed that the standing picture genuinely moved.
+
+**Otherwise answer tersely** — a line or two on what happened and what is next. A watcher firing, one agent reporting, or a single check completing is a **terse update**, not a full report. Re-tabulating unchanged state every turn buries the one thing that actually moved and costs the reader more attention than it returns.
+
+**Any active voice or brevity mode still governs.** This reference sets the *structure* of a report; it never licenses more words than the active voice mode allows. Under a terse mode, a full report keeps these sections but fills them tightly — short rows, clipped bullets, no restatement.
+
+When in doubt, give the terse update and offer the full picture.
+
 ## Shape
 
 **The lede comes first and carries no header.** Everything else sits under a header.
@@ -54,6 +68,26 @@ Cover explicitly:
 **Bullets of what is wanted from the user** — decisions, approvals, manual steps, anything blocked on them. One bullet each, each naming the concrete action.
 
 **Include this section even when it is empty**, and say so ("nothing needed from you"). Its absence is ambiguous: the reader cannot tell whether nothing is needed or whether you forgot to ask.
+
+#### ⛔ Mark an item's prerequisite inline
+
+**When an item cannot yet be acted on because something else has to land first, say so in the item itself** with a leading marker:
+
+```
+- **[PREREQUISITE: <the unmet thing>]** <the ask> — <why it is blocked>.
+```
+
+For example: `- **[PREREQUISITE: verification agent's report]** Confirm the six stacks — gated clean on my own checks, but the deep content verify has not landed.`
+
+**Why this is not optional.** An item listed plainly reads as *ready to act on*. If it actually depends on an unlanded check, an unfinished job, or another decision, presenting it bare invites the user to act on an unverified thing — and if it then goes wrong, the report caused it. Burying the dependency in a trailing clause ("…though X hasn't reported yet") is the same failure: the marker exists so the blocker is visible *before* the ask is read, not after.
+
+Rules:
+
+- **The marker names the specific unmet thing**, not a vague "pending" — the user should be able to tell whether it is worth waiting for.
+- **Keep the item listed.** Do not silently drop a blocked ask; the user often wants to know it is coming.
+- **Remove the marker the moment the prerequisite lands**, and say in the lede that it cleared.
+- **If you are choosing to recommend acting anyway**, say that explicitly alongside the marker and carry the reason — "my own checks are clean, the outstanding one is belt-and-braces". Never let an unmarked item imply verification that did not happen.
+- The same marker works anywhere an item is conditional, including a `Current state` row.
 
 ## Rules
 
