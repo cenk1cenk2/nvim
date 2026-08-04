@@ -61,6 +61,35 @@ The same definition therefore resolves to different tools in the foreground and 
 - **`TaskOutput` is deprecated, and for a local agent task it is a trap** — its `.output` file is a symlink to the full subagent transcript (JSONL), and reading it overflows the lead's context. Use the `Agent` tool result instead. Reserve `TaskOutput` / reading the output file for background **shell** tasks.
 - Since **v2.1.208**, a completed background subagent stays listed in `/tasks`, marked done, until the session cleans up. Failed or stopped ones leave the list.
 
+## ⛔ A NAMED agent reports by `SendMessage`, not by returning
+
+**Passing `name` changes how the result reaches you.** A named agent runs as a teammate, and the rule the `SendMessage` tool states for peers applies to its final answer too: **its plain text output is not visible to the lead.** What arrives instead is an **idle notification** carrying no content:
+
+```json
+{"type":"idle_notification","from":"<name>","idleReason":"available"}
+```
+
+Verified on **v2.1.221**: a named `Explore` agent dispatched with `run_in_background: false` finished, emitted two idle notifications, and delivered nothing until it was told to call `SendMessage`. Its full report then arrived intact on the next turn.
+
+Consequences:
+
+- **`run_in_background: false` does not block for a named agent.** The dispatch returns `Spawned successfully … will receive instructions via mailbox` immediately. Treat `name` and synchronous collection as mutually exclusive: when you need the result as a tool result in the same turn, dispatch **without** a name.
+- **Put the delivery instruction in the prompt.** Any named agent whose prose *is* the deliverable must be told, in the prompt: *your plain text is not visible to the lead — deliver the final answer with one `SendMessage` call to `"main"`.* Without that line the report is written into the void and the work has to be re-collected.
+- **An idle notification means "available", not "done" and not "failed".** It says the agent stopped producing; it says nothing about whether it holds an answer. Ask for the answer.
+
+## ⛔ A quiet agent — steer it, never mark it failed
+
+`SendMessage` to the agent's name is a live channel, and on Claude Code it reaches a **running, idle, completed, or `TaskStop`ped** agent alike — a completed or stopped one auto-resumes in the background with no new `Agent` call. Going quiet is therefore never grounds to declare failure, re-dispatch, or reap. Steering costs one message; every rung below it costs work.
+
+Ladder, cheapest first:
+
+1. **Ask for what it has.** `SendMessage` to its name, requesting the report in the required format and stating that partial results are acceptable.
+2. **Name the delivery mechanism.** An agent that idled with no content has most likely answered in plain text. Tell it explicitly to call `SendMessage` with `to: "main"` and not to reply in plain text.
+3. **Narrow or redirect.** Shrink the scope, restate the required output shape or path, or tell it to write incrementally.
+4. **Only then diagnose** a concrete cause — auth failure, a tool erroring, an unreachable path, an unbounded scope — before considering a re-dispatch, and reap the old agent first so two writers never share a target.
+
+Report a delegation as failed only after the channel itself produced nothing across those rungs, and say which rungs were tried.
+
 ## Reaping
 
 `TaskStop` accepts the task id, a named background agent's name, or a teammate's `name@team`. Stopping ends the run, so **collect before you reap** — though a completed agent can still be resumed by `SendMessage`, so "quiet" is never itself a reason to kill one. Reap when the work is genuinely done, superseded, or about to be replaced (reap *before* re-dispatching over the same target, or two writers clobber each other).
