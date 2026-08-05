@@ -249,6 +249,10 @@ Then:
 - **Acknowledge** in one line, then **apply** the pattern going forward. You may edit any area, including what the user changed — just incorporate their choices; never silently revert them.
 - **Save to memory** only when the deviation reveals a project-wide convention, a strong cross-session preference, or an architectural decision — not one-offs.
 
+### Surfacing Findings — hand location sets to the quickfix list
+
+When an answer is a **set of places in the code** — every call site, all hits of an audit, the files a refactor touches — put it in the user's quickfix list with `editor_quickfix_set` rather than listing paths in prose. They then walk it with their own `:cnext` and picker bindings instead of copying line numbers out of a message. Same etiquette as navigation: populate it, say you did, and leave the window closed unless they asked to see it. Requires the `hyprpilot-nvim` MCP; without it, fall back to a short list in the response.
+
 ### Markdown Output Formatting
 
 When writing project updates, docs, or external messages, wrap technical identifiers in backticks when it improves clarity: repositories, commands, clusters/hosts, file paths, resource types, packages, config keys, and git refs. Do not backtick ordinary English or proper nouns when it hurts readability.
