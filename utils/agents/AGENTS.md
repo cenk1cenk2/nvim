@@ -137,9 +137,7 @@ Available research/documentation MCP tools vary per session — discover what's 
 
 ### hyprpilot-nvim
 
-The editor MCP, exposing the captain's live Neovim (buffers, LSP, windows, cursor). It is the reference case of §I step 6: **its presence loads the `hyprpilot-nvim` skill, unprompted, before any symbol search, navigation, or formatting.**
-
-That skill owns the rules — LSP over manual grepping (absolute), `editor_format` as the formatting fast path, quickfix handoff, and the etiquette for moving a captain's cursor. Do not duplicate them here.
+The editor MCP — the captain's live Neovim (buffers, LSP, windows, cursor). Reference case of §I step 6: its presence loads the `hyprpilot-nvim` skill, which owns every rule for it.
 
 ### tmux
 
@@ -251,10 +249,6 @@ Then:
 - **Ask when unclear** — be specific (_"changed X to Y — because of Z?"_); don't assume motivation; accept short answers ("preference", "cleaner") without pushing.
 - **Acknowledge** in one line, then **apply** the pattern going forward. You may edit any area, including what the user changed — just incorporate their choices; never silently revert them.
 - **Save to memory** only when the deviation reveals a project-wide convention, a strong cross-session preference, or an architectural decision — not one-offs.
-
-### Surfacing Findings — hand location sets to the quickfix list
-
-When an answer is a **set of places in the code** — every call site, all hits of an audit, the files a refactor touches — put it in the user's quickfix list with `editor_quickfix_set` rather than listing paths in prose. They then walk it with their own `:cnext` and picker bindings instead of copying line numbers out of a message. Same etiquette as navigation: populate it, say you did, and leave the window closed unless they asked to see it. Requires the `hyprpilot-nvim` MCP; without it, fall back to a short list in the response.
 
 ### Markdown Output Formatting
 
