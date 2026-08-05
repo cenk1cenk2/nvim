@@ -43,15 +43,19 @@ function M.config()
         options = {
           left = {
             size = nvim.ui.dimensions.dock("width", "sm"),
+            wo = M.vertical_wo,
           },
           bottom = {
             size = nvim.ui.dimensions.dock("height", "xs"),
+            wo = M.horizontal_wo,
           },
           right = {
             size = nvim.ui.dimensions.dock("width", "md"),
+            wo = M.vertical_wo,
           },
           top = {
             size = nvim.ui.dimensions.dock("height", "xs"),
+            wo = M.horizontal_wo,
           },
         },
         -- edgebar animations
@@ -82,8 +86,7 @@ function M.config()
           -- Setting to `false`, won't set any winbar.
           -- Setting to a string, will set the winbar to that string.
           winbar = false,
-          winfixwidth = true,
-          winfixheight = false,
+          -- `winfixwidth` / `winfixheight` are set per position, see `M.vertical_wo`
           winhighlight = "WinBar:EdgyWinBar,Normal:EdgyNormal",
           spell = false,
           signcolumn = "no",
@@ -121,21 +124,23 @@ function M.config()
           ["[W"] = function(win)
             win:prev({ pinned = false, focus = true })
           end,
-          -- increase width
-          ["<C-M-h>"] = function(win)
-            win:resize("width", 5)
-          end,
+          -- these shadow the global resize keys in `ck.keys.default`, which do
+          -- nothing in an edgebar window, so keep both directions and steps in sync
           -- decrease width
+          ["<C-M-h>"] = function(win)
+            win:resize("width", -8)
+          end,
+          -- increase width
           ["<C-M-l>"] = function(win)
-            win:resize("width", -5)
+            win:resize("width", 8)
           end,
           -- increase height
-          ["<C-M-k>"] = function(win)
-            win:resize("height", 5)
+          ["<C-M-j>"] = function(win)
+            win:resize("height", 4)
           end,
           -- decrease height
-          ["<C-M-j>"] = function(win)
-            win:resize("height", -2)
+          ["<C-M-k>"] = function(win)
+            win:resize("height", -4)
           end,
           -- reset all custom sizing
           ["<c-w>="] = function(win)
@@ -159,7 +164,45 @@ function M.config()
     on_setup = function(c)
       require("edgy").setup(c)
     end,
+    autocmds = function()
+      ---@type Autocmds
+      return {
+        {
+          event = "WinClosed",
+          group = "_edgy_keep_main_window",
+          -- edgy replaces the last main window from its own `WinClosed` handler,
+          -- but the window being closed is still listed while that runs, so the
+          -- check passes and the edgebars end up holding the screen alone. Run it
+          -- again once the close has settled.
+          callback = function()
+            vim.schedule(function()
+              if vim.v.exiting == vim.NIL then
+                require("edgy.editor").check_main()
+              end
+            end)
+          end,
+        },
+      }
+    end,
   })
 end
+
+-- A dock pins the axis it is docked on and lets the other follow the layout. edgy
+-- only offers one global `wo`, which cannot be right for both orientations, so the
+-- pair is declared per position instead. Whichever axis is left floating makes the
+-- dock the nearest donor for a resize on a neighbouring window, which is why Neovim
+-- pins `winfixheight` on quickfix windows and why edgy's global default undoing it
+-- let `:resize` eat the quickfix instead of taking rows from its siblings.
+---@type vim.wo
+M.vertical_wo = {
+  winfixwidth = true,
+  winfixheight = false,
+}
+
+---@type vim.wo
+M.horizontal_wo = {
+  winfixwidth = false,
+  winfixheight = true,
+}
 
 return M

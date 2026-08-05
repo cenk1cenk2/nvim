@@ -265,7 +265,7 @@ function M.config()
     end,
     on_setup = function(c)
       require("noice").setup(c)
-      vim.o.cmdheight = 0
+      vim.o.cmdheight = M.cmdheight
     end,
     on_done = function(config)
       -- require("telescope").load_extension("noice")
@@ -365,11 +365,33 @@ function M.config()
       }
     end,
     autocmds = function()
+      ---@type Autocmds
       return {
         -- require("ck.modules.autocmds").set_view_buffer({ "noice" }),
+        {
+          event = "SafeState",
+          group = "_noice_cmdheight",
+          callback = function()
+            M.restore_cmdheight()
+          end,
+        },
       }
     end,
   })
+end
+
+-- noice renders messages in its own popups, so the builtin message area stays at
+-- zero rows.
+M.cmdheight = 0
+
+-- A message taller than the message area makes Neovim grow it, and at zero rows
+-- it never shrinks back -- the command area keeps every row it took and the
+-- windows get squeezed into whatever is left. Put it back as soon as Neovim is
+-- idle again.
+function M.restore_cmdheight()
+  if vim.o.cmdheight ~= M.cmdheight then
+    vim.o.cmdheight = M.cmdheight
+  end
 end
 
 return M

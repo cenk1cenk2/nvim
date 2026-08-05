@@ -40,11 +40,7 @@ function M.config()
     on_setup = function(c)
       vim.opt.winwidth = 5
       vim.opt.winminwidth = 0
-      -- autowidth only owns the horizontal axis, so leave heights to Neovim.
-      -- Without this the space a closing split gives back never gets shared out
-      -- again and toggling the quickfix walks the layout into collapsed windows.
-      vim.opt.equalalways = true
-      vim.opt.eadirection = "ver"
+      vim.opt.equalalways = false
       require("windows").setup(c)
     end,
     wk = function(_, categories, fn)
