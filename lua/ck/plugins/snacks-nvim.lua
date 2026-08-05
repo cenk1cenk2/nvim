@@ -29,6 +29,8 @@ function M.config()
         "snacks_terminal",
         "snacks_words",
       })
+
+      fn.add_pickable_filetypes({ "snacks_dashboard" })
     end,
     setup = function()
       ---@type snacks.Config

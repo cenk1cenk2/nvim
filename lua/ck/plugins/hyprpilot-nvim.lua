@@ -28,6 +28,12 @@ function M.config()
       require("hyprpilot.mcp.editor").register({
         disabled_filetypes = nvim.disabled_filetypes,
         disabled_buffer_types = nvim.disabled_buffer_types,
+        -- Only buftype is forwarded: window-picker's own setup already
+        -- filters the filetypes, and tbl_deep_extend replaces list
+        -- values, so passing them here would undo that.
+        pick_window = function(filter)
+          return nvim.fn.pick_window({ filter_rules = { bo = { buftype = filter.buftype } } })
+        end,
       })
 
       if vim.v.servername == nil or vim.v.servername == "" then

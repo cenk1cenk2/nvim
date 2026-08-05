@@ -19,11 +19,7 @@ function M.config()
         filter_rules = {
           bo = {
             filetype = vim.tbl_filter(function(ft)
-              if vim.tbl_contains({ "alpha", "snacks_dashboard", "" }, ft) then
-                return false
-              end
-
-              return true
+              return not vim.tbl_contains(nvim.pickable_filetypes, ft)
             end, nvim.disabled_filetypes),
           },
           autoselect_one = true,

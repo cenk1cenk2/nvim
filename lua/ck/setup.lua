@@ -429,6 +429,7 @@ end
 ---@class SetupFn
 ---@field add_disabled_filetypes SetupFnAddDisabledFiletypes
 ---@field add_disabled_buffertypes SetupFnAddDisabledBuffertypes
+---@field add_pickable_filetypes SetupFnAddPickableFiletypes
 ---@field setup_callback SetupFnSetupCallback
 ---@field get_wk_categories SetupFnGetWkCategories
 ---@field get_wk_category SetupFnGetWkCategory
@@ -456,6 +457,16 @@ end
 function M.fn.add_disabled_buffertypes(t)
   for _, value in pairs(t) do
     table.insert(nvim.disabled_buffer_types, value)
+  end
+end
+
+---@alias SetupFnAddPickableFiletypes fun(ft: string[]): nil
+
+-- Adds filetypes that stay valid window targets despite being disabled.
+---@type SetupFnAddPickableFiletypes
+function M.fn.add_pickable_filetypes(ft)
+  for _, value in pairs(ft) do
+    table.insert(nvim.pickable_filetypes, value)
   end
 end
 

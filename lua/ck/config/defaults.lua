@@ -133,6 +133,14 @@ return {
     "quickfix",
   },
 
+  -- Disabled filetypes that are still valid windows to land a file in —
+  -- a dashboard gets no statuscolumn or scrollbar, but replacing it with
+  -- the file you asked for is exactly right. An empty filetype is an
+  -- ordinary unnamed buffer, always a target.
+  pickable_filetypes = {
+    "",
+  },
+
   treesitter = {
     ---@type string[]
     parsers = {},
