@@ -1,6 +1,8 @@
 # Commit Trailers
 
-Conventions for referencing and closing issues from commit messages across platforms.
+Conventions for referencing and closing issues across platforms, from commit messages and
+PR/MR titles and descriptions. Which of those surfaces actually links varies by platform —
+Linear ignores commit messages entirely. Check the platform section before assuming.
 
 ## Format
 
@@ -32,12 +34,21 @@ For Linear IDs, choose the trailer from the delivery shape:
 - Use `refs <Linear-id>` only when the change is one of several deliverables (this is not the final one) or the issue still has open work after this merges.
 - Single PR/MR completing one issue → `closes K-123`.
 - Multiple PRs/MRs for one issue → non-final PRs/MRs use `refs K-123`; only the final completing PR/MR uses `closes K-123`.
-- One PR/MR can close multiple independent issues by including one `closes <ID>` trailer per closed issue.
-- Mix `closes` and `refs` when some linked issues are closed and others are only related.
+- One PR/MR can close multiple independent issues. **The syntax differs per platform** — see each platform's "Multiple issues" rule below. Linear takes one keyword followed by a comma-separated list; GitHub requires the keyword repeated per issue.
+- Mix `closes` and `refs` when some linked issues are closed and others are only related. On Linear that means one line per kind: `Closes K-1, K-2` and `Refs K-3`.
 
 ## Linear
 
-Linear links commits to issues via **magic words** in commit messages, MR/PR titles, or descriptions.
+Linear links issues to work via exactly three surfaces: the **branch name**, the
+**MR/PR title**, and **magic words in the MR/PR description**.
+
+⛔ **Linear cannot link via commit messages or comments.** Linear's integration docs state
+this outright. A `(K-123)` in a commit subject is repo convention for human readers — it
+creates no Linear link, moves no state, and closes nothing.
+
+Do not generalise across platforms here: GitHub and GitLab *native* issues DO close from
+commit messages; Linear does not. Getting this backwards produces a branch whose every
+commit names the issue and which still leaves it open on merge.
 
 ### Issue ID Formats
 
@@ -48,24 +59,58 @@ Linear links commits to issues via **magic words** in commit messages, MR/PR tit
 
 ### Closing Keywords
 
-`close`, `closes`, `closed`, `closing`, `fix`, `fixes`, `fixed`, `fixing`, `resolve`, `resolves`, `resolved`, `resolving`, `complete`, `completes`, `completed`, `completing`.
+`close`, `closes`, `closed`, `closing`, `fix`, `fixes`, `fixed`, `fixing`, `resolve`, `resolves`, `resolved`, `resolving`, `complete`, `completes`, `completed`, `completing`, `implement`, `implements`, `implemented`, `implementing`.
 
 ### Contributing Keywords (link without closing)
 
 `ref`, `refs`, `references`, `part of`, `related to`, `contributes to`, `towards`.
 
+A contributing keyword still lets the MR/PR drive the issue through the team's configured
+workflow statuses; it only suppresses the status automation **on merge**.
+
+### Multiple issues on one MR/PR
+
+**One keyword, then a comma-separated list.** This is the form Linear documents:
+
+```
+Closes K-879, K-881
+```
+
+Do NOT repeat the keyword per issue for Linear — that is the GitHub form.
+⚠ Unverified whether repeated keywords also work; the list form is the only shape Linear
+documents, so use it.
+
+An issue linked to several MRs/PRs does not close until **all** of them are merged or
+closed — so a `closes` on one of several open MRs is not premature the way it would be on
+GitHub.
+
+### Put the IDs in the title too
+
+Linear treats a bare issue ID in the MR/PR title as a link — no magic word needed there:
+
+```
+fix(scope): subject (K-879, K-881)
+```
+
+Title and description linking are independent. Use **both**: the description trailer is
+what guarantees the close on merge, and the title keeps the link legible in the MR list
+and survives into the squash commit.
+
 ### Behavior
 
-- Issue moves to **In Progress** when the branch is pushed.
-- Issue moves to **Done** when the commit/PR/MR is merged to the default branch (only with closing keywords).
+- Issue moves to **In Progress** when the branch matching its ID is pushed.
+- Issue moves to **Done** when the **MR/PR** carrying a closing keyword merges to the
+  default branch — not when a commit merges.
 - Contributing keywords such as `refs` link the work but do NOT close the issue on merge.
-- The issue ID must appear with a magic word — bare ID alone does not auto-link.
+- The issue ID must appear with a magic word **in the MR/PR description**, or bare in the
+  MR/PR title, or in the branch name. Nowhere else counts.
 
 ### Trailer Format
 
 ```
 refs K-219
 closes K-383
+closes K-879, K-881
 closes CLOUD-4298
 ```
 

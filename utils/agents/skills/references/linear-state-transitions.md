@@ -61,19 +61,37 @@ save_issue(id, state=target)
 The rank order is: `backlog`/`unstarted` < `In Progress` < `In Review`
 < `Done` / `Canceled`.
 
-## Issue-id extraction from commits
+## Issue-id extraction
 
 When a skill processes a branch / MR / PR rather than a single issue,
-it extracts Linear ids from commit messages and MR/PR bodies:
+it extracts Linear ids from the MR/PR title and body, the branch name,
+and commit messages:
 
-- **Commit trailer syntax:** match both reference and closing trailers
+- **Trailer syntax:** match both reference and closing trailers
   case-insensitively, stopping at newline. Reference trailers include
   `refs K-xxx` / `references K-xxx`. Closing trailers include
   `closes K-xxx`, `fixes K-xxx`, `resolves K-xxx`, `completes K-xxx`,
-  and the other closing keywords from `commit-trailers`.
+  `implements K-xxx`, and the other closing keywords from
+  `commit-trailers`.
+- ⛔ **A keyword applies to EVERY id in its comma/`and`-separated run,
+  not just the first.** `Closes K-879, K-881` closes *both*. Parse the
+  run to end-of-line and tag every id in it with that keyword's kind.
+  Matching only the id adjacent to the keyword leaves the rest
+  classified as bare mentions, which silently skips their `Done`
+  transition — the MR merges, one issue closes, the others sit open
+  looking like the automation is broken.
 - **MR/PR body:** the `closes K-xxx` / `refs K-xxx` trailer at the
   bottom, or a `K-xxx` mentioned inline (less reliable — only
   mentioned at the top near the summary is treated as a trigger id).
+- **MR/PR title:** ids there are a real Linear linking surface — parse
+  them too, e.g. `fix(scope): subject (K-879, K-881)`. Treat a bare
+  title id as a *link*, not a close signal; the closing kind still
+  comes from the description trailer.
+- **Commit messages are NOT a Linear linking surface.** Linear cannot
+  link via commit messages (see `commit-trailers`). Ids found only in
+  commits may still help *discover* which issues a branch touches, but
+  never treat a commit-only id as evidence Linear will close it — if it
+  is not in the MR/PR title or description, Linear does not know.
 - **Regex target:** `/(?:^|\s)(K|CLOUD)-\d+/i` — match the team
   prefixes the current workspace supports. Check `linear-prerequisite`
   for the active workspace's id prefix.

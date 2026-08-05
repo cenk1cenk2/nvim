@@ -34,6 +34,8 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 - Analyze the diff for **logical changes only** — what behavior was added, removed, or changed.
 - Do NOT list changed files, line counts, or mechanical details.
 - If the PR/MR links Linear issues, add or preserve body trailers using `commit-trailers`: default to `closes <ID>` when this PR/MR resolves the issue and nothing else is pending (so it auto-closes on merge); use `refs <ID>` only for genuinely partial or related work.
+- **When one PR/MR closes several issues, give each issue its own section** and list every closed ID on one trailer line — see "Multiple linked issues" below. A reviewer must be able to tell which change belongs to which issue without reading the diff.
+- **Linear links only from the title, the description, and the branch name.** A Linear ID in a commit message does nothing — see `commit-trailers`. Never rely on commits to carry the link.
 
 ## Draft the title
 
@@ -43,6 +45,7 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 - Types: feat, fix, docs, style, refactor, test, chore, perf, build, ci, revert.
 - **Keep it concise** — one line, well within the platform's title limit (aim ≤ ~100 chars, hard ~120); tighter than the description, no fluff.
 - **Pure ASCII, no special chars** — no em/en dashes (`—`, `–`), smart quotes, or ellipsis (`…`); use a plain hyphen `-`. Same subject rules as the `commit-style` reference.
+- **Put the linked issue IDs in the title**, trailing and parenthesised: `fix(scope): subject (K-879)`, or `(K-879, K-881)` for several. For Linear this is a real linking surface in its own right, independent of the description trailer — keep both. Follow the repo's existing convention where it already has one.
 - If the repo has release automation (release-please, semantic-release, …), the title must satisfy it — see the `release-convention` reference. Mark breaking changes with `type(scope)!:` and a `BREAKING CHANGE:` footer.
 
 ## Description Format (When No Template Exists)
@@ -56,6 +59,25 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 - <logical change 2>
 - <logical change 3>
 ```
+
+**Multiple linked issues (one PR/MR closing several):**
+
+```markdown
+<1-3 sentence summary of what this PR/MR does and why>
+
+## K-879 - <issue title>
+
+- <logical change 1>
+- <logical change 2>
+
+## K-881 - <issue title>
+
+- <logical change 1>
+
+Closes K-879, K-881
+```
+
+One section per issue, headed by its ID and title, so the split is obvious at a glance. The trailer stays a **single line listing every closed ID** — that is Linear's documented multi-issue form, not one trailer per issue. Mixed kinds get one line each: `Closes K-879, K-881` and `Refs K-884`.
 
 **Large PRs/MRs (judgment call — significant scope or multiple concerns):**
 
