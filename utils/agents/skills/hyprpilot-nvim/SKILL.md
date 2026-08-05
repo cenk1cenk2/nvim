@@ -67,11 +67,11 @@ A tool missing from the session means that plugin isn't installed. Don't announc
 - `positions` maps discovered tests to `file:line` — use it to name a test exactly, or to find which test covers the code under discussion.
 - `run` queues a run in their editor and returns immediately; poll `status` for the outcome. Prefer it over shelling out to the test binary when they're already watching neotest's output.
 
-**`plugin_dap_*` — a live debugger.** `status` is the cheap check for whether a session is even running; `stack` returns threads and frames as 0-indexed positions that feed straight into `editor_jump`. Runtime values from a paused process are something no shell command can produce — when they're debugging, this is the highest-value thing to read.
+**`plugin_nvim_dap_*` — a live debugger.** `status` is the cheap check for whether a session is even running; `stack` returns threads and frames as 0-indexed positions that feed straight into `editor_jump`. Runtime values from a paused process are something no shell command can produce — when they're debugging, this is the highest-value thing to read.
 
-**`plugin_coverage_report`** — the parsed report, so you never guess whether the project emits lcov or cobertura. Empty means nothing loaded yet, not zero coverage; pass `load` and expect it on the next call.
+**`plugin_nvim_coverage_report`** — the parsed report, so you never guess whether the project emits lcov or cobertura. Empty means nothing loaded yet, not zero coverage; pass `load` and expect it on the next call.
 
-**`plugin_todo_search`** — TODO / FIXME hits through the captain's own configured keywords and comment pattern. Prefer it over `editor_grep` for this one job, because a hand-rolled regex will miss their custom shapes.
+**`plugin_todo_comments_search`** — TODO / FIXME hits through the captain's own configured keywords and comment pattern. Prefer it over `editor_grep` for this one job, because a hand-rolled regex will miss their custom shapes.
 
 ### Reading state before acting
 

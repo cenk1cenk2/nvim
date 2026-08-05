@@ -40,9 +40,9 @@ function M.config()
       -- list can stay unconditional.
       require("hyprpilot.mcp.plugin.diffview").register()
       require("hyprpilot.mcp.plugin.neotest").register()
-      require("hyprpilot.mcp.plugin.dap").register()
-      require("hyprpilot.mcp.plugin.coverage").register()
-      require("hyprpilot.mcp.plugin.todo_comments").register()
+      require("hyprpilot.mcp.plugin.nvim-dap").register()
+      require("hyprpilot.mcp.plugin.nvim-coverage").register()
+      require("hyprpilot.mcp.plugin.todo-comments").register()
 
       if vim.v.servername == nil or vim.v.servername == "" then
         log:warn("hyprpilot: v:servername is empty — MCP bridge will not connect")
