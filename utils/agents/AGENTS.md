@@ -138,9 +138,9 @@ Available research/documentation MCP tools vary per session — discover what's 
 
 - **LSP over manual searching — always.** `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, and `lsp_workspace_symbols` are far faster and more accurate than grepping by hand for a symbol's definition or uses. Reach for them whenever you need to find references, definitions, or symbols. Use `diagnostics_get` to check errors and `lsp_code_actions` for fixes.
 - **Renames:** prefer `lsp_rename` over text replacement — it updates every reference correctly.
-- **Formatting:** use `editor_format` to format a single file when formatting is needed, rather than hand-editing whitespace.
+- **Formatting:** prefer `editor_format` whenever a file needs formatting — it drives the buffer's own LSP formatter in place, far faster than shelling out to the project's format task. Keep the repo task for whole-repo runs.
 - **Navigation:** navigate the user around their editor (jump to a file/line, select code) when it helps them follow along.
-- Before LSP operations on a file that may not be loaded, ensure it is loaded first (`lsp_ensure_loaded`). Ask before moving the user's cursor unless they explicitly requested navigation.
+- Position tools load the file and wait out the LSP attach themselves; reach for `lsp_ensure_loaded` only to warm several files up front. Ask before moving the user's cursor unless they explicitly requested navigation — and note `editor_select` takes the window's focus, unlike the other navigation tools.
 
 ### tmux
 
