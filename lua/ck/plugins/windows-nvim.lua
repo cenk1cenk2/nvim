@@ -40,6 +40,7 @@ function M.config()
     on_setup = function(c)
       vim.opt.winwidth = 5
       vim.opt.winminwidth = 0
+      vim.opt.eadirection = "ver"
       vim.opt.equalalways = false
       require("windows").setup(c)
     end,
