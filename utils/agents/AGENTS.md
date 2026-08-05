@@ -44,7 +44,7 @@
    - The skill's own Boundaries still apply — code/commits/PRs written normal, Auto-Clarity suspends caveman for security/destructive/confusing moments, and "stop caveman" / "normal mode" reverts for the session.
    <!-- CAVEMAN-DEFAULT:END -->
 
-6. **LOAD THE `hyprpilot-nvim` SKILL WHEN THAT SERVER IS PRESENT — ABSOLUTE, SAME STANDING AS CAVEMAN.** No user request needed; the server's presence is the trigger.
+6. **LOAD THE `hyprpilot-nvim` SKILL AT STARTUP WHEN THAT SERVER IS PRESENT — ABSOLUTE, SAME STANDING AS CAVEMAN.** Eagerly, here in the init sequence — do NOT wait for a first editor call the way step 7 does. It governs how you search, format, and surface findings for the whole session, so a decision made before it loads is already the wrong one. No user request needed; the server's presence is the trigger.
 
 7. **LOAD A SERVER'S SAME-NAMED SKILL BEFORE USING IT — ABSOLUTE.** A server named `<x>` and a skill named `<x>` are the same subject: the skill is that server's manual. Before the first call to any MCP server, check the catalog cached in step 4 and `read_skill` the match. Announce it per §II's announcement rule. No match means use the server directly.
 
