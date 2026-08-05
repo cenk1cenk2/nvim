@@ -132,15 +132,11 @@ Available research/documentation MCP tools vary per session — discover what's 
 2. **Usual search/fetch** when no docs tool fits — the runtime's web search/fetch.
 3. **Research tools for a harder push** — when the question needs multi-source digging or verification, reach for the deeper research tools (`tavily`, `exa`, or the `deep-research` skill).
 
-### hyprpilot-nvim — ABSOLUTE: prefer LSP over manual search
+### hyprpilot-nvim — ABSOLUTE: load the skill the moment the MCP is present
 
-`hyprpilot-nvim` is the editor MCP. When it is available, discover it and USE it for editor-aware work — this is an absolute rule, not optional:
+`hyprpilot-nvim` is the editor MCP, exposing the captain's live Neovim (buffers, LSP, windows, cursor). **When that server is available in the session, load the `hyprpilot-nvim` skill immediately and follow it — unprompted, before any symbol search, navigation, or formatting.** Its presence IS the trigger; the user never has to name it.
 
-- **LSP over manual searching — always.** `lsp_definition`, `lsp_references`, `lsp_hover`, `lsp_document_symbols`, and `lsp_workspace_symbols` are far faster and more accurate than grepping by hand for a symbol's definition or uses. Reach for them whenever you need to find references, definitions, or symbols. Use `diagnostics_get` to check errors and `lsp_code_actions` for fixes.
-- **Renames:** prefer `lsp_rename` over text replacement — it updates every reference correctly.
-- **Formatting:** prefer `editor_format` whenever a file needs formatting — it drives the buffer's own LSP formatter in place, far faster than shelling out to the project's format task. Keep the repo task for whole-repo runs.
-- **Navigation:** navigate the user around their editor (jump to a file/line, select code) when it helps them follow along.
-- Position tools load the file and wait out the LSP attach themselves; reach for `lsp_ensure_loaded` only to warm several files up front. Ask before moving the user's cursor unless they explicitly requested navigation — and note `editor_select` takes the window's focus, unlike the other navigation tools.
+The skill owns the rules that used to live here: LSP over manual grepping (absolute), `editor_format` as the formatting fast path, quickfix handoff for sets of locations, and the etiquette for moving a captain's cursor. Do not duplicate them in this file.
 
 ### tmux
 
