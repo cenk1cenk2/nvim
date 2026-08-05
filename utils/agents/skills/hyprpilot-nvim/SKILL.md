@@ -45,7 +45,7 @@ Navigation moves what the captain is looking at, so treat it as an interruption:
 - **Ask before navigating** unless they asked to be taken somewhere. Reporting `file:line` is often enough.
 - `editor_file_open` / `editor_jump` place the file without stealing focus. `editor_select` is the exception — it must take the window's focus, because a selection nobody is looking at is not a selection.
 - The captain may have wired an interactive window picker, in which case navigating **prompts them for a window and blocks until they answer**. Don't fire navigation calls speculatively or in a loop.
-- **Findings go to the quickfix list.** When the answer is a set of locations — audit hits, every call site, all errors of a kind — `editor_quickfix_set` hands them to the captain's own `:cnext` and picker bindings. That beats a wall of paths in a response. Leave `open` false unless they asked to see it.
+- **Findings go to the quickfix list.** When the answer is a set of locations — audit hits, every call site, all errors of a kind — `editor_quickfix_set` hands them to the captain's own `:cnext` and picker bindings. That beats a wall of paths in a response. It opens the list by default, which is the point: a list nobody sees is worse than the wall of paths. Pass `open: false` only when populating it as a side effect of other work.
 
 ### Reading state before acting
 
