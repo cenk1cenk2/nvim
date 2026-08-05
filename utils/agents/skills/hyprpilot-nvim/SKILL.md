@@ -15,6 +15,7 @@ Tools come in two families plus `healthcheck`:
 |--------|-------|
 | `lsp_*` | `definition`, `type_definition`, `implementation`, `references`, `incoming_calls`, `outgoing_calls`, `hover`, `document_symbols`, `workspace_symbols`, `code_actions`, `rename`, `ensure_loaded` |
 | `editor_*` | `status`, `cursor`, `buffers`, `read`, `grep`, `files`, `file_open`, `jump`, `select`, `quickfix_set`, `format`, plus `diagnostics_get` |
+| `plugin_*` | integrations with the captain's own plugins — see Plugins below. Present only when that plugin is installed |
 
 Positions are **0-indexed** on the LSP tools, `editor_grep`, and `editor_quickfix_set`; `editor_jump` / `editor_file_open` / `editor_select` take **1-indexed** lines. Read each tool's schema rather than assuming.
 
@@ -47,6 +48,31 @@ Navigation moves what the captain is looking at, so treat it as an interruption:
 - The captain may have wired an interactive window picker, in which case navigating **prompts them for a window and blocks until they answer**. Don't fire navigation calls speculatively or in a loop.
 - **Findings go to the quickfix list.** When the answer is a set of locations — audit hits, every call site, all errors of a kind — `editor_quickfix_set` hands them to the captain's own `:cnext` and picker bindings. That beats a wall of paths in a response. It opens the list by default, which is the point: a list nobody sees is worse than the wall of paths. Pass `open: false` only when populating it as a side effect of other work.
 
+### Plugins — state the editor holds that nothing else does
+
+The `plugin_*` tools wrap plugins the captain runs. They exist because the data behind them lives only in their session: results of a run *they* triggered, files *they* marked, a process *they* paused. Anything obtainable from `git`, `rg`, or the language server is deliberately absent from this family — reach for those directly instead.
+
+A tool missing from the session means that plugin isn't installed. Don't announce it; fall back and move on.
+
+**`plugin_diffview_*` — the diff the captain is looking at.**
+
+- `open` takes `revision` and, more usefully, `paths` — the way to *show* a set of changes rather than describe them. When the conversation is about specific files' changes, put them on screen.
+- `selection_get` is human intent you can't get anywhere else: the files they marked in the panel. When they say "these files", ask it rather than guessing. `selection_set` hands a shortlist back — the files an audit flagged, the ones a change will touch.
+- `files` / `current` frame the conversation on what they have open. For the diff *content*, use `git` — diffview adds framing, not data.
+- No hunk-level detail exists; `current` resolves to a file and no finer.
+
+**`plugin_neotest_*` — test state without re-running anything.**
+
+- `status` gives pass / fail / skipped / running counts from the captain's last run. Ask before proposing a fix for a failure you assume exists.
+- `positions` maps discovered tests to `file:line` — use it to name a test exactly, or to find which test covers the code under discussion.
+- `run` queues a run in their editor and returns immediately; poll `status` for the outcome. Prefer it over shelling out to the test binary when they're already watching neotest's output.
+
+**`plugin_dap_*` — a live debugger.** `status` is the cheap check for whether a session is even running; `stack` returns threads and frames as 0-indexed positions that feed straight into `editor_jump`. Runtime values from a paused process are something no shell command can produce — when they're debugging, this is the highest-value thing to read.
+
+**`plugin_coverage_report`** — the parsed report, so you never guess whether the project emits lcov or cobertura. Empty means nothing loaded yet, not zero coverage; pass `load` and expect it on the next call.
+
+**`plugin_todo_search`** — TODO / FIXME hits through the captain's own configured keywords and comment pattern. Prefer it over `editor_grep` for this one job, because a hand-rolled regex will miss their custom shapes.
+
 ### Reading state before acting
 
 `editor_status` is one round-trip for mode, focused buffer, cursor, and buffer list — call it before assuming which file the captain means by "this one". `editor_read` sees unsaved buffer contents, so prefer it over a filesystem read when the captain has been editing.
@@ -57,4 +83,5 @@ Navigation moves what the captain is looking at, so treat it as an interruption:
 - **Ask the server, not the text.** Any question about a symbol has an LSP answer that beats a regex.
 - **A set of locations belongs in the quickfix list**, not in prose.
 - **Positions are indexed inconsistently across tools** — check the schema each time.
-- **Degrade quietly.** No language server for a filetype, or the MCP absent entirely, means fall back to grep and the project's own tooling without ceremony.
+- **Degrade quietly.** No language server for a filetype, a `plugin_*` tool absent, or the MCP missing entirely — fall back to grep and the project's own tooling without ceremony or apology.
+- **Read their state before assuming it.** Test results, debugger frames, marked files, and the open diff are all things the captain produced. Ask the tool rather than reconstructing them from the repo.

@@ -36,6 +36,14 @@ function M.config()
         end,
       })
 
+      -- Each of these skips itself when its plugin isn't loaded, so the
+      -- list can stay unconditional.
+      require("hyprpilot.mcp.plugin.diffview").register()
+      require("hyprpilot.mcp.plugin.neotest").register()
+      require("hyprpilot.mcp.plugin.dap").register()
+      require("hyprpilot.mcp.plugin.coverage").register()
+      require("hyprpilot.mcp.plugin.todo_comments").register()
+
       if vim.v.servername == nil or vim.v.servername == "" then
         log:warn("hyprpilot: v:servername is empty — MCP bridge will not connect")
       end
