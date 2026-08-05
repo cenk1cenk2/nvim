@@ -44,6 +44,8 @@
    - The skill's own Boundaries still apply — code/commits/PRs written normal, Auto-Clarity suspends caveman for security/destructive/confusing moments, and "stop caveman" / "normal mode" reverts for the session.
    <!-- CAVEMAN-DEFAULT:END -->
 
+6. **MATCH MCP SERVERS TO SKILLS — ABSOLUTE, SAME STANDING AS CAVEMAN.** A server named `<x>` and a skill named `<x>` are the same subject: the skill carries how to use that server, and the catalog you cached in step 4 already tells you which pairs exist. **Before the first call to any MCP server, check the catalog for a skill of the same name and load it.** No user request is needed — the server's presence IS the trigger, exactly as caveman is the standing default. `hyprpilot-nvim` present means loading the `hyprpilot-nvim` skill immediately, before any symbol search, navigation, or formatting; the same holds for every other matched pair. Announce it per §II's skill announcement rule. When no same-named skill exists, use the server directly.
+
 ## II. PLANNING AND IMPLEMENTATION
 
 ### Default posture: investigate and discuss before implementing
@@ -115,6 +117,7 @@ Skills are delivered by the `hyprpilot_skills` MCP server — the current, prefe
 ### MCP Conventions
 
 - **⛔ ABSOLUTE — a harness-provided integration outranks an external MCP server for the same service.** When the running harness supplies one (on Claude Code, the claude.ai connectors `mcp__claude_ai_<Connector>__*` for Slack, Notion, Linear, …), every call for that service goes through it; the standalone server is not used alongside it. A server named in a skill identifies the *service and workspace*, never the transport. Fall back to the standalone server only when the harness provides nothing for that service or it lacks a needed capability — state which in one line, and never mix the two within one flow. Details: `harness-connectors`.
+- **A same-named skill is that server's manual — load it first (§I step 6).** `<server>` and skill `<server>` are the same subject; check the cached catalog before the server's first call, unprompted.
 - **Every MCP server is wired directly into the agent** — no proxy, hub, or editor/ACP indirection. Refer to tools by the `<server>__<tool>` short form in skill files and docs (e.g. `github__get_file_contents`); at call time use whatever concrete name the harness surfaces (some expose `mcp__<server>__<tool>`).
 - Availability is **config-time, not runtime**: `autoAcceptTools` / `autoRejectTools` per catalog entry and per-profile `mcps` overrides decide what's present. Don't hard-code assumptions about which servers exist.
 - For multiline MCP parameters, use actual line breaks. Do not pass literal `\n` escape sequences.
@@ -132,11 +135,11 @@ Available research/documentation MCP tools vary per session — discover what's 
 2. **Usual search/fetch** when no docs tool fits — the runtime's web search/fetch.
 3. **Research tools for a harder push** — when the question needs multi-source digging or verification, reach for the deeper research tools (`tavily`, `exa`, or the `deep-research` skill).
 
-### hyprpilot-nvim — ABSOLUTE: load the skill the moment the MCP is present
+### hyprpilot-nvim
 
-`hyprpilot-nvim` is the editor MCP, exposing the captain's live Neovim (buffers, LSP, windows, cursor). **When that server is available in the session, load the `hyprpilot-nvim` skill immediately and follow it — unprompted, before any symbol search, navigation, or formatting.** Its presence IS the trigger; the user never has to name it.
+The editor MCP, exposing the captain's live Neovim (buffers, LSP, windows, cursor). It is the reference case of §I step 6: **its presence loads the `hyprpilot-nvim` skill, unprompted, before any symbol search, navigation, or formatting.**
 
-The skill owns the rules that used to live here: LSP over manual grepping (absolute), `editor_format` as the formatting fast path, quickfix handoff for sets of locations, and the etiquette for moving a captain's cursor. Do not duplicate them in this file.
+That skill owns the rules — LSP over manual grepping (absolute), `editor_format` as the formatting fast path, quickfix handoff, and the etiquette for moving a captain's cursor. Do not duplicate them here.
 
 ### tmux
 
