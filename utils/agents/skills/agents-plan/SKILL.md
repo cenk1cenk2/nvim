@@ -56,7 +56,7 @@ This skill takes a plan (explicit file or inferred from a goal), builds a depend
   - **`team` (default)** — `TeamCreate` coordinates the run. The lead orchestrates and stays in the loop between layers.
   - **`fire-and-forget`** — no team coordination; agents run to completion and report. Use when the layer needs no lead involvement mid-flight.
 
-  **Note:** mode no longer controls permissions. On current Claude Code, subagents inherit the session's permission mode and the dispatch parameter is ignored — so autonomy is a property of the session you are running in, not of this axis. See `harness-<provider>-agents-delegate`.
+  **Note:** mode does not control permissions. Subagents inherit the session's permission mode and any dispatch-time parameter is ignored — so autonomy is a property of the session you are running in, not of this axis. See `harness-<provider>-agents-delegate`.
 - **Review cadence** (when `code-review-changes` runs):
   - **`per-layer` (default)** — review after each layer merges, before the next launches. Catches integration issues layer by layer.
   - **`per-task`** — implementer + reviewer pair for every task. Strictest. Use for risky refactors.
@@ -134,7 +134,7 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 - Spawn all teammates for this layer in a single message with multiple subagent dispatches. For each:
   - Worktree isolation (unless user opted out).
   - `team_name` set to the team created above.
-  - No permission-mode parameter — deprecated and ignored on current Claude Code; teammates run under the session's own posture.
+  - No permission-mode parameter — it is ignored; teammates run under the session's own posture.
   - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `harness-<provider>-agents-delegate`.
   - A general-purpose subagent.
 

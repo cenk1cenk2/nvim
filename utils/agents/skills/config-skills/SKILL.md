@@ -161,7 +161,7 @@ What hyprpilot itself *acts on* is small:
 
 Everything else — `disableModelInvocation`, `argumentHint`, and any key you invent — is **passed through untouched**. Hyprpilot enforces none of it; those are conventions the agent reads out of the metadata block, and the central `AGENTS.md` is what turns `disableModelInvocation` into an actual invocation rule. A stray Claude Code key (`when_to_use`, `allowed-tools`, `model`, `hooks`, …) therefore does not error — it just reaches the agent as noise. Do not add them.
 
-**Body structure:** the body starts directly with the plan-mode directive and top-level `##` sections — there is **no `## system` wrapper** (a retired convention, fully removed).
+**Body structure:** the body starts directly with the plan-mode directive and top-level `##` sections — there is **no `## system` wrapper**.
 
 ```markdown
 > **Plan-mode posture** (choose one per skill)
@@ -366,6 +366,7 @@ Run this checklist when creating, updating, or reviewing any skill description:
 - **Plan mode** — use it for skills that need research or multi-step planning. Skip it for interactive or quick-turnaround skills.
 - **Invocation tier** — set `disableModelInvocation` deliberately per the Invocation Tiers section above: `true` for manual-only skills; omit it for model-invocable and auto-invoke skills.
 - **MCP tools** — reference specific tool names (e.g., `github__*`) when the skill depends on them. Use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git status`, `slack__slack_list_channels`) — see MCP Tool Name Convention below.
+- **Describe the current state only** — no deprecation notes, no "formerly X", no "this used to be Y", no migration history. A skill is read at the moment of acting, and a past shape it names is a shape the agent can match by mistake. Delete the old wording and state the new one. The single exception is a `harness-*` reference version-marking *current* runtime behavior (`Since v2.1.186, …`) — that marks when a live claim was verified, not what it replaced.
 - **Be concise** — skills are instructions for an agent, not documentation for humans. Keep it actionable.
 - **End list items with `.`** — consistent punctuation across all skills.
 - **Examples** — workflow skills that orchestrate multi-step processes should include at least one example showing trigger → actions → result.

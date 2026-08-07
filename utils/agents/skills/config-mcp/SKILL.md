@@ -19,7 +19,7 @@ argumentHint: "[add|remove|modify] [server-name] [optional description]"
 
 ## Context
 
-The captain runs **hyprpilot** as the agent host. Hyprpilot loads MCP servers via the `[[mcps]]` array in `~/.config/hyprpilot/config.yaml` — each entry either points at a catalog file (`{ file = "..." }`) or declares inline `mcp_servers = { ... }`. The active catalog file today is `~/.config/nvim/utils/mcphub/servers.json` (the path is historical — the file is now consumed by hyprpilot, not mcphub.nvim). Per-profile `mcps` arrays wholesale-replace the global default.
+The captain runs **hyprpilot** as the agent host. Hyprpilot loads MCP servers via the `[[mcps]]` array in `~/.config/hyprpilot/config.yaml` — each entry either points at a catalog file (`{ file = "..." }`) or declares inline `mcp_servers = { ... }`. The active catalog file is `~/.config/nvim/utils/mcphub/servers.json` — hyprpilot consumes it, despite what the `mcphub` path segment suggests. Per-profile `mcps` arrays wholesale-replace the global default.
 
 This skill edits the catalog file `~/.config/nvim/utils/mcphub/servers.json`. Its top-level key is `mcpServers` — the standard shape Claude Code / Codex / every MCP client uses. Each server entry follows one of two transport patterns:
 

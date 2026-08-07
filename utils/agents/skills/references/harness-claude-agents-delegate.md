@@ -27,9 +27,7 @@ Mirrors the `*/claude/*` profiles in `~/.config/hyprpilot/config.yaml`. Keep in 
 
 Practical consequence: **you cannot grant a subagent a looser posture than the session that launched it.** If a task needs autonomy the session does not have, that is a decision about the *session*, taken with the user — not a dispatch parameter you can set.
 
-Since **v2.1.186**, a background subagent that reaches a tool call needing permission **surfaces the prompt in the main session**, naming the subagent that is asking; Esc denies that one call without stopping the subagent. Before v2.1.186, background subagents silently auto-denied.
-
-> **Historical note — do not apply to a current CLI.** Through roughly v2.1.81–v2.1.146, subagents did *not* inherit permissions and their gates could not surface, producing agents that stalled forever with no error (`anthropics/claude-code` #61547, #61315, #37730, #37442 — all now closed as not-planned/stale). On such a version the old advice holds: the stall is invisible, cross-repo dispatch is the worst trigger, and only artifact inspection separates stalled from finished. On a current CLI this is no longer the default explanation for a quiet agent.
+Since **v2.1.186**, a background subagent that reaches a tool call needing permission **surfaces the prompt in the main session**, naming the subagent that is asking; Esc denies that one call without stopping the subagent.
 
 ## Foreground vs background
 
@@ -39,9 +37,9 @@ Since **v2.1.186**, a background subagent that reaches a tool call needing permi
 - **Frontmatter `background: true`** forces a subagent to always run detached.
 - `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` disables background tasks entirely; `CLAUDE_CODE_FORK_SUBAGENT=1` forces everything to background and removes the `run_in_background` parameter.
 
-**Result delivery (v2.1.211+):** a background subagent's results reach the lead as a **completion notification in a later turn**, and the lead waits for that notification before reporting them. Asking about progress before it lands correctly reports "still running". Before v2.1.211 the lead sometimes reported results for a subagent that had not finished.
+**Result delivery (v2.1.211+):** a background subagent's results reach the lead as a **completion notification in a later turn**, and the lead waits for that notification before reporting them. Asking about progress before it lands correctly reports "still running".
 
-So: **never fabricate or pre-empt a pending agent's result, and never read its silence as a verdict** — but equally, do not assume collection is broken. On a current CLI the completion notification *is* the collection mechanism.
+So: **never fabricate or pre-empt a pending agent's result, and never read its silence as a verdict** — but equally, do not assume collection is broken. The completion notification *is* the collection mechanism.
 
 **On failure:** a background subagent that hits an API error is marked failed, and the message the lead receives names the error and includes the subagent's last output, so partial work is not lost.
 

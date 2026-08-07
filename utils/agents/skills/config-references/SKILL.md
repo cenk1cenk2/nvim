@@ -125,10 +125,10 @@ Rules:
 
 When references list MCP tool names in tables or inline, use the **`<server>__<tool>` short form** with **kebab-case server names**: `linear-kilic__get_issue`, `slack-kilic__slack_list_channels`, `argocd-kilic__list_applications`, `grafana-laravel__query_prometheus`, `spacelift-laravel__list_stacks`. Server keys use `-` only; `/` and `_` are not valid separators inside server keys. Do NOT bake in a transport prefix (`mcp__...`) — the runtime resolves the prefix at call time. Hyprpilot wires every MCP server directly (no aggregator hub), so the bare server name is the only thing that matters in references.
 
-**Removed servers — do NOT reference these in new or updated content:**
+**Servers that do not exist — never reference these:**
 
 - `git__*` tools — there is no `git` MCP. Reference raw `git` CLI (`git status`, `git diff`, `git log`, etc.) via `Bash` instead.
-- `kubernetes__*` tools — the `kubernetes` MCP has been removed. Reference `kubectl` CLI via `Bash` if needed.
+- `kubernetes__*` tools — there is no `kubernetes` MCP. Reference `kubectl` CLI via `Bash` if needed.
 
 **Tmux MCP is read-only.** Only the read-only tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are usable. References must NOT include `execute-command`, `create-window`, `split-pane`, `kill-*`, or `create-session` as a recommended action. For command execution, reference the built-in `Bash` tool. For reads, reference the `tmux__*` tools rather than `tmux` CLI invocations — the CLI belongs in a reference only where the MCP exposes no equivalent (the *current* session) or where the MCP may be absent. Session naming and capture-size guidance live in `tmux.md`; point at it instead of duplicating either.
 
@@ -142,4 +142,5 @@ After applying reference edits and any consumer frontmatter updates, hand off pe
 - A reference should be **self-contained** — readable without loading other references.
 - **No frontmatter** — only skills have YAML frontmatter.
 - **No workflow steps** — references contain conventions and patterns, not process instructions.
+- **Current state only** — no deprecation notes, no "formerly X", no history of what a convention replaced. Rewrite to the live shape and delete the old one; a past shape named in a reference is one the agent can match by mistake. Version-marking *current* runtime behavior in a `harness-*` file stays — that dates a live claim rather than narrating a change.
 - After creating or updating a shared reference, always check if skills need their `references:` frontmatter updated.
