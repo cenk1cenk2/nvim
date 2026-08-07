@@ -57,7 +57,10 @@ Popup sessions are spawned by `tmux-toggle-popup`, so their names encode where t
 
 Note the doubled slash in real names: `<cwd>` is absolute, so the nvim overlay for `/home/user/proj` reads `root/nvim//home/user/proj/nvim`.
 
-Two consequences worth holding onto:
+## Which Terminal the Captain Means
 
-- **"The scratch pane" is ambiguous** — `<session>/scratch` is the general overlay, while each editor has its own `.../nvim` overlay. When the captain says "the scratch pane" and both plausibly hold the output, ask which rather than capturing both.
-- **A session ending in `/nvim/scratch` is stale.** That was the old name of the per-instance overlay; it is now `.../nvim`. Match on the current shape.
+Both `<session>/scratch` and `<session>/nvim/<cwd>/nvim` are scratch terminals. Resolve between them by this rule, not by asking:
+
+1. **The editor's own overlay wins by default** — when a `<session>/nvim/<cwd>/nvim` exists for the repo in play, that is the terminal the captain means.
+2. **The general overlay when they name it** — "general scratch popup", "scratch", or any wording pointing away from the editor means `<session>/scratch`.
+3. **No editor overlay, no ambiguity** — with no `.../nvim` session present, `<session>/scratch` is the only scratch terminal.

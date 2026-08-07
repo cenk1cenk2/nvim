@@ -18,7 +18,7 @@ argumentHint: "[brief description of what failed, e.g., 'build failed', 'test su
 
 ### Step 1: Capture the Failure
 
-- Grab the terminal output with `tmux__capture-pane`, bounded by `lines`. The command was most likely run in the general overlay (`<session>/scratch`) or in an editor instance's own overlay (`<session>/nvim/<cwd>/nvim`) — resolve the pane through `tmux__find-session` / `tmux__list-windows` / `tmux__list-panes` rather than guessing an id.
+- Grab the terminal output with `tmux__capture-pane`, bounded by `lines`. Pick the scratch terminal by the rule in the `tmux` reference — the editor's own overlay for the repo in play, unless the user pointed at the general one — and resolve its pane through `tmux__find-session` / `tmux__list-windows` / `tmux__list-panes` rather than guessing an id.
 - If the failure output is not visible in the pane (scrolled off or in a different pane), ask the user which pane or window contains the output.
 - Extract the **error messages, stack traces, and exit codes** from the captured output.
 
