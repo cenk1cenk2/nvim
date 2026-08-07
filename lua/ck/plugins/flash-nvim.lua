@@ -4,7 +4,8 @@ local M = {}
 M.name = "folke/flash.nvim"
 
 function M.config()
-  require("ck.setup").define_plugin(M.name, true, {
+  -- TODO: enable back when flash.nvim is updated with https://github.com/folke/flash.nvim/pull/492
+  require("ck.setup").define_plugin(M.name, false, {
     plugin = function()
       ---@type Plugin
       return {
