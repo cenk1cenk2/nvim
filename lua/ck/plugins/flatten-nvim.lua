@@ -83,19 +83,23 @@ function M.config()
               return nil
             end
 
-            local win = nvim.fn.pick_window()
+            local win = nvim.fn.open_in_picked_window(focus.bufnr)
+
+            -- Deliberately falls through on a dismissed picker as well as on no
+            -- candidates: the file came from an external `nvim` invocation whose
+            -- shell is blocked waiting for it, so it has to land somewhere.
             if not win then
               win = require("flatten.core").smart_open()
-            end
 
-            if win then
-              vim.api.nvim_win_set_buf(win, focus.bufnr)
-              vim.api.nvim_set_current_win(win)
-            else
-              win = vim.api.nvim_open_win(focus.bufnr, true, {
-                vertical = false,
-                win = 0,
-              })
+              if win then
+                vim.api.nvim_win_set_buf(win, focus.bufnr)
+                vim.api.nvim_set_current_win(win)
+              else
+                win = vim.api.nvim_open_win(focus.bufnr, true, {
+                  vertical = false,
+                  win = 0,
+                })
+              end
             end
 
             return focus.bufnr, win

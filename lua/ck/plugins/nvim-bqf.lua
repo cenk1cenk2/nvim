@@ -32,8 +32,37 @@ function M.config()
     end,
     on_setup = function(c)
       require("bqf").setup(c)
+
+      M.route_mouse_open_through_the_picker()
     end,
   })
+end
+
+--- Send double-click on a quickfix entry through the same window picker as
+--- `<CR>` and `o`.
+---
+--- The keymap cannot be taken the ordinary way: bqf installs it from inside a
+--- `defer_fn(..., 50)` once its preview attaches, so anything bound at
+--- `FileType` time is overwritten a moment later. Replacing the function its
+--- mapping calls wins without racing that timer.
+function M.route_mouse_open_through_the_picker()
+  local ok, handler = pcall(require, "bqf.preview.handler")
+
+  if not ok then
+    return
+  end
+
+  local original = handler.mouseDoubleClick
+
+  handler.mouseDoubleClick = function(mode)
+    -- The fzf filter binds this same handler with a mode inside its own terminal
+    -- buffer, where a click is choosing an fzf line, not a quickfix entry.
+    if mode ~= nil then
+      return original(mode)
+    end
+
+    require("ck.plugins.quicker-nvim").open_with_window_picker({ mouse = true })
+  end
 end
 
 return M

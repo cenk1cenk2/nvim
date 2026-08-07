@@ -184,38 +184,27 @@ function M.config()
       -- Helper: switch to a buffer by path or bufnr, creating if needed
       -- Uses window-picker to find a suitable window, avoiding special windows
       local function switch_to_buffer(path, bufnr)
-        local function focus_or_pick(target_buf)
-          local wins = vim.fn.win_findbuf(target_buf)
-          if #wins > 0 then
-            vim.api.nvim_set_current_win(wins[1])
+        local target = bufnr
 
+        if not (target and vim.api.nvim_buf_is_valid(target)) then
+          -- `bufadd("")` would happily make a fresh unnamed buffer.
+          if not path or path == "" then
             return
           end
 
-          local win = nvim.fn.pick_window()
-          if win then
-            vim.api.nvim_set_current_win(win)
-          end
-          vim.api.nvim_set_current_buf(target_buf)
+          -- `bufadd` gives the same buffer `:edit` would, so the path case can
+          -- take the shared placement logic instead of its own. It stops short
+          -- of listing it, which `:edit` does, so opened files would otherwise
+          -- go missing from `:ls` and `:bnext`.
+          target = vim.fn.bufadd(path)
+          vim.bo[target].buflisted = true
         end
 
-        if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
-          focus_or_pick(bufnr)
-
-          return
-        end
-
-        if path then
-          local existing = vim.fn.bufnr(path)
-          if existing ~= -1 then
-            focus_or_pick(existing)
-          else
-            local win = nvim.fn.pick_window()
-            if win then
-              vim.api.nvim_set_current_win(win)
-            end
-            vim.cmd.edit(vim.fn.fnameescape(path))
-          end
+        -- Nothing pickable — land it in the current window rather than dropping
+        -- the request on the floor. A dismissed picker returns false and is
+        -- left alone.
+        if nvim.fn.open_in_picked_window(target) == nil then
+          vim.api.nvim_set_current_buf(target)
         end
       end
 
