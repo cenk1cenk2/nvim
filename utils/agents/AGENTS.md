@@ -143,9 +143,12 @@ The editor MCP — the captain's live Neovim (buffers, LSP, windows, cursor). Pe
 
 ### tmux
 
-Use tmux MCP tools only for **read-only** inspection of existing user panes when the user references them or asks you to look at/search their terminal state. Do not execute commands or manage panes with tmux — use normal command execution for that.
+Use tmux MCP tools only for **read-only** inspection of existing user panes when the user references them or asks you to look at/search their terminal state. Do not execute commands or manage panes with tmux — the write tools are disabled; run things with `Bash`.
 
-- **Anchor to the current session first.** Whether you run inside neovim (via `hyprpilot-nvim`) or directly under hyprpilot, you share the user's tmux session — find that session first and work from it before looking at any other. Identify it from the shell via `Bash` (`$TMUX`, `$TMUX_PANE`, or `tmux display-message -p '#S'`), then scope inspection with `tmux__list-sessions` / `tmux__list-panes` / `tmux__capture-pane`. Only branch to another session if the current one doesn't hold what the user meant.
+- **Read with `tmux__*`, not the tmux CLI.** For listing, finding, and capturing, prefer the MCP tools over `tmux` shelled through `Bash` — structured results, no quoting, fewer round-trips. The CLI is for what the MCP does not expose (notably the *current* session: `$TMUX`, `$TMUX_PANE`, `tmux display-message -p '#S'`) or when the MCP is absent.
+- **Anchor to the current session first.** Whether you run inside neovim (via `hyprpilot-nvim`) or directly under hyprpilot, you share the user's tmux session — find that session first and work from it before looking at any other. Identify it from the shell, then scope with `tmux__find-session` / `tmux__list-windows` / `tmux__list-panes` / `tmux__capture-pane`. Only branch to another session if the current one doesn't hold what the user meant.
+- **Bound every capture.** `tmux__capture-pane` returns raw scrollback — pass `lines` and start at the tail; an unbounded capture of a build pane is how a tmux read floods the context.
+- **Session names say where a pane came from.** `<session>/scratch` is the general overlay; `<session>/nvim/<cwd>/nvim` is that editor instance's terminal overlay; `<session>/nvim/<cwd>/<tool>` is a tool popup (`lazygit`, `k9s`, `yazi`, …). Full map and capture guidance live in the `tmux` reference — skills that inspect panes declare it.
 
 ### CLI
 

@@ -4,6 +4,7 @@ description: 'code-task-failed Investigate a failed command (build, test, lint) 
 disableModelInvocation: true
 references:
   - ../references/present-first.md
+  - ../references/tmux.md
 argumentHint: "[brief description of what failed, e.g., 'build failed', 'test suite', 'lint errors']"
 ---
 
@@ -13,9 +14,11 @@ argumentHint: "[brief description of what failed, e.g., 'build failed', 'test su
 
 ## Process
 
+> **Terminal state.** Read the `tmux` reference before the first capture — which overlay is which, and how to bound a capture so it doesn't flood context.
+
 ### Step 1: Capture the Failure
 
-- Use `tmux__capture-pane` on the scratch pane to grab the terminal output.
+- Grab the terminal output with `tmux__capture-pane`, bounded by `lines`. The command was most likely run in the general overlay (`<session>/scratch`) or in an editor instance's own overlay (`<session>/nvim/<cwd>/nvim`) — resolve the pane through `tmux__find-session` / `tmux__list-windows` / `tmux__list-panes` rather than guessing an id.
 - If the failure output is not visible in the pane (scrolled off or in a different pane), ask the user which pane or window contains the output.
 - Extract the **error messages, stack traces, and exit codes** from the captured output.
 
@@ -76,7 +79,7 @@ Based on the failure category and user context, investigate using available tool
 
 If the root cause isn't immediately clear:
 
-- **Narrow the scope** — re-run the failing command targeting a single file or test via tmux scratch pane.
+- **Narrow the scope** — re-run the failing command with `Bash`, targeting a single file or test. Execution never goes through the tmux MCP; that server only reads panes the user already ran things in.
 - **Check if it reproduces** — sometimes failures are flaky. Run the command again before deep-diving.
 - **Binary search recent changes** — if the failure is new, use `git log` and `git diff` to identify the introducing commit.
 

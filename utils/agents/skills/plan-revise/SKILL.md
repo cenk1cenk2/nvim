@@ -119,7 +119,7 @@ Extra sources specific to `plan-revise`:
 
 - `git log --since=<plan-date>` — what has been done since the plan.
 - `git diff` — concrete changes on the branch.
-- Build / test output (via tmux) — to confirm whether the current approach actually fails.
+- Build / test output — run it with `Bash`, or capture what the user already ran with `tmux__capture-pane` — to confirm whether the current approach actually fails.
 
 ## Stop Conditions
 

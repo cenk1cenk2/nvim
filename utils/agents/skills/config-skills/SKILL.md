@@ -339,7 +339,7 @@ When creating or updating a skill, always check:
 | Git | `commit-*`, `release-convention` | Commit message style, trailers, release-automation detection. |
 | Posture | `plan-mode`, `present-first`, `mode-toggle` | How a skill behaves before it writes; voice-mode on/off mechanics. |
 | Authoring policy | `output-diff`, `redact-private-data`, `commit-push-scoped`, `review-findings` | How authored output is presented, redacted, and committed. |
-| Service | `obsidian`, `slack*`, `sourcebot-discovery`, `enrich-context`, `excalidraw-*`, `spacelift-github` | Per-service tool sets and conventions. |
+| Service | `obsidian`, `slack*`, `sourcebot-discovery`, `enrich-context`, `excalidraw-*`, `spacelift-github`, `tmux` | Per-service tool sets and conventions. |
 | Runtime paths | `provider-paths` | Plans / state / worktree directories per runtime. Never hardcode these in a body. |
 
 Two carry a hard rule worth knowing without opening the file:
@@ -392,7 +392,9 @@ Examples:
 
 **There is no `git` MCP server.** For local git operations, reference raw `git` CLI commands (`git status`, `git diff`, `git log`, `git show`, `git commit`, etc.) called via `Bash`. Do NOT introduce a `git__*` tool reference into new or updated skills.
 
-**The `tmux` MCP server is read-only.** Write tools (`execute-command`, `create-window`, `split-pane`, `kill-*`, `create-session`) are disabled. Skills that need to execute commands MUST use the built-in `Bash` tool. The remaining tmux tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are still available for inspecting existing user panes.
+**The `tmux` MCP server is read-only.** Write tools (`execute-command`, `create-window`, `split-pane`, `kill-*`, `create-session`) are disabled. Skills that need to execute commands MUST use the built-in `Bash` tool — a step that says "run it in the scratch pane" is not merely stylistically wrong, it cannot execute. The remaining tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are still available for inspecting existing user panes.
+
+When a skill inspects panes, write its steps against those `tmux__*` tools rather than `tmux` CLI calls shelled through `Bash`, and declare `../references/tmux.md` — it owns the session naming map and the capture-size guard, so no skill should restate either.
 
 ## Examples
 

@@ -130,7 +130,7 @@ When references list MCP tool names in tables or inline, use the **`<server>__<t
 - `git__*` tools — there is no `git` MCP. Reference raw `git` CLI (`git status`, `git diff`, `git log`, etc.) via `Bash` instead.
 - `kubernetes__*` tools — the `kubernetes` MCP has been removed. Reference `kubectl` CLI via `Bash` if needed.
 
-**Tmux MCP is read-only.** Only the read-only tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are usable. References must NOT include `execute-command`, `create-window`, `split-pane`, `kill-*`, or `create-session` as a recommended action. For command execution, reference the built-in `Bash` tool.
+**Tmux MCP is read-only.** Only the read-only tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are usable. References must NOT include `execute-command`, `create-window`, `split-pane`, `kill-*`, or `create-session` as a recommended action. For command execution, reference the built-in `Bash` tool. For reads, reference the `tmux__*` tools rather than `tmux` CLI invocations — the CLI belongs in a reference only where the MCP exposes no equivalent (the *current* session) or where the MCP may be absent. Session naming and capture-size guidance live in `tmux.md`; point at it instead of duplicating either.
 
 ## Committing Changes
 
