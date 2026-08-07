@@ -86,9 +86,7 @@ function M.config()
         {
           "<F1>",
           function()
-            require("tmux-toggle-popup").open({
-              name = "nvim/scratch",
-            })
+            require("tmux-toggle-popup").open({})
           end,
           desc = "toggle tmux popup",
         },
