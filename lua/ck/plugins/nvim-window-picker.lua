@@ -21,10 +21,23 @@ function M.config()
             filetype = vim.tbl_filter(function(ft)
               return not vim.tbl_contains(nvim.pickable_filetypes, ft)
             end, nvim.disabled_filetypes),
+            buftype = nvim.disabled_buffer_types,
           },
           autoselect_one = true,
           include_current_win = true,
         },
+        -- The default filter stack has no notion of floating windows, and a
+        -- preview float carries no filetype to exclude it by — it reads as an
+        -- ordinary unnamed buffer. Wrap that filter rather than replace it, so
+        -- `filter_rules` stays in charge of everything else.
+        filter_func = function(windows, rules)
+          local filter = require("window-picker.filters.default-window-filter"):new()
+          filter:set_config(rules)
+
+          return vim.tbl_filter(function(win)
+            return vim.api.nvim_win_get_config(win).relative == ""
+          end, filter:filter_windows(windows))
+        end,
         highlights = {
           winbar = {
             focused = {

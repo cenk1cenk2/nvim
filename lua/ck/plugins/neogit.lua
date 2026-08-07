@@ -18,6 +18,22 @@ function M.config()
       }
     end,
     configure = function(_, fn)
+      -- `gitcommit` and `gitrebase` stay out of this — those are buffers you
+      -- edit, not panels.
+      fn.add_disabled_filetypes({
+        "NeogitCommitSelectView",
+        "NeogitCommitView",
+        "NeogitConsole",
+        "NeogitDiffView",
+        "NeogitGitCommandHistory",
+        "NeogitLogView",
+        "NeogitPopup",
+        "NeogitReflogView",
+        "NeogitRefsView",
+        "NeogitStashView",
+        "NeogitStatus",
+      })
+
       fn.setup_callback(require("ck.plugins.possession-nvim").name, function(c)
         local before_save = c.hooks.before_save
         c.hooks.before_save = function(name)
