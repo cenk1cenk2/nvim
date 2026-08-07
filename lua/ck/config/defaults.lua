@@ -22,8 +22,8 @@ return {
       },
       width = {
         xs = { ratio = 0.15, cells = 30 },
-        sm = { ratio = 0.2, cells = 50 },
-        md = { ratio = 0.25, cells = 80 },
+        sm = { ratio = 0.2, cells = 40 },
+        md = { ratio = 0.25, cells = 75 },
         lg = { ratio = 0.35, cells = 90 },
         -- AI / chat panels: three-branch (ratio -> cells -> wide).
         xl = { ratio = 0.4, cells = 100, wide = 120, ratio_below = "narrow", wide_above = "wide" },
