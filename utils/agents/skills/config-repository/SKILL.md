@@ -118,9 +118,15 @@ Keep it to 3-5 sentences. An agent reading this should immediately understand th
 
 Patterns, naming conventions, commit style, branching strategy, and anything a new agent session needs to follow. One line per convention.
 
+## Constraints
+
+Why the repo is shaped the way it is, stated as standing facts. This is where the reasoning behind a fork point belongs — as the constraint that still holds, not as an account of the decision.
+
+- [Constraint] — [what it rules out, and why that alternative does not work here]
+
 ## Decision Log
 
-Fork points — what was decided, why, and what was rejected. This is the most important section for preventing wasted work.
+**Opt-in — include only when the user explicitly asks for it.** Fork points as history: what was decided, why, what was rejected. Default to folding the durable half into `Constraints` instead.
 
 - **[Decision title]**
   - Chose: [approach taken]
@@ -129,10 +135,9 @@ Fork points — what was decided, why, and what was rejected. This is the most i
 
 ## Approaches Tried
 
-Dead ends and failed experiments. Future sessions MUST read this before proposing solutions.
+**Opt-in — include only when the user explicitly asks for it.** Dead ends and failed experiments. Default to expressing the same knowledge as a `Gotchas` or `Constraints` entry phrased as current behaviour.
 
 - [What was tried] → [why it failed or was abandoned]
-- [What was tried] → [outcome and reason for stopping]
 
 ## Tools & MCP Usage
 
@@ -147,17 +152,40 @@ Non-obvious things that trip up agents or developers. Things that look like they
 
 ## Writing Rules
 
-- **Always write how and why** — not just what. "We use X" is useless. "We use X because Y, and Z didn't work because W" is useful.
+> ⛔ **Present tense, current state only — unless the user explicitly asks for history.**
+>
+> The file describes how the repo works **now**. It is not a changelog, a migration record, or a
+> postmortem. Never write what changed, what it used to be, what was tried and failed, what a spec
+> originally said, or when something was verified. A reader must not be able to tell which parts
+> are new.
+>
+> Caveats, gotchas and constraints are always welcome — phrase them as standing properties:
+>
+> | Instead of | Write |
+> |---|---|
+> | "We moved X to Y because Z broke" | "X lives in Y — Z cannot hold it because …" |
+> | "Verified live on `sun` that layers deep-merge" | "Layers deep-merge; `<example>` shows the shape" |
+> | "The spec called it `a.yaml`; it shipped as `b.yaml`" | "`b.yaml` holds …" |
+> | "This was tried and rejected" | "This does not work here because …" |
+> | "Renamed in v2; old name no longer valid" | *(delete the old name entirely)* |
+>
+> A rejected alternative is worth keeping **only as the constraint that rules it out** — the
+> constraint stays true and useful, the narrative does not.
+>
+> When the user does explicitly ask for decision history, `Decision Log` and `Approaches Tried`
+> are the sections for it, and nothing else in the file adopts that voice.
+
+- **Always write how and why** — not just what. "We use X" is useless. "We use X because Y, and Z doesn't work because W" is useful.
 - **Be concise** — this file is loaded into agent context windows. Every line must earn its place.
 - **Delete aggressively** — outdated information is worse than no information. If something changed, remove the old version entirely.
-- **Decision Log is sacred** — never delete entries from the Decision Log unless the decision was reversed. Add new entries, update outcomes, but preserve the history of why choices were made.
-- **Approaches Tried is append-mostly** — failed approaches stay forever so no one tries them again. Only remove if the underlying constraint changed (e.g., a library bug was fixed).
+- **Constraints are append-mostly** — a constraint stays until the thing that causes it changes, because it is what stops the same dead end being walked again. Remove one only when it no longer holds.
+- **Decision Log is sacred, when it exists** — in the opt-in case, never delete an entry unless the decision was reversed. Add entries and update outcomes, but preserve why choices were made.
 - **No fluff** — no "this file was last updated on...", no meta-commentary, no TODOs about what to document later. If you know it, write it. If you don't, skip the section.
 - **Match existing style** — if the file already exists with a different structure, adapt to it rather than forcing the template. The sections above are a starting point, not a rigid schema.
 
 ## Key Principles
 
 - **Session-aware.** The primary input for revisions is the current conversation — what was learned, what was decided, what failed. Read the session carefully before proposing changes.
-- **Destructive updates are fine.** This is not a changelog. If a section is wrong, rewrite it. If a convention changed, update it. If an approach that "failed" now works, move it out of Approaches Tried.
-- **Fork points matter most.** The Decision Log and Approaches Tried sections save the most time for future sessions. Prioritize these over everything else.
+- **Destructive updates are fine.** This is not a changelog. If a section is wrong, rewrite it. If a convention no longer holds, replace it — do not leave the old one struck through or annotated.
+- **Constraints matter most.** Knowing what does not work here, and why, saves more time than any other section. Prioritize it over everything except correctness of the current state.
 - **Tools section prevents tool misuse.** Documenting which MCP tools work well (and which don't) in this repo prevents future sessions from fumbling with wrong tools or missing useful ones.
