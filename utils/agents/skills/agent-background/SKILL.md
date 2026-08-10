@@ -2,12 +2,15 @@
 name: agent-background
 description: 'agent-background Arm a background wait-loop that polls an external condition (PR/MR merge, CI or deploy run, human approval) and re-invokes the session once when it is met, instead of sleeping or asking the user to ping. Do NOT use to poll background Agent/Workflow work you started (the harness re-invokes automatically) or for self-paced loop iteration (use /loop).'
 references:
+  - ../references/long-running-work.md
   - ../references/agent-watchers.md
 ---
 
 > **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that file owns the tool names, parameters, and defaults.
 
 ## Context
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 Some work blocks on state that changes **outside the session** and that the harness will NOT notify you about: a human merging a change, a CI run finishing, a deploy converging, a remote queue draining, a job completing, a person approving. The two wrong reactions are (a) ending the turn to ask the user to ping you back, and (b) sleeping one short cycle at a time so the session wakes every iteration (noisy). The right reaction is **one background loop that polls the condition itself and wakes the session exactly once, when it's met.**
 

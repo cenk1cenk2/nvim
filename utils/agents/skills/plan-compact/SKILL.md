@@ -4,6 +4,8 @@ description: 'plan-compact Keep a compaction-resilient working anchor for a long
 disableModelInvocation: true
 argumentHint: "[optional task note]"
 references:
+  - ../references/long-running-work.md
+  - ../references/agent-watchers.md
   - ../references/reconcile-state.md
   - ../references/agent-delegate.md
   - ../references/mode-toggle.md
@@ -11,6 +13,8 @@ references:
 ---
 
 ## Plan Compact — In-Session Compaction Anchor
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
@@ -80,6 +84,7 @@ Before an anticipated compaction — when the context is growing long, or on the
 1. **Cross-check for drift.** Compare the anchor against every source document, and the sources against each other: stale status, contradictory decisions, facts that have diverged, an anchor that no longer matches Linear / the plan file / live PR-MR state.
 2. **Delegate when there are several sources.** This is a read-only comparison — dispatch it to a cheap-tier subagent (via the `agent-delegate` mechanics; load `agent-harness` to resolve the tier), handing it the anchor plus the source list and asking it to report only the inconsistencies. Keeps the diffing out of the main context.
 3. **Report inconsistencies to the user before continuing.** Do not silently reconcile material drift — surface which sources disagree and on what, and let the user decide. Fold agreed resolutions into the anchor and the affected source.
+3b. **⛔ The anchor is yours, so propose bringing it current — do not hand over a stale one.** Per `reconcile-state`, an artifact this session created gets reconciled rather than left wrong. Before the compaction lands, offer the update in one line: *"anchor is behind on X and Y — update it to current state before compacting?"* Sources you do not own still only get surfaced, never edited. A compaction that preserves a stale anchor preserves the wrong thing, and the resuming agent trusts it precisely because it survived.
 4. **Self-check the anchor MECHANICALLY, not by reading it.** Reading misses these — a stale line reads as true, and a missing section reads as absent rather than wrong. `grep` for:
    - every scratchpad script named anywhere in prose has its **full body** inlined (a script mentioned but not inlined is unrecoverable after compaction);
    - no contradictory mode/role/hold directives — search the mode keywords and confirm every hit is either current or explicitly marked superseded;
@@ -122,6 +127,54 @@ Detail on each step:
 5. **Rebuild and reconcile.** Reconstruct the working model, including the methodology and caveats. Where the anchor and a live source disagree, the source wins — update the anchor to match.
 6. **Report the reconstructed state** (task, methodology in brief, done, next task, active watches) in a few lines, then **resume** the exact task from the next-task handoff.
 
+## Carrying Posture Across the Compaction
+
+Compaction strips posture hardest, because it reads as tone rather than fact. Each subsection below is a thing the anchor MUST carry and the resuming agent MUST honour. **A resuming agent adopts the recorded architecture — it does not pick its own.**
+
+### Watchers
+
+Watcher cases and cadence live in `agent-watchers`; arming mechanics in the `agent-background` skill. What matters here is that a watcher is **runtime state that does not survive** — the loop dies with the session, and its body lives in a scratchpad that is already gone.
+
+Record per watcher, in *Scratchpad Scripts & Watchers*:
+
+- **What it watches and the done-condition** — "prod pipeline 8 jobs, all FINISHED", "PR #4821 merged", "human approval on the MR".
+- **The verbatim body** — full command or loop, plus its scratchpad path. Not a description of it.
+- **The cadence and any cap**, and what happens when the cap is hit.
+- **What fires on the wake** — the action the watcher exists to trigger, exactly.
+
+Then state, unambiguously, **whether the resuming agent re-arms**:
+
+| Recorded state | Resuming agent |
+|---|---|
+| Mode ON, watcher was live | Re-arm it from the inlined body, report that it did |
+| Mode ON, condition already met while compacting | Do NOT re-arm — run the fired action instead |
+| PARKED | Re-arm **nothing**. Parked means nothing is armed and nothing resumes until the user re-engages by name |
+| Mode OFF | Re-arm nothing; ending the turn idle is correct |
+
+⛔ **Re-arming is a write, not a read.** If the anchor does not say a watcher was live, the resuming agent asks rather than arming one it inferred.
+
+### Coordinator / Supervisor
+
+These postures decide *who does the work*, so resuming without them silently converts a delegating session into a hands-on one. Record:
+
+- **Which posture is active**, its **agreed scope**, and the exact phrase that re-engages it.
+- **The routing rule in force** — what gets dispatched versus kept in-house, and at which tier.
+- **Every agent spawned**: name/id, its brief, and whether it is live, delivered, or reaped. A resuming agent must not re-dispatch work that already ran, and must not assume a quiet agent failed.
+- **Standing holds and pre-approvals** — what the user already blessed within the scope, so the resuming agent neither re-asks nor over-reaches.
+- **For supervisor specifically:** that implementation is never done in-house, and which tracker items it is keeping honest.
+
+The resuming agent stays in that posture. Dropping to hands-on work because the transcript looks like a normal task is the failure this section prevents.
+
+### Bulldozer
+
+Bulldozer is momentum, so the anchor has to carry *how* the push was running, not just that it was:
+
+- **What was being pushed through**, and the stop condition — what "done" is, and whether the user set a boundary.
+- **The queue** — what was in flight, what was next, in order. Bulldozer never ends a turn idle, so a resume with an empty queue means the queue was lost, not finished.
+- **What was already tried and rejected**, so the resume does not re-attempt it and call it progress.
+- **The hard stops that still apply** — destructive actions, credentials, external sends. Bulldozer never relaxes those, and the anchor says so explicitly so a resuming agent does not read momentum as permission.
+- **The exact re-engage phrase**, and that a watcher wake or task notification is never itself permission to resume pushing.
+
 ## Anchor Document Format
 
 ```markdown
@@ -142,13 +195,24 @@ Detail on each step:
 [One or two lines: what we are doing and the end state.]
 
 ## Posture — VERIFY BEFORE ACTING
-- **Mode:** bulldozer ON | OFF/default. If OFF, ending a turn idle is CORRECT.
+- **Mode:** bulldozer ON | coordinator | supervisor | OFF/default | **PARKED**. Re-engage
+  phrase: `<exact words>`. If OFF or PARKED, ending a turn idle is CORRECT.
 - **Role:** who merges / applies / confirms / deploys. [If the user owns these and the
   agent never does, say so as an invariant.]
 - **Delegation:** [delegate-by-default or not; what the main loop keeps — typically gates,
   go/no-go, fact-checking; which agent types proved reliable; isolation requirements.]
+- **Agreed scope:** [what the posture was engaged over — work outside it is a question,
+  not an extension.]
+- **Routing rule:** [what gets dispatched vs kept in-house, and at which tier.]
+- **Agents spawned:** `<name/id>` — [brief] — live | delivered | reaped. [A resuming agent
+  neither re-dispatches delivered work nor assumes a quiet agent failed.]
+- **Bulldozer queue** (when ON): in flight → next → after. [An empty queue on resume means
+  it was lost, not finished.] Tried and rejected: [so the resume does not re-attempt it.]
 - **Trust:** [whether subagent/tool claims get re-verified before being acted on.]
-- **Standing holds:** [gate — release condition.]
+- **Standing holds / pre-approvals:** [gate — release condition; what the user already
+  blessed inside the scope, so the resume neither re-asks nor over-reaches.]
+- **Hard stops that still apply:** destructive actions, credentials, external sends —
+  never relaxed by any mode. A watcher wake or task notification is never permission.
 - **Resuming does NOT authorise:** [opening PRs, applying, re-arming, posting externally.]
 
 ## Methodology & Approach
@@ -164,9 +228,13 @@ decisions, verification commands. The "how" a summary would drop.]
 - `<repo path>` — [what it holds].
 
 ## Standing Watches / Ongoing
-- `<PR/MR URL>` — [what we are watching for, e.g. CI green + review approval].
-- `<pipeline / CI ref>` — [awaited result].
-- `<background agent / loop>` — [what it is doing, how to check].
+[Per watch: the done-condition, the cadence and cap, what fires on the wake, and whether
+the resuming agent RE-ARMS it. Re-arming is a write — if this does not say a watch was
+live, the resume asks instead of arming one it inferred. PARKED means re-arm nothing.]
+- `<PR/MR URL>` — watching: [CI green + review approval]. Cadence: [every N min, cap M].
+  On wake: [exact action]. Re-arm on resume: yes | no — [why].
+- `<pipeline / CI ref>` — awaited: [result]. On wake: [action]. Re-arm: yes | no.
+- `<background agent / loop>` — [what it is doing, how to check]. Re-arm: yes | no.
 
 ## Scratchpad Scripts & Watchers
 [Scratchpad/temp files do NOT survive compaction and are NOT reliably shared — inline

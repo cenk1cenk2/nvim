@@ -4,6 +4,7 @@ description: 'agent-coordinator Coordinator posture: your own context is the sca
 disableModelInvocation: true
 argumentHint: "[scope to coordinate] [optional: 'bulldozer' to also engage push-through mode]"
 references:
+  - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/agent-conventions.md
   - ../references/agent-watchers.md
@@ -16,6 +17,8 @@ references:
 ---
 
 ## Coordinator Posture
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 

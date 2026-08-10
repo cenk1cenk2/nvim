@@ -4,10 +4,13 @@ description: 'plan-pickup Load and execute a plan file from a previous session. 
 disableModelInvocation: true
 argumentHint: "[plan-file-path or plan-name]"
 references:
+  - ../references/long-running-work.md
   - ../references/provider-paths.md
 ---
 
 ## Plan Pickup — Loading and Executing Existing Plans
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 ## Context
 

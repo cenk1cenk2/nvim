@@ -3,6 +3,7 @@ name: agent-plan
 description: 'agent-plan Plan and execute multi-task work across agents via a dependency-aware DAG scheduler; layers run in parallel with review pauses between them. Modes: "team" (default, lead orchestrates) or "fire-and-forget" (autonomous, bypass permissions). Use on "agent-plan", "run these tasks in parallel", "fire and forget". Do NOT use for single-task delegation (use /agent-delegate).'
 argumentHint: "[plan file or goal] [optional: 'fire' | 'fire-and-forget' | 'without worktrees' | 'per-task review' | 'final-only review']"
 references:
+  - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/plan-mode.md
   - ../references/agent-delegate.md
@@ -23,6 +24,8 @@ references:
 ---
 
 ## Agent DAG Orchestration
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 

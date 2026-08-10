@@ -4,6 +4,7 @@ description: 'agent-bulldozer Push-through mode: drive work forward autonomously
 disableModelInvocation: true
 argumentHint: "[scope of the push]"
 references:
+  - ../references/long-running-work.md
   - ../references/mode-toggle.md
   - ../references/agent-watchers.md
 ---
@@ -11,6 +12,8 @@ references:
 Invoking bulldozer IS a standing blessing to push: skip per-step approval ceremony and act, but still surface anything that crosses a Boundary before doing it.
 
 ## Toggle
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 On/off mechanics per `mode-toggle`.
 

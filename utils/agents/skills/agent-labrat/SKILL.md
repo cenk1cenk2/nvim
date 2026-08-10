@@ -4,6 +4,7 @@ description: 'agent-labrat Hand work off to @labrat, the offsite Hermes agent, o
 disableModelInvocation: true
 argumentHint: "[task, Linear issue/project, or Slack thread] [optional: claude|codex|opencode, model name]"
 references:
+  - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/linear-state-transitions.md
   - ../references/slack-prerequisite.md
@@ -15,6 +16,8 @@ references:
 ---
 
 ## Handing Work to labrat
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 

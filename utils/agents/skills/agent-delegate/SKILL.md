@@ -3,6 +3,7 @@ name: agent-delegate
 description: 'agent-delegate Delegate a single task to one subagent at a chosen tier (cheap/default/smart/max) or explicit model. Use on "delegate this", "use a cheap/smart agent", "run this with opus/haiku". Do NOT use for multi-task plans or DAG-scheduled work (use /agent-plan).'
 argumentHint: "[task description] [optional: tier 'cheap'|'default'|'smart'|'max' or explicit model name]"
 references:
+  - ../references/long-running-work.md
   - ../references/agent-delegate.md
   - ../references/agent-worktrees.md
   - ../references/project-tooling.md
@@ -15,6 +16,8 @@ references:
 ---
 
 ## Single-Task Delegation
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 Dispatch parameters, mechanics, and prompt structure per `agent-delegate`. Load the `agent-harness` skill to resolve tiers to concrete models.
 

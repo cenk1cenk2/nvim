@@ -4,6 +4,7 @@ description: 'agent-pickup Pick up Linear projects, project slices, or issues an
 disableModelInvocation: true
 argumentHint: "[Linear project, project slice, issue id(s), or URL] [optional: agent/direct/sequential/parallel/confirm]"
 references:
+  - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
@@ -21,6 +22,8 @@ references:
 ---
 
 ## Agent Linear Pickup Orchestrator
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 

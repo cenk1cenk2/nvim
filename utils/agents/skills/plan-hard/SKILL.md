@@ -2,12 +2,15 @@
 name: plan-hard
 description: 'plan-hard Deep interview-driven plan mode - walks the design tree one decision at a time, self-answers via codebase exploration, and recommends answers. Default whenever plan mode is entered. Triggers: "plan hard", "interview me". Do NOT use for existing plans (/plan-pickup) or cross-session handoffs (/plan-handoff).'
 references:
+  - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/plan-mode.md
   - ../references/provider-paths.md
 ---
 
 ## Plan Hard — Interview-Driven Design-Tree Traversal
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 

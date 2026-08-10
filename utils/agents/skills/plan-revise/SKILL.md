@@ -2,12 +2,15 @@
 name: plan-revise
 description: 'plan-revise Revise an existing plan file when the direction was wrong - gathers what went wrong (and partial implementation via git), re-interviews on the deltas, updates the plan in place with a dated revision entry. Triggers: "revise the plan", "we got it wrong", "change direction". Do NOT use for new plans (/plan-hard), unchanged pickup (/plan-pickup), or handoffs (/plan-handoff).'
 references:
+  - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/plan-mode.md
   - ../references/provider-paths.md
 ---
 
 ## Plan Revise — Going Back to the Drawing Board
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 

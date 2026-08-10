@@ -3,6 +3,7 @@ name: linear-issue-pickup
 description: 'linear-issue-pickup Pick up one or more Linear issues and prep them for implementation - fetch details, comments, relations, docs, and repo context, then wait for an explicit go. Triggers: "pick up K-123", "work on this issue", issue URLs. Do NOT use for read-only refreshes (linear-issue-read) or choosing the next task (linear-next-task).'
 argumentHint: "[issue id(s) or URL(s)]"
 references:
+  - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
@@ -16,6 +17,8 @@ references:
 ---
 
 ## Linear Issue Pickup
+
+State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
