@@ -100,8 +100,27 @@ Bulldozing fast is dangerous if you fire work in the wrong order. Reason about t
 4. **Prep ahead speculatively** wherever it is cheap and reversible. While the blocker settles: draft the next change, branch and scaffold the follow-on work, write the commit/PR description, pre-write the rollout or cutover runbook for the remaining stages, pre-compute or pre-fetch what the next step needs, stage the verification commands. The goal is that the moment the blocker clears, the next step fires instead of starting cold. Prep is drafts and staging — it does not cross Boundaries.
 5. **On wake, verify then advance.** When a watcher fires, re-verify the real state (proxies lag), execute the staged next step, and re-arm for the following blocker. One stage completing is a trigger for the next stage, not a stopping point.
 6. **A dead watcher is NOT a stop.** If a watcher exits without the goal met — backstop cap exhausted, the signal broke, the process was killed, an error — DIAGNOSE why (did the condition never hold? wrong or broken signal? cadence too short? process died?), fix the cause, and RE-ARM (adjust the signal, cadence, or cap as needed). You are a bulldozer: never sit idle because a watcher gave up, and never silently drop the goal because the watch lapsed. **But when the cause needs the driver** — a permission/auth failure, a broken credential, a genuinely unknown breakage you can't resolve, or the work has drifted out of the agreed scope — STOP and report it to the user clearly, stating exactly what you need, before pushing further. You are a bulldozer, but you have a driver: surface the blocker instead of thrashing or wandering off-scope.
-7. **Report momentum tersely each turn.** Three lines max: what just finished, what is now in flight (including armed watchers and their task ids), what is queued next. No essays.
+7. **Report momentum tersely each turn.** Three lines max: what just finished, what is now in flight (including armed watchers and their task ids), what is queued next. No essays. When anything is prepped-but-blocked, add the prep board below those lines — it replaces describing the same items in prose.
 8. **Stop only when stopped.** Keep the loop running across turns until the user says "stop", "hold", "pause bulldozer", or "normal mode" — or the stated scope is fully done, in which case report completion and stand down. Hitting a Boundary pauses that action for approval, not the whole mode: surface it, keep pushing on everything else.
+
+## The Prep Board — what is built but not fired
+
+A bulldozer converts every blocking wait into prep, so at any moment there is work that is **finished but cannot land yet**. That work is invisible unless you name it, and invisible prep gets re-derived from scratch after a compaction or a handoff. Report it as a table alongside the momentum lines:
+
+| Prepped | How far | Blocked on | Clears when | Fires |
+|---|---|---|---|---|
+| MR for K-244 | drafted, not opened | K-243 must merge first | watcher `pr-4821` fires | open the MR, request review |
+| immich values bump | patch written, not applied | driver decision on the target version | driver answers | apply, push, watch the pipeline |
+| runner capacity fix | diagnosed, no change made | out of agreed scope | driver widens scope | raise as a follow-up issue |
+
+- **How far** is the honest state — drafted, written-not-applied, diagnosed-only. "Ready" means it fires with no further thinking; anything else says what remains.
+- **Blocked on** names the concrete gate and **whether it sits with a machine or with the driver.** A machine gate gets a watcher. A driver gate gets surfaced *now* — never parked in this table waiting to be noticed, per *You Have a Driver*.
+- **Clears when** ties the row to the thing that unblocks it, usually a watcher already in the arming table. A row whose blocker has no watcher and no ask is a row nobody is waiting on.
+- **Fires** is the exact action to take the moment it clears, so it lands without re-deriving anything.
+
+⛔ **A full prep board is not momentum.** Prep is what you do *while* something is in flight, never instead of it. If everything is prepped and nothing is in flight or armed, the loop has stalled — find the next real action or tell the driver you are out of runway.
+
+When `plan-compact` is active this board is the queue its anchor records; copy the rows across rather than describing them again.
 
 ## Watchers — the bulldozer's use of them
 
