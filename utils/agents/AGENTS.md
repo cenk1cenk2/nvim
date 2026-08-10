@@ -32,6 +32,7 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 
 - Propose the approach in 1–2 lines and name the files you'd touch; wait for the user's signal before editing.
 - Prefer questions and options over assumptions when requirements or the approach are unclear. Lean toward understanding over guessing.
+- **Name the interpretation and the success criterion before writing code.** "Add authentication" is five different things — say which one you picked and what it trades off; "add validation" becomes "reject a missing or malformed email, return 400 with a clear message, both cases tested". If something is genuinely confusing, ask — code that fills the gap with something plausible is exactly the code that survives a casual review and fails when it matters.
 - **Implement immediately only when:** the task is genuinely trivial (typo, one-line fix, single named tweak); the user gave complete step-by-step instructions that leave no design space; or the user authorized it (`g`, `go`, `y`, `yolo`, "just do it", or `autopilot` after its upfront questions).
 - **Once cleared, act immediately.** Approval or an upfront blessing ends the discussion phase — no plan file, no further gates, no re-confirming. Make the change and report it.
 - When unsure, ask first — "discuss the approach, or go ahead?"
@@ -147,15 +148,15 @@ CLI commands are appropriate for local git, project scripts, tests, builds, form
 
 ## IV. WORKING WITH FILES AND THE EDITOR
 
-- Read the relevant local instructions and nearby code before changing files.
+- **Read before you write — read, not skim.** The files you are about to touch, the local instructions covering them, and the code around them, including the manifest and imports so you do not reach for `axios` where everything is `fetch`. No existing pattern to follow means ask, not guess.
 - If an expected file is missing, search for a rename, move, or consolidation before assuming it was never created. Ask only when the repository does not answer the question.
 - Match existing file conventions for formatting, imports, comments, tests, and structure.
 - For generated, vendored, or lock files, edit through the owning tool when possible.
 - For your runtime's state/config directory, treat those paths as agent configuration/state and edit deliberately; plans still belong in your internal plans directory.
 
-## V. CODE STYLE AND DESIGN
+## V. WRITING CODE
 
-Language-shape preferences — apply across languages and frameworks, while matching the local project first.
+How code gets written, scoped, verified, and debugged — across languages and frameworks, matching the local project first.
 
 ### Style Defaults
 
@@ -172,13 +173,36 @@ Names should not repeat context already provided by their scope — drop the qua
 
 ### Design Defaults
 
+- **Solve today's problem:** the minimum code that solves the problem in front of you now, not the minimum that could solve every future version of it. No premature abstraction, no handling for errors that cannot occur, hardcoded values until something real needs them configurable. If the only reason a thing is abstracted is "in case we need it", it is over-built.
 - **No compatibility shims in personal projects:** when a design changes, delete and rewire in one shape instead of leaving aliases, deprecated wrappers, or dead re-exports.
 - **Stubs fail loudly:** unfinished code should throw/error/panic with a clear message, never return fake success.
 - **Behavior lives with the owner:** helpers that operate on a type's state, handles, channels, or invariants should be methods/composable methods, not detached functions. Pure transformations can stay free.
 - **Carry invariants in objects:** if every call passes the same base/config/client, wrap it once and make methods use the validated state.
 - **Compose instead of bagging:** when consumers need behavior or rendering flexibility, use the language's composition mechanism (closures, callbacks, interfaces, traits, slots, …). Keep config bags for uniform data.
-- **Inline single-use helpers:** extract only when there is a second caller or the abstraction clearly earns its name.
+- **Inline single-use helpers:** extract only when there is a second caller or the abstraction clearly earns its name. Copy-paste twice before abstracting — an abstraction drawn from one example is **the Wrong Abstraction**.
 - **Polymorphism for open sets, unions for closed sets:** reach for a shared one-method abstraction only when multiple concrete branches would otherwise repeat the same dispatch shape.
+- **Every dependency is permanent code you do not control:** check the project's existing dependencies and the standard library first (`crypto.randomUUID()` over a `uuid` package). When you add one, say why in your report — never let the choice appear only in the manifest.
+
+### Scope of a Change
+
+- **Smallest diff the task allows.** Do not touch what you were not asked to touch. Every changed line must be justifiable by the task; a line that is there because "while I was in there" gets reverted — that is **the Kitchen Sink**.
+- **Never reformat as a side effect.** A formatter pass buries the three lines that matter inside three hundred that do not. Format what you wrote, with the project's own formatter.
+- **A fix that starts cascading across files is a stop signal** — **the Runaway Refactor**. Surface the scope and let the user decide; do not push through.
+
+### Verification
+
+The gap between code that works and code you think works is testing.
+
+- **Fixing a bug starts with the failing test.** Write it, watch it fail, then fix — the only proof you fixed the cause and not the symptom.
+- **Test behavior that can actually break**, not that a constructor sets a field. Cover the error path: a handled happy path with an ignored 500 is **the Optimistic Path**, not a finished feature.
+- **Hard to test is information about the design**, not permission to skip the test.
+- Run the project's own test, lint, and format commands before reporting completion, and report what they actually said.
+
+### Debugging
+
+- **Investigate, do not guess.** Read the whole error and the stack trace, reproduce the problem before changing anything, and change one thing at a time.
+- **Never paper over a surprise.** An unexpected null gets a cause, not a null check — silenced, the bug just moves somewhere quieter.
+- Suggest `code-debug` for behavioral bugs and `code-task-failed` for failing build/test/lint commands; they own the full flow.
 
 ### Proactive Improvement
 
@@ -252,6 +276,8 @@ Before creating or modifying resources outside the local workspace (GitHub/GitLa
 
 **NEVER fabricate.** Never guess details that come from outside the current repository: API signatures/endpoints, callback/webhook URLs, request/response fields, config keys and flags, secret names, defaults, feature flags, file paths, version-specific behavior. Verify from source code or official documentation before writing them into answers, plans, code, or config, and cite the file/URL used. When you cannot verify: say "I don't know", offer to search (web or docs), and cite what the search returns.
 
+**Be precise about uncertainty, and flag concerns even when you did exactly what was asked.** "I am not sure this library supports streaming" tells the user what to verify; "I think this should work" does not. Say what you did and why — a block of code with no account of the reasoning is not a report.
+
 ## VII. SESSION MAINTENANCE
 
 ### Memory Updates
@@ -292,5 +318,5 @@ When rules appear to conflict, follow this priority order:
 3. **Default to discussion before implementation** — never start editing code without an explicit signal (proceed words, full step-by-step instructions, or a trivial-scope task). When unsure, ask. Exiting plan mode requires unambiguous user approval.
 4. **Load the covering skill, then use the best available tool** — when a catalog skill covers the task (especially external/MCP operations), load and follow it before acting (§II absolute rule); otherwise prefer purpose-built tools, and use CLI for local shell/git/test/build work.
 5. **A skill body beats this document** — when both cover the same behavior, the skill body wins. This file decides *which* skill loads, not how it works.
-6. **Follow coding style** (match project patterns)
+6. **Follow coding style and implementation discipline** (§V — match project patterns, smallest diff, verify before reporting)
 7. **Update durable context** (memory, plans, and repository guidance when appropriate)
