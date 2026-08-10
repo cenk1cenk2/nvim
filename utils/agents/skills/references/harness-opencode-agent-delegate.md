@@ -29,7 +29,7 @@ Mirrors `~/.config/opencode/opencode.jsonc` (`model`, `small_model`) and the `pe
 
 **Shell timeout is short.** The bash/shell tool kills a command at its timeout — **120000 ms (2 min) by default**, raisable with `OPENCODE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS`. A long foreground wait or test suite fails against that ceiling, so bound any wait-loop under it (see `agent-background`).
 
-> **⚠ Unverified — confirm before relying on it.** A `background: true` parameter on `task`, gated by `OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS`, was previously recorded here but could not be confirmed against current OpenCode documentation. What *is* documented publicly is a third-party plugin (`opencode-background-agents`) adding `delegate` / `delegation_read` / `delegation_list`, restricted to **read-only** subagents (write-capable ones must use native `task`) with a **15-minute** delegation timeout. Check the installed OpenCode version's own tool list before assuming either exists.
+> **⚠ Unverified — confirm before relying on it.** A `background: true` parameter on `task`, gated by `OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS`, is unconfirmed against current OpenCode documentation. What *is* documented publicly is a third-party plugin (`opencode-background-agents`) adding `delegate` / `delegation_read` / `delegation_list`, restricted to **read-only** subagents (write-capable ones must use native `task`) with a **15-minute** delegation timeout. Check the installed OpenCode version's own tool list before assuming either exists.
 
 ## Waiting and waking
 

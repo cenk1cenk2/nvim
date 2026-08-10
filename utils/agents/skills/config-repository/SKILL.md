@@ -3,6 +3,7 @@ name: config-repository
 description: 'config-repository Create or revise repo knowledge base files (CLAUDE.md, AGENTS.md, .local variants). Triggers: "update CLAUDE.md", "create AGENTS.md", "document decisions", or detected durable conventions/rule drift mid-session. Do NOT use for the central AGENTS.md guidelines (config-agents), skills (config-skills), or MCP configs (config-mcp).'
 disableModelInvocation: false
 references:
+  - ../references/current-state-only.md
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -147,22 +148,10 @@ Non-obvious things that trip up agents or developers. Things that look like they
 
 ## Writing Rules
 
-> ⛔ **Present tense, current state only — unless the user explicitly asks for history.**
+> ⛔ **Present tense, current state only** — the full rule and its rewrite table are in `current-state-only`.
 >
-> The file describes how the repo works **now**. It is not a changelog, a migration record, or a
-> postmortem. Never write what changed, what it used to be, what was tried and failed, what a spec
-> originally said, or when something was verified. A reader must not be able to tell which parts
-> are new.
->
-> Caveats, gotchas and constraints are always welcome — phrase them as standing properties:
->
-> | Instead of | Write |
-> |---|---|
-> | "We moved X to Y because Z broke" | "X lives in Y — Z cannot hold it because …" |
-> | "Verified live on `sun` that layers deep-merge" | "Layers deep-merge; `<example>` shows the shape" |
-> | "The spec called it `a.yaml`; it shipped as `b.yaml`" | "`b.yaml` holds …" |
-> | "This was tried and rejected" | "This does not work here because …" |
-> | "Renamed in v2; old name no longer valid" | *(delete the old name entirely)* |
+> A repo knowledge base is where this bites hardest: it is not a changelog, a migration record, or a
+> postmortem. A reader must not be able to tell which parts are new.
 >
 > A rejected alternative is worth keeping **only as the constraint that rules it out** — the
 > constraint stays true and useful, the narrative does not.

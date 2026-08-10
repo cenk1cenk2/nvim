@@ -33,4 +33,4 @@ Because completion never re-invokes the session, a Codex run has no equivalent o
 - **No native deferred-wakeup and no cron.** For recurring runs, wrap `codex exec` in an OS cron job or a CI schedule.
 - Codex offers a first-class interruptible sleep primitive suitable for a bounded sleep-loop, unlike harnesses where foreground sleeping is blocked.
 
-> **⚠ Unverified — confirm against the installed build.** The exact tool names for background terminals and sleep (recorded here previously as `unified_exec` and `clock.sleep`, with a ~12h sleep ceiling) could not be confirmed against current Codex documentation; upstream issue text uses `exec_command` for the same capability. Codex ships fast (700+ releases), so check the running version's own tool list rather than trusting a name from this file.
+> **⚠ Unverified — confirm against the installed build.** The exact tool names for background terminals and sleep are unconfirmed against current Codex documentation; upstream issue text uses `exec_command` for that capability. Codex ships fast (700+ releases), so check the running version's own tool list rather than trusting a name from this file.

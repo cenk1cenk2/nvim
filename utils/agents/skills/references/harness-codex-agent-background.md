@@ -24,4 +24,4 @@ This inverts the whole skill. On a runtime that wakes you, arming a watcher and 
 3. **If you must background it, schedule your own poll** in the same turn plan — never end the turn expecting a wake.
 4. **Re-verify on poll.** As everywhere, a proxy signal firing does not mean the downstream state converged.
 
-> **⚠ Unverified.** The exact tool names for background terminals and for sleep (recorded previously as `unified_exec` and `clock.sleep`, with a ~12 h ceiling) could not be confirmed against current documentation; upstream issue text uses `exec_command` for the same capability. Codex ships very fast — check the running build's tool list rather than trusting a name from this file.
+> **⚠ Unverified.** The exact tool names for background terminals and for sleep are unconfirmed against current documentation; upstream issue text uses `exec_command` for that capability. Codex ships very fast — check the running build's tool list rather than trusting a name from this file.

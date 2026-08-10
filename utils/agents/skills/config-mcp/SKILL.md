@@ -3,6 +3,7 @@ name: config-mcp
 description: 'config-mcp Add, remove, or modify MCP server entries in the hyprpilot MCP catalog; researches servers, prefers official/HTTP sources, prompts for vars and auth. Always manually invoked. Do NOT use for skills (config-skills), agent guidelines (config-agents), or repo configs (config-repository; edit ~/.config/hyprpilot/config.yaml directly for launcher settings).'
 disableModelInvocation: true
 references:
+  - ../references/current-state-only.md
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -136,6 +137,10 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 4. If the user asks to change `hyprpilot.autoAcceptTools` or `autoRejectTools`, prompt for those specifically. Otherwise, do not re-prompt for tool approvals unless relevant to the modification.
 5. Present the updated entry per `output-diff` and wait for approval.
 6. Apply and write the file.
+
+## Validation
+
+Before presenting any edit, run the `current-state-only` check: no compat entries kept "just in case", no note of what a server was called before, no migration history. State the config as it is now.
 
 ## Key Principles
 

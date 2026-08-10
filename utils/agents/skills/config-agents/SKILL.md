@@ -3,6 +3,7 @@ name: config-agents
 description: 'config-agents Update or review the central AGENTS.md guidelines at ~/.config/nvim/utils/agents/AGENTS.md. Always manually invoked; suggest it on rule drift or new durable conventions but never self-invoke. Do NOT use for per-repo CLAUDE.md/AGENTS.md (config-repository), skills (config-skills), or MCP configs (config-mcp).'
 disableModelInvocation: true
 references:
+  - ../references/current-state-only.md
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -28,7 +29,7 @@ It is injected by an **unscoped root `[[patches]]` entry** in `~/.config/hyprpil
 3. **Check for conflicts.** Verify that the proposed change does not contradict existing rules elsewhere in the document. AGENTS.md has a Rule Priority section — ensure new rules fit within or update that hierarchy.
 4. **Check skill ownership before growing the file.** If a skill already governs the behaviour, edit that skill through `config-skills` and leave AGENTS.md a pointer plus the rule that loads it. §III's `hyprpilot-nvim` entry is the shape: the server's presence triggers the skill, and the whole editor-tool playbook lives there rather than in every session's context window. Only rules with no owning skill — or the load rules themselves — belong in this document.
 5. **Draft the changes.** Present the exact additions, modifications, or removals per `output-diff`, with surrounding context so the user can see where changes fit. Keep real private specifics out of the guidelines and their examples per `redact-private-data`.
-6. **Validate conciseness.** AGENTS.md is loaded into every session's context window. Every line must earn its place. Remove redundancy, prefer tables over prose, and avoid restating what's already implied by other rules.
+6. **Validate.** Run the `current-state-only` check — no deprecation notes, no record of what a rule replaced. Then conciseness: AGENTS.md is loaded into every session's context window. Every line must earn its place. Remove redundancy, prefer tables over prose, and avoid restating what's already implied by other rules.
 7. **Iterate.** Refine based on user feedback until approved.
 8. **Apply changes.** After explicit approval, edit the file.
 9. **Commit and push.** Per `commit-push-scoped`, stage ONLY `AGENTS.md` and nothing else in the repo, then compose with `git-commit` (scope `agents`, e.g. `fix(agents): ...`) and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.

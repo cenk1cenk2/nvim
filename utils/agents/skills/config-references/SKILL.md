@@ -3,6 +3,7 @@ name: config-references
 description: 'config-references Create, update, or review reference files in the skills directory. Triggers: "create/add/update a reference", "extract this to a reference". Do NOT use for skills themselves (config-skills) or loading skills (load-skills).'
 disableModelInvocation: true
 references:
+  - ../references/current-state-only.md
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -83,7 +84,7 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 4. Name the file:
    - Shared: `<family>-<topic>.md` (e.g., `linear-prerequisite.md`, `scm-detect.md`).
    - Skill-specific: `<topic>.md` inside `<skill-name>/references/`.
-5. Draft the reference content following the format above.
+5. Draft the reference content following the format above, current state only per `current-state-only`.
 6. Identify which skills should declare this reference in their frontmatter.
 7. Present the draft and the list of skills to update.
 8. After approval, write the file and update skill frontmatter as needed.
@@ -94,7 +95,7 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 2. Read skills that declare it — search for the filename in skill frontmatter to understand consumers.
 3. Identify what needs to change based on conversation context.
 4. Present proposed changes using diff format.
-5. After approval, apply changes.
+5. After approval, apply changes — replacing the old wording rather than annotating it, per `current-state-only`.
 6. If the update changes the reference's scope or contract, notify about affected skills.
 
 ### Review
@@ -105,7 +106,7 @@ A file that fails to read yields the same block with `status: not-found`, **in i
    - Check which skills declare it in their frontmatter.
    - Bundle one consuming skill's references and confirm this file appears — a declared path that silently fails to resolve looks identical to a correct one in the frontmatter.
    - Identify orphaned references (declared by no skill). **The `harness-<provider>-<consumer>` files are declared by nobody on purpose** — they are path-read, named in bodies with an absolute path. They are never orphans; check that a consuming body still names each one instead.
-   - Identify stale content (conventions that no longer apply).
+   - Identify stale content, and any compat note or history the `current-state-only` check forbids.
    - Check for duplication across references.
 3. Present findings and propose improvements.
 
@@ -170,5 +171,5 @@ After applying reference edits and any consumer frontmatter updates, hand off pe
 - A reference should be **self-contained** — readable without loading other references.
 - **No frontmatter** — only skills have YAML frontmatter.
 - **No workflow steps** — references contain conventions and patterns, not process instructions.
-- **Current state only** — no deprecation notes, no "formerly X", no history of what a convention replaced. Rewrite to the live shape and delete the old one; a past shape named in a reference is one the agent can match by mistake. Version-marking *current* runtime behavior in a `harness-*` file stays — that dates a live claim rather than narrating a change.
+- **Current state only**, per `current-state-only` — rewrite to the live shape and delete the old one.
 - After creating or updating a shared reference, always check if skills need their `references:` frontmatter updated.

@@ -24,7 +24,7 @@ A repo may combine several (e.g. commitlint + release-please).
 **commitlint** — enforces the format (no release on its own; usually paired with the above or a CI title check).
 - `commitlint.config.(js|cjs|mjs|ts|cts|mts)`, `.commitlintrc` (`.json` / `.yaml` / `.yml` / `.js` / …), or `"commitlint"` in `package.json`. `@commitlint/config-conventional` = Conventional Commits.
 
-**conventional-changelog / commit-and-tag-version** (formerly `standard-version`) — commit-driven changelog + tag.
+**conventional-changelog / commit-and-tag-version** — commit-driven changelog + tag. A repo may still carry `standard-version` config; treat it as the same detection.
 - `.versionrc`, `.versionrc.json`, `.versionrc.js`, or the tool in `package.json`.
 
 If none match, there is no release automation to satisfy — use the normal conventional-commit title/commit and skip the rest.

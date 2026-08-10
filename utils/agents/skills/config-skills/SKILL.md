@@ -3,6 +3,7 @@ name: config-skills
 description: 'config-skills Create, update, or review skills in the skills directory. Triggers: "create a skill", "update skill X", "add a new slash command", "improve this skill". Do NOT use for loading or chaining skills (load-skills).'
 disableModelInvocation: true
 references:
+  - ../references/current-state-only.md
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
@@ -58,7 +59,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 2. Read 2-3 existing skills in the same family to understand patterns, tone, and structure. For each, read `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` directly — issue reads in parallel.
 3. **Check references** — read shared references at `~/.config/nvim/utils/agents/skills/references/<name>.md`. If the skill belongs to a family (e.g., Linear, Obsidian), check whether sibling skills declare references in their frontmatter and reuse the same ones.
 4. Draft the full `SKILL.md`. Name any shared convention inline where the body uses it, and declare it in `references:`.
-5. **Validate** — run the description checklist (see below) and verify conventions before presenting.
+5. **Validate** — run the description checklist (see below), verify conventions, and run the `current-state-only` check: no compatibility notes, no history, nothing describing a past shape.
 6. Present the draft in chat.
 7. Iterate based on user feedback.
 8. After approval, create the directory and write the file.
@@ -71,7 +72,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 3. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
 4. Identify what needs to change.
 5. **Check for deduplication** — if the skill contains blocks that are duplicated in sibling skills (prerequisite blocks, plan mode directives, description structures, research patterns), check whether a shared reference already exists in `~/.config/nvim/utils/agents/skills/references/`. If it does, replace the duplicated block with an inline mention plus the declaration. If it doesn't and 2+ skills must stay in lockstep on it, propose extracting it.
-6. **Validate** — run the description checklist (see below) against the updated description.
+6. **Validate** — run the description checklist against the updated description, and the `current-state-only` check over the edit: the old wording is deleted, not annotated.
 7. Present proposed changes to the user.
 8. Iterate based on feedback.
 9. After approval, apply the changes.
@@ -80,7 +81,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 ### Review
 
 1. Read the existing `SKILL.md` for the target skill.
-2. **Validate** — run the description checklist (see below) and check all conventions.
+2. **Validate** — run the description checklist (see below), check all conventions, and run the `current-state-only` check for compat notes or history that crept in.
 3. **Audit references** — check whether the skill duplicates content a shared reference already carries, and whether every declaration is still accurate, still used by the body, and correctly tiered (declared vs path-read).
 4. List ambiguities, inconsistencies, or areas that could be improved.
 5. Ask clarifying questions to understand user intent.
@@ -370,7 +371,7 @@ Run this checklist when creating, updating, or reviewing any skill description:
 - **Posture** — inherited by default; declare `plan-mode` only for skills that write nothing outside the internal plans directory. See Posture above.
 - **Invocation tier** — set `disableModelInvocation` deliberately per the Invocation Tiers section above: `true` for manual-only skills; omit it for model-invocable and auto-invoke skills.
 - **MCP tools** — reference specific tool names (e.g., `github__*`) when the skill depends on them. Use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git status`, `slack-kilic__slack_list_channels`) — see MCP Tool Name Convention below.
-- **Describe the current state only** — no deprecation notes, no "formerly X", no "this used to be Y", no migration history. A skill is read at the moment of acting, and a past shape it names is a shape the agent can match by mistake. Delete the old wording and state the new one. The single exception is a `harness-*` reference version-marking *current* runtime behavior (`Since v2.1.186, …`) — that marks when a live claim was verified, not what it replaced.
+- **Describe the current state only**, per `current-state-only` — no deprecation notes, no compatibility shims, no history. Delete the old wording and state the new one.
 - **Be concise** — skills are instructions for an agent, not documentation for humans. Keep it actionable.
 - **End list items with `.`** — consistent punctuation across all skills.
 - **Examples** — workflow skills that orchestrate multi-step processes should include at least one example showing trigger → actions → result.
