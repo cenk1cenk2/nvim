@@ -3,6 +3,8 @@ name: argocd-kilic-loadbalancer
 description: 'argocd-kilic-loadbalancer Create or extend routing workloads in a load balancer cluster''s ArgoCD repo - Pulumi services for cross-cluster routing, VM routing, or direct LB routes. Always manually invoked. Do NOT use for non-LB ArgoCD workloads (/argocd-kilic-workload), standalone workload repos (/cluster-kilic-workload), or chart wrappers (/cluster-kilic-chart).'
 disableModelInvocation: true
 argumentHint: "[workload-name or 'add route to <existing>'] - e.g., 'cluster-rubik', 'vm-gitlab', 'add route to cluster-rubik'"
+references:
+  - ../references/output-diff.md
 ---
 
 ## LB Cluster Routing Workload Creator
@@ -63,6 +65,10 @@ Ask the user:
 5. **The target workload service** — If adding to existing, read the current service file. If creating new, read a similar existing one as template.
 
 This is mandatory because **each LB cluster has different gateway names, IPs, and OPNSense configurations**.
+
+## Present Before Writing
+
+Routing workloads span DNS, certificates, and cross-cluster services, and the scaffold writes many files at once. Present the plan per `output-diff` — service name, target cluster, hostnames, and the files to create — and write only on approval.
 
 ## DNS Configuration
 

@@ -3,6 +3,8 @@ name: argocd-kilic-workload
 description: 'argocd-kilic-workload Create a new workload service in the current cluster''s ArgoCD repo - scaffolds the Pulumi service, registers it in the workloads module, optionally configures gateway listeners. Always manually invoked. Do NOT use for LB routing (/argocd-kilic-loadbalancer), standalone workload repos (/cluster-kilic-workload), or chart wrappers (/cluster-kilic-chart).'
 disableModelInvocation: true
 argumentHint: "[workload-name] - e.g., 'my-app', 'html-cv3', 'notifications'"
+references:
+  - ../references/output-diff.md
 ---
 
 ## Cluster Workload Creator
@@ -38,6 +40,10 @@ Ask the user:
 4. **A similar existing workload service** — Use as the template
 
 This is mandatory because **each cluster has different constants and gateway names**.
+
+## Present Before Writing
+
+The scaffold writes several files at once. Present the plan per `output-diff` — workload name, target cluster, namespace, and the files to create — and write only on approval.
 
 ## Workload Service Pattern
 

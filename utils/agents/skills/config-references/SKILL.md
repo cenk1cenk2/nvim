@@ -40,6 +40,8 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 
 **A skill's declared references are appended to it on read.** `read_skill` and `hyprpilot://skills/<slug>` both bundle them; `references: false` opts out of the tool's default, and `load_skill_references { slug }` / `hyprpilot://references/<slug>` fetch the bundle alone. So the `references:` array is the load list, **declaring a reference is a token cost paid on every load of that skill**, and a reference the body never uses is waste multiplied by every invocation.
 
+That cost compounds across a session: a reference declared by many skills is re-injected by each one. `output-diff` is declared by 48 skills, `scm-detect` by 19, `agents-delegate` by 8 at 3.4k tokens each. A reader can skip the repeat with `references: false` and top up what it lacks, so **size matters most for the widely-declared files** — trimming one of those pays back on every consumer.
+
 That splits references into two tiers, and choosing the wrong one is the most common authoring mistake:
 
 | Tier | Mechanism | Use when |

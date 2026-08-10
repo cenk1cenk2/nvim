@@ -52,7 +52,7 @@ Discovery and loading are defined in `AGENTS.md` §III Hyprpilot.
 
 **Graceful degradation:** skills must work even when references fail to load — they contain enough inline context to function.
 
-**A skill's declared references arrive with it.** `read_skill` appends them by default; `references: false` opts out when you are reading a skill to edit it. Only a path-read reference — one the body names with an explicit absolute path — waits for its branch.
+**A skill's declared references arrive with it.** `read_skill` appends them by default. Pass `references: false` when the bundle would be waste — you are editing the skill rather than following it, or you already hold its references from a skill loaded earlier this session — then `Read` only the files you lack. Only a path-read reference, one the body names with an explicit absolute path, waits for its branch.
 
 ## Reference Files
 

@@ -183,6 +183,8 @@ Note: omitting the flag and writing `disableModelInvocation: false` are behavior
 
 **A skill's declared references are appended to it on read.** `read_skill` and the `hyprpilot://skills/<slug>` resource both bundle them; `references: false` opts out of the tool's default, and `load_skill_references { slug }` fetches the bundle alone. The `references:` array is the load list, and the body never needs to say "go read this".
 
+**The reader may already hold them.** A widely-declared reference is re-injected by every skill that declares it — `output-diff` sits in 48 skills, `scm-detect` in 19 — so a reader loading a second skill in the same family passes `references: false` and tops up only what it lacks. That is a reader-side decision and changes nothing about authoring: declare what the body uses, and let the reader dedupe.
+
 The consequence that governs every decision below: **declaring a reference is a token cost paid on every single load of that skill.** A reference declared "just in case", or one the body never uses, is waste multiplied by every invocation. Extraction into a shared reference does **not** save tokens — it buys consistency, nothing more.
 
 **Two tiers. Choose deliberately.**
