@@ -328,6 +328,6 @@ secrets:
 - [ ] Create `values.yaml` with sensible defaults nested under dependency name
 - [ ] If ExternalSecret needed: create `templates/external-secret.yaml` and add `secrets:` block to values
 - [ ] If custom resources needed: create templates with proper Helm templating
-- [ ] Create all boilerplate files (`.gitlab-ci.yml`, `Taskfile.yml`, `mise.toml`, `renovate.json`, `release.config.mjs`, `.gitignore`, `.helmignore`). `package.json` only when the chart actually needs a Node toolchain — copy whichever shape the nearest existing chart uses.
+- [ ] Create all boilerplate files (`.gitlab-ci.yml`, `Taskfile.yml`, `mise.toml`, `renovate.json`, `release.config.mjs`, `.gitignore`, `.helmignore`). `package.json` when the chart publishes via semantic-release, or when it deploys as part of a monorepo — it carries the package name and `publishConfig`, not a toolchain. `mise.toml` handles tooling (helm-docs). Copy whichever shape the nearest existing chart uses.
 - [ ] Verify values structure matches upstream chart's expected format
 - [ ] Match code style from the reference chart
