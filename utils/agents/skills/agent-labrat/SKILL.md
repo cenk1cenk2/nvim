@@ -16,7 +16,7 @@ references:
 
 ## Handing Work to labrat
 
-When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
+When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
 > **PREREQUISITE:** A Slack workspace skill MUST be active before posting — detection per `slack-prerequisite`. Slack does not render normal markdown; mrkdwn formatting, thread conventions, and the **absolute rule that the harness-provided Slack integration is used over the standalone workspace server** are in `slack`. For a Linear scope, `linear-prerequisite` applies before handing off an issue or project.
 

@@ -9,7 +9,7 @@ references:
 
 ## Plan Hard — Interview-Driven Design-Tree Traversal
 
-When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
+When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
 > **⛔ ALWAYS enter plan mode** — full directives per `plan-mode`.
 >

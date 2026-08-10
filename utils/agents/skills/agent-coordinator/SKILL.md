@@ -17,7 +17,7 @@ references:
 
 ## Coordinator Posture
 
-When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
+When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
 Invoking coordinator IS a standing blessing to dispatch within the agreed scope: present the routing plan once, then run it. Dispatch parameters, blocking vs background, and self-contained prompt structure per `agent-delegate`; load the `agent-harness` skill to resolve tiers.
 

@@ -20,7 +20,7 @@ references:
 
 ## Supervisor Posture
 
-When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
+When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
 Posture: `present-first`.
 Invoking supervisor IS a standing blessing to investigate, verify, and report. Tracker and external writes are presented before they land **unless the user has given a standing preapproval** ("you're preapproved", "don't show me diffs", "just apply it"), in which case apply directly and report what landed. Project and initiative status updates are exempt from any blessing and always need an explicit yes.

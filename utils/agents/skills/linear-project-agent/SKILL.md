@@ -22,7 +22,7 @@ Use Linear documents as shared agent context per `linear-project-documents`, and
 
 ## What is an Agent Project?
 
-When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
+When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
 Posture: `present-first`.
 An **agent project** is a Linear project designed for autonomous execution by LLM agents. Each issue must be:
