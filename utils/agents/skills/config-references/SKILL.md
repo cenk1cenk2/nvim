@@ -38,7 +38,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 
 ## How References Resolve
 
-**Mechanically, references are a separate fetch:** `read_skill` and `hyprpilot://skills/<slug>` return the body alone; only `load_skill_references { slug }` and `hyprpilot://references/<slug>` bundle the declared files. **By policy they always arrive anyway** — `AGENTS.md` §II requires every skill read to be followed by a reference bundle for the same slug. So the `references:` array is the effective load list, **declaring a reference is a token cost paid on every load of that skill**, and a reference the body never uses is waste multiplied by every invocation.
+**A skill's declared references are appended to it on read.** `read_skill` and `hyprpilot://skills/<slug>` both bundle them; `references: false` opts out of the tool's default, and `load_skill_references { slug }` / `hyprpilot://references/<slug>` fetch the bundle alone. So the `references:` array is the load list, **declaring a reference is a token cost paid on every load of that skill**, and a reference the body never uses is waste multiplied by every invocation.
 
 That splits references into two tiers, and choosing the wrong one is the most common authoring mistake:
 
@@ -49,7 +49,24 @@ That splits references into two tiers, and choosing the wrong one is the most co
 
 Hyprpilot resolves declared paths **relative to that skill's own bundle directory** — the directory holding its `SKILL.md`. There is no separate references root. A path that does not resolve is simply absent from the bundle: nothing is logged and nothing errors, so a typo fails silently and the skill runs without the convention it declared. A missed path-read fails the same silent way.
 
-`load_skill_references { slug }` — equivalently the `hyprpilot://references/<slug>` resource — returns every declared reference concatenated with `--- <basename> ---` delimiters. Run it after editing a reference or a consumer's frontmatter: a missing delimiter block is the only signal that a path is wrong.
+A bundle delimits each file with a YAML block naming it and its declared path, all under a banner naming the skill and the count:
+
+```
+---
+skill_references:
+  skill: git-commit
+  count: 2
+---
+
+---
+reference:
+  name: commit-style
+  path: ../references/commit-style.md
+---
+<file body>
+```
+
+A file that fails to read yields the same block with `status: not-found`, **in its declared position** — that marker is the only signal a path is wrong, so check for it after editing a reference or a consumer's frontmatter.
 
 ## Process
 

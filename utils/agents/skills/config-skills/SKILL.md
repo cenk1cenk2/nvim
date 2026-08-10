@@ -65,7 +65,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 ### Update
 
 1. Read the existing `SKILL.md` for the target skill at `~/.config/nvim/utils/agents/skills/<target-skill>/SKILL.md`.
-2. **Bundle the declared references** — `load_skill_references { slug }` for the target skill, so you see the full context it operates in before changing it.
+2. **Read the target with `references: false`** — you are editing the skill, not following it, so the bundle is weight. Read a declared reference directly only when the change depends on its content.
 3. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
 4. Identify what needs to change.
 5. **Check for deduplication** — if the skill contains blocks that are duplicated in sibling skills (prerequisite blocks, plan mode directives, description structures, research patterns), check whether a shared reference already exists in `~/.config/nvim/utils/agents/skills/references/`. If it does, replace the duplicated block with an inline mention plus the declaration. If it doesn't and 2+ skills must stay in lockstep on it, propose extracting it.
@@ -181,9 +181,7 @@ Note: omitting the flag and writing `disableModelInvocation: false` are behavior
 
 ### ⛔ How References Load — declaring one costs tokens on every load
 
-**Mechanically, references are a separate fetch.** `read_skill` and the `hyprpilot://skills/<slug>` resource return the body alone; only `load_skill_references { slug }` and `hyprpilot://references/<slug>` bundle the declared files. The sidecar never attaches them to a skill read.
-
-**By policy, they always arrive anyway.** `AGENTS.md` §II requires every `read_skill` to be followed by `load_skill_references` for the same slug. So the `references:` array is the effective load list, and the body never needs to say "go read this".
+**A skill's declared references are appended to it on read.** `read_skill` and the `hyprpilot://skills/<slug>` resource both bundle them; `references: false` opts out of the tool's default, and `load_skill_references { slug }` fetches the bundle alone. The `references:` array is the load list, and the body never needs to say "go read this".
 
 The consequence that governs every decision below: **declaring a reference is a token cost paid on every single load of that skill.** A reference declared "just in case", or one the body never uses, is waste multiplied by every invocation. Extraction into a shared reference does **not** save tokens — it buys consistency, nothing more.
 
@@ -232,7 +230,7 @@ Paths are relative to the skill's own directory:
 
 The absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/references/<file>.md`, and `./references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`.
 
-Hyprpilot's `mcp__hyprpilot_skills__load_skill_references { slug }` tool returns every reference a skill declares in one response (concatenated with `--- <basename> ---` delimiters) — useful when you want the daemon to walk the frontmatter for you instead of reading paths one at a time.
+`mcp__hyprpilot_skills__load_skill_references { slug }` returns a skill's declared references without its body — useful when the body is already in context. Each file arrives under a `reference:` block naming it and its declared path; see `config-references` for the shape.
 
 ### Posture — inherited, stated only on deviation
 
