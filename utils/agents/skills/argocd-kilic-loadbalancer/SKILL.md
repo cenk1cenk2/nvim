@@ -11,7 +11,7 @@ references:
 ## LB Cluster Routing Workload Creator
 
 Posture: `present-first`.
-> **IMPORTANT: This skill assumes you are already inside a load balancer cluster ArgoCD repository** (e.g., `cluster/sun/argocd-kilic-sun`).
+> **IMPORTANT: This skill assumes you are already inside a load balancer cluster ArgoCD repository** (e.g., `cluster/sun/argocd-sun`).
 
 ## How This Repository Works
 

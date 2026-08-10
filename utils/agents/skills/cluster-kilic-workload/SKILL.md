@@ -16,9 +16,11 @@ Posture: `present-first`.
 
 ## How Workloads Work in This System
 
-Each application deployed to a cluster gets a workload repository at `cluster/workloads/<name>`. These repos contain **kustomize-based Kubernetes manifests** that ArgoCD syncs to the target cluster. The cluster's ArgoCD repo (`cluster/<cluster>/argocd-kilic-<cluster>`) has a workload service that points to this repo.
+Each application deployed to a cluster gets a workload repository at `cluster/workloads/<name>`. These repos contain **kustomize-based Kubernetes manifests** that ArgoCD syncs to the target cluster. The cluster's ArgoCD repo (`cluster/<cluster>/argocd-<cluster>`) has a workload service that points to this repo. The two cluster-wide roots sit at the group top level instead: `cluster/argocd-root` and `cluster/argocd-system`.
 
 Workload repos are self-contained — they define everything the application needs: deployments, services, routes, secrets, databases, storage, and monitoring.
+
+**One cluster or many.** Most workloads deploy to a single cluster and carry one `.deploy/<cluster>/` tree. A workload that runs on several clusters adds `.deploy/base/` for what is identical everywhere, and each `.deploy/<cluster>/` overlays only what differs — `monitoring` and `monitoring-ruler` do this across six clusters. Reach for `base` only on the second cluster; a single-cluster workload with a `base` is indirection with nothing on the other side.
 
 ## Directory Structure
 

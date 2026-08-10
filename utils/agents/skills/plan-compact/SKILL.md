@@ -54,6 +54,7 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
 - **Methodology & approach** — *how* we are doing it: the working method, sequencing, conventions adopted, tooling/agent decisions, verification commands. The habits that would be silently dropped by a summary.
 - **Source documents** — every authoritative external context, each as `identifier — what it holds` (Linear project/issue URLs+IDs and their attachments, Obsidian note paths, plan/handoff/internal-plan file paths, PR/MR URLs, key repo paths).
 - **Standing watches / ongoing** — anything that must keep running after resume: PRs/MRs and CI/pipelines being monitored, background agents in flight, polling loops, review threads awaited — each with its identifier and what you are waiting for.
+- **External state — trackers, PRs/MRs, branches.** Record the Linear issues, projects and documents in play with their current state; every PR/MR with its draft/open/merged state, CI result, and what is outstanding on it; and every branch pushed with whether it is ahead, diverged, or clean. Mark which are **ours** — created this session or handed to us — because that decides what may be reconciled versus only surfaced. This is the board the work sits on; a resuming agent that has to rebuild it by querying will miss the half it does not know to look for.
 - **Subagents — every one spawned this session, live or finished.** Record **why it was spawned** (the reason the main loop did not do it itself), its brief and scope, the tier it ran at, its state, what it returned, and what is still outstanding with it. A compaction erases the transcript that proved the work already ran; without this the resuming agent re-dispatches it, or reads a quiet agent as a failed one and destroys a pending report.
 - **Scratchpad scripts & watchers — ★ INLINE THEM ALWAYS, UNCONDITIONALLY.** Any watcher command, poll loop, or helper script written to the scratchpad or a temp dir does NOT survive compaction, is NOT reliably shared across sessions or agents, and does NOT survive a reboot. **Every checkpoint copies them into the anchor verbatim** — the full body, its path, and what it is for (which watch it drives, how to re-run it). This is not conditional on expecting a compaction: **treat the scratchpad and `/tmp` as already gone, at every checkpoint.**
   - **Inline the body, not a reference to it.** A script *mentioned* but not inlined is unrecoverable — and it reads as recorded, which is worse than an obvious gap.
@@ -228,6 +229,29 @@ decisions, verification commands. The "how" a summary would drop.]
 - `<plans-dir>/...-<name>.md` — internal plan file: [what it holds].
 - `<PR/MR URL>` — [what it holds].
 - `<repo path>` — [what it holds].
+
+## External State — trackers, PRs/MRs, branches
+[Everything this work touches that lives outside the repo, with its state at checkpoint
+time. A resuming agent must be able to see the whole board without re-querying, and must
+know which of these are ours to reconcile per `reconcile-state`.]
+
+**Linear**
+- `<K-xxx>` — [title] — state: [Todo | In Progress | In Review | Done]. Ours? [created
+  this session | handed to us | neither]. [What it covers; what still has to happen to it.]
+- `<project / initiative URL>` — [what it holds; whether its description is current].
+- Documents: `<doc>` — [what it holds; current or drifted].
+
+**PRs / MRs**
+- `<URL>` — [title] — state: [draft (blocked on X) | open | approved | merged | closed].
+  CI: [green | failing on X | not run]. Ours? [opened this session | pre-existing.]
+  Outstanding: [review threads, rebase needed, description behind the branch].
+
+**Branches**
+- `<branch>` — pushed: [yes / no] — upstream: [ahead N / diverged / clean]. [What is on it
+  that is not on the default branch, and whether anything depends on it landing.]
+
+**Other sources** — [Obsidian notes, Spacelift stacks, Slack threads, anything else with
+state that outlives the turn.]
 
 ## Subagents — spawned this session
 [One entry per agent, live or finished. A resuming agent must be able to tell what already

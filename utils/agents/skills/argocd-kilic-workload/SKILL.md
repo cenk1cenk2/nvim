@@ -11,7 +11,7 @@ references:
 ## Cluster Workload Creator
 
 Posture: `present-first`.
-> **IMPORTANT: This skill assumes you are already inside a cluster ArgoCD repository** (e.g., `cluster/rubik/argocd-kilic-rubik`).
+> **IMPORTANT: This skill assumes you are already inside a cluster ArgoCD repository** (e.g., `cluster/rubik/argocd-rubik`).
 
 ## How This Repository Works
 
