@@ -89,6 +89,17 @@ After processing all notes (or when the user stops):
 - Which categories received new notes.
 - How many remain in `Todo/`.
 
+## Show the Decisions Before Applying
+
+One line per note, current state only — this is a confirmation, not a report:
+
+| Note | Decision | Where it goes |
+|---|---|---|
+| `todo-cert-renewal` | keep, rename | `Infrastructure/cert-renewal` |
+| `todo-random-idea` | remove | done, nothing depends on it |
+
+**Remove is destructive** — nothing is applied until this table is approved.
+
 ## Key Rules
 
 - **One note at a time** — present, wait for user response, then proceed.

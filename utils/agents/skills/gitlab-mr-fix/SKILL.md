@@ -16,6 +16,18 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 
 Thread-fixing workflow per `scm-fix-threads`. GitLab tooling and local git per `scm-gitlab`; platform detection per `scm-detect`.
 
+## Report the threads as a ledger
+
+One row per open thread, so it is checkable whether every reviewer got an answer — the part prose reliably drops:
+
+| Thread | Asked for | Outcome | Replied | Resolved |
+|---|---|---|---|---|
+| `auth.ts:42` | use the shared validator | applied | yes | yes |
+| `api.ts:88` | two possible approaches | asked the user | yes | no - awaiting choice |
+| `old.ts:12` | concern about removed code | skipped, stale | yes | yes |
+
+**Outcome** is one of: applied, asked the user, skipped as stale, or could not — never blank. **Replied** and **Resolved** are the only things the reviewer sees on the other end, so an unreplied row is unfinished work no matter what changed in the code.
+
 ## Platform specifics
 
 - **Identify the MR** (when not given): use `git status` for the current branch, extract the project path from the remote URL, then `gitlab__list_merge_requests` with `source_branch` filter and `state: opened`. If none is open, inform the user and stop. Read MR metadata via `gitlab__get_merge_request`.

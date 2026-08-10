@@ -137,6 +137,18 @@ Subagents run in parallel — **dispatch all in a single message with multiple t
 >
 > **Limits:** Under 250 words. Be opinionated — your constraint is a strong preference, lean into it.
 
+## The Shortlist
+
+The product of this skill is one ranked table, not prose per finding:
+
+| # | Dimension | Where | Finding | Effort |
+|---|---|---|---|---|
+| 1 | architecture | `src/auth/` | token refresh duplicated across three call sites | medium |
+| 2 | testability | `src/sync/queue.ts` | retry path only reachable through mocks | small |
+| 3 | consistency | `src/api/` | three different error-wrapping shapes | small |
+
+Ranked by value, highest first. **Where** is a concrete path, never "several places" — a finding you cannot navigate to is not actionable. Effort is small, medium, or large; anything larger is a plan, not a cleanup.
+
 ## Conciseness Rules (Non-Negotiable)
 
 - **A couple of lines at most per proposal** in the shortlist. Never wrap to a paragraph.

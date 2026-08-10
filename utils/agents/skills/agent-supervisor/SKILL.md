@@ -103,6 +103,20 @@ When the coordinator finishes, the reconciliation pass is yours — a finished d
 
 If the user wants coordinator posture to drive instead of supervisor, they say so and this skill steps out. Say plainly which one is driving; never blur them.
 
+## The Roster — every agent you hold
+
+⛔ **Reaping an uncollected agent destroys its report permanently, and a finished agent looks exactly like a working one.** Keep the roster visible so that never happens by accident. Report it whenever you dispatch, whenever one returns, and before any teardown:
+
+| Agent | Doing what | Tier | State | Report |
+|---|---|---|---|---|
+| `audit-auth` | audit the auth module for dead paths | cheap | delivered | collected - 3 findings, folded in |
+| `migrate-cfg` | move config loading to the new shape | default | running | pending |
+| `review-dag` | sanity-check the layer schedule | smart | idle | **not collected** - ask before reaping |
+
+- **State** is what the runtime says: running, idle, delivered, failed, reaped. **Idle is not done** — it means the agent stopped producing, which usually means the report is stranded, not absent.
+- **Report** is the column that matters: pending, collected, or not collected. **Never reap a row whose report is not collected.**
+- A row with no stated task is a dispatch you cannot verify the result of.
+
 ## Process
 
 1. **Set the scope.** One line on what you are supervising, what done looks like, and what you are not touching. Present once, then run.

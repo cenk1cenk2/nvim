@@ -92,6 +92,18 @@ Present findings as a structured summary, not a raw dump:
 
 Omit sections that have no findings.
 
+## The Change Ledger
+
+Present every proposed change as one row, so a batch approval is reviewable rather than trusted. Group by severity — clearly wrong first, then improvements, then suggestions:
+
+| Issue | Field | Now | Proposed | Why |
+|---|---|---|---|---|
+| K-219 | priority | None | High | blocks K-221 and K-224 |
+| K-221 | parent | none | K-219 | it is a slice of that work |
+| K-233 | estimate | 8 | 3 | scope shrank when the API landed |
+
+The **Now** column is what makes this approvable — a proposal with no current value asks the user to trust that a change is needed. Nothing is written until the whole table is approved.
+
 ## Key Rules
 
 - **Never post a project/initiative status update on your own** — when it's warranted, proactively OFFER it (note what happened, that it's update-worthy) after everything else, and post only on the user's explicit yes (see `linear-absolute-approval`); reconcile itself only touches issues/structure.

@@ -90,6 +90,20 @@ An agent that returns a wall of text has failed the task even if the work is rig
 
 **⛔ Match the dispatch mode to the runtime's delivery.** Coordinator mode runs almost entirely on agent reports — for research, verification, or log digging there is no artifact left behind, so the report IS the product. On a runtime that wakes you on completion (current Claude Code), background is safe and that notification is the collection mechanism: wait for it, never pre-empt it, and never read a pending agent's silence as a verdict. On a runtime that does **not** wake you (Codex today), detached work finishes into silence — block, poll explicitly, or have the agent write its findings to a file. Block regardless whenever you simply need the answer to continue; it costs no parallelism, since a whole fan-out issued in one message runs concurrently. **A silent verification agent is not a pass** — and when collection genuinely fails twice, take that one check back in-house rather than dispatching a seventh time. This runtime's delivery rules live in `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md`.
 
+## The Roster — every agent you hold
+
+⛔ **Reaping an uncollected agent destroys its report permanently, and a finished agent looks exactly like a working one.** Keep the roster visible so that never happens by accident. Report it whenever you dispatch, whenever one returns, and before any teardown:
+
+| Agent | Doing what | Tier | State | Report |
+|---|---|---|---|---|
+| `audit-auth` | audit the auth module for dead paths | cheap | delivered | collected - 3 findings, folded in |
+| `migrate-cfg` | move config loading to the new shape | default | running | pending |
+| `review-dag` | sanity-check the layer schedule | smart | idle | **not collected** - ask before reaping |
+
+- **State** is what the runtime says: running, idle, delivered, failed, reaped. **Idle is not done** — it means the agent stopped producing, which usually means the report is stranded, not absent.
+- **Report** is the column that matters: pending, collected, or not collected. **Never reap a row whose report is not collected.**
+- A row with no stated task is a dispatch you cannot verify the result of.
+
 ## Process
 
 1. **Set the scope and present the routing plan.** One line on what done means, then the split: which pieces go out, in what order, which stay with you, and what you are NOT touching. Present once; then run.

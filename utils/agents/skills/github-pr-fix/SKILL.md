@@ -16,6 +16,18 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 
 Run the thread-fixing workflow per `scm-fix-threads`, with GitHub MCP tools per `scm-github` and platform detection plus local git (raw `git` CLI) per `scm-detect`.
 
+## Report the threads as a ledger
+
+One row per open thread, so it is checkable whether every reviewer got an answer — the part prose reliably drops:
+
+| Thread | Asked for | Outcome | Replied | Resolved |
+|---|---|---|---|---|
+| `auth.ts:42` | use the shared validator | applied | yes | yes |
+| `api.ts:88` | two possible approaches | asked the user | yes | no - awaiting choice |
+| `old.ts:12` | concern about removed code | skipped, stale | yes | yes |
+
+**Outcome** is one of: applied, asked the user, skipped as stale, or could not — never blank. **Replied** and **Resolved** are the only things the reviewer sees on the other end, so an unreplied row is unfinished work no matter what changed in the code.
+
 ## Platform specifics
 
 - **Identify the PR** (when not given): use `git status` for the current branch, extract owner/repo from the remote URL, then `github__list_pull_requests` with `head: "owner:branch"` and `state: open`. If none is open, inform the user and stop. Read PR metadata via `github__pull_request_read` (method: `get`).

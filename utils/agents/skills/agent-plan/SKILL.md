@@ -323,6 +323,18 @@ See the `agent-harness` skill for tier definitions, per-provider model lists, us
 - **Explicit model names from the user** override tiers — use verbatim.
 - **Mismatched choices:** ask before dispatching.
 
+## The Run Board
+
+Between layers, show where the run actually is - brief, current state only:
+
+| Layer | Tasks | State | Worktrees |
+|---|---|---|---|
+| 1 | 3 | done | merged, removed |
+| 2 | 2 | running | `task-04-a3f`, `task-05-b91` live |
+| 3 | 4 | blocked on layer 2 | not created |
+
+**Worktrees is the column that matters** — a worktree still listed after its layer merged is orphaned work, and nothing else in the run will tell you.
+
 ## Reaping Between Layers
 
 **⛔ Reap each layer's agents before launching the next.** A DAG run accumulates agents fastest of anything here, and a layer boundary is exactly where stale ones do damage: an unreaped agent from layer N can still be writing while layer N+1 starts, and two concurrent writers on one file clobber each other silently. Worktree cleanup is not the same as agent cleanup — do both.

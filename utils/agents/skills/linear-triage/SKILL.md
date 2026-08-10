@@ -93,6 +93,17 @@ After processing all issues (or when the user stops), present a summary:
 - Any project creation recommendations that came up during the session.
 - Issues that were added to the current cycle.
 
+## Close With a Summary Table
+
+The pass itself stays one issue at a time. At the end, show only what changed:
+
+| Issue | Project | Priority | State |
+|---|---|---|---|
+| K-244 | Cluster Rollout | High | Todo |
+| K-245 | - none - | Low | Canceled |
+
+Decided issues only. Anything still open is a question, not a row.
+
 ## Key Rules
 
 - **One issue at a time** — present, wait for user response, then proceed. Do not dump all recommendations at once.
