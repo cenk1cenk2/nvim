@@ -19,7 +19,7 @@ Posture: `present-first`.
 
 Description/title workflow, format templates, and writing style per `scm-create-description`. GitLab tooling, local git, CLI fallback, and platform detection per `scm-detect` and `scm-gitlab`. Present reasoning and content in logical chunks for user approval per `output-diff` before writing to external systems.
 
-Issue trailer selection per `commit-trailers`: use `closes <Linear-id>` for the single/final MR that should close a Linear issue; use `refs <Linear-id>` for partial, related, multi-MR, or unclear completion work. **Several issues in one MR:** one keyword, comma-separated — `Closes K-879, K-881` — never one trailer per issue, and carry the ids in the title too: `fix(scope): subject (K-879, K-881)`. Give each issue its own description section per `scm-create-description`. **Linear ignores commit messages entirely**, so the title and description are the only things carrying the link.
+Issue trailer selection per `commit-trailers`: use `closes <Linear-id>` for the single/final MR that should close a Linear issue; use `refs <Linear-id>` **only** when the work is genuinely partial - another MR is still pending on the same issue. Unclear is not a reason to hedge to `refs`: if this MR closes it, write `closes`. **Several issues in one MR:** one keyword, comma-separated — `Closes K-879, K-881` — never one trailer per issue, and carry the ids in the title too: `fix(scope): subject (K-879, K-881)`. Give each issue its own description section per `scm-create-description`. **Linear ignores commit messages entirely**, so the title and description are the only things carrying the link.
 
 ## Platform specifics
 
