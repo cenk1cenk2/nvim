@@ -3,12 +3,14 @@ name: linear-issue-checklist
 description: 'linear-issue-checklist Update a Linear issue''s checklist by marking items done or cancelled. Use for "mark task as done", "check off this item". Do NOT use for comments (/linear-issue-comment) or description edits (/linear-issue-update).'
 argumentHint: "[issue-id or Linear URL] [items to update]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
 ---
 
 ## Linear Issue Checklist Update
 
+Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Process

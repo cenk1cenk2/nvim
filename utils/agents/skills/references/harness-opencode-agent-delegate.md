@@ -1,4 +1,4 @@
-# Harness: OpenCode — agents-delegate
+# Harness: OpenCode — agent-delegate
 
 Runtime mechanics for delegation on OpenCode — how subagent dispatch behaves, plus the tier → model mapping. Read this before the first dispatch of a session running on OpenCode. For waiting and waking, see `harness-opencode-agent-background`.
 

@@ -1,12 +1,14 @@
 ---
 name: agent-coordinator
-description: 'agent-coordinator Coordinator posture: your own context is the scarce resource, so route work to subagents and keep only decisions, dispatch, and cheap status checks in your context. Use on "coordinate this", "orchestrate this", "delegate everything", "stay a coordinator". Do NOT use for a single dispatch (/agents-delegate), a DAG run (/agents-plan), or Linear pickup (/agents-pickup).'
+description: 'agent-coordinator Coordinator posture: your own context is the scarce resource, so route work to subagents and keep only decisions, dispatch, and cheap status checks in your context. Use on "coordinate this", "orchestrate this", "delegate everything", "stay a coordinator". Do NOT use for a single dispatch (/agent-delegate), a DAG run (/agent-plan), or Linear pickup (/agent-pickup).'
 disableModelInvocation: true
 argumentHint: "[scope to coordinate] [optional: 'bulldozer' to also engage push-through mode]"
 references:
+  - ../references/agent-conventions.md
+  - ../references/agent-watchers.md
   - ../references/mode-toggle.md
-  - ../references/agents-delegate.md
-  - ../references/agents-worktrees.md
+  - ../references/agent-delegate.md
+  - ../references/agent-worktrees.md
   - ../references/agent-target-capability.md
   - ../references/provider-paths.md
   - ../references/status-report.md
@@ -14,7 +16,7 @@ references:
 
 ## Coordinator Posture
 
-Invoking coordinator IS a standing blessing to dispatch within the agreed scope: present the routing plan once, then run it. Dispatch parameters, blocking vs background, and self-contained prompt structure per `agents-delegate`; resolve tiers via the `agent-harness` skill.
+Invoking coordinator IS a standing blessing to dispatch within the agreed scope: present the routing plan once, then run it. Dispatch parameters, blocking vs background, and self-contained prompt structure per `agent-delegate`; load the `agent-harness` skill to resolve tiers.
 
 ## Toggle
 
@@ -56,13 +58,13 @@ Anything that returns more than a screenful, or that you would have to read the 
 
 | Work | Route to |
 |------|----------|
-| Search or exploration over unknown code | `agents-delegate` with an `Explore` agent |
-| Reading files to understand a subsystem | `agents-delegate`, ask for `file:line` findings, not content |
-| Implementation beyond a trivial edit | `agents-delegate`, or `agents-plan` for multi-task |
-| Multi-task work with dependencies | `agents-plan` (DAG layers, worktrees, review cadence) |
-| Reviewing a plan, DAG, or diff | `agents-review` |
-| CI/pipeline log digging, failure diagnosis | `agents-delegate` — logs are the worst context-per-insight ratio there is |
-| Docs or web research sweeps | `agents-delegate` with the research tools |
+| Search or exploration over unknown code | `agent-delegate` with an `Explore` agent |
+| Reading files to understand a subsystem | `agent-delegate`, ask for `file:line` findings, not content |
+| Implementation beyond a trivial edit | `agent-delegate`, or `agent-plan` for multi-task |
+| Multi-task work with dependencies | `agent-plan` (DAG layers, worktrees, review cadence) |
+| Reviewing a plan, DAG, or diff | `agent-review` |
+| CI/pipeline log digging, failure diagnosis | `agent-delegate` — logs are the worst context-per-insight ratio there is |
+| Docs or web research sweeps | `agent-delegate` with the research tools |
 | Waiting on external state | `agent-background` watcher, never an in-context poll loop |
 
 ## The Return Contract
@@ -72,23 +74,23 @@ Context discipline is enforced in the **prompt**, not by hoping. Every dispatch 
 - **Bounded** — "report in under 20 lines".
 - **Pointers, not payloads** — "cite `file:line`, do not paste code blocks".
 - **Verdict plus evidence** — the conclusion first, then what supports it.
-- **Status token** — `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, `BLOCKED` (per the `agents-delegate` reference).
+- **Status token** — `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, `BLOCKED` (per the `agent-delegate` reference).
 - **No transcript** — "do not include the commands you ran or their raw output unless a command failed".
-- **Pattern reference** — for code dispatches, the prompt carries the `agents-conventions` block naming the files to model the work on, and the report names what it actually followed. A coordinator who never reads the code is exactly the one who ships a foreign-looking diff.
+- **Pattern reference** — for code dispatches, the prompt carries the `agent-conventions` block naming the files to model the work on, and the report names what it actually followed. A coordinator who never reads the code is exactly the one who ships a foreign-looking diff.
 
 An agent that returns a wall of text has failed the task even if the work is right. Say so in the prompt.
 
-**⛔ Settle the permission context before anything else.** How permissions reach a subagent is a runtime property. On current Claude Code they are **inherited from your session and cannot be widened on the dispatch** — so work needing more autonomy than the session has is a conversation with the user, not a parameter you set. On runtimes with independent permissions, a gate the runtime cannot surface leaves the agent waiting silently with no error, and a coordinator that reads that silence as a verdict has routed the work, spent the turn, and learned nothing. Cross-repo dispatch is the riskiest case either way. **Diagnose by inspecting the artifact, never the notification**: work present means only delivery failed, so verify rather than re-run. **An absent artifact proves nothing** — most agents write once at the end, so "nothing on disk" cannot distinguish an agent that never started from one that has done all the work and not written yet. **Steer a quiet agent before concluding anything about it**, per the escalation ladder in the `agents-delegate` reference; reaping on an empty disk destroys real work. **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agents-delegate.md` before the first dispatch** — a missed read is silent.
+**⛔ Settle the permission context before anything else.** How permissions reach a subagent is a runtime property. On current Claude Code they are **inherited from your session and cannot be widened on the dispatch** — so work needing more autonomy than the session has is a conversation with the user, not a parameter you set. On runtimes with independent permissions, a gate the runtime cannot surface leaves the agent waiting silently with no error, and a coordinator that reads that silence as a verdict has routed the work, spent the turn, and learned nothing. Cross-repo dispatch is the riskiest case either way. **Diagnose by inspecting the artifact, never the notification**: work present means only delivery failed, so verify rather than re-run. **An absent artifact proves nothing** — most agents write once at the end, so "nothing on disk" cannot distinguish an agent that never started from one that has done all the work and not written yet. **Steer a quiet agent before concluding anything about it**, per the escalation ladder in the `agent-delegate` reference; reaping on an empty disk destroys real work. **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md` before the first dispatch** — a missed read is silent.
 
-**⛔ Match the dispatch mode to the runtime's delivery.** Coordinator mode runs almost entirely on agent reports — for research, verification, or log digging there is no artifact left behind, so the report IS the product. On a runtime that wakes you on completion (current Claude Code), background is safe and that notification is the collection mechanism: wait for it, never pre-empt it, and never read a pending agent's silence as a verdict. On a runtime that does **not** wake you (Codex today), detached work finishes into silence — block, poll explicitly, or have the agent write its findings to a file. Block regardless whenever you simply need the answer to continue; it costs no parallelism, since a whole fan-out issued in one message runs concurrently. **A silent verification agent is not a pass** — and when collection genuinely fails twice, take that one check back in-house rather than dispatching a seventh time. This runtime's delivery rules live in `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agents-delegate.md`.
+**⛔ Match the dispatch mode to the runtime's delivery.** Coordinator mode runs almost entirely on agent reports — for research, verification, or log digging there is no artifact left behind, so the report IS the product. On a runtime that wakes you on completion (current Claude Code), background is safe and that notification is the collection mechanism: wait for it, never pre-empt it, and never read a pending agent's silence as a verdict. On a runtime that does **not** wake you (Codex today), detached work finishes into silence — block, poll explicitly, or have the agent write its findings to a file. Block regardless whenever you simply need the answer to continue; it costs no parallelism, since a whole fan-out issued in one message runs concurrently. **A silent verification agent is not a pass** — and when collection genuinely fails twice, take that one check back in-house rather than dispatching a seventh time. This runtime's delivery rules live in `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md`.
 
 ## Process
 
 1. **Set the scope and present the routing plan.** One line on what done means, then the split: which pieces go out, in what order, which stay with you, and what you are NOT touching. Present once; then run.
 2. **Orient minimally.** Enough to write good prompts — repo layout, the task runner, the entry points. A couple of bounded commands, not a reading session. Anything deeper is itself a delegation.
-3. **Dispatch with the return contract.** Prompts are self-contained (agents lack your conversation) but point at skills and tools — subagents in this harness are **aware** targets per `agent-target-capability`. Disjoint file scopes; worktrees for parallel writers per `agents-worktrees`, whose concrete directory resolves via `provider-paths` and is never hardcoded.
+3. **Dispatch with the return contract.** Prompts are self-contained (agents lack your conversation) but point at skills and tools — subagents in this harness are **aware** targets per `agent-target-capability`. Disjoint file scopes; worktrees for parallel writers per `agent-worktrees`, whose concrete directory resolves via `provider-paths` and is never hardcoded.
 4. **Cover every wait.** External state gets an `agent-background` watcher, one per independent condition. Harness-tracked agents and workflows are never polled — they re-invoke you on completion.
-5. **Verify cheaply, never blindly.** An agent's summary describes intent. Confirm with a bounded check — `git diff --stat`, the specific file's diff, the test exit code. If honest verification would be expensive, dispatch `agents-review` instead of reading it yourself.
+5. **Verify cheaply, never blindly.** An agent's summary describes intent. Confirm with a bounded check — `git diff --stat`, the specific file's diff, the test exit code. If honest verification would be expensive, dispatch `agent-review` instead of reading it yourself.
 5b. **⛔ Reap what you spawned — but only when completely done with it.** A router accumulates agents and watchers faster than a worker does, so stale entries corrupt the map you are holding until you cannot tell what is genuinely in flight. **Reaping is terminal, though: it destroys the agent's report.** An idle agent is a candidate for **collection**, not reaping — collect, confirm you have what you need, *then* reap. Never kill one because it went quiet or because you are unsure it finished; that converts a recoverable report into a permanent loss, and in coordinator mode the report *is* the product. Safe to reap: delivered and closed, answer obtained and verified elsewhere, superseded, demonstrably stale, or about to be replaced (**reap before re-dispatching**, since two writers on one target clobber each other). Completion does not self-clean — finished agents and exited background tasks linger in the runtime's task list. Before reporting a phase done, enumerate what you spawned and confirm each is stopped or *deliberately* still running with a stated reason.
 6. **Record state, then let it go.** Write the outcome to the state file in one or two lines and stop carrying the detail. The file is the memory; your context is the workbench.
 7. **Report terse each turn, in the `status-report` shape.** Lede with what changed, then current state as tables, then what happened, then what you need from the user. Done / in flight (with ids) / queued. Synthesis, not relay.
@@ -108,11 +110,11 @@ Break posture out loud: say you are doing this one yourself and why, so the mode
 
 ## Composing
 
-- **`agents-plan`** — hand it the whole multi-task run when the work has real dependencies; it owns the DAG, the layer merges, and review cadence.
-- **`agents-delegate`** — single dispatch, tier selection.
-- **`agents-review`** — second eyes on a plan, a DAG ordering, or a diff you refuse to read yourself.
+- **`agent-plan`** — hand it the whole multi-task run when the work has real dependencies; it owns the DAG, the layer merges, and review cadence.
+- **`agent-delegate`** — single dispatch, tier selection.
+- **`agent-review`** — second eyes on a plan, a DAG ordering, or a diff you refuse to read yourself.
 - **`agent-background`** — every external wait; see the `agent-watchers` reference for what to watch, cadence, and recipes. Yours are routing wakes: re-verify, then decide what gets dispatched next.
-- **`agents-pickup`** — Linear-scoped orchestration; coordinator posture layers over it.
+- **`agent-pickup`** — Linear-scoped orchestration; coordinator posture layers over it.
 - **`plan-compact`** — when your context fills anyway, compact to the state file rather than letting the run die.
 
 ### Bulldozer is Opt-In Only

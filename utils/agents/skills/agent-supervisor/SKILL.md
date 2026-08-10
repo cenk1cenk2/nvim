@@ -1,22 +1,25 @@
 ---
 name: agent-supervisor
-description: 'agent-supervisor Supervisor posture: own the project-management layer only - investigate, research, verify claims against artifacts, reconcile tracker state with reality, keep priorities and relations honest, report terse. Implementation is never done here; hand it to /agent-coordinator and supervise the result. Use on "supervise this", "be the PM on this", "keep the project honest", "track and reconcile this". Do NOT use to build anything yourself (/agent-coordinator), for a single dispatch (/agents-delegate), or for a Linear pickup that implements (/agents-pickup).'
+description: 'agent-supervisor Supervisor posture: own the project-management layer only - investigate, research, verify claims against artifacts, reconcile tracker state with reality, keep priorities and relations honest, report terse. Implementation is never done here; hand it to /agent-coordinator and supervise the result. Use on "supervise this", "be the PM on this", "keep the project honest", "track and reconcile this". Do NOT use to build anything yourself (/agent-coordinator), for a single dispatch (/agent-delegate), or for a Linear pickup that implements (/agent-pickup).'
 disableModelInvocation: true
 argumentHint: "[project, scope, or Linear target to supervise]"
 references:
+  - ../references/present-first.md
+  - ../references/linear-project-documents.md
   - ../references/mode-toggle.md
   - ../references/agent-watchers.md
   - ../references/linear-prerequisite.md
   - ../references/linear-state-transitions.md
   - ../references/linear-absolute-approval.md
   - ../references/output-diff.md
-  - ../references/agents-delegate.md
+  - ../references/agent-delegate.md
   - ../references/agent-target-capability.md
   - ../references/status-report.md
 ---
 
 ## Supervisor Posture
 
+Posture: `present-first`.
 Invoking supervisor IS a standing blessing to investigate, verify, and report. Tracker and external writes are presented before they land **unless the user has given a standing preapproval** ("you're preapproved", "don't show me diffs", "just apply it"), in which case apply directly and report what landed. Project and initiative status updates are exempt from any blessing and always need an explicit yes.
 
 > **PREREQUISITE:** A Linear workspace skill MUST be active before any Linear operation — workspace detection per `linear-prerequisite`.
@@ -97,7 +100,7 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 ## Process
 
 1. **Set the scope.** One line on what you are supervising, what done looks like, and what you are not touching. Present once, then run.
-2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agents-delegate` with a bounded return contract, tiers resolved via the `agent-harness` skill; subagents here are aware targets per `agent-target-capability`, so prompts point at skills and tools instead of inlining them. Keep cheap status checks in-house.
+2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agent-delegate` with a bounded return contract, tiers resolved by loading the `agent-harness` skill; subagents here are aware targets per `agent-target-capability`, so prompts point at skills and tools instead of inlining them. Keep cheap status checks in-house.
 3. **Diff record against reality.** List every mismatch with its evidence: wrong status, dead relation, impossible estimate, stale description (cite `updatedAt`), priority that violates its own blocking order.
 4. **Reconcile.** Group findings clearly-wrong first, then improvements, then suggestions. Present chunked per `output-diff` before applying — unless preapproved, in which case apply and report what landed. For a full per-project audit, compose `linear-project-reconcile` rather than re-implementing it.
 5. **⛔ Arm a watcher for every open condition — supervision is event-driven.** See below.
@@ -139,7 +142,7 @@ Supervisor-specific rules on top of the reference's discipline:
 - A green pipeline run id is evidence. "Tests pass" is not.
 - An issue moves to `Done` when its artifact exists and its verification ran, never when the conversation says so.
 - Check `updatedAt` before trusting any description — a well-written description written before the approach changed is still wrong.
-- When honest verification would be expensive, delegate it (`agents-review`, or a read-only agent with a bounded return) rather than reading it yourself or skipping it.
+- When honest verification would be expensive, delegate it (`agent-review`, or a read-only agent with a bounded return) rather than reading it yourself or skipping it.
 
 ## Composing
 
@@ -147,8 +150,8 @@ Supervisor-specific rules on top of the reference's discipline:
 - **`linear-project-reconcile`** — the deep per-project audit; call it, do not restate it.
 - **`linear-issue-status`, `linear-issue-comment`, `linear-issue-update`, `linear-issue-checklist`, `linear-document`, `linear-project-post`** — the actual PM writes.
 - **`linear-next-task`, `linear-triage`, `linear-project-match`** — selection, ordering, and state sync from PRs/MRs.
-- **`agents-delegate`** — read-only investigation and research fan-out.
-- **`agents-review`** — second eyes on an ordering, a plan, or a diff you refuse to read yourself.
+- **`agent-delegate`** — read-only investigation and research fan-out.
+- **`agent-review`** — second eyes on an ordering, a plan, or a diff you refuse to read yourself.
 - **`agent-background`** — every open condition, armed the moment it opens. The mechanics of arming, waking, and reaping live there; the duty to arm lives here.
 - **`plan-hard`** — when the open question is design, not status.
 - **`agent-bulldozer`** — opt-in only, never self-engaged. Supervising is not a licence to push.

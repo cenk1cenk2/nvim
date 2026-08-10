@@ -3,6 +3,7 @@ name: linear-project-agent
 description: 'linear-project-agent Structure Linear projects for autonomous agent execution - agent-ready plans, self-contained issues, readiness review. Triggers: "set up this project for agents". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for generic project creation (/linear-project-create) or status updates (/linear-project-post).'
 argumentHint: "[create|update|review] [project-name] [description of what the project does]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-description-structure.md
   - ../references/output-diff.md
@@ -20,6 +21,7 @@ Use Linear documents as shared agent context per `linear-project-documents`, and
 
 ## What is an Agent Project?
 
+Posture: `present-first`.
 An **agent project** is a Linear project designed for autonomous execution by LLM agents. Each issue must be:
 
 1. **Single repository** — Does not span multiple repositories
@@ -48,7 +50,7 @@ LLM agents work best when:
 8. **Set dependencies** — Use `blockedBy`, `blocks`, and `parentId` fields for dependency ordering. Never put this in descriptions.
 9. **Validate** — Run the issue checklist (see below).
 10. **Present to user** — Show the structured project, project documents, and issues for approval per `output-diff`, before anything is written to Linear.
-11. **Execution handoff** — If the user wants work to start, hand off the approved project structure to `agents-pickup` per `linear-pickup-execution`, instead of embedding implementation into this structure skill.
+11. **Execution handoff** — If the user wants work to start, hand off the approved project structure to `agent-pickup` per `linear-pickup-execution`, instead of embedding implementation into this structure skill.
 
 ### Update
 
@@ -141,7 +143,7 @@ Use documents for shared agent instructions or durable findings that would make 
 
 8. **Set dependencies via Linear fields** — Use `blockedBy`, `blocks`, and `parentId` for dependency ordering. Never put dependency chains or sub-issue tables in descriptions. Linear shows these relations natively.
 
-9. **Execution is a separate phase** — This skill structures projects for agents; `agents-pickup` executes them.
+9. **Execution is a separate phase** — This skill structures projects for agents; `agent-pickup` executes them.
 
 ## Common Patterns
 

@@ -2,6 +2,7 @@
 name: linear-document
 description: 'linear-document Attach a document capturing the current task''s findings to a Linear issue or project, one document per concern. Use for "attach a document", "write this up in Linear". Requires /linear-kilic or /linear-laravel. Do NOT use for description/field edits (/linear-issue-update, /linear-project-update), short comments (/linear-issue-comment), or new projects (/linear-project-create).'
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-project-documents.md
@@ -10,6 +11,7 @@ references:
 
 ## Linear Document — Attach Task Details to an Issue or Project
 
+Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Context

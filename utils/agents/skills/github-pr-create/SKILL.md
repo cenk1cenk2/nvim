@@ -2,6 +2,8 @@
 name: github-pr-create
 description: 'github-pr-create Analyze and write GitHub PR titles and descriptions. Use for "write a PR description", "create a PR", "improve the PR". Do NOT use for GitLab MRs (gitlab-mr-create) or CI workflows/failures (github-ci-create, github-ci-fix).'
 references:
+  - ../references/scm-detect.md
+  - ../references/present-first.md
   - ../references/scm-create-description.md
   - ../references/scm-github.md
   - ../references/commit-trailers.md
@@ -12,7 +14,8 @@ references:
 
 ## GitHub PR Description Workflow
 
-Draft the description and title per `scm-create-description`, with GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection per `scm-github`.
+Posture: `present-first`.
+Draft the description and title per `scm-create-description`, with GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection per `scm-detect` and `scm-github`.
 
 > **Open when ready.** Default communication is opening the PR in the browser once it's ready to look at — skip only on explicit opt-out ("just the link", "don't open").
 

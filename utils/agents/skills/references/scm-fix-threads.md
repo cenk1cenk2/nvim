@@ -72,7 +72,7 @@ After processing all threads, present a summary in chat:
 - Group by resolved vs deferred.
 - If all threads were resolved, omit the Deferred section.
 
-**Pickup workflow note:** When this skill is composed from `agents-pickup`, report any review fix that changes scope, approach, or follow-up requirements so the caller can update the Linear issue comment/checklist or project documentation.
+**Pickup workflow note:** When this skill is composed from `agent-pickup`, report any review fix that changes scope, approach, or follow-up requirements so the caller can update the Linear issue comment/checklist or project documentation.
 
 ## Optional comment
 

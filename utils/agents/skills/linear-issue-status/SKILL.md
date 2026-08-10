@@ -3,6 +3,7 @@ name: linear-issue-status
 description: 'linear-issue-status Quick Linear issue status change from explicit wording or clear workflow context. Triggers: "mark K-123 done", "move to in review", "cancel this issue". Do NOT use for full issue edits (/linear-issue-update), comments (/linear-issue-comment), or project reconciliation (/linear-project-reconcile).'
 argumentHint: "[issue-id or URL] [status]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-issue-states.md
   - ../references/linear-state-transitions.md
@@ -11,6 +12,7 @@ references:
 
 ## Linear Issue Status Update
 
+Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 State semantics and the never-downgrade rule: `linear-issue-states`. Monotonic transition reporting and opt-out wording: `linear-state-transitions`.

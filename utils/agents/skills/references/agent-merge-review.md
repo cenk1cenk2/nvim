@@ -1,6 +1,6 @@
 # Agent Merge & Review
 
-Shared merge + review phase for agent orchestration skills. Covers **per-layer** merge (after each layer of the DAG completes) and **end-of-run** review + verification + handoff. Used by `agents-plan`.
+Shared merge + review phase for agent orchestration skills. Covers **per-layer** merge (after each layer of the DAG completes) and **end-of-run** review + verification + handoff. Used by `agent-plan`.
 
 ## Process
 
@@ -18,7 +18,7 @@ Agents in the completed layer ran in isolated worktrees in the runtime's agent-w
 
 **Why per-layer?** Layer N+1's agents branch their worktrees from the *post-layer-N* state. They must see the merged output of earlier layers. End-of-run batch merging would break dependency semantics.
 
-See the `agents-worktrees` reference for the worktree location rule, naming, and verification requirements.
+See the `agent-worktrees` reference for the worktree location rule, naming, and verification requirements.
 
 ### 2. Review (per-layer and/or end-of-run)
 
@@ -40,14 +40,14 @@ See the `agents-worktrees` reference for the worktree location rule, naming, and
 
 ### 3. Final verification
 
-- Run the full verification command set discovered during planning (step 2 of `agents-plan-split`).
+- Run the full verification command set discovered during planning (step 2 of `agent-plan-split`).
 - Read the output. Confirm pass with evidence — paste the relevant lines into the chat.
 - **Never claim completion without fresh verification output.** "Should pass" is not evidence.
 - If verification fails, do not proceed to handoff. Diagnose the failure, fix it (directly or via a corrective agent), and re-run verification.
 
 ### 4. Completion handoff
 
-Follow the `agents-completion` reference — summarize work, present options (commit, push, PR, leave uncommitted), execute the user's choice.
+Follow the `agent-completion` reference — summarize work, present options (commit, push, PR, leave uncommitted), execute the user's choice.
 
 ## Red flags during this phase
 

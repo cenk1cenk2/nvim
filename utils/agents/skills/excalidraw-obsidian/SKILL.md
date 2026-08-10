@@ -4,6 +4,7 @@ description: 'excalidraw-obsidian Open an existing Excalidraw drawing from the O
 disableModelInvocation: true
 argumentHint: "[filename or description of drawing to pick up]"
 references:
+  - ../references/present-first.md
   - ../references/excalidraw-mcp-preview.md
   - ../references/excalidraw-conversion.md
   - ../references/excalidraw-elements.md
@@ -14,6 +15,7 @@ references:
 
 ## Excalidraw Drawing — Revise or Understand
 
+Posture: `present-first`.
 ## Context
 
 You pick up an existing `.excalidraw.md` drawing from the Obsidian vault and either:

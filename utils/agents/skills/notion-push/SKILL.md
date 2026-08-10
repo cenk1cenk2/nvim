@@ -4,11 +4,13 @@ description: 'notion-push Push the current markdown file to a Notion page (# hea
 disableModelInvocation: true
 argumentHint: "[notion-url or search description]"
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
 ---
 
 ## Notion Push: Markdown to Page
 
+Posture: `present-first`.
 > **PREREQUISITE:** The `notion-laravel` skill MUST be active before this skill runs. If no Notion workspace context exists in the current session, auto-invoke `notion-laravel` first.
 
 > **Deferred tools:** Notion tools are claude.ai connector tools (`mcp__claude_ai_Notion__*`) — load via `ToolSearch` before use:

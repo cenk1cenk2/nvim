@@ -1,6 +1,6 @@
 # Agent Worktree Convention
 
-All worktrees created by any `agents-*` skill MUST live in the active runtime's designated agent-worktrees directory — see the `provider-paths` reference (Claude Code: `<project>/.claude/worktrees/`; OpenCode: its native worktree dir; otherwise `<project>/.agents/worktrees/`). This is an absolute rule — use the one known location for the runtime and never scatter agent worktrees elsewhere in the filesystem.
+All worktrees created by any `agent-*` skill MUST live in the active runtime's designated agent-worktrees directory — see the `provider-paths` reference (Claude Code: `<project>/.claude/worktrees/`; OpenCode: its native worktree dir; otherwise `<project>/.agents/worktrees/`). This is an absolute rule — use the one known location for the runtime and never scatter agent worktrees elsewhere in the filesystem.
 
 ## ⛔ Worktree isolation follows the SESSION's repo, not the task's repo
 
@@ -69,7 +69,7 @@ Once the agent's work is merged back to the original branch (or discarded):
 git worktree remove .agents/worktrees/<name>
 ```
 
-For `agents-plan`, cleanup happens during per-layer merges (both team and fire-and-forget modes). For `agents-delegate`, cleanup happens after the user's completion-handoff choice.
+For `agent-plan`, cleanup happens during per-layer merges (both team and fire-and-forget modes). For `agent-delegate`, cleanup happens after the user's completion-handoff choice.
 
 On `git worktree remove` failure (uncommitted changes, for example), surface the error to the user and let them decide whether to force-remove (`--force`) or keep the worktree for manual recovery.
 

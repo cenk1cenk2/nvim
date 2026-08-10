@@ -114,4 +114,4 @@ One section per issue, headed by its ID and title, so the split is obvious at a 
 - **`code-review-branch`** — for reviewing the code quality of the branch before writing the PR/MR description. Do not auto-invoke.
 - **The platform's CI-create skill** (`github-ci-create` / `gitlab-ci-create`) — for creating or updating CI workflows/pipelines. Do not auto-invoke.
 - **The platform's CI-fix skill** (`github-ci-fix` / `gitlab-ci-fix`) — for diagnosing failing CI on the PR/MR. Do not auto-invoke.
-- **`agents-pickup`** — when this skill is composed from a pickup workflow, keep PR/MR text focused on logical changes; the caller records broader deviations/findings on Linear issues or project documents.
+- **`agent-pickup`** — when this skill is composed from a pickup workflow, keep PR/MR text focused on logical changes; the caller records broader deviations/findings on Linear issues or project documents.

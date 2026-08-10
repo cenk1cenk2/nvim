@@ -4,12 +4,14 @@ description: 'cluster-kilic-workload Create a new workload deployment repo in th
 disableModelInvocation: true
 argumentHint: "[workload-name] - e.g., 'seafile', 'immich', 'my-app'"
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/kilic-argocd-pvc-restore.md
 ---
 
 ## Cluster Workload Creator
 
+Posture: `present-first`.
 > **IMPORTANT: This skill creates or modifies a workload deployment repository in the `cluster/workloads` group on GitLab (`gitlab.kilic.dev`).**
 
 ## How Workloads Work in This System

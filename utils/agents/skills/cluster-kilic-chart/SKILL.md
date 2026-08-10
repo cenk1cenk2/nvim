@@ -4,11 +4,13 @@ description: 'cluster-kilic-chart Create a new Helm chart wrapper in the cluster
 disableModelInvocation: true
 argumentHint: "[chart-name] - e.g., 'goldilocks', 'velero', 'cilium-l2-announcement'"
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
 ---
 
 ## Cluster Chart Creator
 
+Posture: `present-first`.
 > **IMPORTANT: This skill creates a new Helm chart repository in the `cluster/charts` group on GitLab (`gitlab.kilic.dev`).**
 
 ## How Charts Work in This System

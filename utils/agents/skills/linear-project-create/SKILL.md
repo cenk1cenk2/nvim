@@ -2,6 +2,7 @@
 name: linear-project-create
 description: 'linear-project-create Create a new Linear project with research, planning, and issue breakdown. Triggers: "create a project", "plan a new project". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for reconciling projects (/linear-project-reconcile) or status updates (/linear-project-post).'
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-mandatory-fields.md
   - ../references/linear-description-structure.md
@@ -14,6 +15,7 @@ references:
 
 ## Linear Project Creation
 
+Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 Present reasoning and content in logical chunks for user approval per `output-diff` before writing to Linear.

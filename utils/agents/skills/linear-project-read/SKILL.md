@@ -124,7 +124,7 @@ Omit sections that have no findings. Keep bullets short — this is a survey, no
 
 - **`linear-issue-read`** — per-issue deep reconciliation.
 - **`linear-project-pickup`** — prepare the project or a project slice for implementation after this read-only refresh.
-- **`agents-pickup`** — execute the refreshed project scope with direct work and/or agents.
+- **`agent-pickup`** — execute the refreshed project scope with direct work and/or agents.
 - **`linear-project-update`** — edit the project description and documents to match the conversation.
 - **`linear-project-reconcile`** — audit + modify project structure.
 - **`linear-project-post`** — draft a new status update post.

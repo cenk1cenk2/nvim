@@ -2,6 +2,8 @@
 name: gitlab-mr-create
 description: 'gitlab-mr-create Analyze and write GitLab MR titles and descriptions. Use for "write an MR description", "create an MR", "improve the MR". Do NOT use for GitHub PRs (github-pr-create) or CI pipelines/failures (gitlab-ci-create, gitlab-ci-fix).'
 references:
+  - ../references/scm-detect.md
+  - ../references/present-first.md
   - ../references/scm-create-description.md
   - ../references/scm-gitlab.md
   - ../references/commit-trailers.md
@@ -12,9 +14,10 @@ references:
 
 ## GitLab MR Description Workflow
 
+Posture: `present-first`.
 > **Open when ready.** Default communication is opening the MR in the browser once it's ready to look at — skip only on explicit opt-out ("just the link", "don't open").
 
-Description/title workflow, format templates, and writing style per `scm-create-description`. GitLab tooling, local git, CLI fallback, and platform detection per `scm-gitlab`. Present reasoning and content in logical chunks for user approval per `output-diff` before writing to external systems.
+Description/title workflow, format templates, and writing style per `scm-create-description`. GitLab tooling, local git, CLI fallback, and platform detection per `scm-detect` and `scm-gitlab`. Present reasoning and content in logical chunks for user approval per `output-diff` before writing to external systems.
 
 Issue trailer selection per `commit-trailers`: use `closes <Linear-id>` for the single/final MR that should close a Linear issue; use `refs <Linear-id>` for partial, related, multi-MR, or unclear completion work. **Several issues in one MR:** one keyword, comma-separated — `Closes K-879, K-881` — never one trailer per issue, and carry the ids in the title too: `fix(scope): subject (K-879, K-881)`. Give each issue its own description section per `scm-create-description`. **Linear ignores commit messages entirely**, so the title and description are the only things carrying the link.
 

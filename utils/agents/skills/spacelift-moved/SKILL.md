@@ -2,6 +2,8 @@
 name: spacelift-moved
 description: 'spacelift-moved Analyze Spacelift plan output for delete/create cycles replaceable with Terraform moved blocks. Accepts a PR, branch, commit, or Actions link. Triggers: "spacelift moved", "avoid destroy/create". Do NOT use for general Spacelift ops (spacelift-laravel), impact reports (spacelift-report), or PR descriptions (github-pr-create).'
 references:
+  - ../references/scm-detect.md
+  - ../references/present-first.md
   - ../references/scm-github.md
   - ../references/spacelift-github.md
   - ../references/output-diff.md
@@ -9,6 +11,7 @@ references:
 
 ## Spacelift Moved Block Analysis
 
+Posture: `present-first`.
 ## Prerequisite
 
 > **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
@@ -17,7 +20,7 @@ references:
 ## Process
 
 1. **Parse input and resolve to PR + head commit:**
-   - Input parsing and PR resolution per `spacelift-github` — detect input form (current branch, branch name, PR, Actions URL, commit SHA), extract identifiers, and resolve to owner/repo/PR/branch/SHA. GitHub MCP tools, local `git` CLI, and CLI fallbacks per `scm-github`.
+   - Input parsing and PR resolution per `spacelift-github` — detect input form (current branch, branch name, PR, Actions URL, commit SHA), extract identifiers, and resolve to owner/repo/PR/branch/SHA. GitHub MCP tools, local `git` CLI, and CLI fallbacks per `scm-detect` and `scm-github`.
    - If no PR is found and no commit SHA is available, inform the user and stop.
 
 2. **Discover affected stacks and collect run changes:**

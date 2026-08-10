@@ -11,9 +11,9 @@ Every plan task must have:
 - **Files:** Exact file paths — every file that will be created or modified. No "and related files."
 - **Steps:** Concrete actions. Each step is one thing to do, not a paragraph of intent.
 - **Verification:** How to confirm the task is done — which commands to run, what output to expect.
-- **Pattern reference:** For any task that writes code, the concrete existing file(s) it should be modelled on — the nearest sibling and the closest implementation of the same kind of thing. The executing agent reads those before writing (see `agents-conventions`). "Follow project conventions" is a placeholder, not a pattern reference.
+- **Pattern reference:** For any task that writes code, the concrete existing file(s) it should be modelled on — the nearest sibling and the closest implementation of the same kind of thing. The executing agent reads those before writing (see `agent-conventions`). "Follow project conventions" is a placeholder, not a pattern reference.
 
-Optional (used by DAG-scheduled skills like `agents-plan`):
+Optional (used by DAG-scheduled skills like `agent-plan`):
 
 - **Dependencies (`depends_on: [task-id, ...]`):** List of task ids this task must run after. Empty or absent = no dependencies (runs in the first layer). Use for semantic coupling — task B reads a schema defined by task A even though their file lists don't overlap.
 

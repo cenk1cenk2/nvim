@@ -4,7 +4,7 @@ description: 'plan-compact Keep a compaction-resilient working anchor for a long
 disableModelInvocation: true
 argumentHint: "[optional task note]"
 references:
-  - ../references/agents-delegate.md
+  - ../references/agent-delegate.md
   - ../references/mode-toggle.md
   - ../references/provider-paths.md
 ---
@@ -75,7 +75,7 @@ Concretely: an approach the user rejected is worth a line so it is not re-propos
 Before an anticipated compaction — when the context is growing long, or on the checkpoint you expect to be the last before a summary — verify the documentation agrees with itself:
 
 1. **Cross-check for drift.** Compare the anchor against every source document, and the sources against each other: stale status, contradictory decisions, facts that have diverged, an anchor that no longer matches Linear / the plan file / live PR-MR state.
-2. **Delegate when there are several sources.** This is a read-only comparison — dispatch it to a cheap-tier subagent (via the `agents-delegate` mechanics; resolve the tier with `agent-harness`), handing it the anchor plus the source list and asking it to report only the inconsistencies. Keeps the diffing out of the main context.
+2. **Delegate when there are several sources.** This is a read-only comparison — dispatch it to a cheap-tier subagent (via the `agent-delegate` mechanics; load `agent-harness` to resolve the tier), handing it the anchor plus the source list and asking it to report only the inconsistencies. Keeps the diffing out of the main context.
 3. **Report inconsistencies to the user before continuing.** Do not silently reconcile material drift — surface which sources disagree and on what, and let the user decide. Fold agreed resolutions into the anchor and the affected source.
 4. **Self-check the anchor MECHANICALLY, not by reading it.** Reading misses these — a stale line reads as true, and a missing section reads as absent rather than wrong. `grep` for:
    - every scratchpad script named anywhere in prose has its **full body** inlined (a script mentioned but not inlined is unrecoverable after compaction);
@@ -197,7 +197,7 @@ criteria, gotchas. Enough that a fresh agent could run it with no conversation h
 Reconcile reads the source documents and re-checks watches automatically through their owning tools — no user coordination.
 
 - **`agent-read`** — runs first in the reconcile pass to re-read the central `AGENTS.md` / system prompt and rediscover skills, so the guidelines survive compaction before the task is rebuilt.
-- **`agents-delegate`** — dispatches the pre-compaction consistency check to a cheap-tier read-only subagent that diffs the anchor against the source documents and reports drift, keeping the comparison out of the main context.
+- **`agent-delegate`** — dispatches the pre-compaction consistency check to a cheap-tier read-only subagent that diffs the anchor against the source documents and reports drift, keeping the comparison out of the main context.
 - **`plan-hard`** — builds the internal plan file; `plan-compact` tracks its execution and lists it as a source.
 - **`plan-handoff`** — for handing work to a *different* session or repo; `plan-compact` is same-session compaction survival.
 - **`plan-pickup`** — loads a plan file; the anchor's internal plan file can be one, but reconcile reads it directly.

@@ -1,6 +1,6 @@
 ---
 name: agent-harness
-description: 'agent-harness Resolve how the ACTIVE agent runtime dispatches subagents - tier-to-model mapping, foreground vs background, permission inheritance, result collection, limits - for Claude Code, OpenCode, and Codex. Use on "what are my tiers", "which model is cheap/smart/max", "how do background agents work here", or when a delegation skill must resolve a tier or a dispatch mechanic. Do NOT use to dispatch an agent (/agents-delegate) or plan a DAG (/agents-plan).'
+description: 'agent-harness Resolve how the ACTIVE agent runtime dispatches subagents - tier-to-model mapping, foreground vs background, permission inheritance, result collection, limits - for Claude Code, OpenCode, and Codex. Use on "what are my tiers", "which model is cheap/smart/max", "how do background agents work here", or when a delegation skill must resolve a tier or a dispatch mechanic. Do NOT use to dispatch an agent (/agent-delegate) or plan a DAG (/agent-plan).'
 ---
 
 ## Agent Harness
@@ -40,10 +40,10 @@ Harness references are named **`harness-<provider>-<skill-or-reference-name>`** 
 
 | Consumer | Claude Code | OpenCode | Codex |
 |----------|-------------|----------|-------|
-| Dispatch (`agents-delegate` and every skill built on it) | `harness-claude-agents-delegate` | `harness-opencode-agents-delegate` | `harness-codex-agents-delegate` |
+| Dispatch (`agent-delegate` and every skill built on it) | `harness-claude-agent-delegate` | `harness-opencode-agent-delegate` | `harness-codex-agent-delegate` |
 | Waiting and waking (`agent-background`) | `harness-claude-agent-background` | `harness-opencode-agent-background` | `harness-codex-agent-background` |
 
-Tier → model tables live in the **`agents-delegate`** file for each runtime.
+Tier → model tables live in the **`agent-delegate`** file for each runtime.
 
 Headlines per runtime:
 

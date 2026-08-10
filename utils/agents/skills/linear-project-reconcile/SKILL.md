@@ -3,6 +3,7 @@ name: linear-project-reconcile
 description: 'linear-project-reconcile Audit and fix a Linear project''s structure, subissues, priorities, estimates, labels, and blocking relations in one pass. Triggers: "reconcile/audit the project", "review project priorities". Do NOT use for description/doc edits (/linear-project-update), state sync from MRs/PRs (/linear-project-match), status posts (/linear-project-post), or new projects (/linear-project-create).'
 argumentHint: "[project-name or Linear URL]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-absolute-approval.md
@@ -10,6 +11,7 @@ references:
 
 ## Linear Project Reconcile
 
+Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 > **⛔ Project/initiative status updates: offer, don't auto-post — see `linear-absolute-approval`.** Reconciliation covers **issues + structure only** — it does NOT post a project or initiative status update on its own. When progress is genuinely update-worthy, finish all the issue work first, then **proactively offer** one — briefly note what happened and that it may be worth an update (e.g. "X and Y landed — I can post a project update if you'd like") — and post via `/linear-project-post` or `/linear-initiative-post` **only after the user explicitly says yes**. A general blessing / `g` / autopilot does NOT clear this.

@@ -3,6 +3,7 @@ name: config-repository
 description: 'config-repository Create or revise repo knowledge base files (CLAUDE.md, AGENTS.md, .local variants). Triggers: "update CLAUDE.md", "create AGENTS.md", "document decisions", or detected durable conventions/rule drift mid-session. Do NOT use for the central AGENTS.md guidelines (config-agents), skills (config-skills), or MCP configs (config-mcp).'
 disableModelInvocation: false
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
 argumentHint: "[local] [optional: what changed or focus area]"
@@ -10,6 +11,7 @@ argumentHint: "[local] [optional: what changed or focus area]"
 
 ## Repository Knowledge Base
 
+Posture: `present-first`.
 ## Purpose
 
 Maintain a structured knowledge base file in the repository root that helps future agent sessions understand the repo, avoid dead ends, and use the right tools. The file is not documentation for humans — it is context for agents.

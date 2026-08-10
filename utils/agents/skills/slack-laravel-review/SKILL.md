@@ -4,6 +4,9 @@ description: 'slack-laravel-review Post a PR/MR review request in #cloud-infra-p
 disableModelInvocation: true
 argumentHint: "[github-pr-url or PR number]"
 references:
+  - ../references/scm-detect.md
+  - ../references/enrich-context.md
+  - ../references/present-first.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/scm-github.md
@@ -12,6 +15,7 @@ references:
 
 ## Slack Review Request Poster
 
+Posture: `present-first`.
 > **PREREQUISITE:** This skill operates on the Laravel enterprise workspace (`slack-laravel`), which MUST be active before it runs — workspace detection and activation per `slack-prerequisite`.
 
 ## Context
@@ -33,7 +37,7 @@ references:
    - If no PR is found, ask the user.
    - **Multiple PRs:** if the user provides several PRs (e.g., a wave rollout), process each independently and post a SEPARATE message per PR — repeat Steps 2-7 once per PR. Never combine multiple PRs into one message.
 
-2. **Fetch PR details.** GitHub MCP tools and CLI fallbacks per `scm-github`.
+2. **Fetch PR details.** GitHub MCP tools and CLI fallbacks per `scm-detect` and `scm-github`.
    - Use `github__pull_request_read` (method: `get`) to fetch the PR metadata.
    - Extract: title, URL, description/body.
    - Use `github__pull_request_read` (method: `get_comments`) to fetch PR comments (for an infra/Spacelift source, if any).
@@ -74,6 +78,7 @@ references:
      ```
    - Omit the infrastructure line if not applicable.
    - **Title-only (very rare, on request):** the entire message is just the review line `{pr_url} :review:`.
+   - Verify every link per `enrich-context` — fetch the PR URL from the API rather than composing it from owner/repo/number, and confirm any cross-referenced PR or stack exists before naming it.
    - Example (default — title + one-line goal + source footer):
      ```
      https://github.com/<owner>/<repo>/pull/<number> :review:

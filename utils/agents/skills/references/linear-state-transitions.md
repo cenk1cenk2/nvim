@@ -17,7 +17,7 @@ post-merge comment). The issue itself does not drive state — the
 | Trigger | Target state | Applied by |
 |---|---|---|
 | User picks up an issue (`linear-issue-pickup`, `linear-next-task`, `linear-triage` promote) | `In Progress` | the pickup skill itself (already wired). |
-| A worker is dispatched for a Linear-linked task (`agents-delegate`, `agents-plan`) | `In Progress` | the dispatch skill before launching the agent. |
+| A worker is dispatched for a Linear-linked task (`agent-delegate`, `agent-plan`) | `In Progress` | the dispatch skill before launching the agent. |
 | User or workflow explicitly updates status (`linear-issue-status`) | requested state | `linear-issue-status`, respecting never-downgrade and terminal-state guards. |
 | An MR/PR is created that references the issue (`refs K-xxx` / `closes K-xxx` in commit trailers or MR body) | `In Review` | `gitlab-mr-create` / `github-pr-create` after successful MR/PR create. |
 | A merged MR/PR contains a Linear closing keyword for the issue (`closes K-xxx`, `fixes K-xxx`, `resolves K-xxx`, `completes K-xxx`, etc.) | `Done` | `linear-issue-comment` when posting the delivery comment against a merged MR/PR, or `linear-project-match` when reconciling merged work. |

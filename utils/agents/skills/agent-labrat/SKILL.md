@@ -1,9 +1,10 @@
 ---
 name: agent-labrat
-description: 'agent-labrat Hand work off to @labrat, the offsite Hermes agent, over a Slack thread - a one-off task, a Linear issue or project, or an investigation rooted in an existing alert thread. Writes the brief as an aware-target handoff, optionally routes it to claude/codex/opencode with a model, and arms a watcher on the thread so its progress comes back as events. Use on "hand this to labrat", "give this to the offsite agent", "let labrat take this". Do NOT use for local subagents (/agents-delegate, /agents-plan) or for posting an ordinary Slack message (/slack-message).'
+description: 'agent-labrat Hand work off to @labrat, the offsite Hermes agent, over a Slack thread - a one-off task, a Linear issue or project, or an investigation rooted in an existing alert thread. Writes the brief as an aware-target handoff, optionally routes it to claude/codex/opencode with a model, and arms a watcher on the thread so its progress comes back as events. Use on "hand this to labrat", "give this to the offsite agent", "let labrat take this". Do NOT use for local subagents (/agent-delegate, /agent-plan) or for posting an ordinary Slack message (/slack-message).'
 disableModelInvocation: true
 argumentHint: "[task, Linear issue/project, or Slack thread] [optional: claude|codex|opencode, model name]"
 references:
+  - ../references/linear-state-transitions.md
   - ../references/slack-prerequisite.md
   - ../references/slack.md
   - ../references/agent-target-capability.md
@@ -386,7 +387,7 @@ When the terminal report lands:
 
 - **`agent-aware`** — writes the brief itself; this skill decides scope, channel, routing, and watching.
 - **`agent-supervisor`** — the posture for keeping the record honest while offsite work runs.
-- **`agents-delegate` / `agents-plan`** — the local equivalents, for subagents on this machine.
+- **`agent-delegate` / `agent-plan`** — the local equivalents, for subagents on this machine.
 - **`linear-project-agent`** — makes a Linear project or issue fit to hand off.
 - **`agent-background`** and the `agent-watchers` reference — the arming mechanics for the thread watch.
 - **`slack-message`** — an ordinary Slack post that is not an agent handoff.

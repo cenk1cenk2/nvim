@@ -1,8 +1,8 @@
 # Agent Delegation
 
-Shared logic for creating and dispatching subagents via the active runtime's dispatch mechanism. Used by all `agents-*` skills.
+Shared logic for creating and dispatching subagents via the active runtime's dispatch mechanism. Used by all `agent-*` skills.
 
-**This file is runtime-agnostic on purpose.** It covers what every dispatch needs — parameters, prompt shape, reaping discipline. Every mechanic that varies per runtime (permission handling, background defaults, how a result reaches you, limits) lives in `harness-<provider>-agents-delegate` and is authoritative there. When the two disagree, the harness reference wins.
+**This file is runtime-agnostic on purpose.** It covers what every dispatch needs — parameters, prompt shape, reaping discipline. Every mechanic that varies per runtime (permission handling, background defaults, how a result reaches you, limits) lives in `harness-<provider>-agent-delegate` and is authoritative there. When the two disagree, the harness reference wins.
 
 ## Dispatch mechanisms
 
@@ -22,14 +22,14 @@ Whatever the mechanism, the flow is the same: pick a tier from task complexity, 
 | `subagent_type` | no | `general-purpose` (default), `Explore` for research-heavy work, or a specialized agent type. |
 | `model` | no | `haiku`, `sonnet`, `opus`, `fable`, a full model ID, or `inherit`. See Model Selection below. |
 | `effort` | no | Reasoning effort for this agent (`low`…`max`); overrides the session level. |
-| `isolation` | no | `worktree` runs the agent in a temporary git worktree branched from the **default branch**, auto-removed if it changes nothing. Costs disk and setup time — use it only when parallel writers would collide. See `agents-worktrees`. |
+| `isolation` | no | `worktree` runs the agent in a temporary git worktree branched from the **default branch**, auto-removed if it changes nothing. Costs disk and setup time — use it only when parallel writers would collide. See `agent-worktrees`. |
 | `name` | no | Agent name for `SendMessage` routing and for resuming it later. |
-| `run_in_background` | no | Detached execution. **Default is background on Claude Code**; other runtimes differ — check `harness-<provider>-agents-delegate`. |
+| `run_in_background` | no | Detached execution. **Default is background on Claude Code**; other runtimes differ — check `harness-<provider>-agent-delegate`. |
 | `mode` | — | **Deprecated and ignored** on current Claude Code. See the permission section below. |
 
 ## ⛔ FIRST: settle the permission context
 
-**How a subagent gets its permissions is a runtime property, and getting it wrong is the most expensive dispatch mistake.** Read the active `harness-<provider>-agents-delegate` reference before the first dispatch. Two shapes exist in the wild:
+**How a subagent gets its permissions is a runtime property, and getting it wrong is the most expensive dispatch mistake.** Read the active `harness-<provider>-agent-delegate` reference before the first dispatch. Two shapes exist in the wild:
 
 - **Inherited** — the subagent runs with the parent session's permission mode (current Claude Code). You therefore **cannot grant an agent more autonomy than the session has**; a task needing more is a conversation with the user about the session, not a dispatch parameter. Attempting to pass a permission mode on the dispatch is a no-op.
 - **Independent** — the subagent has its own permission context and a gate it hits may not surface to the parent, so it can wait forever with no error, no timeout, and no tool calls. Older Claude Code builds behaved this way; assume any unfamiliar runtime might.
@@ -62,7 +62,7 @@ Rules that hold either way:
 
 **Decide with two questions:**
 
-1. **Does this runtime deliver a detached result?** If no, block or poll. `harness-<provider>-agents-delegate` answers this.
+1. **Does this runtime deliver a detached result?** If no, block or poll. `harness-<provider>-agent-delegate` answers this.
 2. **What will you inspect when it finishes?** A side effect you can verify yourself (files changed, resources written) is safe to background — you confirm it directly. If the agent's prose is the entire deliverable and the runtime's delivery is unreliable, block.
 
 **Never treat silence as a verdict.** A quiet verification agent has not passed anything. Equally, do not assume delivery is broken on a runtime where it works — check the harness reference before concluding an agent failed.
@@ -87,7 +87,7 @@ Genuinely safe to reap:
 
 **Do NOT reap** because it went quiet, because you are unsure whether it finished, or to tidy up mid-flow. Uncertainty means collect.
 
-**Completion does not self-clean.** A finished agent, and a background task whose command already exited, can linger in the runtime's task list. Stop them explicitly via the runtime's own mechanism (per `harness-<provider>-agents-delegate`) once you are done.
+**Completion does not self-clean.** A finished agent, and a background task whose command already exited, can linger in the runtime's task list. Stop them explicitly via the runtime's own mechanism (per `harness-<provider>-agent-delegate`) once you are done.
 
 **★ The concrete hazard is two concurrent writers.** Re-dispatching over the same files, document, or resource without reaping the first lets the later write silently clobber the earlier one — and neither agent reports the collision.
 
@@ -95,7 +95,7 @@ Genuinely safe to reap:
 
 ## Model Selection
 
-Delegation picks a **tier** from task complexity, then resolves it to a **concrete model** for the active runtime. The tier system, user-wording mapping, and per-harness model lists live in the **`agent-harness`** skill and its references (`harness-claude-agents-delegate`, `harness-opencode-agents-delegate`, `harness-codex-agents-delegate`).
+Delegation picks a **tier** from task complexity, then resolves it to a **concrete model** for the active runtime. The tier system, user-wording mapping, and per-harness model lists live in the **`agent-harness`** skill and its references (`harness-claude-agent-delegate`, `harness-opencode-agent-delegate`, `harness-codex-agent-delegate`).
 
 - **Tiers:** `cheap` (mechanical), `default` (integration), `smart` (architecture/review), `max` (absolute ceiling — use sparingly).
 - **Explicit model names override tiers** — use verbatim.
@@ -111,7 +111,7 @@ Agents start with a fresh context window — no conversation history, no files y
 4. **Context** — relevant architecture, patterns, conventions, adjacent work.
 5. **Boundaries** — what NOT to touch (other agents' scope, read-only files).
 6. **Verification** — commands to run after implementation (from `project-tooling` discovery).
-7. **Conventions** — ⛔ **mandatory for any prompt that writes code.** Paste the filled-in block from `agents-conventions`: study the neighbouring files first, copy the local naming/structure/error idiom, match comment density (usually none), stay in scope, and self-check the diff before reporting. An agent given no conventions writes its own dialect, and the result reads as foreign even when it works.
+7. **Conventions** — ⛔ **mandatory for any prompt that writes code.** Paste the filled-in block from `agent-conventions`: study the neighbouring files first, copy the local naming/structure/error idiom, match comment density (usually none), stay in scope, and self-check the diff before reporting. An agent given no conventions writes its own dialect, and the result reads as foreign even when it works.
 8. **Report** — expected status format (DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED) and its length bound. For code work, also require: which files it used as its pattern reference, and anything it had to invent for lack of local precedent.
 
 Point at skills and tools by name rather than inlining them when the target shares your access — see `agent-target-capability`.
@@ -122,9 +122,9 @@ Point at skills and tools by name rather than inlining them when the target shar
 2. Is the tier right for the task, and resolved to a concrete model for the active runtime?
 3. Are file boundaries explicit? No "and related files."
 4. Are verification commands included when the task modifies code?
-4b. Does the prompt carry the `agents-conventions` block — prior-art study, naming, comment discipline, scope limits, and the pre-report self-check?
+4b. Does the prompt carry the `agent-conventions` block — prior-art study, naming, comment discipline, scope limits, and the pre-report self-check?
 5. Is isolation right? Worktree for parallel writers; omit for read-only work.
-6. Does the dispatch mode match the runtime's delivery behavior (per `harness-<provider>-agents-delegate`), and does the agent have the tools it needs in that mode?
+6. Does the dispatch mode match the runtime's delivery behavior (per `harness-<provider>-agent-delegate`), and does the agent have the tools it needs in that mode?
 7. Does the session's own permission posture actually allow the work you are asking for?
 
 ## Key Principles
@@ -134,4 +134,4 @@ Point at skills and tools by name rather than inlining them when the target shar
 - **`max` is the ceiling — use sparingly.** `smart` covers most heavy work.
 - **The harness reference owns the mechanics.** Permission handling, background defaults, delivery, and limits are runtime properties — never carry one runtime's behavior to another.
 - **Match tier to task**, and **ask on mismatch** rather than silently complying.
-- **Verify results.** Agent summaries describe intent, not outcomes. Check the artifact — and for code, check that it matches the house style, not just that it works (`agents-conventions`).
+- **Verify results.** Agent summaries describe intent, not outcomes. Check the artifact — and for code, check that it matches the house style, not just that it works (`agent-conventions`).

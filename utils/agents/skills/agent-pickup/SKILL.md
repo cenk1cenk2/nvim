@@ -1,17 +1,18 @@
 ---
-name: agents-pickup
-description: 'agents-pickup Pick up Linear projects, project slices, or issues and execute them with the lead and agents as appropriate. Use on "agents pick up this project", "work these Linear issues", "pick up K-123". Do NOT use for read-only project refreshes or choosing the next task only.'
+name: agent-pickup
+description: 'agent-pickup Pick up Linear projects, project slices, or issues and execute them with the lead and agents as appropriate. Use on "agents pick up this project", "work these Linear issues", "pick up K-123". Do NOT use for read-only project refreshes or choosing the next task only.'
 disableModelInvocation: true
 argumentHint: "[Linear project, project slice, issue id(s), or URL] [optional: agent/direct/sequential/parallel/confirm]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-pickup-execution.md
   - ../references/linear-state-transitions.md
   - ../references/linear-project-documents.md
   - ../references/linear-chunk-issues.md
-  - ../references/agents-delegate.md
-  - ../references/agents-conventions.md
-  - ../references/agents-plan-split.md
+  - ../references/agent-delegate.md
+  - ../references/agent-conventions.md
+  - ../references/agent-plan-split.md
   - ../references/scm-detect.md
   - ../references/sourcebot-discovery.md
   - ../references/project-tooling.md
@@ -20,6 +21,7 @@ references:
 
 ## Agent Linear Pickup Orchestrator
 
+Posture: `present-first`.
 > **PREREQUISITE:** A Linear workspace skill MUST be active before this skill runs — workspace detection per `linear-prerequisite`.
 
 The pickup lifecycle runs per `linear-pickup-execution`. Present every write to Linear, GitHub, or GitLab per `output-diff`.
@@ -41,13 +43,13 @@ This skill carries Linear work from pickup to review. It can implement directly,
    - Inspect target repository state and origin provider per `scm-detect`.
    - Discover verification commands per `project-tooling`.
    - Use `sourcebot-discovery` when pickup needs broad repository/code discovery before GitLab-specific metadata.
-   - Use a cheap/default `agents-delegate` Explore agent when the unclear details are broad enough to benefit from parallel reconnaissance.
+   - Use a cheap/default `agent-delegate` Explore agent when the unclear details are broad enough to benefit from parallel reconnaissance.
    - Ask early when details are not finalized, stale, contradictory, or missing.
 
 3. **Plan the execution schedule.**
-   - Run an `agents-plan` style split per `agents-plan-split` with file collision checks, prerequisites, and dependency layers; align task boundaries with Linear issues per `linear-chunk-issues`.
-   - Decide per task: lead implementation, delegated single agent, parallel layer, or sequential layer. Tier choice and self-contained agent prompts per `agents-delegate`.
-   - Use `agents-review` for a cheap collision/prerequisite review when the task set is complicated or the user asks for deeper research.
+   - Run an `agent-plan` style split per `agent-plan-split` with file collision checks, prerequisites, and dependency layers; align task boundaries with Linear issues per `linear-chunk-issues`.
+   - Decide per task: lead implementation, delegated single agent, parallel layer, or sequential layer. Tier choice and self-contained agent prompts per `agent-delegate`.
+   - Use `agent-review` for a cheap collision/prerequisite review when the task set is complicated or the user asks for deeper research.
 
 4. **Report before starting tasks.**
    - Present what will be done, who will do it, sequential/parallel shape, target repos, planned branch strategy, verification commands, and open questions.
@@ -56,8 +58,8 @@ This skill carries Linear work from pickup to review. It can implement directly,
 5. **Implement.**
    - Move picked-up issues to `In Progress` per `linear-state-transitions`.
    - Use `git-branch` before implementation unless intentionally continuing a branch.
-   - Apply `agents-conventions` to every implementation, direct or delegated — pickup work lands in existing repos and must read as though the repo's own authors wrote it.
-   - Implement directly and/or dispatch agents with focused prompts, each carrying the `agents-conventions` block with concrete pattern-reference files.
+   - Apply `agent-conventions` to every implementation, direct or delegated — pickup work lands in existing repos and must read as though the repo's own authors wrote it.
+   - Implement directly and/or dispatch agents with focused prompts, each carrying the `agent-conventions` block with concrete pattern-reference files.
    - Keep branches current with known merges at convenient checkpoints.
    - Run local verification equivalent to the PR/MR pipeline.
 
@@ -65,7 +67,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
    - Use `git-commit` for logical commits and Linear trailers.
    - Use `github-pr-create` or `gitlab-mr-create` based on origin provider.
    - Ensure linked issues move to `In Review`.
-   - Run `agents-review` before finalizing non-trivial or agent-produced PRs/MRs, with an independent review prompt focused on the goals, risks, and alternatives considered.
+   - Run `agent-review` before finalizing non-trivial or agent-produced PRs/MRs, with an independent review prompt focused on the goals, risks, and alternatives considered.
    - Record deviations and findings on the relevant issue or project document.
 
 7. **Monitor and fix.**

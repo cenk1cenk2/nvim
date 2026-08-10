@@ -22,10 +22,10 @@ Always do an initial exploration phase before starting implementation:
 3. Check prerequisites and blockers. Treat `In Review` blockers as mostly complete, but verify whether the linked PR/MR exists and is healthy when the next task depends on it.
 4. Detect stale or out-of-whack descriptions. If the issue/project says details are not finalized, or comments contradict the description, ask early.
 5. When explicitly requested, use `linear-scm-discovery` to enrich repository inventory, implementation guidance, prior art, file boundaries, and verification expectations. For broad or unknown-repo investigations, that discovery starts with Sourcebot when available and escalates to GitLab/GitHub for live SCM state.
-6. Use `agents-delegate` with a cheap or default Explore agent for unclear project details when it materially reduces risk.
+6. Use `agent-delegate` with a cheap or default Explore agent for unclear project details when it materially reduces risk.
 7. Use a private `plan-hard` style self-interview to resolve design branches, but do not enter plan mode solely because this reference is used.
-8. Use `agents-review` for a cheap review of task splits, prerequisite assumptions, file collisions, and stale external claims when the task is complicated or the user requests deeper research.
-9. After implementation and before calling work complete, use `agents-review` for an independent review when the diff is non-trivial, risky, or agent-produced.
+8. Use `agent-review` for a cheap review of task splits, prerequisite assumptions, file collisions, and stale external claims when the task is complicated or the user requests deeper research.
+9. After implementation and before calling work complete, use `agent-review` for an independent review when the diff is non-trivial, risky, or agent-produced.
 
 ## Pre-Implementation Report
 
@@ -44,7 +44,7 @@ If the user asked for confirmation, feedback, or a plan-only pass, stop here. As
 
 ## Scheduling and Delegation
 
-Run an `agents-plan` style scheduling pass before implementation:
+Run an `agent-plan` style scheduling pass before implementation:
 
 1. Map tasks to Linear issue boundaries when possible.
 2. Decide whether each task is best done by the lead or an agent.
@@ -63,7 +63,7 @@ Agent prompts must be self-contained. Use an extended handoff shape:
 - Branch and base expectations.
 - Owned files or owned area.
 - Relevant prior decisions, deviations, and constraints.
-- Conventions block per `agents-conventions`, naming the concrete files to model the work on — mandatory for any code-writing handoff.
+- Conventions block per `agent-conventions`, naming the concrete files to model the work on — mandatory for any code-writing handoff.
 - Verification commands.
 - Commit trailer expectations: default to `closes K-123` when the PR/MR resolves the issue and nothing else is pending (so it auto-closes on merge); use `refs K-123` only for partial work or when the issue is still waiting on something.
 - Expected report format: status, changed behavior, verification evidence, PR/MR readiness, deviations, findings, and blockers.
@@ -105,7 +105,7 @@ If conflicts occur, use `git-conflict`. When conflicts involve another active is
 - If failures are external or unrelated, record the evidence and report it at the end.
 - Use `github-ci-fix` or `gitlab-ci-fix` when CI diagnosis needs the dedicated workflow.
 - If review feedback appears, use `github-pr-fix` or `gitlab-mr-fix` automatically when the feedback is clear and in scope. Ask the user for ambiguous, architectural, or conflicting feedback.
-- Before finalizing a non-trivial PR/MR, run `agents-review` with a concise goal and enough context for an independent review. Give hints about decisions and alternatives considered, but do not force the reviewer to accept them.
+- Before finalizing a non-trivial PR/MR, run `agent-review` with a concise goal and enough context for an independent review. Give hints about decisions and alternatives considered, but do not force the reviewer to accept them.
 - Re-check issue and PR/MR states between batches because work may be merged, reviewed, or superseded while agents are running.
 
 ## Final Report

@@ -4,11 +4,13 @@ description: 'argocd-kilic-workload Create a new workload service in the current
 disableModelInvocation: true
 argumentHint: "[workload-name] - e.g., 'my-app', 'html-cv3', 'notifications'"
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
 ---
 
 ## Cluster Workload Creator
 
+Posture: `present-first`.
 > **IMPORTANT: This skill assumes you are already inside a cluster ArgoCD repository** (e.g., `cluster/rubik/argocd-kilic-rubik`).
 
 ## How This Repository Works

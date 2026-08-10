@@ -4,12 +4,14 @@ description: 'obsidian-note Create structured notes in the Obsidian vault follow
 disableModelInvocation: true
 argumentHint: "[topic or description]"
 references:
+  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
 
 ## Obsidian Note: Structured Knowledge Management
 
+Posture: `present-first`.
 ## Context
 
 Vault location, tool access, file naming, frontmatter, writing style, and vault exploration: `obsidian`.

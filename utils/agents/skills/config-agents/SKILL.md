@@ -3,6 +3,7 @@ name: config-agents
 description: 'config-agents Update or review the central AGENTS.md guidelines at ~/.config/nvim/utils/agents/AGENTS.md. Always manually invoked; suggest it on rule drift or new durable conventions but never self-invoke. Do NOT use for per-repo CLAUDE.md/AGENTS.md (config-repository), skills (config-skills), or MCP configs (config-mcp).'
 disableModelInvocation: true
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/commit-push-scoped.md
@@ -11,6 +12,7 @@ argumentHint: "[what to change or review in AGENTS.md]"
 
 ## Agents Guidelines Management
 
+Posture: `present-first`.
 > **Editor MCP.** When the `hyprpilot-nvim` server is in the session, load the `hyprpilot-nvim` skill and work through it — read `AGENTS.md` with `editor_read` so the captain's unsaved edits are visible, and let that skill own every editor-tool rule you are tempted to write into this document.
 
 ## Target File

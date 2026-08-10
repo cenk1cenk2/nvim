@@ -1,4 +1,4 @@
-# Harness: Claude Code — agents-delegate
+# Harness: Claude Code — agent-delegate
 
 Runtime mechanics for delegation on Claude Code — how subagent dispatch actually behaves, plus the tier → model mapping. Read this before the first dispatch of a session running on Claude. For waiting and waking, see `harness-claude-agent-background`. Facts below come from the official subagent docs and the live tool schemas; version markers say when each behavior landed, because an older CLI behaves differently.
 
@@ -107,7 +107,7 @@ Report a delegation as failed only after the channel itself produced nothing acr
 - Since **v2.1.203** a worktree subagent's Bash/PowerShell commands run inside its worktree, and a command whose working directory resolves to the main checkout fails instead of running there.
 - Since **v2.1.210** that check covers the whole repository containing the launch directory — and, for a session already inside a linked worktree, the main checkout it links from.
 
-The concrete on-disk location is a harness detail, not a documented contract: verify the path the dispatch returns rather than assuming one, and see `agents-worktrees` for the naming and cleanup conventions this setup expects.
+The concrete on-disk location is a harness detail, not a documented contract: verify the path the dispatch returns rather than assuming one, and see `agent-worktrees` for the naming and cleanup conventions this setup expects.
 
 ## Other inherited context
 

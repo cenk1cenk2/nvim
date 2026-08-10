@@ -2,6 +2,7 @@
 name: linear-kilic-project-argocd-workload
 description: 'linear-kilic-project-argocd-workload Create a Linear project for deploying application workloads to Kubernetes via ArgoCD. Triggers: "deploy my-app", "add a workload". Do NOT use for system components (linear-kilic-project-argocd-system) or generic projects (linear-project-create).'
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/linear-mandatory-fields.md
 argumentHint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-cluster'"
@@ -9,6 +10,7 @@ argumentHint: "[workload-name] - e.g., 'renovate-jobs', 'my-app', 'postgres-clus
 
 ## ArgoCD Workload Deployment Project Generator
 
+Posture: `present-first`.
 **PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill (load it as defined in `load-skills`). This skill is kilic-dev workspace specific.
 
 ## Overview

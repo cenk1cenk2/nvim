@@ -3,6 +3,7 @@ name: config-mcp
 description: 'config-mcp Add, remove, or modify MCP server entries in the hyprpilot MCP catalog; researches servers, prefers official/HTTP sources, prompts for vars and auth. Always manually invoked. Do NOT use for skills (config-skills), agent guidelines (config-agents), or repo configs (config-repository; edit ~/.config/hyprpilot/config.yaml directly for launcher settings).'
 disableModelInvocation: true
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
 argumentHint: "[add|remove|modify] [server-name] [optional description]"
@@ -10,6 +11,7 @@ argumentHint: "[add|remove|modify] [server-name] [optional description]"
 
 ## MCP Server Configuration Manager
 
+Posture: `present-first`.
 ## Context
 
 The captain runs **hyprpilot** as the agent host. Hyprpilot loads MCP servers via the `[[mcps]]` array in `~/.config/hyprpilot/config.yaml` — each entry either points at a catalog file (`{ file = "..." }`) or declares inline `mcp_servers = { ... }`. The active catalog file is `~/.config/nvim/utils/mcphub/servers.json` — hyprpilot consumes it, despite what the `mcphub` path segment suggests. Per-profile `mcps` arrays wholesale-replace the global default.

@@ -1,4 +1,4 @@
-# Harness: Codex — agents-delegate
+# Harness: Codex — agent-delegate
 
 Runtime mechanics for delegation on Codex — how subagent dispatch behaves, plus the model roles. Read this before the first dispatch of a session running on Codex. For waiting and waking, see `harness-codex-agent-background`.
 

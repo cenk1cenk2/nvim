@@ -1,15 +1,15 @@
 ---
-name: agents-review
-description: 'agents-review Dispatch review subagents to cross-check artifacts (plan, DAG, facts, analysis) against the codebase or a devil''s-advocate lens; tier chosen from what the review demands, parallel reviewers for multiple artifacts. Use on "review this", "fact-check", "second opinion". Do NOT use to run a task (/agents-delegate), for multi-task plans (/agents-plan), or to re-read code you''ve already seen.'
+name: agent-review
+description: 'agent-review Dispatch review subagents to cross-check artifacts (plan, DAG, facts, analysis) against the codebase or a devil''s-advocate lens; tier chosen from what the review demands, parallel reviewers for multiple artifacts. Use on "review this", "fact-check", "second opinion". Do NOT use to run a task (/agent-delegate), for multi-task plans (/agent-plan), or to re-read code you''ve already seen.'
 argumentHint: "[type=plan|dag|facts|freeform] [artifact or file path] [optional: 'hard' | 'deep' | 'thorough' | explicit model name]"
 references:
-  - ../references/agents-delegate.md
+  - ../references/agent-delegate.md
   - ../references/scm-detect.md
 ---
 
 ## Review Subagent Dispatch
 
-Subagent dispatch parameters and mechanics per `agents-delegate`. Resolve tiers to concrete models via the `agent-harness` skill. Reviewers write nothing, so a review dispatch needs no approval gate of its own.
+Subagent dispatch parameters and mechanics per `agent-delegate`. Load the `agent-harness` skill to resolve tiers to concrete models. Reviewers write nothing, so a review dispatch needs no approval gate of its own.
 
 ## Context
 
@@ -18,14 +18,14 @@ This skill externalises review: instead of self-evaluating an artifact you produ
 **When to use:**
 
 - Fact-checking self-answered claims (often invoked automatically by `plan-hard`).
-- Sanity-checking a DAG schedule before running `agents-plan`.
+- Sanity-checking a DAG schedule before running `agent-plan`.
 - Peer-reviewing a plan before committing to it.
 - Getting a devil's-advocate take on a recommendation or analysis.
 
 **When NOT to use:**
 
-- Running a task (use `agents-delegate`).
-- Multi-task plans with file edits (use `agents-plan`).
+- Running a task (use `agent-delegate`).
+- Multi-task plans with file edits (use `agent-plan`).
 - Reading code you haven't looked at (just use `Read` / `Grep`).
 
 ## Artifact Types
@@ -35,13 +35,13 @@ Four typed templates, each with a different checklist. The skill picks the right
 | Type | Use case | Reviewer's focus |
 |------|----------|------------------|
 | `plan` | Plan file or plan section | Requirement coverage, missing steps, overlooked risks, unclear acceptance criteria. |
-| `dag` | Layer schedule from `agents-plan` | Dependency correctness, missed semantic deps, file collisions within layers, layering optimality. |
+| `dag` | Layer schedule from `agent-plan` | Dependency correctness, missed semantic deps, file collisions within layers, layering optimality. |
 | `facts` | List of factual claims | Per-claim verification against the codebase. PASS / FAIL / QUESTION with evidence. |
 | `freeform` | Analysis, recommendation, rationale | Devil's-advocate: counter-arguments, dismissed alternatives, load-bearing assumptions, failure modes. |
 
 ## Model Tier
 
-**Pick the tier from what the review actually demands — there is no blanket default.** A cheap model can grep, cite, and check a claim against a file; it cannot weigh a trade-off, spot the missing dependency in a DAG, or build the strongest counter-argument. Under-tiering a judgment review produces a confident `APPROVED` that means nothing — worse than no review, because it gets trusted. Resolve the concrete model for the active runtime via the `agent-harness` skill.
+**Pick the tier from what the review actually demands — there is no blanket default.** A cheap model can grep, cite, and check a claim against a file; it cannot weigh a trade-off, spot the missing dependency in a DAG, or build the strongest counter-argument. Under-tiering a judgment review produces a confident `APPROVED` that means nothing — worse than no review, because it gets trusted. Load the `agent-harness` skill to resolve the concrete model for the active runtime.
 
 Starting points by artifact type:
 
@@ -63,7 +63,7 @@ Then adjust for the artifact in front of you: its size, how coupled it is, and h
 | "default", "balanced" | `default` |
 | Explicit model name (e.g., `opus`, `sonnet`) | Use verbatim — do not remap |
 
-**Mismatch check:** if the user picks a tier the artifact will defeat — `cheap` for `freeform` or for a large coupled plan — say so before dispatching; likewise flag `smart` for plain `facts` grep work as overspend. See the `agents-delegate` reference's Mismatched Choice section.
+**Mismatch check:** if the user picks a tier the artifact will defeat — `cheap` for `freeform` or for a large coupled plan — say so before dispatching; likewise flag `smart` for plain `facts` grep work as overspend. See the `agent-delegate` reference's Mismatched Choice section.
 
 ## Process
 
@@ -85,7 +85,7 @@ Then adjust for the artifact in front of you: its size, how coupled it is, and h
    - `model` — resolved tier.
    - No worktree isolation (not needed).
    - No permission-mode parameter — it is deprecated and ignored on current Claude Code; reviewers are read-only and run under the session's own posture.
-   - **Naming decides collection, so pick one shape and match the prompt to it.** A reviewer's verdict *is* its entire deliverable, so it must actually arrive: dispatch **unnamed** to get the verdict back as a tool result in the same turn, or dispatch **named** and require the reviewer to deliver via `SendMessage`. Do not mix — a named agent does not block, whatever `run_in_background` says. **⛔ Read the active runtime's delivery rules from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agents-delegate.md` before the first dispatch** — a missed read is silent.
+   - **Naming decides collection, so pick one shape and match the prompt to it.** A reviewer's verdict *is* its entire deliverable, so it must actually arrive: dispatch **unnamed** to get the verdict back as a tool result in the same turn, or dispatch **named** and require the reviewer to deliver via `SendMessage`. Do not mix — a named agent does not block, whatever `run_in_background` says. **⛔ Read the active runtime's delivery rules from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md` before the first dispatch** — a missed read is silent.
    - When dispatching named, append to every review prompt: *your plain text is not visible to the lead — deliver the completed review with one `SendMessage` call to `"main"`.*
 
 4. **Collect verdicts.** A reviewer that goes quiet or reports itself idle has **not** failed and has **not** returned an empty verdict — it has most likely answered where you cannot see it. Steer it per the harness reference's ladder (ask for what it has, then name the delivery mechanism) before considering it failed, and never substitute your own judgement for a verdict that has not arrived.
@@ -206,6 +206,6 @@ No merging across artifacts — each review keeps its own context.
 
 ## Related Skills
 
-- **`agents-delegate`** — for running a task (not reviewing an artifact). Uses the same dispatch mechanism with a different prompt shape.
-- **`agents-plan`** — multi-task DAG execution. `agents-review` can sanity-check the DAG before launching.
-- **`plan-hard`** — auto-invokes `agents-review` type=`facts` at the end of its interview to fact-check self-answered claims before writing the plan file.
+- **`agent-delegate`** — for running a task (not reviewing an artifact). Uses the same dispatch mechanism with a different prompt shape.
+- **`agent-plan`** — multi-task DAG execution. `agent-review` can sanity-check the DAG before launching.
+- **`plan-hard`** — auto-invokes `agent-review` type=`facts` at the end of its interview to fact-check self-answered claims before writing the plan file.

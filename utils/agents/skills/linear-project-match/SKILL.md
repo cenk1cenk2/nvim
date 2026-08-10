@@ -3,6 +3,7 @@ name: linear-project-match
 description: 'linear-project-match State-only sync of Linear issue states to external evidence (merged MRs/PRs, user reports) - proposes transitions with evidence, applies in batch after approval. Triggers: "match linear to reality", "sync with recent MRs/PRs", "I did X, update linear". Do NOT use for structure/priority audits (/linear-project-reconcile) or deep issue reads (/linear-issue-read).'
 argumentHint: "[project-name or Linear URL] [evidence sources: MR/PR URLs, repo names, 'recent merged', user statements, notes]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/scm-detect.md
   - ../references/scm-github.md
@@ -13,6 +14,7 @@ references:
 
 ## Linear Project Match
 
+Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 Determine GitHub vs GitLab from the repo URL per `scm-detect` before pulling MR/PR data, then pick the right MCP tools from `scm-github` or `scm-gitlab` based on that detection.

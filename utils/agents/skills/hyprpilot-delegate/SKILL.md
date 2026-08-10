@@ -1,18 +1,18 @@
 ---
 name: hyprpilot-delegate
-description: 'hyprpilot-delegate Delegate a task to a separate hyprpilot agent session (claude/codex/opencode) over the hyprpilot_harness MCP server, then steer it across turns. Use on "delegate this to hyprpilot", "spawn a hyprpilot agent", "send this to personal/claude/opus", "list hyprpilot sessions", "steer that session", "kill that agent". Covers profile discovery, spawning blocking or detached, multi-turn steering, following output live, and cleanup. Do NOT use for subagents inside this harness (use /agents-delegate) or to reload the skill catalog (use /hyprpilot-reload).'
+description: 'hyprpilot-delegate Delegate a task to a separate hyprpilot agent session (claude/codex/opencode) over the hyprpilot_harness MCP server, then steer it across turns. Use on "delegate this to hyprpilot", "spawn a hyprpilot agent", "send this to personal/claude/opus", "list hyprpilot sessions", "steer that session", "kill that agent". Covers profile discovery, spawning blocking or detached, multi-turn steering, following output live, and cleanup. Do NOT use for subagents inside this harness (use /agent-delegate) or to reload the skill catalog (use /hyprpilot-reload).'
 disableModelInvocation: true
 argumentHint: "[task] [optional: profile name or fragment, e.g. 'personal glm-5.2']"
 references:
   - ../references/hyprpilot-sessions.md
-  - ../references/agents-conventions.md
+  - ../references/agent-conventions.md
   - ../references/project-tooling.md
-  - ../references/agents-completion.md
+  - ../references/agent-completion.md
 ---
 
 ## Hyprpilot Delegation
 
-> **⛔ Runs on explicit user request only.** Spawning a hyprpilot session starts a SEPARATE agent process under this user's credentials, and only the user decides that it should exist. Never infer it from the shape of a task, never fall back to it because in-harness dispatch (`agents-delegate`, `agents-plan`) is inconvenient or refused, and never use it to reach a posture — a mode, a model, a permission — that the current session does not have. If the user has not asked for hyprpilot or named a profile, this skill does not run.
+> **⛔ Runs on explicit user request only.** Spawning a hyprpilot session starts a SEPARATE agent process under this user's credentials, and only the user decides that it should exist. Never infer it from the shape of a task, never fall back to it because in-harness dispatch (`agent-delegate`, `agent-plan`) is inconvenient or refused, and never use it to reach a posture — a mode, a model, a permission — that the current session does not have. If the user has not asked for hyprpilot or named a profile, this skill does not run.
 
 > **⛔ A hyprpilot session is NOT an in-harness subagent.** The `agent-*` rule that dispatched work wakes you does not apply here; nothing pushes a completion to you. Session surface, completion signals, and per-vendor answer extraction per `hyprpilot-sessions`.
 
@@ -20,7 +20,7 @@ references:
 
 This skill delegates to a **separate hyprpilot agent process** — a different CLI (`claude` / `codex` / `opencode`), a different model, its own session and transcript — reached over the `hyprpilot_harness` MCP server.
 
-**This is not the same as `/agents-delegate`.** That spawns a subagent *inside the current harness*, sharing this runtime and its model tiers. This spawns an independent hyprpilot session that survives your turn, keeps its own conversation, and can be steered across many turns. Reach for this one when the user names hyprpilot or a profile, when the work wants a different vendor or model than the current session, or when the job needs to be driven over time rather than answered once.
+**This is not the same as `/agent-delegate`.** That spawns a subagent *inside the current harness*, sharing this runtime and its model tiers. This spawns an independent hyprpilot session that survives your turn, keeps its own conversation, and can be steered across many turns. Reach for this one when the user names hyprpilot or a profile, when the work wants a different vendor or model than the current session, or when the job needs to be driven over time rather than answered once.
 
 **Availability.** The tools live on the `hyprpilot_harness` MCP server. If they are absent, the harness is not enabled for this session — say so and stop; do not fall back to shelling out to the `hyprpilot` CLI, which is one-shot and cannot be steered.
 
@@ -46,7 +46,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - **A row carrying an `error` field failed to resolve — do not launch it.** Report the error instead.
    - **What the listing actually returns is `id`, `provider`, `agent`, `model`, `mode`, `headless`, `harnessEnabled`, `isDefault` — and nothing else.** There is no `cwd`, no `effort`, and no MCP/skill counts. Use what is there to sanity-check the pick and to warn the user when a profile is `headless` (it cannot be driven interactively). A profile's own working directory is **not knowable before launch**: it first appears as `sessionInfo.cwd` in the `spawn` result.
 
-2. **Brief the agent properly.** The spawned agent has NO access to this conversation. Its prompt must be self-contained: the goal, the repo/paths, the constraints, and what "done" looks like. If it writes code, carry the local patterns from `agents-conventions` and the verification commands from `project-tooling` into the prompt. A thin prompt produces a thin result and costs a whole session.
+2. **Brief the agent properly.** The spawned agent has NO access to this conversation. Its prompt must be self-contained: the goal, the repo/paths, the constraints, and what "done" looks like. If it writes code, carry the local patterns from `agent-conventions` and the verification commands from `project-tooling` into the prompt. A thin prompt produces a thin result and costs a whole session.
 
 3. **Present, then spawn.** Show the resolved profile, the working directory, and the prompt. `spawn` runs the profile's `command` as this user, so it is never a silent action — present it and wait for approval. On approval call `spawn { profile, prompt|file, cwd?, mode?, wait?, timeout_seconds?, args?, with_config? }`.
    - **Use the dedicated parameters first.** `cwd`, `mode`, `file`, and `args` are all top-level parameters — reach for them directly. `with_config` is the last resort, for the settings that have no dedicated parameter of their own (`model`, `effort`). (`wait` / `timeout_seconds` are also top-level, but they describe how *you* wait, not the agent — see below.)
@@ -117,7 +117,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - Calling it twice is the natural stop-then-clean-up. Read anything you care about before the reap.
    - Kill runaway sessions, and reap a finished one to free a slot when `spawn` reports the concurrency ceiling.
 
-10. **Report back.** Give the user the outcome, the handle (so they can continue), and the exit status. If the session is still running, say so plainly and tell them it can be followed or steered — do not present a timed-out turn as a finished result. **A non-zero `exitCode` is not automatically the agent's fault**: the transcript may carry an upstream `error` event (auth, quota, model availability). Read it and say which before re-dispatching. If the user wants to commit/push/PR from the result, hand off per `agents-completion`.
+10. **Report back.** Give the user the outcome, the handle (so they can continue), and the exit status. If the session is still running, say so plainly and tell them it can be followed or steered — do not present a timed-out turn as a finished result. **A non-zero `exitCode` is not automatically the agent's fault**: the transcript may carry an upstream `error` event (auth, quota, model availability). Read it and say which before re-dispatching. If the user wants to commit/push/PR from the result, hand off per `agent-completion`.
 
 ## Restricting the spawned agent
 
@@ -154,7 +154,7 @@ Rules that hold whichever vendor you target:
 **User says:** "delegate this to hyprpilot personal glm-5.2 — refactor the retry logic in src/api/client.ts"
 
 1. `list_profiles` → the fragment matches `personal/kilic/glm-5.2:cloud` (opencode, mode `build`).
-2. Build a self-contained prompt naming the file, the neighbouring patterns from `agents-conventions`, and the test command from `project-tooling`.
+2. Build a self-contained prompt naming the file, the neighbouring patterns from `agent-conventions`, and the test command from `project-tooling`.
 3. Present the profile, cwd, and prompt → user approves.
 4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` → returns at once with handle `s-3f2a`, `status: running`.
 5. Watch `done.json` in `sessionInfo.files.dir` through the runtime's background exec; on wake, `session_status` reports `exited` / `hasResult: true`.

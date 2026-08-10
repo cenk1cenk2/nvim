@@ -72,6 +72,6 @@ Don't:
 ## Related Skills
 
 - **`agent-unaware`** — same job, target with no tools or skills.
-- **`agents-delegate`** / **`agents-plan`** — dispatch mechanics; this skill shapes the prompt they send.
+- **`agent-delegate`** / **`agent-plan`** — dispatch mechanics; this skill shapes the prompt they send.
 - **`plan-handoff`** — handoff plan files; this skill decides how much they inline.
 - **`linear-project-agent`** — Linear issues written for agent pickup.

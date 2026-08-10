@@ -3,13 +3,14 @@ name: github-ci-fix
 description: 'github-ci-fix Diagnose failing GitHub Actions on the current branch, research errors, and propose fixes. Triggers: "CI is failing", "why is the check red", "debug the workflow". Do NOT use for creating/updating workflows (github-ci-create), GitLab failures (gitlab-ci-fix), or PR descriptions (github-pr-create).'
 disableModelInvocation: true
 references:
+  - ../references/scm-detect.md
   - ../references/scm-ci-fix.md
   - ../references/scm-github.md
 ---
 
 ## GitHub Failed CI: Diagnose and Fix Failing Actions
 
-Run the CI-diagnosis workflow per `scm-ci-fix`, with GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection per `scm-github`.
+Run the CI-diagnosis workflow per `scm-ci-fix`, with GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection per `scm-detect` and `scm-github`.
 
 ## Platform specifics
 

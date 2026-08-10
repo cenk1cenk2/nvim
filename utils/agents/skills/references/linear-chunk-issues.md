@@ -91,7 +91,7 @@ Add an **Issue** column to the standard task split table:
 
 ## Completion Handoff
 
-During the completion handoff (agents-completion reference):
+During the completion handoff (agent-completion reference):
 
 - If all issues are resolved, each commit should already have the correct trailers from the agents.
 - If the orchestrator creates a final combined commit instead, include trailers for all issues.

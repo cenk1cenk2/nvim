@@ -1,6 +1,8 @@
 ---
 name: linear-laravel
 description: 'linear-laravel Initialize a Linear session for the Laravel workspace with GitHub as SCM. Auto-invoked on Laravel context: CLOUD-xxx issue IDs, Laravel workspace URLs, GitHub Laravel org repos.'
+references:
+  - ../references/linear-mandatory-fields.md
 ---
 
 ## Session Initialization

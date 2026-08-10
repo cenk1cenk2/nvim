@@ -2,12 +2,14 @@
 name: linear-kilic-project-argocd-system
 description: 'linear-kilic-project-argocd-system Create a Linear project for deploying system components (operators, controllers, infra tools) to Kubernetes via ArgoCD. Triggers: "deploy cert-manager", "set up a system component". Do NOT use for app workloads (linear-kilic-project-argocd-workload) or generic projects (linear-project-create).'
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
 argumentHint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'velero'"
 ---
 
 ## ArgoCD System Deployment Project Generator
 
+Posture: `present-first`.
 **PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill (load it as defined in `load-skills`). This skill is kilic-dev workspace specific.
 
 ## Overview

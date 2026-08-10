@@ -2,7 +2,7 @@
 name: code-improve
 description: 'code-improve Audit a codebase or scoped area for architectural, testability, consistency, and clarity improvements; fans out parallel subagents and returns a ranked shortlist, optionally drilling into picks. Use on "improve the codebase", "audit this codebase", "find refactors". Do NOT use for reviewing a PR/branch (/code-review-branch, /code-review-changes), single-file cleanup (edit directly), or planning a pick (/plan-hard).'
 references:
-  - ../references/agents-delegate.md
+  - ../references/agent-delegate.md
   - ../references/project-tooling.md
   - ../references/provider-paths.md
 ---
@@ -33,7 +33,7 @@ This is an audit, not a review of pending changes. For reviewing a specific bran
 
    Then discover the project's task tooling per `project-tooling` — scan for `Taskfile.yml`, `package.json`, `Makefile`, `Cargo.toml`, and the like, and note the format / lint / test commands. These anchor the audit: proposals must not break them, and the consistency dimension defers to whatever the formatter already normalizes.
 
-2. **Phase 1 — Parallel Audit.** Dispatch 3-5 audit subagents in parallel (single message, multiple subagent dispatches) per `agents-delegate`, at **`cheap` tier** — resolve tiers to concrete models via the `agent-harness` skill, use an exploration subagent. Each subagent takes a focused audit dimension and returns a **short report (under 300 words)** listing candidates with file paths and 1-line rationale per candidate.
+2. **Phase 1 — Parallel Audit.** Dispatch 3-5 audit subagents in parallel (single message, multiple subagent dispatches) per `agent-delegate`, at **`cheap` tier** — load the `agent-harness` skill to resolve tiers to concrete models, use an exploration subagent. Each subagent takes a focused audit dimension and returns a **short report (under 300 words)** listing candidates with file paths and 1-line rationale per candidate.
 
    **Default dimensions** (skip or merge based on user filter):
 
@@ -49,11 +49,11 @@ This is an audit, not a review of pending changes. For reviewing a specific bran
 
 3. **Phase 2 — Collate and rank.** After all subagents return, de-duplicate overlapping candidates, then rank by **Impact × Ease** (rough mental heuristic, not a formula).
 
-   **Optional second opinion (with approval).** Before presenting, offer to cross-check the ranked shortlist with `agents-review`:
+   **Optional second opinion (with approval).** Before presenting, offer to cross-check the ranked shortlist with `agent-review`:
 
-   > Want a second opinion? I'll dispatch a review subagent (`agents-review`, `type=freeform`) to sanity-check the top candidates before we drill in.
+   > Want a second opinion? I'll dispatch a review subagent (`agent-review`, `type=freeform`) to sanity-check the top candidates before we drill in.
 
-   On approval, dispatch one `agents-review` pass over the top candidates and fold its verdicts (confirmed / weak / missed) into the shortlist. The cross-check runs in an isolated subagent, so the main context stays clean. Skip silently if the user declines.
+   On approval, dispatch one `agent-review` pass over the top candidates and fold its verdicts (confirmed / weak / missed) into the shortlist. The cross-check runs in an isolated subagent, so the main context stays clean. Skip silently if the user declines.
 
    Then present a numbered shortlist in chat:
 
@@ -77,7 +77,7 @@ This is an audit, not a review of pending changes. For reviewing a specific bran
    - **Effort estimate** (low / med / high with rough reasoning).
    - **Verification** (which discovered task confirms it stays green — e.g. `task test`, `task lint`).
 
-   **b. Parallel design alternatives** — for genuinely architectural changes where the interface is the key decision. Dispatch 3+ design subagents in parallel (per `agents-delegate`, a planning subagent), each with a **radically different** design constraint:
+   **b. Parallel design alternatives** — for genuinely architectural changes where the interface is the key decision. Dispatch 3+ design subagents in parallel (per `agent-delegate`, a planning subagent), each with a **radically different** design constraint:
    - Agent 1: "Minimize the interface — aim for 1-3 entry points maximum."
    - Agent 2: "Maximize flexibility — support many use cases and extension."
    - Agent 3: "Optimize for the most common caller — make the default case trivial."
@@ -160,7 +160,7 @@ Subagents run in parallel — **dispatch all in a single message with multiple t
 
 1. User says "code improve, whole repo".
 2. Dispatch 5 audit subagents in parallel (`cheap` tier): architecture, testability, consistency, dead code, clarity.
-3. Collate 12 candidates → rank. Offer a second opinion; user accepts, so dispatch `agents-review` over the top candidates and fold in its verdicts.
+3. Collate 12 candidates → rank. Offer a second opinion; user accepts, so dispatch `agent-review` over the top candidates and fold in its verdicts.
 4. Present top 10 with 1-liners. Recommend top 3.
 5. User picks #2 ("Extract DB session management from handlers"). Route to single opinionated proposal (not enough architectural ambiguity to justify 3 design subagents).
 6. Present Problem / Proposal / Trade-offs / Effort. Suggest `plan-hard` for implementation.
@@ -177,8 +177,8 @@ Subagents run in parallel — **dispatch all in a single message with multiple t
 
 ## Composition with Other Skills
 
-- **`agents-review`** — the second-opinion pass in Phase 2. Cross-checks the ranked shortlist in an isolated subagent so the review never pollutes the main context. Gated on user approval.
-- **`agents-delegate`** — the dispatch mechanics for the Phase 1 audit and Phase 3b design subagents (tier resolution, self-contained prompts, blocking parallel dispatch).
+- **`agent-review`** — the second-opinion pass in Phase 2. Cross-checks the ranked shortlist in an isolated subagent so the review never pollutes the main context. Gated on user approval.
+- **`agent-delegate`** — the dispatch mechanics for the Phase 1 audit and Phase 3b design subagents (tier resolution, self-contained prompts, blocking parallel dispatch).
 - **`plan-hard`** — the natural follow-on for any picked improvement. Produce the plan. This skill stops at proposal.
 - **`plan-revise`** — if a picked improvement reveals that an existing plan was wrong, route to `plan-revise` instead of `plan-hard`.
 - **`code-review-branch`** / **`code-review-changes`** — for reviewing pending changes, not for codebase-wide audit. Different skill, different scope.
@@ -186,8 +186,8 @@ Subagents run in parallel — **dispatch all in a single message with multiple t
 
 ## Related Skills
 
-- **`agents-review`** — dispatch a review subagent for a second opinion on the shortlist.
-- **`agents-delegate`** — subagent dispatch mechanics and tier resolution.
+- **`agent-review`** — dispatch a review subagent for a second opinion on the shortlist.
+- **`agent-delegate`** — subagent dispatch mechanics and tier resolution.
 - **`plan-hard`** — build a plan from a picked improvement.
 - **`plan-revise`** — revise an existing plan when an audit finding invalidates it.
 - **`code-review-branch`** — review a specific branch's changes.

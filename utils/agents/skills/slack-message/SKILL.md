@@ -4,6 +4,7 @@ description: 'slack-message Process a Slack message link - reads the thread, und
 disableModelInvocation: true
 argumentHint: "[slack-message-url] [what to do with it]"
 references:
+  - ../references/present-first.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/output-diff.md
@@ -11,6 +12,7 @@ references:
 
 ## Slack Message Processor
 
+Posture: `present-first`.
 > **PREREQUISITE:** A Slack workspace skill (`slack-kilic` or `slack-laravel`) MUST be active before this skill runs — workspace detection per `slack-prerequisite`.
 
 ## Context

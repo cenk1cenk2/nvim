@@ -1,8 +1,9 @@
 ---
 name: linear-project-pickup
-description: 'linear-project-pickup Prepare a Linear project or slice for implementation - fetch issues, documents, blockers, comments, and execution scope. Triggers: "pick up this project", "implement this project slice". This skill preps and waits for a go; /agents-pickup executes. Do NOT use for read-only refreshes (/linear-project-read) or structure audits (/linear-project-reconcile).'
+description: 'linear-project-pickup Prepare a Linear project or slice for implementation - fetch issues, documents, blockers, comments, and execution scope. Triggers: "pick up this project", "implement this project slice", project URL for execution. This skill preps and waits for a go; /agent-pickup executes. Do NOT use for read-only refreshes (/linear-project-read) or structure audits (/linear-project-reconcile).'
 argumentHint: "[project name or URL] [optional slice/filter]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-pickup-execution.md
   - ../references/linear-project-documents.md
@@ -16,15 +17,16 @@ references:
 
 ## Linear Project Pickup
 
+Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 > **THE PROJECT RECORD IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.** Record vs conversation authority per `linear-issue-philosophy`, applied before treating the project's issues or description as requirements. Records go stale — written before the work started, by someone who did not yet know what implementation would reveal. The user may skip, reorder, add, or override anything in them; never push back with "but the project says…".
 
-Scope resolution, early questions, issue selection, state updates, and handoff to `agents-pickup` follow `linear-pickup-execution`; apply `linear-state-transitions` before moving selected issues to `In Progress`, and `output-diff` before writing to Linear.
+Scope resolution, early questions, issue selection, state updates, and handoff to `agent-pickup` follow `linear-pickup-execution`; apply `linear-state-transitions` before moving selected issues to `In Progress`, and `output-diff` before writing to Linear.
 
 ## Purpose
 
-This skill turns a project or project slice into an execution-ready issue set. It does not have to implement by itself; by default it hands the prepared context to `agents-pickup`.
+This skill turns a project or project slice into an execution-ready issue set. It does not have to implement by itself; by default it hands the prepared context to `agent-pickup`.
 
 ## Process
 
@@ -56,7 +58,7 @@ This skill turns a project or project slice into an execution-ready issue set. I
 5. **Report and hand off.**
    - Summarize selected issues, skipped issues, blockers, documents read, uncertainties, and recommended execution shape.
    - If the user requested confirmation, stop here.
-   - Otherwise compose with `agents-pickup` for implementation.
+   - Otherwise compose with `agent-pickup` for implementation.
 
 ## Output Shape
 
@@ -79,7 +81,7 @@ This skill turns a project or project slice into an execution-ready issue set. I
 - <blocking question or stale information>
 
 ### Next
-- Hand off to `agents-pickup` with <N> tasks.
+- Hand off to `agent-pickup` with <N> tasks.
 ```
 
 ## Key Principles

@@ -3,12 +3,14 @@ name: obsidian-triage
 description: 'obsidian-triage Process todo notes in the Obsidian vault interactively - organize, move, rename, or remove. Triggers: "triage my notes", "clean up todos". Do NOT use for creating notes (obsidian-note), repo docs (obsidian-repository), or adding todos (obsidian-todo).'
 disableModelInvocation: true
 references:
+  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
 
 ## Obsidian Triage
 
+Posture: `present-first`.
 ## Context
 
 Vault location, tool access, file naming, frontmatter, and writing style: `obsidian`.

@@ -16,12 +16,11 @@ Reasoning sits on top so the user can decide whether to read the block below it.
 - One chunk per logical change; group related small changes under a shared reason.
 - Omit unchanged fields entirely. For long-form edits, show a concise diff of what moved, was added, or was removed — never dump unchanged surrounding text.
 - Group short metadata fields (title, priority, labels, estimate, team) into one chunk; give long-form sections (description body, analysis) their own.
+- **On a create, show the full content that will be written** — the concise-diff rule above is for edits. A new description presented in summary is not reviewable.
 - Language tag by content: `diff` for field changes, `markdown` for prose, `yaml` for structured config, plain for short field groups.
 - Wait for explicit approval before the write — unless the request already blessed it, in which case act and report.
 
-## Examples
-
-Update:
+## Example
 
 > Title was generic. Updated to name the actual scope.
 >
@@ -30,18 +29,7 @@ Update:
 > + fix(auth): rotate JWT signing key
 > ```
 
-Create:
-
-> High priority because the certificates are managed by hand today.
->
-> ```
-> title:    Add cert-manager to <cluster>
-> team:     Infrastructure
-> priority: High
-> labels:   kubernetes, security
-> ```
-
-Slack posts use the same shape with lighter formatting: present the full message draft in a quoted block, then ask.
+Slack posts use the same shape, lighter: the full draft in a quoted block, then ask.
 
 ## Scope
 

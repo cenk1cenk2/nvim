@@ -1,19 +1,19 @@
 ---
-name: agents-plan
-description: 'agents-plan Plan and execute multi-task work across agents via a dependency-aware DAG scheduler; layers run in parallel with review pauses between them. Modes: "team" (default, lead orchestrates) or "fire-and-forget" (autonomous, bypass permissions). Use on "agents-plan", "run these tasks in parallel", "fire and forget". Do NOT use for single-task delegation (use /agents-delegate).'
+name: agent-plan
+description: 'agent-plan Plan and execute multi-task work across agents via a dependency-aware DAG scheduler; layers run in parallel with review pauses between them. Modes: "team" (default, lead orchestrates) or "fire-and-forget" (autonomous, bypass permissions). Use on "agent-plan", "run these tasks in parallel", "fire and forget". Do NOT use for single-task delegation (use /agent-delegate).'
 argumentHint: "[plan file or goal] [optional: 'fire' | 'fire-and-forget' | 'without worktrees' | 'per-task review' | 'final-only review']"
 references:
   - ../references/plan-mode.md
-  - ../references/agents-delegate.md
-  - ../references/agents-worktrees.md
+  - ../references/agent-delegate.md
+  - ../references/agent-worktrees.md
   - ../references/scm-detect.md
   - ../references/sourcebot-discovery.md
   - ../references/project-tooling.md
-  - ../references/agents-write-plans.md
-  - ../references/agents-conventions.md
-  - ../references/agents-completion.md
-  - ../references/agents-plan-split.md
-  - ../references/agents-merge-review.md
+  - ../references/agent-write-plans.md
+  - ../references/agent-conventions.md
+  - ../references/agent-completion.md
+  - ../references/agent-plan-split.md
+  - ../references/agent-merge-review.md
   - ../references/commit-style.md
   - ../references/commit-trailers.md
   - ../references/linear-chunk-issues.md
@@ -30,7 +30,7 @@ references:
 > - Present the plan, the proposed layer schedule, and the resolved mode+cadence to the user for approval.
 > - Exit plan mode only when launching layer 0.
 
-The planning phase runs per `agents-plan-split`; the between-layer and end-of-run phases per `agents-merge-review`.
+The planning phase runs per `agent-plan-split`; the between-layer and end-of-run phases per `agent-merge-review`.
 
 ## Context
 
@@ -42,7 +42,7 @@ This skill takes a plan (explicit file or inferred from a goal), builds a depend
   - **`team` (default)** — `TeamCreate` coordinates the run. The lead orchestrates and stays in the loop between layers.
   - **`fire-and-forget`** — no team coordination; agents run to completion and report. Use when the layer needs no lead involvement mid-flight.
 
-  **Note:** mode does not control permissions. Subagents inherit the session's permission mode and any dispatch-time parameter is ignored — so autonomy is a property of the session you are running in, not of this axis. See `harness-<provider>-agents-delegate`.
+  **Note:** mode does not control permissions. Subagents inherit the session's permission mode and any dispatch-time parameter is ignored — so autonomy is a property of the session you are running in, not of this axis. See `harness-<provider>-agent-delegate`.
 - **Review cadence** (when `code-review-changes` runs):
   - **`per-layer` (default)** — review after each layer merges, before the next launches. Catches integration issues layer by layer.
   - **`per-task`** — implementer + reviewer pair for every task. Strictest. Use for risky refactors.
@@ -78,18 +78,18 @@ Present both resolutions in the plan summary. If either is ambiguous, default to
 
 ### Steps 1–4 — Planning
 
-Follow the `agents-plan-split` reference steps 1–4: understand the goal, discover tooling, establish conventions, write the plan. The plan must include a `depends_on: [task-id, ...]` field on each task (empty/absent = layer 0).
+Follow the `agent-plan-split` reference steps 1–4: understand the goal, discover tooling, establish conventions, write the plan. The plan must include a `depends_on: [task-id, ...]` field on each task (empty/absent = layer 0).
 
 - Repository and code discovery when planning starts from an organization-wide question or the target repository is not yet known: `sourcebot-discovery`.
 - SCM platform detection and raw `git` CLI usage: `scm-detect`.
 - Verification commands: `project-tooling`.
-- Project conventions, discovered and agreed before any dispatch: `agents-conventions`.
-- Plan quality criteria, including the optional `depends_on` field on tasks: `agents-write-plans`.
+- Project conventions, discovered and agreed before any dispatch: `agent-conventions`.
+- Plan quality criteria, including the optional `depends_on` field on tasks: `agent-write-plans`.
 - Task splits aligned with Linear issue boundaries when the user supplies issues or a project: `linear-chunk-issues`.
 
 ### Step 5 — Build the schedule
 
-Follow the `agents-plan-split` reference's "Task dependencies" section:
+Follow the `agent-plan-split` reference's "Task dependencies" section:
 
 - Read each task's `depends_on`. Compute the layer for each task: `layer(task) = max(layer(dep) for dep in depends_on) + 1`, or `0` if `depends_on` is empty.
 - Group tasks by layer. Within each layer, verify no two tasks write to the same file. If overlap exists, flag it to the user — propose promoting one task to a later layer, splitting the overlap into a new task, or merging the two conflicting tasks. Do NOT auto-resolve.
@@ -107,7 +107,7 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 - User approves or adjusts (reshuffle layers, change mode, change cadence, add/remove tasks).
 - Iterate until approved.
 
-> **Tip:** Want a second opinion on the DAG before launching? Suggest to the user: *"Invoke `/agents-review dag` with the schedule above to dispatch a reviewer (it picks the tier from the DAG's size and coupling)."* This is a nudge, not a step — the user decides whether to act on it.
+> **Tip:** Want a second opinion on the DAG before launching? Suggest to the user: *"Invoke `/agent-review dag` with the schedule above to dispatch a reviewer (it picks the tier from the DAG's size and coupling)."* This is a nudge, not a step — the user decides whether to act on it.
 
 ### Step 7 — Decide agent count per layer
 
@@ -116,7 +116,7 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 
 ### Step 8 — Launch the first layer
 
-> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agents-delegate.md` before the first dispatch.** A missed read is silent, and the blocking flag below is exactly what varies.
+> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md` before the first dispatch.** A missed read is silent, and the blocking flag below is exactly what varies.
 
 - Exit plan mode.
 - Record the **run-level baseline** (current branch + HEAD) for the final review pass.
@@ -130,7 +130,7 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
   - Worktree isolation (unless user opted out).
   - `team_name` set to the team created above.
   - No permission-mode parameter — it is ignored; teammates run under the session's own posture.
-  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `harness-<provider>-agents-delegate`.
+  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `harness-<provider>-agent-delegate`.
   - A general-purpose subagent.
 
 **Fire-and-forget mode:**
@@ -139,15 +139,15 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 - Spawn all agents for this layer in a single message with multiple subagent dispatches. For each:
   - Worktree isolation (unless user opted out).
   - No permission-mode parameter — it is ignored; agents run under the session's posture.
-  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `harness-<provider>-agents-delegate`.
+  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `harness-<provider>-agent-delegate`.
   - A general-purpose subagent.
 
 **Per-task cadence override:** if the user chose `per-task` cadence, each layer still runs in parallel, but every task is implemented + reviewed by a pair (two dispatches — one implementer, one reviewer) before the layer considers itself done. See the "Per-Task Review Pattern" section below. This is heavier than per-layer review.
 
 **Shared:**
 
-- Dispatch parameters and mechanics per `agents-delegate`; resolve tiers to concrete models via the `agent-harness` skill.
-- Verify each returned worktree path is absolute and in the runtime's agent-worktrees directory per `agents-worktrees` — the concrete worktrees and plans directories resolve via `provider-paths`, never hardcoded.
+- Dispatch parameters and mechanics per `agent-delegate`; load the `agent-harness` skill to resolve tiers to concrete models.
+- Verify each returned worktree path is absolute and in the runtime's agent-worktrees directory per `agent-worktrees` — the concrete worktrees and plans directories resolve via `provider-paths`, never hardcoded.
 - Each agent prompt is self-contained. Use the template below. Include the running `## Accumulated Guidance` section (empty for layer 0).
 
 ### Step 9 — Collect layer results
@@ -158,7 +158,7 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 
 ### Step 10 — Merge this layer's worktrees
 
-Follow the `agents-merge-review` reference "Merge worktrees (per-layer)" section:
+Follow the `agent-merge-review` reference "Merge worktrees (per-layer)" section:
 
 - Merge each layer worktree's branch back to the active branch sequentially.
 - On merge conflicts: present to user, wait for resolution decision, do NOT auto-resolve.
@@ -185,11 +185,11 @@ Present findings. If the reviewer flags issues, fix them (directly or via a corr
 
 ### Step 14 — Final review, verification, handoff
 
-Follow the `agents-merge-review` reference steps 2–4:
+Follow the `agent-merge-review` reference steps 2–4:
 
 - **Final review.** Run `code-review-changes` against the **run-level baseline** (recorded in step 8 for layer 0). This catches cross-layer integration issues regardless of cadence choice.
 - **Final verification.** Run the full verification command set from the planning phase. Read the output. Confirm with evidence.
-- **Completion handoff.** Summarize and present options (commit / push / PR / leave); execute the user's choice per the `agents-completion` reference. Commit messages follow `commit-style`, with issue links per `commit-trailers`.
+- **Completion handoff.** Summarize and present options (commit / push / PR / leave); execute the user's choice per the `agent-completion` reference. Commit messages follow `commit-style`, with issue links per `commit-trailers`.
 
 ### Step 15 — Shutdown (team mode only)
 
@@ -237,7 +237,7 @@ Do NOT modify files outside your write scope. Other agents in this layer:
 
 FIRST, before writing anything: read [nearest sibling files] and [closest existing implementation of the same kind], and follow them. Extend the existing pattern rather than introducing a new one.
 
-[Filled-in block from the `agents-conventions` reference — naming, formatting, errors, imports, tests, architecture]
+[Filled-in block from the `agent-conventions` reference — naming, formatting, errors, imports, tests, architecture]
 
 Idiom above binds regardless of how novel the task is. For shape (decomposition, abstractions, signatures): mirror [analogous implementation] where one exists; where the task has no analogue, design it against the codebase's architecture and state in your report what you chose and why.
 
@@ -312,7 +312,7 @@ Report: APPROVED or list specific issues to fix.
 
 See the `agent-harness` skill for tier definitions, per-provider model lists, user shorthand, and mismatch handling. Per-agent, pick a tier based on task complexity and resolve to a concrete model:
 
-- **Concrete model depends on the provider** — resolve via the `agent-harness` skill (Claude: cheap→`haiku`, default→`sonnet`, smart→`opus`, max→`fable`; OpenCode / Codex per its references). Same mapping applies to review subagents under per-task cadence.
+- **Concrete model depends on the provider** — load the `agent-harness` skill to resolve it (Claude: cheap→`haiku`, default→`sonnet`, smart→`opus`, max→`fable`; OpenCode / Codex per its references). Same mapping applies to review subagents under per-task cadence.
 - **Other providers:** if the mapping is unknown, ask the user.
 - **Explicit model names from the user** override tiers — use verbatim.
 - **Mismatched choices:** ask before dispatching.
@@ -355,6 +355,6 @@ At the end of the run, and at every layer boundary, enumerate what is still aliv
 
 ## Related Skills
 
-- **`agents-delegate`** — for single-task, one-shot delegation to one agent at a user-chosen tier/model. Use when the work fits one agent and doesn't warrant a plan + DAG.
+- **`agent-delegate`** — for single-task, one-shot delegation to one agent at a user-chosen tier/model. Use when the work fits one agent and doesn't warrant a plan + DAG.
 - **`code-review-changes`** — invoked per-layer (default cadence) and at end-of-run for integration review.
-- **`agents-review`** — dispatch a reviewer to cross-check the DAG before launching. Suggested after step 6 (optional; cheap tier by default).
+- **`agent-review`** — dispatch a reviewer to cross-check the DAG before launching. Suggested after step 6 (optional; cheap tier by default).

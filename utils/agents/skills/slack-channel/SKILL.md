@@ -4,6 +4,8 @@ description: 'slack-channel Process a Slack channel - reads recent messages, ana
 disableModelInvocation: true
 argumentHint: "[channel-name-or-id] [optional: timeframe or instructions]"
 references:
+  - ../references/present-first.md
+  - ../references/enrich-context.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/output-diff.md
@@ -11,6 +13,7 @@ references:
 
 ## Slack Channel Processor
 
+Posture: `present-first`.
 > **PREREQUISITE:** A Slack workspace skill (`slack-kilic` or `slack-laravel`) MUST be active before this skill runs — workspace detection per `slack-prerequisite`.
 
 ## Context
@@ -124,6 +127,6 @@ The user wants to catch up on a Slack channel. This skill reads the channel's re
 ## Key Principles
 
 - **Always write back to Slack.** Default behavior is to respond in Slack, not just in chat. The posted content doubles as a record for creating Linear issues.
-- **Enrich with source tools.** Don't just summarize Slack text — use GitLab/Linear MCP tools to provide real context (diffs, MR details, issue state).
+- **Enrich with source tools** per `enrich-context`. Don't just summarize Slack text — use GitLab/Linear MCP tools to provide real context (diffs, MR details, issue state).
 - **Prompt for `echo`.** The echo channel is personal — always ask before creating issues or notes.
 - Follow the response conventions — thread vs channel, `:dark_sunglasses:`, approval rules — per `slack`.

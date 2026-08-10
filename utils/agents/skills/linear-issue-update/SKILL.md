@@ -3,6 +3,7 @@ name: linear-issue-update
 description: 'linear-issue-update Update a Linear issue''s description to reflect deviations and refinements from the conversation. Triggers: "update the issue", "issue description is outdated". Do NOT use for comments (/linear-issue-comment), checklists (/linear-issue-checklist), or new issues (/linear-issue-create).'
 argumentHint: "[issue-id or Linear URL]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-document-handling.md
@@ -11,6 +12,7 @@ references:
 
 ## Linear Issue Update
 
+Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 ## Core Principle

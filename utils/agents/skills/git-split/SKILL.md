@@ -4,12 +4,14 @@ description: 'git-split Break a large change set - uncommitted tree, branch comm
 disableModelInvocation: true
 argumentHint: "[optional: slicing hint — e.g., 'by feature', 'separate refactor and feature', 'by file']"
 references:
+  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/output-diff.md
 ---
 
 ## Git Break
 
+Posture: `present-first`.
 ## Context
 
 `git-split` is a **delegation orchestrator**. It does not create branches, commit, push, or open PRs/MRs itself — it plans the split and then delegates each step to the dedicated skills:

@@ -3,6 +3,7 @@ name: git-commit
 description: 'git-commit Commit current changes with conventional-commit messages, or split them into scoped commits; analyzes the diff and commits after approval (amends own unshared commits when right). Triggers: "commit this", "git commit", "split into commits". Do NOT use for PR/MR descriptions (github-pr-create, gitlab-mr-create) or conflicts (git-conflict).'
 argumentHint: "[optional: type or message hint — e.g., 'fix', 'feat: add retry']"
 references:
+  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/commit-style.md
   - ../references/commit-trailers.md
@@ -12,6 +13,7 @@ references:
 
 ## Git Commit
 
+Posture: `present-first`.
 ## Process
 
 1. **Assess the working tree.**

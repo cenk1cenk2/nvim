@@ -123,7 +123,7 @@ Once the user agrees on the selection:
    - `backlog → in progress` or `todo → in progress` for the immediate task.
 2. **Wait for explicit approval** before making any changes.
 3. **Apply status changes** using parallel tool calls where possible.
-4. **Execution handoff** — if the user wants the selected work picked up immediately, follow `linear-pickup-execution` and hand off to `linear-issue-pickup` for specific issues or `agents-pickup` for a project slice/multiple issues.
+4. **Execution handoff** — if the user wants the selected work picked up immediately, follow `linear-pickup-execution` and hand off to `linear-issue-pickup` for specific issues or `agent-pickup` for a project slice/multiple issues.
 
 ## Recommendation Format
 

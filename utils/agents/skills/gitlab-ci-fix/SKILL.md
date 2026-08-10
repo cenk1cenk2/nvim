@@ -3,13 +3,14 @@ name: gitlab-ci-fix
 description: 'gitlab-ci-fix Diagnose failing GitLab CI pipelines on the current branch, research errors, and propose fixes. Use for "pipeline is failing", "fix the GitLab CI". Do NOT use for creating pipelines (gitlab-ci-create), GitHub failures (github-ci-fix), or MR descriptions (gitlab-mr-create).'
 disableModelInvocation: true
 references:
+  - ../references/scm-detect.md
   - ../references/scm-ci-fix.md
   - ../references/scm-gitlab.md
 ---
 
 ## GitLab Failed CI: Diagnose and Fix Failing Pipelines
 
-Diagnosis workflow per `scm-ci-fix`. GitLab tooling, local git, CLI fallback, and platform detection per `scm-gitlab`.
+Diagnosis workflow per `scm-ci-fix`. GitLab tooling, local git, CLI fallback, and platform detection per `scm-detect` and `scm-gitlab`.
 
 ## Platform specifics
 

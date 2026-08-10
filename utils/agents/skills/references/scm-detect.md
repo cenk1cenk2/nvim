@@ -1,42 +1,23 @@
 # SCM Platform Detection and Git Tools
 
-## Detect Current Branch and Platform
+**Local git is always the raw `git` CLI via `Bash` — there is no git MCP server.** Nor a `kubernetes` one; same rule, use `kubectl`.
 
-**Step 1: Get current branch and remote URL.**
+## Detect the platform
 
-Use `git status` to get the current branch name, and `git rev-parse --abbrev-ref HEAD` / `git remote get-url origin` for scripted parsing. Local git is always the raw `git` CLI via `Bash` — there is no git MCP server.
+Read the remote (`git remote get-url origin`) and branch (`git status`), then load the matching platform reference — it carries that provider's tool list.
 
-**Step 2: Determine the SCM platform from the remote URL.**
-
-| Remote URL pattern | Platform | Reference to read |
+| Remote URL contains | Platform | Reference |
 |---|---|---|
-| `github.com` in URL | GitHub | `scm-github` reference |
-| `gitlab.*` in URL (e.g., `gitlab.com`, `gitlab.kilic.dev`) | GitLab | `scm-gitlab` reference |
+| `github.com` | GitHub | `scm-github` |
+| `gitlab.*` (e.g. `gitlab.com`, `gitlab.kilic.dev`) | GitLab | `scm-gitlab` |
 
-Parse the remote URL to extract:
+Parse out what the platform tools need:
 
-- **GitHub:** `git@github.com:<owner>/<repo>.git` → `owner` + `repo`.
-- **GitLab:** `git@gitlab.example.com:<group>/<project>.git` → `project_path` (supports nested groups: `<group>/<subgroup>/<project>`).
+- **GitHub:** `git@github.com:<owner>/<repo>.git` gives `owner` + `repo`.
+- **GitLab:** `git@gitlab.example.com:<group>/<project>.git` gives `project_path` — and it **supports nested groups**, so `<group>/<subgroup>/<project>` is one path, not a group plus a project.
 
-**Step 3: Read the matching platform reference**. The platform reference contains the full list of available MCP tools for that provider.
+Skip detection when the platform is already known (the user gave a URL, or the skill is platform-specific) and read that platform's reference directly.
 
-If the skill already knows the platform (e.g., user provided a URL, or it's a platform-specific skill), skip detection and read the platform reference directly.
+## The one git command worth stating
 
-## Local Git Operations
-
-Local git is the raw `git` CLI via `Bash` — there is no git MCP server. Common commands:
-
-| Command | Purpose |
-|---------|---------|
-| `git status` | Current branch, staged/unstaged changes. |
-| `git branch` | List branches. |
-| `git diff <ref1> <ref2>` | Diff between refs (branches, commits). |
-| `git diff --cached` | Staged changes only. |
-| `git diff` | Unstaged changes only. |
-| `git log` | Commit history. |
-| `git show <ref>` | Show a specific commit. |
-| `git add <path>` | Stage files for commit. |
-| `git commit -m "<msg>"` | Create a commit with staged changes. |
-| `git reset` | Unstage files or reset to a ref. |
-| `git checkout <ref>` | Switch branches or restore files. |
-| `git branch <branch>` | Create a branch from HEAD or a ref. **Does NOT switch** — run `git checkout` after. |
+`git branch <name>` creates without switching — follow it with `git checkout <name>`. Everything else (`status`, `diff`, `log`, `show`, `add`, `commit`, `reset`, `checkout`) behaves as expected and needs no table here.

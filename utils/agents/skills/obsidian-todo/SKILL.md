@@ -4,6 +4,7 @@ description: 'obsidian-todo Create quick todo notes for task tracking in Obsidia
 disableModelInvocation: true
 argumentHint: "[task or thought to capture]"
 references:
+  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
@@ -12,6 +13,7 @@ references:
 
 ## Context
 
+Posture: `present-first`.
 Vault location and tool access: `obsidian`. Present the note in chat per `output-diff` before writing it.
 
 You capture the user's unstructured thoughts, mumbling, and ideas into structured notes in `Todo/`. The user talks — you organize. Notes are **temporary working memory**, not permanent reference material.

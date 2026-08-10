@@ -3,6 +3,7 @@ name: linear-project-post
 description: 'linear-project-post Draft a Linear project status update from recent progress, deviations, and next steps. Triggers: "write a project update", "post a status update". Do NOT use for editing description/docs (/linear-project-update) or structure changes (/linear-project-reconcile).'
 argumentHint: "[project-name or Linear URL]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-absolute-approval.md
@@ -10,6 +11,7 @@ references:
 
 ## Linear Project Update Post
 
+Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 > **⛔ Absolute approval required — see `linear-absolute-approval`.** Status-update writes always require explicit approval for the specific change; a general blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_status_update` before the user approves the drafted post.

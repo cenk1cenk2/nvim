@@ -2,6 +2,7 @@
 name: linear-issue-create
 description: 'linear-issue-create Create new Linear issues with comprehensive analysis and research. Use for "create an issue", "file a bug", "create a ticket". Requires linear-kilic or linear-laravel. ALWAYS set state explicitly - never let issues default to Triage. Do NOT use for updating (linear-issue-update), commenting (linear-issue-comment), or pickup (linear-issue-pickup).'
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-mandatory-fields.md
   - ../references/linear-issue-states.md
@@ -15,6 +16,7 @@ references:
 
 ## Linear Issue Creation
 
+Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Core Requirements

@@ -4,6 +4,7 @@ description: 'caveman Terse, action-first, plain-language voice - keeps all tech
 disableModelInvocation: true
 argumentHint: "[full|ultra]"
 references:
+  - ../references/status-report.md
   - ../references/mode-toggle.md
 ---
 

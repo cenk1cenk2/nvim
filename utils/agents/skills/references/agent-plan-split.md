@@ -1,6 +1,6 @@
 # Agent Planning & Task Split
 
-Shared planning phase for agent orchestration skills. Walks through understanding the goal, discovering project tooling, establishing conventions, writing the plan, splitting into non-overlapping tasks, declaring task dependencies, and building the execution schedule (layers). Used by `agents-plan` (all steps).
+Shared planning phase for agent orchestration skills. Walks through understanding the goal, discovering project tooling, establishing conventions, writing the plan, splitting into non-overlapping tasks, declaring task dependencies, and building the execution schedule (layers). Used by `agent-plan` (all steps).
 
 ## Process
 
@@ -19,13 +19,13 @@ Shared planning phase for agent orchestration skills. Walks through understandin
 
 ### 3. Establish conventions
 
-- Follow the `agents-conventions` reference — read existing code to discover testing framework, code style, patterns, formatting, commit style.
+- Follow the `agent-conventions` reference — read existing code to discover testing framework, code style, patterns, formatting, commit style.
 - Present the conventions block to the user for confirmation.
 - This block will be included in every agent's prompt as the `## Conventions` section.
 
 ### 4. Plan the implementation
 
-- Create a full implementation plan following the `agents-write-plans` reference — exact file paths, concrete steps, no placeholders.
+- Create a full implementation plan following the `agent-write-plans` reference — exact file paths, concrete steps, no placeholders.
 - Identify all files and areas of the codebase that will be touched.
 - Self-review the plan (spec coverage, placeholder scan, consistency) before presenting.
 - Present the plan to the user and iterate.

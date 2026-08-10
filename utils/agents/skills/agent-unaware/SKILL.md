@@ -86,4 +86,4 @@ Don't:
 
 - **`agent-aware`** — same job, target sharing your skills and MCP servers.
 - **`plan-handoff`** — cross-repo/session plans; this skill sets their inlining depth.
-- **`agents-delegate`** — its self-contained-prompt rule covers missing conversation; this covers missing tools.
+- **`agent-delegate`** — its self-contained-prompt rule covers missing conversation; this covers missing tools.

@@ -3,6 +3,7 @@ name: config-references
 description: 'config-references Create, update, or review reference files in the skills directory. Triggers: "create/add/update a reference", "extract this to a reference". Do NOT use for skills themselves (config-skills) or loading skills (load-skills).'
 disableModelInvocation: true
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/commit-push-scoped.md
@@ -11,7 +12,7 @@ argumentHint: "[create|update|review] [reference-name] [description or context]"
 
 ## Reference Management
 
-Present proposed changes per `output-diff` before writing. Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`.
+Posture: `present-first`. Present proposed changes per `output-diff` before writing. Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`.
 
 ## Reference Directory Structure
 
@@ -40,7 +41,7 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 
 **A skill's declared references are appended to it on read.** `read_skill` and `hyprpilot://skills/<slug>` both bundle them; `references: false` opts out of the tool's default, and `load_skill_references { slug }` / `hyprpilot://references/<slug>` fetch the bundle alone. So the `references:` array is the load list, **declaring a reference is a token cost paid on every load of that skill**, and a reference the body never uses is waste multiplied by every invocation.
 
-That cost compounds across a session: a reference declared by many skills is re-injected by each one. `output-diff` is declared by 48 skills, `scm-detect` by 19, `agents-delegate` by 8 at 3.4k tokens each. A reader can skip the repeat with `references: false` and top up what it lacks, so **size matters most for the widely-declared files** — trimming one of those pays back on every consumer.
+That cost compounds across a session: a reference declared by many skills is re-injected by each one. `output-diff` is declared by 48 skills, `scm-detect` by 19, `agent-delegate` by 8 at 3.4k tokens each. A reader can skip the repeat with `references: false` and top up what it lacks, so **size matters most for the widely-declared files** — trimming one of those pays back on every consumer.
 
 That splits references into two tiers, and choosing the wrong one is the most common authoring mistake:
 
@@ -114,16 +115,22 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 |------|---------|----------|
 | Family shared | `<family>-<topic>.md` | `linear-prerequisite.md`, `scm-github.md` |
 | Cross-family shared | `<topic>.md` | `output-diff.md`, `plan-mode.md` |
-| Per-harness | `harness-<provider>-<skill-or-reference-name>.md` | `harness-claude-agents-delegate.md`, `harness-codex-agent-background.md` |
+| Per-harness | `harness-<provider>-<skill-or-reference-name>.md` | `harness-claude-agent-delegate.md`, `harness-codex-agent-background.md` |
 | Skill-specific | `<topic>.md` in `<skill>/references/` | `./references/template.md` |
+
+## A Reference Is Not a Pointer
+
+References arrive with their skill, so a body names them inline where used (`per \`output-diff\``) with no load instruction. **Skills do not arrive** — a body needing another skill writes one explicit sentence instead: *"Load the `agent-harness` skill to resolve tiers to concrete models."* `config-skills` owns that form.
+
+Never create a reference whose only content is "go load skill X". A reference carries a convention; forwarding to a skill from a file that had to be bundled anyway just adds a hop.
 
 ## Per-Harness References
 
 When a skill's *mechanics* differ by agent runtime while its *intent* does not, the runtime-specific half becomes one reference per runtime, named `harness-<provider>-<skill-or-reference-name>.md`. The trailing segment is the exact name of the consuming skill or shared reference, so the filename says what it configures.
 
 ```
-harness-claude-agents-delegate.md      # dispatch mechanics for the agents-delegate reference, on Claude Code
-harness-codex-agents-delegate.md       # same slot, different runtime
+harness-claude-agent-delegate.md      # dispatch mechanics for the agent-delegate reference, on Claude Code
+harness-codex-agent-delegate.md       # same slot, different runtime
 harness-claude-agent-background.md     # waiting/waking mechanics for the agent-background skill
 ```
 

@@ -3,6 +3,7 @@ name: linear-issue-comment
 description: 'linear-issue-comment Record critical findings, deviations, and decisions as concise comments on Linear issues. Use for "comment on the issue", "log this to Linear". Do NOT use for description edits (/linear-issue-update) or checklists (/linear-issue-checklist).'
 argumentHint: "[issue-id or Linear URL] [what to comment]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-state-transitions.md
@@ -10,6 +11,7 @@ references:
 
 ## Linear Comment: Issue Documentation
 
+Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Context

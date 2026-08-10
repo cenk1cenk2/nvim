@@ -4,11 +4,13 @@ description: 'argocd-kilic-loadbalancer Create or extend routing workloads in a 
 disableModelInvocation: true
 argumentHint: "[workload-name or 'add route to <existing>'] - e.g., 'cluster-rubik', 'vm-gitlab', 'add route to cluster-rubik'"
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
 ---
 
 ## LB Cluster Routing Workload Creator
 
+Posture: `present-first`.
 > **IMPORTANT: This skill assumes you are already inside a load balancer cluster ArgoCD repository** (e.g., `cluster/sun/argocd-kilic-sun`).
 
 ## How This Repository Works

@@ -3,6 +3,7 @@ name: linear-project-update
 description: 'linear-project-update Update a Linear project''s description and documents to reflect deviations and refinements. Triggers: "update the project", "project docs are stale". Do NOT use for structural audits (/linear-project-reconcile), state sync (/linear-project-match), status posts (/linear-project-post), or creation (/linear-project-create).'
 argumentHint: "[project-name or Linear URL]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-absolute-approval.md
@@ -12,6 +13,7 @@ references:
 
 ## Linear Project Update
 
+Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 > **⛔ Absolute approval required — see `linear-absolute-approval`.** Project writes always require explicit approval for the specific change; a general blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_project` / `save_document` before the user approves the drafted change.

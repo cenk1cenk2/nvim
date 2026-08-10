@@ -3,12 +3,14 @@ name: git-branch
 description: 'git-branch Create a new git branch following repo naming conventions; fast-forwards the default branch, branches off it, and switches. Triggers: "create/new/cut a branch", "branch off". Do NOT use for commits (git-commit), conflicts (git-conflict), pulling reference changes (code-pull), or PRs/MRs (github-pr-create, gitlab-mr-create).'
 argumentHint: "[optional: branch name, prefix, or base branch]"
 references:
+  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/output-diff.md
 ---
 
 ## Git Branch
 
+Posture: `present-first`.
 ## Process
 
 1. **Discover the current state.**

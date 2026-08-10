@@ -4,6 +4,8 @@ description: 'slack-laravel-compile Compile a concise Slack message from the use
 disableModelInvocation: true
 argumentHint: "[what to compile — a question, finding, or topic]"
 references:
+  - ../references/scm-detect.md
+  - ../references/present-first.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/scm-github.md
@@ -14,6 +16,7 @@ references:
 
 ## Slack Compile
 
+Posture: `present-first`.
 > **PREREQUISITE:** This skill operates on the Laravel enterprise workspace (`slack-laravel`), which MUST be active before it runs — workspace detection and activation per `slack-prerequisite`.
 
 This skill takes the user's input — a question, finding, or topic — and compiles it into a concise Slack message enriched with real links and references. The goal is to make the message self-contained so others can understand it and reach the relevant resources without asking follow-up questions.
@@ -41,7 +44,7 @@ Read the user's message carefully. Identify:
 
 ### Step 2: Enrich with Links and References
 
-For each entity the user mentioned, fetch the real link using the entity enrichment table and code permalink format in `enrich-context`, with the SCM tools from `scm-github` / `scm-gitlab`. Only enrich entities the user actually mentioned — do not go looking for extra things to link.
+For each entity the user mentioned, fetch the real link using the entity enrichment table and code permalink format in `enrich-context`, with the SCM tools from `scm-detect` and `scm-github` / `scm-gitlab`. Only enrich entities the user actually mentioned — do not go looking for extra things to link.
 
 For Slack output specifically: use plain URLs for GitHub/GitLab (Slack auto-unfurls them). Use `<url|label>` format for non-unfurling links (Spacelift, Linear, etc.).
 

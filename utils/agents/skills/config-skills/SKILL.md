@@ -3,6 +3,7 @@ name: config-skills
 description: 'config-skills Create, update, or review skills in the skills directory. Triggers: "create a skill", "update skill X", "add a new slash command", "improve this skill". Do NOT use for loading or chaining skills (load-skills).'
 disableModelInvocation: true
 references:
+  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/commit-push-scoped.md
@@ -11,6 +12,7 @@ argumentHint: "[create|update|review] [skill-name] [description of what the skil
 
 ## Skill Management
 
+Posture: `present-first`.
 Present proposed changes per `output-diff` before writing. Keep real private specifics out of skills, references, and examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — scope `agents`, branch `rolling`.
 
 ## ⛔ ABSOLUTE RULE — change the RELEVANT skills, not this one
@@ -170,7 +172,7 @@ How a skill *should* be invoked is declared by `disableModelInvocation`. Hyprpil
 
 Assignment guidance:
 
-- **Manual** — reviews, reads, fixes, CI, scaffolding, config-authoring (`config-*`), personality modes, plan handoff/pickup, and any heavy or destructive orchestration the user should trigger deliberately (`git-split`, `code-improve`, `agents-*`).
+- **Manual** — reviews, reads, fixes, CI, scaffolding, config-authoring (`config-*`), personality modes, plan handoff/pickup, and any heavy or destructive orchestration the user should trigger deliberately (`git-split`, `code-improve`, `agent-*`).
 - **Model-invocable** — routine actions the agent legitimately reaches for mid-task: git basics (`git-commit`, `git-branch`, `git-push`), PR/MR creation, most Linear operations, `plan-hard`.
 - **Auto-invoke** — workspace/session initializers only (`linear-kilic`, `linear-laravel`, `slack-kilic`, `slack-laravel`, `spacelift-laravel`, `notion-laravel`).
 - **Proactive-suggest overlay** — a Manual skill whose body tells the assistant to *recommend* itself on a trigger (rule drift, user deviations) but never self-invoke (`config-agents`, `obsidian-repository`). `config-repository` is the one skill kept Model-invocable with an explicit `disableModelInvocation: false` because autopilot may auto-apply it.
@@ -234,6 +236,23 @@ The absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<f
 
 `mcp__hyprpilot_skills__load_skill_references { slug }` returns a skill's declared references without its body — useful when the body is already in context. Each file arrives under a `reference:` block naming it and its declared path; see `config-references` for the shape.
 
+### Naming another skill — one sentence, with the gate
+
+A skill body may need **another skill** (a posture, a workspace initializer, a composed step). Say so in one sentence carrying three things: the load, the trigger, and what it owns.
+
+```markdown
+Load the `agent-harness` skill to resolve tiers to concrete models — the mapping is per-runtime.
+Load the `agent-harness` skill to resolve tiers to concrete models — the mapping is per-runtime.
+```
+
+- **Say "Load the `X` skill", not "see" or "via".** A skill is not bundled the way a reference is; only an explicit instruction gets it loaded.
+- **Name the trigger** — "before the first write", "when the request names a Linear id", "before the first dispatch". A load with no trigger fires always or never.
+- **Say what it owns**, briefly, so the reader can tell whether this run needs it.
+- **Put it where the need arises** — at the top when it gates the whole skill, in the step when it gates one action.
+- **Never build a reference whose only content is "go load skill X".** The sentence sits in the body the agent is already reading; a file forwarding to a skill only adds a hop.
+
+Contrast with references, which arrive automatically: those are named inline where used (`per \`output-diff\``) and carry no load instruction.
+
 ### Posture — inherited, stated only on deviation
 
 **Do not write a posture directive.** The default is `AGENTS.md` §II: investigate, present before writing, act immediately once cleared. Every skill inherits it, so restating it in 99 skills spends tokens telling the agent what it already knows.
@@ -268,9 +287,9 @@ A skill is authored once and runs under whichever agent runtime is active. Keep 
 **The per-harness naming convention.** A skill that behaves differently per runtime gets one reference per runtime, named after the runtime *and* the thing it configures:
 
 ```
-references/harness-claude-agents-delegate.md      # dispatch mechanics + tier→model, Claude Code
-references/harness-opencode-agents-delegate.md
-references/harness-codex-agents-delegate.md
+references/harness-claude-agent-delegate.md      # dispatch mechanics + tier→model, Claude Code
+references/harness-opencode-agent-delegate.md
+references/harness-codex-agent-delegate.md
 references/harness-claude-agent-background.md     # waiting/waking mechanics, Claude Code
 references/harness-opencode-agent-background.md
 references/harness-codex-agent-background.md
@@ -278,7 +297,7 @@ references/harness-codex-agent-background.md
 
 Rules for this family:
 
-1. **`<skill-or-reference-name>` is the exact name of the consumer** — the skill (`agent-background`) or the shared reference (`agents-delegate`) whose mechanics the file carries. A reader seeing the filename knows what it configures without opening it.
+1. **`<skill-or-reference-name>` is the exact name of the consumer** — the skill (`agent-background`) or the shared reference (`agent-delegate`) whose mechanics the file carries. A reader seeing the filename knows what it configures without opening it.
 2. **The skill does NOT declare the provider files — they are path-read.** Declaring all three bundles all three, and at most one is usable in a session; the other two are guaranteed waste on every load. Never assume the session's runtime in the body.
 3. **The directive names the family and carries the absolute path:** *"Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything."* The `<provider>` slot resolves at runtime; the rest of the path must be literal, because a missed read is silent.
 4. **Split by consumer, not by topic size.** Do not pile every runtime mechanic into one file per provider — a skill should load the mechanics it needs and nothing else.
@@ -291,10 +310,10 @@ Rules for this family:
 Checklist for any skill that dispatches subagents:
 
 1. The body names no runtime-specific tool, parameter, or default value.
-2. A directive points at `harness-<provider>-agents-delegate` **before** the first dispatch step.
+2. A directive points at `harness-<provider>-agent-delegate` **before** the first dispatch step.
 3. Blocking vs detached is expressed as intent; the provider reference owns the flag and its default.
 4. Result collection is covered explicitly, including diagnose-before-re-dispatch.
-5. If it isolates writes, it points at `agents-worktrees` — including that isolation follows the **session's** repo, not the task's, which breaks cross-repo dispatch.
+5. If it isolates writes, it points at `agent-worktrees` — including that isolation follows the **session's** repo, not the task's, which breaks cross-repo dispatch.
 6. Anything else that differs per runtime (plans directory, state directory, worktree location) points at `provider-paths` instead of hardcoding a path.
 
 When a runtime's behavior turns out to contradict a generic skill body, fix it in that provider's reference — do not special-case the runtime inside the shared body.
@@ -317,7 +336,7 @@ When creating or updating a skill, always check:
 |--------|--------|--------|
 | Linear | `linear-*` | Prerequisite/workspace detection, mandatory fields, description structure, issue philosophy, states and transitions, pickup execution, documents, chunking, approval gates, SCM discovery, research. |
 | SCM | `scm-*` | Platform detection, GitHub/GitLab tool sets, and the shared PR/MR workflows — review, fix-threads, read-summary, create-description, comment-poster, ci-fix. |
-| Agents | `agents-*`, `agent-*` | Dispatch posture, worktrees, plan splitting, plan quality, project conventions, merge/review, completion handoff, watchers, target capability. |
+| Agents | `agent-*`, `agent-*` | Dispatch posture, worktrees, plan splitting, plan quality, project conventions, merge/review, completion handoff, watchers, target capability. |
 | Per-harness | `harness-<provider>-<consumer>` | Runtime mechanics for one consuming skill. See Provider-Specific Behavior. |
 | Cross-harness | `harness-<topic>` | One policy across all runtimes plus a per-runtime inventory (`harness-connectors`). |
 | Git | `commit-*`, `release-convention` | Commit message style, trailers, release-automation detection. |
@@ -328,8 +347,8 @@ When creating or updating a skill, always check:
 
 Two carry a hard rule worth knowing without opening the file:
 
-- `agents-delegate` points at the per-provider reference for dispatch mechanics — a skill that spawns subagents must send the reader there **before** the first dispatch.
-- `agents-worktrees` covers the trap that isolation follows the **session's** repo, not the task's, which breaks cross-repo dispatch.
+- `agent-delegate` points at the per-provider reference for dispatch mechanics — a skill that spawns subagents must send the reader there **before** the first dispatch.
+- `agent-worktrees` covers the trap that isolation follows the **session's** repo, not the task's, which breaks cross-repo dispatch.
 
 ## Description Checklist
 

@@ -27,7 +27,7 @@ references:
 **Delegated refinement mode.** Triggered when the user says "delegate", "delegate review", "delegate the plan", "review and refine the plan", or similar. Instead of walking every branch with the user:
 
 1. Build the design tree and **self-answer aggressively** from the codebase (Self-Answering Rule) to produce a complete DRAFT plan — choose your recommended answer for every branch that is not pure user intent.
-2. Dispatch `agents-review` on the draft to refine it: run `type=plan` (devil's-advocate + gap analysis) and, when the draft rests on factual claims, also `type=facts`. Lenses may run in parallel. Fold the reviewer's findings back into the plan; re-open any branch it faults.
+2. Dispatch `agent-review` on the draft to refine it: run `type=plan` (devil's-advocate + gap analysis) and, when the draft rests on factual claims, also `type=facts`. Lenses may run in parallel. Fold the reviewer's findings back into the plan; re-open any branch it faults.
 3. Bring **only the residual to the user**: the genuine open questions the reviewer could not resolve (pure intent/preference), plus the final approval and a concise summary of what was decided and why. Do not replay the full interview.
 
 Delegated mode trades interview depth for a review pass — use it when the user wants a fast, refined plan rather than a guided walkthrough.
@@ -54,7 +54,7 @@ Delegated mode trades interview depth for a review pass — use it when the user
 
    **Trigger condition:** run this step ONLY when the user's invocation included an explicit rigour signal — "plan hard", "think hard", "look hard", "deep plan", "thorough plan", "rigorous plan", or an equivalent phrase. If `plan-hard` was loaded as the default disposition for a generic plan-mode entry (no explicit rigour phrase), **skip this step** and proceed directly to step 8. The fact-check is a cost/latency investment that should only kick in when the user has asked for depth.
 
-   When the trigger applies, invoke `agents-review` type=`facts` with two payloads:
+   When the trigger applies, invoke `agent-review` type=`facts` with two payloads:
 
    - **Resolved claims** — facts you self-answered from codebase exploration during the interview. Reviewer verifies (PASS/FAIL/QUESTION with evidence).
    - **Unresolved items** — branches that required user intent/preference but also have factual components you could not confidently self-answer. Reviewer attempts to find evidence in the codebase; if found, those items move from "needs user input" to "auto-resolved" without a user question.
@@ -160,7 +160,7 @@ Keep going until a stop condition is met.
 
 - **`plan-handoff`** — if the interviewed plan is intended for a different session or repository, compose with `plan-handoff` to produce a self-contained handoff plan.
 - **`plan-pickup`** — after the plan file is written, the user runs `plan-pickup` to load and execute it.
-- **`agents-review`** — used two ways: (1) in **Delegated refinement mode** to refine the draft plan without a full interview, and (2) conditionally in step 7 to fact-check resolved claims AND auto-resolve pending unresolved ones (only on an explicit rigour phrase — "plan hard" / "think hard" / "deep" / "thorough" / "rigorous"; default plan-mode entry skips it; opt-out "skip fact-check").
+- **`agent-review`** — used two ways: (1) in **Delegated refinement mode** to refine the draft plan without a full interview, and (2) conditionally in step 7 to fact-check resolved claims AND auto-resolve pending unresolved ones (only on an explicit rigour phrase — "plan hard" / "think hard" / "deep" / "thorough" / "rigorous"; default plan-mode entry skips it; opt-out "skip fact-check").
 
 When composing, do NOT duplicate the interview — `plan-hard` runs once per plan, then the downstream skill takes over.
 
@@ -188,4 +188,4 @@ When composing, do NOT duplicate the interview — `plan-hard` runs once per pla
 
 - **`plan-handoff`** — produce self-contained plans for other sessions or repositories.
 - **`plan-pickup`** — load and execute an existing plan file.
-- **`agents-review`** — refines the draft in Delegated refinement mode, and (on explicit rigour triggers) fact-checks resolved claims and auto-resolves unresolved branches where evidence is findable. Read-only reviewer dispatched at cheap tier by default.
+- **`agent-review`** — refines the draft in Delegated refinement mode, and (on explicit rigour triggers) fact-checks resolved claims and auto-resolves unresolved branches where evidence is findable. Read-only reviewer dispatched at cheap tier by default.

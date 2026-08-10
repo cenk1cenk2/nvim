@@ -4,7 +4,7 @@ Shared workflow for diagnosing failing CI on the current branch, researching the
 
 ## Pickup Workflow Notes
 
-When composed from `agents-pickup`:
+When composed from `agent-pickup`:
 
 - Distinguish branch-caused failures from external or unrelated CI failures.
 - Fix branch-caused failures in the current branch and report the verification evidence.

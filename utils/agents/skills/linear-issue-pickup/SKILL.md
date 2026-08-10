@@ -3,6 +3,7 @@ name: linear-issue-pickup
 description: 'linear-issue-pickup Pick up one or more Linear issues and prep them for implementation - fetch details, comments, relations, docs, and repo context, then wait for an explicit go. Triggers: "pick up K-123", "work on this issue", issue URLs. Do NOT use for read-only refreshes (linear-issue-read) or choosing the next task (linear-next-task).'
 argumentHint: "[issue id(s) or URL(s)]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-pickup-execution.md
   - ../references/linear-project-documents.md
@@ -15,6 +16,7 @@ references:
 
 ## Linear Issue Pickup
 
+Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 > **THE ISSUE IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.** Issues go stale — written before the work started, by someone who did not yet know what implementation would reveal. The user may skip, reorder, add, or override anything in it; never push back with "but the issue says…". Full rationale in `linear-issue-philosophy`.
@@ -23,7 +25,7 @@ Pickup, early questions, Linear state updates, implementation handoff, and final
 
 ## Purpose
 
-This skill prepares one or more issues for real work. It can hand off to `agents-pickup` for execution, or support a direct lead implementation when the task is small.
+This skill prepares one or more issues for real work. It can hand off to `agent-pickup` for execution, or support a direct lead implementation when the task is small.
 
 ## Process
 
@@ -52,7 +54,7 @@ This skill prepares one or more issues for real work. It can hand off to `agents
    - Move actionable picked-up issues to `In Progress` per `linear-state-transitions`, unless suppressed by the user.
    - Report state transitions.
    - **Prepare only by default — do NOT begin implementing.** Present the pickup summary per `output-diff` and wait for an explicit go (`go`, "implement", "start") before writing any code.
-   - When the user already asked to implement in the same request (or gives the go), hand off to `agents-pickup` for execution, or implement directly for a small single issue.
+   - When the user already asked to implement in the same request (or gives the go), hand off to `agent-pickup` for execution, or implement directly for a small single issue.
 
 ## Output Shape
 

@@ -3,6 +3,7 @@ name: linear-initiative-post
 description: 'linear-initiative-post Draft a status update post for a Linear initiative from recent progress across its projects and next steps. Use for "write an initiative update", "post an initiative status update". Do NOT use for description edits (/linear-initiative-update) or project status updates (/linear-project-post).'
 argumentHint: "[initiative-name or ID]"
 references:
+  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-absolute-approval.md
@@ -10,6 +11,7 @@ references:
 
 ## Linear Initiative Update Post
 
+Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 > **⛔ Absolute approval required per `linear-absolute-approval`.** Initiative writes always require explicit approval for the specific change; an upfront blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_status_update` before the user approves the drafted post.
