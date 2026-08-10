@@ -60,7 +60,10 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
   - **Include the invariants that make a script safe to re-run** — absolute binary paths (a backgrounded shell has no user PATH), required environment, and any assertion the script performs.
   - Never leave a running watcher, or state referenced only by a path the next agent cannot read.
   - **A park, a reboot, or a handoff makes this mandatory before standing down**, per `mode-toggle`'s *Parking* section.
-- **Done so far** — completed steps and decisions.
+- **Done so far** — completed steps and decisions, **weighted by whether they still constrain anything.** Not all history earns equal space:
+  - **Load-bearing** — a decision that rules out an approach, a prerequisite something later depends on, a discovery that changed the plan, anything a resuming agent would redo or contradict without knowing. Record it in full, with the why.
+  - **Incidental** — an unrelated bug fixed in passing, a typo, a detour that left no constraint behind. **One line, or drop it.** It is done and nothing depends on it.
+  - ⛔ **Do not promote incidental work into structure.** An unrelated fix written up with its own rationale, prerequisites, and follow-ups reads to the next agent as a live dependency — so it gets re-derived, branched off, and repeated in every later summary. The anchor is what the work needs *next*, not a ledger of everything that happened.
 - **Next up** — planned steps, in order.
 - **Next-task handoff** — a cold-executable brief for the immediate next task.
 - **Caveats & constraints** and **Open decisions / blockers**.
@@ -247,7 +250,13 @@ re-materialized after compaction.]
   ```
 
 ## Done So Far
-- [Completed step / decision.]
+[Load-bearing only, in full — decisions that rule things out, prerequisites, discoveries
+that changed the plan. Incidental work (an unrelated fix, a detour that left no
+constraint) gets one line under Incidental, or is dropped. Do not give it structure it
+does not have.]
+- [Completed step / decision + why it constrains what follows.]
+
+**Incidental (no dependants, safe to forget):** [one line, comma-separated.]
 
 ## Next Up
 1. [Next planned step.]
