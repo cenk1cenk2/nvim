@@ -5,6 +5,7 @@ disableModelInvocation: true
 references:
   - ../references/current-state-only.md
   - ../references/present-first.md
+  - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
 argumentHint: '[add|remove|modify] [server-name] [optional: description]'
@@ -13,6 +14,9 @@ argumentHint: '[add|remove|modify] [server-name] [optional: description]'
 ## MCP Server Configuration Manager
 
 Posture: `present-first`.
+
+**Target: the MCP catalog at `~/.config/nvim/utils/mcphub/servers.json`.** The hyprpilot launcher config that wires this catalog into a launch is `config-hyprpilot`'s. Targets and the propose-don't-write rule for a gap in this skill: `config-targets`.
+
 ## Context
 
 The captain runs **hyprpilot** as the agent host. Hyprpilot loads MCP servers via the `[[mcps]]` array in `~/.config/hyprpilot/config.yaml` — each entry either points at a catalog file (`{ file = "..." }`) or declares inline `mcp_servers = { ... }`. The active catalog file is `~/.config/nvim/utils/mcphub/servers.json` — hyprpilot consumes it, despite what the `mcphub` path segment suggests. Per-profile `mcps` arrays wholesale-replace the global default.

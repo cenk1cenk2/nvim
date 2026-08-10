@@ -5,6 +5,7 @@ disableModelInvocation: true
 references:
   - ../references/current-state-only.md
   - ../references/present-first.md
+  - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/commit-push-scoped.md
@@ -27,7 +28,7 @@ So, before editing:
 1. **Find the skills that own the behaviour** — search `~/.config/nvim/utils/agents/skills/` for the ones whose process steps actually perform it. There is usually more than one (a family of skills plus a shared reference).
 2. **Edit every one of them**, not just the first. A rule present in one sibling and absent in the others fails exactly when a different entry point is used.
 3. **Put runtime-specific mechanics in the per-provider reference**, and the runtime-agnostic principle in the body (see *Provider-Specific Behavior*).
-4. **Only touch `config-skills` when the lesson is genuinely about how skills are authored** — a new frontmatter field, a validation rule, a structural convention — or when the user explicitly asks for `config-skills` itself.
+4. **A gap in `config-skills` itself gets proposed, not written**, per `config-targets`. Even when the lesson is genuinely about authoring — a new frontmatter field, a validation rule, a structural convention — raise it and stop. Only an explicit ask for `config-skills` makes this file the target.
 
 **This is absolute.** "I'll record it in config-skills so future authors know" is the failure mode: it documents the lesson where nobody acts on it and leaves the real skills wrong.
 
@@ -376,6 +377,7 @@ Run this when creating, updating, or reviewing any description. **One shape, eve
 - **MCP tools** — reference specific tool names (e.g., `github__*`) when the skill depends on them. Use the **`<server>__<tool>` short form** (e.g., `github__get_file_contents`, `git status`, `slack-kilic__slack_list_channels`) — see MCP Tool Name Convention below.
 - **Describe the current state only**, per `current-state-only` — no deprecation notes, no compatibility shims, no history. Delete the old wording and state the new one.
 - **Be concise** — skills are instructions for an agent, not documentation for humans. Keep it actionable.
+- **State what to do.** Guidance lands as the positive instruction — name the target, the field, the flow. A prohibition earns its place when the user asked for one, or when the wrong move destroys work; otherwise it is an invented example the reader has to parse and discount. A reader told what a thing *is* deduces what it is not.
 - **End list items with `.`** — consistent punctuation across all skills.
 - **Examples** — workflow skills that orchestrate multi-step processes should include at least one example showing trigger → actions → result.
 - **Compose over duplicate** — when another skill or reference already does something, name it (compose with the skill "as defined in `load-skills`", or name the reference inline) rather than hardcoding a copy of its logic.

@@ -5,6 +5,7 @@ disableModelInvocation: true
 references:
   - ../references/current-state-only.md
   - ../references/present-first.md
+  - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/commit-push-scoped.md
@@ -14,6 +15,8 @@ argumentHint: '[create|update|review] [reference-name] [context]'
 ## Reference Management
 
 Posture: `present-first`. Present proposed changes per `output-diff` before writing. Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`.
+
+**Target: the reference file whose topic covers the convention**, inferred from what the lesson is actually about; a new reference when none fits. Targets and the propose-don't-write rule for a gap in this skill: `config-targets`.
 
 ## Reference Directory Structure
 
@@ -171,5 +174,6 @@ After applying reference edits and any consumer frontmatter updates, hand off pe
 - A reference should be **self-contained** — readable without loading other references.
 - **No frontmatter** — only skills have YAML frontmatter.
 - **No workflow steps** — references contain conventions and patterns, not process instructions.
+- **State the convention, not its inverse.** A reference says what the shape is; a prohibition belongs in it when the user asked for one, or when the wrong move destroys work. Invented forbidden cases cost every consumer on every load and teach nothing a positive statement did not already.
 - **Current state only**, per `current-state-only` — rewrite to the live shape and delete the old one.
 - After creating or updating a shared reference, always check if skills need their `references:` frontmatter updated.
