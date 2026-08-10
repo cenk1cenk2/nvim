@@ -3,22 +3,16 @@ name: git-push
 description: 'git-push Push the current branch to remote immediately (invoking is the approval); asks only on real blockers (diverged, behind, force, protected). Triggers: "push", "git push", "push to origin". Do NOT use for committing (git-commit), branch creation (git-branch), or opening PRs (github-pr-create, gitlab-mr-create).'
 argumentHint: "[optional: remote name or safety flag — e.g., 'upstream', '--force-with-lease']"
 references:
-  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/release-convention.md
 ---
 
 ## Git Push
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
-
-> Read the `release-convention` reference to detect the repo's release automation and check the pending commits satisfy the convention it consumes (advisory).
-
 ## Process
 
 1. **Assess local state.**
+   - Detect the platform and run local git per `scm-detect`.
    - Use `git status` to get the current branch.
    - Detect the upstream via the built-in `Bash` tool (there is no git MCP tool for this): `git rev-parse --abbrev-ref --symbolic-full-name @{u}`. A non-zero exit means the branch has no upstream yet.
    - If the working tree is dirty, note it in the report — `git push` carries only committed history. Do NOT prompt on this; just report. **Skip this note when invoked immediately after `git-commit` in the same turn** (see "Composing with Other Skills").

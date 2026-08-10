@@ -5,28 +5,19 @@ argumentHint: "[issue-id or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/present-first.md
   - ../references/linear-document-handling.md
   - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Issue Update
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-## Prerequisite
-
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 ## Core Principle
 
-> **THE ISSUE IS NOT THE ABSOLUTE TRUTH. THE CONVERSATION IS.**
->
-> Read the `linear-issue-philosophy` reference for the full rule — record vs conversation authority, and the timestamp check that decides it. The goal of *this* skill is to apply deviations from the conversation back to the issue in Linear: when the issue's `updatedAt` is older than the current conversation, update the issue to match, always confirming with the user before applying.
+> **THE ISSUE IS NOT THE ABSOLUTE TRUTH. THE CONVERSATION IS.** Record vs conversation authority, and the timestamp check that decides it, per `linear-issue-philosophy`. The goal of *this* skill is to apply deviations from the conversation back to the issue in Linear: when the issue's `updatedAt` is older than the current conversation, update the issue to match, always confirming with the user before applying.
 
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
-
-> Read the `linear-document-handling` reference before touching any attached/linked document: glimpse always, classify plan-like vs external, and edit only plan-like documents with explicit user agreement. External docs stay read-only unless the user says otherwise.
+Attached/linked documents follow `linear-document-handling`: glimpse always, classify plan-like vs external, and edit only plan-like documents with explicit user agreement. External docs stay read-only unless the user says otherwise.
 
 ## Process
 
@@ -35,7 +26,7 @@ references:
 3. **Check the `updatedAt` timestamp** — if the description is older than the current session context, ask the user what has changed before assuming the stored content is current.
 4. **Review the conversation** for deviations from the original issue — changed requirements, rejected approaches, new decisions, corrected assumptions.
 5. **Flag outdated or irrelevant sections** — warn the user about parts of the issue that are stale, no longer applicable, or contradicted by the conversation. Get explicit approval before modifying or removing these.
-6. **Draft the updated description** and present it to the user, highlighting what changed and why.
+6. **Draft the updated description** and present it to the user per `output-diff`, highlighting what changed and why.
 7. **Iterate** based on user feedback. This is a refining process — work with the user to get the issue into a state that accurately reflects the current understanding.
 8. **Apply changes** only after user approval.
 

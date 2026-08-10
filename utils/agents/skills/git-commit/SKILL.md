@@ -3,7 +3,6 @@ name: git-commit
 description: 'git-commit Commit current changes with conventional-commit messages, or split them into scoped commits; analyzes the diff and commits after approval (amends own unshared commits when right). Triggers: "commit this", "git commit", "split into commits". Do NOT use for PR/MR descriptions (github-pr-create, gitlab-mr-create) or conflicts (git-conflict).'
 argumentHint: "[optional: type or message hint — e.g., 'fix', 'feat: add retry']"
 references:
-  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/commit-style.md
   - ../references/commit-trailers.md
@@ -13,21 +12,10 @@ references:
 
 ## Git Commit
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-detect` reference for platform/branch detection and raw `git` CLI usage.
-
-> Read the `commit-style` reference for conventional commit format, types, subject line rules, body rules, and examples.
-
-> Read the `commit-trailers` reference for issue linking conventions — platform detection (Linear, GitHub, GitLab), closing keywords, trailer format, and `refs` vs `closes` usage.
-
-> Read the `release-convention` reference — when the repo has release automation (release-please / semantic-release / changesets / commitlint), the commit type drives the version bump; pick it deliberately, mark breaking changes with `!` plus a `BREAKING CHANGE:` footer, and note when a changeset file is required.
-
-> Read the `output-diff` reference for presenting the draft commit message to the user before committing.
-
 ## Process
 
 1. **Assess the working tree.**
+   - Detect the platform and branch, and run local git, per `scm-detect`.
    - Use `git status` to check staged, unstaged, and untracked files.
    - If nothing is staged and nothing is modified, inform the user and stop.
 
@@ -59,7 +47,7 @@ references:
    - If the diff is large, read the changed files for surrounding context to understand the intent.
 
 4. **Draft the commit message.**
-   - Determine the commit **type** from the `commit-style` reference based on the nature of the changes:
+   - Determine the commit **type** per `commit-style`, based on the nature of the changes:
      - `feat` — new feature or capability.
      - `fix` — bug fix or correction of wrong behavior.
      - `refactor` — restructuring without behavior change.
@@ -77,21 +65,21 @@ references:
    - Write the **subject line** — imperative mood, ≤50 chars preferred, 72 hard cap, no trailing period.
    - **Body** — by default, draft a subject-only commit. Add a body only when:
      - The user explicitly requests a description/body (e.g., "commit with description", "add details", "verbose commit").
-     - The change is a security fix, data migration, or revert (per `commit-style` reference).
+     - The change is a security fix, data migration, or revert (per `commit-style`).
      - The user explicitly flags a breaking change (see below).
    - **Breaking changes** — include when the user explicitly says so (e.g., "breaking change", "this is breaking", "commit with breaking change"), or when the repo has commit-driven release automation and the change is genuinely breaking (flag it and propose the markers — an unmarked breaking change ships as a wrong version bump). When flagged:
      - Append `!` after the scope in the subject line: `feat(api)!: rename /v1/orders to /v1/checkout`.
      - Add a `BREAKING CHANGE:` trailer in the footer describing what breaks and the migration path.
      - Always include a body explaining the breaking change even if the user didn't request a verbose commit.
    - **Issue/PR references** — when the user provides an issue URL, issue ID, or the branch name matches an issue pattern:
-     - Follow the `commit-trailers` reference for detection, keyword selection, and trailer format per platform.
+     - Detection, keyword selection, and per-platform trailer format: `commit-trailers`.
      - Fetch the issue via the appropriate MCP tool to understand context.
      - For Linear IDs, default to `refs` when closing intent is unclear or the work is partial. Use `closes` when the staged change is the single/final deliverable that should close the issue.
      - If the user also requested an extended description, weave relevant issue context into the body.
    - **NEVER add `Co-authored-by:` trailers.** This is forbidden — no exceptions.
 
 5. **Present the draft to the user.**
-   - Show the full commit message using the `output-diff` presentation format:
+   - Show the full commit message per `output-diff`:
      - Reasoning: brief explanation of why you chose this type, scope, and message.
      - Content: the full commit message in a fenced code block.
    - Ask for approval or feedback.

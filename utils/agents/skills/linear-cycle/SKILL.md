@@ -5,21 +5,12 @@ argumentHint: "[cycle-number or 'current'|'next'] - e.g., '42', 'current', 'next
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/present-first.md
   - ../references/linear-issue-states.md
 ---
 
 ## Linear Cycle Planning
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-## Prerequisite
-
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
-
-> Read the `linear-issue-states` reference for state transition rules — especially the never-downgrade constraint and cycle promotion patterns.
+A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Process
 
@@ -107,7 +98,7 @@ After drafting the core plan, generate a **Recommendations** section with action
 
 ### Step 8: Present the Plan
 
-Present the cycle plan to the user in a clear format. **List every issue** — do not truncate, abbreviate, or show only a few examples. The user needs the full picture to make decisions.
+Present the cycle plan to the user in a clear format, in logical chunks per `output-diff`. **List every issue** — do not truncate, abbreviate, or show only a few examples. The user needs the full picture to make decisions.
 
 ```
 ## Cycle <number> Plan (<start> — <end>)
@@ -163,7 +154,7 @@ Present the cycle plan to the user in a clear format. **List every issue** — d
 For each issue in the approved plan:
 
 1. **Set the cycle** — explicitly set the cycle to the target cycle number using the `cycle` field on `save_issue`.
-2. **Set the state** — minimum `todo`. Rules:
+2. **Set the state** — minimum `todo`, transitions per `linear-issue-states`. Rules:
    - If current state is `triage` or `backlog` → change to `todo`.
    - If current state is `todo`, `in progress`, or any state beyond `todo` → **do not change the state**. Preserve the current state.
    - **NEVER downgrade** an issue's state (e.g., never move `in progress` back to `todo`).

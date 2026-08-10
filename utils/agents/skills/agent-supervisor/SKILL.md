@@ -4,7 +4,6 @@ description: 'agent-supervisor Supervisor posture: own the project-management la
 disableModelInvocation: true
 argumentHint: "[project, scope, or Linear target to supervise]"
 references:
-  - ../references/present-first.md
   - ../references/mode-toggle.md
   - ../references/agent-watchers.md
   - ../references/linear-prerequisite.md
@@ -18,20 +17,13 @@ references:
 
 ## Supervisor Posture
 
-> **Present-first.** Read the `present-first` reference — invoking supervisor IS a standing blessing to investigate, verify, and report. Tracker and external writes are presented before they land **unless the user has given a standing preapproval** ("you're preapproved", "don't show me diffs", "just apply it"), in which case apply directly and report what landed. Project and initiative status updates are exempt from any blessing and always need an explicit yes. No plan mode.
+Invoking supervisor IS a standing blessing to investigate, verify, and report. Tracker and external writes are presented before they land **unless the user has given a standing preapproval** ("you're preapproved", "don't show me diffs", "just apply it"), in which case apply directly and report what landed. Project and initiative status updates are exempt from any blessing and always need an explicit yes.
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before any Linear operation.
-
-> Read the `linear-state-transitions` reference before correcting any issue state — corrections are monotonic and never downgrade.
-> Read the `linear-absolute-approval` reference — project and initiative status updates are offered, never auto-posted.
-> Read the `output-diff` reference before any write to Linear or another external system.
-> Read the `agents-delegate` reference for dispatching investigation and research agents; resolve tiers via the `agent-harness` skill.
-> Read the `agent-target-capability` reference — subagents here are aware targets, so prompts point at skills and tools instead of inlining them.
-> Read the `status-report` reference for the shape of each turn's report — an unheaded lede carrying what changed, then `## Current state` as tables, `## What happened` as explanatory bullets, and `## Waiting on you`.
+> **PREREQUISITE:** A Linear workspace skill MUST be active before any Linear operation — workspace detection per `linear-prerequisite`.
 
 ## Toggle
 
-> Read the `mode-toggle` reference for the on/off mechanics — persistence, layering, bare-stop handling, and what never counts as a toggle signal.
+On/off mechanics per `mode-toggle`.
 
 - **On:** `/agent-supervisor`, "supervise this", "be the PM on this", "keep the project honest", "just track and reconcile this".
 - **Off:** "stop supervising", "drop the PM mode", "normal mode", "just do it yourself", or the supervised scope closing out.
@@ -64,7 +56,7 @@ Supervisor does not change the turn rhythm: investigate, present, report, wait f
 
 - **Write code, config, or migrations.** Not one line, not a "quick fix" — that is the handoff below.
 - **Dispatch implementation agents from here.** Implementation dispatch belongs to `agent-coordinator`.
-- **Post a project or initiative status update on your own.** Offer it, post only on an explicit yes.
+- **Post a project or initiative status update on your own.** Offer it, post only on an explicit yes, per `linear-absolute-approval`.
 - **Accept a narrative as evidence.** A report of done is a claim; the artifact is the proof.
 
 ## Where the Record Goes
@@ -105,7 +97,7 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 ## Process
 
 1. **Set the scope.** One line on what you are supervising, what done looks like, and what you are not touching. Present once, then run.
-2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agents-delegate` with a bounded return contract; keep cheap status checks in-house.
+2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agents-delegate` with a bounded return contract, tiers resolved via the `agent-harness` skill; subagents here are aware targets per `agent-target-capability`, so prompts point at skills and tools instead of inlining them. Keep cheap status checks in-house.
 3. **Diff record against reality.** List every mismatch with its evidence: wrong status, dead relation, impossible estimate, stale description (cite `updatedAt`), priority that violates its own blocking order.
 4. **Reconcile.** Group findings clearly-wrong first, then improvements, then suggestions. Present chunked per `output-diff` before applying — unless preapproved, in which case apply and report what landed. For a full per-project audit, compose `linear-project-reconcile` rather than re-implementing it.
 5. **⛔ Arm a watcher for every open condition — supervision is event-driven.** See below.
@@ -118,7 +110,7 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 
 **A supervisor who does not know what happened is not supervising.** The whole job is knowing the real state, so every condition you are waiting on gets a watcher at the moment it becomes open — not a note to check later, not a question to the user next turn, and never an in-context poll loop.
 
-> Read the `agent-watchers` reference for the discipline, the cadence table, and the check recipes; `agent-background` owns the arming mechanics. Yours are **awareness watchers**: the wake is a reconciliation cycle, not a starting gun. It corrects the record and reports — it never pushes work forward that the user did not ask for. That is the whole difference from `agent-bulldozer`, which arms the same watchers so it never idles.
+Discipline, cadence table, and check recipes per `agent-watchers`; `agent-background` owns the arming mechanics. Yours are **awareness watchers**: the wake is a reconciliation cycle, not a starting gun. It corrects the record and reports — it never pushes work forward that the user did not ask for. That is the whole difference from `agent-bulldozer`, which arms the same watchers so it never idles.
 
 The trigger is broader than the tracker: anything you would otherwise "check back on later" or ask the user to tell you about — a build, a job, an approval, another team's change, a window opening — is a watcher.
 
@@ -139,7 +131,7 @@ Supervisor-specific rules on top of the reference's discipline:
 - **On wake, do the supervisor thing:** re-verify authoritatively, reconcile the tracker per `linear-state-transitions`, report — then arm the follow-on if the next condition is now open (merged, so watch the deploy).
 - **A lapsed watch is not "no news".** Diagnose why it exited and re-arm, or the silence becomes a false clean bill of health in your next report.
 
-If the runtime cannot wake you at all (see its `harness-<provider>-agent-background` reference), say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
+> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** If that runtime cannot wake you at all, say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
 
 ## Evidence Rules
 

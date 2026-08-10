@@ -1,14 +1,9 @@
 ---
 name: notion-laravel
 description: 'notion-laravel Initialize a Notion session for the Laravel workspace. Auto-invoked on Notion context: Notion URLs or Notion page references in Laravel context. Do NOT use for pulling (notion-pull) or pushing (notion-push) pages.'
-references:
-  - ../references/present-first.md
-  - ../references/harness-connectors.md
 ---
 
 ## Notion Workspace: Laravel
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## Workspace Context
 

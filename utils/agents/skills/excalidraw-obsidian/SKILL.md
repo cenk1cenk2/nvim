@@ -4,7 +4,6 @@ description: 'excalidraw-obsidian Open an existing Excalidraw drawing from the O
 disableModelInvocation: true
 argumentHint: "[filename or description of drawing to pick up]"
 references:
-  - ../references/present-first.md
   - ../references/excalidraw-mcp-preview.md
   - ../references/excalidraw-conversion.md
   - ../references/excalidraw-elements.md
@@ -15,20 +14,6 @@ references:
 
 ## Excalidraw Drawing — Revise or Understand
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `excalidraw-mcp-preview` reference FIRST — it contains the absolute rule on using the MCP server for visual feedback. This is non-negotiable.
-
-> Read the `excalidraw-conversion` reference for the full MCP ↔ Obsidian conversion algorithm — critical for both directions (reading existing drawings into MCP and writing back to vault).
-
-> Read the `excalidraw-elements` reference for the element format, color palette (onedarker), and layout conventions.
-
-> Read the `excalidraw-template` reference for the `.excalidraw.md` file structure and appState defaults.
-
-> Read the `obsidian` reference for vault location and tool selection rules.
-
-> Read the `output-diff` reference for presenting changes before writing.
-
 ## Context
 
 You pick up an existing `.excalidraw.md` drawing from the Obsidian vault and either:
@@ -38,7 +23,7 @@ You pick up an existing `.excalidraw.md` drawing from the Obsidian vault and eit
 
 In both modes, the Excalidraw MCP server is your visual feedback tool. Render the drawing in chat so the user can see what they're working with.
 
-**Tool selection for vault:** Follow the `obsidian` reference — use embedded `obsidian` MCP tools with vault-relative paths. Filesystem is fallback only.
+**Tool selection for vault:** per `obsidian` — use embedded `obsidian` MCP tools with vault-relative paths. Filesystem is fallback only.
 
 ## Process
 
@@ -51,7 +36,7 @@ In both modes, the Excalidraw MCP server is your visual feedback tool. Render th
 
 2. **Read the drawing.** Load the `.excalidraw.md` file from the vault:
    - Parse the `## Drawing` section — extract the JSON from the code block.
-   - If that block is `compressed-json` (legacy files — the vault's `compress` setting is off, so new saves are plain `json`), decompress it natively first: `open_file` the drawing, then `command_execute` `obsidian-excalidraw-plugin:excalidraw-unzip-file`, then re-read. See the `excalidraw-conversion` reference.
+   - If that block is `compressed-json` (legacy files — the vault's `compress` setting is off, so new saves are plain `json`), decompress it natively first: `open_file` the drawing, then `command_execute` `obsidian-excalidraw-plugin:excalidraw-unzip-file`, then re-read. Conversion algorithm in both directions: `excalidraw-conversion`.
    - Parse the `## Text Elements` section — note existing text content and IDs.
    - Identify the appState (dark/light mode, background color).
 
@@ -59,7 +44,7 @@ In both modes, the Excalidraw MCP server is your visual feedback tool. Render th
 
 3. **Load MCP format.** Call `excalidraw__read_me` once if not already loaded this conversation.
 
-4. **Convert to MCP format and render.** Transform the standard Excalidraw elements into MCP preview format:
+4. **Convert to MCP format and render.** Transform the standard Excalidraw elements into the MCP preview format per `excalidraw-elements`:
    - Bound text elements (`containerId`) → `label` on their parent shape.
    - Add a `cameraUpdate` as the first element, sized to fit the diagram.
    - Strip `seed`, `version`, `versionNonce` and other file-only fields.
@@ -105,8 +90,8 @@ If the user wants to revise the drawing:
    - Convert MCP elements back to standard Excalidraw JSON.
    - Expand `label` to bound text elements, strip pseudo-elements, add `seed` values.
    - Preserve the original appState (dark/light mode) unless the user changed it.
-   - Rebuild the `.excalidraw.md` file: frontmatter, text elements section, drawing section.
-   - Present changes with the `output-diff` convention.
+   - Rebuild the `.excalidraw.md` file per `excalidraw-template`: frontmatter, text elements section, drawing section.
+   - Present changes per `output-diff`.
    - Overwrite the original file (or write to a new file if the user prefers).
 
 ## Conventions
@@ -114,7 +99,7 @@ If the user wants to revise the drawing:
 - **MCP preview is mandatory.** Always render the drawing before and after changes. The user must see both states.
 - **Preserve existing style.** When revising, match the drawing's existing color scheme, font sizes, and layout patterns unless the user asks to change them.
 - **Dark mode by default** for new elements. But respect the existing drawing's theme.
-- **Colors from onedarker.** See the `excalidraw-elements` reference.
+- **Colors from onedarker** per `excalidraw-elements`.
 - **Overwrite carefully.** Always present changes and get approval before overwriting the vault file.
 
 ## Composing with Obsidian Skills

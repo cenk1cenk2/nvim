@@ -4,14 +4,11 @@ description: 'obsidian-repository Document repository knowledge (architecture, c
 disableModelInvocation: true
 argumentHint: "[repository name or path] [optional: what to document]"
 references:
-  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
 
 ## Obsidian Repository: Repository Knowledge Base
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## Context
 
@@ -42,13 +39,8 @@ If the current working directory is under `~/development/`, derive the folder pa
 
 ## Tools
 
-> **Tool access:** Use the embedded `obsidian` MCP tools from the `obsidian` reference for all vault operations. Paths are vault-relative; filesystem is fallback only.
->
-> Read the `obsidian` reference for vault location and full tool access conventions — read the files listed in `references:` for the `obsidian-repository` skill.
-
+- Vault location, tool access, and path conventions: `obsidian`.
 - Use codebase exploration tools (treesitter, Grep, Glob, raw `git` CLI) to analyze the repository.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ## Process
 
@@ -62,7 +54,7 @@ If the current working directory is under `~/development/`, derive the folder pa
 
 2. **Draft the note.**
    - Follow the note structure below for `README.md`.
-   - Present the draft in chat for approval.
+   - Present the draft in chat for approval per `output-diff`.
    - After approval, create the repository folder and `README.md`.
 
 3. **Identify sub-note candidates (optional).**
@@ -79,7 +71,7 @@ If the current working directory is under `~/development/`, derive the folder pa
    - Identify outdated information (changed structure, removed components, new patterns).
    - Identify missing information (new components, changed conventions).
    - Identify oversized sections that could be extracted to sub-notes (standalone topics with their own context, references, or findings).
-5. **Present deviations to the user.**
+5. **Present deviations to the user** per `output-diff`.
    - For each outdated section, show what changed and ask: "Is this still relevant, or should I update it?"
    - For oversized sections, propose extracting to a sub-note and replacing with a brief summary + link in the README.
    - Wait for the user to confirm which updates to apply.

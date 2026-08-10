@@ -1,29 +1,22 @@
 ---
 name: linear-project-read
-description: 'linear-project-read Read-only refresh of a Linear project - scan issues and statuses, re-read description and latest update, surface what changed. Triggers: "read/refresh the project", "project pulse". Do NOT use for structure audits (/linear-project-reconcile), status posts (/linear-project-post), or per-issue reads (/linear-issue-read).'
+description: 'linear-project-read Read-only refresh of a Linear project - issue statuses, description, latest update, and what changed. Triggers: "read/refresh the project", "project pulse". Do NOT use to start work (/linear-project-pickup), structure audits (/linear-project-reconcile), status posts (/linear-project-post), or per-issue reads (/linear-issue-read).'
 argumentHint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
-  - ../references/present-first.md
   - ../references/linear-document-handling.md
   - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Project Read
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-## Prerequisite
-
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 ## Core Principle
 
-> **THE PROJECT RECORD IS NOT THE ABSOLUTE TRUTH.**
->
-> Read the `linear-issue-philosophy` reference for the full rule — record vs conversation authority, and the timestamp check that decides it. Here "the record" is the project description, its issues, and its status updates. This skill is read-only, so it stops at surfacing the gap: flag stale records with their timestamps and ask the user. Hand actionable edits to `linear-project-update`.
+> **THE PROJECT RECORD IS NOT THE ABSOLUTE TRUTH.** Record vs conversation authority, and the timestamp check that decides it, per `linear-issue-philosophy`. Here "the record" is the project description, its issues, and its status updates. This skill is read-only, so it stops at surfacing the gap: flag stale records with their timestamps and ask the user. Hand actionable edits to `linear-project-update`.
 
-> Read the `linear-document-handling` reference — in this read-only skill, glimpse the project's documents for context, surface what's relevant, and flag stale ones with their timestamps. Never edit; hand off actionable edits to `linear-project-update`.
+Handle the project's documents per `linear-document-handling` — in this read-only skill, glimpse them for context, surface what's relevant, and flag stale ones with their timestamps. Never edit; hand off actionable edits to `linear-project-update`.
 
 ## Purpose
 

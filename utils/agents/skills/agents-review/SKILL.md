@@ -1,20 +1,15 @@
 ---
 name: agents-review
 description: 'agents-review Dispatch review subagents to cross-check artifacts (plan, DAG, facts, analysis) against the codebase or a devil''s-advocate lens; tier chosen from what the review demands, parallel reviewers for multiple artifacts. Use on "review this", "fact-check", "second opinion". Do NOT use to run a task (/agents-delegate), for multi-task plans (/agents-plan), or to re-read code you''ve already seen.'
-disableModelInvocation: true
 argumentHint: "[type=plan|dag|facts|freeform] [artifact or file path] [optional: 'hard' | 'deep' | 'thorough' | explicit model name]"
 references:
-  - ../references/present-first.md
   - ../references/agents-delegate.md
   - ../references/scm-detect.md
 ---
 
 ## Review Subagent Dispatch
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `agents-delegate` reference for subagent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agent-harness` skill (and its per-provider references).
-> Read the `scm-detect` reference only if the review task requires git context (e.g., reviewing a diff or historical change).
+Subagent dispatch parameters and mechanics per `agents-delegate`. Resolve tiers to concrete models via the `agent-harness` skill. Reviewers write nothing, so a review dispatch needs no approval gate of its own.
 
 ## Context
 
@@ -79,7 +74,7 @@ Then adjust for the artifact in front of you: its size, how coupled it is, and h
    - "Hard" / "deep" / "thorough" keyword → upgrade tier.
 
 2. **For each artifact:**
-   - Read the artifact content (from file, or inline from the user's message).
+   - Read the artifact content (from file, or inline from the user's message). When the review needs git context — a diff or a historical change — resolve the platform per `scm-detect`.
    - Build a self-contained review prompt using the type's template (see Prompt Templates below).
    - Resolve the tier per artifact from what that review demands (see Model Tier; user override wins; mismatch check if needed).
 
@@ -90,7 +85,7 @@ Then adjust for the artifact in front of you: its size, how coupled it is, and h
    - `model` — resolved tier.
    - No worktree isolation (not needed).
    - No permission-mode parameter — it is deprecated and ignored on current Claude Code; reviewers are read-only and run under the session's own posture.
-   - **Naming decides collection, so pick one shape and match the prompt to it.** A reviewer's verdict *is* its entire deliverable, so it must actually arrive: dispatch **unnamed** to get the verdict back as a tool result in the same turn, or dispatch **named** and require the reviewer to deliver via `SendMessage`. Do not mix — a named agent does not block, whatever `run_in_background` says. See `harness-<provider>-agents-delegate` for the runtime's delivery rules.
+   - **Naming decides collection, so pick one shape and match the prompt to it.** A reviewer's verdict *is* its entire deliverable, so it must actually arrive: dispatch **unnamed** to get the verdict back as a tool result in the same turn, or dispatch **named** and require the reviewer to deliver via `SendMessage`. Do not mix — a named agent does not block, whatever `run_in_background` says. **⛔ Read the active runtime's delivery rules from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agents-delegate.md` before the first dispatch** — a missed read is silent.
    - When dispatching named, append to every review prompt: *your plain text is not visible to the lead — deliver the completed review with one `SendMessage` call to `"main"`.*
 
 4. **Collect verdicts.** A reviewer that goes quiet or reports itself idle has **not** failed and has **not** returned an empty verdict — it has most likely answered where you cannot see it. Steer it per the harness reference's ladder (ask for what it has, then name the delivery mechanism) before considering it failed, and never substitute your own judgement for a verdict that has not arrived.

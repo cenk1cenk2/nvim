@@ -1,15 +1,11 @@
 ---
 name: argocd-kilic
 description: 'argocd-kilic Operate ArgoCD interactively - rollover deployments, refresh external secrets, sync apps, fetch logs, investigate sync errors, browse resources. Use on "check argocd", "sync the app", "rollover deployments". Do NOT use for creating ArgoCD workload configs (/argocd-kilic-workload) or MCP server setup (/config-mcp).'
-references:
-  - ../references/present-first.md
 disableModelInvocation: true
 argumentHint: "[operation] [application-name] - e.g., 'rollover deployments for my-app', 'logs for notifications', 'investigate sync error on cert-manager'"
 ---
 
 ## ArgoCD Operator
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## Context
 

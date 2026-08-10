@@ -4,21 +4,15 @@ description: 'notion-push Push the current markdown file to a Notion page (# hea
 disableModelInvocation: true
 argumentHint: "[notion-url or search description]"
 references:
-  - ../references/present-first.md
-  - ../references/harness-connectors.md
   - ../references/output-diff.md
 ---
 
 ## Notion Push: Markdown to Page
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
 > **PREREQUISITE:** The `notion-laravel` skill MUST be active before this skill runs. If no Notion workspace context exists in the current session, auto-invoke `notion-laravel` first.
 
 > **Deferred tools:** Notion tools are claude.ai connector tools (`mcp__claude_ai_Notion__*`) — load via `ToolSearch` before use:
 > `ToolSearch({ query: "select:mcp__claude_ai_Notion__notion-search,mcp__claude_ai_Notion__notion-update-page" })`
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ## Process
 
@@ -53,7 +47,7 @@ Determine the Notion page to update, using this priority:
 
 **Step 4: Confirm before pushing.**
 
-Present a summary to the user before updating:
+Present a summary to the user before updating, per `output-diff`:
 
 - Target page title and URL.
 - Properties that will be updated (from frontmatter).

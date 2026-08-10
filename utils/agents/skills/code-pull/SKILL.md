@@ -3,7 +3,6 @@ name: code-pull
 description: 'code-pull Pull changes from a reference GitHub/GitLab repository and adapt them to the current repository. Always manually invoked. Do NOT use for code review (code-review-branch), debugging (code-debug), or PR descriptions (github-pr-create, gitlab-mr-create).'
 disableModelInvocation: true
 references:
-  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/scm-github.md
   - ../references/scm-gitlab.md
@@ -12,13 +11,9 @@ argumentHint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
 
 ## Code Pull: Adapt Changes from a Reference Repository
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
 ## Core Requirements
 
-> Read the `scm-detect` reference to detect the SCM platform and use local git (raw `git` CLI). Then read the matching platform reference (`scm-github` or `scm-gitlab`) for provider-specific tools.
-
-- Determine the source platform (GitHub or GitLab) from the provided URL or remote origin.
+- Determine the source platform (GitHub or GitLab) from the provided URL or remote origin — detection per `scm-detect`, provider-specific tools per `scm-github` or `scm-gitlab`.
 - The current repository and the reference repository are similar but NOT identical. Changes must be adapted, not blindly copied.
 
 ## Process

@@ -1,9 +1,7 @@
 ---
 name: code-improve
 description: 'code-improve Audit a codebase or scoped area for architectural, testability, consistency, and clarity improvements; fans out parallel subagents and returns a ranked shortlist, optionally drilling into picks. Use on "improve the codebase", "audit this codebase", "find refactors". Do NOT use for reviewing a PR/branch (/code-review-branch, /code-review-changes), single-file cleanup (edit directly), or planning a pick (/plan-hard).'
-disableModelInvocation: true
 references:
-  - ../references/present-first.md
   - ../references/agents-delegate.md
   - ../references/project-tooling.md
   - ../references/provider-paths.md
@@ -11,16 +9,7 @@ references:
 
 ## Code Improve — Codebase Audit and Improvement Proposals
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; this skill reads and presents, it does NOT implement. The only write is the optional audit-file save in the final phase, gated on approval.
->
-> - Delegate discovery to subagents so the audit stays out of the main context.
-> - This skill produces proposals, not implementation. The user picks what to do, then invokes `plan-hard` (or similar) to plan the chosen work.
-
-> Read the `agents-delegate` reference for subagent dispatch mechanics. Resolve tiers to concrete models via the `agent-harness` skill.
-
-> Read the `project-tooling` reference to discover the project's format / lint / test commands (Taskfile, `package.json`, Makefile, Cargo, …). The audit grounds its proposals in what keeps those tasks green.
-
-> Read the `provider-paths` reference before the optional audit-file save — it resolves the internal plans directory for the active runtime. Never hardcode a path.
+This skill reads and presents proposals — it does NOT implement. The only write is the optional audit-file save in the final phase, gated on approval.
 
 ## Context
 
@@ -42,9 +31,9 @@ This is an audit, not a review of pending changes. For reviewing a specific bran
 
    If the user replies `g`, `go`, or similar, use the recommended scope.
 
-   Then discover the project's task tooling per the `project-tooling` reference — scan for `Taskfile.yml`, `package.json`, `Makefile`, `Cargo.toml`, and the like, and note the format / lint / test commands. These anchor the audit: proposals must not break them, and the consistency dimension defers to whatever the formatter already normalizes.
+   Then discover the project's task tooling per `project-tooling` — scan for `Taskfile.yml`, `package.json`, `Makefile`, `Cargo.toml`, and the like, and note the format / lint / test commands. These anchor the audit: proposals must not break them, and the consistency dimension defers to whatever the formatter already normalizes.
 
-2. **Phase 1 — Parallel Audit.** Dispatch 3-5 audit subagents in parallel (single message, multiple subagent dispatches) at **`cheap` tier** — resolve via the `agent-harness` skill, use an exploration subagent. Each subagent takes a focused audit dimension and returns a **short report (under 300 words)** listing candidates with file paths and 1-line rationale per candidate.
+2. **Phase 1 — Parallel Audit.** Dispatch 3-5 audit subagents in parallel (single message, multiple subagent dispatches) per `agents-delegate`, at **`cheap` tier** — resolve tiers to concrete models via the `agent-harness` skill, use an exploration subagent. Each subagent takes a focused audit dimension and returns a **short report (under 300 words)** listing candidates with file paths and 1-line rationale per candidate.
 
    **Default dimensions** (skip or merge based on user filter):
 
@@ -88,7 +77,7 @@ This is an audit, not a review of pending changes. For reviewing a specific bran
    - **Effort estimate** (low / med / high with rough reasoning).
    - **Verification** (which discovered task confirms it stays green — e.g. `task test`, `task lint`).
 
-   **b. Parallel design alternatives** — for genuinely architectural changes where the interface is the key decision. Dispatch 3+ design subagents in parallel (via the `agents-delegate` mechanics, a planning subagent), each with a **radically different** design constraint:
+   **b. Parallel design alternatives** — for genuinely architectural changes where the interface is the key decision. Dispatch 3+ design subagents in parallel (per `agents-delegate`, a planning subagent), each with a **radically different** design constraint:
    - Agent 1: "Minimize the interface — aim for 1-3 entry points maximum."
    - Agent 2: "Maximize flexibility — support many use cases and extension."
    - Agent 3: "Optimize for the most common caller — make the default case trivial."
@@ -100,7 +89,7 @@ This is an audit, not a review of pending changes. For reviewing a specific bran
 
 5. **Phase 4 — Hand off or save.**
    - If the user wants to implement a picked improvement, suggest invoking `plan-hard` to build the implementation plan. Do NOT implement directly — `code-improve` stops at proposal.
-   - Offer to save the audit shortlist to your internal plans directory as `YYYY-MM-DD-<project>-code-improve-audit.md` for later reference. Only write the file once the user agrees.
+   - Offer to save the audit shortlist as `YYYY-MM-DD-<project>-code-improve-audit.md` in the internal plans directory resolved per `provider-paths` — never hardcode a path. Only write the file once the user agrees.
 
 ## Consistency Dimension — What to Audit
 

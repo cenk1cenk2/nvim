@@ -4,18 +4,13 @@ description: 'agent-unaware Author instructions for a target agent with no MCP t
 disableModelInvocation: true
 argumentHint: "[artifact being authored]"
 references:
-  - ../references/present-first.md
   - ../references/agent-target-capability.md
   - ../references/redact-private-data.md
 ---
 
 ## Writing for a Bare Target
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `agent-target-capability` reference for the capability axes, tier defaults, mixed/unknown handling, and the declaration line every such artifact opens with.
-
-> **No private specifics.** Read the `redact-private-data` reference — unaware targets usually sit outside this setup, so customer names, account ids, secrets, internal hostnames, and real resource ids never travel into the artifact. Use placeholders.
+Capability axes, tier defaults, mixed/unknown handling, and the opening declaration line: `agent-target-capability`. An unaware target usually sits outside this setup, so every specific that reaches the artifact is redacted per `redact-private-data`.
 
 ## Context
 

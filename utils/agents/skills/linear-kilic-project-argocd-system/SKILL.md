@@ -2,18 +2,13 @@
 name: linear-kilic-project-argocd-system
 description: 'linear-kilic-project-argocd-system Create a Linear project for deploying system components (operators, controllers, infra tools) to Kubernetes via ArgoCD. Triggers: "deploy cert-manager", "set up a system component". Do NOT use for app workloads (linear-kilic-project-argocd-workload) or generic projects (linear-project-create).'
 references:
-  - ../references/present-first.md
   - ../references/output-diff.md
 argumentHint: "[component-name] - e.g., 'renovate-operator', 'cert-manager', 'velero'"
 ---
 
 ## ArgoCD System Deployment Project Generator
 
-> **PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill (load it as defined in `load-skills`). This skill is kilic-dev workspace specific.
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+**PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill (load it as defined in `load-skills`). This skill is kilic-dev workspace specific.
 
 ## Overview
 
@@ -60,7 +55,7 @@ Use GitLab MCP to analyze existing deployments for reference:
 
 **3. Create Project and Issues:**
 
-Create the Linear project with issues based on the template below. **Only include optional issues if the user confirmed they are needed during requirements gathering.**
+Create the Linear project with issues based on the template below, presented per `output-diff` for approval before writing to Linear. **Only include optional issues if the user confirmed they are needed during requirements gathering.**
 
 ## Issue Template
 

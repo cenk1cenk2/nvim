@@ -4,7 +4,6 @@ description: 'github-pr-comment Post a companion skill''s output as a comment on
 disableModelInvocation: true
 argumentHint: "[companion-skill] [PR number or URL]"
 references:
-  - ../references/present-first.md
   - ../references/scm-comment-poster.md
   - ../references/scm-github.md
   - ../references/output-diff.md
@@ -12,11 +11,7 @@ references:
 
 ## GitHub PR Comment Poster
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-comment-poster` reference for the full draft-and-post workflow and key principles.
-> Read the `scm-github` reference for GitHub MCP tools, local git (raw `git` CLI), and platform detection.
-> Read the `output-diff` reference for presenting the comment before posting.
+Run the draft-and-post workflow per `scm-comment-poster`, with GitHub MCP tools, local git (raw `git` CLI), and platform detection per `scm-github`. Present the comment per `output-diff` before posting.
 
 ## Platform specifics
 

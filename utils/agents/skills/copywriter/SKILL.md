@@ -1,15 +1,11 @@
 ---
 name: copywriter
 description: 'copywriter Clean up text in the current buffer - fix typos, grammar, punctuation, and markdown formatting while preserving meaning and tone. Triggers: "clean up this text", "proofread", "fix typos". Do NOT use for code editing or refactoring.'
-references:
-  - ../references/present-first.md
 disableModelInvocation: true
 argumentHint: "[optional: specific instructions]"
 ---
 
 ## Copywriter: Text Cleanup
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## Process
 

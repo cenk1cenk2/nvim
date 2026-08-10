@@ -15,7 +15,7 @@ Default: **full**. Switch: `/caveman full|ultra`.
 
 ## Toggle
 
-> Read the `mode-toggle` reference for the on/off mechanics — persistence, layering, bare-stop handling, and what never counts as a toggle signal.
+On/off mechanics per `mode-toggle`.
 
 - **On:** `/caveman`, "caveman mode", "be brief", "less tokens", "terse". This setup also loads caveman as the standing session default (see the central `AGENTS.md`), which overrides the manual-only tier — but the user's word still ends it.
 - **Off:** "stop caveman", "normal mode", or any verbosity ask ("be more verbose", "be verbose this session", "more detail", "explain fully"). Off lasts the rest of the session.

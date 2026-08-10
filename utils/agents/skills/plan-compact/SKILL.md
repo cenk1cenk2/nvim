@@ -4,18 +4,12 @@ description: 'plan-compact Keep a compaction-resilient working anchor for a long
 disableModelInvocation: true
 argumentHint: "[optional task note]"
 references:
-  - ../references/present-first.md
   - ../references/agents-delegate.md
+  - ../references/mode-toggle.md
   - ../references/provider-paths.md
 ---
 
 ## Plan Compact — In-Session Compaction Anchor
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `agents-delegate` reference for dispatching the pre-compaction consistency check to a cheap-tier read-only subagent. Resolve tiers via the `agent-harness` skill.
-
-> Read the `provider-paths` reference to resolve the concrete internal plans directory for the active runtime before creating the anchor file. Never hardcode a path.
 
 ## Context
 
@@ -27,7 +21,7 @@ Unlike `plan-handoff` (a self-contained plan for a *different* session or repo),
 
 ## The Anchor Document
 
-- **Location:** your internal plans directory, as `YYYY-MM-DD-<project>-compact.md` — one per active task.
+- **Location:** your internal plans directory — resolve it for the active runtime via `provider-paths`, never hardcode — as `YYYY-MM-DD-<project>-compact.md`, one per active task.
 - **Live:** updated at every checkpoint; always reflects the latest done/next state.
 - **Complete:** captures not just *what* is done but *how* the work is being done — the methodology, caveats, the source documents, and any standing watches — so the resuming agent picks up mid-flight with nothing lost.
 
@@ -58,7 +52,7 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
   - **Inline the durable-directory scripts too when the next task needs them.** A file under the user's home survives a reboot, but inlining the one the handoff depends on costs a few lines and removes the dependency entirely.
   - **Include the invariants that make a script safe to re-run** — absolute binary paths (a backgrounded shell has no user PATH), required environment, and any assertion the script performs.
   - Never leave a running watcher, or state referenced only by a path the next agent cannot read.
-  - **A park, a reboot, or a handoff makes this mandatory before standing down**, per the `mode-toggle` reference's *Parking* section.
+  - **A park, a reboot, or a handoff makes this mandatory before standing down**, per `mode-toggle`'s *Parking* section.
 - **Done so far** — completed steps and decisions.
 - **Next up** — planned steps, in order.
 - **Next-task handoff** — a cold-executable brief for the immediate next task.
@@ -119,7 +113,7 @@ Detail on each step:
 4. **Re-establish standing watches and scripts — but only if the posture permits.**
    - **If the posture is PARKED or the mode is off, re-arm NOTHING.** Verify nothing is running, report that, and stop. An unexpected armed watcher reads as in-flight work that isn't, and re-arming while parked silently re-engages a mode the user turned off.
    - **When arming is permitted:** for every item under Standing Watches, re-check its **live state from source** (PR/MR status, pipeline result, run state, awaited thread) before arming anything — the state moved on while the context was being rebuilt, and a watcher armed against a stale assumption fires on the wrong condition.
-   - **Arm one watcher per independent condition**, never bundled, via the background/watcher skill's own mechanics (`agent-background`, plus the active runtime's `harness-<provider>-agent-background` reference for the facility and its wake semantics). **Do not detach inside the command** — that produces a log, not a watcher.
+   - **Arm one watcher per independent condition**, never bundled, via the background/watcher skill's own mechanics (`agent-background`). **⛔ Before arming anything, Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md`** — `<provider>` resolves at runtime (`claude`, `opencode`, `codex`), the rest of the path is literal. It owns the watcher facility and its wake semantics; a missed read is silent and the watcher never wakes anyone. **Do not detach inside the command** — that produces a log, not a watcher.
    - **Treat the scratchpad as gone.** Re-materialize every script from the anchor's verbatim copy before arming the watch that depends on it. Never assume a scratchpad or temp path from before compaction still exists.
    - **Confirm each launch returned a handle**, and state which watchers are now armed and on what condition.
 5. **Rebuild and reconcile.** Reconstruct the working model, including the methodology and caveats. Where the anchor and a live source disagree, the source wins — update the anchor to match.

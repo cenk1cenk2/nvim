@@ -9,21 +9,15 @@ references:
   - ../references/scm-gitlab.md
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
-  - ../references/present-first.md
 ---
 
 ## Linear Project Match
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-## Prerequisite
+Determine GitHub vs GitLab from the repo URL per `scm-detect` before pulling MR/PR data, then pick the right MCP tools from `scm-github` or `scm-gitlab` based on that detection.
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
-
-> Read the `scm-detect` reference to determine GitHub vs GitLab from repo URL before pulling MR/PR data.
-> Read `scm-github` or `scm-gitlab` based on detection to pick the right MCP tools.
-> Read the `linear-state-transitions` reference for the monotonic-forward-move rule; every state proposal MUST pass the never-downgrade guard.
-> Read the `output-diff` reference for chat output conventions before writing to Linear — present proposals in logical chunks for approval.
+Every state proposal MUST pass the never-downgrade guard — monotonic-forward-move rule in `linear-state-transitions`.
 
 ## Purpose
 
@@ -96,7 +90,7 @@ Apply these rules, in order, per issue. Respect the **never-downgrade guard** fr
 
 ### Step 5: Present the proposal
 
-Format per the `output-diff` reference — one logical chunk per issue, each with reasoning + the proposed transition in a fenced block.
+Format per `output-diff` — one logical chunk per issue, each with reasoning + the proposed transition in a fenced block.
 
 ```
 ### K-123 — Add cert-manager to cluster-rubik

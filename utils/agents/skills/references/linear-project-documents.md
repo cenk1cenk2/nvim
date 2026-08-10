@@ -1,6 +1,6 @@
 # Linear Project Documents
 
-Use the active Linear workspace's `save_document` tool, for example `linear-kilic__save_document`, to create or update project-scoped documents when multiple issues need the same shared context. To author or attach a document on demand — one per concern — use the `linear-document` skill, which owns the drafting, scoping, and present-first flow; this reference covers *when* documents earn their place and *how* to scope them.
+Use the active Linear workspace's `save_document` tool, for example `linear-kilic__save_document`, to create or update project-scoped documents when multiple issues need the same shared context. To author or attach a document on demand — one per concern — use the `linear-document` skill, which owns the drafting and scoping flow; this reference covers *when* documents earn their place and *how* to scope them.
 
 ## When to Use Project Documents
 

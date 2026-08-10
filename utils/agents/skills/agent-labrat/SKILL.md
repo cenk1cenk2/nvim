@@ -4,29 +4,19 @@ description: 'agent-labrat Hand work off to @labrat, the offsite Hermes agent, o
 disableModelInvocation: true
 argumentHint: "[task, Linear issue/project, or Slack thread] [optional: claude|codex|opencode, model name]"
 references:
-  - ../references/present-first.md
   - ../references/slack-prerequisite.md
   - ../references/slack.md
   - ../references/agent-target-capability.md
   - ../references/agent-watchers.md
   - ../references/redact-private-data.md
   - ../references/linear-prerequisite.md
-  - ../references/output-diff.md
 ---
 
 ## Handing Work to labrat
 
-> **Present-first, and blessing skips the gate.** Read the `present-first` reference. Posting into Slack reaches other people, so an unblessed brief is drafted and presented first — but **when the user has already blessed it, post directly and report what you sent.** "hand this to labrat", "send it", `g` / `go`, or a standing instruction for this class of handoff all clear the gate; do not stage a draft they have to approve twice. Present anyway when the content itself is the uncertain part — a claim you are unsure of, an irreversible instruction, or a channel the user did not choose.
+> **PREREQUISITE:** A Slack workspace skill MUST be active before posting — detection per `slack-prerequisite`. Slack does not render normal markdown; mrkdwn formatting, thread conventions, and the **absolute rule that the harness-provided Slack integration is used over the standalone workspace server** are in `slack`. For a Linear scope, `linear-prerequisite` applies before handing off an issue or project.
 
-> **PREREQUISITE:** Read the `slack-prerequisite` reference — a Slack workspace skill MUST be active before posting. Read the `slack` reference for mrkdwn formatting, thread conventions, and the **absolute rule that the harness-provided Slack integration is used over the standalone workspace server**. Slack does not render normal markdown.
-
-> **PREREQUISITE for Linear scopes:** Read the `linear-prerequisite` reference when handing off an issue or project.
-
-> Read the `agent-target-capability` reference, then compose the `agent-aware` skill to write the brief — labrat is an **aware** target and the brief must point, not paste.
-
-> Read the `agent-watchers` reference before arming the thread watch. Yours is an **awareness** watcher: it reconciles and reports, it does not push labrat's work forward.
-
-> **No private specifics.** Read the `redact-private-data` reference. Slack is a shared surface and the thread is durable — never post secrets, tokens, or credentials into it, whatever the task needs.
+> **⛔ No private specifics.** Slack is a shared surface and the thread is durable — never post secrets, tokens, or credentials into it, whatever the task needs. Redact per `redact-private-data`.
 
 ## Context
 
@@ -261,7 +251,7 @@ If the user names a runtime, pass it through verbatim — labrat knows how to dr
 
 1. **Resolve the scope.** A one-off task, a Linear issue, a Linear project, or an existing Slack thread to investigate. If the request could mean more than one, ask once.
 2. **Make the source agent-ready first.** For Linear work, the issue or project must already be self-contained — compose `linear-project-agent` if it is not. Handing off a vague issue just moves the ambiguity offsite, where it costs a round trip measured in hours.
-3. **Draft the brief** with `agent-aware`. It carries:
+3. **Draft the brief** with `agent-aware` — labrat is an **aware** target per `agent-target-capability`, so the brief points rather than pastes. It carries:
    - the goal and what done means,
    - **the invariant** — what must not break, and which findings it must stop and report rather than fix,
    - **the flow**, with its branch point stated (see Pick the flow),
@@ -273,7 +263,7 @@ If the user names a runtime, pass it through verbatim — labrat knows how to dr
    - a degradation line: what it should say if something is unreachable from its host, instead of guessing.
 
    Leave out anything it can find on its own host, and leave out the commands entirely.
-4. **Post it** — directly when blessed, after presenting when not (see the directive above). Format for the **active integration**: the harness connector takes standard markdown, the workspace server takes mrkdwn — check the `slack` reference rather than assuming. One `@labrat` mention, in this message only.
+4. **Post it.** Posting into Slack reaches other people, so an unblessed brief is presented first — but **when the user has already blessed it ("hand this to labrat", "send it", `g` / `go`, or a standing instruction for this class of handoff), post directly and report what you sent**; do not stage a draft they have to approve twice. Present anyway when the content itself is the uncertain part — a claim you are unsure of, an irreversible instruction, or a channel the user did not choose. Format for the **active integration**: the harness connector takes standard markdown, the workspace server takes mrkdwn — check the `slack` reference rather than assuming. One `@labrat` mention, in this message only.
 5. **Capture the thread `ts`** from the post result and state it in chat, per the rule above.
 6. **Arm a watcher only if the user asked to follow it** — see below. Otherwise read the thread on demand.
 7. **Steer in-thread, never by re-briefing.** Follow-ups, corrections, and answers to its questions go into the same thread as plain replies.

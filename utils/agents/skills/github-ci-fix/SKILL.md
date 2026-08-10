@@ -4,16 +4,12 @@ description: 'github-ci-fix Diagnose failing GitHub Actions on the current branc
 disableModelInvocation: true
 references:
   - ../references/scm-ci-fix.md
-  - ../references/present-first.md
   - ../references/scm-github.md
 ---
 
 ## GitHub Failed CI: Diagnose and Fix Failing Actions
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-ci-fix` reference for the shared CI-diagnosis workflow and key principles.
-> Read the `scm-github` reference for GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection.
+Run the CI-diagnosis workflow per `scm-ci-fix`, with GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection per `scm-github`.
 
 ## Platform specifics
 

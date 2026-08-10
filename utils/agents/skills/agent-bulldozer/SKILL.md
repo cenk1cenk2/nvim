@@ -4,16 +4,15 @@ description: 'agent-bulldozer Push-through mode: drive work forward autonomously
 disableModelInvocation: true
 argumentHint: "[scope of the push]"
 references:
-  - ../references/present-first.md
   - ../references/mode-toggle.md
   - ../references/agent-watchers.md
 ---
 
-> **Present-first.** Read the `present-first` reference — draft and act on blessing. Invoking bulldozer IS a standing blessing to push: skip per-step approval ceremony and act, but still surface anything that crosses a Boundary before doing it. No plan mode.
+Invoking bulldozer IS a standing blessing to push: skip per-step approval ceremony and act, but still surface anything that crosses a Boundary before doing it.
 
 ## Toggle
 
-> Read the `mode-toggle` reference for the on/off mechanics — persistence, layering, bare-stop handling, and what never counts as a toggle signal.
+On/off mechanics per `mode-toggle`.
 
 - **On:** `/agent-bulldozer`, "bulldoze", "push through", "keep going until done", "don't stop until it's done".
 - **Off:** "stop", "hold", "pause bulldozer", "normal mode", **any park signal ("we will park it", "park things here", "we park here", "parking for now")**, or the stated scope completing — report and stand down.
@@ -103,7 +102,9 @@ Bulldozing fast is dangerous if you fire work in the wrong order. Reason about t
 
 ## Watchers — the bulldozer's use of them
 
-> Read the `agent-watchers` reference for the discipline, cadence table, and check recipes; `agent-background` owns the arming mechanics, and the active `harness-<provider>-agent-background` reference names the runtime facility. Do not restate those here — what follows is only what bulldozing adds.
+Discipline, cadence table, and check recipes per `agent-watchers`; `agent-background` owns the arming mechanics. Do not restate those here — what follows is only what bulldozing adds.
+
+> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** It names the runtime facility, and a missed read is silent.
 
 - **Every blocker gets one, immediately.** Ending a turn blocked with nothing armed is the anti-pattern this whole mode exists to kill.
 - **Bias the cadence tight.** A merge, a finished CI run, or a completed apply should be caught within seconds, not minutes — the point of bulldozing is momentum, and idling after the blocker already cleared wastes it. Long cadences only for genuinely slow jobs, tightened as the expected finish approaches.

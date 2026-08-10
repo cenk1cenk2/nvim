@@ -4,7 +4,6 @@ description: 'gitlab-mr-read Read the full state of a GitLab MR - description, c
 disableModelInvocation: true
 argumentHint: "[MR number or URL]"
 references:
-  - ../references/present-first.md
   - ../references/scm-read-summary.md
   - ../references/scm-gitlab.md
   - ../references/scm-detect.md
@@ -12,11 +11,7 @@ references:
 
 ## GitLab MR Read
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-read-summary` reference for the full read/summarize workflow and key principles.
-> Read the `scm-gitlab` reference for GitLab MCP tools and local git (raw `git` CLI).
-> Read the `scm-detect` reference for platform detection and local git operations.
+Read/summarize workflow per `scm-read-summary`. GitLab tooling and local git per `scm-gitlab`; platform detection per `scm-detect`.
 
 ## Platform specifics
 

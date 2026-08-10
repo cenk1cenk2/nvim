@@ -10,14 +10,12 @@ references:
 
 ## Cross-Session / Cross-Repository Planning
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference for full directives — read the files listed in `references:` for the `plan-handoff` skill.
+> **⛔ ALWAYS enter plan mode** — full directives per `plan-mode`.
 >
 > - Enter plan mode immediately.
-> - Create plan file in your internal plans directory as `YYYY-MM-DD-<project>-<name>.md`.
+> - Create plan file in your internal plans directory as `YYYY-MM-DD-<project>-<name>.md`. Resolve the directory and filename default for the active runtime via `provider-paths`; never hardcode a path.
 > - Present the plan to the user and iterate based on feedback.
 > - Do NOT implement — the plan is consumed by a different session or agent.
-
-> Read the `provider-paths` reference to resolve the concrete internal plans directory for the active runtime, and the filename default. Never hardcode a path.
 
 ## Context
 

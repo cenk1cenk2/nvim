@@ -1,14 +1,10 @@
 ---
 name: clipboard-copy
 description: 'clipboard-copy Copy a companion skill''s output to clipboard instead of executing it; skips confirmation and copies the drafted content directly. Use on "cbcp", "copy to clipboard" alongside another skill. Do NOT use standalone without a companion skill.'
-references:
-  - ../references/present-first.md
 disableModelInvocation: true
 ---
 
 ## Clipboard Copy
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 This skill is a **modifier**. It intercepts the final output of a companion skill and copies it to the clipboard by piping the content to `wl-copy` via the `Bash` tool (Wayland clipboard) instead of performing the skill's write action.
 

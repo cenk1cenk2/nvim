@@ -5,21 +5,14 @@ argumentHint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/present-first.md
   - ../references/linear-absolute-approval.md
 ---
 
 ## Linear Project Update Post
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-## Prerequisite
-
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
-
-> **Absolute approval required.** Read the `linear-absolute-approval` reference — status-update writes always require explicit approval for the specific change; the present-first blessing shortcut (`g` / `go` / autopilot) does NOT clear them. Never call `save_status_update` before the user approves the drafted post.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> **⛔ Absolute approval required — see `linear-absolute-approval`.** Status-update writes always require explicit approval for the specific change; a general blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_status_update` before the user approves the drafted post.
 
 ## Process
 
@@ -32,7 +25,7 @@ references:
 7. **Investigate cancelled or descoped issues since the last update** — these form the deviations section. Summarize why they were dropped or changed in a concise manner.
 8. **Investigate in-progress and upcoming issues** — identify the immediate next steps for the closing sentence(s).
 9. **Draft the update post** following the format below.
-10. **Present the draft to the user.** Iterate based on feedback.
+10. **Present the draft to the user** per `output-diff`. Iterate based on feedback.
 11. **Post only after explicit user approval** using the `save_status_update` tool.
 
 ## Post Format

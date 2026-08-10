@@ -4,7 +4,6 @@ description: 'github-pr-review Autonomously review the current GitHub PR with in
 disableModelInvocation: true
 argumentHint: "[PR number or URL]"
 references:
-  - ../references/present-first.md
   - ../references/scm-review-workflow.md
   - ../references/scm-github.md
   - ../references/scm-detect.md
@@ -13,12 +12,7 @@ references:
 
 ## GitHub PR Review
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-review-workflow` reference for the full review workflow, tone, and key principles.
-> Read the `scm-github` reference for GitHub MCP tools and local git (raw `git` CLI).
-> Read the `scm-detect` reference for platform detection and local git operations.
-> Read the `review-findings` reference for finding format, severity tags, and tone rules.
+Run the review workflow per `scm-review-workflow`, formatting findings per `review-findings`, with GitHub MCP tools per `scm-github` and platform detection plus local git (raw `git` CLI) per `scm-detect`.
 
 This skill performs an autonomous code review on a GitHub pull request using native inline annotations. It does NOT draft findings for user approval — it reviews the code and posts annotations and a summary directly.
 
@@ -70,12 +64,7 @@ This renders as a one-click "Apply suggestion" button for the author. Rules:
 - Do NOT use suggestions for: questions, architectural concerns, or findings where multiple valid fixes exist — use a plain comment instead.
 - One suggestion per comment. If a fix spans non-contiguous lines, use separate comments.
 
-**Comment body format:**
-
-- Start with severity tag when not obvious: `**bug:**`, `**risk:**`, `**nit:**`, `**question:**`.
-- Terse description of the issue.
-- Suggestion block if a concrete fix exists.
-- The *why* only when the fix isn't obvious.
+**Comment body format:** follow "Inline Comment Body" in `review-findings`.
 
 **Example comment body:**
 

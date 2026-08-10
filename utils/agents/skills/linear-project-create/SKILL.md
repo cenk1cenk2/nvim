@@ -7,7 +7,6 @@ references:
   - ../references/linear-description-structure.md
   - ../references/linear-research-documentation.md
   - ../references/output-diff.md
-  - ../references/present-first.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
   - ../references/sourcebot-discovery.md
@@ -15,15 +14,13 @@ references:
 
 ## Linear Project Creation
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+Present reasoning and content in logical chunks for user approval per `output-diff` before writing to Linear.
 
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+Shared context lives in Linear project documents per `linear-project-documents`. Use project documents for repeated guidance, research, matrices, and agent instructions; keep issues focused on task-specific details.
 
-> Read the `linear-project-documents` reference for using Linear project documents as shared context. Use project documents for repeated guidance, research, matrices, and agent instructions; keep issues focused on task-specific details.
-
-> Read the `linear-scm-discovery` reference when the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or create agent-ready implementation context. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
+When the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or create agent-ready implementation context, run SCM discovery per `linear-scm-discovery`. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
 
 ## Core Requirements
 
@@ -45,7 +42,7 @@ After gathering project context, fetch available initiatives using `list_initiat
 
 ### Issue Fields
 
-> Read the `linear-mandatory-fields` reference for required issue fields (team, state, labels, estimate, priority, assignee).
+Required issue fields (team, state, labels, estimate, priority, assignee) per `linear-mandatory-fields`.
 
 Project-specific overrides for issues created under this project:
 
@@ -71,10 +68,10 @@ Project-specific overrides for issues created under this project:
 
 ## Description Structure
 
-> Read the `linear-description-structure` reference for the project and issue description format.
+Project and issue description format per `linear-description-structure`.
 
 When the same analysis or documentation applies to many issues, place the full analysis or appendix in a project document and summarize or reference it briefly from the project description and issues.
 
 ## Research & Documentation
 
-> Read the `linear-research-documentation` reference for the research process, analysis, appendix, and link conventions.
+Research process, analysis, appendix, and link conventions per `linear-research-documentation`.

@@ -1,11 +1,9 @@
 ---
 name: slack-laravel-review
-description: 'slack-laravel-review Post a PR/MR review request in #cloud-infra-pr on the Laravel Slack, one PR per message. Triggers: "request review", "post review request". Composable with github-pr-create. Always manually invoked.'
+description: 'slack-laravel-review Post a PR/MR review request in #cloud-infra-pr on the Laravel Slack, one PR per message. Triggers: "request review", "post review request". Composable with github-pr-create. Always manually invoked. Do NOT use to review code — this only posts a Slack ask and reviews nothing (github-pr-review, gitlab-mr-review).'
 disableModelInvocation: true
 argumentHint: "[github-pr-url or PR number]"
 references:
-  - ../references/present-first.md
-  - ../references/harness-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/scm-github.md
@@ -14,14 +12,7 @@ references:
 
 ## Slack Review Request Poster
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection and activation. This skill operates on the Laravel enterprise workspace (`slack-laravel`), which MUST be active before it runs.
-
-> Read the `slack` reference for Slack mrkdwn formatting rules.
-> Read the `scm-github` reference for GitHub MCP tools.
-> Read the `output-diff` reference for presenting the message before posting.
-> Read the `caveman` skill for the terse goal-line lingo — drop articles and filler, fragments fine, technical terms exact.
+> **PREREQUISITE:** This skill operates on the Laravel enterprise workspace (`slack-laravel`), which MUST be active before it runs — workspace detection and activation per `slack-prerequisite`.
 
 ## Context
 
@@ -42,7 +33,7 @@ references:
    - If no PR is found, ask the user.
    - **Multiple PRs:** if the user provides several PRs (e.g., a wave rollout), process each independently and post a SEPARATE message per PR — repeat Steps 2-7 once per PR. Never combine multiple PRs into one message.
 
-2. **Fetch PR details.**
+2. **Fetch PR details.** GitHub MCP tools and CLI fallbacks per `scm-github`.
    - Use `github__pull_request_read` (method: `get`) to fetch the PR metadata.
    - Extract: title, URL, description/body.
    - Use `github__pull_request_read` (method: `get_comments`) to fetch PR comments (for an infra/Spacelift source, if any).
@@ -69,7 +60,7 @@ references:
    - **Composing with `*-pr-comment`** — if this skill is being used alongside `github-pr-comment` or `gitlab-mr-comment`, also output a `## Review Request` section containing the formatted Slack review request message (from Step 5). This section will be included in the PR/MR comment by the `*-pr-comment` skill. The Slack message is still posted separately to Slack — the `## Review Request` section is additional output for the PR/MR comment, not a replacement.
 
 5. **Format the message.**
-   - Use Slack mrkdwn syntax (NOT standard markdown).
+   - Use Slack mrkdwn syntax (NOT standard markdown) per `slack`.
    - **Review line (always, exact):** `{pr_url} :review:` — the URL first, then the `:review:` emoji.
    - **Default — title + description.** Leave ONE blank line after the review line, then the bold what-was-done title, then the extended description:
      ```
@@ -115,7 +106,7 @@ references:
 
 6. **Present for approval — unless the user already told you to post.**
    - **If the user explicitly instructed the message(s) be posted** (e.g., "post this", "post these", "this has to be posted", "go ahead and post"), skip approval and post directly (Step 7).
-   - Otherwise, show the formatted message(s) in chat and wait for explicit approval before posting.
+   - Otherwise, show the formatted message(s) in chat per `output-diff` and wait for explicit approval before posting.
 
 7. **Post to Slack.**
    - Load the Slack send tool: `ToolSearch({ query: "select:mcp__claude_ai_Slack__slack_send_message" })`.

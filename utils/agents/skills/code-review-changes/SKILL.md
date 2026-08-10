@@ -4,18 +4,11 @@ description: 'code-review-changes Quick, iterative review of recent changes. Tri
 disableModelInvocation: true
 argumentHint: "[optional: baseline — branch, commit, or 'this conversation']"
 references:
-  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/review-findings.md
 ---
 
 ## Quick Code Review
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
-
-> Read the `review-findings` reference for finding presentation format — group by logical domain, severity tags, tone rules.
 
 ## Tone
 
@@ -34,6 +27,7 @@ You are a senior developer who has seen every mistake twice. Professional, direc
    - If nothing is specified — ask. Suggest the default branch as the most likely option.
 
 2. **Gather the full diff.**
+   - Detect the platform and run local git per `scm-detect`.
    - Combine all layers to capture the complete working state:
      - `git diff` between baseline and HEAD for committed changes.
      - `git diff --staged` for staged changes.
@@ -49,7 +43,7 @@ You are a senior developer who has seen every mistake twice. Professional, direc
 
 4. **Report findings as you go.**
    - Do not accumulate a giant report — present findings incrementally as you review each logical domain.
-   - Follow the `review-findings` reference for format: group under `###` headings by logical domain/system (e.g., "Authentication", "Plugin System"), not by severity or file.
+   - Format findings per `review-findings`: group under `###` headings by logical domain/system (e.g., "Authentication", "Plugin System"), not by severity or file.
    - Within each domain, order most critical findings first. Use severity tags (`**bug:**`, `**risk:**`, `**nit:**`, `**question:**`) when severity isn't obvious from context.
    - Skip nitpicks if the user seems busy.
    - If a domain has no issues, do not mention it.
@@ -87,5 +81,5 @@ You are a senior developer who has seen every mistake twice. Professional, direc
 
 ## Related Skills
 
-- **`code-review-branch`** — formal, intent-driven branch audit with plan mode and PR annotation. Use that when you need a thorough, documented review tied to a specific goal. Do not auto-invoke.
+- **`code-review-branch`** — formal, intent-driven branch audit with PR annotation. Use that when you need a thorough, documented review tied to a specific goal. Do not auto-invoke.
 - **`code-debug`** — for investigating and fixing bugs. Do not auto-invoke.

@@ -1,24 +1,19 @@
 ---
 name: linear-issue-status
-description: 'linear-issue-status Quick Linear issue status change from explicit wording or clear workflow context. Triggers: "mark K-123 done", "move to in review", "cancel this issue". Do NOT use for full issue edits or project reconciliation.'
+description: 'linear-issue-status Quick Linear issue status change from explicit wording or clear workflow context. Triggers: "mark K-123 done", "move to in review", "cancel this issue". Do NOT use for full issue edits (/linear-issue-update), comments (/linear-issue-comment), or project reconciliation (/linear-project-reconcile).'
 argumentHint: "[issue-id or URL] [status]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-issue-states.md
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
-  - ../references/present-first.md
 ---
 
 ## Linear Issue Status Update
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
-
-> Read the `linear-issue-states` reference for state semantics and the never-downgrade rule.
-> Read the `linear-state-transitions` reference for monotonic transition reporting and opt-out wording.
-> Read the `output-diff` reference when presenting non-obvious or inferred status changes before writing.
+State semantics and the never-downgrade rule: `linear-issue-states`. Monotonic transition reporting and opt-out wording: `linear-state-transitions`.
 
 ## Purpose
 
@@ -50,7 +45,7 @@ This skill changes issue status only. It is meant to compose verbally and situat
 
 4. **Update status.**
    - If the user explicitly requested the status, update directly and report.
-   - If the status was inferred, present the proposed change and apply only when the evidence is clear or the user confirms.
+   - If the status was inferred, present the proposed change per `output-diff` and apply only when the evidence is clear or the user confirms.
    - Report with the state-transition format: `Linear state: moved K-123 → In Review (was In Progress).`
 
 5. **Checklist follow-up for review/done.**

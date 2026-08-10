@@ -10,23 +10,16 @@ references:
   - ../references/sourcebot-discovery.md
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
-  - ../references/present-first.md
   - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Issue Pickup
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+> **THE ISSUE IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.** Issues go stale — written before the work started, by someone who did not yet know what implementation would reveal. The user may skip, reorder, add, or override anything in it; never push back with "but the issue says…". Full rationale in `linear-issue-philosophy`.
 
-> **THE ISSUE IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.** Read the `linear-issue-philosophy` reference before treating any part of the issue as a requirement. Issues go stale — written before the work started, by someone who did not yet know what implementation would reveal. The user may skip, reorder, add, or override anything in it; never push back with "but the issue says…".
-
-> Read the `linear-pickup-execution` reference for issue pickup, early questions, Linear state updates, implementation handoff, and final reporting.
-> Read the `linear-project-documents` reference when issues belong to a project with shared documentation.
-> Read the `linear-scm-discovery` reference when the user explicitly asks to enrich pickup context from GitHub/GitLab or repository history. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
-> Read the `linear-state-transitions` reference before moving issues to `In Progress`.
-> Read the `output-diff` reference before writing to Linear.
+Pickup, early questions, Linear state updates, implementation handoff, and final reporting per `linear-pickup-execution`.
 
 ## Purpose
 
@@ -37,7 +30,7 @@ This skill prepares one or more issues for real work. It can hand off to `agents
 1. **Resolve issues.**
    - Parse issue IDs or URLs.
    - Fetch each issue, full description, comments, relations, project field, labels, estimate, priority, status, and links.
-   - If an issue belongs to a project, fetch relevant project documents.
+   - If an issue belongs to a project, fetch relevant project documents per `linear-project-documents`.
 
 2. **Check readiness.**
    - Inspect `blockedBy`, parent/sub-issues, and related issues.
@@ -51,14 +44,14 @@ This skill prepares one or more issues for real work. It can hand off to `agents
 
 4. **Prepare implementation context.**
    - Identify target repo(s), branch boundaries, origin provider, likely verification commands, and linked PR/MR history.
-   - If explicitly requested, use SCM discovery to enrich repository context, prior art, likely file boundaries, and agent instructions.
+   - If explicitly requested, enrich repository context, prior art, likely file boundaries, and agent instructions per `linear-scm-discovery`, using `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
    - Decide whether implementation should be direct, delegated, sequential, or parallel.
    - For multiple issues, preserve issue boundaries where possible.
 
 5. **State update and handoff.**
-   - Move actionable picked-up issues to `In Progress` unless suppressed by the user.
+   - Move actionable picked-up issues to `In Progress` per `linear-state-transitions`, unless suppressed by the user.
    - Report state transitions.
-   - **Prepare only by default — do NOT begin implementing.** Present the pickup summary and wait for an explicit go (`go`, "implement", "start") before writing any code.
+   - **Prepare only by default — do NOT begin implementing.** Present the pickup summary per `output-diff` and wait for an explicit go (`go`, "implement", "start") before writing any code.
    - When the user already asked to implement in the same request (or gives the go), hand off to `agents-pickup` for execution, or implement directly for a small single issue.
 
 ## Output Shape

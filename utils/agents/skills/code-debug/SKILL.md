@@ -3,14 +3,11 @@ name: code-debug
 description: 'code-debug Debug a behavioral issue where code runs but produces wrong results; investigates via LSP, code hosting, web search, and terminal tools to find the root cause. Always manually invoked. Do NOT use for failed commands (code-task-failed) or code review (code-review-branch).'
 disableModelInvocation: true
 references:
-  - ../references/present-first.md
   - ../references/tmux.md
 argumentHint: "[description of the problem or paste the failing snippet]"
 ---
 
 ## Code Debugging
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## Context
 

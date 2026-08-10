@@ -2,13 +2,8 @@
 name: linear-kilic
 description: 'linear-kilic Initialize a Linear session for the kilic-dev workspace with GitLab as SCM. Auto-invoked on kilic-dev context: K-xxx issue IDs, kilic-dev workspace URLs, gitlab.kilic.dev repos.'
 references:
-  - ../references/present-first.md
   - ../references/linear-mandatory-fields.md
 ---
-
-## Linear Workspace: kilic-dev
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## Session Initialization
 
@@ -35,6 +30,6 @@ references:
 
 Once context is established, proceed with the user's request.
 
-**Issue-creation invariant:** every `linear-kilic__save_issue` call — including ad-hoc creates made WITHOUT the `linear-issue-create` skill — MUST send an explicit `state`. The Linear API defaults to `Triage`, which is WRONG. Default to `state: "Backlog"`; set `Triage` ONLY when the user explicitly asks for it. See the `linear-mandatory-fields` reference.
+**Issue-creation invariant:** every `linear-kilic__save_issue` call — including ad-hoc creates made WITHOUT the `linear-issue-create` skill — MUST send an explicit `state`. The Linear API defaults to `Triage`, which is WRONG. Default to `state: "Backlog"`; set `Triage` ONLY when the user explicitly asks for it. Required issue fields per `linear-mandatory-fields`.
 
 If the user wants to create issues, follow the `linear-issue-create` skill workflow.

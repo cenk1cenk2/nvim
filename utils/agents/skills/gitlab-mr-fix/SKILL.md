@@ -4,7 +4,6 @@ description: 'gitlab-mr-fix Fix all open review conversations on a GitLab MR by 
 disableModelInvocation: true
 argumentHint: "[MR number or URL]"
 references:
-  - ../references/present-first.md
   - ../references/scm-fix-threads.md
   - ../references/scm-gitlab.md
   - ../references/scm-detect.md
@@ -12,11 +11,7 @@ references:
 
 ## GitLab MR Fix
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-fix-threads` reference for the full thread-fixing workflow and key principles.
-> Read the `scm-gitlab` reference for GitLab MCP tools and local git (raw `git` CLI).
-> Read the `scm-detect` reference for platform detection and local git operations.
+Thread-fixing workflow per `scm-fix-threads`. GitLab tooling and local git per `scm-gitlab`; platform detection per `scm-detect`.
 
 ## Platform specifics
 

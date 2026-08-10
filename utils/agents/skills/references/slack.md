@@ -1,50 +1,37 @@
 # Slack MCP Tools and Conventions
 
-## ⛔ ABSOLUTE: use the harness-provided Slack integration
+## ⛔ ABSOLUTE: the workspace decides the integration
 
-**When the running harness provides Slack, use it — never the standalone workspace server for the same work.** On Claude Code that is the claude.ai connector (`mcp__claude_ai_Slack__*`); see the `harness-connectors` reference for the full rule and for loading deferred tools. The workspace server (`slack-kilic` / `slack-laravel`) is the fallback for when the harness provides no Slack integration, or lacks a capability the task needs — and falling back is stated out loud, once, never silently and never mixed inside one flow.
+**Each Slack workspace has exactly one route.** The kilic workspace is reachable only through the `slack-kilic` server; the Laravel workspace is reachable only through the claude.ai connector (`mcp__claude_ai_Slack__*`). Routing a workspace through the other integration reads or posts into the wrong workspace. See the `harness-connectors` reference for the precedence rule this mapping carves out of, and for loading deferred connector tools.
 
-The tool names below are the workspace-server names. Map them to the harness equivalent at call time:
+## Workspace Routing
 
-| Intent | Harness connector | Workspace server |
-|--------|-------------------|------------------|
-| Find a channel | `slack_search_channels` | `slack__slack_list_channels` |
-| Read a channel | `slack_read_channel` | `slack__slack_get_channel_history` |
-| Read a thread | `slack_read_thread` | `slack__slack_get_thread_replies` |
-| Find users | `slack_search_users` | `slack__slack_get_users` |
-| Read a profile | `slack_read_user_profile` | `slack__slack_get_user_profile` |
-| Post to a channel | `slack_send_message` | `slack__slack_post_message` |
-| Reply in a thread | `slack_send_message` (with the thread) | `slack__slack_reply_to_thread` |
-| React | `slack_add_reaction` | `slack__slack_add_reaction` |
-| Search messages | `slack_search_public` / `slack_search_public_and_private` | — (no equivalent) |
+| Action | kilic (`slack-kilic`) | Laravel (`mcp__claude_ai_Slack__*`, deferred) |
+|--------|-----------------------|-----------------------------------------------|
+| Find a channel | `slack-kilic__slack_list_channels` | `mcp__claude_ai_Slack__slack_search_channels` |
+| Read a channel | `slack-kilic__slack_get_channel_history` | `mcp__claude_ai_Slack__slack_read_channel` |
+| Read a thread | `slack-kilic__slack_get_thread_replies` | `mcp__claude_ai_Slack__slack_read_thread` |
+| Find users | `slack-kilic__slack_get_users` | `mcp__claude_ai_Slack__slack_search_users` |
+| Read a profile | `slack-kilic__slack_get_user_profile` | `mcp__claude_ai_Slack__slack_read_user_profile` |
+| Post to a channel | `slack-kilic__slack_post_message` | `mcp__claude_ai_Slack__slack_send_message` |
+| Reply in a thread | `slack-kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with the thread) |
+| React | `slack-kilic__slack_add_reaction` | `mcp__claude_ai_Slack__slack_add_reaction` |
+| Search messages | — (no equivalent) | `mcp__claude_ai_Slack__slack_search_public` / `slack_search_public_and_private` |
 
-Workspace-scoped skills still decide *which* workspace and *which* channel; that is independent of which integration carries the call.
-
-## Available Tools (workspace server)
-
-| Tool | Purpose |
-|------|---------|
-| `slack__slack_list_channels` | Resolve channel name to ID. |
-| `slack__slack_get_channel_history` | Fetch recent messages from a channel. |
-| `slack__slack_get_thread_replies` | Fetch all replies in a message thread. |
-| `slack__slack_get_users` | List workspace users (resolve user IDs to names). |
-| `slack__slack_get_user_profile` | Get detailed profile for a specific user ID. |
-| `slack__slack_post_message` | Post a new message to a channel. |
-| `slack__slack_reply_to_thread` | Reply to a specific thread. |
-| `slack__slack_add_reaction` | Add an emoji reaction to a message. |
+The connector tools are deferred — load them via `ToolSearch` before the first call. Workspace-scoped skills decide *which* workspace and *which* channel; this table decides the tools.
 
 ## Message Formatting
 
 **Which format to write depends on the integration you are sending through:**
 
-- **Harness connector** (`mcp__claude_ai_Slack__slack_send_message`) — takes **standard markdown** (`**bold**`, `_italic_`, fenced blocks with a language hint, `[label](url)`) and converts it. Writing mrkdwn here renders literally.
-- **Workspace server** (`slack__slack_post_message` / `slack__slack_reply_to_thread`) — takes **mrkdwn**, per the table below.
+- **Connector** (`mcp__claude_ai_Slack__slack_send_message`) — takes **standard markdown** (`**bold**`, `_italic_`, fenced blocks with a language hint, `[label](url)`) and converts it. Writing mrkdwn here renders literally.
+- **`slack-kilic`** (`slack-kilic__slack_post_message` / `slack-kilic__slack_reply_to_thread`) — takes **mrkdwn**, per the table below.
 
 Mentions (`<@U123>`), channel links (`<#C123>`), and emoji shortcodes are the same in both. When unsure, keep the message plain — short lines, hyphen lists, raw URLs — which renders correctly either way.
 
-### mrkdwn (workspace server)
+### mrkdwn (`slack-kilic`)
 
-Slack does NOT render standard markdown. It uses its own format called **mrkdwn**. All messages sent via `slack__slack_post_message` and `slack__slack_reply_to_thread` MUST use Slack mrkdwn syntax.
+Slack does NOT render standard markdown. It uses its own format called **mrkdwn**. All messages sent via `slack-kilic__slack_post_message` and `slack-kilic__slack_reply_to_thread` MUST use Slack mrkdwn syntax.
 
 | Intent | Markdown (WRONG) | Slack mrkdwn (CORRECT) |
 |--------|-------------------|------------------------|
@@ -73,8 +60,8 @@ Slack does NOT render standard markdown. It uses its own format called **mrkdwn*
 
 ### Thread vs Channel
 
-- **Single message** → use `slack__slack_reply_to_thread` to reply in the thread.
-- **Batch of messages** → use `slack__slack_post_message` to post a channel-level summary.
+- **Single message** → reply in the thread ("Reply in a thread" above).
+- **Batch of messages** → post a channel-level summary ("Post to a channel" above).
 - Default to thread replies. Only use channel-level messages when there is no existing thread or the user explicitly asks.
 
 ### `:dark_sunglasses:` Reaction
@@ -105,5 +92,5 @@ cat <result-file> | jq -r '.[0].text' | jq '[.messages[] | select((.ts | split("
 ## General Principles
 
 - **Slack context is ephemeral.** Summarize key information in chat so the user has it even if messages evolve.
-- **Resolve user IDs to names.** Always use `slack__slack_get_users` or `slack__slack_get_user_profile` before presenting summaries — show real names, not IDs.
+- **Resolve user IDs to names.** Always run the workspace's user or profile lookup before presenting summaries — show real names, not IDs.
 - **Track your position.** Note the timestamp of the last message you processed so you can offer to resume from there next time.

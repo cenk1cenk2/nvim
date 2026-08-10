@@ -1,8 +1,7 @@
 ---
 name: spacelift-report
-description: 'spacelift-report Analyze Spacelift infrastructure changes triggered by a GitHub PR, branch, commit, or Actions run. Triggers: "spacelift report", "what infra changes", or a GitHub link expecting Spacelift analysis. Do NOT use for general Spacelift ops (spacelift-laravel), CI failures (github-ci-fix), or PR descriptions (github-pr-create).'
+description: 'spacelift-report Analyze Spacelift infrastructure changes triggered by a GitHub PR, branch, commit, or Actions run. Triggers: "spacelift report", "what infra changes", or a GitHub link expecting Spacelift analysis. Do NOT use for moved-block analysis (spacelift-moved), general Spacelift ops (spacelift-laravel), CI failures (github-ci-fix), or PR descriptions (github-pr-create).'
 references:
-  - ../references/present-first.md
   - ../references/scm-github.md
   - ../references/output-diff.md
   - ../references/spacelift-github.md
@@ -10,31 +9,21 @@ references:
 
 ## Spacelift Infrastructure Impact Report
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
 ## Prerequisite
 
 > **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
 > If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-laravel` via the `spacelift-laravel` skill (load it as defined in `load-skills`).
 
-## Core Requirements
-
-> Read the `spacelift-github` reference for input parsing, PR resolution, and Spacelift run discovery
-
-> Read the `scm-github` reference for GitHub MCP tools, local git (raw `git` CLI), and CLI fallback conventions.
-
-> Read the `output-diff` reference for chat output conventions when offering to post the report as a PR comment.
-
 ## Process
 
 1. **Parse input and resolve to PR + head commit:**
-   - Follow the `spacelift-github` reference — detect input form (current branch, branch name, PR, Actions URL, commit SHA), extract identifiers, and resolve to owner/repo/PR/branch/SHA.
+   - Input parsing and PR resolution per `spacelift-github` — detect input form (current branch, branch name, PR, Actions URL, commit SHA), extract identifiers, and resolve to owner/repo/PR/branch/SHA. GitHub MCP tools, local `git` CLI, and CLI fallbacks per `scm-github`.
    - If no PR is found and no commit SHA is available, inform the user and stop.
 
 2. **Discover affected stacks and collect run details:**
-   - Follow the `spacelift-github` reference — list stacks, find proposed runs matching the branch/SHA, fall back to recent runs if needed. If the input was a check run or Spacelift URL, the stack and run ID are already known — skip discovery.
-   - For each affected stack, collect run status and resource changes per the reference's run detail collection and state handling sections.
-   - **If `get_stack_run_changes` returns empty** (common during APPLYING state and after completion), fall back to parsing the terraform plan output from `get_stack_run_logs` — see the "Log Parsing Fallback" section in the `spacelift-github` reference.
+   - Run discovery per `spacelift-github` — list stacks, find proposed runs matching the branch/SHA, fall back to recent runs if needed. If the input was a check run or Spacelift URL, the stack and run ID are already known — skip discovery.
+   - For each affected stack, collect run status and resource changes per `spacelift-github`'s run detail collection and state handling sections.
+   - **If `get_stack_run_changes` returns empty** (common during APPLYING state and after completion), fall back to parsing the terraform plan output from `get_stack_run_logs` — see the "Log Parsing Fallback" section of `spacelift-github`.
 
 3. **Analyze and classify resource changes:**
    - For each stack's run changes, classify every resource into one of these categories based on the change action:
@@ -64,7 +53,7 @@ references:
    - After presenting, offer:
      - "Post this as a comment on PR #N?"
      - "Drill into a specific stack or resource?"
-   - If the user approves posting, follow `output-diff` conventions — show the content that will be posted, wait for explicit approval, then use `github__add_issue_comment`.
+   - If the user approves posting, present per `output-diff` — show the content that will be posted, wait for explicit approval, then use `github__add_issue_comment`.
 
 ## Report Format
 

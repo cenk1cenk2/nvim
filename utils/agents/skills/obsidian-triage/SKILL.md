@@ -3,24 +3,17 @@ name: obsidian-triage
 description: 'obsidian-triage Process todo notes in the Obsidian vault interactively - organize, move, rename, or remove. Triggers: "triage my notes", "clean up todos". Do NOT use for creating notes (obsidian-note), repo docs (obsidian-repository), or adding todos (obsidian-todo).'
 disableModelInvocation: true
 references:
-  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
 
 ## Obsidian Triage
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> **Tool access:** Use the embedded `obsidian` MCP tools from the `obsidian` reference for all vault operations. Paths are vault-relative; filesystem is fallback only.
-
 ## Context
 
-> Read the `obsidian` reference for vault location, tool access, file naming, frontmatter, and writing style conventions — read the files listed in `references:` for the `obsidian-triage` skill.
+Vault location, tool access, file naming, frontmatter, and writing style: `obsidian`.
 
 Todo notes in `Todo/` are quick captures — timestamped files with rough thoughts, checklists, and brain dumps. Over time they accumulate. This skill processes them one by one: organizing relevant notes into proper vault categories (like `obsidian-note` would), flagging stale or completed notes for removal, and refining what remains.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ## Process
 
@@ -53,7 +46,7 @@ For each note, present its content summary and recommend one of:
    - Propose a kebab-case filename (replacing the timestamp name).
    - Propose updated frontmatter following the target category's conventions (read 1-2 existing notes in that category if not already familiar with its patterns).
    - Propose restructured content to match the category's style — following the same approach as `obsidian-note`: concise, practical, flat `##` structure.
-   - Present the full proposed note for approval before writing.
+   - Present the full proposed note for approval per `output-diff` before writing.
 
 2. **Keep** — the note is still an active todo and should stay in `Todo/`.
    - Optionally suggest refinements: clearer alias, better structure, completed items checked off.

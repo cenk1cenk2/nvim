@@ -4,7 +4,6 @@ description: 'agents-pickup Pick up Linear projects, project slices, or issues a
 disableModelInvocation: true
 argumentHint: "[Linear project, project slice, issue id(s), or URL] [optional: agent/direct/sequential/parallel/confirm]"
 references:
-  - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-pickup-execution.md
   - ../references/linear-state-transitions.md
@@ -21,19 +20,9 @@ references:
 
 ## Agent Linear Pickup Orchestrator
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+> **PREREQUISITE:** A Linear workspace skill MUST be active before this skill runs — workspace detection per `linear-prerequisite`.
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
-
-> Read the `linear-pickup-execution` reference for the pickup lifecycle: exploration, pre-implementation report, scheduling, Linear updates, branching, PR/MR creation, pipelines, review fixes, project documentation, and final report.
-> Read the `linear-state-transitions` reference for monotonic Linear status updates.
-> Read the `linear-project-documents` reference for project-scoped shared context and for propagating investigations, plans, solved problems, and deviations as documents. Attach these on demand with the `linear-document` skill — one tightly focused concern per document, like obsidian repository notes.
-> Read the `linear-chunk-issues` reference for aligning tasks with Linear issue boundaries.
-> Read the `agents-plan-split` and `agents-delegate` references for schedule construction, agent tier choice, and self-contained agent prompts.
-> Read the `agents-conventions` reference before any implementation — direct or delegated. Pickup work lands in existing repos, so the code must read as though the repo's own authors wrote it: study the neighbouring files first, copy the local naming and structure, and add no comments the surrounding code would not have.
-> Read the `scm-detect` and `project-tooling` references before touching repositories.
-> Read the `sourcebot-discovery` reference when pickup needs broad repository/code discovery before GitLab-specific metadata.
-> Read the `output-diff` reference before writing to Linear, GitHub, or GitLab.
+The pickup lifecycle runs per `linear-pickup-execution`. Present every write to Linear, GitHub, or GitLab per `output-diff`.
 
 ## Purpose
 
@@ -49,14 +38,15 @@ This skill carries Linear work from pickup to review. It can implement directly,
 
 2. **Explore before implementation.**
    - Fetch Linear issues, project documents, relations, comments, blockers, and linked PRs/MRs.
-   - Inspect target repository state and origin provider.
-   - Discover verification commands.
+   - Inspect target repository state and origin provider per `scm-detect`.
+   - Discover verification commands per `project-tooling`.
+   - Use `sourcebot-discovery` when pickup needs broad repository/code discovery before GitLab-specific metadata.
    - Use a cheap/default `agents-delegate` Explore agent when the unclear details are broad enough to benefit from parallel reconnaissance.
    - Ask early when details are not finalized, stale, contradictory, or missing.
 
 3. **Plan the execution schedule.**
-   - Run an `agents-plan` style split with issue boundaries, file collision checks, prerequisites, and dependency layers.
-   - Decide per task: lead implementation, delegated single agent, parallel layer, or sequential layer.
+   - Run an `agents-plan` style split per `agents-plan-split` with file collision checks, prerequisites, and dependency layers; align task boundaries with Linear issues per `linear-chunk-issues`.
+   - Decide per task: lead implementation, delegated single agent, parallel layer, or sequential layer. Tier choice and self-contained agent prompts per `agents-delegate`.
    - Use `agents-review` for a cheap collision/prerequisite review when the task set is complicated or the user asks for deeper research.
 
 4. **Report before starting tasks.**
@@ -64,8 +54,9 @@ This skill carries Linear work from pickup to review. It can implement directly,
    - If the user asked for feedback or confirmation, stop and wait. Do not continue into implementation.
 
 5. **Implement.**
-   - Move picked-up issues to `In Progress`.
+   - Move picked-up issues to `In Progress` per `linear-state-transitions`.
    - Use `git-branch` before implementation unless intentionally continuing a branch.
+   - Apply `agents-conventions` to every implementation, direct or delegated — pickup work lands in existing repos and must read as though the repo's own authors wrote it.
    - Implement directly and/or dispatch agents with focused prompts, each carrying the `agents-conventions` block with concrete pattern-reference files.
    - Keep branches current with known merges at convenient checkpoints.
    - Run local verification equivalent to the PR/MR pipeline.
@@ -88,7 +79,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
    - Always try checklist reconciliation when issues move to `In Review` or `Done`.
    - Comment on issues by default for deviations, decisions, blockers, findings, reviewer-driven scope changes, or non-obvious implementation notes.
    - Update issue descriptions only for autonomous-agent alignment or huge rewrites where the old issue is materially out of whack; otherwise prefer comments.
-   - Update project documents when deviations or findings are shared across issues.
+   - Update project documents per `linear-project-documents` when deviations or findings are shared across issues — attach them with the `linear-document` skill, one tightly focused concern per document.
    - Reconcile issue states with current PR/MR reality.
    - If all project issues are done, complete the project by default unless there is a reason to leave it open.
    - Report final status, PR/MR links, pipeline status, verification evidence, deviations, findings, and remaining work.

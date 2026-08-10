@@ -1,13 +1,9 @@
 ---
 name: spacelift-laravel
 description: 'spacelift-laravel Initialize a Spacelift session for the Laravel workspace. Auto-invoked on Spacelift context (Spacelift URLs, stack names, run references). Do NOT use for ArgoCD operations (argocd-kilic).'
-references:
-  - ../references/present-first.md
 ---
 
 ## Spacelift Workspace: Laravel
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## Session Initialization
 

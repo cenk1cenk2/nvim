@@ -55,22 +55,7 @@
 
 ### Local Git Operations
 
-Raw `git` CLI commands via `Bash` (there is no git MCP server):
-
-| Command | Purpose |
-|------|---------|
-| `git status` | Current branch, staged/unstaged changes. |
-| `git branch` | List, create, or check branches. |
-| `git diff` | Diff between refs (branches, commits). |
-| `git diff --staged` | Staged changes only. |
-| `git diff` | Unstaged changes only. |
-| `git log` | Commit history. |
-| `git show` | Show a specific commit. |
-| `git add` | Stage files for commit. |
-| `git commit` | Create a commit with staged changes. |
-| `git reset` | Unstage files or reset to a ref. |
-| `git checkout` | Switch branches or restore files. |
-| `git branch` | Create a new branch from current HEAD or a ref. |
+Raw `git` CLI commands via `Bash` (there is no git MCP server) — the command table lives in the `scm-detect` reference.
 
 ## CLI Fallback
 

@@ -1,30 +1,20 @@
 ---
 name: slack-laravel-compile
-description: 'slack-laravel-compile Compile a concise Slack message from the user''s input, enriched with PR, Spacelift, and code references via MCP tools; always drafts for approval before posting. Triggers: "compile this for Slack", "share this on Slack".'
+description: 'slack-laravel-compile Compile a concise Slack message from the user''s input, enriched with PR, Spacelift, and code references; always drafts for approval before posting. Triggers: "compile this for Slack", "share this on Slack". Do NOT use for reading an existing Slack link (slack-message), PR review requests (slack-laravel-review), or the daily check-in DM (beep-laravel).'
 disableModelInvocation: true
 argumentHint: "[what to compile — a question, finding, or topic]"
 references:
-  - ../references/present-first.md
-  - ../references/harness-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/scm-github.md
   - ../references/scm-gitlab.md
-  - ../references/scm-detect.md
   - ../references/output-diff.md
   - ../references/enrich-context.md
 ---
 
 ## Slack Compile
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection and activation. This skill operates on the Laravel enterprise workspace (`slack-laravel`), which MUST be active before it runs.
-
-> Read the `slack` reference for Slack mrkdwn formatting rules.
-> Read the `scm-github` and `scm-gitlab` references for SCM MCP tools.
-> Read the `enrich-context` reference for the entity enrichment table, code permalink format, and appendix pattern.
-> Read the `output-diff` reference for presenting the draft before posting.
+> **PREREQUISITE:** This skill operates on the Laravel enterprise workspace (`slack-laravel`), which MUST be active before it runs — workspace detection and activation per `slack-prerequisite`.
 
 This skill takes the user's input — a question, finding, or topic — and compiles it into a concise Slack message enriched with real links and references. The goal is to make the message self-contained so others can understand it and reach the relevant resources without asking follow-up questions.
 
@@ -51,7 +41,7 @@ Read the user's message carefully. Identify:
 
 ### Step 2: Enrich with Links and References
 
-Follow the `enrich-context` reference. For each entity the user mentioned, fetch the real link using the entity enrichment table. Only enrich entities the user actually mentioned — do not go looking for extra things to link.
+For each entity the user mentioned, fetch the real link using the entity enrichment table and code permalink format in `enrich-context`, with the SCM tools from `scm-github` / `scm-gitlab`. Only enrich entities the user actually mentioned — do not go looking for extra things to link.
 
 For Slack output specifically: use plain URLs for GitHub/GitLab (Slack auto-unfurls them). Use `<url|label>` format for non-unfurling links (Spacelift, Linear, etc.).
 
@@ -76,17 +66,17 @@ If companion skill output is present, include it as a separate section:
 
 Rules:
 - **Concise.** Say enough so others understand and can reach the resources. No more.
-- **Slack mrkdwn.** Use `*bold*`, `_italic_`, `\`code\``, plain URLs for auto-unfurl, `<url|label>` for non-unfurling links.
+- **Slack mrkdwn** per `slack`. Use `*bold*`, `_italic_`, `\`code\``, plain URLs for auto-unfurl, `<url|label>` for non-unfurling links.
 - **No markdown.** No `**bold**`, no `[text](url)`, no `###` headings. Use Slack conventions.
 - **Stick to what the user said.** Enrich with links and details, but do not add opinions, analysis, or information the user did not ask to share.
 
 ### Step 4: Add Appendix (if needed)
 
-Follow the appendix pattern from the `enrich-context` reference. Add an `## Appendix` section for details that help but would clutter the main message. Skip if the message is already self-contained.
+Follow the appendix pattern in `enrich-context`. Add an `## Appendix` section for details that help but would clutter the main message. Skip if the message is already self-contained.
 
 ### Step 5: Present Draft
 
-Show the complete message to the user in chat using `output-diff` conventions.
+Show the complete message to the user in chat per `output-diff`.
 
 - Include which channel it will be posted to.
 - Wait for explicit approval before posting.

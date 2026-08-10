@@ -5,21 +5,16 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/linear-description-structure.md
   - ../references/output-diff.md
-  - ../references/present-first.md
 ---
 
 ## Linear Initiative Creation
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Process
 
 1. **Gather requirements** — discuss with the user what the initiative is about, why it exists, and what it aims to achieve.
-2. **Draft the initiative** — prepare `name`, `summary`, `description`, and other fields. Present to the user.
+2. **Draft the initiative** — prepare `name`, `summary`, `description`, and other fields. Present to the user in logical chunks per `output-diff`.
 3. **Iterate** based on user feedback until the user approves.
 4. **Create the initiative** using `save_initiative`.
 5. **Project matching** — after creation:
@@ -41,4 +36,4 @@ references:
 
 ## Description Structure
 
-> Read the `linear-description-structure` reference for the initiative description format.
+Initiative description format per `linear-description-structure`.

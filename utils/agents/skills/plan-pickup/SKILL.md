@@ -4,15 +4,10 @@ description: 'plan-pickup Load and execute a plan file from a previous session. 
 disableModelInvocation: true
 argumentHint: "[plan-file-path or plan-name]"
 references:
-  - ../references/present-first.md
   - ../references/provider-paths.md
 ---
 
 ## Plan Pickup — Loading and Executing Existing Plans
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `provider-paths` reference to resolve the concrete internal plans directory for the active runtime before searching for plan files. Never hardcode a path.
 
 ## Context
 
@@ -20,7 +15,7 @@ This skill is the counterpart to `/plan-handoff`. It picks up a self-contained p
 
 ## Process
 
-1. **Locate the plan file.**
+1. **Locate the plan file.** Resolve your internal plans directory for the active runtime via `provider-paths`; never hardcode a path.
    - If the user provides a file path, use it directly.
    - If the user provides a plan name or partial match, search your internal plans directory for matching files.
    - If no path is given, list recent plan files from your internal plans directory (sorted by modification time) and ask the user to pick one.

@@ -3,15 +3,11 @@ name: cluster-kilic-chart
 description: 'cluster-kilic-chart Create a new Helm chart wrapper in the cluster/charts GitLab group - scaffolds the chart repo with upstream dependency, values, optional custom templates, and standard boilerplate. Always manually invoked. Do NOT use for workload deployments (/cluster-kilic-workload), ArgoCD workloads (/argocd-kilic-workload), or LB routing (/argocd-kilic-loadbalancer).'
 disableModelInvocation: true
 argumentHint: "[chart-name] - e.g., 'goldilocks', 'velero', 'cilium-l2-announcement'"
-references:
-  - ../references/present-first.md
 ---
 
 ## Cluster Chart Creator
 
 > **IMPORTANT: This skill creates a new Helm chart repository in the `cluster/charts` group on GitLab (`gitlab.kilic.dev`).**
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## How Charts Work in This System
 

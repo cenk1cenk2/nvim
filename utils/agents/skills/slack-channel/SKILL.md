@@ -4,50 +4,25 @@ description: 'slack-channel Process a Slack channel - reads recent messages, ana
 disableModelInvocation: true
 argumentHint: "[channel-name-or-id] [optional: timeframe or instructions]"
 references:
-  - ../references/present-first.md
-  - ../references/harness-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/output-diff.md
-  - ../references/enrich-context.md
 ---
 
 ## Slack Channel Processor
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection rules.
-> A Slack workspace skill (`slack-kilic` or `slack-laravel`) MUST be active before this skill runs.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> **PREREQUISITE:** A Slack workspace skill (`slack-kilic` or `slack-laravel`) MUST be active before this skill runs — workspace detection per `slack-prerequisite`.
 
 ## Context
 
-> Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling. **The `slack__*` names in the steps below are intents, not transport choices** — route every call through the harness-provided Slack integration per the absolute rule in that reference and in `harness-connectors`; the workspace server is the stated fallback.
+Workspace routing, response conventions, reaction rules, and large-results handling: `slack`. The steps below name the kilic tools (`slack-kilic__*`); on the Laravel workspace use the connector column of that reference's routing table and load its deferred tools via `ToolSearch` first.
 
 The user wants to catch up on a Slack channel. This skill reads the channel's recent messages, classifies them by type, and takes appropriate action depending on the channel's purpose. The skill supports both automated channels (CI/CD, deployments, publishes) and human channels (issues, echo/thoughts).
-
-## Tool Mapping by Workspace
-
-Tool names differ per workspace. Use the correct tools based on which workspace skill is active:
-
-| Action | `slack-kilic` | `slack-laravel` (`mcp__claude_ai_Slack__*`, deferred) |
-|--------|------------------------|-----------------------------------------------------|
-| Read channel | `slack-kilic__slack_get_channel_history` | `mcp__claude_ai_Slack__slack_read_channel` |
-| Read thread | `slack-kilic__slack_get_thread_replies` | `mcp__claude_ai_Slack__slack_read_thread` |
-| List channels | `slack-kilic__slack_list_channels` | `mcp__claude_ai_Slack__slack_search_channels` |
-| Get users | `slack-kilic__slack_get_users` | `mcp__claude_ai_Slack__slack_search_users` |
-| Get user profile | `slack-kilic__slack_get_user_profile` | `mcp__claude_ai_Slack__slack_read_user_profile` |
-| Post message | `slack-kilic__slack_post_message` | `mcp__claude_ai_Slack__slack_send_message` |
-| Reply to thread | `slack-kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with thread) |
-| Add reaction | `slack-kilic__slack_add_reaction` | `mcp__claude_ai_Slack__slack_add_reaction` |
-
-**`slack-laravel` tools are deferred** — load via `ToolSearch` before use. See `harness-connectors` reference.
 
 ## Process
 
 1. **Resolve the channel.**
-   - If the user provides a channel name, use `slack__slack_list_channels` to resolve it to a channel ID.
+   - If the user provides a channel name, use `slack-kilic__slack_list_channels` to resolve it to a channel ID.
    - If the user provides a channel ID, use it directly.
 
 2. **Determine the timeframe.**
@@ -56,10 +31,10 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
    - Otherwise, ask the user how far back to look.
 
 3. **Fetch and filter messages.**
-   - Use `slack__slack_get_channel_history` with a generous `limit` to fetch messages.
-   - For large results, use the `jq` filtering patterns from the slack reference.
-   - For any message with thread replies, use `slack__slack_get_thread_replies` to read the full thread.
-   - Resolve user IDs to real names using `slack__slack_get_users` or `slack__slack_get_user_profile`.
+   - Use `slack-kilic__slack_get_channel_history` with a generous `limit` to fetch messages.
+   - For large results, use the `jq` filtering patterns per `slack`.
+   - For any message with thread replies, use `slack-kilic__slack_get_thread_replies` to read the full thread.
+   - Resolve user IDs to real names using `slack-kilic__slack_get_users` or `slack-kilic__slack_get_user_profile`.
 
 4. **Classify and act per channel type.**
 
@@ -99,7 +74,7 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
 
    #### `issues` — Linear Issue Discussions
    - Messages reference Linear issues or contain issue discussions.
-   - For each message thread, read the full thread via `slack__slack_get_thread_replies`.
+   - For each message thread, read the full thread via `slack-kilic__slack_get_thread_replies`.
    - If the thread references a Linear issue, fetch it via `linear-kilic__get_issue`.
    - If the thread contains user comments with feedback or refinements:
      - Use `linear-kilic__list_comments` to see existing Linear comments.
@@ -119,16 +94,16 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
    - Provide a general summary of messages grouped by topic or thread.
    - Ask the user how they'd like to handle the content.
 
-5. **Respond back to Slack.**
+5. **Respond back to Slack.** Present drafted replies per `output-diff` before sending.
 
    The response method depends on whether you processed a single message or a batch:
 
    **Single message** → reply in thread:
-   - Use `slack__slack_reply_to_thread` on the message you processed.
+   - Use `slack-kilic__slack_reply_to_thread` on the message you processed.
    - Add `:dark_sunglasses:` reaction to that message.
 
    **Batch of messages** → post channel-level summary:
-   - Use `slack__slack_post_message` to post a summary to the channel.
+   - Use `slack-kilic__slack_post_message` to post a summary to the channel.
    - Add `:dark_sunglasses:` reaction to **each message that was included in the summary**.
    - Group findings by channel type logic above.
    - Lead with actionable items (failures, pending deployments, unresolved feedback).
@@ -151,4 +126,4 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
 - **Always write back to Slack.** Default behavior is to respond in Slack, not just in chat. The posted content doubles as a record for creating Linear issues.
 - **Enrich with source tools.** Don't just summarize Slack text — use GitLab/Linear MCP tools to provide real context (diffs, MR details, issue state).
 - **Prompt for `echo`.** The echo channel is personal — always ask before creating issues or notes.
-- Follow the response conventions (thread vs channel, `:dark_sunglasses:`, approval rules) from the slack reference.
+- Follow the response conventions — thread vs channel, `:dark_sunglasses:`, approval rules — per `slack`.

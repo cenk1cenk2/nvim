@@ -3,7 +3,6 @@ name: config-agents
 description: 'config-agents Update or review the central AGENTS.md guidelines at ~/.config/nvim/utils/agents/AGENTS.md. Always manually invoked; suggest it on rule drift or new durable conventions but never self-invoke. Do NOT use for per-repo CLAUDE.md/AGENTS.md (config-repository), skills (config-skills), or MCP configs (config-mcp).'
 disableModelInvocation: true
 references:
-  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/commit-push-scoped.md
@@ -11,14 +10,6 @@ argumentHint: "[what to change or review in AGENTS.md]"
 ---
 
 ## Agents Guidelines Management
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed change before asking for approval.
-
-> **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into the guidelines or its examples unless the user explicitly allows it; use placeholders instead.
-
-> **Commit and push.** Read the `commit-push-scoped` reference — after the edit lands, stage ONLY `AGENTS.md` and nothing else in the repo, then commit as `<type>(agents): <subject>` and push to `rolling` via `git-commit` and `git-push`. Ask first by default; skip the ask when the request already blessed the push.
 
 > **Editor MCP.** When the `hyprpilot-nvim` server is in the session, load the `hyprpilot-nvim` skill and work through it — read `AGENTS.md` with `editor_read` so the captain's unsaved edits are visible, and let that skill own every editor-tool rule you are tempted to write into this document.
 
@@ -34,11 +25,11 @@ It is injected by an **unscoped root `[[patches]]` entry** in `~/.config/hyprpil
 2. **Understand the request.** Determine what needs to change. Ask the user if the intent is ambiguous.
 3. **Check for conflicts.** Verify that the proposed change does not contradict existing rules elsewhere in the document. AGENTS.md has a Rule Priority section — ensure new rules fit within or update that hierarchy.
 4. **Check skill ownership before growing the file.** If a skill already governs the behaviour, edit that skill through `config-skills` and leave AGENTS.md a pointer plus the rule that loads it. §III's `hyprpilot-nvim` entry is the shape: the server's presence triggers the skill, and the whole editor-tool playbook lives there rather than in every session's context window. Only rules with no owning skill — or the load rules themselves — belong in this document.
-5. **Draft the changes.** Present the exact additions, modifications, or removals in the chat window. Show surrounding context so the user can see where changes fit.
+5. **Draft the changes.** Present the exact additions, modifications, or removals per `output-diff`, with surrounding context so the user can see where changes fit. Keep real private specifics out of the guidelines and their examples per `redact-private-data`.
 6. **Validate conciseness.** AGENTS.md is loaded into every session's context window. Every line must earn its place. Remove redundancy, prefer tables over prose, and avoid restating what's already implied by other rules.
 7. **Iterate.** Refine based on user feedback until approved.
 8. **Apply changes.** After explicit approval, edit the file.
-9. **Commit and push.** Follow the `commit-push-scoped` reference — stage only `AGENTS.md`, then compose with `git-commit` (scope `agents`, e.g. `fix(agents): ...`) and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
+9. **Commit and push.** Per `commit-push-scoped`, stage ONLY `AGENTS.md` and nothing else in the repo, then compose with `git-commit` (scope `agents`, e.g. `fix(agents): ...`) and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
 
 ## Key Principles
 

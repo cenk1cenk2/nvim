@@ -8,13 +8,11 @@ references:
 
 ## Plan Hard — Interview-Driven Design-Tree Traversal
 
-> **ALWAYS enter plan mode.** Read the `plan-mode` reference for full directives — read the files listed in `references:` for the `plan-hard` skill.
+> **⛔ ALWAYS enter plan mode** — full directives per `plan-mode`.
 >
 > - Enter plan mode immediately.
 > - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", or an equally direct proceed signal (the user lingo `g`, `go`, `y`, `yolo` also count).
 > - When in doubt about whether the user wants implementation, ASK. Do not assume.
-
-> Read the `provider-paths` reference to resolve the concrete internal plans directory for the active runtime before writing the plan file. Never hardcode a path.
 
 ## Core Disposition
 
@@ -69,7 +67,7 @@ Delegated mode trades interview depth for a review pass — use it when the user
 
    **Opt-out:** even when the trigger condition applies, the user can skip this step by saying "skip fact-check" / "no review" / "skip review" in the same turn as the stop signal. When skipped, proceed directly to step 8.
 
-8. **Write the plan file** to your internal plans directory as `YYYY-MM-DD-<project>-<name>.md` using the standard structure from `AGENTS.md` Section II. Include:
+8. **Write the plan file** to your internal plans directory (resolved for the active runtime via `provider-paths`; never hardcode a path) as `YYYY-MM-DD-<project>-<name>.md`, using the standard structure from `AGENTS.md` Section II. Include:
    - Context, Requirements, Approach, Implementation Steps, Risks, Verification.
    - A **Design Decisions** subsection under Approach that records every decision reached during the interview, each with a one-line "Why".
    - If step 7 produced unresolved concerns, include them under Design Decisions with the reviewer's evidence.

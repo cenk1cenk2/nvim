@@ -3,22 +3,17 @@ name: code-task-failed
 description: 'code-task-failed Investigate a failed command (build, test, lint) by capturing output and isolating the root cause. Always manually invoked. Do NOT use for behavioral bugs (code-debug) or code review (code-review-branch).'
 disableModelInvocation: true
 references:
-  - ../references/present-first.md
   - ../references/tmux.md
 argumentHint: "[brief description of what failed, e.g., 'build failed', 'test suite', 'lint errors']"
 ---
 
 ## Code Failure Investigation
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
 ## Process
-
-> **Terminal state.** Read the `tmux` reference before the first capture — which overlay is which, and how to bound a capture so it doesn't flood context.
 
 ### Step 1: Capture the Failure
 
-- Grab the terminal output with `tmux__capture-pane`, bounded by `lines`. Pick the scratch terminal by the rule in the `tmux` reference — the editor's own overlay for the repo in play, unless the user pointed at the general one — and resolve its pane through `tmux__find-session` / `tmux__list-windows` / `tmux__list-panes` rather than guessing an id.
+- Grab the terminal output with `tmux__capture-pane`, bounded by `lines` per `tmux`. Pick the scratch terminal — the editor's own overlay for the repo in play, unless the user pointed at the general one — and resolve its pane through `tmux__find-session` / `tmux__list-windows` / `tmux__list-panes` rather than guessing an id.
 - If the failure output is not visible in the pane (scrolled off or in a different pane), ask the user which pane or window contains the output.
 - Extract the **error messages, stack traces, and exit codes** from the captured output.
 

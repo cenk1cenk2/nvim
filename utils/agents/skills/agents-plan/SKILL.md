@@ -1,9 +1,9 @@
 ---
 name: agents-plan
 description: 'agents-plan Plan and execute multi-task work across agents via a dependency-aware DAG scheduler; layers run in parallel with review pauses between them. Modes: "team" (default, lead orchestrates) or "fire-and-forget" (autonomous, bypass permissions). Use on "agents-plan", "run these tasks in parallel", "fire and forget". Do NOT use for single-task delegation (use /agents-delegate).'
-disableModelInvocation: true
 argumentHint: "[plan file or goal] [optional: 'fire' | 'fire-and-forget' | 'without worktrees' | 'per-task review' | 'final-only review']"
 references:
+  - ../references/plan-mode.md
   - ../references/agents-delegate.md
   - ../references/agents-worktrees.md
   - ../references/scm-detect.md
@@ -23,28 +23,14 @@ references:
 
 ## Agent DAG Orchestration
 
-> **ALWAYS enter plan mode for the planning and scheduling phases.**
+> **⛔ ALWAYS enter plan mode for the planning and scheduling phases** — full directives per `plan-mode`.
 >
 > - Enter plan mode immediately.
 > - Plan the work, build the dependency DAG, decide review cadence and mode.
 > - Present the plan, the proposed layer schedule, and the resolved mode+cadence to the user for approval.
 > - Exit plan mode only when launching layer 0.
 
-> Read the `agents-plan-split` reference for the planning phase — understand goal, discover tooling, establish conventions, write the plan. Also covers `depends_on` declarations, layer assignment, and file-overlap verification.
-> Read the `agents-merge-review` reference for between-layer and end-of-run phases — per-layer worktree merge, per-layer review, final `code-review-changes` against the run-level baseline, final verification, completion handoff.
-> Read the `agents-delegate` reference for agent dispatch parameters and mechanics. Resolve tiers to concrete models via the `agent-harness` skill (and its per-provider references).
-> Read the `agents-worktrees` reference for the mandatory worktree location rule, naming, verification, and cleanup — agent worktrees MUST live in the runtime's agent-worktrees directory, no exceptions.
-> Read the `provider-paths` reference alongside it — that is where the runtime's concrete worktrees and plans directories resolve. Never hardcode either path.
-> Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
-> Read the `sourcebot-discovery` reference when planning starts from an organization-wide question or the target repository is not yet known.
-> Read the `project-tooling` reference for discovering verification commands.
-> Read the `agents-write-plans` reference for plan quality criteria — including the optional `depends_on` field on tasks.
-> Read the `agents-conventions` reference for discovering and agreeing on project conventions before dispatching agents.
-> Read the `agents-completion` reference for the completion handoff after verification passes.
-> Read the `commit-style` reference for conventional commit format — used during handoff and per-task commits.
-> Read the `commit-trailers` reference for issue linking conventions — used when commits reference Linear/GitHub/GitLab issues.
-> Read the `linear-chunk-issues` reference for aligning task splits with Linear issues — used when the user provides Linear issues or a project as input.
-> Read the `linear-state-transitions` reference for the auto-advance rules. Applied before each layer's launch — each Linear-linked task in the launching layer advances to `In Progress`.
+The planning phase runs per `agents-plan-split`; the between-layer and end-of-run phases per `agents-merge-review`.
 
 ## Context
 
@@ -94,6 +80,13 @@ Present both resolutions in the plan summary. If either is ambiguous, default to
 
 Follow the `agents-plan-split` reference steps 1–4: understand the goal, discover tooling, establish conventions, write the plan. The plan must include a `depends_on: [task-id, ...]` field on each task (empty/absent = layer 0).
 
+- Repository and code discovery when planning starts from an organization-wide question or the target repository is not yet known: `sourcebot-discovery`.
+- SCM platform detection and raw `git` CLI usage: `scm-detect`.
+- Verification commands: `project-tooling`.
+- Project conventions, discovered and agreed before any dispatch: `agents-conventions`.
+- Plan quality criteria, including the optional `depends_on` field on tasks: `agents-write-plans`.
+- Task splits aligned with Linear issue boundaries when the user supplies issues or a project: `linear-chunk-issues`.
+
 ### Step 5 — Build the schedule
 
 Follow the `agents-plan-split` reference's "Task dependencies" section:
@@ -123,6 +116,8 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 
 ### Step 8 — Launch the first layer
 
+> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agents-delegate.md` before the first dispatch.** A missed read is silent, and the blocking flag below is exactly what varies.
+
 - Exit plan mode.
 - Record the **run-level baseline** (current branch + HEAD) for the final review pass.
 - For layer 0, the **layer baseline** = run baseline.
@@ -151,7 +146,8 @@ Follow the `agents-plan-split` reference's "Task dependencies" section:
 
 **Shared:**
 
-- Verify each returned worktree path is absolute and in the runtime's agent-worktrees directory per the `agents-worktrees` reference.
+- Dispatch parameters and mechanics per `agents-delegate`; resolve tiers to concrete models via the `agent-harness` skill.
+- Verify each returned worktree path is absolute and in the runtime's agent-worktrees directory per `agents-worktrees` — the concrete worktrees and plans directories resolve via `provider-paths`, never hardcoded.
 - Each agent prompt is self-contained. Use the template below. Include the running `## Accumulated Guidance` section (empty for layer 0).
 
 ### Step 9 — Collect layer results
@@ -193,7 +189,7 @@ Follow the `agents-merge-review` reference steps 2–4:
 
 - **Final review.** Run `code-review-changes` against the **run-level baseline** (recorded in step 8 for layer 0). This catches cross-layer integration issues regardless of cadence choice.
 - **Final verification.** Run the full verification command set from the planning phase. Read the output. Confirm with evidence.
-- **Completion handoff.** Summarize and present options (commit / push / PR / leave); execute the user's choice per the `agents-completion` reference.
+- **Completion handoff.** Summarize and present options (commit / push / PR / leave); execute the user's choice per the `agents-completion` reference. Commit messages follow `commit-style`, with issue links per `commit-trailers`.
 
 ### Step 15 — Shutdown (team mode only)
 

@@ -4,7 +4,6 @@ description: 'gitlab-mr-comment Post a companion skill''s output as a comment on
 disableModelInvocation: true
 argumentHint: "[companion-skill] [MR number or URL]"
 references:
-  - ../references/present-first.md
   - ../references/scm-comment-poster.md
   - ../references/scm-gitlab.md
   - ../references/output-diff.md
@@ -12,11 +11,7 @@ references:
 
 ## GitLab MR Comment Poster
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-comment-poster` reference for the full draft-and-post workflow and key principles.
-> Read the `scm-gitlab` reference for GitLab MCP tools, local git (raw `git` CLI), and platform detection.
-> Read the `output-diff` reference for presenting the comment before posting.
+Draft-and-post workflow per `scm-comment-poster`. Present the comment per `output-diff` before posting. GitLab tooling, local git, and platform detection per `scm-gitlab`.
 
 ## Platform specifics
 

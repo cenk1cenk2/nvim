@@ -1,10 +1,8 @@
 ---
 name: agents-delegate
 description: 'agents-delegate Delegate a single task to one subagent at a chosen tier (cheap/default/smart/max) or explicit model. Use on "delegate this", "use a cheap/smart agent", "run this with opus/haiku". Do NOT use for multi-task plans or DAG-scheduled work (use /agents-plan).'
-disableModelInvocation: true
 argumentHint: "[task description] [optional: tier 'cheap'|'default'|'smart'|'max' or explicit model name]"
 references:
-  - ../references/present-first.md
   - ../references/agents-delegate.md
   - ../references/agents-worktrees.md
   - ../references/project-tooling.md
@@ -18,17 +16,7 @@ references:
 
 ## Single-Task Delegation
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `agents-delegate` reference for agent parameters, dispatch mechanics, and prompt structure. Resolve tiers to concrete models via the `agent-harness` skill (and its per-provider references).
-> Read the `agents-worktrees` reference when dispatching with worktree isolation — worktrees MUST live in the runtime's agent-worktrees directory. Covers naming, verification, and cleanup.
-> Read the `provider-paths` reference alongside it — that is where the runtime's concrete worktrees directory resolves. Never hardcode the path.
-> Read the `agents-conventions` reference when the task modifies code — establishes conventions to include in the agent prompt. Skip for read-only research tasks.
-> Read the `project-tooling` reference when the task modifies code — for verification commands to include in the agent prompt. Skip for read-only research tasks.
-> Read the `agents-completion` reference if the user wants to commit/push/PR after the agent reports back.
-> Read the `scm-detect` reference if the delegated task involves git operations.
-> Read the `sourcebot-discovery` reference when the delegated task is read-only org-wide repository/code discovery or needs a repo shortlist before SCM calls.
-> Read the `linear-state-transitions` reference if the task is linked to a Linear issue — the dispatcher advances the issue to `In Progress` before launching the agent. Skip when the task has no Linear id.
+Dispatch parameters, mechanics, and prompt structure per `agents-delegate`. Resolve tiers to concrete models via the `agent-harness` skill.
 
 ## Context
 
@@ -45,6 +33,7 @@ Use it when:
 1. **Understand the task.**
    - Read the user's request. If ambiguous, ask ONE clarifying question before proceeding.
    - Gather minimal codebase context needed to brief the agent — don't over-explore; the agent will explore on its own.
+   - For org-wide repository or code discovery, or a repo shortlist before SCM calls, use `sourcebot-discovery`.
 
 2. **Resolve tier / model selection.**
    - Parse the user's input per the `agents-delegate` reference:
@@ -67,6 +56,7 @@ Use it when:
    - Build a self-contained prompt per the `agents-delegate` reference's Self-Contained Prompt Structure section.
    - For research: an exploration subagent, omit verification, omit write scope.
    - For implementation: a general-purpose subagent, include verification and write scope.
+   - When the delegated task involves git operations, resolve the platform per `scm-detect` and state it in the prompt.
    - Present the prompt to the user for review before launching.
 
 6. **Transition linked Linear issue to `In Progress` (when applicable).**
@@ -78,13 +68,13 @@ Use it when:
 7. **Launch the agent — background by default.**
    - Dispatch the subagent via your runtime's dispatch mechanism, with parameters resolved from the reference's parameter table.
    - **Dispatch in the BACKGROUND by default — this is the preferred mode.** The lead stays free, so the conversation keeps moving and you keep working while the agent runs. See the `agents-delegate` reference's Dispatch Mode section.
-   - **Read the active `harness-<provider>-agents-delegate` reference for the flag name, its default, and how a background result actually reaches you.** This differs per runtime: current Claude Code wakes you with a completion notification, Codex does not wake you at all.
+   - **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agents-delegate.md` before the first dispatch** — the flag name, its default, and how a background result actually reaches you. This differs per runtime: current Claude Code wakes you with a completion notification, Codex does not wake you at all.
    - **⛔ Block when the runtime will not deliver a detached result**, and when you simply need the answer to continue. For a fan-out you need complete before proceeding, issue several dispatches in one message, all blocking — they still run concurrently and land together.
    - **Never pre-empt a pending agent and never read its silence as a verdict.** A verification agent that has not reported has not passed anything. Equally, do not declare it broken on a runtime where delivery works — check the harness reference first.
    - `isolation`: `worktree` if the task modifies files — offer, confirm with user.
    - **⛔ Permissions: settle the context FIRST, but do not try to set it on the dispatch.** On current Claude Code the `mode` parameter is deprecated and ignored — subagents inherit the session's permission mode, so you cannot grant an agent more autonomy than the session already has. If the task needs more, raise it with the user; do not dispatch and hope. On runtimes with independent permissions, an unsurfaced gate stalls the agent silently — **highest risk: a task targeting a directory or repo other than the session's.** See the active `harness-<provider>-agents-delegate` reference.
    - **Collect deliberately.** On Claude Code, a background agent's result arrives as a completion notification — wait for it rather than polling, and note that a completed agent can be resumed by `SendMessage` to its name if you need more. Do NOT read a local agent's task-output file: it is a symlink to the full transcript and will overflow your context. **After two failed collection attempts, stop negotiating** — verify the underlying artifact yourself, or re-dispatch blocking. Diagnose the cause first; only blind re-dispatch wastes completed work.
-   - **If worktree isolation is used**, verify the returned path is absolute and in the runtime's agent-worktrees directory per the `agents-worktrees` reference. If it falls outside, abort the result and recreate the worktree manually at the correct location (see the Manual Fallback section), then re-dispatch without worktree isolation and instruct the agent via the prompt to `cd` into the manual path.
+   - **If worktree isolation is used**, verify the returned path is absolute and in the runtime's agent-worktrees directory per `agents-worktrees` — the concrete directory resolves via `provider-paths`, never hardcoded. If it falls outside, abort the result and recreate the worktree manually at the correct location (see the Manual Fallback section), then re-dispatch without worktree isolation and instruct the agent via the prompt to `cd` into the manual path.
 
 8. **Handle the result.**
    - Relay the agent's summary to the user.

@@ -1,6 +1,6 @@
 ---
 name: load-skills
-description: 'load-skills Background knowledge on resolving skill dependencies and chaining or auto-invoking prerequisite skills - read when a skill declares prerequisites or multiple skills are active together. Not a user action; do NOT invoke to perform a task.'
+description: 'load-skills Background knowledge on resolving skill dependencies and chaining or auto-invoking prerequisite skills - read when a skill declares prerequisites or multiple skills are active together. Load it to resolve a dependency, never as the task itself.'
 ---
 
 ## Skill Cross-Loading
@@ -21,19 +21,7 @@ When a skill has a **PREREQUISITE** block, the agent MUST ensure that prerequisi
 
 ### Linear Workspace Detection
 
-Two Linear workspaces exist. Deduce which one from context:
-
-| Signal                                 | Workspace | Skill                |
-| -------------------------------------- | --------- | -------------------- |
-| Issue ID prefix `K-xxx`                | kilic-dev | `linear-kilic`       |
-| Issue ID prefix `CLOUD-xxx`            | Laravel   | `linear-laravel`        |
-| Linear URL containing `kilic-dev`      | kilic-dev | `linear-kilic`       |
-| Linear URL containing `laravel`        | Laravel   | `linear-laravel`        |
-| GitLab repository (`gitlab.kilic.dev`) | kilic-dev | `linear-kilic`       |
-| GitHub repository (Laravel org)        | Laravel   | `linear-laravel`        |
-| User says "work" or "laravel"          | Laravel   | `linear-laravel`        |
-| User says "personal" or "kilic"        | kilic-dev | `linear-kilic`       |
-| No signal available                    | —         | Ask the user         |
+Two Linear workspaces exist. The `linear-prerequisite` reference owns the deduction table — read it to pick the workspace skill.
 
 ### Skill Chaining
 
@@ -58,23 +46,13 @@ When a skill exists in multiple variants (e.g., `linear-kilic-project-argocd-sys
 
 ## Loading Skills
 
-Skills live as plain Markdown files at `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`. The hyprpilot harness usually attaches them for you; when it doesn't, read them directly from disk.
-
-**Discovery** — read the `hyprpilot://skills` resource: the whole catalogue as one markdown index, with every slug and description, and a header explaining how to load them. One read instead of a directory listing plus ~100 frontmatter reads. Fall back to listing `~/.config/nvim/utils/agents/skills/` and reading each `SKILL.md`'s frontmatter only when the resource is unavailable. Skills with `disableModelInvocation: true` are manual-only — only load on explicit user request.
-
-**Three ways a skill becomes loaded:**
-
-1. **Harness attachment.** The captain pastes `#{hyprpilot://skills/<name>}`, picks the skill from the palette, or hyprpilot auto-attaches it for the turn. The skill body lands in context as a markdown attachment with the bundle path. Treat it as loaded — follow the instructions in the attachment.
-
-2. **Filesystem `Read`.** The skill isn't in context but you need it (recursive prerequisite resolution, cross-loading, etc.). Use the built-in `Read` tool against `~/.config/nvim/utils/agents/skills/<name>/SKILL.md`. For multiple skills, read in parallel.
-
-3. **MCP tool.** Hyprpilot's in-tree MCP server exposes `mcp__hyprpilot_skills__list_skills` (discovery against the daemon's resolved per-instance catalog) and `mcp__hyprpilot_skills__read_skill { slug }` (body fetch). Use these when you specifically want the daemon's filtered view (per-profile `[[mcp.skills.dirs]]` filtering / `ignore` globs honoured); use plain `Read` otherwise.
+Discovery and loading are defined in `AGENTS.md` §III Hyprpilot.
 
 **Recursive prerequisites:** if a loaded skill declares its own prerequisites, resolve them by re-entering this procedure for each.
 
 **Graceful degradation:** skills must work even when references fail to load — they contain enough inline context to function.
 
-**Do NOT auto-load references.** Only read a reference when the skill's body tells you to.
+**Bundle a skill's references when you load the skill.** `read_skill` returns the body alone; `load_skill_references { slug }` fetches the declared files. Both, in the same step, per `AGENTS.md` §II. Only a path-read reference — one the body names with an explicit absolute path — waits for its branch.
 
 ## Reference Files
 
@@ -83,7 +61,7 @@ Skills may declare references to additional files for shared conventions and det
 ```yaml
 references:
   - ../references/linear-prerequisite.md
-  - ../references/present-first.md
+  - ../references/output-diff.md
 ```
 
 **Reference locations:**
@@ -108,7 +86,6 @@ When the user explicitly asks to unload a skill (e.g., "unload the obsidian skil
 
 ## Key Rules
 
-- **Announce loaded skills.** When a skill is loaded, give a one-line summary: `Using <skill-name> — <what it does>.` (e.g., `Using config-agents — updates the AGENTS.md guidelines file.`).
 - **Auto-invoke when unambiguous.** If context clearly identifies the prerequisite, load it without asking.
 - **Ask when ambiguous.** If multiple skills could apply and context doesn't disambiguate, ask the user.
 - **Never skip prerequisites.** A skill that declares a prerequisite MUST have it satisfied — there are no optional prerequisites.

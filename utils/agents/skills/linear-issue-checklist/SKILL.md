@@ -5,24 +5,17 @@ argumentHint: "[issue-id or Linear URL] [items to update]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/present-first.md
 ---
 
 ## Linear Issue Checklist Update
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-## Prerequisite
-
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Process
 
 1. **Fetch the issue** using the appropriate Linear MCP tools. Also fetch comments using `list_comments` — comments may reference checklist items being completed, cancelled, or changed.
 2. **Extract the current checklist** from the issue description.
-3. **Present the checklist to the user** and confirm which items to update.
+3. **Present the checklist to the user** per `output-diff` and confirm which items to update.
 4. **Apply changes** only after user confirmation.
 5. **Status handoff** — if the checklist update completes the implementation or moves the issue into review, compose with `linear-issue-status` to move the issue to `In Review` or `Done`.
 

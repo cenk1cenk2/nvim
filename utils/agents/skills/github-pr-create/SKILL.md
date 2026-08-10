@@ -3,7 +3,6 @@ name: github-pr-create
 description: 'github-pr-create Analyze and write GitHub PR titles and descriptions. Use for "write a PR description", "create a PR", "improve the PR". Do NOT use for GitLab MRs (gitlab-mr-create) or CI workflows/failures (github-ci-create, github-ci-fix).'
 references:
   - ../references/scm-create-description.md
-  - ../references/present-first.md
   - ../references/scm-github.md
   - ../references/commit-trailers.md
   - ../references/output-diff.md
@@ -13,20 +12,14 @@ references:
 
 ## GitHub PR Description Workflow
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+Draft the description and title per `scm-create-description`, with GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection per `scm-github`.
 
 > **Open when ready.** Default communication is opening the PR in the browser once it's ready to look at — skip only on explicit opt-out ("just the link", "don't open").
 
-> Read the `scm-create-description` reference for the shared description/title workflow, format templates, and writing style.
-> Read the `scm-github` reference for GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection.
-> Read the `commit-trailers` reference for Linear/GitHub issue trailer selection. Use `closes <Linear-id>` for the single/final PR that should close a Linear issue; use `refs <Linear-id>` for partial, related, multi-PR, or unclear completion work. **Several issues in one PR — the syntax differs per tracker:** Linear takes one keyword with a comma-separated list (`Closes K-879, K-881`), GitHub native issues need the keyword repeated (`closes #10, closes #123`). Do not apply one platform's form to the other. Carry Linear ids in the title too, and give each issue its own description section per `scm-create-description`. **Linear ignores commit messages entirely.**
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
-> Read the `linear-state-transitions` reference for the auto-advance rules (target state, never-downgrade guard, id extraction, silent-with-report contract). Applied after the PR update succeeds.
-> Read the `release-convention` reference to detect the repo's release automation (release-please, semantic-release, changesets, commitlint) and match the title/commits — on a squash-merge repo the PR title becomes the release commit, and breaking changes need `type(scope)!:` plus a `BREAKING CHANGE:` footer.
-
 ## Platform specifics
 
-- **Find the PR** (when not given): get the current branch via `git status`, extract owner/repo from the remote, then `github__list_pull_requests` with a `head` filter (format `owner:branch`) and `state: open`. See "Branch reuse" in the `scm-create-description` reference. If no open PR exists, ask the user before creating one via `github__create_pull_request` (fall back to `gh pr create` if MCP creation is unavailable).
+- **Find the PR** (when not given): get the current branch via `git status`, extract owner/repo from the remote, then `github__list_pull_requests` with a `head` filter (format `owner:branch`) and `state: open`. See "Branch reuse" in `scm-create-description`. If no open PR exists, ask the user before creating one via `github__create_pull_request` (fall back to `gh pr create` if MCP creation is unavailable).
+- **Issue trailers.** Select `closes` vs `refs` and the per-tracker syntax per `commit-trailers`. Carry Linear ids in the title too, and give each linked issue its own description section per `scm-create-description`.
 - **Preserve multi-commit history.** If the branch carries multiple meaningful commits (e.g. grouped by task), it should NOT be squash-merged — a merge or rebase merge keeps the separate commits. Squash-merge is fine only when the branch is a single logical change. GitHub picks the merge method at merge time, so call this out in the PR when it matters.
 - **Match the release automation.** Detect the repo's release method per `release-convention`. If it is commit-driven (release-please / semantic-release) and the repo squash-merges, the PR title becomes the release commit — make it a valid Conventional Commit with the correct type and, for breaking changes, `type(scope)!:` plus a `BREAKING CHANGE:` footer in the body. If the repo uses changesets, ensure the branch includes a changeset file before merge (offer to add one).
 - **Analyze the PR:** read details via `github__pull_request_read` (method `get`), the full diff via `github__pull_request_read` (method `get_diff`), and commit history via `github__list_commits` filtered to the PR branch. Note the existing title and body (may contain a template or prior content).
@@ -38,6 +31,6 @@ references:
   5. `pull_request_template.md` (repo root)
   6. `docs/PULL_REQUEST_TEMPLATE.md`
   7. `docs/pull_request_template.md`
-  If a template is found, announce the path (e.g., "Found template at `.github/PULL_REQUEST_TEMPLATE.md`") and use it as the starting scaffold. If none is found, fall back to the standard description format in the reference.
-- **Update the PR** (only after approval): update both `title` (if changed) and `body` via `github__update_pull_request`, then confirm success. Once the PR is created/updated and ready to look at, by default open its web URL in the browser (e.g. via `hyprpilot__open`) — skip only if the user explicitly said not to ("just give me the link", "don't open it", "no browser").
-- **Transition linked Linear issues to `In Review`:** after the PR update succeeds, follow the `linear-state-transitions` reference — extract Linear ids from the PR body (`refs K-xxx` / `closes K-xxx` trailers) and the branch's commit messages, fetch each id's current `statusType`, and call `save_issue` with `state: "In Review"` (skip when already `Done` / `Canceled` or already `In Review`; never downgrade). Report one line per issue touched: `Linear state: moved K-xxx → In Review (was Todo).` Silent-with-report — no prompt; the user opts out by saying "don't move the Linear state" in the PR-create request. Skip entirely when zero Linear ids are found.
+  If a template is found, announce the path (e.g., "Found template at `.github/PULL_REQUEST_TEMPLATE.md`") and use it as the starting scaffold. If none is found, fall back to the standard description format in `scm-create-description`.
+- **Update the PR** (only after approval): present the drafted title and body per `output-diff`, then update both `title` (if changed) and `body` via `github__update_pull_request` and confirm success. Once the PR is created/updated and ready to look at, by default open its web URL in the browser (e.g. via `hyprpilot__open`) — skip only if the user explicitly said not to ("just give me the link", "don't open it", "no browser").
+- **Transition linked Linear issues to `In Review`:** after the PR update succeeds, follow `linear-state-transitions` — extract Linear ids from the PR body (`refs K-xxx` / `closes K-xxx` trailers) and the branch's commit messages, fetch each id's current `statusType`, and call `save_issue` with `state: "In Review"` (skip when already `Done` / `Canceled` or already `In Review`; never downgrade). Report one line per issue touched: `Linear state: moved K-xxx → In Review (was Todo).` Silent-with-report — no prompt; the user opts out by saying "don't move the Linear state" in the PR-create request. Skip entirely when zero Linear ids are found.

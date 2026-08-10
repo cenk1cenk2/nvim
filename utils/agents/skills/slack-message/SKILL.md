@@ -4,8 +4,6 @@ description: 'slack-message Process a Slack message link - reads the thread, und
 disableModelInvocation: true
 argumentHint: "[slack-message-url] [what to do with it]"
 references:
-  - ../references/present-first.md
-  - ../references/harness-connectors.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
   - ../references/output-diff.md
@@ -13,48 +11,24 @@ references:
 
 ## Slack Message Processor
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> **PREREQUISITE:** Read the `slack-prerequisite` reference for workspace detection rules.
-> A Slack workspace skill (`slack-kilic` or `slack-laravel`) MUST be active before this skill runs.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> **PREREQUISITE:** A Slack workspace skill (`slack-kilic` or `slack-laravel`) MUST be active before this skill runs — workspace detection per `slack-prerequisite`.
 
 ## Context
 
-> Read the `slack` reference for available Slack MCP tools, response conventions, reaction rules, and large results handling. **The `slack__*` names in the steps below are intents, not transport choices** — route every call through the harness-provided Slack integration per the absolute rule in that reference and in `harness-connectors`; the workspace server is the stated fallback.
+Workspace routing, response conventions, reaction rules, and large-results handling: `slack`. The steps below name the kilic tools (`slack-kilic__*`); on the Laravel workspace use the connector column of that reference's routing table and load its deferred tools via `ToolSearch` first.
 
 The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `linear-issue-pickup`, `obsidian-note`, `code-pull`) or performing direct actions (research, code changes, summarization).
 
-## Tool Mapping by Workspace
-
-Tool names differ per workspace. Use the correct tools based on which workspace skill is active:
-
-| Action | `slack-kilic` | `slack-laravel` (`mcp__claude_ai_Slack__*`, deferred) |
-|--------|------------------------|-----------------------------------------------------|
-| Read channel | `slack-kilic__slack_get_channel_history` | `mcp__claude_ai_Slack__slack_read_channel` |
-| Read thread | `slack-kilic__slack_get_thread_replies` | `mcp__claude_ai_Slack__slack_read_thread` |
-| List channels | `slack-kilic__slack_list_channels` | `mcp__claude_ai_Slack__slack_search_channels` |
-| Get users | `slack-kilic__slack_get_users` | `mcp__claude_ai_Slack__slack_search_users` |
-| Get user profile | `slack-kilic__slack_get_user_profile` | `mcp__claude_ai_Slack__slack_read_user_profile` |
-| Post message | `slack-kilic__slack_post_message` | `mcp__claude_ai_Slack__slack_send_message` |
-| Reply to thread | `slack-kilic__slack_reply_to_thread` | `mcp__claude_ai_Slack__slack_send_message` (with thread) |
-| Add reaction | `slack-kilic__slack_add_reaction` | `mcp__claude_ai_Slack__slack_add_reaction` |
-
-**`slack-laravel` tools are deferred** — load via `ToolSearch` before use. See `harness-connectors` reference.
-
 ## Process
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 1. **Parse the message.**
    - Parse the Slack message URL to identify the channel ID and message timestamp.
 
 2. **Extract the message.**
-   - Use `slack__slack_get_channel_history` to fetch the message if only the channel and timestamp are known.
-   - If the message is part of a thread, use `slack__slack_get_thread_replies` to read the **entire thread** (all replies).
-   - Resolve user IDs to real names using `slack__slack_get_users` or `slack__slack_get_user_profile` for a readable summary.
-   - If the URL contains a channel name instead of an ID, use `slack__slack_list_channels` to resolve it.
+   - Use `slack-kilic__slack_get_channel_history` to fetch the message if only the channel and timestamp are known.
+   - If the message is part of a thread, use `slack-kilic__slack_get_thread_replies` to read the **entire thread** (all replies).
+   - Resolve user IDs to real names using `slack-kilic__slack_get_users` or `slack-kilic__slack_get_user_profile` for a readable summary.
+   - If the URL contains a channel name instead of an ID, use `slack-kilic__slack_list_channels` to resolve it.
    - If the thread references other channels or messages, note them but do not fetch unless the user asks.
 
 3. **Summarize the context.**
@@ -73,27 +47,27 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
      - **Create an Obsidian note** — invoke `obsidian-note` with the thread context.
      - **Research a topic** — use web search, Context7, or codebase exploration based on what the thread discusses.
      - **Write or modify code** — use the thread context to inform implementation.
-     - **Summarize** — reply in thread via `slack__slack_reply_to_thread` with the summary and add `:dark_sunglasses:` reaction to the message.
-     - **Reply** — draft a response and present it for approval. **Always use `slack__slack_reply_to_thread`** to keep conversations in threads. Only use `slack__slack_post_message` for a new channel-level message when there is no thread context or the user explicitly asks.
-     - **React** — add an emoji reaction via `slack__slack_add_reaction` when the user asks.
+     - **Summarize** — reply in thread via `slack-kilic__slack_reply_to_thread` with the summary and add `:dark_sunglasses:` reaction to the message.
+     - **Reply** — draft a response and present it for approval per `output-diff`. **Always use `slack-kilic__slack_reply_to_thread`** to keep conversations in threads. Only use `slack-kilic__slack_post_message` for a new channel-level message when there is no thread context or the user explicitly asks.
+     - **React** — add an emoji reaction via `slack-kilic__slack_add_reaction` when the user asks.
 
 5. **Compose with other skills.**
    - When delegating to another skill, pass the thread context as input — do not make the other skill re-fetch it.
-   - Respect the invoked skill's workflow (plan mode, prompts, etc.).
+   - Respect the invoked skill's own workflow, posture, and prompts.
    - If multiple skills are relevant, ask the user which to use.
 
 ## Key Principles
 
 - **Read the full thread.** A single message without thread context is often insufficient. Always fetch the complete thread.
 - **Compose, don't duplicate.** When another skill handles the action better, invoke it with the gathered context rather than reimplementing its workflow.
-- Follow the response conventions (thread vs channel, `:dark_sunglasses:`, approval rules) from the slack reference.
+- Follow the response conventions — thread vs channel, `:dark_sunglasses:`, approval rules — per `slack`.
 
 ## Examples
 
 **User says:** `slack-message https://slack.com/archives/C123/p456 create a Linear issue from this`
 
 1. Parse URL → channel `C123`, timestamp `456`.
-2. Fetch thread via `slack__slack_get_thread_replies`.
+2. Fetch thread via `slack-kilic__slack_get_thread_replies`.
 3. Resolve user IDs to names.
 4. Summarize: "Alice reported a DNS resolution bug in cluster-rubik. Bob confirmed it affects all pods."
 5. Invoke `linear-kilic` → compose with issue creation using thread context.
@@ -107,7 +81,7 @@ Tool names differ per workspace. Use the correct tools based on which workspace 
 1. Parse URL, fetch full thread.
 2. Resolve user names.
 3. Present summary in chat.
-4. Reply in thread with summary via `slack__slack_reply_to_thread`.
+4. Reply in thread with summary via `slack-kilic__slack_reply_to_thread`.
 5. Add `:dark_sunglasses:` reaction.
 
 **Result:** Summary posted in thread, reaction added.

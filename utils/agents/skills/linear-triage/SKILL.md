@@ -5,18 +5,13 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-issue-states.md
-  - ../references/present-first.md
 ---
 
 ## Linear Triage
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
-
-> Read the `linear-issue-states` reference for state meanings and transition rules when recommending target states.
+State meanings and transition rules for recommending target states: `linear-issue-states`.
 
 ## Process
 
@@ -59,7 +54,7 @@ Present a recommendation covering:
 8. **Description refinement** — if the description is vague, incomplete, or could be improved, suggest specific changes. Follow the approach from the `linear-issue-update` skill: identify what's missing or unclear, draft improvements, and present them for approval.
 9. **Estimate** — recommend an estimate if missing.
 
-**Present recommendations as a concise block per issue.** Example:
+**Present recommendations as a concise block per issue**, formatted per `output-diff`, before writing anything to Linear. Example:
 
 ```
 ### K-123: Fix authentication timeout on mobile

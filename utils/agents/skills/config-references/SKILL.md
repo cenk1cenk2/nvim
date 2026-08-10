@@ -3,7 +3,6 @@ name: config-references
 description: 'config-references Create, update, or review reference files in the skills directory. Triggers: "create/add/update a reference", "extract this to a reference". Do NOT use for skills themselves (config-skills) or loading skills (load-skills).'
 disableModelInvocation: true
 references:
-  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/commit-push-scoped.md
@@ -12,13 +11,7 @@ argumentHint: "[create|update|review] [reference-name] [description or context]"
 
 ## Reference Management
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed reference change before writing.
-
-> **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into references or their examples unless the user explicitly allows it; use placeholders instead.
-
-> **Commit and push.** Read the `commit-push-scoped` reference — after edits land, stage ONLY the reference files and the consuming skills whose frontmatter this run changed, then commit as `<type>(agents): <subject>` and push to `rolling` via `git-commit` and `git-push`. Ask first by default; skip the ask when the request already blessed the push.
+Present proposed changes per `output-diff` before writing. Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`.
 
 ## Reference Directory Structure
 
@@ -45,7 +38,16 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 
 ## How References Resolve
 
-Hyprpilot resolves a skill's declared `references:` paths **relative to that skill's own bundle directory** — the directory holding its `SKILL.md`. There is no separate references root. A path that does not resolve from there is simply absent from the bundle: the sidecar logs nothing to the agent and does not error, so a typo fails silently and the skill runs without the convention it declared.
+**Mechanically, references are a separate fetch:** `read_skill` and `hyprpilot://skills/<slug>` return the body alone; only `load_skill_references { slug }` and `hyprpilot://references/<slug>` bundle the declared files. **By policy they always arrive anyway** — `AGENTS.md` §II requires every skill read to be followed by a reference bundle for the same slug. So the `references:` array is the effective load list, **declaring a reference is a token cost paid on every load of that skill**, and a reference the body never uses is waste multiplied by every invocation.
+
+That splits references into two tiers, and choosing the wrong one is the most common authoring mistake:
+
+| Tier | Mechanism | Use when |
+|------|-----------|----------|
+| **Declared** | listed in `references:`; injected on every load | every run of the consuming skill uses it |
+| **Path-read** | named in the body **with its absolute path**, read only when that branch is reached | only some runs use it — one runtime out of three, one platform out of two, an error path |
+
+Hyprpilot resolves declared paths **relative to that skill's own bundle directory** — the directory holding its `SKILL.md`. There is no separate references root. A path that does not resolve is simply absent from the bundle: nothing is logged and nothing errors, so a typo fails silently and the skill runs without the convention it declared. A missed path-read fails the same silent way.
 
 `load_skill_references { slug }` — equivalently the `hyprpilot://references/<slug>` resource — returns every declared reference concatenated with `--- <basename> ---` delimiters. Run it after editing a reference or a consumer's frontmatter: a missing delimiter block is the only signal that a path is wrong.
 
@@ -82,7 +84,7 @@ Hyprpilot resolves a skill's declared `references:` paths **relative to that ski
    - Read its content.
    - Check which skills declare it in their frontmatter.
    - Bundle one consuming skill's references and confirm this file appears — a declared path that silently fails to resolve looks identical to a correct one in the frontmatter.
-   - Identify orphaned references (declared by no skill).
+   - Identify orphaned references (declared by no skill). **The `harness-<provider>-<consumer>` files are declared by nobody on purpose** — they are path-read, named in bodies with an absolute path. They are never orphans; check that a consuming body still names each one instead.
    - Identify stale content (conventions that no longer apply).
    - Check for duplication across references.
 3. Present findings and propose improvements.
@@ -114,7 +116,7 @@ harness-claude-agent-background.md     # waiting/waking mechanics for the agent-
 Rules:
 
 - **Split by consumer, not by provider alone.** One file per (runtime × consumer) keeps a skill loading only the mechanics it needs. Do not accumulate every runtime detail into a single file per provider.
-- **The consuming skill declares every provider's file** in `references:` and reads only the active one. Directives name the family — `harness-<provider>-agent-background` — never a single runtime's file.
+- **The consuming skill does NOT declare the provider files — they are path-read.** Declaring all three injects all three when at most one is usable, so two are guaranteed waste on every load. The body names the family with an absolute path — `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` — and resolves `<provider>` at runtime. Never name a single runtime's file.
 - **Content is concrete on purpose.** Tool names, parameter names, defaults, env vars, limits, and known traps belong here; this is the one place where naming a specific runtime's tool is correct.
 - **Version-mark claims and flag what you could not confirm.** Runtime behavior changes between releases — an unmarked claim rots invisibly, and a guessed one is worse than an absent one. Write `⚠ Unverified` in place rather than asserting.
 - **Do not create a provider's file until its behavior is known.** An empty harness file implies coverage that does not exist.
@@ -138,7 +140,7 @@ After applying reference edits and any consumer frontmatter updates, hand off pe
 
 ## Key Principles
 
-- References are **progressive disclosure** — keep them focused on one topic.
+- References are **bundled whenever their skill loads** — keep them focused on one topic and ruthlessly short, because every consumer pays their full length on every load.
 - A reference should be **self-contained** — readable without loading other references.
 - **No frontmatter** — only skills have YAML frontmatter.
 - **No workflow steps** — references contain conventions and patterns, not process instructions.

@@ -15,7 +15,7 @@ Use it when the output is several items that each need understanding or a decisi
 
 ## Toggle
 
-> Read the `mode-toggle` reference for the on/off mechanics — persistence, layering, bare-stop handling, and what never counts as a toggle signal.
+On/off mechanics per `mode-toggle`.
 
 - **On:** `/output-chunks`, "chunk this", "one at a time", "walk me through it", "go chunk by chunk", "don't dump it all at once".
 - **Off:** "stop chunking", "just give me all of it", "dump it", "normal mode", or the chunk set completing.

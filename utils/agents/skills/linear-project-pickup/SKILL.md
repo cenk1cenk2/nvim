@@ -1,6 +1,6 @@
 ---
 name: linear-project-pickup
-description: 'linear-project-pickup Prepare a Linear project or slice for implementation - fetch issues, documents, blockers, comments, and execution scope. Triggers: "pick up this project", "implement this project slice", project URL for execution. Do NOT use for read-only refreshes or structure audits.'
+description: 'linear-project-pickup Prepare a Linear project or slice for implementation - fetch issues, documents, blockers, comments, and execution scope. Triggers: "pick up this project", "implement this project slice". This skill preps and waits for a go; /agents-pickup executes. Do NOT use for read-only refreshes (/linear-project-read) or structure audits (/linear-project-reconcile).'
 argumentHint: "[project name or URL] [optional slice/filter]"
 references:
   - ../references/linear-prerequisite.md
@@ -11,24 +11,16 @@ references:
   - ../references/linear-chunk-issues.md
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
-  - ../references/present-first.md
   - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Project Pickup
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+> **THE PROJECT RECORD IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.** Record vs conversation authority per `linear-issue-philosophy`, applied before treating the project's issues or description as requirements. Records go stale — written before the work started, by someone who did not yet know what implementation would reveal. The user may skip, reorder, add, or override anything in them; never push back with "but the project says…".
 
-> **THE PROJECT RECORD IS A TEMPLATE. THE USER IS THE SOURCE OF TRUTH.** Read the `linear-issue-philosophy` reference before treating the project's issues or description as requirements. Records go stale — written before the work started, by someone who did not yet know what implementation would reveal. The user may skip, reorder, add, or override anything in them; never push back with "but the project says…".
-
-> Read the `linear-pickup-execution` reference for scope resolution, early questions, issue selection, state updates, and handoff to `agents-pickup`.
-> Read the `linear-project-documents` reference for shared project document handling and for propagating investigations, solved problems, and deviations as tightly focused documents via the `linear-document` skill.
-> Read the `linear-scm-discovery` reference when the user explicitly asks to enrich pickup context from GitHub/GitLab, discover repositories, or produce agent-ready implementation guidance. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
-> Read the `linear-chunk-issues` reference for mapping project issues to executable tasks.
-> Read the `linear-state-transitions` reference before moving selected issues to `In Progress`.
-> Read the `output-diff` reference before writing to Linear.
+Scope resolution, early questions, issue selection, state updates, and handoff to `agents-pickup` follow `linear-pickup-execution`; apply `linear-state-transitions` before moving selected issues to `In Progress`, and `output-diff` before writing to Linear.
 
 ## Purpose
 
@@ -50,11 +42,12 @@ This skill turns a project or project slice into an execution-ready issue set. I
 
 3. **Read context.**
    - Read descriptions, comments, relations, labels, estimates, and priorities for selected issues.
-   - Read project documents that provide agent instructions, migration guides, candidate matrices, or shared verification commands.
-   - If explicitly requested, use SCM discovery to enrich repository inventory, implementation guidance, prior art, file boundaries, and verification expectations.
+   - Read project documents that provide agent instructions, migration guides, candidate matrices, or shared verification commands, handled per `linear-project-documents` — including propagating investigations, solved problems, and deviations as tightly focused documents via the `linear-document` skill.
+   - When the user explicitly asks to enrich pickup context from GitHub/GitLab, discover repositories, or produce agent-ready implementation guidance, use SCM discovery per `linear-scm-discovery` to enrich repository inventory, implementation guidance, prior art, file boundaries, and verification expectations. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
    - Identify stale descriptions, contradictory comments, missing details, and project documentation that needs updates.
 
 4. **Prepare execution set.**
+   - Map project issues to executable tasks per `linear-chunk-issues`.
    - Group issues by repository, concern, and dependency.
    - Identify direct implementation candidates, agent candidates, sequential prerequisites, and parallel-safe groups.
    - Note likely branch/PR boundaries.

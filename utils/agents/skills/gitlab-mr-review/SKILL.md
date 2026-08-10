@@ -4,7 +4,6 @@ description: 'gitlab-mr-review Autonomously review the current GitLab MR with in
 disableModelInvocation: true
 argumentHint: "[MR number or URL]"
 references:
-  - ../references/present-first.md
   - ../references/scm-review-workflow.md
   - ../references/scm-gitlab.md
   - ../references/scm-detect.md
@@ -13,12 +12,7 @@ references:
 
 ## GitLab MR Review
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-review-workflow` reference for the full review workflow, tone, and key principles.
-> Read the `scm-gitlab` reference for GitLab MCP tools and local git (raw `git` CLI).
-> Read the `scm-detect` reference for platform detection and local git operations.
-> Read the `review-findings` reference for finding format, severity tags, and tone rules.
+Review workflow and tone per `scm-review-workflow`. GitLab tooling and local git per `scm-gitlab`; platform detection per `scm-detect`. Finding format and severity tags per `review-findings`.
 
 This skill performs an autonomous code review on a GitLab merge request using native inline discussion threads. It does NOT draft findings for user approval — it reviews the code and posts annotations and a summary directly.
 
@@ -72,12 +66,7 @@ Rules:
 - For multi-line replacements, use the offset syntax: `suggestion:-2+0` to include 2 lines above the commented line in the replacement range.
 - One suggestion per comment. If a fix spans non-contiguous lines, use separate discussion threads.
 
-**Comment body format:**
-
-- Start with severity tag when not obvious: `**bug:**`, `**risk:**`, `**nit:**`, `**question:**`.
-- Terse description of the issue.
-- Suggestion block if a concrete fix exists.
-- The *why* only when the fix isn't obvious.
+**Comment body format:** follow "Inline Comment Body" in the `review-findings` reference.
 
 **Example comment body:**
 

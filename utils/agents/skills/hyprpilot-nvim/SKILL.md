@@ -1,6 +1,6 @@
 ---
 name: hyprpilot-nvim
-description: Editor-aware work through the captain's running Neovim - LSP navigation over manual grepping, diagnostics, formatting, and driving their windows. Auto-invoked the moment the hyprpilot-nvim MCP server is detected in the session, before any symbol search or file navigation. Do NOT use for editing file contents (the server is read-and-navigate only).
+description: 'hyprpilot-nvim Auto-invoked the moment the hyprpilot-nvim MCP server is detected, before any symbol search or file navigation. Editor-aware work through the running Neovim - LSP navigation over manual grepping, diagnostics, formatting, and driving windows. Do NOT use for editing file contents (the server is read-and-navigate only).'
 ---
 
 ## Context

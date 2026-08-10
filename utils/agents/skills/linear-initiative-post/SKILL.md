@@ -5,21 +5,14 @@ argumentHint: "[initiative-name or ID]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/present-first.md
   - ../references/linear-absolute-approval.md
 ---
 
 ## Linear Initiative Update Post
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
-## Prerequisite
-
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
-
-> **Absolute approval required.** Read the `linear-absolute-approval` reference — initiative writes always require explicit approval for the specific change; the present-first blessing shortcut (`g` / `go` / autopilot) does NOT clear them. Never call `save_status_update` before the user approves the drafted post.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+> **⛔ Absolute approval required per `linear-absolute-approval`.** Initiative writes always require explicit approval for the specific change; an upfront blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_status_update` before the user approves the drafted post.
 
 ## Process
 
@@ -31,7 +24,7 @@ references:
 6. **Identify deviations** — projects that were descoped, paused, re-prioritized, or that hit unexpected challenges since the last update. These form the deviations section (only if applicable).
 7. **Identify what's next** — the immediate direction based on in-flight and upcoming projects, for the closing sentence(s).
 8. **Draft the update post** following the format below.
-9. **Present the draft to the user.** Iterate based on feedback.
+9. **Present the draft to the user** in logical chunks per `output-diff`. Iterate based on feedback.
 10. **Post only after explicit user approval** using `save_status_update` with `type: "initiative"` and the `initiative` id.
 
 ## Post Format

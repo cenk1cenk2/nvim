@@ -3,18 +3,14 @@ name: github-ci-create
 description: 'github-ci-create Create or update GitHub Actions workflows for the current repo. Triggers: "add CI", "set up GitHub Actions", "modify the workflow". Do NOT use for diagnosing failures (github-ci-fix), GitLab pipelines (gitlab-ci-create), or PR descriptions (github-pr-create).'
 disableModelInvocation: true
 references:
-  - ../references/present-first.md
   - ../references/scm-github.md
 ---
 
 ## GitHub CI: Create and Update GitHub Actions Workflows
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
 ## Core Requirements
 
-> Read the `scm-github` reference for GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection
-
+- GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection per `scm-github`.
 - **ALWAYS prefer existing, well-maintained GitHub Actions over writing custom steps.** Search GitHub for a preexisting action before building your own.
 - **ALWAYS fetch the latest version** of any action from its GitHub repository before referencing it in a workflow. Do not hardcode old versions.
 - **ALWAYS consult documentation** for actions and tools via GitHub MCP when unsure about configuration options.

@@ -4,7 +4,6 @@ description: 'github-pr-read Read the full state of a GitHub PR - description, c
 disableModelInvocation: true
 argumentHint: "[PR number or URL]"
 references:
-  - ../references/present-first.md
   - ../references/scm-read-summary.md
   - ../references/scm-github.md
   - ../references/scm-detect.md
@@ -12,11 +11,7 @@ references:
 
 ## GitHub PR Read
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-read-summary` reference for the full read/summarize workflow and key principles.
-> Read the `scm-github` reference for GitHub MCP tools and local git (raw `git` CLI).
-> Read the `scm-detect` reference for platform detection and local git operations.
+Run the read/summarize workflow per `scm-read-summary`, with GitHub MCP tools per `scm-github` and platform detection plus local git (raw `git` CLI) per `scm-detect`.
 
 ## Platform specifics
 

@@ -3,19 +3,12 @@ name: config-repository
 description: 'config-repository Create or revise repo knowledge base files (CLAUDE.md, AGENTS.md, .local variants). Triggers: "update CLAUDE.md", "create AGENTS.md", "document decisions", or detected durable conventions/rule drift mid-session. Do NOT use for the central AGENTS.md guidelines (config-agents), skills (config-skills), or MCP configs (config-mcp).'
 disableModelInvocation: false
 references:
-  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
 argumentHint: "[local] [optional: what changed or focus area]"
 ---
 
 ## Repository Knowledge Base
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each proposed section change before writing.
-
-> **No private specifics.** Read the `redact-private-data` reference — never write real private/sensitive specifics (customer names, account IDs, secrets, internal hostnames, real resource IDs) into the knowledge base or its examples unless the user explicitly allows it; use placeholders instead.
 
 ## Purpose
 
@@ -66,7 +59,7 @@ When no knowledge base file exists yet:
    - What tools (MCP or otherwise) were used and how?
 
 3. **Draft the full document** following the Document Structure below.
-4. **Present the draft** in chat for approval.
+4. **Present the draft** in chat per `output-diff` for approval.
 5. **Iterate** based on user feedback.
 6. **After approval**, create the file.
 
@@ -88,7 +81,7 @@ When the knowledge base file already exists:
    - Identify information that is now outdated or wrong — **mark for deletion**.
    - Identify new information that should be added.
 
-4. **Present proposed changes** to the user:
+4. **Present proposed changes** to the user per `output-diff`:
    - For each change, show what exists and what you propose.
    - Explicitly call out deletions — explain why the content is outdated.
    - Group changes by section.
@@ -175,6 +168,7 @@ Non-obvious things that trip up agents or developers. Things that look like they
 > When the user does explicitly ask for decision history, `Decision Log` and `Approaches Tried`
 > are the sections for it, and nothing else in the file adopts that voice.
 
+- **No private specifics** — keep customer names, account IDs, secrets, internal hostnames, and real resource IDs out of the file and its examples per `redact-private-data`; use placeholders.
 - **Always write how and why** — not just what. "We use X" is useless. "We use X because Y, and Z doesn't work because W" is useful.
 - **Be concise** — this file is loaded into agent context windows. Every line must earn its place.
 - **Delete aggressively** — outdated information is worse than no information. If something changed, remove the old version entirely.

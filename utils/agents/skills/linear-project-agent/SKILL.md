@@ -6,26 +6,17 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/linear-description-structure.md
   - ../references/output-diff.md
-  - ../references/present-first.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
   - ../references/sourcebot-discovery.md
   - ../references/linear-pickup-execution.md
 ---
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+Issue/project description format per `linear-description-structure`.
 
-> Read the `linear-description-structure` reference for issue/project description format or filesystem tools.
-
-> Read the `linear-project-documents` reference for using Linear documents as shared agent context and for propagating investigations, plans, solved problems, and deviations. When issues would repeat the same instructions, keep issues light and store the shared guidance in project documents. Attach these documents on demand with the `linear-document` skill, kept tightly focused — one concern per document, like obsidian repository notes.
-
-> Read the `linear-scm-discovery` reference when the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or make the project easier for agents to implement. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
-
-> Read the `output-diff` reference before writing project documents or issues to Linear — present document drafts and issue content in logical chunks for user approval.
-
-> Read the `linear-pickup-execution` reference when the user wants the structured project executed after creation or review. Use `agents-pickup` for the execution phase instead of embedding implementation into this structure skill.
+Use Linear documents as shared agent context per `linear-project-documents`, and for propagating investigations, plans, solved problems, and deviations. When issues would repeat the same instructions, keep issues light and store the shared guidance in project documents. Attach these documents on demand with the `linear-document` skill, kept tightly focused — one concern per document, like obsidian repository notes.
 
 ## What is an Agent Project?
 
@@ -49,15 +40,15 @@ LLM agents work best when:
 
 1. **Gather context** — Understand the work to be done. Ask the user what the project should accomplish.
 2. **Identify repositories** — Determine which repositories are involved. If multiple repos, consider splitting into sub-projects.
-3. **Discover implementation context** — If explicitly requested, run SCM discovery to identify involved repositories, existing implementation patterns, related MRs/PRs, likely file boundaries, and verification commands.
+3. **Discover implementation context** — When the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or make the project easier for agents to implement, run SCM discovery per `linear-scm-discovery` to identify involved repositories, existing implementation patterns, related MRs/PRs, likely file boundaries, and verification commands. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
 4. **Break down into layers** — Group work by concern (infrastructure, workload, networking, DNS, etc.).
 5. **Extract shared context** — If many issues need the same instructions, candidate matrix, repository inventory, research, or verification commands, draft a project document for that shared information.
 6. **One issue per layer per repo** — Each issue touches ONE repository and ONE layer.
 7. **Keep repetitive issues light** — Put only the repo/scope, issue-specific checklist or delta, exceptions, and a "Read first" reference to the project document in each issue.
 8. **Set dependencies** — Use `blockedBy`, `blocks`, and `parentId` fields for dependency ordering. Never put this in descriptions.
 9. **Validate** — Run the issue checklist (see below).
-10. **Present to user** — Show the structured project, project documents, and issues for approval.
-11. **Execution handoff** — If the user wants work to start, hand off the approved project structure to `agents-pickup`.
+10. **Present to user** — Show the structured project, project documents, and issues for approval per `output-diff`, before anything is written to Linear.
+11. **Execution handoff** — If the user wants work to start, hand off the approved project structure to `agents-pickup` per `linear-pickup-execution`, instead of embedding implementation into this structure skill.
 
 ### Update
 

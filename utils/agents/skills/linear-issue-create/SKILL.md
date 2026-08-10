@@ -10,21 +10,16 @@ references:
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
   - ../references/sourcebot-discovery.md
-  - ../references/present-first.md
   - ../references/output-diff.md
 ---
 
 ## Linear Issue Creation
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Core Requirements
 
-> Read the `linear-mandatory-fields` reference for team, state, labels, estimate, priority, and relations rules.
-
-> Read the `linear-issue-states` reference for state meanings, transition rules, and when to use which state.
+Team, state, labels, estimate, priority, and relations per `linear-mandatory-fields`. State meanings and transition rules per `linear-issue-states`.
 
 Additional rules for issue creation:
 
@@ -34,19 +29,19 @@ Additional rules for issue creation:
 - Keep issue titles concise and replicate the styling of encountered issues in the same project.
 - If the user creates an issue and also asks for a non-default status, create with the best matching explicit state or compose with `linear-issue-status` immediately after creation.
 
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
+Present the drafted issue in logical chunks for user approval per `output-diff` before writing to Linear.
 
-> Read the `linear-project-documents` reference for packaging local/file reference context into Linear documents or comments when an issue points an implementation agent at files, screenshots, examples, or other context that may not be available from the issue text alone.
+When an issue points an implementation agent at files, screenshots, examples, or other context that may not be available from the issue text alone, package it into Linear documents or comments per `linear-project-documents`.
 
-> Read the `linear-scm-discovery` reference when the user explicitly asks to enrich the issue from GitHub/GitLab or repository context. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available. Use discovered facts to make the issue easier to implement, but do not run broad SCM discovery by default.
+When the user explicitly asks to enrich the issue from GitHub/GitLab or repository context, follow `linear-scm-discovery`, using `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available. Use discovered facts to make the issue easier to implement, but do not run broad SCM discovery by default.
 
 ## Issue Structure
 
-> Read the `linear-description-structure` reference for the issue description format.
+Issue description format per `linear-description-structure`.
 
 ## Research & Documentation
 
-> Read the `linear-research-documentation` reference for the research process, analysis, appendix, and link conventions.
+Research process, analysis, appendix, and link conventions per `linear-research-documentation`.
 
 ## Related Skills
 

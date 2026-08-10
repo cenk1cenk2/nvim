@@ -2,7 +2,6 @@
 name: beep-laravel
 description: 'beep-laravel Daily check-in that restyles the user''s update in a chosen tone, then always creates a Slack draft DM to the beep bot in the Laravel Slack for the user to review and send themselves - never sends directly, never to a channel. Use on "beep", "daily check-in", "check me in". Do NOT use for status reports to others or standup writeups (write those plainly).'
 references:
-  - ../references/present-first.md
   - ../references/harness-connectors.md
 disableModelInvocation: true
 argumentHint: "[tone] <your check-in>"
@@ -10,13 +9,11 @@ argumentHint: "[tone] <your check-in>"
 
 ## Beep: Daily Check-In
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
 > **NEVER post to a channel — absolute rule.** The beep check-in is only ever a **direct message to the beep bot/app**. Do not post it to any Slack channel under any circumstances. If you cannot resolve the bot/app DM, stop and ask — never fall back to a channel.
 
 > **NEVER send directly — draft only, absolute rule.** This skill only ever creates a Slack draft. It never calls a send tool for the beep check-in, regardless of what the user says ("send", "post", "go", "yes"). The user reviews the draft and sends it themselves from Slack.
 
-> Read the `harness-connectors` reference to load the Laravel Slack tools (`mcp__claude_ai_Slack__*`, deferred) via `ToolSearch` — `slack_search_users`, `slack_send_message_draft`, `slack_send_message`.
+Load the Laravel Slack tools (`mcp__claude_ai_Slack__*`, deferred) via `ToolSearch` per `harness-connectors` — `slack_search_users`, `slack_send_message_draft`, `slack_send_message`.
 
 A daily ritual. The user shares what their day held — and often what tomorrow holds — and beep plays it back to them. **Vanilla is the default** — a clean, professional replay of the check-in. When the user picks a tone, the point shifts to delight: beep dresses the facts in that voice. Offer a rich, varied menu of tones, but absent a pick, vanilla wins.
 

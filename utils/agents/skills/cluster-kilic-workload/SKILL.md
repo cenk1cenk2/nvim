@@ -4,15 +4,12 @@ description: 'cluster-kilic-workload Create a new workload deployment repo in th
 disableModelInvocation: true
 argumentHint: "[workload-name] - e.g., 'seafile', 'immich', 'my-app'"
 references:
-  - ../references/present-first.md
   - ../references/kilic-argocd-pvc-restore.md
 ---
 
 ## Cluster Workload Creator
 
 > **IMPORTANT: This skill creates or modifies a workload deployment repository in the `cluster/workloads` group on GitLab (`gitlab.kilic.dev`).**
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## How Workloads Work in This System
 
@@ -528,9 +525,7 @@ Place in a `db/` subfolder with its own `kustomization.yaml`.
 
 ### Restore (data and databases)
 
-> Read the `kilic-argocd-pvc-restore` reference when the workload needs to restore PVC data or a database from an S3 archive — it carries the suspended-CronJob templates for file data, PostgreSQL (`jkaninda/pg-bkup`), and MariaDB/MySQL (`jkaninda/mysql-bkup`), plus the S3 URL sources and naming conventions.
-
-Restore is the counterpart to the backup patterns above and uses the same tooling. Restore jobs are **always** `suspend: true` — they ship dormant via kustomize and are triggered by hand.
+Restore is the counterpart to the backup patterns above and uses the same tooling. Restore jobs are **always** `suspend: true` — they ship dormant via kustomize and are triggered by hand. Build them from the templates and S3 conventions in `kilic-argocd-pvc-restore`.
 
 ---
 

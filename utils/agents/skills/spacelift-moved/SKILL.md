@@ -2,7 +2,6 @@
 name: spacelift-moved
 description: 'spacelift-moved Analyze Spacelift plan output for delete/create cycles replaceable with Terraform moved blocks. Accepts a PR, branch, commit, or Actions link. Triggers: "spacelift moved", "avoid destroy/create". Do NOT use for general Spacelift ops (spacelift-laravel), impact reports (spacelift-report), or PR descriptions (github-pr-create).'
 references:
-  - ../references/present-first.md
   - ../references/scm-github.md
   - ../references/spacelift-github.md
   - ../references/output-diff.md
@@ -10,31 +9,21 @@ references:
 
 ## Spacelift Moved Block Analysis
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
 ## Prerequisite
 
 > **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
 > If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-laravel` via the `spacelift-laravel` skill (load it as defined in `load-skills`).
 
-## Core Requirements
-
-> Read the `spacelift-github` reference for input parsing, PR resolution, and Spacelift run discovery
-
-> Read the `scm-github` reference for GitHub MCP tools, local git (raw `git` CLI), and CLI fallback conventions.
-
-> Read the `output-diff` reference for presenting proposed file content before writing.
-
 ## Process
 
 1. **Parse input and resolve to PR + head commit:**
-   - Follow the `spacelift-github` reference — detect input form (current branch, branch name, PR, Actions URL, commit SHA), extract identifiers, and resolve to owner/repo/PR/branch/SHA.
+   - Input parsing and PR resolution per `spacelift-github` — detect input form (current branch, branch name, PR, Actions URL, commit SHA), extract identifiers, and resolve to owner/repo/PR/branch/SHA. GitHub MCP tools, local `git` CLI, and CLI fallbacks per `scm-github`.
    - If no PR is found and no commit SHA is available, inform the user and stop.
 
 2. **Discover affected stacks and collect run changes:**
-   - Follow the `spacelift-github` reference — list stacks, find proposed runs matching the branch/SHA. If the input was a check run or Spacelift URL, the stack and run ID are already known — skip discovery.
+   - Run discovery per `spacelift-github` — list stacks, find proposed runs matching the branch/SHA. If the input was a check run or Spacelift URL, the stack and run ID are already known — skip discovery.
    - For each affected stack, call `spacelift-laravel__get_stack_run_changes` to get the full resource change list.
-   - **If `get_stack_run_changes` returns empty** (common during APPLYING state and after completion), fall back to parsing the terraform plan output from `get_stack_run_logs` — see the "Log Parsing Fallback" section in the `spacelift-github` reference.
+   - **If `get_stack_run_changes` returns empty** (common during APPLYING state and after completion), fall back to parsing the terraform plan output from `get_stack_run_logs` — see the "Log Parsing Fallback" section of `spacelift-github`.
 
 3. **Identify moved block candidates:**
    - Scan the change list for **delete + create pairs** — resources being destroyed and recreated under a different address.
@@ -70,7 +59,7 @@ references:
 7. **Generate `moved.tf`:**
    - Ask the user where to place the file — suggest the repository root or the relevant module directory.
    - Generate `moved` blocks for approved candidates only.
-   - Present the file content following `output-diff` conventions — show the full content, wait for explicit approval.
+   - Present the file content per `output-diff` — show the full content, wait for explicit approval.
    - After approval, write the file.
 
 ## Report Format

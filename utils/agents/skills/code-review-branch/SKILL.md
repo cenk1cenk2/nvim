@@ -4,7 +4,6 @@ description: 'code-review-branch Review the current branch''s changes against th
 disableModelInvocation: true
 argumentHint: "[optional: target-branch or PR URL]"
 references:
-  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/scm-github.md
   - ../references/scm-gitlab.md
@@ -12,8 +11,6 @@ references:
 ---
 
 ## Branch Code Review
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## Context
 
@@ -28,7 +25,7 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - Summarize your understanding of the intent before proceeding — confirm with the user if anything is unclear.
 
 2. **Discover Platform and Review Mode:**
-   - Read the `scm-detect` reference to detect the current branch and SCM platform Then read the matching platform reference (`scm-github` or `scm-gitlab`) for provider-specific tools.
+   - Detect the current branch and SCM platform per `scm-detect`, then use the provider-specific tools per `scm-github` or `scm-gitlab`.
    - Check if a PR/MR is open for this branch.
    - If a PR/MR exists, ask the user: **"There's an open PR/MR. Would you like findings inline in chat, or annotated directly on the PR/MR?"**
    - If a PR/MR is open, use its target branch and diff. Otherwise diff against the default branch (`main`/`master`/`rolling`).
@@ -52,7 +49,7 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
    - The user may say "ignore that" without further explanation — respect it and drop the item.
 
 5. **Present Findings:**
-   - Read the `review-findings` reference for finding presentation format
+   - Format findings per `review-findings`.
    - Group findings under `###` headings by logical domain/system (e.g., "Authentication", "Plugin System", "Database Layer"), not by severity.
    - Within each domain, order most critical findings first. Use severity tags (`**bug:**`, `**risk:**`, `**nit:**`, `**question:**`) when severity isn't obvious from context.
    - For each finding, show the code in question and the proposed change:

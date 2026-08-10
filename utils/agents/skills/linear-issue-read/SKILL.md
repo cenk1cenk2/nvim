@@ -4,26 +4,19 @@ description: 'linear-issue-read Read-only refresh of a Linear issue - re-read de
 argumentHint: "[issue-id or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
-  - ../references/present-first.md
   - ../references/linear-document-handling.md
   - ../references/linear-issue-philosophy.md
 ---
 
 ## Linear Issue Read
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-## Prerequisite
-
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
 ## Core Principle
 
-> **THE ISSUE IS NOT THE ABSOLUTE TRUTH.**
->
-> Read the `linear-issue-philosophy` reference for the full rule — record vs conversation authority, and the timestamp check that decides it. This skill is read-only, so it stops at surfacing the gap: flag a stale issue with its timestamps and ask the user, never present it as definitive. Hand actionable edits to `linear-issue-update`.
+> **THE ISSUE IS NOT THE ABSOLUTE TRUTH.** Record vs conversation authority, and the timestamp check that decides it, per `linear-issue-philosophy`. This skill is read-only, so it stops at surfacing the gap: flag a stale issue with its timestamps and ask the user, never present it as definitive. Hand actionable edits to `linear-issue-update`.
 
-> Read the `linear-document-handling` reference — in this read-only skill, glimpse any attached/linked documents for context, surface what's relevant, and flag stale ones with their timestamps. Never edit; hand off actionable edits to `linear-issue-update`.
+Handle attached/linked documents per `linear-document-handling` — in this read-only skill, glimpse them for context, surface what's relevant, and flag stale ones with their timestamps. Never edit; hand off actionable edits to `linear-issue-update`.
 
 ## Purpose
 

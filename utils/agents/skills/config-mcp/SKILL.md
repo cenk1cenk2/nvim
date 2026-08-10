@@ -3,19 +3,12 @@ name: config-mcp
 description: 'config-mcp Add, remove, or modify MCP server entries in the hyprpilot MCP catalog; researches servers, prefers official/HTTP sources, prompts for vars and auth. Always manually invoked. Do NOT use for skills (config-skills), agent guidelines (config-agents), or repo configs (config-repository; edit ~/.config/hyprpilot/config.yaml directly for launcher settings).'
 disableModelInvocation: true
 references:
-  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
 argumentHint: "[add|remove|modify] [server-name] [optional description]"
 ---
 
 ## MCP Server Configuration Manager
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `output-diff` reference for chunked change presentation — show reasoning + content blocks for each configuration change before applying.
-
-> **No private specifics.** Read the `redact-private-data` reference — beyond the never-hardcode-secrets rule below, never write real private/sensitive specifics (account IDs, internal hostnames, tokens) into the config or its examples unless the user explicitly allows it; use `${ENV_VAR}` references and placeholders instead.
 
 ## Context
 
@@ -79,7 +72,7 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 
 ## Special Tool Categories
 
-- **Tmux MCP write tools.** `execute-command`, `create-window`, `split-pane`, `kill-window`, `kill-session`, `kill-pane`, `create-session` are disabled by policy — these grant the agent the ability to mutate the user's terminal layout and run arbitrary commands invisibly. Command execution belongs in the agent's built-in `Bash` tool, where it is visible and permission-prompted. Keep these in `autoRejectTools` (server-relative globs).
+- **Tmux MCP write tools.** `execute-command`, `create-window`, `split-pane`, `kill-*`, `create-session` are disabled by policy — these grant the agent the ability to mutate the user's terminal layout and run arbitrary commands invisibly. Command execution belongs in the agent's built-in `Bash` tool, where it is visible and permission-prompted. Keep these in `autoRejectTools` (server-relative globs).
 - **Removed servers.** The `git` MCP and `kubernetes` MCP have been removed from this config. Use `git` CLI and `kubectl` CLI via `Bash` for those operations. If a user asks to re-add either, raise the trade-off (extra surface area; commands are already accessible via Bash) before doing so.
 - **In-tree hyprpilot servers.** Do NOT add `hyprpilot`, `hyprpilot_skills`, or `hyprpilot_harness` entries here — those names are **reserved**, and an entry using one is silently replaced by the injected server. Hyprpilot auto-injects three of its own at launch, gated by the `[mcp]` block in `~/.config/hyprpilot/config.yaml`:
   - `hyprpilot` (`mcp serve`) — general tools (`open`). On by default.
@@ -118,7 +111,7 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
    - Suggest write / destructive tools as candidates for `autoRejectTools`.
    - Do not assume defaults — the captain decides both lists.
 7. **Present the configuration.**
-   - Show the complete JSON entry in chat.
+   - Show the complete JSON entry in chat per `output-diff`.
    - Explain each field briefly.
    - Wait for user approval.
 8. **Apply the configuration.**
@@ -131,7 +124,7 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 1. Read `servers.json` and list available servers if no specific server is named.
 2. Confirm with the user which server to remove.
 3. Remove the entry and write the file.
-4. Remind about the daemon-restart requirement.
+4. Remind the captain that the removal applies to the next launched session — a session already running keeps the catalog it launched with.
 
 ### Modify
 
@@ -139,12 +132,13 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 2. Ask the user what they want to change (or apply the change they described).
 3. If the change involves new variables or auth, follow the prompting steps from the Add flow.
 4. If the user asks to change `hyprpilot.autoAcceptTools` or `autoRejectTools`, prompt for those specifically. Otherwise, do not re-prompt for tool approvals unless relevant to the modification.
-5. Present the updated entry and wait for approval.
+5. Present the updated entry per `output-diff` and wait for approval.
 6. Apply and write the file.
 
 ## Key Principles
 
 - **Never hardcode secrets.** Always use `${ENV_VAR}` references.
+- **No private specifics.** Keep real account IDs, internal hostnames, and tokens out of the config and its examples per `redact-private-data` — use `${ENV_VAR}` references and placeholders.
 - **Prefer official servers.** First-party MCP servers from service providers are more reliable and feature-complete.
 - **Prefer HTTP transport.** Remote HTTP endpoints avoid local dependency management.
 - **Prefer `bunx` for stdio.** When stdio is needed, use `bunx -y package@latest` as the command pattern (matching existing entries). Fall back to `npx -y` or `uvx` based on the package ecosystem.

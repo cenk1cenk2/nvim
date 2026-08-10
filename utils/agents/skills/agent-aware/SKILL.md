@@ -4,15 +4,12 @@ description: 'agent-aware Author instructions for a target agent that shares you
 disableModelInvocation: true
 argumentHint: "[artifact being authored]"
 references:
-  - ../references/present-first.md
   - ../references/agent-target-capability.md
 ---
 
 ## Writing for a Capable Target
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `agent-target-capability` reference for the capability axes, tier defaults, mixed/unknown handling, and the declaration line every such artifact opens with.
+Capability axes, tier defaults, mixed/unknown handling, and the opening declaration line: `agent-target-capability`.
 
 ## Context
 

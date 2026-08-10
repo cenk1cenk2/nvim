@@ -3,7 +3,6 @@ name: linear-document
 description: 'linear-document Attach a document capturing the current task''s findings to a Linear issue or project, one document per concern. Use for "attach a document", "write this up in Linear". Requires /linear-kilic or /linear-laravel. Do NOT use for description/field edits (/linear-issue-update, /linear-project-update), short comments (/linear-issue-comment), or new projects (/linear-project-create).'
 references:
   - ../references/linear-prerequisite.md
-  - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/linear-project-documents.md
   - ../references/linear-document-handling.md
@@ -11,15 +10,7 @@ references:
 
 ## Linear Document — Attach Task Details to an Issue or Project
 
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `output-diff` reference — present each document's reasoning and content in logical chunks for approval before writing.
-
-> Read the `linear-project-documents` reference for when documents earn their place, issue-vs-project scoping, and keeping issues lightweight.
-
-> Read the `linear-document-handling` reference for updating an existing attached document — glimpse, classify plan-like vs external, and edit only with agreement.
+A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
 ## Context
 
@@ -33,7 +24,7 @@ This skill packages the **current task's details** — findings, an investigatio
 
 2. **Scope the content — one document or several.** Decide whether the material is a single coherent topic or several distinct concerns. **Separate investigations, findings, or topics become separate documents** — each with its own title and target — never one blob. Present the proposed split (titles + targets) before drafting.
 
-3. **Check for existing documents.** `list_documents` (filter by `projectId`, or read the issue's attached docs) and skim for one that already covers this concern. If found, update it per the `linear-document-handling` reference (classify, propose the edit, agree) instead of creating a duplicate.
+3. **Check for existing documents.** `list_documents` (filter by `projectId`, or read the issue's attached docs) and skim for one that already covers this concern. If found, update it per `linear-document-handling` instead of creating a duplicate.
 
 4. **Draft each document.** Title + Markdown content capturing the task detail for that scope, self-contained: purpose/scope, current findings or state, decisions and rationale, key references (files, PRs/MRs, paths), and open questions / next steps. Keep issues light — put shared context in a project document and reference it, per `linear-project-documents`.
 

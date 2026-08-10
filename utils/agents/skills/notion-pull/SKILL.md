@@ -3,14 +3,9 @@ name: notion-pull
 description: 'notion-pull Pull a Notion page into the current editor as markdown (title to # heading, metadata to frontmatter). Triggers: "pull from Notion", a Notion URL to pull. Do NOT use for pushing (notion-push) or session init (notion-laravel).'
 disableModelInvocation: true
 argumentHint: "[notion-url or search description]"
-references:
-  - ../references/present-first.md
-  - ../references/harness-connectors.md
 ---
 
 ## Notion Pull: Page to Markdown
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 > **PREREQUISITE:** The `notion-laravel` skill MUST be active before this skill runs.
 > If no Notion workspace context exists in the current session, auto-invoke `notion-laravel` first.

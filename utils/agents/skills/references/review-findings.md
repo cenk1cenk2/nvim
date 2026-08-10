@@ -60,6 +60,15 @@ Write a full paragraph (drop terse format) for:
 
 Resume terse format after the expanded section.
 
+## Inline Comment Body
+
+For a finding posted as an inline annotation on a PR/MR:
+
+- Start with severity tag when not obvious: `**bug:**`, `**risk:**`, `**nit:**`, `**question:**`.
+- Terse description of the issue.
+- Suggestion block if a concrete fix exists.
+- The *why* only when the fix isn't obvious.
+
 ## Example
 
 ```markdown

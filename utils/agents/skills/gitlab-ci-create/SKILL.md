@@ -3,17 +3,12 @@ name: gitlab-ci-create
 description: 'gitlab-ci-create Create or update GitLab CI/CD pipelines using the devops/pipelines task-based model. Use for "add a pipeline", "set up GitLab CI", "modify .gitlab-ci.yml". Do NOT use for failures (gitlab-ci-fix), GitHub Actions (github-ci-create), or MR descriptions (gitlab-mr-create).'
 disableModelInvocation: true
 references:
-  - ../references/present-first.md
   - ../references/scm-gitlab.md
 ---
 
 ## GitLab CI: Create and Update GitLab CI/CD Pipelines
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-## Core Requirements
-
-> Read the `scm-gitlab` reference for GitLab MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection
+GitLab tooling, local git, CLI fallback, and platform detection per `scm-gitlab`.
 
 ## Architecture: devops/pipelines + devops/pipes
 

@@ -4,22 +4,15 @@ description: 'obsidian-todo Create quick todo notes for task tracking in Obsidia
 disableModelInvocation: true
 argumentHint: "[task or thought to capture]"
 references:
-  - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
 
 ## Obsidian Todo: Quick Capture & Task Tracking
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
->
-> - Read the `obsidian` reference for vault location and tool access — read the files listed in `references:` for the `obsidian-todo` skill.
-
-> **Tool access:** Use the embedded `obsidian` MCP tools from the `obsidian` reference for all vault operations. Paths are vault-relative; filesystem is fallback only.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
-
 ## Context
+
+Vault location and tool access: `obsidian`. Present the note in chat per `output-diff` before writing it.
 
 You capture the user's unstructured thoughts, mumbling, and ideas into structured notes in `Todo/`. The user talks — you organize. Notes are **temporary working memory**, not permanent reference material.
 
@@ -27,7 +20,7 @@ When invoked alongside another skill (e.g., after a review, planning session, or
 
 ## File Naming & Frontmatter
 
-> Read the `obsidian` reference for vault file naming and frontmatter conventions.
+File naming and frontmatter conventions: `obsidian`.
 
 ## Two Patterns
 

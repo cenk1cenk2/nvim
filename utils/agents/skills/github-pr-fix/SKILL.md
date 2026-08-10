@@ -4,7 +4,6 @@ description: 'github-pr-fix Fix all open review conversations on a GitHub PR by 
 disableModelInvocation: true
 argumentHint: "[PR number or URL]"
 references:
-  - ../references/present-first.md
   - ../references/scm-fix-threads.md
   - ../references/scm-github.md
   - ../references/scm-detect.md
@@ -12,11 +11,7 @@ references:
 
 ## GitHub PR Fix
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-fix-threads` reference for the full thread-fixing workflow and key principles.
-> Read the `scm-github` reference for GitHub MCP tools and local git (raw `git` CLI).
-> Read the `scm-detect` reference for platform detection and local git operations.
+Run the thread-fixing workflow per `scm-fix-threads`, with GitHub MCP tools per `scm-github` and platform detection plus local git (raw `git` CLI) per `scm-detect`.
 
 ## Platform specifics
 

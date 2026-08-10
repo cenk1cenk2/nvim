@@ -6,7 +6,9 @@ The rule is harness-agnostic. The inventory below is per harness and grows as in
 
 ## ⛔ ABSOLUTE: the harness-provided integration wins
 
-**When the running harness provides an integration for a service, use it. Do NOT use an external or self-hosted MCP server for that same service.** On Claude Code that means a `mcp__claude_ai_<Connector>__*` connector takes precedence over the equivalent standalone server (`slack-kilic`, `notion-laravel`, and so on) for every read and every write.
+**When the running harness provides an integration for a service, use it. Do NOT use an external or self-hosted MCP server for that same service.** On Claude Code that means a `mcp__claude_ai_<Connector>__*` connector takes precedence over the equivalent standalone server (`slack-kilic`, `linear-kilic`, and so on) for every read and every write.
+
+**The precedence is per service *and workspace*.** A standalone server keyed to a workspace (`slack-kilic`, `linear-kilic`) is that workspace's only route; the connector is authorized against a different workspace, so applying the rule across workspaces reads or writes into the wrong place. Where a skill declares a per-workspace mapping — the `slack` reference maps kilic to `slack-kilic` and Laravel to the connector — that mapping decides the transport, and the rule above applies within each workspace.
 
 Why it is absolute rather than a preference:
 
@@ -19,12 +21,12 @@ How to apply it:
 1. **Check what the harness offers first**, before reaching for a server name a skill happens to mention. Deferred connector tools still count as available — load them first.
 2. **Use the external server only when the harness provides nothing for that service**, or when it is genuinely missing a capability the task needs.
 3. **When you do fall back, say so in one line** — which capability was missing and which server you used instead. Never switch silently, and never mix the two inside one flow.
-4. **A skill naming one server is not an override.** Skill bodies name a server for identification; this precedence rule outranks that name at call time.
+4. **A bare server name in a skill is not an override, but a per-workspace mapping is.** A skill naming one server for identification does not outrank this rule. A skill that maps workspaces to integrations does — follow its row for the workspace in play.
 
 ## What counts as harness-provided
 
 - **Yes:** an integration the agent runtime ships or brokers itself, authorized where the user administers the harness — Claude Code's claude.ai connectors are the current example.
-- **No:** a standalone MCP server configured in hyprpilot (`slack-kilic`, `notion-laravel`, `linear-kilic`, …), however reliably present it is. Those are the fallback tier.
+- **No:** a standalone MCP server configured in hyprpilot (`slack-kilic`, `linear-kilic`, `grafana-kilic`, …), however reliably present it is. Those are the fallback tier.
 - **Unsure:** treat it as harness-provided only if the harness itself surfaces and authorizes it. If you cannot tell, say so rather than guessing at precedence.
 
 ## Inventory
@@ -72,9 +74,11 @@ Load only what the current task needs — one call can load several tools.
 | `slack_add_reaction`              | Add an emoji reaction to a message.                 |
 | `slack_get_reactions`             | Get the reactions on a message.                     |
 
-See the `slack` reference for the mapping between these and the workspace-server tool names.
+See the `slack` reference for the workspace routing table and the mapping between these and the `slack-kilic` tool names.
 
 #### Notion (`mcp__claude_ai_Notion__`)
+
+Notion is connector-only — the catalog holds no Notion server, so there is no fallback tier here.
 
 | Tool                        | Purpose                             |
 | --------------------------- | ----------------------------------- |
@@ -101,5 +105,5 @@ Nothing confirmed for OpenCode or Codex. Check the running build's own tool list
 
 - **Always load before use.** Calling a deferred tool without loading it first fails with `InputValidationError`.
 - **Load per task.** Load only what you need — do not bulk-load a connector.
-- **Tool names vary.** Connector names differ from server-direct equivalents (`mcp__claude_ai_Notion__notion-fetch` vs `notion-laravel__notion-fetch`, `mcp__claude_ai_Slack__slack_read_channel` vs `slack-kilic__slack_get_channel_history`). The differing name is a mapping exercise, never a reason to fall back.
+- **Tool names vary.** Connector names differ from server-direct equivalents (`mcp__claude_ai_Linear__get_issue` vs `linear-kilic__get_issue`, `mcp__claude_ai_Slack__slack_read_channel` vs `slack-kilic__slack_get_channel_history`). The differing name is a mapping exercise, never a reason to fall back.
 - **Deferred is not unavailable.** A connector tool whose schema is not loaded yet still takes precedence — load it and use it.

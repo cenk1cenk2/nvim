@@ -4,18 +4,11 @@ description: 'git-split Break a large change set - uncommitted tree, branch comm
 disableModelInvocation: true
 argumentHint: "[optional: slicing hint — e.g., 'by feature', 'separate refactor and feature', 'by file']"
 references:
-  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/output-diff.md
 ---
 
 ## Git Break
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-detect` reference for SCM detection and raw `git` CLI.
-
-> Read the `output-diff` reference for chunked split-plan presentation — show reasoning + content blocks per slice before any write.
 
 ## Context
 
@@ -36,7 +29,7 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
    - `git status` for current branch and working-tree state.
    - Detect the default/base branch (try `git symbolic-ref refs/remotes/origin/HEAD` via CLI; fall back to common names: `main`, `master`, `rolling`, `develop`, `trunk`).
    - `git log <base>..HEAD` to enumerate commits ahead of base.
-   - Detect SCM platform via `scm-detect` reference, then look up an open PR/MR for the current branch (`github__list_pull_requests` with `head: owner:branch, state: open` or `gitlab__list_merge_requests` with `source_branch, state: opened`).
+   - Detect the SCM platform and run local git per `scm-detect`, then look up an open PR/MR for the current branch (`github__list_pull_requests` with `head: owner:branch, state: open` or `gitlab__list_merge_requests` with `source_branch, state: opened`).
    - Categorize: `dirty-tree`, `commits-ahead`, `open-pr-mr`, or a combination. Record commit SHAs and changed-file paths.
 
 2. **Surface the state and ask for split intent.**
@@ -64,7 +57,7 @@ The skill handles three input modes — uncommitted tree, branch commits ahead o
    - Ask once globally during this step whether to push all slices and whether to draft PRs/MRs for all slices. The user can override per slice during iteration.
 
 5. **Present the split plan.**
-   - Use the `output-diff` chunked-presentation format. One chunk per slice with reasoning + a content block listing the slice metadata.
+   - Present per `output-diff` — one chunk per slice with reasoning + a content block listing the slice metadata.
    - Single approval gate covers the entire plan.
 
    Example chunk:

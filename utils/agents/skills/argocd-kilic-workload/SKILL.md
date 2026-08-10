@@ -3,15 +3,11 @@ name: argocd-kilic-workload
 description: 'argocd-kilic-workload Create a new workload service in the current cluster''s ArgoCD repo - scaffolds the Pulumi service, registers it in the workloads module, optionally configures gateway listeners. Always manually invoked. Do NOT use for LB routing (/argocd-kilic-loadbalancer), standalone workload repos (/cluster-kilic-workload), or chart wrappers (/cluster-kilic-chart).'
 disableModelInvocation: true
 argumentHint: "[workload-name] - e.g., 'my-app', 'html-cv3', 'notifications'"
-references:
-  - ../references/present-first.md
 ---
 
 ## Cluster Workload Creator
 
 > **IMPORTANT: This skill assumes you are already inside a cluster ArgoCD repository** (e.g., `cluster/rubik/argocd-kilic-rubik`).
-
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
 
 ## How This Repository Works
 

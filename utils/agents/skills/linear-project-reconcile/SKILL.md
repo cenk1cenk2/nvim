@@ -5,25 +5,18 @@ argumentHint: "[project-name or Linear URL]"
 references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/present-first.md
   - ../references/linear-absolute-approval.md
 ---
 
 ## Linear Project Reconcile
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
+A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-> **Project/initiative status updates: offer, don't auto-post.** Read the `linear-absolute-approval` reference. Reconciliation covers **issues + structure only** — it does NOT post a project or initiative status update on its own. When progress is genuinely update-worthy, finish all the issue work first, then **proactively offer** one — briefly note what happened and that it may be worth an update (e.g. "X and Y landed — I can post a project update if you'd like") — and post via `/linear-project-post` or `/linear-initiative-post` **only after the user explicitly says yes**. A general blessing / `g` / autopilot does NOT clear this.
-
-## Prerequisite
-
-> **PREREQUISITE:** Read the `linear-prerequisite` reference for workspace detection rules. A Linear workspace skill MUST be active before this skill runs.
+> **⛔ Project/initiative status updates: offer, don't auto-post — see `linear-absolute-approval`.** Reconciliation covers **issues + structure only** — it does NOT post a project or initiative status update on its own. When progress is genuinely update-worthy, finish all the issue work first, then **proactively offer** one — briefly note what happened and that it may be worth an update (e.g. "X and Y landed — I can post a project update if you'd like") — and post via `/linear-project-post` or `/linear-initiative-post` **only after the user explicitly says yes**. A general blessing / `g` / autopilot does NOT clear this.
 
 ## Timestamp Awareness
 
 Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). When auditing, **check `updatedAt` on each issue** — if a description hasn't been updated in a while, it may be stale regardless of how it reads. The current conversation context holds the most recent understanding of the project — the goal is to bring Linear in line with reality, not the other way around. When you flag a description as stale, note its `updatedAt` timestamp and ask the user to confirm before recommending changes.
-
-> Read the `output-diff` reference for chat output conventions before writing to external systems — present reasoning and content in logical chunks for user approval.
 
 ## Process
 
@@ -50,7 +43,7 @@ Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). Whe
    - **Status corrections** for issues that don't reflect reality.
    - **Description updates** for stale issues.
    - **Label changes** for consistency.
-6. **Present the report to the user.** Group changes by severity — things that are clearly wrong first, then improvements, then suggestions.
+6. **Present the report to the user** per `output-diff`, before anything is written to Linear. Group changes by severity — things that are clearly wrong first, then improvements, then suggestions.
 7. **Iterate** based on user feedback. The user may approve all, some, or none of the changes.
 8. **Apply approved changes** — update issues in batch where possible using parallel tool calls.
 

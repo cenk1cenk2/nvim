@@ -3,22 +3,16 @@ name: git-branch
 description: 'git-branch Create a new git branch following repo naming conventions; fast-forwards the default branch, branches off it, and switches. Triggers: "create/new/cut a branch", "branch off". Do NOT use for commits (git-commit), conflicts (git-conflict), pulling reference changes (code-pull), or PRs/MRs (github-pr-create, gitlab-mr-create).'
 argumentHint: "[optional: branch name, prefix, or base branch]"
 references:
-  - ../references/present-first.md
   - ../references/scm-detect.md
   - ../references/output-diff.md
 ---
 
 ## Git Branch
 
-> **Present-first.** Read the `present-first` reference — do not enter plan mode; draft and present before writing, and proceed on approval or upfront blessing.
-
-> Read the `scm-detect` reference for SCM platform detection and raw `git` CLI usage.
-
-> Read the `output-diff` reference for presenting the proposed branch plan before creating it.
-
 ## Process
 
 1. **Discover the current state.**
+   - Detect the platform and run local git per `scm-detect`.
    - Use `git status` to get the current branch and working tree state.
    - Determine the default branch — try `git symbolic-ref refs/remotes/origin/HEAD` via CLI first, or list branches with `git branch` and check which of `main`, `master`, `rolling`, `develop`, `trunk` exists.
 
@@ -49,7 +43,7 @@ references:
    - Override when the user explicitly specifies a base (e.g., "branch off `feat/x`", "from `develop`").
 
 5. **Present the plan.**
-   - Use the `output-diff` presentation format with a single chunk covering the full branching plan:
+   - Present per `output-diff` with a single chunk covering the full branching plan:
      - Reasoning: 1-2 sentences on prefix choice (what convention was detected and why).
      - Content block listing: `branch`, `base`, `fast-forward` (yes/no), and any notes (e.g., uncommitted changes present).
    - Wait for explicit user approval before any write.

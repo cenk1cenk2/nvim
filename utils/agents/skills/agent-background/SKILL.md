@@ -2,18 +2,10 @@
 name: agent-background
 description: 'agent-background Arm a background wait-loop that polls an external condition (PR/MR merge, CI or deploy run, human approval) and re-invokes the session once when it is met, instead of sleeping or asking the user to ping. Do NOT use to poll background Agent/Workflow work you started (the harness re-invokes automatically) or for self-paced loop iteration (use /loop).'
 references:
-  - ../references/present-first.md
   - ../references/agent-watchers.md
-  - ../references/harness-claude-agent-background.md
-  - ../references/harness-opencode-agent-background.md
-  - ../references/harness-codex-agent-background.md
 ---
 
-> **Present-first.** Read the `present-first` reference — arm the loop when it's the obvious next step or the user blessed it; surface it first if spawning it is itself the decision.
-
-> Read the `agent-watchers` reference for the watching discipline, cadence table, and concrete check recipes (PR/MR merged, pipeline finished, app converged, endpoint live, MCP-only truth via proxy).
-
-> **⛔ Read the active runtime's `harness-<provider>-agent-background` reference BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that file owns the tool names, parameters, and defaults.
+> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that file owns the tool names, parameters, and defaults.
 
 ## Context
 
@@ -68,10 +60,10 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 ## Process
 
 1. **Confirm it's external state.** If you started the work with `Agent`/`Workflow`, do NOT poll — the harness re-invokes you on completion. Only loop for state the harness can't see.
-2. **Pick a bash-reachable signal.** A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (bash cannot call MCP), poll a **proxy** bash CAN see, and do the authoritative MCP check yourself on wake.
+2. **Pick a bash-reachable signal**, per the watching discipline, cadence table, and check recipes in `agent-watchers`. A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (bash cannot call MCP), poll a **proxy** bash CAN see, and do the authoritative MCP check yourself on wake.
 3. **Bound the loop.** Always cap iterations (`seq 1 N`) as a runaway backstop; on exhaustion print a clear "not met" line and re-arm rather than looping forever.
 4. **Choose cadence by how fast the state changes** — short (~60s) for a human action, longer for a slow job (one check near the expected finish beats many early ones). Never poll faster than the state can plausibly change.
-5. **Launch one watcher through the runtime's background facility** — never by detaching inside the command (see the boxed warning under *The pattern*). Confirm the launch returned a **task id / handle**; if it did not, you detached instead of arming, and nothing will wake you. Note that id and tell the user what it's waiting on. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. State the watcher (what it polls, its cadence, its task id, and the command to re-arm it) out loud in chat, and if `plan-compact` is active write it verbatim into the anchor's Scratchpad Scripts & Watchers section. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
+5. **Launch one watcher through the runtime's background facility** — never by detaching inside the command (see the boxed warning under *The pattern*). Arm it directly when it is the obvious next step or the user blessed it; surface it first only when spawning the watcher is itself the decision. Confirm the launch returned a **task id / handle**; if it did not, you detached instead of arming, and nothing will wake you. Note that id and tell the user what it's waiting on. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. State the watcher (what it polls, its cadence, its task id, and the command to re-arm it) out loud in chat, and if `plan-compact` is active write it verbatim into the anchor's Scratchpad Scripts & Watchers section. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
 6. **On wake: re-verify the real state before acting.** External APIs lag — a signal can read "done" slightly before/after the truth, and a proxy firing does not mean the downstream state converged. Do the authoritative check now.
 7. **Continue or re-arm.** If a follow-on condition isn't satisfied yet (e.g. the proxy fired but the real work is still settling), launch the next watcher. Never assume the proxy equals the end state.
 8. **⛔ REAP IT.** A watcher is not finished when its condition is met — it is finished when it is **stopped**. Kill it the moment it stops earning its keep, which is **not only on success**:
