@@ -123,6 +123,19 @@ Why the repo is shaped the way it is, stated as standing facts. This is where th
 
 - [Constraint] — [what it rules out, and why that alternative does not work here]
 
+## Conditional Changes
+
+Changes that are wrong today and correct once a condition holds. Each entry is a standing rule keyed on a trigger the repo does not currently meet — forward-looking, not history, so it does not conflict with the present-tense rule.
+
+Use it when investigation establishes *how* to do something and *that it should not be done yet*. Without it that finding is either lost or written as a decision narrative.
+
+- **Trigger:** [the observable condition — something a reader can check, not a vague "if we ever"]
+  - **Do:** [the change, precise enough to execute without redoing the investigation]
+  - **Atomic with:** [anything that must land in the same change, if partial application is unsafe]
+  - **Trap:** [what breaks if applied early, late, or partially — and whether it breaks loudly or silently]
+
+Drop an entry once its trigger fires and the change lands, or once the trigger becomes impossible. A conditional whose condition can no longer occur is noise.
+
 ## Decision Log
 
 **Opt-in — include only when the user explicitly asks for it.** Fork points as history: what was decided, why, what was rejected. Default to folding the durable half into `Constraints` instead.
@@ -167,6 +180,7 @@ Non-obvious things that trip up agents or developers. Things that look like they
 - **Be concise** — this file is loaded into agent context windows. Every line must earn its place.
 - **Delete aggressively** — outdated information is worse than no information. If something changed, remove the old version entirely.
 - **Constraints are append-mostly** — a constraint stays until the thing that causes it changes, because it is what stops the same dead end being walked again. Remove one only when it no longer holds.
+- **`Conditional Changes` is the one forward-looking section** — a trigger that has not fired is a live property of the repo, not history, so it passes the present-tense rule. Keep it to conditions a reader can actually check; "if we ever refactor" is not a trigger. A conditional that has fired, or can no longer fire, gets deleted like any stale content.
 - **Decision Log is sacred, when it exists** — in the opt-in case, never delete an entry unless the decision was reversed. Add entries and update outcomes, but preserve why choices were made.
 - **No fluff** — no "this file was last updated on...", no meta-commentary, no TODOs about what to document later. If you know it, write it. If you don't, skip the section.
 - **Match existing style** — if the file already exists with a different structure, adapt to it rather than forcing the template. The sections above are a starting point, not a rigid schema.
