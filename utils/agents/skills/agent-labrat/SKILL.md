@@ -4,6 +4,7 @@ description: 'agent-labrat Hand work off to @labrat, the offsite Hermes agent, o
 disableModelInvocation: true
 argumentHint: "[task, Linear issue/project, or Slack thread] [optional: claude|codex|opencode, model name]"
 references:
+  - ../references/reconcile-state.md
   - ../references/linear-state-transitions.md
   - ../references/slack-prerequisite.md
   - ../references/slack.md
@@ -14,6 +15,8 @@ references:
 ---
 
 ## Handing Work to labrat
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 > **PREREQUISITE:** A Slack workspace skill MUST be active before posting — detection per `slack-prerequisite`. Slack does not render normal markdown; mrkdwn formatting, thread conventions, and the **absolute rule that the harness-provided Slack integration is used over the standalone workspace server** are in `slack`. For a Linear scope, `linear-prerequisite` applies before handing off an issue or project.
 

@@ -3,6 +3,7 @@ name: linear-project-post
 description: 'linear-project-post Draft a Linear project status update from recent progress, deviations, and next steps. Triggers: "write a project update", "post a status update". Do NOT use for editing description/docs (/linear-project-update) or structure changes (/linear-project-reconcile).'
 argumentHint: "[project-name or Linear URL]"
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
@@ -10,6 +11,8 @@ references:
 ---
 
 ## Linear Project Update Post
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.

@@ -2,6 +2,7 @@
 name: gitlab-mr-create
 description: 'gitlab-mr-create Analyze and write GitLab MR titles and descriptions. Use for "write an MR description", "create an MR", "improve the MR". Do NOT use for GitHub PRs (github-pr-create) or CI pipelines/failures (gitlab-ci-create, gitlab-ci-fix).'
 references:
+  - ../references/reconcile-state.md
   - ../references/scm-detect.md
   - ../references/present-first.md
   - ../references/scm-create-description.md
@@ -13,6 +14,8 @@ references:
 ---
 
 ## GitLab MR Description Workflow
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 > **Open when ready.** Default communication is opening the MR in the browser once it's ready to look at — skip only on explicit opt-out ("just the link", "don't open").

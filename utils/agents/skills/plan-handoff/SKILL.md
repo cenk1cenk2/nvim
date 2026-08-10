@@ -4,11 +4,14 @@ description: 'plan-handoff Create a self-contained plan for another Claude Code 
 disableModelInvocation: true
 argumentHint: "[same-repo|other-repo] [goal description]"
 references:
+  - ../references/reconcile-state.md
   - ../references/plan-mode.md
   - ../references/provider-paths.md
 ---
 
 ## Cross-Session / Cross-Repository Planning
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 > **⛔ ALWAYS enter plan mode** — full directives per `plan-mode`.
 >

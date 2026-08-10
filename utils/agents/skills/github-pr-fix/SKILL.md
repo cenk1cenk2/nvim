@@ -4,12 +4,15 @@ description: 'github-pr-fix Fix all open review conversations on a GitHub PR by 
 disableModelInvocation: true
 argumentHint: "[PR number or URL]"
 references:
+  - ../references/reconcile-state.md
   - ../references/scm-fix-threads.md
   - ../references/scm-github.md
   - ../references/scm-detect.md
 ---
 
 ## GitHub PR Fix
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Run the thread-fixing workflow per `scm-fix-threads`, with GitHub MCP tools per `scm-github` and platform detection plus local git (raw `git` CLI) per `scm-detect`.
 

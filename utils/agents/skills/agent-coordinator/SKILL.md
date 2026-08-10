@@ -4,6 +4,7 @@ description: 'agent-coordinator Coordinator posture: your own context is the sca
 disableModelInvocation: true
 argumentHint: "[scope to coordinate] [optional: 'bulldozer' to also engage push-through mode]"
 references:
+  - ../references/reconcile-state.md
   - ../references/agent-conventions.md
   - ../references/agent-watchers.md
   - ../references/mode-toggle.md
@@ -15,6 +16,8 @@ references:
 ---
 
 ## Coordinator Posture
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Invoking coordinator IS a standing blessing to dispatch within the agreed scope: present the routing plan once, then run it. Dispatch parameters, blocking vs background, and self-contained prompt structure per `agent-delegate`; load the `agent-harness` skill to resolve tiers.
 

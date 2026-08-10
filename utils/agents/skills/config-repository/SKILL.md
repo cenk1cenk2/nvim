@@ -3,6 +3,7 @@ name: config-repository
 description: 'config-repository Create or revise repo knowledge base files (CLAUDE.md, AGENTS.md, .local variants). Triggers: "update CLAUDE.md", "create AGENTS.md", "document decisions", or detected durable conventions/rule drift mid-session. Do NOT use for the central AGENTS.md guidelines (config-agents), skills (config-skills), or MCP configs (config-mcp).'
 disableModelInvocation: false
 references:
+  - ../references/reconcile-state.md
   - ../references/current-state-only.md
   - ../references/present-first.md
   - ../references/output-diff.md
@@ -11,6 +12,8 @@ argumentHint: "[local] [optional: what changed or focus area]"
 ---
 
 ## Repository Knowledge Base
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 ## Purpose

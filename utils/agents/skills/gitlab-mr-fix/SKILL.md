@@ -4,12 +4,15 @@ description: 'gitlab-mr-fix Fix all open review conversations on a GitLab MR by 
 disableModelInvocation: true
 argumentHint: "[MR number or URL]"
 references:
+  - ../references/reconcile-state.md
   - ../references/scm-fix-threads.md
   - ../references/scm-gitlab.md
   - ../references/scm-detect.md
 ---
 
 ## GitLab MR Fix
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Thread-fixing workflow per `scm-fix-threads`. GitLab tooling and local git per `scm-gitlab`; platform detection per `scm-detect`.
 

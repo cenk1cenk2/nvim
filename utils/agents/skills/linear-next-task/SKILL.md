@@ -3,6 +3,7 @@ name: linear-next-task
 description: 'linear-next-task Analyze Linear projects and issues to recommend the best next task(s). Triggers: "what should I work on", "pick next task". Do NOT use for picking up a known issue (/linear-issue-pickup) or cycle planning (/linear-cycle).'
 argumentHint: "[project-name or Linear URL] (optional — omit to analyze all projects)"
 references:
+  - ../references/reconcile-state.md
   - ../references/linear-prerequisite.md
   - ../references/linear-issue-states.md
   - ../references/linear-pickup-execution.md
@@ -10,6 +11,8 @@ references:
 ---
 
 ## Linear Pick Next Task
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 

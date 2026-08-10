@@ -2,6 +2,7 @@
 name: linear-initiative-create
 description: 'linear-initiative-create Create a new Linear initiative with description and goals, linking orphan projects. Use for "create an initiative", "group these projects under an initiative". Requires /linear-kilic or /linear-laravel. Do NOT use for updating initiatives (/linear-initiative-update).'
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-description-structure.md
@@ -9,6 +10,8 @@ references:
 ---
 
 ## Linear Initiative Creation
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.

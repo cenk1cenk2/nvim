@@ -3,6 +3,7 @@ name: linear-project-agent
 description: 'linear-project-agent Structure Linear projects for autonomous agent execution - agent-ready plans, self-contained issues, readiness review. Triggers: "set up this project for agents". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for generic project creation (/linear-project-create) or status updates (/linear-project-post).'
 argumentHint: "[create|update|review] [project-name] [description of what the project does]"
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-description-structure.md
@@ -20,6 +21,8 @@ Issue/project description format per `linear-description-structure`.
 Use Linear documents as shared agent context per `linear-project-documents`, and for propagating investigations, plans, solved problems, and deviations. When issues would repeat the same instructions, keep issues light and store the shared guidance in project documents. Attach these documents on demand with the `linear-document` skill, kept tightly focused — one concern per document, like obsidian repository notes.
 
 ## What is an Agent Project?
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 An **agent project** is a Linear project designed for autonomous execution by LLM agents. Each issue must be:

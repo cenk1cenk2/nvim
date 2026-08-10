@@ -3,6 +3,7 @@ name: linear-project-pickup
 description: 'linear-project-pickup Prepare a Linear project or slice for implementation - fetch issues, documents, blockers, comments, and execution scope. Triggers: "pick up this project", "implement this project slice", project URL for execution. This skill preps and waits for a go; /agent-pickup executes. Do NOT use for read-only refreshes (/linear-project-read) or structure audits (/linear-project-reconcile).'
 argumentHint: "[project name or URL] [optional slice/filter]"
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-pickup-execution.md
@@ -16,6 +17,8 @@ references:
 ---
 
 ## Linear Project Pickup
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.

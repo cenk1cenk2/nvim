@@ -4,12 +4,15 @@ description: 'plan-compact Keep a compaction-resilient working anchor for a long
 disableModelInvocation: true
 argumentHint: "[optional task note]"
 references:
+  - ../references/reconcile-state.md
   - ../references/agent-delegate.md
   - ../references/mode-toggle.md
   - ../references/provider-paths.md
 ---
 
 ## Plan Compact — In-Session Compaction Anchor
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 ## Context
 

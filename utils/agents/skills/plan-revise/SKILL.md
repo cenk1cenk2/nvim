@@ -2,11 +2,14 @@
 name: plan-revise
 description: 'plan-revise Revise an existing plan file when the direction was wrong - gathers what went wrong (and partial implementation via git), re-interviews on the deltas, updates the plan in place with a dated revision entry. Triggers: "revise the plan", "we got it wrong", "change direction". Do NOT use for new plans (/plan-hard), unchanged pickup (/plan-pickup), or handoffs (/plan-handoff).'
 references:
+  - ../references/reconcile-state.md
   - ../references/plan-mode.md
   - ../references/provider-paths.md
 ---
 
 ## Plan Revise — Going Back to the Drawing Board
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 > **⛔ ALWAYS enter plan mode** — full directives per `plan-mode`.
 >

@@ -4,12 +4,15 @@ description: 'obsidian-repository Document repository knowledge (architecture, c
 disableModelInvocation: true
 argumentHint: "[repository name or path] [optional: what to document]"
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
 
 ## Obsidian Repository: Repository Knowledge Base
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 ## Context

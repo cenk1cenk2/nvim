@@ -4,7 +4,10 @@ Shared description/title drafting workflow for opening or updating a pull/merge 
 
 ## ⛔ Never open it as a draft
 
-**Default is ready for review. Opening a draft requires the user to have explicitly asked for a draft PR/MR, in those terms.** "Open it as a draft", "make it a draft MR", "draft PR please" — that is the only trigger.
+**Default is ready for review.** Exactly two things open a draft:
+
+1. **The user asked for one, in those terms** — "open it as a draft", "make it a draft MR", "draft PR please".
+2. **A real merge prerequisite exists** — this PR/MR cannot merge until something else does: it is stacked on another PR/MR, or waiting on a dependency release, a migration, or an approval outside this branch. Draft is the correct state there because merging early would break something, not because the work is unfinished.
 
 **"Draft" describing the WORK is not a request for a draft PR.** These are not triggers, and treating them as one is the mistake this rule exists to stop:
 
@@ -21,7 +24,12 @@ When the work genuinely is not ready, the answer is **not** a draft:
 1. **Do not open it yet** — say what is outstanding and wait.
 2. Or **open it ready** and state the outstanding items in the description.
 
-If a request is genuinely ambiguous — the word "draft" appears but you cannot tell whether it describes the PR or the work — ask the single question before opening. Never guess toward draft. When a draft was opened at the user's request and they later say it is ready, mark it ready for review; do not leave it sitting in draft.
+If a request is genuinely ambiguous — the word "draft" appears but you cannot tell whether it describes the PR or the work — ask the single question before opening. Never guess toward draft.
+
+**A draft is a state you are responsible for clearing.** Whichever reason opened it:
+
+- **Name the reason in the description** — which PR/MR, release, or approval it waits on. A draft with no stated blocker is indistinguishable from one that was opened by mistake.
+- **Reconcile it when the blocker clears.** The prerequisite merged, the dependency shipped, or the user said it is ready — mark it ready for review and say so. Do not leave it sitting in draft, and do not make the user ask twice.
 
 ## ⛔ The description is live, not write-once
 

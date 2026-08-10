@@ -3,6 +3,7 @@ name: linear-initiative-update
 description: 'linear-initiative-update Revise a Linear initiative''s description and review its project alignment. Use for "update the initiative", "revise initiative description". Requires /linear-kilic or /linear-laravel. Do NOT use for creating initiatives (/linear-initiative-create) or status posts (/linear-initiative-post).'
 argumentHint: "[initiative-name or ID]"
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-description-structure.md
@@ -11,6 +12,8 @@ references:
 ---
 
 ## Linear Initiative Update
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.

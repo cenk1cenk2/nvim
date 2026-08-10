@@ -4,6 +4,7 @@ description: 'agent-supervisor Supervisor posture: own the project-management la
 disableModelInvocation: true
 argumentHint: "[project, scope, or Linear target to supervise]"
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-project-documents.md
   - ../references/mode-toggle.md
@@ -18,6 +19,8 @@ references:
 ---
 
 ## Supervisor Posture
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 Invoking supervisor IS a standing blessing to investigate, verify, and report. Tracker and external writes are presented before they land **unless the user has given a standing preapproval** ("you're preapproved", "don't show me diffs", "just apply it"), in which case apply directly and report what landed. Project and initiative status updates are exempt from any blessing and always need an explicit yes.

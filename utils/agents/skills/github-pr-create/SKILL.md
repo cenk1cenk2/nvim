@@ -2,6 +2,7 @@
 name: github-pr-create
 description: 'github-pr-create Analyze and write GitHub PR titles and descriptions. Use for "write a PR description", "create a PR", "improve the PR". Do NOT use for GitLab MRs (gitlab-mr-create) or CI workflows/failures (github-ci-create, github-ci-fix).'
 references:
+  - ../references/reconcile-state.md
   - ../references/scm-detect.md
   - ../references/present-first.md
   - ../references/scm-create-description.md
@@ -13,6 +14,8 @@ references:
 ---
 
 ## GitHub PR Description Workflow
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 Draft the description and title per `scm-create-description`, with GitHub MCP tools, local git (raw `git` CLI), CLI fallback, and platform detection per `scm-detect` and `scm-github`.

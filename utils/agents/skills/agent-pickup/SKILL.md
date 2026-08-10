@@ -4,6 +4,7 @@ description: 'agent-pickup Pick up Linear projects, project slices, or issues an
 disableModelInvocation: true
 argumentHint: "[Linear project, project slice, issue id(s), or URL] [optional: agent/direct/sequential/parallel/confirm]"
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-pickup-execution.md
@@ -20,6 +21,8 @@ references:
 ---
 
 ## Agent Linear Pickup Orchestrator
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 > **PREREQUISITE:** A Linear workspace skill MUST be active before this skill runs — workspace detection per `linear-prerequisite`.

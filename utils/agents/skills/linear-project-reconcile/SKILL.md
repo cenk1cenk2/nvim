@@ -3,6 +3,7 @@ name: linear-project-reconcile
 description: 'linear-project-reconcile Audit and fix a Linear project''s structure, subissues, priorities, estimates, labels, and blocking relations in one pass. Triggers: "reconcile/audit the project", "review project priorities". Do NOT use for description/doc edits (/linear-project-update), state sync from MRs/PRs (/linear-project-match), status posts (/linear-project-post), or new projects (/linear-project-create).'
 argumentHint: "[project-name or Linear URL]"
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
@@ -10,6 +11,8 @@ references:
 ---
 
 ## Linear Project Reconcile
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.

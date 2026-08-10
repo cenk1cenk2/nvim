@@ -2,6 +2,7 @@
 name: linear-triage
 description: 'linear-triage Process all Linear issues in triage, recommending projects, priorities, teams, and refinements interactively. Triggers: "triage issues", "process the triage queue". Requires a workspace skill (linear-kilic or linear-laravel). Do NOT use for cycle planning (linear-cycle) or next-task picks (linear-next-task).'
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
@@ -9,6 +10,8 @@ references:
 ---
 
 ## Linear Triage
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.

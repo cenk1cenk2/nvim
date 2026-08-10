@@ -3,6 +3,7 @@ name: linear-initiative-post
 description: 'linear-initiative-post Draft a status update post for a Linear initiative from recent progress across its projects and next steps. Use for "write an initiative update", "post an initiative status update". Do NOT use for description edits (/linear-initiative-update) or project status updates (/linear-project-post).'
 argumentHint: "[initiative-name or ID]"
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
@@ -10,6 +11,8 @@ references:
 ---
 
 ## Linear Initiative Update Post
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.

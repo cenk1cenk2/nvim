@@ -4,12 +4,15 @@ description: 'obsidian-note Create structured notes in the Obsidian vault follow
 disableModelInvocation: true
 argumentHint: "[topic or description]"
 references:
+  - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---
 
 ## Obsidian Note: Structured Knowledge Management
+
+When the work deviates from what this artifact claims, reconcile it per `reconcile-state` — on by default, ask when it is a judgement call.
 
 Posture: `present-first`.
 ## Context
