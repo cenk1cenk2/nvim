@@ -76,7 +76,8 @@ Posture: `present-first`.
    - **Issue/PR references** — when the user provides an issue URL, issue ID, or the branch name matches an issue pattern:
      - Detection, keyword selection, and per-platform trailer format: `commit-trailers`.
      - Fetch the issue via the appropriate MCP tool to understand context.
-     - For Linear IDs, default to `refs` when closing intent is unclear or the work is partial. Use `closes` when the staged change is the single/final deliverable that should close the issue.
+     - ⛔ **Linear ignores commit messages entirely** — a `closes K-123` in a commit links nothing, moves nothing, closes nothing. Put the id in the commit only as a human-readable note if the repo does that, and never rely on it. The link and the close come from the **PR/MR title and description** (`github-pr-create` / `gitlab-mr-create`).
+     - GitHub and GitLab **native** issues DO close from commit messages — `closes #42` there works. Do not generalise either way.
      - If the user also requested an extended description, weave relevant issue context into the body.
    - **NEVER add `Co-authored-by:` trailers.** This is forbidden — no exceptions.
 

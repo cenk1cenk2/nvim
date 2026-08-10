@@ -23,6 +23,17 @@ When the work genuinely is not ready, the answer is **not** a draft:
 
 If a request is genuinely ambiguous — the word "draft" appears but you cannot tell whether it describes the PR or the work — ask the single question before opening. Never guess toward draft. When a draft was opened at the user's request and they later say it is ready, mark it ready for review; do not leave it sitting in draft.
 
+## ⛔ The description is live, not write-once
+
+**Whenever the branch changes after the PR/MR exists, bring the title and description back in line with it.** Scope grew, an approach was abandoned, a commit was added, the work deviated from what the description claims — update it. Default is update; the user opts out by saying so ("leave the description", "no need to update it").
+
+This matters more than it looks because of the merge method:
+
+- **Squash-merge** — the title becomes the commit subject and the body commonly becomes the commit body. A stale description is not just misleading on the PR page; it is written into history permanently and cannot be fixed by editing the PR afterwards.
+- **Merge / rebase** — the commits carry the history, but the description is still what a reviewer reads first and what the tracker links from.
+
+A description that describes work the branch no longer does is worse than a thin one: it is confidently wrong, and under squash it is wrong forever.
+
 ## Branch reuse
 
 Branches may have previously merged or closed PRs/MRs — this is normal. Only open PRs/MRs matter. If no open PR/MR is found but `git log main..HEAD` shows commits ahead of the base branch, the branch needs a new one. Do NOT search for or get confused by prior closed/merged PRs/MRs on the same branch.
