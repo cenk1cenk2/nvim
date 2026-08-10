@@ -54,6 +54,7 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
 - **Methodology & approach** — *how* we are doing it: the working method, sequencing, conventions adopted, tooling/agent decisions, verification commands. The habits that would be silently dropped by a summary.
 - **Source documents** — every authoritative external context, each as `identifier — what it holds` (Linear project/issue URLs+IDs and their attachments, Obsidian note paths, plan/handoff/internal-plan file paths, PR/MR URLs, key repo paths).
 - **Standing watches / ongoing** — anything that must keep running after resume: PRs/MRs and CI/pipelines being monitored, background agents in flight, polling loops, review threads awaited — each with its identifier and what you are waiting for.
+- **Subagents — every one spawned this session, live or finished.** Record **why it was spawned** (the reason the main loop did not do it itself), its brief and scope, the tier it ran at, its state, what it returned, and what is still outstanding with it. A compaction erases the transcript that proved the work already ran; without this the resuming agent re-dispatches it, or reads a quiet agent as a failed one and destroys a pending report.
 - **Scratchpad scripts & watchers — ★ INLINE THEM ALWAYS, UNCONDITIONALLY.** Any watcher command, poll loop, or helper script written to the scratchpad or a temp dir does NOT survive compaction, is NOT reliably shared across sessions or agents, and does NOT survive a reboot. **Every checkpoint copies them into the anchor verbatim** — the full body, its path, and what it is for (which watch it drives, how to re-run it). This is not conditional on expecting a compaction: **treat the scratchpad and `/tmp` as already gone, at every checkpoint.**
   - **Inline the body, not a reference to it.** A script *mentioned* but not inlined is unrecoverable — and it reads as recorded, which is worse than an obvious gap.
   - **Inline the durable-directory scripts too when the next task needs them.** A file under the user's home survives a reboot, but inlining the one the handoff depends on costs a few lines and removes the dependency entirely.
@@ -207,8 +208,6 @@ Bulldozer is momentum, so the anchor has to carry *how* the push was running, no
 - **Agreed scope:** [what the posture was engaged over — work outside it is a question,
   not an extension.]
 - **Routing rule:** [what gets dispatched vs kept in-house, and at which tier.]
-- **Agents spawned:** `<name/id>` — [brief] — live | delivered | reaped. [A resuming agent
-  neither re-dispatches delivered work nor assumes a quiet agent failed.]
 - **Bulldozer queue** (when ON): in flight → next → after. [An empty queue on resume means
   it was lost, not finished.] Tried and rejected: [so the resume does not re-attempt it.]
 - **Trust:** [whether subagent/tool claims get re-verified before being acted on.]
@@ -229,6 +228,16 @@ decisions, verification commands. The "how" a summary would drop.]
 - `<plans-dir>/...-<name>.md` — internal plan file: [what it holds].
 - `<PR/MR URL>` — [what it holds].
 - `<repo path>` — [what it holds].
+
+## Subagents — spawned this session
+[One entry per agent, live or finished. A resuming agent must be able to tell what already
+ran without re-reading a transcript it no longer has. Never re-dispatch delivered work, and
+never read a quiet agent as a failed one.]
+- `<name / agent-id>` — **why spawned:** [the reason it exists, not just its task — what
+  the main loop was trying to avoid doing itself]. **Brief:** [what it was told to do,
+  and its scope]. **Tier/model:** [resolved]. **State:** live | delivered | reaped.
+  **Result:** [what it returned, or where the result landed]. **Outstanding:** [what still
+  needs doing with it — collect, verify, reap, re-dispatch with a fixed brief].
 
 ## Standing Watches / Ongoing
 [Per watch: the done-condition, the cadence and cap, what fires on the wake, and whether
