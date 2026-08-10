@@ -54,7 +54,7 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
 - **Methodology & approach** — *how* we are doing it: the working method, sequencing, conventions adopted, tooling/agent decisions, verification commands. The habits that would be silently dropped by a summary.
 - **Source documents** — every authoritative external context, each as `identifier — what it holds` (Linear project/issue URLs+IDs and their attachments, Obsidian note paths, plan/handoff/internal-plan file paths, PR/MR URLs, key repo paths).
 - **Standing watches / ongoing** — anything that must keep running after resume: PRs/MRs and CI/pipelines being monitored, background agents in flight, polling loops, review threads awaited — each with its identifier and what you are waiting for.
-- **External state — anything outside this repo that holds state.** Trackers (Linear issues, projects, documents), PRs/MRs with their draft/CI/thread state, branches and their divergence, and anything else that outlives the turn. **Notes and knowledge bases get their own record** — Obsidian repo notes, a repo `CLAUDE.md` touched during the work, the plan file — because they carry no state to report, only whether they still match reality. Per entry: what it is, its state now, whether it is **ours** — created this session or handed to us, which decides reconcile versus surface — and what is outstanding. Notes are the ones most often missed: nothing fails when one goes stale. A resuming agent that rebuilds this board by querying misses whatever it does not know to look for.
+- **External state — one record per kind, not one list.** Linear (issues with live `statusType`, projects, documents), PRs/MRs (draft/CI/threads/description-drift), branches (pushed, divergence, work that exists nowhere else), notes and knowledge bases, and anything else that outlives the turn. Trackers (Linear issues, projects, documents), PRs/MRs with their draft/CI/thread state, branches and their divergence, and anything else that outlives the turn. **Notes and knowledge bases get their own record** — Obsidian repo notes, a repo `CLAUDE.md` touched during the work, the plan file — because they carry no state to report, only whether they still match reality. Per entry: what it is, its state now, whether it is **ours** — created this session or handed to us, which decides reconcile versus surface — and what is outstanding. Notes are the ones most often missed: nothing fails when one goes stale. A resuming agent that rebuilds this board by querying misses whatever it does not know to look for.
 - **Subagents — every one spawned this session, live or finished.** Record **why it was spawned** (the reason the main loop did not do it itself), its brief and scope, the tier it ran at, its state, what it returned, and what is still outstanding with it. A compaction erases the transcript that proved the work already ran; without this the resuming agent re-dispatches it, or reads a quiet agent as a failed one and destroys a pending report.
 - **Scratchpad scripts & watchers — ★ INLINE THEM ALWAYS, UNCONDITIONALLY.** Any watcher command, poll loop, or helper script written to the scratchpad or a temp dir does NOT survive compaction, is NOT reliably shared across sessions or agents, and does NOT survive a reboot. **Every checkpoint copies them into the anchor verbatim** — the full body, its path, and what it is for (which watch it drives, how to re-run it). This is not conditional on expecting a compaction: **treat the scratchpad and `/tmp` as already gone, at every checkpoint.**
   - **Inline the body, not a reference to it.** A script *mentioned* but not inlined is unrecoverable — and it reads as recorded, which is worse than an obvious gap.
@@ -230,30 +230,41 @@ decisions, verification commands. The "how" a summary would drop.]
 - `<PR/MR URL>` — [what it holds].
 - `<repo path>` — [what it holds].
 
-## External State — everything outside this repo
+## Linear — issues, projects, documents
 
-[Every artifact this work touches that lives somewhere else and holds state. Per entry:
-**what it is**, **its state now**, **ours or not** (created this session or handed to us —
-that decides reconcile versus surface, per `reconcile-state`), and **what is outstanding**.
-A resuming agent must see the whole board without re-querying, and cannot query for the
-half it does not know exists.]
+[Refresh state through the active workspace skill (`linear-kilic` / `linear-laravel`) —
+`get_issue` for the live `statusType`, not what the transcript last claimed. Record every
+id in play, not only the one being worked.]
 
-- `<ref / URL>` — [what it is] — state: [...]. Ours? [yes / handed / no]. Outstanding: [...]
+- `<K-xxx>` — [title] — state: [Todo | In Progress | In Review | Done | Canceled].
+  Ours? [created this session | handed to us | neither]. Description current? [yes |
+  drifted on X]. Outstanding: [what has to happen before it closes].
+- `<project / initiative URL>` — [what it holds]. Description current? [...]
+- Documents: `<title>` — [what it holds]. Authored here? [yes / no]. Current? [...]
 
-Common kinds, as prompts rather than a fixed list:
+Rules the resuming agent must not rediscover the hard way: **state moves forward only** —
+never write a lower state than the live one; **closing happens through the PR/MR**, since
+Linear ignores commit messages; and a description that drifted is reconciled only if the
+issue is ours, otherwise surfaced.
 
-**Trackers** — Linear issues (`K-xxx`, with workflow state), projects, initiatives, and the
-documents attached to them. Note whether each description still matches reality.
+## Code Review — PRs / MRs
 
-**Code review** — PRs/MRs: draft (and what it is blocked on) / open / approved / merged /
-closed, CI result, open review threads, and whether the description is behind the branch.
+- `<URL>` — [title] — state: [draft (blocked on X) | open | approved | merged | closed].
+  CI: [green | failing on X | not run]. Ours? [opened this session | pre-existing].
+  Outstanding: [unresolved threads | rebase needed | description behind the branch].
 
-**Branches** — pushed or local, ahead / diverged / clean, and whether anything depends on
-it landing.
+**A draft is a state someone owes an action on** — record what it waits for, and that it
+gets marked ready when the blocker lifts. **Under squash-merge the title and body become
+the commit**, so a description behind the branch is a permanent error once merged, not a
+cosmetic one.
 
-**Anything else with state that outlives the turn** — Spacelift stacks, Slack threads,
-dashboards, scheduled jobs. If it will still exist tomorrow and this work changed or
-depends on it, it belongs here.
+## Branches
+
+- `<branch>` — pushed: [yes / no]. Upstream: [ahead N | behind N | diverged | clean].
+  [What is on it that is not on the default branch; whether anything waits on it landing.]
+
+Note any branch carrying work that exists nowhere else — that is the one a resuming agent
+can destroy by assuming it was merged.
 
 ## Notes & Knowledge Bases — authored, and silently stale
 
@@ -266,10 +277,16 @@ is the drift most often carried straight through a compaction.]
   Current? [matches reality | drifted on X]. Ours? [we authored it | handed to us | no —
   surface only]. Outstanding: [what still needs writing].
 
-Covers Obsidian repository notes and other vault notes, a repo `CLAUDE.md` / `AGENTS.md`
-updated during the work, the internal plan file, and any Linear document authored here.
-Reconcile what is ours per `reconcile-state`; for the rest, record the drift so the
-resuming agent can raise it rather than trusting the note.
+**Obsidian repository notes** — derive the folder from the repo path relative to
+`~/development/` and read `<folder>/README` with `obsidian__vault_read`. Treat what it says
+as established context. Updates go through `obsidian-repository`, which **always proposes
+and never auto-writes**, so an intended note change survives compaction only if it is
+recorded here as outstanding.
+
+Also covers a repo `CLAUDE.md` / `AGENTS.md` touched during the work — those route through
+`config-repository` — the internal plan file, and any Linear document authored here.
+Reconcile what is ours per `reconcile-state`; for the rest record the drift so the resuming
+agent raises it rather than trusting the note.
 
 ## Subagents — spawned this session
 [One entry per agent, live or finished. A resuming agent must be able to tell what already
