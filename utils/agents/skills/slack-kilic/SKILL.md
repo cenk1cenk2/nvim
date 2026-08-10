@@ -1,6 +1,6 @@
 ---
 name: slack-kilic
-description: 'slack-kilic Initialize a Slack session for the kilic workspace. Auto-invoked on kilic Slack context (personal Slack URLs, kilic channels, GitLab-related discussions).'
+description: slack-kilic Auto-invoked on personal Slack context - kilic Slack URLs, kilic channels, or GitLab-related discussion. Initialises the Slack session for that workspace.
 references:
   - ../references/harness-connectors.md
   - ../references/slack.md

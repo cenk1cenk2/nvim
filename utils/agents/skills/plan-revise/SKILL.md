@@ -1,11 +1,12 @@
 ---
 name: plan-revise
-description: 'plan-revise Revise an existing plan file when the direction was wrong - gathers what went wrong (and partial implementation via git), re-interviews on the deltas, updates the plan in place with a dated revision entry. Triggers: "revise the plan", "we got it wrong", "change direction". Do NOT use for new plans (/plan-hard), unchanged pickup (/plan-pickup), or handoffs (/plan-handoff).'
+description: plan-revise Revise a plan whose direction turned out wrong - gathers what went wrong and what was already built, re-interviews on just the deltas, and updates the plan in place with a dated entry. Use on "revise the plan", "we got this wrong", "change direction". Not for a new plan, resuming an unchanged one, or a handoff.
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/plan-mode.md
   - ../references/provider-paths.md
+argumentHint: '[optional: plan file, and what changed]'
 ---
 
 ## Plan Revise — Going Back to the Drawing Board

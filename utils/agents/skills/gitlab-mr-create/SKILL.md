@@ -1,6 +1,6 @@
 ---
 name: gitlab-mr-create
-description: 'gitlab-mr-create Analyze and write GitLab MR titles and descriptions. Use for "write an MR description", "create an MR", "improve the MR". Do NOT use for GitHub PRs (github-pr-create) or CI pipelines/failures (gitlab-ci-create, gitlab-ci-fix).'
+description: gitlab-mr-create Analyse a GitLab MR and write its title and description, keeping them current as the branch changes. Use on "write an MR description", "create an MR", "improve the MR". Not for GitHub pull requests, or for CI pipelines and failures.
 references:
   - ../references/reconcile-state.md
   - ../references/scm-detect.md
@@ -11,6 +11,7 @@ references:
   - ../references/output-diff.md
   - ../references/linear-state-transitions.md
   - ../references/release-convention.md
+argumentHint: '[optional: MR number or URL]'
 ---
 
 ## GitLab MR Description Workflow

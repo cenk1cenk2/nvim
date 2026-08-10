@@ -1,7 +1,7 @@
 ---
 name: linear-issue-update
-description: 'linear-issue-update Update a Linear issue''s description to reflect deviations and refinements from the conversation. Triggers: "update the issue", "issue description is outdated". Do NOT use for comments (/linear-issue-comment), checklists (/linear-issue-checklist), or new issues (/linear-issue-create).'
-argumentHint: "[issue-id or Linear URL]"
+description: linear-issue-update Rewrite a Linear issue's description so it reflects the deviations and refinements the conversation produced. Use on "update the issue", "the description is out of date". Not for a state change alone, a comment, checklist items, or a new issue.
+argumentHint: '[issue id or URL]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md

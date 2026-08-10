@@ -1,7 +1,7 @@
 ---
 name: linear-issue-checklist
-description: 'linear-issue-checklist Update a Linear issue''s checklist by marking items done or cancelled. Use for "mark task as done", "check off this item". Do NOT use for comments (/linear-issue-comment) or description edits (/linear-issue-update).'
-argumentHint: "[issue-id or Linear URL] [items to update]"
+description: linear-issue-checklist Tick or cancel items on a Linear issue's checklist. Use on "mark that task done", "check off this item". Not for leaving a comment, or for rewriting the description.
+argumentHint: '[issue id or URL] [items to update]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md

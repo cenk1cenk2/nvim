@@ -1,7 +1,7 @@
 ---
 name: linear-initiative-update
-description: 'linear-initiative-update Revise a Linear initiative''s description and review its project alignment. Use for "update the initiative", "revise initiative description". Requires /linear-kilic or /linear-laravel. Do NOT use for creating initiatives (/linear-initiative-create) or status posts (/linear-initiative-post).'
-argumentHint: "[initiative-name or ID]"
+description: linear-initiative-update Revise a Linear initiative's description and review whether its projects still belong to it. A Linear workspace skill must be active first. Use on "update the initiative", "revise the initiative description". Not for creating one, or for posting its status.
+argumentHint: '[initiative name or ID]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md

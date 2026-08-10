@@ -1,7 +1,7 @@
 ---
 name: linear-issue-comment
-description: 'linear-issue-comment Record critical findings, deviations, and decisions as concise comments on Linear issues. Use for "comment on the issue", "log this to Linear". Do NOT use for description edits (/linear-issue-update) or checklists (/linear-issue-checklist).'
-argumentHint: "[issue-id or Linear URL] [what to comment]"
+description: linear-issue-comment Record findings, deviations, and decisions as a concise comment on a Linear issue. Use on "comment on the issue", "log this to Linear". Not for rewriting the description, or for checklist items.
+argumentHint: '[issue id or URL] [what to record]'
 references:
   - ../references/present-first.md
   - ../references/linear-prerequisite.md

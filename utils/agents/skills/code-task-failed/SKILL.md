@@ -1,10 +1,10 @@
 ---
 name: code-task-failed
-description: 'code-task-failed Investigate a failed command (build, test, lint) by capturing output and isolating the root cause. Always manually invoked. Do NOT use for behavioral bugs (code-debug) or code review (code-review-branch).'
+description: code-task-failed Investigate a command that failed - build, test, lint - by capturing its output and isolating the root cause. Use on "the build failed", "tests are failing", "why did that error". Not for code that runs but behaves wrongly, or for code review.
 disableModelInvocation: true
 references:
   - ../references/tmux.md
-argumentHint: "[brief description of what failed, e.g., 'build failed', 'test suite', 'lint errors']"
+argumentHint: '[what failed - e.g. ''build'', ''test suite'', ''lint'']'
 ---
 
 ## Code Failure Investigation

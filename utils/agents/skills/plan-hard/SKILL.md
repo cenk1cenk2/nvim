@@ -1,6 +1,6 @@
 ---
 name: plan-hard
-description: 'plan-hard Deep interview-driven plan mode - walks the design tree one decision at a time, self-answers via codebase exploration, and recommends answers. Default whenever plan mode is entered. Triggers: "plan hard", "interview me". Do NOT use for existing plans (/plan-pickup) or cross-session handoffs (/plan-handoff).'
+description: plan-hard Interview-driven plan mode - walks the design tree one decision at a time, self-answers what the codebase can answer, and recommends the rest. The default whenever plan mode is entered. Use on "plan hard", "interview me", "think this through". Not for loading an existing plan, or writing one for another session.
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md

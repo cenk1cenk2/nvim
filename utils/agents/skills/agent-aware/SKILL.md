@@ -1,8 +1,8 @@
 ---
 name: agent-aware
-description: 'agent-aware Author instructions for a target agent that shares your access - hyprpilot skills, MCP servers, repo, instruction files - so point at skills and tools by name instead of inlining what they already contain. Use when drafting subagent prompts, handoff plans, AGENTS.md, or Linear issues your own agents pick up. Do NOT use when the target has no tools or skills (/agent-unaware).'
+description: agent-aware Author instructions for a target agent that shares your access - skills, MCP servers, repo, instruction files - so you point at things by name instead of inlining what it already has. Use when drafting subagent prompts, handoff plans, AGENTS.md, or issues your own agents pick up. Not for a target with no tools or skills.
 disableModelInvocation: true
-argumentHint: "[artifact being authored]"
+argumentHint: '[artifact being authored]'
 references:
   - ../references/agent-target-capability.md
 ---

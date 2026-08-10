@@ -1,6 +1,6 @@
 ---
 name: linear-issue-create
-description: 'linear-issue-create Create new Linear issues with comprehensive analysis and research. Use for "create an issue", "file a bug", "create a ticket". Requires linear-kilic or linear-laravel. ALWAYS set state explicitly - never let issues default to Triage. Do NOT use for updating (linear-issue-update), commenting (linear-issue-comment), or pickup (linear-issue-pickup).'
+description: linear-issue-create Create Linear issues with the analysis and research behind them, always setting the state explicitly rather than letting it fall into triage. A Linear workspace skill must be active first. Use on "create an issue", "file a bug", "open a ticket". Not for editing an existing issue, commenting on one, or preparing one for work.
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md

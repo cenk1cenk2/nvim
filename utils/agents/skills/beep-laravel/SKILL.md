@@ -1,10 +1,10 @@
 ---
 name: beep-laravel
-description: 'beep-laravel Daily check-in that restyles the user''s update in a chosen tone, then always creates a Slack draft DM to the beep bot in the Laravel Slack for the user to review and send themselves - never sends directly, never to a channel. Use on "beep", "daily check-in", "check me in". Do NOT use for status reports to others or standup writeups (write those plainly).'
+description: 'beep-laravel Daily check-in: restyle your update in a chosen tone, then create a Slack draft DM to the check-in bot for you to review and send yourself. Never sends, never posts to a channel. Use on "beep", "daily check-in", "check me in". Not for status reports to other people or standup writeups.'
 references:
   - ../references/harness-connectors.md
 disableModelInvocation: true
-argumentHint: "[tone] <your check-in>"
+argumentHint: '[tone] <your check-in>'
 ---
 
 ## Beep: Daily Check-In

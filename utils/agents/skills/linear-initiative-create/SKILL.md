@@ -1,6 +1,6 @@
 ---
 name: linear-initiative-create
-description: 'linear-initiative-create Create a new Linear initiative with description and goals, linking orphan projects. Use for "create an initiative", "group these projects under an initiative". Requires /linear-kilic or /linear-laravel. Do NOT use for updating initiatives (/linear-initiative-update).'
+description: linear-initiative-create Create a Linear initiative with its description and goals, pulling in orphan projects that belong under it. A Linear workspace skill must be active first. Use on "create an initiative", "group these projects". Not for revising one that exists, or for posting its status.
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md

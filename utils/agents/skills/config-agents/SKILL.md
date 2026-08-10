@@ -1,6 +1,6 @@
 ---
 name: config-agents
-description: 'config-agents Update or review the central AGENTS.md guidelines at ~/.config/nvim/utils/agents/AGENTS.md. Always manually invoked; suggest it on rule drift or new durable conventions but never self-invoke. Do NOT use for per-repo CLAUDE.md/AGENTS.md (config-repository), skills (config-skills), or MCP configs (config-mcp).'
+description: config-agents Update or review the central agent guidelines that load into every session. Use when a rule there is wrong, drifted, or a new durable convention should apply everywhere. Suggest it on rule drift; the user triggers it. Not for a repository's own knowledge base, for skills, or for MCP server config.
 disableModelInvocation: true
 references:
   - ../references/current-state-only.md
@@ -8,7 +8,7 @@ references:
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/commit-push-scoped.md
-argumentHint: "[what to change or review in AGENTS.md]"
+argumentHint: '[what to change or review]'
 ---
 
 ## Agents Guidelines Management

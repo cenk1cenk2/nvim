@@ -1,6 +1,6 @@
 ---
 name: agent-harness
-description: 'agent-harness Resolve how the ACTIVE agent runtime dispatches subagents - tier-to-model mapping, foreground vs background, permission inheritance, result collection, limits - for Claude Code, OpenCode, and Codex. Use on "what are my tiers", "which model is cheap/smart/max", "how do background agents work here", or when a delegation skill must resolve a tier or a dispatch mechanic. Do NOT use to dispatch an agent (/agent-delegate) or plan a DAG (/agent-plan).'
+description: agent-harness Resolve how the ACTIVE runtime dispatches subagents - tier-to-model mapping, foreground vs background, permission inheritance, result collection, limits. Use on "what are my tiers", "which model is smart", "how do background agents work here", or whenever a dispatch needs a tier resolved. Not for actually dispatching or scheduling work.
 ---
 
 ## Agent Harness

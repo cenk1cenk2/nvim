@@ -1,10 +1,10 @@
 ---
 name: code-debug
-description: 'code-debug Debug a behavioral issue where code runs but produces wrong results; investigates via LSP, code hosting, web search, and terminal tools to find the root cause. Always manually invoked. Do NOT use for failed commands (code-task-failed) or code review (code-review-branch).'
+description: code-debug Debug a behavioural issue where code runs but produces the wrong result; investigates via LSP, code hosting, web search, and the terminal to find the root cause. Use on "why is this wrong", "debug this", "track down this bug". Not for a command that failed outright, or for reviewing code quality.
 disableModelInvocation: true
 references:
   - ../references/tmux.md
-argumentHint: "[description of the problem or paste the failing snippet]"
+argumentHint: '[description of the problem, or the failing snippet]'
 ---
 
 ## Code Debugging

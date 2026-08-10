@@ -1,6 +1,6 @@
 ---
 name: slack-laravel
-description: 'slack-laravel Initialize a Slack session for the Laravel enterprise workspace. Auto-invoked on enterprise Slack context (work Slack URLs, Laravel org channels, GitHub Laravel repos).'
+description: slack-laravel Auto-invoked on work Slack context - Laravel workspace URLs, org channels, or Laravel GitHub repos. Initialises the Slack session for that workspace.
 references:
   - ../references/harness-connectors.md
 ---

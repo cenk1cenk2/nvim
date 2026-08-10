@@ -1,7 +1,7 @@
 ---
 name: agent-review
-description: 'agent-review Dispatch review subagents to cross-check artifacts (plan, DAG, facts, analysis) against the codebase or a devil''s-advocate lens; tier chosen from what the review demands, parallel reviewers for multiple artifacts. Use on "review this", "fact-check", "second opinion". Do NOT use to run a task (/agent-delegate), for multi-task plans (/agent-plan), or to re-read code you''ve already seen.'
-argumentHint: "[type=plan|dag|facts|freeform] [artifact or file path] [optional: 'hard' | 'deep' | 'thorough' | explicit model name]"
+description: agent-review Dispatch review subagents to cross-check an artifact - a plan, a DAG, a set of factual claims, or an argument - against the codebase or a devil's-advocate lens. Tier follows what the review demands; multiple artifacts review in parallel. Use on "review this", "fact-check", "second opinion". Not for running the work itself, or re-reading code you already have.
+argumentHint: '[type=plan|dag|facts|freeform] [artifact or path] [optional: ''thorough'' or a model name]'
 references:
   - ../references/agent-delegate.md
   - ../references/scm-detect.md

@@ -1,8 +1,8 @@
 ---
 name: hyprpilot-delegate
-description: 'hyprpilot-delegate Delegate a task to a separate hyprpilot agent session (claude/codex/opencode) over the hyprpilot_harness MCP server, then steer it across turns. Use on "delegate this to hyprpilot", "spawn a hyprpilot agent", "send this to personal/claude/opus", "list hyprpilot sessions", "steer that session", "kill that agent". Covers profile discovery, spawning blocking or detached, multi-turn steering, following output live, and cleanup. Do NOT use for subagents inside this harness (use /agent-delegate) or to reload the skill catalog (use /hyprpilot-reload).'
+description: 'hyprpilot-delegate Hand a task to a SEPARATE hyprpilot agent session and steer it across turns - profile discovery, spawning blocking or detached, following output live, cleanup. Only on an explicit request: it is never inferred from a task''s shape. Use on "delegate this to hyprpilot", "spawn a hyprpilot agent", "steer that session". Not for subagents inside this harness, or for reloading the skill catalog.'
 disableModelInvocation: true
-argumentHint: "[task] [optional: profile name or fragment, e.g. 'personal glm-5.2']"
+argumentHint: '[task] [optional: profile name or fragment]'
 references:
   - ../references/hyprpilot-sessions.md
   - ../references/agent-conventions.md

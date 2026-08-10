@@ -1,7 +1,7 @@
 ---
 name: linear-initiative-post
-description: 'linear-initiative-post Draft a status update post for a Linear initiative from recent progress across its projects and next steps. Use for "write an initiative update", "post an initiative status update". Do NOT use for description edits (/linear-initiative-update) or project status updates (/linear-project-post).'
-argumentHint: "[initiative-name or ID]"
+description: linear-initiative-post Draft a status update for a Linear initiative from recent progress across its projects and what comes next. Use on "write an initiative update", "post initiative status". Not for editing the initiative's description, or for a single project's status.
+argumentHint: '[initiative name or ID]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md

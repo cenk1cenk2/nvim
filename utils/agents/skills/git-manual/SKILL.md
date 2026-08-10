@@ -1,6 +1,6 @@
 ---
 name: git-manual
-description: 'git-manual Session-persistent "skip the ceremony" mode - implement inline on the current branch and leave all version control to the user; overrides prior instructions to branch/commit/push/PR. Triggers: "manual mode", "no branch", "no commit", "I''ll handle git". Do NOT use to create a branch (git-branch), commit (git-commit), or draft a PR/MR (github-pr-create, gitlab-mr-create).'
+description: git-manual Session mode that skips version-control ceremony - implement inline on the current branch and leave branching, committing and pushing to the user. Overrides earlier instructions to branch or commit. Use on "manual mode", "no branch", "I'll handle git". Not for actually creating a branch, committing, or drafting a PR/MR.
 disableModelInvocation: true
 ---
 

@@ -1,6 +1,6 @@
 ---
 name: linear-triage
-description: 'linear-triage Process all Linear issues in triage, recommending projects, priorities, teams, and refinements interactively. Triggers: "triage issues", "process the triage queue". Requires a workspace skill (linear-kilic or linear-laravel). Do NOT use for cycle planning (linear-cycle) or next-task picks (linear-next-task).'
+description: linear-triage Work through every Linear issue sitting in triage, recommending project, priority, team, and refinements interactively. A Linear workspace skill must be active first. Use on "triage the issues", "process the triage queue". Not for planning a cycle, or for choosing a single next task.
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md

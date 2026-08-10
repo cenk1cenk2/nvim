@@ -1,11 +1,12 @@
 ---
 name: gitlab-ci-fix
-description: 'gitlab-ci-fix Diagnose failing GitLab CI pipelines on the current branch, research errors, and propose fixes. Use for "pipeline is failing", "fix the GitLab CI". Do NOT use for creating pipelines (gitlab-ci-create), GitHub failures (github-ci-fix), or MR descriptions (gitlab-mr-create).'
+description: gitlab-ci-fix Diagnose failing GitLab pipelines on the current branch, research the errors, and propose fixes. Use on "the pipeline is failing", "fix the CI". Not for authoring pipelines, for GitHub Actions failures, or for MR descriptions.
 disableModelInvocation: true
 references:
   - ../references/scm-detect.md
   - ../references/scm-ci-fix.md
   - ../references/scm-gitlab.md
+argumentHint: '[optional: pipeline or job name]'
 ---
 
 ## GitLab Failed CI: Diagnose and Fix Failing Pipelines

@@ -1,8 +1,8 @@
 ---
 name: agent-unaware
-description: 'agent-unaware Author instructions for a target agent with no MCP tools and no skills - a plain chat model, a hosted coding agent, a CI job, or a human - by inlining every convention and spelling out exact commands instead of pointing at things it cannot open. Use when drafting prompts, issues, or docs for an outside executor. Do NOT use when the target shares your skills and MCP servers (/agent-aware).'
+description: agent-unaware Author instructions for a target with no MCP tools and no skills - a plain chat model, a hosted coding agent, a CI job, or a person - by inlining every convention and spelling out exact commands instead of pointing at things it cannot open. Use when drafting prompts, issues, or docs for an outside executor. Not for a target that shares your skills and servers.
 disableModelInvocation: true
-argumentHint: "[artifact being authored]"
+argumentHint: '[artifact being authored]'
 references:
   - ../references/agent-target-capability.md
   - ../references/redact-private-data.md

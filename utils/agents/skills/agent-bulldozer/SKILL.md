@@ -1,8 +1,8 @@
 ---
 name: agent-bulldozer
-description: 'agent-bulldozer Push-through mode: drive work forward autonomously until told to stop - always queue the next action, never idle on blocking waits (arm a watcher), report momentum tersely. Hard stops (destructive actions, credentials) still apply. Use on "bulldoze", "push through", "keep going until done". Do NOT use for the default investigate-discuss-wait posture or one-step tasks.'
+description: 'agent-bulldozer Push-through posture: drive work forward autonomously until told to stop - always queue the next action, never idle on a blocking wait, report momentum tersely. Destructive actions and credentials still stop. Use on "bulldoze", "push through", "keep going until done". Not for the default investigate-and-discuss posture, or a one-step task.'
 disableModelInvocation: true
-argumentHint: "[scope of the push]"
+argumentHint: '[scope of the push]'
 references:
   - ../references/long-running-work.md
   - ../references/mode-toggle.md

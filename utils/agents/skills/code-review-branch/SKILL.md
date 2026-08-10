@@ -1,8 +1,8 @@
 ---
 name: code-review-branch
-description: 'code-review-branch Review the current branch''s changes against the default or target branch with full conversation context. Always manually invoked. Do NOT use for PR/MR descriptions (github-pr-create, gitlab-mr-create), debugging (code-debug), or failed commands (code-task-failed).'
+description: code-review-branch Formal review of the whole current branch against its base, with full conversation context. Use on "review the branch", "audit this before the PR". Not for a quick pass over recent edits, writing a PR description, debugging, or a failed command.
 disableModelInvocation: true
-argumentHint: "[optional: target-branch or PR URL]"
+argumentHint: '[optional: target branch or PR/MR URL]'
 references:
   - ../references/scm-detect.md
   - ../references/scm-github.md

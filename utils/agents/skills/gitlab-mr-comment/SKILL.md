@@ -1,8 +1,8 @@
 ---
 name: gitlab-mr-comment
-description: 'gitlab-mr-comment Post a companion skill''s output as a comment on the current GitLab MR. Use for "comment on the MR", "post this to the MR". Do NOT use for MR descriptions (gitlab-mr-create), GitHub PR comments (github-pr-comment), or issue comments (GitLab MCP directly).'
+description: gitlab-mr-comment Post a companion skill's output as a comment on a GitLab MR. Use on "comment on the MR", "post this to the MR". Not for the MR description itself, for GitHub pull requests, or for issue comments.
 disableModelInvocation: true
-argumentHint: "[companion-skill] [MR number or URL]"
+argumentHint: '[companion-skill] [MR number or URL]'
 references:
   - ../references/scm-detect.md
   - ../references/present-first.md

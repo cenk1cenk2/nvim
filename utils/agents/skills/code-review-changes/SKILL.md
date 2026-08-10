@@ -1,8 +1,8 @@
 ---
 name: code-review-changes
-description: 'code-review-changes Quick, iterative review of recent changes. Triggers: "review my changes", "check this code", "review against main". Do NOT use for formal branch audits (code-review-branch), PR/MR descriptions (github-pr-create, gitlab-mr-create), or debugging (code-debug).'
+description: code-review-changes Quick, iterative review of recent changes as you work. Use on "review my changes", "check this code". Not for a formal audit of the whole branch, writing a PR description, or debugging.
 disableModelInvocation: true
-argumentHint: "[optional: baseline — branch, commit, or 'this conversation']"
+argumentHint: '[optional: baseline - branch, commit, or ''this conversation'']'
 references:
   - ../references/scm-detect.md
   - ../references/review-findings.md

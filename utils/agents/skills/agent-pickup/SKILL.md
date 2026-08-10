@@ -1,8 +1,8 @@
 ---
 name: agent-pickup
-description: 'agent-pickup Pick up Linear projects, project slices, or issues and execute them with the lead and agents as appropriate. Use on "agents pick up this project", "work these Linear issues", "pick up K-123". Do NOT use for read-only project refreshes or choosing the next task only.'
+description: agent-pickup Pick up tracker projects, slices, or issues and EXECUTE them with the lead and subagents. Use on "agents pick up this", "have the agents do these issues". Not for preparing an issue and waiting for a go, a read-only refresh, or only choosing what to work on next.
 disableModelInvocation: true
-argumentHint: "[Linear project, project slice, issue id(s), or URL] [optional: agent/direct/sequential/parallel/confirm]"
+argumentHint: '[project, slice, issue id(s), or URL] [optional: agent|direct|sequential|parallel|confirm]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md

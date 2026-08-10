@@ -1,8 +1,8 @@
 ---
 name: cluster-kilic-chart
-description: 'cluster-kilic-chart Create a new Helm chart wrapper in the cluster/charts GitLab group - scaffolds the chart repo with upstream dependency, values, optional custom templates, and standard boilerplate. Always manually invoked. Do NOT use for workload deployments (/cluster-kilic-workload), ArgoCD workloads (/argocd-kilic-workload), or LB routing (/argocd-kilic-loadbalancer).'
+description: cluster-kilic-chart Create a Helm chart wrapper in the charts group - scaffolds the repo with its upstream dependency, values, optional custom templates, and standard boilerplate. Use when wrapping an upstream chart for this setup. Not for deployment repos, ArgoCD workload services, or load balancer routing.
 disableModelInvocation: true
-argumentHint: "[chart-name] - e.g., 'goldilocks', 'velero', 'cilium-l2-announcement'"
+argumentHint: '[chart-name] - e.g. ''goldilocks'', ''velero'''
 references:
   - ../references/present-first.md
   - ../references/output-diff.md

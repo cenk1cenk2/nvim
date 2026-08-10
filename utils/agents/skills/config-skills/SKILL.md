@@ -1,6 +1,6 @@
 ---
 name: config-skills
-description: 'config-skills Create, update, or review skills in the skills directory. Triggers: "create a skill", "update skill X", "add a new slash command", "improve this skill". Do NOT use for loading or chaining skills (load-skills).'
+description: config-skills Create, update, or review skills in the skills directory. Use on "create a skill", "update this skill", "add a slash command", "improve this skill". Not for the shared reference files, and not for resolving which skill to load.
 disableModelInvocation: true
 references:
   - ../references/current-state-only.md
@@ -8,7 +8,7 @@ references:
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/commit-push-scoped.md
-argumentHint: "[create|update|review] [skill-name] [description of what the skill should do]"
+argumentHint: '[create|update|review] [skill-name] [what it should do]'
 ---
 
 ## Skill Management
@@ -108,7 +108,7 @@ Every `SKILL.md` starts with YAML frontmatter followed by markdown instructions.
 ```yaml
 ---
 name: skill-name # kebab-case, matches directory name
-description: What it does, key use case first. Use when user says "trigger phrase", "another phrase". Do NOT use for X (use /other-skill).
+description: slug What it does. Use on "trigger phrase", "another phrase". Not for the situation it must not take.
 ---
 ```
 
@@ -353,16 +353,19 @@ Two carry a hard rule worth knowing without opening the file:
 
 ## Description Checklist
 
-Run this checklist when creating, updating, or reviewing any skill description:
+Run this when creating, updating, or reviewing any description. **One shape, every skill:**
 
-1. **Structure** — follows the format: `[What it does, key use case first] + [When to use it / trigger phrases] + [Negative triggers if needed]`.
-2. **Trigger phrases** — includes phrases users would actually say (e.g., "create a skill", "set up a project").
-3. **Negative triggers** — includes "Do NOT use for X" when the skill shares vocabulary with sibling skills (e.g., Linear family, cluster family).
-4. **Specificity** — not too vague ("Helps with projects" is bad) and not too technical ("Implements the entity model" is bad).
-5. **Plain text, key use case first** — brief plain-text prose only. No markdown headers and no YAML block scalars (`|`, `>`) in the description; structured what/when/do-not content belongs in the skill **body**, not the description. Put the primary use case first so it survives truncation.
-6. **Start with the slug.** Every description opens by repeating its own skill name — `config-skills Create, update, or review skills…`. This is deliberate: **Claude Code truncates long descriptions**, and leading with the slug guarantees the skill's identity survives the cut. It is not redundancy to optimize away.
-7. **Length** — keep it short. `list_skills` returns **every** skill's description in one payload, so each description is paid for by the whole catalog, and an over-long one risks truncation eating its triggers. Lead with the slug, then the primary use case, then triggers; cut everything else.
-8. **No XML tags** — no `<` or `>` characters in the description (security restriction).
+```
+<slug> <what it does>. Use on "<phrase>", "<phrase>". Not for <situation>.
+```
+
+1. **Start with the slug.** Claude Code truncates long descriptions, so leading with the slug keeps the skill identifiable when the tail is cut. Not redundancy — a truncation defence.
+2. **Then what it does**, in one clause. Plain prose, no headers, no YAML block scalars.
+3. **Then `Use on` / `Use when`** with phrases a user would actually type, or the situation that should trigger it. Auto-invoked skills lead with the condition instead: *"Auto-invoked on X context - ..."*.
+4. **Then `Not for <situation>`** — ⛔ **describe the situation, never name the sibling skill.** A hardcoded slug goes stale the moment anything is renamed, and it forces every rename into a catalog-wide sweep. "Not for a read-only refresh" routes as well as "(use /linear-issue-read)" and survives the rename.
+5. **Say it once.** Do not restate the tier — `disableModelInvocation` already carries "manually invoked", and repeating it in prose costs the whole catalog.
+6. **Keep it short.** `list_skills` returns every description in one payload, so each is paid for by the whole catalog and an over-long one risks truncation eating its own triggers. Roughly 380 characters is the ceiling.
+7. **No `<` or `>`** anywhere in the description.
 
 ## Conventions
 

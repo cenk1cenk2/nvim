@@ -1,12 +1,12 @@
 ---
 name: code-pull
-description: 'code-pull Pull changes from a reference GitHub/GitLab repository and adapt them to the current repository. Always manually invoked. Do NOT use for code review (code-review-branch), debugging (code-debug), or PR descriptions (github-pr-create, gitlab-mr-create).'
+description: code-pull Pull changes from a reference repository and adapt them to this one. Use on "pull this from upstream", "port that change here", or when given a reference repo and refs. Not for reviewing code, debugging, or writing a PR description.
 disableModelInvocation: true
 references:
   - ../references/scm-detect.md
   - ../references/scm-github.md
   - ../references/scm-gitlab.md
-argumentHint: "[github/gitlab repo URL or path] [branch/PR/MR/commit refs]"
+argumentHint: '[repo URL or path] [branch, PR/MR, or commit refs]'
 ---
 
 ## Code Pull: Adapt Changes from a Reference Repository

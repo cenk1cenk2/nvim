@@ -1,7 +1,7 @@
 ---
 name: git-push
-description: 'git-push Push the current branch to remote immediately (invoking is the approval); asks only on real blockers (diverged, behind, force, protected). Triggers: "push", "git push", "push to origin". Do NOT use for committing (git-commit), branch creation (git-branch), or opening PRs (github-pr-create, gitlab-mr-create).'
-argumentHint: "[optional: remote name or safety flag — e.g., 'upstream', '--force-with-lease']"
+description: 'git-push Push the current branch - invoking it is the approval. Asks only on a real blocker: diverged, behind, a force push, or a protected branch. Use on "push", "push to origin". Not for committing, creating a branch, or opening a PR/MR.'
+argumentHint: '[optional: remote, or a safety flag such as ''--force-with-lease'']'
 references:
   - ../references/scm-detect.md
   - ../references/release-convention.md

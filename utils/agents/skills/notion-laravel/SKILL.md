@@ -1,6 +1,6 @@
 ---
 name: notion-laravel
-description: 'notion-laravel Initialize a Notion session for the Laravel workspace. Auto-invoked on Notion context: Notion URLs or Notion page references in Laravel context. Do NOT use for pulling (notion-pull) or pushing (notion-push) pages.'
+description: notion-laravel Auto-invoked on Notion context - a Notion URL or page reference in Laravel work. Initialises the Notion session for that workspace. Not for pulling a page into the editor, or pushing one back.
 ---
 
 ## Notion Workspace: Laravel

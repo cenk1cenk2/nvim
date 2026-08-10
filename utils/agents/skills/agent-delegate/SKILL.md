@@ -1,7 +1,7 @@
 ---
 name: agent-delegate
-description: 'agent-delegate Delegate a single task to one subagent at a chosen tier (cheap/default/smart/max) or explicit model. Use on "delegate this", "use a cheap/smart agent", "run this with opus/haiku". Do NOT use for multi-task plans or DAG-scheduled work (use /agent-plan).'
-argumentHint: "[task description] [optional: tier 'cheap'|'default'|'smart'|'max' or explicit model name]"
+description: agent-delegate Delegate one task to one subagent at a chosen tier - cheap, default, smart, max - or an explicit model. Use on "delegate this", "use a cheap/smart agent", "run this with opus". Not for multi-task or dependency-scheduled work, a separate agent session, or the offsite agent.
+argumentHint: '[task] [optional: cheap|default|smart|max, or a model name]'
 references:
   - ../references/long-running-work.md
   - ../references/agent-delegate.md

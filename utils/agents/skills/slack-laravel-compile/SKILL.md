@@ -1,8 +1,8 @@
 ---
 name: slack-laravel-compile
-description: 'slack-laravel-compile Compile a concise Slack message from the user''s input, enriched with PR, Spacelift, and code references; always drafts for approval before posting. Triggers: "compile this for Slack", "share this on Slack". Do NOT use for reading an existing Slack link (slack-message), PR review requests (slack-laravel-review), or the daily check-in DM (beep-laravel).'
+description: slack-laravel-compile Compile a concise Slack message from your input, enriched with verified links to the PRs, stacks, and code it mentions, and drafted for approval before posting. Use on "compile this for Slack", "share this on Slack". Not for reading an existing Slack link, posting a review request, or the daily check-in.
 disableModelInvocation: true
-argumentHint: "[what to compile — a question, finding, or topic]"
+argumentHint: '[what to compile - a question, finding, or topic]'
 references:
   - ../references/scm-detect.md
   - ../references/present-first.md

@@ -1,7 +1,7 @@
 ---
 name: linear-next-task
-description: 'linear-next-task Analyze Linear projects and issues to recommend the best next task(s). Triggers: "what should I work on", "pick next task". Do NOT use for picking up a known issue (/linear-issue-pickup) or cycle planning (/linear-cycle).'
-argumentHint: "[project-name or Linear URL] (optional — omit to analyze all projects)"
+description: linear-next-task Weigh Linear projects and issues and recommend what to work on next. Use on "what should I work on", "pick the next task". Not for picking up an issue you already chose, or for planning a whole cycle.
+argumentHint: '[optional: project or URL - omit to weigh everything]'
 references:
   - ../references/reconcile-state.md
   - ../references/linear-prerequisite.md

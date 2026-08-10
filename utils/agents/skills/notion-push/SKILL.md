@@ -1,8 +1,8 @@
 ---
 name: notion-push
-description: 'notion-push Push the current markdown file to a Notion page (# heading to title, frontmatter to metadata). Triggers: "push to Notion", "sync to Notion". Do NOT use for pulling (notion-pull) or session init (notion-laravel).'
+description: notion-push Push the current markdown file to a Notion page - heading becomes the title, frontmatter becomes metadata. Use on "push to Notion", "sync this to Notion". Not for pulling a page in, or for session setup.
 disableModelInvocation: true
-argumentHint: "[notion-url or search description]"
+argumentHint: '[Notion URL or search terms]'
 references:
   - ../references/present-first.md
   - ../references/output-diff.md

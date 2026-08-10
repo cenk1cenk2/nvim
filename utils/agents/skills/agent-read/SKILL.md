@@ -1,6 +1,6 @@
 ---
 name: agent-read
-description: 'agent-read Re-ground the session from scratch: re-read ~/.config/nvim/utils/agents/AGENTS.md, re-run list_skills, reload caveman, redo session initialization. Use after deviating from guidelines or when AGENTS.md changed mid-session. Always manually invoked. Do NOT use for normal work or a one-off file read.'
+description: agent-read Re-ground the session from scratch - re-read the central guidelines, re-list the skill catalog, reload the voice, redo session initialization. Use after drifting from the guidelines, or when the guidelines changed mid-session. Not for normal work or a one-off file read.
 disableModelInvocation: true
 ---
 

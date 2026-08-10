@@ -1,7 +1,7 @@
 ---
 name: linear-issue-read
-description: 'linear-issue-read Read-only refresh of a Linear issue - re-read description, comments, and relations, surfacing what changed. Triggers: "read/refresh the issue", "what changed on K-123". Do NOT use to start work (/linear-issue-pickup) or edit it (/linear-issue-update).'
-argumentHint: "[issue-id or Linear URL]"
+description: linear-issue-read Read-only refresh of a Linear issue - description, comments and relations, surfacing what changed since you last looked. Use on "refresh the issue", "what changed on K-123". Not for starting work on it, or editing it.
+argumentHint: '[issue id or URL]'
 references:
   - ../references/linear-prerequisite.md
   - ../references/linear-document-handling.md

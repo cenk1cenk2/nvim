@@ -1,7 +1,7 @@
 ---
 name: linear-project-pickup
-description: 'linear-project-pickup Prepare a Linear project or slice for implementation - fetch issues, documents, blockers, comments, and execution scope. Triggers: "pick up this project", "implement this project slice", project URL for execution. This skill preps and waits for a go; /agent-pickup executes. Do NOT use for read-only refreshes (/linear-project-read) or structure audits (/linear-project-reconcile).'
-argumentHint: "[project name or URL] [optional slice/filter]"
+description: linear-project-pickup Prepare a Linear project or slice for implementation - issues, documents, blockers, comments, execution scope - then wait for an explicit go. Use on "pick up this project", "implement this slice", or a project URL. Not for execution by subagents, a read-only refresh, or a structure audit.
+argumentHint: '[project or URL] [optional: slice or filter]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md

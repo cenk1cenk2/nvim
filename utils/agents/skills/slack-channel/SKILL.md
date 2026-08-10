@@ -1,8 +1,8 @@
 ---
 name: slack-channel
-description: 'slack-channel Process a Slack channel - reads recent messages, analyzes automated and human messages, and acts per channel type. Always manually invoked. Do NOT use for individual message links (slack-message).'
+description: slack-channel Work through a Slack channel - read recent messages, separate automated from human traffic, and act according to what that channel is for. Use on "catch me up on this channel", "process this channel". Not for a single message link.
 disableModelInvocation: true
-argumentHint: "[channel-name-or-id] [optional: timeframe or instructions]"
+argumentHint: '[channel] [optional: timeframe or instructions]'
 references:
   - ../references/present-first.md
   - ../references/enrich-context.md

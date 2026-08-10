@@ -1,8 +1,8 @@
 ---
 name: argocd-kilic-workload
-description: 'argocd-kilic-workload Create a new workload service in the current cluster''s ArgoCD repo - scaffolds the Pulumi service, registers it in the workloads module, optionally configures gateway listeners. Always manually invoked. Do NOT use for LB routing (/argocd-kilic-loadbalancer), standalone workload repos (/cluster-kilic-workload), or chart wrappers (/cluster-kilic-chart).'
+description: argocd-kilic-workload Create a workload service in the current cluster's ArgoCD repo - scaffolds the Pulumi service, registers it in the workloads module, optionally configures gateway listeners. Use when a cluster needs to start deploying something new. Not for load balancer routing, standalone deployment repos, or chart wrappers.
 disableModelInvocation: true
-argumentHint: "[workload-name] - e.g., 'my-app', 'html-cv3', 'notifications'"
+argumentHint: '[workload-name] - e.g. ''my-app'', ''notifications'''
 references:
   - ../references/present-first.md
   - ../references/output-diff.md

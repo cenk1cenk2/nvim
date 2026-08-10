@@ -1,8 +1,8 @@
 ---
 name: agent-labrat
-description: 'agent-labrat Hand work off to @labrat, the offsite Hermes agent, over a Slack thread - a one-off task, a Linear issue or project, or an investigation rooted in an existing alert thread. Writes the brief as an aware-target handoff, optionally routes it to claude/codex/opencode with a model, and arms a watcher on the thread so its progress comes back as events. Use on "hand this to labrat", "give this to the offsite agent", "let labrat take this". Do NOT use for local subagents (/agent-delegate, /agent-plan) or for posting an ordinary Slack message (/slack-message).'
+description: agent-labrat Hand work off to the offsite agent over a Slack thread - a one-off task, a tracker issue or project, or an investigation rooted in an alert thread. Writes the brief, optionally picks the vendor and model, and watches the thread so progress returns as events. Use on "hand this to labrat", "give this to the offsite agent". Not for in-harness subagents or an ordinary Slack post.
 disableModelInvocation: true
-argumentHint: "[task, Linear issue/project, or Slack thread] [optional: claude|codex|opencode, model name]"
+argumentHint: '[task, issue/project, or Slack thread] [optional: vendor and model]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md

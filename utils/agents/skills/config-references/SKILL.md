@@ -1,6 +1,6 @@
 ---
 name: config-references
-description: 'config-references Create, update, or review reference files in the skills directory. Triggers: "create/add/update a reference", "extract this to a reference". Do NOT use for skills themselves (config-skills) or loading skills (load-skills).'
+description: config-references Create, update, or review the shared reference files that skills declare. Use on "create a reference", "extract this to a reference", "review the references". Not for the skills themselves, or for resolving which skill to load.
 disableModelInvocation: true
 references:
   - ../references/current-state-only.md
@@ -8,7 +8,7 @@ references:
   - ../references/output-diff.md
   - ../references/redact-private-data.md
   - ../references/commit-push-scoped.md
-argumentHint: "[create|update|review] [reference-name] [description or context]"
+argumentHint: '[create|update|review] [reference-name] [context]'
 ---
 
 ## Reference Management

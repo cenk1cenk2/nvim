@@ -1,8 +1,8 @@
 ---
 name: agent-coordinator
-description: 'agent-coordinator Coordinator posture: your own context is the scarce resource, so route work to subagents and keep only decisions, dispatch, and cheap status checks in your context. Use on "coordinate this", "orchestrate this", "delegate everything", "stay a coordinator". Do NOT use for a single dispatch (/agent-delegate), a DAG run (/agent-plan), or Linear pickup (/agent-pickup).'
+description: 'agent-coordinator Coordinator posture: your own context is the scarce resource, so route work to subagents and keep only decisions, dispatch, and cheap status checks. Use on "coordinate this", "orchestrate this", "delegate everything". Not for a single one-off dispatch, a dependency-scheduled run, or picking up tracker work.'
 disableModelInvocation: true
-argumentHint: "[scope to coordinate] [optional: 'bulldozer' to also engage push-through mode]"
+argumentHint: '[scope to coordinate] [optional: ''bulldozer'' to also push through]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md

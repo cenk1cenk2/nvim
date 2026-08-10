@@ -1,8 +1,8 @@
 ---
 name: copywriter
-description: 'copywriter Clean up text in the current buffer - fix typos, grammar, punctuation, and markdown formatting while preserving meaning and tone. Triggers: "clean up this text", "proofread", "fix typos". Do NOT use for code editing or refactoring.'
+description: copywriter Clean up text in the current buffer - typos, grammar, punctuation, markdown formatting - preserving meaning and tone. Use on "clean up this text", "proofread", "fix typos". Not for editing or refactoring code.
 disableModelInvocation: true
-argumentHint: "[optional: specific instructions]"
+argumentHint: '[optional: specific instructions]'
 ---
 
 ## Copywriter: Text Cleanup

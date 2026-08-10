@@ -1,6 +1,6 @@
 ---
 name: config-repository
-description: 'config-repository Create or revise repo knowledge base files (CLAUDE.md, AGENTS.md, .local variants). Triggers: "update CLAUDE.md", "create AGENTS.md", "document decisions", or detected durable conventions/rule drift mid-session. Do NOT use for the central AGENTS.md guidelines (config-agents), skills (config-skills), or MCP configs (config-mcp).'
+description: config-repository Create or revise a repository's own knowledge base - CLAUDE.md, AGENTS.md, and .local variants. Use on "update CLAUDE.md", "document this decision", or when durable conventions surface mid-session. Not for the central always-on guidelines, for skills, or for MCP config.
 disableModelInvocation: false
 references:
   - ../references/reconcile-state.md
@@ -8,7 +8,7 @@ references:
   - ../references/present-first.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
-argumentHint: "[local] [optional: what changed or focus area]"
+argumentHint: '[local] [optional: what changed or focus area]'
 ---
 
 ## Repository Knowledge Base

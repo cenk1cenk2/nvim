@@ -1,12 +1,13 @@
 ---
 name: spacelift-report
-description: 'spacelift-report Analyze Spacelift infrastructure changes triggered by a GitHub PR, branch, commit, or Actions run. Triggers: "spacelift report", "what infra changes", or a GitHub link expecting Spacelift analysis. Do NOT use for moved-block analysis (spacelift-moved), general Spacelift ops (spacelift-laravel), CI failures (github-ci-fix), or PR descriptions (github-pr-create).'
+description: spacelift-report Report what infrastructure a change actually alters, from the Spacelift runs a PR, branch, commit, or Actions run triggered. Use on "spacelift report", "what infra does this change". Not for spotting destroy/create cycles that moved blocks would fix, ordinary Spacelift operations, CI failures, or PR descriptions.
 references:
   - ../references/scm-detect.md
   - ../references/present-first.md
   - ../references/scm-github.md
   - ../references/output-diff.md
   - ../references/spacelift-github.md
+argumentHint: '[PR, branch, commit, or Actions link]'
 ---
 
 ## Spacelift Infrastructure Impact Report

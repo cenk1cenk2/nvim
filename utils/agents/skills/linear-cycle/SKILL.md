@@ -1,7 +1,7 @@
 ---
 name: linear-cycle
-description: 'linear-cycle Plan and organize Linear cycles by analyzing projects, issues, and initiatives into a realistic workload. Use for "plan the cycle", "cycle planning", "organize the sprint". Do NOT use for triage (/linear-triage) or picking next tasks (/linear-next-task).'
-argumentHint: "[cycle-number or 'current'|'next'] - e.g., '42', 'current', 'next'"
+description: linear-cycle Plan and organise a Linear cycle by weighing projects, issues, and initiatives into a realistic workload. Use on "plan the cycle", "cycle planning", "organise the sprint". Not for sorting the inbox, or for choosing the single next task.
+argumentHint: '[cycle number, or ''current'' | ''next'']'
 references:
   - ../references/present-first.md
   - ../references/linear-prerequisite.md

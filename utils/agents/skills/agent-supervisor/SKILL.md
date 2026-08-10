@@ -1,8 +1,8 @@
 ---
 name: agent-supervisor
-description: 'agent-supervisor Supervisor posture: own the project-management layer only - investigate, research, verify claims against artifacts, reconcile tracker state with reality, keep priorities and relations honest, report terse. Implementation is never done here; hand it to /agent-coordinator and supervise the result. Use on "supervise this", "be the PM on this", "keep the project honest", "track and reconcile this". Do NOT use to build anything yourself (/agent-coordinator), for a single dispatch (/agent-delegate), or for a Linear pickup that implements (/agent-pickup).'
+description: 'agent-supervisor Supervisor posture: own the project-management layer only - investigate, verify claims against artifacts, reconcile tracker state with reality, keep priorities and relations honest. Implementation always goes elsewhere. Use on "supervise this", "be the PM on this", "keep the project honest". Not for building anything yourself, a single dispatch, or a pickup that implements.'
 disableModelInvocation: true
-argumentHint: "[project, scope, or Linear target to supervise]"
+argumentHint: '[project, scope, or tracker target to supervise]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md

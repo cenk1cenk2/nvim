@@ -1,8 +1,8 @@
 ---
 name: output-chunks
-description: 'output-chunks Walk the user through multi-part analysis one decision at a time - numbered self-contained chunks, each ending in a decision prompt, instead of one wall of findings. Triggers: "chunk this", "one at a time", "walk me through it", "go chunk by chunk". Do NOT use for presenting writes to external systems (output-diff covers that) or for single-item answers.'
+description: output-chunks Walk through multi-part analysis one decision at a time - numbered self-contained chunks, each ending in a prompt - instead of one wall of findings. Use on "chunk this", "one at a time", "walk me through it". Not for presenting a write for approval, and not for a single-item answer.
 disableModelInvocation: true
-argumentHint: "[optional: what to walk through]"
+argumentHint: '[optional: what to walk through]'
 references:
   - ../references/mode-toggle.md
 ---

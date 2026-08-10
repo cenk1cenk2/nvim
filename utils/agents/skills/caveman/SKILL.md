@@ -1,8 +1,8 @@
 ---
 name: caveman
-description: 'caveman Terse, action-first, plain-language voice - keeps all technical substance, cuts fluff, shapes each turn as lede then body then ask; intensity levels full (default) and ultra. Use on "caveman mode", "be brief", "terse", "less tokens".'
+description: 'caveman Terse, action-first, plain-language voice - keeps all technical substance, cuts fluff, shapes each turn as lede then body then ask. Levels: full and ultra. Use on "caveman mode", "be brief", "terse", "fewer tokens".'
 disableModelInvocation: true
-argumentHint: "[full|ultra]"
+argumentHint: '[full|ultra]'
 references:
   - ../references/status-report.md
   - ../references/mode-toggle.md

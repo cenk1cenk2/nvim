@@ -1,6 +1,6 @@
 ---
 name: github-pr-create
-description: 'github-pr-create Analyze and write GitHub PR titles and descriptions. Use for "write a PR description", "create a PR", "improve the PR". Do NOT use for GitLab MRs (gitlab-mr-create) or CI workflows/failures (github-ci-create, github-ci-fix).'
+description: github-pr-create Analyse a GitHub PR and write its title and description, keeping them current as the branch changes. Use on "write a PR description", "create a PR", "improve the PR". Not for GitLab merge requests, or for CI workflows and failures.
 references:
   - ../references/reconcile-state.md
   - ../references/scm-detect.md
@@ -11,6 +11,7 @@ references:
   - ../references/output-diff.md
   - ../references/linear-state-transitions.md
   - ../references/release-convention.md
+argumentHint: '[optional: PR number or URL]'
 ---
 
 ## GitHub PR Description Workflow

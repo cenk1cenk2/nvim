@@ -1,10 +1,11 @@
 ---
 name: code-improve
-description: 'code-improve Audit a codebase or scoped area for architectural, testability, consistency, and clarity improvements; fans out parallel subagents and returns a ranked shortlist, optionally drilling into picks. Use on "improve the codebase", "audit this codebase", "find refactors". Do NOT use for reviewing a PR/branch (/code-review-branch, /code-review-changes), single-file cleanup (edit directly), or planning a pick (/plan-hard).'
+description: code-improve Audit a codebase or scoped area for architectural, testability, consistency, and clarity improvements; fans out parallel subagents and returns a ranked shortlist, optionally drilling into a pick. Use on "improve the codebase", "audit this", "find refactors". Not for reviewing a branch or PR, a single-file cleanup, or planning one chosen change.
 references:
   - ../references/agent-delegate.md
   - ../references/project-tooling.md
   - ../references/provider-paths.md
+argumentHint: '[optional: area or path to audit]'
 ---
 
 ## Code Improve — Codebase Audit and Improvement Proposals

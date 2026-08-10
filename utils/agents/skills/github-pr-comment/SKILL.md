@@ -1,8 +1,8 @@
 ---
 name: github-pr-comment
-description: 'github-pr-comment Post a companion skill''s output as a comment on the current GitHub PR. Triggers: "comment on the PR", "post this to the PR". Do NOT use for PR descriptions (github-pr-create), GitLab MR comments (gitlab-mr-comment), or issue comments (use GitHub MCP directly).'
+description: github-pr-comment Post a companion skill's output as a comment on a GitHub PR. Use on "comment on the PR", "post this to the PR". Not for the PR description itself, for GitLab merge requests, or for issue comments.
 disableModelInvocation: true
-argumentHint: "[companion-skill] [PR number or URL]"
+argumentHint: '[companion-skill] [PR number or URL]'
 references:
   - ../references/scm-detect.md
   - ../references/present-first.md

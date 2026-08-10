@@ -1,8 +1,8 @@
 ---
 name: git-split
-description: 'git-split Break a large change set - uncommitted tree, branch commits, or an open PR/MR - into smaller focused pieces, each on its own branch/commit with optional push and PR/MR. Triggers: "split this PR/MR/branch", "break into smaller PRs", "smaller chunks". Do NOT use to commit as-is (git-commit), create a single branch (git-branch), or rewrite a PR/MR description (github-pr-create, gitlab-mr-create).'
+description: git-split Break a large change set - an uncommitted tree, branch commits, or an open PR/MR - into smaller focused pieces, each on its own branch or commit, optionally pushed and opened. Use on "split this PR", "break into smaller PRs", "smaller chunks". Not for committing the whole set as-is, creating one branch, or rewriting a PR/MR description.
 disableModelInvocation: true
-argumentHint: "[optional: slicing hint — e.g., 'by feature', 'separate refactor and feature', 'by file']"
+argumentHint: '[optional: slicing hint - e.g. ''by feature'', ''separate refactor from feature'']'
 references:
   - ../references/present-first.md
   - ../references/scm-detect.md

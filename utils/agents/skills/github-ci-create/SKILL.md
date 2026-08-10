@@ -1,10 +1,11 @@
 ---
 name: github-ci-create
-description: 'github-ci-create Create or update GitHub Actions workflows for the current repo. Triggers: "add CI", "set up GitHub Actions", "modify the workflow". Do NOT use for diagnosing failures (github-ci-fix), GitLab pipelines (gitlab-ci-create), or PR descriptions (github-pr-create).'
+description: github-ci-create Create or update GitHub Actions workflows for this repo. Use on "add CI", "set up GitHub Actions", "change the workflow". Not for diagnosing a failing run, for GitLab pipelines, or for PR descriptions.
 disableModelInvocation: true
 references:
   - ../references/scm-detect.md
   - ../references/scm-github.md
+argumentHint: '[optional: what the workflow should do]'
 ---
 
 ## GitHub CI: Create and Update GitHub Actions Workflows

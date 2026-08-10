@@ -1,6 +1,6 @@
 ---
 name: load-skills
-description: 'load-skills Background knowledge on resolving skill dependencies and chaining or auto-invoking prerequisite skills - read when a skill declares prerequisites or multiple skills are active together. Load it to resolve a dependency, never as the task itself.'
+description: load-skills Background knowledge on resolving skill prerequisites and chaining - read when a skill declares a prerequisite, or several skills are active together. Load it to resolve a dependency, never as the task itself.
 ---
 
 ## Skill Cross-Loading

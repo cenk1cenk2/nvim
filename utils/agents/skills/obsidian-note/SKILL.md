@@ -1,8 +1,8 @@
 ---
 name: obsidian-note
-description: 'obsidian-note Create structured notes in the Obsidian vault following existing conventions. Triggers: "create a note", "write it up in Obsidian". Do NOT use for repo docs (obsidian-repository), quick todos (obsidian-todo), or triage (obsidian-triage).'
+description: obsidian-note Create a structured note in the vault, following the conventions already there. Use on "create a note", "write this up in Obsidian". Not for repository documentation, a quick todo, or sorting the todo backlog.
 disableModelInvocation: true
-argumentHint: "[topic or description]"
+argumentHint: '[topic or description]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md

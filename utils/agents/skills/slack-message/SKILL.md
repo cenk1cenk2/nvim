@@ -1,8 +1,8 @@
 ---
 name: slack-message
-description: 'slack-message Process a Slack message link - reads the thread, understands context, and acts on user instructions by composing other skills. Always manually invoked. Do NOT use for channel-wide catch-up (slack-channel).'
+description: slack-message Work a Slack message link - read the thread, understand the context, and act on it by composing other skills. Use on "handle this Slack link", or when handed a message URL. Not for catching up on a whole channel.
 disableModelInvocation: true
-argumentHint: "[slack-message-url] [what to do with it]"
+argumentHint: '[message URL] [what to do with it]'
 references:
   - ../references/present-first.md
   - ../references/slack.md

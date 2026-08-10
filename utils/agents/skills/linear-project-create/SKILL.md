@@ -1,6 +1,6 @@
 ---
 name: linear-project-create
-description: 'linear-project-create Create a new Linear project with research, planning, and issue breakdown. Triggers: "create a project", "plan a new project". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for reconciling projects (/linear-project-reconcile) or status updates (/linear-project-post).'
+description: linear-project-create Create a Linear project with the research, planning, and issue breakdown behind it. A Linear workspace skill must be active first. Use on "create a project", "plan a new project". Not for auditing a project that exists, or for status updates.
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md

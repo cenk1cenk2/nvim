@@ -1,10 +1,10 @@
 ---
 name: present-first
-description: 'present-first Toggle the draft-and-present posture that gates skills which write - off with "just write it" or "skip the gates", back on with /present-first. The posture rides along with every writing skill already; load this only to change its state. Do NOT use to present one change (output-diff covers that).'
+description: present-first Toggle the draft-and-present posture that gates skills which write - off with "just write it" or "skip the gates", back on with the slash form. The posture already rides along with every writing skill; load this only to change its state. Not for presenting a single change, which the writing skill handles itself.
 references:
   - ../references/present-first.md
   - ../references/mode-toggle.md
-argumentHint: "[on|off]"
+argumentHint: '[on|off]'
 ---
 
 ## Present-First Toggle

@@ -1,6 +1,6 @@
 ---
 name: agent-background
-description: 'agent-background Arm a background wait-loop that polls an external condition (PR/MR merge, CI or deploy run, human approval) and re-invokes the session once when it is met, instead of sleeping or asking the user to ping. Do NOT use to poll background Agent/Workflow work you started (the harness re-invokes automatically) or for self-paced loop iteration (use /loop).'
+description: agent-background Arm a background wait-loop that polls an external condition - a PR/MR merging, a CI or deploy run, a human approval - and re-invokes the session once when it is met, instead of sleeping or asking to be pinged. Use when work must wait on something outside this session. Not for polling subagent work you started, which the harness reports on its own, or for self-paced repetition.
 references:
   - ../references/long-running-work.md
   - ../references/agent-watchers.md

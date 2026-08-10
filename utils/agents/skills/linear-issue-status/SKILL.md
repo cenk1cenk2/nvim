@@ -1,7 +1,7 @@
 ---
 name: linear-issue-status
-description: 'linear-issue-status Quick Linear issue status change from explicit wording or clear workflow context. Triggers: "mark K-123 done", "move to in review", "cancel this issue". Do NOT use for full issue edits (/linear-issue-update), comments (/linear-issue-comment), or project reconciliation (/linear-project-reconcile).'
-argumentHint: "[issue-id or URL] [status]"
+description: linear-issue-status Change a Linear issue's workflow state and nothing else. Use on "mark K-123 done", "move it to in review", "cancel this issue". Not for editing the description, leaving a comment, or auditing a whole project.
+argumentHint: '[issue id or URL] [target state]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md

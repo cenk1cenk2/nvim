@@ -1,7 +1,7 @@
 ---
 name: linear-project-agent
-description: 'linear-project-agent Structure Linear projects for autonomous agent execution - agent-ready plans, self-contained issues, readiness review. Triggers: "set up this project for agents". Requires a workspace skill (/linear-kilic or /linear-laravel). Do NOT use for generic project creation (/linear-project-create) or status updates (/linear-project-post).'
-argumentHint: "[create|update|review] [project-name] [description of what the project does]"
+description: linear-project-agent Structure a Linear project so agents can execute it - agent-ready plans, self-contained issues, a readiness review. A Linear workspace skill must be active first. Use on "set this project up for agents". Not for ordinary project creation, or for status updates.
+argumentHint: '[create|update|review] [project] [what it does]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md

@@ -1,8 +1,8 @@
 ---
 name: plan-compact
-description: 'plan-compact Keep a compaction-resilient working anchor for a long in-session task - checkpoints progress, sources, and standing watches, then reconciles from them and resumes after compaction. Triggers: "plan compact", "stay compaction-safe". Do NOT use for cross-session handoff (/plan-handoff), new plans (/plan-hard), or loading plan files (/plan-pickup).'
+description: plan-compact Keep a compaction-resilient anchor for long in-session work - checkpoints posture, external state, subagents, watchers and progress, then rebuilds from it after a compaction. Use on "plan compact", "stay compaction-safe", or when context is getting long. Not for handing work to another session, writing a new plan, or loading an existing one.
 disableModelInvocation: true
-argumentHint: "[optional task note]"
+argumentHint: '[optional: task note]'
 references:
   - ../references/long-running-work.md
   - ../references/agent-watchers.md
