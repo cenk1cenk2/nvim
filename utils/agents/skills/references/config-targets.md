@@ -14,7 +14,7 @@ because the target is what an agent reads at the moment it needs the rule.
 | `config-references` | the reference file whose topic covers the convention; a new reference when none fits |
 | `config-repository` | `CLAUDE.md` / `AGENTS.md` in the repository being worked on |
 | `config-agents` | `~/.config/nvim/utils/agents/AGENTS.md` |
-| `config-mcp` | the MCP catalog at `~/.config/nvim/utils/mcphub/servers.json` |
+| `config-mcp` | the MCP catalog at `~/.config/nvim/utils/agents/mcp/servers.json` |
 | `config-hyprpilot` | the launcher config at `~/.dotfiles/hyprpilot/.config/hyprpilot/config.yaml` |
 
 **Resolving the target is a search.** For `config-skills` and `config-references` the target is

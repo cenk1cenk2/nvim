@@ -16,11 +16,6 @@ function M.config()
         -- dir = "~/development/codecompanion.nvim",
         cmd = { "CodeCompanion", "CodeCompanionCmd", "CodeCompanionActions", "CodeCompanionChat" },
         keys = { "<Space>c" },
-        dependencies = {
-          -- "ravitemer/mcphub.nvim",
-          -- TODO: POINT TO ORIGINAL WHEN FORK MERGES OR IF MERGES?
-          "cenk1cenk2/mcphub.nvim",
-        },
       }
     end,
     configure = function(_, fn)
@@ -43,49 +38,13 @@ function M.config()
       end)
     end,
     setup = function(_, fn)
-      local instance = require("mcphub").get_hub_instance()
-
       if not vim.env["NVIM_CODECOMPANION_SELECTED_PROFILE"] then
         M.select_profile(M.profiles.work)
-      end
-
-      local function get_mcphub_mcp_servers()
-        log:info("Connecting to MCPHub...")
-
-        local ok = vim.wait(15000, function()
-          instance = require("mcphub").get_hub_instance()
-          return instance ~= nil and instance:is_ready()
-        end, 250)
-
-        if not ok or not instance then
-          log:warn("MCPHub instance not ready in time.")
-        end
-
-        local proxy = require("mcphub.extensions.proxy").get()
-        log:info("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
-
-        return vim.tbl_extend("force", {
-          name = "mcphub",
-        }, proxy)
       end
 
       return {
         opts = {
           log_level = require("ck.log"):to_nvim_level() == vim.log.levels.DEBUG and "DEBUG" or require("ck.log"):to_nvim_level(),
-        },
-        mcp = {
-          servers = {
-            ["mcphub"] = {
-              cmd = vim.list_extend({ "bun" }, get_mcphub_mcp_servers().args),
-              tool_defaults = {
-                require_approval_before = false,
-              },
-            },
-          },
-          opts = {
-            default_servers = { "mcphub" },
-            timeout = 240000,
-          },
         },
         adapters = {
           http = {
@@ -622,24 +581,6 @@ function M.config()
             start_in_insert_mode = true, -- Open the chat buffer in insert mode?
           },
         },
-        extensions = {
-          mcphub = {
-            callback = "mcphub.extensions.codecompanion",
-            opts = {
-              -- MCP Tools
-              make_tools = true, -- Make individual tools (@server__tool) and server groups (@server) from MCP servers
-              show_server_tools_in_chat = true, -- Show individual tools in chat completion (when make_tools=true)
-              add_mcp_prefix_to_tool_names = false, -- Add mcp__ prefix (e.g `@mcp__github`, `@mcp__neovim__list_issues`)
-              show_result_in_chat = true, -- Show tool results directly in chat buffer
-              -- format_tool = nil, -- function(tool_name:string, tool: CodeCompanion.Agent.Tool) : string Function to format tool names to show in the chat buffer
-              -- MCP Resources
-              -- TODO: SET ME TRUE AFTER THE PLUGIN UPDATE
-              make_vars = true,
-              -- MCP Prompts
-              make_slash_commands = true, -- Add MCP prompts as /slash commands
-            },
-          },
-        },
       }
     end,
     on_setup = function(c)
@@ -870,7 +811,6 @@ function M.config()
           group = "_codecompanion_tmux_alert",
           pattern = {
             "CodeCompanionToolApprovalRequested",
-            "MCPHubApprovalWindowOpened",
             "CodeCompanionRequestFinished",
             "CodeCompanionRequestError",
           },

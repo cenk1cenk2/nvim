@@ -47,7 +47,6 @@ local plugins = {
   "sidekick-nvim",
   "copilot-lsp",
   "avante-nvim",
-  "mcphub-nvim",
   "code-companion-nvim",
   "hyprpilot-nvim",
   "aerial-nvim",

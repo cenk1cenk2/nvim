@@ -15,13 +15,13 @@ argumentHint: '[add|remove|modify] [server-name] [optional: description]'
 
 Posture: `present-first`.
 
-**Target: the MCP catalog at `~/.config/nvim/utils/mcphub/servers.json`.** The hyprpilot launcher config that wires this catalog into a launch is `config-hyprpilot`'s. Targets and the propose-don't-write rule for a gap in this skill: `config-targets`.
+**Target: the MCP catalog at `~/.config/nvim/utils/agents/mcp/servers.json`.** The hyprpilot launcher config that wires this catalog into a launch is `config-hyprpilot`'s. Targets and the propose-don't-write rule for a gap in this skill: `config-targets`.
 
 ## Context
 
-The captain runs **hyprpilot** as the agent host. Hyprpilot loads MCP servers via the `[[mcps]]` array in `~/.config/hyprpilot/config.yaml` — each entry either points at a catalog file (`{ file = "..." }`) or declares inline `mcp_servers = { ... }`. The active catalog file is `~/.config/nvim/utils/mcphub/servers.json` — hyprpilot consumes it, despite what the `mcphub` path segment suggests. Per-profile `mcps` arrays wholesale-replace the global default.
+The captain runs **hyprpilot** as the agent host. Hyprpilot loads MCP servers via the `[[mcps]]` array in `~/.config/hyprpilot/config.yaml` — each entry either points at a catalog file (`{ file = "..." }`) or declares inline `mcp_servers = { ... }`. The active catalog file is `~/.config/nvim/utils/agents/mcp/servers.json`. Per-profile `mcps` arrays wholesale-replace the global default.
 
-This skill edits the catalog file `~/.config/nvim/utils/mcphub/servers.json`. Its top-level key is `mcpServers` — the standard shape Claude Code / Codex / every MCP client uses. Each server entry follows one of two transport patterns:
+This skill edits the catalog file `~/.config/nvim/utils/agents/mcp/servers.json`. Its top-level key is `mcpServers` — the standard shape Claude Code / Codex / every MCP client uses. Each server entry follows one of two transport patterns:
 
 **HTTP (preferred):**
 
@@ -56,7 +56,7 @@ This skill edits the catalog file `~/.config/nvim/utils/mcphub/servers.json`. It
 
 **Environment variables** use `${VAR_NAME}` syntax and are resolved at runtime. Secrets MUST use env var references, never hardcoded values. The convention for env var names is `NVIM_<SERVICE>` (e.g., `NVIM_GITHUB`, `NVIM_GITLAB`).
 
-> **The catalog file is shared with other clients.** `~/.config/nvim/utils/mcphub/servers.json` is consumed by hyprpilot and may be referenced from other MCP clients too. `${VAR}` syntax works in hyprpilot, Claude Code, and Codex; for OpenCode (`{env:VAR}` style), keep a one-shot conversion at hand: `sed 's/${\([A-Z_][A-Z0-9_]*\)}/{env:\1}/g' servers.json`. Do NOT mix syntaxes inside a single file.
+> **The catalog file is shared with other clients.** `~/.config/nvim/utils/agents/mcp/servers.json` is consumed by hyprpilot and may be referenced from other MCP clients too. `${VAR}` syntax works in hyprpilot, Claude Code, and Codex; for OpenCode (`{env:VAR}` style), keep a one-shot conversion at hand: `sed 's/${\([A-Z_][A-Z0-9_]*\)}/{env:\1}/g' servers.json`. Do NOT mix syntaxes inside a single file.
 
 ## Server Naming
 

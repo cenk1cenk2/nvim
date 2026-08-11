@@ -14,8 +14,6 @@ function M.config()
         build = "make",
         dependencies = {
           { "Kaiser-Yang/blink-cmp-avante" },
-          -- TODO: POINT TO ORIGINAL WHEN FORK MERGES OR IF MERGES?
-          "cenk1cenk2/mcphub.nvim",
         },
       }
     end,
@@ -75,26 +73,6 @@ function M.config()
         end
 
         return provider
-      end
-
-      local function get_mcp_servers()
-        log:info("Connecting to MCPHub...")
-
-        local instance
-        local ok = vim.wait(15000, function()
-          instance = require("mcphub").get_hub_instance()
-          return instance ~= nil and instance:is_ready()
-        end, 250)
-
-        if not ok or not instance then
-          log:warn("MCPHub instance not ready in time.")
-          return {}
-        end
-
-        local proxy = require("mcphub.extensions.proxy").get()
-        log:info("Connected to MCPHub instance: :%d through %s", instance.port, proxy.args)
-
-        return { proxy }
       end
 
       local function get_system_prompt()
@@ -163,7 +141,6 @@ function M.config()
                 -- ACP_PERMISSION_MODE = "bypassPermissions",
               }
             end)(),
-            mcp_servers = get_mcp_servers(),
           },
           ["codex"] = {
             command = "bunx",
@@ -180,7 +157,6 @@ function M.config()
                 CODEX_API_KEY = vim.env["NVIM_CODEX_ACP"],
               }
             end)(),
-            mcp_servers = get_mcp_servers(),
           },
           ["kilic"] = {
             command = "opencode",
@@ -192,7 +168,6 @@ function M.config()
               OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/kilic.json"),
               AI_KILIC_DEV_API_KEY = vim.env["AI_KILIC_DEV_API_KEY"],
             },
-            mcp_servers = get_mcp_servers(),
           },
           ["opencode"] = {
             command = "opencode",
@@ -204,14 +179,8 @@ function M.config()
               OPENCODE_CONFIG = vim.fn.expand("~/.config/nvim/utils/agents/opencode/zen.json"),
               OPENCODE_API_KEY = vim.env["NVIM_OPENCODE_ACP_WORK"],
             },
-            mcp_servers = get_mcp_servers(),
           },
         },
-        custom_tools = function()
-          return {
-            require("mcphub.extensions.avante").mcp_tool(),
-          }
-        end,
         web_search_engine = {
           provider = "google",
         },
@@ -596,7 +565,6 @@ function M.config()
           pattern = {
             "AvanteViewBufferUpdated",
             "AvanteLLMEscape",
-            "MCPHubApprovalWindowOpened",
           },
           callback = function()
             require("ck.utils").bell()

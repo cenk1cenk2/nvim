@@ -769,13 +769,6 @@ hl.plugins.markview = {
   MarkviewDiffChange = { link = "DiffChange" },
 }
 
----@type table<string, vim.api.keyset.highlight>
-hl.plugins.mcphub = {
-  MCPHubDiffAdd = { link = "DiffAdd" },
-  MCPHubDiffChange = { link = "DiffChange" }, -- New content being added
-  MCPHubDiffDelete = { link = "DiffDelete" }, -- Content being removed
-}
-
 function M.load_highlights(ns, highlights)
   for group_name, group_settings in pairs(highlights) do
     vim.api.nvim_set_hl(ns, group_name, group_settings)
