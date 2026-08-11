@@ -1,6 +1,6 @@
 ---
 name: linear-structure-agent
-description: linear-structure-agent Shape Linear work for agent execution and keep it honest while agents run - one repo, one PR, one concern per issue, a parent hosting per-repo sub-issues, ownership blessed once, verification recorded as you go. A Linear workspace skill must be active first. Use on "structure this for agents". Not for plain issue or project CRUD.
+description: linear-structure-agent Shape Linear work for agent execution and keep it honest while implementing it - one repo, one PR, one concern per issue, a parent hosting per-repo sub-issues, ownership blessed once, verification recorded as you go. Structuring and picking work up are one mentality. Use on "structure this for agents". Not for plain issue or project CRUD.
 argumentHint: '[project or issue] [what it does]'
 references:
   - ../references/long-running-work.md
@@ -9,15 +9,36 @@ references:
   - ../references/linear-description-structure.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
-  - ../references/sourcebot-discovery.md
   - ../references/output-diff.md
 ---
 
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-**This skill owns two things: the shape of the work, and the honesty of the record while agents execute it.** It does not create, update, or reconcile Linear records itself — `linear-project-create`, `linear-issue-create`, `linear-issue-update`, `linear-issue-comment`, `linear-document`, and `linear-project-reconcile` write; this skill decides what they write and when. Load the `agent-pickup` skill once the structure is approved and the user wants execution to start.
+**This skill owns two things: the shape of the work, and the honesty of the record while that work is implemented.** It does not create, update, or reconcile Linear records itself — `linear-project-create`, `linear-issue-create`, `linear-issue-update`, `linear-issue-comment`, `linear-document`, and `linear-project-reconcile` write; this skill decides what they write and when.
 
 Present a proposed structure per `output-diff`. Description format for whatever gets written per `linear-description-structure`.
+
+## ⛔ Two Modes, One Mentality — and You Will Switch Mid-Flight
+
+**This skill covers structuring the work AND picking it up.** They are not two skills or two phases; they are two modes of one way of thinking, and a single piece of work moves between them repeatedly.
+
+| Mode | You are | The record is |
+|------|---------|---------------|
+| **Structuring** | deciding the shape — which issues exist, what each holds, how they nest | written **for** the agent who has not started yet |
+| **Picking up** | implementing, alone or through agents, and watching what comes back | kept **true to** what actually happened |
+
+**Infer the mode from what you are doing, not from how the request was worded.** Drafting or reshaping issues is structuring. Reading an issue in order to implement it, or pointing an agent at one, is picking up. Nobody has to announce the switch.
+
+**Switching back is normal and needs no ceremony.** Implementation is what discovers that the structure was wrong — a repository nobody knew about, a deviation that applies to three repos, a layer that has to split. Reshape it in place under the rules below, then carry on implementing. **Structuring is not a phase that closes**, and finishing the shape is not permission to stop maintaining it.
+
+The mentality is identical in both directions:
+
+1. **The executable unit is one repo, one PR, one concern.** A mid-flight discovery that breaks it means restructuring, never a bigger issue.
+2. **The parent holds the description, sub-issues hold deviations.** A finding gets filed by that rule whichever mode surfaced it.
+3. **Ownership is blessed once and covers both modes** — settled before the first agent, not re-asked at the first write.
+4. **What you learn gets written where the next reader will look**, per the notebook rules below, at the moment you learn it.
+
+**Execution mechanics are borrowed, not re-specified here.** Scope resolution, exploration, task scheduling, branches, commits, PRs/MRs, state transitions, and the final report belong to `agent-pickup` and the `linear-issue-pickup` / `linear-project-pickup` skills — load whichever fits when the work becomes implementation. This skill stays loaded across both modes because the shape rules and the record rules apply the whole way through.
 
 ## The Executable Unit
 
@@ -35,7 +56,7 @@ Agents work best this way: scope and boundaries are clear, the repository is evi
 
 ⛔ **Repo span is rarely obvious from the request — investigate before choosing.** "Add X" means adding X to one repository about as often as it means adding the same X to six. Getting it wrong late is expensive: an issue discovered mid-flight to span four repositories has to be torn apart after agents already started on it.
 
-Investigate first per `linear-scm-discovery` — use `sourcebot-discovery` through that workflow for broad or unknown-repo searches. Establish how many repositories carry the change, whether the change is identical in each, and what differs where.
+Investigate first per `linear-scm-discovery` — its Discovery Ladder picks the tools from what the active profile carries, so never assume a code-discovery MCP is there. Establish how many repositories carry the change, whether the change is identical in each, and what differs where.
 
 Then pick:
 
@@ -245,7 +266,8 @@ Ask the user when uncertain whether a manual step is separate or included.
 8. **The record is a notebook during execution.** Baseline before, result after, deviations as they surface, reconciled in batches.
 9. **External systems:** ask whether the system is configured via code or by hand. Code means a separate issue in that repository; manual means a task inside the related issue.
 10. **Dependencies via Linear fields** — `blockedBy`, `blocks`, `parentId`. Never in descriptions.
-11. **Shape and record honesty here; writing and execution elsewhere.** The create/update/comment skills write; `agent-pickup` executes.
+11. **Structuring and picking up are one mentality.** The mode follows what you are doing; switching back to reshape mid-implementation needs no ceremony.
+12. **Shape and record honesty here; writing and execution mechanics elsewhere.** The create/update/comment skills write; `agent-pickup` and the pickup skills execute.
 
 ## Examples
 
