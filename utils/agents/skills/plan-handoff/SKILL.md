@@ -129,11 +129,11 @@ Integration points between the two repositories.]
 ## After Completion
 
 1. Write the plan file to your internal plans directory as `YYYY-MM-DD-<project>-<name>.md`.
-2. **Open the final response with one sentence carrying the pickup command**, and nothing above it. A sentence, not a labelled block or a bare line:
+2. **Open the final response with one plain-English sentence telling the next session what to do**, and nothing above it:
 
-   > Pick this up in a new session with `/plan-pickup <plans-dir>/YYYY-MM-DD-<project>-<name>.md`.
+   > Use the `plan-pickup` skill to read the file at `<plans-dir>/YYYY-MM-DD-<project>-<name>.md` and go through the instructions.
 
-   That sentence is the entire handoff — it names the file and how to load it in one copyable piece. Do not restate the path, summarise the plan's contents, or repeat the loading instructions anywhere else; the receiving session reads the file, not the report.
+   Write it as an instruction to a person — name the skill, name the file, say what to do with it. Not a labelled block, not a bare path, not a terse command fragment. That sentence is the entire handoff: do not restate the path, summarise the plan's contents, or repeat the loading instructions anywhere else, because the receiving session reads the file rather than the report.
 3. If the skill exits without writing a file, say plainly that no handoff file exists yet, and why.
 4. Any summary or caveats come after the pickup line.
 
