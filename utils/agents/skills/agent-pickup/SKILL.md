@@ -31,6 +31,8 @@ Posture: `present-first`.
 
 The pickup lifecycle runs per `linear-pickup-execution`. Present every write to Linear, GitHub, or GitLab per `output-diff`.
 
+Load the `linear-structure-agent` skill before the first task is dispatched, whether or not this tree was shaped with it — picking up is one of its two modes, and it owns what stays true throughout: the executable unit is one repo, one PR, one concern, a parent holds the description while sub-issues hold deviations, ownership is blessed once before any agent writes to the tree, and each agent's findings get recorded where the next reader will look. A task that turns out to span repositories is a restructuring signal, not a bigger task.
+
 ## Purpose
 
 This skill carries Linear work from pickup to review. It can implement directly, delegate to agents, or mix both. The goal is not "agents for everything"; the goal is to choose the cheapest reliable execution model for the work in front of us.

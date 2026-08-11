@@ -28,6 +28,8 @@ A Linear workspace skill must be active first — detection rules in `linear-pre
 
 Pickup, early questions, Linear state updates, implementation handoff, and final reporting per `linear-pickup-execution`.
 
+Load the `linear-structure-agent` skill before implementation starts, whether or not this tree was shaped with it — picking up is one of its two modes, and it owns what stays true throughout: the executable unit is one repo, one PR, one concern, a parent holds the description while sub-issues hold deviations, ownership is blessed once, and findings get recorded as they surface rather than reconstructed at wrap-up. A discovery that breaks the shape means reshaping the issue, not widening it.
+
 ## Purpose
 
 This skill prepares one or more issues for real work. It can hand off to `agent-pickup` for execution, or support a direct lead implementation when the task is small.

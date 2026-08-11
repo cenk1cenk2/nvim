@@ -29,6 +29,8 @@ A Linear workspace skill MUST be active before this skill runs — detection rul
 
 Scope resolution, early questions, issue selection, state updates, and handoff to `agent-pickup` follow `linear-pickup-execution`; apply `linear-state-transitions` before moving selected issues to `In Progress`, and `output-diff` before writing to Linear.
 
+Load the `linear-structure-agent` skill before implementation starts, whether or not this tree was shaped with it — picking up is one of its two modes, and it owns what stays true throughout: the executable unit is one repo, one PR, one concern, a parent holds the description while sub-issues hold deviations, ownership is blessed once, and findings get recorded as they surface rather than reconstructed at wrap-up. When execution shows the project's shape is wrong, reshape it there instead of working around it.
+
 ## Purpose
 
 This skill turns a project or project slice into an execution-ready issue set. It does not have to implement by itself; by default it hands the prepared context to `agent-pickup`.
