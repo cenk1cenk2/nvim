@@ -87,7 +87,7 @@ When the user pointed at an example, both lists are measured against **that** ex
 Discover these from the code before dispatching (Sourcebot first when the pattern may span repos, then the target repo directly), and fold them into the prompt block below. Skip categories that do not apply.
 
 - **Testing** — framework, style (table-driven / BDD), file naming, location, fixture and mock patterns.
-- **Code style** — formatter in use (and whether the agent should run it or `hyprpilot-nvim__editor_format`), whitespace habits, naming per symbol kind, import grouping, error-handling idiom.
+- **Code style** — formatter in use (and whether the agent should run it or `hyprpilot_nvim__editor_format`), whitespace habits, naming per symbol kind, import grouping, error-handling idiom.
 - **Project patterns** — architecture, where new code of this kind belongs, dependency injection, logging, configuration.
 - **Git** — commit convention, branch naming.
 - **Tooling** — linter and the rules that matter; the agent must not introduce violations.

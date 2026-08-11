@@ -118,7 +118,7 @@ Same Recommendation Format as `plan-hard`:
 
 ## Self-Answering Rule
 
-Same as `plan-hard`: before asking the user, check if the codebase answers the question. Use `hyprpilot-nvim` MCP (LSP + editor + diagnostics), `git` CLI via Bash, `Grep`, `Glob`, `Read`, `github__*` / `gitlab__*`, and `context7` for documentation. Only escalate to the user for intent, preference, or unknowable-from-code decisions.
+Same as `plan-hard`: before asking the user, check if the codebase answers the question. Use `hyprpilot_nvim` MCP (LSP + editor + diagnostics), `git` CLI via Bash, `Grep`, `Glob`, `Read`, `github__*` / `gitlab__*`, and `context7` for documentation. Only escalate to the user for intent, preference, or unknowable-from-code decisions.
 
 Extra sources specific to `plan-revise`:
 

@@ -20,8 +20,8 @@ Posture: `present-first`.
 
 **Step 1: Read the current file.**
 
-- Use `hyprpilot-nvim__editor_status` to identify the current buffer.
-- Read the file content via `hyprpilot-nvim__editor_read`.
+- Use `hyprpilot_nvim__editor_status` to identify the current buffer.
+- Read the file content via `hyprpilot_nvim__editor_read`.
 - If the buffer is empty or has no content, inform the user and stop.
 
 **Step 2: Parse the markdown.**

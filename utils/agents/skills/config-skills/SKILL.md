@@ -358,7 +358,7 @@ When creating or updating a skill, always check:
 | Git | `commit-*`, `release-convention` | Commit message style, trailers, release-automation detection. |
 | Posture | `plan-mode`, `mode-toggle` | Strict planning posture; voice-mode on/off mechanics. Everything else inherits the default. |
 | Authoring policy | `output-diff`, `redact-private-data`, `commit-push-scoped`, `review-findings` | How authored output is presented, redacted, and committed. |
-| Service | `obsidian`, `slack*`, `sourcebot-discovery`, `enrich-context`, `excalidraw-*`, `spacelift-github`, `tmux` | Per-service tool sets and conventions. |
+| Service | `obsidian`, `slack*`, `enrich-context`, `excalidraw-*`, `spacelift-github`, `tmux` | Per-service tool sets and conventions. |
 | Runtime paths | `provider-paths` | Plans / state / worktree directories per runtime. Never hardcode these in a body. |
 
 Two carry a hard rule worth knowing without opening the file:
@@ -404,7 +404,9 @@ Run this when creating, updating, or reviewing any description. **One shape, eve
 
 In skill files, reference files, and documentation, use the **`<server>__<tool>` short form** — the server name is the identifying factor. The harness/client may surface the tool under a longer prefix (`mcp__<server>__<tool>`, `mcp__<hub>__<server>__<tool>`, etc.); the agent resolves whatever prefix the runtime uses at call time. Documentation should NOT bake in a specific prefix.
 
-**Server name rules** — server keys MUST use kebab-case with `-` separators only. Never use `/` in server keys (does not parse correctly through some MCP hubs) and avoid `_` for word separation inside the key. Workspace-suffixed servers follow the `<service>-<workspace>` pattern, e.g., `linear-kilic`, `linear-laravel`, `grafana-kilic`, `grafana-laravel`, `argocd-kilic`, `slack-kilic`, `spacelift-laravel`.
+**Server name rules** — catalog server keys (the ones `config-mcp` writes) MUST use kebab-case with `-` separators only. Never use `/` in a server key (does not parse correctly through some MCP hubs) and avoid `_` for word separation inside it. Workspace-suffixed servers follow the `<service>-<workspace>` pattern, e.g., `linear-kilic`, `linear-laravel`, `grafana-kilic`, `grafana-laravel`, `argocd-kilic`, `slack-kilic`, `spacelift-laravel`.
+
+**Hyprpilot's injected servers are `_` delimited — write them verbatim.** `hyprpilot_skills`, `hyprpilot_nvim`, and `hyprpilot_harness` are not catalog entries and the kebab rule does not reach them. Every skill slug is `-`, so a server and its same-named skill differ by delimiter on purpose: `hyprpilot_nvim` the server, `hyprpilot-nvim` the skill. "Correcting" a server to kebab names the skill instead and the tool call fails.
 
 Examples:
 

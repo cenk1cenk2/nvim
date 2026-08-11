@@ -44,7 +44,7 @@ Parse the fetched page content into markdown format:
 
 **Step 3: Determine the target.**
 
-- Use `hyprpilot-nvim__editor_status` to check the current buffer.
+- Use `hyprpilot_nvim__editor_status` to check the current buffer.
 - If the buffer is empty or unnamed, write the markdown content there.
 - If the buffer has existing content, ask the user: write to current buffer (replacing content) or create a new file?
 
