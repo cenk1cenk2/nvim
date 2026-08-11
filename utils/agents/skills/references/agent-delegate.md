@@ -79,21 +79,25 @@ Collect from the agent; verify against the artifact — `git status`, `git diff`
 
 Say which state you found. "Re-ran it" and "finished the remaining four files because six were already correct" are different events, and only one is a repeat cost.
 
-## Reaping — terminal, so collect first
+## Reaping — terminal for the run, so COLLECT FIRST
 
-> **Stopping an agent ends its run.** Reap only when you are finished with it. **Reaping is never the response to silence** — quiet usually means the work is done and only delivery is pending, and on runtimes where a finished agent resumes by message, killing it forecloses that. Steering is reversible; reaping is not.
+> **Stopping an agent ends its run.** Reap only when you are finished with it: you have what you need, you have no further question, and the work has moved on.
+>
+> **A quiet agent is a candidate for COLLECTION, not for reaping.** Quiet usually means the work is done and only the delivery is pending. Collect first — read its result, or message it. On runtimes where a completed agent can be resumed by message (Claude Code), killing it is the one move that forecloses that. Steering is reversible; reaping is not.
 
 **Order, always:** collect → confirm you have what you need → *then* reap.
 
 Genuinely safe to reap:
 
 - it delivered, you acted on the result, and the task is closed,
-- you obtained the answer another way **and verified it**,
+- you obtained the answer another way **and verified it**, so its report is redundant,
 - its task was superseded, re-scoped, or abandoned,
-- **you are about to replace it** — reap first, so two agents never write the same target,
+- **you are about to replace it** — reap before re-dispatching, so two agents never write the same target,
 - it is demonstrably stale: guarding work that no longer exists, or polling a signal now known to be wrong.
 
 **Do NOT reap** because it went quiet, because you are unsure whether it finished, or to tidy up mid-flow. Uncertainty means collect.
+
+**The concrete hazard is two concurrent writers.** Re-dispatching over the same files, document, or resource without reaping the first lets the later write silently clobber the earlier one — and neither agent reports the collision.
 
 **Completion does not self-clean.** A finished agent, and a background task whose command already exited, can linger in the runtime's task list. Stop them explicitly per `agent-delegate-harness-<provider>` once you are done.
 
@@ -115,30 +119,6 @@ Genuinely safe to reap:
 **Never treat silence as a verdict.** A quiet verification agent has not passed anything. Equally, do not assume delivery is broken on a runtime where it works — check the harness reference before concluding an agent failed.
 
 **Consequences of blocking:** no mid-execution message exchange (the lead is paused), and user guidance only arrives on the next turn.
-
-## Reaping — terminal for the run, so COLLECT FIRST
-
-> **Stopping an agent ends its run.** Reap only when you are finished with it: you have what you need, you have no further question, and the work has moved on.
->
-> **A quiet agent is a candidate for COLLECTION, not for reaping.** Quiet usually means the work is done and only the delivery is pending. Collect first — read its result, or message it. On runtimes where a completed agent can be resumed by message (Claude Code), killing it is the one move that forecloses that.
-
-**Order, always:** collect → confirm you have what you need → *then* reap.
-
-Genuinely safe to reap:
-
-- it delivered, you acted on the result, and the task is closed,
-- you obtained the answer another way **and verified it**, so its report is redundant,
-- its task was superseded, re-scoped, or abandoned,
-- **you are about to replace it** — reap before re-dispatching, so two agents never write the same target,
-- it is demonstrably stale: guarding work that no longer exists, or polling a signal now known to be wrong.
-
-**Do NOT reap** because it went quiet, because you are unsure whether it finished, or to tidy up mid-flow. Uncertainty means collect.
-
-**Completion does not self-clean.** A finished agent, and a background task whose command already exited, can linger in the runtime's task list. Stop them explicitly via the runtime's own mechanism (per `agent-delegate-harness-<provider>`) once you are done.
-
-**The concrete hazard is two concurrent writers.** Re-dispatching over the same files, document, or resource without reaping the first lets the later write silently clobber the earlier one — and neither agent reports the collision.
-
-**Reap checkpoint:** before declaring the work done, enumerate everything you spawned and confirm each is stopped, or state that one is *deliberately* still running and what it waits on.
 
 ## Model Selection
 
