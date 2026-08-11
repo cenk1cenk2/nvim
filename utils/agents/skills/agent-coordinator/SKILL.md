@@ -8,6 +8,7 @@ references:
   - ../references/reconcile-state.md
   - ../references/agent-conventions.md
   - ../references/agent-watchers.md
+  - ../references/agent-roster.md
   - ../references/mode-toggle.md
   - ../references/agent-delegate.md
   - ../references/agent-worktrees.md
@@ -90,19 +91,22 @@ An agent that returns a wall of text has failed the task even if the work is rig
 
 **⛔ Match the dispatch mode to the runtime's delivery.** Coordinator mode runs almost entirely on agent reports — for research, verification, or log digging there is no artifact left behind, so the report IS the product. On a runtime that wakes you on completion (current Claude Code), background is safe and that notification is the collection mechanism: wait for it, never pre-empt it, and never read a pending agent's silence as a verdict. On a runtime that does **not** wake you (Codex today), detached work finishes into silence — block, poll explicitly, or have the agent write its findings to a file. Block regardless whenever you simply need the answer to continue; it costs no parallelism, since a whole fan-out issued in one message runs concurrently. **A silent verification agent is not a pass** — and when collection genuinely fails twice, take that one check back in-house rather than dispatching a seventh time. This runtime's delivery rules live in `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md`.
 
-## The Roster — every agent you hold
+## The Roster and the Watch Board — what you are holding
 
-⛔ **Reaping an uncollected agent destroys its report permanently, and a finished agent looks exactly like a working one.** Keep the roster visible so that never happens by accident. Report it whenever you dispatch, whenever one returns, and before any teardown:
+Two ledgers, and a router needs both visible every turn. Agents per `agent-roster` — the roster table, and the rule that reaping an uncollected agent destroys its report. Watchers per `agent-watchers` — the armed and ended tables, plus what to arm for each kind of wait.
 
-| Agent | Doing what | Tier | State | Report |
-|---|---|---|---|---|
-| `audit-auth` | audit the auth module for dead paths | cheap | delivered | collected - 3 findings, folded in |
-| `migrate-cfg` | move config loading to the new shape | default | running | pending |
-| `review-dag` | sanity-check the layer schedule | smart | idle | **not collected** - ask before reaping |
+Report both whenever you dispatch, whenever one returns, and before any teardown. A live entry you cannot justify is the map going stale, which is the one thing this posture cannot afford.
 
-- **State** is what the runtime says: running, idle, delivered, failed, reaped. **Idle is not done** — it means the agent stopped producing, which usually means the report is stranded, not absent.
-- **Report** is the column that matters: pending, collected, or not collected. **Never reap a row whose report is not collected.**
-- A row with no stated task is a dispatch you cannot verify the result of.
+## Watchers — what routing adds
+
+> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** It names the runtime facility, and a missed read is silent.
+
+Yours are **routing** wakes: the wake is a dispatch decision, not a starting gun and not a bookkeeping cycle.
+
+- **Every external wait gets one, one per independent condition.** An in-context poll loop spends your context on checks a background loop does for free — the exact resource this posture exists to protect.
+- **On wake: re-verify authoritatively, then decide what gets dispatched next.** The wake produces a routing decision; the work it triggers goes out.
+- **Never poll work the harness already tracks.** Dispatched subagents and workflows report their own completion where the runtime supports it — arm watchers only for state outside anything the harness sees.
+- **Delegate the expensive verification the wake calls for.** If confirming what happened means reading logs or a wide diff, that is a dispatch, not something you read yourself.
 
 ## Process
 

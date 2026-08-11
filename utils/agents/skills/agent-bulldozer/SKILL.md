@@ -7,6 +7,7 @@ references:
   - ../references/long-running-work.md
   - ../references/mode-toggle.md
   - ../references/agent-watchers.md
+  - ../references/agent-roster.md
 ---
 
 Invoking bulldozer IS a standing blessing to push: skip per-step approval ceremony and act, but still surface anything that crosses a Boundary before doing it.
@@ -122,15 +123,17 @@ A bulldozer converts every blocking wait into prep, so at any moment there is wo
 
 When `plan-compact` is active this board is the queue its anchor records; copy the rows across rather than describing them again.
 
-## Watchers — the bulldozer's use of them
+## Watchers — what bulldozing adds
 
-Discipline, cadence table, and check recipes per `agent-watchers`; `agent-background` owns the arming mechanics. Do not restate those here — what follows is only what bulldozing adds.
+What to arm for what, the cadence table, the per-domain examples, the ledger tables, and what a wake means per `agent-watchers`; `agent-background` owns the arming mechanics; spawned agents per `agent-roster`. None of that is restated here — what follows is only bulldozer's deviation.
 
 > **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** It names the runtime facility, and a missed read is silent.
 
+Yours are **momentum** watchers: the wake is a starting gun, not a notification.
+
 - **Every blocker gets one, immediately.** Ending a turn blocked with nothing armed is the anti-pattern this whole mode exists to kill.
-- **Bias the cadence tight.** A merge, a finished CI run, or a completed apply should be caught within seconds, not minutes — the point of bulldozing is momentum, and idling after the blocker already cleared wastes it. Long cadences only for genuinely slow jobs, tightened as the expected finish approaches.
-- **The wake is a starting gun**, not a notification: re-verify, fire the already-staged next step, arm the following watcher.
+- **Bias the cadence tight, but size the cap to the real wait.** A merge or a finished apply should be caught within seconds — idling after the blocker cleared is pure waste. That is *cadence*, not *cap*: a gate a human may clear overnight still needs hours of cap, or it expires and the silence reads as "nothing happened".
+- **On wake: re-verify, fire the already-staged next step, arm the follow-on.** One stage completing is a trigger, never a stopping point.
 - **A dead watcher is not a stop.** Diagnose why it exited and re-arm — unless the cause needs the driver (auth, credentials, an unknown breakage), in which case surface it.
 - **Work the harness already tracks is not a blocker to watch** — it reports itself where the runtime supports it. Spend that wait on prep instead.
 

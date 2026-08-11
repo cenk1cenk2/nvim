@@ -10,6 +10,7 @@ references:
   - ../references/linear-project-documents.md
   - ../references/mode-toggle.md
   - ../references/agent-watchers.md
+  - ../references/agent-roster.md
   - ../references/linear-prerequisite.md
   - ../references/linear-state-transitions.md
   - ../references/linear-absolute-approval.md
@@ -103,19 +104,11 @@ When the coordinator finishes, the reconciliation pass is yours — a finished d
 
 If the user wants coordinator posture to drive instead of supervisor, they say so and this skill steps out. Say plainly which one is driving; never blur them.
 
-## The Roster — every agent you hold
+## The Roster and the Watch Board — what you are holding
 
-⛔ **Reaping an uncollected agent destroys its report permanently, and a finished agent looks exactly like a working one.** Keep the roster visible so that never happens by accident. Report it whenever you dispatch, whenever one returns, and before any teardown:
+Two ledgers, both reported every turn a supervision scope is open. Agents per `agent-roster` — including that reaping an uncollected agent destroys its report, and that idle is not done. Watchers per `agent-watchers` — the armed and ended tables, and what to arm for each kind of wait.
 
-| Agent | Doing what | Tier | State | Report |
-|---|---|---|---|---|
-| `audit-auth` | audit the auth module for dead paths | cheap | delivered | collected - 3 findings, folded in |
-| `migrate-cfg` | move config loading to the new shape | default | running | pending |
-| `review-dag` | sanity-check the layer schedule | smart | idle | **not collected** - ask before reaping |
-
-- **State** is what the runtime says: running, idle, delivered, failed, reaped. **Idle is not done** — it means the agent stopped producing, which usually means the report is stranded, not absent.
-- **Report** is the column that matters: pending, collected, or not collected. **Never reap a row whose report is not collected.**
-- A row with no stated task is a dispatch you cannot verify the result of.
+For a supervisor these are not housekeeping: an unaccounted watcher or a stranded agent report **is** a gap in the record, which is the one thing this posture exists to prevent.
 
 ## Process
 
@@ -133,20 +126,11 @@ If the user wants coordinator posture to drive instead of supervisor, they say s
 
 **A supervisor who does not know what happened is not supervising.** The whole job is knowing the real state, so every condition you are waiting on gets a watcher at the moment it becomes open — not a note to check later, not a question to the user next turn, and never an in-context poll loop.
 
-Discipline, cadence table, and check recipes per `agent-watchers`; `agent-background` owns the arming mechanics. Yours are **awareness watchers**: the wake is a reconciliation cycle, not a starting gun. It corrects the record and reports — it never pushes work forward that the user did not ask for. That is the whole difference from `agent-bulldozer`, which arms the same watchers so it never idles.
+What to arm for what — merge gates, pipelines, Terraform and Pulumi plans and applies, deploy convergence, tracker reconciliation — plus the cadence table, the ledger tables, and the check recipes, all per `agent-watchers`. `agent-background` owns the arming mechanics.
+
+Yours are **awareness** watchers: the wake is a reconciliation cycle, not a starting gun. It corrects the record and reports — it never pushes work forward that the user did not ask for. That is the whole difference from `agent-bulldozer`, which arms the very same watchers so it never idles, and from `agent-coordinator`, whose wake is a dispatch decision.
 
 The trigger is broader than the tracker: anything you would otherwise "check back on later" or ask the user to tell you about — a build, a job, an approval, another team's change, a window opening — is a watcher.
-
-Arm one the moment you say any of these:
-
-| You just did / observed | Watch for |
-|---|---|
-| An MR/PR was opened (by you, the coordinator, or anyone) | it merging, closing, or going stale |
-| A branch was pushed | its pipeline finishing, and its verdict |
-| Something was merged | the downstream deploy/apply converging |
-| A review was requested | approval, or requested changes landing |
-| An issue was handed to someone else | its state changing without you |
-| A release or migration was kicked off | completion, and the failure signatures |
 
 Supervisor-specific rules on top of the reference's discipline:
 
