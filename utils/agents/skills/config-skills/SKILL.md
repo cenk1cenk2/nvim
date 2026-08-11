@@ -300,7 +300,7 @@ Do NOT extract:
 A skill is authored once and runs under whichever agent runtime is active. Keep that split explicit:
 
 - **The SKILL.md body stays runtime-agnostic.** Describe the *intent* — "dispatch a subagent", "run it detached", "write the plan to the internal plans directory" — and never name one runtime's tool, parameter, default, or filesystem path.
-- **Runtime mechanics live in a per-harness SKILL**, named **`<consumer>-harness-<provider>`** — one per (runtime × consumer). That is where the concrete tool name, its parameters, its defaults, and the collection semantics belong. Cross-cutting paths stay in `provider-paths.md`.
+- **Runtime mechanics live in a per-harness REFERENCE**, named **`<consumer>-harness-<provider>.md`** — one per (runtime × consumer). That is where the concrete tool name, its parameters, its defaults, and the collection semantics belong. Cross-cutting paths stay in `provider-paths.md`.
 
 ```
 agent-delegate-harness-claude      # dispatch mechanics + tier to model, Claude Code
@@ -314,9 +314,9 @@ agent-background-harness-codex
 Rules for this family:
 
 1. **`<consumer>` is the exact name of the thing it configures** — the skill (`agent-background`) or shared reference (`agent-delegate`) whose mechanics it carries. The name says what it configures without opening it.
-2. **They are skills, not references, because they are situational.** At most one runtime applies per session, so declaring all three would bundle two guaranteed-waste files on every load. As skills they are discoverable in the catalog and loaded by name when the runtime is known.
-3. **The directive names the family with the placeholder:** *"Load `agent-background-harness-<provider>` before arming anything."* `<provider>` resolves at runtime. Never name a single runtime's skill in a runtime-agnostic body.
-4. **Split by consumer, not by topic size.** A consumer should load the mechanics it needs and nothing else.
+2. **They are references, and the consuming skill declares EVERY provider in the family.** Reference bodies are fetched on demand, so declaring all three costs three manifest rows and fetches one body — the conditional-family pattern in `hyprpilot-skills`. A reference beats a skill here because the manifest hands the reader the path, making the fetch mechanical; loading a skill is a choice that can be forgotten.
+3. **The directive names the family with the placeholder:** *"Fetch `agent-background-harness-<provider>` before arming anything."* `<provider>` resolves at runtime. Never name a single runtime's file in a runtime-agnostic body.
+4. **Split by consumer, not by topic size.** A consumer should fetch the mechanics it needs and nothing else.
 5. **Add a new provider only when its behavior is known.** An empty or guessed harness skill is worse than none; mark anything unconfirmed as **unverified** in place.
 6. **Version-mark behavioral claims.** Runtime behavior changes between releases; a claim without a version marker rots invisibly.
 - **A skill that spawns subagents MUST send the reader to the active provider's reference BEFORE the first dispatch**, as a hard directive rather than optional background. Write the directive so it cannot be read as "nice to have".
@@ -353,7 +353,7 @@ When creating or updating a skill, always check:
 | Linear | `linear-*` | Prerequisite/workspace detection, mandatory fields, description structure, issue philosophy, states and transitions, pickup execution, documents, chunking, approval gates, SCM discovery, research. |
 | SCM | `scm-*` | Platform detection, GitHub/GitLab tool sets, and the shared PR/MR workflows — review, fix-threads, read-summary, create-description, comment-poster, ci-fix. |
 | Agents | `agent-*`, `agent-*` | Dispatch posture, worktrees, plan splitting, plan quality, project conventions, merge/review, completion handoff, watchers, target capability. |
-| Per-harness | `harness-<provider>-<consumer>` | Runtime mechanics for one consuming skill. See Provider-Specific Behavior. |
+| Per-harness | `<consumer>-harness-<provider>` | Runtime mechanics for one consuming skill; every provider declared, one fetched. See Provider-Specific Behavior. |
 | Cross-harness | `harness-<topic>` | One policy across all runtimes plus a per-runtime inventory (`harness-connectors`). |
 | Git | `commit-*`, `release-convention` | Commit message style, trailers, release-automation detection. |
 | Posture | `plan-mode`, `mode-toggle` | Strict planning posture; voice-mode on/off mechanics. Everything else inherits the default. |

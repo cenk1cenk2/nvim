@@ -17,6 +17,9 @@ references:
   - ./references/agent-merge-review.md
   - ../references/provider-paths.md
   - ../references/identifier-legibility.md
+  - ../references/agent-delegate-harness-claude.md
+  - ../references/agent-delegate-harness-codex.md
+  - ../references/agent-delegate-harness-opencode.md
 ---
 
 Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
@@ -120,7 +123,7 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
 
 ### Step 8 — Launch the first layer
 
-> **Load `agent-delegate-harness-<provider>` before the first dispatch.** A missed read is silent, and the blocking flag below is exactly what varies.
+> **Fetch `agent-delegate-harness-<provider>` before the first dispatch.** A missed read is silent, and the blocking flag below is exactly what varies.
 
 - Exit plan mode.
 - Record the **run-level baseline** (current branch + HEAD) for the final review pass.

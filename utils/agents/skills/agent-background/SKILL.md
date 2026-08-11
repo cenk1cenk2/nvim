@@ -4,9 +4,12 @@ description: agent-background Arm a background wait-loop that polls an external 
 references:
   - ../references/long-running-work.md
   - ../references/agent-watchers.md
+  - ../references/agent-background-harness-claude.md
+  - ../references/agent-background-harness-codex.md
+  - ../references/agent-background-harness-opencode.md
 ---
 
-> **Load `agent-background-harness-<provider>` BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that one owns the tool names, parameters, and defaults.
+> **Fetch `agent-background-harness-<provider>` BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that one owns the tool names, parameters, and defaults.
 
 ## Context
 

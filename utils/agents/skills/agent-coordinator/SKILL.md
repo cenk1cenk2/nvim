@@ -16,6 +16,12 @@ references:
   - ../references/provider-paths.md
   - ../references/status-report.md
   - ../references/identifier-legibility.md
+  - ../references/agent-delegate-harness-claude.md
+  - ../references/agent-delegate-harness-codex.md
+  - ../references/agent-delegate-harness-opencode.md
+  - ../references/agent-background-harness-claude.md
+  - ../references/agent-background-harness-codex.md
+  - ../references/agent-background-harness-opencode.md
 ---
 
 Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
@@ -90,7 +96,7 @@ Context discipline is enforced in the **prompt**, not by hoping. Every dispatch 
 
 An agent that returns a wall of text has failed the task even if the work is right. Say so in the prompt.
 
-**Settle the permission context before anything else.** How permissions reach a subagent is a runtime property. On current Claude Code they are **inherited from your session and cannot be widened on the dispatch** — so work needing more autonomy than the session has is a conversation with the user, not a parameter you set. On runtimes with independent permissions, a gate the runtime cannot surface leaves the agent waiting silently with no error, and a coordinator that reads that silence as a verdict has routed the work, spent the turn, and learned nothing. Cross-repo dispatch is the riskiest case either way. **Diagnose by inspecting the artifact, never the notification**: work present means only delivery failed, so verify rather than re-run. **An absent artifact proves nothing** — most agents write once at the end, so "nothing on disk" cannot distinguish an agent that never started from one that has done all the work and not written yet. **Steer a quiet agent before concluding anything about it**, per the escalation ladder in the `agent-delegate` reference; reaping on an empty disk destroys real work. **Load `agent-delegate-harness-<provider>` before the first dispatch** — a missed read is silent.
+**Settle the permission context before anything else.** How permissions reach a subagent is a runtime property. On current Claude Code they are **inherited from your session and cannot be widened on the dispatch** — so work needing more autonomy than the session has is a conversation with the user, not a parameter you set. On runtimes with independent permissions, a gate the runtime cannot surface leaves the agent waiting silently with no error, and a coordinator that reads that silence as a verdict has routed the work, spent the turn, and learned nothing. Cross-repo dispatch is the riskiest case either way. **Diagnose by inspecting the artifact, never the notification**: work present means only delivery failed, so verify rather than re-run. **An absent artifact proves nothing** — most agents write once at the end, so "nothing on disk" cannot distinguish an agent that never started from one that has done all the work and not written yet. **Steer a quiet agent before concluding anything about it**, per the escalation ladder in the `agent-delegate` reference; reaping on an empty disk destroys real work. **Fetch `agent-delegate-harness-<provider>` before the first dispatch** — a missed read is silent.
 
 **Match the dispatch mode to the runtime's delivery.** Coordinator mode runs almost entirely on agent reports — for research, verification, or log digging there is no artifact left behind, so the report IS the product. On a runtime that wakes you on completion (current Claude Code), background is safe and that notification is the collection mechanism: wait for it, never pre-empt it, and never read a pending agent's silence as a verdict. On a runtime that does **not** wake you (Codex today), detached work finishes into silence — block, poll explicitly, or have the agent write its findings to a file. Block regardless whenever you simply need the answer to continue; it costs no parallelism, since a whole fan-out issued in one message runs concurrently. **A silent verification agent is not a pass** — and when collection genuinely fails twice, take that one check back in-house rather than dispatching a seventh time. This runtime's delivery rules live in `agent-delegate-harness-<provider>`.
 
@@ -102,7 +108,7 @@ Report both whenever you dispatch, whenever one returns, and before any teardown
 
 ## Watchers — what routing adds
 
-> **Load `agent-background-harness-<provider>` before arming anything.** It names the runtime facility, and a missed read is silent.
+> **Fetch `agent-background-harness-<provider>` before arming anything.** It names the runtime facility, and a missed read is silent.
 
 Yours are **routing** wakes: the wake is a dispatch decision, not a starting gun and not a bookkeeping cycle.
 

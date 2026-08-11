@@ -103,7 +103,7 @@ A file that fails to read yields the same block with `status: not-found`, **in i
    - Read its content.
    - Check which skills declare it in their frontmatter.
    - Bundle one consuming skill's references and confirm this file appears — a declared path that silently fails to resolve looks identical to a correct one in the frontmatter.
-   - Identify orphaned references (declared by no skill). **The `harness-<provider>-<consumer>` files are declared by nobody on purpose** — they are path-read, named in bodies with an absolute path. They are never orphans; check that a consuming body still names each one instead.
+   - Identify orphaned references (declared by no skill). **The `<consumer>-harness-<provider>` files are declared by every consumer in the family on purpose** — all providers are declared, one body is fetched. A missing declaration is the defect, not an extra one.
    - Identify stale content, and any compat note or history the `current-state-only` check forbids.
    - Check for duplication across references.
 3. Present findings and propose improvements.
@@ -114,7 +114,7 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 |------|---------|----------|
 | Family shared | `<family>-<topic>.md` | `linear-prerequisite.md`, `scm-github.md` |
 | Cross-family shared | `<topic>.md` | `output-diff.md`, `plan-mode.md` |
-| Per-harness | `harness-<provider>-<skill-or-reference-name>.md` | `harness-claude-agent-delegate.md`, `harness-codex-agent-background.md` |
+| Per-harness | `<consumer>-harness-<provider>.md` | `agent-delegate-harness-claude.md`, `agent-background-harness-codex.md` |
 | Skill-specific | `<topic>.md` in `<skill>/references/` | `./references/template.md` |
 
 ## A Reference Is Not a Pointer
@@ -148,27 +148,24 @@ When a body loads another skill for a branch, that skill arrives **with its own 
 
 Applied naively this deletes load-bearing declarations. Check each one against the body: if a step outside the composition branch names it, it stays.
 
-## A Reference Is Shared AND Always Loaded — Otherwise It Is a Skill
+## A Reference Is Shared — Situational Is No Longer a Reason to Make It a Skill
 
-**Two properties make something a reference. It needs both.**
+**One property makes something a reference: two or more consumers must stay in lockstep on it.**
 
-1. **Shared** — two or more consumers must stay in lockstep on it.
-2. **Always loaded** — every consumer needs it on every run.
-
-Content that is **situational** — needed only on some runs, or only under one runtime, or only for one domain — **is not a reference.** It becomes a **skill**, loaded by name when the situation arises.
+Situational content — needed only on some runs, only under one runtime, only for one platform — **is still a reference.** Declare it and fetch it on the branch that needs it. That is the conditional-family pattern: declare every member, fetch the one that applies.
 
 | | Reference | Skill |
 |---|---|---|
-| Arrives | bundled with its consumers, always | on demand, by name |
-| Cost | paid on every load of every consumer | paid only when loaded |
-| Discoverable | no, it is an implementation detail | yes, listed in the catalog |
-| Missed how | it cannot be — it is already there | the agent chooses not to load it |
+| Arrives | a manifest row always; the body when fetched | only when loaded by name |
+| Cost | ~150 bytes declared, the body only if fetched | a catalog entry (~798 bytes) in **every** session |
+| Discoverable | via its consumers' manifests | yes, listed in the catalog |
+| Missed how | the reader has the path and skips the fetch | the agent never chooses to load it |
 
-**Why situational content must not be a reference.** Declaring it taxes every run for a branch most runs never take. The old workaround was a path-read: a body naming an absolute path for the reader to `Read` conditionally. That worked, but **a missed path-read is silent** — the run simply proceeds without the convention and nobody is told. A skill fixes both halves: it costs nothing until loaded, and loading it is a first-class call rather than a remembered instruction.
+**Prefer the reference.** A catalog entry is paid by every session whether or not the thing is ever used, while a manifest row is paid only by sessions loading a consumer. And the fetch is mechanical — the path is in hand — where loading a skill is a judgement the agent can simply not make.
 
-**The test:** if you find yourself writing "read this file when X", it is a skill. If it is "this always applies", it is a reference.
+**Make it a skill when it is a workflow the user invokes**, or when it must be discoverable by an agent that has loaded none of its consumers. Not merely because it is conditional.
 
-Per-runtime mechanics are the canonical case — at most one runtime applies per session, so `<consumer>-harness-<provider>` are skills. Per-domain catalogues are the other: a reader needs one entry and none of the rest.
+**The test:** if it is a *convention* that some runs need, it is a reference. If it is a *procedure someone invokes*, it is a skill.
 
 ## Split a Reference When Part of It Is Conditional
 
@@ -177,7 +174,7 @@ A reference is paid for on **every** load by **every** consumer. When a chunk of
 Two shapes to look for when a reference grows past a few hundred lines:
 
 - **A per-domain catalogue.** Signals, recipes, provider quirks, worked examples — a reader needs the one entry matching what they are doing and none of the rest. Split it out and reach it by **path-read** with the absolute path, so it loads only when that branch is taken. `agent-watchers` keeps the discipline, the cadence table and the audit; `agent-watcher-recipes` holds the per-domain signals and shell checks.
-- **Runtime-specific content in a file that claims to be agnostic.** A parameter table, a tool name, a default — it belongs in the `harness-<provider>-*` file, and leaving it in the shared one is both waste and a contradiction of the shared file's own rule.
+- **Runtime-specific content in a file that claims to be agnostic.** A parameter table, a tool name, a default — it belongs in the `<consumer>-harness-<provider>` file, and leaving it in the shared one is both waste and a contradiction of the shared file's own rule.
 
 **Splitting is not the same as extracting for reuse.** Extraction shares content between consumers and moves tokens without removing them. This split *removes* tokens from most loads, because the new file is path-read rather than declared. Only conditional content qualifies — anything every consumer needs on every run stays put, however long it is.
 
@@ -185,23 +182,23 @@ Two shapes to look for when a reference grows past a few hundred lines:
 
 ## Per-Harness References
 
-When a skill's *mechanics* differ by agent runtime while its *intent* does not, the runtime-specific half becomes one reference per runtime, named `harness-<provider>-<skill-or-reference-name>.md`. The trailing segment is the exact name of the consuming skill or shared reference, so the filename says what it configures.
+When a skill's *mechanics* differ by agent runtime while its *intent* does not, the runtime-specific half becomes one reference per runtime, named `<consumer>-harness-<provider>.md`. The trailing segment is the exact name of the consuming skill or shared reference, so the filename says what it configures.
 
 ```
-harness-claude-agent-delegate.md      # dispatch mechanics for the agent-delegate reference, on Claude Code
-harness-codex-agent-delegate.md       # same slot, different runtime
-harness-claude-agent-background.md     # waiting/waking mechanics for the agent-background skill
+agent-delegate-harness-claude.md      # dispatch mechanics for the agent-delegate reference, on Claude Code
+agent-delegate-harness-codex.md       # same slot, different runtime
+agent-background-harness-claude.md    # waiting/waking mechanics for the agent-background skill
 ```
 
 **Two shapes, do not confuse them:**
 
-- `harness-<provider>-<consumer>.md` — mechanics of one runtime for one consuming skill (`agent-background-harness-claude`). Per (runtime × consumer).
+- `<consumer>-harness-<provider>.md` — mechanics of one runtime for one consuming skill (`agent-background-harness-claude`). Per (runtime x consumer).
 - `harness-<topic>.md` — a cross-harness policy plus a per-harness inventory (`harness-connectors`). One file, all runtimes, because the rule is the same everywhere and only the inventory differs.
 
 Rules:
 
 - **Split by consumer, not by provider alone.** One file per (runtime × consumer) keeps a skill loading only the mechanics it needs. Do not accumulate every runtime detail into a single file per provider.
-- **The consuming skill does NOT declare the provider files — they are path-read.** Declaring all three injects all three when at most one is usable, so two are guaranteed waste on every load. The body names the family with an absolute path — `agent-background-harness-<provider>` — and resolves `<provider>` at runtime. Never name a single runtime's file.
+- **The consuming skill declares EVERY provider file in the family.** Bodies are fetched on demand, so three declarations cost three manifest rows and fetch one body. The body names the family with the placeholder — `agent-background-harness-<provider>` — and resolves `<provider>` at runtime. Never name a single runtime's file in a runtime-agnostic body.
 - **Content is concrete on purpose.** Tool names, parameter names, defaults, env vars, limits, and known traps belong here; this is the one place where naming a specific runtime's tool is correct.
 - **Version-mark claims and flag what you could not confirm.** Runtime behavior changes between releases — an unmarked claim rots invisibly, and a guessed one is worse than an absent one. Write `Unverified` in place rather than asserting.
 - **Do not create a provider's file until its behavior is known.** An empty harness file implies coverage that does not exist.

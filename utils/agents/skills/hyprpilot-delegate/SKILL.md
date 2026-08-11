@@ -8,6 +8,9 @@ references:
   - ../references/agent-conventions.md
   - ../references/project-tooling.md
   - ../references/agent-completion.md
+  - ../references/agent-background-harness-claude.md
+  - ../references/agent-background-harness-codex.md
+  - ../references/agent-background-harness-opencode.md
 ---
 
 ## Hyprpilot Delegation

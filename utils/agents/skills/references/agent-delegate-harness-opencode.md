@@ -1,8 +1,3 @@
----
-name: agent-delegate-harness-opencode
-description: agent-delegate-harness-opencode OpenCode dispatch mechanics for subagents - tier to model, the blocking task tool, absent timeouts, and why a thin report cannot be recovered afterwards. Load before the first dispatch on OpenCode. Not for the runtime-agnostic dispatch discipline, or for waiting and waking.
----
-
 # Harness: OpenCode — agent-delegate
 
 Runtime mechanics for delegation on OpenCode — how subagent dispatch behaves, plus the tier → model mapping. Read this before the first dispatch of a session running on OpenCode. For waiting and waking, see `agent-background-harness-opencode`.

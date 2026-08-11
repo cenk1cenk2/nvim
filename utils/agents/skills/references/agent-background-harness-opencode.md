@@ -1,8 +1,3 @@
----
-name: agent-background-harness-opencode
-description: agent-background-harness-opencode OpenCode waiting and waking mechanics - no native deferred wakeup or cron, no sleep tool, and a short shell timeout that bounds every wait loop. Load before arming anything on OpenCode. Not for the runtime-agnostic watcher discipline, or for dispatching subagents.
----
-
 # Harness: OpenCode — agent-background
 
 Runtime mechanics for the `agent-background` skill on OpenCode: how to wait on external state and what this runtime cannot do for you.

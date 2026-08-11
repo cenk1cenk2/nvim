@@ -11,6 +11,12 @@ references:
   - ../references/mode-toggle.md
   - ../references/provider-paths.md
   - ../references/identifier-legibility.md
+  - ../references/agent-delegate-harness-claude.md
+  - ../references/agent-delegate-harness-codex.md
+  - ../references/agent-delegate-harness-opencode.md
+  - ../references/agent-background-harness-claude.md
+  - ../references/agent-background-harness-codex.md
+  - ../references/agent-background-harness-opencode.md
 ---
 
 Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
@@ -129,7 +135,7 @@ Detail on each step:
 4. **Re-establish standing watches and scripts — but only if the posture permits.**
    - **If the posture is PARKED or the mode is off, re-arm NOTHING.** Verify nothing is running, report that, and stop. An unexpected armed watcher reads as in-flight work that isn't, and re-arming while parked silently re-engages a mode the user turned off.
    - **When arming is permitted:** for every item under Standing Watches, re-check its **live state from source** (PR/MR status, pipeline result, run state, awaited thread) before arming anything — the state moved on while the context was being rebuilt, and a watcher armed against a stale assumption fires on the wrong condition.
-   - **Arm one watcher per independent condition**, never bundled, via the background/watcher skill's own mechanics (`agent-background`). **Before arming anything, Load `agent-background-harness-<provider>`** — `<provider>` resolves at runtime (`claude`, `opencode`, `codex`), the rest of the path is literal. It owns the watcher facility and its wake semantics; a missed read is silent and the watcher never wakes anyone. **Do not detach inside the command** — that produces a log, not a watcher.
+   - **Arm one watcher per independent condition**, never bundled, via the background/watcher skill's own mechanics (`agent-background`). **Before arming anything, Fetch `agent-background-harness-<provider>`** — `<provider>` resolves at runtime (`claude`, `opencode`, `codex`), the rest of the path is literal. It owns the watcher facility and its wake semantics; a missed read is silent and the watcher never wakes anyone. **Do not detach inside the command** — that produces a log, not a watcher.
    - **Treat the scratchpad as gone.** Re-materialize every script from the anchor's verbatim copy before arming the watch that depends on it. Never assume a scratchpad or temp path from before compaction still exists.
    - **Confirm each launch returned a handle**, and state which watchers are now armed and on what condition.
 5. **Rebuild and reconcile.** Reconstruct the working model, including the methodology and caveats. Where the anchor and a live source disagree, the source wins — update the anchor to match.

@@ -5,6 +5,9 @@ references:
   - ../references/agent-delegate.md
   - ../references/project-tooling.md
   - ../references/provider-paths.md
+  - ../references/agent-delegate-harness-claude.md
+  - ../references/agent-delegate-harness-codex.md
+  - ../references/agent-delegate-harness-opencode.md
 argumentHint: '[optional: area or path to audit]'
 ---
 

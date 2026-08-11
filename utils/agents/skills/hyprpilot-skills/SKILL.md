@@ -59,6 +59,14 @@ This is what makes the shared corpus free after first use. `output-diff` is decl
 
 The set survives everything except a `reload` that changed the file, which `modified` tells you about.
 
+## Conditional Families — Declare All, Fetch One
+
+**When several references cover the same slot and only one applies per session, declare every one of them and fetch only the live one.** The per-runtime harness files are the canonical case: a skill declares `agent-delegate-harness-claude`, `-codex`, and `-opencode`, and fetches whichever matches the runtime it is actually on.
+
+This costs three manifest rows — roughly 450 bytes — and one body. Under a model where bodies rode along it would have cost three bodies, which is why such content used to be pushed out into separate skills; it no longer needs to be. **A reference beats a skill for this job**: the manifest hands you the path, so the fetch is mechanical, whereas loading a skill is a choice the agent can simply forget to make.
+
+The pattern generalises to any mutually exclusive set — one platform of several, one provider of several, one workspace of several.
+
 ## Fetch What the Step Names, Not the Whole Manifest
 
 A manifest is cheap and bodies are not. So:

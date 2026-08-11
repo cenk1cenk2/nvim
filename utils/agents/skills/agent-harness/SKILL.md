@@ -50,7 +50,7 @@ Headlines per runtime:
 - **Claude Code** — built-in `Agent` tool; `haiku`/`sonnet`/`opus`/`fable`. Background by default, results arrive as a completion notification, permissions are **inherited from the session** (the dispatch `mode` parameter is deprecated and ignored), background agents run with a reduced built-in tool set, and concurrency/nesting/session caps apply.
 - **OpenCode** — `task` tool; `kilic/*` models. Blocking dispatch, no timeout parameter, short shell timeout that bounds every wait.
 - **Codex / OpenAI** — `gpt-*` role models. **Background work does not wake the caller** — poll or block, in dispatch and in waiting alike.
-- **Other providers** (Google, mixed, custom) — the user declares the mapping; ask, then persist to memory if stable. Add a `harness-<provider>-<consumer>` file once the behavior is known.
+- **Other providers** (Google, mixed, custom) — the user declares the mapping; ask, then persist to memory if stable. Add a `<consumer>-harness-<provider>` reference once the behavior is known, declared by every consumer in that family.
 
 ## Rules
 

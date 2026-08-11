@@ -19,6 +19,12 @@ references:
   - ../references/agent-target-capability.md
   - ../references/status-report.md
   - ../references/identifier-legibility.md
+  - ../references/agent-delegate-harness-claude.md
+  - ../references/agent-delegate-harness-codex.md
+  - ../references/agent-delegate-harness-opencode.md
+  - ../references/agent-background-harness-claude.md
+  - ../references/agent-background-harness-codex.md
+  - ../references/agent-background-harness-opencode.md
 ---
 
 Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
@@ -141,7 +147,7 @@ Supervisor-specific rules on top of the reference's discipline:
 - **On wake, do the supervisor thing:** re-verify authoritatively, reconcile the tracker per `linear-state-transitions`, report — then arm the follow-on if the next condition is now open (merged, so watch the deploy).
 - **A lapsed watch is not "no news".** Diagnose why it exited and re-arm, or the silence becomes a false clean bill of health in your next report.
 
-> **Load `agent-background-harness-<provider>` before arming anything.** If that runtime cannot wake you at all, say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
+> **Fetch `agent-background-harness-<provider>` before arming anything.** If that runtime cannot wake you at all, say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
 
 ## Evidence Rules
 

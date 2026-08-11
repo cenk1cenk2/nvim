@@ -5,6 +5,9 @@ argumentHint: '[type=plan|dag|facts|freeform] [artifact or path] [optional: ''th
 references:
   - ../references/agent-delegate.md
   - ../references/scm-detect.md
+  - ../references/agent-delegate-harness-claude.md
+  - ../references/agent-delegate-harness-codex.md
+  - ../references/agent-delegate-harness-opencode.md
 ---
 
 ## Review Subagent Dispatch
@@ -85,7 +88,7 @@ Then adjust for the artifact in front of you: its size, how coupled it is, and h
    - `model` — resolved tier.
    - No worktree isolation (not needed).
    - No permission-mode parameter — it is deprecated and ignored on current Claude Code; reviewers are read-only and run under the session's own posture.
-   - **Naming decides collection, so pick one shape and match the prompt to it.** A reviewer's verdict *is* its entire deliverable, so it must actually arrive: dispatch **unnamed** to get the verdict back as a tool result in the same turn, or dispatch **named** and require the reviewer to deliver via `SendMessage`. Do not mix — a named agent does not block, whatever `run_in_background` says. **Load `agent-delegate-harness-<provider>` before the first dispatch** — a missed read is silent.
+   - **Naming decides collection, so pick one shape and match the prompt to it.** A reviewer's verdict *is* its entire deliverable, so it must actually arrive: dispatch **unnamed** to get the verdict back as a tool result in the same turn, or dispatch **named** and require the reviewer to deliver via `SendMessage`. Do not mix — a named agent does not block, whatever `run_in_background` says. **Fetch `agent-delegate-harness-<provider>` before the first dispatch** — a missed read is silent.
    - When dispatching named, append to every review prompt: *your plain text is not visible to the lead — deliver the completed review with one `SendMessage` call to `"main"`.*
 
 4. **Collect verdicts.** A reviewer that goes quiet or reports itself idle has **not** failed and has **not** returned an empty verdict — it has most likely answered where you cannot see it. Steer it per the harness reference's ladder (ask for what it has, then name the delivery mechanism) before considering it failed, and never substitute your own judgement for a verdict that has not arrived.

@@ -1,8 +1,3 @@
----
-name: agent-delegate-harness-claude
-description: agent-delegate-harness-claude Claude Code dispatch mechanics for subagents - tier to model, the Agent parameter table, inherited permissions, background defaults, the reduced background tool set, and how a result actually reaches you. Load before the first dispatch on Claude Code. Not for the runtime-agnostic dispatch discipline, or for waiting and waking.
----
-
 # Harness: Claude Code — agent-delegate
 
 Runtime mechanics for delegation on Claude Code — how subagent dispatch actually behaves, plus the tier → model mapping. Read this before the first dispatch of a session running on Claude. For waiting and waking, see `agent-background-harness-claude`. Facts below come from the official subagent docs and the live tool schemas; version markers say when each behavior landed, because an older CLI behaves differently.

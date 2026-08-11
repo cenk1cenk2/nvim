@@ -8,6 +8,9 @@ references:
   - ../references/mode-toggle.md
   - ../references/agent-watchers.md
   - ../references/agent-roster.md
+  - ../references/agent-background-harness-claude.md
+  - ../references/agent-background-harness-codex.md
+  - ../references/agent-background-harness-opencode.md
 ---
 
 Invoking bulldozer IS a standing blessing to push: skip per-step approval ceremony and act, but still surface anything that crosses a Boundary before doing it.
@@ -127,7 +130,7 @@ When `plan-compact` is active this board is the queue its anchor records; copy t
 
 What to arm for what, the cadence table, the per-domain examples, the ledger tables, and what a wake means per `agent-watchers`; `agent-background` owns the arming mechanics; spawned agents per `agent-roster`. None of that is restated here — what follows is only bulldozer's deviation.
 
-> **Load `agent-background-harness-<provider>` before arming anything.** It names the runtime facility, and a missed read is silent.
+> **Fetch `agent-background-harness-<provider>` before arming anything.** It names the runtime facility, and a missed read is silent.
 
 Yours are **momentum** watchers: the wake is a starting gun, not a notification.
 

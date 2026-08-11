@@ -12,6 +12,9 @@ references:
   - ../references/scm-detect.md
   - ../references/linear-state-transitions.md
   - ../references/provider-paths.md
+  - ../references/agent-delegate-harness-claude.md
+  - ../references/agent-delegate-harness-codex.md
+  - ../references/agent-delegate-harness-opencode.md
 ---
 
 ## Single-Task Delegation
@@ -41,7 +44,7 @@ Use it when:
    - Parse the user's input per `agent-delegate`:
      - **Explicit model name** (e.g., `haiku`, `opus`, `gpt-4o`, `gemini-2.5-pro`) → use verbatim, no remapping.
      - **Tier shorthand** (`cheap`, `smart`, `lesser`, `higher`, etc.) → resolve to a concrete model via the ecosystem's mapping.
-   - Load the **`agent-harness`** skill and resolve the tier to a concrete model there (load `agent-delegate-harness-<provider>`) — the mapping depends on the active provider (Claude, OpenCode, Codex, …), not just Anthropic. If the provider's mapping is unknown, ask; persist to memory if stable across sessions.
+   - Load the **`agent-harness`** skill and resolve the tier to a concrete model there (fetch `agent-delegate-harness-<provider>`) — the mapping depends on the active provider (Claude, OpenCode, Codex, …), not just Anthropic. If the provider's mapping is unknown, ask; persist to memory if stable across sessions.
    - If no preference is stated, infer the tier from task complexity and propose with reasoning.
    - **If the user's pick seems mismatched to the task** (e.g., cheap for architectural design, smart for a trivial rename), **ask before dispatching** — state the mismatch and propose an alternative. Do not silently comply.
 
@@ -70,7 +73,7 @@ Use it when:
 7. **Launch the agent — background by default.**
    - Dispatch the subagent via your runtime's dispatch mechanism, with parameters per `agent-delegate-harness-<provider>`.
    - **Dispatch in the BACKGROUND by default — this is the preferred mode.** The lead stays free, so the conversation keeps moving and you keep working while the agent runs. See the `agent-delegate` reference's Dispatch Mode section.
-   - **Load `agent-delegate-harness-<provider>` before the first dispatch** — the flag name, its default, and how a background result actually reaches you. This differs per runtime: current Claude Code wakes you with a completion notification, Codex does not wake you at all.
+   - **Fetch `agent-delegate-harness-<provider>` before the first dispatch** — the flag name, its default, and how a background result actually reaches you. This differs per runtime: current Claude Code wakes you with a completion notification, Codex does not wake you at all.
    - **Block when the runtime will not deliver a detached result**, and when you simply need the answer to continue. For a fan-out you need complete before proceeding, issue several dispatches in one message, all blocking — they still run concurrently and land together.
    - **Never pre-empt a pending agent and never read its silence as a verdict.** A verification agent that has not reported has not passed anything. Equally, do not declare it broken on a runtime where delivery works — check the harness reference first.
    - `isolation`: `worktree` if the task modifies files — offer, confirm with user.

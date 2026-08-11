@@ -16,6 +16,9 @@ references:
   - ../references/scm-detect.md
   - ../references/project-tooling.md
   - ../references/output-diff.md
+  - ../references/agent-delegate-harness-claude.md
+  - ../references/agent-delegate-harness-codex.md
+  - ../references/agent-delegate-harness-opencode.md
 ---
 
 ## Agent Linear Pickup Orchestrator

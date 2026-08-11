@@ -1,8 +1,3 @@
----
-name: agent-delegate-harness-codex
-description: agent-delegate-harness-codex Codex dispatch mechanics for subagents - model roles, and the fact that background work never wakes the caller so every result is polled or blocked for. Load before the first dispatch on Codex. Not for the runtime-agnostic dispatch discipline, or for waiting and waking.
----
-
 # Harness: Codex — agent-delegate
 
 Runtime mechanics for delegation on Codex — how subagent dispatch behaves, plus the model roles. Read this before the first dispatch of a session running on Codex. For waiting and waking, see `agent-background-harness-codex`.
