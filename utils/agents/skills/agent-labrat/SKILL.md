@@ -257,7 +257,7 @@ If the user names a runtime, pass it through verbatim — labrat knows how to dr
 ## Process
 
 1. **Resolve the scope.** A one-off task, a Linear issue, a Linear project, or an existing Slack thread to investigate. If the request could mean more than one, ask once.
-2. **Make the source agent-ready first.** For Linear work, the issue or project must already be self-contained — compose `linear-project-agent` if it is not. Handing off a vague issue just moves the ambiguity offsite, where it costs a round trip measured in hours.
+2. **Make the source agent-ready first.** For Linear work, the issue or project must already be self-contained — compose `linear-structure-agent` if it is not. Handing off a vague issue just moves the ambiguity offsite, where it costs a round trip measured in hours.
 3. **Draft the brief** with `agent-aware` — labrat is an **aware** target per `agent-target-capability`, so the brief points rather than pastes. It carries:
    - the goal and what done means,
    - **the invariant** — what must not break, and which findings it must stop and report rather than fix,
@@ -394,6 +394,6 @@ When the terminal report lands:
 - **`agent-aware`** — writes the brief itself; this skill decides scope, channel, routing, and watching.
 - **`agent-supervisor`** — the posture for keeping the record honest while offsite work runs.
 - **`agent-delegate` / `agent-plan`** — the local equivalents, for subagents on this machine.
-- **`linear-project-agent`** — makes a Linear project or issue fit to hand off.
+- **`linear-structure-agent`** — makes a Linear project or issue fit to hand off.
 - **`agent-background`** and the `agent-watchers` reference — the arming mechanics for the thread watch.
 - **`slack-message`** — an ordinary Slack post that is not an agent handoff.
