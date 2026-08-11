@@ -54,7 +54,7 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 - Do NOT list changed files, line counts, or mechanical details.
 - If the PR/MR links Linear issues, add or preserve body trailers using `commit-trailers`: default to `closes <ID>` when this PR/MR resolves the issue and nothing else is pending (so it auto-closes on merge); use `refs <ID>` only for genuinely partial or related work.
 - **When one PR/MR closes several issues, give each issue its own section** and list every closed ID on one trailer line — see "Multiple linked issues" below. A reviewer must be able to tell which change belongs to which issue without reading the diff.
-- **Linear links only from the title, the description, and the branch name.** A Linear ID in a commit message does nothing — see `commit-trailers`. Never rely on commits to carry the link.
+- **Linear links only from the title, the description, and the branch name.** A Linear ID in a commit message does nothing — see `commit-trailers-linear`. Never rely on commits to carry the link.
 
 ## Draft the title
 

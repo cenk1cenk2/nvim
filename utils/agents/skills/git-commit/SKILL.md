@@ -7,6 +7,9 @@ references:
   - ../references/scm-detect.md
   - ../references/commit-style.md
   - ../references/commit-trailers.md
+  - ../references/commit-trailers-github.md
+  - ../references/commit-trailers-gitlab.md
+  - ../references/commit-trailers-linear.md
   - ../references/output-diff.md
   - ../references/release-convention.md
 ---
@@ -74,7 +77,7 @@ Posture: `present-first`.
      - Add a `BREAKING CHANGE:` trailer in the footer describing what breaks and the migration path.
      - Always include a body explaining the breaking change even if the user didn't request a verbose commit.
    - **Issue/PR references** — when the user provides an issue URL, issue ID, or the branch name matches an issue pattern:
-     - Detection, keyword selection, and per-platform trailer format: `commit-trailers`.
+     - Shared `closes` versus `refs` policy: `commit-trailers`. Then fetch only the platform in play — `commit-trailers-github`, `commit-trailers-gitlab`, or `commit-trailers-linear` — for that platform's keywords, syntax, and detection.
      - Fetch the issue via the appropriate MCP tool to understand context.
      - **Linear ignores commit messages entirely** — a `closes K-123` in a commit links nothing, moves nothing, closes nothing. Put the id in the commit only as a human-readable note if the repo does that, and never rely on it. The link and the close come from the **PR/MR title and description** (`github-pr-create` / `gitlab-mr-create`).
      - GitHub and GitLab **native** issues DO close from commit messages — `closes #42` there works. Do not generalise either way.

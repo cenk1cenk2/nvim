@@ -88,7 +88,7 @@ and commit messages:
   title id as a *link*, not a close signal; the closing kind still
   comes from the description trailer.
 - **Commit messages are NOT a Linear linking surface.** Linear cannot
-  link via commit messages (see `commit-trailers`). Ids found only in
+  link via commit messages (see `commit-trailers-linear`). Ids found only in
   commits may still help *discover* which issues a branch touches, but
   never treat a commit-only id as evidence Linear will close it — if it
   is not in the MR/PR title or description, Linear does not know.

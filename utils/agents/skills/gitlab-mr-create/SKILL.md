@@ -8,6 +8,8 @@ references:
   - ../references/scm-create-description.md
   - ../references/scm-gitlab.md
   - ../references/commit-trailers.md
+  - ../references/commit-trailers-gitlab.md
+  - ../references/commit-trailers-linear.md
   - ../references/output-diff.md
   - ../references/linear-state-transitions.md
   - ../references/release-convention.md
