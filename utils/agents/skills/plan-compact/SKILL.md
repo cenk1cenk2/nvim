@@ -39,7 +39,7 @@ Unlike `plan-handoff` (a self-contained plan for a *different* session or repo),
 
 Invoke `plan-compact` **once** to activate it for the current task. Everything below then runs automatically, without further prompting.
 
-1. **Activate.** Create the anchor file (or locate an existing one for this task). State the anchor path in chat and commit to the discipline: checkpoint automatically, and reconcile first on any resume after compaction.
+1. **Activate.** Create the anchor file (or locate an existing one for this task). Say it in one sentence that carries the path and what to do with it — *"Anchoring this work in `<path>`; reconcile from it before anything else on any resume."* — never a bare path or a labelled block. Then commit to the discipline: checkpoint automatically, and reconcile first on any resume after compaction.
 
 ### Checkpoint — maintain the anchor (automatic)
 
@@ -73,7 +73,7 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
 - **Next-task handoff** — a cold-executable brief for the immediate next task.
 - **Caveats & constraints** and **Open decisions / blockers**.
 
-Restate the anchor path in chat each time so it survives the next compaction summary.
+Restate the anchor in chat each time so it survives the next compaction summary, in the same one-sentence form that carries the path and what to do with it.
 
 **The anchor serves the OBJECTIVE. It is not a session log — PRUNE, do not accumulate.**
 
