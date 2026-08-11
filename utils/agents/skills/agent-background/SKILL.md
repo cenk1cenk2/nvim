@@ -39,6 +39,23 @@ The long, user-dependent wait collapses into a single silent process. You get on
 >
 > Corollary: `ps` cannot tell you whether a running watcher will wake you — a detached loop and a runtime-managed one look identical in a process list. Judge by **how it was launched**, not by whether the process is alive.
 
+## ABSOLUTE — Arm One Watcher Per Item, Never One Over the Set
+
+**Five Spacelift stacks are five watchers. Eight CI runs are eight. Three MRs are three.** Never one loop that waits for all of them, and never one that polls a list and exits when the list is finally empty. The discipline is item 1 of `agent-watchers`; this is why it matters at the moment you arm.
+
+An aggregate watcher can answer exactly one question — "is everything done?" — and that is the least useful question in the set. What you need is **which one moved, and when**:
+
+- **One stall blinds you to the rest.** A single stack sitting on approval holds the aggregate at "not met" while seven others finished, failed, or drifted. You learn nothing about the seven until the one clears.
+- **Failures arrive late instead of immediately.** The run that errored two minutes in should wake you two minutes in. Inside an aggregate it waits for the slowest sibling, and by then the context that made it cheap to fix is gone.
+- **You cannot act incrementally.** Per-item wakes let you fix the broken one, re-run it, and re-arm just that one while the others keep going. An aggregate forces a verdict on everything before you may touch anything.
+- **The wake carries no identity.** "The loop exited" does not say what changed, so you re-query the whole set on wake — reintroducing exactly the per-turn cost this skill exists to remove.
+
+Key each watcher on **one stable id** — one stack id, one pipeline id, one MR number — so the wake identifies itself and re-arming one leaves the others untouched.
+
+**Bundle only when the items genuinely cannot be acted on separately**: a gate where nothing moves until all of them are green, and one failure means abandoning the batch. That is rare. When you do bundle, say so and say why, or the next reader reads it as an oversight.
+
+**Cost is never the reason to bundle.** These are sleeping shell loops; N of them cost about what one costs. If N feels too large to arm individually, the batch is too large — say that out loud instead of quietly collapsing it into one blind watcher.
+
 ## Ways to Wait and Wake — by mechanism and provider
 
 The bash wait-loop above is the portable default, but it is not the only way, and not every runtime supports every method. Pick the mechanism that fits the case AND the active runtime — discover the runtime's own facilities rather than assuming this harness's.

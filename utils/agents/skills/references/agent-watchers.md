@@ -274,6 +274,9 @@ reaping is terminal.
   the process runs, exits into silence, and nothing wakes you. You made a log file, not a watcher.
 - **Re-reading a watcher's output each turn** to see whether it fired. If you are polling the watcher,
   the watcher is not waking you.
+- **One watcher over a set of items** — a single loop across five stacks, eight pipelines, or three MRs.
+  It can only report "all done", so one stall hides the rest and a failure waits for the slowest sibling.
+  One item, one stable id, one watcher.
 - **An in-context poll loop** — burning turns on checks a background loop does for free.
 - **Arming the whole chain up front** — the later ids do not exist yet, so those watchers key on a guess.
 - **Treating a wake as user input.** A notification is never approval, consent, or an answer to a
