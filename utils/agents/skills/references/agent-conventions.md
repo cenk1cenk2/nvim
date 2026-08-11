@@ -72,6 +72,7 @@ When the user pointed at an example, both lists are measured against **that** ex
 - **Match the surrounding density and format, including when that means none at all.**
 - **Never restate what the code does.** A comment earns its place only by explaining a non-obvious *why*: a constraint, a trade-off, a gotcha, an edge case.
 - **No section banners, no narration** (`// Step 1: …`), **no docstrings** added where siblings carry none, **no TODOs** unless asked.
+- **An asked-for TODO-family comment carries the user's handle, right after the colon** — `KEYWORD: @handle <message>`, e.g. `TODO: @cenk1cenk2 drop once the v2 endpoint ships`. The handle is the user's account on **that repository's git provider**, so read it off the remote rather than assuming; it is `@cenk1cenk2` on GitHub and on `gitlab.kilic.dev`. Recognised keywords, and nothing else: `FIX` (`FIXME`, `BUG`, `FIXIT`, `ISSUE`), `TODO`, `HACK`, `WARN` (`WARNING`, `XXX`), `PERF` (`OPTIM`, `PERFORMANCE`, `OPTIMIZE`), `NOTE` (`INFO`).
 - Explanation belongs in the agent's report, not in the code.
 
 ## 4. Scope discipline
