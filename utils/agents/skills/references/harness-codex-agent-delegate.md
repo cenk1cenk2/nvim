@@ -28,6 +28,17 @@ Everything follows from that:
 
 Because completion never re-invokes the session, a Codex run has no equivalent of "arm a watcher and stop thinking about it": every wait is either a blocking call or an explicit poll you must remember to make.
 
+## Collecting a report — poll or block, and write to a file
+
+Since completion never re-invokes the session, **there is no notification carrying a result and no post-hoc channel to a finished agent**. The collection ladder in `agent-delegate` loses its nudge rung here for the same reason it does on OpenCode: nothing is listening once the work ends.
+
+- **Blocking dispatch is the only delivery you can count on** when the report matters.
+- **Specify the report's shape in the prompt**, since there is no follow-up round to ask for the diff you actually wanted.
+- **Have the work write its report to a file.** On this runtime the file is the primary artifact rather than a backup — a result you never polled for is simply lost, and the file is what makes it recoverable without re-running.
+- **A quiet background task is not a failed one.** It finished into silence by design. Poll it before concluding anything.
+
+When a report is thin, the fallbacks are the file, the artifact on disk, and a re-dispatch with a tighter deliverable — never assuming the work did not happen.
+
 ## Waiting and scheduling
 
 - **No native deferred-wakeup and no cron.** For recurring runs, wrap `codex exec` in an OS cron job or a CI schedule.

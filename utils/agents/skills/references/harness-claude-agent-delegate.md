@@ -54,6 +54,8 @@ The same definition therefore resolves to different tools in the foreground and 
 
 ## Collecting and resuming
 
+**Finishing does not put an agent out of reach — this is the runtime where the collection ladder in `agent-delegate` works in full.** A thin or vague report is recovered by messaging the agent that produced it, not by reconstructing the work from the diff. Use `ListAgents` to confirm which agent a name currently reaches before assuming it is gone.
+
 - **`SendMessage` to the agent's name** reaches it, and a **completed** subagent that receives one **auto-resumes in the background** with no new `Agent` call. The same holds for one stopped with `TaskStop`.
 - Since **v2.1.199**, `SendMessage` refuses a name that now points at a *different* agent (a re-spawned background agent that reused it) and reports which agent the name reaches. Address the earlier one by the agent ID from its spawn result.
 - **`TaskOutput` is deprecated, and for a local agent task it is a trap** — its `.output` file is a symlink to the full subagent transcript (JSONL), and reading it overflows the lead's context. Use the `Agent` tool result instead. Reserve `TaskOutput` / reading the output file for background **shell** tasks.

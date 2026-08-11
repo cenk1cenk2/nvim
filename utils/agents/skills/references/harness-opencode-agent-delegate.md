@@ -31,6 +31,18 @@ Mirrors `~/.config/opencode/opencode.jsonc` (`model`, `small_model`) and the `pe
 
 > **Unverified — confirm before relying on it.** A `background: true` parameter on `task`, gated by `OPENCODE_EXPERIMENTAL_BACKGROUND_SUBAGENTS`, is unconfirmed against current OpenCode documentation. What *is* documented publicly is a third-party plugin (`opencode-background-agents`) adding `delegate` / `delegation_read` / `delegation_list`, restricted to **read-only** subagents (write-capable ones must use native `task`) with a **15-minute** delegation timeout. Check the installed OpenCode version's own tool list before assuming either exists.
 
+## Collecting a report — there is no second chance
+
+**The tool result is the whole delivery.** `task` is blocking, so the subagent's return value is the only thing it ever hands you, and once the call ends there is no agent left to message. The collection ladder in `agent-delegate` therefore **loses its cheapest rung here**: a thin report cannot be recovered by nudging, because there is nobody to nudge.
+
+That moves the work to dispatch time:
+
+- **Ask for the report's exact shape in the prompt** — the diff, the file list, the command output — because you get one attempt at it.
+- **Have the subagent write its findings to a file**, and say where. A file survives a thin return, an abort, and a hang; a stranded tool result survives none of them.
+- **Keep tasks small.** A hang costs the entire task with no partial recovery, so smaller dispatches lose less.
+
+When a report does come back thin, the fallbacks are the file you asked for, the artifact on disk, and re-dispatching with a better-specified deliverable. Say that you re-ran it and why, since that is a real cost rather than a retry.
+
 ## Waiting and waking
 
 - **No native deferred-wakeup and no cron** — third-party plugins only (e.g. `opencode-scheduler`). Do not assume a `ScheduleWakeup`/`CronCreate` equivalent.

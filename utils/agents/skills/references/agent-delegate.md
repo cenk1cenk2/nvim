@@ -58,19 +58,28 @@ An agent that finishes and hands back a vague summary, a paragraph where you ask
 
 **The wrong response is to take the work in-house.** Redoing it locally discards a completed run, pays for it a second time, and loses everything it learned that you did not think to ask about. It also feels like progress, which is why it happens.
 
-### Check the artifact before you judge the report
+### FIRST establish the agent's state, because it decides the branch
 
-**Work lands on disk, not in the message.** Before concluding anything, look at what actually changed:
+**Is the agent still reachable?** Enumerate what exists and find it before doing anything else. Guessing wrong wastes a round trip on a confusing error:
 
-- `git status` and `git diff --stat` in the target repository.
-- The output path you asked it to write.
-- Whether the run made many tool calls or ran a long time — both mean it did something, whatever it said.
+- **Reachable** — and this is the usual answer. **Finishing does not make an agent unreachable.** Where the runtime supports resuming, a completed agent — and often a stopped one — takes a message and picks up from its own transcript, which is exactly the state you are collecting from. Running and idle agents are reachable too.
+- **Genuinely gone** — the session that spawned it no longer exists, the runtime does not support resuming at all, or the name now resolves to a **different** agent than the one you mean. Only then is there nobody to ask, and you fall back to its transcript or output file.
 
-A correct diff under a useless summary is a **formatting problem**. Read the diff and move on; do not ask it to redo work that is already sitting in the working tree.
+**Do not treat "it already finished" as gone.** That mistake sends you straight to reconstructing from the diff while the agent sits there holding the report.
 
-### Then nudge, and be specific
+Which states are reachable, how to address one, and whether a name can drift onto another agent are runtime properties: `harness-<provider>-agent-delegate`.
 
-A finished agent can be resumed by message and answers from its existing transcript, so it still has everything. **Name the exact artifact you are missing.** A specific ask retrieves it in one round; a vague "can you give more detail" returns another summary.
+### Then nudge — it is the only thing that recovers the reasoning
+
+**Ask the agent before you go looking.** One message is cheaper than reading a large diff, and it is the only step that recovers what the artifact cannot show: why it did something, what it deviated from and why, what it found and deliberately left alone, and what it could not do.
+
+Reconstructing that yourself from the diff is the in-house failure in miniature — you are redoing, by hand, work the agent has already finished and is holding.
+
+**Where the runtime supports messaging, that is the collection channel.** A finished agent that receives a message resumes from its existing transcript, so it still has everything it did, and it can send the report back directly.
+
+**Check that delivery was ever possible before blaming the agent.** On some runtimes an agent's plain text does not reach the lead at all and the report must be sent explicitly — an agent that "returned nothing" may have written a perfect report into the void. That is a brief bug, not an agent failure, and the fix is a delivery instruction in the prompt rather than a re-dispatch. The provider reference names which dispatch shapes behave this way.
+
+**Name the exact artifact you are missing.** A specific ask retrieves it in one round; a vague "can you give more detail" returns another summary.
 
 - "Give me the unified diff of every file you changed."
 - "List each file you touched with a count of replacements."
@@ -79,15 +88,18 @@ A finished agent can be resumed by message and answers from its existing transcr
 
 **Ask for one thing at a time.** A nudge listing five requests tends to come back as a summary of five things rather than the five artifacts.
 
-### The ladder for a bad report
+### The ladder
 
-1. **Inspect the artifact.** Often the answer is already there and no message is needed.
+1. **Establish the agent's state.** Reachable, or gone. Everything else depends on it.
 2. **Nudge for the specific missing piece.** One artifact, named exactly.
-3. **Nudge again, narrower**, if the reply is still a summary — ask for a single file, a single command's output.
-4. **Read its transcript or output file** where the runtime exposes one.
-5. **Only then reconstruct**, and say plainly that you did and why the collection failed.
+3. **Nudge again, narrower** if the reply is still a summary — a single file, a single command's output.
+4. **Read its transcript or output file**, where the runtime exposes one. This is also rung 1 for an agent that is gone.
+5. **Inspect the artifact** — `git status`, `git diff`, the output path. This *verifies* what you collected; it does not replace collecting, because a diff cannot tell you why.
+6. **Only then reconstruct**, and say plainly that you did and why collection failed.
 
-Rungs 1 through 3 resolve nearly everything and cost one message each. Rung 5 costs the whole task again.
+Rungs 1 through 3 resolve nearly everything and cost one message each. Rung 6 costs the whole task again.
+
+**Collecting and verifying are different jobs.** Collect from the agent, verify against the artifact — and do both. A correct diff under a useless summary still needs the summary, because the reasoning is not in the diff.
 
 **Never let an unusable report pass silently either.** Accepting a summary you cannot verify, and reporting the task as done on its word, is the same failure wearing a better outfit — you have no evidence, and neither does the user.
 
