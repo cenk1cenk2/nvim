@@ -377,7 +377,7 @@ function M.instance_config()
         mcps = {
           {
             mcpServers = {
-              ["hyprpilot-nvim"] = {
+              ["hyprpilot_nvim"] = {
                 command = "uvx",
                 args = { "hyprpilot-nvim-mcp@latest" },
                 env = {
