@@ -150,9 +150,9 @@ CLI owns what no MCP server covers: local git, `kubectl`, project scripts, tests
 
 ### mise
 
-Most CLI tooling here is installed by **mise** — `gh`, `glab`, `kubectl`, `helm`, `terraform`, `task`, `selene`, language runtimes — and resolves through `~/.local/share/mise/shims`, which the graphical session puts on `PATH`. Anything launched from that session, this one included, just calls the tool directly. A shim resolves the repository's own `mise.toml` version and passes mise's `[env]` vars to the process it launches.
+Most CLI tooling here is installed by **mise** — `gh`, `glab`, `kubectl`, `helm`, `terraform`, `task`, `selene`, language runtimes. It resolves in this session and in anything launched from the graphical session, so **call the tool directly**: no wrapper, no prefix, nothing to reason about.
 
-Contexts that do **not** inherit the session environment — systemd units, cron, a headless or remote launch — have no shims and fail with "command not found" for a tool that is plainly installed. Give those the shims directory explicitly on `PATH`, the way the existing unit files do, or invoke through `mise exec -- <command>`; the mise binary sits outside its own shims, so it is reachable from any environment.
+Where it does not resolve, the cause is a process that did not inherit the session environment — a systemd unit, cron, a headless or remote launch — and the fallback is `~/.local/share/mise/shims` on `PATH` the way the existing unit files do it, or `mise exec -- <command>`. The mise binary sits outside its own shims, so it is reachable from anywhere.
 
 **Diagnose before working around.** A tool that fails from a shell where `PATH` already carries the shims is not an environment problem, and wrapping the call hides whatever is actually broken. Read the error: a zsh function or completion wrapper failing before the binary runs is a shell-config bug to fix at its source, not something to route around.
 
