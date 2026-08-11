@@ -15,7 +15,7 @@ No cheap→max ladder is configured — two role models, both `reasoningEffort: 
 
 Mirrors the `personal/codex/*` profiles in `~/.config/hyprpilot/config.yaml` and the `openai` provider in `~/.config/opencode/opencode.jsonc`. Keep in sync when those change. If a cheap/default/smart/max ladder is needed later, add it here and to those profiles.
 
-## ⛔ Background work does NOT wake you
+## Background work does NOT wake you
 
 **This is the defining difference from Claude Code.** A background subprocess or subagent on Codex completes without informing the calling agent — no notification, no re-invocation (`openai/codex` #15723, open, filed against codex-cli 0.116.0). The caller either polls for the result or waits for the user to ask.
 
@@ -33,4 +33,4 @@ Because completion never re-invokes the session, a Codex run has no equivalent o
 - **No native deferred-wakeup and no cron.** For recurring runs, wrap `codex exec` in an OS cron job or a CI schedule.
 - Codex offers a first-class interruptible sleep primitive suitable for a bounded sleep-loop, unlike harnesses where foreground sleeping is blocked.
 
-> **⚠ Unverified — confirm against the installed build.** The exact tool names for background terminals and sleep are unconfirmed against current Codex documentation; upstream issue text uses `exec_command` for that capability. Codex ships fast (700+ releases), so check the running version's own tool list rather than trusting a name from this file.
+> **Unverified — confirm against the installed build.** The exact tool names for background terminals and sleep are unconfirmed against current Codex documentation; upstream issue text uses `exec_command` for that capability. Codex ships fast (700+ releases), so check the running version's own tool list rather than trusting a name from this file.

@@ -2,7 +2,7 @@
 
 Runtime mechanics for the `agent-background` skill on Codex. Read this before arming anything: the core assumption behind background waiting does not hold here.
 
-## ⛔ Nothing wakes you
+## Nothing wakes you
 
 **Background subprocesses and subagents complete without informing the calling agent** — no notification, no re-invocation (`openai/codex` #15723, open, filed against codex-cli 0.116.0). The caller either polls, or waits for the user to ask.
 
@@ -24,4 +24,4 @@ This inverts the whole skill. On a runtime that wakes you, arming a watcher and 
 3. **If you must background it, schedule your own poll** in the same turn plan — never end the turn expecting a wake.
 4. **Re-verify on poll.** As everywhere, a proxy signal firing does not mean the downstream state converged.
 
-> **⚠ Unverified.** The exact tool names for background terminals and for sleep are unconfirmed against current documentation; upstream issue text uses `exec_command` for that capability. Codex ships very fast — check the running build's tool list rather than trusting a name from this file.
+> **Unverified.** The exact tool names for background terminals and for sleep are unconfirmed against current documentation; upstream issue text uses `exec_command` for that capability. Codex ships very fast — check the running build's tool list rather than trusting a name from this file.

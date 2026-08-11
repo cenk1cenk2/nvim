@@ -27,7 +27,7 @@ Whatever the mechanism, the flow is the same: pick a tier from task complexity, 
 | `run_in_background` | no | Detached execution. **Default is background on Claude Code**; other runtimes differ — check `harness-<provider>-agent-delegate`. |
 | `mode` | — | **Deprecated and ignored** on current Claude Code. See the permission section below. |
 
-## ⛔ FIRST: settle the permission context
+## FIRST: settle the permission context
 
 **How a subagent gets its permissions is a runtime property, and getting it wrong is the most expensive dispatch mistake.** Read the active `harness-<provider>-agent-delegate` reference before the first dispatch. Two shapes exist in the wild:
 
@@ -39,9 +39,9 @@ Rules that hold either way:
 - **Granting autonomous access is a security decision, not a default.** Get the user's explicit opt-in, scope the prompt to exact paths with a do-not-touch list, and keep irreversible steps on the main loop.
 - **Cross-repo and cross-directory dispatch is the riskiest case** on any runtime — settings and isolation are usually scoped to a filesystem path.
 - **Diagnose by inspecting the artifact, never the notification.** Work present but no report means the work happened and only the delivery failed — verify it and move on, do **not** re-run. **Silence is neither success nor failure.**
-- **⛔ An ABSENT artifact proves nothing.** It does not mean the agent never ran, never worked, or is broken. Most agents write once near the end, so one that has read twenty files and formed its entire answer looks **identical on disk** to one that never started. Treating an empty disk as "it never ran" and reaping on that basis **destroys real work**, and reaping is terminal. When there is nothing to inspect you have learned nothing — steer it (below) rather than concluding.
+- **An ABSENT artifact proves nothing.** It does not mean the agent never ran, never worked, or is broken. Most agents write once near the end, so one that has read twenty files and formed its entire answer looks **identical on disk** to one that never started. Treating an empty disk as "it never ran" and reaping on that basis **destroys real work**, and reaping is terminal. When there is nothing to inspect you have learned nothing — steer it (below) rather than concluding.
 
-## ⛔ A quiet or stuck agent — STEER FIRST, escalate in this order
+## A quiet or stuck agent — STEER FIRST, escalate in this order
 
 **You have control over your agents.** An agent that has gone quiet, looks stuck, or has produced nothing is a thing you can **talk to**, and that is nearly always the cheapest fix. Work the ladder in order and do not skip a rung — each later rung costs more and destroys more.
 
@@ -54,11 +54,11 @@ Rules that hold either way:
 
 ## Dispatch Mode — background by default, where the runtime supports it
 
-> **★ Background is the preferred posture where the runtime delivers results reliably** (Claude Code: background is the tool default, and a finished agent's result arrives as a completion notification in a later turn). The lead stays free, the user keeps talking, you keep working.
+> **Background is the preferred posture where the runtime delivers results reliably** (Claude Code: background is the tool default, and a finished agent's result arrives as a completion notification in a later turn). The lead stays free, the user keeps talking, you keep working.
 >
 > **Block when you need the result to continue** — the next step depends on it and you would otherwise sit idle. Blocking costs no parallelism: several dispatches in ONE message run concurrently and land together.
 >
-> **⛔ On a runtime that does NOT wake you on completion (Codex today), background is a trap** — the work finishes into silence and nobody re-invokes you. There, block, or poll explicitly, or have the agent write its result to a file you read afterwards.
+> **On a runtime that does NOT wake you on completion (Codex today), background is a trap** — the work finishes into silence and nobody re-invokes you. There, block, or poll explicitly, or have the agent write its result to a file you read afterwards.
 
 **Decide with two questions:**
 
@@ -69,7 +69,7 @@ Rules that hold either way:
 
 **Consequences of blocking:** no mid-execution message exchange (the lead is paused), and user guidance only arrives on the next turn.
 
-## ⛔ Reaping — terminal for the run, so COLLECT FIRST
+## Reaping — terminal for the run, so COLLECT FIRST
 
 > **Stopping an agent ends its run.** Reap only when you are finished with it: you have what you need, you have no further question, and the work has moved on.
 >
@@ -89,7 +89,7 @@ Genuinely safe to reap:
 
 **Completion does not self-clean.** A finished agent, and a background task whose command already exited, can linger in the runtime's task list. Stop them explicitly via the runtime's own mechanism (per `harness-<provider>-agent-delegate`) once you are done.
 
-**★ The concrete hazard is two concurrent writers.** Re-dispatching over the same files, document, or resource without reaping the first lets the later write silently clobber the earlier one — and neither agent reports the collision.
+**The concrete hazard is two concurrent writers.** Re-dispatching over the same files, document, or resource without reaping the first lets the later write silently clobber the earlier one — and neither agent reports the collision.
 
 **Reap checkpoint:** before declaring the work done, enumerate everything you spawned and confirm each is stopped, or state that one is *deliberately* still running and what it waits on.
 
@@ -111,7 +111,7 @@ Agents start with a fresh context window — no conversation history, no files y
 4. **Context** — relevant architecture, patterns, conventions, adjacent work.
 5. **Boundaries** — what NOT to touch (other agents' scope, read-only files).
 6. **Verification** — commands to run after implementation (from `project-tooling` discovery).
-7. **Conventions** — ⛔ **mandatory for any prompt that writes code.** Paste the filled-in block from `agent-conventions`: study the neighbouring files first, copy the local naming/structure/error idiom, match comment density (usually none), stay in scope, and self-check the diff before reporting. An agent given no conventions writes its own dialect, and the result reads as foreign even when it works.
+7. **Conventions** — **mandatory for any prompt that writes code.** Paste the filled-in block from `agent-conventions`: study the neighbouring files first, copy the local naming/structure/error idiom, match comment density (usually none), stay in scope, and self-check the diff before reporting. An agent given no conventions writes its own dialect, and the result reads as foreign even when it works.
 8. **Report** — expected status format (DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED) and its length bound. For code work, also require: which files it used as its pattern reference, and anything it had to invent for lack of local precedent.
 
 Point at skills and tools by name rather than inlining them when the target shares your access — see `agent-target-capability`.

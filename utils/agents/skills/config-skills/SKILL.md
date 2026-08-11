@@ -17,7 +17,7 @@ argumentHint: '[create|update|review] [skill-name] [what it should do]'
 Posture: `present-first`.
 Present proposed changes per `output-diff` before writing. Keep real private specifics out of skills, references, and examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — scope `agents`, branch `rolling`.
 
-## ⛔ ABSOLUTE RULE — change the RELEVANT skills, not this one
+## ABSOLUTE RULE — change the RELEVANT skills, not this one
 
 **When you learn something that should change agent behaviour, discover and edit the skills that actually govern that behaviour. Do NOT write it into `config-skills`.** This file is *authoring guidance* — how to write, structure, and validate a skill. It is not where operational rules live, and nothing reads it at the moment the behaviour is needed.
 
@@ -46,7 +46,7 @@ All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a direct
     └── SKILL.md
 ```
 
-⛔ **Never hand-maintain a file list here.** `ls ~/.config/nvim/utils/agents/skills/references/` is the live inventory; a copy in this file is stale the moment anyone adds a reference.
+**Never hand-maintain a file list here.** `ls ~/.config/nvim/utils/agents/skills/references/` is the live inventory; a copy in this file is stale the moment anyone adds a reference.
 
 ## Skill Ecosystem
 
@@ -183,7 +183,7 @@ Note: omitting the flag and writing `disableModelInvocation: false` are behavior
 
 ## References
 
-### ⛔ How References Load — declaring one costs tokens on every load
+### How References Load — declaring one costs tokens on every load
 
 **A skill's declared references are appended to it on read.** `read_skill` and the `hyprpilot://skills/<slug>` resource both bundle them; `references: false` opts out of the tool's default, and `load_skill_references { slug }` fetches the bundle alone. The `references:` array is the load list, and the body never needs to say "go read this".
 
@@ -200,7 +200,7 @@ The consequence that governs every decision below: **declaring a reference is a 
 
 Path-read exists because a conditional reference taxes every run for a branch most runs never take. The per-harness family is the canonical case: declaring all three provider files guarantees two are wasted.
 
-⛔ **A path-read directive MUST carry the absolute path.** A missed `Read` raises no error — the skill simply runs without the convention it named, silently.
+**A path-read directive MUST carry the absolute path.** A missed `Read` raises no error — the skill simply runs without the convention it named, silently.
 
 ### Writing Reference Directives — name it inline, do not announce it
 
@@ -224,7 +224,7 @@ Rules:
 - **Name the reference, never the act of reading it.** "per `X`", "via `X`", "fields per `X`".
 - **No inline summary for a declared reference.** It cannot fail to load, so a summary is the same content paid for twice.
 - **A real directive block is for path-read references only**, and it carries the absolute path plus a one-line summary — there, the read genuinely may not happen.
-- **Reserve `⛔` and blockquote weight for traps** — a rule whose violation destroys work. Routine composition gets a clause, not a banner.
+- **Reserve a bold ABSOLUTE marker and blockquote weight for traps** — a rule whose violation destroys work. Routine composition gets a clause, not a banner.
 - **Never name the fetching tool.** The agent resolves that itself.
 
 ### Path Convention
@@ -307,7 +307,7 @@ Rules for this family:
 6. **Version-mark behavioral claims.** Runtime behavior changes between releases; a claim without a version marker rots invisibly. When behavior contradicts a file, verify against the running build and fix the file rather than special-casing the runtime in a skill body.
 - **A skill that spawns subagents MUST send the reader to the active provider's reference BEFORE the first dispatch**, as a hard directive rather than optional background. Write the directive so it cannot be read as "nice to have".
 
-> **⛔ The expensive failure mode is result COLLECTION, not dispatch.** Whether detached is the default, and above all **how a finished agent's output actually reaches the caller**, vary per runtime and change between versions. One runtime wakes the caller with a completion notification; another never wakes it at all, so detached work finishes into silence. An author who omits the collection guidance produces a skill whose users either discard finished work and re-run it, or wait forever for a wake that was never coming. Any skill that dispatches subagents must therefore cover: how a finished agent's output reaches the caller on the active runtime, how to resume or poll it, and **diagnose the cause before re-dispatching** (blind re-dispatch is what throws work away, not re-dispatch itself).
+> **The expensive failure mode is result COLLECTION, not dispatch.** Whether detached is the default, and above all **how a finished agent's output actually reaches the caller**, vary per runtime and change between versions. One runtime wakes the caller with a completion notification; another never wakes it at all, so detached work finishes into silence. An author who omits the collection guidance produces a skill whose users either discard finished work and re-run it, or wait forever for a wake that was never coming. Any skill that dispatches subagents must therefore cover: how a finished agent's output reaches the caller on the active runtime, how to resume or poll it, and **diagnose the cause before re-dispatching** (blind re-dispatch is what throws work away, not re-dispatch itself).
 
 Checklist for any skill that dispatches subagents:
 
@@ -332,7 +332,7 @@ When creating or updating a skill, always check:
 
 ### Shared Reference Families
 
-⛔ **This is a map, not an inventory.** The live list is the directory — run `ls ~/.config/nvim/utils/agents/skills/references/` before proposing a new reference or claiming one does not exist. A hand-maintained file list here rots the moment anyone adds a file.
+**This is a map, not an inventory.** The live list is the directory — run `ls ~/.config/nvim/utils/agents/skills/references/` before proposing a new reference or claiming one does not exist. A hand-maintained file list here rots the moment anyone adds a file.
 
 | Family | Prefix | Covers |
 |--------|--------|--------|
@@ -363,7 +363,7 @@ Run this when creating, updating, or reviewing any description. **One shape, eve
 1. **Start with the slug.** Claude Code truncates long descriptions, so leading with the slug keeps the skill identifiable when the tail is cut. Not redundancy — a truncation defence.
 2. **Then what it does**, in one clause. Plain prose, no headers, no YAML block scalars.
 3. **Then `Use on` / `Use when`** with phrases a user would actually type, or the situation that should trigger it. Auto-invoked skills lead with the condition instead: *"Auto-invoked on X context - ..."*.
-4. **Then `Not for <situation>`** — ⛔ **describe the situation, never name the sibling skill.** A hardcoded slug goes stale the moment anything is renamed, and it forces every rename into a catalog-wide sweep. "Not for a read-only refresh" routes as well as "(use /linear-issue-read)" and survives the rename.
+4. **Then `Not for <situation>`** — **describe the situation, never name the sibling skill.** A hardcoded slug goes stale the moment anything is renamed, and it forces every rename into a catalog-wide sweep. "Not for a read-only refresh" routes as well as "(use /linear-issue-read)" and survives the rename.
 5. **Say it once.** Do not restate the tier — `disableModelInvocation` already carries "manually invoked", and repeating it in prose costs the whole catalog.
 6. **Keep it short.** `list_skills` returns every description in one payload, so each is paid for by the whole catalog and an over-long one risks truncation eating its own triggers. Roughly 380 characters is the ceiling.
 7. **No `<` or `>`** anywhere in the description.
@@ -379,13 +379,14 @@ Run this when creating, updating, or reviewing any description. **One shape, eve
 - **Be concise** — skills are instructions for an agent, not documentation for humans. Keep it actionable.
 - **State what to do.** Guidance lands as the positive instruction — name the target, the field, the flow. A prohibition earns its place when the user asked for one, or when the wrong move destroys work; otherwise it is an invented example the reader has to parse and discount. A reader told what a thing *is* deduces what it is not.
 - **End list items with `.`** — consistent punctuation across all skills.
+- **No emoji, in the skill or in what it tells the agent to write** — the absolute rule lives in the central `AGENTS.md`. Markers are words and bold (**ABSOLUTE**, **NEVER**, **Warning:**), never a pictograph. The only glyph that stays is one a file format or API requires as literal data.
 - **Examples** — workflow skills that orchestrate multi-step processes should include at least one example showing trigger → actions → result.
 - **Compose over duplicate** — when another skill or reference already does something, name it (compose with the skill "as defined in `load-skills`", or name the reference inline) rather than hardcoding a copy of its logic.
 - **SKILL.md size** — no hard line limit. Some scaffolding skills (e.g. `cluster-*`, `argocd-*`) are legitimately long, and that is fine. Do NOT split a skill into references just to shrink it — references exist only to share content across skills (see References).
 
 ## MCP Tool Name Convention
 
-**⛔ ABSOLUTE — the harness-provided integration outranks any server a skill names.** When the running harness supplies an integration for a service (on Claude Code, a `mcp__claude_ai_<Connector>__*` connector), it is used for that service and the standalone MCP server is not. A server name in a skill body identifies *which service and workspace*, never *which transport wins* — see the `harness-connectors` reference. When authoring: name the server for identification, and for any service with a harness connector, add a directive pointing at that reference rather than implying the standalone server is the default. Falling back to the standalone server is allowed only when the harness offers nothing for that service or lacks a needed capability, and it is stated out loud.
+**ABSOLUTE — the harness-provided integration outranks any server a skill names.** When the running harness supplies an integration for a service (on Claude Code, a `mcp__claude_ai_<Connector>__*` connector), it is used for that service and the standalone MCP server is not. A server name in a skill body identifies *which service and workspace*, never *which transport wins* — see the `harness-connectors` reference. When authoring: name the server for identification, and for any service with a harness connector, add a directive pointing at that reference rather than implying the standalone server is the default. Falling back to the standalone server is allowed only when the harness offers nothing for that service or lacks a needed capability, and it is stated out loud.
 
 In skill files, reference files, and documentation, use the **`<server>__<tool>` short form** — the server name is the identifying factor. The harness/client may surface the tool under a longer prefix (`mcp__<server>__<tool>`, `mcp__<hub>__<server>__<tool>`, etc.); the agent resolves whatever prefix the runtime uses at call time. Documentation should NOT bake in a specific prefix.
 

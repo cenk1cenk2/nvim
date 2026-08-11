@@ -4,7 +4,7 @@ Integrations the running agent harness provides itself, and the rule that they o
 
 The rule is harness-agnostic. The inventory below is per harness and grows as integrations are confirmed — today only Claude Code's connectors are established.
 
-## ⛔ ABSOLUTE: the harness-provided integration wins
+## ABSOLUTE: the harness-provided integration wins
 
 **When the running harness provides an integration for a service, use it. Do NOT use an external or self-hosted MCP server for that same service.** On Claude Code that means a `mcp__claude_ai_<Connector>__*` connector takes precedence over the equivalent standalone server (`slack-kilic`, `linear-kilic`, and so on) for every read and every write.
 

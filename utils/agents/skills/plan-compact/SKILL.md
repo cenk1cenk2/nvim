@@ -45,7 +45,7 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
 - **Task & goal** — what we are doing and the end state.
 - **Operating model & posture** — the *stance*, not the steps. Compaction strips this hardest because it reads as tone rather than fact, and an agent that resumes with the wrong stance does the wrong things confidently. Record:
   - **Mode** — bulldozer ON, or default, or **PARKED**. When ON: never end a turn idle, always have a next action queued or a watcher armed, report finished/in-flight/queued each turn. **When OFF or PARKED: ending a turn idle is CORRECT** — investigate, propose, wait. Say which is active, name the **exact phrase that re-engages it**, and state that a watcher wake or task notification is never permission to switch mode.
-  - **★ PARKED is its own state, not a synonym for OFF.** Record it explicitly when the user parked the work: **nothing is armed, nothing is re-armed on resume, and no push resumes until the user re-engages the mode by name.** A resuming agent that finds an ambiguous mode line will guess, and a confident wrong stance beats a hesitant right one — so write the parked state and its release phrase in the same line.
+  - **PARKED is its own state, not a synonym for OFF.** Record it explicitly when the user parked the work: **nothing is armed, nothing is re-armed on resume, and no push resumes until the user re-engages the mode by name.** A resuming agent that finds an ambiguous mode line will guess, and a confident wrong stance beats a hesitant right one — so write the parked state and its release phrase in the same line.
   - **Role** — who performs the irreversible acts. If the user merges, applies, confirms, or deploys and the agent never does, write that down as an invariant; it is the single easiest thing for a resuming agent to violate.
   - **Delegation stance** — whether work is delegated by default and what the main loop keeps for itself (typically: gates, go/no-go, fact-checking, and anything where a wrong claim is expensive). Note which agent types have proved reliable and which have gone silent, and any isolation requirement (e.g. worktrees for concurrent file-writers).
   - **Trust posture** — whether subagent and tool claims get re-verified before being acted on, and what that caught.
@@ -56,7 +56,7 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
 - **Standing watches / ongoing** — anything that must keep running after resume: PRs/MRs and CI/pipelines being monitored, background agents in flight, polling loops, review threads awaited — each with its identifier and what you are waiting for.
 - **External state — one record per kind, not one list.** Linear (issues with live `statusType`, projects, documents), PRs/MRs (draft/CI/threads/description-drift), branches (pushed, divergence, work that exists nowhere else), notes and knowledge bases, and anything else that outlives the turn. Trackers (Linear issues, projects, documents), PRs/MRs with their draft/CI/thread state, branches and their divergence, and anything else that outlives the turn. **Notes and knowledge bases get their own record** — Obsidian repo notes, a repo `CLAUDE.md` touched during the work, the plan file — because they carry no state to report, only whether they still match reality. Per entry: what it is, its state now, whether it is **ours** — created this session or handed to us, which decides reconcile versus surface — and what is outstanding. Notes are the ones most often missed: nothing fails when one goes stale. A resuming agent that rebuilds this board by querying misses whatever it does not know to look for.
 - **Subagents — every one spawned this session, live or finished.** Record **why it was spawned** (the reason the main loop did not do it itself), its brief and scope, the tier it ran at, its state, what it returned, and what is still outstanding with it. A compaction erases the transcript that proved the work already ran; without this the resuming agent re-dispatches it, or reads a quiet agent as a failed one and destroys a pending report.
-- **Scratchpad scripts & watchers — ★ INLINE THEM ALWAYS, UNCONDITIONALLY.** Any watcher command, poll loop, or helper script written to the scratchpad or a temp dir does NOT survive compaction, is NOT reliably shared across sessions or agents, and does NOT survive a reboot. **Every checkpoint copies them into the anchor verbatim** — the full body, its path, and what it is for (which watch it drives, how to re-run it). This is not conditional on expecting a compaction: **treat the scratchpad and `/tmp` as already gone, at every checkpoint.**
+- **Scratchpad scripts & watchers — INLINE THEM ALWAYS, UNCONDITIONALLY.** Any watcher command, poll loop, or helper script written to the scratchpad or a temp dir does NOT survive compaction, is NOT reliably shared across sessions or agents, and does NOT survive a reboot. **Every checkpoint copies them into the anchor verbatim** — the full body, its path, and what it is for (which watch it drives, how to re-run it). This is not conditional on expecting a compaction: **treat the scratchpad and `/tmp` as already gone, at every checkpoint.**
   - **Inline the body, not a reference to it.** A script *mentioned* but not inlined is unrecoverable — and it reads as recorded, which is worse than an obvious gap.
   - **Inline the durable-directory scripts too when the next task needs them.** A file under the user's home survives a reboot, but inlining the one the handoff depends on costs a few lines and removes the dependency entirely.
   - **Include the invariants that make a script safe to re-run** — absolute binary paths (a backgrounded shell has no user PATH), required environment, and any assertion the script performs.
@@ -65,14 +65,14 @@ Runs on its own, no user prompt, whenever a meaningful milestone lands, before a
 - **Done so far** — completed steps and decisions, **weighted by whether they still constrain anything.** Not all history earns equal space:
   - **Load-bearing** — a decision that rules out an approach, a prerequisite something later depends on, a discovery that changed the plan, anything a resuming agent would redo or contradict without knowing. Record it in full, with the why.
   - **Incidental** — an unrelated bug fixed in passing, a typo, a detour that left no constraint behind. **One line, or drop it.** It is done and nothing depends on it.
-  - ⛔ **Do not promote incidental work into structure.** An unrelated fix written up with its own rationale, prerequisites, and follow-ups reads to the next agent as a live dependency — so it gets re-derived, branched off, and repeated in every later summary. The anchor is what the work needs *next*, not a ledger of everything that happened.
+  - **Do not promote incidental work into structure.** An unrelated fix written up with its own rationale, prerequisites, and follow-ups reads to the next agent as a live dependency — so it gets re-derived, branched off, and repeated in every later summary. The anchor is what the work needs *next*, not a ledger of everything that happened.
 - **Next up** — planned steps, in order.
 - **Next-task handoff** — a cold-executable brief for the immediate next task.
 - **Caveats & constraints** and **Open decisions / blockers**.
 
 Restate the anchor path in chat each time so it survives the next compaction summary.
 
-**★★ The anchor serves the OBJECTIVE. It is not a session log — PRUNE, do not accumulate.**
+**The anchor serves the OBJECTIVE. It is not a session log — PRUNE, do not accumulate.**
 
 Every checkpoint is a chance to cut, not only to add. Delete work that went nowhere: an artifact created then abandoned, an approach tried and dropped, a side quest that was never part of the goal, a question raised and answered. If it does not change what the next agent **does**, it does not belong. An anchor that records everything buries the objective in the middle of a diary, and the resuming agent then spends its first move reconstructing irrelevant history.
 
@@ -80,7 +80,7 @@ Every checkpoint is a chance to cut, not only to add. Delete work that went nowh
 
 Concretely: an approach the user rejected is worth a line so it is not re-proposed. A directive that changed is worth marking superseded because acting on the old one is dangerous. A document that was created and then cancelled in favour of something else is worth a line *only* if someone might otherwise recreate it. Intermediate states, tool failures that were worked around, and self-corrections that changed nothing are worth **nothing** — cut them.
 
-**★ When a mode, role, or hold CHANGES, mark every superseded instance as superseded — do not merely add the new one.** Contradictory directives are worse than stale ones: the agent acts on whichever it reads first, and a confident wrong stance beats a hesitant right one. Strike the old line through, label it `STALE — superseded <date>, see <where>`, and leave it in place so the *reason* it changed survives.
+**When a mode, role, or hold CHANGES, mark every superseded instance as superseded — do not merely add the new one.** Contradictory directives are worse than stale ones: the agent acts on whichever it reads first, and a confident wrong stance beats a hesitant right one. Strike the old line through, label it `STALE — superseded <date>, see <where>`, and leave it in place so the *reason* it changed survives.
 
 ### Consistency check — drift detection (before compaction)
 
@@ -89,7 +89,7 @@ Before an anticipated compaction — when the context is growing long, or on the
 1. **Cross-check for drift.** Compare the anchor against every source document, and the sources against each other: stale status, contradictory decisions, facts that have diverged, an anchor that no longer matches Linear / the plan file / live PR-MR state.
 2. **Delegate when there are several sources.** This is a read-only comparison — dispatch it to a cheap-tier subagent (via the `agent-delegate` mechanics; load `agent-harness` to resolve the tier), handing it the anchor plus the source list and asking it to report only the inconsistencies. Keeps the diffing out of the main context.
 3. **Report inconsistencies to the user before continuing.** Do not silently reconcile material drift — surface which sources disagree and on what, and let the user decide. Fold agreed resolutions into the anchor and the affected source.
-3b. **⛔ The anchor is yours, so propose bringing it current — do not hand over a stale one.** Per `reconcile-state`, an artifact this session created gets reconciled rather than left wrong. Before the compaction lands, offer the update in one line: *"anchor is behind on X and Y — update it to current state before compacting?"* Sources you do not own still only get surfaced, never edited. A compaction that preserves a stale anchor preserves the wrong thing, and the resuming agent trusts it precisely because it survived.
+3b. **The anchor is yours, so propose bringing it current — do not hand over a stale one.** Per `reconcile-state`, an artifact this session created gets reconciled rather than left wrong. Before the compaction lands, offer the update in one line: *"anchor is behind on X and Y — update it to current state before compacting?"* Sources you do not own still only get surfaced, never edited. A compaction that preserves a stale anchor preserves the wrong thing, and the resuming agent trusts it precisely because it survived.
 4. **Self-check the anchor MECHANICALLY, not by reading it.** Reading misses these — a stale line reads as true, and a missing section reads as absent rather than wrong. `grep` for:
    - every scratchpad script named anywhere in prose has its **full body** inlined (a script mentioned but not inlined is unrecoverable after compaction);
    - no contradictory mode/role/hold directives — search the mode keywords and confirm every hit is either current or explicitly marked superseded;
@@ -107,7 +107,7 @@ The moment the context has been compacted — the summary says so, or you notice
 0. **Detect it.** A summary in context, or specifics missing that the summary references, means compaction happened. **If unsure, assume it did** — running the pass unnecessarily costs a few minutes; skipping it costs correctness.
 1. **`agent-read`** — guidelines, skills catalog, caveman, local instructions. **Re-read every skill you are about to use, from its source; never work from a summary's memory of one** (see step 1 detail).
 2. **Read the anchor FULLY**, top to bottom, **including blocks marked superseded** — a superseded block records what was believed and why it changed, which is often the thing that stops you repeating it.
-3. **★ Establish the posture BEFORE any action.** Mode (on / off / **parked**), role (who merges/applies/confirms), standing holds, and what resuming does not authorise. **An agent that resumes pushing when it was told to park has failed regardless of what it accomplishes** — and one that resumes timid when told to bulldoze wastes the user's time. Get the stance right first.
+3. **Establish the posture BEFORE any action.** Mode (on / off / **parked**), role (who merges/applies/confirms), standing holds, and what resuming does not authorise. **An agent that resumes pushing when it was told to park has failed regardless of what it accomplishes** — and one that resumes timid when told to bulldoze wastes the user's time. Get the stance right first.
 4. **Re-read every source via its owning tool.** Sources win over the anchor; update the anchor where they disagree.
 5. **Verify nothing is still running** (watchers, background agents), then re-arm **only** what the anchor says should be armed **and only if the posture permits arming at all** — see step 5 detail. Never re-arm speculatively.
 6. **Report the reconstructed state, then act** — or **park and wait**, if the posture says so. **Ending the turn idle is CORRECT when parked.**
@@ -116,7 +116,7 @@ Detail on each step:
 
 1. **Re-ground EVERYTHING first — run `agent-read` (absolute, never deviate).** Before touching the task, do the full discovery as if starting a new session: re-read the central `AGENTS.md` / system prompt fresh, rediscover the skills catalog, reload caveman, and re-read the local instructions — all via the `agent-read` skill. The guidelines and catalog that compaction summarized away come back inline before anything else. This is the mandatory first task; do not begin any task work until it is done.
 
-   **★ Re-READ the skills, do not recall them.** Compaction leaves you *remembering* a skill's gist while the details — the traps, the exact parameters, the stop conditions — are gone, and a half-remembered skill is more dangerous than an unread one because it feels known. So:
+   **Re-READ the skills, do not recall them.** Compaction leaves you *remembering* a skill's gist while the details — the traps, the exact parameters, the stop conditions — are gone, and a half-remembered skill is more dangerous than an unread one because it feels known. So:
    - **Enumerate the catalog fresh** so profile-filtered availability is current, not assumed.
    - **Load the body of every skill the resumed work will use**, from source, before using it — including the mode skills whose posture you are about to adopt and any per-runtime reference they point at. **A skill named in the anchor is a skill to re-read, not a skill you already know.**
    - **Re-load a skill's declared references** where the body directs it; a reference read before compaction is gone too.
@@ -126,7 +126,7 @@ Detail on each step:
 4. **Re-establish standing watches and scripts — but only if the posture permits.**
    - **If the posture is PARKED or the mode is off, re-arm NOTHING.** Verify nothing is running, report that, and stop. An unexpected armed watcher reads as in-flight work that isn't, and re-arming while parked silently re-engages a mode the user turned off.
    - **When arming is permitted:** for every item under Standing Watches, re-check its **live state from source** (PR/MR status, pipeline result, run state, awaited thread) before arming anything — the state moved on while the context was being rebuilt, and a watcher armed against a stale assumption fires on the wrong condition.
-   - **Arm one watcher per independent condition**, never bundled, via the background/watcher skill's own mechanics (`agent-background`). **⛔ Before arming anything, Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md`** — `<provider>` resolves at runtime (`claude`, `opencode`, `codex`), the rest of the path is literal. It owns the watcher facility and its wake semantics; a missed read is silent and the watcher never wakes anyone. **Do not detach inside the command** — that produces a log, not a watcher.
+   - **Arm one watcher per independent condition**, never bundled, via the background/watcher skill's own mechanics (`agent-background`). **Before arming anything, Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md`** — `<provider>` resolves at runtime (`claude`, `opencode`, `codex`), the rest of the path is literal. It owns the watcher facility and its wake semantics; a missed read is silent and the watcher never wakes anyone. **Do not detach inside the command** — that produces a log, not a watcher.
    - **Treat the scratchpad as gone.** Re-materialize every script from the anchor's verbatim copy before arming the watch that depends on it. Never assume a scratchpad or temp path from before compaction still exists.
    - **Confirm each launch returned a handle**, and state which watchers are now armed and on what condition.
 5. **Rebuild and reconcile.** Reconstruct the working model, including the methodology and caveats. Where the anchor and a live source disagree, the source wins — update the anchor to match.
@@ -156,7 +156,7 @@ Then state, unambiguously, **whether the resuming agent re-arms**:
 | PARKED | Re-arm **nothing**. Parked means nothing is armed and nothing resumes until the user re-engages by name |
 | Mode OFF | Re-arm nothing; ending the turn idle is correct |
 
-⛔ **Re-arming is a write, not a read.** If the anchor does not say a watcher was live, the resuming agent asks rather than arming one it inferred.
+**Re-arming is a write, not a read.** If the anchor does not say a watcher was live, the resuming agent asks rather than arming one it inferred.
 
 ### Coordinator / Supervisor
 
@@ -185,7 +185,7 @@ Bulldozer is momentum, so the anchor has to carry *how* the push was running, no
 ```markdown
 # [Task title] — Compaction Anchor
 
-> ⚠️ POST-COMPACTION: THIS FILE IS THE DISCOVERY DOCUMENT — read it FIRST, in full,
+> POST-COMPACTION: THIS FILE IS THE DISCOVERY DOCUMENT — read it FIRST, in full,
 > including blocks marked superseded. If you are resuming with a summarized context, STOP:
 > run `agent-read` (AGENTS.md + skills catalog + caveman + local instructions), read this
 > file, **establish Posture below before any action**, re-read every Source Document via

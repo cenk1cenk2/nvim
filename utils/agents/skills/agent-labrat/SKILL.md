@@ -23,7 +23,7 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 
 > **PREREQUISITE:** A Slack workspace skill MUST be active before posting — detection per `slack-prerequisite`. Slack does not render normal markdown; mrkdwn formatting, thread conventions, and the **absolute rule that the harness-provided Slack integration is used over the standalone workspace server** are in `slack`. For a Linear scope, `linear-prerequisite` applies before handing off an issue or project.
 
-> **⛔ No private specifics.** Slack is a shared surface and the thread is durable — never post secrets, tokens, or credentials into it, whatever the task needs. Redact per `redact-private-data`.
+> **No private specifics.** Slack is a shared surface and the thread is durable — never post secrets, tokens, or credentials into it, whatever the task needs. Redact per `redact-private-data`.
 
 ## Context
 
@@ -123,8 +123,8 @@ Schedule shapes worth knowing, because they change what you can ask for:
 
 Three properties change how you brief a scheduled job, and all three bite:
 
-- **⛔ A scheduled job runs in a fresh session with no memory of your thread.** The prompt must be entirely self-contained — everything the cross-thread section says about pointing at context applies double here, because there is not even an ambient conversation to search from. This is the most common way a scheduled job produces confident nonsense.
-- **⛔ A cron-run session cannot create further cron jobs.** Recursive scheduling is blocked to prevent loops, so never brief a job whose plan is to schedule its own follow-ups. Chain instead: a job can consume an upstream job's most recent output rather than re-fetching it.
+- **A scheduled job runs in a fresh session with no memory of your thread.** The prompt must be entirely self-contained — everything the cross-thread section says about pointing at context applies double here, because there is not even an ambient conversation to search from. This is the most common way a scheduled job produces confident nonsense.
+- **A cron-run session cannot create further cron jobs.** Recursive scheduling is blocked to prevent loops, so never brief a job whose plan is to schedule its own follow-ups. Chain instead: a job can consume an upstream job's most recent output rather than re-fetching it.
 - **Skills attach to a job and load in order.** This is the cron equivalent of the section above — a scheduled job can be handed hyprpilot skills by slug, and the order matters when one teaches what the next one acts on.
 
 Two more worth knowing when you want a quiet job rather than a chatty one:
@@ -147,7 +147,7 @@ For anything beyond a one-liner, hand off a **plan**, not a sentence — the `pl
 - Never hand it a local plan path. A path it cannot open reads as a lost brief.
 - Keep the plan's **Research Needed** section — it is the honest way to say "work this part out on your host", and it is exactly what a capable remote should be doing rather than guessing.
 
-## ⛔ The thread is the handle
+## The thread is the handle
 
 **Mention `@labrat` exactly once, in the opening message.** Hermes starts a conversation on the mention and replies in a thread. Every later message in that thread reaches it **without** re-mentioning — re-tagging mid-thread is noise at best and can restart context at worst.
 
@@ -279,7 +279,7 @@ If the user names a runtime, pass it through verbatim — labrat knows how to dr
 
 ## Watching the thread
 
-**⛔ Arm a watcher only when the user asks for one.** Watching costs their session — each wake is a turn — so it is their call, not a default. Without a watcher you simply read the thread when they next ask, which is often exactly right for a long-running handoff.
+**Arm a watcher only when the user asks for one.** Watching costs their session — each wake is a turn — so it is their call, not a default. Without a watcher you simply read the thread when they next ask, which is often exactly right for a long-running handoff.
 
 When they do ask, arm for what the chosen mode needs: **every reply** when steering, the **terminal signal** when delegating. Both are awareness watchers — they reconcile and report, they never push labrat's work forward.
 
@@ -301,7 +301,7 @@ Judge liveness by task-relevant replies, not message count. If two or three cons
 
 | Last message | Meaning | Watcher |
 |---|---|---|
-| Progress line (`⏳ Working — N min — iteration x/y`) | Mid-run | Keep armed. |
+| Progress line (`Working — N min — iteration x/y`) | Mid-run | Keep armed. |
 | A phase narration ("let me dig into…", "opus dispatched") | Mid-run | Keep armed. |
 | Housekeeping or empty | Alive, not advancing | Keep armed; status-ping after 2-3 such checks. |
 | A verdict, a report, an MR link, "done" | **Terminal** | Verify the claim, then **reap the watcher** — the run is over and every further tick is a wasted turn. |

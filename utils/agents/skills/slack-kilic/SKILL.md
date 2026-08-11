@@ -8,7 +8,7 @@ references:
 
 ## Slack Workspace: kilic
 
-> **⛔ The workspace decides the integration.** kilic is reachable **only** through the standalone `slack-kilic` server. The claude.ai Slack connector (`mcp__claude_ai_Slack__*`) reaches the Laravel workspace and nothing else — routing kilic traffic through it reads and posts into the wrong workspace. Tool-by-tool routing per `slack`; the harness precedence this mapping carves out of is in `harness-connectors`.
+> **The workspace decides the integration.** kilic is reachable **only** through the standalone `slack-kilic` server. The claude.ai Slack connector (`mcp__claude_ai_Slack__*`) reaches the Laravel workspace and nothing else — routing kilic traffic through it reads and posts into the wrong workspace. Tool-by-tool routing per `slack`; the harness precedence this mapping carves out of is in `harness-connectors`.
 
 ## Workspace Context
 

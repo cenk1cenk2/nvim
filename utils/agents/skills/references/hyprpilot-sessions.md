@@ -2,7 +2,7 @@
 
 Facts about sessions started through the **`hyprpilot_harness`** MCP server. Shared between the hyprpilot-facing skills; not part of the `harness-<provider>-*` family, which covers the mechanics of whichever runtime *you* are running under.
 
-**⛔ A hyprpilot session is NOT an in-harness subagent, and the two do not mix.** The `agent-*` skills (`agent-delegate`, `agent-background`, `agent-coordinator`, `agent-bulldozer`) are about subagents your own runtime dispatches and tracks — it re-invokes you when they finish, so you do not poll them. A hyprpilot session is a separate OS process running a different vendor CLI, owned by an MCP sidecar, with its own transcript on disk. **Your runtime does not track it and will not wake you for it.**
+**A hyprpilot session is NOT an in-harness subagent, and the two do not mix.** The `agent-*` skills (`agent-delegate`, `agent-background`, `agent-coordinator`, `agent-bulldozer`) are about subagents your own runtime dispatches and tracks — it re-invokes you when they finish, so you do not poll them. A hyprpilot session is a separate OS process running a different vendor CLI, owned by an MCP sidecar, with its own transcript on disk. **Your runtime does not track it and will not wake you for it.**
 
 So the `agent-*` "never poll harness-tracked work" rule does not cover these, and nothing here transfers to those skills either. Keep the two vocabularies apart.
 
@@ -152,7 +152,7 @@ This is the one MCP-only truth that has a first-class **bash** signal, which mat
 
 **The marker is cleared when a turn STARTS**, not only written when one ends. `session_send` reuses the handle and directory, so once the next turn is running the previous turn's marker is gone. Corollary: absence means *not finished*, never *error*.
 
-**⛔ Which makes arm ORDER load-bearing: arm the watcher AFTER `session_send` returns, never before.** The clear happens when the turn starts, not when you decide to watch, so anything armed ahead of the send sees the previous turn's leftover `done.json` and fires instantly on stale state. Measured: a watcher armed before a `session_send` reported "turn finished" before the new turn had produced a single event. `session_send` returns once the turn is running and the marker is already cleared, so its result is the correct arming point.
+**Which makes arm ORDER load-bearing: arm the watcher AFTER `session_send` returns, never before.** The clear happens when the turn starts, not when you decide to watch, so anything armed ahead of the send sees the previous turn's leftover `done.json` and fires instantly on stale state. Measured: a watcher armed before a `session_send` reported "turn finished" before the new turn had produced a single event. `session_send` returns once the turn is running and the marker is already cleared, so its result is the correct arming point.
 
 ## Watching a turn live — stream the transcript file
 
@@ -230,7 +230,7 @@ jq -rs '                                                                        
   | $e[(($prev // -1) + 1):$end] | map(.part.text) | join("\n")' "$T"
 ```
 
-**⛔ `| tail -n1` is WRONG here and the earlier version of this file had it.** `tail` counts **lines**, not events — so it truncates any multi-line answer down to its final line. Measured: a three-paragraph opencode answer came back as the single word `DONE-TURN-TWO.`, the other two paragraphs silently gone. The scoping has to happen where the events are still events, which is inside `jq` — hence `-s` (slurp) plus `last`. Same correction applies to all three vendors; the selects themselves are unchanged and still verified, only the way the latest one is picked was broken. The opencode slice is measured against a 2-turn transcript; the claude and codex lines are the same mechanical line-to-element fix, not a fresh measurement.
+**`| tail -n1` is WRONG here and the earlier version of this file had it.** `tail` counts **lines**, not events — so it truncates any multi-line answer down to its final line. Measured: a three-paragraph opencode answer came back as the single word `DONE-TURN-TWO.`, the other two paragraphs silently gone. The scoping has to happen where the events are still events, which is inside `jq` — hence `-s` (slurp) plus `last`. Same correction applies to all three vendors; the selects themselves are unchanged and still verified, only the way the latest one is picked was broken. The opencode slice is measured against a 2-turn transcript; the claude and codex lines are the same mechanical line-to-element fix, not a fresh measurement.
 
 **Why scoping is needed at all:** `session_send` **appends to the same `turns.jsonl`**, so on turn N an unscoped query matches every turn's answer, oldest first. Take the first match and you report turn 1's answer as the reply to turn 5 — confidently, and forever.
 
@@ -238,7 +238,7 @@ jq -rs '                                                                        
 
 Corollary: "a text part exists" never means "finished"; only `status: exited` does. This is why `hasResult` exists and why hand-rolling it goes wrong.
 
-### ⛔ The answer query goes blind on a failed run — always pair it with the error query
+### The answer query goes blind on a failed run — always pair it with the error query
 
 None of the three one-liners above matches anything when the turn failed upstream, so a caller running only them reports "the agent returned nothing" for what was actually an auth or billing error. Run both:
 
@@ -270,14 +270,14 @@ The split to remember: **launch failure → `stderr.log`, transcript empty. Runt
 ## Rules that bite
 
 - **A session is `exited` after every TURN**, not only when the conversation ends. "Is it done" always means "is this turn done".
-- **⛔ `exitCode: 0` and `hasResult: true` mean the TURN ended cleanly, never that the TASK was completed.** They are process and transcript facts; neither inspects whether the agent did what it was asked. A measured run gave a 4-step prompt to a small model, which answered steps 1 and 2, stopped, and exited 0 with `hasResult: true` and no error event anywhere — the harness reported that success faithfully. Read the answer against what you asked for before relaying it, and re-`session_send` the remainder rather than treating the exit status as an acceptance test.
+- **`exitCode: 0` and `hasResult: true` mean the TURN ended cleanly, never that the TASK was completed.** They are process and transcript facts; neither inspects whether the agent did what it was asked. A measured run gave a 4-step prompt to a small model, which answered steps 1 and 2, stopped, and exited 0 with `hasResult: true` and no error event anywhere — the harness reported that success faithfully. Read the answer against what you asked for before relaying it, and re-`session_send` the remainder rather than treating the exit status as an acceptance test.
 - **One turn at a time.** `session_send` to a running session is refused; no vendor supports two concurrent turns on one conversation. `session_kill` still works on it.
 - **A timeout is not a failure.** The turn returning `running` means the agent is still working — poll, never re-`spawn`.
 - **Sessions die with the sidecar.** No persistence. If it restarts, running agents are killed and transcripts are lost — capture anything that must outlive the connection.
 - **`session_send` replays the launch.** `cwd` / `args` / `with_config` are inherited and **rejected** if passed; only the prompt, `mode`, `wait` and `timeout_seconds` are per-turn.
 - **Paging is MCP-style.** `cursor` in, `nextCursor` out, opaque. **No `nextCursor` means finished AND fully read.** An unrecognised cursor is an error, not a silent reset.
 - **Launches are detached — `wait` defaults to false.** `spawn` / `session_send` return as soon as the turn starts. Opting into `wait: true` is rarely right: it returns the whole raw event stream with no `tail` and no `cursor` to trim it (measured on one trivial three-item task: 14 kB on opencode, 121 kB on claude), and it still comes back `running` if the turn outlives `timeout_seconds`, so it never even guarantees an answer. Poll `session_status`, then pull the answer out of `files.transcript`.
-- **⛔ A runtime that auto-backgrounds slow MCP calls does NOT make `wait: true` cheap.** Some runtimes move an MCP call that outlives a threshold into a background task — the turn stops stalling, and the payload arrives later in a notification. **Later is not smaller.** Measured: a `wait: true` follow backgrounded on schedule and then delivered a 60 kB slice of raw events to answer what `jq` on the same transcript answered in fourteen lines. Read the auto-background threshold as a fix for *blocking* only; the token cost is identical either way, and the ranking below is unchanged by it.
+- **A runtime that auto-backgrounds slow MCP calls does NOT make `wait: true` cheap.** Some runtimes move an MCP call that outlives a threshold into a background task — the turn stops stalling, and the payload arrives later in a notification. **Later is not smaller.** Measured: a `wait: true` follow backgrounded on schedule and then delivered a 60 kB slice of raw events to answer what `jq` on the same transcript answered in fourteen lines. Read the auto-background threshold as a fix for *blocking* only; the token cost is identical either way, and the ranking below is unchanged by it.
 - **The handle is the only id.** It is minted at `spawn`, arrives in the first result, never changes, and is what every tool takes. There is no vendor session id on the wire — hyprpilot keeps the vendor's own id internally as the token `session_send` resumes with, and that is all it ever meant.
 - **`sessionInfo.mode` reports the profile's mode, not the launched one.** A mode imposed through `args` (opencode `--agent plan`) does not show up there; `sessionInfo.argv` is the honest record. The same caveat as `model` under a `with_config` overlay.
 - **`spawn` runs a profile's `command` as this user.** The `provider` picks a flag projection, not a sandbox.

@@ -2,7 +2,7 @@
 
 For skills that own a **durable artifact** — a Linear issue or project, a PR/MR title and description, a Linear document, a plan file, a repo knowledge base, an Obsidian note. These outlive the turn that wrote them, and reality moves on without them.
 
-## ⛔ First: is it yours to touch?
+## First: is it yours to touch?
 
 **Reconcile only what this session created, or what the user explicitly handed you.** That is the whole permission.
 

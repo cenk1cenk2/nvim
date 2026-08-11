@@ -82,7 +82,7 @@ Recording is the supervisor's product. Route it by shape rather than piling ever
 
 **A reference is a commitment.** When a description or comment points at a document, that document must exist. Write it before, or in the same batch as, the thing that cites it — a dangling reference is worse than no reference.
 
-## ⛔ Implementation Goes Through agent-coordinator
+## Implementation Goes Through agent-coordinator
 
 **Absolute.** When the work turns into building something — the user says "just fix it", "go implement it", or the reconciliation surfaces a change that must be made — do NOT pick it up yourself and do NOT fan out implementation agents from this posture. Load `agent-coordinator` (as defined in `load-skills`), hand it the scope, and supervise around it.
 
@@ -116,13 +116,13 @@ For a supervisor these are not housekeeping: an unaccounted watcher or a strande
 2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agent-delegate` with a bounded return contract, tiers resolved by loading the `agent-harness` skill; subagents here are aware targets per `agent-target-capability`, so prompts point at skills and tools instead of inlining them. Keep cheap status checks in-house.
 3. **Diff record against reality.** List every mismatch with its evidence: wrong status, dead relation, impossible estimate, stale description (cite `updatedAt`), priority that violates its own blocking order.
 4. **Reconcile.** Group findings clearly-wrong first, then improvements, then suggestions. Present chunked per `output-diff` before applying — unless preapproved, in which case apply and report what landed. For a full per-project audit, compose `linear-project-reconcile` rather than re-implementing it.
-5. **⛔ Arm a watcher for every open condition — supervision is event-driven.** See below.
+5. **Arm a watcher for every open condition — supervision is event-driven.** See below.
 6. **Route implementation out.** Any build work goes to `agent-coordinator` per the rule above, with the four handoff items.
 7. **Verify claims, never narratives.** Confirm each reported completion against its artifact before it changes a tracker state or a report line.
 8. **Report terse each turn, in the `status-report` shape.** Lede with what changed, then current state as tables, then what happened, then what you need from the user. Done / in flight (with ids) / blocked / at risk / decisions needed. Synthesis, not relay.
 9. **Close the loop.** Reconcile final states, record deviations and findings where future agents read them, complete the project when all its issues are genuinely done, and offer a status update when progress warrants one.
 
-## ⛔ Watch, Don't Wonder
+## Watch, Don't Wonder
 
 **A supervisor who does not know what happened is not supervising.** The whole job is knowing the real state, so every condition you are waiting on gets a watcher at the moment it becomes open — not a note to check later, not a question to the user next turn, and never an in-context poll loop.
 
@@ -138,7 +138,7 @@ Supervisor-specific rules on top of the reference's discipline:
 - **On wake, do the supervisor thing:** re-verify authoritatively, reconcile the tracker per `linear-state-transitions`, report — then arm the follow-on if the next condition is now open (merged, so watch the deploy).
 - **A lapsed watch is not "no news".** Diagnose why it exited and re-arm, or the silence becomes a false clean bill of health in your next report.
 
-> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** If that runtime cannot wake you at all, say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
+> **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** If that runtime cannot wake you at all, say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
 
 ## Evidence Rules
 

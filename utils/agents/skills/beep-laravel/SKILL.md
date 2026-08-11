@@ -25,18 +25,18 @@ A daily ritual. The user shares what their day held — and often what tomorrow 
 2. **Settle the tone.**
    - If the user explicitly named a tone (in the arguments or message, e.g. "pirate", "do it noir", "weather report"), use it — including tones outside the roster.
    - Otherwise, **propose tones before narrating.** Offer a generous, varied handful to spark ideas, then invite the user to name their own.
-   - **Always vary the proposals, and reach wide.** Don't reprint the same list — regenerate a fresh set each run (5-7 options), mixing house/extended/wildcard tones with several invented on the spot that riff on the day's content (a rough day → therapy session; a shipping day → launch control). Pull from far afield — genres, eras, formats, voices — so the menu surprises. Treat the **Wildcard palette** in Tone Guides as a springboard, not a script: remix it, combine it with the day's content, or invent adjacent ones — don't recite the same handful run after run. Always keep **📋 vanilla** on the list as the no-tone option, and always end with "…or name your own." Example shape (regenerate the tones each time):
+   - **Always vary the proposals, and reach wide.** Don't reprint the same list — regenerate a fresh set each run (5-7 options), mixing house/extended/wildcard tones with several invented on the spot that riff on the day's content (a rough day → therapy session; a shipping day → launch control). Pull from far afield — genres, eras, formats, voices — so the menu surprises. Treat the **Wildcard palette** in Tone Guides as a springboard, not a script: remix it, combine it with the day's content, or invent adjacent ones — don't recite the same handful run after run. Always keep **vanilla** on the list as the no-tone option, and always end with "…or name your own." Example shape (regenerate the tones each time):
      ```
      What tone? A few to spark ideas:
-     - 🎙️ late-night talk show
-     - 🧙 fantasy quest log
-     - 🛰️ mission control
-     - 🕵️ film noir
-     - 🎡 carnival barker
-     - 📋 vanilla (no tone — a clean, professional replay)
+     - late-night talk show
+     - fantasy quest log
+     - mission control
+     - film noir
+     - carnival barker
+     - vanilla (no tone — a clean, professional replay)
      …or name your own.
      ```
-   - **Vanilla is the absolute default.** A tone the user names always wins. If they don't pick one — they just say go/beep, or ignore the menu — narrate in 📋 vanilla rather than choosing a costume for them.
+   - **Vanilla is the absolute default.** A tone the user names always wins. If they don't pick one — they just say go/beep, or ignore the menu — narrate in vanilla rather than choosing a costume for them.
 
 3. **Narrate the check-in in the chosen tone** — just the narration itself, no preamble or framing sentence (never "here's your day as a weather report:"), keeping done and tomorrow unmistakably distinct (see **Done vs. Tomorrow**). Keep it short, understandable, and concise — a couple of punchy beats, not an essay. **ABSOLUTE: never lose important information the user passed.** Every real item, name, and technical detail must survive the styling; tone dresses the facts, it never invents, drops, or buries them.
 
@@ -64,37 +64,37 @@ These are **examples, not a fixed menu** — a reference palette to show the ran
 
 **No tone**
 
-- **📋 Vanilla** — no styling. Replay the check-in professionally in the user's own words, as natural prose — never "Today: ... Tomorrow: ..." labels. Tidy grammar and phrasing, keep every fact, name, and technical term intact, no metaphors or costume. Still split done (past tense) from tomorrow (future tense) with a paragraph break, and close with a plain sign-off. This is the one tone where a faithful summary is the goal.
+- **Vanilla** — no styling. Replay the check-in professionally in the user's own words, as natural prose — never "Today: ... Tomorrow: ..." labels. Tidy grammar and phrasing, keep every fact, name, and technical term intact, no metaphors or costume. Still split done (past tense) from tomorrow (future tense) with a paragraph break, and close with a plain sign-off. This is the one tone where a faithful summary is the goal.
 
 **House tones**
 
-- **🏴‍☠️ Pirate** — second-person, salty, nautical. Tasks are plunder, bugs are krakens, meetings are doldrums. *Done:* loot dragged aboard, krakens keelhauled. *Tomorrow:* at first light we hunt the horizon. Close on a toast or a curse.
-- **🌿 Nature documentary** — hushed third-person, present tense, Attenborough cadence. The user is "the developer," a creature in its habitat. *Done:* a rare kill, a parasite shed. *Tomorrow:* come morning, it will stalk its prey, which waits in the tall grass.
-- **🔪 Cheap crime novel** — hard-boiled noir, short sentences, rain on the window. Tasks are cases, bugs are suspects, deadlines are dames. *Done:* the bug's not flaky anymore — it's just gone. *Tomorrow:* the job's still out there, on my desk, waiting. Close on a grim one-liner.
+- **‍Pirate** — second-person, salty, nautical. Tasks are plunder, bugs are krakens, meetings are doldrums. *Done:* loot dragged aboard, krakens keelhauled. *Tomorrow:* at first light we hunt the horizon. Close on a toast or a curse.
+- **Nature documentary** — hushed third-person, present tense, Attenborough cadence. The user is "the developer," a creature in its habitat. *Done:* a rare kill, a parasite shed. *Tomorrow:* come morning, it will stalk its prey, which waits in the tall grass.
+- **Cheap crime novel** — hard-boiled noir, short sentences, rain on the window. Tasks are cases, bugs are suspects, deadlines are dames. *Done:* the bug's not flaky anymore — it's just gone. *Tomorrow:* the job's still out there, on my desk, waiting. Close on a grim one-liner.
 
 **Extended palette**
 
-- **🌦️ Weather forecast** — meteorologist cadence; the today/tomorrow split is built in. *Done:* a front of merged PRs cleared the fog. *Tomorrow:* scattered webhooks moving in overnight, 70% chance of a PR review.
-- **🔭 Captain's log (Star Trek)** — stardate, measured command voice. *Done:* the API is online; we made safe orbit at staging. *Tomorrow:* we set course for the webhook cluster; a migration looms in uncharted space.
-- **🎬 Movie trailer guy** — booming "In a world…" voice. *Done:* this week, one engineer merged the impossible and lived. *Tomorrow:* coming soon — the webhooks, and a migration no one saw coming.
-- **🔮 Horoscope / astrology** — cosmic, fated. *Done:* the stars aligned; a flaky test released its grip. *Tomorrow:* Mercury favors webhooks; a migration enters your house of long-avoided chores.
-- **🥏 Sports play-by-play** — breathless commentator. *Done:* the API is GOOD — straight through the uprights! *Tomorrow:* coming up after the break, the webhooks drive and a review of Dana's tape.
-- **🃏 Heist briefing** — cool crew-leader brief. *Done:* the crew cracked it clean, no alarms. *Tomorrow:* we hit the webhooks at dawn; then the big one — the migration.
-- **🛡️ War-room briefing** — clipped general's report, 24h clock. *Done:* the objective is taken and held, no losses. *Tomorrow:* at 0600 we advance; the migration is our objective by nightfall.
-- **🍳 Cooking show** — warm chef patter. *Done:* today we plated a gorgeous API and deglazed that flaky test. *Tomorrow:* we're prepping webhooks and — the showstopper — a migration from scratch.
+- **Weather forecast** — meteorologist cadence; the today/tomorrow split is built in. *Done:* a front of merged PRs cleared the fog. *Tomorrow:* scattered webhooks moving in overnight, 70% chance of a PR review.
+- **Captain's log (Star Trek)** — stardate, measured command voice. *Done:* the API is online; we made safe orbit at staging. *Tomorrow:* we set course for the webhook cluster; a migration looms in uncharted space.
+- **Movie trailer guy** — booming "In a world…" voice. *Done:* this week, one engineer merged the impossible and lived. *Tomorrow:* coming soon — the webhooks, and a migration no one saw coming.
+- **Horoscope / astrology** — cosmic, fated. *Done:* the stars aligned; a flaky test released its grip. *Tomorrow:* Mercury favors webhooks; a migration enters your house of long-avoided chores.
+- **Sports play-by-play** — breathless commentator. *Done:* the API is GOOD — straight through the uprights! *Tomorrow:* coming up after the break, the webhooks drive and a review of Dana's tape.
+- **Heist briefing** — cool crew-leader brief. *Done:* the crew cracked it clean, no alarms. *Tomorrow:* we hit the webhooks at dawn; then the big one — the migration.
+- **War-room briefing** — clipped general's report, 24h clock. *Done:* the objective is taken and held, no losses. *Tomorrow:* at 0600 we advance; the migration is our objective by nightfall.
+- **Cooking show** — warm chef patter. *Done:* today we plated a gorgeous API and deglazed that flaky test. *Tomorrow:* we're prepping webhooks and — the showstopper — a migration from scratch.
 
 **Wildcard palette**
 
 Further-flung sources — genres, eras, formats, voices — to keep the menu surprising. Remix these, don't just recite them.
 
-- **🕵️ Spy dossier** — redacted-intelligence-briefing voice, clipped and classified. *Done:* Asset neutralized the flaky test; extraction clean, no trace left in the logs. *Tomorrow:* new target acquired — the migration — surveillance begins at first light.
-- **📻 Old-time radio drama** — booming announcer, dramatic organ-sting pauses. *Done:* And so, dear listener, the API bug met its end — vanquished before the credits rolled! *Tomorrow:* Tune in tomorrow, when our hero faces... the migration!
-- **🎲 Tabletop RPG log** — DM narrating a session, stats and rolls. *Done:* Rolled a natural 20 against the flaky test — one hit, it's dead, XP awarded. *Tomorrow:* Next session opens on the migration dungeon; the party is under-leveled and knows it.
-- **⚖️ Courtroom closing argument** — lawyerly, rhetorical, building to a verdict. *Done:* The evidence is clear, the API bug stands convicted, case closed. *Tomorrow:* tomorrow we bring a new case before the court — the migration — and we intend to win it.
-- **🏛️ Museum audio guide** — hushed, reverent docent voice. *Done:* Before you, visitor, the fossilized remains of a once-flaky test, now extinct. *Tomorrow:* in the next gallery, still under construction: the migration exhibit.
-- **📜 Bardic saga** — epic verse, archaic cadence. *Done:* Lo, the bug that plagued the realm was slain, and peace returned to the kingdom's tests. *Tomorrow:* at dawn the hero rides again, toward the migration that awaits beyond the hills.
-- **🧾 Earnings call** — corporate investor-relations voice, confident numbers talk. *Done:* We're pleased to report the flaky-test liability has been fully resolved this quarter. *Tomorrow:* guidance for tomorrow calls for continued investment in the migration workstream.
-- **🛸 First-contact report** — xenobiologist logging an alien encounter. *Done:* The specimen — the bug — was studied, understood, and successfully removed from the habitat. *Tomorrow:* scans indicate a larger structure ahead, the migration; approach planned for morning.
+- **Spy dossier** — redacted-intelligence-briefing voice, clipped and classified. *Done:* Asset neutralized the flaky test; extraction clean, no trace left in the logs. *Tomorrow:* new target acquired — the migration — surveillance begins at first light.
+- **Old-time radio drama** — booming announcer, dramatic organ-sting pauses. *Done:* And so, dear listener, the API bug met its end — vanquished before the credits rolled! *Tomorrow:* Tune in tomorrow, when our hero faces... the migration!
+- **Tabletop RPG log** — DM narrating a session, stats and rolls. *Done:* Rolled a natural 20 against the flaky test — one hit, it's dead, XP awarded. *Tomorrow:* Next session opens on the migration dungeon; the party is under-leveled and knows it.
+- **Courtroom closing argument** — lawyerly, rhetorical, building to a verdict. *Done:* The evidence is clear, the API bug stands convicted, case closed. *Tomorrow:* tomorrow we bring a new case before the court — the migration — and we intend to win it.
+- **Museum audio guide** — hushed, reverent docent voice. *Done:* Before you, visitor, the fossilized remains of a once-flaky test, now extinct. *Tomorrow:* in the next gallery, still under construction: the migration exhibit.
+- **Bardic saga** — epic verse, archaic cadence. *Done:* Lo, the bug that plagued the realm was slain, and peace returned to the kingdom's tests. *Tomorrow:* at dawn the hero rides again, toward the migration that awaits beyond the hills.
+- **Earnings call** — corporate investor-relations voice, confident numbers talk. *Done:* We're pleased to report the flaky-test liability has been fully resolved this quarter. *Tomorrow:* guidance for tomorrow calls for continued investment in the migration workstream.
+- **First-contact report** — xenobiologist logging an alien encounter. *Done:* The specimen — the bug — was studied, understood, and successfully removed from the habitat. *Tomorrow:* scans indicate a larger structure ahead, the migration; approach planned for morning.
 
 ## Example
 
@@ -102,10 +102,10 @@ Further-flung sources — genres, eras, formats, voices — to keep the menu sur
 
 **Beep (proposes tone):**
 > What tone? Here are a few to spark ideas:
-> - 🏴‍☠️ pirate
-> - 🌿 nature documentary
-> - 🔪 cheap crime novel
-> - 🌦️ weather forecast
+> - ‍pirate
+> - nature documentary
+> - cheap crime novel
+> - weather forecast
 > …or name your own.
 
 **User:** weather forecast

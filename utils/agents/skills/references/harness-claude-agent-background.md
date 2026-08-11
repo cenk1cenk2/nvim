@@ -14,7 +14,7 @@ Runtime mechanics for the `agent-background` skill on Claude Code: how to wait o
 
 **Foreground `sleep` is blocked.** Use a background loop or a `Monitor` until-loop; never chain short foreground sleeps.
 
-## ★ `run_in_background` is a parameter ON the call
+## `run_in_background` is a parameter ON the call
 
 Set it on the tool invocation. Putting `&`, `nohup`, `disown`, or `setsid` inside the command string instead produces an OS-detached process with **no task id, no output-file registration, and no task-notification** — it will never wake the session. One launch per condition, each its own call: a single call that backgrounds several loops internally yields one wake at best, usually none.
 
@@ -46,7 +46,7 @@ Consequences worth planning around:
 - **Per-call limits still apply while it runs backgrounded** — the wall-clock limit from the per-server timeout or `MCP_TOOL_TIMEOUT`, and the idle limit from `CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT`.
 - **The threshold is configurable per install** via `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` (`0` disables auto-backgrounding; `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` disables it along with every other background-task feature). **Never assume the default** — read the value in play before reasoning about whether a given call will block, and lower it only deliberately: every call that starts backgrounding costs a round trip it did not previously need.
 
-**⛔ Auto-backgrounding fixes the blocking, NOT the context cost — do not read it as permission to use a blocking follow.** A backgrounded call still delivers its full payload later, whole, into the notification. Measured on `hyprpilot_harness__session_read { wait: true }` against a 45 000 ms threshold: it backgrounded at exactly 45 s and the turn stayed usable, then the notification landed carrying a 60 kB slice of raw event stream — to answer a question that `jq` against the same transcript answered in fourteen lines.
+**Auto-backgrounding fixes the blocking, NOT the context cost — do not read it as permission to use a blocking follow.** A backgrounded call still delivers its full payload later, whole, into the notification. Measured on `hyprpilot_harness__session_read { wait: true }` against a 45 000 ms threshold: it backgrounded at exactly 45 s and the turn stayed usable, then the notification landed carrying a 60 kB slice of raw event stream — to answer a question that `jq` against the same transcript answered in fourteen lines.
 
 So the ranking is unchanged, and the filesystem route below is still the default:
 
@@ -83,7 +83,7 @@ Rules that bite on this pattern:
 
 - **`TaskStop <task-id>`** stops a watcher. It also accepts a named background agent's name or a teammate's `name@team`.
 - **Background *shell* output:** read the output file path returned at launch (`Read`, or `TaskOutput`). This is safe for shells.
-- **⛔ Never read a local *agent* task's output file** — it is a symlink to the full subagent transcript (JSONL) and will overflow the lead's context.
+- **Never read a local *agent* task's output file** — it is a symlink to the full subagent transcript (JSONL) and will overflow the lead's context.
 - **`run_in_background` shells do not appear in `TaskList`** — that lists the task-management system, not local shells. Track the returned id yourself.
 - `PushNotification` is available when an event is one the user would want to act on immediately.
 

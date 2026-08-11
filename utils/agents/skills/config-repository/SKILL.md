@@ -168,7 +168,7 @@ Non-obvious things that trip up agents or developers. Things that look like they
 
 ## Writing Rules
 
-> ⛔ **Present tense, current state only** — the full rule and its rewrite table are in `current-state-only`.
+> **Present tense, current state only** — the full rule and its rewrite table are in `current-state-only`.
 >
 > A repo knowledge base is where this bites hardest: it is not a changelog, a migration record, or a
 > postmortem. A reader must not be able to tell which parts are new.

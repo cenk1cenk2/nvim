@@ -21,7 +21,7 @@ Positions are **0-indexed** on the LSP tools, `editor_grep`, and `editor_quickfi
 
 ## Process
 
-### ⛔ LSP over manual searching — absolute
+### LSP over manual searching — absolute
 
 When a symbol is involved, ask the language server. `lsp_definition`, `lsp_references`, and `lsp_workspace_symbols` are faster and correct where grep is neither — grep cannot tell a definition from a mention, a method from a same-named field, or a live call site from a comment.
 

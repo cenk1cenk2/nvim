@@ -19,7 +19,7 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-> **⛔ Absolute approval required — see `linear-absolute-approval`.** Project writes always require explicit approval for the specific change; a general blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_project` / `save_document` before the user approves the drafted change.
+> **Absolute approval required — see `linear-absolute-approval`.** Project writes always require explicit approval for the specific change; a general blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_project` / `save_document` before the user approves the drafted change.
 
 ## Core Principle
 

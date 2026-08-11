@@ -6,7 +6,7 @@ across a run — `agent-coordinator`, `agent-supervisor`, `agent-bulldozer`, `ag
 Watchers are tracked separately, per `agent-watchers`. Agents and watchers fail differently: a stale
 watcher wakes you with an obsolete verdict, while a reaped agent loses its report forever.
 
-## ⛔ Reaping an uncollected agent destroys its report permanently
+## Reaping an uncollected agent destroys its report permanently
 
 A finished agent looks exactly like a working one, and in a routing posture the report **is** the
 product. The roster is what stops an accidental loss. Report it whenever you dispatch, whenever one

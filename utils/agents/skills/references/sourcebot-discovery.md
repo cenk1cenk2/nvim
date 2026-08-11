@@ -38,7 +38,7 @@ For `gitlab.kilic.dev` work where the exact project path is unknown:
 5. Verify live GitLab state with GitLab MCP before creating branches,
    reading MRs/pipelines, or writing anything.
 
-## ⛔ `ask_codebase` Does Not Work
+## `ask_codebase` Does Not Work
 
 **`sourcebot-kilic__ask_codebase` is non-functional — never call it**, not even
 when the question is broad and several targeted searches look inefficient. Answer

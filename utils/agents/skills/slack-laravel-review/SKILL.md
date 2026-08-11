@@ -56,7 +56,7 @@ Posture: `present-first`.
    - If the PR description is empty, derive the title and goal from the PR title, commit messages, and rollout context.
    - **Source footer (optional, pluggable).** Append a one-line summary from an available source. Spacelift is the common example (e.g., "Spacelift: 5 stacks, +35 ~41 −10, all finished."); use other sources — CI/pipeline status, another infra report, or one the user names — when the user instructs or the source is present. Omit if no source applies.
    - **Full Spacelift narrative (when requested)** — if the user says "include spacelift report", "include the spacelift analysis", or similar, replace the one-line infrastructure summary with a full narrative:
-     - Start with the one-line delta summary in italics (e.g., `_Spacelift: 1 stack, +5 ~5 ♻2, finished._`).
+     - Start with the one-line delta summary in italics (e.g., `_Spacelift: 1 stack, +5 ~5 2, finished._`).
      - Follow with a paragraph explaining the core intended change and its effect (e.g., what the tunnel cutover does, what service replaces what).
      - Then a paragraph covering module-bump or incidental side effects — new resources added, secrets recreated, addon version bumps, AMI refreshes. Name specific resources, versions, and values so the reviewer understands the blast radius without opening the PR.
      - Use Slack mrkdwn: backticks for resource names, service URLs, versions, and AMIs. Italics (`_text_`) for the delta line.
@@ -87,7 +87,7 @@ Posture: `present-first`.
 
      <One terse line stating the goal — light caveman lingo, drop articles/filler>.
 
-     _Spacelift: <N> stacks, +<a> ~<c> ♻<r> each (<in-place upgrade, node roll; no replacements>), all planned clean._
+     _Spacelift: <N> stacks, +<a> ~<c> <r> each (<in-place upgrade, node roll; no replacements>), all planned clean._
      ```
    - Example (brevity — shrink the goal to ONE terse line):
      - Too long: "Phase 1 of the control-plane rollout: adopt control-plane module `<v>` (parameters-sourced add-on versions + the `<repo>#<n>` CNI node-role grant) and step k8s `<old>` → `<new>` on all `<N>` prod control-planes in one apply. ArgoCD decoupled in P0 so no helm op runs behind the node roll; canary-verified on `<region>`, drift cleared, lockfiles regenerated to `<provider> <ver>`."
@@ -102,7 +102,7 @@ Posture: `present-first`.
 
      <One-line goal: what this change accomplishes and why>.
 
-     _Spacelift: <N> stack(s) (`<stack-name>`), +<a> ~<c> ♻<r>, finished._
+     _Spacelift: <N> stack(s) (`<stack-name>`), +<a> ~<c> <r>, finished._
 
      <Paragraph explaining the core intended change and its effect — e.g. what a cutover does, what service replaces what. Use backticks for service URLs and resource names.>
 

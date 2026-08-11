@@ -22,7 +22,7 @@ protected-branch ack is resolved.
 
 ## Staging — only what this run touched
 
-⛔ **Never `git add .` here.** The edited files usually share a repository with
+**Never `git add .` here.** The edited files usually share a repository with
 unrelated work, and staging everything sweeps up changes that are not yours.
 
 - Stage explicit paths only — every file this run created or edited, and no other.

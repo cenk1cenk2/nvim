@@ -2,7 +2,7 @@
 
 Shared description/title drafting workflow for opening or updating a pull/merge request. Used by `github-pr-create` (GitHub) and `gitlab-mr-create` (GitLab). The platform reference (`scm-github` / `scm-gitlab`) and each skill's "Platform specifics" supply the exact detect/create/update tools; this reference covers only the parts that are identical across platforms.
 
-## ⛔ Never open it as a draft
+## Never open it as a draft
 
 **Default is ready for review.** Exactly two things open a draft:
 
@@ -31,7 +31,7 @@ If a request is genuinely ambiguous — the word "draft" appears but you cannot 
 - **Name the reason in the description** — which PR/MR, release, or approval it waits on. A draft with no stated blocker is indistinguishable from one that was opened by mistake.
 - **Reconcile it when the blocker clears.** The prerequisite merged, the dependency shipped, or the user said it is ready — mark it ready for review and say so. Do not leave it sitting in draft, and do not make the user ask twice.
 
-## ⛔ The description is live, not write-once
+## The description is live, not write-once
 
 **Whenever the branch changes after the PR/MR exists, bring the title and description back in line with it.** Scope grew, an approach was abandoned, a commit was added, the work deviated from what the description claims — update it. Default is update; the user opts out by saying so ("leave the description", "no need to update it").
 

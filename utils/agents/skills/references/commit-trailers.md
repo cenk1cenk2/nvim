@@ -42,7 +42,7 @@ For Linear IDs, choose the trailer from the delivery shape:
 Linear links issues to work via exactly three surfaces: the **branch name**, the
 **MR/PR title**, and **magic words in the MR/PR description**.
 
-⛔ **Linear cannot link via commit messages or comments.** Linear's integration docs state
+**Linear cannot link via commit messages or comments.** Linear's integration docs state
 this outright. A `(K-123)` in a commit subject is repo convention for human readers — it
 creates no Linear link, moves no state, and closes nothing.
 
@@ -77,7 +77,7 @@ Closes K-879, K-881
 ```
 
 Do NOT repeat the keyword per issue for Linear — that is the GitHub form.
-⚠ Unverified whether repeated keywords also work; the list form is the only shape Linear
+Unverified whether repeated keywords also work; the list form is the only shape Linear
 documents, so use it.
 
 An issue linked to several MRs/PRs does not close until **all** of them are merged or

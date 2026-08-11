@@ -43,7 +43,7 @@ for the injected `AGENTS.md`, `config-skills` for the skill bundles, `config-mcp
 
 ## Deriving the Schema From Source
 
-⛔ **The Rust source is the schema. Read it before answering a question about a field.** Upstream is
+**The Rust source is the schema. Read it before answering a question about a field.** Upstream is
 `github.com/hyprpilot/hyprpilot`, cloned locally at `~/development/hyprpilot`. The published docs
 under `docs/config/` are a secondary read — useful for narrative, behind the code for detail.
 
@@ -115,7 +115,7 @@ stops at `exec()`; everything after belongs to the vendor.
 
 ## Keeping This Skill Current
 
-⛔ **Schema drift is this skill's own target — fix it here, in the same run.** This is the carve-out in
+**Schema drift is this skill's own target — fix it here, in the same run.** This is the carve-out in
 `config-targets`: the claims above describe an external binary, so correcting them is a factual repair
 rather than a lesson recorded in the wrong file.
 

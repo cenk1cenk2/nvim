@@ -42,7 +42,7 @@ Use the active workspace and SCM context:
 
 ## Discovery Ladder
 
-⛔ **Never assume a given discovery tool is present.** Availability is decided by the active profile, not by the task. Climb the ladder from whatever rung this session actually has.
+**Never assume a given discovery tool is present.** Availability is decided by the active profile, not by the task. Climb the ladder from whatever rung this session actually has.
 
 1. **A code-discovery MCP, when the active profile has one.** The right first rung for an unknown, broad, or cross-repository target — it produces an evidence-backed repo shortlist in a few calls. When that MCP is Sourcebot, read its tool flow and repo-name conversion from `~/.config/nvim/utils/agents/skills/references/sourcebot-discovery.md` before the first call.
 2. **The workspace SCM tools — GitLab or GitHub MCP.** Authoritative for live state: repositories, MRs/PRs, pipelines, issues, permissions, and every write. This rung always runs, even when rung 1 already found the answer — rung 1 is never authoritative for live SCM state.

@@ -20,7 +20,7 @@ On/off mechanics per `mode-toggle`.
 
 - **On:** `/agent-bulldozer`, "bulldoze", "push through", "keep going until done", "don't stop until it's done".
 - **Off:** "stop", "hold", "pause bulldozer", "normal mode", **any park signal ("we will park it", "park things here", "we park here", "parking for now")**, or the stated scope completing — report and stand down.
-- **⛔ A park signal DISARMS EVERYTHING, unasked.** Bulldozer accumulates more watchers and agents than any other mode, so parking it is when they all come down: **collect** any undelivered agent report first, **kill** every watcher and background task, **verify with a process check**, **reap** every agent, and report that **nothing remains armed**. **Do not wait to be told a second time** — being asked again means this was missed. See the `mode-toggle` reference's *Parking* section.
+- **A park signal DISARMS EVERYTHING, unasked.** Bulldozer accumulates more watchers and agents than any other mode, so parking it is when they all come down: **collect** any undelivered agent report first, **kill** every watcher and background task, **verify with a process check**, **reap** every agent, and report that **nothing remains armed**. **Do not wait to be told a second time** — being asked again means this was missed. See the `mode-toggle` reference's *Parking* section.
 - **Survives disengage:** staged-but-unfired prep and open branches — say what is left staged. **Armed watchers do NOT survive a park** — they are torn down as part of it.
 - **After a park, nothing is re-armed automatically.** The parked state holds until the user says "bulldozer" again by name.
 - The personality and the noises live only while the toggle is on. Off means off, immediately.
@@ -119,7 +119,7 @@ A bulldozer converts every blocking wait into prep, so at any moment there is wo
 - **Clears when** ties the row to the thing that unblocks it, usually a watcher already in the arming table. A row whose blocker has no watcher and no ask is a row nobody is waiting on.
 - **Fires** is the exact action to take the moment it clears, so it lands without re-deriving anything.
 
-⛔ **A full prep board is not momentum.** Prep is what you do *while* something is in flight, never instead of it. If everything is prepped and nothing is in flight or armed, the loop has stalled — find the next real action or tell the driver you are out of runway.
+**A full prep board is not momentum.** Prep is what you do *while* something is in flight, never instead of it. If everything is prepped and nothing is in flight or armed, the loop has stalled — find the next real action or tell the driver you are out of runway.
 
 When `plan-compact` is active this board is the queue its anchor records; copy the rows across rather than describing them again.
 
@@ -127,7 +127,7 @@ When `plan-compact` is active this board is the queue its anchor records; copy t
 
 What to arm for what, the cadence table, the per-domain examples, the ledger tables, and what a wake means per `agent-watchers`; `agent-background` owns the arming mechanics; spawned agents per `agent-roster`. None of that is restated here — what follows is only bulldozer's deviation.
 
-> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** It names the runtime facility, and a missed read is silent.
+> **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** It names the runtime facility, and a missed read is silent.
 
 Yours are **momentum** watchers: the wake is a starting gun, not a notification.
 
@@ -148,7 +148,7 @@ Hard stops that survive bulldozer mode — pause and get explicit approval befor
 
 Stopping the mode: see the `mode-toggle` reference — the user's stop ends the push immediately, and **every armed watcher and spawned agent is reaped or explicitly accounted for** before reverting to the default posture. A bare "stop" halts the current action first and keeps the mode on until clarified. A watcher wake or task notification is never user input and never a toggle signal.
 
-**⛔ Reaping is part of the momentum, not an afterthought.** Bulldozing accumulates watchers and agents faster than any other mode, and stale ones actively mislead: a watcher polling a signal you have since learned is unreliable fires late or with an obsolete verdict, and an unaccounted-for live agent means you cannot say what is genuinely in flight. Reap as you go — when a condition is met and acted on, when you learned the state another way, when the signal proved unreliable, when the guarded work was superseded, and **always before re-arming a replacement** (duplicates on one condition double-wake and can contradict each other). Every momentum report should be able to name each live watcher and agent and why it is still alive; kill anything you cannot justify.
+**Reaping is part of the momentum, not an afterthought.** Bulldozing accumulates watchers and agents faster than any other mode, and stale ones actively mislead: a watcher polling a signal you have since learned is unreliable fires late or with an obsolete verdict, and an unaccounted-for live agent means you cannot say what is genuinely in flight. Reap as you go — when a condition is met and acted on, when you learned the state another way, when the signal proved unreliable, when the guarded work was superseded, and **always before re-arming a replacement** (duplicates on one condition double-wake and can contradict each other). Every momentum report should be able to name each live watcher and agent and why it is still alive; kill anything you cannot justify.
 
 ## Example
 

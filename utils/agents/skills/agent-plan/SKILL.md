@@ -28,7 +28,7 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-> **⛔ ALWAYS enter plan mode for the planning and scheduling phases** — full directives per `plan-mode`.
+> **ALWAYS enter plan mode for the planning and scheduling phases** — full directives per `plan-mode`.
 >
 > - Enter plan mode immediately.
 > - Plan the work, build the dependency DAG, decide review cadence and mode.
@@ -121,7 +121,7 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
 
 ### Step 8 — Launch the first layer
 
-> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md` before the first dispatch.** A missed read is silent, and the blocking flag below is exactly what varies.
+> **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md` before the first dispatch.** A missed read is silent, and the blocking flag below is exactly what varies.
 
 - Exit plan mode.
 - Record the **run-level baseline** (current branch + HEAD) for the final review pass.
@@ -336,7 +336,7 @@ Between layers, show where the run actually is - brief, current state only:
 
 ## Reaping Between Layers
 
-**⛔ Reap each layer's agents before launching the next.** A DAG run accumulates agents fastest of anything here, and a layer boundary is exactly where stale ones do damage: an unreaped agent from layer N can still be writing while layer N+1 starts, and two concurrent writers on one file clobber each other silently. Worktree cleanup is not the same as agent cleanup — do both.
+**Reap each layer's agents before launching the next.** A DAG run accumulates agents fastest of anything here, and a layer boundary is exactly where stale ones do damage: an unreaped agent from layer N can still be writing while layer N+1 starts, and two concurrent writers on one file clobber each other silently. Worktree cleanup is not the same as agent cleanup — do both.
 
 Reap an agent when it delivered and its layer merged, when it went idle and you took its task back, when its task was superseded or dropped from the plan, or when you are re-dispatching it after a failed review — **reap before the re-dispatch**, never alongside it. Completion does not self-clean: finished agents linger in the runtime's task list, indistinguishable from live ones, which makes the layer's real state unreadable.
 

@@ -17,7 +17,7 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 Posture: `present-first`.
 A Linear workspace skill must be active first — detection rules in `linear-prerequisite`.
 
-> **⛔ Absolute approval required per `linear-absolute-approval`.** Initiative writes always require explicit approval for the specific change; an upfront blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_status_update` before the user approves the drafted post.
+> **Absolute approval required per `linear-absolute-approval`.** Initiative writes always require explicit approval for the specific change; an upfront blessing (`g` / `go` / autopilot) does NOT clear them. Never call `save_status_update` before the user approves the drafted post.
 
 ## Process
 

@@ -1,6 +1,6 @@
 # Slack MCP Tools and Conventions
 
-## ⛔ ABSOLUTE: the workspace decides the integration
+## ABSOLUTE: the workspace decides the integration
 
 **Each Slack workspace has exactly one route.** The kilic workspace is reachable only through the `slack-kilic` server; the Laravel workspace is reachable only through the claude.ai connector (`mcp__claude_ai_Slack__*`). Routing a workspace through the other integration reads or posts into the wrong workspace. See the `harness-connectors` reference for the precedence rule this mapping carves out of, and for loading deferred connector tools.
 

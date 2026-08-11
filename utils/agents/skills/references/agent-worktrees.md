@@ -2,7 +2,7 @@
 
 All worktrees created by any `agent-*` skill MUST live in the active runtime's designated agent-worktrees directory — see the `provider-paths` reference (Claude Code: `<project>/.claude/worktrees/`; OpenCode: its native worktree dir; otherwise `<project>/.agents/worktrees/`). This is an absolute rule — use the one known location for the runtime and never scatter agent worktrees elsewhere in the filesystem.
 
-## ⛔ Worktree isolation follows the SESSION's repo, not the task's repo
+## Worktree isolation follows the SESSION's repo, not the task's repo
 
 **`isolation: worktree` creates a worktree of the repository the session is running in — the cwd project — NOT the repository the delegated task targets.** In a multi-repo workspace those are frequently different, and then the agent lands in a worktree where **its target files do not exist**.
 

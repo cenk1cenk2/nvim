@@ -88,7 +88,7 @@ Posture: `present-first`.
 - Type: `<resource type>`.
 - Address change: <description>.
 - Attribute drift: <list differences that may or may not be intentional>.
-- ⚠️ <Caveat — e.g., "tags differ, verify if intentional.">.
+- <Caveat — e.g., "tags differ, verify if intentional.">.
 
 ### Low Confidence (<number>)
 

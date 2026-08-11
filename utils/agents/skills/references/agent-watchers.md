@@ -92,7 +92,7 @@ gh pr checks "$N" --repo "$OWNER/$REPO" --json name,state \
 # GitLab: glab ci status / the pipelines API, keyed on the pipeline id
 ```
 
-⛔ **Exclude every non-terminal state, not just the obvious one.** A filter that excludes `PENDING` but
+**Exclude every non-terminal state, not just the obvious one.** A filter that excludes `PENDING` but
 not `IN_PROGRESS` fires on a running job and reports a verdict that does not exist yet. Enumerate the
 in-flight set for that system and match the complement.
 
@@ -265,7 +265,7 @@ or is reaped:
 - **Reaped needs its reason** — superseded, moot, or replaced — because a reaped watcher and a fired one
   look identical afterwards.
 
-⛔ Never reap a watcher to tidy up before its outcome is in the table. Collect the outcome first;
+Never reap a watcher to tidy up before its outcome is in the table. Collect the outcome first;
 reaping is terminal.
 
 ## Anti-patterns

@@ -73,7 +73,7 @@ and commit messages:
   `closes K-xxx`, `fixes K-xxx`, `resolves K-xxx`, `completes K-xxx`,
   `implements K-xxx`, and the other closing keywords from
   `commit-trailers`.
-- ⛔ **A keyword applies to EVERY id in its comma/`and`-separated run,
+- **A keyword applies to EVERY id in its comma/`and`-separated run,
   not just the first.** `Closes K-879, K-881` closes *both*. Parse the
   run to end-of-line and tag every id in it with that keyword's kind.
   Matching only the id adjacent to the keyword leaves the rest

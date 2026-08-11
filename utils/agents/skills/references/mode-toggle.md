@@ -38,7 +38,7 @@ Naming the mode is not required. "Stop supervising, just fix it" and "just fix i
 
 Before standing down: account for everything the mode spawned — watchers, background tasks, agents — each reported as stopped or deliberately still running with a reason. Collect a pending report before reaping it; reaping destroys it.
 
-## ⛔ Parking — DISARM EVERYTHING, without being asked
+## Parking — DISARM EVERYTHING, without being asked
 
 **"We are parking" means the session goes quiet. Nothing may keep running.** Do not wait for a follow-up instruction to tear things down — **the park signal IS that instruction.** Being told a second time ("you should also disarm the watchers") means this step was missed.
 
@@ -52,7 +52,7 @@ On any park signal, in order:
 
 A parked session with a live watcher is the failure this section exists to prevent: it wakes into a context that has moved on, and its output reads as current when it is not.
 
-**★ Parking is usually followed by a compaction, a reboot, or both.** Treat every scratchpad and `/tmp` artefact as **already gone**: watcher bodies, poll loops, helper scripts, and any state referenced only by a temp path get **copied verbatim into durable storage** (the anchor, per `plan-compact`) before standing down. A path the next session cannot read is the same as no record at all.
+**Parking is usually followed by a compaction, a reboot, or both.** Treat every scratchpad and `/tmp` artefact as **already gone**: watcher bodies, poll loops, helper scripts, and any state referenced only by a temp path get **copied verbatim into durable storage** (the anchor, per `plan-compact`) before standing down. A path the next session cannot read is the same as no record at all.
 
 **On resume after a park, nothing is re-armed automatically.** The parked state is the default until the user re-engages the mode by name.
 

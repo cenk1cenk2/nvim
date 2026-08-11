@@ -9,7 +9,7 @@ The posture for a skill that writes — files, code, or an external resource. On
 
 **Already approval** — skip the gate, act, report: an explicit go ("do it", "go ahead"), the lingo `g` / `go` / `y` / `yolo`, a prior yes covering this same change, or `autopilot`. A blessing is **scoped to the run it was given in** — not the next separate change.
 
-## ⛔ Destructive actions are outside all of that
+## Destructive actions are outside all of that
 
 Irreversible: force pushes, discarding uncommitted work, deleting or overwriting non-reproducible data, dropping resources others depend on, publishing to an external audience.
 

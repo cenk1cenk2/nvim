@@ -59,7 +59,7 @@ The same definition therefore resolves to different tools in the foreground and 
 - **`TaskOutput` is deprecated, and for a local agent task it is a trap** — its `.output` file is a symlink to the full subagent transcript (JSONL), and reading it overflows the lead's context. Use the `Agent` tool result instead. Reserve `TaskOutput` / reading the output file for background **shell** tasks.
 - Since **v2.1.208**, a completed background subagent stays listed in `/tasks`, marked done, until the session cleans up. Failed or stopped ones leave the list.
 
-## ⛔ A NAMED agent reports by `SendMessage`, not by returning
+## A NAMED agent reports by `SendMessage`, not by returning
 
 **Passing `name` changes how the result reaches you.** A named agent runs as a teammate, and the rule the `SendMessage` tool states for peers applies to its final answer too: **its plain text output is not visible to the lead.** What arrives instead is an **idle notification** carrying no content:
 
@@ -75,7 +75,7 @@ Consequences:
 - **Put the delivery instruction in the prompt.** Any named agent whose prose *is* the deliverable must be told, in the prompt: *your plain text is not visible to the lead — deliver the final answer with one `SendMessage` call to `"main"`.* Without that line the report is written into the void and the work has to be re-collected.
 - **An idle notification means "available", not "done" and not "failed".** It says the agent stopped producing; it says nothing about whether it holds an answer. Ask for the answer.
 
-## ⛔ A quiet agent — steer it, never mark it failed
+## A quiet agent — steer it, never mark it failed
 
 `SendMessage` to the agent's name is a live channel, and on Claude Code it reaches a **running, idle, completed, or `TaskStop`ped** agent alike — a completed or stopped one auto-resumes in the background with no new `Agent` call. Going quiet is therefore never grounds to declare failure, re-dispatch, or reap. Steering costs one message; every rung below it costs work.
 

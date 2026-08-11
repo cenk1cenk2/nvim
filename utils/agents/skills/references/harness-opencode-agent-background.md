@@ -11,7 +11,7 @@ Runtime mechanics for the `agent-background` skill on OpenCode: how to wait on e
 | Recurring cadence | **none natively** | Third-party plugins only (e.g. `opencode-scheduler`), or an OS cron wrapping the CLI. |
 | Work you dispatched yourself | depends on the build | If a background-subagent mechanism is present it notifies the parent on completion — do not poll it. See `harness-opencode-agent-delegate`. |
 
-## ⛔ The shell timeout bounds every wait
+## The shell timeout bounds every wait
 
 The shell tool kills a command at its timeout — **120000 ms (2 min) by default**, raisable with `OPENCODE_EXPERIMENTAL_BASH_DEFAULT_TIMEOUT_MS`. Consequences:
 
@@ -25,4 +25,4 @@ The shell tool kills a command at its timeout — **120000 ms (2 min) by default
 - **A dispatched `task` blocks the turn** (see `harness-opencode-agent-delegate`), so "arm it and keep working" is not the same posture as on Claude Code.
 - **Long work should write to a file.** With no deferred wakeup and an aggressive timeout, an artifact on disk is the reliable way to recover a result you could not wait for.
 
-> **⚠ Unverified.** Whether the running build exposes a native background-subagent flag, and what its notification behavior is, could not be confirmed against current documentation. Check the installed build's own tool list before relying on either.
+> **Unverified.** Whether the running build exposes a native background-subagent flag, and what its notification behavior is, could not be confirmed against current documentation. Check the installed build's own tool list before relying on either.

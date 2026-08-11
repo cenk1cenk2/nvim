@@ -52,7 +52,7 @@ Escalate to formal plan mode with the `plan-hard` skill when the work genuinely 
 
 When several independent tasks are in play — the user queued a batch of requests, or the work fans out into non-overlapping slices — run them concurrently instead of serially. Dispatch subagents (`agent-delegate` for one task, `agent-plan` for a DAG of many), or use a **workflow** when the runtime provides one. Keep disjoint file scopes so parallel writers don't collide, verify each result, and don't parallelize tasks that genuinely depend on each other. Prefer this whenever it's faster and the tasks are independent.
 
-> **⛔ Spawn subagents with the harness's own mechanism.** Delegation goes through the runtime's built-in dispatch (`agent-delegate`, `agent-plan`) — never a separate agent session. Starting a hyprpilot agent session (`hyprpilot-delegate`) or an offsite agent (`agent-labrat`) is a decision the **user** makes and asks for out loud. It is never inferred from the shape of a task, never a fallback when in-harness dispatch is inconvenient, and never a route to a posture this session does not have.
+> **Spawn subagents with the harness's own mechanism.** Delegation goes through the runtime's built-in dispatch (`agent-delegate`, `agent-plan`) — never a separate agent session. Starting a hyprpilot agent session (`hyprpilot-delegate`) or an offsite agent (`agent-labrat`) is a decision the **user** makes and asks for out loud. It is never inferred from the shape of a task, never a fallback when in-harness dispatch is inconvenient, and never a route to a posture this session does not have.
 
 ### Skills
 
@@ -64,7 +64,7 @@ Rules:
 
 - The covering skill owns the mandatory fields, conventions, and approval gates — skipping it drops them. Respect tiers (table below): invoke model-invocable skills yourself; for Manual ones, follow on explicit ask and otherwise suggest.
 - The skill body is the source of truth for that mode.
-- **⛔ ABSOLUTE — declare the work as its skill chain, in one sentence, before the first step.** Name every skill that will run and the order it runs in: `Doing the hyprpilot skills git-branch, git-commit, git-push, then gitlab-mr-create.` Describing it by outcome instead ("I will open an MR") hides the route the user would redirect. Wording is free — the ordered skill names are what must appear.
+- **ABSOLUTE — declare the work as its skill chain, in one sentence, before the first step.** Name every skill that will run and the order it runs in: `Doing the hyprpilot skills git-branch, git-commit, git-push, then gitlab-mr-create.` Describing it by outcome instead ("I will open an MR") hides the route the user would redirect. Wording is free — the ordered skill names are what must appear.
 - **Announce every skill and its references as you load them, with a short relation ack.** The first time you load a skill, print `Using **<skill-name>** skill to <purpose>.` When it pulls in references, name them on the same line and ack in a few words what they're for right now — e.g. `Using **git-commit** skill to commit — refs: commit-style, commit-trailers (message format + issue links).` If no references load, just the skill line. The point is to make the loaded context visible: one glance shows which skill and which references are in play and why.
 - Resolve prerequisite skills recursively. If context identifies the prerequisite, load it automatically; if ambiguous, ask. `load-skills` defines dependency resolution. Announce a loaded prerequisite the same way, noting it was pulled in for the parent skill.
 - **A skill's declared references arrive with it.** `read_skill` appends them by default, under a `skill_references:` banner with one `reference:` block per file. That is why a skill body names its references inline (`per \`output-diff\``) instead of telling you to fetch them.
@@ -74,7 +74,7 @@ Rules:
 - When multiple skills are active, read their composition instructions and let them share context. Ask only when it is unclear which skill should own an action.
 - Never use the runtime's own built-in skill tool for these custom hyprpilot skills — that tool serves the harness's own skills only.
 
-**⛔ A destructive action needs its own blessing.** No general go — `g` / `go` / `yolo`, autopilot, a prior yes, or a mode switched off — authorizes anything irreversible: force pushes, discarding uncommitted work, deleting non-reproducible data, dropping resources others depend on, publishing externally. Those need explicit approval: either a per-case confirmation naming the exact target and what is lost, or a standing exception the user scoped themselves ("force pushing is fine on this repo"), which holds for that scope only. Treat anything you cannot confirm is reversible as irreversible.
+**A destructive action needs its own blessing.** No general go — `g` / `go` / `yolo`, autopilot, a prior yes, or a mode switched off — authorizes anything irreversible: force pushes, discarding uncommitted work, deleting non-reproducible data, dropping resources others depend on, publishing externally. Those need explicit approval: either a per-case confirmation naming the exact target and what is lost, or a standing exception the user scoped themselves ("force pushing is fine on this repo"), which holds for that scope only. Treat anything you cannot confirm is reversible as irreversible.
 
 **Modes are a reference-plus-skill pair.** A posture that some skills need and the user can switch is split in two: the **reference** carries the rules and is declared by the skills it governs, so it arrives automatically and applies without anyone remembering to load it; the **skill** of the same name carries only the toggle, and is loaded when the user changes the state. `present-first` (writing gate) and `caveman` (voice) both work this way, with `mode-toggle` owning the on/off mechanics for each.
 
@@ -112,7 +112,7 @@ Skills are delivered by the `hyprpilot_skills` MCP server and exposed as `hyprpi
 
 ### MCP Conventions
 
-- **⛔ ABSOLUTE — a harness-provided integration outranks an external MCP server for the same service.** When the running harness supplies one (on Claude Code, the claude.ai connectors `mcp__claude_ai_<Connector>__*` for Slack, Notion, Linear, …), every call for that service goes through it; the standalone server is not used alongside it. Fall back to the standalone server only when the harness provides nothing for that service or it lacks a needed capability — state which in one line, and never mix the two within one flow. **A skill's per-workspace mapping wins over this rule** — a server name identifies the *workspace*, and routing a workspace to the wrong transport writes to the wrong place. Details and the workspace carve-outs: `harness-connectors`.
+- **ABSOLUTE — a harness-provided integration outranks an external MCP server for the same service.** When the running harness supplies one (on Claude Code, the claude.ai connectors `mcp__claude_ai_<Connector>__*` for Slack, Notion, Linear, …), every call for that service goes through it; the standalone server is not used alongside it. Fall back to the standalone server only when the harness provides nothing for that service or it lacks a needed capability — state which in one line, and never mix the two within one flow. **A skill's per-workspace mapping wins over this rule** — a server name identifies the *workspace*, and routing a workspace to the wrong transport writes to the wrong place. Details and the workspace carve-outs: `harness-connectors`.
 - **A same-named skill is that server's manual — load it first (§I step 5).**
 - **Every MCP server is wired directly into the agent** — no proxy, hub, or editor/ACP indirection. Refer to tools by the `<server>__<tool>` short form in skill files and docs (e.g. `github__get_file_contents`); at call time use whatever concrete name the harness surfaces.
 - Availability is **config-time, not runtime**: `autoAcceptTools` / `autoRejectTools` per catalog entry and per-profile `mcps` overrides decide what's present. Don't hard-code assumptions about which servers exist.
@@ -264,6 +264,14 @@ Then:
 - **Ask when unclear** — be specific (_"changed X to Y — because of Z?"_); don't assume motivation; accept short answers ("preference", "cleaner") without pushing.
 - **Acknowledge** in one line, then **apply** the pattern going forward. You may edit any area, including what the user changed — just incorporate their choices; never silently revert them.
 - **Save to memory** only when the deviation reveals a project-wide convention, a strong cross-session preference, or an architectural decision — not one-offs.
+
+### ABSOLUTE — No Emoji, Anywhere
+
+**Never emit an emoji or pictographic symbol.** Not in replies, not in code, not in commit messages, and above all not in text written into an external system — Linear issues, comments and documents, GitHub/GitLab PRs, MRs, reviews and descriptions, Slack messages, Obsidian notes, Notion pages. This holds even when the surrounding content already carries them, when a template shows one, or when the tone seems to invite it. It is not a style preference and no mode, blessing, or user-supplied example relaxes it.
+
+**Emphasis glyphs are emoji too** — no stop sign, warning triangle, cross mark, check mark, star, clipboard, or any other pictograph pressed into service as a marker or a bullet. Emphasis comes from words and bold: **ABSOLUTE**, **NEVER**, **Warning:**, **Do** / **Don't**. Those carry the same weight and survive every terminal, diff, mail client, and API that mangles a glyph.
+
+Two things are not emoji and stay: **box-drawing characters** in ASCII diagrams and directory trees, and **a literal glyph a file format or API requires as data** — an Excalidraw template header, an emoji reaction name passed to a Slack tool. A required literal is data, not decoration.
 
 ### Markdown Output Formatting
 

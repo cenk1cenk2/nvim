@@ -36,7 +36,7 @@ Cost and capability vary by an order of magnitude across tiers — pick the chea
 
 Harness references are named **`harness-<provider>-<skill-or-reference-name>`** — one file per (runtime × consuming skill), so a skill loads exactly the mechanics it needs and nothing else.
 
-> **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-<consumer>.md` before the first dispatch or the first wait.** `<provider>` is `claude`, `opencode`, or `codex`; `<consumer>` is the row below. A missed read raises no error — the mechanics are simply absent.
+> **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-<consumer>.md` before the first dispatch or the first wait.** `<provider>` is `claude`, `opencode`, or `codex`; `<consumer>` is the row below. A missed read raises no error — the mechanics are simply absent.
 
 | Consumer | Claude Code | OpenCode | Codex |
 |----------|-------------|----------|-------|

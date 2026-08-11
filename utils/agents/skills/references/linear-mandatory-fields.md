@@ -44,10 +44,10 @@ When creating multiple related issues or working with projects, ALWAYS set prope
 
 | Information | Where to put it | Where NOT to put it |
 |------------|-----------------|---------------------|
-| "Issue A blocks Issue B" | `blocks` / `blockedBy` fields | ❌ "## Dependencies" section in description |
-| "Issue A is a sub-issue of Issue B" | `parentId` field | ❌ "## Sub-issues" table in description |
-| "Issue A is related to Issue B" | `relatedTo` field | ❌ "See also K-123" in description |
-| Dependency chain ordering | `blockedBy` fields on each issue | ❌ "## Issue Order" or "## Dependency chain" in description |
+| "Issue A blocks Issue B" | `blocks` / `blockedBy` fields | "## Dependencies" section in description |
+| "Issue A is a sub-issue of Issue B" | `parentId` field | "## Sub-issues" table in description |
+| "Issue A is related to Issue B" | `relatedTo` field | "See also K-123" in description |
+| Dependency chain ordering | `blockedBy` fields on each issue | "## Issue Order" or "## Dependency chain" in description |
 
 The only exception is when a parent issue needs brief context about *why* sub-issues exist — not *what* they are or *how* they relate (Linear shows that natively). Use `## Thoughts` sections for rationale, not relation listings.
 

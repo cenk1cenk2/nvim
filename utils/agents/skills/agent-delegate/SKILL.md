@@ -45,7 +45,7 @@ Use it when:
    - If no preference is stated, infer the tier from task complexity and propose with reasoning.
    - **If the user's pick seems mismatched to the task** (e.g., cheap for architectural design, smart for a trivial rename), **ask before dispatching** — state the mismatch and propose an alternative. Do not silently comply.
 
-3. **⛔ Establish conventions — mandatory whenever the task writes code.**
+3. **Establish conventions — mandatory whenever the task writes code.**
    - Follow the `agent-conventions` reference: discover the local patterns, then build the prompt block that makes the agent study its neighbours first, copy the local naming and structure, match comment density (usually none), and stay in scope.
    - Name the concrete files the agent should use as its pattern reference — the nearest siblings and the closest existing implementation of the same kind of thing. A generic "follow project conventions" line does nothing.
    - Skip only for genuinely read-only research.
@@ -70,11 +70,11 @@ Use it when:
 7. **Launch the agent — background by default.**
    - Dispatch the subagent via your runtime's dispatch mechanism, with parameters resolved from the reference's parameter table.
    - **Dispatch in the BACKGROUND by default — this is the preferred mode.** The lead stays free, so the conversation keeps moving and you keep working while the agent runs. See the `agent-delegate` reference's Dispatch Mode section.
-   - **⛔ Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md` before the first dispatch** — the flag name, its default, and how a background result actually reaches you. This differs per runtime: current Claude Code wakes you with a completion notification, Codex does not wake you at all.
-   - **⛔ Block when the runtime will not deliver a detached result**, and when you simply need the answer to continue. For a fan-out you need complete before proceeding, issue several dispatches in one message, all blocking — they still run concurrently and land together.
+   - **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md` before the first dispatch** — the flag name, its default, and how a background result actually reaches you. This differs per runtime: current Claude Code wakes you with a completion notification, Codex does not wake you at all.
+   - **Block when the runtime will not deliver a detached result**, and when you simply need the answer to continue. For a fan-out you need complete before proceeding, issue several dispatches in one message, all blocking — they still run concurrently and land together.
    - **Never pre-empt a pending agent and never read its silence as a verdict.** A verification agent that has not reported has not passed anything. Equally, do not declare it broken on a runtime where delivery works — check the harness reference first.
    - `isolation`: `worktree` if the task modifies files — offer, confirm with user.
-   - **⛔ Permissions: settle the context FIRST, but do not try to set it on the dispatch.** On current Claude Code the `mode` parameter is deprecated and ignored — subagents inherit the session's permission mode, so you cannot grant an agent more autonomy than the session already has. If the task needs more, raise it with the user; do not dispatch and hope. On runtimes with independent permissions, an unsurfaced gate stalls the agent silently — **highest risk: a task targeting a directory or repo other than the session's.** See the active `harness-<provider>-agent-delegate` reference.
+   - **Permissions: settle the context FIRST, but do not try to set it on the dispatch.** On current Claude Code the `mode` parameter is deprecated and ignored — subagents inherit the session's permission mode, so you cannot grant an agent more autonomy than the session already has. If the task needs more, raise it with the user; do not dispatch and hope. On runtimes with independent permissions, an unsurfaced gate stalls the agent silently — **highest risk: a task targeting a directory or repo other than the session's.** See the active `harness-<provider>-agent-delegate` reference.
    - **Collect deliberately.** On Claude Code, a background agent's result arrives as a completion notification — wait for it rather than polling, and note that a completed agent can be resumed by `SendMessage` to its name if you need more. Do NOT read a local agent's task-output file: it is a symlink to the full transcript and will overflow your context. **After two failed collection attempts, stop negotiating** — verify the underlying artifact yourself, or re-dispatch blocking. Diagnose the cause first; only blind re-dispatch wastes completed work.
    - **If worktree isolation is used**, verify the returned path is absolute and in the runtime's agent-worktrees directory per `agent-worktrees` — the concrete directory resolves via `provider-paths`, never hardcoded. If it falls outside, abort the result and recreate the worktree manually at the correct location (see the Manual Fallback section), then re-dispatch without worktree isolation and instruct the agent via the prompt to `cd` into the manual path.
 
@@ -84,13 +84,13 @@ Use it when:
    - **Check the diff for style drift**, per `agent-conventions`: naming that matches the neighbours, no comments restating the code, no docstrings or banners the surrounding files lack, no reformatting or refactors outside the task, no new abstraction where a local one existed. Bounce a mismatch back to the agent with the specific line — it still holds the context; fix by hand only when it is a one-liner.
    - If the user wants to commit/push/PR, follow the `agent-completion` reference or invoke the relevant SCM skill.
 
-9. **⛔ REAP ONLY WHEN COMPLETELY DONE — reaping is terminal.**
+9. **REAP ONLY WHEN COMPLETELY DONE — reaping is terminal.**
    - **Stopping an agent destroys any chance of getting its report.** You cannot message, resume, or read it afterwards. So reap only when you have everything you need, have no further question for it, and the work has moved on.
    - **An idle/available agent is a candidate for COLLECTION, not reaping.** Idle usually means the work finished and only the report is stranded — killing it there turns a recoverable report into a permanent loss. **Order: collect → confirm you have what you need → then reap.** Never reap because it went quiet or because you are unsure whether it finished; uncertainty means collect.
    - Genuinely safe to reap: it delivered and the task is closed; you obtained and **verified** the answer another way so its report is redundant; its task was superseded or abandoned; it is demonstrably stale; or you are replacing it — **reap before re-dispatching** so two agents never write the same target (collect anything salvageable first).
    - **Completion does not self-clean.** A finished agent lingers in the runtime's task list, indistinguishable from a working one. Stop it explicitly via the runtime's own mechanism (see the active provider's `harness-<provider>-agent-delegate` reference).
    - **Reap checkpoint at the end of the flow:** enumerate every agent you spawned and confirm each is stopped, or state that one is *deliberately* still running and what it waits on.
-   - **★ Two concurrent writers on one target is the real hazard.** Re-dispatching over the same files, document, or resource without reaping the first lets the later write silently clobber the earlier one. Reap, verify the target's current state, then dispatch again.
+   - **Two concurrent writers on one target is the real hazard.** Re-dispatching over the same files, document, or resource without reaping the first lets the later write silently clobber the earlier one. Reap, verify the target's current state, then dispatch again.
 
 ## Model Selection
 

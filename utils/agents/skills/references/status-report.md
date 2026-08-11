@@ -4,7 +4,7 @@ Shape for the recurring status report a persistent posture mode gives the user e
 
 The problem it solves: a long-running mode produces a mix of durable state, fresh findings, explanation, and asks. Delivered as prose they blur together, and the reader cannot separate what is true *now* from what just *changed* from what is *wanted from them*. A stable layout keeps those apart and lets the reader's eye learn where to look instead of re-parsing every report.
 
-## ⛔ NOT every turn — this is the full-report shape, not the default reply
+## NOT every turn — this is the full-report shape, not the default reply
 
 **Do not emit the full four-part report on every turn.** Two triggers, and nothing else:
 
@@ -70,7 +70,7 @@ Cover explicitly:
 
 **Include this section even when it is empty**, and say so ("nothing needed from you"). Its absence is ambiguous: the reader cannot tell whether nothing is needed or whether you forgot to ask.
 
-#### ⛔ Mark an item's prerequisite inline
+#### Mark an item's prerequisite inline
 
 **When an item cannot yet be acted on because something else has to land first, say so in the item itself** with a leading marker:
 

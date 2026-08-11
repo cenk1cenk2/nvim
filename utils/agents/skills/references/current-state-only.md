@@ -4,7 +4,7 @@ Applies to everything authored here — skills, references, guidance files, repo
 
 ## The rule
 
-⛔ **Write what is true now. Never what changed, what it used to be, or what replaced what.**
+**Write what is true now. Never what changed, what it used to be, or what replaced what.**
 
 An agent reads these at the moment of acting. A past shape named anywhere is a shape it can match by mistake — so a deprecation note is not a helpful caveat, it is a live instruction to consider the wrong thing. **Delete the old wording and state the new one.** A reader must not be able to tell which parts are new.
 

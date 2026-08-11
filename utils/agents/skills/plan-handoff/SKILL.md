@@ -16,7 +16,7 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-> **⛔ ALWAYS enter plan mode** — full directives per `plan-mode`.
+> **ALWAYS enter plan mode** — full directives per `plan-mode`.
 >
 > - Enter plan mode immediately.
 > - Create plan file in your internal plans directory as `YYYY-MM-DD-<project>-<name>.md`. Resolve the directory and filename default for the active runtime via `provider-paths`; never hardcode a path.
@@ -33,7 +33,7 @@ This skill produces **self-contained plan files** that can be loaded by a future
    - Ask the user: is this plan for **another session in the same repository** or for **a different repository**?
    - If the user already stated this, skip asking.
 
-2. **⛔ Reconcile before handing off.** The plan is an artifact this session owns, so per `reconcile-state` it gets brought current rather than shipped stale. Compare it against what actually happened — scope that grew, an approach dropped, work already done, decisions the user changed — and **propose the update in one line**: *"plan is behind on X and Y — reconcile it to current state before handing off?"* A handoff is the worst moment for drift: the receiving session has no way to know the plan is wrong, and will execute it confidently. Artifacts you do not own are surfaced, never edited.
+2. **Reconcile before handing off.** The plan is an artifact this session owns, so per `reconcile-state` it gets brought current rather than shipped stale. Compare it against what actually happened — scope that grew, an approach dropped, work already done, decisions the user changed — and **propose the update in one line**: *"plan is behind on X and Y — reconcile it to current state before handing off?"* A handoff is the worst moment for drift: the receiving session has no way to know the plan is wrong, and will execute it confidently. Artifacts you do not own are surfaced, never edited.
 
 3. **Branch by target type.**
 

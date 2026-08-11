@@ -18,7 +18,7 @@ A Linear workspace skill MUST be active before this skill runs — detection rul
 
 Present a proposed structure per `output-diff`. Description format for whatever gets written per `linear-description-structure`.
 
-## ⛔ Two Modes, One Mentality — and You Will Switch Mid-Flight
+## Two Modes, One Mentality — and You Will Switch Mid-Flight
 
 **This skill covers structuring the work AND picking it up.** They are not two skills or two phases; they are two modes of one way of thinking, and a single piece of work moves between them repeatedly.
 
@@ -54,7 +54,7 @@ Agents work best this way: scope and boundaries are clear, the repository is evi
 
 ## Choosing the Shape
 
-⛔ **Repo span is rarely obvious from the request — investigate before choosing.** "Add X" means adding X to one repository about as often as it means adding the same X to six. Getting it wrong late is expensive: an issue discovered mid-flight to span four repositories has to be torn apart after agents already started on it.
+**Repo span is rarely obvious from the request — investigate before choosing.** "Add X" means adding X to one repository about as often as it means adding the same X to six. Getting it wrong late is expensive: an issue discovered mid-flight to span four repositories has to be torn apart after agents already started on it.
 
 Investigate first per `linear-scm-discovery` — its Discovery Ladder picks the tools from what the active profile carries, so never assume a code-discovery MCP is there. Establish how many repositories carry the change, whether the change is identical in each, and what differs where.
 
@@ -89,7 +89,7 @@ The parent is a container, not work. It is not picked up, it produces no PR of i
 
 ### The sub-issue carries only the delta
 
-⛔ **A sub-issue MUST NOT restate the parent's description.** A copied description is exactly the drift this pattern prevents.
+**A sub-issue MUST NOT restate the parent's description.** A copied description is exactly the drift this pattern prevents.
 
 Each sub-issue is one repository, and carries:
 
@@ -153,7 +153,7 @@ Scope picks the parent — tightest level that covers it, per `linear-project-do
 
 Attach documents on demand with the `linear-document` skill — one concern per document, tightly focused like obsidian repository notes. Investigations, plans, candidate matrices, migration guides, solved problems, deviations.
 
-## ⛔ Ownership — Bless It Once, Up Front
+## Ownership — Bless It Once, Up Front
 
 **Before the first agent starts, ask one question and get one answer: is this project or issue tree ours to keep current?** Ownership rules per `reconcile-state` — the permission is "what this session created, or what the user explicitly handed you", and everything else is off limits.
 
@@ -166,7 +166,7 @@ This matters most under the agent postures — `agent-coordinator`, `agent-super
 5. **The blessing is scoped to that tree.** A parent plus its sub-issues, or a project plus its issues. A different project needs its own blessing; a general `g` / `yolo` / autopilot does not supply one.
 6. **An opt-out suppresses the write, never the question.** "Don't touch the tracker" gets honored and reported.
 
-## ⛔ The Record Is a Notebook, Not Just a Blueprint
+## The Record Is a Notebook, Not Just a Blueprint
 
 **Structure is half the job. While agents implement, the Linear tree is the running log of what was actually observed and done.** An agent-ready structure that ends up describing work nobody did is worse than no structure — a stale parent gets read by the next agent and implemented as written.
 
@@ -237,7 +237,7 @@ Ask the user when uncertain whether a manual step is separate or included.
 
 ## Anti-Patterns
 
-❌ Don't:
+**Don't:**
 
 - "Set up TeamSpeak" — spans repositories, too vague.
 - "Create workload and routing" — two concerns, two repos.
@@ -248,7 +248,7 @@ Ask the user when uncertain whether a manual step is separate or included.
 - Reconstructing verification evidence at wrap-up instead of capturing it at the task.
 - Dependency chains or sub-issue tables written into descriptions.
 
-✅ Do:
+**Do:**
 
 - "Create teamspeak3 workload manifests" — one repo, one PR.
 - "Configure load balancer routes for teamspeak3" — one repo, one PR.

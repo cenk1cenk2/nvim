@@ -1,6 +1,6 @@
 # Agent Conventions — Match the House Style
 
-**⛔ MANDATORY for every dispatch that writes code.** Not an optional enrichment step. Skip it only for genuinely read-only work (research, audits, reviews).
+**MANDATORY for every dispatch that writes code.** Not an optional enrichment step. Skip it only for genuinely read-only work (research, audits, reviews).
 
 A subagent starts with a fresh context and no taste for this codebase. Left to itself it writes generically-correct code in its own dialect: different naming, its own vocabulary for concepts that already have names, explanatory comments nobody asked for, a second way to do something the codebase already does. It passes the tests and reads as foreign — and that *is* the defect, because the next person to touch it cannot tell what the codebase's pattern actually is.
 
@@ -28,7 +28,7 @@ Real for a genuinely new feature, a first-of-its-kind integration, or a new subs
 
 Make this the agent's mandatory first action, stated in the prompt. Authority runs in this order — a lower source never overrides a higher one:
 
-1. **⛔ Examples the user pointed at.** When the user named a file, function, module, commit, or PR and said "do it like this" — that is the template, and it outranks everything, including your own reading of the codebase and your judgement about what is better. Read it before writing a line, follow its shape exactly, and if you believe it is wrong, say so in the report instead of quietly doing it differently.
+1. **Examples the user pointed at.** When the user named a file, function, module, commit, or PR and said "do it like this" — that is the template, and it outranks everything, including your own reading of the codebase and your judgement about what is better. Read it before writing a line, follow its shape exactly, and if you believe it is wrong, say so in the report instead of quietly doing it differently.
 2. **The nearest siblings.** The 2-3 files in the same directory or module, read end to end.
 3. **The closest existing implementation of the same kind of thing** — another handler, another plugin module, another migration, another test — used as the working template.
 4. **The wider codebase**, for anything the local files do not settle.

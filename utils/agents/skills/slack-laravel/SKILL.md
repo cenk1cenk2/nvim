@@ -7,7 +7,7 @@ references:
 
 ## Slack Workspace: Laravel
 
-> **⛔ The workspace decides the integration.** Laravel is reachable **only** through the claude.ai Slack connector — the catalog holds no standalone server for it, and `slack-kilic__*` reaches a different workspace entirely. Connector inventory per `harness-connectors`.
+> **The workspace decides the integration.** Laravel is reachable **only** through the claude.ai Slack connector — the catalog holds no standalone server for it, and `slack-kilic__*` reaches a different workspace entirely. Connector inventory per `harness-connectors`.
 
 ## Workspace Context
 
