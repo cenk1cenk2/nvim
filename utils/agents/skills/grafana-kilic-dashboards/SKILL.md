@@ -94,6 +94,7 @@ These are dashboard-specific and each was measured, not assumed:
 
 Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboard-side rules on top of it.
 
+- **A row whose kind is a custom resource cannot drill down on `workload_type`.** Mimir resolves CRD owners (`Cluster` for CloudNativePG, `RenovateJob`, `HelmChart`, plus `staticpod`); Loki collapses all of them to `barepod`. A link built from such a row selects nothing, silently, and `(?i)` does not help because the value is genuinely absent. **Scope those on `namespace` plus the `pod` or `workload` field instead** — `namespace`, `pod` and `container` agree exactly across both sides, including for these rows.
 - **Prefer one `Open workload logs` button** over separate deployment, statefulset, daemonset and job buttons. Select the kind with the indexed `workload_type` and filter the name with the `workload` structured-metadata field. A trailing `(-.*)?` keeps generated Job names matching for CronJob-like workloads.
 - **Every stream selector needs at least one matcher that cannot match empty**, such as `service_name=~".+"`. Dashboard all-values expand to `.*`, and a selector made only of empty-compatible matchers is rejected.
 - **Preserve the time range** with `range.from=${__from}` and `range.to=${__to}` in the encoded Explore state.
