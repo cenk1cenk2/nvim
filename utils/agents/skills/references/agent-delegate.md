@@ -88,16 +88,40 @@ Reconstructing that yourself from the diff is the in-house failure in miniature 
 
 **Ask for one thing at a time.** A nudge listing five requests tends to come back as a summary of five things rather than the five artifacts.
 
+### When collection genuinely fails, discover what it did before deciding anything
+
+An agent that cannot be reached, or will not yield its report, has still left evidence. **Establish how far it actually got before choosing what to do** — the answer usually is not "run the whole thing again".
+
+Look at everything it could have touched:
+
+- The working tree — `git status`, `git diff`, and any branch or commit it created.
+- The output path it was told to write.
+- Its transcript or output file, where the runtime exposes one.
+- External artifacts: an MR or PR opened, an issue updated, a resource created.
+
+Then judge which of four states you are in, because each takes a different action:
+
+| What you find | Do |
+|---|---|
+| **Complete** | Verify it and move on. No re-dispatch — the report was the only thing missing, and you now have the substance. |
+| **Partial and coherent** | Re-dispatch **scoped to the remainder**, telling the new agent exactly what already exists so it neither redoes nor clobbers it. |
+| **Partial and half-applied** | Decide deliberately whether to finish or reset. A half-applied mechanical change is more dangerous than none, because it looks done. |
+| **Nothing** | Re-dispatch in full — and only here does the whole task cost again. Fix the brief first if the brief was the cause. |
+
+**Re-dispatching without this discovery is how work gets destroyed.** A fresh agent pointed at a task that is already half done either duplicates it or overwrites it, and neither agent reports the collision. Reap the original before dispatching a replacement.
+
+Say what you found and which state you judged it to be. "Re-ran it" and "finished the remaining four files because six were already correct" are different events, and only one of them is a repeat cost.
+
 ### The ladder
 
-1. **Establish the agent's state.** Reachable, or gone. Everything else depends on it.
+1. **Establish the agent's state.** Reachable, or genuinely gone. Everything else depends on it.
 2. **Nudge for the specific missing piece.** One artifact, named exactly.
 3. **Nudge again, narrower** if the reply is still a summary — a single file, a single command's output.
-4. **Read its transcript or output file**, where the runtime exposes one. This is also rung 1 for an agent that is gone.
+4. **Read its transcript or output file**, where the runtime exposes one. This is rung 1 for an agent that is gone.
 5. **Inspect the artifact** — `git status`, `git diff`, the output path. This *verifies* what you collected; it does not replace collecting, because a diff cannot tell you why.
-6. **Only then reconstruct**, and say plainly that you did and why collection failed.
+6. **Discover how far it got, then decide** per the table above. Re-dispatch scoped to what remains, not to the whole task.
 
-Rungs 1 through 3 resolve nearly everything and cost one message each. Rung 6 costs the whole task again.
+Rungs 1 through 3 resolve nearly everything and cost one message each. Only the "nothing was done" branch of rung 6 costs the whole task again.
 
 **Collecting and verifying are different jobs.** Collect from the agent, verify against the artifact — and do both. A correct diff under a useless summary still needs the summary, because the reasoning is not in the diff.
 
@@ -187,3 +211,4 @@ Point at skills and tools by name rather than inlining them when the target shar
 - **Match tier to task**, and **ask on mismatch** rather than silently complying.
 - **Verify results.** Agent summaries describe intent, not outcomes. Check the artifact — and for code, check that it matches the house style, not just that it works (`agent-conventions`).
 - **A thin report means nudge, not redo.** The work is on disk and the specifics are in its transcript; taking the task in-house discards a finished run and pays for it twice.
+- **When collection fails, discover how far it got before re-dispatching.** Scope the replacement to what remains — a fresh agent pointed at half-finished work duplicates or clobbers it, and neither reports the collision.
