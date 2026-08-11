@@ -52,6 +52,45 @@ Rules that hold either way:
 
 **Reaping is never the first response to silence.** It is terminal: it destroys the report, and on runtimes where a finished agent can be resumed by message it also forecloses that. Steering is reversible; reaping is not.
 
+## ABSOLUTE — A thin report is a DELIVERY failure, not a work failure
+
+An agent that finishes and hands back a vague summary, a paragraph where you asked for a diff, or "I made the changes" with no detail **has almost certainly done the work**. Its transcript holds the specifics. What failed is the last step, and the last step is the cheapest one to retry.
+
+**The wrong response is to take the work in-house.** Redoing it locally discards a completed run, pays for it a second time, and loses everything it learned that you did not think to ask about. It also feels like progress, which is why it happens.
+
+### Check the artifact before you judge the report
+
+**Work lands on disk, not in the message.** Before concluding anything, look at what actually changed:
+
+- `git status` and `git diff --stat` in the target repository.
+- The output path you asked it to write.
+- Whether the run made many tool calls or ran a long time — both mean it did something, whatever it said.
+
+A correct diff under a useless summary is a **formatting problem**. Read the diff and move on; do not ask it to redo work that is already sitting in the working tree.
+
+### Then nudge, and be specific
+
+A finished agent can be resumed by message and answers from its existing transcript, so it still has everything. **Name the exact artifact you are missing.** A specific ask retrieves it in one round; a vague "can you give more detail" returns another summary.
+
+- "Give me the unified diff of every file you changed."
+- "List each file you touched with a count of replacements."
+- "You said you verified it — paste the command you ran and its output."
+- "Which of the four files did you not change, and why?"
+
+**Ask for one thing at a time.** A nudge listing five requests tends to come back as a summary of five things rather than the five artifacts.
+
+### The ladder for a bad report
+
+1. **Inspect the artifact.** Often the answer is already there and no message is needed.
+2. **Nudge for the specific missing piece.** One artifact, named exactly.
+3. **Nudge again, narrower**, if the reply is still a summary — ask for a single file, a single command's output.
+4. **Read its transcript or output file** where the runtime exposes one.
+5. **Only then reconstruct**, and say plainly that you did and why the collection failed.
+
+Rungs 1 through 3 resolve nearly everything and cost one message each. Rung 5 costs the whole task again.
+
+**Never let an unusable report pass silently either.** Accepting a summary you cannot verify, and reporting the task as done on its word, is the same failure wearing a better outfit — you have no evidence, and neither does the user.
+
 ## Dispatch Mode — background by default, where the runtime supports it
 
 > **Background is the preferred posture where the runtime delivers results reliably** (Claude Code: background is the tool default, and a finished agent's result arrives as a completion notification in a later turn). The lead stays free, the user keeps talking, you keep working.
@@ -135,3 +174,4 @@ Point at skills and tools by name rather than inlining them when the target shar
 - **The harness reference owns the mechanics.** Permission handling, background defaults, delivery, and limits are runtime properties — never carry one runtime's behavior to another.
 - **Match tier to task**, and **ask on mismatch** rather than silently complying.
 - **Verify results.** Agent summaries describe intent, not outcomes. Check the artifact — and for code, check that it matches the house style, not just that it works (`agent-conventions`).
+- **A thin report means nudge, not redo.** The work is on disk and the specifics are in its transcript; taking the task in-house discards a finished run and pays for it twice.
