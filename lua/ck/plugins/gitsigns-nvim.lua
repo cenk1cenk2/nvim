@@ -38,14 +38,6 @@ function M.config()
         linehl = false,
         signcolumn = true,
         word_diff = false,
-        -- nvim 0.13 returns `diffopt` from `vim.opt:get()` as a map, so gitsigns' `ipairs` parse
-        -- yields nothing and silently falls back to external git diff, which reports zero hunks.
-        diff_opts = {
-          internal = true,
-          indent_heuristic = true,
-          algorithm = "myers",
-          linematch = 40,
-        },
         attach_to_untracked = true,
         current_line_blame = false, -- Toggle with `:Gitsigns toggle_current_line_blame`
         current_line_blame_opts = {
