@@ -5,6 +5,7 @@ disableModelInvocation: true
 argumentHint: '[what to look at] - e.g. ''logs for mimir-ruler on rubik'', ''memory usage in monitoring'''
 references:
   - ../references/grafana-kilic-datasources.md
+  - ../references/loki-label-model.md
   - ../references/kilic-workload-resolution.md
 ---
 
@@ -12,57 +13,7 @@ references:
 
 Datasource inventory, target resolution, endpoint flakiness, and parameter naming: `grafana-kilic-datasources`. Resolving a workload to the clusters that run it: `kilic-workload-resolution`.
 
-Metrics and logs use the **same label names**. Mimir gets them from the Prometheus exporters; Loki's collector renames its OpenTelemetry attributes to match. So `namespace` means `namespace` on both sides, and the same is true of `pod`, `container`, `node`, `deployment`, `statefulset`, `daemonset`, `cronjob`, `workload`, `workload_type` and `cluster`.
-
-## ABSOLUTE — Loki Has Two Tiers, and Only One Goes in the Braces
-
-The names match. **Where you put them does not.** Loki indexes a subset of fields as stream labels; everything else is structured metadata, filtered after the selector. Put a structured-metadata field inside `{}` and the query **returns zero rows without erroring** — indistinguishable from "there are no logs", which is why this mistake survives.
-
-**Stream labels — the only things allowed inside `{}`:**
-
-`cluster`, `namespace`, `workload_type`, `deployment`, `statefulset`, `daemonset`, `cronjob`, `job_name`, `service_name`, `__stream_shard__`
-
-**Structured metadata — filtered after the selector with `|`:**
-
-`pod`, `container`, `node`, `workload`, `container_restart_count`, `detected_level`, `log_iostream`, `tenant`, `observed_timestamp`
-
-Correct:
-
-```logql
-{namespace="monitoring", deployment="mimir-ruler"} | container="ruler" | detected_level="error"
-```
-
-Wrong, and **returns an empty result rather than an error**:
-
-```logql
-{namespace="monitoring", container="ruler"}
-```
-
-The split is deliberate: pod, container and node are per-instance dimensions, and indexing them would multiply streams against a `max_global_streams_per_user` of 15000 per tenant. Structured metadata costs bytes per line, not streams.
-
-**An empty Loki result is a query bug until proven otherwise.** Before reporting "no logs", check every name in the selector against the stream-label list above, then confirm the stream exists by selecting on namespace alone.
-
-## Label Values Worth Knowing
-
-`workload_type` is **lowercase**: `deployment`, `statefulset`, `daemonset`, `cronjob`, `job`, `barepod`.
-
-That matters when a value comes from a Prometheus field rather than being typed by hand. `scaletargetref_kind` and similar metric labels are PascalCase, so a matcher built from one needs the case-insensitive flag or it selects nothing, silently:
-
-```logql
-{workload_type=~"(?i)${__data.fields["scaletargetref_kind"]}"}
-```
-
-There is no `pod` **stream** label, so a pod-scoped log query selects on the workload and filters the pod:
-
-```logql
-{namespace="monitoring", statefulset="loki-write"} | pod="loki-write-1"
-```
-
-## A Label in the Listing Is Not Proof Anything Writes It
-
-`list_loki_label_names` reflects every label present in chunks **within the retention window** (360h), not what is currently being ingested. A label that stopped being written days ago still appears until its chunks age out.
-
-The practical consequence: the old OpenTelemetry names (`k8s_namespace_name`, `k8s_workload_kind`, `k8s_deployment_name` and the rest) still appear in listings for up to 15 days after they stopped being written. They match old chunks only. Do not build a new query on a name just because the listing shows it — check that recent data carries it.
+Label names, the indexed-versus-structured-metadata split, and the empty-result trap that follows from it: `loki-label-model`. That split is the single most common source of a wrong answer here, because the wrong form returns zero rows without erroring.
 
 ## Mimir — Prefer the Recording Rules
 
