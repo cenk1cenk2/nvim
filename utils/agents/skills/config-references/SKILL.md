@@ -167,6 +167,53 @@ Situational content — needed only on some runs, only under one runtime, only f
 
 **The test:** if it is a *convention* that some runs need, it is a reference. If it is a *procedure someone invokes*, it is a skill.
 
+## Giving a Reference a Skill Twin — the mode pair
+
+**When the user can switch a convention on and off, it needs both halves.** The reference alone cannot be toggled, and a skill alone would only apply to sessions that happened to load it. So the two split by job:
+
+| Half | Carries | Reaches the agent |
+|---|---|---|
+| `references/<name>.md` | the rules, the posture, what stays true when it is off | declared by every skill it governs — applies whether or not the skill is ever loaded |
+| `<name>/SKILL.md` | **only the toggle** | loaded by name, and only when the user changes the state |
+
+**Same name on both halves**, so the reader who sees `per \`present-first\`` and the user who types `/present-first` land on the same subject.
+
+`present-first` is the worked example: a 1,562-byte reference declared by 53 skills, against a 1,371-byte skill that changes its state and nothing else. `caveman` is the same shape for voice, and both lean on `mode-toggle` for the on/off mechanics.
+
+### Structuring the skill half
+
+Keep it small. Its whole job is state.
+
+```yaml
+---
+name: <name>                       # identical to the reference
+description: <name> Toggle the ... posture. The posture already rides along with
+  every skill that ...; load this only to change its state. Not for <the per-use case>.
+references:
+  - ../references/<name>.md        # its own rules
+  - ../references/mode-toggle.md   # the on/off mechanics
+argumentHint: '[on|off]'
+---
+```
+
+Body, in order:
+
+1. **One sentence disclaiming the rules.** Say they live in the reference, that the reference arrives with every skill it governs, and that nothing needs loading for the posture to apply. This is what stops the skill growing a second copy of the rules.
+2. **A `## Toggle` section**, opening with `On/off mechanics per \`mode-toggle\`.` then five fixed lines:
+   - **On** — the default state if any, the slash form, and the phrases a user actually types.
+   - **Off** — the phrases that end it, and how long that lasts.
+   - **Level** — intensity settings, or `none — on or off`.
+   - **Survives disengage** — what stays armed or written after it is switched off. Usually `nothing`.
+   - **Layering** — that it sits under other modes and never toggles one.
+3. **A closing line on acknowledgement** — what to say when the state changes, including what the toggle does *not* lift (destructive-action gates, any skill's own stricter rule).
+
+### Rules
+
+- **Never restate the posture in the skill.** Both halves are in context whenever the skill loads, so a copy is the same content paid twice and rots the moment the reference changes.
+- **The reference must state what survives the mode being off.** Turning a mode off never lifts a destructive-action gate or a stricter rule a skill sets for itself, and that belongs with the rules, not with the toggle.
+- **Pick the tier from who may flip it.** `caveman` is manual because only the user changes voice; `present-first` is model-invocable because a skill's own flow may legitimately turn its gate off.
+- **Not every reference wants a twin.** Only add one when there is a real state the user changes. A convention that simply always applies stays a lone reference.
+
 ## Split a Reference When Part of It Is Conditional
 
 A reference is paid for on **every** load by **every** consumer. When a chunk of it is only needed on some runs, that chunk is taxing all the others.
