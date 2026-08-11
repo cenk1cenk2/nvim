@@ -21,12 +21,14 @@ Every Linear issue MUST have these fields set. Do NOT create issues with missing
 ## Labels, Estimate, Priority
 
 - **MANDATORY** — every issue MUST have `labels`, `estimate`, and `priority` set.
-- `priority`: 0=None, 1=Urgent, 2=High, 3=Normal, 4=Low.
-- `estimate`: Use the team's estimation scale.
+- `priority`: 0=None, 1=Urgent, 2=High, 3=Medium, 4=Low.
+- `estimate`: Use the team's estimation scale. On update, `null` clears it; omitting leaves it unchanged.
 - `labels`: At minimum one label categorizing the issue type. **MUST be from the fetched label list — NEVER invent labels.**
+- **`labels` replaces the entire set** — any existing label absent from the array is removed. Omit the field to leave labels untouched. This is the opposite of how relations behave.
 
 ## Assignee
 
+- **Field name:** `assignee`, NOT `assigneeId`. It accepts a user ID, name, email, or the literal `"me"`.
 - Always assign issues to the current user unless the user specifies otherwise.
 
 ## Relations
@@ -37,6 +39,20 @@ When creating multiple related issues or working with projects, ALWAYS set prope
 - Use `relatedTo` for issues that are connected but not blocking each other.
 - Use `parentId` for sub-issues that belong to a parent issue.
 - When creating a set of issues for a project, think through the dependency graph and set blocking relations so the work order is clear.
+
+**These are the exact field names.** `blocks`, `blockedBy`, `relatedTo`, `parentId` — each takes an array of issue identifiers (`["K-123"]`), except `parentId` which takes a single one. A name the schema does not carry is rejected as `Invalid input` with no indication of which field was wrong.
+
+**Relations are append-only.** Passing `blocks` adds to what is already there; omitting it removes nothing. To break a relation, name it explicitly in `removeBlocks`, `removeBlockedBy`, or `removeRelatedTo`. Clear a parent with `parentId: null`.
+
+## Create vs. Update
+
+- **`id` decides which one happens.** Present means update, absent means create. Pass the identifier (`K-123`). Never send `id` when creating.
+- `title` and `team` are required on create.
+- `project`, `cycle`, `assignee`, `dueDate`, and `parentId` accept `null` to remove the current value.
+
+**Editing a description: use `patch`, not a rewritten `description`.** `patch` applies a list of ops — `replace`, `insert_before`, `insert_after`, `prepend`, `append`, `replace_range` — against the current content, atomically and in order. Only valid on update, and it takes the place of `description` rather than accompanying it.
+
+Every anchor string must match the current content **exactly once**, and one failing op aborts the whole save, so nothing lands half-applied. Resending a full description to change two lines risks silently dropping whatever was edited since it was fetched.
 
 ## Structural vs. Descriptive
 
