@@ -8,7 +8,7 @@ references:
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
-  - ../references/commit-push-scoped.md
+  - ../references/scm/commit-push-scoped.md
 argumentHint: '[create|update|review] [reference-name] [context]'
 ---
 
@@ -22,8 +22,27 @@ Posture: `present-first`. Present proposed changes per `output-diff` before writ
 
 References live in two locations under `~/.config/nvim/utils/agents/skills/`:
 
-- `references/` — shared references consumed by multiple skills.
+- `references/` — shared references consumed by multiple skills, grouped into family folders.
 - `<skill-name>/references/` — skill-specific references consumed only by that skill.
+
+**Shared references are grouped by family, and the root is a legitimate home.**
+
+```
+references/
+├── agent/        # dispatch, worktrees, conventions, watchers, completion
+├── excalidraw/   # drawing conversion, elements, templates
+├── harness/      # per-runtime mechanics, connectors, provider paths
+├── kilic/        # this operator's own infra and observability specifics
+├── linear/       # workspace, issue, project, document conventions
+├── scm/          # platform detection, PR/MR workflows, commits and trailers
+└── *.md          # cross-cutting conventions that belong to no family
+```
+
+**The rule: a folder once a family reaches four files. Everything else stays at the root.** Do not force a file into a folder to tidy the listing — `output-diff`, `present-first`, `plan-mode`, `mode-toggle`, `current-state-only` and their kin are cited from every family, so a folder would misfile them. A one-off service reference with no siblings (`obsidian`, `tmux`) also stays at the root until a family grows around it.
+
+When a root-level family reaches its fourth file, create the folder, move all four, and update every declaring skill's path in the same change.
+
+**The folder is part of the declared path:** `../references/scm/commit-style.md`, `../references/linear/linear-prerequisite.md`. Bodies are unaffected — they cite by name, never by path.
 
 ## Reference Format
 
@@ -63,7 +82,7 @@ skill_references:
 ---
 reference:
   name: commit-style
-  path: ../references/commit-style.md
+  path: ../references/scm/commit-style.md
 ---
 <file body>
 ```
@@ -77,10 +96,11 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 1. Determine the scope — **shared** or **skill-specific**.
    - Shared: the content applies to 2+ skills or is a general convention.
    - Skill-specific: the content supports only one skill and would clutter its SKILL.md.
-2. If shared, list files in `~/.config/nvim/utils/agents/skills/references/` to check for existing references and avoid duplication.
+2. If shared, list `~/.config/nvim/utils/agents/skills/references/` **and its family folders** to check for existing references and avoid duplication.
 3. If skill-specific, read the parent skill at `~/.config/nvim/utils/agents/skills/<name>/SKILL.md` to understand context.
 4. Name the file:
-   - Shared: `<family>-<topic>.md` (e.g., `linear-prerequisite.md`, `scm-detect.md`).
+   - Shared, with a family: `<family>/<family>-<topic>.md` (e.g. `linear/linear-prerequisite.md`, `scm/scm-detect.md`).
+   - Shared, cross-cutting: `<topic>.md` at the references root.
    - Skill-specific: `<topic>.md` inside `<skill-name>/references/`.
 5. Draft the reference content following the format above, current state only per `current-state-only`.
 6. Identify which skills should declare this reference in their frontmatter.
@@ -89,7 +109,7 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 
 ### Update
 
-1. Read the existing reference at `~/.config/nvim/utils/agents/skills/references/<name>.md`.
+1. Read the existing reference at `~/.config/nvim/utils/agents/skills/references/<family>/<name>.md`, or at the references root when it is cross-cutting.
 2. Read skills that declare it — search for the filename in skill frontmatter to understand consumers.
 3. Identify what needs to change based on conversation context.
 4. Present proposed changes using diff format.
@@ -98,7 +118,7 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 
 ### Review
 
-1. List all files in `~/.config/nvim/utils/agents/skills/references/`.
+1. List all files in `~/.config/nvim/utils/agents/skills/references/`, recursing into the family folders.
 2. For each reference (or a specific one if requested):
    - Read its content.
    - Check which skills declare it in their frontmatter.
@@ -112,10 +132,12 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 
 | Type | Pattern | Examples |
 |------|---------|----------|
-| Family shared | `<family>-<topic>.md` | `linear-prerequisite.md`, `scm-github.md` |
-| Cross-family shared | `<topic>.md` | `output-diff.md`, `plan-mode.md` |
-| Per-harness | `<consumer>-harness-<provider>.md` | `agent-delegate-harness-claude.md`, `agent-background-harness-codex.md` |
+| Family shared | `<family>/<family>-<topic>.md` | `linear/linear-prerequisite.md`, `scm/scm-github.md` |
+| Cross-family shared | `<topic>.md` at the root | `output-diff.md`, `plan-mode.md` |
+| Per-harness | `harness/<consumer>-harness-<provider>.md` | `harness/agent-delegate-harness-claude.md` |
 | Skill-specific | `<topic>.md` in `<skill>/references/` | `./references/template.md` |
+
+The family prefix stays in the filename even inside its folder. `scm/scm-github.md` reads as redundant in a listing, but the **name** is what bodies cite and what the manifest surfaces, and a bare `github.md` is ambiguous the moment it is quoted away from its path.
 
 ## A Reference Is Not a Pointer
 

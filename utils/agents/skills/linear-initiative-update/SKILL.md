@@ -5,10 +5,10 @@ argumentHint: '[initiative name or ID]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
-  - ../references/linear-description-structure.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-description-structure.md
   - ../references/output-diff.md
-  - ../references/linear-absolute-approval.md
+  - ../references/linear/linear-absolute-approval.md
 ---
 
 ## Linear Initiative Update

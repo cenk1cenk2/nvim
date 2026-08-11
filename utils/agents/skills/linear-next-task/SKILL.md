@@ -4,10 +4,10 @@ description: linear-next-task Weigh Linear projects and issues and recommend wha
 argumentHint: '[optional: project or URL - omit to weigh everything]'
 references:
   - ../references/reconcile-state.md
-  - ../references/linear-prerequisite.md
-  - ../references/linear-issue-states.md
-  - ../references/linear-pickup-execution.md
-  - ../references/linear-issue-philosophy.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-issue-states.md
+  - ../references/linear/linear-pickup-execution.md
+  - ../references/linear/linear-issue-philosophy.md
   - ../references/identifier-legibility.md
   - ../references/open-artifact.md
 ---

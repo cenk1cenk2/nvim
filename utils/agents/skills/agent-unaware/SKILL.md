@@ -4,7 +4,7 @@ description: agent-unaware Author instructions for a target with no MCP tools an
 disableModelInvocation: true
 argumentHint: '[artifact being authored]'
 references:
-  - ../references/agent-target-capability.md
+  - ../references/agent/agent-target-capability.md
   - ../references/redact-private-data.md
 ---
 

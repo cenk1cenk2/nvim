@@ -2,7 +2,7 @@
 name: git-conflict
 description: git-conflict Resolve merge conflicts interactively - settles the clear ones itself, asks on the ambiguous. Use on "resolve conflicts", "fix the merge conflicts", or when git reports unmerged paths. Not for ordinary git operations, which are plain CLI calls.
 references:
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
 ---
 
 ## Git Conflict Resolution

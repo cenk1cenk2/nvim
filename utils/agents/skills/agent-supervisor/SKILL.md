@@ -7,24 +7,24 @@ references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-project-documents.md
+  - ../references/linear/linear-project-documents.md
   - ../references/mode-toggle.md
-  - ../references/agent-watchers.md
-  - ../references/agent-roster.md
-  - ../references/linear-prerequisite.md
-  - ../references/linear-state-transitions.md
-  - ../references/linear-absolute-approval.md
+  - ../references/agent/agent-watchers.md
+  - ../references/agent/agent-roster.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-state-transitions.md
+  - ../references/linear/linear-absolute-approval.md
   - ../references/output-diff.md
-  - ../references/agent-delegate.md
-  - ../references/agent-target-capability.md
+  - ../references/agent/agent-delegate.md
+  - ../references/agent/agent-target-capability.md
   - ../references/status-report.md
   - ../references/identifier-legibility.md
-  - ../references/agent-delegate-harness-claude.md
-  - ../references/agent-delegate-harness-codex.md
-  - ../references/agent-delegate-harness-opencode.md
-  - ../references/agent-background-harness-claude.md
-  - ../references/agent-background-harness-codex.md
-  - ../references/agent-background-harness-opencode.md
+  - ../references/harness/agent-delegate-harness-claude.md
+  - ../references/harness/agent-delegate-harness-codex.md
+  - ../references/harness/agent-delegate-harness-opencode.md
+  - ../references/harness/agent-background-harness-claude.md
+  - ../references/harness/agent-background-harness-codex.md
+  - ../references/harness/agent-background-harness-opencode.md
 ---
 
 Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.

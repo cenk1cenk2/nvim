@@ -2,10 +2,10 @@
 name: spacelift-moved
 description: spacelift-moved Read Spacelift plan output for delete/create cycles that a Terraform moved block would avoid. Takes a PR, branch, commit, or Actions link. Use on "spacelift moved", "avoid this destroy/create". Not for a general impact report, ordinary Spacelift operations, or PR descriptions.
 references:
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
   - ../references/present-first.md
-  - ../references/scm-github.md
-  - ../references/spacelift-github.md
+  - ../references/scm/scm-github.md
+  - ../references/scm/spacelift-github.md
   - ../references/output-diff.md
 argumentHint: '[PR, branch, commit, or Actions link]'
 ---

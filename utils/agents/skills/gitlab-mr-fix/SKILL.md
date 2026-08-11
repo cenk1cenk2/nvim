@@ -5,9 +5,9 @@ disableModelInvocation: true
 argumentHint: '[MR number or URL]'
 references:
   - ../references/reconcile-state.md
-  - ../references/scm-fix-threads.md
-  - ../references/scm-gitlab.md
-  - ../references/scm-detect.md
+  - ../references/scm/scm-fix-threads.md
+  - ../references/scm/scm-gitlab.md
+  - ../references/scm/scm-detect.md
 ---
 
 ## GitLab MR Fix

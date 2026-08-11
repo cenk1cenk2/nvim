@@ -5,18 +5,18 @@ disableModelInvocation: true
 argumentHint: '[optional: task note]'
 references:
   - ../references/long-running-work.md
-  - ../references/agent-watchers.md
+  - ../references/agent/agent-watchers.md
   - ../references/reconcile-state.md
-  - ../references/agent-delegate.md
+  - ../references/agent/agent-delegate.md
   - ../references/mode-toggle.md
-  - ../references/provider-paths.md
+  - ../references/harness/provider-paths.md
   - ../references/identifier-legibility.md
-  - ../references/agent-delegate-harness-claude.md
-  - ../references/agent-delegate-harness-codex.md
-  - ../references/agent-delegate-harness-opencode.md
-  - ../references/agent-background-harness-claude.md
-  - ../references/agent-background-harness-codex.md
-  - ../references/agent-background-harness-opencode.md
+  - ../references/harness/agent-delegate-harness-claude.md
+  - ../references/harness/agent-delegate-harness-codex.md
+  - ../references/harness/agent-delegate-harness-opencode.md
+  - ../references/harness/agent-background-harness-claude.md
+  - ../references/harness/agent-background-harness-codex.md
+  - ../references/harness/agent-background-harness-opencode.md
 ---
 
 Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.

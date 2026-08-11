@@ -4,7 +4,7 @@ description: code-review-changes Quick, iterative review of recent changes as yo
 disableModelInvocation: true
 argumentHint: '[optional: baseline - branch, commit, or ''this conversation'']'
 references:
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
   - ../references/review-findings.md
 ---
 

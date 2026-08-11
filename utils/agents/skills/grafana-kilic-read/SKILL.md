@@ -4,9 +4,9 @@ description: grafana-kilic-read Query metrics and logs correctly - Loki splits l
 disableModelInvocation: true
 argumentHint: '[what to look at] - e.g. ''logs for mimir-ruler on rubik'', ''memory usage in monitoring'''
 references:
-  - ../references/grafana-kilic-datasources.md
-  - ../references/loki-label-model.md
-  - ../references/kilic-workload-resolution.md
+  - ../references/kilic/grafana-kilic-datasources.md
+  - ../references/kilic/loki-label-model.md
+  - ../references/kilic/kilic-workload-resolution.md
 ---
 
 ## Reading Grafana

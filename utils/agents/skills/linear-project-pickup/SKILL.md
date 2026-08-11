@@ -6,14 +6,14 @@ references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
-  - ../references/linear-pickup-execution.md
-  - ../references/linear-project-documents.md
-  - ../references/linear-scm-discovery.md
-  - ../references/linear-chunk-issues.md
-  - ../references/linear-state-transitions.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-pickup-execution.md
+  - ../references/linear/linear-project-documents.md
+  - ../references/linear/linear-scm-discovery.md
+  - ../references/linear/linear-chunk-issues.md
+  - ../references/linear/linear-state-transitions.md
   - ../references/output-diff.md
-  - ../references/linear-issue-philosophy.md
+  - ../references/linear/linear-issue-philosophy.md
   - ../references/identifier-legibility.md
 ---
 

@@ -3,9 +3,9 @@ name: linear-project-read
 description: linear-project-read Read-only refresh of a Linear project - issue states, description, latest update, and what changed. Use on "refresh the project", "project pulse". Not for starting work on it, auditing its structure, posting an update, or reading one issue in depth.
 argumentHint: '[project or URL]'
 references:
-  - ../references/linear-prerequisite.md
-  - ../references/linear-document-handling.md
-  - ../references/linear-issue-philosophy.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-document-handling.md
+  - ../references/linear/linear-issue-philosophy.md
   - ../references/identifier-legibility.md
 ---
 

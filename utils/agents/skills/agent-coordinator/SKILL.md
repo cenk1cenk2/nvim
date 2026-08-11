@@ -6,22 +6,22 @@ argumentHint: '[scope to coordinate] [optional: ''bulldozer'' to also push throu
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/agent-conventions.md
-  - ../references/agent-watchers.md
-  - ../references/agent-roster.md
+  - ../references/agent/agent-conventions.md
+  - ../references/agent/agent-watchers.md
+  - ../references/agent/agent-roster.md
   - ../references/mode-toggle.md
-  - ../references/agent-delegate.md
-  - ../references/agent-worktrees.md
-  - ../references/agent-target-capability.md
-  - ../references/provider-paths.md
+  - ../references/agent/agent-delegate.md
+  - ../references/agent/agent-worktrees.md
+  - ../references/agent/agent-target-capability.md
+  - ../references/harness/provider-paths.md
   - ../references/status-report.md
   - ../references/identifier-legibility.md
-  - ../references/agent-delegate-harness-claude.md
-  - ../references/agent-delegate-harness-codex.md
-  - ../references/agent-delegate-harness-opencode.md
-  - ../references/agent-background-harness-claude.md
-  - ../references/agent-background-harness-codex.md
-  - ../references/agent-background-harness-opencode.md
+  - ../references/harness/agent-delegate-harness-claude.md
+  - ../references/harness/agent-delegate-harness-codex.md
+  - ../references/harness/agent-delegate-harness-opencode.md
+  - ../references/harness/agent-background-harness-claude.md
+  - ../references/harness/agent-background-harness-codex.md
+  - ../references/harness/agent-background-harness-opencode.md
 ---
 
 Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.

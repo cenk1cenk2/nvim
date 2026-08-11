@@ -4,9 +4,9 @@ description: linear-cycle Plan and organise a Linear cycle by weighing projects,
 argumentHint: '[cycle number, or ''current'' | ''next'']'
 references:
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
+  - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/linear-issue-states.md
+  - ../references/linear/linear-issue-states.md
   - ../references/identifier-legibility.md
 ---
 

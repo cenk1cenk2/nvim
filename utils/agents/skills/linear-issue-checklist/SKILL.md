@@ -5,7 +5,7 @@ argumentHint: '[issue id or URL] [items to update]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
+  - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
 ---
 

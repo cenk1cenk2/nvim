@@ -4,9 +4,9 @@ description: linear-triage Work through every Linear issue sitting in triage, re
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
+  - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/linear-issue-states.md
+  - ../references/linear/linear-issue-states.md
   - ../references/identifier-legibility.md
 ---
 

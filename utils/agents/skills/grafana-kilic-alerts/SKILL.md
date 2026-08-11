@@ -4,7 +4,7 @@ description: grafana-kilic-alerts Author and tune Prometheus alert rules in the 
 disableModelInvocation: true
 argumentHint: '[alert or subsystem] - e.g. ''add a cnpg backup alert'', ''velero is noisy'''
 references:
-  - ../references/grafana-kilic-datasources.md
+  - ../references/kilic/grafana-kilic-datasources.md
   - ../references/output-diff.md
 ---
 

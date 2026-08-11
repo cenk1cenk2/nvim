@@ -3,11 +3,11 @@ name: agent-review
 description: agent-review Dispatch review subagents to cross-check an artifact - a plan, a DAG, a set of factual claims, or an argument - against the codebase or a devil's-advocate lens. Tier follows what the review demands; multiple artifacts review in parallel. Use on "review this", "fact-check", "second opinion". Not for running the work itself, or re-reading code you already have.
 argumentHint: '[type=plan|dag|facts|freeform] [artifact or path] [optional: ''thorough'' or a model name]'
 references:
-  - ../references/agent-delegate.md
-  - ../references/scm-detect.md
-  - ../references/agent-delegate-harness-claude.md
-  - ../references/agent-delegate-harness-codex.md
-  - ../references/agent-delegate-harness-opencode.md
+  - ../references/agent/agent-delegate.md
+  - ../references/scm/scm-detect.md
+  - ../references/harness/agent-delegate-harness-claude.md
+  - ../references/harness/agent-delegate-harness-codex.md
+  - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
 ## Review Subagent Dispatch

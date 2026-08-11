@@ -3,9 +3,9 @@ name: code-pull
 description: code-pull Pull changes from a reference repository and adapt them to this one. Use on "pull this from upstream", "port that change here", or when given a reference repo and refs. Not for reviewing code, debugging, or writing a PR description.
 disableModelInvocation: true
 references:
-  - ../references/scm-detect.md
-  - ../references/scm-github.md
-  - ../references/scm-gitlab.md
+  - ../references/scm/scm-detect.md
+  - ../references/scm/scm-github.md
+  - ../references/scm/scm-gitlab.md
 argumentHint: '[repo URL or path] [branch, PR/MR, or commit refs]'
 ---
 

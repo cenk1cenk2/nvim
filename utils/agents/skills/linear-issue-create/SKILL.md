@@ -4,13 +4,13 @@ description: linear-issue-create Create Linear issues with the analysis and rese
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
-  - ../references/linear-mandatory-fields.md
-  - ../references/linear-issue-states.md
-  - ../references/linear-description-structure.md
-  - ../references/linear-research-documentation.md
-  - ../references/linear-project-documents.md
-  - ../references/linear-scm-discovery.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-mandatory-fields.md
+  - ../references/linear/linear-issue-states.md
+  - ../references/linear/linear-description-structure.md
+  - ../references/linear/linear-research-documentation.md
+  - ../references/linear/linear-project-documents.md
+  - ../references/linear/linear-scm-discovery.md
   - ../references/output-diff.md
 ---
 

@@ -4,8 +4,8 @@ description: linear-initiative-create Create a Linear initiative with its descri
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
-  - ../references/linear-description-structure.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-description-structure.md
   - ../references/output-diff.md
 ---
 

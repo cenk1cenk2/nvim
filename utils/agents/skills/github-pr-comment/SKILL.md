@@ -4,10 +4,10 @@ description: github-pr-comment Post a companion skill's output as a comment on a
 disableModelInvocation: true
 argumentHint: '[companion-skill] [PR number or URL]'
 references:
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
   - ../references/present-first.md
-  - ../references/scm-comment-poster.md
-  - ../references/scm-github.md
+  - ../references/scm/scm-comment-poster.md
+  - ../references/scm/scm-github.md
   - ../references/output-diff.md
 ---
 

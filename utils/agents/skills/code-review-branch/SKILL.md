@@ -4,9 +4,9 @@ description: code-review-branch Formal review of the whole current branch agains
 disableModelInvocation: true
 argumentHint: '[optional: target branch or PR/MR URL]'
 references:
-  - ../references/scm-detect.md
-  - ../references/scm-github.md
-  - ../references/scm-gitlab.md
+  - ../references/scm/scm-detect.md
+  - ../references/scm/scm-github.md
+  - ../references/scm/scm-gitlab.md
   - ../references/review-findings.md
 ---
 

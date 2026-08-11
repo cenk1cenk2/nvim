@@ -4,12 +4,12 @@ description: slack-laravel-review Post a review request for one PR into the revi
 disableModelInvocation: true
 argumentHint: '[PR URL or number]'
 references:
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
   - ../references/enrich-context.md
   - ../references/present-first.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
-  - ../references/scm-github.md
+  - ../references/scm/scm-github.md
   - ../references/output-diff.md
 ---
 

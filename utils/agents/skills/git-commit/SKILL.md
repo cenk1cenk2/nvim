@@ -4,14 +4,14 @@ description: git-commit Commit current changes as conventional commits, or split
 argumentHint: '[optional: type or message hint - e.g. ''fix'', ''feat: add retry'']'
 references:
   - ../references/present-first.md
-  - ../references/scm-detect.md
-  - ../references/commit-style.md
-  - ../references/commit-trailers.md
-  - ../references/commit-trailers-github.md
-  - ../references/commit-trailers-gitlab.md
-  - ../references/commit-trailers-linear.md
+  - ../references/scm/scm-detect.md
+  - ../references/scm/commit-style.md
+  - ../references/scm/commit-trailers.md
+  - ../references/scm/commit-trailers-github.md
+  - ../references/scm/commit-trailers-gitlab.md
+  - ../references/scm/commit-trailers-linear.md
   - ../references/output-diff.md
-  - ../references/release-convention.md
+  - ../references/scm/release-convention.md
 ---
 
 ## Git Commit

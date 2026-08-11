@@ -4,12 +4,12 @@ description: slack-laravel-compile Compile a concise Slack message from your inp
 disableModelInvocation: true
 argumentHint: '[what to compile - a question, finding, or topic]'
 references:
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
   - ../references/present-first.md
   - ../references/slack.md
   - ../references/slack-prerequisite.md
-  - ../references/scm-github.md
-  - ../references/scm-gitlab.md
+  - ../references/scm/scm-github.md
+  - ../references/scm/scm-gitlab.md
   - ../references/output-diff.md
   - ../references/enrich-context.md
 ---

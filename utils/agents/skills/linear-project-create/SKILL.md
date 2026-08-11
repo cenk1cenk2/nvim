@@ -4,13 +4,13 @@ description: linear-project-create Create a Linear project with the research, pl
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
-  - ../references/linear-mandatory-fields.md
-  - ../references/linear-description-structure.md
-  - ../references/linear-research-documentation.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-mandatory-fields.md
+  - ../references/linear/linear-description-structure.md
+  - ../references/linear/linear-research-documentation.md
   - ../references/output-diff.md
-  - ../references/linear-project-documents.md
-  - ../references/linear-scm-discovery.md
+  - ../references/linear/linear-project-documents.md
+  - ../references/linear/linear-scm-discovery.md
 ---
 
 ## Linear Project Creation

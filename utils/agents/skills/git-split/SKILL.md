@@ -5,7 +5,7 @@ disableModelInvocation: true
 argumentHint: '[optional: slicing hint - e.g. ''by feature'', ''separate refactor from feature'']'
 references:
   - ../references/present-first.md
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
   - ../references/output-diff.md
 ---
 

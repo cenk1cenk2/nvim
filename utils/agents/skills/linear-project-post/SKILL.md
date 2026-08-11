@@ -5,9 +5,9 @@ argumentHint: '[project or URL]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
+  - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/linear-absolute-approval.md
+  - ../references/linear/linear-absolute-approval.md
 ---
 
 ## Linear Project Update Post

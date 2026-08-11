@@ -3,10 +3,10 @@ name: agent-background
 description: agent-background Arm a background wait-loop that polls an external condition - a PR/MR merging, a CI or deploy run, a human approval - and re-invokes the session once when it is met, instead of sleeping or asking to be pinged. Use when work must wait on something outside this session. Not for polling subagent work you started, which the harness reports on its own, or for self-paced repetition.
 references:
   - ../references/long-running-work.md
-  - ../references/agent-watchers.md
-  - ../references/agent-background-harness-claude.md
-  - ../references/agent-background-harness-codex.md
-  - ../references/agent-background-harness-opencode.md
+  - ../references/agent/agent-watchers.md
+  - ../references/harness/agent-background-harness-claude.md
+  - ../references/harness/agent-background-harness-codex.md
+  - ../references/harness/agent-background-harness-opencode.md
 ---
 
 > **Fetch `agent-background-harness-<provider>` BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that one owns the tool names, parameters, and defaults.

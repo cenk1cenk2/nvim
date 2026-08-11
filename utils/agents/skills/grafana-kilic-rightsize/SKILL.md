@@ -4,8 +4,8 @@ description: grafana-kilic-rightsize Find and apply container rightsizing from V
 disableModelInvocation: true
 argumentHint: '[candidates|target] - e.g. ''find candidates on rubik'', ''rightsize loki-chunks-cache'''
 references:
-  - ../references/kilic-workload-resolution.md
-  - ../references/kilic-resource-placement.md
+  - ../references/kilic/kilic-workload-resolution.md
+  - ../references/kilic/kilic-resource-placement.md
   - ./references/rightsize-signals.md
   - ../references/output-diff.md
 ---

@@ -4,17 +4,17 @@ description: agent-delegate Delegate one task to one subagent at a chosen tier -
 argumentHint: '[task] [optional: cheap|default|smart|max, or a model name]'
 references:
   - ../references/long-running-work.md
-  - ../references/agent-delegate.md
-  - ../references/agent-worktrees.md
+  - ../references/agent/agent-delegate.md
+  - ../references/agent/agent-worktrees.md
   - ../references/project-tooling.md
-  - ../references/agent-conventions.md
-  - ../references/agent-completion.md
-  - ../references/scm-detect.md
-  - ../references/linear-state-transitions.md
-  - ../references/provider-paths.md
-  - ../references/agent-delegate-harness-claude.md
-  - ../references/agent-delegate-harness-codex.md
-  - ../references/agent-delegate-harness-opencode.md
+  - ../references/agent/agent-conventions.md
+  - ../references/agent/agent-completion.md
+  - ../references/scm/scm-detect.md
+  - ../references/linear/linear-state-transitions.md
+  - ../references/harness/provider-paths.md
+  - ../references/harness/agent-delegate-harness-claude.md
+  - ../references/harness/agent-delegate-harness-codex.md
+  - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
 ## Single-Task Delegation

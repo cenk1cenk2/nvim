@@ -4,8 +4,8 @@ description: grafana-kilic-dashboards Author and fix Grafana dashboards in the m
 disableModelInvocation: true
 argumentHint: '[dashboard or panel] - e.g. ''add a logs button to cluster-workloads'''
 references:
-  - ../references/grafana-kilic-datasources.md
-  - ../references/loki-label-model.md
+  - ../references/kilic/grafana-kilic-datasources.md
+  - ../references/kilic/loki-label-model.md
   - ../references/output-diff.md
 ---
 

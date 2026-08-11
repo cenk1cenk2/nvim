@@ -2,7 +2,7 @@
 name: linear-kilic
 description: linear-kilic Auto-invoked on kilic-dev context - K-xxx issue ids, kilic-dev workspace URLs, or a gitlab.kilic.dev repo. Initialises the Linear session for that workspace, with GitLab as its SCM.
 references:
-  - ../references/linear-mandatory-fields.md
+  - ../references/linear/linear-mandatory-fields.md
 ---
 
 ## Session Initialization

@@ -3,7 +3,7 @@ name: grafana-kilic
 description: grafana-kilic Manual for the grafana-kilic MCP server - resolve a question to the right datasource uid, know which tool families exist and which are absent, and route to the skill that owns the task. Load before the first call to that server. Not for the query construction itself, dashboards, alert rules, or rightsizing.
 argumentHint: '[what you are about to ask Grafana]'
 references:
-  - ../references/grafana-kilic-datasources.md
+  - ../references/kilic/grafana-kilic-datasources.md
 ---
 
 ## The grafana-kilic Server

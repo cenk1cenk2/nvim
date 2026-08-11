@@ -5,12 +5,12 @@ disableModelInvocation: true
 argumentHint: '[task] [optional: profile name or fragment]'
 references:
   - ./references/hyprpilot-sessions.md
-  - ../references/agent-conventions.md
+  - ../references/agent/agent-conventions.md
   - ../references/project-tooling.md
-  - ../references/agent-completion.md
-  - ../references/agent-background-harness-claude.md
-  - ../references/agent-background-harness-codex.md
-  - ../references/agent-background-harness-opencode.md
+  - ../references/agent/agent-completion.md
+  - ../references/harness/agent-background-harness-claude.md
+  - ../references/harness/agent-background-harness-codex.md
+  - ../references/harness/agent-background-harness-opencode.md
 ---
 
 ## Hyprpilot Delegation

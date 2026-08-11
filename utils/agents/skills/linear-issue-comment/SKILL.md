@@ -4,9 +4,9 @@ description: linear-issue-comment Record findings, deviations, and decisions as 
 argumentHint: '[issue id or URL] [what to record]'
 references:
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
+  - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/linear-state-transitions.md
+  - ../references/linear/linear-state-transitions.md
 ---
 
 ## Linear Comment: Issue Documentation

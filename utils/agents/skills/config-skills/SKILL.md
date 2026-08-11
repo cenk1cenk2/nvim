@@ -8,7 +8,7 @@ references:
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
-  - ../references/commit-push-scoped.md
+  - ../references/scm/commit-push-scoped.md
 argumentHint: '[create|update|review] [skill-name] [what it should do]'
 ---
 
@@ -38,7 +38,9 @@ All skills live in `~/.config/nvim/utils/agents/skills/`. Each skill is a direct
 
 ```
 ~/.config/nvim/utils/agents/skills/
-├── references/           # Shared references — declared by 2+ skills
+├── references/           # Shared references, grouped into family folders
+│   ├── <family>/         # agent, harness, linear, scm, excalidraw, kilic
+│   └── <topic>.md        # cross-cutting conventions live at the root
 ├── <skill-name>/
 │   ├── SKILL.md
 │   └── references/       # Skill-specific references (single consumer)
@@ -231,10 +233,11 @@ Rules:
 
 Paths are relative to the skill's own directory:
 
-- `../references/<file>.md` — shared references (up to `skills/`, into `references/`).
+- `../references/<family>/<file>.md` — shared references in a family folder (agent, harness, linear, scm, excalidraw, kilic).
+- `../references/<file>.md` — cross-cutting shared references, which stay at the references root.
 - `./references/<file>.md` — skill-specific references (inside the skill's own directory).
 
-The absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/references/<file>.md`, and `./references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`.
+The absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<family>/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/references/<family>/<file>.md`, and `./references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`.
 
 `mcp__hyprpilot_skills__list_skill_references { slug }` returns a skill's reference manifest without its body, and `read_skill_references { references: [path] }` returns the bodies for the canonical paths you name. Each file arrives under a `reference:` block naming it and its declared path; see `config-references` for the shape.
 

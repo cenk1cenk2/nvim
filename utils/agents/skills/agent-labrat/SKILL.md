@@ -6,13 +6,13 @@ argumentHint: '[task, issue/project, or Slack thread] [optional: vendor and mode
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/linear-state-transitions.md
+  - ../references/linear/linear-state-transitions.md
   - ../references/slack-prerequisite.md
   - ../references/slack.md
-  - ../references/agent-target-capability.md
-  - ../references/agent-watchers.md
+  - ../references/agent/agent-target-capability.md
+  - ../references/agent/agent-watchers.md
   - ../references/redact-private-data.md
-  - ../references/linear-prerequisite.md
+  - ../references/linear/linear-prerequisite.md
 ---
 
 ## Handing Work to labrat

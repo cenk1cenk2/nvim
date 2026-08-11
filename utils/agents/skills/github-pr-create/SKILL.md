@@ -3,16 +3,16 @@ name: github-pr-create
 description: github-pr-create Analyse a GitHub PR and write its title and description, keeping them current as the branch changes. Use on "write a PR description", "create a PR", "improve the PR". Not for GitLab merge requests, or for CI workflows and failures.
 references:
   - ../references/reconcile-state.md
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
   - ../references/present-first.md
-  - ../references/scm-create-description.md
-  - ../references/scm-github.md
-  - ../references/commit-trailers.md
-  - ../references/commit-trailers-github.md
-  - ../references/commit-trailers-linear.md
+  - ../references/scm/scm-create-description.md
+  - ../references/scm/scm-github.md
+  - ../references/scm/commit-trailers.md
+  - ../references/scm/commit-trailers-github.md
+  - ../references/scm/commit-trailers-linear.md
   - ../references/output-diff.md
-  - ../references/linear-state-transitions.md
-  - ../references/release-convention.md
+  - ../references/linear/linear-state-transitions.md
+  - ../references/scm/release-convention.md
   - ../references/identifier-legibility.md
   - ../references/open-artifact.md
 argumentHint: '[optional: PR number or URL]'

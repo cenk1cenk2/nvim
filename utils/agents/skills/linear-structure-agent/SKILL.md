@@ -5,10 +5,10 @@ argumentHint: '[project or issue] [what it does]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
-  - ../references/linear-prerequisite.md
-  - ../references/linear-description-structure.md
-  - ../references/linear-project-documents.md
-  - ../references/linear-scm-discovery.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-description-structure.md
+  - ../references/linear/linear-project-documents.md
+  - ../references/linear/linear-scm-discovery.md
   - ../references/output-diff.md
   - ../references/identifier-legibility.md
 ---

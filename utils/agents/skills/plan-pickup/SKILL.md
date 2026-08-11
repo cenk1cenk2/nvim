@@ -5,7 +5,7 @@ disableModelInvocation: true
 argumentHint: '[plan file path or name]'
 references:
   - ../references/long-running-work.md
-  - ../references/provider-paths.md
+  - ../references/harness/provider-paths.md
 ---
 
 ## Plan Pickup — Loading and Executing Existing Plans

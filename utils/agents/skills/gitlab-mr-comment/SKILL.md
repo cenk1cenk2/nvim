@@ -4,10 +4,10 @@ description: gitlab-mr-comment Post a companion skill's output as a comment on a
 disableModelInvocation: true
 argumentHint: '[companion-skill] [MR number or URL]'
 references:
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
   - ../references/present-first.md
-  - ../references/scm-comment-poster.md
-  - ../references/scm-gitlab.md
+  - ../references/scm/scm-comment-poster.md
+  - ../references/scm/scm-gitlab.md
   - ../references/output-diff.md
 ---
 

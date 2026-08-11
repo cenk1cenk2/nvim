@@ -4,9 +4,9 @@ description: github-pr-review Review a GitHub PR autonomously with inline annota
 disableModelInvocation: true
 argumentHint: '[optional: PR number or URL]'
 references:
-  - ../references/scm-review-workflow.md
-  - ../references/scm-github.md
-  - ../references/scm-detect.md
+  - ../references/scm/scm-review-workflow.md
+  - ../references/scm/scm-github.md
+  - ../references/scm/scm-detect.md
   - ../references/review-findings.md
 ---
 

@@ -4,7 +4,7 @@ description: linear-kilic-project-argocd-workload Create a Linear project for de
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
-  - ../references/linear-mandatory-fields.md
+  - ../references/linear/linear-mandatory-fields.md
 argumentHint: '[workload] - e.g. ''my-app'', ''postgres-cluster'''
 ---
 

@@ -6,11 +6,11 @@ argumentHint: '[scope of the push]'
 references:
   - ../references/long-running-work.md
   - ../references/mode-toggle.md
-  - ../references/agent-watchers.md
-  - ../references/agent-roster.md
-  - ../references/agent-background-harness-claude.md
-  - ../references/agent-background-harness-codex.md
-  - ../references/agent-background-harness-opencode.md
+  - ../references/agent/agent-watchers.md
+  - ../references/agent/agent-roster.md
+  - ../references/harness/agent-background-harness-claude.md
+  - ../references/harness/agent-background-harness-codex.md
+  - ../references/harness/agent-background-harness-opencode.md
 ---
 
 Invoking bulldozer IS a standing blessing to push: skip per-step approval ceremony and act, but still surface anything that crosses a Boundary before doing it.

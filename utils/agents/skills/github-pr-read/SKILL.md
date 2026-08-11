@@ -4,9 +4,9 @@ description: github-pr-read Read the full state of a GitHub PR - description, co
 disableModelInvocation: true
 argumentHint: '[PR number or URL]'
 references:
-  - ../references/scm-read-summary.md
-  - ../references/scm-github.md
-  - ../references/scm-detect.md
+  - ../references/scm/scm-read-summary.md
+  - ../references/scm/scm-github.md
+  - ../references/scm/scm-detect.md
 ---
 
 ## GitHub PR Read

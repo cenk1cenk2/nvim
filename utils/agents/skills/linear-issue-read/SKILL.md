@@ -3,9 +3,9 @@ name: linear-issue-read
 description: linear-issue-read Read-only refresh of a Linear issue - description, comments and relations, surfacing what changed since you last looked. Use on "refresh the issue", "what changed on K-123". Not for starting work on it, or editing it.
 argumentHint: '[issue id or URL]'
 references:
-  - ../references/linear-prerequisite.md
-  - ../references/linear-document-handling.md
-  - ../references/linear-issue-philosophy.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-document-handling.md
+  - ../references/linear/linear-issue-philosophy.md
   - ../references/identifier-legibility.md
 ---
 

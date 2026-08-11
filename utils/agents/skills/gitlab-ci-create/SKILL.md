@@ -3,8 +3,8 @@ name: gitlab-ci-create
 description: gitlab-ci-create Create or update GitLab CI pipelines on the shared task-based model. Use on "add a pipeline", "set up GitLab CI", "change .gitlab-ci.yml". Not for diagnosing a failing pipeline, for GitHub Actions, or for MR descriptions.
 disableModelInvocation: true
 references:
-  - ../references/scm-detect.md
-  - ../references/scm-gitlab.md
+  - ../references/scm/scm-detect.md
+  - ../references/scm/scm-gitlab.md
 argumentHint: '[optional: what the pipeline should do]'
 ---
 

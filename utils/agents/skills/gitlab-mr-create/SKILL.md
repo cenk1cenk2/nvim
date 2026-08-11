@@ -3,16 +3,16 @@ name: gitlab-mr-create
 description: gitlab-mr-create Analyse a GitLab MR and write its title and description, keeping them current as the branch changes. Use on "write an MR description", "create an MR", "improve the MR". Not for GitHub pull requests, or for CI pipelines and failures.
 references:
   - ../references/reconcile-state.md
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
   - ../references/present-first.md
-  - ../references/scm-create-description.md
-  - ../references/scm-gitlab.md
-  - ../references/commit-trailers.md
-  - ../references/commit-trailers-gitlab.md
-  - ../references/commit-trailers-linear.md
+  - ../references/scm/scm-create-description.md
+  - ../references/scm/scm-gitlab.md
+  - ../references/scm/commit-trailers.md
+  - ../references/scm/commit-trailers-gitlab.md
+  - ../references/scm/commit-trailers-linear.md
   - ../references/output-diff.md
-  - ../references/linear-state-transitions.md
-  - ../references/release-convention.md
+  - ../references/linear/linear-state-transitions.md
+  - ../references/scm/release-convention.md
   - ../references/identifier-legibility.md
   - ../references/open-artifact.md
 argumentHint: '[optional: MR number or URL]'

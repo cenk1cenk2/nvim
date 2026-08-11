@@ -8,7 +8,7 @@ references:
   - ../references/config-targets.md
   - ../references/output-diff.md
   - ../references/redact-private-data.md
-  - ../references/commit-push-scoped.md
+  - ../references/scm/commit-push-scoped.md
 argumentHint: '[what to change or review]'
 ---
 

@@ -4,11 +4,11 @@ description: linear-project-match Sync Linear issue states to outside evidence -
 argumentHint: '[project or URL] [evidence: PR/MR URLs, repos, ''recent merged'', notes]'
 references:
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
-  - ../references/scm-detect.md
-  - ../references/scm-github.md
-  - ../references/scm-gitlab.md
-  - ../references/linear-state-transitions.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/scm/scm-detect.md
+  - ../references/scm/scm-github.md
+  - ../references/scm/scm-gitlab.md
+  - ../references/linear/linear-state-transitions.md
   - ../references/output-diff.md
   - ../references/identifier-legibility.md
 ---

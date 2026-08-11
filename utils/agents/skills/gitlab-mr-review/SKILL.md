@@ -4,9 +4,9 @@ description: gitlab-mr-review Review a GitLab MR autonomously with inline annota
 disableModelInvocation: true
 argumentHint: '[optional: MR number or URL]'
 references:
-  - ../references/scm-review-workflow.md
-  - ../references/scm-gitlab.md
-  - ../references/scm-detect.md
+  - ../references/scm/scm-review-workflow.md
+  - ../references/scm/scm-gitlab.md
+  - ../references/scm/scm-detect.md
   - ../references/review-findings.md
 ---
 

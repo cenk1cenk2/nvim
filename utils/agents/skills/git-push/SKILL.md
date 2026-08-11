@@ -3,8 +3,8 @@ name: git-push
 description: 'git-push Push the current branch - invoking it is the approval. Asks only on a real blocker: diverged, behind, a force push, or a protected branch. Use on "push", "push to origin". Not for committing, creating a branch, or opening a PR/MR.'
 argumentHint: '[optional: remote, or a safety flag such as ''--force-with-lease'']'
 references:
-  - ../references/scm-detect.md
-  - ../references/release-convention.md
+  - ../references/scm/scm-detect.md
+  - ../references/scm/release-convention.md
 ---
 
 ## Git Push

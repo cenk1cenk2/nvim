@@ -4,7 +4,7 @@ description: agent-aware Author instructions for a target agent that shares your
 disableModelInvocation: true
 argumentHint: '[artifact being authored]'
 references:
-  - ../references/agent-target-capability.md
+  - ../references/agent/agent-target-capability.md
 ---
 
 ## Writing for a Capable Target

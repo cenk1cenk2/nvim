@@ -4,9 +4,9 @@ description: gitlab-mr-read Read the full state of a GitLab MR - description, co
 disableModelInvocation: true
 argumentHint: '[MR number or URL]'
 references:
-  - ../references/scm-read-summary.md
-  - ../references/scm-gitlab.md
-  - ../references/scm-detect.md
+  - ../references/scm/scm-read-summary.md
+  - ../references/scm/scm-gitlab.md
+  - ../references/scm/scm-detect.md
 ---
 
 ## GitLab MR Read

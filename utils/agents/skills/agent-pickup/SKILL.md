@@ -7,18 +7,18 @@ references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
-  - ../references/linear-pickup-execution.md
-  - ../references/linear-project-documents.md
-  - ../references/agent-delegate.md
-  - ../references/agent-conventions.md
-  - ../references/agent-plan-split.md
-  - ../references/scm-detect.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-pickup-execution.md
+  - ../references/linear/linear-project-documents.md
+  - ../references/agent/agent-delegate.md
+  - ../references/agent/agent-conventions.md
+  - ../references/agent/agent-plan-split.md
+  - ../references/scm/scm-detect.md
   - ../references/project-tooling.md
   - ../references/output-diff.md
-  - ../references/agent-delegate-harness-claude.md
-  - ../references/agent-delegate-harness-codex.md
-  - ../references/agent-delegate-harness-opencode.md
+  - ../references/harness/agent-delegate-harness-claude.md
+  - ../references/harness/agent-delegate-harness-codex.md
+  - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
 ## Agent Linear Pickup Orchestrator

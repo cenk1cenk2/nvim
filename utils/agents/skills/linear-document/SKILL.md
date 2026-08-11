@@ -3,10 +3,10 @@ name: linear-document
 description: linear-document Attach a document capturing this task's findings to a Linear issue or project, one document per concern. A workspace skill must be active first. Use on "attach a document", "write this up in Linear". Not for editing descriptions or fields, for a short comment, or for creating a project.
 references:
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
+  - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
-  - ../references/linear-project-documents.md
-  - ../references/linear-document-handling.md
+  - ../references/linear/linear-project-documents.md
+  - ../references/linear/linear-document-handling.md
 argumentHint: '[optional: issue or project, and the concern to capture]'
 ---
 

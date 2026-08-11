@@ -5,9 +5,9 @@ argumentHint: '[issue id or URL] [target state]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
-  - ../references/linear-prerequisite.md
-  - ../references/linear-issue-states.md
-  - ../references/linear-state-transitions.md
+  - ../references/linear/linear-prerequisite.md
+  - ../references/linear/linear-issue-states.md
+  - ../references/linear/linear-state-transitions.md
   - ../references/output-diff.md
 ---
 

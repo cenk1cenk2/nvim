@@ -6,20 +6,20 @@ references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/plan-mode.md
-  - ../references/agent-delegate.md
-  - ../references/agent-worktrees.md
-  - ../references/scm-detect.md
+  - ../references/agent/agent-delegate.md
+  - ../references/agent/agent-worktrees.md
+  - ../references/scm/scm-detect.md
   - ../references/project-tooling.md
-  - ../references/agent-write-plans.md
-  - ../references/agent-conventions.md
-  - ../references/agent-completion.md
-  - ../references/agent-plan-split.md
+  - ../references/agent/agent-write-plans.md
+  - ../references/agent/agent-conventions.md
+  - ../references/agent/agent-completion.md
+  - ../references/agent/agent-plan-split.md
   - ./references/agent-merge-review.md
-  - ../references/provider-paths.md
+  - ../references/harness/provider-paths.md
   - ../references/identifier-legibility.md
-  - ../references/agent-delegate-harness-claude.md
-  - ../references/agent-delegate-harness-codex.md
-  - ../references/agent-delegate-harness-opencode.md
+  - ../references/harness/agent-delegate-harness-claude.md
+  - ../references/harness/agent-delegate-harness-codex.md
+  - ../references/harness/agent-delegate-harness-opencode.md
 ---
 
 Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.

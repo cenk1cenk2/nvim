@@ -5,10 +5,10 @@ disableModelInvocation: true
 argumentHint: '[what to draw]'
 references:
   - ../references/present-first.md
-  - ../references/excalidraw-mcp-preview.md
-  - ../references/excalidraw-conversion.md
-  - ../references/excalidraw-elements.md
-  - ../references/excalidraw-template.md
+  - ../references/excalidraw/excalidraw-mcp-preview.md
+  - ../references/excalidraw/excalidraw-conversion.md
+  - ../references/excalidraw/excalidraw-elements.md
+  - ../references/excalidraw/excalidraw-template.md
   - ../references/obsidian.md
   - ../references/output-diff.md
 ---

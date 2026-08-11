@@ -60,7 +60,7 @@ Skills may declare references to additional files for shared conventions and det
 
 ```yaml
 references:
-  - ../references/linear-prerequisite.md
+  - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
 ```
 

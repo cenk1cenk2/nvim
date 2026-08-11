@@ -3,8 +3,8 @@ name: github-ci-create
 description: github-ci-create Create or update GitHub Actions workflows for this repo. Use on "add CI", "set up GitHub Actions", "change the workflow". Not for diagnosing a failing run, for GitLab pipelines, or for PR descriptions.
 disableModelInvocation: true
 references:
-  - ../references/scm-detect.md
-  - ../references/scm-github.md
+  - ../references/scm/scm-detect.md
+  - ../references/scm/scm-github.md
 argumentHint: '[optional: what the workflow should do]'
 ---
 

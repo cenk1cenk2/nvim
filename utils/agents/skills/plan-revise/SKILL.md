@@ -5,7 +5,7 @@ references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/plan-mode.md
-  - ../references/provider-paths.md
+  - ../references/harness/provider-paths.md
 argumentHint: '[optional: plan file, and what changed]'
 ---
 

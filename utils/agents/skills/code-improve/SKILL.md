@@ -2,12 +2,12 @@
 name: code-improve
 description: code-improve Audit a codebase or scoped area for architectural, testability, consistency, and clarity improvements; fans out parallel subagents and returns a ranked shortlist, optionally drilling into a pick. Use on "improve the codebase", "audit this", "find refactors". Not for reviewing a branch or PR, a single-file cleanup, or planning one chosen change.
 references:
-  - ../references/agent-delegate.md
+  - ../references/agent/agent-delegate.md
   - ../references/project-tooling.md
-  - ../references/provider-paths.md
-  - ../references/agent-delegate-harness-claude.md
-  - ../references/agent-delegate-harness-codex.md
-  - ../references/agent-delegate-harness-opencode.md
+  - ../references/harness/provider-paths.md
+  - ../references/harness/agent-delegate-harness-claude.md
+  - ../references/harness/agent-delegate-harness-codex.md
+  - ../references/harness/agent-delegate-harness-opencode.md
 argumentHint: '[optional: area or path to audit]'
 ---
 

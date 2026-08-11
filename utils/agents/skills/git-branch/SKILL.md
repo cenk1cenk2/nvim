@@ -4,7 +4,7 @@ description: git-branch Create a branch following the repo's naming convention; 
 argumentHint: '[optional: branch name, prefix, or base branch]'
 references:
   - ../references/present-first.md
-  - ../references/scm-detect.md
+  - ../references/scm/scm-detect.md
   - ../references/output-diff.md
 ---
 
