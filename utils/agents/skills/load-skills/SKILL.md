@@ -52,7 +52,7 @@ Discovery and loading are defined in `AGENTS.md` §III Hyprpilot.
 
 **Graceful degradation:** skills must work even when references fail to load — they contain enough inline context to function.
 
-**A skill's declared references arrive with it.** `read_skill` appends them by default. Pass `references: false` when the bundle would be waste — you are editing the skill rather than following it, or you already hold its references from a skill loaded earlier this session — then `Read` only the files you lack. Only a path-read reference, one the body names with an explicit absolute path, waits for its branch.
+**A skill's reference bodies do not come with it — only a manifest of them does.** Fetch the ones the step names with `read_skill_references { references: [path] }`, using the canonical paths from that manifest, and keep a loaded-path set so no path is ever fetched twice. Mechanics per `hyprpilot-skills`.
 
 ## Reference Files
 
@@ -71,9 +71,7 @@ references:
 | `../references/<file>.md` | Shared across skills  | `~/.config/nvim/utils/agents/skills/references/<file>.md`                          |
 | `./references/<file>.md`  | Specific to one skill | `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`                  |
 
-Declared references arrive with the skill. `mcp__hyprpilot_skills__load_skill_references { slug }` fetches them without the body, for when the body is already in context.
-
-`hyprpilot://references/<slug>` is the resource form of the same bundle. Outside a skill load, `Read` the file directly.
+`read_skill` returns a manifest of the declared references, not their bodies. `mcp__hyprpilot_skills__read_skill_references { references: [path] }` fetches the bodies by canonical path, and `list_skill_references { slug }` returns the manifest alone when the body is already in context. Outside a skill load, `Read` the file directly.
 
 ## Dismissing Skills
 

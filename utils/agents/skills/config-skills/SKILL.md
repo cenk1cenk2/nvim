@@ -69,7 +69,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 ### Update
 
 1. Read the existing `SKILL.md` for the target skill at `~/.config/nvim/utils/agents/skills/<target-skill>/SKILL.md`.
-2. **Read the target with `references: false`** — you are editing the skill, not following it, so the bundle is weight. Read a declared reference directly only when the change depends on its content.
+2. **Read the target with plain `read_skill { slug }`** — the manifest is enough to see what it declares. Fetch a reference body only when the change depends on its content.
 3. Review the preceding conversation for key learnings, corrections, or deviations from the current skill content.
 4. Identify what needs to change.
 5. **Check for deduplication** — if the skill contains blocks that are duplicated in sibling skills (prerequisite blocks, plan mode directives, description structures, research patterns), check whether a shared reference already exists in `~/.config/nvim/utils/agents/skills/references/`. If it does, replace the duplicated block with an inline mention plus the declaration. If it doesn't and 2+ skills must stay in lockstep on it, propose extracting it.
@@ -97,7 +97,7 @@ After creating, updating, deleting, or moving skill files:
 1. Run `mcp__hyprpilot_skills__reload` so Hyprpilot refreshes the skill catalog.
 2. Verify the reload result reports the expected skill count or succeeds without errors.
 3. For changed skills, re-read the affected skill with `mcp__hyprpilot_skills__read_skill` when practical to confirm the daemon sees the latest content.
-4. If references changed, use `mcp__hyprpilot_skills__load_skill_references` for an affected skill when practical to confirm reference resolution.
+4. If references changed, use `mcp__hyprpilot_skills__list_skill_references { slug }` on an affected skill to confirm every declared path resolved into the manifest — a typo drops the row silently.
 5. Report the reload result to the user.
 
 ## SKILL.md Format
@@ -131,7 +131,7 @@ What hyprpilot itself *acts on* is small:
 |-----|------------------------------|
 | `description` | Becomes `Resource.description`. Falls back to `Guidance for <slug>` when absent — always write one anyway. |
 | `title` | Becomes `Resource.title`. Optional; the slug stands in when absent. |
-| `references` | Resolved relative to the skill's own `bundleDir` and bundled by `load_skill_references`. |
+| `references` | Resolved relative to the skill's own `bundleDir` into manifest rows carrying each file's canonical path; bodies fetched by path with `read_skill_references`. |
 | `name` | Passed through only — the **directory name is the slug**. A mismatch changes nothing at runtime, so keep them equal for the reader. |
 
 Everything else — `disableModelInvocation`, `argumentHint`, and any key you invent — is **passed through untouched**. Hyprpilot enforces none of it; those are conventions the agent reads out of the metadata block, and the central `AGENTS.md` is what turns `disableModelInvocation` into an actual invocation rule. A stray Claude Code key (`when_to_use`, `allowed-tools`, `model`, `hooks`, …) therefore does not error — it just reaches the agent as noise. Do not add them.
@@ -183,22 +183,22 @@ Note: omitting the flag and writing `disableModelInvocation: false` are behavior
 
 ## References
 
-### How References Load — declaring one costs tokens on every load
+### How References Load — declaring one costs a manifest row, not the file
 
-**A skill's declared references are appended to it on read.** `read_skill` and the `hyprpilot://skills/<slug>` resource both bundle them; `references: false` opts out of the tool's default, and `load_skill_references { slug }` fetches the bundle alone. The `references:` array is the load list, and the body never needs to say "go read this".
+**A skill's `references:` array is a manifest, not a payload.** `read_skill { slug }` returns the body plus one row per declared reference — `path`, `name`, `size`, `modified`, `created`, and the reference's own frontmatter — and **not the bodies**. The reader fetches what it needs with `read_skill_references { references: [path] }`, addressed by canonical absolute path. `bundle: true` still pulls every body inline for a first read of an unfamiliar skill.
 
-**The reader may already hold them.** A widely-declared reference is re-injected by every skill that declares it — `output-diff` sits in 48 skills, `scm-detect` in 19 — so a reader loading a second skill in the same family passes `references: false` and tops up only what it lacks. That is a reader-side decision and changes nothing about authoring: declare what the body uses, and let the reader dedupe.
+**So a declaration costs roughly 150 bytes; a body averages 4,619.** Declaring is close to free, and a reader that keeps a loaded-path set pays for each distinct file once per session — which matters because `output-diff` is declared by 57 skills and `scm-detect` by 31.
 
-The consequence that governs every decision below: **declaring a reference is a token cost paid on every single load of that skill.** A reference declared "just in case", or one the body never uses, is waste multiplied by every invocation. Extraction into a shared reference does **not** save tokens — it buys consistency, nothing more.
+The consequence that governs every decision below: **the expensive mistake is now a large multi-topic reference, not an extra declaration.** A step that needs one section of a file pays for all of it, so splitting pays whenever a step uses less than about 97% of a file — in practice, always. Extraction into a shared reference still buys consistency; granularity is what now buys tokens.
 
-**Two tiers. Choose deliberately.**
+**Declared is the default. Reserve path-read for what cannot be declared.**
 
 | Tier | Mechanism | Use when |
 |------|-----------|----------|
-| **Declared** | listed in `references:`; bundled on every load | the body uses it on **every** run of the skill |
-| **Path-read** | named in the body **with its absolute path**, read only when that branch is reached | the body uses it **conditionally** — one runtime out of three, one platform out of two, an error path, a rare mode |
+| **Declared** | listed in `references:`; appears in the manifest, body fetched on demand | almost always — the body cites it, on any run |
+| **Path-read** | named in the body **with its absolute path** | the file is deliberately **not** declared by any skill, so no manifest carries it and `read_skill_references` refuses it |
 
-Path-read exists because a conditional reference taxes every run for a branch most runs never take. The per-harness family is the canonical case: declaring all three provider files guarantees two are wasted.
+Conditional use is no longer a reason to skip declaring: an unused row costs a manifest line, and declaring it makes the file fetchable by path. Path-read now means genuinely undeclared — the per-harness family, where naming all three providers in one skill's frontmatter would claim files that belong to whichever runtime is live.
 
 **A path-read directive MUST carry the absolute path.** A missed `Read` raises no error — the skill simply runs without the convention it named, silently.
 
@@ -236,7 +236,7 @@ Paths are relative to the skill's own directory:
 
 The absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/references/<file>.md`, and `./references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`.
 
-`mcp__hyprpilot_skills__load_skill_references { slug }` returns a skill's declared references without its body — useful when the body is already in context. Each file arrives under a `reference:` block naming it and its declared path; see `config-references` for the shape.
+`mcp__hyprpilot_skills__list_skill_references { slug }` returns a skill's reference manifest without its body, and `read_skill_references { references: [path] }` returns the bodies for the canonical paths you name. Each file arrives under a `reference:` block naming it and its declared path; see `config-references` for the shape.
 
 ### Naming another skill — one line, and never its contents
 

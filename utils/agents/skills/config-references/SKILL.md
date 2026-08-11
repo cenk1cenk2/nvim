@@ -43,20 +43,15 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 
 ## How References Resolve
 
-**A skill's declared references are appended to it on read.** `read_skill` and `hyprpilot://skills/<slug>` both bundle them; `references: false` opts out of the tool's default, and `load_skill_references { slug }` / `hyprpilot://references/<slug>` fetch the bundle alone. So the `references:` array is the load list, **declaring a reference is a token cost paid on every load of that skill**, and a reference the body never uses is waste multiplied by every invocation.
+**A skill's `references:` array is a manifest, not a payload.** `read_skill { slug }` returns the body plus one manifest row per declared reference — `path`, `name`, `size`, `modified`, `created`, and the reference's own frontmatter. **The bodies do not come with it.** The reader fetches the ones it needs with `read_skill_references { references: [path] }`, addressed by canonical absolute path.
 
-That cost compounds across a session: a reference declared by many skills is re-injected by each one. `output-diff` is declared by 48 skills, `scm-detect` by 19, `agent-delegate` by 8 at 3.4k tokens each. A reader can skip the repeat with `references: false` and top up what it lacks, so **size matters most for the widely-declared files** — trimming one of those pays back on every consumer.
+**So declaring a reference costs a manifest row, roughly 150 bytes, not the file.** A body averages 4,619 bytes. That inverts the old authoring economics: an extra declaration is nearly free, and the expensive mistake is now a **large multi-topic file**, because a step that needs one section of it pays for all of them. Splitting pays whenever a step uses less than about 97% of a file — in practice, always.
 
-That splits references into two tiers, and choosing the wrong one is the most common authoring mistake:
+`output-diff` is declared by 57 skills and `scm-detect` by 31, so a reader that keeps a loaded-path set pays for each once per session. Path identity is what makes that mechanical: `git-commit`'s `output-diff` and `git-push`'s `output-diff` are the same path, so they de-duplicate on sight. There are no name collisions and no shadowing.
 
-| Tier | Mechanism | Use when |
-|------|-----------|----------|
-| **Declared** | listed in `references:`; injected on every load | every run of the consuming skill uses it |
-| **Path-read** | named in the body **with its absolute path**, read only when that branch is reached | only some runs use it — one runtime out of three, one platform out of two, an error path |
+Hyprpilot resolves declared paths **relative to that skill's own bundle directory** — the directory holding its `SKILL.md`. There is no separate references root. A path that does not resolve is simply absent from the manifest: nothing is logged and nothing errors, so a typo fails silently and the skill runs without the convention it declared.
 
-Hyprpilot resolves declared paths **relative to that skill's own bundle directory** — the directory holding its `SKILL.md`. There is no separate references root. A path that does not resolve is simply absent from the bundle: nothing is logged and nothing errors, so a typo fails silently and the skill runs without the convention it declared. A missed path-read fails the same silent way.
-
-A bundle delimits each file with a YAML block naming it and its declared path, all under a banner naming the skill and the count:
+`read_skill { slug, bundle: true }` still returns every body inline, delimited by a YAML block naming each file and its declared path, under a banner naming the skill and the count. Reach for it on the first load of an unfamiliar skill, not as a habit:
 
 ```
 ---
@@ -124,13 +119,13 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 
 ## A Reference Is Not a Pointer
 
-References arrive with their skill, so a body names them inline where used (`per \`output-diff\``) with no load instruction. **Skills do not arrive** — a body needing another skill writes `Load \`agent-harness\`.` plus its trigger. `config-skills` owns that form.
+**Cite a reference by NAME, never by path.** A body names it inline where used (`per \`output-diff\``) with no load instruction — the reader resolves that name against the manifest `read_skill` just handed it. A path in prose is machine detail that breaks the moment the file moves. **Skills do not arrive at all** — a body needing another skill writes `Load \`agent-harness\`.` plus its trigger. `config-skills` owns that form.
 
-Never create a reference whose only content is "go load skill X". A reference carries a convention; forwarding to a skill from a file that had to be bundled anyway just adds a hop.
+Never create a reference whose only content is "go load skill X". A reference carries a convention; forwarding to a skill just adds a hop and a fetch.
 
 ## Consumers Name It, Never Summarise It
 
-**The reference is already in context when the body runs.** A call site that explains what the reference contains pays for the same content twice, and the summary rots the moment the reference changes while the reader cannot tell which is current.
+**The reader can fetch the reference the moment it needs it.** A call site that explains what the reference contains pays for the same content twice, and the summary rots the moment the reference changes while the reader cannot tell which is current.
 
 - **`<thing> per \`x\`.`** That is the base form. Not "per the `x` reference", not "read `x` to learn how", not a sentence describing what `x` covers.
 - **Fold in *when* it applies, when that is not obvious** — `Before the first dispatch, mechanics per \`agent-delegate\`.` A trigger is what lets the reader check whether this run needs it, so it earns its clause. What the reference *contains* never does.

@@ -17,7 +17,8 @@ All on the in-tree skills MCP server (surfaced as `mcp__hyprpilot_skills__*`):
 | `reload` | Rescan every skill directory from disk and rebuild the catalog. The one you almost always want. |
 | `list_skills` | Enumerate the current (profile-filtered) catalog — names, descriptions, invocation flags. |
 | `read_skill` | Fetch a single skill body by slug. |
-| `load_skill_references` | Bundle the references a skill declares in frontmatter. |
+| `list_skill_references` | The manifest of references a skill declares — paths, sizes, `modified`, no bodies. |
+| `read_skill_references` | Fetch reference bodies by canonical path. |
 
 ## Reload fixes the sidecar, not your context
 
@@ -31,7 +32,8 @@ That is the failure this skill exists to prevent: reloading, seeing the count go
 
 1. **Reload.** Call `mcp__hyprpilot_skills__reload`. It returns the reloaded skill count.
 2. **Verify.** Confirm the count is what you expect (e.g. `+1` after adding a skill) and the call reported no errors.
-3. **Re-read what is already loaded.** Enumerate every skill whose content is in this conversation — the ones you edited, and any others loaded earlier this session — and fetch each again with `mcp__hyprpilot_skills__read_skill { slug }`. Do the same with `mcp__hyprpilot_skills__load_skill_references { slug }` for any skill whose references changed. Treat the newly returned body as authoritative and the earlier copy as void.
+3. **Re-read what is already loaded.** Enumerate every skill whose content is in this conversation — the ones you edited, and any others loaded earlier this session — and fetch each again with `mcp__hyprpilot_skills__read_skill { slug }`. Treat the newly returned body as authoritative and the earlier copy as void.
+   - **A reload also invalidates your loaded-path set.** Reference bodies you already hold are snapshots too. Compare each edited file's `modified` in the new manifest against when you fetched it, drop those paths from the set, and re-fetch them with `mcp__hyprpilot_skills__read_skill_references { references: [path] }`. The set is keyed on path, so a body that changed under the same path is exactly the case the set cannot notice on its own.
    - **A resource attached earlier is the riskiest case**, because it reads as current and there is no marker saying when it was fetched. Re-fetch it rather than trusting it.
    - If the catalog itself may have changed shape — a skill added, renamed, or deleted — re-read the catalogue too, so routing decisions are made against the new names rather than the old ones. The `hyprpilot://skills` resource is the whole index in one read; `mcp__hyprpilot_skills__list_skills` returns the same set as a tool call.
    - Skip nothing on the grounds that "the edit was small". The whole point of re-reading is that you cannot tell from context which copy you are holding.

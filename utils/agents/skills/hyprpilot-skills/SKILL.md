@@ -1,6 +1,6 @@
 ---
 name: hyprpilot-skills
-description: hyprpilot-skills Auto-invoked at session start when the hyprpilot_skills server is present. The skills system itself - the servers hyprpilot injects, how a skill and its references reach you, when to skip the reference bundle, and where skill source lives. Not for authoring or editing a skill, and not for driving a separate agent session.
+description: hyprpilot-skills Auto-invoked at session start when the hyprpilot_skills server is present. The skills system itself - the servers hyprpilot injects, how a skill and its references reach you, how to address a reference by path and pay for it once, and where skill source lives. Not for authoring or editing a skill, and not for driving a separate agent session.
 ---
 
 ## The Hyprpilot Skills System
@@ -11,7 +11,7 @@ Mechanics of how skills reach you. Whether to route a task through a skill at al
 
 | Server | Carries | Its manual |
 |---|---|---|
-| `hyprpilot_skills` | `list_skills`, `read_skill`, `load_skill_references`, `reload` | this skill |
+| `hyprpilot_skills` | `list_skills`, `read_skill`, `list_skill_references`, `read_skill_references`, `reload` | this skill |
 | `hyprpilot` | general tools — `open` (URL, file, or directory in the OS default handler) | none yet |
 | `hyprpilot_nvim` | the captain's live Neovim — buffers, LSP, diagnostics | `hyprpilot-nvim`, eager at startup |
 | `hyprpilot_harness` | `spawn` / `session_*` for separate agent sessions, where enabled | `hyprpilot-delegate`, loaded only on the captain's explicit ask |
@@ -22,9 +22,11 @@ Every `hyprpilot_skills` tool is auto-accepted and never prompts.
 
 Skills are exposed as `hyprpilot://skills/<slug>` resources.
 
-- `list_skills` — the catalog. Descriptions and metadata for every skill, no bodies.
-- `read_skill { slug }` — one body, with its declared references appended.
-- `load_skill_references { slug }` — that skill's references alone, no body.
+- `list_skills` — the catalog. Descriptions and metadata for every skill, no bodies. Each row carries `referenceCount`, served from cache with no filesystem access, so checking whether a skill is heavy costs nothing.
+- `read_skill { slug }` — one body, **plus a manifest of the references it declares. The reference bodies do not come with it.**
+- `read_skill { slug, bundle: true }` — body plus every reference body. Worth it on the first load of an unfamiliar skill; wasteful once you hold the shared conventions.
+- `list_skill_references { slug }` — the manifest alone, no bodies and no skill body.
+- `read_skill_references { references: [path] }` — the bodies you actually want. See below.
 - `reload` — after skill source changes on disk. Flow per `hyprpilot-reload`.
 
 A skill the harness already attached is loaded — an `#{hyprpilot://skills/<slug>}` mention, a palette pick, or auto-injection. Do not re-read it.
@@ -35,21 +37,42 @@ A skill the harness already attached is loaded — an `#{hyprpilot://skills/<slu
 
 The active hyprpilot profile drops some skills, so `list_skills` — not the filesystem — is the source of truth for what exists this session. Reading a `SKILL.md` by path can pull in a skill the profile deliberately dropped. Use filesystem paths only when editing source.
 
-## References Arrive With Their Skill
+## References Are Addressed by Path
 
-`read_skill` appends a skill's declared references under a `skill_references:` banner, one `reference:` block per file. That is why a skill body names its references inline (`per \`output-diff\``) rather than telling you to fetch them.
+**A reference is identified by its canonical absolute path**, and that path is what `read_skill`'s manifest hands you. Fetch bodies with `read_skill_references { references: [path, ...] }` — the argument is required, and the paths must come from a manifest, because a path no skill declares is refused.
 
-**Pass `references: false` when the bundle would be waste.** Two cases:
+Because the address is a path rather than a skill-and-name pair:
 
-1. You are reading the skill to **edit** it rather than follow it.
-2. **Its references are already in context** from a skill loaded earlier this session.
+- **One call spans skills.** Ask for everything you need across every skill you are about to run, in a single call.
+- **A repeated path is served once**, so passing the same file twice costs nothing.
+- **There are no name collisions and no shadowing.** `git-commit`'s `output-diff` and `git-push`'s `output-diff` are literally the same path, so they are comparable and de-duplicate on sight.
 
-Shared references repeat heavily — `output-diff` is declared by 48 skills, `scm-detect` by 19. Loading `git-commit` then `git-push` repeats ~1.9k tokens; `agent-delegate` is 3.4k on its own.
+Each manifest row carries `path`, `name` (the display label — the reference's frontmatter `name`, else the file stem), `size`, `modified`, `created`, and `metadata` (the reference's own frontmatter, verbatim). Skill metadata carries the same `size` / `modified` / `created` alongside `path` and `bundleDir`.
 
-**Then top up only what is missing.** The metadata lists every declared path, so compare against what you hold: `Read` the one or two files you lack, or call `load_skill_references { slug }` for the whole bundle. Re-reading a skill you already loaded is always `references: false`.
+**`modified` answers staleness, never caching.** It tells you whether a convention changed since you read it, which matters in a long session and after `reload`. The cache key is the path.
 
-**The one exception is a path-read reference** — one a body names with an explicit absolute path, because it applies only on a branch most runs never take (per-harness runtime mechanics). Those are not declared and not bundled; `Read` that file only when you reach that branch.
+## ABSOLUTE — Keep a Loaded-Path Set and Never Fetch a Path Twice
+
+**Track the set of reference paths you have loaded this session. Before any `read_skill_references` call, drop every path already in that set. Never fetch a path you already hold.**
+
+This is what makes the shared corpus free after first use. `output-diff` is declared by 57 skills and `scm-detect` by 31 — under this rule a session pays for each of them once instead of dozens of times. Path identity is exactly what makes it mechanical rather than a judgement call: two citations either resolve to the same path or they do not.
+
+The set survives everything except a `reload` that changed the file, which `modified` tells you about.
+
+## Fetch What the Step Names, Not the Whole Manifest
+
+A manifest is cheap and bodies are not. So:
+
+- **Read the manifest first**, and fetch only the references the step in front of you actually names.
+- **Pre-flight an expensive skill** with `list_skill_references { slug }` — a few hundred bytes to learn what it cites and how large each file is, against up to ~20 KB of bodies. Worth it for the agent-family skills; pointless for a skill citing one small file.
+- **Reach for `bundle: true`** only when you genuinely want everything, on a skill you have not run before.
+
+## Reading a Reference Directly
+
+Every declared reference publishes an absolute path, so `Read`ing one is a legitimate route rather than an exception — use it when you want a single file and already know where it is.
+
+**The one case that has no alternative** is a file a skill body names that **no skill declares** in its frontmatter. It appears in no manifest, so `read_skill_references` refuses it. Those bodies name the absolute path explicitly, and `Read` is the only way to get them.
 
 ## Skill Source
 
-Lives under `~/.config/nvim/utils/agents/skills/`, shared references in `references/` at that root. Authoring conventions — frontmatter, description shape, reference tiering — belong to `config-skills`; suggest it rather than editing a `SKILL.md` freehand.
+Lives under `~/.config/nvim/utils/agents/skills/`, shared references in `references/` at that root. Authoring conventions — frontmatter, description shape, reference granularity — belong to `config-skills`; suggest it rather than editing a `SKILL.md` freehand.
