@@ -104,7 +104,7 @@ When you write a plan (`plan-hard` and the other plan skills):
 
 ## III. TOOL USE
 
-Use the tools available in the session. Prefer purpose-built MCP tools when one fits; use CLI commands for local git, shells, tests, builds, and anything with no dedicated tool. When you need a capability that is not in the active tool list, reach for your runtime's tool-discovery mechanism and pull in only the categories the task needs. If a needed tool is simply unavailable, silently continue with the best available option — that is different from a call the user or permission layer *rejected*, which stops and asks.
+Use the tools available in the session. A service with an MCP server is reached through that server (see MCP Conventions); CLI covers local git, shells, tests, builds, and anything with no server. When you need a capability that is not in the active tool list, reach for your runtime's tool-discovery mechanism and pull in only the categories the task needs. If a needed tool is simply unavailable, silently continue with the best available option — that is different from a call the user or permission layer *rejected*, which stops and asks.
 
 ### Hyprpilot
 
@@ -112,6 +112,7 @@ Skills are delivered by the `hyprpilot_skills` MCP server and exposed as `hyprpi
 
 ### MCP Conventions
 
+- **ABSOLUTE — a service with an MCP server is reached through that server, not its CLI.** GitHub, GitLab, Linear, Slack, Grafana, ArgoCD, Obsidian, Sourcebot and the rest: use their tools rather than `gh`, `glab`, `argocd`, or `curl` against their APIs, for anything the server already does. **The CLI is a legitimate fallback the moment the server cannot do the thing** — no endpoint for that operation, an output or format it cannot return, streaming or tailing, a watcher or poll loop that has to run as a shell process, or a bulk job that would cost dozens of calls. Take the fallback and say in one line what was missing; never stall because the server fell short. Two standing exceptions where the CLI is simply the tool: **local git is always raw `git`**, and cluster work is always `kubectl`.
 - **ABSOLUTE — a harness-provided integration outranks an external MCP server for the same service.** When the running harness supplies one (on Claude Code, the claude.ai connectors `mcp__claude_ai_<Connector>__*` for Slack, Notion, Linear, …), every call for that service goes through it; the standalone server is not used alongside it. Fall back to the standalone server only when the harness provides nothing for that service or it lacks a needed capability — state which in one line, and never mix the two within one flow. **A skill's per-workspace mapping wins over this rule** — a server name identifies the *workspace*, and routing a workspace to the wrong transport writes to the wrong place. Details and the workspace carve-outs: `harness-connectors`.
 - **A same-named skill is that server's manual — load it first (§I step 5).**
 - **Every MCP server is wired directly into the agent** — no proxy, hub, or editor/ACP indirection. Refer to tools by the `<server>__<tool>` short form in skill files and docs (e.g. `github__get_file_contents`); at call time use whatever concrete name the harness surfaces.
@@ -145,7 +146,15 @@ Use tmux MCP tools only for **read-only** inspection of existing user panes when
 
 ### CLI
 
-CLI commands are appropriate for local git, project scripts, tests, builds, formatters, and shell inspection. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation instead of working around permissions.
+CLI owns what no MCP server covers: local git, `kubectl`, project scripts, tests, builds, formatters, and shell inspection. For a service that does have a server, the MCP-first rule above governs. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation instead of working around permissions.
+
+### mise
+
+Most CLI tooling here is installed by **mise** — `gh`, `glab`, `kubectl`, `helm`, `terraform`, `task`, `selene`, language runtimes — and resolves through `~/.local/share/mise/shims`, which the graphical session puts on `PATH`. Anything launched from that session, this one included, just calls the tool directly. A shim resolves the repository's own `mise.toml` version and passes mise's `[env]` vars to the process it launches.
+
+Contexts that do **not** inherit the session environment — systemd units, cron, a headless or remote launch — have no shims and fail with "command not found" for a tool that is plainly installed. Give those the shims directory explicitly on `PATH`, the way the existing unit files do, or invoke through `mise exec -- <command>`; the mise binary sits outside its own shims, so it is reachable from any environment.
+
+**Diagnose before working around.** A tool that fails from a shell where `PATH` already carries the shims is not an environment problem, and wrapping the call hides whatever is actually broken. Read the error: a zsh function or completion wrapper failing before the binary runs is a shell-config bug to fix at its source, not something to route around.
 
 ## IV. WORKING WITH FILES AND THE EDITOR
 
