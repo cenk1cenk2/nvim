@@ -8,6 +8,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-absolute-approval.md
+  - ../references/identifier-legibility.md
 ---
 
 ## Linear Project Reconcile

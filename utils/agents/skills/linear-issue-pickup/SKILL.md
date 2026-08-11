@@ -13,6 +13,7 @@ references:
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
   - ../references/linear-issue-philosophy.md
+  - ../references/identifier-legibility.md
 ---
 
 ## Linear Issue Pickup

@@ -10,6 +10,7 @@ references:
   - ../references/scm-gitlab.md
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
+  - ../references/identifier-legibility.md
 ---
 
 ## Linear Project Match

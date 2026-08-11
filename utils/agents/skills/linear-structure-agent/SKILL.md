@@ -10,6 +10,7 @@ references:
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
   - ../references/output-diff.md
+  - ../references/identifier-legibility.md
 ---
 
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.

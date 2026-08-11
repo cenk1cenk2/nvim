@@ -56,6 +56,21 @@ A parked session with a live watcher is the failure this section exists to preve
 
 **On resume after a park, nothing is re-armed automatically.** The parked state is the default until the user re-engages the mode by name.
 
+## ABSOLUTE — Announcing the Next Action Is Not Doing It
+
+**If you write "next I will do X", do X in the same turn, immediately after the report.**
+
+A persistent mode does not get a turn on its own. Once you stop, nothing happens until the user types, a watcher fires, or a task completes. So a turn that ends on a stated intention does not pause the work — **it abandons it**, and it does so while telling the user the opposite. They read a plan and reasonably assume it is running.
+
+The failure is easy to miss because the report looks complete. It reads as momentum and is its absence.
+
+- **Report, then act, in one turn.** The report is the narration of what you are about to do, not a request for permission to do it.
+- **If the next action genuinely needs the user** — a decision, an approval, a destructive step, a credential — then say that explicitly and stop. "Waiting on your call about X" is a legitimate ending. "Next I will do X" is not.
+- **If the next action waits on something external**, arm a watcher for it per `agent-watchers` and say it is armed. Waiting is a thing you set up, not a thing you announce.
+- **If you cannot act because you ran out of room**, say what is undone and what should happen first on resume, per `long-running-work`. That is a handoff, not an intention.
+
+Ending a turn is a decision with the same weight as any other. A mode that stops mid-flow without a reason is off, and nobody turned it off.
+
 ## Bare "stop" — Halt First, Ask Second
 
 A bare stop mid-work is ambiguous: it may mean stop this action, or stop the mode. Resolve in this order:

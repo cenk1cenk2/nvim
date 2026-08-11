@@ -7,6 +7,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear-issue-states.md
+  - ../references/identifier-legibility.md
 ---
 
 ## Linear Cycle Planning

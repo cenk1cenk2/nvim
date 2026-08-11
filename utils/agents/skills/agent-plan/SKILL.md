@@ -20,6 +20,7 @@ references:
   - ../references/linear-chunk-issues.md
   - ../references/linear-state-transitions.md
   - ../references/provider-paths.md
+  - ../references/identifier-legibility.md
 ---
 
 ## Agent DAG Orchestration

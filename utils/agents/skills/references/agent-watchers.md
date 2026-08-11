@@ -268,12 +268,43 @@ or is reaped:
 Never reap a watcher to tidy up before its outcome is in the table. Collect the outcome first;
 reaping is terminal.
 
+## Audit the ledger against reality, not against your notes
+
+**What you believe is armed and what is actually running drift apart**, and every mechanism that
+causes it is silent. A watcher exits on its cap. A process dies. One was described in a report but
+never launched. A replacement was armed without reaping its predecessor, so two now poll the same
+condition and can wake you with contradicting answers. None of these announce themselves — the
+symptom of all of them is quiet, which is also what a healthy watcher produces.
+
+So **verify, do not recall**. Enumerate what the runtime says is running and compare it against your
+ledger, rather than re-reading your own last report and trusting it.
+
+Run the audit:
+
+- **Every time you report armed state.** A table row claiming a watcher is live is a factual claim;
+  check it before writing it.
+- **On every wake**, before acting on what woke you — including that the waker itself is now spent.
+- **Before standing down, parking, or handing off**, per `mode-toggle`. An unexplained live watcher
+  at the end of a flow is a bug.
+
+Each row resolves to exactly one of: **live** and still earning its keep, **fired** with its outcome
+recorded, **expired** and needing a diagnosis before re-arming, or **deliberately not armed** with
+the reason stated. Anything that resolves to none of those is drift, and the fix happens in the same
+turn that finds it — re-arm it, reap it, or say why neither.
+
+**A discrepancy is a finding, not a bookkeeping error.** A watcher you thought was live and was not
+means the thing it guarded has been unobserved for however long, and whatever you concluded from its
+silence was unfounded. Say so plainly rather than quietly re-arming and moving on.
+
 ## Anti-patterns
 
 - **Detaching inside the command** (`&`, `nohup`, `disown`) instead of using the runtime's facility —
   the process runs, exits into silence, and nothing wakes you. You made a log file, not a watcher.
 - **Re-reading a watcher's output each turn** to see whether it fired. If you are polling the watcher,
   the watcher is not waking you.
+- **Reporting a watcher you have not launched.** Describing one, naming what it would poll, or
+  intending to arm it after one more check are all "no watcher". It exists when a launch returned a
+  handle you can quote, and not before.
 - **One watcher over a set of items** — a single loop across five stacks, eight pipelines, or three MRs.
   It can only report "all done", so one stall hides the rest and a failure waits for the slowest sibling.
   One item, one stable id, one watcher.

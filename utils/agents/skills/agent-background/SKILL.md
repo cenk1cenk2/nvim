@@ -39,6 +39,20 @@ The long, user-dependent wait collapses into a single silent process. You get on
 >
 > Corollary: `ps` cannot tell you whether a running watcher will wake you — a detached loop and a runtime-managed one look identical in a process list. Judge by **how it was launched**, not by whether the process is alive.
 
+## ABSOLUTE — Deciding to Arm Is Not Arming
+
+**A watcher exists only once a launch returned a handle.** Nothing before that counts: not naming it, not describing it, not writing it into a report, not intending to arm it after one more check.
+
+This fails silently and in the direction that feels productive. The turn ends with a paragraph describing what is being watched, the user reads it as armed, and nothing is polling anything. The work then waits forever on a wake that was never scheduled — and because silence is what a healthy watcher also produces, nobody notices until someone asks why it has been quiet.
+
+Three rules that close it:
+
+1. **Arm before you report it.** Write "watcher armed" only after the launch returned a handle you can quote. A report is narration of what you did, never a substitute for doing it.
+2. **Quote the handle.** A watcher announced without its task id is unverifiable and usually was not armed. If you cannot name the handle, you have not armed it.
+3. **If you decide not to arm one, say that instead** — "not watching the pipeline; it finishes in under a minute and I will check it directly". A deliberate non-watch is a fine answer. An implied one is not.
+
+The same applies to re-arming. Noticing that a watcher expired, or that a proxy proved unreliable, creates an obligation to re-arm **now**, in this turn — not a note that it should be re-armed.
+
 ## ABSOLUTE — Arm One Watcher Per Item, Never One Over the Set
 
 **Five Spacelift stacks are five watchers. Eight CI runs are eight. Three MRs are three.** Never one loop that waits for all of them, and never one that polls a list and exits when the list is finally empty. The discipline is item 1 of `agent-watchers`; this is why it matters at the moment you arm.

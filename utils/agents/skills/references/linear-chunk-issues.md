@@ -81,7 +81,7 @@ Commit per issue where possible. Use `refs <ID>` for partial progress, `closes <
 
 ## Task Split Table
 
-Add an **Issue** column to the standard task split table:
+Add an **Issue** column to the standard task split table. Carry the issue title too, per `identifier-legibility` — a bare id in a schedule tells the reader nothing about what the agent is doing:
 
 | Agent | Task | Files (write) | Issue | Dependencies |
 |-------|------|---------------|-------|-------------|

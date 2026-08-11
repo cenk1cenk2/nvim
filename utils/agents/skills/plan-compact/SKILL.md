@@ -10,6 +10,7 @@ references:
   - ../references/agent-delegate.md
   - ../references/mode-toggle.md
   - ../references/provider-paths.md
+  - ../references/identifier-legibility.md
 ---
 
 ## Plan Compact — In-Session Compaction Anchor

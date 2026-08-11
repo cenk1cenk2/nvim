@@ -6,6 +6,7 @@ references:
   - ../references/linear-prerequisite.md
   - ../references/linear-document-handling.md
   - ../references/linear-issue-philosophy.md
+  - ../references/identifier-legibility.md
 ---
 
 ## Linear Issue Read

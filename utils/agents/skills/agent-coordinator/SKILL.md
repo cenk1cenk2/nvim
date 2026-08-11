@@ -15,6 +15,7 @@ references:
   - ../references/agent-target-capability.md
   - ../references/provider-paths.md
   - ../references/status-report.md
+  - ../references/identifier-legibility.md
 ---
 
 ## Coordinator Posture

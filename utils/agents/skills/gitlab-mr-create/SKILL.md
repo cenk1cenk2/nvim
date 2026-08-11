@@ -11,6 +11,7 @@ references:
   - ../references/output-diff.md
   - ../references/linear-state-transitions.md
   - ../references/release-convention.md
+  - ../references/identifier-legibility.md
 argumentHint: '[optional: MR number or URL]'
 ---
 

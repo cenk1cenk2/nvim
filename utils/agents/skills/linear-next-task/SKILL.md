@@ -8,6 +8,7 @@ references:
   - ../references/linear-issue-states.md
   - ../references/linear-pickup-execution.md
   - ../references/linear-issue-philosophy.md
+  - ../references/identifier-legibility.md
 ---
 
 ## Linear Pick Next Task

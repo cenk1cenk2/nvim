@@ -18,6 +18,7 @@ references:
   - ../references/agent-delegate.md
   - ../references/agent-target-capability.md
   - ../references/status-report.md
+  - ../references/identifier-legibility.md
 ---
 
 ## Supervisor Posture
