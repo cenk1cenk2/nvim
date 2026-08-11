@@ -27,7 +27,7 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-> **ALWAYS enter plan mode for the planning and scheduling phases** — per `plan-mode`.
+> **ALWAYS enter plan mode for the planning and scheduling phases** — per `plan-mode`, unless the user asked you to plan with yourself.
 >
 > - Enter plan mode immediately.
 > - Plan the work, build the dependency DAG, decide review cadence and mode.
