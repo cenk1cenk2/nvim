@@ -4,8 +4,8 @@ A Linear workspace skill **MUST** be active before any Linear issue/project/init
 
 If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
 
-- **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill (load it as defined in `load-skills`)
-- **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill (load it as defined in `load-skills`)
+- **kilic-dev workspace:** Load skill `linear-kilic` via the `linear-kilic` skill
+- **Laravel workspace:** Load skill `linear-laravel` via the `linear-laravel` skill
 
 ## Deduction Rules
 

@@ -4,7 +4,7 @@ description: 'hyprpilot-delegate Hand a task to a SEPARATE hyprpilot agent sessi
 disableModelInvocation: true
 argumentHint: '[task] [optional: profile name or fragment]'
 references:
-  - ../references/hyprpilot-sessions.md
+  - ./references/hyprpilot-sessions.md
   - ../references/agent-conventions.md
   - ../references/project-tooling.md
   - ../references/agent-completion.md
@@ -65,7 +65,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - **Nothing will wake you. There is no completion push here.** The harness emits one, but it only lands on an interactive Claude Code lead with the channel registered — and registration was tried on this setup, did not work, and has been reverted. A client without it **drops the event silently, with no error**, which looks exactly like a hung agent. Plan for silence from the moment you spawn: arm a watcher or poll. Never treat "no news" as "still working".
    - **So watch `done.json` yourself.** A turn ending writes `done.json` into the session directory (`sessionInfo.files.dir`), and it is the one MCP-only truth a plain shell can reach. Arm it through your runtime's **own** background-exec facility — the one that re-invokes you when the command exits. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
 
-     > **Read the active runtime's background-exec mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** `<provider>` is the runtime this session runs on (`claude`, `opencode`, `codex`); the rest of the path is literal. That file owns whether a watcher can be backgrounded at all and how it wakes you. It is not declared, so a missed read is silent — the watcher simply never fires.
+     > **Read the active runtime's background-exec mechanics from `agent-background-harness-<provider>` before arming anything.** `<provider>` is the runtime this session runs on (`claude`, `opencode`, `codex`); the rest of the path is literal. That file owns whether a watcher can be backgrounded at all and how it wakes you. It is not declared, so a missed read is silent — the watcher simply never fires.
 
      ```bash
      D=<sessionInfo.files.dir>

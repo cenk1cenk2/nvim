@@ -34,14 +34,14 @@ Cost and capability vary by an order of magnitude across tiers — pick the chea
 
 ## Per-Harness References
 
-Harness references are named **`harness-<provider>-<skill-or-reference-name>`** — one file per (runtime × consuming skill), so a skill loads exactly the mechanics it needs and nothing else.
+Harness mechanics are **skills**, named **`<consumer>-harness-<provider>`** — one per (runtime × consumer), so you load exactly the mechanics this session needs and nothing else.
 
-> **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-<consumer>.md` before the first dispatch or the first wait.** `<provider>` is `claude`, `opencode`, or `codex`; `<consumer>` is the row below. A missed read raises no error — the mechanics are simply absent.
+> **Load `<consumer>-harness-<provider>` before the first dispatch or the first wait.** `<provider>` is `claude`, `opencode`, or `codex`; `<consumer>` is the row below.
 
 | Consumer | Claude Code | OpenCode | Codex |
 |----------|-------------|----------|-------|
-| Dispatch (`agent-delegate` and every skill built on it) | `harness-claude-agent-delegate` | `harness-opencode-agent-delegate` | `harness-codex-agent-delegate` |
-| Waiting and waking (`agent-background`) | `harness-claude-agent-background` | `harness-opencode-agent-background` | `harness-codex-agent-background` |
+| Dispatch (`agent-delegate` and every skill built on it) | `agent-delegate-harness-claude` | `agent-delegate-harness-opencode` | `agent-delegate-harness-codex` |
+| Waiting and waking (`agent-background`) | `agent-background-harness-claude` | `agent-background-harness-opencode` | `agent-background-harness-codex` |
 
 Tier → model tables live in the **`agent-delegate`** file for each runtime.
 
@@ -54,7 +54,7 @@ Headlines per runtime:
 
 ## Rules
 
-- **Read `~/.config/nvim/utils/agents/skills/references/harness-<provider>-<consumer>.md` before dispatching, not after something breaks.** The failure modes differ per runtime and several of them are silent.
+- **Load `<consumer>-harness-<provider>` before dispatching, not after something breaks.** The failure modes differ per runtime and several of them are silent.
 - **Never carry one runtime's behavior to another.** Background-by-default, wake-on-completion, and permission inheritance are all Claude Code specifics.
 - **Explicit model names override tiers.** If the user names a model (`fable`, `kilic/glm-5.2:cloud`, `gpt-5.5`), use it verbatim — no remapping.
 - **Ask on mismatch.** If the chosen tier/model looks wrong for the task (cheap for architecture, max for a rename), state the mismatch and propose an alternative before dispatching.

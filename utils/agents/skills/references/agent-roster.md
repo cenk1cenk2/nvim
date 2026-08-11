@@ -32,7 +32,7 @@ Collection and reaping are separate acts, and the order is not negotiable.
 
 1. **Collect** — read the answer out of wherever the runtime put it (a returned tool result, a
    transcript, a file the agent wrote). Per-runtime extraction lives in the active
-   `harness-<provider>-agent-delegate` reference.
+   `agent-delegate-harness-<provider>` reference.
 2. **Verify** it answers the brief. A report that restates the brief without evidence is not an answer.
 3. **Then reap.**
 

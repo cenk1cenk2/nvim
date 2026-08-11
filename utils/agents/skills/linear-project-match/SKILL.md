@@ -13,6 +13,8 @@ references:
   - ../references/identifier-legibility.md
 ---
 
+Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
+
 ## Linear Project Match
 
 Posture: `present-first`.

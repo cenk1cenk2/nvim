@@ -9,9 +9,7 @@ references:
   - ../references/present-first.md
   - ../references/linear-prerequisite.md
   - ../references/linear-pickup-execution.md
-  - ../references/linear-state-transitions.md
   - ../references/linear-project-documents.md
-  - ../references/linear-chunk-issues.md
   - ../references/agent-delegate.md
   - ../references/agent-conventions.md
   - ../references/agent-plan-split.md
@@ -31,7 +29,7 @@ Posture: `present-first`.
 
 The pickup lifecycle runs per `linear-pickup-execution`. Present every write to Linear, GitHub, or GitLab per `output-diff`.
 
-Load the `linear-structure-agent` skill before the first task is dispatched, whether or not this tree was shaped with it — picking up is one of its two modes, and it owns what stays true throughout: the executable unit is one repo, one PR, one concern, a parent holds the description while sub-issues hold deviations, ownership is blessed once before any agent writes to the tree, and each agent's findings get recorded where the next reader will look. A task that turns out to span repositories is a restructuring signal, not a bigger task.
+Load `linear-structure-agent` before the first dispatch — picking up is one of its two modes; it owns the shape and record rules throughout, whether or not this tree was shaped with it.
 
 ## Purpose
 
@@ -41,15 +39,15 @@ This skill carries Linear work from pickup to review. It can implement directly,
 
 1. **Resolve the target.**
    - Accept a Linear project, project slice, multiple issues, one issue, or URL.
-   - Compose with `linear-project-pickup` (load it as defined in `load-skills`) for project or slice inputs — do not re-implement its preparation logic.
-   - Compose with `linear-issue-pickup` (load it as defined in `load-skills`) for issue inputs — do not re-implement its preparation logic.
+   - Compose with `linear-project-pickup` for project or slice inputs — do not re-implement its preparation logic.
+   - Compose with `linear-issue-pickup` for issue inputs — do not re-implement its preparation logic.
    - If the prompt can mean more than one scope, ask one focused question immediately.
 
 2. **Explore before implementation.**
    - Fetch Linear issues, project documents, relations, comments, blockers, and linked PRs/MRs.
    - Inspect target repository state and origin provider per `scm-detect`.
    - Discover verification commands per `project-tooling`.
-   - When pickup needs broad repository/code discovery before provider-specific metadata, start with a code-discovery MCP if the active profile has one, otherwise search from the workspace SCM tools and say so. When that MCP is Sourcebot, read its tool flow from `~/.config/nvim/utils/agents/skills/references/sourcebot-discovery.md` before the first call.
+   - When pickup needs broad repository/code discovery before provider-specific metadata, start with a code-discovery MCP if the active profile has one, otherwise search from the workspace SCM tools and say so. When that MCP is Sourcebot, load `sourcebot-discovery` before the first call.
    - Use a cheap/default `agent-delegate` Explore agent when the unclear details are broad enough to benefit from parallel reconnaissance.
    - Ask early when details are not finalized, stale, contradictory, or missing.
 

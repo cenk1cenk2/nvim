@@ -10,7 +10,7 @@ argumentHint: '[component] - e.g. ''cert-manager'', ''velero'''
 ## ArgoCD System Deployment Project Generator
 
 Posture: `present-first`.
-**PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill (load it as defined in `load-skills`). This skill is kilic-dev workspace specific.
+**PREREQUISITE: The `linear-kilic` workspace skill MUST be active before this skill runs.** If no workspace context exists, auto-invoke it via the `linear-kilic` skill. This skill is kilic-dev workspace specific.
 
 ## Overview
 

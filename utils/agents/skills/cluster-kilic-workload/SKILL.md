@@ -6,7 +6,7 @@ argumentHint: '[workload-name] - e.g. ''seafile'', ''immich'''
 references:
   - ../references/present-first.md
   - ../references/output-diff.md
-  - ../references/kilic-argocd-pvc-restore.md
+  - ./references/kilic-argocd-pvc-restore.md
 ---
 
 ## Cluster Workload Creator

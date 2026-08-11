@@ -21,6 +21,8 @@ references:
   - ../references/identifier-legibility.md
 ---
 
+Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
+
 ## Supervisor Posture
 
 State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
@@ -139,7 +141,7 @@ Supervisor-specific rules on top of the reference's discipline:
 - **On wake, do the supervisor thing:** re-verify authoritatively, reconcile the tracker per `linear-state-transitions`, report — then arm the follow-on if the next condition is now open (merged, so watch the deploy).
 - **A lapsed watch is not "no news".** Diagnose why it exited and re-arm, or the silence becomes a false clean bill of health in your next report.
 
-> **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** If that runtime cannot wake you at all, say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
+> **Load `agent-background-harness-<provider>` before arming anything.** If that runtime cannot wake you at all, say so plainly and schedule the check explicitly — do not silently downgrade to hoping the user mentions it.
 
 ## Evidence Rules
 

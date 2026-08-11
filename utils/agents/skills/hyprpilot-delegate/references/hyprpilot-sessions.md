@@ -158,7 +158,7 @@ This is the one MCP-only truth that has a first-class **bash** signal, which mat
 
 `session_status` and `done.json` both answer *is it done*. Neither shows a turn **in progress**, and `session_read { wait: true }` blocks your own call to do it. The third option: `turns.jsonl` is an append-only JSONL file, so tailing it gives per-event notifications while the agent works, with no blocking call and no raw payloads in context.
 
-**Whether that can run in the background is a property of YOUR runtime, not of hyprpilot** — see `harness-<provider>-agent-background`. What is hyprpilot's side is the file, its event vocabulary, and the two ways a naive tail goes wrong.
+**Whether that can run in the background is a property of YOUR runtime, not of hyprpilot** — see `agent-background-harness-<provider>`. What is hyprpilot's side is the file, its event vocabulary, and the two ways a naive tail goes wrong.
 
 ```bash
 # BEFORE the send — capture the byte offset

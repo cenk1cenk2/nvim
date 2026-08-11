@@ -238,22 +238,37 @@ The absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<f
 
 `mcp__hyprpilot_skills__load_skill_references { slug }` returns a skill's declared references without its body — useful when the body is already in context. Each file arrives under a `reference:` block naming it and its declared path; see `config-references` for the shape.
 
-### Naming another skill — one sentence, with the gate
+### Naming another skill — one line, and never its contents
 
-A skill body may need **another skill** (a posture, a workspace initializer, a composed step). Say so in one sentence carrying three things: the load, the trigger, and what it owns.
+A body needing **another skill** says so in one sentence carrying the load and the trigger. Nothing else.
 
 ```markdown
-Load the `agent-harness` skill to resolve tiers to concrete models — the mapping is per-runtime.
-Load the `agent-harness` skill to resolve tiers to concrete models — the mapping is per-runtime.
+Load `agent-harness` to resolve tiers to concrete models.
+Load `linear-structure-agent` before implementation.
 ```
 
-- **Say "Load the `X` skill", not "see" or "via".** A skill is not bundled the way a reference is; only an explicit instruction gets it loaded.
-- **Name the trigger** — "before the first write", "when the request names a Linear id", "before the first dispatch". A load with no trigger fires always or never.
-- **Say what it owns**, briefly, so the reader can tell whether this run needs it.
+- **Say "Load `X`".** A skill is not bundled the way a reference is; only an explicit instruction gets it loaded.
+- **Name the trigger** — "before the first write", "when the request names a Linear id". A load with no trigger fires always or never.
+- **Add at most ONE short clause**, and only for a deviation this run needs the reader to know. Never a second sentence.
 - **Put it where the need arises** — at the top when it gates the whole skill, in the step when it gates one action.
-- **Never build a reference whose only content is "go load skill X".** The sentence sits in the body the agent is already reading; a file forwarding to a skill only adds a hop.
+- **Name it once per file.** A second mention of the same skill is drift waiting to happen.
 
-Contrast with references, which arrive automatically: those are named inline where used (`per \`output-diff\``) and carry no load instruction.
+**Never restate what the skill contains.** It is about to be loaded and will say so itself, at length, in its own words. A call site that summarises the skill doubles the tokens, and the summary rots the moment the skill changes while the reader has no way to tell which is current.
+
+```markdown
+Load `linear-structure-agent` before implementation — picking up is one of its two modes.
+```
+
+Not:
+
+```markdown
+Load the `linear-structure-agent` skill before implementation starts, whether or not this tree
+was shaped with it — picking up is one of its two modes, and it owns what stays true throughout:
+the executable unit is one repo, one PR, one concern, a parent holds the description while
+sub-issues hold deviations, ownership is blessed once, and findings get recorded as they surface.
+```
+
+The second is 500 characters restating the skill's own opening. Every one of those clauses is in the skill.
 
 ### Posture — inherited, stated only on deviation
 
@@ -274,6 +289,7 @@ Extract when **two or more skills must stay in lockstep** on a convention or pol
 
 Do NOT extract:
 
+- Content a **composed skill already declares**, when it only matters on that composition's branch — the skill brings its own references, so declaring them again taxes every run. Keep anything your own steps need regardless; `output-diff` and `present-first` govern your writes, not the composed skill's.
 - Content with a single consumer — put it in `<skill>/references/` if it is genuinely bulky, otherwise inline. A single-consumer file in the shared directory is mislabelled.
 - Skill-specific workflow steps, descriptions, or examples — unique per skill.
 - Short inline rules that would lose their context when separated.
@@ -284,27 +300,25 @@ Do NOT extract:
 A skill is authored once and runs under whichever agent runtime is active. Keep that split explicit:
 
 - **The SKILL.md body stays runtime-agnostic.** Describe the *intent* — "dispatch a subagent", "run it detached", "write the plan to the internal plans directory" — and never name one runtime's tool, parameter, default, or filesystem path.
-- **Runtime mechanics live in a per-harness reference**, named **`harness-<provider>-<skill-or-reference-name>.md`** — one file per (runtime × consuming skill). That is where the concrete tool name, its parameters, its defaults, and the collection semantics belong. Cross-cutting paths stay in `provider-paths.md`.
-
-**The per-harness naming convention.** A skill that behaves differently per runtime gets one reference per runtime, named after the runtime *and* the thing it configures:
+- **Runtime mechanics live in a per-harness SKILL**, named **`<consumer>-harness-<provider>`** — one per (runtime × consumer). That is where the concrete tool name, its parameters, its defaults, and the collection semantics belong. Cross-cutting paths stay in `provider-paths.md`.
 
 ```
-references/harness-claude-agent-delegate.md      # dispatch mechanics + tier→model, Claude Code
-references/harness-opencode-agent-delegate.md
-references/harness-codex-agent-delegate.md
-references/harness-claude-agent-background.md     # waiting/waking mechanics, Claude Code
-references/harness-opencode-agent-background.md
-references/harness-codex-agent-background.md
+agent-delegate-harness-claude      # dispatch mechanics + tier to model, Claude Code
+agent-delegate-harness-opencode
+agent-delegate-harness-codex
+agent-background-harness-claude    # waiting and waking mechanics, Claude Code
+agent-background-harness-opencode
+agent-background-harness-codex
 ```
 
 Rules for this family:
 
-1. **`<skill-or-reference-name>` is the exact name of the consumer** — the skill (`agent-background`) or the shared reference (`agent-delegate`) whose mechanics the file carries. A reader seeing the filename knows what it configures without opening it.
-2. **The skill does NOT declare the provider files — they are path-read.** Declaring all three bundles all three, and at most one is usable in a session; the other two are guaranteed waste on every load. Never assume the session's runtime in the body.
-3. **The directive names the family and carries the absolute path:** *"Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything."* The `<provider>` slot resolves at runtime; the rest of the path must be literal, because a missed read is silent.
-4. **Split by consumer, not by topic size.** Do not pile every runtime mechanic into one file per provider — a skill should load the mechanics it needs and nothing else.
-5. **Add a new provider file only when its behavior is known.** An empty or guessed harness file is worse than none; mark anything unconfirmed as **unverified** in place.
-6. **Version-mark behavioral claims.** Runtime behavior changes between releases; a claim without a version marker rots invisibly. When behavior contradicts a file, verify against the running build and fix the file rather than special-casing the runtime in a skill body.
+1. **`<consumer>` is the exact name of the thing it configures** — the skill (`agent-background`) or shared reference (`agent-delegate`) whose mechanics it carries. The name says what it configures without opening it.
+2. **They are skills, not references, because they are situational.** At most one runtime applies per session, so declaring all three would bundle two guaranteed-waste files on every load. As skills they are discoverable in the catalog and loaded by name when the runtime is known.
+3. **The directive names the family with the placeholder:** *"Load `agent-background-harness-<provider>` before arming anything."* `<provider>` resolves at runtime. Never name a single runtime's skill in a runtime-agnostic body.
+4. **Split by consumer, not by topic size.** A consumer should load the mechanics it needs and nothing else.
+5. **Add a new provider only when its behavior is known.** An empty or guessed harness skill is worse than none; mark anything unconfirmed as **unverified** in place.
+6. **Version-mark behavioral claims.** Runtime behavior changes between releases; a claim without a version marker rots invisibly.
 - **A skill that spawns subagents MUST send the reader to the active provider's reference BEFORE the first dispatch**, as a hard directive rather than optional background. Write the directive so it cannot be read as "nice to have".
 
 > **The expensive failure mode is result COLLECTION, not dispatch.** Whether detached is the default, and above all **how a finished agent's output actually reaches the caller**, vary per runtime and change between versions. One runtime wakes the caller with a completion notification; another never wakes it at all, so detached work finishes into silence. An author who omits the collection guidance produces a skill whose users either discard finished work and re-run it, or wait forever for a wake that was never coming. Any skill that dispatches subagents must therefore cover: how a finished agent's output reaches the caller on the active runtime, how to resume or poll it, and **diagnose the cause before re-dispatching** (blind re-dispatch is what throws work away, not re-dispatch itself).
@@ -312,7 +326,7 @@ Rules for this family:
 Checklist for any skill that dispatches subagents:
 
 1. The body names no runtime-specific tool, parameter, or default value.
-2. A directive points at `harness-<provider>-agent-delegate` **before** the first dispatch step.
+2. A directive points at `agent-delegate-harness-<provider>` **before** the first dispatch step.
 3. Blocking vs detached is expressed as intent; the provider reference owns the flag and its default.
 4. Result collection is covered explicitly, including diagnose-before-re-dispatch.
 5. If it isolates writes, it points at `agent-worktrees` — including that isolation follows the **session's** repo, not the task's, which breaks cross-repo dispatch.

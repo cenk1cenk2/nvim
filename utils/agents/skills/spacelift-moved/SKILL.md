@@ -16,7 +16,7 @@ Posture: `present-first`.
 ## Prerequisite
 
 > **PREREQUISITE:** The `spacelift-laravel` skill MUST be active before this skill runs.
-> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-laravel` via the `spacelift-laravel` skill (load it as defined in `load-skills`).
+> If no Spacelift workspace context exists in the current session, auto-invoke `spacelift-laravel` via the `spacelift-laravel` skill.
 
 ## Process
 

@@ -16,6 +16,8 @@ references:
   - ../references/identifier-legibility.md
 ---
 
+Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
+
 ## Linear Issue Pickup
 
 State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
@@ -29,7 +31,7 @@ A Linear workspace skill must be active first — detection rules in `linear-pre
 
 Pickup, early questions, Linear state updates, implementation handoff, and final reporting per `linear-pickup-execution`.
 
-Load the `linear-structure-agent` skill before implementation starts, whether or not this tree was shaped with it — picking up is one of its two modes, and it owns what stays true throughout: the executable unit is one repo, one PR, one concern, a parent holds the description while sub-issues hold deviations, ownership is blessed once, and findings get recorded as they surface rather than reconstructed at wrap-up. A discovery that breaks the shape means reshaping the issue, not widening it.
+Load `linear-structure-agent` before implementation — picking up is one of its two modes; it owns the shape and record rules throughout, whether or not this tree was shaped with it.
 
 ## Purpose
 

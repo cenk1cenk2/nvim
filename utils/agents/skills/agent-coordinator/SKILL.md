@@ -18,6 +18,8 @@ references:
   - ../references/identifier-legibility.md
 ---
 
+Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
+
 ## Coordinator Posture
 
 State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
@@ -82,15 +84,15 @@ Context discipline is enforced in the **prompt**, not by hoping. Every dispatch 
 - **Bounded** — "report in under 20 lines".
 - **Pointers, not payloads** — "cite `file:line`, do not paste code blocks".
 - **Verdict plus evidence** — the conclusion first, then what supports it.
-- **Status token** — `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, `BLOCKED` (per the `agent-delegate` reference).
+- **Status token** — `DONE`, `DONE_WITH_CONCERNS`, `NEEDS_CONTEXT`, `BLOCKED` (per `agent-delegate`).
 - **No transcript** — "do not include the commands you ran or their raw output unless a command failed".
 - **Pattern reference** — for code dispatches, the prompt carries the `agent-conventions` block naming the files to model the work on, and the report names what it actually followed. A coordinator who never reads the code is exactly the one who ships a foreign-looking diff.
 
 An agent that returns a wall of text has failed the task even if the work is right. Say so in the prompt.
 
-**Settle the permission context before anything else.** How permissions reach a subagent is a runtime property. On current Claude Code they are **inherited from your session and cannot be widened on the dispatch** — so work needing more autonomy than the session has is a conversation with the user, not a parameter you set. On runtimes with independent permissions, a gate the runtime cannot surface leaves the agent waiting silently with no error, and a coordinator that reads that silence as a verdict has routed the work, spent the turn, and learned nothing. Cross-repo dispatch is the riskiest case either way. **Diagnose by inspecting the artifact, never the notification**: work present means only delivery failed, so verify rather than re-run. **An absent artifact proves nothing** — most agents write once at the end, so "nothing on disk" cannot distinguish an agent that never started from one that has done all the work and not written yet. **Steer a quiet agent before concluding anything about it**, per the escalation ladder in the `agent-delegate` reference; reaping on an empty disk destroys real work. **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md` before the first dispatch** — a missed read is silent.
+**Settle the permission context before anything else.** How permissions reach a subagent is a runtime property. On current Claude Code they are **inherited from your session and cannot be widened on the dispatch** — so work needing more autonomy than the session has is a conversation with the user, not a parameter you set. On runtimes with independent permissions, a gate the runtime cannot surface leaves the agent waiting silently with no error, and a coordinator that reads that silence as a verdict has routed the work, spent the turn, and learned nothing. Cross-repo dispatch is the riskiest case either way. **Diagnose by inspecting the artifact, never the notification**: work present means only delivery failed, so verify rather than re-run. **An absent artifact proves nothing** — most agents write once at the end, so "nothing on disk" cannot distinguish an agent that never started from one that has done all the work and not written yet. **Steer a quiet agent before concluding anything about it**, per the escalation ladder in the `agent-delegate` reference; reaping on an empty disk destroys real work. **Load `agent-delegate-harness-<provider>` before the first dispatch** — a missed read is silent.
 
-**Match the dispatch mode to the runtime's delivery.** Coordinator mode runs almost entirely on agent reports — for research, verification, or log digging there is no artifact left behind, so the report IS the product. On a runtime that wakes you on completion (current Claude Code), background is safe and that notification is the collection mechanism: wait for it, never pre-empt it, and never read a pending agent's silence as a verdict. On a runtime that does **not** wake you (Codex today), detached work finishes into silence — block, poll explicitly, or have the agent write its findings to a file. Block regardless whenever you simply need the answer to continue; it costs no parallelism, since a whole fan-out issued in one message runs concurrently. **A silent verification agent is not a pass** — and when collection genuinely fails twice, take that one check back in-house rather than dispatching a seventh time. This runtime's delivery rules live in `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md`.
+**Match the dispatch mode to the runtime's delivery.** Coordinator mode runs almost entirely on agent reports — for research, verification, or log digging there is no artifact left behind, so the report IS the product. On a runtime that wakes you on completion (current Claude Code), background is safe and that notification is the collection mechanism: wait for it, never pre-empt it, and never read a pending agent's silence as a verdict. On a runtime that does **not** wake you (Codex today), detached work finishes into silence — block, poll explicitly, or have the agent write its findings to a file. Block regardless whenever you simply need the answer to continue; it costs no parallelism, since a whole fan-out issued in one message runs concurrently. **A silent verification agent is not a pass** — and when collection genuinely fails twice, take that one check back in-house rather than dispatching a seventh time. This runtime's delivery rules live in `agent-delegate-harness-<provider>`.
 
 ## The Roster and the Watch Board — what you are holding
 
@@ -100,7 +102,7 @@ Report both whenever you dispatch, whenever one returns, and before any teardown
 
 ## Watchers — what routing adds
 
-> **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` before arming anything.** It names the runtime facility, and a missed read is silent.
+> **Load `agent-background-harness-<provider>` before arming anything.** It names the runtime facility, and a missed read is silent.
 
 Yours are **routing** wakes: the wake is a dispatch decision, not a starting gun and not a bookkeeping cycle.
 
@@ -149,7 +151,7 @@ Break posture out loud: say you are doing this one yourself and why, so the mode
 - Engage it **only** on an explicit additional signal: `/agent-coordinator bulldozer`, "coordinate and bulldoze", or a separate `/agent-bulldozer` invocation.
 - **Never self-engage it.** Coordinating is not a licence to push. Without that signal, run the default rhythm: dispatch, verify, report, wait for the user.
 - When both are engaged, bulldozer owns the momentum rules and its own Boundaries and situational holds bind unchanged; coordinator still owns the routing and the return contract.
-- Toggles are independent per the `mode-toggle` reference: stopping bulldozer ends the push and leaves coordinator posture in place, and stopping coordinator leaves any bulldozer push running.
+- Toggles are independent per `mode-toggle`: stopping bulldozer ends the push and leaves coordinator posture in place, and stopping coordinator leaves any bulldozer push running.
 
 ## Example
 

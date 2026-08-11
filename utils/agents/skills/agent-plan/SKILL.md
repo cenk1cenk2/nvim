@@ -14,14 +14,12 @@ references:
   - ../references/agent-conventions.md
   - ../references/agent-completion.md
   - ../references/agent-plan-split.md
-  - ../references/agent-merge-review.md
-  - ../references/commit-style.md
-  - ../references/commit-trailers.md
-  - ../references/linear-chunk-issues.md
-  - ../references/linear-state-transitions.md
+  - ./references/agent-merge-review.md
   - ../references/provider-paths.md
   - ../references/identifier-legibility.md
 ---
+
+Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
 
 ## Agent DAG Orchestration
 
@@ -29,7 +27,7 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-> **ALWAYS enter plan mode for the planning and scheduling phases** — full directives per `plan-mode`.
+> **ALWAYS enter plan mode for the planning and scheduling phases** — per `plan-mode`.
 >
 > - Enter plan mode immediately.
 > - Plan the work, build the dependency DAG, decide review cadence and mode.
@@ -48,7 +46,7 @@ This skill takes a plan (explicit file or inferred from a goal), builds a depend
   - **`team` (default)** — `TeamCreate` coordinates the run. The lead orchestrates and stays in the loop between layers.
   - **`fire-and-forget`** — no team coordination; agents run to completion and report. Use when the layer needs no lead involvement mid-flight.
 
-  **Note:** mode does not control permissions. Subagents inherit the session's permission mode and any dispatch-time parameter is ignored — so autonomy is a property of the session you are running in, not of this axis. See `harness-<provider>-agent-delegate`.
+  **Note:** mode does not control permissions. Subagents inherit the session's permission mode and any dispatch-time parameter is ignored — so autonomy is a property of the session you are running in, not of this axis. See `agent-delegate-harness-<provider>`.
 - **Review cadence** (when `code-review-changes` runs):
   - **`per-layer` (default)** — review after each layer merges, before the next launches. Catches integration issues layer by layer.
   - **`per-task`** — implementer + reviewer pair for every task. Strictest. Use for risky refactors.
@@ -86,7 +84,7 @@ Present both resolutions in the plan summary. If either is ambiguous, default to
 
 Follow the `agent-plan-split` reference steps 1–4: understand the goal, discover tooling, establish conventions, write the plan. The plan must include a `depends_on: [task-id, ...]` field on each task (empty/absent = layer 0).
 
-- Repository and code discovery when planning starts from an organization-wide question or the target repository is not yet known: a code-discovery MCP when the active profile has one, otherwise the workspace SCM tools, saying which. When that MCP is Sourcebot, read its tool flow from `~/.config/nvim/utils/agents/skills/references/sourcebot-discovery.md` before the first call.
+- Repository and code discovery when planning starts from an organization-wide question or the target repository is not yet known: a code-discovery MCP when the active profile has one, otherwise the workspace SCM tools, saying which. When that MCP is Sourcebot, load `sourcebot-discovery` before the first call.
 - SCM platform detection and raw `git` CLI usage: `scm-detect`.
 - Verification commands: `project-tooling`.
 - Project conventions, discovered and agreed before any dispatch: `agent-conventions`.
@@ -122,12 +120,12 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
 
 ### Step 8 — Launch the first layer
 
-> **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-delegate.md` before the first dispatch.** A missed read is silent, and the blocking flag below is exactly what varies.
+> **Load `agent-delegate-harness-<provider>` before the first dispatch.** A missed read is silent, and the blocking flag below is exactly what varies.
 
 - Exit plan mode.
 - Record the **run-level baseline** (current branch + HEAD) for the final review pass.
 - For layer 0, the **layer baseline** = run baseline.
-- Transition each Linear-linked task in this layer to `In Progress` per the `linear-state-transitions` reference. Report one line per id (`Linear state: moved K-xxx → In Progress (was Todo).`).
+- Transition each Linear-linked task in this layer to `In Progress` per `linear-state-transitions`. Report one line per id (`Linear state: moved K-xxx → In Progress (was Todo).`).
 
 **Team mode (default):**
 
@@ -136,7 +134,7 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
   - Worktree isolation (unless user opted out).
   - `team_name` set to the team created above.
   - No permission-mode parameter — it is ignored; teammates run under the session's own posture.
-  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `harness-<provider>-agent-delegate`.
+  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `agent-delegate-harness-<provider>`.
   - A general-purpose subagent.
 
 **Fire-and-forget mode:**
@@ -145,7 +143,7 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
 - Spawn all agents for this layer in a single message with multiple subagent dispatches. For each:
   - Worktree isolation (unless user opted out).
   - No permission-mode parameter — it is ignored; agents run under the session's posture.
-  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `harness-<provider>-agent-delegate`.
+  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `agent-delegate-harness-<provider>`.
   - A general-purpose subagent.
 
 **Per-task cadence override:** if the user chose `per-task` cadence, each layer still runs in parallel, but every task is implemented + reviewed by a pair (two dispatches — one implementer, one reviewer) before the layer considers itself done. See the "Per-Task Review Pattern" section below. This is heavier than per-layer review.
@@ -195,7 +193,7 @@ Follow the `agent-merge-review` reference steps 2–4:
 
 - **Final review.** Run `code-review-changes` against the **run-level baseline** (recorded in step 8 for layer 0). This catches cross-layer integration issues regardless of cadence choice.
 - **Final verification.** Run the full verification command set from the planning phase. Read the output. Confirm with evidence.
-- **Completion handoff.** Summarize and present options (commit / push / PR / leave); execute the user's choice per the `agent-completion` reference. Commit messages follow `commit-style`, with issue links per `commit-trailers`.
+- **Completion handoff.** Summarize and present options (commit / push / PR / leave); execute the user's choice per `agent-completion`. Commits go through `git-commit`, which owns message style and issue trailers.
 
 ### Step 15 — Shutdown (team mode only)
 

@@ -4,8 +4,8 @@ A Slack workspace skill **MUST** be active before any Slack message/channel skil
 
 If no workspace context exists in the current session, auto-invoke the appropriate workspace skill:
 
-- **kilic workspace:** Load skill `slack-kilic` via the `slack-kilic` skill (load it as defined in `load-skills`)
-- **Laravel workspace:** Load skill `slack-laravel` via the `slack-laravel` skill (load it as defined in `load-skills`)
+- **kilic workspace:** Load skill `slack-kilic` via the `slack-kilic` skill
+- **Laravel workspace:** Load skill `slack-laravel` via the `slack-laravel` skill
 
 ## Workspace Identifiers
 

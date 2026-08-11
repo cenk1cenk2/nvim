@@ -1,3 +1,8 @@
+---
+name: agent-background-harness-claude
+description: agent-background-harness-claude Claude Code waiting and waking mechanics - which facility backgrounds a watcher, what re-invokes the session, and the traps that make a watcher fire into silence. Load before arming anything on Claude Code. Not for the runtime-agnostic watcher discipline, or for dispatching subagents.
+---
+
 # Harness: Claude Code — agent-background
 
 Runtime mechanics for the `agent-background` skill on Claude Code: how to wait on external state and get woken. The skill body owns the intent and the discipline; this file owns the tool names, parameters, and defaults.

@@ -124,9 +124,69 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 
 ## A Reference Is Not a Pointer
 
-References arrive with their skill, so a body names them inline where used (`per \`output-diff\``) with no load instruction. **Skills do not arrive** — a body needing another skill writes one explicit sentence instead: *"Load the `agent-harness` skill to resolve tiers to concrete models."* `config-skills` owns that form.
+References arrive with their skill, so a body names them inline where used (`per \`output-diff\``) with no load instruction. **Skills do not arrive** — a body needing another skill writes `Load \`agent-harness\`.` plus its trigger. `config-skills` owns that form.
 
 Never create a reference whose only content is "go load skill X". A reference carries a convention; forwarding to a skill from a file that had to be bundled anyway just adds a hop.
+
+## Consumers Name It, Never Summarise It
+
+**The reference is already in context when the body runs.** A call site that explains what the reference contains pays for the same content twice, and the summary rots the moment the reference changes while the reader cannot tell which is current.
+
+- **`<thing> per \`x\`.`** That is the base form. Not "per the `x` reference", not "read `x` to learn how", not a sentence describing what `x` covers.
+- **Fold in *when* it applies, when that is not obvious** — `Before the first dispatch, mechanics per \`agent-delegate\`.` A trigger is what lets the reader check whether this run needs it, so it earns its clause. What the reference *contains* never does.
+- **Add at most ONE further clause**, and only for a deviation this run needs.
+- **Name it once per consuming file.** A second mention of the same reference is drift waiting to happen.
+- **A declared reference gets no inline summary at all** — it cannot fail to load. Only a path-read reference earns a one-line summary, because that read genuinely may not happen.
+
+When a consumer's call site grows past a line, the content belongs in the reference, not at the call site.
+
+## Do Not Declare What a Composed Skill Brings
+
+When a body loads another skill for a branch, that skill arrives **with its own references**. A reference needed only on that branch does not belong in your frontmatter — declaring it taxes every run for a branch most runs skip.
+
+`agent-plan` composes with the Linear pickup skills when the input is Linear, and those declare `linear-state-transitions` and `linear-chunk-issues`. So `agent-plan` does not.
+
+**The test is what the reference serves, not whether both files list it.** Overlap is usually correct:
+
+- **Keep it** when your own steps need it — `present-first` and `output-diff` govern *your* writes, and every writing skill declares them independently. Two skills sharing them is not duplication.
+- **Drop it** when it exists purely for the composed skill's job, and your body only mentions it inside that branch.
+
+Applied naively this deletes load-bearing declarations. Check each one against the body: if a step outside the composition branch names it, it stays.
+
+## A Reference Is Shared AND Always Loaded — Otherwise It Is a Skill
+
+**Two properties make something a reference. It needs both.**
+
+1. **Shared** — two or more consumers must stay in lockstep on it.
+2. **Always loaded** — every consumer needs it on every run.
+
+Content that is **situational** — needed only on some runs, or only under one runtime, or only for one domain — **is not a reference.** It becomes a **skill**, loaded by name when the situation arises.
+
+| | Reference | Skill |
+|---|---|---|
+| Arrives | bundled with its consumers, always | on demand, by name |
+| Cost | paid on every load of every consumer | paid only when loaded |
+| Discoverable | no, it is an implementation detail | yes, listed in the catalog |
+| Missed how | it cannot be — it is already there | the agent chooses not to load it |
+
+**Why situational content must not be a reference.** Declaring it taxes every run for a branch most runs never take. The old workaround was a path-read: a body naming an absolute path for the reader to `Read` conditionally. That worked, but **a missed path-read is silent** — the run simply proceeds without the convention and nobody is told. A skill fixes both halves: it costs nothing until loaded, and loading it is a first-class call rather than a remembered instruction.
+
+**The test:** if you find yourself writing "read this file when X", it is a skill. If it is "this always applies", it is a reference.
+
+Per-runtime mechanics are the canonical case — at most one runtime applies per session, so `<consumer>-harness-<provider>` are skills. Per-domain catalogues are the other: a reader needs one entry and none of the rest.
+
+## Split a Reference When Part of It Is Conditional
+
+A reference is paid for on **every** load by **every** consumer. When a chunk of it is only needed on some runs, that chunk is taxing all the others.
+
+Two shapes to look for when a reference grows past a few hundred lines:
+
+- **A per-domain catalogue.** Signals, recipes, provider quirks, worked examples — a reader needs the one entry matching what they are doing and none of the rest. Split it out and reach it by **path-read** with the absolute path, so it loads only when that branch is taken. `agent-watchers` keeps the discipline, the cadence table and the audit; `agent-watcher-recipes` holds the per-domain signals and shell checks.
+- **Runtime-specific content in a file that claims to be agnostic.** A parameter table, a tool name, a default — it belongs in the `harness-<provider>-*` file, and leaving it in the shared one is both waste and a contradiction of the shared file's own rule.
+
+**Splitting is not the same as extracting for reuse.** Extraction shares content between consumers and moves tokens without removing them. This split *removes* tokens from most loads, because the new file is path-read rather than declared. Only conditional content qualifies — anything every consumer needs on every run stays put, however long it is.
+
+**When the split lands, the stub must carry the absolute path**, since a missed path-read is silent: the run simply proceeds without the recipes and nobody is told.
 
 ## Per-Harness References
 
@@ -140,13 +200,13 @@ harness-claude-agent-background.md     # waiting/waking mechanics for the agent-
 
 **Two shapes, do not confuse them:**
 
-- `harness-<provider>-<consumer>.md` — mechanics of one runtime for one consuming skill (`harness-claude-agent-background`). Per (runtime × consumer).
+- `harness-<provider>-<consumer>.md` — mechanics of one runtime for one consuming skill (`agent-background-harness-claude`). Per (runtime × consumer).
 - `harness-<topic>.md` — a cross-harness policy plus a per-harness inventory (`harness-connectors`). One file, all runtimes, because the rule is the same everywhere and only the inventory differs.
 
 Rules:
 
 - **Split by consumer, not by provider alone.** One file per (runtime × consumer) keeps a skill loading only the mechanics it needs. Do not accumulate every runtime detail into a single file per provider.
-- **The consuming skill does NOT declare the provider files — they are path-read.** Declaring all three injects all three when at most one is usable, so two are guaranteed waste on every load. The body names the family with an absolute path — `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` — and resolves `<provider>` at runtime. Never name a single runtime's file.
+- **The consuming skill does NOT declare the provider files — they are path-read.** Declaring all three injects all three when at most one is usable, so two are guaranteed waste on every load. The body names the family with an absolute path — `agent-background-harness-<provider>` — and resolves `<provider>` at runtime. Never name a single runtime's file.
 - **Content is concrete on purpose.** Tool names, parameter names, defaults, env vars, limits, and known traps belong here; this is the one place where naming a specific runtime's tool is correct.
 - **Version-mark claims and flag what you could not confirm.** Runtime behavior changes between releases — an unmarked claim rots invisibly, and a guessed one is worse than an absent one. Write `Unverified` in place rather than asserting.
 - **Do not create a provider's file until its behavior is known.** An empty harness file implies coverage that does not exist.
@@ -166,7 +226,7 @@ When references list MCP tool names in tables or inline, use the **`<server>__<t
 
 ## Committing Changes
 
-After applying reference edits and any consumer frontmatter updates, hand off per the `commit-push-scoped` reference — stage only the touched files, then compose with `git-commit` (scope `agents`, e.g. `feat(agents): ...`) and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
+After applying reference edits and any consumer frontmatter updates, hand off per `commit-push-scoped` — stage only the touched files, then compose with `git-commit` (scope `agents`, e.g. `feat(agents): ...`) and `git-push` targeting `rolling`. Ask before committing unless the request already blessed the push.
 
 ## Key Principles
 

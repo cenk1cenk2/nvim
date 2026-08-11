@@ -1,6 +1,11 @@
+---
+name: agent-delegate-harness-claude
+description: agent-delegate-harness-claude Claude Code dispatch mechanics for subagents - tier to model, the Agent parameter table, inherited permissions, background defaults, the reduced background tool set, and how a result actually reaches you. Load before the first dispatch on Claude Code. Not for the runtime-agnostic dispatch discipline, or for waiting and waking.
+---
+
 # Harness: Claude Code — agent-delegate
 
-Runtime mechanics for delegation on Claude Code — how subagent dispatch actually behaves, plus the tier → model mapping. Read this before the first dispatch of a session running on Claude. For waiting and waking, see `harness-claude-agent-background`. Facts below come from the official subagent docs and the live tool schemas; version markers say when each behavior landed, because an older CLI behaves differently.
+Runtime mechanics for delegation on Claude Code — how subagent dispatch actually behaves, plus the tier → model mapping. Read this before the first dispatch of a session running on Claude. For waiting and waking, see `agent-background-harness-claude`. Facts below come from the official subagent docs and the live tool schemas; version markers say when each behavior landed, because an older CLI behaves differently.
 
 **Dispatch:** the built-in `Agent` tool.
 
@@ -16,6 +21,20 @@ Runtime mechanics for delegation on Claude Code — how subagent dispatch actual
 Mirrors the `*/claude/*` profiles in `~/.config/hyprpilot/config.yaml`. Keep in sync when those change.
 
 `max`/`fable` is the ceiling — reserve it for the single hardest problems; `smart`/`opus` covers most heavy work. The `model` parameter also accepts a full model ID or `inherit`; subagent frontmatter defaults to `inherit` (the main conversation's model).
+
+## `Agent` tool parameters
+
+| Param | Required | Purpose |
+|-------|----------|---------|
+| `description` | yes | Short (3-5 word) task summary. Shown in telemetry and to the user. |
+| `prompt` | yes | Full self-contained task prompt. Agents do not share context with you or each other. |
+| `subagent_type` | no | `general-purpose` (default), `Explore` for research-heavy work, or a specialized agent type. |
+| `model` | no | `haiku`, `sonnet`, `opus`, `fable`, a full model ID, or `inherit`. Tier mapping above. |
+| `effort` | no | Reasoning effort for this agent (`low`…`max`); overrides the session level. |
+| `isolation` | no | `worktree` runs the agent in a temporary git worktree branched from the **default branch**, auto-removed if it changes nothing. Costs disk and setup time — use it only when parallel writers would collide. See `agent-worktrees`. |
+| `name` | no | Agent name for `SendMessage` routing and for resuming it later. |
+| `run_in_background` | no | Detached execution. **Default is background on Claude Code**; other runtimes differ. |
+| `mode` | — | **Deprecated and ignored** on current Claude Code. See Permissions below. |
 
 ## Permissions — inherited, NOT set on the dispatch
 

@@ -1,3 +1,8 @@
+---
+name: agent-background-harness-codex
+description: agent-background-harness-codex Codex waiting and waking mechanics - background work never re-invokes the session, so every wait is a blocking call or an explicit poll. Load before arming anything on Codex. Not for the runtime-agnostic watcher discipline, or for dispatching subagents.
+---
+
 # Harness: Codex — agent-background
 
 Runtime mechanics for the `agent-background` skill on Codex. Read this before arming anything: the core assumption behind background waiting does not hold here.

@@ -1,3 +1,8 @@
+---
+name: sourcebot-discovery
+description: sourcebot-discovery Organization-wide repository and code discovery with Sourcebot - build an evidence-backed repo shortlist before provider-specific SCM calls, then escalate to GitLab or GitHub for live state. Load when the target repository is unknown or the search spans repositories. Not for authoritative SCM metadata, or for local git.
+---
+
 # Sourcebot Repository Discovery
 
 Use Sourcebot when available for fast organization-wide repository and code discovery before provider-specific SCM calls.

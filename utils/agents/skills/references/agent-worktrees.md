@@ -38,7 +38,7 @@ Keep names ≤ 64 chars total and use only letters, digits, dots, underscores, d
 When your subagent-dispatch tool returns a worktree path, verify it:
 
 1. Is absolute.
-2. Is in the runtime's agent-worktrees directory (per the `provider-paths` reference).
+2. Is in the runtime's agent-worktrees directory (per `provider-paths`).
 
 If verification fails, treat it as an error:
 

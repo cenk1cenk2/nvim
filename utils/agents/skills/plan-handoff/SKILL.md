@@ -16,7 +16,7 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-> **ALWAYS enter plan mode** — full directives per `plan-mode`.
+> **ALWAYS enter plan mode** — per `plan-mode`.
 >
 > - Enter plan mode immediately.
 > - Create plan file in your internal plans directory as `YYYY-MM-DD-<project>-<name>.md`. Resolve the directory and filename default for the active runtime via `provider-paths`; never hardcode a path.

@@ -18,10 +18,7 @@ candidates, the route depends on what the active profile carries:
    repositories, then file-pattern search for structural clues such as
    `**/.gitlab-ci.yml`, `**/Chart.yaml`, `**/package.json`, `**/go.mod`,
    or `**/Cargo.toml`. Inspect the shortlisted files before escalating.
-   When that MCP is Sourcebot, its tool flow and repo-name conversion
-   live in
-   `~/.config/nvim/utils/agents/skills/references/sourcebot-discovery.md`
-   — read it before the first call.
+   When that MCP is Sourcebot, load `sourcebot-discovery` before the first call.
 2. **None is present** — say so and search from `gitlab` MCP directly:
    `search_repositories` for name and namespace candidates, then
    `get_repository_tree` and `get_file_contents` to confirm the

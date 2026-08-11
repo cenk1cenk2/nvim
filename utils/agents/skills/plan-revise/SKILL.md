@@ -15,7 +15,7 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-> **ALWAYS enter plan mode** — full directives per `plan-mode`.
+> **ALWAYS enter plan mode** — per `plan-mode`.
 >
 > - Enter plan mode immediately.
 > - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", `g`, `go`, `y`, or `yolo`.

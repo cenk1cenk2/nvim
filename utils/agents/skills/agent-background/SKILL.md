@@ -6,7 +6,7 @@ references:
   - ../references/agent-watchers.md
 ---
 
-> **Read the active runtime's mechanics from `~/.config/nvim/utils/agents/skills/references/harness-<provider>-agent-background.md` BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that file owns the tool names, parameters, and defaults.
+> **Load `agent-background-harness-<provider>` BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that one owns the tool names, parameters, and defaults.
 
 ## Context
 
@@ -16,7 +16,7 @@ Some work blocks on state that changes **outside the session** and that the harn
 
 ## The pattern
 
-Launch a shell loop through the runtime's own background-exec facility (named in the active `harness-<provider>-agent-background` reference). The loop polls a **bash-reachable** signal and `exit`s the moment it's satisfied; where the runtime supports it, that exit delivers a notification which re-invokes the main loop.
+Launch a shell loop through the runtime's own background-exec facility (per `agent-background-harness-<provider>`). The loop polls a **bash-reachable** signal and `exit`s the moment it's satisfied; where the runtime supports it, that exit delivers a notification which re-invokes the main loop.
 
 ```
 for i in $(seq 1 N); do
@@ -33,7 +33,7 @@ The long, user-dependent wait collapses into a single silent process. You get on
 >
 > Backgrounding within the shell — `&`, `nohup`, `disown`, `setsid` — hands the process to the OS. **The runtime never learns it exists, so it will never wake you.** The loop runs, polls correctly, writes its output, exits into silence, and nothing happens. You have created a log file, not a watcher.
 >
-> The wake comes from the runtime's **own** background-exec mechanism (the tool flag / parameter / API named in its `harness-<provider>-agent-background` reference), set **on the invocation**, not from anything inside the command string.
+> The wake comes from the runtime's **own** background-exec mechanism (the tool flag / parameter / API named per `agent-background-harness-<provider>`), set **on the invocation**, not from anything inside the command string.
 >
 > **Symptom to recognise, because it is easy to miss for a long time:** you find yourself re-reading a watcher's log or output file each turn to check whether it fired. **If you are polling the watcher, the watcher is not waking you.** Same for reporting "watchers armed" and then continuing to inspect their state by hand — that is a detached process, and every turn spent checking it is the cost this skill exists to remove. Re-arm through the runtime facility.
 >
@@ -82,7 +82,7 @@ The bash wait-loop above is the portable default, but it is not the only way, an
 4. **Recurring schedule (cron)** — for work that must run on a repeating cadence, outliving the session.
 5. **Sleep-in-a-loop** — a bounded loop around an interruptible sleep, where the runtime offers a real sleep primitive.
 
-**Which mechanisms exist, and what they are called, is a runtime property.** The active runtime's `harness-<provider>-agent-background` reference is the authority: it names the facility for each mechanism above, its parameters, its defaults, and its traps. Read it before arming.
+**Which mechanisms exist, and what they are called, is a runtime property.** `agent-background-harness-<provider>` is the authority: it names the facility for each mechanism above, its parameters, its defaults, and its traps. Read it before arming.
 
 Two runtime differences big enough to change the plan, not just the syntax:
 
@@ -122,7 +122,7 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 
 ## Fallback
 
-If no bash-reachable signal exists at all, drop to a deferred wakeup or a monitor loop — whichever the active runtime provides, per its `harness-<provider>-agent-background` reference. Prefer the background loop for concrete external conditions, and use a recurring scheduler only for genuinely repeating work, never one-shot polling. On a runtime that provides neither, the fallback is a blocking wait or an artifact the work leaves behind for you to read.
+If no bash-reachable signal exists at all, drop to a deferred wakeup or a monitor loop — whichever the active runtime provides, per `agent-background-harness-<provider>`. Prefer the background loop for concrete external conditions, and use a recurring scheduler only for genuinely repeating work, never one-shot polling. On a runtime that provides neither, the fallback is a blocking wait or an artifact the work leaves behind for you to read.
 
 ## Example
 
