@@ -23,11 +23,14 @@ Two consequences that decide how every task is shaped:
 - **There is no fleet-wide datasource.** A question about "the fleet" is seven queries, and the cost is real. Ask which clusters before sweeping all of them.
 - **Filtering by `cluster` inside a query buys nothing.** The uid already decided it. Keep the label only when copying a dashboard query that templates on it.
 
-**Mimir and Loki are not deployed the same way.** Mimir runs per cluster. Loki is a **single instance on rubik** serving every cluster as a tenant, so the seven `loki-*` datasources are seven tenant views of one store. Tenants are named `<cluster>.monitoring.int.kilic.dev` and appear as the `tenant` structured metadata on every log line, which is a useful cross-check that the uid you used is the cluster you meant.
+**One datasource is one cluster, but not one backend.** Mimir and Loki are each a **single multi-tenant instance on rubik**; every other cluster runs only collectors — `opentelemetry-collector`, `grafana-alloy`, `blackbox-exporter` — that ship to them. So the fourteen `mimir-*` and `loki-*` datasources are tenant views of two stores, not fourteen deployments.
 
-That topology explains two things: Loki-wide limits such as `max_global_streams_per_user` (15000) apply per tenant on shared infrastructure, and a Loki-side incident affects every cluster's logs at once while metrics keep working.
+Tenants are named `<cluster>.monitoring.int.kilic.dev`. On logs the tenant appears as `tenant` structured metadata on every line, which cross-checks that the uid you used is the cluster you meant.
 
-Loki retention is **360h** (15 days). `max_query_lookback` matches it, so a query reaching further back returns nothing rather than erroring.
+Two consequences worth holding: per-tenant limits such as Loki's `max_global_streams_per_user` (15000) are enforced on shared infrastructure, so one noisy tenant is a neighbour problem; and an incident in either store affects **every** cluster's data at once, which is the opposite of what per-cluster datasource names suggest. Rubik being down is a fleet-wide observability outage, not a rubik one.
+
+Loki retention is **360h** (15 days), and `max_query_lookback` matches it, so a query reaching further back returns nothing rather than erroring.
+
 
 ## Resolving a target to a uid
 
