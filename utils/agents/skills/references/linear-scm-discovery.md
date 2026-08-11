@@ -1,6 +1,6 @@
 # Linear SCM Discovery
 
-Use Sourcebot first when available, then GitHub/GitLab MCP tools, to enrich Linear issues, projects, and agent project documents when the user explicitly asks for discovery, enrichment, repository analysis, implementation guidance, or agent-ready context.
+Enrich Linear issues, projects, and agent project documents with repository facts, when the user explicitly asks for discovery, enrichment, repository analysis, implementation guidance, or agent-ready context. Which tools do the finding depends on the active profile — see the Discovery Ladder below.
 
 ## Trigger
 
@@ -34,19 +34,21 @@ Use the prompt to determine:
 Use the active workspace and SCM context:
 
 - Linear MCP for project/issue history, docs, comments, relations, and labels.
-- Sourcebot MCP for fast organization-wide repository/code discovery, repo shortlists, file patterns, symbols, dependencies, and prior art.
+- A code-discovery MCP, when the active profile has one, for fast organization-wide repository/code discovery, repo shortlists, file patterns, symbols, dependencies, and prior art.
 - GitLab MCP for `gitlab.kilic.dev` repositories, MRs, pipelines, files, commits, and searches.
 - GitHub MCP for GitHub repositories, PRs, checks, files, commits, and searches.
 - Local repository checkout when available.
 - `context7` or web search only for external library/framework behavior, not for repository-specific facts.
 
-## Sourcebot-First Workflow
+## Discovery Ladder
 
-When `sourcebot-kilic` is available and the target repository is unknown, broad, or cross-repository, read `sourcebot-discovery` and start there:
+⛔ **Never assume a given discovery tool is present.** Availability is decided by the active profile, not by the task. Climb the ladder from whatever rung this session actually has.
 
-1. Use Sourcebot to identify candidate repos and evidence-backed file/symbol matches.
-2. Use GitLab/GitHub only after the shortlist exists for live SCM metadata, MRs/PRs, pipelines, issues, permissions, and writes.
-3. If Sourcebot is unavailable or ignored by the active profile, fall back to the active workspace SCM tools and state that fallback.
+1. **A code-discovery MCP, when the active profile has one.** The right first rung for an unknown, broad, or cross-repository target — it produces an evidence-backed repo shortlist in a few calls. When that MCP is Sourcebot, read its tool flow and repo-name conversion from `~/.config/nvim/utils/agents/skills/references/sourcebot-discovery.md` before the first call.
+2. **The workspace SCM tools — GitLab or GitHub MCP.** Authoritative for live state: repositories, MRs/PRs, pipelines, issues, permissions, and every write. This rung always runs, even when rung 1 already found the answer — rung 1 is never authoritative for live SCM state.
+3. **A local checkout**, when one exists, for implementation detail, tests, and final verification.
+
+**Say which rung produced the answer, and announce a skipped one.** With no code-discovery MCP in the profile, start at the SCM tools and state that in one line — the same shortlist built from repeated SCM search costs more calls and misses more, and the user should know that is what happened.
 
 ## Output Placement
 

@@ -2,36 +2,35 @@
 
 ## Core Rules
 
-- Use Sourcebot first when available for broad repository/code discovery across `gitlab.kilic.dev`; switch to `gitlab` MCP for authoritative GitLab metadata and operations.
+- For broad repository/code discovery across `gitlab.kilic.dev`, start with a code-discovery MCP when the active profile has one, then switch to `gitlab` MCP for authoritative metadata and operations. With none present, search from `gitlab` MCP directly and say so.
 - Use raw `git` CLI commands for local git operations.
 - Use `glab` CLI as fallback when MCP tools lack the needed capability (e.g., `glab ci trace` for job logs).
 - Determine project path from the git remote URL.
 - Determine the current branch from local git state via `git status`.
 
-## Sourcebot-first GitLab Repository Discovery
+## Finding an Unknown GitLab Repository
 
-When `sourcebot-kilic` is available and the GitLab repository is
-unknown, broad, or one of several candidates:
+When the target repository is unknown, broad, or one of several
+candidates, the route depends on what the active profile carries:
 
-1. Use `sourcebot-kilic__list_repos` with `query` to find name,
-   namespace, or service candidates.
-2. Use `sourcebot-kilic__grep` with `groupByRepo: true` for config
-   keys, package names, service names, hostnames, routes, or other text
-   clues across all indexed repositories.
-3. Use `sourcebot-kilic__glob` for file patterns such as
-   `**/.gitlab-ci.yml`, `**/Chart.yaml`, `**/package.json`,
-   `**/go.mod`, or `**/Cargo.toml`.
-4. Inspect shortlisted evidence with `sourcebot-kilic__read_file` or
-   `sourcebot-kilic__list_tree`.
-5. Convert Sourcebot repo names like `gitlab.kilic.dev/group/project`
-   into GitLab project paths like `group/project`, then verify live
-   state with GitLab MCP before using branches, MRs, pipelines,
-   permissions, or writes.
+1. **A code-discovery MCP is present** — build the shortlist there
+   first: repo/namespace search, grouped content search across indexed
+   repositories, then file-pattern search for structural clues such as
+   `**/.gitlab-ci.yml`, `**/Chart.yaml`, `**/package.json`, `**/go.mod`,
+   or `**/Cargo.toml`. Inspect the shortlisted files before escalating.
+   When that MCP is Sourcebot, its tool flow and repo-name conversion
+   live in
+   `~/.config/nvim/utils/agents/skills/references/sourcebot-discovery.md`
+   — read it before the first call.
+2. **None is present** — say so and search from `gitlab` MCP directly:
+   `search_repositories` for name and namespace candidates, then
+   `get_repository_tree` and `get_file_contents` to confirm the
+   shortlist. Expect more calls for the same answer.
 
-Use `sourcebot-kilic__ask_codebase` only when the user explicitly asks
-to use Sourcebot AI / `ask_codebase`. Treat its answer as a research
-shortcut and verify actionable findings with targeted Sourcebot,
-GitLab MCP, or local git before acting.
+Either route ends the same way: convert the discovered repo name into a
+GitLab project path (`group/project`, nested groups included) and verify
+live state with `gitlab` MCP before touching branches, MRs, pipelines,
+permissions, or writes.
 
 ## Available Tools by Category
 

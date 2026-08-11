@@ -10,7 +10,6 @@ references:
   - ../references/linear-pickup-execution.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
-  - ../references/sourcebot-discovery.md
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
   - ../references/linear-issue-philosophy.md
@@ -52,7 +51,7 @@ This skill prepares one or more issues for real work. It can hand off to `agent-
 
 4. **Prepare implementation context.**
    - Identify target repo(s), branch boundaries, origin provider, likely verification commands, and linked PR/MR history.
-   - If explicitly requested, enrich repository context, prior art, likely file boundaries, and agent instructions per `linear-scm-discovery`, using `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
+   - If explicitly requested, enrich repository context, prior art, likely file boundaries, and agent instructions per `linear-scm-discovery` — its Discovery Ladder picks the tools from what the active profile carries.
    - Decide whether implementation should be direct, delegated, sequential, or parallel.
    - For multiple issues, preserve issue boundaries where possible.
 

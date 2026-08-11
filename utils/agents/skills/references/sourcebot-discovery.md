@@ -38,13 +38,12 @@ For `gitlab.kilic.dev` work where the exact project path is unknown:
 5. Verify live GitLab state with GitLab MCP before creating branches,
    reading MRs/pipelines, or writing anything.
 
-## AI-assisted Sourcebot Research
+## ⛔ `ask_codebase` Does Not Work
 
-Use `sourcebot-kilic__ask_codebase` only when the user explicitly asks
-to use Sourcebot AI / `ask_codebase`. It is useful for broad natural
-language questions where several targeted searches would be inefficient.
-Always verify actionable results with targeted Sourcebot calls,
-GitLab/GitHub MCP, or local git before acting.
+**`sourcebot-kilic__ask_codebase` is non-functional — never call it**, not even
+when the question is broad and several targeted searches look inefficient. Answer
+broad questions with the grep/glob/symbol flow above; it costs more calls and
+returns evidence you can cite.
 
 ## Output Expectations
 

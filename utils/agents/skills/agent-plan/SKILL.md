@@ -9,7 +9,6 @@ references:
   - ../references/agent-delegate.md
   - ../references/agent-worktrees.md
   - ../references/scm-detect.md
-  - ../references/sourcebot-discovery.md
   - ../references/project-tooling.md
   - ../references/agent-write-plans.md
   - ../references/agent-conventions.md
@@ -86,7 +85,7 @@ Present both resolutions in the plan summary. If either is ambiguous, default to
 
 Follow the `agent-plan-split` reference steps 1–4: understand the goal, discover tooling, establish conventions, write the plan. The plan must include a `depends_on: [task-id, ...]` field on each task (empty/absent = layer 0).
 
-- Repository and code discovery when planning starts from an organization-wide question or the target repository is not yet known: `sourcebot-discovery`.
+- Repository and code discovery when planning starts from an organization-wide question or the target repository is not yet known: a code-discovery MCP when the active profile has one, otherwise the workspace SCM tools, saying which. When that MCP is Sourcebot, read its tool flow from `~/.config/nvim/utils/agents/skills/references/sourcebot-discovery.md` before the first call.
 - SCM platform detection and raw `git` CLI usage: `scm-detect`.
 - Verification commands: `project-tooling`.
 - Project conventions, discovered and agreed before any dispatch: `agent-conventions`.

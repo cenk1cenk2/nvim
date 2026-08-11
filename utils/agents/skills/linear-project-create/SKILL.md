@@ -11,7 +11,6 @@ references:
   - ../references/output-diff.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
-  - ../references/sourcebot-discovery.md
 ---
 
 ## Linear Project Creation
@@ -25,7 +24,7 @@ Present reasoning and content in logical chunks for user approval per `output-di
 
 Shared context lives in Linear project documents per `linear-project-documents`. Use project documents for repeated guidance, research, matrices, and agent instructions; keep issues focused on task-specific details.
 
-When the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or create agent-ready implementation context, run SCM discovery per `linear-scm-discovery`. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
+When the user explicitly asks to discover repositories, enrich the project from GitHub/GitLab, or create agent-ready implementation context, run SCM discovery per `linear-scm-discovery` — its Discovery Ladder picks the tools from what the active profile carries.
 
 ## Core Requirements
 

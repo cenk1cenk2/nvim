@@ -10,7 +10,6 @@ references:
   - ../references/linear-pickup-execution.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
-  - ../references/sourcebot-discovery.md
   - ../references/linear-chunk-issues.md
   - ../references/linear-state-transitions.md
   - ../references/output-diff.md
@@ -51,7 +50,7 @@ This skill turns a project or project slice into an execution-ready issue set. I
 3. **Read context.**
    - Read descriptions, comments, relations, labels, estimates, and priorities for selected issues.
    - Read project documents that provide agent instructions, migration guides, candidate matrices, or shared verification commands, handled per `linear-project-documents` — including propagating investigations, solved problems, and deviations as tightly focused documents via the `linear-document` skill.
-   - When the user explicitly asks to enrich pickup context from GitHub/GitLab, discover repositories, or produce agent-ready implementation guidance, use SCM discovery per `linear-scm-discovery` to enrich repository inventory, implementation guidance, prior art, file boundaries, and verification expectations. Use `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available.
+   - When the user explicitly asks to enrich pickup context from GitHub/GitLab, discover repositories, or produce agent-ready implementation guidance, use SCM discovery per `linear-scm-discovery` to enrich repository inventory, implementation guidance, prior art, file boundaries, and verification expectations — its Discovery Ladder picks the tools from what the active profile carries.
    - Identify stale descriptions, contradictory comments, missing details, and project documentation that needs updates.
 
 4. **Prepare execution set.**

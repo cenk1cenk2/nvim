@@ -11,7 +11,6 @@ references:
   - ../references/linear-research-documentation.md
   - ../references/linear-project-documents.md
   - ../references/linear-scm-discovery.md
-  - ../references/sourcebot-discovery.md
   - ../references/output-diff.md
 ---
 
@@ -38,7 +37,7 @@ Present the drafted issue in logical chunks for user approval per `output-diff` 
 
 When an issue points an implementation agent at files, screenshots, examples, or other context that may not be available from the issue text alone, package it into Linear documents or comments per `linear-project-documents`.
 
-When the user explicitly asks to enrich the issue from GitHub/GitLab or repository context, follow `linear-scm-discovery`, using `sourcebot-discovery` through that workflow for broad or unknown-repo searches when available. Use discovered facts to make the issue easier to implement, but do not run broad SCM discovery by default.
+When the user explicitly asks to enrich the issue from GitHub/GitLab or repository context, follow `linear-scm-discovery` — its Discovery Ladder picks the tools from what the active profile carries. Use discovered facts to make the issue easier to implement, but do not run broad SCM discovery by default.
 
 ## Issue Structure
 

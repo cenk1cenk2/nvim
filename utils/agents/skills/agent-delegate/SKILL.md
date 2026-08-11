@@ -10,7 +10,6 @@ references:
   - ../references/agent-conventions.md
   - ../references/agent-completion.md
   - ../references/scm-detect.md
-  - ../references/sourcebot-discovery.md
   - ../references/linear-state-transitions.md
   - ../references/provider-paths.md
 ---
@@ -36,7 +35,7 @@ Use it when:
 1. **Understand the task.**
    - Read the user's request. If ambiguous, ask ONE clarifying question before proceeding.
    - Gather minimal codebase context needed to brief the agent — don't over-explore; the agent will explore on its own.
-   - For org-wide repository or code discovery, or a repo shortlist before SCM calls, use `sourcebot-discovery`.
+   - For org-wide repository or code discovery, or a repo shortlist before SCM calls, start with a code-discovery MCP when the active profile has one, then verify live state with the workspace SCM tools. With none present, search from the SCM tools directly and say so. When that MCP is Sourcebot, read its tool flow from `~/.config/nvim/utils/agents/skills/references/sourcebot-discovery.md` before the first call.
 
 2. **Resolve tier / model selection.**
    - Parse the user's input per the `agent-delegate` reference:

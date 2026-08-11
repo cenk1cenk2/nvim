@@ -16,7 +16,6 @@ references:
   - ../references/agent-conventions.md
   - ../references/agent-plan-split.md
   - ../references/scm-detect.md
-  - ../references/sourcebot-discovery.md
   - ../references/project-tooling.md
   - ../references/output-diff.md
 ---
@@ -48,7 +47,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
    - Fetch Linear issues, project documents, relations, comments, blockers, and linked PRs/MRs.
    - Inspect target repository state and origin provider per `scm-detect`.
    - Discover verification commands per `project-tooling`.
-   - Use `sourcebot-discovery` when pickup needs broad repository/code discovery before GitLab-specific metadata.
+   - When pickup needs broad repository/code discovery before provider-specific metadata, start with a code-discovery MCP if the active profile has one, otherwise search from the workspace SCM tools and say so. When that MCP is Sourcebot, read its tool flow from `~/.config/nvim/utils/agents/skills/references/sourcebot-discovery.md` before the first call.
    - Use a cheap/default `agent-delegate` Explore agent when the unclear details are broad enough to benefit from parallel reconnaissance.
    - Ask early when details are not finalized, stale, contradictory, or missing.
 
