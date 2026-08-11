@@ -9,6 +9,7 @@ references:
   - ../references/linear-pickup-execution.md
   - ../references/linear-issue-philosophy.md
   - ../references/identifier-legibility.md
+  - ../references/open-artifact.md
 ---
 
 Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
@@ -109,7 +110,7 @@ If the user lets you decide:
 
 If the user asks to open the issue:
 
-- Use `hyprpilot__open` with the issue URL: `https://linear.app/<workspace>/issue/<identifier>`
+- Use `hyprpilot__open` with the issue URL: `https://linear.app/<workspace>/issue/<identifier>`, timing per `open-artifact`.
 - If opening multiple issues, ask the user which one to open first.
 
 ### Step 6: Session Planning

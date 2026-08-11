@@ -12,6 +12,7 @@ references:
   - ../references/linear-state-transitions.md
   - ../references/release-convention.md
   - ../references/identifier-legibility.md
+  - ../references/open-artifact.md
 argumentHint: '[optional: PR number or URL]'
 ---
 
@@ -44,5 +45,5 @@ Draft the description and title per `scm-create-description`, with GitHub MCP to
   6. `docs/PULL_REQUEST_TEMPLATE.md`
   7. `docs/pull_request_template.md`
   If a template is found, announce the path (e.g., "Found template at `.github/PULL_REQUEST_TEMPLATE.md`") and use it as the starting scaffold. If none is found, fall back to the standard description format in `scm-create-description`.
-- **Update the PR** (only after approval): present the drafted title and body per `output-diff`, then update both `title` (if changed) and `body` via `github__update_pull_request` and confirm success. Once the PR is created/updated and ready to look at, by default open its web URL in the browser (e.g. via `hyprpilot__open`) — skip only if the user explicitly said not to ("just give me the link", "don't open it", "no browser").
+- **Update the PR** (only after approval): present the drafted title and body per `output-diff`, then update both `title` (if changed) and `body` via `github__update_pull_request` and confirm success. Once the PR is created/updated and ready to look at, by default open its web URL in the browser (e.g. via `hyprpilot__open`), timing per `open-artifact` — skip only if the user explicitly said not to ("just give me the link", "don't open it", "no browser").
 - **Transition linked Linear issues to `In Review`:** after the PR update succeeds, follow `linear-state-transitions` — extract Linear ids from the PR body (`refs K-xxx` / `closes K-xxx` trailers) and the branch's commit messages, fetch each id's current `statusType`, and call `save_issue` with `state: "In Review"` (skip when already `Done` / `Canceled` or already `In Review`; never downgrade). Report one line per issue touched: `Linear state: moved K-xxx → In Review (was Todo).` Silent-with-report — no prompt; the user opts out by saying "don't move the Linear state" in the PR-create request. Skip entirely when zero Linear ids are found.
