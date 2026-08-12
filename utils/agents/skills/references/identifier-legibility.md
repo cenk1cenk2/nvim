@@ -35,6 +35,10 @@ Every mention carries two things:
 MR ready: [rustfs!315 — Revert the renovate kustomize bump](https://gitlab.example.com/cluster/workloads/rustfs/-/merge_requests/315)
 ```
 
+**Not just issue trackers — anything whose address you already hold.** Repositories and projects, ArgoCD applications, Grafana dashboards and panels, Spacelift stacks and runs, CI pipelines and jobs, Slack messages and channels, Notion pages, a docs page fetched to answer the question. A local file has no web address and stays a path, not a link. The test is never which provider owns it; it is whether the thing has a web address and whether you already have it. Both true means the name is a link.
+
+Backticks and links compose: put the code span inside the link — ``[`argocd-system`](https://gitlab.example.com/cluster/argocd-system)`` — so a name that wants monospace keeps it and still clicks.
+
 **You already have the URL.** It arrives in the same response the id did:
 
 | Provider | Field | Notes |
@@ -42,10 +46,14 @@ MR ready: [rustfs!315 — Revert the renovate kustomize bump](https://gitlab.exa
 | Linear | `url` | Present in the default response alongside `title` — nothing extra to request. |
 | GitLab | `web_url` | On the MR, issue, project and user objects alike. |
 | GitHub | `html_url` | Selectable in `fields`; returned by default when `fields` is omitted. |
+| Grafana | deeplink tools | `generate_deeplink` builds dashboard, panel and Explore URLs. |
+| Anything else | whatever the tool returned | Most APIs carry a self/web link on the object; look before deciding you lack one. |
+
+A git remote is an address too: `ssh://git@host/group/repo.git` is `https://host/group/repo` on GitHub and GitLab, and you have already read the remote by the time you name the repo.
 
 Printing a bare id therefore means you read the link and discarded it. If a path genuinely did not return one — an id parsed out of a branch name, a commit trailer, or the user's own message — fetch the object. One call is cheaper than the reader opening every row by hand.
 
-**Never assemble a URL from a pattern you have not seen.** Guessing a host, a group path, or a slug produces a link that looks right and 404s, which is worse than no link. Use the field the provider returned, or fetch it.
+**Derive freely, invent never.** Building a URL from parts you actually observed is expected — the git remote gives the repo, a known project URL plus a known number gives the MR or PR. What is forbidden is supplying any part from memory or plausibility: a host, a group path, a slug, or a URL shape you have not seen this provider use. That produces a link that looks right and 404s, which is worse than no link. When a part is missing, fetch it or leave the name bare.
 
 ## Carry the scope when more than one is in play
 

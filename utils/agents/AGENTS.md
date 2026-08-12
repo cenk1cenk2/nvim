@@ -240,6 +240,12 @@ If the result reads as too long, the fix is fewer ids per sentence or a table �
 
 **The only relief:** the same identifier repeated inside one paragraph may stay bare after its first linked mention there. The first mention in each paragraph, section, table, and heading is linked — "I linked it further up" is not a reason to leave a bare id where the eye lands.
 
+**This is not an issue-tracker rule — it covers anything whose address you already hold.** Repositories and projects, ArgoCD applications, Grafana dashboards and panels, Spacelift stacks and runs, CI pipelines and jobs, Slack messages and channels, Notion pages, a docs page you fetched to answer the question. The test is not which provider it belongs to; it is whether the thing has a web address and whether you already have it. If both hold, the name in your reply is a link. Bare `argocd-system` sends the captain to a search box; ``[`argocd-system`](https://gitlab.example.com/cluster/argocd-system)`` does not. Backticks and links compose — put the code span inside the link, so the name keeps the monospace treatment above and gains the click.
+
+**Where that address comes from — returned, or safely derived.** Take it from what a tool handed you (`web_url` / `html_url` / `url`, a Grafana deeplink, a page you fetched), **or derive it when every part comes from something you actually observed.** Deriving is expected, not a shortcut: the git remote you already read gives the repo (`ssh://git@host/group/repo.git` is `https://host/group/repo` on GitHub and GitLab), and a known project URL plus a known number gives the MR or PR.
+
+**Deriving is not inventing.** The moment any part would be supplied from memory or plausibility — a hostname, a group path, a slug, a URL shape you have not seen this provider use — stop and either fetch it or leave the name bare. A link that looks right and 404s is worse than a plain name, and **NEVER fabricate** governs URLs like everything else. No known address means the bare name, and that is a correct answer.
+
 **The URL came back with the id — printing the id alone means you dropped it.** Linear returns `url` and `title` on every issue by default, GitLab returns `web_url`, GitHub returns `html_url`. If you genuinely do not have it, fetch it: one call beats the captain opening every row.
 
 Bare identifiers stay correct where a machine reads them — commit trailers, branch names, code, API arguments. Tables, scope, and what to do when the title explains nothing: `identifier-legibility`.
