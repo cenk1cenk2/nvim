@@ -43,6 +43,10 @@ Posture: `present-first`.
 4. **Determine the base branch.**
    - Default to the repository's default branch.
    - Override when the user explicitly specifies a base (e.g., "branch off `feat/x`", "from `develop`").
+   - **Cascading work — base off the branch you depend on, not trunk.** When the change builds on a branch that is still open in review, branch from *that* branch. Basing on the default instead drags the prerequisite's commits into your diff, so the review re-covers work already reviewed next door and the two changes cannot be read apart.
+     - The PR/MR then targets that same branch (`github-pr-create` / `gitlab-mr-create`), and both platforms retarget it to trunk once the prerequisite merges — the stack unwinds itself, so nothing has to be rebased by hand.
+     - Fast-forward does not apply to a non-default base. Fetch and pull the prerequisite branch instead, so you stack on its current tip rather than a stale local copy.
+     - Say in the plan which branch is the prerequisite and that the PR/MR will target it — the base is the whole point of the branch here, not a detail.
 
 5. **Present the plan.**
    - Present per `output-diff` with a single chunk covering the full branching plan:
@@ -84,6 +88,7 @@ This skill is composable — other skills can delegate branch creation to it as 
 - **Sticky style only for related chained branching.** Within one conversation, reuse the style of earlier branches when splitting the same work. Do not inherit styles across unrelated work or from semantic prefixes (`release/*`).
 - **Kebab-case always** for the descriptive partial. When the user asks for kebab-case-only names, flatten `prefix/descriptive` to `prefix-descriptive` (drop the `/`).
 - **Default branch unless told otherwise** — never branch from a random HEAD silently.
+- **Stack on what you depend on.** Work that builds on an unmerged branch bases off that branch and targets it, so each review sees only its own diff. Both platforms retarget the dependent PR/MR to trunk when the prerequisite merges.
 - **Fast-forward default unless told otherwise.** On any blocker, ask the user — never auto-resolve.
 - **Never push automatically.** Branch creation is local-only until the user explicitly asks to push.
 
@@ -148,6 +153,26 @@ This skill is composable — other skills can delegate branch creation to it as 
 4. User approves.
 5. Create `feat/payment-retry-cleanup` from `feat/payment-retry` → checkout.
 6. Confirm.
+
+---
+
+**User says:** "branch for the rate-limit work — it needs the token refresh from the MR that's still open"
+
+1. Current branch: `feat/token-refresh`, which has an open MR into `main`. The new work depends on it.
+2. Cascading: base off the prerequisite rather than `main`, so the review shows only the rate-limit diff.
+3. Propose plan:
+
+   > Stacking on `feat/token-refresh` — its MR is still open, so basing on `main` would pull its commits into your diff. The MR for this branch targets `feat/token-refresh`, and GitLab retargets it to `main` when the prerequisite merges.
+   >
+   > ```
+   > branch:        feat/rate-limit
+   > base:          feat/token-refresh (prerequisite, MR open)
+   > fast-forward:  no (base is not default; pulled the prerequisite instead)
+   > ```
+
+4. User approves.
+5. `git checkout feat/token-refresh`, `git pull --ff-only`, create `feat/rate-limit` from it, checkout.
+6. Confirm, naming the prerequisite and the MR target.
 
 ---
 
