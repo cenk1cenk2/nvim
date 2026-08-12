@@ -1,20 +1,51 @@
 ---
 name: code-style
-description: code-style How code gets written here - style and comment defaults, naming, design defaults, verification, debugging discipline, and which improvements to raise unprompted. Load before writing or editing code in any language. Not for reviewing a diff, auditing a repo for improvements, or debugging a specific failure.
+description: code-style How code gets written here - matching the surrounding neighbourhood, style and comment defaults, naming, design defaults, verification, debugging discipline, and which improvements to raise unprompted. Load before writing or editing code in any language. Not for reviewing a diff, auditing a repo for improvements, or debugging a specific failure.
+references:
+  - ../references/project-tooling.md
 ---
 
 ## Writing Code
 
 Across languages and frameworks, **matching the local project first**. A convention the surrounding code already follows beats every default below.
 
+## Match the Neighbourhood
+
+**Read the code around your change before writing any of your own, and measure against it rather than a global ideal.** The target is code no reader can pick out as added later or by a different hand. This is the first check, not a polish pass — a default from this file applied over a neighbourhood that does it differently is a defect, however good the default.
+
+Check each axis against the siblings solving the same problem:
+
+- **Naming.** Casing per language, abbreviation habits, boolean prefixes (`is` / `has` / `should`), and how neighbours name this very concept.
+- **Function signatures.** Parameter order and grouping, options bag versus positional, return discipline (`Result` / `error` / option / throw), sync versus async shape, and whether behaviour lives here as a method or a free function.
+- **Comment density, including its absence.** A sparse-comment file is a deliberate convention, not a gap to fill. See `## Comments`.
+- **Layout and idiom.** File and module structure, import ordering, error-handling and logging shape, dependency-injection style.
+
+**Defer to the tooling.** Whatever the project's formatter or linter normalizes — import order, whitespace, quote style, trailing commas — is not your judgment call and not worth your attention. Discover the project's real commands per `project-tooling` and run them; spend the attention on what tooling cannot catch: naming, signatures, comment intent, structure.
+
+`code-improve` audits these same axes across an area and reports drift as findings. This section is the writing side of that rule — same axes, applied before the code exists rather than after.
+
 ## Style Defaults
 
 - Avoid trailing whitespace.
 - Start YAML files with `---` unless the directory consistently does otherwise.
 - In multi-statement functions, leave a blank line before the final return when the language and style support it. Single-statement functions and guard returns do not need it.
+
+## Comments
+
 - **Match the surrounding comment style, or add none.** Before writing any comment, look at the neighboring code and mirror its density, tone, and format — including when that means no comments at all. Do not add comments or docstrings unless the surrounding file already uses them or the user asks.
-- **Never state the obvious — this is absolute.** A comment must explain *why*: a non-obvious constraint, trade-off, edge case, or gotcha. Never restate *what* the code already says. A comment that names the operation its line performs is noise; if it only paraphrases the line below it, delete it. Explain your changes to the user in chat, not in code comments.
-- **Tag every TODO-family comment with the user's handle, right after the colon** — `KEYWORD: @handle <message>`, e.g. `TODO: @cenk1cenk2 drop once the v2 endpoint ships`. The handle is the user's account on **that repository's git provider**, so read it off the remote rather than assuming; it is `@cenk1cenk2` on GitHub and on `gitlab.kilic.dev`. Recognised keywords, and nothing else: `FIX` (`FIXME`, `BUG`, `FIXIT`, `ISSUE`), `TODO`, `HACK`, `WARN` (`WARNING`, `XXX`), `PERF` (`OPTIM`, `PERFORMANCE`, `OPTIMIZE`), `NOTE` (`INFO`). This is how such a comment is written, not permission to add one — the two rules above still decide whether it exists.
+- **Never state the obvious — this is absolute.** A comment must explain *why*: a non-obvious constraint, trade-off, edge case, or gotcha that stays true and stays surprising long after the change lands. Never restate *what* the code already says. A comment that names the operation its line performs is noise; if it only paraphrases the line below it, delete it.
+- **Keep your own reasoning out of the file — this is absolute.** A comment documents the code for whoever maintains it next. It is not where you explain the edit you just made, justify the option you picked, or argue against the one you rejected. This is thinking, not a comment:
+
+  ```terraform
+  # null_resource.karpenter_ami triggers on this rather than the variable, so the AMI stays
+  # visible in the plan for callers that leave it null and take it from parameters
+  ```
+
+  Nothing there describes the code. It narrates a decision, addressed to whoever reviews the diff rather than whoever inherits the file — and a week later the alternative it argues against exists nowhere but in your head.
+
+  **The test: would this comment exist if the code had always looked this way?** If it only makes sense as a defence of a change, it belongs in your chat message to the user, never in the file. Catch yourself on the tells — "rather than", "instead of", "so callers that…", any clause comparing against an alternative the file does not contain, and any sentence that would start with "I".
+
+- **Tag every TODO-family comment with the user's handle, right after the colon** — `KEYWORD: @handle <message>`, e.g. `TODO: @cenk1cenk2 drop once the v2 endpoint ships`. The handle is the user's account on **that repository's git provider**, so read it off the remote rather than assuming; it is `@cenk1cenk2` on GitHub and on `gitlab.kilic.dev`. Recognised keywords, and nothing else: `FIX` (`FIXME`, `BUG`, `FIXIT`, `ISSUE`), `TODO`, `HACK`, `WARN` (`WARNING`, `XXX`), `PERF` (`OPTIM`, `PERFORMANCE`, `OPTIMIZE`), `NOTE` (`INFO`). This is how such a comment is written, not permission to add one — the rules above still decide whether it exists.
 
 ## Naming
 

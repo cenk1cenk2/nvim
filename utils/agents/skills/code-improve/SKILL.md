@@ -97,12 +97,14 @@ This is an audit, not a review of pending changes. For reviewing a specific bran
 
 ## Consistency Dimension — What to Audit
 
-Consistency is measured against the **local neighborhood**, not a global ideal: the target state is code indistinguishable from the files around it, where a reader can't tell which lines were added later or by a different hand. For the consistency dimension, audit these axes and flag *drift from the surrounding convention* — never deviation from an external style guide:
+**The axes live in `code-style`'s "Match the Neighbourhood" — load that skill for the full rule, and pass it to the consistency subagent so its prompt stays self-contained.** This section is the audit side of the same convention: `code-style` applies it while writing, this dimension hunts for where it was not applied.
 
-- **Naming.** Casing per language (snake_case / camelCase / PascalCase), abbreviation habits, boolean prefixes (`is` / `has` / `should`), and names that restate their scope (`sandbox.resolve(path)`, not `sandbox.resolve_sandbox_path(path)`). Flag stutters, one-off casings, and names that diverge from how siblings name the same concept.
-- **Function signatures.** Parameter order and grouping, options-bag vs positional params, return discipline (`Result` / `error` / option / throw — applied consistently?), sync vs async shape, and behavior placed as a free function where the codebase would make it a method (or vice versa).
-- **Comments — density and its absence.** Match the surrounding file. Flag comments added where neighbors carry none (noise), and missing comments where the file or module documents consistently. A sparse-comment file is a deliberate convention — do NOT propose blanket "add docstrings"; flag the *drift*, in either direction.
-- **Layout & idiom.** File/module structure, import ordering, error-handling and logging shape, dependency-injection style — deviations from how sibling files solve the same problem.
+Consistency is measured against the **local neighborhood**, not a global ideal: the target state is code indistinguishable from the files around it, where a reader can't tell which lines were added later or by a different hand. Flag *drift from the surrounding convention* — never deviation from an external style guide — along the four axes:
+
+- **Naming** — casing, abbreviation habits, boolean prefixes, and names that restate their scope (`sandbox.resolve(path)`, not `sandbox.resolve_sandbox_path(path)`). Flag stutters, one-off casings, divergence from how siblings name the same concept.
+- **Function signatures** — parameter order and grouping, options bag vs positional, return discipline, sync vs async shape, free function where the codebase would use a method.
+- **Comments — density and its absence.** Flag comments added where neighbors carry none, and missing comments where the module documents consistently. A sparse-comment file is a deliberate convention: do NOT propose blanket "add docstrings", flag the *drift* in either direction. **Comments narrating an author's reasoning rather than the code — a decision defended against an alternative the file does not contain — are a finding wherever they appear**, per `code-style`.
+- **Layout & idiom** — file/module structure, import ordering, error-handling and logging shape, dependency-injection style.
 
 **Defer to the tooling.** Skip whatever the project's formatter/linter auto-normalizes — import ordering, whitespace, quote style, trailing commas. That drift isn't worth a finding; `task fmt` (or the project's equivalent) fixes it on the next run. Spend the consistency budget on what the tooling can't catch: naming, signatures, comment intent, structure.
 
@@ -164,7 +166,7 @@ Ranked by value, highest first. **Where** is a concrete path, never "several pla
 
 - **Friction is the signal.** When exploring, what feels awkward, what takes 3 jumps to understand, what has a test that clearly dodges the real behavior — those are candidates. Organic exploration beats rigid heuristics.
 - **Branch out with subagents.** Parallel audits across dimensions find more candidates faster, each subagent's focus keeps it from drifting, and the raw exploration stays isolated from the main context.
-- **Consistency is local.** Measure each file against its neighbors, not a global ideal. Flag drift from the surrounding convention — naming, signatures, comment density — and treat the absence of comments or abstraction as a deliberate pattern to preserve, never a gap to fill.
+- **Consistency is local.** Measure each file against its neighbors, not a global ideal. Flag drift from the surrounding convention — naming, signatures, comment density — and treat the absence of comments or abstraction as a deliberate pattern to preserve, never a gap to fill. The convention itself is `code-style`'s; this skill only hunts for where it was broken.
 - **Ground in the tooling.** Discover the project's format / lint / test tasks up front and keep proposals inside what they enforce — a picked improvement should land green, and don't spend findings on drift the formatter auto-fixes.
 - **Be opinionated.** The user wants a strong read. "All options have trade-offs" is a failure mode — recommend one.
 - **Stop at proposal.** This skill does not implement. After picking, the user invokes `plan-hard` (or another skill) to plan the work.
@@ -198,6 +200,7 @@ Ranked by value, highest first. **Where** is a concrete path, never "several pla
 - **`plan-hard`** — the natural follow-on for any picked improvement. Produce the plan. This skill stops at proposal.
 - **`plan-revise`** — if a picked improvement reveals that an existing plan was wrong, route to `plan-revise` instead of `plan-hard`.
 - **`code-review-branch`** / **`code-review-changes`** — for reviewing pending changes, not for codebase-wide audit. Different skill, different scope.
+- **`code-style`** — owns the conventions this audit measures against, "Match the Neighbourhood" above all. Load it for the consistency dimension rather than inventing a standard; a finding that contradicts it is a bad finding.
 - **`code-deviations`** — if the audit surfaces a deviation between intended and actual behavior, apply the deviations pattern when discussing with the user.
 
 ## Related Skills

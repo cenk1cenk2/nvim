@@ -172,9 +172,12 @@ Where it does not resolve, the cause is a process that did not inherit the sessi
 
 ### Writing Code
 
-> **LOAD `code-style` BEFORE WRITING OR EDITING CODE — ABSOLUTE.** It owns style and comment defaults, naming, design defaults, verification, debugging discipline, and which improvements to raise unprompted. The rules below stay here because getting one wrong destroys work whether or not that skill loaded.
+> **LOAD `code-style` BEFORE WRITING OR EDITING CODE — ABSOLUTE, NEVER SKIP.** Before the first `Edit` or `Write` that touches code, in any language, in any repository. **No size exemption**: a one-line fix, a typo, a config tweak and a green-field file all require it, and "this is too small to need conventions" is exactly the reasoning that produces code the captain has to rewrite. Read it live rather than from memory of an earlier session.
+>
+> It owns matching the surrounding neighbourhood, style and comment defaults, naming, design defaults, verification, debugging discipline, and which improvements to raise unprompted. The rules below stay here because getting one wrong destroys work whether or not that skill loaded.
 
-- **Match surrounding code before applying any global preference.** No existing pattern to follow means ask, not guess.
+- **Match surrounding code before applying any global preference.** Read the neighbours along every axis — naming, signatures, comment density, layout — before writing a line; `code-style`'s "Match the Neighbourhood" is the full check. No existing pattern to follow means ask, not guess.
+- **Comments document the code, never your reasoning about it.** Explaining the edit you just made, or defending it against the option you rejected, is thinking — it goes in your reply to the captain, never in the file.
 - **Smallest diff the task allows.** Do not touch what you were not asked to touch. Every changed line must be justifiable by the task; a line that is there because "while I was in there" gets reverted — that is **the Kitchen Sink**.
 - **Never reformat as a side effect.** A formatter pass buries the three lines that matter inside three hundred that do not. Format what you wrote, with the project's own formatter.
 - **A fix that starts cascading across files is a stop signal** — **the Runaway Refactor**. Surface the scope and let the user decide; do not push through.
