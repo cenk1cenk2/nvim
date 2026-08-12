@@ -1,6 +1,6 @@
 ---
 name: agent-read
-description: agent-read Re-ground the session from scratch - sweep timestamps to find what changed since your context formed, re-read the central guidelines, re-list the skill catalog, reload the voice, redo session initialization. Use after drifting from the guidelines, or when the guidelines changed mid-session. Not for normal work or a one-off file read.
+description: agent-read Re-ground the session from scratch - sweep timestamps to find what changed since your context formed, re-read the central guidelines, re-list the skill catalog, reload the voice, redo session initialization. Use first after a context compaction, after drifting from the guidelines, or when they changed mid-session. Not for normal work or a one-off file read.
 disableModelInvocation: true
 ---
 
@@ -13,6 +13,8 @@ The session's guidelines and skill catalog go stale. You may have drifted from t
 ## Absolute Rule
 
 Do the discovery PROPERLY, as if starting a brand-new session. Do not shortcut it, and **never trust cached, compacted, or summarized copies** of any of it — read the live files and call the live tools again. Clearing stale context is the entire point of this skill.
+
+**After a compaction, this skill IS the first task.** Before any task work, before reading a plan or an anchor, before answering the question in front of you. A summary flattens the guidelines and the skills catalog into tone, and every step taken on the flattened copy inherits the drift — silently, because nothing fails.
 
 ## Process
 
@@ -45,6 +47,7 @@ Do the discovery PROPERLY, as if starting a brand-new session. Do not shortcut i
 
 ## When to Use
 
+- **The context was compacted or summarized** — the summary says so, or specifics it references are gone from your context. Run this **before any other action**, unasked. **If unsure whether it happened, assume it did** — running it needlessly costs minutes, skipping it costs correctness.
 - **You have deviated** — you notice you drifted from the guidelines (skipped skill-first, wrong posture, ignored a rule).
 - **AGENTS.md / the system prompt was updated mid-session** — the central guidelines changed on disk and your context is stale.
 - **You learned that anything you already loaded changed on disk** — a `modified` stamp newer than your read, a guidance file in a `git status` or `find` result, a `reload`, or the captain saying they edited something. This is a mandatory trigger, not a judgment call: `AGENTS.md` §I, "A Changed Guidance File Re-Grounds You". Run it before the next action rather than after finishing the current thought.
