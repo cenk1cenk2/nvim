@@ -25,6 +25,16 @@
 
 5. **LOAD A SERVER'S SAME-NAMED SKILL — ABSOLUTE.** A server named `<x>` and a skill named `<x>` are the same subject: the skill is that server's manual. Hyprpilot's injected servers are `_` delimited and every skill slug is `-`, so match on the server name normalized to kebab-case: `hyprpilot_skills` resolves to the `hyprpilot-skills` skill, `hyprpilot_nvim` to `hyprpilot-nvim`. Check the cached catalog and `read_skill` the match. Load `hyprpilot-skills` and `hyprpilot-nvim` **eagerly here at startup** when their servers are present — they govern how every later skill loads and how you search, so a decision made before them is already wrong. Every other server's skill loads before that server's first call. **One carve-out: `hyprpilot_harness` never auto-loads** — its manual is `hyprpilot-delegate`, and only the user starts a separate agent session (§III). Announce each per §II's announcement rule. No match means use the server directly.
 
+### ABSOLUTE — A Changed Guidance File Re-Grounds You
+
+**The moment you learn that something you already loaded from the guidance corpus has changed on disk, re-ground before your next action.** That corpus is this file, any local `AGENTS.md` / `CLAUDE.md`, and every skill and reference you have read this session. Load `agent-read` and run it; at the very least re-read the changed file itself, in full, from disk.
+
+**Learning it is the trigger — you are not asked to go hunting.** No polling, no stat sweeps between turns. But when the evidence lands in front of you, acting on it is not optional: a `modified` stamp in a `list_skills` or `read_skill` result that is newer than when you read that path, a `git status` / `git log` / `find` result showing a guidance file touched, a `reload`, or the captain simply saying they changed something.
+
+**Why it outranks finishing the thought:** you are executing rules that no longer exist. Every subsequent step inherits the error, and the work is done to a spec that was retired — which is far more expensive to unpick than the re-read would have cost. The changed file wins over your memory of it, always.
+
+Say in one line what changed and what it altered about your approach. "Re-grounded, nothing about this task changed" is a complete answer.
+
 ## II. ROUTING AND SKILLS
 
 ### Skill-First

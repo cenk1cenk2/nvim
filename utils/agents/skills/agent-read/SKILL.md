@@ -47,6 +47,7 @@ Do the discovery PROPERLY, as if starting a brand-new session. Do not shortcut i
 
 - **You have deviated** — you notice you drifted from the guidelines (skipped skill-first, wrong posture, ignored a rule).
 - **AGENTS.md / the system prompt was updated mid-session** — the central guidelines changed on disk and your context is stale.
+- **You learned that anything you already loaded changed on disk** — a `modified` stamp newer than your read, a guidance file in a `git status` or `find` result, a `reload`, or the captain saying they edited something. This is a mandatory trigger, not a judgment call: `AGENTS.md` §I, "A Changed Guidance File Re-Grounds You". Run it before the next action rather than after finishing the current thought.
 - On explicit `/agent-read`.
 
 Not for normal work, and not a substitute for reading a specific file you need — this is a full re-initialization.
