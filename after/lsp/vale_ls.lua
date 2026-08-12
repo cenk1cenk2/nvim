@@ -9,8 +9,8 @@ return {
       .create({
         command = "vale",
         args = { "--config", config, "sync" },
-        on_failure = function(j, return_val)
-          require("ck.log").error("Vale sync failed: %s", j:result())
+        on_failure = function(j)
+          require("ck.log"):error("Vale sync failed: %s", j:result())
         end,
       })
       :start()
