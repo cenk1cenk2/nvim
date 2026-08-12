@@ -7,6 +7,7 @@ references:
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
+  - ../references/linear/linear-description-structure.md
   - ../references/identifier-legibility.md
 ---
 

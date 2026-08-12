@@ -33,3 +33,12 @@ Standard structure for Linear issue, project, and initiative descriptions. Not e
 - Use `##` and smaller headings to break sections when descriptions are large or involve extensive research.
 - Keep descriptions clean and scannable.
 - Keep issue titles concise and consistent in style across the project.
+
+## The Normaliser Rewrites What You Send
+
+Linear normalises markdown on write, and two constructs come back broken. **Both fail silently — the write succeeds either way, so read the echoed body back and look at it.**
+
+- **A line ending in bold, immediately before a line starting with bold, merges into `****`.** Patching the whitespace does not fix it; Linear re-normalises straight back. Change the content so the line does not end in bold.
+- **Strikethrough spanning an inline code span shreds**, leaking the tildes inside the code and stranding nearby bold markers. Never wrap a code span in `~~`; strike a pure-prose phrase or nothing.
+
+**For an item that is now resolved, lead with a bold `RESOLVED <date>:` rather than striking the original text.** It sidesteps both traps and stays readable in a long checklist.

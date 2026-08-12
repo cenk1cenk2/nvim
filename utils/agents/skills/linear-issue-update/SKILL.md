@@ -9,6 +9,7 @@ references:
   - ../references/output-diff.md
   - ../references/linear/linear-document-handling.md
   - ../references/linear/linear-issue-philosophy.md
+  - ../references/linear/linear-description-structure.md
   - ../references/identifier-legibility.md
 ---
 

@@ -11,11 +11,13 @@ Every Linear issue MUST have these fields set. Do NOT create issues with missing
 ## State
 
 - **MANDATORY** — you MUST explicitly send `state` on EVERY `save_issue` call. The Linear API defaults to `Triage` which is WRONG.
-- **Default for new issues:** `state: "Backlog"`. Ask the user about timing — if they want it in the current cycle, use `state: "Todo"`.
+- **Default for new issues:** `state: "Backlog"`. Ask the user about timing — if they want it in the current cycle, use the team's own in-cycle unstarted state.
+- **Workflow states are PER TEAM — fetch them, never assume.** `list_issue_statuses` returns the team's real set. **A state name the team does not have is silently dropped and the issue stays in `Triage`** — no error, no indication which field was wrong. Some teams have no `Todo` at all and name their unstarted state something else entirely.
+- **Verify the echo.** `save_issue` returns the issue, and on a write that did not land it reports the **old** state rather than erroring. Read the returned `status` and retry on mismatch.
 - **`Triage` is opt-in only** — never set it as a default or fallback. Use `Triage` ONLY when the user explicitly asks for it.
-- **Field name:** Use `state`, NOT `status`.
+- **Field name:** send `state`, NOT `status` — but the value comes **back** as `status`.
 - **Spelling:** `Canceled` (American, one 'l'). NOT `Cancelled`.
-- **Valid values:** `Backlog`, `Todo`, `In Progress`, `In Review`, `Done`, `Canceled`.
+- **Common values, to confirm against the team's own list rather than trust:** `Backlog`, `Todo`, `In Progress`, `In Review`, `Done`, `Canceled`.
 - For state meanings and transition rules, see the `linear-issue-states` reference.
 
 ## Labels, Estimate, Priority
@@ -44,6 +46,8 @@ When creating multiple related issues or working with projects, ALWAYS set prope
 
 **Relations are append-only.** Passing `blocks` adds to what is already there; omitting it removes nothing. To break a relation, name it explicitly in `removeBlocks`, `removeBlockedBy`, or `removeRelatedTo`. Clear a parent with `parentId: null`.
 
+**The save response does NOT echo relations**, so a relation write cannot be confirmed from the result the way `state` can. Re-fetch the issue, or fetch the other side, before reporting a dependency graph as built. An accepted write is not a verified edge.
+
 ## Create vs. Update
 
 - **`id` decides which one happens.** Present means update, absent means create. Pass the identifier (`K-123`). Never send `id` when creating.
@@ -53,6 +57,8 @@ When creating multiple related issues or working with projects, ALWAYS set prope
 **Editing a description: use `patch`, not a rewritten `description`.** `patch` applies a list of ops — `replace`, `insert_before`, `insert_after`, `prepend`, `append`, `replace_range` — against the current content, atomically and in order. Only valid on update, and it takes the place of `description` rather than accompanying it.
 
 Every anchor string must match the current content **exactly once**, and one failing op aborts the whole save, so nothing lands half-applied. Resending a full description to change two lines risks silently dropping whatever was edited since it was fetched.
+
+**Anchor against the NORMALISED content, not against what you sent.** Linear rewrites markdown on write — see `linear-description-structure` — so an anchor copied from your own earlier draft can fail to match while the same anchor copied from a fresh fetch succeeds. Fetch first, then anchor.
 
 ## Structural vs. Descriptive
 
