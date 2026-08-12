@@ -15,6 +15,7 @@ Every mention carries two things:
 
 - **Tables:** an id column is always followed by a title or summary column, and the id itself is the link.
 - **Prose:** `[K-219 — Rotate the JWT signing key](https://linear.app/<workspace>/issue/K-219/rotate-the-jwt-signing-key)`, or the name first with the id after.
+- **Inline, mid-sentence:** the same, and this is the position where the rule is most often dropped. An id inside a clause, an aside, or a parenthetical is not a lesser mention exempt from linking — referring to a thing in passing is exactly when the reader wants to click it. The only relief is the same id repeated within one paragraph, which may stay bare after its first linked mention there.
 
 ```markdown
 | Issue | Title | State |
@@ -25,6 +26,8 @@ Every mention carries two things:
 ## Give it a link
 
 **Markdown link form, with the absolute URL inside it.** It renders clickable where markdown renders, and where it does not the raw URL is still on screen for the terminal to autolink — so the link form degrades into the plain form rather than into nothing. A bare id is clickable nowhere, and a shortened or relative URL is clickable only sometimes.
+
+**A run of ids in one sentence is the worst case.** Sequencing and dependency sentences — merge order, blocked-on chains, apply-before-apply — pile up identifiers faster than anything else, and each bare one makes the sentence less readable rather than more precise. `Merge order: !320 first, then !319, then undraft !987` is five addresses and nothing to act on. Give every id a parenthetical description or a link, **both by default**; a link alone is the floor, for when titles would genuinely drown the sentence. If the result reads long, use fewer ids per sentence or a table — never the same sentence with the titles stripped back out.
 
 **Announcements are the case that matters most.** "The MR is ready", "the issue is done", "picked up K-219", "opened the PR" — a one-line announcement is exactly where the reader wants to click straight through, and exactly where a bare id most often survives because there is no table to force a title column. Announce with the link every time:
 

@@ -222,7 +222,23 @@ Every mention carries the **title**, and the **full URL** as a markdown link whe
 - `[K-219 — Rotate the JWT signing key](https://linear.app/<workspace>/issue/K-219/rotate-the-jwt-signing-key)`
 - `MR ready: [rustfs!315 — Revert the renovate kustomize bump](https://gitlab.example.com/cluster/workloads/rustfs/-/merge_requests/315)`
 
-Link form rather than a bare URL: it renders clickable where markdown renders, and where it does not the raw URL is still on screen for the terminal to autolink. This governs announcements above all — "the MR is ready", "the issue is done", "picked up K-219" carry the link every time, not only tables and lists.
+**EVERY mention, in EVERY position — above all the inline ones mid-sentence.** This is where the rule is dropped, every time: a table gets a tidy id column and a headline announcement gets its link, and then three paragraphs of prose name `!932` and `K-382` bare because they are "just referring to it". Referring to it is precisely when the captain wants to click it. There is no position — a clause, an aside, a parenthetical, a footnote, a bullet halfway down a report — where an identifier is exempt:
+
+> Blocked on [!932 — Bump the ingress controller](https://gitlab.example.com/cluster/workloads/ingress/-/merge_requests/932), which has to land before [K-382 — Cut over the staging ruler](https://linear.app/<workspace>/issue/K-382/cut-over-the-staging-ruler) can move.
+
+**A run of ids in one sentence is the worst case, and the most common.** Sequencing, ordering and dependency sentences pile up identifiers faster than anything else, and each one added makes the sentence less readable rather than more precise. This is unusable:
+
+> Merge order that matters: !320 first, wait for ArgoCD to actually prune, then !319, then undraft !987. Separately !54 merged and applied before !55.
+
+Five addresses, nothing to act on, and no way to tell which of them matters. **Every id gets a parenthetical description or a link — ideally both, and both is the default.** A link alone is the floor, acceptable only where titles would genuinely drown the sentence:
+
+> Merge order that matters: [!320 — Drop the legacy ruler CRDs](https://gitlab.example.com/cluster/workloads/ruler/-/merge_requests/320) first, wait for ArgoCD to actually prune, then [!319 — Point alerts at the new ruler](https://gitlab.example.com/cluster/workloads/ruler/-/merge_requests/319), then undraft [!987 — Bump the chart](https://gitlab.example.com/cluster/workloads/ruler/-/merge_requests/987).
+
+If the result reads as too long, the fix is fewer ids per sentence or a table — never the same sentence with the titles stripped back out.
+
+**Always emit the markdown link form** — never withhold it wondering whether the surface renders it. Where markdown renders it is clickable; where it does not, the raw URL is still on screen and the terminal autolinks it. It degrades into the plain form rather than into nothing, so the form is never the wrong bet.
+
+**The only relief:** the same identifier repeated inside one paragraph may stay bare after its first linked mention there. The first mention in each paragraph, section, table, and heading is linked — "I linked it further up" is not a reason to leave a bare id where the eye lands.
 
 **The URL came back with the id — printing the id alone means you dropped it.** Linear returns `url` and `title` on every issue by default, GitLab returns `web_url`, GitHub returns `html_url`. If you genuinely do not have it, fetch it: one call beats the captain opening every row.
 
