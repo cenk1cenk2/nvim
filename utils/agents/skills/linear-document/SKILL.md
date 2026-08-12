@@ -7,8 +7,11 @@ references:
   - ../references/output-diff.md
   - ../references/linear/linear-project-documents.md
   - ../references/linear/linear-document-handling.md
+  - ../references/identifier-legibility.md
 argumentHint: '[optional: issue or project, and the concern to capture]'
 ---
+
+Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
 
 ## Linear Document — Attach Task Details to an Issue or Project
 

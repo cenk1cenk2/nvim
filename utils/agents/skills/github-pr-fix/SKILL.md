@@ -8,7 +8,10 @@ references:
   - ../references/scm/scm-fix-threads.md
   - ../references/scm/scm-github.md
   - ../references/scm/scm-detect.md
+  - ../references/identifier-legibility.md
 ---
+
+Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
 
 ## GitHub PR Fix
 

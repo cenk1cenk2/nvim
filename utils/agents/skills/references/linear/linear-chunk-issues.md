@@ -81,13 +81,13 @@ Commit per issue where possible. Use `refs <ID>` for partial progress, `closes <
 
 ## Task Split Table
 
-Add an **Issue** column to the standard task split table. Carry the issue title too, per `identifier-legibility` — a bare id in a schedule tells the reader nothing about what the agent is doing:
+Add an **Issue** column to the standard task split table. Link every id to its issue and let the **Task** column carry the title, per `identifier-legibility` — a bare id in a schedule tells the reader nothing about what the agent is doing and gives them nothing to click:
 
 | Agent | Task | Files (write) | Issue | Dependencies |
 |-------|------|---------------|-------|-------------|
-| 1 | Add token refresh | `src/auth/*` | K-219 | none |
-| 2 | Update config parser | `src/config/*` | K-220 | none |
-| 3 | Fix rate limiter | `src/api/rate.*` | K-221, K-222 | none |
+| 1 | Add token refresh | `src/auth/*` | [K-219](https://linear.app/<workspace>/issue/K-219/add-token-refresh) | none |
+| 2 | Update config parser | `src/config/*` | [K-220](https://linear.app/<workspace>/issue/K-220/update-config-parser) | none |
+| 3 | Fix rate limiter | `src/api/rate.*` | [K-221](https://linear.app/<workspace>/issue/K-221/fix-rate-limiter), [K-222](https://linear.app/<workspace>/issue/K-222/add-rate-limiter-tests) | none |
 
 ## Completion Handoff
 

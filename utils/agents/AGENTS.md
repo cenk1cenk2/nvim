@@ -200,6 +200,21 @@ Two things are not emoji and stay: **box-drawing characters** in ASCII diagrams 
 
 When writing project updates, docs, or external messages, wrap technical identifiers in backticks when it improves clarity: repositories, commands, clusters/hosts, file paths, resource types, packages, config keys, and git refs. Do not backtick ordinary English or proper nouns when it hurts readability.
 
+### ABSOLUTE — Identifiers Carry Their Title and Their Link
+
+**Never put a bare identifier in front of the captain.** `K-219`, `!262`, `#41`, a stack or run id — an identifier is an address, not a name. Alone it says nothing about whether the thing matters, and it is clickable nowhere.
+
+Every mention carries the **title**, and the **full URL** as a markdown link when the thing has one:
+
+- `[K-219 — Rotate the JWT signing key](https://linear.app/<workspace>/issue/K-219/rotate-the-jwt-signing-key)`
+- `MR ready: [rustfs!315 — Revert the renovate kustomize bump](https://gitlab.example.com/cluster/workloads/rustfs/-/merge_requests/315)`
+
+Link form rather than a bare URL: it renders clickable where markdown renders, and where it does not the raw URL is still on screen for the terminal to autolink. This governs announcements above all — "the MR is ready", "the issue is done", "picked up K-219" carry the link every time, not only tables and lists.
+
+**The URL came back with the id — printing the id alone means you dropped it.** Linear returns `url` and `title` on every issue by default, GitLab returns `web_url`, GitHub returns `html_url`. If you genuinely do not have it, fetch it: one call beats the captain opening every row.
+
+Bare identifiers stay correct where a machine reads them — commit trailers, branch names, code, API arguments. Tables, scope, and what to do when the title explains nothing: `identifier-legibility`.
+
 ### Information Accuracy
 
 **NEVER fabricate.** Never guess details that come from outside the current repository: API signatures/endpoints, callback/webhook URLs, request/response fields, config keys and flags, secret names, defaults, feature flags, file paths, version-specific behavior. Verify from source code or official documentation before writing them into answers, plans, code, or config, and cite the file/URL used. When you cannot verify: say "I don't know", offer to search (web or docs), and cite what the search returns.

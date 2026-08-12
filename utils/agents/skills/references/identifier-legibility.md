@@ -1,6 +1,6 @@
 # Identifier Legibility
 
-How to present anything addressed by an identifier — issues, merge requests, pull requests — in a table, a list, a report, or a sentence.
+How to present anything addressed by an identifier — issues, merge requests, pull requests, stacks, runs — in a table, a list, a report, or a sentence.
 
 ## The rule
 
@@ -8,14 +8,41 @@ How to present anything addressed by an identifier — issues, merge requests, p
 
 `K-219` tells the reader nothing: not whether it matters, not whether it is theirs, not whether they already know. A table of ten bare ids is ten round trips before the first decision.
 
-- **Tables:** an id column is always followed by a title or summary column.
-- **Prose:** `K-219 (rotate the JWT signing key)`, or the name first with the id after.
+Every mention carries two things:
+
+1. **The title**, so the reader knows what it is without opening it.
+2. **The full URL as a markdown link**, so they can open it in one click when they want to.
+
+- **Tables:** an id column is always followed by a title or summary column, and the id itself is the link.
+- **Prose:** `[K-219 — Rotate the JWT signing key](https://linear.app/<workspace>/issue/K-219/rotate-the-jwt-signing-key)`, or the name first with the id after.
 
 ```markdown
 | Issue | Title | State |
 |---|---|---|
-| K-219 | Rotate the JWT signing key | In Progress |
+| [K-219](https://linear.app/<workspace>/issue/K-219/rotate-the-jwt-signing-key) | Rotate the JWT signing key | In Progress |
 ```
+
+## Give it a link
+
+**Markdown link form, with the absolute URL inside it.** It renders clickable where markdown renders, and where it does not the raw URL is still on screen for the terminal to autolink — so the link form degrades into the plain form rather than into nothing. A bare id is clickable nowhere, and a shortened or relative URL is clickable only sometimes.
+
+**Announcements are the case that matters most.** "The MR is ready", "the issue is done", "picked up K-219", "opened the PR" — a one-line announcement is exactly where the reader wants to click straight through, and exactly where a bare id most often survives because there is no table to force a title column. Announce with the link every time:
+
+```markdown
+MR ready: [rustfs!315 — Revert the renovate kustomize bump](https://gitlab.example.com/cluster/workloads/rustfs/-/merge_requests/315)
+```
+
+**You already have the URL.** It arrives in the same response the id did:
+
+| Provider | Field | Notes |
+|---|---|---|
+| Linear | `url` | Present in the default response alongside `title` — nothing extra to request. |
+| GitLab | `web_url` | On the MR, issue, project and user objects alike. |
+| GitHub | `html_url` | Selectable in `fields`; returned by default when `fields` is omitted. |
+
+Printing a bare id therefore means you read the link and discarded it. If a path genuinely did not return one — an id parsed out of a branch name, a commit trailer, or the user's own message — fetch the object. One call is cheaper than the reader opening every row by hand.
+
+**Never assemble a URL from a pattern you have not seen.** Guessing a host, a group path, or a slug produces a link that looks right and 404s, which is worse than no link. Use the field the provider returned, or fetch it.
 
 ## Carry the scope when more than one is in play
 
@@ -34,7 +61,7 @@ Provider short forms encode it for free; prefer them over a bare `!262` whenever
 
 Some titles are useless — "update config", a Renovate branch name. **The title is the minimum, not the goal.** Add a clause that explains:
 
-`!41 (update config) — switches the ruler to the new tenant list`
+`[!41 (update config)](https://…/merge_requests/41) — switches the ruler to the new tenant list`
 
 Truncate a long title at a word boundary rather than dropping it; a truncated title still identifies.
 

@@ -44,7 +44,7 @@ The delta only, never the standing picture. New findings, completed steps, verdi
 
 ### `## Current state`
 
-**Tables.** The standing picture: every tracked item and its live status, one row per item, concrete values. Anything addressed by an identifier carries its title or a summary beside it, per `identifier-legibility` — a column of bare ids is not a standing picture, it is a lookup list. A reader who reads nothing else should still know where things stand. Keep columns stable across turns so rows compare turn to turn.
+**Tables.** The standing picture: every tracked item and its live status, one row per item, concrete values. Anything addressed by an identifier carries its title or a summary beside it and links to its URL, per `identifier-legibility` — a column of bare ids is not a standing picture, it is a lookup list. A reader who reads nothing else should still know where things stand. Keep columns stable across turns so rows compare turn to turn.
 
 Tables rather than bullets, because this section is *scanned* rather than read.
 

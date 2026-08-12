@@ -7,7 +7,10 @@ references:
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
+  - ../references/identifier-legibility.md
 ---
+
+Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
 
 ## Linear Issue Checklist Update
 

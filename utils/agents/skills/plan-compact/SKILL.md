@@ -19,7 +19,7 @@ references:
   - ../references/harness/agent-background-harness-opencode.md
 ---
 
-Issues, MRs and PRs are never listed as bare identifiers - carry a title, and the repository or parent scope when more than one is in play, per `identifier-legibility`.
+Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
 
 ## Plan Compact — In-Session Compaction Anchor
 

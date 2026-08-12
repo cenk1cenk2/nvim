@@ -9,7 +9,10 @@ references:
   - ../references/output-diff.md
   - ../references/linear/linear-document-handling.md
   - ../references/linear/linear-issue-philosophy.md
+  - ../references/identifier-legibility.md
 ---
+
+Never hand back a bare identifier: issues, MRs and PRs carry their title and a markdown link to their URL, plus the repository or parent scope when more than one is in play, per `identifier-legibility`.
 
 ## Linear Issue Update
 
