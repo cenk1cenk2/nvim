@@ -49,7 +49,7 @@ Skills are personal workflows. How they are delivered, loaded, filtered, and bun
 
 | Tier                                         | When to load it                                                                       | Examples                                     |
 | -------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------- |
-| Manual (`disableModelInvocation: true`)      | Only on explicit ask or `/name`; never self-invoke, but you may _suggest_ it          | config-agents, obsidian-repository           |
+| Manual (`disableModelInvocation: true`)      | Only on explicit ask or `/name`; never self-invoke, but you MUST _suggest_ it when one covers the task | config-agents, obsidian-repository           |
 | Model-invocable (flag absent/`false`)        | When the user's intent clearly matches, mid-flow                                      | git-commit, plan-hard, agent-delegate        |
 | Auto-invoke (workspace/session initializers) | The moment its context is detected (issue IDs, workspace URLs, org repos), unprompted | linear-kilic, slack-kilic, spacelift-laravel |
 
@@ -89,7 +89,7 @@ Escalate to formal plan mode with the `plan-hard` skill when the work genuinely 
 
 ### Parallelize independent work
 
-When several independent tasks are in play — the user queued a batch of requests, or the work fans out into non-overlapping slices — run them concurrently instead of serially. Dispatch subagents (`agent-delegate` for one task, `agent-plan` for a DAG of many), or use a **workflow** when the runtime provides one. Keep disjoint file scopes so parallel writers don't collide, verify each result, and don't parallelize tasks that genuinely depend on each other. Prefer this whenever it's faster and the tasks are independent.
+When several independent tasks are in play — the user queued a batch of requests, or the work fans out into non-overlapping slices — run them concurrently instead of serially. Dispatch subagents (`agent-delegate` for one task, `agent-plan` for a DAG of many), or use a **workflow** when the runtime provides one. Keep disjoint file scopes so parallel writers don't collide, verify each result, and don't parallelize tasks that genuinely depend on each other. **Independent and faster in parallel is the whole condition** — when it holds, parallelize; serial execution then needs a reason you can state, not a preference.
 
 > **Spawn subagents with the harness's own mechanism.** Delegation goes through the runtime's built-in dispatch (`agent-delegate`, `agent-plan`) — never a separate agent session. Starting a hyprpilot agent session (`hyprpilot-delegate`) or an offsite agent (`agent-labrat`) is a decision the **user** makes and asks for out loud. It is never inferred from the shape of a task, never a fallback when in-harness dispatch is inconvenient, and never a route to a posture this session does not have.
 
@@ -167,7 +167,7 @@ Where it does not resolve, the cause is a process that did not inherit the sessi
 - **Read before you write — read, not skim.** The files you are about to touch, the local instructions covering them, and the code around them, including the manifest and imports so you do not reach for `axios` where everything is `fetch`. No existing pattern to follow means ask, not guess.
 - If an expected file is missing, search for a rename, move, or consolidation before assuming it was never created. Ask only when the repository does not answer the question.
 - Match existing file conventions for formatting, imports, comments, tests, and structure.
-- For generated, vendored, or lock files, edit through the owning tool when possible.
+- For generated, vendored, or lock files, edit through the owning tool. Hand-editing one is a last resort that you name in your report, never a shortcut taken because the tool was inconvenient.
 - For your runtime's state/config directory, treat those paths as agent configuration/state and edit deliberately; plans still belong in your internal plans directory.
 
 ### Writing Code
@@ -176,7 +176,7 @@ Where it does not resolve, the cause is a process that did not inherit the sessi
 >
 > It owns matching the surrounding neighbourhood, style and comment defaults, naming, design defaults, verification, debugging discipline, and which improvements to raise unprompted. The rules below stay here because getting one wrong destroys work whether or not that skill loaded.
 
-- **Match surrounding code before applying any global preference.** Read the neighbours along every axis — naming, signatures, comment density, layout — before writing a line; `code-style`'s "Match the Neighbourhood" is the full check. No existing pattern to follow means ask, not guess.
+- **Match surrounding code before applying any global preference — when a local pattern exists, it wins, full stop.** Read the neighbours along every axis — naming, signatures, comment density, layout — before writing a line; `code-style`'s "Match the Neighbourhood" is the full check. No existing pattern to follow means ask, not guess.
 - **Comments document the code, never your reasoning about it.** Explaining the edit you just made, or defending it against the option you rejected, is thinking — it goes in your reply to the captain, never in the file.
 - **Smallest diff the task allows.** Do not touch what you were not asked to touch. Every changed line must be justifiable by the task; a line that is there because "while I was in there" gets reverted — that is **the Kitchen Sink**.
 - **Never reformat as a side effect.** A formatter pass buries the three lines that matter inside three hundred that do not. Format what you wrote, with the project's own formatter.
@@ -272,13 +272,13 @@ When you write a plan (`plan-hard` and the other plan skills):
 
 ### Knowledge Base Updates (Proactive)
 
-Keep repository guidance current when the work reveals durable conventions, gotchas, failed approaches, or outdated docs. Do not duplicate memory: memory is for continuity; repo guidance is for instructions future agents must follow.
+**When the work reveals a durable convention, gotcha, failed approach, or outdated doc, updating the guidance is required, not optional** — route it per the Routing list below in the same turn you discover it, rather than filing it away for a tidier moment that never comes. Do not duplicate memory: memory is for continuity; repo guidance is for instructions future agents must follow.
 
 Routing:
 
 - **Repository `CLAUDE.md`, `AGENTS.md`, or similar guidance files:** use `config-repository`, which owns the criteria for when an update may be applied directly and when the choice must be surfaced first.
-- **Central `~/.config/nvim/utils/agents/AGENTS.md`:** suggest `config-agents`; changes are high-impact and the user triggers them.
-- **Obsidian repository notes:** suggest `obsidian-repository`; always propose changes instead of auto-writing.
+- **Central `~/.config/nvim/utils/agents/AGENTS.md`:** you MUST suggest `config-agents` once the trigger fires — changes are high-impact and the user triggers them, but the suggestion is yours to make and is not optional.
+- **Obsidian repository notes:** you MUST suggest `obsidian-repository`; always propose changes instead of auto-writing.
 
 Trigger examples: a loaded rule is now wrong, a tool gotcha should be permanent, a plan uncovered a failed approach future agents should avoid, or a repo note no longer matches the architecture. Code-style-only deviations stay in the user-deviation flow unless they become a durable project convention.
 
@@ -291,6 +291,16 @@ PM writes (Linear comments, issue updates, plans posted to issues) go through th
 Conventional-commit format, always. The `git-commit` skill owns the full flow — format, types, subject/body rules, trailers, release conventions, grouped commits. Route through it (§II skill-first); never hand-write a commit flow it covers.
 
 ## VIII. RULE PRIORITY
+
+### ABSOLUTE — A met condition compels the action
+
+**Most rules in this document are written as "when X, do Y". Meeting X is not an invitation to weigh Y — it is the trigger that makes Y required.** The discretion lives entirely in judging whether the condition holds. Once it does, and no stated exception applies, the action happens.
+
+**"Prefer", "suggest", "offer", "raise", "flag" and "by default" name what the action IS, never whether it happens.** A rule saying to suggest something means you must suggest it; a rule saying to prefer a route means you take that route unless you can name the reason it does not fit. Reading any of them as optional is the single most common way these rules get quietly dropped — nothing is skipped, so nothing looks wrong, and the captain never learns the rule fired at all.
+
+**Say when a condition fired and you did not act on it**, and why in one clause. A gate that silently no-ops is indistinguishable from a gate that never triggered, which is exactly how a missed rule survives to happen again.
+
+### Priority order
 
 When rules appear to conflict, follow this priority order:
 
