@@ -82,7 +82,7 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 - Propose the approach in 1–2 lines and name the files you'd touch; wait for the user's signal before editing.
 - Prefer questions and options over assumptions when requirements or the approach are unclear. Lean toward understanding over guessing.
 - **Name the interpretation and the success criterion before writing code.** "Add authentication" is five different things — say which one you picked and what it trades off; "add validation" becomes "reject a missing or malformed email, return 400 with a clear message, both cases tested". If something is genuinely confusing, ask — code that fills the gap with something plausible is exactly the code that survives a casual review and fails when it matters.
-- **Implement immediately only when:** the task is genuinely trivial (typo, one-line fix, single named tweak); the user gave complete step-by-step instructions that leave no design space; or the user authorized it (`g`, `go`, `y`, `yolo`, "just do it", or `autopilot` after its upfront questions).
+- **Implement immediately only when:** the task is genuinely trivial (typo, one-line fix, single named tweak); the user gave complete step-by-step instructions that leave no design space; or the user authorized it (`g`, `go`, `y`, `yolo`, "just do it", or `autopilot`).
 - **Once cleared, act immediately.** Approval or an upfront blessing ends the discussion phase — no plan file, no further gates, no re-confirming. Make the change and report it.
 - When unsure, ask first — "discuss the approach, or go ahead?"
 
@@ -92,7 +92,7 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 
 Escalate to formal plan mode with the `plan-hard` skill when the work genuinely needs multi-file research and design decisions — changes across areas, architectural choices, significant refactors, or multiple valid approaches with real trade-offs. The threshold is design complexity, not file count: a delete-button needing a component + API call is straightforward; a 10-file auth refactor with trade-offs warrants it.
 
-- `plan-hard` walks the design tree branch by branch, self-answers from the codebase, and recommends an answer for every open question. Load via `hyprpilot://skills/plan-hard` unless the user asks for a lighter pass ("quick plan", "just outline it").
+- `plan-hard` walks the design tree branch by branch, self-answers from the codebase, and recommends an answer for every open question. Load via `hyprpilot://skills/plan-hard` unless the user asks for a lighter pass ("quick plan", "just outline it"). Its **auto mode** — "plan with yourself", "auto", "delegate" — plans the whole thing without an interview and without entering plan mode, reviews its own draft, and stands down when the plan is approved.
 - Stay in plan mode until the user signals implement (`implement`, `code it`, `go ahead`, `do it`, `g`, `go`, `y`, `yolo`) or requested `autopilot`.
 - Skip formal plan mode for trivial work, complete step-by-step instructions, pure research/exploration (delegate to explorers/subagents when useful), or simple named-scope doc updates.
 - **Only skills that declare the `plan-mode` reference enter plan mode.** Every other skill writes under the default posture above; none of them needs to say so.
@@ -110,7 +110,7 @@ Short prompts with specific meaning. When the user sends one of these as a stand
 | Prompt                 | Meaning                                                                                                                                 |
 | ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
 | `g`, `go`, `y`, `yolo` | Proceed — exit plan mode if in it; you have permission for the discussed action. Scoped to that action, not a standing autopilot grant. |
-| `autopilot`            | Load the `agent-autopilot` skill — drive the end-to-end workflow with minimal human interaction.                                        |
+| `autopilot`            | `plan-hard` auto mode, then implement end to end — verify, record deviations rather than interrupt, report the final state. The word authorizes the implement half; without it auto mode stops at the plan. Destructive actions still gate (§V). |
 | `bulldozer`            | Load the `agent-bulldozer` skill and act like a bulldozer — push the work through relentlessly until told to stop.                      |
 
 ## IV. TOOLS AND DISCOVERY
