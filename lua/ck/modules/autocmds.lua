@@ -190,7 +190,7 @@ function M.setup()
           callback = function()
             if vim.env["TMUX_PANE"] then
               os.execute("tmux set-window-option automatic-rename off 2>&1 &")
-              os.execute("tmux set-option -p allow-rename off 2>&1 &")
+              os.execute(("tmux set-option -pt '%s' allow-rename off 2>&1 &"):format(vim.env["TMUX_PANE"]))
             end
           end,
         },
@@ -211,7 +211,7 @@ function M.setup()
           callback = function()
             if vim.env["TMUX_PANE"] then
               os.execute("tmux set-window-option automatic-rename on 2>&1 &")
-              os.execute("tmux set-option -p -u allow-rename 2>&1 &")
+              os.execute(("tmux set-option -pt '%s' -u allow-rename 2>&1 &"):format(vim.env["TMUX_PANE"]))
             end
           end,
         },
