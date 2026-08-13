@@ -80,6 +80,20 @@ Truncate a long title at a word boundary rather than dropping it; a truncated ti
 
 Fetch it — one call is cheaper than the reader opening every row. If it genuinely cannot be fetched, say so in the column: `| !9001 | (title unavailable - 404) |`.
 
+## Pre-send check — scan the id columns
+
+**The rule is easy to follow on the thing you are announcing and easy to drop on everything else.** An
+issue or PR gets linked because it is the subject; the stack ids, run ids, job ids and dashboard names in
+the same report go out bare because they read as context. They are what the reader needs to click.
+
+Before sending, scan every table column and every inline mention holding an identifier, and confirm each
+is a link. A status or progress table is the highest-risk surface: it is mostly identifiers by
+construction, and it gets regenerated every turn, so one bare column repeats for a whole session.
+
+**Capture the provider's URL shape once, then reuse it.** The first tool result that hands you a link for
+that provider gives you the pattern — a CI check's `link`, an object's `web_url`, a deeplink. Note it and
+build every later reference from it, instead of re-deciding per mention whether you hold an address.
+
 ## Where bare identifiers are correct
 
 Commit trailers (`closes K-219`), branch names, URLs, API parameters, code and query expressions. The rule governs what a **human reads**, not what a tool parses.
