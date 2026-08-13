@@ -19,7 +19,7 @@ Posture: `present-first`.
 
 Workspace routing, response conventions, reaction rules, and large-results handling: `slack`. The steps below name the kilic tools (`slack-kilic__*`); on the Laravel workspace use the connector column of that reference's routing table and load its deferred tools via `ToolSearch` first.
 
-The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `linear-issue-pickup`, `obsidian-note`, `code-pull`) or performing direct actions (research, code changes, summarization).
+The user provides a Slack message URL and a task. This skill reads the message and its full thread, synthesizes the context, and then acts on the user's request — which may involve invoking other skills (e.g., `linear-pickup`, `obsidian-note`, `code-pull`) or performing direct actions (research, code changes, summarization).
 
 ## Process
 
@@ -45,7 +45,7 @@ The user provides a Slack message URL and a task. This skill reads the message a
    - If the user provided explicit instructions (e.g., "create a Linear issue from this", "summarize this in Obsidian"), follow them.
    - If the user's intent is unclear, present the summary and ask what they'd like to do.
    - Common actions:
-     - **Create a Linear issue** — invoke the appropriate Linear workspace skill and compose with `linear-issue-pickup` or create directly.
+     - **Create a Linear issue** — invoke the appropriate Linear workspace skill and compose with `linear-pickup` or create directly.
      - **Create an Obsidian note** — invoke `obsidian-note` with the thread context.
      - **Research a topic** — use web search, Context7, or codebase exploration based on what the thread discusses.
      - **Write or modify code** — use the thread context to inform implementation.

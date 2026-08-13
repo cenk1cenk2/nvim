@@ -42,8 +42,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
 
 1. **Resolve the target.**
    - Accept a Linear project, project slice, multiple issues, one issue, or URL.
-   - Compose with `linear-project-pickup` for project or slice inputs — do not re-implement its preparation logic.
-   - Compose with `linear-issue-pickup` for issue inputs — do not re-implement its preparation logic.
+   - Compose with `linear-pickup` for any of them — do not re-implement its preparation logic.
    - If the prompt can mean more than one scope, ask one focused question immediately.
 
 2. **Explore before implementation.**

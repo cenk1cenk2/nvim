@@ -41,7 +41,7 @@ The mentality is identical in both directions:
 3. **Ownership is blessed once and covers both modes** — settled before the first agent, not re-asked at the first write.
 4. **What you learn gets written where the next reader will look**, per the notebook rules below, at the moment you learn it.
 
-**Execution mechanics are borrowed, not re-specified here.** Scope resolution, exploration, task scheduling, branches, commits, PRs/MRs, state transitions, and the final report belong to `agent-pickup` and the `linear-issue-pickup` / `linear-project-pickup` skills — load whichever fits when the work becomes implementation. This skill stays loaded across both modes because the shape rules and the record rules apply the whole way through.
+**Execution mechanics are borrowed, not re-specified here.** Scope resolution, exploration, task scheduling, branches, commits, PRs/MRs, state transitions, and the final report belong to `agent-pickup` and `linear-pickup` — load them when the work becomes implementation. This skill stays loaded across both modes because the shape rules and the record rules apply the whole way through.
 
 ## The Executable Unit
 

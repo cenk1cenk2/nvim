@@ -20,7 +20,7 @@ This is not a generic code review — it is a **context-aware audit**. Before lo
 
 1. **Gather Intent:**
    - Review the full conversation for context: what is the user trying to achieve?
-   - Identify any prior skills invoked (`linear-issue-pickup`, `plan-hard`, `linear-kilic`, etc.) and extract the goals, requirements, decisions, and constraints established there.
+   - Identify any prior skills invoked (`linear-pickup`, `plan-hard`, `linear-kilic`, etc.) and extract the goals, requirements, decisions, and constraints established there.
    - If a Linear issue or plan file was discussed, re-read it for the acceptance criteria and agreed approach.
    - Summarize your understanding of the intent before proceeding — confirm with the user if anything is unclear.
 
