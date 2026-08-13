@@ -22,7 +22,7 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 Posture: `present-first`.
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-> **Status updates and summary comments: offer, don't auto-post — see `linear-absolute-approval`.** Reconciliation covers **issues + structure only** — it does NOT post a project or initiative status update on its own, and does NOT comment on a parent issue to summarize the pass. When progress is genuinely update-worthy, finish all the issue work first, then **proactively offer** it — briefly note what happened and that it may be worth an update (e.g. "X and Y landed — I can post a project update if you'd like") — and post via `/linear-project-post`, `/linear-initiative-post`, or `/linear-issue-comment` **only after the user explicitly says yes**. A general blessing / `g` / autopilot does NOT clear this.
+> **Status updates and summary comments: offer, don't auto-post — see `linear-absolute-approval`.** Reconciliation covers **issues + structure only** — it does NOT post a project or initiative status update on its own, and does NOT comment on a parent issue to summarize the pass. When progress is genuinely update-worthy, finish all the issue work first, then **proactively offer** it — briefly note what happened and that it may be worth an update (e.g. "X and Y landed — I can post a project update if you'd like") — and post via `/linear-post` or `/linear-issue-comment` **only after the user explicitly says yes**. A general blessing / `g` / autopilot does NOT clear this.
 
 ## Timestamp Awareness
 

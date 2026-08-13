@@ -161,7 +161,7 @@ Supervisor-specific rules on top of the reference's discipline:
 
 - **`agent-coordinator`** — every implementation, always. It routes the work; you keep the record.
 - **`linear-reconcile`** — the deep audit of a project, an issue tree, or one issue; call it, do not restate it.
-- **`linear-issue-status`, `linear-issue-comment`, `linear-issue-update`, `linear-issue-checklist`, `linear-document`, `linear-project-post`** — the actual PM writes.
+- **`linear-issue-status`, `linear-issue-comment`, `linear-issue-update`, `linear-issue-checklist`, `linear-document`, `linear-post`** — the actual PM writes.
 - **`linear-next-task`, `linear-triage`, `linear-project-match`** — selection, ordering, and state sync from PRs/MRs.
 - **`agent-delegate`** — read-only investigation and research fan-out.
 - **`agent-review`** — second eyes on an ordering, a plan, or a diff you refuse to read yourself.
