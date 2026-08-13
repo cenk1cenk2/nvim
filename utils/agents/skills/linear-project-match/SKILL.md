@@ -31,7 +31,7 @@ Linear's ground truth drifts from reality: an MR merges but the issue stays `In 
 **Composability:**
 
 - **Standalone:** user invokes with evidence sources ("check these merged PRs", "I finished X Y Z, clean up states").
-- **After `linear-project-read`:** that skill flags mismatched states; `linear-project-match` is the natural follow-up to act on them.
+- **After `linear-read`:** that skill flags mismatched states; `linear-project-match` is the natural follow-up to act on them.
 - **Inside other workflows:** can be chained from PR/MR-close hooks or cycle cleanup flows.
 
 ## Evidence Sources
@@ -148,7 +148,7 @@ At the bottom, summarise unchanged issues (not enough evidence) and explicit no-
 
 ## Related Skills
 
-- **`linear-project-read`** — read-only project survey. Surfaces mismatched states; this skill acts on them.
+- **`linear-read`** — read-only project survey. Surfaces mismatched states; this skill acts on them.
 - **`linear-reconcile`** — audit + modify project structure (priorities, estimates, labels, relations). Complementary scope.
 - **`linear-issue-update`** — update a single issue's fields (any field, not just state). Use when the match involves more than a state transition.
 - **`linear-state-transitions`** (reference) — defines the forward-move rank order and the never-downgrade guard.
