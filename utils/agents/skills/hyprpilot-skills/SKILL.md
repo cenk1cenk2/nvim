@@ -20,7 +20,7 @@ Every `hyprpilot_skills` tool is auto-accepted and never prompts.
 
 ## Loading a Skill
 
-Skills are exposed as `hyprpilot://skills/<slug>` resources.
+Skills are exposed as resources: `hyprpilot://skills` is the catalogue index in one read, `hyprpilot://skills/<slug>` is one skill's body.
 
 - `list_skills` — the catalog. Descriptions and metadata for every skill, no bodies. Each row carries `referenceCount`, served from cache with no filesystem access, so checking whether a skill is heavy costs nothing.
 - `read_skill { slug }` — one body, **plus a manifest of the references it declares. The reference bodies do not come with it.**
@@ -30,6 +30,8 @@ Skills are exposed as `hyprpilot://skills/<slug>` resources.
 - `reload` — after skill source changes on disk. Flow per `hyprpilot-reload`.
 
 A skill the harness already attached is loaded — an `#{hyprpilot://skills/<slug>}` mention, a palette pick, or auto-injection. Do not re-read it.
+
+**An attached skill carries its reference manifest as a footer in the body text**, under a `skill_references:` banner naming the skill and count. The same rows also ride `_meta`, but many clients never surface `_meta` to the model — so the footer is what keeps an attached skill's references visible rather than silently absent. Fetch from those paths exactly as you would from a `read_skill` manifest.
 
 **Never use the runtime's own built-in skill tool for these.** That tool serves the harness's own skills, not the hyprpilot catalog.
 
@@ -47,7 +49,9 @@ Because the address is a path rather than a skill-and-name pair:
 - **A repeated path is served once**, so passing the same file twice costs nothing.
 - **There are no name collisions and no shadowing.** `git-commit`'s `output-diff` and `git-push`'s `output-diff` are literally the same path, so they are comparable and de-duplicate on sight.
 
-Each manifest row carries `path`, `name` (the display label — the reference's frontmatter `name`, else the file stem), `size`, `modified`, `created`, and `metadata` (the reference's own frontmatter, verbatim). Skill metadata carries the same `size` / `modified` / `created` alongside `path` and `bundleDir`.
+Each manifest row carries `path`, `name` (the display label — the reference's frontmatter `name`, else the file stem), `size`, `modified`, `created`, and `metadata` (the reference's own frontmatter, verbatim, and absent entirely when the file has none). Skill metadata carries the same `size` / `modified` / `created` alongside `path` and `bundleDir`.
+
+A skill's metadata block is its whole frontmatter minus the three keys another field already carries — `title` and `description` (the spec `Resource` fields) and `references` (superseded by the manifest, which publishes the canonical path that actually addresses each file). Everything else, including keys nobody planned for, rides through verbatim.
 
 **`modified` answers staleness, never caching.** It tells you whether a convention changed since you read it, which matters in a long session and after `reload`. The cache key is the path.
 

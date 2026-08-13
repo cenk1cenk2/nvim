@@ -39,15 +39,17 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 | `hyprpilot_harness__session_list` | List sessions — recover a handle you lost. |
 | `hyprpilot_harness__session_kill` | Stop a running session, or reap a finished one. |
 
+**Reading a session is a RESOURCE read, not a tool call.** `hyprpilot://sessions/<handle>/result` is the answer, already extracted per vendor; `hyprpilot://sessions/<handle>` lists every turn with its outcome and URI. The tools above start, steer and poll — the resource tree is how you collect. Full tree, the three tiers, and when to drop to `session_read` or `jq`: `hyprpilot-sessions`.
+
 ## Process
 
 1. **Discover the profile — never hardcode an id.**
    - Call `list_profiles` first, every time. Profile ids are captain-defined and change; a hardcoded id silently breaks.
-   - **The listing is the whole available set.** The harness is opt-in per profile (`[profiles.harness]`), so a profile the captain configured but did not nominate is absent here AND refused by `spawn`. If the user names one that is missing, say it is not on the harness rather than guessing a neighbour.
+   - **The listing is the whole available set, and a profile can be missing for either of two reasons.** The harness is opt-in per profile (`[profiles.harness]`), and separately the *launching* profile's `[mcp.harness].includeProfiles` / `excludeProfiles` globs scope who it may delegate to. Both gates also refuse `spawn`, with distinct messages — read the refusal rather than guessing, because the fixes differ: one is the target profile opting in, the other is this launcher's scope. If the user names a profile that is missing, say it is not reachable from here rather than guessing a neighbour.
    - **Match the user's phrasing loosely.** Ids are path-like (`personal/claude/opus`, `work/claude/sonnet`, `personal/kilic/glm-5.2:cloud`) and users say them in fragments. "delegate this to hyprpilot personal glm-5.2" means the id containing both `personal` and `glm-5.2`.
    - **Ambiguous match → ask.** If a fragment matches two profiles, list the candidates and ask; do not guess. If it matches none, show what is available.
    - **A row carrying an `error` field failed to resolve — do not launch it.** Report the error instead.
-   - **What the listing actually returns is `id`, `provider`, `agent`, `model`, `mode`, `headless`, `harnessEnabled`, `isDefault` — and nothing else.** There is no `cwd`, no `effort`, and no MCP/skill counts. Use what is there to sanity-check the pick and to warn the user when a profile is `headless` (it cannot be driven interactively). A profile's own working directory is **not knowable before launch**: it first appears as `sessionInfo.cwd` in the `spawn` result.
+   - **What the listing returns is `id`, `agent`, `provider`, `model`, `effort`, `mode`, `cwd`, `headless`, `harnessEnabled`, `isDefault`, and `error` on a row that failed to resolve.** `model`, `effort`, `mode` and `cwd` are **omitted when the profile does not set them**, so an absent key means unset rather than unsupported — do not read one missing row as proof the field does not exist. Use what is there to sanity-check the pick and to warn the user when a profile is `headless` (it cannot be driven interactively). A listed `cwd` is the profile's own; the directory actually launched into is `sessionInfo.cwd` in the `spawn` result, which is what a relative or absent `cwd` resolves to.
 
 2. **Brief the agent properly.** The spawned agent has NO access to this conversation. Its prompt must be self-contained: the goal, the repo/paths, the constraints, and what "done" looks like. If it writes code, carry the local patterns from `agent-conventions` and the verification commands from `project-tooling` into the prompt. A thin prompt produces a thin result and costs a whole session.
 
@@ -65,13 +67,13 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 4. **Detached is the normal mode, and the default.** It suits anything long, fanning out several agents at once, and every "check on it later".
    - It returns immediately with `status: running`, the `session` handle, and a `nextCursor` to resume reading from. **The handle is the whole identity** — minted before the agent produces a byte, unchanged across turns, and the only thing any tool accepts. There is no second id to wait for.
    - **Unless your client speaks SEP-2663 Tasks**, in which case the same `spawn` returns `resultType: "task"` and a `taskId` instead. That is the standard-protocol path to the same session, and it changes which tools you poll with. **Check the result, do not assume** — `resultType: "task"` means you are on it. No vendor CLI declares the extension today, so normally you are not. Full comparison and the rules that differ: `hyprpilot-sessions`.
-   - **Nothing will wake you. There is no completion push here.** The harness emits one, but it only lands on an interactive Claude Code lead with the channel registered — and registration was tried on this setup, did not work, and has been reverted. A client without it **drops the event silently, with no error**, which looks exactly like a hung agent. Plan for silence from the moment you spawn: arm a watcher or poll. Never treat "no news" as "still working".
-   - **So watch `done.json` yourself.** A turn ending writes `done.json` into the session directory (`sessionInfo.files.dir`), and it is the one MCP-only truth a plain shell can reach. Arm it through your runtime's **own** background-exec facility — the one that re-invokes you when the command exits. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
+   - **Nothing will wake you. There is no completion push here.** The harness emits one, but it only lands on an interactive Claude Code lead with the channel registered — and registration was tried on this setup, did not work, and has been reverted. A client without it **drops the event silently, with no error**, which looks exactly like a hung agent. The harness also emits `resources/updated` per turn, but arming that needs `subscriptions/listen`, which is a **client** capability with no tool exposed to you. Plan for silence from the moment you spawn: arm a watcher or poll. Never treat "no news" as "still working".
+   - **So watch `done.json` yourself.** Each turn writes its own `done.json` into its own directory (`sessionInfo.files.turnDir`), and it is the one MCP-only truth a plain shell can reach. Arm it through your runtime's **own** background-exec facility — the one that re-invokes you when the command exits. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
 
      > **Read the active runtime's background-exec mechanics from `agent-background-harness-<provider>` before arming anything.** `<provider>` is the runtime this session runs on (`claude`, `opencode`, `codex`); the rest of the path is literal. That file owns whether a watcher can be backgrounded at all and how it wakes you. It is not declared, so a missed read is silent — the watcher simply never fires.
 
      ```bash
-     D=<sessionInfo.files.dir>
+     D=<sessionInfo.files.turnDir>
      for i in $(seq 1 60); do
        if [ ! -d "$D" ] || [ -f "$D/done.json" ]; then echo "RESULT: turn finished"; exit 0; fi
        sleep 30
@@ -79,10 +81,10 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
      echo "RESULT: still running after 30 cycles"
      ```
 
-     **Both halves of the test are required.** Reap, eviction and sidecar shutdown delete the whole directory, so testing only for the file waits forever on a session that was cleaned up — a missing **directory** means finished-and-gone.
+     **Both halves of the test are required.** Reap, eviction and sidecar shutdown delete the whole session directory, so testing only for the file waits forever on a session that was cleaned up — a missing **directory** means finished-and-gone.
 
-     **Arm the watcher AFTER `spawn` / `session_send` returns, never before.** The marker is cleared when a turn *starts*, so anything armed ahead of the call still sees the previous turn's `done.json` and fires instantly on stale state — measured: a watcher armed before a `session_send` reported "turn finished" before the new turn emitted one event. The call returns once the turn is running and the marker is already gone, which makes its result the correct arming point.
-   - **Want progress, not just completion? Stream `turns.jsonl`.** It is append-only, so tailing it gives an event per step while the agent works — no blocking call, no raw payloads in context. Arm it the same way and on the same schedule as the `done.json` watcher, capturing the file's byte offset *before* the send so the head of the turn is not lost. The filter and opencode's event field paths are in `hyprpilot-sessions`; whether it can run in the background at all is in the harness file named above.
+     **Take the path from the call that started the turn.** Each turn owns its directory, so `turnDir` names this turn and nothing else — there is no stale marker to race and no rule about when to arm.
+   - **Want progress, not just completion? Stream the turn's `turns.jsonl`.** It is append-only, so tailing it gives an event per step while the agent works — no blocking call, no raw payloads in context. `tail -F` it from the start: the file belongs to this turn alone, so there is no byte offset to capture. The filter and opencode's event field paths are in `hyprpilot-sessions`; whether it can run in the background at all is in the harness file named above.
    - **On wake, confirm through the harness.** `done.json` says the turn ended, not that it succeeded — read `session_status` for `exitCode` and `hasResult`, then collect per step 6.
    - Where no watcher can be armed, poll `session_status` by hand; it is cheap enough to repeat. What you must never do is leave a detached agent unread — that is how a finished result gets thrown away and the job re-run.
 
@@ -92,18 +94,18 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - **`session_status { session }` is the poll.** It reads no transcript, so it costs almost nothing to repeat: `status`, `exitCode`, `transcriptBytes`, `hasResult`. Reach for `session_read` when you want the *output*, not to answer "is it done".
    - On the Tasks path this is `tasks/get` instead, honouring its `pollIntervalMs`. Same discipline, different method.
    - **`transcriptBytes` tells you working from wedged.** It climbs while the agent produces output and plateaus while it thinks or runs a long tool. Flat for minutes with `status: running` is a hung agent — something `status` alone can never show you. Report it; do not kill on it reflexively.
-   - Follow live instead with `session_read { session, wait: true, cursor: <nextCursor>, timeout_seconds? }` when you actually want the stream. A follow ends when the agent finishes, when the request is cancelled, or at `timeout_seconds`. **It blocks your own turn while it runs**, and you cannot ask for it to run detached — no MCP call takes a background parameter. Some runtimes auto-background an MCP call past a threshold (the harness file named in step 4 says whether yours does), **but that only stops the stall — the same untrimmed payload still arrives, just later.** A follow is the right tool only when you genuinely want the entire raw stream; for progress, stream `turns.jsonl` per step 4, and for the answer, `jq` it per step 6.
+   - Follow live instead with `session_read { session, wait: true, cursor: <nextCursor>, timeout_seconds? }` when you actually want the stream. A follow ends when the agent finishes, when the request is cancelled, or at `timeout_seconds`. **It blocks your own turn while it runs**, and you cannot ask for it to run detached — no MCP call takes a background parameter. Some runtimes auto-background an MCP call past a threshold (the harness file named in step 4 says whether yours does), **but that only stops the stall — the same untrimmed payload still arrives, just later.** A follow is the right tool only when you genuinely want the entire raw stream; for progress, stream the turn's `turns.jsonl` per step 4, and for the answer, read `/result` per step 6.
 
 6. **Collect the result deliberately — this is where the work gets lost.**
-   - **`hasResult` on `session_status` already did the per-vendor scan** — tail-scoped to the latest turn. Use it instead of hand-rolling one; getting it wrong is easy, because opencode emits a `text` part per block of prose — one mid-turn before its tool calls, another at the end — and has no terminal event at all.
-   - `session_read` returns the vendor's raw JSON event stream, and **the answer sits in a different event per vendor**. The `tool_use` events between can be enormous.
-   - **Default to skipping the paging — cheapest path, and the reflex to build.** `sessionInfo.files.transcript` is the path to `turns.jsonl`; `jq` the answer straight out rather than pulling 60 kB of tool traffic through your context. A query per vendor plus the full cost ranking: `hyprpilot-sessions`. **Take the query from there rather than improvising one — scoping to the latest turn with `| tail -n1` silently truncates a multi-line answer to its last line.**
+   - **Read `hyprpilot://sessions/<handle>/result`. That is the collection step.** It performs the per-vendor extraction server-side and hands back the answer at the answer's own size — a measured probe returned 22 bytes where the transcript was 1 049. It slices by event, so a multi-line answer survives whole, and an `error` event outranks text, so an upstream failure is reported as the error rather than as silence.
+   - **It never comes back blank on a finished session.** The three no-answer shapes — an `error` event, a launch failure with an empty transcript, or neither — land in different places, and `/result` falls through transcript, stderr and exit code, then names which one happened. That is why it replaces the hand-rolled query: a query can only see one of the three.
+   - **An earlier turn is `…/turns/<n>/result`,** and `hyprpilot://sessions/<handle>` lists every turn with its outcome and URI in one read — so you never walk turn numbers probing for the end.
+   - **Want something the views do not define? `jq` on `files.transcript`.** "Every tool it called", "just the errors", "how many files it read". Its advantage is structural: it filters **before** the bytes reach your context, which no resource read can do. Reach for it to keep context pure on a large transcript, not to find the answer — `/result` already did that, correctly.
    - **`session_read` stays a legitimate choice — it is situational, not banned.** Page it when you want the raw event stream, when the run was small enough that the difference does not matter, when you are diagnosing the vendor's own shape, or when no shell is available. Just know which one you are paying for.
-   - **The gap is not small, and it grows with the agent's tool use rather than its output.** opencode inlines each file it reads into the event *and* re-attaches the loaded instruction files on every call: a measured ten-file survey left a 389 kB transcript whose answer was twelve lines. `session_read` would have paged that; `jq` returned the twelve lines.
-   - **A failure hides in one of two places and you must check both.** A **launch** failure (a flag the vendor rejects) writes the usage text to `files.stderr` and leaves `turns.jsonl` **empty**. A **runtime** failure (auth, quota, model unavailable) leaves `stderr` **empty** and lands as an `error` event inside `turns.jsonl` — a real 402 from the model provider produced exactly that, with a zero-byte `stderr.log`. Checking only `stderr` reports "no output" for a billing error. Report the message, never the bare exit code.
+   - **The gap is not small, and it grows with the agent's tool use rather than its output.** opencode inlines each file it reads into the event *and* re-attaches the loaded instruction files on every call: a measured ten-file survey left a 389 kB transcript whose answer was twelve lines. `session_read` would have paged that; `/result` returns the twelve lines.
    - **Page with `nextCursor`.** MCP pagination: pass a result's `nextCursor` back **verbatim** as `cursor` to continue exactly where that read stopped. It is opaque — never parse or construct one. **No `nextCursor` means the session is finished and you have all of it**; a running session always returns one, so a poller never loses its place. An unrecognised cursor is an error, not a silent reset.
    - **`exitCode: 0` + `hasResult: true` says the turn ended cleanly, NOT that the task was done.** Neither field inspects whether the agent answered what you asked. A measured run handed a 4-step prompt to a small model, got steps 1 and 2, and exited 0 with `hasResult: true` and no error event — the harness reported that success accurately. Check the answer against the brief before relaying it, and `session_send` the remainder rather than treating exit status as an acceptance test.
-   - **Read the result BEFORE sending the next turn.** A new turn appends to the same transcript and pushes the previous answer out of the tail.
+   - **Every turn keeps its own answer.** A new turn writes into its own directory, so turn 1's `/result` still returns turn 1's answer after turn 5 — reading in order is good practice, not a deadline.
    - `tail` (default 200 lines) returns the trailing lines when `cursor` is omitted — the quick way to see *what it said*. For *whether it is done*, `session_status` is cheaper.
 
 7. **Steer across turns with `session_send`, not `spawn`.**
@@ -147,7 +149,7 @@ Rules that hold whichever vendor you target:
 
 - **Sessions die with the MCP server and do not survive a restart.** There is no persistence. If the sidecar restarts, running agents are killed and transcripts are lost. Treat a chain as living only as long as this MCP connection — capture anything that must outlive it before the turn ends.
 - **Bounded retention.** The oldest **finished** sessions are evicted along with their transcripts (default ceiling 64). A running session is never evicted. Read a transcript you care about before it ages out.
-- **Bounded breadth and depth.** A ceiling of **8 concurrently running** sessions bounds breadth; `HYPRPILOT_SPAWN_DEPTH` bounds nesting at **1**, so an agent you spawn cannot spawn its own — you delegate, it works. Hitting either returns an error — free a slot with `session_kill` rather than retrying blindly.
+- **Bounded breadth and depth.** A ceiling of **8 concurrently running** sessions bounds breadth; `[mcp.harness].maxDepth` bounds nesting at **1** by default (stamped as `HYPRPILOT_SPAWN_DEPTH`), so an agent you spawn cannot spawn its own — you delegate, it works. Hitting either returns an error — free a slot with `session_kill` rather than retrying blindly.
 - **Detaching removes the natural brake on breadth.** A blocking `spawn` could not overrun the concurrency ceiling because it finished before you called the next one. Detached calls return instantly, so a fan-out of nine is nine calls in one turn and the ninth is refused. Count what is already running — `session_list` — before firing a batch, and reap finished ones to free slots.
 - **So the fan-out is yours to run.** A delegate cannot sub-delegate, and asking it to would just earn a refusal it has to report back. Split the work here and spawn the pieces yourself, where `session_list` sees them and `session_kill` can stop them.
 - **`spawn` executes as this user.** A profile's `command` is an arbitrary binary and its `provider` picks a flag projection, not a sandbox. This is why the skill is manual, requested by the user, and presented before it spawns.
@@ -159,9 +161,9 @@ Rules that hold whichever vendor you target:
 1. `list_profiles` → the fragment matches `personal/kilic/glm-5.2:cloud` (opencode, mode `build`).
 2. Build a self-contained prompt naming the file, the neighbouring patterns from `agent-conventions`, and the test command from `project-tooling`.
 3. Present the profile, cwd, and prompt → user approves.
-4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` → returns at once with handle `s-3f2a`, `status: running`.
-5. Watch `done.json` in `sessionInfo.files.dir` through the runtime's background exec; on wake, `session_status` reports `exited` / `hasResult: true`.
-6. `jq` the answer out of `files.transcript`, then report the result and the handle.
+4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` → returns at once with handle `3b5ce010-…`, `status: running`.
+5. Watch `done.json` in `sessionInfo.files.turnDir` through the runtime's background exec; on wake, `session_status` reports `exited` / `hasResult: true`.
+6. Read `hyprpilot://sessions/3b5ce010-…/result`, then report the answer and the handle.
 
 **Result:** Work done in a separate opencode session; handle available for follow-ups.
 
@@ -169,7 +171,7 @@ Rules that hold whichever vendor you target:
 
 **User says:** "that's not quite right, tell it to keep the existing backoff"
 
-1. Reuse the handle from the previous exchange — `session_send { session: "s-3f2a", prompt: "Keep the existing backoff curve; only change the retry ceiling." }`.
+1. Reuse the handle from the previous exchange — `session_send { session: "3b5ce010-…", prompt: "Keep the existing backoff curve; only change the retry ceiling." }`.
 2. The session had exited, so it is resumed; the agent still has turn 1's context.
 
 **Result:** Correction applied in the same conversation — no re-briefing, no second agent.
@@ -179,10 +181,10 @@ Rules that hold whichever vendor you target:
 **User says:** "delegate this to hyprpilot and check on it later"
 
 1. Resolve the profile, present, then `spawn { …, mode: "plan" }` — detached by default, and read-only because the job only needs to look.
-2. Returns instantly: handle `s-91c4`, `status: running`. Report that it is running and followable, and by which handle.
-3. Arm the `done.json` watcher on `sessionInfo.files.dir` through the runtime's background exec — nothing wakes you here, so without it the session finishes into silence.
+2. Returns instantly: handle `9c4de0a8-…`, `status: running`. Report that it is running and followable, and by which handle.
+3. Arm the `done.json` watcher on `sessionInfo.files.turnDir` through the runtime's background exec — nothing wakes you here, so without it the session finishes into silence.
 4. On wake: `session_status` → `exited`, `hasResult: true`. **Not** a second `spawn`.
-5. `jq` the answer out of `files.transcript` (plus the `error` query), relay it, and only then send any further turn.
+5. Read `hyprpilot://sessions/9c4de0a8-…/result` — one read covers the answer and any upstream error — relay it, and only then send any further turn.
 
 **Result:** Long job tracked to completion without abandoning it, duplicating it, or burying its result under a later turn.
 
@@ -193,16 +195,15 @@ Rules that hold whichever vendor you target:
 - **Dedicated parameters before `with_config`.** Reach for `with_config` only for `model` and `effort`.
 - **`with_config` before `args`.** hyprpilot converts an overlay onto the target vendor; `args` is raw vendor argv you have to get right yourself. Drop to `args` only for knobs hyprpilot does not model, and check the vendor's `--help` first.
 - **`mode: "plan"` for anything read-only.** Free, and it removes write authority instead of asking for it.
-- **Stay detached, and collect cheaply.** `wait` already defaults false; opting into a blocking call dumps the whole raw transcript into your context with no way to trim it, and still returns `running` on a long turn. Poll `session_status`, then `jq` the answer out of `files.transcript`.
-- **`jq` is the default, `session_read` is situational.** The ranking is about cost, not permission — page the transcript when the raw stream is what you want, when the run was small, or when no shell is at hand.
-- **Scope the answer query inside `jq`, never with `tail`.** `tail` counts lines and eats every line but the last of a multi-line answer. Copy the vendor query from `hyprpilot-sessions`.
-- **A runtime that auto-backgrounds slow MCP calls changes nothing here.** It stops the turn stalling; the untrimmed payload still arrives. Deferred cost is still cost — order of preference stays `jq` the transcript, then a filtered tail for progress, then `session_status`, and a raw read only when the raw stream is the goal.
+- **Stay detached, and collect through the resource.** `wait` already defaults false; opting into a blocking call dumps the whole raw transcript into your context with no way to trim it, and still returns `running` on a long turn. Poll `session_status`, then read `/result`.
+- **`/result` for the answer, `jq` for a projection, `session_read` for the raw stream.** Three tools, three jobs — the ranking is about cost, not permission. `jq` earns its place by filtering before the bytes reach your context; nothing else can do that.
+- **A runtime that auto-backgrounds slow MCP calls changes nothing here.** It stops the turn stalling; the untrimmed payload still arrives. Deferred cost is still cost.
 - **The handle is the only id.** It arrives with the first result and never changes. Nothing else addresses a session — and on the Tasks path it still rides `_meta`, so you never parse a task id to recover it.
 - **A timeout means still working.** Follow it; never re-spawn.
-- **Detached work finishes into silence.** There is no completion push here — watch `done.json` or poll. Read every session you start, and collect the answer before steering it again.
-- **Arm watchers after the call, never before.** The `done.json` marker clears at turn start, so anything armed earlier fires on the previous turn's leftover.
+- **Detached work finishes into silence.** There is no completion push you can arm — watch `done.json` or poll. Read every session you start, and collect the answer before steering it again.
+- **Watch the TURN's directory.** `sessionInfo.files.turnDir` names the turn the call just started, and each turn owns its own marker — so there is no stale state to race and no rule about when to arm.
 - **A clean exit is not a finished task.** `exitCode: 0` and `hasResult: true` describe the turn, not the brief. Check the answer against what you asked.
-- **Check both failure locations.** `stderr` holds launch failures, `turns.jsonl` holds runtime ones. A bare exit code is never the report.
+- **`/result` already checks both failure locations** — launch failures land in `stderr.log`, runtime ones as an `error` event in the transcript, and it names which happened. A bare exit code is never the report.
 - **Self-contained prompts, absolute paths.** The agent cannot see this conversation.
 - **Present before spawning.** It runs commands as this user.
 - **Report the handle.** A handle the user does not have is a session they cannot steer.

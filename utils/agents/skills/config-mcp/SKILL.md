@@ -84,9 +84,20 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 - **In-tree hyprpilot servers.** Do NOT add `hyprpilot`, `hyprpilot_skills`, or `hyprpilot_harness` entries here — those names are **reserved**, and an entry using one is silently replaced by the injected server. Hyprpilot auto-injects three of its own at launch, gated by the `[mcp]` block in `~/.config/hyprpilot/config.yaml`:
   - `hyprpilot` (`mcp serve`) — general tools (`open`). On by default.
   - `hyprpilot_skills` (`mcp skills`) — skills as `hyprpilot://skills/<slug>` resources plus `mcp__hyprpilot_skills__list_skills` / `read_skill` / `list_skill_references` / `read_skill_references` / `reload`. On by default, and additionally gated on the resolved `[[mcp.skills.dirs]]` catalog being non-empty.
-  - `hyprpilot_harness` (`mcp harness`) — `list_profiles` / `spawn` / `session_*` for driving other agent sessions. **Off unless `mcp.harness.enabled` says otherwise**, since `spawn` runs a profile's `command` as this user.
+  - `hyprpilot_harness` (`mcp harness`) — `list_profiles` / `spawn` / `session_*` for driving other agent sessions, plus session resources under `hyprpilot://sessions/`. **Off unless `mcp.harness.enabled` says otherwise**, since `spawn` runs a profile's `command` as this user.
 
   `mcp.enabled: false` is the master gate over all three; each also takes its own `enabled` / `name` / `autoAcceptTools` / `autoRejectTools`. Per-server tool policy **overrides** the `[mcp]`-level globs rather than merging with them — so enabling the harness without its own `autoAcceptTools` inherits `["*"]` and auto-approves `spawn`.
+
+  `mcp.harness` carries four more knobs, all scoping what a spawned agent may reach:
+
+  | Key | Default | Effect |
+  |-----|---------|--------|
+  | `maxDepth` | `1` | How deep spawning nests. A session at the cap gets **no harness injected** and its `spawn` is refused, so the lead delegates and the delegate works. Raising it reopens the next level with nothing else to change. |
+  | `includeProfiles` / `excludeProfiles` | unset | Globs scoping which profiles *this* launcher may delegate to. They AND with each profile's own `[profiles.harness]` opt-in, so a glob can never promote a profile that never opted in. Exclude beats include. |
+  | `mcp` | unset | An `[mcp]`-shaped overlay every delegate receives, folded **per leaf** over the delegate's own resolved block — a key you set wins, a key you leave unset inherits. This is what narrows a delegate's MCP reach. |
+  | `notifyOnComplete` | `true` | The Claude channel push when a turn ends. Noise control only; an unregistered channel is dropped silently either way. |
+
+  **Write a seeded key the way the seed writes it.** Both casings parse, but patches merge by key string before anything is typed — so writing `maxDepth` / `maxSessions` / `notifyOnComplete` in the other spelling reaches serde as a duplicate field and fails config load.
 
 ## Process
 

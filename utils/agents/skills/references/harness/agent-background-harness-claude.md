@@ -32,6 +32,12 @@ echo "RESULT: not met after N cycles"   # backstop — report and re-arm
 
 Monitor's own guidance applies when you use it instead: every pipe stage must flush per line (`grep --line-buffered`, `awk` + `fflush()`), poll remote APIs no faster than ~30 s, and the filter must match failure signatures as well as success — a monitor that greps only the happy path stays silent through a crashloop.
 
+## Reading an MCP resource
+
+`ReadMcpResourceTool { server, uri }` — `server` is the bare server name (`hyprpilot_harness`), `uri` the full resource URI. `ListMcpResourcesTool { server? }` enumerates what a server publishes.
+
+**A resource read lands in context, not in a shell.** There is no way to pipe one into `jq`, `grep`, or a file, and no filter parameter — you get the view the server defines, whole. So when you want a *projection* of something large, the on-disk route below is the only one that filters before the bytes arrive.
+
 ## MCP calls background automatically, but you cannot ask them to
 
 Two separate facts, and conflating them produces the wrong plan:
@@ -46,13 +52,14 @@ Consequences worth planning around:
 - **Per-call limits still apply while it runs backgrounded** — the wall-clock limit from the per-server timeout or `MCP_TOOL_TIMEOUT`, and the idle limit from `CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT`.
 - **The threshold is configurable per install** via `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` (`0` disables auto-backgrounding; `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` disables it along with every other background-task feature). **Never assume the default** — read the value in play before reasoning about whether a given call will block, and lower it only deliberately: every call that starts backgrounding costs a round trip it did not previously need.
 
-**Auto-backgrounding fixes the blocking, NOT the context cost — do not read it as permission to use a blocking follow.** A backgrounded call still delivers its full payload later, whole, into the notification. Measured on `hyprpilot_harness__session_read { wait: true }` against a 45 000 ms threshold: it backgrounded at exactly 45 s and the turn stayed usable, then the notification landed carrying a 60 kB slice of raw event stream — to answer a question that `jq` against the same transcript answered in fourteen lines.
+**Auto-backgrounding fixes the blocking, NOT the context cost — do not read it as permission to use a blocking follow.** A backgrounded call still delivers its full payload later, whole, into the notification. Measured on `hyprpilot_harness__session_read { wait: true }` against a 45 000 ms threshold: it backgrounded at exactly 45 s and the turn stayed usable, then the notification landed carrying a 60 kB slice of raw event stream — to answer a question that one `hyprpilot://sessions/<handle>/result` read answers in a line.
 
 So the ranking is unchanged, and the filesystem route below is still the default:
 
 | Want | Use | Why |
 |------|-----|-----|
-| The answer | `jq` the artifact on disk | Costs what the answer costs |
+| The answer | the server's own extracted view, where it has one | Costs what the answer costs |
+| A projection of something large | `jq` the artifact on disk | Filters before the bytes reach context |
 | Progress, as it happens | `Monitor` + filtered `tail -F` | One small event per step |
 | Only "is it done" | the cheap status poll | No payload at all |
 | The entire raw stream, deliberately | a blocking follow | The only case it wins |
@@ -74,7 +81,7 @@ tail -c +$((OFF+1)) -F "$FILE" | jq -r --unbuffered '<select + truncate>'
 Rules that bite on this pattern:
 
 - **Capture the byte offset BEFORE triggering the work**, then `tail -c +$((OFF+1))`. `tail -n0` drops everything written between the trigger returning and the tail attaching — a measured run lost the first step of a job that way.
-- **Arm AFTER the call that starts the work returns, not before.** A marker file from the *previous* run is usually still on disk until the new one starts, so a watcher armed early fires immediately on stale state.
+- **Check whether the marker is per-run before deciding when to arm.** Where one path is reused across runs, a previous run's marker sits there until the new one clears it, so a watcher armed early fires instantly on stale state — arm after the call returns. Where each run writes its own path, take the path from that call's result and arm whenever you like.
 - **`jq --unbuffered`** (and `grep --line-buffered`) or the events arrive in blocks, or never.
 - **Verify the field paths against a real line of the file first.** A filter keyed on the wrong shape emits nothing, which looks exactly like a quiet job.
 - **A `Monitor` on `tail -F` never exits by itself.** Pair it with a background loop that kills the tail once the marker appears, or it burns to `timeout_ms`.
