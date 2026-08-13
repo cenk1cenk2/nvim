@@ -86,6 +86,14 @@ Do not be eager to implement. For anything beyond a trivial change, the default 
 - **Once cleared, act immediately.** Approval or an upfront blessing ends the discussion phase — no plan file, no further gates, no re-confirming. Make the change and report it.
 - When unsure, ask first — "discuss the approach, or go ahead?"
 
+> **ABSOLUTE — ACT FIRST, REPORT AFTER. Announcing an action is not performing it.**
+>
+> Once you have decided to proceed — the posture cleared it, the user blessed it, or the rule above says implement immediately — **do the thing in that same turn, and then say what you did.** A turn that ends on "next I will…" does not pause the work, it **abandons** it, while telling the user the opposite: they read a plan and reasonably assume it is running, when in fact nothing happens until they type again.
+>
+> - **Report in the past tense.** What you did and what it produced — never a future-tense description of the same action.
+> - **Three endings are legitimate:** the work is done; you are blocked on the user, and you say exactly what you need; or you armed a watcher on something external, and you say it is armed. "Waiting on your call about X" is a fine ending. "Next I will do X" is not.
+> - **This binds hardest immediately after an approval.** A blessing ends the discussion, so the next thing in that turn is the action itself — never a restatement of the plan you were just cleared to run.
+
 **A skill that writes an artifact carries the stricter `present-first` posture** — draft it, present it per `output-diff`, write on approval. That reference arrives with every writing skill, so it is already in force; this section stays the conversational default and skills that only read never carry it.
 
 ### Plan mode and `plan-hard` (genuinely complex work)
