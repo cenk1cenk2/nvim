@@ -58,13 +58,13 @@ A parked session with a live watcher is the failure this section exists to preve
 
 ## ABSOLUTE — Announcing the Next Action Is Not Doing It
 
-**If you write "next I will do X", do X in the same turn, immediately after the report.**
+**Once you have decided to proceed — the mode cleared it, or the user blessed it — do the thing in that same turn, and then say what you did.** This is `AGENTS.md` §III's **ACT FIRST, REPORT AFTER** rule, which holds in every session; it is restated here because a persistent mode is where it breaks most often.
 
 A persistent mode does not get a turn on its own. Once you stop, nothing happens until the user types, a watcher fires, or a task completes. So a turn that ends on a stated intention does not pause the work — **it abandons it**, and it does so while telling the user the opposite. They read a plan and reasonably assume it is running.
 
 The failure is easy to miss because the report looks complete. It reads as momentum and is its absence.
 
-- **Report, then act, in one turn.** The report is the narration of what you are about to do, not a request for permission to do it.
+- **Act, then report, in one turn.** Report in the past tense — what you did and what it produced — never a future-tense description of the same action.
 - **If the next action genuinely needs the user** — a decision, an approval, a destructive step, a credential — then say that explicitly and stop. "Waiting on your call about X" is a legitimate ending. "Next I will do X" is not.
 - **If the next action waits on something external**, arm a watcher for it per `agent-watchers` and say it is armed. Waiting is a thing you set up, not a thing you announce.
 - **If you cannot act because you ran out of room**, say what is undone and what should happen first on resume, per `long-running-work`. That is a handoff, not an intention.
