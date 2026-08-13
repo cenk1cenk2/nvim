@@ -17,7 +17,7 @@ Never hand back a bare identifier: issues, MRs and PRs carry their title and a m
 
 A Linear workspace skill MUST be active before this skill runs — detection rules in `linear-prerequisite`.
 
-**This skill owns two things: the shape of the work, and the honesty of the record while that work is implemented.** It does not create, update, or reconcile Linear records itself — `linear-project-create`, `linear-issue-create`, `linear-issue-update`, `linear-issue-comment`, `linear-document`, and `linear-project-reconcile` write; this skill decides what they write and when.
+**This skill owns two things: the shape of the work, and the honesty of the record while that work is implemented.** It does not create, update, or reconcile Linear records itself — `linear-project-create`, `linear-issue-create`, `linear-issue-update`, `linear-issue-comment`, `linear-document`, and `linear-reconcile` write; this skill decides what they write and when.
 
 Present a proposed structure per `output-diff`. Description format for whatever gets written per `linear-description-structure`.
 

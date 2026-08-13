@@ -32,7 +32,7 @@ Documents follow `linear-document-handling`: glimpse always, classify plan-like 
 
 ## Scope
 
-This skill edits the project's **own prose** — description and documents. It does NOT audit issue structure, priorities, estimates, or relations (that is `linear-project-reconcile`), and it does not post status updates (that is `linear-project-post`).
+This skill edits the project's **own prose** — description and documents. It does NOT audit issue structure, priorities, estimates, or relations (that is `linear-reconcile`), and it does not post status updates (that is `linear-project-post`).
 
 ## Process
 
@@ -66,7 +66,7 @@ Only include deviations that matter for future readers understanding *why* the p
 ## Key Rules
 
 - **Never modify the project or its documents without explicit, per-change user approval** — per `linear-absolute-approval`; no blessing/autopilot shortcut applies.
-- **Prose only.** For issue-level structure, priorities, estimates, and relations, use `linear-project-reconcile`.
+- **Prose only.** For issue-level structure, priorities, estimates, and relations, use `linear-reconcile`.
 - **Documents follow the handling policy.** Plan-like → editable with agreement; external → read-only unless the user explicitly says to edit.
 - **Preserve content that hasn't changed** — only update what deviated.
 - **The Thoughts section documents *why*, not *what*** — the description itself reflects the *what*.

@@ -29,7 +29,7 @@ Compare to sibling skills:
 
 - `linear-issue-read` — deep per-issue reconciliation (one issue, all comments, all relations).
 - `linear-project-read` (this skill) — top-level project sweep (all issues, just statuses + titles; latest update; description).
-- `linear-project-reconcile` — audit + modify project structure (priorities, estimates, labels, relations).
+- `linear-reconcile` — audit + modify project structure (priorities, estimates, labels, relations).
 - `linear-project-post` — draft a new status update post.
 
 ## Process
@@ -118,7 +118,7 @@ Omit sections that have no findings. Keep bullets short — this is a survey, no
 
 ## Key Rules
 
-- **Read-only.** Never modify issues, comments, the project, or status updates. For modifications, refer the user to `linear-project-reconcile`.
+- **Read-only.** Never modify issues, comments, the project, or status updates. For modifications, refer the user to `linear-reconcile`.
 - **Highlight deltas, not full restatements.** The value is in surfacing *what changed since I last looked*, not describing the project from scratch.
 - **Timestamps drive staleness.** Quote `updatedAt` when flagging anything as possibly stale.
 - **Brief over thorough.** If the user wants a deep dive on a specific issue, refer them to `linear-issue-read`.
@@ -129,6 +129,6 @@ Omit sections that have no findings. Keep bullets short — this is a survey, no
 - **`linear-project-pickup`** — prepare the project or a project slice for implementation after this read-only refresh.
 - **`agent-pickup`** — execute the refreshed project scope with direct work and/or agents.
 - **`linear-project-update`** — edit the project description and documents to match the conversation.
-- **`linear-project-reconcile`** — audit + modify project structure.
+- **`linear-reconcile`** — audit + modify project structure.
 - **`linear-project-post`** — draft a new status update post.
 - **`linear-project-match`** — sync issue states against external reality (merged MRs/PRs, user statements). Can be invoked as a follow-up when this read flags mismatched states.

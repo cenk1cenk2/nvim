@@ -126,7 +126,7 @@ At the bottom, summarise unchanged issues (not enough evidence) and explicit no-
 - **Confirm cancellations.** `Canceled` is terminal. Always get explicit approval before cancelling, even when the user said "dropped".
 - **Keyword matches are candidates, not matches.** If you can't find a direct issue-id reference, surface it as a candidate for the user to confirm.
 - **Batch application.** Apply approved transitions in parallel `save_issue` calls to minimise round trips.
-- **No scope creep.** This skill only moves issue states. For priority/estimate/label/relation changes, refer the user to `linear-project-reconcile`; for description/document edits, `linear-project-update`.
+- **No scope creep.** This skill only moves issue states. For priority/estimate/label/relation changes, refer the user to `linear-reconcile`; for description/document edits, `linear-project-update`.
 
 ## Report Format (final summary after apply)
 
@@ -149,6 +149,6 @@ At the bottom, summarise unchanged issues (not enough evidence) and explicit no-
 ## Related Skills
 
 - **`linear-project-read`** — read-only project survey. Surfaces mismatched states; this skill acts on them.
-- **`linear-project-reconcile`** — audit + modify project structure (priorities, estimates, labels, relations). Complementary scope.
+- **`linear-reconcile`** — audit + modify project structure (priorities, estimates, labels, relations). Complementary scope.
 - **`linear-issue-update`** — update a single issue's fields (any field, not just state). Use when the match involves more than a state transition.
 - **`linear-state-transitions`** (reference) — defines the forward-move rank order and the never-downgrade guard.

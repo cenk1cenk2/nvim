@@ -124,7 +124,7 @@ For a supervisor these are not housekeeping: an unaccounted watcher or a strande
 1. **Set the scope.** One line on what you are supervising, what done looks like, and what you are not touching. Present once, then run.
 2. **Establish real state before opining.** Pull tracker issues, relations, and comments; check repo, branch, pipeline, and PR/MR state with bounded commands. Delegate the bulk reading — log digging, broad code search, doc sweeps — per `agent-delegate` with a bounded return contract, tiers resolved by loading the `agent-harness` skill; subagents here are aware targets per `agent-target-capability`, so prompts point at skills and tools instead of inlining them. Keep cheap status checks in-house.
 3. **Diff record against reality.** List every mismatch with its evidence: wrong status, dead relation, impossible estimate, stale description (cite `updatedAt`), priority that violates its own blocking order.
-4. **Reconcile.** Group findings clearly-wrong first, then improvements, then suggestions. Present chunked per `output-diff` before applying — unless preapproved, in which case apply and report what landed. For a full per-project audit, compose `linear-project-reconcile` rather than re-implementing it.
+4. **Reconcile.** Group findings clearly-wrong first, then improvements, then suggestions. Present chunked per `output-diff` before applying — unless preapproved, in which case apply and report what landed. For a full audit of a project or an issue tree, compose `linear-reconcile` rather than re-implementing it.
 5. **Arm a watcher for every open condition — supervision is event-driven.** See below.
 6. **Route implementation out.** Any build work goes to `agent-coordinator` per the rule above, with the four handoff items.
 7. **Verify claims, never narratives.** Confirm each reported completion against its artifact before it changes a tracker state or a report line.
@@ -160,7 +160,7 @@ Supervisor-specific rules on top of the reference's discipline:
 ## Composing
 
 - **`agent-coordinator`** — every implementation, always. It routes the work; you keep the record.
-- **`linear-project-reconcile`** — the deep per-project audit; call it, do not restate it.
+- **`linear-reconcile`** — the deep audit of a project, an issue tree, or one issue; call it, do not restate it.
 - **`linear-issue-status`, `linear-issue-comment`, `linear-issue-update`, `linear-issue-checklist`, `linear-document`, `linear-project-post`** — the actual PM writes.
 - **`linear-next-task`, `linear-triage`, `linear-project-match`** — selection, ordering, and state sync from PRs/MRs.
 - **`agent-delegate`** — read-only investigation and research fan-out.
