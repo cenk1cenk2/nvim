@@ -14,6 +14,10 @@ tracked separately, per `agent-roster`.
    rest.
 2. **Arm it the moment the condition opens**, not when you next remember it. The gap between "the MR is
    open" and "did it merge?" is where both momentum and tracker accuracy are lost.
+   **Arming is never gated on a decision.** A prep is held at a gate because firing early corrupts
+   state; a watcher only reads, so there is no such thing as arming one too early. Holding one back
+   pending an ordering call, an approval, or a preference leaves the event it guarded unobserved — and
+   the thing you were deciding about happens while you decide.
 3. **Bound every loop.** A cap is a runaway backstop, not a deadline: on exhaustion, report "not met"
    and re-arm rather than looping forever.
 4. **Size cap × cadence to the real wait, not to your impatience.** A human action you expect
@@ -36,6 +40,26 @@ tracked separately, per `agent-roster`.
 **Bash cannot call MCP tools.** When the truth is only reachable via MCP (Linear state, ArgoCD, Grafana,
 Spacelift where no CLI exists), poll a bash-visible **proxy** and do the authoritative MCP check
 yourself on wake.
+
+## Fire on the actionable transition, not only the terminal state
+
+**A watcher keyed to the end state is silent through every intermediate state, including the ones you
+need to act on.** Ask what the *earliest* state is that changes what you do, and wake on that.
+
+A job reaching a terminal state and a job merely *appearing* are different events with different
+actions. When a pre-condition window opens as the work starts — a baseline to capture, a snapshot to
+take, a value to record before it is overwritten — a terminal-only watcher delivers its wake after that
+window has already closed.
+
+So watch the state field for **any change**, report each transition, and exit on terminal. A job that
+appears and then sits queued becomes visible that way too, where a terminal-only watch makes it
+indistinguishable from nothing having happened at all.
+
+**Carry the wake's own reference values in its message, and replace the watcher when they turn out
+wrong.** A threshold or band written from an earlier measurement is the thing a wake gets judged
+against, so a stale one produces a confident false positive. On learning the real figure, stop the
+watcher and re-arm with the corrected value rather than remembering to mentally adjust — a wake read
+against a wrong band is worse than no wake.
 
 ## Which wake is this? — routing by posture
 
