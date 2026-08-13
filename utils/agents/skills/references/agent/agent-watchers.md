@@ -67,6 +67,34 @@ against, so a stale one produces a confident false positive. On learning the rea
 watcher and re-arm with the corrected value rather than remembering to mentally adjust — a wake read
 against a wrong band is worse than no wake.
 
+## A watcher can watch nothing and still earn its keep — the reminder loop
+
+Not every watcher polls external state. A **reminder watcher** emits a fixed checklist on a cadence
+during a long wait, so the standing procedure stays in front of you instead of decaying across turns:
+the queries to re-run, the discriminator that separates progress from a stall, the person to prompt,
+the trap to avoid. It watches you, not the system.
+
+Arm one whenever a wait is long enough that the *procedure* will drift before the condition fires — a
+multi-stage rollout, a convergence with a manual step in the middle, anything whose next action depends
+on a rule established hours earlier. It is the per-occurrence mechanism by definition: a one-wake loop
+delivers the whole checklist once, at exit, which is the single moment it is useless.
+
+**The payload is a file. The command is `cat <path>`.** Never inline the reminder text into the
+command string.
+
+- **Quoting kills it.** Real payloads carry quoted selectors, JSON, and regex. Nested quotes inside a
+  command string fail at the shell's parser, and that failure arrives as an *unarmed* watcher, not a
+  bad wake — indistinguishable from a quiet one.
+- **A file is editable.** A reminder goes stale the moment a rule is superseded — a retired window, a
+  corrected discriminator. Correcting a file is an edit; correcting an inlined string is a reap and a
+  re-arm, which is how a wrong reminder outlives the rule it carried.
+- **A file outlives the handle.** The command string exists only in the runtime's task record and dies
+  with a compaction. The file is on disk and the anchor names its path.
+
+Write it to the session scratchpad or a temp directory — it is scaffolding, not a deliverable, and it
+does not belong in a repository. Durability comes from the `plan-compact` anchor recording the path and
+the payload per `long-running-work`, never from where the file sits.
+
 ## Which wake is this? — routing by posture
 
 The mechanics are identical across modes. **What the wake is *for* is not**, and you decide that before
@@ -121,6 +149,8 @@ when armed, again when re-armed, and whenever asked what is running:
   answers.
 - **Handle** is the task id the runtime returned. **No handle means you detached instead of arming** —
   nothing will wake you.
+- **A reminder watcher's *Watching for* cell is its payload path**, since it tests no condition. Without
+  it the row reads as a watcher with no purpose.
 
 When `plan-compact` is active, these columns are exactly what its anchor records — copy the row across
 rather than writing it twice.

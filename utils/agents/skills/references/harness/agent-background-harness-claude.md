@@ -102,6 +102,7 @@ Background shells survive across turns until they exit or are stopped, and the s
 
 ## Traps
 
+- **Command strings are parsed by zsh, inside an `eval`.** `Bash` and `Monitor` hand the command to `zsh -c '… eval …'`, so a nested `\"` inside an embedded PromQL selector, JSON body, or regex fails as `(eval):1: parse error near …` and the task exits 1 on the spot. Put the text in a file and make the command `cat <path>`.
 - **Task-notifications are not user input.** A completion event is never approval, consent, or an answer to a pending question.
 - **Bash cannot call MCP tools.** Poll a bash-visible proxy and keep the authoritative MCP check on the main loop.
 - **`ps` proves nothing.** A detached loop and a runtime-managed one look identical in a process list — judge by how it was launched.
