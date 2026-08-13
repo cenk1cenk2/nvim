@@ -1,10 +1,12 @@
 ---
 name: plan-hard
-description: plan-hard Interview-driven plan mode - walks the design tree one decision at a time, self-answers what the codebase can answer, and recommends the rest. The default whenever plan mode is entered. Use on "plan hard", "interview me", "think this through". Not for loading an existing plan, or writing one for another session.
+description: plan-hard Interview-driven plan mode - walks the design tree one decision at a time, self-answers what the codebase can answer, and recommends the rest. Auto mode plans the whole thing without an interview and without plan mode, reviews its own draft, and stands down. The default whenever plan mode is entered. Use on "plan hard", "interview me", "plan with yourself", "auto". Not for loading an existing plan, or writing one for another session.
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/plan-mode.md
+  - ../references/mode-toggle.md
+  - ../references/status-report.md
   - ../references/harness/provider-paths.md
 ---
 
@@ -14,7 +16,7 @@ State that spans turns must be written durably per `long-running-work` — postu
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
-> **ALWAYS enter plan mode** — per `plan-mode`, unless the user asked you to plan with yourself.
+> **ALWAYS enter plan mode** — per `plan-mode`, unless auto mode is engaged (see Modes).
 >
 > - Enter plan mode immediately.
 > - **NEVER exit plan mode.** Stay in plan mode until the user explicitly says "implement", "start coding", "write the code", or an equally direct proceed signal (the user lingo `g`, `go`, `y`, `yolo` also count).
@@ -30,13 +32,28 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 
 **Default — interview mode.** Traverse the design tree one question at a time with the user (the Process below). This is the disposition unless the user asks to delegate.
 
-**Delegated refinement mode.** Triggered when the user says "delegate", "delegate review", "delegate the plan", "review and refine the plan", or similar. Instead of walking every branch with the user:
+**Auto mode.** Triggered when the user says "plan with yourself", "auto", "delegate", "delegate the plan", "review and refine the plan", or similar. Plan the whole thing yourself, hand back a plan and a summary, and stand down. It replaces the interview, never the gate on implementation.
 
-1. Build the design tree and **self-answer aggressively** from the codebase (Self-Answering Rule) to produce a complete DRAFT plan — choose your recommended answer for every branch that is not pure user intent.
-2. Dispatch `agent-review` on the draft to refine it: run `type=plan` (devil's-advocate + gap analysis) and, when the draft rests on factual claims, also `type=facts`. Lenses may run in parallel. Fold the reviewer's findings back into the plan; re-open any branch it faults.
-3. Bring **only the residual to the user**: the genuine open questions the reviewer could not resolve (pure intent/preference), plus the final approval and a concise summary of what was decided and why. Do not replay the full interview.
+**No plan mode at all** — the "plan with yourself" carve-out in `plan-mode` applies. An interview and an approval gate are exactly what this mode exists to avoid.
 
-Delegated mode trades interview depth for a review pass — use it when the user wants a fast, refined plan rather than a guided walkthrough.
+1. **Research the whole question before answering any of it.** Self-answer per the Self-Answering Rule, and widen past it when the question reaches outside this repo: load `sourcebot-discovery` for cross-repo prior art, a docs MCP for any library or API in play, and the runtime's search or deep-research facility for the rest. Route per the Discovery table in `AGENTS.md` §IV.
+2. **Build the design tree and self-answer aggressively** from the codebase (Self-Answering Rule) to produce a complete DRAFT plan — choose your recommended answer for every branch that is not pure user intent.
+3. **Review the draft at the same tier or smarter.** Dispatch `agent-review` `type=plan` (devil's-advocate + gap analysis) and, when the draft rests on factual claims, also `type=facts`; lenses may run in parallel, and `agent-harness` resolves the tier. Fold the findings back into the plan and re-open every branch the reviewer faults.
+4. **When the plan targets implementation, plan the execution too.** Load `code-style` so the approach matches the conventions the implementation will be held to, and name separately any cleanup `code-improve` would own rather than folding it into the plan silently.
+5. **Name the skill chain the plan runs through** — the skills whoever executes it should load, in order. A plan carrying its own route is one the executor does not re-derive, and it is what makes the plan usable by an aware target per `agent-aware`.
+6. **Report progress as the pass converges, not every turn.** A finished design tree, a returned review, an assembled residual are milestones and get a report per `status-report`; anything mid-flight gets a terse line. When a branch blocks on external state, arm a watcher via `agent-background` instead of idling on it.
+7. **Bring only the residual to the user**: the genuine open questions the reviewer could not resolve (pure intent/preference), plus the assumptions you made, in one batch. Do not replay the full interview. This is the only place the mode spends the user's attention.
+8. **Summarize and stand down.** Present the plan and what was decided and why. On the user's ok the posture ends per `mode-toggle`. **Implementation is a separate blessing** — auto mode stops at the plan unless the run was invoked as `autopilot`, which authorizes carrying straight on into it.
+
+Auto mode trades interview depth for a review pass — use it when the user wants a fast, refined plan rather than a guided walkthrough.
+
+### Toggle (auto mode only)
+
+On/off mechanics per `mode-toggle`. Interview mode is unaffected and has no toggle.
+
+- **On:** the engage phrases above.
+- **Off:** the plan is approved, or any stop or park signal.
+- **Survives disengage:** the written plan file. Armed watchers do NOT — account for every one before standing down.
 
 ## Process
 
@@ -166,7 +183,7 @@ Keep going until a stop condition is met.
 
 - **`plan-handoff`** — if the interviewed plan is intended for a different session or repository, compose with `plan-handoff` to produce a self-contained handoff plan.
 - **`plan-pickup`** — after the plan file is written, the user runs `plan-pickup` to load and execute it.
-- **`agent-review`** — used two ways: (1) in **Delegated refinement mode** to refine the draft plan without a full interview, and (2) conditionally in step 7 to fact-check resolved claims AND auto-resolve pending unresolved ones (only on an explicit rigour phrase — "plan hard" / "think hard" / "deep" / "thorough" / "rigorous"; default plan-mode entry skips it; opt-out "skip fact-check").
+- **`agent-review`** — used two ways: (1) in **Auto mode** to refine the draft plan without a full interview, and (2) conditionally in step 7 to fact-check resolved claims AND auto-resolve pending unresolved ones (only on an explicit rigour phrase — "plan hard" / "think hard" / "deep" / "thorough" / "rigorous"; default plan-mode entry skips it; opt-out "skip fact-check").
 
 When composing, do NOT duplicate the interview — `plan-hard` runs once per plan, then the downstream skill takes over.
 
@@ -194,4 +211,4 @@ When composing, do NOT duplicate the interview — `plan-hard` runs once per pla
 
 - **`plan-handoff`** — produce self-contained plans for other sessions or repositories.
 - **`plan-pickup`** — load and execute an existing plan file.
-- **`agent-review`** — refines the draft in Delegated refinement mode, and (on explicit rigour triggers) fact-checks resolved claims and auto-resolves unresolved branches where evidence is findable. Read-only reviewer dispatched at cheap tier by default.
+- **`agent-review`** — refines the draft in Auto mode, and (on explicit rigour triggers) fact-checks resolved claims and auto-resolves unresolved branches where evidence is findable. Read-only reviewer dispatched at cheap tier by default.
