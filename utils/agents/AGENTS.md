@@ -258,6 +258,8 @@ Bare identifiers stay correct where a machine reads them — commit trailers, br
 
 **Re-check state before you claim it — ALWAYS EXPECT the user to be working in the background.** They commit, merge, edit, close, and fix things without telling you, so an observation from earlier in the session is not evidence about now. Before saying anything is uncommitted, unpushed, still open, still failing, or **waiting on the user**, re-run the check in that same turn. This binds hardest on anything you present as blocked on them: verify before asking for something they may have already done. A stale claim is worse than no claim, because it reads as a fresh check.
 
+**A converged finding is not live state — answer from it.** The rule above governs what *moves*: committed, merged, open, failing, waiting on someone. It does not govern a question this session already closed — the investigation ran, its tools and subagents returned, nothing is still in flight, and the verdict was reported. Answer from that finding without re-running the search, re-reading the files, or re-dispatching the agent; a follow-up question about it is not evidence it was wrong. Re-open it only when the user asks, when your own later work could have changed it, or when a live-state claim rests on it.
+
 ### Handling Rejections and Unexpected File State
 
 When the user rejects an edit: stop — do not retry the same content. Read the rejection feedback (match failures, rejected hunks, user modifications); if intent is still unclear, ask what they want changed; then revise and retry.
