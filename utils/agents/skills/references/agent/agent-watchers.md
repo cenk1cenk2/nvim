@@ -37,6 +37,12 @@ tracked separately, per `agent-roster`.
 9. **Account for every live watcher in each report** — what it polls, its cadence, its handle. An
    unexplained live watcher at the end of a flow is a bug, not diligence.
 
+**One wake or many is a mechanism choice, not a cadence choice.** A watcher that must report each time
+something changes needs the runtime's per-occurrence facility. Give that job to a one-wake background loop
+and it still runs and still polls correctly, but every line it prints is withheld until the process exits and
+lost entirely if it is reaped first. If you find yourself reading a watcher's log to see what it has said,
+the mechanism is wrong, not slow.
+
 **Bash cannot call MCP tools.** When the truth is only reachable via MCP (Linear state, ArgoCD, Grafana,
 Spacelift where no CLI exists), poll a bash-visible **proxy** and do the authoritative MCP check
 yourself on wake.

@@ -81,9 +81,12 @@ The bash wait-loop above is the portable default, but it is not the only way, an
 
 1. **Harness auto-reinvoke on subagent/task completion** — if the wait is on work YOU launched via the runtime's subagent/Workflow dispatch, do NOT poll: the harness re-invokes you when it finishes. Only arm a watcher when the state changes *outside* anything the harness tracks.
 2. **Background exec + wake** — run the poll/command detached and get woken when it exits. The bash-loop pattern above, on runtimes with a background shell.
-3. **Scheduled / deferred wakeup** — schedule the session to resume after a delay when there is no clean signal to poll (interval prep, self-pacing).
-4. **Recurring schedule (cron)** — for work that must run on a repeating cadence, outliving the session.
-5. **Sleep-in-a-loop** — a bounded loop around an interruptible sleep, where the runtime offers a real sleep primitive.
+3. **Per-occurrence event stream** — one wake per line the command emits, for a watch that must report repeatedly rather than once: each status flip, each new comment, each progress step, each periodic prompt to go do an MCP read bash cannot make. A one-wake facility cannot do this job, per the selection rule below.
+4. **Scheduled / deferred wakeup** — schedule the session to resume after a delay when there is no clean signal to poll (interval prep, self-pacing).
+5. **Recurring schedule (cron)** — for work that must run on a repeating cadence, outliving the session.
+6. **Sleep-in-a-loop** — a bounded loop around an interruptible sleep, where the runtime offers a real sleep primitive.
+
+**Pick the mechanism by HOW MANY wakes you need, before anything else.** One wake and repeated wakes are different facilities on every runtime, and choosing wrong fails silently in one direction only: **a one-wake facility given a repeating job still runs, still polls correctly, still writes every line — and delivers them all in a single wake at exit, or none at all if it is stopped first.** The loop looks armed and its log fills up, while nothing reaches you at the moment it would have mattered. Measured: a background loop printing 14 status transitions delivered all 14 at exit, and a sibling stopped before exit delivered nothing. So a watcher that prints anything you mean to act on *while it runs* needs the per-occurrence facility, not a bounded loop.
 
 **Which mechanisms exist, and what they are called, is a runtime property.** `agent-background-harness-<provider>` is the authority: it names the facility for each mechanism above, its parameters, its defaults, and its traps. Read it before arming.
 
