@@ -286,7 +286,6 @@ function M.config()
           end,
           desc = "rename note",
         },
-
       }
     end,
     autocmds = function()
