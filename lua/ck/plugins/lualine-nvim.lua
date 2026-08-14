@@ -28,6 +28,8 @@ function M.config()
           lualine_a = { components.mode },
           lualine_b = {
             components.branch,
+            components.git_upstream,
+            components.git_diff,
             components.filetype,
             -- components.filename,
             components.diff,
@@ -89,6 +91,35 @@ function M.config()
     on_setup = function(c)
       require("lualine").setup(c)
     end,
+    autocmds = function()
+      ---@type Autocmds
+      return {
+        {
+          event = "BufEnter",
+          group = "_lualine_git",
+          callback = function()
+            if not M.git.get() then
+              M.git.refresh()
+            end
+          end,
+        },
+        {
+          event = { "FocusGained", "DirChanged" },
+          group = "_lualine_git",
+          callback = function()
+            M.git.refresh()
+          end,
+        },
+        {
+          event = "User",
+          pattern = "GitSignsUpdate",
+          group = "_lualine_git",
+          callback = function()
+            M.git.refresh()
+          end,
+        },
+      }
+    end,
   })
 end
 
@@ -137,6 +168,53 @@ function M.components()
       icon = nvim.ui.icons.git.Branch,
       color = { fg = nvim.ui.colors.black, bg = nvim.ui.colors.yellow[300] },
       cond = conditions.hide_in_width,
+    },
+    git_upstream = {
+      function()
+        local git = M.git.get()
+
+        local message = {}
+
+        if git.ahead > 0 then
+          table.insert(message, ("%s %s"):format(nvim.ui.icons.ui.BoldArrowUp, git.ahead))
+        end
+
+        if git.behind > 0 then
+          table.insert(message, ("%s %s"):format(nvim.ui.icons.ui.BoldArrowDown, git.behind))
+        end
+
+        return table.concat(message, " ")
+      end,
+      color = { fg = nvim.ui.colors.yellow[600], bg = nvim.ui.colors.bg[400] },
+      cond = function()
+        local git = M.git.get()
+
+        return conditions.hide_in_width() and git ~= nil and (git.ahead > 0 or git.behind > 0)
+      end,
+    },
+    git_diff = {
+      "diff",
+      source = function()
+        local git = M.git.get()
+
+        if git then
+          return { added = git.added, modified = git.changed, removed = git.removed }
+        end
+      end,
+      symbols = { added = nvim.ui.icons.git.LineAdded .. " ", modified = nvim.ui.icons.git.LineModified .. " ", removed = nvim.ui.icons.git.LineRemoved .. " " },
+      diff_color = {
+        added = { fg = nvim.ui.colors.green[600] },
+        modified = { fg = nvim.ui.colors.blue[600] },
+        removed = { fg = nvim.ui.colors.red[600] },
+      },
+      color = {
+        bg = nvim.ui.colors.bg[400],
+      },
+      cond = function()
+        local git = M.git.get()
+
+        return conditions.hide_in_width() and git ~= nil and (git.added > 0 or git.changed > 0 or git.removed > 0)
+      end,
     },
     filetype = {
       "filetype",
@@ -433,6 +511,100 @@ function M.components()
   }
 
   return components
+end
+
+---@class LualineGitState
+---@field ahead number
+---@field behind number
+---@field added number
+---@field changed number
+---@field removed number
+
+M.git = {
+  ---@type table<string, LualineGitState>
+  cache = {},
+  ---@type table<string, boolean>
+  running = {},
+}
+
+---@return string | nil
+function M.git.root()
+  local status = vim.b.gitsigns_status_dict
+
+  return status and status.root
+end
+
+---@return LualineGitState | nil
+function M.git.get()
+  local root = M.git.root()
+
+  return root and M.git.cache[root]
+end
+
+function M.git.refresh()
+  local root = M.git.root()
+
+  if not root or M.git.running[root] then
+    return
+  end
+
+  M.git.running[root] = true
+
+  ---@type LualineGitState
+  local state = { ahead = 0, behind = 0, added = 0, changed = 0, removed = 0 }
+  local pending = 2
+
+  local function finish()
+    pending = pending - 1
+
+    if pending > 0 then
+      return
+    end
+
+    M.git.running[root] = nil
+
+    if not vim.deep_equal(M.git.cache[root], state) then
+      M.git.cache[root] = state
+
+      vim.cmd.redrawstatus()
+    end
+  end
+
+  vim.system(
+    { "git", "-C", root, "rev-list", "--left-right", "--count", "@{upstream}...HEAD" },
+    { text = true },
+    vim.schedule_wrap(function(out)
+      local behind, ahead = tostring(out.stdout):match("(%d+)%s+(%d+)")
+
+      state.behind = tonumber(behind) or 0
+      state.ahead = tonumber(ahead) or 0
+
+      finish()
+    end)
+  )
+
+  vim.system(
+    { "git", "-C", root, "diff", "--unified=0", "HEAD" },
+    { text = true },
+    vim.schedule_wrap(function(out)
+      for line in tostring(out.stdout):gmatch("[^\n]+") do
+        -- an omitted hunk length means a single line, so an empty capture counts as one
+        local old, new = line:match("^@@ %-%d+,?(%d*) %+%d+,?(%d*) @@")
+
+        if old then
+          local removed = tonumber(old) or 1
+          local added = tonumber(new) or 1
+          local changed = math.min(removed, added)
+
+          state.changed = state.changed + changed
+          state.added = state.added + added - changed
+          state.removed = state.removed + removed - changed
+        end
+      end
+
+      finish()
+    end)
+  )
 end
 
 return M
