@@ -16,7 +16,9 @@ argumentHint: '[create|update|review] [reference-name] [context]'
 
 Posture: `present-first`. Present proposed changes per `output-diff` before writing. Keep real private specifics out of references and their examples per `redact-private-data`. Once edits land, commit and push per `commit-push-scoped` — stage the reference files plus any consuming skill whose frontmatter changed, scope `agents`, branch `rolling`.
 
-**Target: the reference file whose topic covers the convention**, inferred from what the lesson is actually about; a new reference when none fits. Targets and the propose-don't-write rule for a gap in this skill: `config-targets`.
+**Target: the reference file whose topic covers the convention**, inferred from what the lesson is actually about; a new reference when none fits.
+
+> **ABSOLUTE — discover the target before drafting, per `config-targets`.** This file is the procedure; the target is whichever reference already claims the topic. Search for it and name it back before writing a line. Editing this file needs the captain naming it **and** blessing the change — otherwise propose and stop.
 
 ## Reference Directory Structure
 

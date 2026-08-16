@@ -15,7 +15,9 @@ argumentHint: '[add|remove|modify] [server-name] [optional: description]'
 
 Posture: `present-first`.
 
-**Target: the MCP catalog at `~/.config/nvim/utils/agents/mcp/servers.json`.** The hyprpilot launcher config that wires this catalog into a launch is `config-hyprpilot`'s. Targets and the propose-don't-write rule for a gap in this skill: `config-targets`.
+**Target: the MCP catalog at `~/.config/nvim/utils/agents/mcp/servers.json`.** The hyprpilot launcher config that wires this catalog into a launch is `config-hyprpilot`'s.
+
+> **ABSOLUTE — discover the target before drafting, per `config-targets`.** This file is the procedure; the target is the catalog and whatever else the request is actually about. A server's own facts belong to its manual, not here. Editing this file needs the captain naming it **and** blessing the change — otherwise propose and stop.
 
 ## Context
 

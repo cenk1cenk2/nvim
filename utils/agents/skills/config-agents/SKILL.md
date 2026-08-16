@@ -21,7 +21,7 @@ Posture: `present-first`.
 
 `~/.config/nvim/utils/agents/AGENTS.md` — the central guidelines document loaded into every hyprpilot agent session.
 
-Targets and the propose-don't-write rule for a gap in this skill: `config-targets`.
+> **ABSOLUTE — discover the target before drafting, per `config-targets`.** This file is the procedure; the target is `AGENTS.md` and whatever skills own the behaviour alongside it. A rule a skill already governs belongs in that skill, not here. Editing this file needs the captain naming it **and** blessing the change — otherwise propose and stop.
 
 It is injected by an **unscoped root `[[patches]]` entry** in `~/.config/hyprpilot/config.yaml` — a `system_prompt: [{ file: ... }]` overlay with no `$match`, so it folds onto whichever profile resolves. Individual profiles do NOT declare it. Changing which file is loaded is a patch edit, not a per-profile edit.
 

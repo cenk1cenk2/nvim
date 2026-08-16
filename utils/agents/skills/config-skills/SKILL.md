@@ -25,10 +25,10 @@ A rule about dispatching subagents belongs in the dispatch skills and their per-
 
 So, before editing:
 
-1. **Find the skills that own the behaviour** — search `~/.config/nvim/utils/agents/skills/` for the ones whose process steps actually perform it. There is usually more than one (a family of skills plus a shared reference).
+1. **Find the skills that own the behaviour** — search `~/.config/nvim/utils/agents/skills/` for the ones whose process steps actually perform it. There is usually more than one (a family of skills plus a shared reference). **Name them back in one line before drafting**; a run that opens with a draft has skipped this step.
 2. **Edit every one of them**, not just the first. A rule present in one sibling and absent in the others fails exactly when a different entry point is used.
 3. **Put runtime-specific mechanics in the per-provider reference**, and the runtime-agnostic principle in the body (see *Provider-Specific Behavior*).
-4. **A gap in `config-skills` itself gets proposed, not written**, per `config-targets`. Even when the lesson is genuinely about authoring — a new frontmatter field, a validation rule, a structural convention — raise it and stop. Only an explicit ask for `config-skills` makes this file the target.
+4. **A gap in `config-skills` itself gets proposed, not written**, per `config-targets`. Even when the lesson is genuinely about authoring — a new frontmatter field, a validation rule, a structural convention — raise it and stop. Two things must both hold before this file is edited: the captain **names** it, and the captain **blesses** the presented change. Naming without a blessing means present and wait; a blessing for other work never reaches this file.
 
 **This is absolute.** "I'll record it in config-skills so future authors know" is the failure mode: it documents the lesson where nobody acts on it and leaves the real skills wrong.
 

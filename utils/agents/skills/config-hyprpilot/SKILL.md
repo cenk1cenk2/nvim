@@ -18,7 +18,9 @@ Posture: `present-first`.
 
 **Target: `~/.dotfiles/hyprpilot/.config/hyprpilot/config.yaml`** — the launcher config. It is stowed,
 so `~/.config/hyprpilot/config.yaml` is a symlink to it; edit the dotfiles path, which is the one git
-tracks. Targets and the propose-don't-write rule: `config-targets`.
+tracks.
+
+> **ABSOLUTE — discover the target before drafting, per `config-targets`.** This file is the procedure; the target is the launcher config. Editing this file needs the captain naming it **and** blessing the change — except for the schema carve-out below, where drift against the installed binary is repaired in place.
 
 ## What This Config Is
 
