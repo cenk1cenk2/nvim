@@ -43,7 +43,6 @@ local plugins = {
   "auto-hlsearch-nvim",
   "grug-far-nvim",
   "bookmarks-nvim",
-  "minuet-ai-nvim",
   "sidekick-nvim",
   "copilot-lsp",
   "avante-nvim",

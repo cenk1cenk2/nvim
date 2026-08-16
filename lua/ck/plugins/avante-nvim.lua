@@ -184,31 +184,6 @@ function M.config()
         web_search_engine = {
           provider = "google",
         },
-        rag_service = {
-          enabled = nvim.lsp.ai.chat.rag,
-          host_mount = os.getenv("HOME"),
-          --- NOTE: api key is causing a problem so we are using the open ai client
-          llm = {
-            provider = "openai",
-            endpoint = "https://api.ai.kilic.dev/v1",
-            api_key = "AI_KILIC_DEV_API_KEY",
-            --- NOTE: this should be an openai model matching cause of pydantic
-            model = "o1",
-          },
-          embed = {
-            provider = "openai",
-            endpoint = "https://api.ai.kilic.dev/v1",
-            api_key = "AI_KILIC_DEV_API_KEY",
-            --- NOTE: this should be an openai model matching cause of pydantic
-            model = "text-embedding-3-small",
-          },
-          docker_extra_args = table.concat({
-            "-e",
-            "OLLAMA_API_KEY=" .. (os.getenv("AI_KILIC_DEV_API_KEY") or ""),
-            "-e",
-            "OPENAI_API_KEY=" .. (os.getenv("AI_KILIC_DEV_API_KEY") or ""),
-          }, " "),
-        },
         windows = {
           wrap = true, -- similar to vim.o.wrap
           width = 50, -- default % based on available width
