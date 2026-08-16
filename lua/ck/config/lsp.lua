@@ -33,10 +33,9 @@ return {
       provider = { "codecompanion" },
       ---@type table<string, any>
       options = {},
-      rag = false,
     },
     completion = {
-      ---@type ("inline" | "cmp" | "minuet")[]
+      ---@type ("inline" | "cmp")[]
       provider = { "inline" },
       number_of_completions = 1,
       context_window = 2048,
@@ -52,9 +51,9 @@ return {
       options = {},
     },
     provider = {
-      ---@type 'copilot' | 'ai.kilic.dev' | 'gemini' | string
+      ---@type 'copilot' | 'gemini' | string
       chat = "claude_code",
-      ---@type 'copilot' | 'ai.kilic.dev' | 'gemini' | string
+      ---@type 'copilot' | 'gemini' | string
       completion = "copilot",
     },
     filetypes = {
