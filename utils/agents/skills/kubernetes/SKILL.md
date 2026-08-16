@@ -1,6 +1,8 @@
 ---
 name: kubernetes
-description: kubernetes Manual for the read-only Kubernetes MCP server - what it exposes, where kubectl takes over, naming the cluster, and the offer-first gate on touching one. Load before the first call to that server, or on "check the cluster", "what is running on X". Not for authoring manifests, ArgoCD operations, or metrics and logs.
+description: kubernetes Manual for the read-only Kubernetes MCP server - what it exposes, where kubectl takes over, resolving a cluster to a context, and the offer-first gate the captain names the cluster in. Load before the first call to that server, or on "check the cluster", "what is running on X". Not for authoring manifests, ArgoCD operations, or metrics and logs.
+references:
+  - ../references/kilic/kilic-workload-resolution.md
 ---
 
 ## Context
@@ -15,14 +17,19 @@ The `kubernetes` server is read-only inspection of live clusters. It runs `--rea
 
 **Reaching into a live cluster is the captain's call, even for a read.** Name the cluster and what you would look at, then wait. This holds for `kubernetes__*` and for a read-only `kubectl` alike, and it is the one carve-out from the rule that reads do not gate (`AGENTS.md` §V).
 
-**Nothing enforces it.** Every tool on the server auto-accepts, because every registered tool is a read — the permission lane has nothing to catch. The gate holds only as long as the offer is actually made.
+**The blessing names the cluster.** An approval that does not say which cluster is not an approval for any of them. Where you resolved a candidate yourself — from the repository, from ArgoCD, from a name that looked close enough — it goes into the offer as a candidate for the captain to confirm. Inference produces something to ask about, never something to act on.
+
+**The blessing covers the cluster it named and no other.** A follow-up that moves to a different cluster is a new offer. A question spanning the fleet names every cluster it would touch, or it is not blessed.
+
+**Nothing enforces any of this.** Every tool on the server auto-accepts, because every registered tool is a read — the permission lane has nothing to catch. The gate holds only as long as the offer is actually made.
 
 ## Process
 
-1. **Offer.** Name the cluster and what you would look at. Wait for the word.
-2. **Name the cluster on every call.** Pass `context` explicitly whenever the cluster is known. Omitted, it falls to the current context, which is rarely the one meant.
-3. **Route by direction** — the table below.
-4. **Report the finding, not the transcript.** A resource list or log fetch returns far more than the question needs; answer the question and quote the lines that carry it.
+1. **Resolve the cluster to a context** — see Naming the Cluster below.
+2. **Offer.** Name that cluster and what you would look at. Wait for a word that names the cluster back.
+3. **Pass `context` on every call.** The context the captain blessed, on every call, with no exceptions.
+4. **Route by direction** — the table below.
+5. **Report the finding, not the transcript.** A resource list or log fetch returns far more than the question needs; answer the question and quote the lines that carry it.
 
 ## Read With `kubernetes__*`, Write With `kubectl`
 
@@ -38,9 +45,26 @@ The `kubernetes` server is read-only inspection of live clusters. It runs `--rea
 
 `pods_exec`, `pods_run`, `pods_delete`, `resources_create_or_update`, `resources_delete`, `resources_scale`, `helm_install` and `helm_uninstall` are absent from this server. A step written against one cannot execute.
 
+## Naming the Cluster
+
+**Every call carries `context`.** Not "when the cluster is known" — always. A call without it answers about whichever context the kubeconfig currently points at, and that answer looks exactly like a correct one: same shape, same fields, wrong cluster. Nothing errors.
+
+Resolve a name to a context in this order, stopping at the first that answers:
+
+1. **The captain named it.** Personal clusters are their own context name verbatim — `rubik` the cluster is `rubik` the context. Cloud clusters carry a descriptive context name over an ARN; the context is that name, never the ARN.
+2. **The repository says it.** Inside a cluster ArgoCD repo (`argocd-<cluster>`), the cluster is in the path.
+3. **ArgoCD says it.** An Application's `spec.destination` names the cluster it deploys to, per `kilic-workload-resolution`.
+4. **Ask the kubeconfig.** `kubectl config get-contexts` via `Bash`, or `configuration_contexts_list`. Both return every context, far more than any task needs — the last route, never the opening move.
+
+**Only route 1 arrives already named.** Routes 2 to 4 produce a candidate, and a candidate goes into the offer for the captain to confirm — never straight into a call.
+
+**A name that resolves to nothing is a question, not a guess.** Cluster and context names coincide often enough that a near-miss reads as plausible; confirm through route 4 rather than trying a spelling.
+
+**Say the context back in the offer.** The name the captain approves must be the context you then pass — approving `rubik` and querying whatever was current is exactly what the gate exists to stop.
+
 ## Key Principles
 
-- **Offer before reaching in.** Nothing else stops a cluster read.
-- **Name the cluster.** An unqualified call answers about whichever context happens to be current.
-- **The kubeconfig carries far more contexts than any one task needs.** `configuration_contexts_list` and `targets_list` return all of them — reach for those only when the context name is genuinely unknown, never as an opening move.
+- **Offer before reaching in, and let the captain name the cluster.** Nothing else stops a cluster read, and nothing else decides which cluster it reads.
+- **Every call carries `context`.** An unqualified call answers about whichever context happens to be current, and looks right doing it.
+- **One blessing, one cluster.** Moving to another cluster is another offer.
 - **Read here, write with `kubectl`.** A write step routed through this server cannot execute.
