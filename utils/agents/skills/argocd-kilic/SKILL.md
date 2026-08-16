@@ -13,6 +13,8 @@ This skill uses the `argocd-kilic` MCP server to operate on ArgoCD applications.
 
 **MCP server:** `argocd-kilic` (stdio, `argocd-mcp`).
 
+Load `kubernetes` when a question needs the cluster itself rather than ArgoCD's view of it.
+
 ## Tools
 
 | Tool | Auto-approved | Purpose |

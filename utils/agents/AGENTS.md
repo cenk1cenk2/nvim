@@ -131,7 +131,7 @@ Skills are delivered by the `hyprpilot_skills` MCP server, which also injects `h
 
 ### MCP Conventions
 
-- **ABSOLUTE — a service with an MCP server is reached through that server, not its CLI.** GitHub, GitLab, Linear, Slack, Grafana, ArgoCD, Obsidian, Sourcebot and the rest: use their tools rather than `gh`, `glab`, `argocd`, or `curl` against their APIs, for anything the server already does. **The CLI is a legitimate fallback the moment the server cannot do the thing** — no endpoint for that operation, an output or format it cannot return, streaming or tailing, a watcher or poll loop that has to run as a shell process, or a bulk job that would cost dozens of calls. Take the fallback and say in one line what was missing; never stall because the server fell short. Two standing exceptions where the CLI is simply the tool: **local git is always raw `git`**, and cluster work is always `kubectl`.
+- **ABSOLUTE — a service with an MCP server is reached through that server, not its CLI.** GitHub, GitLab, Linear, Slack, Grafana, ArgoCD, Obsidian, Sourcebot and the rest: use their tools rather than `gh`, `glab`, `argocd`, or `curl` against their APIs, for anything the server already does. **The CLI is a legitimate fallback the moment the server cannot do the thing** — no endpoint for that operation, an output or format it cannot return, streaming or tailing, a watcher or poll loop that has to run as a shell process, or a bulk job that would cost dozens of calls. Take the fallback and say in one line what was missing; never stall because the server fell short. One standing exception where the CLI is simply the tool: **local git is always raw `git`**. Cluster work splits between the `kubernetes` server and `kubectl` — see below.
 - **ABSOLUTE — a harness-provided integration outranks an external MCP server for the same service.** When the running harness supplies one (on Claude Code, the claude.ai connectors `mcp__claude_ai_<Connector>__*` for Slack, Notion, Linear, …), every call for that service goes through it; the standalone server is not used alongside it. Fall back to the standalone server only when the harness provides nothing for that service or it lacks a needed capability — state which in one line, and never mix the two within one flow. **A skill's per-workspace mapping wins over this rule** — a server name identifies the _workspace_, and routing a workspace to the wrong transport writes to the wrong place. Details and the workspace carve-outs: `harness-connectors`.
 - **A same-named skill is that server's manual — load it first (§I step 5).**
 - **Every MCP server is wired directly into the agent** — no proxy, hub, or editor/ACP indirection. Refer to tools by the `<server>__<tool>` short form in skill files and docs (e.g. `github__get_file_contents`); at call time use whatever concrete name the harness surfaces.
@@ -147,6 +147,7 @@ Finding out what exists. Route by what you are asking, and prefer the narrowest 
 |---|---|
 | Where does this exist across the org — repos, file patterns, config keys, prior art | Load `sourcebot-discovery` |
 | Symbols, definitions, callers in the repo at hand | LSP through the `hyprpilot-nvim` skill, not grep |
+| Live cluster state — workloads, events, logs, resource YAML | the `kubernetes` server, gated per §V |
 | Authoritative SCM state — MRs/PRs, issues, pipelines, permissions, live branches | GitHub/GitLab MCP per `scm-detect` |
 | Library, framework, API, CLI, or cloud docs | a docs MCP (`context7`, provider docs) before anything else, since training data lags |
 | Open web | the runtime's search/fetch |
@@ -166,9 +167,13 @@ Use tmux MCP tools only for **read-only** inspection of existing user panes when
 - **Bound every capture.** `tmux__capture-pane` returns raw scrollback — pass `lines` and start at the tail; an unbounded capture of a build pane is how a tmux read floods the context.
 - Session naming and the rest of the capture guidance live in the `tmux` reference — skills that inspect panes declare it.
 
+### kubernetes
+
+Read-only inspection of live clusters. Per §I step 5, load the `kubernetes` skill before the first call to this server; it owns the split with `kubectl`, the `context` argument, and the offer-first gate (§V Gates).
+
 ### CLI
 
-CLI owns what no MCP server covers: local git, `kubectl`, project scripts, tests, builds, formatters, and shell inspection. For a service that does have a server, the MCP-first rule above governs. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation instead of working around permissions.
+CLI owns what no MCP server covers: local git, cluster writes and streaming via `kubectl`, project scripts, tests, builds, formatters, and shell inspection. For a service that does have a server, the MCP-first rule above governs. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation instead of working around permissions.
 
 ### mise
 
@@ -205,7 +210,7 @@ Where it does not resolve, the cause is a process that did not inherit the sessi
 
 **A destructive action needs its own blessing.** No general go — `g` / `go` / `yolo`, autopilot, a prior yes, or a mode switched off (§II Modes) — authorizes anything irreversible: force pushes, discarding uncommitted work, deleting non-reproducible data, dropping resources others depend on, publishing externally. Those need explicit approval: either a per-case confirmation naming the exact target and what is lost, or a standing exception the user scoped themselves ("force pushing is fine on this repo"), which holds for that scope only. Treat anything you cannot confirm is reversible as irreversible.
 
-**External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
+**External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. **One carve-out: a live Kubernetes cluster**, where read-only does not exempt the read — offer it and wait, per §IV. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
 
 ## VI. COMMUNICATING
 

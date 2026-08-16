@@ -64,13 +64,13 @@ Reference files are plain markdown. They do NOT have YAML frontmatter — only s
 
 **A skill's `references:` array is a manifest, not a payload.** `read_skill { slug }` returns the body plus one manifest row per declared reference — `path`, `name`, `size`, `modified`, `created`, and the reference's own frontmatter. **The bodies do not come with it.** The reader fetches the ones it needs with `read_skill_references { references: [path] }`, addressed by canonical absolute path.
 
-**So declaring a reference costs a manifest row, roughly 150 bytes, not the file.** A body averages 4,619 bytes. That inverts the old authoring economics: an extra declaration is nearly free, and the expensive mistake is now a **large multi-topic file**, because a step that needs one section of it pays for all of them. Splitting pays whenever a step uses less than about 97% of a file — in practice, always.
+**So declaring a reference costs a manifest row, roughly 150 bytes, not the file.** A body averages 4,619 bytes. So an extra declaration is nearly free, and the expensive mistake is a **large multi-topic file**, because a step that needs one section of it pays for all of them. Splitting pays whenever a step uses less than about 97% of a file — in practice, always.
 
 `output-diff` is declared by 57 skills and `scm-detect` by 31, so a reader that keeps a loaded-path set pays for each once per session. Path identity is what makes that mechanical: `git-commit`'s `output-diff` and `git-push`'s `output-diff` are the same path, so they de-duplicate on sight. There are no name collisions and no shadowing.
 
 Hyprpilot resolves declared paths **relative to that skill's own bundle directory** — the directory holding its `SKILL.md`. There is no separate references root. A path that does not resolve is simply absent from the manifest: nothing is logged and nothing errors, so a typo fails silently and the skill runs without the convention it declared.
 
-`read_skill { slug, bundle: true }` still returns every body inline, delimited by a YAML block naming each file and its declared path, under a banner naming the skill and the count. Reach for it on the first load of an unfamiliar skill, not as a habit:
+`read_skill { slug, bundle: true }` returns every body inline, delimited by a YAML block naming each file and its declared path, under a banner naming the skill and the count. Reach for it on the first load of an unfamiliar skill, not as a habit:
 
 ```
 ---
@@ -172,11 +172,11 @@ When a body loads another skill for a branch, that skill arrives **with its own 
 
 Applied naively this deletes load-bearing declarations. Check each one against the body: if a step outside the composition branch names it, it stays.
 
-## A Reference Is Shared — Situational Is No Longer a Reason to Make It a Skill
+## A Reference Is Shared — Situational Content Stays a Reference
 
 **One property makes something a reference: two or more consumers must stay in lockstep on it.**
 
-Situational content — needed only on some runs, only under one runtime, only for one platform — **is still a reference.** Declare it and fetch it on the branch that needs it. That is the conditional-family pattern: declare every member, fetch the one that applies.
+Situational content — needed only on some runs, only under one runtime, only for one platform — **is a reference.** Declare it and fetch it on the branch that needs it. That is the conditional-family pattern: declare every member, fetch the one that applies.
 
 | | Reference | Skill |
 |---|---|---|
@@ -280,12 +280,9 @@ Rules:
 
 When references list MCP tool names in tables or inline, use the **`<server>__<tool>` short form** with **kebab-case server names**: `linear-kilic__get_issue`, `slack-kilic__slack_list_channels`, `argocd-kilic__list_applications`, `grafana-laravel__query_prometheus`, `spacelift-laravel__list_stacks`. Catalog server keys use `-` only, and `/` is never valid in one. **Hyprpilot's injected servers are `_` delimited** — write `hyprpilot_skills`, `hyprpilot_nvim`, and `hyprpilot_harness` verbatim; every skill slug is `-`, so a server and its same-named skill differ by delimiter on purpose. Do NOT bake in a transport prefix (`mcp__...`) — the runtime resolves the prefix at call time. Hyprpilot wires every MCP server directly (no aggregator hub), so the bare server name is the only thing that matters in references.
 
-**Servers that do not exist — never reference these:**
+**Tabulate only what a server actually registers.** Several expose less than their vendor documents — a read-only flag, disabled write tools, a capability the catalog entry withholds. Load that server's same-named skill before listing its tools, and list only the surface it names; a tool the server does not register is an instruction that cannot execute. Where no server covers the job, name the CLI instead — local git is always raw `git` via `Bash`, so a `git__*` tool never appears in a reference.
 
-- `git__*` tools — there is no `git` MCP. Reference raw `git` CLI (`git status`, `git diff`, `git log`, etc.) via `Bash` instead.
-- `kubernetes__*` tools — there is no `kubernetes` MCP. Reference `kubectl` CLI via `Bash` if needed.
-
-**Tmux MCP is read-only.** Only the read-only tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are usable. References must NOT include `execute-command`, `create-window`, `split-pane`, `kill-*`, or `create-session` as a recommended action. For command execution, reference the built-in `Bash` tool. For reads, reference the `tmux__*` tools rather than `tmux` CLI invocations — the CLI belongs in a reference only where the MCP exposes no equivalent (the *current* session) or where the MCP may be absent. Session naming and capture-size guidance live in `tmux.md`; point at it instead of duplicating either.
+**The server's own manual owns its conventions.** Read/write splits, approval gates, per-tool traps: name the skill or reference that carries them and stop there. A reference restating another server's surface is a second copy to keep in sync.
 
 ## Committing Changes
 

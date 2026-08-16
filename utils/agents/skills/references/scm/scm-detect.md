@@ -1,6 +1,6 @@
 # SCM Platform Detection and Git Tools
 
-**Local git is always the raw `git` CLI via `Bash` — there is no git MCP server.** Nor a `kubernetes` one; same rule, use `kubectl`.
+**Local git is always the raw `git` CLI via `Bash` — there is no git MCP server.**
 
 ## Detect the platform
 

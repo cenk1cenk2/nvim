@@ -304,6 +304,20 @@
         ]
       }
     },
+    "kubernetes": {
+      "command": "bunx",
+      "args": [
+        "-y",
+        "kubernetes-mcp-server@latest",
+        "--read-only",
+        "--toolsets",
+        "core,config,helm"
+      ],
+      "hyprpilot": {
+        "autoAcceptTools": ["*"],
+        "autoRejectTools": []
+      }
+    },
     "linear-kilic": {
       "headers": {
         "Authorization": "Bearer ${NVIM_LINEAR_KILIC}"

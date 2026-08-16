@@ -191,7 +191,7 @@ Note: omitting the flag and writing `disableModelInvocation: false` are behavior
 
 **So a declaration costs roughly 150 bytes; a body averages 4,619.** Declaring is close to free, and a reader that keeps a loaded-path set pays for each distinct file once per session — which matters because `output-diff` is declared by 57 skills and `scm-detect` by 31.
 
-The consequence that governs every decision below: **the expensive mistake is now a large multi-topic reference, not an extra declaration.** A step that needs one section of a file pays for all of it, so splitting pays whenever a step uses less than about 97% of a file — in practice, always. Extraction into a shared reference still buys consistency; granularity is what now buys tokens.
+The consequence that governs every decision below: **the expensive mistake is a large multi-topic reference, not an extra declaration.** A step that needs one section of a file pays for all of it, so splitting pays whenever a step uses less than about 97% of a file — in practice, always. Extraction into a shared reference buys consistency; granularity buys tokens.
 
 **Declared is the default. Reserve path-read for what cannot be declared.**
 
@@ -200,7 +200,7 @@ The consequence that governs every decision below: **the expensive mistake is no
 | **Declared** | listed in `references:`; appears in the manifest, body fetched on demand | almost always — the body cites it, on any run |
 | **Path-read** | named in the body **with its absolute path** | the file is deliberately **not** declared by any skill, so no manifest carries it and `read_skill_references` refuses it |
 
-Conditional use is no longer a reason to skip declaring: an unused row costs a manifest line, and declaring it makes the file fetchable by path. Path-read now means genuinely undeclared — the per-harness family, where naming all three providers in one skill's frontmatter would claim files that belong to whichever runtime is live.
+Conditional use is not a reason to skip declaring: an unused row costs a manifest line, and declaring it makes the file fetchable by path. Path-read means genuinely undeclared — the per-harness family, where naming all three providers in one skill's frontmatter would claim files that belong to whichever runtime is live.
 
 **A path-read directive MUST carry the absolute path.** A missed `Read` raises no error — the skill simply runs without the convention it named, silently.
 
@@ -422,11 +422,9 @@ Examples:
 - `grafana-kilic__query_prometheus` (server: `grafana-kilic`, tool: `query_prometheus`)
 - `obsidian__vault_read` (server: `obsidian`, tool: `vault_read`)
 
-**There is no `git` MCP server.** For local git operations, reference raw `git` CLI commands (`git status`, `git diff`, `git log`, `git show`, `git commit`, etc.) called via `Bash`. Do NOT introduce a `git__*` tool reference into new or updated skills.
+**Write steps only against tools a server actually registers.** Several expose less than their vendor documents — a read-only flag, disabled write tools, a capability the catalog entry withholds. Load that server's same-named skill before writing steps against it. A step routed through a tool the server does not register cannot execute, and nothing catches that at authoring time: it reads as a perfectly ordinary instruction and fails only when someone runs it.
 
-**The `tmux` MCP server is read-only.** Write tools (`execute-command`, `create-window`, `split-pane`, `kill-*`, `create-session`) are disabled. Skills that need to execute commands MUST use the built-in `Bash` tool — a step that says "run it in the scratch pane" is not merely stylistically wrong, it cannot execute. The remaining tools (`tmux__list-*`, `tmux__capture-pane`, `tmux__find-session`, `tmux__get-command-result`) are still available for inspecting existing user panes.
-
-When a skill inspects panes, write its steps against those `tmux__*` tools rather than `tmux` CLI calls shelled through `Bash`, and declare `../references/tmux.md` — it owns the session naming map and the capture-size guard, so no skill should restate either.
+Where no server covers the job, name the CLI instead — local git is always raw `git` via `Bash`, so a `git__*` tool never appears in a skill. And when a server carries its own conventions, declare its reference or name its skill rather than restating them.
 
 ## Examples
 
