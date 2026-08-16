@@ -46,7 +46,9 @@ When creating multiple related issues or working with projects, ALWAYS set prope
 
 **Relations are append-only.** Passing `blocks` adds to what is already there; omitting it removes nothing. To break a relation, name it explicitly in `removeBlocks`, `removeBlockedBy`, or `removeRelatedTo`. Clear a parent with `parentId: null`.
 
-**The save response does NOT echo relations**, so a relation write cannot be confirmed from the result the way `state` can. Re-fetch the issue, or fetch the other side, before reporting a dependency graph as built. An accepted write is not a verified edge.
+**Relations are invisible to every read path.** `save_issue` does not echo them, and neither `get_issue` nor `list_issues` returns them — so a relation write cannot be confirmed through the MCP server at all. Re-fetching shows only that `updatedAt` advanced, which proves the write was accepted, not that the edge exists.
+
+An accepted write is not a verified edge. Report a dependency graph as **written, not verified**, and say which it is. Never describe it as confirmed, and never imply a check that is not available — only the Linear UI shows the edges.
 
 ## Create vs. Update
 

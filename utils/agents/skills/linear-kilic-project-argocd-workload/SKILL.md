@@ -15,33 +15,34 @@ Posture: `present-first`.
 
 ## Overview
 
-This skill creates a Linear project for deploying application workloads through ArgoCD. Workloads are application deployments, CRDs, or services that run on target clusters (not system-level operators). They are deployed via `cluster/<cluster>/argocd-kilic-<cluster>` and optionally expose services through the load balancer cluster.
+This skill creates a Linear project for deploying application workloads through ArgoCD. Workloads are application deployments, CRDs, or services that run on target clusters (not system-level operators).
 
 ## Architecture Pattern
 
-All repositories are on `gitlab.kilic.dev`. Workload deployments involve these repository groups:
+All repositories are on `gitlab.kilic.dev`. **A workload spans two repositories, and confusing them is the most common mistake.**
 
 ```
-cluster/<cluster>/argocd-kilic-<cluster>/                          # Target cluster ArgoCD config
-├── src/workloads/<workload>/<workload>.service.ts           # Pulumi workload definition
-├── workloads/<workload>/1-manifest/                         # Generated manifests
-│   ├── namespace.yaml
-│   ├── externalsecret.yaml (if needed)
-│   └── <workload>-crds.yaml
-└── workloads/routes/1-manifest/ (if LB on same cluster)    # Route manifests
-    └── httproute-<workload>.yaml
+cluster/workloads/<workload>/                     # The actual Kubernetes manifests
+└── .deploy/<cluster>/                            # Hand-written kustomize, one tree per cluster
+    ├── kustomization.yaml
+    └── <component>/{kustomization,values,es,route-http}.yaml
 
-cluster/<lb-cluster>/argocd-kilic-<lb-cluster>/                    # Load balancer cluster (if needed)
-└── workloads/routes/1-manifest/
-    └── httproute-<workload>.yaml
+cluster/<cluster>/argocd-<cluster>/               # Target cluster ArgoCD config (NestJS + Pulumi)
+├── src/workloads/<workload>/<workload>.service.ts   # Namespace + ArgoCD Application only
+└── apps/1-manifest/                              # Pulumi-GENERATED Application manifest
 
-infrastructure/pulumi-config-gitlab                          # ArgoCD repository access
-Vault: secret/<cluster>/<namespace>/...                      # Secrets (if needed)
+cluster/<lb-cluster>/argocd-<lb-cluster>/         # Load balancer cluster (if exposure is needed)
+└── src/workloads/cluster-<target>/cluster-<target>.service.ts
+
+infrastructure/pulumi-config-gitlab               # ArgoCD repository access (new repos only)
+Vault: secret/<cluster>/<namespace>/...           # Secrets (if needed)
 ```
 
-**Known clusters:** `moon`, `nailbed`, `neutrino`, `overseer`, `rubik`, `sun`
+**The cluster ArgoCD repo does NOT contain the workload's manifests.** Its Pulumi service emits only a Namespace and an ArgoCD Application whose source points at `cluster/workloads/<workload>`. Everything under `1-manifest/` there is generated output, never hand-edited. Anyone looking for a workload's Deployment or values in the cluster repo will not find it.
 
-Each cluster has its own ArgoCD repo at `cluster/<cluster>/argocd-kilic-<cluster>`.
+**Known clusters:** `moon`, `nailbed`, `neutrino`, `overseer`, `rubik`, `sun`. Each has its ArgoCD repo at `cluster/<cluster>/argocd-<cluster>`; the two cluster-wide roots sit at the group top level as `cluster/argocd-root` and `cluster/argocd-system`.
+
+Load `cluster-kilic-workload` when writing the manifest repo's contents, and `argocd-kilic-workload` when writing the Pulumi service.
 
 ## Workflow
 
@@ -59,11 +60,11 @@ Each cluster has its own ArgoCD repo at `cluster/<cluster>/argocd-kilic-<cluster
 
 Use GitLab MCP to analyze existing deployments for reference:
 
-- **Target cluster:** Browse `cluster/<cluster>/argocd-kilic-<cluster>` repo — workloads directory structure, existing Pulumi services
+- **Target cluster:** Browse `cluster/<cluster>/argocd-<cluster>` repo — workloads directory structure, existing Pulumi services
 - **Existing workloads:** Browse `workloads/<similar-workload>/1-manifest/` — manifest patterns, namespace setup, ExternalSecret examples
 - **Pulumi services:** Browse `src/workloads/<similar-workload>/<similar-workload>.service.ts` — WorkloadsService injection, namespace creation, ArgoCD Application setup
 - **Routes:** Browse `workloads/routes/1-manifest/` — HTTPRoute and DNSEndpoint patterns
-- **Load balancer:** Browse `cluster/<lb-cluster>/argocd-kilic-<lb-cluster>` repo — Gateway definitions, route manifests
+- **Load balancer:** Browse `cluster/<lb-cluster>/argocd-<lb-cluster>` repo — Gateway definitions, route manifests
 
 **3. Create Project and Issues:**
 
@@ -79,14 +80,15 @@ Create the Linear project with issues based on the template below, presented per
 
 The following issues form the deployment pipeline. Adjust based on what's actually needed — not every workload requires secrets or load balancer routes.
 
-**Issue 1: Create Workload Pulumi Service**
+**Issue 1: Create the workload Pulumi service**
 
-> **Repo:** `cluster/<cluster>/argocd-kilic-<cluster>`
-> **Purpose:** Each cluster's ArgoCD repo contains Pulumi code that generates Kubernetes manifests. A workload service defines the namespace, ArgoCD Application, and any in-cluster routing. Pulumi outputs generated manifests to `workloads/<workload>/1-manifest/` which ArgoCD then syncs to the cluster.
+> **Repo:** `cluster/<cluster>/argocd-<cluster>`
+> **Purpose:** Registers the workload with the cluster — a Namespace and an ArgoCD Application whose source points at the manifest repo. It defines any Gateway listener the workload needs. It does NOT contain the workload's own manifests.
 
 - Create `src/workloads/<workload>/<workload>.service.ts`
-- Define Pulumi workload with namespace, ArgoCD Application
-- Create namespace manifest in `workloads/<workload>/1-manifest/`
+- Define the namespace and the ArgoCD Application, sourcing `cluster/workloads/<workload>` at `.deploy/<cluster>`
+- Register the service in `src/workloads/workloads.module.ts`
+- Run the synth and commit the generated Application under `apps/1-manifest/`
 
 **Issue 2: Run pulumi-config-gitlab for ArgoCD Access**
 
@@ -103,25 +105,26 @@ The following issues form the deployment pipeline. Adjust based on what's actual
 > **Purpose:** Some workloads need secrets (API keys, database credentials, etc.). These are stored in Vault and synced to Kubernetes via ExternalSecret CRDs that reference a ClusterSecretStore.
 
 - Create secrets at `secret/<cluster>/<namespace>/...`
-- Create ExternalSecret CRD in `workloads/<workload>/1-manifest/`
-- Configure Vault access for the namespace
-- Reference ClusterSecretStore for the cluster
+- Create the ExternalSecret in `cluster/workloads/<workload>/.deploy/<cluster>/`
+- Reference the cluster's ClusterSecretStore
+- Confirm the namespace's `default` service account carries the `system:auth-delegator` binding Vault auth needs
 - **Blocked by:** Issue 1
 
-**Issue 4: Create Workload Manifests**
+**Issue 4: Create the workload manifests**
 
-> **Repo:** `cluster/<cluster>/argocd-kilic-<cluster>`
-> **Purpose:** The actual application manifests (Deployments, CRDs, ConfigMaps, etc.) that define how the workload runs. These go into `workloads/<workload>/1-manifest/` and are synced by the ArgoCD Application created in Issue 1.
+> **Repo:** `cluster/workloads/<workload>`
+> **Purpose:** The actual application manifests — Deployments, CRDs, ConfigMaps, Helm values via kustomize — that define how the workload runs. Hand-written kustomize under `.deploy/<cluster>/`, synced by the Application created in Issue 1.
 
-- Create deployment/CRD manifests in `workloads/<workload>/1-manifest/`
-- Configure resource limits, security contexts
-- Set up ConfigMaps/Secrets references
-- Add kustomization.yaml if needed
+- Create `.deploy/<cluster>/kustomization.yaml` and the per-component directories
+- Configure resource limits and security contexts
+- Add the HTTPRoute if the workload is exposed in-cluster
 - **Blocked by:** Issue 2 (and Issue 3 if secrets are needed)
+
+Load `cluster-kilic-workload` for this issue — it owns the directory conventions and the reference repos to copy from.
 
 **Issue 5 (Optional — if load balancer is needed): Configure Load Balancer Routes**
 
-> **Repo:** `cluster/<lb-cluster>/argocd-kilic-<lb-cluster>`
+> **Repo:** `cluster/<lb-cluster>/argocd-<lb-cluster>`
 > **Purpose:** The LB cluster acts as the ingress point. Its Pulumi services create Gateway listeners, TLSRoute/HTTPRoute resources, EnvoyGateway Backends (pointing to target cluster gateway FQDNs), and DNSEndpoint resources for DNS registration. Each target cluster that needs external/internal routing gets a dedicated service file.
 
 - Add route Pulumi service in LB cluster: `src/workloads/cluster-<target>/cluster-<target>.service.ts`
@@ -191,8 +194,8 @@ Internet/LAN → LB cluster gateway → TLSRoute/HTTPRoute (LB cluster)
 ## Key Principles
 
 - **Use `gitlab` MCP** for researching existing patterns
-- **Workloads go to target cluster** — deployed via `cluster/<cluster>/argocd-kilic-<cluster>`, not `argocd-system`
-- **Load balancer cluster is separate** — routes are configured in `cluster/<lb-cluster>/argocd-kilic-<lb-cluster>` (ask user which cluster(s) serve as load balancer)
+- **Workloads go to target cluster** — deployed via `cluster/<cluster>/argocd-<cluster>`, not `argocd-system`
+- **Load balancer cluster is separate** — routes are configured in `cluster/<lb-cluster>/argocd-<lb-cluster>` (ask user which cluster(s) serve as load balancer)
 - **All routes are Pulumi-managed** — manifests in `workloads/*/1-manifest/` are generated output, not hand-written
 - **Two DNS providers:** Cloudflare (external, `provider.kilic.dev/external-dns-cloudflare`) and OPNSense (internal, `provider.kilic.dev/external-dns-opnsense-loki`)
 - **Two LB gateways:** `default` for external traffic, `internal` for internal-only services
@@ -202,17 +205,27 @@ Internet/LAN → LB cluster gateway → TLSRoute/HTTPRoute (LB cluster)
 
 ## Directory Structure Reference
 
-**Target Cluster (e.g., `cluster/rubik/argocd-kilic-rubik`):**
+**Manifest repo (e.g., `cluster/workloads/my-workload`)** — hand-written kustomize:
+
+```
+.deploy/<cluster>/
+  ├── kustomization.yaml
+  └── my-workload/
+      ├── kustomization.yaml
+      ├── values.yaml
+      ├── es.yaml
+      └── route-http.yaml
+```
+
+**Target Cluster (e.g., `cluster/rubik/argocd-rubik`)** — the Pulumi source is hand-written, everything under `1-manifest/` is generated:
 
 ```
 src/workloads/my-workload/my-workload.service.ts  # Pulumi definition
-workloads/my-workload/1-manifest/                  # Generated manifests
-  ├── namespace.yaml
-  ├── externalsecret.yaml
-  └── my-crds.yaml
+src/workloads/workloads.module.ts                 # Service registration
+apps/1-manifest/                                  # Generated Application manifest
 ```
 
-**Load Balancer Cluster (`cluster/<lb-cluster>/argocd-kilic-<lb-cluster>`):**
+**Load Balancer Cluster (`cluster/<lb-cluster>/argocd-<lb-cluster>`):**
 
 ```
 src/cluster/gateway.service.ts                              # Gateway definitions (default + internal)
