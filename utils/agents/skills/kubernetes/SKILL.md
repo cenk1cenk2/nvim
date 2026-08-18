@@ -7,11 +7,20 @@ references:
 
 ## Context
 
-The `kubernetes` server is read-only inspection of live clusters. It runs `--read-only`, so its surface is the `readOnlyHint=true` tools and nothing else. Multi-cluster is on, so every tool takes a `context` argument naming the kubeconfig context.
+Read-only inspection of live clusters, split across two servers — one per estate, and only one of them is present in any given profile:
 
-`kubectl` via `Bash` is the other half: everything that changes state, and everything that streams.
+| Server | Estate | Transport |
+|---|---|---|
+| `kubernetes-kilic` | the kilic clusters — `moon`, `nailbed`, `neutrino`, `overseer`, `rancher`, `rubik`, `sun` | hosted, `kubernetes.mcp.kilic.dev` |
+| `kubernetes-laravel` | the AWS EKS clusters | local stdio |
 
-**Editing the catalog entry:** keep `experimental_enable_target_compatibility_tool_filters` off. It runs GVK discovery against every kubeconfig context at startup, 10s per unreachable one, which on a many-context kubeconfig outruns the client's startup handshake.
+Both run `--read-only`, so the surface is the `readOnlyHint=true` tools and nothing else, and both are multi-cluster, so every tool takes a `context` argument naming the kubeconfig context. The tables below write `kubernetes__*` for tool names; read it as whichever of the two the profile loaded.
+
+The estate follows from the cluster, so resolving the cluster (below) also picks the server. A context that belongs to the other estate is not reachable from the server you have — that is the point of the split, not a fault to work around.
+
+`kubectl` via `Bash` is the other half: everything that changes state, and everything that streams. `kubectl` reads the whole kubeconfig and so spans both estates; the gate below governs it just the same.
+
+**Editing the `kubernetes-laravel` catalog entry:** keep `experimental_enable_target_compatibility_tool_filters` off. It runs GVK discovery against every kubeconfig context at startup, 10s per unreachable one, which on a many-context kubeconfig outruns the client's startup handshake.
 
 ## The Gate — Offer, Never Take
 
