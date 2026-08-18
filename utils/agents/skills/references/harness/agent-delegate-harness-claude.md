@@ -98,15 +98,19 @@ Consequences:
 - **`run_in_background: false` does not block for a named agent.** The dispatch returns `Spawned successfully … will receive instructions via mailbox` immediately. Treat `name` and synchronous collection as mutually exclusive: when you need the result as a tool result in the same turn, dispatch **without** a name.
 - **An idle notification means "available", not "done" and not "failed".** It says the agent stopped producing; it says nothing about whether it holds an answer. Ask for the answer.
 
+### Dispatch named agents in the BACKGROUND
+
+`"main"` is the lead's address and is available to background subagents only. A named agent does not block anyway (above), so a foreground named dispatch buys nothing and costs the agent its only reliable route to you. **Name it and background it, or leave it unnamed** — those are the two shapes. Whether a foreground named agent can address the lead at all is **unverified**; do not rely on it.
+
 ### The delivery line — paste it into every named dispatch
 
-> Your plain text output is not visible to the lead. Deliver your final report with one `SendMessage` call to `"main"`, in the format above. Do not reply in plain text, and do not send JSON status objects — the report is prose.
+> Your plain text output is not visible to the lead. Deliver your final report with one `SendMessage` call to `"main"`, in the report format this prompt specifies. Do not reply in plain text, and do not send JSON status objects — the report is prose.
 
 Without that line the report is written into the void and the work has to be re-collected.
 
-### Who is the lead — the subagent cannot discover it
+### The recipient is yours to supply — the agent cannot look it up
 
-**`"main"` IS the lead's address** — a literal, not a name, needing no lookup. It is available to **background** subagents only.
+**`"main"` IS the lead's address** — a literal, not a name, needing no lookup.
 
 **A background subagent can address nothing it was not given.** `ListAgents` is absent from the background built-in set above, so the agent holds `SendMessage` and no way to find a target. Its whole address book is:
 
