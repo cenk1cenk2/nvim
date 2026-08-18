@@ -311,11 +311,8 @@
       }
     },
     "kubernetes": {
-      "headers": {
-        "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
-        "kubernetes-authorization": "Bearer ${NVIM_KUBERNETES_TOKEN}"
-      },
-      "url": "https://kubernetes.mcp.kilic.dev/mcp",
+      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only", "--toolsets", "core,config,helm"],
+      "command": "bunx",
       "hyprpilot": {
         "autoAcceptTools": ["*"],
         "autoRejectTools": []
