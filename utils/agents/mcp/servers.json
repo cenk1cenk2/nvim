@@ -116,7 +116,6 @@
       "env": {
         "GITLAB_API_URL": "https://gitlab.kilic.dev/api/v4/",
         "GITLAB_PERSONAL_ACCESS_TOKEN": "${NVIM_GITLAB}",
-        "GITLAB_READ_ONLY_MODE": "true",
         "USE_PIPELINE": "true"
       },
       "hyprpilot": {
