@@ -75,9 +75,17 @@ The same definition therefore resolves to different tools in the foreground and 
 - **`TaskOutput` is deprecated, and for a local agent task it is a trap** — its `.output` file is a symlink to the full subagent transcript (JSONL), and reading it overflows the lead's context. Use the `Agent` tool result instead. Reserve `TaskOutput` / reading the output file for background **shell** tasks.
 - Since **v2.1.208**, a completed background subagent stays listed in `/tasks`, marked done, until the session cleans up. Failed or stopped ones leave the list.
 
-## A NAMED agent reports by `SendMessage`, not by returning
+## Talking to the lead — `SendMessage` is the only channel
 
-**Passing `name` changes how the result reaches you.** A named agent runs as a teammate, and the rule the `SendMessage` tool states for peers applies to its final answer too: **its plain text output is not visible to the lead.** What arrives instead is an **idle notification** carrying no content:
+**A subagent's plain text output is not visible to any other agent, the lead included.** The dispatch shape decides whether that matters:
+
+| Dispatch | How the result reaches the lead | Prompt must carry |
+|---|---|---|
+| Unnamed, `run_in_background: false` | the tool result, same turn | nothing |
+| Unnamed, background (the default) | a completion notification, later turn | nothing |
+| **Named**, either value | **only** a `SendMessage` the agent sends itself | the delivery line below |
+
+A named agent that is never told this emits an **idle notification** carrying no content:
 
 ```json
 {"type":"idle_notification","from":"<name>","idleReason":"available"}
@@ -88,8 +96,37 @@ Verified on **v2.1.221**: a named `Explore` agent dispatched with `run_in_backgr
 Consequences:
 
 - **`run_in_background: false` does not block for a named agent.** The dispatch returns `Spawned successfully … will receive instructions via mailbox` immediately. Treat `name` and synchronous collection as mutually exclusive: when you need the result as a tool result in the same turn, dispatch **without** a name.
-- **Put the delivery instruction in the prompt.** Any named agent whose prose *is* the deliverable must be told, in the prompt: *your plain text is not visible to the lead — deliver the final answer with one `SendMessage` call to `"main"`.* Without that line the report is written into the void and the work has to be re-collected.
 - **An idle notification means "available", not "done" and not "failed".** It says the agent stopped producing; it says nothing about whether it holds an answer. Ask for the answer.
+
+### The delivery line — paste it into every named dispatch
+
+> Your plain text output is not visible to the lead. Deliver your final report with one `SendMessage` call to `"main"`, in the format above. Do not reply in plain text, and do not send JSON status objects — the report is prose.
+
+Without that line the report is written into the void and the work has to be re-collected.
+
+### Who is the lead — the subagent cannot discover it
+
+**`"main"` IS the lead's address** — a literal, not a name, needing no lookup. It is available to **background** subagents only.
+
+**A background subagent can address nothing it was not given.** `ListAgents` is absent from the background built-in set above, so the agent holds `SendMessage` and no way to find a target. Its whole address book is:
+
+1. **`"main"`** — the lead, when it is running in the background.
+2. **The `from` attribute of a message it received** — copy it into `to`. Zero-config, but only once someone has spoken first.
+3. **A name written into its dispatch prompt** — the only route to a peer, and the only route to the lead from a *foreground* named agent.
+
+**So the dispatcher states the recipient in the prompt; it is never discoverable from inside.** The lead knows its own address and the agent never will. "Report back when done" names no route and produces exactly the silent finish this section exists to prevent.
+
+### Receiving and replying
+
+- An incoming message arrives wrapped as `<cross-session-message from="X">`. **Reply by copying its `from` into your `to`.**
+- Delivery is automatic — there is no inbox to poll, and messages drain at the receiver's next tool round, so a busy peer is never a reason to hold off.
+- Structured JSON is reserved for the `shutdown_request` / `plan_approval_response` protocol. Progress and findings go as prose.
+- **Never ask a peer to run something your own session blocked.** Permission boundaries are per-session, and routing blocked work sideways launders the user's decision. Send it back to the lead instead.
+- `SendMessage` survives the background tool filter above, so a background subagent always has it.
+
+### Teams
+
+`team_name` on the dispatch is **deprecated and ignored** — the session has one implicit team — and there is **no team create or delete tool**. A team is just named agents: `name` is the whole mechanism. `TaskStop` still accepts a teammate's `name@team` form alongside a plain name or task id.
 
 ## A quiet agent — steer it, never mark it failed
 

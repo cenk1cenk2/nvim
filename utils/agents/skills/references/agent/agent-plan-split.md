@@ -64,7 +64,7 @@ Present the resulting schedule to the user as a layer-by-layer table:
 | 0 | task-b | Add logging | — | src/log.ts |
 | 1 | task-c | Auth integration tests | task-a | tests/auth.test.ts |
 
-The calling skill may substitute "Agent" with "Teammate" in the header if it uses `TeamCreate` semantics.
+The calling skill may substitute "Agent" with "Teammate" in the header when it dispatches named agents.
 
 ### 7. Decide agent count per layer
 

@@ -62,6 +62,7 @@ Use it when:
    - For research: an exploration subagent, omit verification, omit write scope.
    - For implementation: a general-purpose subagent, include verification and write scope.
    - When the delegated task involves git operations, resolve the platform per `scm-detect` and state it in the prompt.
+   - **Carry the delivery instruction, naming the recipient**, when the dispatch shape does not return the report on its own — a named agent's prose reaches nobody, and the agent cannot look up who to send it to. Shape and exact wording per `agent-delegate-harness-<provider>`.
    - Present the prompt to the user for review before launching.
 
 6. **Transition linked Linear issue to `In Progress` (when applicable).**

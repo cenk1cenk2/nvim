@@ -139,7 +139,7 @@ Agents start with a fresh context window — no conversation history, no files y
 5. **Boundaries** — what NOT to touch (other agents' scope, read-only files), and **do not open anything in the captain's browser or editor unless this prompt says to**. Opening is the lead's call and the lead's timing, per `open-artifact` — say so explicitly when you do want the agent to open its result.
 6. **Verification** — commands to run after implementation (from `project-tooling` discovery).
 7. **Conventions** — **mandatory for any prompt that writes code.** Paste the filled-in block from `agent-conventions`: study the neighbouring files first, copy the local naming/structure/error idiom, match comment density (usually none), stay in scope, and self-check the diff before reporting. An agent given no conventions writes its own dialect, and the result reads as foreign even when it works.
-8. **Report** — expected status format (DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED) and its length bound. For code work, also require: which files it used as its pattern reference, and anything it had to invent for lack of local precedent.
+8. **Report** — expected status format (DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED), its length bound, and **how it is to be delivered**. On runtimes where an agent's prose does not reach the lead by itself, the prompt must name the messaging call **and the concrete recipient** or the report goes into the void — an agent cannot discover who dispatched it, so an address it was not given is an address it does not have. Which dispatch shapes need this, and the exact line, are in `agent-delegate-harness-<provider>`. For code work, also require: which files it used as its pattern reference, and anything it had to invent for lack of local precedent.
 
 Point at skills and tools by name rather than inlining them when the target shares your access — see `agent-target-capability`.
 
@@ -152,6 +152,7 @@ Point at skills and tools by name rather than inlining them when the target shar
 4b. Does the prompt carry the `agent-conventions` block — prior-art study, naming, comment discipline, scope limits, and the pre-report self-check?
 5. Is isolation right? Worktree for parallel writers; omit for read-only work.
 6. Does the dispatch mode match the runtime's delivery behavior (per `agent-delegate-harness-<provider>`), and does the agent have the tools it needs in that mode?
+6b. Does the prompt tell the agent how to deliver its report, and to whom, when the dispatch shape does not deliver it automatically?
 7. Does the session's own permission posture actually allow the work you are asking for?
 
 ## Key Principles

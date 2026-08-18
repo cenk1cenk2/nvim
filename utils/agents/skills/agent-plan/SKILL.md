@@ -46,8 +46,8 @@ This skill takes a plan (explicit file or inferred from a goal), builds a depend
 **Two orthogonal axes** control behaviour:
 
 - **Mode** (coordination model):
-  - **`team` (default)** — `TeamCreate` coordinates the run. The lead orchestrates and stays in the loop between layers.
-  - **`fire-and-forget`** — no team coordination; agents run to completion and report. Use when the layer needs no lead involvement mid-flight.
+  - **`team` (default)** — every agent in the layer is dispatched **named**, so the lead can message it mid-run and it can answer. The lead orchestrates and stays in the loop between layers.
+  - **`fire-and-forget`** — agents are dispatched **unnamed** and blocking; their reports come back as tool results. Use when the layer needs no lead involvement mid-flight.
 
   **Note:** mode does not control permissions. Subagents inherit the session's permission mode and any dispatch-time parameter is ignored — so autonomy is a property of the session you are running in, not of this axis. See `agent-delegate-harness-<provider>`.
 - **Review cadence** (when `code-review-changes` runs):
@@ -132,19 +132,20 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
 
 **Team mode (default):**
 
-- Create the team with `TeamCreate({ team_name, description })` on the very first layer only (reused across layers).
 - Spawn all teammates for this layer in a single message with multiple subagent dispatches. For each:
   - Worktree isolation (unless user opted out).
-  - `team_name` set to the team created above.
+  - A `name` — that is what makes a teammate addressable for mid-run steering and for its own report. There is no team-creation step and no team parameter.
   - No permission-mode parameter — it is ignored; teammates run under the session's own posture.
-  - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `agent-delegate-harness-<provider>`.
+  - The delivery line from `agent-delegate-harness-<provider>` in the prompt, naming the recipient — **a named agent's plain text reaches nobody**, so without it the report is lost and the layer cannot close.
   - A general-purpose subagent.
+
+  **A named teammate does not block, whatever `run_in_background` says.** The layer barrier is held by collection: the layer closes when every teammate has delivered, not when the dispatch returns. Want the barrier enforced by the dispatch itself, use fire-and-forget.
 
 **Fire-and-forget mode:**
 
-- No `TeamCreate`.
 - Spawn all agents for this layer in a single message with multiple subagent dispatches. For each:
   - Worktree isolation (unless user opted out).
+  - No `name` — an unnamed agent returns its report as the tool result, which is what makes the barrier hold.
   - No permission-mode parameter — it is ignored; agents run under the session's posture.
   - `run_in_background: false` — **set it explicitly.** A layer is a barrier, so it MUST block; on some providers (Claude Code) omitting the flag gets you background and the barrier silently does not hold. See `agent-delegate-harness-<provider>`.
   - A general-purpose subagent.
@@ -203,7 +204,7 @@ Follow the `agent-merge-review` reference steps 2–4:
 - Send shutdown requests to all teammates: `SendMessage({ to: "<name>", message: { type: "shutdown_request" } })`.
 - Wait for shutdown confirmations.
 - Ensure every agent worktree tied to this team has been removed.
-- Clean up with `TeamDelete`.
+- Confirm every teammate is stopped — collect before you reap, per `agent-delegate`.
 
 Fire-and-forget mode has no shutdown — agents exit on their own when their task completes.
 
@@ -357,7 +358,7 @@ At the end of the run, and at every layer boundary, enumerate what is still aliv
 - **Worktrees are the default.** Opt out with "without worktrees".
 - **Verify before claiming completion.** Read verification output; paste evidence. "Should pass" is not evidence.
 - **Don't trust agent success reports.** Check the VCS diff to verify agents actually made the expected changes.
-- **Clean shutdown is mandatory in team mode.** Always send shutdown requests and call `TeamDelete` when done.
+- **Clean shutdown is mandatory in team mode.** Collect every teammate's report first, then send shutdown requests and confirm each one stopped.
 
 ## Red Flags
 
