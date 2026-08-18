@@ -1,12 +1,11 @@
 {
   "mcpServers": {
     "argocd-kilic": {
-      "args": ["-y", "--bun", "argocd-mcp@latest", "stdio"],
-      "command": "bunx",
-      "env": {
-        "ARGOCD_API_TOKEN": "${NVIM_ARGOCD_KILIC_TOKEN}",
-        "ARGOCD_BASE_URL": "${NVIM_ARGOCD_KILIC_URL}"
+      "headers": {
+        "Authorization": "Bearer ${NVIM_AGENTGATEWAY_API_KEY}",
+        "x-argocd-api-token": "${NVIM_ARGOCD_KILIC_TOKEN}"
       },
+      "url": "https://argocd.mcp.kilic.dev/mcp",
       "hyprpilot": {
         "excludeTools": ["create_application", "update_application", "delete_application"],
         "autoAcceptTools": [
@@ -312,8 +311,11 @@
       }
     },
     "kubernetes": {
-      "command": "bunx",
-      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only", "--toolsets", "core,config,helm"],
+      "headers": {
+        "Authorization": "Bearer ${NVIM_AGENTGATEWAY_API_KEY}",
+        "kubernetes-authorization": "Bearer ${NVIM_KUBERNETES_TOKEN}"
+      },
+      "url": "https://kubernetes.mcp.kilic.dev/mcp",
       "hyprpilot": {
         "autoAcceptTools": ["*"],
         "autoRejectTools": []
@@ -458,9 +460,10 @@
     },
     "sourcebot-kilic": {
       "headers": {
-        "Authorization": "Bearer ${NVIM_SOURCEBOT_API_KEY}"
+        "Authorization": "Bearer ${NVIM_AGENTGATEWAY_API_KEY}",
+        "X-Sourcebot-Api-Key": "${NVIM_SOURCEBOT_API_KEY}"
       },
-      "url": "https://sourcebot.kilic.dev/api/mcp",
+      "url": "https://sourcebot.mcp.kilic.dev/mcp",
       "hyprpilot": {
         "autoAcceptTools": [
           "grep",
@@ -472,8 +475,7 @@
           "get_diff",
           "find_symbol_definitions",
           "find_symbol_references",
-          "list_language_models",
-          "ask_codebase"
+          "list_language_models"
         ],
         "autoRejectTools": []
       }
