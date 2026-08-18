@@ -10,6 +10,7 @@
       "hyprpilot": {
         "excludeTools": ["create_application", "update_application", "delete_application"],
         "autoAcceptTools": [
+          "get_appproject",
           "list_applications",
           "get_application",
           "get_application_resource_tree",
@@ -18,7 +19,8 @@
           "get_application_events",
           "get_resource_events",
           "get_resources",
-          "get_resource_actions"
+          "get_resource_actions",
+          "run_resource_action"
         ],
         "autoRejectTools": []
       }
