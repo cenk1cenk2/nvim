@@ -169,7 +169,7 @@ Use tmux MCP tools only for **read-only** inspection of existing user panes when
 
 ### kubernetes-kilic, kubernetes-laravel
 
-Read-only inspection of live clusters, one server per estate — `kubernetes-kilic` for the kilic clusters, `kubernetes-laravel` for the AWS EKS ones. Only one of the two is present in any profile. Per §I step 5, load the `kubernetes` skill before the first call to either; it owns the split with `kubectl`, the `context` argument, and the offer-first gate (§V Gates).
+Read-only inspection of live clusters, one server per estate — `kubernetes-kilic` for the kilic clusters, `kubernetes-laravel` for the AWS EKS ones. Only one of the two is present in any profile. Per §I step 5, load the matching skill — `kubernetes-kilic` or `kubernetes-laravel` — before the first call; it owns that estate, its read-only surface, and how a cluster name resolves to a context, with the shared `kubectl` split, the `context` argument, and the offer-first gate (§V Gates) in `kubernetes`.
 
 ### CLI
 
