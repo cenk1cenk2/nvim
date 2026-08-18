@@ -136,7 +136,7 @@ Agents start with a fresh context window — no conversation history, no files y
 2. **Task** — concrete description, detailed enough that another engineer could execute it.
 3. **Files** — exact paths the agent owns (reads anywhere, writes only within scope).
 4. **Context** — relevant architecture, patterns, conventions, adjacent work.
-5. **Boundaries** — what NOT to touch (other agents' scope, read-only files), and **never open anything in the captain's browser or editor**. Opening is the lead's call and the lead's timing, per `open-artifact`.
+5. **Boundaries** — what NOT to touch (other agents' scope, read-only files), and **do not open anything in the captain's browser or editor unless this prompt says to**. Opening is the lead's call and the lead's timing, per `open-artifact` — say so explicitly when you do want the agent to open its result.
 6. **Verification** — commands to run after implementation (from `project-tooling` discovery).
 7. **Conventions** — **mandatory for any prompt that writes code.** Paste the filled-in block from `agent-conventions`: study the neighbouring files first, copy the local naming/structure/error idiom, match comment density (usually none), stay in scope, and self-check the diff before reporting. An agent given no conventions writes its own dialect, and the result reads as foreign even when it works.
 8. **Report** — expected status format (DONE, DONE_WITH_CONCERNS, NEEDS_CONTEXT, BLOCKED) and its length bound. For code work, also require: which files it used as its pattern reference, and anything it had to invent for lack of local precedent.

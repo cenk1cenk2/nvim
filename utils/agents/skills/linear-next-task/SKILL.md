@@ -110,7 +110,7 @@ If the user lets you decide:
 
 If the user asks to open the issue:
 
-- Use `hyprpilot__open` with the issue URL: `https://linear.app/<workspace>/issue/<identifier>`, timing per `open-artifact`.
+- Use `hyprpilot__open` with the issue URL: `https://linear.app/<workspace>/issue/<identifier>` — **only when you are the lead**. Running as a subagent, return the URL and leave the opening to the parent, unless the dispatch prompt explicitly told you to open it. Timing per `open-artifact`.
 - If opening multiple issues, ask the user which one to open first.
 
 ### Step 6: Session Planning
