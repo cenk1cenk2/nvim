@@ -46,7 +46,7 @@ Read the user's message carefully. Identify:
 
 For each entity the user mentioned, fetch the real link using the entity enrichment table and code permalink format in `enrich-context`, with the SCM tools from `scm-detect` and `scm-github` / `scm-gitlab`. Only enrich entities the user actually mentioned — do not go looking for extra things to link.
 
-For Slack output specifically: use plain URLs for GitHub/GitLab (Slack auto-unfurls them). Use `<url|label>` format for non-unfurling links (Spacelift, Linear, etc.).
+For Slack output specifically: label every link with its own URL minus the protocol so Slack generates no preview, per `slack`. That covers GitHub/GitLab, Spacelift, Linear alike — no link is exempt.
 
 ### Step 3: Compose the Message
 
@@ -69,7 +69,7 @@ If companion skill output is present, include it as a separate section:
 
 Rules:
 - **Concise.** Say enough so others understand and can reach the resources. No more.
-- **Slack mrkdwn** per `slack`. Use `*bold*`, `_italic_`, `\`code\``, plain URLs for auto-unfurl, `<url|label>` for non-unfurling links.
+- **Slack mrkdwn** per `slack`. Use `*bold*`, `_italic_`, `\`code\``, and URL-labelled links so nothing previews.
 - **No markdown.** No `**bold**`, no `[text](url)`, no `###` headings. Use Slack conventions.
 - **Stick to what the user said.** Enrich with links and details, but do not add opinions, analysis, or information the user did not ask to share.
 
@@ -109,5 +109,5 @@ When composed, the companion skill's output is included under its own `##` secti
 - **Always draft first.** Never post without presenting to the user and getting approval.
 - **Stay within scope.** Only compile what the user asked about. Do not add unrelated information.
 - **Enrich, don't editorialize.** Add links, references, and details — not opinions or analysis.
-- **Use Slack mrkdwn.** Plain URLs for GitHub/GitLab (auto-unfurl). `<url|label>` for everything else.
+- **Use Slack mrkdwn.** Every link labelled with its own URL minus the protocol — no previews, no exceptions.
 - **Concise with reach.** Short enough to read quickly, detailed enough to act on.

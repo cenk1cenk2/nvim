@@ -27,7 +27,24 @@ The connector tools are deferred — load them via `ToolSearch` before the first
 - **Connector** (`mcp__claude_ai_Slack__slack_send_message`) — takes **standard markdown** (`**bold**`, `_italic_`, fenced blocks with a language hint, `[label](url)`) and converts it. Writing mrkdwn here renders literally.
 - **`slack-kilic`** (`slack-kilic__slack_post_message` / `slack-kilic__slack_reply_to_thread`) — takes **mrkdwn**, per the table below.
 
-Mentions (`<@U123>`), channel links (`<#C123>`), and emoji shortcodes are the same in both. When unsure, keep the message plain — short lines, hyphen lists, raw URLs — which renders correctly either way.
+Mentions (`<@U123>`), channel links (`<#C123>`), and emoji shortcodes are the same in both. When unsure, keep the message plain — short lines, hyphen lists, labelled links per the rule below — which renders correctly either way.
+
+### ABSOLUTE: no link previews, on every link we post
+
+**Every link in every Slack message we send is written so Slack generates no preview.** Not just PRs, not just one skill — every URL, in every channel, thread, draft and DM, whatever the workspace or integration.
+
+Slack unfurls any URL it recognises, labelled ones included. There is exactly one exception, and it is the mechanism: Slack never unfurls a link whose label is a complete substring of the URL minus the protocol. So label each link with its own URL minus `https://`:
+
+| Integration | Write |
+|-------------|-------|
+| Connector (standard markdown) | `[github.com/<owner>/<repo>/pull/<n>](https://github.com/<owner>/<repo>/pull/<n>)` |
+| `slack-kilic` (mrkdwn) | `<https://github.com/<owner>/<repo>/pull/<n>\|github.com/<owner>/<repo>/pull/<n>>` |
+
+It renders as the bare URL without the protocol, stays clickable, and no card appears. A shorter label works only while it stays a contiguous piece of that string — `<owner>/<repo>/pull/<n>` does; `<owner>/<repo>#<n>` does not, and will unfurl.
+
+A descriptive label (`the control-plane PR`) unfurls. That is the trade when prose genuinely needs one; otherwise the label is the URL.
+
+**Never set `unfurl_app_links: true`** on `mcp__claude_ai_Slack__slack_send_message`. It defaults false, and turning it on restores the app cards this rule suppresses. The tool exposes no `unfurl_links` / `unfurl_media` parameter, so the label is the only other lever.
 
 ### mrkdwn (`slack-kilic`)
 

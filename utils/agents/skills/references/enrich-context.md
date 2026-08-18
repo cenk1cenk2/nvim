@@ -14,7 +14,7 @@ When compiling output for others (Slack messages, PR comments, summaries), enric
 
 | Entity | MCP tool | Link format |
 |--------|----------|-------------|
-| PR | `github__pull_request_read` (method: `get`) | Plain URL (auto-unfurls in Slack/GitHub). |
+| PR | `github__pull_request_read` (method: `get`) | PR URL from response. |
 | Issue | `github__issue_read` | Issue URL from response. |
 | Commit | `github__get_commit` | Commit URL from response. |
 | Code file/line | `github__get_file_contents` to verify file and line exist | `https://github.com/<owner>/<repo>/blob/<sha>/<path>#L<line>-L<end_line>` |
@@ -26,7 +26,7 @@ When compiling output for others (Slack messages, PR comments, summaries), enric
 
 | Entity | MCP tool | Link format |
 |--------|----------|-------------|
-| MR | `gitlab__get_merge_request` | Plain URL (auto-unfurls in Slack/GitLab). |
+| MR | `gitlab__get_merge_request` | MR URL from response. |
 | Issue | `gitlab__get_issue` | Issue URL from response. |
 | Commit | `gitlab__get_commit` | Commit URL from response. |
 | Code file/line | `gitlab__get_file_contents` to verify file and line exist | `https://gitlab.com/<project_path>/-/blob/<sha>/<path>#L<line>-<end_line>` |

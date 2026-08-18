@@ -3,6 +3,7 @@ name: beep-laravel
 description: 'beep-laravel Daily check-in: restyle your update in a chosen tone, then create a Slack draft DM to the check-in bot for you to review and send yourself. Never sends, never posts to a channel. Use on "beep", "daily check-in", "check me in". Not for status reports to other people or standup writeups.'
 references:
   - ../references/harness/harness-connectors.md
+  - ../references/slack.md
 disableModelInvocation: true
 argumentHint: '[tone] <your check-in>'
 ---
@@ -124,6 +125,7 @@ Further-flung sources — genres, eras, formats, voices — to keep the menu sur
 - **Done ≠ tomorrow** — past/settled for done, future/incoming for tomorrow; the line between them must be unmistakable.
 - **No "Today:"/"Tomorrow:" labels — ABSOLUTE.** Never prefix a line with a literal label ("Today:", "Tomorrow:", "Done:", "Up next:"), in vanilla or any tone. Tense and the paragraph break alone carry the split, in natural flowing prose.
 - **Short and punchy** — a couple of beats, then let it land. No essays, no meta.
+- **No link previews.** Any URL the check-in carries is labelled with its own URL minus the protocol, per `slack`, so the draft renders no preview card.
 - **Honor custom tones** — if the user names their own, run with it over the roster.
 - **Vanilla is the default** — it's what beep uses when no tone is named: drop the costume and give a clean professional replay. A named tone opts into delight; vanilla is the faithful baseline.
 - **DM the beep app, never a channel** — the beep check-in goes only to the beep DM (`D0B5SBB8QUF`, member `U08MDLB9U0Z`) as a direct message; `slack_search_users` won't find the app, so use that DM directly. Posting it to a channel is never allowed.
