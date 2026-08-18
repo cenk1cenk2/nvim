@@ -8,6 +8,7 @@
         "ARGOCD_BASE_URL": "${NVIM_ARGOCD_KILIC_URL}"
       },
       "hyprpilot": {
+        "excludeTools": ["create_application", "update_application", "delete_application"],
         "autoAcceptTools": [
           "list_applications",
           "get_application",
@@ -19,7 +20,7 @@
           "get_resources",
           "get_resource_actions"
         ],
-        "autoRejectTools": ["create_application", "update_application", "delete_application"]
+        "autoRejectTools": []
       }
     },
     "aws-docs": {
@@ -30,7 +31,7 @@
         "FASTMCP_LOG_LEVEL": "ERROR"
       },
       "hyprpilot": {
-        "autoAcceptTools": ["read_documentation", "search_documentation", "read_sections", "recommend"],
+        "excludeTools": ["get_available_services"],
         "autoRejectTools": ["get_available_services"]
       }
     },
@@ -68,6 +69,17 @@
       },
       "url": "https://api.githubcopilot.com/mcp/",
       "hyprpilot": {
+        "excludeTools": [
+          "assign_copilot_to_issue",
+          "create_branch",
+          "create_or_update_file",
+          "create_repository",
+          "delete_file",
+          "fork_repository",
+          "get_label",
+          "get_team_members",
+          "merge_pull_request"
+        ],
         "autoAcceptTools": [
           "get_me",
           "issue_read",
@@ -94,17 +106,7 @@
           "pull_request_read",
           "request_copilot_review"
         ],
-        "autoRejectTools": [
-          "assign_copilot_to_issue",
-          "create_branch",
-          "create_or_update_file",
-          "create_repository",
-          "delete_file",
-          "fork_repository",
-          "get_label",
-          "get_team_members",
-          "merge_pull_request"
-        ]
+        "autoRejectTools": []
       }
     },
     "gitlab": {
@@ -117,6 +119,25 @@
         "USE_PIPELINE": "true"
       },
       "hyprpilot": {
+        "excludeTools": [
+          "download_attachment",
+          "download_release_asset",
+          "get_job_artifact_file",
+          "get_group_wiki_page",
+          "get_environment",
+          "get_deployment",
+          "download_job_artifacts",
+          "get_milestone",
+          "get_milestone_burndown_events",
+          "get_milestone_issue",
+          "get_milestone_merge_requests",
+          "list_deployments",
+          "list_environments",
+          "list_group_wiki_pages",
+          "list_job_artifacts",
+          "list_milestones",
+          "list_wiki_pages"
+        ],
         "autoAcceptTools": [
           "get_branch_diffs",
           "get_commit",
@@ -167,25 +188,7 @@
           "list_merge_request_changed_files",
           "list_merge_request_diffs"
         ],
-        "autoRejectTools": [
-          "download_attachment",
-          "download_release_asset",
-          "get_job_artifact_file",
-          "get_group_wiki_page",
-          "get_environment",
-          "get_deployment",
-          "download_job_artifacts",
-          "get_milestone",
-          "get_milestone_burndown_events",
-          "get_milestone_issue",
-          "get_milestone_merge_requests",
-          "list_deployments",
-          "list_environments",
-          "list_group_wiki_pages",
-          "list_job_artifacts",
-          "list_milestones",
-          "list_wiki_pages"
-        ]
+        "autoRejectTools": []
       }
     },
     "grafana-kilic": {
@@ -196,6 +199,33 @@
         "GRAFANA_URL": "${NVIM_GRAFANA_KILIC_URL}"
       },
       "hyprpilot": {
+        "excludeTools": [
+          "add_activity_to_incident",
+          "create_alert_rule",
+          "create_annotation",
+          "create_folder",
+          "create_incident",
+          "delete_alert_rule",
+          "fetch_pyroscope_profile",
+          "get_current_oncall_users",
+          "get_incident",
+          "get_oncall_shift",
+          "get_panel_image",
+          "get_sift_analysis",
+          "get_sift_investigation",
+          "list_oncall_schedules",
+          "list_oncall_teams",
+          "list_oncall_users",
+          "list_pyroscope_label_names",
+          "list_pyroscope_label_values",
+          "list_pyroscope_profile_types",
+          "list_sift_investigations",
+          "update_alert_rule",
+          "update_annotation",
+          "update_dashboard",
+          "list_incidents",
+          "list_contact_points"
+        ],
         "autoAcceptTools": [
           "query_prometheus_histogram",
           "query_prometheus",
@@ -217,7 +247,18 @@
           "get_alert_rule_by_uid",
           "get_alert_group"
         ],
-        "autoRejectTools": [
+        "autoRejectTools": []
+      }
+    },
+    "grafana-laravel": {
+      "args": ["mcp-grafana"],
+      "command": "uvx",
+      "env": {
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${NVIM_GRAFANA_LARAVEL_TOKEN}",
+        "GRAFANA_URL": "${NVIM_GRAFANA_LARAVEL_URL}"
+      },
+      "hyprpilot": {
+        "excludeTools": [
           "add_activity_to_incident",
           "create_alert_rule",
           "create_annotation",
@@ -243,17 +284,7 @@
           "update_dashboard",
           "list_incidents",
           "list_contact_points"
-        ]
-      }
-    },
-    "grafana-laravel": {
-      "args": ["mcp-grafana"],
-      "command": "uvx",
-      "env": {
-        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${NVIM_GRAFANA_LARAVEL_TOKEN}",
-        "GRAFANA_URL": "${NVIM_GRAFANA_LARAVEL_URL}"
-      },
-      "hyprpilot": {
+        ],
         "autoAcceptTools": [
           "query_prometheus_histogram",
           "query_prometheus",
@@ -275,44 +306,12 @@
           "get_alert_group",
           "get_alert_rule_by_uid"
         ],
-        "autoRejectTools": [
-          "add_activity_to_incident",
-          "create_alert_rule",
-          "create_annotation",
-          "create_folder",
-          "create_incident",
-          "delete_alert_rule",
-          "fetch_pyroscope_profile",
-          "get_current_oncall_users",
-          "get_incident",
-          "get_oncall_shift",
-          "get_panel_image",
-          "get_sift_analysis",
-          "get_sift_investigation",
-          "list_oncall_schedules",
-          "list_oncall_teams",
-          "list_oncall_users",
-          "list_pyroscope_label_names",
-          "list_pyroscope_label_values",
-          "list_pyroscope_profile_types",
-          "list_sift_investigations",
-          "update_alert_rule",
-          "update_annotation",
-          "update_dashboard",
-          "list_incidents",
-          "list_contact_points"
-        ]
+        "autoRejectTools": []
       }
     },
     "kubernetes": {
       "command": "bunx",
-      "args": [
-        "-y",
-        "kubernetes-mcp-server@latest",
-        "--read-only",
-        "--toolsets",
-        "core,config,helm"
-      ],
+      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only", "--toolsets", "core,config,helm"],
       "hyprpilot": {
         "autoAcceptTools": ["*"],
         "autoRejectTools": []
@@ -482,6 +481,7 @@
       "command": "spacectl",
       "env": {},
       "hyprpilot": {
+        "excludeTools": ["confirm_stack_run", "discard_stack_run", "local_preview"],
         "autoAcceptTools": [
           "get_api_key",
           "get_blueprint",
@@ -517,7 +517,7 @@
           "search_graphql_schema_fields",
           "search_modules"
         ],
-        "autoRejectTools": ["local_preview"]
+        "autoRejectTools": []
       }
     },
     "tavily": {
@@ -552,8 +552,9 @@
       "args": ["-y", "--bun", "tmux-mcp", "--shell-type=zsh"],
       "command": "bunx",
       "hyprpilot": {
+        "excludeTools": ["create-session", "create-window", "execute-command", "kill-pane", "kill-session", "kill-window", "split-pane"],
         "autoAcceptTools": ["get-command-result", "list-panes", "list-sessions", "list-windows", "capture-pane", "find-session"],
-        "autoRejectTools": ["kill-window", "kill-session", "kill-pane", "create-session", "create-window", "execute-command", "split-pane"]
+        "autoRejectTools": []
       }
     }
   }
