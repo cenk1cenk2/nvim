@@ -34,6 +34,7 @@ This skill edits the catalog file `~/.config/nvim/utils/agents/mcp/servers.json`
     "Authorization": "Bearer ${ENV_VAR}"
   },
   "hyprpilot": {
+    "excludeTools": [],
     "autoAcceptTools": [],
     "autoRejectTools": []
   }
@@ -50,6 +51,7 @@ This skill edits the catalog file `~/.config/nvim/utils/agents/mcp/servers.json`
     "API_KEY": "${ENV_VAR}"
   },
   "hyprpilot": {
+    "excludeTools": [],
     "autoAcceptTools": [],
     "autoRejectTools": []
   }
@@ -72,17 +74,27 @@ A clean kebab-case server key produces a clean, addressable tool prefix downstre
 
 ## Hyprpilot Permission Extension
 
-The `hyprpilot` namespace key on each server entry is hyprpilot's typed extension over the standard `mcpServers` shape. It carries two glob arrays:
+The `hyprpilot` namespace key on each server entry is hyprpilot's typed extension over the standard `mcpServers` shape. It carries four glob arrays across **two independent axes**:
 
-- `autoAcceptTools` — globs matching tool names that auto-resolve as "allow" through `PermissionController::decide` lane 2. Reject beats accept inside the lane.
-- `autoRejectTools` — globs matching tool names that auto-resolve as "deny". Short-circuits before accept.
+| Field | Default | Axis | Effect |
+|---|---|---|---|
+| `includeTools` | unset | visibility | Allow-list. Unset means no allow-list; `[]` means deny all. |
+| `excludeTools` | `[]` | visibility | Deny-list. Exclude beats include. |
+| `autoAcceptTools` | inherited | approval | Auto-resolves as "allow" through `PermissionController::decide` lane 2. |
+| `autoRejectTools` | inherited | approval | Auto-resolves as "deny". Short-circuits before accept; reject beats accept. |
+
+**Visibility decides whether the tool exists for the agent; approval decides whether calling it prompts.** An excluded tool is never surfaced, so it cannot be called at all — a stronger guarantee than rejecting it, which only refuses the call after the model has already chosen to make it. Use `excludeTools` for anything the agent should never reach; reserve `autoRejectTools` for tools that must stay visible but always gate.
+
+**The approval pair is inherited, the visibility pair is not.** A server with no `autoAcceptTools` override falls back to the `mcp` block's default of `['*']` and auto-accepts everything it exposes.
+
+**House pattern:** every existing entry that restricts anything uses `excludeTools` plus an explicit `autoAcceptTools` list plus an empty `autoRejectTools`. Match it.
 
 The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<server>__read_*`. The `mcp__<server>__` prefix is implicit. Vendor-native tools (Bash, Read, …) skip this lane entirely.
 
 ## Special Tool Categories
 
-- **Glob the surface, not the vendor's docs.** A server may register less than its documentation lists, and a launch flag can cut the surface further. Decide the globs against what it actually registers: a server whose whole surface is reads can auto-accept wholesale, one that mixes reads and writes rejects the write globs explicitly. Load the server's same-named skill when the surface is not obvious from the entry.
-- **Command execution belongs in `Bash`.** A server tool that runs arbitrary commands or mutates the captain's environment goes in `autoRejectTools` — `Bash` is where execution is visible and permission-prompted.
+- **Glob the surface, not the vendor's docs.** A server may register less than its documentation lists, and a launch flag can cut the surface further. Decide the globs against what it actually registers: a server whose whole surface is reads can auto-accept wholesale, one that mixes reads and writes **excludes** the write globs so they never surface. Load the server's same-named skill when the surface is not obvious from the entry.
+- **Command execution belongs in `Bash`.** A server tool that runs arbitrary commands or mutates the captain's environment goes in `excludeTools` — `Bash` is where execution is visible and permission-prompted. `tmux` is the worked example: `execute-command`, `kill-*` and `split-pane` are excluded outright.
 - **A tool policy is not an approval gate.** Auto-accepting a server's reads says nothing about whether reaching into what it reads is the captain's call. Where such a gate exists it is behavioural and lives in that server's own skill, which the permission lane cannot enforce.
 - **No `git` MCP.** Local git is the raw `git` CLI via `Bash`. If a user asks to add a git server, raise the trade-off (extra surface area; the commands are already reachable through Bash) before doing so.
 - **In-tree hyprpilot servers.** Do NOT add `hyprpilot`, `hyprpilot_skills`, or `hyprpilot_harness` entries here — those names are **reserved**, and an entry using one is silently replaced by the injected server. Hyprpilot auto-injects three of its own at launch, gated by the `[mcp]` block in `~/.config/hyprpilot/config.yaml`:
@@ -128,9 +140,10 @@ The globs are **server-relative** — write `read_*` / `delete_*`, not `mcp__<se
 6. **Prompt for permission globs.**
    - Research available tools the server exposes.
    - Present the full tool list to the user, categorized as read-only vs write/destructive.
-   - Ask explicitly which tool patterns belong in `hyprpilot.autoAcceptTools` (allow without prompting) and `hyprpilot.autoRejectTools` (deny outright). Reject beats accept.
+   - **Ask visibility first:** which tools go in `hyprpilot.excludeTools` and never reach the agent at all.
+   - **Then approval:** which of the remaining go in `autoAcceptTools` (allow without prompting), and which in `autoRejectTools` (deny outright).
+   - Suggest write / destructive tools as candidates for `excludeTools`.
    - Suggest read-only / safe tools as candidates for `autoAcceptTools`.
-   - Suggest write / destructive tools as candidates for `autoRejectTools`.
    - Do not assume defaults — the captain decides both lists.
 7. **Present the configuration.**
    - Show the complete JSON entry in chat per `output-diff`.

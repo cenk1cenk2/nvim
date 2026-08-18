@@ -7,7 +7,6 @@
       },
       "url": "https://argocd.mcp.kilic.dev/mcp",
       "hyprpilot": {
-        "excludeTools": ["create_application", "update_application", "delete_application"],
         "autoAcceptTools": [
           "get_appproject",
           "list_applications",
@@ -565,6 +564,17 @@
       "hyprpilot": {
         "excludeTools": ["create-session", "create-window", "execute-command", "kill-pane", "kill-session", "kill-window", "split-pane"],
         "autoAcceptTools": ["get-command-result", "list-panes", "list-sessions", "list-windows", "capture-pane", "find-session"],
+        "autoRejectTools": []
+      }
+    },
+    "vault-kilic": {
+      "headers": {
+        "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
+        "vault-authorization": "${NVIM_VAULT_TOKEN}"
+      },
+      "url": "https://vault.mcp.kilic.dev/mcp",
+      "hyprpilot": {
+        "autoAcceptTools": ["list_mounts", "list_secrets", "list_pki_issuers"],
         "autoRejectTools": []
       }
     }
