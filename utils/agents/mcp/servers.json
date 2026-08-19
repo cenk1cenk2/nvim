@@ -1,25 +1,5 @@
 {
   "mcpServers": {
-    "context7": {
-      "headers": {
-        "Authorization": "Bearer ${NVIM_CONTEXT7}"
-      },
-      "url": "https://mcp.context7.com/mcp",
-      "hyprpilot": {
-        "autoAcceptTools": ["get-library-docs", "resolve-library-id", "query-docs"],
-        "autoRejectTools": []
-      }
-    },
-    "exa": {
-      "headers": {
-        "x-api-key": "${NVIM_EXA_API_KEY}"
-      },
-      "url": "https://mcp.exa.ai/mcp",
-      "hyprpilot": {
-        "autoAcceptTools": ["get_code_context_exa", "web_search_exa", "web_fetch_exa"],
-        "autoRejectTools": []
-      }
-    },
     "excalidraw": {
       "url": "https://mcp.excalidraw.com",
       "hyprpilot": {
@@ -94,13 +74,23 @@
         "autoRejectTools": []
       }
     },
-    "tavily": {
+    "research": {
       "headers": {
-        "Authorization": "Bearer ${NVIM_TAVILY_API_KEY}"
+        "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}"
       },
-      "url": "https://mcp.tavily.com/mcp",
+      "url": "https://research.mcp.kilic.dev/mcp",
       "hyprpilot": {
-        "autoAcceptTools": ["tavily-search", "tavily_search", "tavily_extract", "tavily_crawl", "tavily_map", "tavily_skill", "tavily_research"],
+        "autoAcceptTools": [
+          "exa_web_search_exa",
+          "exa_web_fetch_exa",
+          "tavily_tavily_search",
+          "tavily_tavily_extract",
+          "tavily_tavily_crawl",
+          "tavily_tavily_map",
+          "tavily_tavily_research",
+          "context7_resolve-library-id",
+          "context7_query-docs"
+        ],
         "autoRejectTools": []
       }
     },

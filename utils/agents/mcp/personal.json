@@ -24,33 +24,12 @@
       }
     },
     "gitlab": {
-      "args": ["-y", "@zereight/mcp-gitlab"],
-      "command": "npx",
-      "env": {
-        "GITLAB_API_URL": "https://gitlab.kilic.dev/api/v4/",
-        "GITLAB_PERSONAL_ACCESS_TOKEN": "${NVIM_GITLAB}",
-        "USE_PIPELINE": "true"
+      "headers": {
+        "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
+        "gitlab-authorization": "${NVIM_GITLAB}"
       },
+      "url": "https://gitlab.mcp.kilic.dev/mcp",
       "hyprpilot": {
-        "excludeTools": [
-          "download_attachment",
-          "download_release_asset",
-          "get_job_artifact_file",
-          "get_group_wiki_page",
-          "get_environment",
-          "get_deployment",
-          "download_job_artifacts",
-          "get_milestone",
-          "get_milestone_burndown_events",
-          "get_milestone_issue",
-          "get_milestone_merge_requests",
-          "list_deployments",
-          "list_environments",
-          "list_group_wiki_pages",
-          "list_job_artifacts",
-          "list_milestones",
-          "list_wiki_pages"
-        ],
         "autoAcceptTools": [
           "get_branch_diffs",
           "get_commit",
@@ -105,40 +84,12 @@
       }
     },
     "grafana-kilic": {
-      "args": ["mcp-grafana"],
-      "command": "uvx",
-      "env": {
-        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${NVIM_GRAFANA_KILIC_TOKEN}",
-        "GRAFANA_URL": "${NVIM_GRAFANA_KILIC_URL}"
+      "headers": {
+        "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
+        "grafana-authorization": "Bearer ${NVIM_GRAFANA_KILIC_TOKEN}"
       },
+      "url": "https://grafana.mcp.kilic.dev/mcp",
       "hyprpilot": {
-        "excludeTools": [
-          "add_activity_to_incident",
-          "create_alert_rule",
-          "create_annotation",
-          "create_folder",
-          "create_incident",
-          "delete_alert_rule",
-          "fetch_pyroscope_profile",
-          "get_current_oncall_users",
-          "get_incident",
-          "get_oncall_shift",
-          "get_panel_image",
-          "get_sift_analysis",
-          "get_sift_investigation",
-          "list_oncall_schedules",
-          "list_oncall_teams",
-          "list_oncall_users",
-          "list_pyroscope_label_names",
-          "list_pyroscope_label_values",
-          "list_pyroscope_profile_types",
-          "list_sift_investigations",
-          "update_alert_rule",
-          "update_annotation",
-          "update_dashboard",
-          "list_incidents",
-          "list_contact_points"
-        ],
         "autoAcceptTools": [
           "query_prometheus_histogram",
           "query_prometheus",
