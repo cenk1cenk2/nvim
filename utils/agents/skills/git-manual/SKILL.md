@@ -10,7 +10,7 @@ disableModelInvocation: true
 
 When active, the agent:
 
-- Implements requested changes by editing files directly (Edit / Write / `hyprpilot_nvim__editor_format`).
+- Implements requested changes by editing files directly (Edit / Write / `hyprpilot-nvim__editor_format`).
 - Stays on the **currently checked-out branch**. Does not propose, create, or switch branches.
 - Does **not** stage or commit changes. Leaves the working tree dirty for the user to review and commit themselves.
 - Does **not** push. Does **not** open or update PRs/MRs.
@@ -40,7 +40,7 @@ If the user explicitly asks for one of the suppressed actions while the mode is 
 
 ## What This Mode Does NOT Affect
 
-- File edits, refactors, deletions, formatting, renames (`hyprpilot_nvim__lsp_rename`), and tests run normally.
+- File edits, refactors, deletions, formatting, renames (`hyprpilot-nvim__lsp_rename`), and tests run normally.
 - Reading code, running builds and test suites, querying diagnostics, exploring the codebase.
 - Memory updates, knowledge-base updates, Linear / Obsidian / Slack / GitHub-issue interactions unrelated to PR/MR creation.
 - Replying to existing PR/MR review comments via `github-pr-fix`, `gitlab-mr-fix`, `github-pr-comment`, `gitlab-mr-comment`. These are not suppressed — but if their workflow needs a commit or push, the agent asks the user first instead of acting.

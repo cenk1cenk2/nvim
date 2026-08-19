@@ -23,7 +23,7 @@
 
    <!-- CAVEMAN-DEFAULT:END -->
 
-5. **LOAD A SERVER'S SAME-NAMED SKILL — ABSOLUTE.** A server named `<x>` and a skill named `<x>` are the same subject: the skill is that server's manual. Most injected servers are spelled exactly like their skill; `hyprpilot_nvim` is the one that is not, so match on the server name normalized to kebab-case: `hyprpilot_nvim` resolves to the `hyprpilot-nvim` skill. Check the cached catalog and `read_skill` the match. Load `hyprpilot-skills` and `hyprpilot-nvim` **eagerly here at startup** when their servers are present — they govern how every later skill loads and how you search, so a decision made before them is already wrong. Every other server's skill loads before that server's first call. **One carve-out: `hyprpilot-harness` never auto-loads** — its manual is `hyprpilot-delegate`, and only the user starts a separate agent session (§III). Announce each per §II's announcement rule. No match means use the server directly.
+5. **LOAD A SERVER'S SAME-NAMED SKILL — ABSOLUTE.** A server named `<x>` and a skill named `<x>` are the same subject: the skill is that server's manual. Check the cached catalog and `read_skill` the match. Load `hyprpilot-skills` and `hyprpilot-nvim` **eagerly here at startup** when their servers are present — they govern how every later skill loads and how you search, so a decision made before them is already wrong. Every other server's skill loads before that server's first call. **One carve-out: `hyprpilot-harness` never auto-loads** — its manual is `hyprpilot-delegate`, and only the user starts a separate agent session (§III). Announce each per §II's announcement rule. No match means use the server directly.
 
 ### ABSOLUTE — A Changed Guidance File Re-Grounds You
 
@@ -127,7 +127,7 @@ Use the tools available in the session. A service with an MCP server is reached 
 
 ### Hyprpilot
 
-Skills are delivered by the `hyprpilot-skills` MCP server, which also injects `hyprpilot`, `hyprpilot_nvim`, and where enabled `hyprpilot-harness`. The whole system — those servers, the loading tools, profile filtering, and how references arrive — is `hyprpilot-skills`, eager at startup per §I step 5.
+Skills are delivered by the `hyprpilot-skills` MCP server, which also injects `hyprpilot`, `hyprpilot-nvim`, and where enabled `hyprpilot-harness`. The whole system — those servers, the loading tools, profile filtering, and how references arrive — is `hyprpilot-skills`, eager at startup per §I step 5.
 
 ### MCP Conventions
 
@@ -155,7 +155,7 @@ Finding out what exists. Route by what you are asking, and prefer the narrowest 
 
 `research` is one server covering all three of the last rows: context7 library documentation, exa and tavily web search and page fetch, and tavily's crawl, site-map and multi-step deep research. It is more than a search box — reach for its research and crawl tools when one query will not settle the question. Hosted behind the gateway, so no API key is held locally. Sourcebot builds the evidence-backed shortlist; the SCM tools give authoritative metadata and every write. When a route's server is absent or the profile drops it, fall back one row down and say so.
 
-### hyprpilot_nvim
+### hyprpilot-nvim
 
 The editor MCP — the captain's live Neovim (buffers, LSP, windows, cursor). Per §I step 5, load the `hyprpilot-nvim` skill before the first call to this server; it owns every rule for it.
 

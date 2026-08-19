@@ -27,16 +27,16 @@ If the user already provided clear expected/actual behavior, skip redundant ques
 
 ### Step 2: Locate the Code
 
-- If the user provided a snippet, find its location in the codebase using Grep or `hyprpilot_nvim__lsp_workspace_symbols`.
-- If the user described the problem area, use `hyprpilot_nvim__lsp_workspace_symbols`, `hyprpilot_nvim__lsp_document_symbols`, or treesitter `get_symbols` to locate relevant code.
-- Read the file(s) involved using `hyprpilot_nvim__editor_read` or the built-in `Read` tool.
+- If the user provided a snippet, find its location in the codebase using Grep or `hyprpilot-nvim__lsp_workspace_symbols`.
+- If the user described the problem area, use `hyprpilot-nvim__lsp_workspace_symbols`, `hyprpilot-nvim__lsp_document_symbols`, or treesitter `get_symbols` to locate relevant code.
+- Read the file(s) involved using `hyprpilot-nvim__editor_read` or the built-in `Read` tool.
 
 ### Step 3: Trace the Logic
 
 Follow the execution path from input to incorrect output:
 
-- **Map the call chain** — use `hyprpilot_nvim__lsp_definition` and `hyprpilot_nvim__lsp_references` to trace how data flows through the code.
-- **Check types and signatures** — use `hyprpilot_nvim__lsp_hover` to verify that types, return values, and parameters match expectations.
+- **Map the call chain** — use `hyprpilot-nvim__lsp_definition` and `hyprpilot-nvim__lsp_references` to trace how data flows through the code.
+- **Check types and signatures** — use `hyprpilot-nvim__lsp_hover` to verify that types, return values, and parameters match expectations.
 - **Read the surrounding context** — don't just read the failing line. Read the function, the caller, and the callee. Bugs often live one level above or below the obvious location.
 - **Check conditionals and edge cases** — look for off-by-one errors, missing null checks, wrong comparison operators, inverted conditions.
 
@@ -47,7 +47,7 @@ When the logic trace isn't enough:
 - **Check git history** — use `git log` and `git diff` on the affected files. Was this code recently changed? Did it ever work correctly?
 - **Search for known issues** — use GitHub/GitLab MCP to search for open issues in the project or upstream dependencies matching the symptoms.
 - **Consult documentation** — use `research` (library docs, web search and fetch) to verify that APIs, library methods, or framework features are being used correctly.
-- **Check LSP diagnostics** — use `hyprpilot_nvim__diagnostics_get` to see if there are warnings or errors the user might have missed.
+- **Check LSP diagnostics** — use `hyprpilot-nvim__diagnostics_get` to see if there are warnings or errors the user might have missed.
 
 Always consult the user before concluding that the issue is in an external dependency or upstream.
 

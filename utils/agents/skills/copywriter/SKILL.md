@@ -10,8 +10,8 @@ argumentHint: '[optional: specific instructions]'
 ## Process
 
 1. **Get the current buffer content.**
-   - Use `hyprpilot_nvim__editor_status` to identify the current buffer.
-   - Read the file content via `hyprpilot_nvim__editor_read`.
+   - Use `hyprpilot-nvim__editor_status` to identify the current buffer.
+   - Read the file content via `hyprpilot-nvim__editor_read`.
    - If the buffer is empty, inform the user and stop.
 
 2. **Apply the cleanup rules below to the entire buffer content.**

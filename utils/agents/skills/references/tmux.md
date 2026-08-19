@@ -38,7 +38,7 @@ Anything else — listing, finding, capturing — goes through the MCP.
 
 ## Anchor to the Captain's Own Session First
 
-Whether the agent runs inside Neovim (via `hyprpilot_nvim`) or directly under hyprpilot, it shares the captain's tmux session. Find that one before looking at any other:
+Whether the agent runs inside Neovim (via `hyprpilot-nvim`) or directly under hyprpilot, it shares the captain's tmux session. Find that one before looking at any other:
 
 1. Identify it from the shell — `$TMUX`, `$TMUX_PANE`, or `tmux display-message -p '#S'` (the one place CLI beats MCP).
 2. Scope from there with `tmux__find-session` / `tmux__list-windows` / `tmux__list-panes`.

@@ -421,7 +421,7 @@ In skill files, reference files, and documentation, use the **`<server>__<tool>`
 
 **Server name rules** — catalog server keys (the ones `config-mcp` writes) MUST use kebab-case with `-` separators only. Never use `/` in a server key (does not parse correctly through some MCP hubs) and avoid `_` for word separation inside it. Workspace-suffixed servers follow the `<service>-<workspace>` pattern, e.g., `linear-kilic`, `linear-laravel`, `grafana-kilic`, `grafana-laravel`, `argocd-kilic`, `slack-kilic`, `spacelift-laravel`.
 
-**Hyprpilot's injected servers are not catalog entries — write each one as it is registered.** `hyprpilot`, `hyprpilot-skills` and `hyprpilot-harness` are kebab like the rest, so each matches its same-named skill exactly. `hyprpilot_nvim` keeps an `_`: "correcting" it to kebab names the `hyprpilot-nvim` skill instead and the tool call fails.
+**Hyprpilot's injected servers are not catalog entries but follow the same rule.** `hyprpilot`, `hyprpilot-skills`, `hyprpilot-nvim` and `hyprpilot-harness` are kebab, so each is spelled exactly like its same-named skill.
 
 Examples:
 

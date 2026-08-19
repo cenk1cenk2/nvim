@@ -5,7 +5,7 @@ description: 'hyprpilot-nvim Auto-invoked the moment the editor MCP server is pr
 
 ## Context
 
-The `hyprpilot_nvim` server exposes the captain's **live** Neovim over MCP: their buffers with unsaved changes, their attached language servers, their windows and cursor. It is not a second copy of the filesystem — a read through it sees what they see right now.
+The `hyprpilot-nvim` server exposes the captain's **live** Neovim over MCP: their buffers with unsaved changes, their attached language servers, their windows and cursor. It is not a second copy of the filesystem — a read through it sees what they see right now.
 
 The server is read-and-navigate. It cannot change file contents; use the normal editing tools for that, and reach for these when the question is *where is this symbol*, *what is broken*, or *show the captain something*.
 
