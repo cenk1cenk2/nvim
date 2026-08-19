@@ -149,6 +149,10 @@ The family prefix stays in the filename even inside its folder. `scm/scm-github.
 
 Never create a reference whose only content is "go load skill X". A reference carries a convention; forwarding to a skill just adds a hop and a fetch.
 
+**A name resolves only against a manifest the reader already holds.** Citing `output-diff` works because the consuming skill declared it. Citing a reference your skill does not declare gives the reader a name and no path — `read_skill_references` refuses anything no manifest published.
+
+So a convention owned by another skill is reached by loading that skill. `agent-harness` is the worked example: the per-harness mechanics belong to `agent-delegate` and `agent-background`, so it routes the reader to those skills rather than naming their references.
+
 ## Consumers Name It, Never Summarise It
 
 **The reader can fetch the reference the moment it needs it.** A call site that explains what the reference contains pays for the same content twice, and the summary rots the moment the reference changes while the reader cannot tell which is current.

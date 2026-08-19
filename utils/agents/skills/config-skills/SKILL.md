@@ -202,6 +202,17 @@ The consequence that governs every decision below: **the expensive mistake is a 
 
 Conditional use is not a reason to skip declaring: an unused row costs a manifest line, and declaring it makes the file fetchable by path. Path-read means genuinely undeclared — the per-harness family, where naming all three providers in one skill's frontmatter would claim files that belong to whichever runtime is live.
 
+### A reference name only resolves through a manifest
+
+`read_skill_references` accepts a path, and only a path some manifest published. So a reference name is not a portable address: naming `commit-style` in a body whose skill does not declare it hands the reader a name with nothing to fetch it by.
+
+That decides how a body reaches a convention another skill owns — **route to the skill, not to the reference**:
+
+- **Your own steps need it** — declare it. The row is yours, the path arrives with your skill.
+- **A composed skill's steps need it** — write **Load `X`** and let X's manifest carry it. Do not name X's reference directly; the reader cannot address it until X is loaded.
+
+The escape hatch is `Read` on the absolute path, which always works — and is why a path-read directive carries the path in full. A name alone is not enough.
+
 **A path-read directive MUST carry the absolute path.** A missed `Read` raises no error — the skill simply runs without the convention it named, silently.
 
 ### Writing Reference Directives — name it inline, do not announce it
