@@ -9,7 +9,7 @@
       },
       "hyprpilot": {
         "excludeTools": ["get_available_services"],
-        "autoRejectTools": ["get_available_services"]
+        "autoRejectTools": []
       }
     },
     "grafana-laravel": {
