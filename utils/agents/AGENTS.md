@@ -149,11 +149,11 @@ Finding out what exists. Route by what you are asking, and prefer the narrowest 
 | Symbols, definitions, callers in the repo at hand | LSP through the `hyprpilot-nvim` skill, not grep |
 | Live cluster state — workloads, events, logs, resource YAML | the estate's `kubernetes-*` server, gated per §V |
 | Authoritative SCM state — MRs/PRs, issues, pipelines, permissions, live branches | GitHub/GitLab MCP per `scm-detect` |
-| Library, framework, API, CLI, or cloud docs | a docs MCP (`context7`, provider docs) before anything else, since training data lags |
-| Open web | the runtime's search/fetch |
-| Multi-source digging or verification | the harness's deep-research mechanism, else `tavily` / `exa` |
+| Library, framework, API, CLI, or cloud docs | the `research` server before anything else, since training data lags |
+| Open web | the `research` server, or the runtime's search/fetch |
+| Multi-source digging or verification | the harness's deep-research mechanism, else the `research` server |
 
-Sourcebot builds the evidence-backed shortlist; the SCM tools give authoritative metadata and every write. When a route's server is absent or the profile drops it, fall back one row down and say so.
+`research` is one server covering both halves of the last three rows — library documentation and open-web search, fetch and deep research — behind the gateway, so no API key is held locally. Sourcebot builds the evidence-backed shortlist; the SCM tools give authoritative metadata and every write. When a route's server is absent or the profile drops it, fall back one row down and say so.
 
 ### hyprpilot_nvim
 
