@@ -1,0 +1,182 @@
+{
+  "mcpServers": {
+    "aws-docs": {
+      "args": ["awslabs.aws-documentation-mcp-server@latest"],
+      "command": "uvx",
+      "env": {
+        "AWS_DOCUMENTATION_PARTITION": "aws",
+        "FASTMCP_LOG_LEVEL": "ERROR"
+      },
+      "hyprpilot": {
+        "excludeTools": ["get_available_services"],
+        "autoRejectTools": ["get_available_services"]
+      }
+    },
+    "grafana-laravel": {
+      "args": ["mcp-grafana"],
+      "command": "uvx",
+      "env": {
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${NVIM_GRAFANA_LARAVEL_TOKEN}",
+        "GRAFANA_URL": "${NVIM_GRAFANA_LARAVEL_URL}"
+      },
+      "hyprpilot": {
+        "excludeTools": [
+          "add_activity_to_incident",
+          "create_alert_rule",
+          "create_annotation",
+          "create_folder",
+          "create_incident",
+          "delete_alert_rule",
+          "fetch_pyroscope_profile",
+          "get_current_oncall_users",
+          "get_incident",
+          "get_oncall_shift",
+          "get_panel_image",
+          "get_sift_analysis",
+          "get_sift_investigation",
+          "list_oncall_schedules",
+          "list_oncall_teams",
+          "list_oncall_users",
+          "list_pyroscope_label_names",
+          "list_pyroscope_label_values",
+          "list_pyroscope_profile_types",
+          "list_sift_investigations",
+          "update_alert_rule",
+          "update_annotation",
+          "update_dashboard",
+          "list_incidents",
+          "list_contact_points"
+        ],
+        "autoAcceptTools": [
+          "query_prometheus_histogram",
+          "query_prometheus",
+          "query_loki_stats",
+          "query_loki_patterns",
+          "query_loki_logs",
+          "search_dashboards",
+          "search_folders",
+          "list_prometheus_label_names",
+          "list_prometheus_label_values",
+          "list_prometheus_metric_metadata",
+          "list_prometheus_metric_names",
+          "list_loki_label_values",
+          "list_loki_label_names",
+          "list_datasources",
+          "list_alert_rules",
+          "list_alert_groups",
+          "get_datasource",
+          "get_alert_group",
+          "get_alert_rule_by_uid"
+        ],
+        "autoRejectTools": []
+      }
+    },
+    "kubernetes-laravel": {
+      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only", "--toolsets", "core,config,helm"],
+      "command": "bunx",
+      "hyprpilot": {
+        "autoAcceptTools": ["*"],
+        "autoRejectTools": []
+      }
+    },
+    "linear-laravel": {
+      "headers": {
+        "Authorization": "Bearer ${NVIM_LINEAR_WORK}"
+      },
+      "url": "https://mcp.linear.app/mcp",
+      "hyprpilot": {
+        "autoAcceptTools": [
+          "get_attachment",
+          "get_document",
+          "get_initiative",
+          "get_issue",
+          "get_issue_status",
+          "get_milestone",
+          "get_project",
+          "get_status_updates",
+          "get_team",
+          "get_user",
+          "list_comments",
+          "list_cycles",
+          "list_documents",
+          "list_initiatives",
+          "list_issue_labels",
+          "list_issue_statuses",
+          "list_issues",
+          "list_milestones",
+          "list_project_labels",
+          "list_projects",
+          "list_teams",
+          "list_users",
+          "search_documentation",
+          "extract_images",
+          "get_authenticated_user",
+          "research"
+        ],
+        "autoRejectTools": []
+      }
+    },
+    "spacelift-laravel": {
+      "args": ["mcp", "server"],
+      "command": "spacectl",
+      "env": {},
+      "hyprpilot": {
+        "excludeTools": ["confirm_stack_run", "discard_stack_run", "local_preview"],
+        "autoAcceptTools": [
+          "get_api_key",
+          "get_blueprint",
+          "get_context",
+          "get_graphql_type_details",
+          "get_module",
+          "get_module_guide",
+          "get_module_version",
+          "get_policy",
+          "get_policy_sample",
+          "get_space",
+          "get_stack_run",
+          "get_stack_run_changes",
+          "get_stack_run_logs",
+          "get_worker_pool",
+          "get_authentication_guide",
+          "introspect_graphql_schema",
+          "list_api_keys",
+          "list_blueprints",
+          "list_contexts",
+          "list_modules",
+          "list_module_versions",
+          "list_policies",
+          "list_policy_samples",
+          "list_policy_samples_indexed",
+          "list_resources",
+          "list_spaces",
+          "list_stack_proposed_runs",
+          "list_stack_runs",
+          "list_stacks",
+          "list_worker_pools",
+          "search_contexts",
+          "search_graphql_schema_fields",
+          "search_modules"
+        ],
+        "autoRejectTools": []
+      }
+    },
+    "terraform": {
+      "args": ["run", "-i", "--rm", "hashicorp/terraform-mcp-server", "stdio", "--toolsets=registry"],
+      "command": "docker",
+      "hyprpilot": {
+        "autoAcceptTools": [
+          "search_providers",
+          "get_provider_details",
+          "get_latest_provider_version",
+          "get_provider_capabilities",
+          "search_modules",
+          "get_module_details",
+          "get_latest_module_version",
+          "search_policies",
+          "get_policy_details"
+        ],
+        "autoRejectTools": []
+      }
+    }
+  }
+}
