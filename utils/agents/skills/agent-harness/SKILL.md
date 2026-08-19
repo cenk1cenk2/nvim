@@ -34,9 +34,9 @@ Cost and capability vary by an order of magnitude across tiers — pick the chea
 
 ## Per-Harness References
 
-Harness mechanics are **skills**, named **`<consumer>-harness-<provider>`** — one per (runtime × consumer), so you load exactly the mechanics this session needs and nothing else.
+Harness mechanics are **references**, named **`<consumer>-harness-<provider>`** — one per (runtime × consumer). This skill does not carry them: each consumer skill declares all three of its providers, so loading the consumer is what puts the paths in front of you.
 
-> **Load `<consumer>-harness-<provider>` before the first dispatch or the first wait.** `<provider>` is `claude`, `opencode`, or `codex`; `<consumer>` is the row below.
+> **Load the consumer skill, then fetch its `<provider>` row before the first dispatch or the first wait.** Dispatch is `agent-delegate`, waiting is `agent-background`; `<provider>` is `claude`, `opencode`, or `codex`.
 
 | Consumer | Claude Code | OpenCode | Codex |
 |----------|-------------|----------|-------|
@@ -54,7 +54,7 @@ Headlines per runtime:
 
 ## Rules
 
-- **Load `<consumer>-harness-<provider>` before dispatching, not after something breaks.** The failure modes differ per runtime and several of them are silent.
+- **Fetch `<consumer>-harness-<provider>` before dispatching, not after something breaks.** The failure modes differ per runtime and several of them are silent.
 - **Never carry one runtime's behavior to another.** Background-by-default, wake-on-completion, and permission inheritance are all Claude Code specifics.
 - **Explicit model names override tiers.** If the user names a model (`fable`, `kilic/glm-5.2:cloud`, `gpt-5.5`), use it verbatim — no remapping.
 - **Ask on mismatch.** If the chosen tier/model looks wrong for the task (cheap for architecture, max for a rename), state the mismatch and propose an alternative before dispatching.

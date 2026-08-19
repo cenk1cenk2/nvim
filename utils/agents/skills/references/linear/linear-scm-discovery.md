@@ -38,7 +38,7 @@ Use the active workspace and SCM context:
 - GitLab MCP for `gitlab.kilic.dev` repositories, MRs, pipelines, files, commits, and searches.
 - GitHub MCP for GitHub repositories, PRs, checks, files, commits, and searches.
 - Local repository checkout when available.
-- `context7` or web search only for external library/framework behavior, not for repository-specific facts.
+- `research` or web search only for external library/framework behavior, not for repository-specific facts.
 
 ## Discovery Ladder
 

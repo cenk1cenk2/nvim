@@ -144,7 +144,7 @@ Self-answer for everything else. Use:
 - raw `git` CLI (via `Bash`) for history, diffs, and blame.
 - `github__*` / `gitlab__*` for remote repository details.
 - `Grep` / `Glob` for pattern and file search.
-- `context7` for library documentation.
+- `research` for library documentation.
 - `Read` for direct file inspection.
 
 When you self-answer, **report the finding briefly** so the user sees what you decided and why. Example:

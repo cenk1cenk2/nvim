@@ -106,6 +106,7 @@ Label tiers and the `(?i)` rule are in `loki-label-model`; these are the dashboa
 - **Never change a dashboard `uid`.** It is the routing identity other dashboards link to.
 - Dashboard JSON serializes at `indent=2`. **Some files escape non-ASCII as `\uXXXX` and some do not** — detect per file by round-tripping before rewriting, or the diff churns hundreds of unrelated lines. Where an edit is a pure string substitution, rewriting the raw file text avoids the question entirely.
 - **Prefer scripted edits that assert the old value** over hand-editing. The files are large and the same URL commonly repeats across four panels.
+- **Present the panel change per `output-diff`** before writing it — the JSON is large, so show the panel or query that moves, never the whole file.
 - Most rate windows use `$__rate_interval`. `increase()` over `$__range` or `$__interval`, and the deliberate `[30m]` and `[10m]` smoothing windows, are intentional.
 
 ## Verification

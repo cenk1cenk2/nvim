@@ -99,7 +99,8 @@ stops at `exec()`; everything after belongs to the vendor.
    `$match`ed patch; a knob that must beat an unscoped patch has to be a later patch.
 3. Walk the fold order and name which patch wins each field being set.
 4. Present the edit per `output-diff`, stating the resolution consequence: which profiles change, and
-   what they will resolve to.
+   what they will resolve to. Keep real hostnames, tokens and account ids out of the config and its
+   examples per `redact-private-data`.
 5. Apply to the dotfiles path.
 6. Verify. `hyprpilot profiles` loads and validates the whole config, so a clean listing proves the
    edit parses and every cross-reference resolves; `--json` gives the machine-readable form and

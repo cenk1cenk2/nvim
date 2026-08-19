@@ -1,6 +1,8 @@
 ---
 name: agent-watcher-recipes
 description: agent-watcher-recipes Concrete watcher signals per domain and the shell checks that poll them - merge gates, CI runs, terraform and Spacelift, deploy convergence, chaining, tracker reconciliation. Load the entry for the thing you are about to watch. Not for watcher discipline, cadence, or the announce tables.
+references:
+  - ../references/agent/agent-watchers.md
 ---
 
 # Agent Watcher Recipes

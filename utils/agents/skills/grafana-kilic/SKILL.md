@@ -4,6 +4,7 @@ description: grafana-kilic Manual for the grafana-kilic MCP server - resolve a q
 argumentHint: '[what you are about to ask Grafana]'
 references:
   - ../references/kilic/grafana-kilic-datasources.md
+  - ../references/kilic/kilic-workload-resolution.md
 ---
 
 ## The grafana-kilic Server

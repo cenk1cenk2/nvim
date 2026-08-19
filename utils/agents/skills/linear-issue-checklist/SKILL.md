@@ -25,7 +25,7 @@ A Linear workspace skill must be active first — detection rules in `linear-pre
 1. **Fetch the issue** using the appropriate Linear MCP tools. Also fetch comments using `list_comments` — comments may reference checklist items being completed, cancelled, or changed.
 2. **Extract the current checklist** from the issue description.
 3. **Present the checklist to the user** per `output-diff` and confirm which items to update.
-4. **Apply changes** only after user confirmation.
+4. **Apply changes** only after user confirmation, leaving the surrounding description untouched — its section shape is `linear-description-structure`.
 5. **Status handoff** — if the checklist update completes the implementation or moves the issue into review, compose with `linear-issue-status` to move the issue to `In Review` or `Done`.
 
 ## Checklist Markup

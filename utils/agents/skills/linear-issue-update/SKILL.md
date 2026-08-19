@@ -35,7 +35,7 @@ Attached/linked documents follow `linear-document-handling`: glimpse always, cla
 3. **Check the `updatedAt` timestamp** — if the description is older than the current session context, ask the user what has changed before assuming the stored content is current.
 4. **Review the conversation** for deviations from the original issue — changed requirements, rejected approaches, new decisions, corrected assumptions.
 5. **Flag outdated or irrelevant sections** — warn the user about parts of the issue that are stale, no longer applicable, or contradicted by the conversation. Get explicit approval before modifying or removing these.
-6. **Draft the updated description** and present it to the user per `output-diff`, highlighting what changed and why.
+6. **Draft the updated description**, section shape per `linear-description-structure`, and present it to the user per `output-diff`, highlighting what changed and why.
 7. **Iterate** based on user feedback. This is a refining process — work with the user to get the issue into a state that accurately reflects the current understanding.
 8. **Apply changes** only after user approval.
 
