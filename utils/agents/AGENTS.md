@@ -153,7 +153,7 @@ Finding out what exists. Route by what you are asking, and prefer the narrowest 
 | Open web | the `research` server, or the runtime's search/fetch |
 | Multi-source digging or verification | the harness's deep-research mechanism, else the `research` server |
 
-`research` is one server covering both halves of the last three rows — library documentation and open-web search, fetch and deep research — behind the gateway, so no API key is held locally. Sourcebot builds the evidence-backed shortlist; the SCM tools give authoritative metadata and every write. When a route's server is absent or the profile drops it, fall back one row down and say so.
+`research` is one server covering all three of the last rows: context7 library documentation, exa and tavily web search and page fetch, and tavily's crawl, site-map and multi-step deep research. It is more than a search box — reach for its research and crawl tools when one query will not settle the question. Hosted behind the gateway, so no API key is held locally. Sourcebot builds the evidence-backed shortlist; the SCM tools give authoritative metadata and every write. When a route's server is absent or the profile drops it, fall back one row down and say so.
 
 ### hyprpilot_nvim
 
