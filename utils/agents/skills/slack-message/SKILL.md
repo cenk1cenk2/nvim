@@ -47,7 +47,7 @@ The user provides a Slack message URL and a task. This skill reads the message a
    - Common actions:
      - **Create a Linear issue** — invoke the appropriate Linear workspace skill and compose with `linear-pickup` or create directly.
      - **Create an Obsidian note** — invoke `obsidian-note` with the thread context.
-     - **Research a topic** — use web search, Context7, or codebase exploration based on what the thread discusses.
+     - **Research a topic** — use `research` (docs, web search, deep research) or codebase exploration based on what the thread discusses.
      - **Write or modify code** — use the thread context to inform implementation.
      - **Summarize** — reply in thread via `slack-kilic__slack_reply_to_thread` with the summary and add `:dark_sunglasses:` reaction to the message.
      - **Reply** — draft a response and present it for approval per `output-diff`. **Always use `slack-kilic__slack_reply_to_thread`** to keep conversations in threads. Only use `slack-kilic__slack_post_message` for a new channel-level message when there is no thread context or the user explicitly asks.

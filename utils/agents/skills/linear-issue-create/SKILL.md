@@ -60,7 +60,7 @@ Research process, analysis, appendix, and link conventions per `linear-research-
 **User says:** "Create an issue for adding cert-manager to cluster-rubik"
 
 1. Auto-invoke `linear-kilic` (GitLab context detected).
-2. Research cert-manager deployment patterns via web search and Context7.
+2. Research cert-manager deployment patterns via `research` — library docs and web search in one server.
 3. Fetch labels and team from Linear workspace.
 4. Draft the issue with checklist, analysis, and appendix links.
 5. Present the draft to the user for review before writing.

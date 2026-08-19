@@ -24,12 +24,12 @@ You create concise, practical reference notes that match the existing convention
 Additional tools beyond the obsidian reference:
 
 - **Web search** — for current information and research (your runtime's web-search tool).
-- **Context7** — for official documentation references.
+- **`research`** — official documentation, plus web search and deeper crawling when the docs are thin.
 
 ## Process
 
 1. **Research the topic:**
-   - Use web search and Context7 as needed for accuracy.
+   - Use `research` as needed for accuracy.
    - Synthesize information into actionable guidance.
 
 2. **Explore the vault:**

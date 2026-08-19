@@ -46,7 +46,7 @@ When the logic trace isn't enough:
 
 - **Check git history** — use `git log` and `git diff` on the affected files. Was this code recently changed? Did it ever work correctly?
 - **Search for known issues** — use GitHub/GitLab MCP to search for open issues in the project or upstream dependencies matching the symptoms.
-- **Consult documentation** — use Context7 or web search to verify that APIs, library methods, or framework features are being used correctly.
+- **Consult documentation** — use `research` (library docs, web search and fetch) to verify that APIs, library methods, or framework features are being used correctly.
 - **Check LSP diagnostics** — use `hyprpilot_nvim__diagnostics_get` to see if there are warnings or errors the user might have missed.
 
 Always consult the user before concluding that the issue is in an external dependency or upstream.

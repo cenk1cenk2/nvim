@@ -56,6 +56,12 @@ permissions, or writes.
 | `gitlab__mr_discussions` | List or create MR discussion threads (for review comments). |
 | `gitlab__list_merge_request_versions` | List MR diff versions. |
 | `gitlab__get_merge_request_version` | Get a specific MR diff version. |
+| `gitlab__create_merge_request` | Open an MR. Takes `squash`, `remove_source_branch`, `draft`, `labels`, reviewers. |
+| `gitlab__update_merge_request` | Change title, description, target, or draft state. |
+| `gitlab__merge_merge_request` | Merge an open MR. |
+| `gitlab__approve_merge_request` | Approve an MR. |
+| `gitlab__create_merge_request_note` | Comment on an MR. |
+| `gitlab__create_merge_request_thread` | Open a review thread on a diff line. |
 
 ### Issues
 
@@ -66,6 +72,9 @@ permissions, or writes.
 | `gitlab__list_issue_discussions` | List discussions on an issue. |
 | `gitlab__list_issue_links` | List linked issues. |
 | `gitlab__my_issues` | List issues assigned to the current user. |
+| `gitlab__create_issue` | Create an issue. |
+| `gitlab__update_issue` | Change an issue's fields or state. |
+| `gitlab__create_issue_note` | Comment on an issue. |
 
 ### CI/CD Pipelines
 
@@ -109,7 +118,6 @@ When MCP tools lack the needed capability, use `glab` CLI via `Bash`:
 
 - `glab ci trace <job-id>` — stream job logs (more complete than MCP output).
 - `glab ci list` — list recent pipelines.
-- `glab mr create` — create MR (when MCP creation is unavailable).
 - `glab ci view` — view pipeline status interactively.
 
 ## Platform Detection

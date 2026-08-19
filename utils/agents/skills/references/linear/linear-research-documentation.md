@@ -5,7 +5,7 @@ Standard process for technical issues, projects, and initiatives that require re
 ## Research Process
 
 1. Use web search with sequential thinking to explore the problem space.
-2. Use Context7 to analyze relevant framework/library documentation for implementation guidance.
+2. Use `research` to analyze relevant framework/library documentation for implementation guidance; its crawl and deep-research tools cover what a single lookup cannot.
 3. When repository discovery is part of the request or needed for the research scope, start with Sourcebot when available to identify candidate repositories and code evidence quickly, then use the active workspace's SCM MCP (GitLab or GitHub) for authoritative live metadata. Do not run broad SCM discovery by default for simple issue/project creation.
 
 For explicit repository enrichment, read `linear-scm-discovery`.

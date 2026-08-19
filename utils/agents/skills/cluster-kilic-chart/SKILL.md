@@ -45,7 +45,7 @@ Ask the user:
 
 **BEFORE writing any code:**
 
-1. **Find the upstream chart** — Use web search or Context7 to find the Helm chart repository URL, chart name, and latest version
+1. **Find the upstream chart** — Use `research` to find the Helm chart repository URL, chart name, and latest version
 2. **Read a similar existing chart** — Use GitLab MCP to browse `cluster/charts/chart-<similar>` for reference. Pick the closest match by type:
    - Pure wrapper → read `chart-goldilocks`
    - With ExternalSecret → read `chart-external-dns` or `chart-velero`
@@ -312,7 +312,7 @@ secrets:
 ## Key Principles
 
 - **Use GitLab MCP** to research existing chart patterns before creating
-- **Use web search / Context7** to find upstream chart repos and their values schema
+- **Use `research`** to find upstream chart repos and their values schema
 - **Chart version is always `1.0.0`** — semantic-release handles actual versioning
 - **All boilerplate files are identical** across repos — copy them exactly
 - **Values nest under dependency name** (or alias) for upstream wrappers
