@@ -3,7 +3,7 @@
     "argocd-kilic": {
       "headers": {
         "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
-        "x-argocd-api-token": "${NVIM_ARGOCD_KILIC_TOKEN}"
+        "x-argocd-token": "${NVIM_ARGOCD_KILIC_TOKEN}"
       },
       "url": "https://argocd.mcp.kilic.dev/mcp",
       "hyprpilot": {
@@ -26,7 +26,7 @@
     "gitlab": {
       "headers": {
         "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
-        "gitlab-authorization": "${NVIM_GITLAB}"
+        "x-gitlab-token": "${NVIM_GITLAB}"
       },
       "url": "https://gitlab.mcp.kilic.dev/mcp",
       "hyprpilot": {
@@ -107,7 +107,7 @@
     "grafana-kilic": {
       "headers": {
         "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
-        "grafana-authorization": "Bearer ${NVIM_GRAFANA_KILIC_TOKEN}"
+        "x-grafana-token": "${NVIM_GRAFANA_KILIC_TOKEN}"
       },
       "url": "https://grafana.mcp.kilic.dev/mcp",
       "hyprpilot": {
@@ -155,7 +155,7 @@
     "kubernetes-kilic": {
       "headers": {
         "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
-        "kubernetes-authorization": "Bearer ${NVIM_KUBERNETES_TOKEN}"
+        "x-kubernetes-token": "${NVIM_KUBERNETES_TOKEN}"
       },
       "url": "https://kubernetes.mcp.kilic.dev/mcp",
       "hyprpilot": {
@@ -246,7 +246,7 @@
     "sourcebot-kilic": {
       "headers": {
         "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
-        "X-Sourcebot-Api-Key": "${NVIM_SOURCEBOT_API_KEY}"
+        "x-sourcebot-api-key": "${NVIM_SOURCEBOT_API_KEY}"
       },
       "url": "https://sourcebot.mcp.kilic.dev/mcp",
       "hyprpilot": {
@@ -267,7 +267,7 @@
     "vault-kilic": {
       "headers": {
         "Authorization": "Bearer ${AI_KILIC_DEV_API_KEY}",
-        "vault-authorization": "${NVIM_VAULT_TOKEN}"
+        "x-vault-token": "${NVIM_VAULT_TOKEN}"
       },
       "url": "https://vault.mcp.kilic.dev/mcp",
       "hyprpilot": {
