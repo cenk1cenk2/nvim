@@ -155,6 +155,22 @@ function M.config()
           mode = { "n", "v" },
         },
         {
+          fn.wk_keystroke({ categories.COPILOT, "r" }),
+          function()
+            M.create_instance({ "--resume" })
+          end,
+          desc = "resume [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
+          fn.wk_keystroke({ categories.COPILOT, "R" }),
+          function()
+            M.create_instance({ "--resume-last" })
+          end,
+          desc = "resume last [sidekick]",
+          mode = { "n", "v" },
+        },
+        {
           fn.wk_keystroke({ categories.COPILOT, "f" }),
           function()
             M.pick_instance()
@@ -368,9 +384,10 @@ M.current_instance = 0
 -- name makes a fresh instance collide with the session of the one that just died.
 M.instance_count = 0
 
-function M.instance_config()
+---@param args? string[]
+function M.instance_config(args)
   return {
-    cmd = {
+    cmd = vim.list_extend({
       "hyprpilot",
       "--with-config",
       "@" .. vim.json.encode({
@@ -388,7 +405,7 @@ function M.instance_config()
           },
         },
       }),
-    },
+    }, args or {}),
     env = {
       EDITOR = "nvim",
       VISUAL = "nvim",
@@ -399,8 +416,9 @@ function M.instance_config()
   }
 end
 
+---@param args? string[]
 ---@return SidekickInstance
-function M.register_instance()
+function M.register_instance(args)
   M.instance_count = M.instance_count + 1
 
   ---@type SidekickInstance
@@ -410,7 +428,7 @@ function M.register_instance()
   }
 
   M.instances[instance.index] = instance
-  require("sidekick.config").cli.tools[instance.name] = M.instance_config()
+  require("sidekick.config").cli.tools[instance.name] = M.instance_config(args)
 
   return instance
 end
@@ -561,9 +579,10 @@ function M.confirm_instance(index)
   end)
 end
 
+---@param args? string[]
 ---@return SidekickInstance
-function M.create_instance()
-  local instance = M.register_instance()
+function M.create_instance(args)
+  local instance = M.register_instance(args)
 
   M.show_instance(instance.index)
 
