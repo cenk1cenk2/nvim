@@ -34,14 +34,14 @@ Cost and capability vary by an order of magnitude across tiers — pick the chea
 
 ## Per-Harness References
 
-Harness mechanics are **references**, named **`<consumer>-harness-<provider>`** — one per (runtime × consumer). This skill does not carry them: each consumer skill declares all three of its providers, so loading the consumer is what puts the paths in front of you.
+Harness mechanics are **references**, named **`<consumer>-harness-<provider>`** — one per (runtime × consumer). **A reference cannot be fetched on its own:** the path only becomes addressable once a skill that declares it has been loaded. So getting them is always two hops — load the consumer skill, then fetch the row for the live runtime. This skill declares none of them; the consumers do.
 
-> **Load the consumer skill, then fetch its `<provider>` row before the first dispatch or the first wait.** Dispatch is `agent-delegate`, waiting is `agent-background`; `<provider>` is `claude`, `opencode`, or `codex`.
+> **Load `agent-delegate` before the first dispatch, or `agent-background` before the first wait.** Each declares all three of its providers; fetch the one matching the runtime. `<provider>` is `claude`, `opencode`, or `codex`.
 
-| Consumer | Claude Code | OpenCode | Codex |
-|----------|-------------|----------|-------|
-| Dispatch (`agent-delegate` and every skill built on it) | `agent-delegate-harness-claude` | `agent-delegate-harness-opencode` | `agent-delegate-harness-codex` |
-| Waiting and waking (`agent-background`) | `agent-background-harness-claude` | `agent-background-harness-opencode` | `agent-background-harness-codex` |
+| Load this skill | Claude Code | OpenCode | Codex |
+|---|---|---|---|
+| `agent-delegate` — dispatch, and every skill built on it | `agent-delegate-harness-claude` | `agent-delegate-harness-opencode` | `agent-delegate-harness-codex` |
+| `agent-background` — waiting and waking | `agent-background-harness-claude` | `agent-background-harness-opencode` | `agent-background-harness-codex` |
 
 Tier → model tables live in the **`agent-delegate`** file for each runtime.
 
@@ -54,7 +54,7 @@ Headlines per runtime:
 
 ## Rules
 
-- **Fetch `<consumer>-harness-<provider>` before dispatching, not after something breaks.** The failure modes differ per runtime and several of them are silent.
+- **Load the consumer skill and fetch its `<provider>` row before dispatching, not after something breaks.** The failure modes differ per runtime and several of them are silent.
 - **Never carry one runtime's behavior to another.** Background-by-default, wake-on-completion, and permission inheritance are all Claude Code specifics.
 - **Explicit model names override tiers.** If the user names a model (`fable`, `kilic/glm-5.2:cloud`, `gpt-5.5`), use it verbatim — no remapping.
 - **Ask on mismatch.** If the chosen tier/model looks wrong for the task (cheap for architecture, max for a rename), state the mismatch and propose an alternative before dispatching.
