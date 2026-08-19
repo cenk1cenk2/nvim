@@ -13,11 +13,10 @@
       }
     },
     "grafana-laravel": {
-      "args": ["mcp-grafana"],
-      "command": "uvx",
-      "env": {
-        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${NVIM_GRAFANA_LARAVEL_TOKEN}",
-        "GRAFANA_URL": "${NVIM_GRAFANA_LARAVEL_URL}"
+      "url": "https://mcp.grafana.com/mcp",
+      "headers": {
+        "X-Grafana-URL": "${NVIM_GRAFANA_LARAVEL_URL}",
+        "GRAFANA_SERVICE_ACCOUNT_TOKEN": "${NVIM_GRAFANA_LARAVEL_TOKEN}"
       },
       "hyprpilot": {
         "excludeTools": [
