@@ -1,6 +1,6 @@
 ---
 name: hyprpilot-skills
-description: hyprpilot-skills Auto-invoked at session start when the hyprpilot_skills server is present. The skills system itself - the servers hyprpilot injects, how a skill and its references reach you, how to address a reference by path and pay for it once, and where skill source lives. Not for authoring or editing a skill, and not for driving a separate agent session.
+description: hyprpilot-skills Auto-invoked at session start when the hyprpilot-skills server is present. The skills system itself - the servers hyprpilot injects, how a skill and its references reach you, how to address a reference by path and pay for it once, and where skill source lives. Not for authoring or editing a skill, and not for driving a separate agent session.
 ---
 
 ## The Hyprpilot Skills System
@@ -11,12 +11,12 @@ Mechanics of how skills reach you. Whether to route a task through a skill at al
 
 | Server | Carries | Its manual |
 |---|---|---|
-| `hyprpilot_skills` | `list_skills`, `read_skill`, `list_skill_references`, `read_skill_references`, `reload` | this skill |
+| `hyprpilot-skills` | `list_skills`, `read_skill`, `list_skill_references`, `read_skill_references`, `reload` | this skill |
 | `hyprpilot` | general tools — `open` (URL, file, or directory in the OS default handler) | none yet |
 | `hyprpilot_nvim` | the captain's live Neovim — buffers, LSP, diagnostics | `hyprpilot-nvim`, eager at startup |
-| `hyprpilot_harness` | `spawn` / `session_*` for separate agent sessions, where enabled | `hyprpilot-delegate`, loaded only on the captain's explicit ask |
+| `hyprpilot-harness` | `spawn` / `session_*` for separate agent sessions, where enabled | `hyprpilot-delegate`, loaded only on the captain's explicit ask |
 
-Every `hyprpilot_skills` tool is auto-accepted and never prompts.
+Every `hyprpilot-skills` tool is auto-accepted and never prompts.
 
 ## Loading a Skill
 

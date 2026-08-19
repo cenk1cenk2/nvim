@@ -34,7 +34,7 @@ Monitor's own guidance applies when you use it instead: every pipe stage must fl
 
 ## Reading an MCP resource
 
-`ReadMcpResourceTool { server, uri }` — `server` is the bare server name (`hyprpilot_harness`), `uri` the full resource URI. `ListMcpResourcesTool { server? }` enumerates what a server publishes.
+`ReadMcpResourceTool { server, uri }` — `server` is the bare server name (`hyprpilot-harness`), `uri` the full resource URI. `ListMcpResourcesTool { server? }` enumerates what a server publishes.
 
 **A resource read lands in context, not in a shell.** There is no way to pipe one into `jq`, `grep`, or a file, and no filter parameter — you get the view the server defines, whole. So when you want a *projection* of something large, the on-disk route below is the only one that filters before the bytes arrive.
 
@@ -52,7 +52,7 @@ Consequences worth planning around:
 - **Per-call limits still apply while it runs backgrounded** — the wall-clock limit from the per-server timeout or `MCP_TOOL_TIMEOUT`, and the idle limit from `CLAUDE_CODE_MCP_TOOL_IDLE_TIMEOUT`.
 - **The threshold is configurable per install** via `CLAUDE_CODE_MCP_AUTO_BACKGROUND_MS` (`0` disables auto-backgrounding; `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS=1` disables it along with every other background-task feature). **Never assume the default** — read the value in play before reasoning about whether a given call will block, and lower it only deliberately: every call that starts backgrounding costs a round trip it did not previously need.
 
-**Auto-backgrounding fixes the blocking, NOT the context cost — do not read it as permission to use a blocking follow.** A backgrounded call still delivers its full payload later, whole, into the notification. Measured on `hyprpilot_harness__session_read { wait: true }` against a 45 000 ms threshold: it backgrounded at exactly 45 s and the turn stayed usable, then the notification landed carrying a 60 kB slice of raw event stream — to answer a question that one `hyprpilot://sessions/<handle>/result` read answers in a line.
+**Auto-backgrounding fixes the blocking, NOT the context cost — do not read it as permission to use a blocking follow.** A backgrounded call still delivers its full payload later, whole, into the notification. Measured on `hyprpilot-harness__session_read { wait: true }` against a 45 000 ms threshold: it backgrounded at exactly 45 s and the turn stayed usable, then the notification landed carrying a 60 kB slice of raw event stream — to answer a question that one `hyprpilot://sessions/<handle>/result` read answers in a line.
 
 So the ranking is unchanged, and the filesystem route below is still the default:
 

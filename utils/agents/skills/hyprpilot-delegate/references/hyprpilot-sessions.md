@@ -1,6 +1,6 @@
 # hyprpilot Agent Sessions — surface, completion signals, limits
 
-Facts about sessions started through the **`hyprpilot_harness`** MCP server. Shared between the hyprpilot-facing skills; not part of the `harness-<provider>-*` family, which covers the mechanics of whichever runtime *you* are running under.
+Facts about sessions started through the **`hyprpilot-harness`** MCP server. Shared between the hyprpilot-facing skills; not part of the `harness-<provider>-*` family, which covers the mechanics of whichever runtime *you* are running under.
 
 **A hyprpilot session is NOT an in-harness subagent, and the two do not mix.** The `agent-*` skills (`agent-delegate`, `agent-background`, `agent-coordinator`, `agent-bulldozer`) are about subagents your own runtime dispatches and tracks — it re-invokes you when they finish, so you do not poll them. A hyprpilot session is a separate OS process running a different vendor CLI, owned by an MCP sidecar, with its own transcript on disk. **Your runtime does not track it and will not wake you for it.**
 

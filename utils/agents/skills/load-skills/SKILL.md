@@ -71,7 +71,7 @@ references:
 | `../references/<file>.md` | Shared across skills  | `~/.config/nvim/utils/agents/skills/references/<file>.md`                          |
 | `./references/<file>.md`  | Specific to one skill | `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`                  |
 
-`read_skill` returns a manifest of the declared references, not their bodies. `mcp__hyprpilot_skills__read_skill_references { references: [path] }` fetches the bodies by canonical path, and `list_skill_references { slug }` returns the manifest alone when the body is already in context. Outside a skill load, `Read` the file directly.
+`read_skill` returns a manifest of the declared references, not their bodies. `mcp__hyprpilot-skills__read_skill_references { references: [path] }` fetches the bodies by canonical path, and `list_skill_references { slug }` returns the manifest alone when the body is already in context. Outside a skill load, `Read` the file directly.
 
 ## Dismissing Skills
 

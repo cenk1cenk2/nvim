@@ -18,12 +18,12 @@
 
 4. **LOAD CAVEMAN VOICE — ABSOLUTE, BEFORE YOUR FIRST USER-FACING REPLY.**
    <!-- CAVEMAN-DEFAULT:START -->
-   - Call `mcp__hyprpilot_skills__read_skill { slug: "caveman" }` yourself. Do NOT answer from memory of it — read the body live each session so the rules are fresh. This is also the session's proof that the hyprpilot skill system loads; if `read_skill` errors, report it.
+   - Call `mcp__hyprpilot-skills__read_skill { slug: "caveman" }` yourself. Do NOT answer from memory of it — read the body live each session so the rules are fresh. This is also the session's proof that the hyprpilot skill system loads; if `read_skill` errors, report it.
    - Apply it as the default communication style (level: full). This overrides the skill's manual-only gate: caveman is the standing default for this setup, not a per-request invocation. The skill's own Boundaries and Auto-Clarity rules still apply.
 
    <!-- CAVEMAN-DEFAULT:END -->
 
-5. **LOAD A SERVER'S SAME-NAMED SKILL — ABSOLUTE.** A server named `<x>` and a skill named `<x>` are the same subject: the skill is that server's manual. Hyprpilot's injected servers are `_` delimited and every skill slug is `-`, so match on the server name normalized to kebab-case: `hyprpilot_skills` resolves to the `hyprpilot-skills` skill, `hyprpilot_nvim` to `hyprpilot-nvim`. Check the cached catalog and `read_skill` the match. Load `hyprpilot-skills` and `hyprpilot-nvim` **eagerly here at startup** when their servers are present — they govern how every later skill loads and how you search, so a decision made before them is already wrong. Every other server's skill loads before that server's first call. **One carve-out: `hyprpilot_harness` never auto-loads** — its manual is `hyprpilot-delegate`, and only the user starts a separate agent session (§III). Announce each per §II's announcement rule. No match means use the server directly.
+5. **LOAD A SERVER'S SAME-NAMED SKILL — ABSOLUTE.** A server named `<x>` and a skill named `<x>` are the same subject: the skill is that server's manual. Most injected servers are spelled exactly like their skill; `hyprpilot_nvim` is the one that is not, so match on the server name normalized to kebab-case: `hyprpilot_nvim` resolves to the `hyprpilot-nvim` skill. Check the cached catalog and `read_skill` the match. Load `hyprpilot-skills` and `hyprpilot-nvim` **eagerly here at startup** when their servers are present — they govern how every later skill loads and how you search, so a decision made before them is already wrong. Every other server's skill loads before that server's first call. **One carve-out: `hyprpilot-harness` never auto-loads** — its manual is `hyprpilot-delegate`, and only the user starts a separate agent session (§III). Announce each per §II's announcement rule. No match means use the server directly.
 
 ### ABSOLUTE — A Changed Guidance File Re-Grounds You
 
@@ -127,7 +127,7 @@ Use the tools available in the session. A service with an MCP server is reached 
 
 ### Hyprpilot
 
-Skills are delivered by the `hyprpilot_skills` MCP server, which also injects `hyprpilot`, `hyprpilot_nvim`, and where enabled `hyprpilot_harness`. The whole system — those servers, the loading tools, profile filtering, and how references arrive — is `hyprpilot-skills`, eager at startup per §I step 5.
+Skills are delivered by the `hyprpilot-skills` MCP server, which also injects `hyprpilot`, `hyprpilot_nvim`, and where enabled `hyprpilot-harness`. The whole system — those servers, the loading tools, profile filtering, and how references arrive — is `hyprpilot-skills`, eager at startup per §I step 5.
 
 ### MCP Conventions
 

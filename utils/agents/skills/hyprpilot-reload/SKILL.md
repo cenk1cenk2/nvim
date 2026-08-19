@@ -10,7 +10,7 @@ Refresh the skills sidecar's view after the files on disk change. The catalog is
 
 ## Tools
 
-All on the in-tree skills MCP server (surfaced as `mcp__hyprpilot_skills__*`):
+All on the in-tree skills MCP server (surfaced as `mcp__hyprpilot-skills__*`):
 
 | Tool | Purpose |
 |------|---------|
@@ -30,12 +30,12 @@ That is the failure this skill exists to prevent: reloading, seeing the count go
 
 ## Process
 
-1. **Reload.** Call `mcp__hyprpilot_skills__reload`. It returns `reloaded` (the skill count), `membershipChanged` (whether any skill was added or removed), and `updated` — **the slugs whose content actually changed**.
+1. **Reload.** Call `mcp__hyprpilot-skills__reload`. It returns `reloaded` (the skill count), `membershipChanged` (whether any skill was added or removed), and `updated` — **the slugs whose content actually changed**.
 2. **Verify.** Confirm `reloaded` is what you expect (e.g. `+1` after adding a skill) and the call reported no errors.
-3. **Re-read what is already loaded.** `updated` names exactly which skills changed, so start there: fetch each with `mcp__hyprpilot_skills__read_skill { slug }` and treat the newly returned body as authoritative and the earlier copy as void. Then cover anything else in this conversation whose source you touched — `updated` tracks skill bodies, so a reference edit shows up in the manifests rather than in that list.
-   - **A reload also invalidates your loaded-path set.** Reference bodies you already hold are snapshots too. Compare each edited file's `modified` in the new manifest against when you fetched it, drop those paths from the set, and re-fetch them with `mcp__hyprpilot_skills__read_skill_references { references: [path] }`. The set is keyed on path, so a body that changed under the same path is exactly the case the set cannot notice on its own.
+3. **Re-read what is already loaded.** `updated` names exactly which skills changed, so start there: fetch each with `mcp__hyprpilot-skills__read_skill { slug }` and treat the newly returned body as authoritative and the earlier copy as void. Then cover anything else in this conversation whose source you touched — `updated` tracks skill bodies, so a reference edit shows up in the manifests rather than in that list.
+   - **A reload also invalidates your loaded-path set.** Reference bodies you already hold are snapshots too. Compare each edited file's `modified` in the new manifest against when you fetched it, drop those paths from the set, and re-fetch them with `mcp__hyprpilot-skills__read_skill_references { references: [path] }`. The set is keyed on path, so a body that changed under the same path is exactly the case the set cannot notice on its own.
    - **A resource attached earlier is the riskiest case**, because it reads as current and there is no marker saying when it was fetched. Re-fetch it rather than trusting it.
-   - If the catalog itself may have changed shape — a skill added, renamed, or deleted — re-read the catalogue too, so routing decisions are made against the new names rather than the old ones. The `hyprpilot://skills` resource is the whole index in one read; `mcp__hyprpilot_skills__list_skills` returns the same set as a tool call.
+   - If the catalog itself may have changed shape — a skill added, renamed, or deleted — re-read the catalogue too, so routing decisions are made against the new names rather than the old ones. The `hyprpilot://skills` resource is the whole index in one read; `mcp__hyprpilot-skills__list_skills` returns the same set as a tool call.
    - Skip nothing on the grounds that "the edit was small". The whole point of re-reading is that you cannot tell from context which copy you are holding.
 4. **Report** the reload result to the user: the count, which skills were re-read, and anything that failed to resolve.
 

@@ -21,23 +21,23 @@ references:
 
 ## Context
 
-This skill delegates to a **separate hyprpilot agent process** — a different CLI (`claude` / `codex` / `opencode`), a different model, its own session and transcript — reached over the `hyprpilot_harness` MCP server.
+This skill delegates to a **separate hyprpilot agent process** — a different CLI (`claude` / `codex` / `opencode`), a different model, its own session and transcript — reached over the `hyprpilot-harness` MCP server.
 
 **This is not the same as `/agent-delegate`.** That spawns a subagent *inside the current harness*, sharing this runtime and its model tiers. This spawns an independent hyprpilot session that survives your turn, keeps its own conversation, and can be steered across many turns. Reach for this one when the user names hyprpilot or a profile, when the work wants a different vendor or model than the current session, or when the job needs to be driven over time rather than answered once.
 
-**Availability.** The tools live on the `hyprpilot_harness` MCP server. If they are absent, the harness is not enabled for this session — say so and stop; do not fall back to shelling out to the `hyprpilot` CLI, which is one-shot and cannot be steered.
+**Availability.** The tools live on the `hyprpilot-harness` MCP server. If they are absent, the harness is not enabled for this session — say so and stop; do not fall back to shelling out to the `hyprpilot` CLI, which is one-shot and cannot be steered.
 
 ## Tools
 
 | Tool | Purpose |
 |------|---------|
-| `hyprpilot_harness__list_profiles` | Discover launchable profiles. Always first. |
-| `hyprpilot_harness__spawn` | Start a NEW session from a profile. Returns a `session` handle. |
-| `hyprpilot_harness__session_send` | Send another turn to an existing session. The steering tool. |
-| `hyprpilot_harness__session_read` | Read or follow a session's transcript. |
-| `hyprpilot_harness__session_status` | **The cheap poll.** State without reading the transcript. |
-| `hyprpilot_harness__session_list` | List sessions — recover a handle you lost. |
-| `hyprpilot_harness__session_kill` | Stop a running session, or reap a finished one. |
+| `hyprpilot-harness__list_profiles` | Discover launchable profiles. Always first. |
+| `hyprpilot-harness__spawn` | Start a NEW session from a profile. Returns a `session` handle. |
+| `hyprpilot-harness__session_send` | Send another turn to an existing session. The steering tool. |
+| `hyprpilot-harness__session_read` | Read or follow a session's transcript. |
+| `hyprpilot-harness__session_status` | **The cheap poll.** State without reading the transcript. |
+| `hyprpilot-harness__session_list` | List sessions — recover a handle you lost. |
+| `hyprpilot-harness__session_kill` | Stop a running session, or reap a finished one. |
 
 **Reading a session is a RESOURCE read, not a tool call.** `hyprpilot://sessions/<handle>/result` is the answer, already extracted per vendor; `hyprpilot://sessions/<handle>` lists every turn with its outcome and URI. The tools above start, steer and poll — the resource tree is how you collect. Full tree, the three tiers, and when to drop to `session_read` or `jq`: `hyprpilot-sessions`.
 
@@ -58,7 +58,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - **`wait` defaults `false` — detached — and that is the right default. Leave it alone.** Opting into `wait: true` returns the **entire raw event stream inline**, every `tool_use` payload included, with no `tail` and no `cursor` to trim it: the same trivial three-item read-only task produced a **14 kB** transcript on opencode and a **121 kB** one on claude, all of it pushed through your context to deliver three lines of answer. It does not even buy certainty — a turn outliving `timeout_seconds` (default `300`) comes back `running` anyway. Reserve it for a genuinely short turn whose full trace you actually want; otherwise detach and collect just the answer (step 6).
    - **`prompt` and `file` are mutually exclusive.** `file` takes a path (`~` and `$VAR` expanded) whose contents become the prompt — prefer it for a long brief instead of inlining one.
    - **`mode` overrides the profile's mode.** `mode: "plan"` yields a read-only agent that refuses to edit — the cheapest safety lever here, and the default for a delegation that only needs to look. **Verified twice on opencode: plan-mode strips nothing from the registry.** The plan agent listed its MCP servers and every one it was configured with was there, *and* it still listed `edit`, `write` and `task` — opencode gates it at call time through `OPENCODE_PERMISSION`, it does not remove tools. So on opencode a read-only delegation keeps full MCP reach, and "the agent can see `write`" is not evidence the mode failed to apply. Do not generalise either half to claude or codex, where a mode can gate whole tool groups — on an unverified vendor, have the agent report its own tool registry in its first turn rather than assuming.
-   - **A plan-mode agent also refuses on its OWN judgement, before the enforcement layer is ever reached.** Asked to call `hyprpilot_harness__spawn` and report the error verbatim, a plan-mode opencode agent declined outright: it reasoned that `spawn` is side-effecting, that plan-mode forbids side effects, and reported "exists, not invoked" instead. `OPENCODE_PERMISSION` never got a say. **Consequence: a plan-mode delegate cannot be used to probe whether a hard limit works** — a refusal proves the agent is behaving, never that the harness would have stopped it. Test enforcement from a `build`-mode session, or not at all.
+   - **A plan-mode agent also refuses on its OWN judgement, before the enforcement layer is ever reached.** Asked to call `hyprpilot-harness__spawn` and report the error verbatim, a plan-mode opencode agent declined outright: it reasoned that `spawn` is side-effecting, that plan-mode forbids side effects, and reported "exists, not invoked" instead. `OPENCODE_PERMISSION` never got a say. **Consequence: a plan-mode delegate cannot be used to probe whether a hard limit works** — a refusal proves the agent is behaving, never that the harness would have stopped it. Test enforcement from a `build`-mode session, or not at all.
    - `with_config` is an **array of overlay objects** — `with_config: [{ "model": "…" }]`, not a flat object. It accepts **only** `model`, `effort`, `mode`; every other key is refused by design, because an overlay reaching the command, its arguments, its environment, or the MCP servers it launches would turn `spawn` into arbitrary command execution. To run something else, add a profile for it.
    - **An overridden model is not visible as the profile.** Results and `session_list` keep reporting the profile id; only `sessionInfo.model` carries what actually ran. Check it before reporting which model did the work. **`sessionInfo.mode` has the same blind spot in reverse:** it echoes the profile's mode, so a mode you imposed through `args` (opencode `--agent plan`) still reads `build` there. `sessionInfo.argv` is the only honest record of what launched.
    - **Address files by absolute path in the prompt.** Do not make the agent's output depend on resolving anything relative to the working directory.

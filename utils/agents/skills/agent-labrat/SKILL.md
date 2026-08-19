@@ -91,9 +91,9 @@ Name the branch point explicitly when there is one: *investigate first, and only
 
 - **Name the slug and say to follow it.** "Load `git-commit` and follow it for the commit message." "Follow `gitlab-mr-create` for the MR." "Use `plan-hard` before writing any code."
 - **Point at references too** when a convention lives in one — it can load a skill's references the same way.
-- **Verify the slug exists before naming it.** Resolve it against `hyprpilot_skills__list_skills`; the catalog is profile-filtered, so a slug present for you may be absent for it. A pointer to a skill it cannot load is worse than no pointer.
+- **Verify the slug exists before naming it.** Resolve it against `hyprpilot-skills__list_skills`; the catalog is profile-filtered, so a slug present for you may be absent for it. A pointer to a skill it cannot load is worse than no pointer.
 - **Do not paraphrase a skill you could name.** A paraphrase forks on the day you write it. If you find yourself explaining a process that already has a slug, replace the explanation with the slug.
-- **Tell it to reload when freshness matters.** `hyprpilot_skills__reload` if the catalog may be stale — and note escalation stops at restarting the **`hyprpilot_skills`** sidecar, never the gateway. Name that server explicitly: there are three, and restarting `hyprpilot_harness` instead **kills every running agent session and destroys its transcripts**, since sessions die with their sidecar.
+- **Tell it to reload when freshness matters.** `hyprpilot-skills__reload` if the catalog may be stale — and note escalation stops at restarting the **`hyprpilot-skills`** sidecar, never the gateway. Name that server explicitly: there are three, and restarting `hyprpilot-harness` instead **kills every running agent session and destroys its transcripts**, since sessions die with their sidecar.
 
 ## Its background work is prompt-driven — just ask for it
 

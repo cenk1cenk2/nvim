@@ -96,10 +96,10 @@ Skills in this directory form an interconnected system. A skill may depend on or
 
 After creating, updating, deleting, or moving skill files:
 
-1. Run `mcp__hyprpilot_skills__reload` so Hyprpilot refreshes the skill catalog.
+1. Run `mcp__hyprpilot-skills__reload` so Hyprpilot refreshes the skill catalog.
 2. Verify the reload result reports the expected skill count or succeeds without errors.
-3. For changed skills, re-read the affected skill with `mcp__hyprpilot_skills__read_skill` when practical to confirm the daemon sees the latest content.
-4. If references changed, use `mcp__hyprpilot_skills__list_skill_references { slug }` on an affected skill to confirm every declared path resolved into the manifest — a typo drops the row silently.
+3. For changed skills, re-read the affected skill with `mcp__hyprpilot-skills__read_skill` when practical to confirm the daemon sees the latest content.
+4. If references changed, use `mcp__hyprpilot-skills__list_skill_references { slug }` on an affected skill to confirm every declared path resolved into the manifest — a typo drops the row silently.
 5. Report the reload result to the user.
 
 ## SKILL.md Format
@@ -250,7 +250,7 @@ Paths are relative to the skill's own directory:
 
 The absolute base is `~/.config/nvim/utils/agents/skills/`. So `../references/<family>/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/references/<family>/<file>.md`, and `./references/<file>.md` resolves to `~/.config/nvim/utils/agents/skills/<skill>/references/<file>.md`.
 
-`mcp__hyprpilot_skills__list_skill_references { slug }` returns a skill's reference manifest without its body, and `read_skill_references { references: [path] }` returns the bodies for the canonical paths you name. Each file arrives under a `reference:` block naming it and its declared path; see `config-references` for the shape.
+`mcp__hyprpilot-skills__list_skill_references { slug }` returns a skill's reference manifest without its body, and `read_skill_references { references: [path] }` returns the bodies for the canonical paths you name. Each file arrives under a `reference:` block naming it and its declared path; see `config-references` for the shape.
 
 ### Naming another skill — one line, and never its contents
 
@@ -421,7 +421,7 @@ In skill files, reference files, and documentation, use the **`<server>__<tool>`
 
 **Server name rules** — catalog server keys (the ones `config-mcp` writes) MUST use kebab-case with `-` separators only. Never use `/` in a server key (does not parse correctly through some MCP hubs) and avoid `_` for word separation inside it. Workspace-suffixed servers follow the `<service>-<workspace>` pattern, e.g., `linear-kilic`, `linear-laravel`, `grafana-kilic`, `grafana-laravel`, `argocd-kilic`, `slack-kilic`, `spacelift-laravel`.
 
-**Hyprpilot's injected servers are `_` delimited — write them verbatim.** `hyprpilot_skills`, `hyprpilot_nvim`, and `hyprpilot_harness` are not catalog entries and the kebab rule does not reach them. Every skill slug is `-`, so a server and its same-named skill differ by delimiter on purpose: `hyprpilot_nvim` the server, `hyprpilot-nvim` the skill. "Correcting" a server to kebab names the skill instead and the tool call fails.
+**Hyprpilot's injected servers are not catalog entries — write each one as it is registered.** `hyprpilot`, `hyprpilot-skills` and `hyprpilot-harness` are kebab like the rest, so each matches its same-named skill exactly. `hyprpilot_nvim` keeps an `_`: "correcting" it to kebab names the `hyprpilot-nvim` skill instead and the tool call fails.
 
 Examples:
 
