@@ -148,9 +148,16 @@ M.default_formatters = {
 }
 
 function M.register()
-  tools.register(METHOD, { "trim_whitespace", "trim_newlines", "trim_multiple_newlines" }, {
+  tools.register(METHOD, { "trim_whitespace", "trim_newlines" }, {
     "*",
     "!diff",
+  })
+
+  tools.register(METHOD, "trim_multiple_newlines", {
+    "*",
+    "!diff",
+    -- ruff format owns the blank lines it puts around top-level definitions.
+    "!python",
   })
 
   tools.register(METHOD, "injected", {
