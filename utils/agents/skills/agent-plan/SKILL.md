@@ -155,7 +155,7 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
 **Shared:**
 
 - Dispatch parameters and mechanics per `agent-delegate`; load the `agent-harness` skill to resolve tiers to concrete models.
-- Verify each returned worktree path is absolute and in the runtime's agent-worktrees directory per `agent-worktrees` — the concrete worktrees and plans directories resolve via `provider-paths`, never hardcoded.
+- Verify each returned worktree path per `agent-worktrees`; the concrete plans directory resolves via `provider-paths`, never hardcoded.
 - Each agent prompt is self-contained. Use the template below. Include the running `## Accumulated Guidance` section (empty for layer 0).
 
 ### Step 9 — Collect layer results
@@ -170,7 +170,7 @@ Follow the `agent-merge-review` reference "Merge worktrees (per-layer)" section:
 
 - Merge each layer worktree's branch back to the active branch sequentially.
 - On merge conflicts: present to user, wait for resolution decision, do NOT auto-resolve.
-- Remove each worktree via `git worktree remove`. Surface failures; do not force-remove silently.
+- Remove each worktree per `agent-worktrees`. Surface failures; do not force-remove silently.
 
 ### Step 11 — Review this layer
 
@@ -210,7 +210,7 @@ Fire-and-forget mode has no shutdown — agents exit on their own when their tas
 
 ## Worktree Mode
 
-Worktree mode is the **default**. Every agent in every layer runs in its own worktree in the runtime's agent-worktrees directory. Worktree lifetime is one layer: created at layer launch, merged+removed at layer end.
+Worktree mode is the **default**. Every agent in every layer runs in its own worktree, created and removed per `agent-worktrees`. Worktree lifetime is one layer: created at layer launch, merged+removed at layer end.
 
 **When to skip worktrees (user must opt out with "without worktrees" or "same worktree"):**
 - Tasks are small and low-risk.
@@ -367,7 +367,7 @@ At the end of the run, and at every layer boundary, enumerate what is still aliv
 - Defaulting to `final-only` review when per-layer would catch integration issues earlier.
 - Auto-advancing past a failed or BLOCKED task.
 - Auto-resolving merge conflicts between layers.
-- Force-removing a worktree silently when `git worktree remove` fails.
+- Force-removing a worktree silently when removal fails.
 - Trusting agent "success" reports without verifying the diff.
 - Assuming verification commands without checking the project's actual tooling.
 - Starting implementation on main/master without explicit user consent.
