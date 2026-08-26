@@ -1,13 +1,15 @@
 ---
 name: agent-watcher-recipes
-description: agent-watcher-recipes Concrete watcher signals per domain and the shell checks that poll them - merge gates, CI runs, terraform and Spacelift, deploy convergence, chaining, tracker reconciliation. Load the entry for the thing you are about to watch. Not for watcher discipline, cadence, or the announce tables.
+description: agent-watcher-recipes Concrete watcher signals per domain and the python checks that poll them - merge gates, CI runs, terraform and Spacelift, deploy convergence, chaining, tracker reconciliation. Load the entry for the thing you are about to watch. Not for watcher discipline, cadence, or the announce tables.
 references:
   - ../references/agent/agent-watchers.md
 ---
 
 # Agent Watcher Recipes
 
-Concrete signals per domain, and the shell checks that poll them. Read the entry for the thing you are about to watch; skip the rest.
+Concrete signals per domain, and the checks that poll them. Read the entry for the thing you are about to watch; skip the rest.
+
+Checks are python unless the condition is a single-condition one-liner, per the language rule in `agent-watchers`.
 
 Discipline, cadence, the announce tables and the audit live in `agent-watchers`.
 
@@ -26,9 +28,13 @@ The most common wait, and the one most often left unwatched because it feels lik
 say. Watch the state field, and match **closed-without-merge** too — a watcher that only matches
 `MERGED` hangs through an abandonment.
 
-```bash
-[ "$(gh pr view "$N" --repo "$OWNER/$REPO" --json state --jq .state)" = "MERGED" ]
-# GitLab: glab mr view "$N" --repo "$PROJECT" -F json | jq -r .state  → "merged"
+```python
+import json, subprocess
+out = subprocess.run(["gh", "pr", "view", N, "--repo", REPO, "--json", "state"],
+                     capture_output=True, text=True).stdout
+state = json.loads(out)["state"]
+met = state in ("MERGED", "CLOSED")
+# GitLab: glab mr view <N> --repo <project> -F json, then .state in ("merged", "closed")
 ```
 
 Cadence 60s; cap sized to how long the human plausibly takes — hours, not minutes, when they may merge
@@ -41,10 +47,14 @@ Handle that one, then re-arm for the remainder.
 
 ### CI and pipeline runs
 
-```bash
-# GitHub Actions: check conclusions, and exclude every in-flight state explicitly
-gh pr checks "$N" --repo "$OWNER/$REPO" --json name,state \
-  | jq -e '[.[] | select(.state=="PENDING" or .state=="IN_PROGRESS" or .state=="QUEUED")] | length == 0'
+```python
+# GitHub Actions: exclude every in-flight state explicitly, then read the conclusions
+import json, subprocess
+IN_FLIGHT = {"PENDING", "IN_PROGRESS", "QUEUED"}
+out = subprocess.run(["gh", "pr", "checks", N, "--repo", REPO, "--json", "name,state"],
+                     capture_output=True, text=True).stdout
+checks = json.loads(out)
+met = not any(c["state"] in IN_FLIGHT for c in checks)
 # GitLab: glab ci status / the pipelines API, keyed on the pipeline id
 ```
 
@@ -69,10 +79,15 @@ difference between them. Write the exclusion list from the platform's full state
 initializing, queued, planning, applying, confirming, and the awaiting-approval state — and match the
 complement.
 
-```bash
+```python
 # Spacelift, via its CLI (tracked runs only — proposed/PR runs come from the MCP or the PR checks)
-spacectl stack run list --id "$STACK" --max-results 5 --output json \
-  | jq -r --arg r "$RUN" '.[] | select(.id==$r) | .state'
+import json, subprocess
+NOT_SETTLED = {"INITIALIZING", "QUEUED", "PLANNING", "APPLYING", "CONFIRMING"}
+out = subprocess.run(["spacectl", "stack", "run", "list", "--id", STACK,
+                      "--max-results", "5", "--output", "json"],
+                     capture_output=True, text=True).stdout
+state = next(r["state"] for r in json.loads(out) if r["id"] == RUN)
+met = state not in NOT_SETTLED          # add the awaiting-approval state per the table above
 ```
 
 On wake, **read the delta, not just the state.** A settled plan with the wrong resource counts is the
@@ -85,12 +100,20 @@ be asked for.
 ### Deploy convergence — ArgoCD, operators, rollouts
 
 Reconcile loops run on their own interval, so cadence 30–60s. The signal is usually MCP-only or
-cluster-only, so poll a bash-visible proxy (a CLI status, an HTTP probe) and confirm through the
+cluster-only, so poll a shell-visible proxy (a CLI status, an HTTP probe) and confirm through the
 authoritative tool on wake.
 
+```python
+import json, subprocess
+out = subprocess.run(["some-cli", "app", "get", APP, "-o", "json"],
+                     capture_output=True, text=True).stdout
+met = json.loads(out)["status"]["sync"]["status"] == "Synced"
+```
+
+A bare reachability probe carries no parsing, so it is one of the cases bash still fits:
+
 ```bash
-curl -fsS -o /dev/null "$HEALTH_URL"          # reachability
-[ "$(some-cli app get "$APP" -o json | jq -r .status.sync.status)" = "Synced" ]
+curl -fsS -o /dev/null "$HEALTH_URL"
 ```
 
 Convergence is where **"applied" and "working" diverge most** — the apply finishing is not the workload
@@ -123,34 +146,56 @@ the artifact says so rather than when someone remembers.
 - **People and other agents** — an approval, a tracker or chat reply, another team's change landing.
 - **Time-bound conditions** — a release window opening, a maintenance slot ending.
 
-If the truth is not bash-reachable, that is not a reason to skip it — poll a proxy and confirm on wake.
+If the truth is not shell-reachable, that is not a reason to skip it — poll a proxy and confirm on wake.
 If nothing is pollable at all, say so explicitly rather than quietly deciding to remember.
 
 ## Check recipes
 
-A watcher's `<check>` is any command that **exits zero only when the condition holds** — that is the
-entire contract. Four shapes cover almost everything above.
+A watcher's `<check>` is whatever decides the condition holds — an expression in python, or a command
+exiting zero in bash. **Write it in python by default**; bash is for the single-condition one-liners at
+the end of this section. Four shapes cover almost everything above.
 
 **State query** — a CLI or API reporting a status field:
-```bash
-[ "$(some-cli show "$ID" --output json | jq -r .state)" = "$TERMINAL_STATE" ]
-```
-
-**Reachability** — something coming up or responding:
-```bash
-curl -fsS -o /dev/null "$URL"
+```python
+import json, subprocess
+out = subprocess.run(["some-cli", "show", ID, "--output", "json"],
+                     capture_output=True, text=True).stdout
+met = json.loads(out)["state"] in TERMINAL_STATES
 ```
 
 **Appearance** — an artifact produced, or a line showing up in a log:
-```bash
-[ -s "$ARTIFACT" ] || grep -qE 'DONE|FAILED|Traceback' "$LOGFILE"
+```python
+import os, re
+met = (os.path.getsize(ARTIFACT) > 0 if os.path.exists(ARTIFACT) else False) \
+      or bool(re.search(r"DONE|FAILED|Traceback", open(LOGFILE, errors="replace").read()))
 ```
 
 **Change** — a value moving off a known baseline (a ref, a count, a version). Capture the baseline
 *before* triggering the work:
-```bash
-[ "$(probe-current-value)" != "$KNOWN_BASELINE" ]
+```python
+import subprocess
+current = subprocess.run(["probe-current-value"], capture_output=True, text=True).stdout.strip()
+met = current != KNOWN_BASELINE
 ```
+
+**Several items** — one watcher still owns one condition (discipline item 1), but a check that consults
+a collection holds it in python, never a shell array:
+```python
+import json, subprocess
+out = subprocess.run(["some-cli", "list", "--output", "json"],
+                     capture_output=True, text=True).stdout
+met = any(r["id"] == RUN and r["state"] in TERMINAL_STATES for r in json.loads(out))
+```
+
+**Reachability is the bash case** — a probe with nothing to parse is a single-condition one-liner, and
+the shell says it in less:
+```bash
+curl -fsS -o /dev/null "$URL"
+```
+
+The same goes for a bare file test or one string compared to one field. Anything past that — a JSON
+response parsed, several fields weighed, a collection walked, a path built — is python, per the language
+rule in `agent-watchers`.
 
 **Adapt to what this environment actually has.** Do not reach for a CLI because it appeared in an
 example — check what is installed, or fall back to the API over `curl`, or to a filesystem signal.
@@ -159,7 +204,13 @@ example — check what is installed, or fall back to the API over `curl`, or to 
 and silence looks exactly like "still running". Match every terminal state, or bound the loop tightly
 enough that exhaustion tells you something.
 
-**Keep the filter simple enough to be right.** A parsing helper that errors — a quoting bug, a wrong
-field path — makes the loop exit early and report a settle that never happened. Prefer `jq` over an
-inline script in another language, and verify the filter against one real response before arming.
+**Verify the field paths against one real response before arming.** A parser that errors — a wrong field
+path, a shape that changed — makes the loop exit early and report a settle that never happened. Where a
+single field out of a single response is genuinely all you need, `jq` in a bash one-liner is fine; the
+moment a second field or a branch appears, it is python.
+
+**Never hold the ids in a shell array.** `${array[@]}` can expand to nothing inside a background-exec
+facility, and a loop over an empty list examines nothing and then reports success — the watcher fires on
+the first cycle, on a condition that never held. Hold the collection in python, where it is a value
+rather than a word the shell re-splits.
 

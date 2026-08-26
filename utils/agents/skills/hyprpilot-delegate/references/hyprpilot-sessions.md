@@ -194,10 +194,11 @@ Written into the turn's own directory by the same `child.wait()` task that owns 
 { "handle": "3b5ce010-…", "exitCode": 0, "finishedAt": 1785584247 }
 ```
 
-This is the one MCP-only truth with a first-class **bash** signal, which matters because a bash watcher cannot call an MCP tool.
+This is the one MCP-only truth a plain shell can reach, which matters because a background watcher cannot call an MCP tool.
 
-```bash
-[ ! -d "$TURN_DIR" ] || [ -f "$TURN_DIR/done.json" ]
+```python
+import os
+met = not os.path.isdir(TURN_DIR) or os.path.exists(os.path.join(TURN_DIR, "done.json"))
 ```
 
 **Both halves are required.** The marker is advisory — reap, eviction and sidecar shutdown delete the whole session directory, so testing only for the file waits forever on a session that was cleaned up. A missing **directory** means finished-and-gone.

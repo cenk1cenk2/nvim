@@ -288,7 +288,7 @@ When they do ask, arm for what the chosen mode needs: **every reply** when steer
 The thread is the only signal, and thread replies are reachable only through Slack MCP — **bash cannot call MCP**. So:
 
 - **Preferred:** a deferred-wakeup loop (self-paced `/loop`) that re-invokes the session on an interval, where you read the thread through the active Slack integration on the main loop and diff against the last `ts` you processed.
-- **If a Slack token is reachable from the shell**, a background loop polling `conversations.replies` for a new reply is a valid bash-visible proxy — still do the authoritative read over MCP on wake.
+- **If a Slack token is reachable from the shell**, a background loop polling `conversations.replies` for a new reply is a valid shell-visible proxy. **Write it in python** — the check is a JSON response diffed against the last `ts` you processed, which is a program rather than a test, and the language rule in `agent-watchers` puts that in `python3 -c`. Still do the authoritative read over MCP on wake.
 - **Cadence:** minutes, not seconds. An offsite agent's turn takes as long as real work takes, and Slack rate limits punish tight polling.
 
 On each wake, run the awareness cycle from `agent-watchers`: read what is new, verify any claim against its artifact, reconcile the tracker, report terse, then re-arm — until the work reaches a terminal state or the user stops it.
