@@ -22,12 +22,28 @@ Confirm the launch returned a **task id**. If it did not, you detached instead o
 
 ## Loop shape
 
+Python by default, per the language rule in `agent-watchers`:
+
+```python
+python3 -c '
+import json, os, subprocess, sys, time
+for i in range(1, N + 1):
+    if <check>:
+        print(f"RESULT: met after {i} cycle(s)")
+        sys.exit(0)
+    time.sleep(<cadence-seconds>)
+print("RESULT: not met after N cycles")   # backstop — report and re-arm
+'
 ```
+
+Bash only for a single-condition one-liner with no arrays, no JSON parsing and no multi-line payload:
+
+```bash
 for i in $(seq 1 N); do
   if <check>; then echo "RESULT: met after ${i} cycle(s)"; exit 0; fi
   sleep <cadence-seconds>
 done
-echo "RESULT: not met after N cycles"   # backstop — report and re-arm
+echo "RESULT: not met after N cycles"
 ```
 
 Monitor's own guidance applies when you use it instead: every pipe stage must flush per line (`grep --line-buffered`, `awk` + `fflush()`), poll remote APIs no faster than ~30 s, and the filter must match failure signatures as well as success — a monitor that greps only the happy path stays silent through a crashloop.
@@ -104,6 +120,6 @@ Background shells survive across turns until they exit or are stopped, and the s
 
 - **Command strings are parsed by zsh, inside an `eval`.** `Bash` and `Monitor` hand the command to `zsh -c '… eval …'`, so a nested `\"` inside an embedded PromQL selector, JSON body, or regex fails as `(eval):1: parse error near …` and the task exits 1 on the spot. Put the text in a file and make the command `cat <path>`.
 - **Task-notifications are not user input.** A completion event is never approval, consent, or an answer to a pending question.
-- **Bash cannot call MCP tools.** Poll a bash-visible proxy and keep the authoritative MCP check on the main loop.
+- **A background loop cannot call MCP tools**, in any language. Poll a shell-visible proxy and keep the authoritative MCP check on the main loop.
 - **`ps` proves nothing.** A detached loop and a runtime-managed one look identical in a process list — judge by how it was launched.
 - **If you are re-reading a watcher's log each turn, it is not waking you.** That is the detached-process symptom; re-arm through the tool parameter.

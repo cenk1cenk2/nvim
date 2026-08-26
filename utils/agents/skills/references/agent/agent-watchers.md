@@ -47,6 +47,16 @@ the mechanism is wrong, not slow.
 Spacelift where no CLI exists), poll a bash-visible **proxy** and do the authoritative MCP check
 yourself on wake.
 
+**Python is the default language for a watcher script.** Write the loop as `python3 -c`. Bash is acceptable
+only for a single-condition one-liner — **no arrays, no JSON parsing, no multi-line payload**; anything past
+that keeps its data as values in a program instead of words the shell re-splits. **Shell arrays are the
+specific trap**: a `${array[@]}` that expands fine interactively can arrive empty inside a background-exec
+facility, and a loop over an empty list examines nothing and then reports success — a wake on a condition
+that never held, indistinguishable from a fast one. Quoting is the second: a payload carrying nested quotes,
+JSON, or a regex dies at the shell's parser, and that arrives as an *unarmed* watcher rather than a bad wake.
+Judge by what the check does, not by how long it looks — a one-line `jq` filter over a JSON response is
+already parsing. Arming mechanics per `agent-background`, check shapes per `agent-watcher-recipes`.
+
 ## Fire on the actionable transition, not only the terminal state
 
 **A watcher keyed to the end state is silent through every intermediate state, including the ones you

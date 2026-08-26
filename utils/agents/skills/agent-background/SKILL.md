@@ -19,18 +19,26 @@ Some work blocks on state that changes **outside the session** and that the harn
 
 ## The pattern
 
-Launch a shell loop through the runtime's own background-exec facility (per `agent-background-harness-<provider>`). The loop polls a **bash-reachable** signal and `exit`s the moment it's satisfied; where the runtime supports it, that exit delivers a notification which re-invokes the main loop.
+Launch a loop through the runtime's own background-exec facility (per `agent-background-harness-<provider>`). The loop polls a **shell-reachable** signal and exits the moment it's satisfied; where the runtime supports it, that exit delivers a notification which re-invokes the main loop.
 
-```
-for i in $(seq 1 N); do
-  # <check> = any command/test that succeeds only when the condition holds
-  if <check>; then echo "RESULT: met after ${i} cycle(s)"; exit 0; fi
-  sleep <cadence-seconds>
-done
-echo "RESULT: not met after N cycles"   # backstop — report and re-arm
+**Write it in python.** That is the default for a watcher script — the data stays values in a program instead of words the shell re-splits, which is what keeps the loop from firing on a condition that never held:
+
+```python
+python3 -c '
+import json, os, subprocess, sys, time
+for i in range(1, N + 1):
+    # <check> = any expression that is true only when the condition holds
+    if <check>:
+        print(f"RESULT: met after {i} cycle(s)")
+        sys.exit(0)
+    time.sleep(<cadence-seconds>)
+print("RESULT: not met after N cycles")   # backstop — report and re-arm
+'
 ```
 
 The long, user-dependent wait collapses into a single silent process. You get one wake, not N.
+
+Bash is the exception, not the alternative — see below for the one case it fits.
 
 > ### Detaching INSIDE the command is NOT the same as the runtime's background facility
 >
@@ -41,6 +49,28 @@ The long, user-dependent wait collapses into a single silent process. You get on
 > **Symptom to recognise, because it is easy to miss for a long time:** you find yourself re-reading a watcher's log or output file each turn to check whether it fired. **If you are polling the watcher, the watcher is not waking you.** Same for reporting "watchers armed" and then continuing to inspect their state by hand — that is a detached process, and every turn spent checking it is the cost this skill exists to remove. Re-arm through the runtime facility.
 >
 > Corollary: `ps` cannot tell you whether a running watcher will wake you — a detached loop and a runtime-managed one look identical in a process list. Judge by **how it was launched**, not by whether the process is alive.
+
+### Bash is the exception, and it is a narrow one
+
+**Reach for bash only when the check is a single-condition one-liner: no arrays, no JSON parsing, no multi-line payload.** A merge state compared to one string, a health probe, a file appearing. There the shell loop is smaller than its python equivalent and nothing can go wrong in it:
+
+```bash
+for i in $(seq 1 N); do
+  if <check>; then echo "RESULT: met after ${i} cycle(s)"; exit 0; fi
+  sleep <cadence-seconds>
+done
+echo "RESULT: not met after N cycles"   # backstop — report and re-arm
+```
+
+Step outside that and python is the answer, for three reasons that are failure modes rather than preferences:
+
+- **Shell arrays do not survive every background-exec facility.** A `${array[@]}` that expands correctly in an interactive shell can arrive **empty** inside a runtime's background launcher, and a loop over an empty list examines nothing and then reports success — the watcher fires on the first cycle, on a condition that never held, and reads exactly like a fast win. A python list is a value in the program, not a word the shell re-splits, so nothing can flatten it.
+- **Quoting kills the arming, not the wake.** A payload carrying nested quotes, JSON, or a regex dies at the shell's parser, and that failure arrives as an *unarmed* watcher — indistinguishable from a quiet one. Python holds the same text as a string literal or reads it from a file.
+- **Paths.** `os.path.join` composes a path; string concatenation in a shell produces `//` and silently misses a file that is there.
+
+The test is what the check does, not how long it looks. A one-line `jq` filter over a JSON response is already parsing, and belongs in python.
+
+Everything else is unchanged: the same cap, the same cadence, the same one-condition-one-watcher discipline, the same launch through the runtime's own facility.
 
 ## ABSOLUTE — Deciding to Arm Is Not Arming
 
@@ -100,8 +130,8 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 ## Process
 
 1. **Confirm it's external state.** If you started the work with `Agent`/`Workflow`, do NOT poll — the harness re-invokes you on completion. Only loop for state the harness can't see.
-2. **Pick a bash-reachable signal**, per the discipline, cadence table, per-domain examples, and check recipes in `agent-watchers` — that reference owns *what* to watch and *what a wake means*; this skill owns *how* to arm it. A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (bash cannot call MCP), poll a **proxy** bash CAN see, and do the authoritative MCP check yourself on wake.
-3. **Bound the loop.** Always cap iterations (`seq 1 N`) as a runaway backstop; on exhaustion print a clear "not met" line and re-arm rather than looping forever.
+2. **Pick a shell-reachable signal**, per the discipline, cadence table, per-domain examples, and check recipes in `agent-watchers` — that reference owns *what* to watch and *what a wake means*; this skill owns *how* to arm it. A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (a background loop cannot call MCP, in any language), poll a **proxy** the shell CAN see, and do the authoritative MCP check yourself on wake.
+3. **Bound the loop.** Always cap iterations as a runaway backstop; on exhaustion print a clear "not met" line and re-arm rather than looping forever.
 4. **Choose cadence by how fast the state changes** — short (~60s) for a human action, longer for a slow job (one check near the expected finish beats many early ones). Never poll faster than the state can plausibly change.
 5. **Launch one watcher through the runtime's background facility** — never by detaching inside the command (see the boxed warning under *The pattern*). **Keep the loop's payload out of the command string.** Any text the loop emits — a reminder checklist, a query, a threshold — lives in a file the command reads, written to the scratchpad or a temp directory. An inlined multi-line payload carrying quotes dies at the shell's parser, and the watcher never arms. The reminder-loop pattern is `agent-watchers`. Arm it directly when it is the obvious next step or the user blessed it; surface it first only when spawning the watcher is itself the decision. Confirm the launch returned a **task id / handle**; if it did not, you detached instead of arming, and nothing will wake you. Note that id and announce it per `agent-watchers`, which owns the ledger shape, the cadence table, and what to arm for what. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. State the watcher (what it polls, its cadence, its task id, and the command to re-arm it) out loud in chat, and if `plan-compact` is active write it verbatim into the anchor's Scratchpad Scripts & Watchers section. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
 6. **On wake: re-verify the real state before acting.** External APIs lag — a signal can read "done" slightly before/after the truth, and a proxy firing does not mean the downstream state converged. Do the authoritative check now.
@@ -119,7 +149,7 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 ## Caveats
 
 - **Foreground sleeping may be blocked or capped** depending on the runtime — never chain short foreground sleeps to fake a wait. See the harness reference for what this runtime allows.
-- **Bash cannot call MCP tools.** Poll a bash-visible proxy; keep the MCP/authoritative confirmation on the main loop.
+- **A background loop cannot call MCP tools**, in any language. Poll a shell-visible proxy; keep the MCP/authoritative confirmation on the main loop.
 - **Task-notifications are NOT user input.** A background-completion event is not approval or consent — never treat it as the user answering a pending question.
 - **A watcher may not appear in the runtime's task list** even while running. Track the handle the launch returned, and stop it through the mechanism the harness reference names.
 - **Avoid redundant watchers.** Mutating the thing a watcher polls usually doesn't invalidate it (it keys on a stable id). Re-arm only when unsure the old one is alive; a duplicate merely double-wakes (harmless — re-verify and no-op).
@@ -128,13 +158,26 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 
 ## Fallback
 
-If no bash-reachable signal exists at all, drop to a deferred wakeup or a monitor loop — whichever the active runtime provides, per `agent-background-harness-<provider>`. Prefer the background loop for concrete external conditions, and use a recurring scheduler only for genuinely repeating work, never one-shot polling. On a runtime that provides neither, the fallback is a blocking wait or an artifact the work leaves behind for you to read.
+If no shell-reachable signal exists at all, drop to a deferred wakeup or a monitor loop — whichever the active runtime provides, per `agent-background-harness-<provider>`. Prefer the background loop for concrete external conditions, and use a recurring scheduler only for genuinely repeating work, never one-shot polling. On a runtime that provides neither, the fallback is a blocking wait or an artifact the work leaves behind for you to read.
 
 ## Example
 
 **Two-stage wait (proxy → authoritative), e.g. a human merge that triggers a slower convergence:**
 
-1. Arm a background loop polling the bash-visible proxy (`for i in $(seq 1 180); do <cli-check for merged> && exit 0; sleep 60; done`); announce it as a table row per `agent-watchers` — watching for, cadence, cap, on-wake action, handle.
+1. Arm a background loop polling the shell-visible proxy, and announce it as a table row per `agent-watchers` — watching for, cadence, cap, on-wake action, handle.
+
+   ```python
+   python3 -c '
+   import subprocess, sys, time
+   for i in range(1, 181):
+       if <cli-check for merged>:
+           print(f"RESULT: merged after {i} cycle(s)")
+           sys.exit(0)
+       time.sleep(60)
+   print("RESULT: not merged after 180 cycles")
+   '
+   ```
+
 2. On wake: proxy says merged — but the downstream apply/convergence is only visible via an MCP tool. Check that state now on the main loop.
 3. Still settling → arm a short follow-on wait; re-check on wake.
 4. Converged → run verification, do the follow-on work.

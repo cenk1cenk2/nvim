@@ -8,6 +8,7 @@ references:
   - ../references/agent/agent-conventions.md
   - ../references/project-tooling.md
   - ../references/agent/agent-completion.md
+  - ../references/agent/agent-watchers.md
   - ../references/harness/agent-background-harness-claude.md
   - ../references/harness/agent-background-harness-codex.md
   - ../references/harness/agent-background-harness-opencode.md
@@ -72,14 +73,20 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
      > **Read the active runtime's background-exec mechanics from `agent-background-harness-<provider>` before arming anything.** `<provider>` is the runtime this session runs on (`claude`, `opencode`, `codex`); the rest of the path is literal. That file owns whether a watcher can be backgrounded at all and how it wakes you. It is not declared, so a missed read is silent — the watcher simply never fires.
 
-     ```bash
-     D=<sessionInfo.files.turnDir>
-     for i in $(seq 1 60); do
-       if [ ! -d "$D" ] || [ -f "$D/done.json" ]; then echo "RESULT: turn finished"; exit 0; fi
-       sleep 30
-     done
-     echo "RESULT: still running after 30 cycles"
+     ```python
+     python3 -c '
+     import os, sys, time
+     d = "<sessionInfo.files.turnDir>"
+     for i in range(1, 61):
+         if not os.path.isdir(d) or os.path.exists(os.path.join(d, "done.json")):
+             print(f"RESULT: turn finished after {i} cycle(s)")
+             sys.exit(0)
+         time.sleep(30)
+     print("RESULT: still running after 60 cycles")
+     '
      ```
+
+     **Python, not shell, because the check is two conditions over a path.** `os.path.join` composes the marker path without producing a `//` that silently misses the file, and holding several handles means holding a list — which a shell array cannot do safely inside a background launcher, where `${array[@]}` can arrive empty and fire the watcher on the first cycle. Discipline, cadence and the announce tables per `agent-watchers`.
 
      **Both halves of the test are required.** Reap, eviction and sidecar shutdown delete the whole session directory, so testing only for the file waits forever on a session that was cleaned up — a missing **directory** means finished-and-gone.
 
