@@ -24,4 +24,13 @@ This inverts the whole skill. On a runtime that wakes you, arming a watcher and 
 3. **If you must background it, schedule your own poll** in the same turn plan — never end the turn expecting a wake.
 4. **Re-verify on poll.** As everywhere, a proxy signal firing does not mean the downstream state converged.
 
+## Detached agent sessions on another MCP server
+
+A session started over MCP — a hyprpilot session above all — is doubly unobserved here: the server pushes nothing, and this runtime wakes you for nothing. **There is no armable watcher, so the arming step resolves to one of two explicit branches, chosen and named before the session is reported as running:**
+
+- **Block on the turn** — issue it with the blocking flag and a timeout sized to the job, and collect when it returns. This is the default here.
+- **Bounded explicit poll** — end the turn only with a stated plan to poll the session's status yourself on a named later turn, under a cap. Never end it having reported the session as running with no such plan.
+
+Either way the completion state is read back through the server's own status call and the answer through its result view; the process being alive is not a completion signal.
+
 > **Unverified.** The exact tool names for background terminals and for sleep are unconfirmed against current documentation; upstream issue text uses `exec_command` for that capability. Codex ships very fast — check the running build's tool list rather than trusting a name from this file.

@@ -20,6 +20,60 @@ references:
 
 > **A hyprpilot session is NOT an in-harness subagent.** The `agent-*` rule that dispatched work wakes you does not apply here; nothing pushes a completion to you. Session surface, completion signals, and per-vendor answer extraction per `hyprpilot-sessions`.
 
+## ABSOLUTE — arm the turn's watcher before reporting the session as running
+
+**Every detached turn is followed, in the same turn, by arming exactly one runtime-managed watcher on that turn's own `done.json`.** This binds to `spawn` and to every `session_send` alike — each starts a turn, each returns that turn's own path, and each finishes into silence otherwise.
+
+The call hands you the exact path in `sessionInfo.files.turnDir`. There is nothing left to discover and nothing to wait for, so there is no state in which arming is premature and no reason to defer it to a later turn.
+
+The sequence, in order, no step skippable:
+
+1. **Take `sessionInfo.files.turnDir` from the call that just returned.** It names this turn and nothing else. Never carry a previous turn's path forward and never reconstruct one by hand.
+2. **Read `agent-background-harness-<provider>` for the runtime's background-exec facility.** `<provider>` is the runtime this session runs on (`claude`, `opencode`, `codex`); the rest of the path is literal. It is undeclared, so a missed read is silent — the watcher simply never fires.
+3. **Launch one watcher through that facility**, on the two-condition check below. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
+4. **Confirm the launch returned a watcher handle.** No handle means you detached instead of arming: take a branch from *No wake available* below before going further.
+5. **Record and announce three identifiers together** — the session handle, the exact `turnDir` path being watched, and the watcher handle — as the armed row `agent-watchers` defines. A session handle reported without a watcher handle is an unwatched session, and the user cannot see a background loop to notice.
+
+**Only after step 5 is "the session is running" a true statement.** Report it with all three identifiers, never with the session handle alone.
+
+### The check
+
+```python
+python3 -c '
+import os, sys, time
+d = "<sessionInfo.files.turnDir>"
+for i in range(1, 61):
+    if not os.path.isdir(d) or os.path.exists(os.path.join(d, "done.json")):
+        print(f"RESULT: turn finished after {i} cycle(s)")
+        sys.exit(0)
+    time.sleep(30)
+print("RESULT: still running after 60 cycles")
+'
+```
+
+**Both halves of the test are required.** Reap, eviction and sidecar shutdown delete the whole session directory, so testing only for the file waits forever on a session that was cleaned up — a missing **directory** means finished-and-gone.
+
+**Python, not shell, because the check is two conditions over a path.** `os.path.join` composes the marker path without producing a `//` that silently misses the file, and holding several handles means holding a list — which a shell array cannot do safely inside a background launcher, where `${array[@]}` can arrive empty and fire the watcher on the first cycle. Discipline, cadence and the announce tables per `agent-watchers`.
+
+### No wake available — poll or block, never proceed
+
+Where the runtime offers no facility that wakes you, or the launch returned no handle, silence is not an option and neither is carrying on. Take one of these in the same turn and say which:
+
+1. **Bounded explicit poll on the main loop.** Repeat `session_status { session }` yourself at the cadence `agent-watchers` gives, under a stated cap, until `exited` — then audit and collect. It reads no transcript, so it is cheap to repeat.
+2. **Blocking wait.** Re-issue the turn with `wait: true` and a `timeout_seconds` sized to the job, accepting the raw-transcript cost knowingly. A turn outliving the timeout still returns `running`, which still means working.
+
+Never end a turn reporting a detached session as running with neither a watcher handle nor one of these two in place.
+
+### On wake — audit the completion state, then collect
+
+**A wake is the runtime's own notification firing on the watcher you armed, and nothing else.** A live OS process is not a wake, and a watcher's log or output file is not a wake. If you are reading either to find out whether the turn finished, nothing is waking you — that is a detached process, and the watch must be re-armed through the runtime facility before you rely on it again.
+
+On a real wake, in order:
+
+1. **Audit the completion state through the harness.** `session_status { session }` for `status`, `exitCode` and `hasResult`. `done.json` says the turn ended, never that it succeeded, and a missing directory says it was cleaned up rather than that it worked.
+2. **Collect the result** per step 6, before any further steering. `exitCode: 0` and `hasResult: true` describe the turn, not the brief.
+3. **Reap the watcher** and record its outcome in the ending row `agent-watchers` defines. A watcher that fired and was left running double-wakes the next turn.
+
 ## Context
 
 This skill delegates to a **separate hyprpilot agent process** — a different CLI (`claude` / `codex` / `opencode`), a different model, its own session and transcript — reached over the `hyprpilot-harness` MCP server.
@@ -68,32 +122,10 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 4. **Detached is the normal mode, and the default.** It suits anything long, fanning out several agents at once, and every "check on it later".
    - It returns immediately with `status: running`, the `session` handle, and a `nextCursor` to resume reading from. **The handle is the whole identity** — minted before the agent produces a byte, unchanged across turns, and the only thing any tool accepts. There is no second id to wait for.
    - **Unless your client speaks SEP-2663 Tasks**, in which case the same `spawn` returns `resultType: "task"` and a `taskId` instead. That is the standard-protocol path to the same session, and it changes which tools you poll with. **Check the result, do not assume** — `resultType: "task"` means you are on it. No vendor CLI declares the extension today, so normally you are not. Full comparison and the rules that differ: `hyprpilot-sessions`.
-   - **Nothing will wake you. There is no completion push here.** The harness emits one, but it only lands on an interactive Claude Code lead with the channel registered — and registration was tried on this setup, did not work, and has been reverted. A client without it **drops the event silently, with no error**, which looks exactly like a hung agent. The harness also emits `resources/updated` per turn, but arming that needs `subscriptions/listen`, which is a **client** capability with no tool exposed to you. Plan for silence from the moment you spawn: arm a watcher or poll. Never treat "no news" as "still working".
-   - **So watch `done.json` yourself.** Each turn writes its own `done.json` into its own directory (`sessionInfo.files.turnDir`), and it is the one MCP-only truth a plain shell can reach. Arm it through your runtime's **own** background-exec facility — the one that re-invokes you when the command exits. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
-
-     > **Read the active runtime's background-exec mechanics from `agent-background-harness-<provider>` before arming anything.** `<provider>` is the runtime this session runs on (`claude`, `opencode`, `codex`); the rest of the path is literal. That file owns whether a watcher can be backgrounded at all and how it wakes you. It is not declared, so a missed read is silent — the watcher simply never fires.
-
-     ```python
-     python3 -c '
-     import os, sys, time
-     d = "<sessionInfo.files.turnDir>"
-     for i in range(1, 61):
-         if not os.path.isdir(d) or os.path.exists(os.path.join(d, "done.json")):
-             print(f"RESULT: turn finished after {i} cycle(s)")
-             sys.exit(0)
-         time.sleep(30)
-     print("RESULT: still running after 60 cycles")
-     '
-     ```
-
-     **Python, not shell, because the check is two conditions over a path.** `os.path.join` composes the marker path without producing a `//` that silently misses the file, and holding several handles means holding a list — which a shell array cannot do safely inside a background launcher, where `${array[@]}` can arrive empty and fire the watcher on the first cycle. Discipline, cadence and the announce tables per `agent-watchers`.
-
-     **Both halves of the test are required.** Reap, eviction and sidecar shutdown delete the whole session directory, so testing only for the file waits forever on a session that was cleaned up — a missing **directory** means finished-and-gone.
-
-     **Take the path from the call that started the turn.** Each turn owns its directory, so `turnDir` names this turn and nothing else — there is no stale marker to race and no rule about when to arm.
-   - **Want progress, not just completion? Stream the turn's `turns.jsonl`.** It is append-only, so tailing it gives an event per step while the agent works — no blocking call, no raw payloads in context. `tail -F` it from the start: the file belongs to this turn alone, so there is no byte offset to capture. The filter and opencode's event field paths are in `hyprpilot-sessions`; whether it can run in the background at all is in the harness file named above.
-   - **On wake, confirm through the harness.** `done.json` says the turn ended, not that it succeeded — read `session_status` for `exitCode` and `hasResult`, then collect per step 6.
-   - Where no watcher can be armed, poll `session_status` by hand; it is cheap enough to repeat. What you must never do is leave a detached agent unread — that is how a finished result gets thrown away and the job re-run.
+   - **Nothing will wake you. There is no completion push here.** The harness emits one, but it only lands on an interactive Claude Code lead with the channel registered, and nothing registers it. A client without it **drops the event silently, with no error**, which looks exactly like a hung agent. The harness also emits `resources/updated` per turn, but arming that needs `subscriptions/listen`, which is a **client** capability with no tool exposed to you. Plan for silence from the moment the call returns, and never treat "no news" as "still working".
+   - **So arm the turn's `done.json` watcher now, per the ABSOLUTE section above.** That section owns the sequence, the handle requirement, the announce, the no-wake fallback, and what counts as a wake. Nothing in this step replaces it — the spawn is not finished until it has been run.
+   - **Want progress, not just completion? Stream the turn's `turns.jsonl` in addition.** It is append-only, so tailing it gives an event per step while the agent works — no blocking call, no raw payloads in context. `tail -F` it from the start: the file belongs to this turn alone, so there is no byte offset to capture. The filter and opencode's event field paths are in `hyprpilot-sessions`; whether it can run in the background at all is in `agent-background-harness-<provider>`. This is a second watcher for progress, never a substitute for the completion one.
+   - Leaving a detached agent unread is how a finished result gets thrown away and the job re-run.
 
 5. **A timeout is NOT a failure and NOT a cancellation.**
    - If the turn outlives `timeout_seconds` the result returns `status: running` and **the agent keeps working.**
@@ -117,6 +149,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 7. **Steer across turns with `session_send`, not `spawn`.**
    - **A conversation is ONE session.** `session_send { session, prompt }` reuses the handle and appends to the same transcript, so the agent retains everything from earlier turns.
+   - **A detached `session_send` starts a turn, so it arms a watcher exactly like a spawn does.** Its result carries that turn's own `sessionInfo.files.turnDir` — a fresh directory with no marker in it — so run the ABSOLUTE sequence again against the new path and the new watcher handle. Reap the previous turn's watcher before arming the replacement; two loops on one session wake you twice and can report different turns.
    - Each turn runs as a **fresh process resumed against the vendor's own session store** — the pid changes, `startedAt` stays put, `lastTurnAt` moves. That is why a session that already exited can still be steered rather than lost; the result's `delivery` field reports what happened (`resumed`).
    - **It replays the original launch and will not let you change it.** `cwd`, `args` and `with_config` are inherited from the `spawn` and are **rejected** if you pass them — how a conversation was launched is part of its identity. Only `prompt`/`file`, `mode`, `wait` and `timeout_seconds` are per-turn. To launch differently, start a new session.
    - **One turn at a time, and detaching makes this the easy mistake.** A `session_send` against a session that is still working comes back as a tool **error** — "already has a turn in flight" — not a queued message. `spawn` returns while the agent is still thinking, so "spawn, then immediately send the next instruction" is a refusal every time. Poll `session_status` until `exited`, or `session_kill` it first.
@@ -128,6 +161,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - **Already finished** → `action: "reaped"`. The transcript and the handle both go, and any later read fails with `unknown session`.
    - Calling it twice is the natural stop-then-clean-up. Read anything you care about before the reap.
    - Kill runaway sessions, and reap a finished one to free a slot when `spawn` reports the concurrency ceiling.
+   - **Reaping the session deletes the directory the watcher tests, so reap the watcher too.** A loop left on a reaped session's `turnDir` fires on the missing-directory half and reports a finish that is really a cleanup. Stop the watcher through the runtime facility and record its ending row before or with the `session_kill`.
 
 10. **Report back.** Give the user the outcome, the handle (so they can continue), and the exit status. If the session is still running, say so plainly and tell them it can be followed or steered — do not present a timed-out turn as a finished result. **A non-zero `exitCode` is not automatically the agent's fault**: the transcript may carry an upstream `error` event (auth, quota, model availability). Read it and say which before re-dispatching. If the user wants to commit/push/PR from the result, hand off per `agent-completion`.
 
@@ -168,9 +202,9 @@ Rules that hold whichever vendor you target:
 1. `list_profiles` → the fragment matches `personal/kilic/glm-5.2:cloud` (opencode, mode `build`).
 2. Build a self-contained prompt naming the file, the neighbouring patterns from `agent-conventions`, and the test command from `project-tooling`.
 3. Present the profile, cwd, and prompt → user approves.
-4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` → returns at once with handle `3b5ce010-…`, `status: running`.
-5. Watch `done.json` in `sessionInfo.files.turnDir` through the runtime's background exec; on wake, `session_status` reports `exited` / `hasResult: true`.
-6. Read `hyprpilot://sessions/3b5ce010-…/result`, then report the answer and the handle.
+4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` → returns at once with handle `3b5ce010-…`, `status: running`, and `sessionInfo.files.turnDir` for turn 1.
+5. Arm the `done.json` watcher on that exact `turnDir` through the runtime's background exec; the launch returns watcher handle `task_01H…`. Announce the session handle, the watched path, and the watcher handle, and only then say the session is running.
+6. On wake, `session_status` reports `exited` / `hasResult: true`; read `hyprpilot://sessions/3b5ce010-…/result`, reap the watcher, then report the answer and the handle.
 
 **Result:** Work done in a separate opencode session; handle available for follow-ups.
 
@@ -180,18 +214,20 @@ Rules that hold whichever vendor you target:
 
 1. Reuse the handle from the previous exchange — `session_send { session: "3b5ce010-…", prompt: "Keep the existing backoff curve; only change the retry ceiling." }`.
 2. The session had exited, so it is resumed; the agent still has turn 1's context.
+3. The result carries turn 2's own `turnDir`. Arm a fresh watcher on it, quote the new watcher handle, and reap turn 1's.
 
-**Result:** Correction applied in the same conversation — no re-briefing, no second agent.
+**Result:** Correction applied in the same conversation — no re-briefing, no second agent, and turn 2 is watched from the moment it starts.
 
 ---
 
 **User says:** "delegate this to hyprpilot and check on it later"
 
 1. Resolve the profile, present, then `spawn { …, mode: "plan" }` — detached by default, and read-only because the job only needs to look.
-2. Returns instantly: handle `9c4de0a8-…`, `status: running`. Report that it is running and followable, and by which handle.
-3. Arm the `done.json` watcher on `sessionInfo.files.turnDir` through the runtime's background exec — nothing wakes you here, so without it the session finishes into silence.
-4. On wake: `session_status` → `exited`, `hasResult: true`. **Not** a second `spawn`.
-5. Read `hyprpilot://sessions/9c4de0a8-…/result` — one read covers the answer and any upstream error — relay it, and only then send any further turn.
+2. Returns instantly: handle `9c4de0a8-…`, `status: running`, plus turn 1's `turnDir`.
+3. Arm the `done.json` watcher on that exact path through the runtime's background exec, and confirm it returned watcher handle `task_01H…`. Nothing wakes you here, so without a handle the session finishes into silence.
+4. Report it running, naming the session handle, the watched path, and the watcher handle.
+5. On wake: `session_status` → `exited`, `hasResult: true`. **Not** a second `spawn`, and not a read of the watcher's own log.
+6. Read `hyprpilot://sessions/9c4de0a8-…/result` — one read covers the answer and any upstream error — relay it, reap the watcher, and only then send any further turn.
 
 **Result:** Long job tracked to completion without abandoning it, duplicating it, or burying its result under a later turn.
 
@@ -207,8 +243,12 @@ Rules that hold whichever vendor you target:
 - **A runtime that auto-backgrounds slow MCP calls changes nothing here.** It stops the turn stalling; the untrimmed payload still arrives. Deferred cost is still cost.
 - **The handle is the only id.** It arrives with the first result and never changes. Nothing else addresses a session — and on the Tasks path it still rides `_meta`, so you never parse a task id to recover it.
 - **A timeout means still working.** Follow it; never re-spawn.
-- **Detached work finishes into silence.** There is no completion push you can arm — watch `done.json` or poll. Read every session you start, and collect the answer before steering it again.
+- **Detached work finishes into silence.** There is no completion push you can arm — every detached `spawn` and every detached `session_send` gets its own `done.json` watcher, armed before the session is reported as running.
+- **A watcher exists when a launch returned a handle.** No handle means you detached instead of arming: drop to a bounded `session_status` poll or a blocking `wait: true`, and say which.
+- **Announce the session handle, the watched `turnDir`, and the watcher handle together.** Any of the three missing makes the other two unverifiable.
+- **A wake is the runtime's notification, never a log.** Reading a watcher's output file to find out whether the turn finished means nothing is waking you.
 - **Watch the TURN's directory.** `sessionInfo.files.turnDir` names the turn the call just started, and each turn owns its own marker — so there is no stale state to race and no rule about when to arm.
+- **Audit before collecting.** `session_status` first for `status` / `exitCode` / `hasResult`, then `/result`. A marker file is an end, not an outcome.
 - **A clean exit is not a finished task.** `exitCode: 0` and `hasResult: true` describe the turn, not the brief. Check the answer against what you asked.
 - **`/result` already checks both failure locations** — launch failures land in `stderr.log`, runtime ones as an `error` event in the transcript, and it names which happened. A bare exit code is never the report.
 - **Self-contained prompts, absolute paths.** The agent cannot see this conversation.
