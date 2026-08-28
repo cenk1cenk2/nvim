@@ -156,7 +156,6 @@ function M.register()
   tools.register(METHOD, "trim_multiple_newlines", {
     "*",
     "!diff",
-    -- ruff format owns the blank lines it puts around top-level definitions.
     "!python",
   })
 
