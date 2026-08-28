@@ -1,6 +1,6 @@
 ---
 name: agent-watcher-recipes
-description: agent-watcher-recipes Concrete watcher signals per domain and the python checks that poll them - merge gates, CI runs, terraform and Spacelift, deploy convergence, chaining, tracker reconciliation. Load the entry for the thing you are about to watch. Not for watcher discipline, cadence, or the announce tables.
+description: agent-watcher-recipes Concrete watcher signals per domain and the python checks that poll them - merge gates, CI runs, terraform and Spacelift, deploy convergence, detached agent sessions, chaining, tracker reconciliation. Load the entry for the thing you are about to watch. Not for watcher discipline, cadence, or the announce tables.
 references:
   - ../references/agent/agent-watchers.md
 ---
@@ -118,6 +118,33 @@ curl -fsS -o /dev/null "$HEALTH_URL"
 
 Convergence is where **"applied" and "working" diverge most** — the apply finishing is not the workload
 being healthy. Chain a second watcher on the health signal rather than inferring it.
+
+### Detached agent sessions on another server
+
+An agent session started over MCP — a hyprpilot session above all — is a separate OS process your runtime
+does not track and will never wake you for. **It is external state, and every detached turn gets its own
+watcher armed before the session is reported as running.** One turn, one directory, one watcher: a follow-up
+turn on the same session is a new condition, not the same one continuing.
+
+The shell-visible proxy is the turn's completion marker, and the check is two conditions over the exact
+per-turn path the call returned:
+
+```python
+import os
+met = not os.path.isdir(TURN_DIR) or os.path.exists(os.path.join(TURN_DIR, "done.json"))
+```
+
+**Both halves are required.** A cleaned-up session — reaped, evicted, or lost with its sidecar — takes the
+whole directory with it, so a file-only test waits forever on work that is already gone. A missing
+**directory** means finished-and-gone.
+
+Cadence 30 s, cap sized to how long the delegated job plausibly takes. `TURN_DIR` comes from the result of
+the call that started this turn and is never reconstructed by hand.
+
+On wake the marker tells you the turn **ended**, never that it succeeded and never what it produced. Do the
+authoritative status read and the result collection over MCP on the main loop, then reap the watcher —
+reaping the session deletes the directory the loop tests, so a survivor fires on the cleanup and reports a
+finish that never happened. Session surface, tools and views per `hyprpilot-sessions`.
 
 ### Chaining — the wake that arms the next wake
 

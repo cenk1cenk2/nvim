@@ -138,7 +138,7 @@ Yours are **momentum** watchers: the wake is a starting gun, not a notification.
 - **Bias the cadence tight, but size the cap to the real wait.** A merge or a finished apply should be caught within seconds — idling after the blocker cleared is pure waste. That is *cadence*, not *cap*: a gate a human may clear overnight still needs hours of cap, or it expires and the silence reads as "nothing happened".
 - **On wake: re-verify, fire the already-staged next step, arm the follow-on.** One stage completing is a trigger, never a stopping point.
 - **A dead watcher is not a stop.** Diagnose why it exited and re-arm — unless the cause needs the driver (auth, credentials, an unknown breakage), in which case surface it.
-- **Work the harness already tracks is not a blocker to watch** — it reports itself where the runtime supports it. Spend that wait on prep instead.
+- **Work this runtime dispatched is not a blocker to watch** — it reports itself where the runtime supports it. Spend that wait on prep instead. An agent session owned by another MCP server is not that: nothing reports it, so it gets a watcher.
 
 ## Boundaries
 
