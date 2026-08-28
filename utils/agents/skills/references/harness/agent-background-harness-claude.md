@@ -10,7 +10,7 @@ Runtime mechanics for the `agent-background` skill on Claude Code: how to wait o
 | One notification per occurrence | `Monitor` | Each stdout line becomes an event. `persistent: true` for session-length watches; otherwise `timeout_ms` (default 300000, max 3600000). Also accepts a `ws` WebSocket source. |
 | No bash-reachable signal | `ScheduleWakeup` (dynamic `/loop`) | Deferred re-invocation; delay clamped to 60–3600 s. |
 | Genuinely recurring cadence | `CronCreate` / the `/schedule` skill | Outlives the session. Never for a one-shot wait. |
-| Work you dispatched yourself | **nothing — do not poll** | Subagent and Workflow completion re-invokes the session automatically. |
+| Work you dispatched yourself | **nothing — do not poll** | `Agent` and `Workflow` completion re-invokes the session automatically. Scoped to those two: an agent process owned by an MCP server is not dispatched work and needs a watcher like any other external condition. |
 
 **Foreground `sleep` is blocked.** Use a background loop or a `Monitor` until-loop; never chain short foreground sleeps.
 
@@ -18,7 +18,7 @@ Runtime mechanics for the `agent-background` skill on Claude Code: how to wait o
 
 Set it on the tool invocation. Putting `&`, `nohup`, `disown`, or `setsid` inside the command string instead produces an OS-detached process with **no task id, no output-file registration, and no task-notification** — it will never wake the session. One launch per condition, each its own call: a single call that backgrounds several loops internally yields one wake at best, usually none.
 
-Confirm the launch returned a **task id**. If it did not, you detached instead of arming.
+Confirm the launch returned a **task id**. If it did not, you detached instead of arming, and there is no branch where you simply carry on: drop to a bounded poll on the main loop or a blocking call, and say which you took. Quote the task id wherever you report the watcher — it is the only evidence the arming happened.
 
 ## Loop shape
 
@@ -98,6 +98,7 @@ Rules that bite on this pattern:
 
 - **Capture the byte offset BEFORE triggering the work**, then `tail -c +$((OFF+1))`. `tail -n0` drops everything written between the trigger returning and the tail attaching — a measured run lost the first step of a job that way.
 - **Check whether the marker is per-run before deciding when to arm.** Where one path is reused across runs, a previous run's marker sits there until the new one clears it, so a watcher armed early fires instantly on stale state — arm after the call returns. Where each run writes its own path, take the path from that call's result and arm whenever you like.
+- **A `Bash` + `run_in_background` marker watcher is what makes an MCP-owned agent process observable at all**, since a backgrounded shell cannot call MCP tools. Arm it on the exact per-run path the MCP call returned, and keep the authoritative status read and the result collection as MCP calls on the main loop when it wakes you.
 - **`jq --unbuffered`** (and `grep --line-buffered`) or the events arrive in blocks, or never.
 - **Verify the field paths against a real line of the file first.** A filter keyed on the wrong shape emits nothing, which looks exactly like a quiet job.
 - **A `Monitor` on `tail -F` never exits by itself.** Pair it with a background loop that kills the tail once the marker appears, or it burns to `timeout_ms`.

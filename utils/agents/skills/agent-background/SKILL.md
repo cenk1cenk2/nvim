@@ -86,6 +86,14 @@ Three rules that close it:
 
 The same applies to re-arming. Noticing that a watcher expired, or that a proxy proved unreliable, creates an obligation to re-arm **now**, in this turn — not a note that it should be re-armed.
 
+**No handle is a branch, never a shrug.** When the launch returns none, or the runtime has no facility that wakes you at all (`agent-background-harness-<provider>` says which), take one of these in the same turn and name it:
+
+- **A bounded explicit poll on the main loop** — the same check, at the same cadence, under a stated cap, run by you rather than by a background process.
+- **A blocking wait**, sized to the job, accepting that it holds the turn.
+- **An artifact the work leaves behind**, read on a later turn you commit to.
+
+Silently continuing as though a watcher were armed is the one branch that is never available: the condition goes unobserved and the report says the opposite.
+
 ## ABSOLUTE — Arm One Watcher Per Item, Never One Over the Set
 
 **Five Spacelift stacks are five watchers. Eight CI runs are eight. Three MRs are three.** Never one loop that waits for all of them, and never one that polls a list and exits when the list is finally empty. The discipline is item 1 of `agent-watchers`; this is why it matters at the moment you arm.
@@ -109,7 +117,7 @@ The bash wait-loop above is the portable default, but it is not the only way, an
 
 **Mechanisms (best-fit first):**
 
-1. **Harness auto-reinvoke on subagent/task completion** — if the wait is on work YOU launched via the runtime's subagent/Workflow dispatch, do NOT poll: the harness re-invokes you when it finishes. Only arm a watcher when the state changes *outside* anything the harness tracks.
+1. **Harness auto-reinvoke on subagent/task completion** — if the wait is on work you launched through the runtime's own subagent or workflow dispatch, do NOT poll: it re-invokes you when it finishes. Arm a watcher for every state that changes *outside* what the runtime tracks, which includes any agent process owned by another server.
 2. **Background exec + wake** — run the poll/command detached and get woken when it exits. The bash-loop pattern above, on runtimes with a background shell.
 3. **Per-occurrence event stream** — one wake per line the command emits, for a watch that must report repeatedly rather than once: each status flip, each new comment, each progress step, each periodic prompt to go do an MCP read bash cannot make. A one-wake facility cannot do this job, per the selection rule below.
 4. **Scheduled / deferred wakeup** — schedule the session to resume after a delay when there is no clean signal to poll (interval prep, self-pacing).
@@ -129,7 +137,7 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 
 ## Process
 
-1. **Confirm it's external state.** If you started the work with `Agent`/`Workflow`, do NOT poll — the harness re-invokes you on completion. Only loop for state the harness can't see.
+1. **Confirm it's external state.** Work dispatched through the runtime's **own** subagent or workflow mechanism is not — it re-invokes you on completion where the runtime supports it, so do not poll it. **Everything else is external, including another server's agent process.** A separate vendor agent session started over MCP runs outside your runtime's knowledge and pushes nothing to you, so it is watched exactly like a CI run or a merge; treating it as dispatched work is how it finishes into silence.
 2. **Pick a shell-reachable signal**, per the discipline, cadence table, per-domain examples, and check recipes in `agent-watchers` — that reference owns *what* to watch and *what a wake means*; this skill owns *how* to arm it. A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (a background loop cannot call MCP, in any language), poll a **proxy** the shell CAN see, and do the authoritative MCP check yourself on wake.
 3. **Bound the loop.** Always cap iterations as a runaway backstop; on exhaustion print a clear "not met" line and re-arm rather than looping forever.
 4. **Choose cadence by how fast the state changes** — short (~60s) for a human action, longer for a slow job (one check near the expected finish beats many early ones). Never poll faster than the state can plausibly change.

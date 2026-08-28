@@ -144,13 +144,11 @@ Earlier turns are not listed: they are `<turnsDir>/<n>/` for every `n` up to `tu
 
 ### 1. Channels — a push wake-up that does NOT work here. Assume silence.
 
-The harness pushes `notifications/claude/channel` when a turn ends, and `mcp.harness.notifyOnComplete` defaults **true**, so the server side is live. The *client* side is what fails.
+The harness pushes `notifications/claude/channel` when a turn ends, and `mcp.harness.notifyOnComplete` defaults **true**, so the server side is live. The *client* side is what fails: **nothing registers the channel here, so no completion event reaches anyone.** Treat the mechanism as unavailable.
 
-**Registration was tried on this setup and did not work; the launch flag has been reverted.** Nothing registers the channel today, so no completion event reaches anyone. Treat the mechanism as unavailable rather than untested.
+Even where it is registered it is narrow: **interactive only** (a headless `claude -p` lead never receives one), **Claude Code only**, and a client without registration **drops it silently with no error**. An unfired watcher looks identical to a hung agent.
 
-Even where it works it is narrow: **interactive only** (a headless `claude -p` lead never receives one), **Claude Code only**, and a client that has not registered **drops it silently with no error** — which is exactly why the failure went unnoticed. An unfired watcher looks identical to a hung agent.
-
-**So every detached session must be watched or polled.** Silence after a spawn is the normal case, not a malfunction.
+**So every detached turn is watched or polled, and the watcher is armed before the turn is reported as running.** Silence after a `spawn` or a `session_send` is the normal case, not a malfunction. The arming sequence, the handle requirement, and the fallback when no facility wakes you are `hyprpilot-delegate`'s ABSOLUTE section; what follows here is the signal it tests.
 
 ### 1b. Resource notifications — real, and not yours to arm
 
@@ -204,6 +202,10 @@ met = not os.path.isdir(TURN_DIR) or os.path.exists(os.path.join(TURN_DIR, "done
 **Both halves are required.** The marker is advisory — reap, eviction and sidecar shutdown delete the whole session directory, so testing only for the file waits forever on a session that was cleaned up. A missing **directory** means finished-and-gone.
 
 Take `$TURN_DIR` from the `sessionInfo.files.turnDir` of the call that started the turn: each turn writes into its own directory, so the marker you are waiting on cannot be a previous turn's.
+
+**The loop testing it must be launched through your runtime's own background-exec facility**, per `agent-background-harness-<provider>`. A loop detached inside the command string polls this marker perfectly and wakes nobody, and the resulting file of output is not a completion signal — see `agent-watchers`.
+
+**The marker is an ending, not an outcome.** `done.json` carries an `exitCode`, but the authoritative completion state is `session_status` on the main loop, and the answer is `/result`. A wake on this file is the cue to run both, never a substitute for either.
 
 ## Watching a turn live — stream the turn's transcript
 

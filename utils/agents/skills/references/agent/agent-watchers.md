@@ -37,6 +37,19 @@ tracked separately, per `agent-roster`.
 9. **Account for every live watcher in each report** — what it polls, its cadence, its handle. An
    unexplained live watcher at the end of a flow is a bug, not diligence.
 
+**A wake is the runtime's own notification firing on a watcher you launched through its background-exec
+facility. Nothing else is one.** Two things that look like wakes and are not:
+
+- **A live OS process.** A loop detached inside the command string (`&`, `nohup`, `disown`, `setsid`) runs
+  and polls correctly and will never re-invoke you. `ps` cannot tell the two apart — judge by how it was
+  launched.
+- **A watcher's log or output file.** Reading one to find out whether the condition held is you polling the
+  watcher, which means the watcher is not waking you. Re-arm through the facility rather than reading
+  harder.
+
+Both fail in the direction that looks like patience: the work is unobserved and the silence reads as
+progress.
+
 **One wake or many is a mechanism choice, not a cadence choice.** A watcher that must report each time
 something changes needs the runtime's per-occurrence facility. Give that job to a one-wake background loop
 and it still runs and still polls correctly, but every line it prints is withheld until the process exits and
@@ -235,5 +248,9 @@ silence was unfounded. Say so plainly rather than quietly re-arming and moving o
 - **Treating a wake as user input.** A notification is never approval, consent, or an answer to a
   pending question.
 - **Treating silence as a verdict.** No wake means no information, never a pass.
-- **Watching something the harness already tracks.** Work you dispatched (subagents, workflows) reports
-  its own completion where the runtime supports it — check the harness reference before arming.
+- **Watching something the harness already tracks.** Work your own runtime dispatched — its subagents, its
+  workflows — reports its own completion where the runtime supports it; check the harness reference before
+  arming. **The exemption stops at what your runtime dispatched.** A separate agent process owned by
+  another server, a hyprpilot session above all, is external state your runtime never learns about, so it
+  is watched like any other external condition. Reading the exemption onto one is how a detached session
+  finishes into silence.

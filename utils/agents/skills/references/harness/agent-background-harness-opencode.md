@@ -19,6 +19,12 @@ The shell tool kills a command at its timeout — **120000 ms (2 min) by default
 - A wait-loop must be sized to exit **under** the ceiling, then be re-armed. Prefer many short bounded loops over one long one.
 - Raising the env var is a per-environment change, not something a skill can assume. Check before relying on a longer window.
 
+## Detached agent sessions on another MCP server
+
+A session started over MCP — a hyprpilot session above all — is external state this runtime never tracks, so it gets a bounded background shell loop on the per-run marker path the MCP call returned. **The shell timeout bounds that loop like every other**, so size it to exit under the ceiling and re-arm on each wake until the turn ends, rather than writing one long watch that the runtime kills silently.
+
+Confirm the launch returned a handle. Where it does not, or the marker is not reachable from the shell, the branch is a bounded explicit poll of the session's status on the main loop, or a blocking turn — named out loud, never skipped. The authoritative completion state and the answer are both MCP reads on the main loop; the marker only says the turn ended.
+
 ## Traps
 
 - **No sleep tool.** The bounded shell loop is the only wait primitive.
