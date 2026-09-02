@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "harrisoncramer/gitlab.nvim",
-        version = "*",
+        branch = "develop",
         dependencies = {
           "MunifTanjim/nui.nvim",
           "nvim-lua/plenary.nvim",
@@ -40,7 +40,7 @@ function M.config()
       end)
     end,
     setup = function(_, fn)
-      ---@type Settings
+      ---@type GitlabSettings
       return {
         server = {
           binary = nil,
@@ -119,7 +119,7 @@ function M.config()
         },
         discussion_signs = {
           enabled = true,
-          severity = "WARN",
+          severity = vim.diagnostic.severity.WARN,
           skip_resolved_discussion = false,
           skip_old_revision_discussion = false,
           use_diagnostic_signs = true,
@@ -131,15 +131,15 @@ function M.config()
           },
         },
         pipeline = {
-          created = "",
-          pending = "",
-          preparing = "",
-          scheduled = "",
-          running = "ﰌ",
-          canceled = "ﰸ",
-          skipped = "ﰸ",
-          success = "✓",
-          failed = "",
+          created = nvim.ui.icons.ui.Circle,
+          pending = nvim.ui.icons.ui.Clock,
+          preparing = nvim.ui.icons.ui.Clock,
+          scheduled = nvim.ui.icons.ui.Clock,
+          running = nvim.ui.icons.ui.Triangle,
+          canceled = nvim.ui.icons.ui.Close,
+          skipped = nvim.ui.icons.ui.DoubleChevronRight,
+          success = nvim.ui.icons.ui.CheckMark,
+          failed = nvim.ui.icons.ui.Cross,
         },
         colors = {
           discussion_tree = {
@@ -326,6 +326,31 @@ function M.config()
           desc = "remove reviewer",
         },
         {
+          fn.wk_keystroke({ categories.GIT, "l", "b" }),
+          group = "rebase",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "l", "b", "b" }),
+          function()
+            require("gitlab").rebase()
+          end,
+          desc = "gitlab mr rebase",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "l", "b", "s" }),
+          function()
+            require("gitlab").rebase({ skip_ci = true })
+          end,
+          desc = "gitlab mr rebase without ci",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "l", "b", "f" }),
+          function()
+            require("gitlab").rebase({ force = true })
+          end,
+          desc = "gitlab mr rebase force",
+        },
+        {
           fn.wk_keystroke({ categories.GIT, "l", "u" }),
           function()
             require("gitlab").copy_mr_url()
@@ -359,6 +384,13 @@ function M.config()
             require("gitlab").choose_merge_request_by_username()
           end,
           desc = "choose mr by username",
+        },
+        {
+          fn.wk_keystroke({ categories.GIT, "l", "q" }),
+          function()
+            require("gitlab").reload_review()
+          end,
+          desc = "gitlab reload review",
         },
         {
           fn.wk_keystroke({ categories.GIT, "l", "Q" }),
