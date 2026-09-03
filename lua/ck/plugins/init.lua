@@ -99,8 +99,6 @@ local plugins = {
   "gitlab-nvim",
   "symbol-usage-nvim",
   "obsidian-nvim",
-  "iedit-nvim",
-  -- "viedit-nvim",
   "urlview-nvim",
   "img-clip-nvim",
   "crates-nvim",

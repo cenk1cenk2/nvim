@@ -132,17 +132,6 @@ function M.load()
           end,
           mode = { "n" },
         },
-        -- disable Ex mode
-        {
-          "Q",
-          "<Nop>",
-          mode = { "n" },
-        },
-        {
-          "qq",
-          "<Nop>",
-          mode = { "n" },
-        },
         -- better window movement
         {
           "<C-h>",
