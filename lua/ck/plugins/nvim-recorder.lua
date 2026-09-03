@@ -9,7 +9,7 @@ function M.config()
       ---@type Plugin
       return {
         "chrisgrieser/nvim-recorder",
-        keys = { "q", "Q", "@", "cq", "yq", "dq", "cq" },
+        keys = { "q", "@", "cq", "yq", "dq" },
       }
     end,
     setup = function()
@@ -21,7 +21,7 @@ function M.config()
 
         -- default keymaps, see README for description what the commands do
         mapping = {
-          startStopRecording = "Q",
+          startStopRecording = "q",
           playMacro = "@",
           switchSlot = "#",
           editMacro = "cq",
@@ -44,16 +44,6 @@ function M.config()
     end,
     on_setup = function(c)
       require("recorder").setup(c)
-    end,
-    keymaps = function()
-      ---@type KeymapMappings
-      return {
-        {
-          "q",
-          "<Nop>",
-          mode = { "n", "v", "x", "o" },
-        },
-      }
     end,
   })
 end

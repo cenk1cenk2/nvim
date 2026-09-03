@@ -331,6 +331,77 @@ function M.setup()
             mode = { "n", "v" },
           },
 
+          -- multicursor
+
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i" }),
+            group = "multicursor",
+            mode = { "n", "v" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i", "i" }),
+            "Q",
+            desc = "toggle cursor at position",
+            mode = { "n" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i", "i" }),
+            "Q",
+            desc = "cursor on each line of selection",
+            mode = { "v" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i", "a" }),
+            "1Q",
+            desc = "cursor at every search match",
+            mode = { "n" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i", "w" }),
+            function()
+              vim.fn.setreg("/", [[\<]] .. vim.fn.expand("<cword>") .. [[\>]])
+              vim.api.nvim_feedkeys("1Q", "n", false)
+            end,
+            desc = "cursor at every match of current word",
+            mode = { "n" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i", "n" }),
+            "]C",
+            desc = "go to next cursor",
+            mode = { "n" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i", "p" }),
+            "[C",
+            desc = "go to previous cursor",
+            mode = { "n" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i", "f" }),
+            "q=",
+            desc = "toggle follow mode",
+            mode = { "n" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i", "r" }),
+            "gQ",
+            desc = "restore previous cursors",
+            mode = { "n" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i", "#" }),
+            "g<C-a>",
+            desc = "insert ascending numbers",
+            mode = { "n" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "i", "c" }),
+            "<C-l>",
+            desc = "clear cursors",
+            mode = { "n" },
+          },
+
           -- issues
 
           {
