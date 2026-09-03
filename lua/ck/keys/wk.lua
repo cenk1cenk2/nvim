@@ -334,30 +334,40 @@ function M.setup()
           -- multicursor
 
           {
-            fn.wk_keystroke({ categories.SEARCH, "i" }),
+            fn.wk_keystroke({ categories.SEARCH, "m" }),
             group = "multicursor",
             mode = { "n", "v" },
           },
           {
-            fn.wk_keystroke({ categories.SEARCH, "i", "i" }),
+            fn.wk_keystroke({ categories.SEARCH, "m", "i" }),
             "Q",
             desc = "toggle cursor at position",
             mode = { "n" },
           },
           {
-            fn.wk_keystroke({ categories.SEARCH, "i", "i" }),
+            fn.wk_keystroke({ categories.SEARCH, "m", "i" }),
             "Q",
             desc = "cursor on each line of selection",
             mode = { "v" },
           },
           {
-            fn.wk_keystroke({ categories.SEARCH, "i", "a" }),
+            fn.wk_keystroke({ categories.SEARCH, "m", "a" }),
             "1Q",
             desc = "cursor at every search match",
             mode = { "n" },
           },
           {
-            fn.wk_keystroke({ categories.SEARCH, "i", "w" }),
+            fn.wk_keystroke({ categories.SEARCH, "m", "a" }),
+            function()
+              local text = table.concat(vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = vim.fn.mode() }), "\n")
+              vim.fn.setreg("/", [[\V]] .. (vim.fn.escape(text, [[/\]]):gsub("\n", [[\n]])))
+              vim.api.nvim_feedkeys(vim.keycode("<Esc>1Q"), "n", false)
+            end,
+            desc = "cursor at every match of selection",
+            mode = { "v" },
+          },
+          {
+            fn.wk_keystroke({ categories.SEARCH, "m", "w" }),
             function()
               vim.fn.setreg("/", [[\<]] .. vim.fn.expand("<cword>") .. [[\>]])
               vim.api.nvim_feedkeys("1Q", "n", false)
@@ -366,38 +376,41 @@ function M.setup()
             mode = { "n" },
           },
           {
-            fn.wk_keystroke({ categories.SEARCH, "i", "n" }),
+            fn.wk_keystroke({ categories.SEARCH, "m", "n" }),
             "]C",
             desc = "go to next cursor",
-            mode = { "n" },
+            mode = { "n", "v" },
           },
           {
-            fn.wk_keystroke({ categories.SEARCH, "i", "p" }),
+            fn.wk_keystroke({ categories.SEARCH, "m", "p" }),
             "[C",
             desc = "go to previous cursor",
-            mode = { "n" },
+            mode = { "n", "v" },
           },
           {
-            fn.wk_keystroke({ categories.SEARCH, "i", "f" }),
+            fn.wk_keystroke({ categories.SEARCH, "m", "f" }),
             "q=",
             desc = "toggle follow mode",
             mode = { "n" },
           },
           {
-            fn.wk_keystroke({ categories.SEARCH, "i", "r" }),
+            fn.wk_keystroke({ categories.SEARCH, "m", "r" }),
             "gQ",
             desc = "restore previous cursors",
             mode = { "n" },
           },
           {
-            fn.wk_keystroke({ categories.SEARCH, "i", "#" }),
+            fn.wk_keystroke({ categories.SEARCH, "m", "#" }),
             "g<C-a>",
             desc = "insert ascending numbers",
             mode = { "n" },
           },
           {
-            fn.wk_keystroke({ categories.SEARCH, "i", "c" }),
-            "<C-l>",
+            fn.wk_keystroke({ categories.SEARCH, "m", "c" }),
+            function()
+              vim.cmd("nohlsearch|diffupdate")
+              vim.api.nvim_buf_clear_namespace(0, vim.api.nvim_create_namespace("nvim.multicursor"), 0, -1)
+            end,
             desc = "clear cursors",
             mode = { "n" },
           },
