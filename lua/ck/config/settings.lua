@@ -10,6 +10,7 @@ function M.load_default_options()
 
   vim.opt.timeoutlen = 200
   vim.opt.backup = false
+  vim.opt.autoread = true
   vim.opt.clipboard = "unnamedplus"
   vim.opt.cmdheight = 2
   vim.opt.completeopt = { "menuone", "noselect" }
