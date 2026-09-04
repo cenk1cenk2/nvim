@@ -4,10 +4,10 @@ local M = {}
 
 --- Load configuration.
 function M:load()
-  log:debug("Starting to load configuration...")
-
   _G.nvim = require("ck.config.defaults")
   _G.nvim.lsp = require("ck.config.lsp")
+
+  log:debug("Starting to load configuration...")
 
   require("ck.config.settings").load()
 

@@ -191,6 +191,21 @@ function M.setup()
           end,
           desc = "open the neovim logfile",
         },
+        {
+          fn.wk_keystroke({ categories.NEOVIM, categories.LOGS, "l" }),
+          function()
+            vim.ui.select(vim.tbl_keys(require("ck.log").levels), {
+              prompt = "Log Level",
+            }, function(level)
+              if not level then
+                return
+              end
+
+              require("ck.log"):set_log_level(level)
+            end)
+          end,
+          desc = "set log level",
+        },
       }
     end,
   })

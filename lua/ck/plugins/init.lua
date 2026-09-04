@@ -4,7 +4,6 @@ local plugins = {
   "plenary-nvim",
   "lazy-nvim",
   "snacks-nvim",
-  "structlog-nvim",
   "mini-nvim-icons",
   -- core
   "which-key",

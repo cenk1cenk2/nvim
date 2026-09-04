@@ -1,8 +1,6 @@
 local M = {}
 
----@module "structlog"
-
-M.name = "nvim"
+M.name = "ck"
 
 ---@enum LogLevel
 M.levels = {
@@ -32,36 +30,67 @@ M.nvim_levels = {
   [M.levels.ERROR] = vim.log.levels.ERROR,
 }
 
----@class LogQueueEntry
----@field level LogLevel
----@field message any
----@field sprintf table
+---@type table<LogLevel, string>
+local level_names = {
+  [M.levels.TRACE] = "TRACE",
+  [M.levels.DEBUG] = "DEBUG",
+  [M.levels.INFO] = "INFO",
+  [M.levels.WARN] = "WARN",
+  [M.levels.ERROR] = "ERROR",
+}
 
----@type LogQueueEntry[]
-local queue = {}
+---@type table<LogLevel, string>
+local writers = {
+  [M.levels.TRACE] = "trace",
+  [M.levels.DEBUG] = "debug",
+  [M.levels.INFO] = "info",
+  [M.levels.WARN] = "warn",
+  [M.levels.ERROR] = "error",
+}
+
+---@type table<NvimLogLevel, string>
+local nvim_level_names = {
+  [vim.log.levels.TRACE] = "TRACE",
+  [vim.log.levels.DEBUG] = "DEBUG",
+  [vim.log.levels.INFO] = "INFO",
+  [vim.log.levels.WARN] = "WARN",
+  [vim.log.levels.ERROR] = "ERROR",
+}
+
+---Formats a log entry, attributing it to the first caller outside this module.
+---@param min_level NvimLogLevel
+---@param level NvimLogLevel
+---@return string?
+local function format_func(min_level, level, ...)
+  if level < min_level then
+    return nil
+  end
+
+  local depth = 3
+  local caller = debug.getinfo(depth, "Sl")
+  while caller and caller.short_src:find("ck/log%.lua$") do
+    depth = depth + 1
+    caller = debug.getinfo(depth, "Sl")
+  end
+
+  local parts = {
+    ("[%-5s][%s] %s:%s"):format(nvim_level_names[level], os.date("%F %H:%M:%S"), caller.short_src, caller.currentline),
+  }
+  for i = 1, select("#", ...) do
+    table.insert(parts, tostring((select(i, ...))))
+  end
+
+  return table.concat(parts, "\t") .. "\n"
+end
 
 --- Sets the log level.
 ---@param level LogLevel
 function M:set_log_level(level)
   xpcall(function()
-    local log_level = self:to_level(level)
-    local sl = require("structlog")
-
-    local logger = sl.get_logger(M.name)
-    if logger == nil then
-      self:error("No logger available.")
-
-      return
-    end
-
-    for _, s in ipairs(logger.pipelines) do
-      if not vim.tbl_contains({ "notify" }, s.name) then
-        s.level = log_level
-      end
-    end
+    local previous = nvim.log.level
     nvim.log.level = level
 
-    if self:to_level(level) ~= self:to_level(nvim.log.level) then
+    if self:to_level(level) ~= self:to_level(previous) then
       self:info("Set log level: %s", level)
     else
       self:debug("Set log level to default: %s", level)
@@ -80,71 +109,20 @@ function M:to_nvim_level()
   return self.nvim_levels[tostring(nvim.log.level):upper()]
 end
 
-function M:init()
-  local ok, sl = pcall(require, "structlog")
-  if not ok then
-    return nil
+---Retrieves the handle of the logger instance, creating it on first use and
+---keeping its level in sync with the configured one.
+---@return vim.Log
+function M:get_logger()
+  if not self.__handle then
+    self.__handle = vim.log.new({
+      name = self.name,
+      format_func = format_func,
+    })
   end
 
-  local adapter = require("structlog.sinks.adapter")
+  vim.log.set_level(self.__handle, self:to_nvim_level())
 
-  local log_level = self:to_level(nvim.log.level)
-  sl.configure({
-    [M.name] = {
-      pipelines = {
-        {
-          name = "file",
-          level = log_level,
-          sink = sl.sinks.RotatingFile(self:get_log_filepath(), {
-            max_size = 1048576 * 10,
-          }),
-          processors = {
-            sl.processors.StackWriter({ "line", "file" }, { max_parents = 3, stack_level = 2 }),
-            sl.processors.Timestamper("%F %H:%M:%S"),
-          },
-          formatter = sl.formatters.Format( --
-            "%s [%-5s] %s",
-            { "timestamp", "level", "msg" },
-            {
-              blacklist = { "logger_name" },
-            }
-          ),
-        },
-        {
-          name = "console",
-          level = log_level,
-          sink = sl.sinks.Console(),
-          processors = {},
-          formatter = sl.formatters.FormatColorizer( --
-            "[%-5s] %s",
-            { "level", "msg" },
-            {
-              blacklist = { "logger_name" },
-              level = sl.formatters.FormatColorizer.color_level(),
-            }
-          ),
-        },
-        {
-          name = "notify",
-          level = M.levels.INFO,
-          sink = adapter(function(log)
-            vim.notify(log.msg, log.level)
-          end),
-          processors = {},
-          formatter = sl.formatters.Format( --
-            "%s",
-            { "msg" },
-            {
-              blacklist = { "logger_name" },
-              blacklist_all = true,
-            }
-          ),
-        },
-      },
-    },
-  })
-
-  return sl.get_logger(M.name)
+  return self.__handle
 end
 
 ---@param msg any
@@ -170,52 +148,29 @@ function M:splat(msg, sprintf)
   end, sprintf)))
 end
 
---- Adds a log entry using Plenary.log
----@param level string [same as vim.log.log_levels]
+---Adds a log entry using vim.log
+---@param level LogLevel
 ---@param message any
 ---@param sprintf? any[]
 function M:write(level, message, sprintf)
-  local logger = self:setup()
+  local logger = self:get_logger()
+  local splatted = self:splat(message, sprintf)
 
-  if not logger then
-    table.insert(queue, {
-      level = level,
-      message = message,
-      sprintf = sprintf,
-    })
+  logger[writers[level]](splatted)
 
-    return
+  if is_headless() then
+    if self.nvim_levels[level] >= vim.log.get_level(logger) then
+      print(("[%-5s] %s"):format(level_names[level], splatted))
+    end
+  elseif level >= self.levels.INFO then
+    vim.notify(splatted, self.nvim_levels[level])
   end
-
-  return logger:log(level, self:splat(message, sprintf))
-end
-
----Retrieves the handle of the logger object
----@return self | nil
-function M:setup()
-  if self.__handle then
-    return self.__handle
-  end
-
-  local logger = self:init()
-  if not logger then
-    return
-  end
-
-  self.__handle = logger
-
-  for _, entry in pairs(queue) do
-    self:log(entry.level or self.levels.DEBUG, self:splat(entry.message, entry.sprintf))
-  end
-  queue = {}
-
-  return M
 end
 
 ---Retrieves the path of the logfile
 ---@return string
 function M:get_log_filepath()
-  return string.format("%s/%s.log", get_cache_dir(), "core")
+  return vim.fs.joinpath(vim.fn.stdpath("log"), self.name:lower() .. ".log")
 end
 
 ---Retrieves the path of the neovim logfile.
