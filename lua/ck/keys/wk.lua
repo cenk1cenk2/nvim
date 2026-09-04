@@ -360,8 +360,12 @@ function M.setup()
             fn.wk_keystroke({ categories.SEARCH, "c", "a" }),
             function()
               local text = table.concat(vim.fn.getregion(vim.fn.getpos("v"), vim.fn.getpos("."), { type = vim.fn.mode() }), "\n")
-              vim.fn.setreg("/", [[\V]] .. (vim.fn.escape(text, [[/\]]):gsub("\n", [[\n]])))
-              vim.api.nvim_feedkeys(vim.keycode("<Esc>1Q"), "n", false)
+              local pattern = [[\V]] .. (vim.fn.escape(text, [[/\]]):gsub("\n", [[\n]]))
+              vim.fn.setreg("/", pattern)
+              vim.api.nvim_feedkeys(vim.keycode("<Esc>"), "nx", false)
+              for _, m in ipairs(vim.fn.matchbufline("%", pattern, 1, "$")) do
+                vim.api.nvim_mcursor(0, { m.lnum, m.byteidx })
+              end
             end,
             desc = "cursor at every match of selection",
             mode = { "v" },
@@ -369,8 +373,11 @@ function M.setup()
           {
             fn.wk_keystroke({ categories.SEARCH, "c", "w" }),
             function()
-              vim.fn.setreg("/", [[\<]] .. vim.fn.expand("<cword>") .. [[\>]])
-              vim.api.nvim_feedkeys("1Q", "n", false)
+              local pattern = [[\<]] .. vim.fn.expand("<cword>") .. [[\>]]
+              vim.fn.setreg("/", pattern)
+              for _, m in ipairs(vim.fn.matchbufline("%", pattern, 1, "$")) do
+                vim.api.nvim_mcursor(0, { m.lnum, m.byteidx })
+              end
             end,
             desc = "cursor at every match of current word",
             mode = { "n" },
