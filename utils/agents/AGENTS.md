@@ -173,7 +173,11 @@ Read-only inspection of live clusters, one server per estate — `kubernetes-kil
 
 ### CLI
 
-CLI owns what no MCP server covers: local git, cluster writes and streaming via `kubectl`, project scripts, tests, builds, formatters, and shell inspection. For a service that does have a server, the MCP-first rule above governs. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation instead of working around permissions.
+CLI owns what no MCP server covers: local git (worktrees via `wt`, below), cluster writes and streaming via `kubectl`, project scripts, tests, builds, formatters, and shell inspection. For a service that does have a server, the MCP-first rule above governs. Avoid destructive commands unless explicitly requested or approved. If sandboxing blocks an important command, request escalation instead of working around permissions.
+
+### Worktrees
+
+**`wt` (worktrunk) owns every worktree operation — create, list, remove — whether or not an `agent-*` skill is loaded.** It places the tree from one configured path template, addresses it by branch name, reports with `wt list --format=json`, and `wt remove <branch>` takes the merged branch with the worktree (`-D` for an unmerged one, `--no-delete-branch` to keep it, `--reap` to kill processes rooted in the tree). Raw `git worktree` is the fallback when `wt` is not on `PATH` or cannot reach the repo; it leaves the branch behind, so delete that yourself. Placement, naming, verification and cleanup: `agent-worktrees` — read `~/.config/nvim/utils/agents/skills/references/agent/agent-worktrees.md` when no loaded skill declares it.
 
 ### mise
 
