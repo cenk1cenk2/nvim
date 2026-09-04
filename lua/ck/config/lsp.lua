@@ -131,7 +131,9 @@ return {
 
   ---@type table<string, string | LspOnCallback>
   buffer_options = {
-    formatexpr = "v:lua.vim.lsp.formatexpr(#{timeout_ms:500})",
+    formatexpr = function()
+      return vim.lsp.formatexpr({ timeout_ms = 500 })
+    end,
   },
 
   ---@type string[]

@@ -86,10 +86,14 @@ function M.config()
             pcall(vim.treesitter.start, bufnr, vim.treesitter.language.get_lang(ft))
           end
 
-          vim.bo[bufnr].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          vim.bo[bufnr].indentexpr = function()
+            return require("nvim-treesitter").indentexpr()
+          end
 
           vim.wo.foldmethod = "expr"
-          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+          vim.wo.foldexpr = function()
+            return vim.treesitter.foldexpr()
+          end
         end,
       })
     end,

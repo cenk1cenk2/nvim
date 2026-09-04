@@ -6,9 +6,7 @@ M._.has_loaded = false
 function M.load_default_options()
   local undodir = join_paths(get_cache_dir(), "undo")
 
-  if not is_directory(undodir) then
-    vim.fn.mkdir(undodir, "p")
-  end
+  vim.fs.mkdir(undodir, { parents = true })
 
   vim.opt.timeoutlen = 200
   vim.opt.backup = false
@@ -18,9 +16,13 @@ function M.load_default_options()
   vim.opt.conceallevel = 0
   vim.opt.fileencoding = "utf-8"
   vim.opt.foldmethod = "expr"
-  vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+  vim.opt.foldexpr = function()
+    return vim.treesitter.foldexpr()
+  end
   -- vim.opt.foldtext = "v:lua.nvim.fold.text()"
-  vim.opt.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  vim.opt.indentexpr = function()
+    return require("nvim-treesitter").indentexpr()
+  end
   vim.opt.fillchars = {
     foldopen = nvim.ui.icons.ArrowCircleDown,
     foldsep = nvim.ui.icons.BoldLineLeft,
