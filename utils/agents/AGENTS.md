@@ -29,7 +29,7 @@
 
 **The moment you learn that something you already loaded from the guidance corpus has changed on disk, re-ground before your next action.** That corpus is this file, any local `AGENTS.md` / `CLAUDE.md`, and every skill and reference you have read this session. Load `agent-read` and run it; at the very least re-read the changed file itself, in full, from disk.
 
-**Learning it is the trigger — you are not asked to go hunting.** No polling, no stat sweeps between turns. But when the evidence lands in front of you, acting on it is not optional: a `modified` stamp in a `list_skills` or `read_skill` result that is newer than when you read that path, a `git status` / `git log` / `find` result showing a guidance file touched, a `reload`, or the captain simply saying they changed something.
+**Learning it is the trigger — you are not asked to go hunting.** No polling, no stat sweeps between turns. But when the evidence lands in front of you, acting on it is not optional: a `modified` stamp in a `list_skills` or `read_skill` result that is newer than when you read that path, a `git status` / `git log` / `find` result showing a guidance file touched, a skills change notification (`resources/updated` / `resources/list_changed`), or the captain simply saying they changed something.
 
 **Why it outranks finishing the thought:** you are executing rules that no longer exist. Every subsequent step inherits the error, and the work is done to a spec that was retired — which is far more expensive to unpick than the re-read would have cost. The changed file wins over your memory of it, always.
 

@@ -93,7 +93,7 @@ Name the branch point explicitly when there is one: *investigate first, and only
 - **Point at references too** when a convention lives in one — it can load a skill's references the same way.
 - **Verify the slug exists before naming it.** Resolve it against `hyprpilot-skills__list_skills`; the catalog is profile-filtered, so a slug present for you may be absent for it. A pointer to a skill it cannot load is worse than no pointer.
 - **Do not paraphrase a skill you could name.** A paraphrase forks on the day you write it. If you find yourself explaining a process that already has a slug, replace the explanation with the slug.
-- **Tell it to reload when freshness matters.** `hyprpilot-skills__reload` if the catalog may be stale — and note escalation stops at restarting the **`hyprpilot-skills`** sidecar, never the gateway. Name that server explicitly: there are three, and restarting `hyprpilot-harness` instead **kills every running agent session and destroys its transcripts**, since sessions die with their sidecar.
+- **Freshness is automatic.** The skill roots are watched, so an edit reaches the session without a tool call; what a change means for what the agent already holds is `hyprpilot-reload`. Note escalation stops at restarting the **`hyprpilot-skills`** sidecar, never the gateway. Name that server explicitly: there are three, and restarting `hyprpilot-harness` instead **kills every running agent session and destroys its transcripts**, since sessions die with their sidecar.
 
 ## Its background work is prompt-driven — just ask for it
 
@@ -387,7 +387,7 @@ When the terminal report lands:
 
 - Update it **during** the run, not as a retrospective — the detail is exact while the thread is open and vague an hour later.
 - Record the mechanism, not the anecdote: "state the invariant or it optimises for finishing" travels; "the opnsense bump went fine" does not.
-- Follow `config-skills` for the edit itself, and reload after.
+- Follow `config-skills` for the edit itself. The roots are watched, so re-read what you already hold — `hyprpilot-reload`.
 
 ## Related Skills
 
