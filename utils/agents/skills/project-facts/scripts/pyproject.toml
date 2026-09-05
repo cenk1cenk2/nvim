@@ -1,0 +1,32 @@
+[project]
+name = "project-facts-scripts"
+version = "1.0.0"
+description = "Report a repository's task runner, CI gates and release automation."
+requires-python = ">=3.11"
+dependencies = [
+  "agentlib",
+  "click>=8.1",
+  # Pipeline and Taskfile definitions are YAML; parsing beats regexing them.
+  "pyyaml>=6.0",
+]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.0",
+]
+
+[tool.uv]
+python-preference = "only-system"
+
+[tool.uv.sources]
+agentlib = { path = "../../lib", editable = true }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

@@ -21,14 +21,51 @@ from pathlib import Path
 import click
 from agentlib.cli import ExitCode, create_logger, emit
 
+# A lint run that found failures. Deliberately not `ExitCode.CEILING`, which
+# means a bounded wait expired in the watcher scripts.
+FINDINGS_FOUND = 1
+
 DESCRIPTION_CEILING = 380
-DESCRIPTION_HARD_CEILING = 500
-EMOJI = re.compile(
-    "[☀-➿\U0001f000-\U0001faff️]",
+# "Roughly 380" allows a tolerance band, not an open one. 420 is ~10% over;
+# beyond that a description is long enough for truncation to start eating the
+# trailing triggers, which is the whole reason the ceiling exists.
+DESCRIPTION_HARD_CEILING = 420
+
+# Pictographs, dingbats, arrows and stars. The narrow BMP ranges matter as much
+# as the astral ones: the absolute rule names "star" explicitly, and U+2B50 sits
+# outside the emoji planes.
+EMOJI = re.compile("[\u2300-\u23ff\u2600-\u27bf\u2b00-\u2bff\ufe0f\U0001f000-\U0001faff]")
+
+# The closed set of trigger phrasings the catalog uses. Enumerated, not a loose
+# pattern: `Use on`, `Use when`, `Use first after`, `Load before`, `Load the
+# entry for`, `read when`, `load this only to`, and the auto-invoke form.
+TRIGGER = re.compile(
+    r"\b(?:"
+    r"Use on|Use when|Use first|Use it when|Use this when"
+    r"|Load when|Load before|Load it|Load the entry|load this"
+    r"|[Rr]ead when|Invoke when|Invoked when"
+    r"|Auto-invoked"
+    r")\b",
 )
-MCP_WIRE = re.compile(r"mcp__[a-z]")
-LOAD_SLUG = re.compile(r"Load `([a-z0-9][a-z0-9-]*)`")
-BACKTICK_PATH = re.compile(r"`([^`]+\.md)`")
+
+MCP_WIRE = re.compile(r"mcp__[A-Za-z]")
+# A wire name may legitimately appear as a FAMILY glob naming a connector, or
+# inside a ToolSearch `select:` string, which is literal data. Everything else
+# is an instruction to call it, which the short `server__tool` form owns.
+MCP_WIRE_ALLOWED = re.compile(r"mcp__[A-Za-z0-9_]*__\*|select:[^`\s]*mcp__")
+
+# The catalog writes loads three ways; all three must resolve.
+LOAD_SLUG = re.compile(r"\b[Ll]oad(?: the)? `([a-z0-9][a-z0-9-]*)`")
+KEBAB = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+# Keys Claude Code understands but this catalog does not use; `config-skills`
+# says plainly not to add them, and a stray one is invisible.
+FOREIGN_KEYS = ("when_to_use", "allowed-tools", "allowed_tools", "hooks", "model")
+
+# Frontmatter lines the hand parser understands. Anything else is reported
+# rather than skipped: a silently dropped `references:` item means the
+# existence check quietly stops checking.
+RECOGNISED_LINE = re.compile(r"^(?:\s*- .+|[A-Za-z_][A-Za-z0-9_-]*:.*|\s*#.*|\s*)$")
 
 
 class Level(StrEnum):
@@ -82,8 +119,13 @@ def parse_skill(path: Path) -> tuple[Skill | None, list[Finding]]:
     fields: dict[str, str] = {}
     references: list[str] = []
     scripts: list[str] = []
+    unreadable: list[Finding] = []
     current: str | None = None
-    for line in lines[1:close]:
+    for offset, line in enumerate(lines[1:close], start=2):
+        if not RECOGNISED_LINE.match(line):
+            unreadable.append(
+                Finding(Level.FAIL, "frontmatter", slug, f"unparseable frontmatter line: {line.strip()!r}", offset)
+            )
         if line.startswith("#") or not line.strip():
             continue
         if line.startswith("  - "):
@@ -108,12 +150,24 @@ def parse_skill(path: Path) -> tuple[Skill | None, list[Finding]]:
             body_offset=close + 1,
             raw=raw,
         ),
-        [],
+        unreadable,
     )
 
 
 class Checks:
     """Each method is one rule. `config-skills` is cited so a failure is traceable to its source."""
+
+    RULES = (
+        "name_matches_directory",
+        "kebab_case",
+        "description",
+        "no_foreign_frontmatter",
+        "declared_paths_exist",
+        "load_lines_resolve",
+        "no_emoji",
+        "no_mcp_wire_names",
+        "no_h1",
+    )
 
     def __init__(self, root: Path, slugs: set[str]):
         self.root = root
@@ -140,24 +194,18 @@ class Checks:
         text = raw.strip("'\"")
         if not text.startswith(skill.slug):
             out.append(Finding(Level.FAIL, "desc-slug", skill.slug, "does not start with the slug (checklist 1)"))
-        # `Load when` / `Load before` fill the same slot as `Use on` for a
-        # manual or server-manual skill, and several skills use them.
-        # Checklist 3 writes the slot as `Use on` / `Use when`, but the catalog
-        # in practice also says "Use first after", "Load the entry for", "read
-        # when", "load this only to". All of them are the same slot - an
-        # imperative telling the reader when to reach for the skill - so the
-        # check accepts any of them. What it still catches is a description
-        # with no trigger clause at all, which is the failure that matters.
-        if not re.search(
-            r"\b(use|load|read|invoke)\b[^.]{0,40}?\b(on|when|before|after|for|to)\b|auto-invoked", text, re.IGNORECASE
-        ):
+        # Checklist 3 writes the slot as `Use on` / `Use when`. The catalog also
+        # uses a small, closed set of variants; they are enumerated rather than
+        # matched loosely, because a loose pattern accepts prose that carries no
+        # trigger at all ("Load-balancer tuning for the ingress tier").
+        if not TRIGGER.search(text):
             out.append(Finding(Level.FAIL, "desc-trigger", skill.slug, "no trigger phrase (checklist 3)"))
+        # Checklist 4 is part of "one shape, every skill" and its presence is
+        # purely mechanical, so it fails rather than warns.
         if "Not for" not in text:
-            out.append(Finding(Level.WARN, "desc-notfor", skill.slug, "no `Not for <situation>` (checklist 4)"))
+            out.append(Finding(Level.FAIL, "desc-notfor", skill.slug, "no `Not for <situation>` (checklist 4)"))
         if len(text) > DESCRIPTION_CEILING:
-            # The checklist says "roughly 380", so overshooting it is a warning.
-            # It becomes a failure only where truncation would start eating the
-            # trailing triggers, which is what the ceiling exists to protect.
+            # "Roughly 380" is a tolerance band, not an open one.
             level = Level.FAIL if len(text) > DESCRIPTION_HARD_CEILING else Level.WARN
             out.append(
                 Finding(level, "desc-length", skill.slug, f"{len(text)} chars, ceiling ~{DESCRIPTION_CEILING} (6)")
@@ -179,12 +227,19 @@ class Checks:
                 break
         return out
 
-    def tier(self, skill: Skill) -> list[Finding]:
-        """config-skills Conventions: `disableModelInvocation` is true or absent, never false."""
-        value = skill.frontmatter.get("disableModelInvocation")
-        if value == "false":
-            return [Finding(Level.WARN, "tier", skill.slug, "disableModelInvocation: false; omit the key instead")]
+    def kebab_case(self, skill: Skill) -> list[Finding]:
+        """config-skills Conventions: directory and `name` are both kebab-case."""
+        if not KEBAB.match(skill.slug):
+            return [Finding(Level.FAIL, "kebab", skill.slug, "directory name is not kebab-case")]
         return []
+
+    def no_foreign_frontmatter(self, skill: Skill) -> list[Finding]:
+        """config-skills: the Claude Code keys this catalog does not use are not added."""
+        return [
+            Finding(Level.FAIL, "frontmatter-key", skill.slug, f"{key} is not a key this catalog uses")
+            for key in FOREIGN_KEYS
+            if key in skill.frontmatter
+        ]
 
     def declared_paths_exist(self, skill: Skill) -> list[Finding]:
         """A declared reference or script that does not exist resolves to nothing, silently."""
@@ -224,22 +279,30 @@ class Checks:
             if line.lstrip().startswith("```"):
                 fenced = not fenced
                 continue
-            match = MCP_WIRE.search(line)
-            if not match:
+            if not MCP_WIRE.search(line):
                 continue
-            # A wire name followed by `(` is an instruction to CALL it, which is
-            # the mistake. A bare one is usually naming a connector whose wire
-            # form IS its identity - `mcp__claude_ai_Slack__*` in slack-kilic -
-            # and that is legitimate, so it only warns.
-            called = re.search(r"mcp__[A-Za-z0-9_]+\(", line) is not None
-            level = Level.FAIL if called and not fenced else Level.WARN
-            out.append(Finding(level, "mcp-prefix", skill.slug, "mcp__ wire name in the body", offset))
+            # Two shapes are literal data rather than an instruction: a family
+            # glob naming a connector (`mcp__claude_ai_Slack__*`), and a name
+            # inside a ToolSearch `select:` string. Everything else is a call the
+            # short `server__tool` form owns, and a fence does not excuse it -
+            # a fenced call instruction is still an instruction.
+            if MCP_WIRE_ALLOWED.search(line):
+                continue
+            out.append(Finding(Level.FAIL, "mcp-prefix", skill.slug, "mcp__ wire name; use `server__tool`", offset))
         return out
 
     def no_h1(self, skill: Skill) -> list[Finding]:
-        """config-skills Body structure: a SKILL.md body opens with content, not an H1."""
+        """config-skills Body structure: a SKILL.md body opens with content, not an H1.
+
+        Fence-aware: a `# ...` inside a code block is a shell comment, and
+        counting those trains a reader to ignore the column.
+        """
+        fenced = False
         for offset, line in enumerate(skill.body.splitlines(), start=skill.body_offset + 1):
-            if line.startswith("# "):
+            if line.lstrip().startswith("```"):
+                fenced = not fenced
+                continue
+            if not fenced and line.startswith("# "):
                 return [Finding(Level.WARN, "h1", skill.slug, "H1 heading in the body", offset)]
         return []
 
@@ -292,9 +355,9 @@ def cli(root: str | None, warnings: bool, verbose: bool) -> None:
 
     slugs = {skill.slug for skill in skills}
     checks = Checks(catalog, slugs)
-    methods = [
-        getattr(checks, name) for name in dir(checks) if not name.startswith("_") and callable(getattr(checks, name))
-    ]
+    # Named explicitly: sweeping `dir()` would turn any future public helper on
+    # Checks into a silent rule.
+    methods = [getattr(checks, name) for name in Checks.RULES]
     for skill in skills:
         for method in methods:
             findings.extend(method(skill))
@@ -315,8 +378,20 @@ def cli(root: str | None, warnings: bool, verbose: bool) -> None:
     warns = sum(1 for f in findings if f.level is Level.WARN)
     emit("")
     emit(f"{len(skills)} skill(s) checked: {fails} failure(s), {warns} warning(s)")
-    raise SystemExit(ExitCode.CEILING if fails else ExitCode.MET)
+    # Not CEILING: that means 'a bounded wait expired' for the watcher scripts.
+    # Here a non-zero exit means the catalog has failures to fix.
+    raise SystemExit(FINDINGS_FOUND if fails else ExitCode.MET)
+
+
+def main() -> None:
+    try:
+        cli.main(standalone_mode=False)
+    except click.ClickException as err:
+        err.show()
+        raise SystemExit(ExitCode.USAGE) from err
+    except click.Abort:
+        raise SystemExit(130) from None
 
 
 if __name__ == "__main__":
-    cli.main(standalone_mode=False)
+    main()
