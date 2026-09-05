@@ -66,7 +66,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 6. Present the draft in chat.
 7. Iterate based on user feedback.
 8. After approval, create the directory and write the file.
-9. Reload the skill catalog using the reloading guidance below.
+9. Confirm it landed, per the guidance below.
 
 ### Update
 
@@ -79,7 +79,7 @@ Skills in this directory form an interconnected system. A skill may depend on or
 7. Present proposed changes to the user.
 8. Iterate based on feedback.
 9. After approval, apply the changes.
-10. Reload the skill catalog using the reloading guidance below.
+10. Confirm it landed, per the guidance below.
 
 ### Review
 
@@ -90,17 +90,17 @@ Skills in this directory form an interconnected system. A skill may depend on or
 5. Ask clarifying questions to understand user intent.
 6. Propose specific improvements based on answers.
 7. After approval, apply the changes (or leave as-is if no changes needed).
-8. If files changed, reload the skill catalog using the reloading guidance below.
+8. If files changed, confirm they landed, per the guidance below.
 
-## Reloading Skills
+## Confirming an Edit Landed
 
-After creating, updating, deleting, or moving skill files:
+The skills sidecar watches every root, so a written file is rescanned and announced on its own. What still needs doing is confirming it landed and re-reading what you already hold — the rescan fixes the catalog, never your context.
 
-1. Run `mcp__hyprpilot-skills__reload` so Hyprpilot refreshes the skill catalog.
-2. Verify the reload result reports the expected skill count or succeeds without errors.
-3. For changed skills, re-read the affected skill with `mcp__hyprpilot-skills__read_skill` when practical to confirm the daemon sees the latest content.
-4. If references changed, use `mcp__hyprpilot-skills__list_skill_references { slug }` on an affected skill to confirm every declared path resolved into the manifest — a typo drops the row silently.
-5. Report the reload result to the user.
+1. Re-read the skill you just wrote with `mcp__hyprpilot-skills__read_skill { slug }` and treat the returned body as authoritative. Any copy you were holding from before the edit is void.
+2. If references changed, use `mcp__hyprpilot-skills__list_skill_references { slug }` on an affected skill to confirm every declared path resolved into the manifest — a typo drops the row silently.
+3. Report what you re-read, and anything that failed to resolve.
+
+Full flow in `hyprpilot-reload`.
 
 ## SKILL.md Format
 

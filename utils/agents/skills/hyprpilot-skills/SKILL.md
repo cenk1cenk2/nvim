@@ -11,7 +11,7 @@ Mechanics of how skills reach you. Whether to route a task through a skill at al
 
 | Server | Carries | Its manual |
 |---|---|---|
-| `hyprpilot-skills` | `list_skills`, `read_skill`, `list_skill_references`, `read_skill_references`, `reload` | this skill |
+| `hyprpilot-skills` | `list_skills`, `read_skill`, `list_skill_references`, `read_skill_references` | this skill |
 | `hyprpilot` | general tools — `open` (URL, file, or directory in the OS default handler) | none yet |
 | `hyprpilot-nvim` | the captain's live Neovim — buffers, LSP, diagnostics | `hyprpilot-nvim`, eager at startup |
 | `hyprpilot-harness` | `spawn` / `session_*` for separate agent sessions, where enabled | `hyprpilot-delegate`, loaded only on the captain's explicit ask |
@@ -27,7 +27,7 @@ Skills are exposed as resources: `hyprpilot://skills` is the catalogue index in 
 - `read_skill { slug, bundle: true }` — body plus every reference body. Worth it on the first load of an unfamiliar skill; wasteful once you hold the shared conventions.
 - `list_skill_references { slug }` — the manifest alone, no bodies and no skill body.
 - `read_skill_references { references: [path] }` — the bodies you actually want. See below.
-- `reload` — after skill source changes on disk. Flow per `hyprpilot-reload`.
+The roots are WATCHED, so an edit on disk is rescanned and announced without anything asked of you. What a change means for what you already hold is `hyprpilot-reload`.
 
 A skill the harness already attached is loaded — an `#{hyprpilot://skills/<slug>}` mention, a palette pick, or auto-injection. Do not re-read it.
 
@@ -53,7 +53,7 @@ Each manifest row carries `path`, `name` (the display label — the reference's 
 
 A skill's metadata block is its whole frontmatter minus the three keys another field already carries — `title` and `description` (the spec `Resource` fields) and `references` (superseded by the manifest, which publishes the canonical path that actually addresses each file). Everything else, including keys nobody planned for, rides through verbatim.
 
-**`modified` answers staleness, never caching.** It tells you whether a convention changed since you read it, which matters in a long session and after `reload`. The cache key is the path.
+**`modified` answers staleness, never caching.** It tells you whether a convention changed since you read it, which matters in a long session and after any rescan. The cache key is the path.
 
 ## ABSOLUTE — Keep a Loaded-Path Set and Never Fetch a Path Twice
 
@@ -61,7 +61,7 @@ A skill's metadata block is its whole frontmatter minus the three keys another f
 
 This is what makes the shared corpus free after first use. `output-diff` is declared by 57 skills and `scm-detect` by 31 — under this rule a session pays for each of them once instead of dozens of times. Path identity is exactly what makes it mechanical rather than a judgement call: two citations either resolve to the same path or they do not.
 
-The set survives everything except a `reload` that changed the file, which `modified` tells you about.
+The set survives everything except the file itself changing, which `modified` tells you about. Because the roots are watched, that happens without you asking — so a change notification for a skill you hold is a signal to re-check the manifest, not noise.
 
 ## Conditional Families — Declare All, Fetch One
 
