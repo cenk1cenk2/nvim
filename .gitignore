@@ -34,3 +34,10 @@ lua/lv-user-config/
 
 /testingsmt
 .DS_Store
+
+# python: agent skill scripts are uv projects; the lockfile IS committed
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/

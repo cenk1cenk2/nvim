@@ -1,0 +1,24 @@
+[project]
+name = "agentlib"
+version = "1.0.0"
+description = "Scaffolding shared by every agent-skill scripts project in this catalog."
+requires-python = ">=3.11"
+dependencies = [
+  "click>=8.1",
+  # httpx over urllib: browser-shaped requests and redirect following, so a
+  # probe through Cloudflare or any edge proxy is not bounced.
+  "httpx>=0.27",
+  # jq-shaped narrowing for the cases a dotted path cannot express: filters,
+  # wildcards, recursive descent. Pure python, so the watcher payload stays
+  # portable - libjq bindings would need a C toolchain on every host.
+  "jsonpath-ng>=1.6",
+  "pydantic>=2.7",
+  "rich>=13.7",
+]
+
+# A path dependency has to be an installable package: uv builds it even in
+# editable mode, to produce the .pth and dist-info. uv_build is uv's own
+# backend, so this needs nothing beyond the uv that already runs every script.
+[build-system]
+requires = ["uv_build>=0.12,<0.13"]
+build-backend = "uv_build"

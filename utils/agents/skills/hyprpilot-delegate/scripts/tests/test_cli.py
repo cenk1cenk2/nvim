@@ -9,10 +9,10 @@ import pytest
     ("args", "code", "expect"),
     [
         pytest.param(("--help",), 0, "resolve", id="top-level help lists the verbs"),
-        pytest.param(("--help",), 0, "10 session dir gone", id="epilog documents the wait exits"),
+        pytest.param(("--help",), 0, "session dir gone", id="epilog documents the wait exits"),
         pytest.param(("verdict", "--help"), 0, "--turn-dir", id="verb help is reachable"),
         pytest.param((), 2, "required", id="no verb is a usage error"),
-        pytest.param(("spawn",), 2, "invalid choice", id="unknown verb is a usage error"),
+        pytest.param(("spawn",), 2, "No such command", id="unknown verb is a usage error"),
     ],
 )
 def test_cli_surface(run, args, code, expect):

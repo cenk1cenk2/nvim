@@ -178,14 +178,16 @@ class TestStallDetection:
         pytest.param(("--turn-dir", "turns/1"), "absolute path", id="relative turn-dir"),
         pytest.param(("--done-file", "{s}/turns/*/done.json"), "glob character", id="glob in done-file"),
         pytest.param(("--turn-dir", "{s}/turns/1", "--session-dir", "rel"), "absolute path", id="relative session-dir"),
-        pytest.param(("--turn-dir", "{s}/turns/1", "--stall-after", "1.5"), "positive integer", id="non-integer stall"),
+        pytest.param(
+            ("--turn-dir", "{s}/turns/1", "--stall-after", "1.5"), "not a valid integer", id="non-integer stall"
+        ),
         pytest.param(("--turn-dir", "{s}/turns/1", "--stall-after", "0"), "positive integer", id="zero stall"),
         pytest.param(("--turn-dir", "{s}/turns/1", "--max-polls", "0"), "positive integer", id="zero max-polls"),
         pytest.param(("--turn-dir", "{s}/turns/1", "--interval", "-5"), "must not be negative", id="negative interval"),
         pytest.param(
-            ("--turn-dir", "{s}/turns/1", "--interval", "soon"), "number of seconds", id="non-numeric interval"
+            ("--turn-dir", "{s}/turns/1", "--interval", "soon"), "not a valid float", id="non-numeric interval"
         ),
-        pytest.param(("--turn-dir", "{s}/turns/1", "--forever"), "unrecognized", id="unknown option"),
+        pytest.param(("--turn-dir", "{s}/turns/1", "--forever"), "No such option", id="unknown option"),
     ],
 )
 def test_wait_refusals(run, session_dir, args, expect):

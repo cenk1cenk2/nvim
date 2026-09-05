@@ -154,7 +154,7 @@ class TestJsonInput:
 @pytest.mark.parametrize(
     ("args", "expect"),
     [
-        pytest.param(("--status", "done"), "invalid choice", id="bad status"),
+        pytest.param(("--status", "done"), "not one of", id="bad status"),
         pytest.param(
             ("--status", "exited", "--has-result", "true"), "pass --exit-code", id="exited without an exit code"
         ),
@@ -162,8 +162,8 @@ class TestJsonInput:
             ("--status", "exited", "--exit-code", "0", "--has-result", "maybe"), "true or false", id="bad has-result"
         ),
         pytest.param(("--status", "running", "--ledger", "ledger.jsonl"), "absolute path", id="relative ledger"),
-        pytest.param(("--status", "running", "--flat-after", "soon"), "invalid float", id="bad flat-after"),
-        pytest.param(("--status", "running", "--bogus"), "unrecognized", id="unknown option"),
+        pytest.param(("--status", "running", "--flat-after", "soon"), "not a valid float", id="bad flat-after"),
+        pytest.param(("--status", "running", "--bogus"), "No such option", id="unknown option"),
     ],
 )
 def test_verdict_refusals(run, args, expect):

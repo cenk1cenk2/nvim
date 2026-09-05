@@ -86,7 +86,7 @@ class TestModes:
             pytest.param("personal/claude/opus", "bypassPermissions", "widens", id="claude bypass is refused"),
             pytest.param("personal/claude/opus", "build", "claude mode must be", id="claude unknown mode"),
             pytest.param("glm-5.3", "auto", "opencode mode must be", id="opencode unknown mode"),
-            pytest.param("personal/codex/gpt", "plan", "carry no mode", id="codex profile carries no mode"),
+            pytest.param("personal/codex/gpt", "plan", "codex mode must be", id="codex rejects claude's vocabulary"),
         ],
     )
     def test_refused(self, resolve, want, mode, expect):
@@ -125,10 +125,11 @@ class TestReadOnly:
         assert result.code == 0
         assert '"mode": "auto"' in result
 
-    def test_codex_read_only_is_refused(self, resolve):
+    def test_codex_read_only_is_the_sandbox_mode(self, resolve):
+        """hyprpilot projects codex `mode` to `--sandbox`, so read-only is a real lever."""
         result = resolve("--want", "personal/codex/gpt", "--read-only")
-        assert result.code == 2
-        assert "restrict" in result
+        assert result.code == 0
+        assert '"mode": "read-only"' in result
 
 
 class TestArgs:
@@ -282,8 +283,8 @@ def test_missing_profiles_file_is_refused(run, tmp_path):
 @pytest.mark.parametrize(
     ("args", "expect"),
     [
-        pytest.param((), "required", id="no --want"),
-        pytest.param(("--want", "x", "--model", "y"), "unrecognized", id="unknown option"),
+        pytest.param((), "Missing option", id="no --want"),
+        pytest.param(("--want", "x", "--model", "y"), "No such option", id="unknown option"),
     ],
 )
 def test_resolve_usage_errors(run, profiles_file, args, expect):

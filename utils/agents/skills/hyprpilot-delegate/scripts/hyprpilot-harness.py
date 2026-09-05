@@ -1,55 +1,60 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S sh -c 'exec uv run --project "$(dirname "$0")" "$0" "$@"'
 """Wait on, resolve, judge, collect and tear down hyprpilot sessions from a shell, without calling MCP."""
 
 from __future__ import annotations
 
-import argparse
 import json
 import logging
 import os
 import sys
 import time
 from pathlib import Path
-from typing import Any
+from types import SimpleNamespace
+from typing import TYPE_CHECKING, Any
+
+import click
+from agentlib.cli import EarlyExit, ExitCode, ScriptError, create_logger
+from agentlib.models import WatchedPath
+from pydantic import TypeAdapter, ValidationError
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from lib import turns as ht  # noqa: E402
-from lib.cli import EarlyExit, ScriptError, create_logger  # noqa: E402
 
-GLOB_CHARS = "*?["
+if TYPE_CHECKING:
+    from collections.abc import Callable
+
+_NON_NEGATIVE_INT = TypeAdapter(int)
 
 
 def absolute_path(value: str, what: str) -> str:
-    """Refuse a relative or globbed path; a glob false-positives on a sibling turn."""
-    for ch in GLOB_CHARS:
-        if ch in value:
-            raise ScriptError(f"{what} contains the glob character {ch!r}; pass the exact path")
-    if not value.startswith("/"):
-        raise ScriptError(f"{what} must be an absolute path, got: {value}")
+    """Refuse a relative or globbed path; a glob false-positives on a sibling turn.
+
+    The rule lives in `agentlib.models.WatchedPath`; this wraps it so the message
+    still names which argument was wrong, which a bare pydantic error does not.
+    """
+    try:
+        return WatchedPath(path=value).path
+    except ValidationError as err:
+        raise ScriptError(f"{what} {err.errors()[0]['msg']}") from err
+
+
+def _positive_int(value: int, what: str) -> int:
+    if value <= 0:
+        raise ScriptError(f"{what} must be a positive integer, got: {value}")
     return value
 
 
-def positive_int(value: str) -> int:
-    if not value.isdigit() or int(value) <= 0:
-        raise argparse.ArgumentTypeError(f"must be a positive integer, got: {value}")
-    return int(value)
+def _non_negative_int(value: int, what: str) -> int:
+    if value < 0:
+        raise ScriptError(f"{what} must be a non-negative integer, got: {value}")
+    return value
 
 
-def non_negative_number(value: str) -> float:
-    try:
-        number = float(value)
-    except ValueError:
-        raise argparse.ArgumentTypeError(f"must be a number of seconds, got: {value}") from None
-    if number < 0:
-        raise argparse.ArgumentTypeError(f"must not be negative, got: {value}")
-    return number
-
-
-def non_negative_int(value: str) -> int:
-    if not value.isdigit():
-        raise argparse.ArgumentTypeError(f"must be a non-negative integer, got: {value}")
-    return int(value)
+def _non_negative_number(value: float, what: str) -> float:
+    if value < 0:
+        raise ScriptError(f"{what} must not be negative, got: {value}")
+    return value
 
 
 def load_json(source: str, what: str) -> Any:
@@ -72,7 +77,7 @@ class TurnWaiter:
 
     log = logging.getLogger("harness.wait")
 
-    def __init__(self, args: argparse.Namespace):
+    def __init__(self, args: SimpleNamespace):
         self.args = args
         self.flat_since: float | None = None
         self.flat_size: int | None = None
@@ -201,6 +206,9 @@ class SpawnResolver:
 
     CLAUDE_MODES = ("auto", "default", "acceptEdits", "dontAsk")
     OPENCODE_MODES = ("build", "plan")
+    # codex sandbox vocabulary, per CODEX_SANDBOX_MODES in hyprpilot's
+    # src/spawn/providers/codex.rs; hyprpilot projects these to `--sandbox`.
+    CODEX_MODES = ("read-only", "workspace-write", "danger-full-access")
     WITH_CONFIG_KEYS = ("model", "effort", "mode")
     # Claude's own gate-removing mode. Narrowing is a skill decision; widening never is.
     REFUSED_CLAUDE_MODES = ("bypassPermissions",)
@@ -279,7 +287,7 @@ class SpawnResolver:
                     "so this entry blocks nothing"
                 )
 
-    def validate(self, args: argparse.Namespace, row: dict[str, Any]) -> dict[str, Any]:
+    def validate(self, args: SimpleNamespace, row: dict[str, Any]) -> dict[str, Any]:
         vendor = self.vendor_of(row)
         call: dict[str, Any] = {"profile": row["id"]}
 
@@ -327,10 +335,9 @@ class SpawnResolver:
                 if mode != "plan":
                     raise ScriptError(f"opencode read-only is mode plan, got: {mode}")
             elif vendor == "codex":
-                raise ScriptError(
-                    "codex has no plan mode and no tool allow list in the harness; restrict "
-                    "through a profile that already carries the policy"
-                )
+                mode = mode or "read-only"
+                if mode != "read-only":
+                    raise ScriptError(f"codex read-only is mode read-only, got: {mode}")
 
         if mode is not None:
             if vendor == "claude":
@@ -346,8 +353,8 @@ class SpawnResolver:
             elif vendor == "opencode":
                 if mode not in self.OPENCODE_MODES:
                     raise ScriptError(f"opencode mode must be one of {', '.join(self.OPENCODE_MODES)}, got: {mode}")
-            elif vendor == "codex":
-                raise ScriptError("codex profiles carry no mode; the listing shows none, so --mode is refused")
+            elif vendor == "codex" and mode not in self.CODEX_MODES:
+                raise ScriptError(f"codex mode must be one of {', '.join(self.CODEX_MODES)}, got: {mode}")
             call["mode"] = mode
 
         if args.arg:
@@ -392,7 +399,7 @@ class SpawnResolver:
             self.warnings.append("profile is headless; it cannot be driven interactively")
         return call
 
-    def run(self, args: argparse.Namespace) -> int:
+    def run(self, args: SimpleNamespace) -> int:
         row = self.pick(args.want)
         call = self.validate(args, row)
         if not args.json:
@@ -420,7 +427,7 @@ class SessionVerdict:
     log = logging.getLogger("harness.verdict")
     EXIT = {"collect": 0, "running": 4, "wedged": 5, "inspect": 6, "steer": 7}
 
-    def __init__(self, args: argparse.Namespace):
+    def __init__(self, args: SimpleNamespace):
         self.args = args
         self.reading = self.parse_reading(args)
 
@@ -444,7 +451,7 @@ class SessionVerdict:
         except (TypeError, ValueError):
             raise ScriptError(f"{what} must be an integer, got: {value}") from None
 
-    def parse_reading(self, args: argparse.Namespace) -> dict[str, Any]:
+    def parse_reading(self, args: SimpleNamespace) -> dict[str, Any]:
         status, exit_code, has_result, transcript_bytes, turn = (
             args.status,
             args.exit_code,
@@ -599,7 +606,7 @@ class TurnResult:
 
     log = logging.getLogger("harness.result")
 
-    def __init__(self, args: argparse.Namespace):
+    def __init__(self, args: SimpleNamespace):
         self.args = args
         self.path = ht.resolve_transcript(args.transcript)
 
@@ -680,7 +687,7 @@ class SessionInspector:
     log = logging.getLogger("harness.inspect")
     SAFE_SESSION_KEYS = ("handle", "startedAt", "startTicks")
 
-    def __init__(self, args: argparse.Namespace):
+    def __init__(self, args: SimpleNamespace):
         self.args = args
         self.session_dir = self.resolve_session_dir(args.session_dir)
 
@@ -908,7 +915,7 @@ class TeardownChecklist:
     # generic watch.py armed on a session path by hand.
     WATCHER_MARKERS = ("hyprpilot-harness.py", "watch.py")
 
-    def __init__(self, args: argparse.Namespace):
+    def __init__(self, args: SimpleNamespace):
         self.args = args
         self.session_dir = self.resolve_session_dir(args.session_dir)
 
@@ -1097,6 +1104,7 @@ class TeardownChecklist:
 # --- cli ------------------------------------------------------------------------------------------
 
 EPILOG = """\
+\b
 exit codes:
   wait      0 turn done | 10 session dir gone | 11 transcript flat | 1 ceiling | 2 bad input
   resolve   0 spawn call on stdout | 3 no launchable match | 2 refused argument
@@ -1114,194 +1122,167 @@ Reads only. Never spawns, kills, calls MCP, or globs; the verdict ledger is
 the one file it writes, and only when asked to.
 """
 
-
-def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        prog="hyprpilot-harness.py",
-        description=__doc__,
-        epilog=EPILOG,
-        formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    parser.add_argument("-v", "--verbose", action="store_true", help="Debug logging on stderr.")
-    verbs = parser.add_subparsers(dest="verb", required=True, metavar="VERB")
-
-    p = verbs.add_parser(
-        "wait",
-        help="Wait for one turn's done.json; the watcher payload.",
-        description="Wait for exactly one hyprpilot turn to end. Takes the turn path verbatim from the "
-        "spawn or session_send response - never a computed turn number. Bounded polling, one "
-        "literal path, no globbing. Meant to be armed through the runtime's background "
-        "facility so its exit wakes the session once.",
-    )
-    p.add_argument(
-        "--turn-dir", metavar="PATH", help="sessionInfo.files.turnDir, verbatim; done.json is appended to it."
-    )
-    p.add_argument(
-        "--done-file",
-        metavar="PATH",
-        help="sessionInfo.files.done, verbatim; must end in /done.json. "
-        "Exactly one of --turn-dir and --done-file is required.",
-    )
-    p.add_argument(
-        "--session-dir",
-        metavar="PATH",
-        help="sessionInfo.files.dir; defaults to three levels above the marker, "
-        "which is the SESSION/turns/N/done.json layout.",
-    )
-    p.add_argument(
-        "--interval", type=non_negative_number, default=30.0, metavar="SEC", help="Seconds between polls (default 30)."
-    )
-    p.add_argument(
-        "--max-polls",
-        type=positive_int,
-        default=120,
-        metavar="N",
-        help="Poll ceiling (default 120, so 60 minutes at the default interval).",
-    )
-    p.add_argument("--label", metavar="NAME", help="Name printed in the RESULT line (default: the done path).")
-    p.add_argument(
-        "--stall-after",
-        type=positive_int,
-        metavar="SECONDS",
-        help="Also exit 11 when turns.jsonl has not grown for this many seconds while the turn "
-        "is not done. 600-900 for a delegate turn; a wedged turn never wakes you without it.",
-    )
-    p.add_argument("--quiet", action="store_true", help="Print only the RESULT lines.")
-
-    p = verbs.add_parser(
-        "resolve",
-        help="Resolve a profile from a list_profiles listing and validate the spawn arguments.",
-        description="Resolve a profile from a saved list_profiles listing and validate the spawn call "
-        "before anything is launched. Prints the spawn call as JSON on stdout.",
-    )
-    p.add_argument(
-        "--profiles",
-        required=True,
-        metavar="FILE",
-        help="The list_profiles JSON saved to a file; - reads stdin. Never pin an id.",
-    )
-    p.add_argument(
-        "--want", required=True, metavar="FRAGMENT", help="An exact profile id, or words that must all appear in it."
-    )
-    p.add_argument("--prompt", metavar="TEXT", help="The brief; mutually exclusive with --prompt-file.")
-    p.add_argument("--prompt-file", metavar="PATH", help="Absolute path whose contents become the prompt.")
-    p.add_argument("--cwd", metavar="PATH", help="Absolute working directory.")
-    p.add_argument(
-        "--mode",
-        metavar="MODE",
-        help="claude auto|default|acceptEdits|dontAsk; opencode build|plan; codex carries none.",
-    )
-    p.add_argument(
-        "--arg",
-        action="append",
-        default=[],
-        metavar="TOKEN",
-        help="Raw vendor argv token, repeatable, forwarded verbatim.",
-    )
-    p.add_argument("--with-config", metavar="JSON", help="Array of overlay objects; keys model, effort, mode only.")
-    p.add_argument("--read-only", action="store_true", help="Assert the per-vendor read-only shape.")
-    p.add_argument("--wait", action="store_true", help="Note that the caller intends a blocking turn.")
-    p.add_argument("--json", action="store_true", help="Print only the spawn call; no summary on stderr.")
-
-    p = verbs.add_parser(
-        "verdict",
-        help="Turn a session_status reading into a verdict and the next action.",
-        description="Turn one session_status reading into a verdict and the next action, keeping a "
-        "ledger across readings so a wedged agent is visible. Pass the fields as flags, "
-        "or the whole session_status object with --json.",
-    )
-    p.add_argument("--status", choices=("running", "exited"))
-    p.add_argument("--exit-code", metavar="N", help="Integer; omitted while running.")
-    p.add_argument("--has-result", metavar="BOOL", help="true or false.")
-    p.add_argument("--transcript-bytes", metavar="N")
-    p.add_argument("--turn", metavar="N")
-    p.add_argument("--json", metavar="FILE", help="The session_status object; - reads stdin.")
-    p.add_argument(
-        "--ledger",
-        metavar="PATH",
-        help="Append this reading to a JSONL file and judge progress against the earlier ones.",
-    )
-    p.add_argument(
-        "--flat-after",
-        type=float,
-        default=300.0,
-        metavar="SECONDS",
-        help="A running turn flat for this long is wedged (default 300).",
-    )
-    p.add_argument(
-        "--turn-dir",
-        metavar="PATH",
-        help="sessionInfo.files.turnDir; an exited turn's transcript is read to tell max-turns apart.",
-    )
-    p.add_argument("--output", choices=("text", "json"), default="text")
-
-    p = verbs.add_parser(
-        "result",
-        help="Extract the final agent text from one turn transcript.",
-        description="Extract the final agent result from one turn transcript, or say why there is none. "
-        "Takes sessionInfo.files.transcript, or the turn directory holding it.",
-    )
-    p.add_argument("transcript", help="turns.jsonl, or the turn directory.")
-    p.add_argument("--provider", choices=("auto",) + ht.PROVIDERS, default="auto", help="Override shape detection.")
-    p.add_argument("--json", action="store_true", help="Emit a JSON report instead of plain text.")
-    p.add_argument("--max-chars", type=positive_int, default=0, metavar="N", help="Truncate the printed result.")
-    p.add_argument("--quiet", action="store_true", help="Print the result only, no diagnostics.")
-
-    p = verbs.add_parser(
-        "inspect",
-        help="Report every turn of a session directory, read-only.",
-        description="Inspect a session directory read-only: which turn is current, whether it finished, "
-        "what the terminal event said, whether a result is recoverable. stderr.log content, "
-        "environment values and raw payloads are never printed.",
-    )
-    p.add_argument("session_dir", help="sessionInfo.files.dir, or any turn directory under it.")
-    p.add_argument("--turn", type=positive_int, metavar="N", help="Report only turn N.")
-    p.add_argument("--json", action="store_true", help="Emit a JSON report instead of the text table.")
-    p.add_argument(
-        "--max-errors",
-        type=non_negative_int,
-        default=5,
-        metavar="N",
-        help="Cap the error strings printed per turn (default 5).",
-    )
-
-    p = verbs.add_parser(
-        "teardown",
-        help="List uncollected turns and watcher processes before a reap.",
-        description="List what a session leaves behind before it is reaped: turns whose answer is not "
-        "collected, and watcher processes still polling its files, read from /proc. Kills nothing.",
-    )
-    p.add_argument("session_dir", help="sessionInfo.files.dir, or any turn directory under it.")
-    p.add_argument("--handle", metavar="HANDLE", help="The session handle, echoed into the checklist.")
-    p.add_argument("--json", action="store_true", help="Machine-readable report.")
-    p.add_argument("--proc", default="/proc", help=argparse.SUPPRESS)
-    return parser
+CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"], "max_content_width": 100}
 
 
-def cmd_main(argv: list[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
-    create_logger(args.verbose, name="harness")
+def _args(**kwargs: Any) -> SimpleNamespace:
+    """Adapt click's keyword parameters to the namespace the verb classes read.
+
+    The six verb classes predate this CLI and read ~40 attributes off one
+    object. Handing them a namespace keeps that surface untouched while click
+    owns parsing, which is the whole point of the port; giving each class a
+    typed model is a separate refactor with its own test churn.
+    """
+    return SimpleNamespace(**kwargs)
+
+
+def _run(verb: str, build: Callable[[], int]) -> None:
     try:
-        if args.verb == "wait":
-            return TurnWaiter(args).run()
-        if args.verb == "resolve":
-            return SpawnResolver.from_listing(args.profiles).run(args)
-        if args.verb == "verdict":
-            return SessionVerdict(args).run()
-        if args.verb == "result":
-            return TurnResult(args).run()
-        if args.verb == "inspect":
-            return SessionInspector(args).run()
-        if args.verb == "teardown":
-            return TeardownChecklist(args).run()
-        raise ScriptError(f"unknown verb: {args.verb}")
+        raise SystemExit(build())
     except ht.TranscriptError as err:
         sys.stderr.write(f"error: {err}\n")
-        return 2
+        raise SystemExit(ExitCode.USAGE) from err
     except ScriptError as err:
-        sys.stderr.write(f"error: {err}\n" if err.exit_code == 2 else f"{err}\n")
-        return err.exit_code
+        sys.stderr.write(f"error: {err}\n" if err.exit_code == ExitCode.USAGE else f"{err}\n")
+        raise SystemExit(err.exit_code) from err
+
+
+@click.group(context_settings=CONTEXT_SETTINGS, help=__doc__, epilog=EPILOG, invoke_without_command=True)
+@click.option("-v", "--verbose", is_flag=True, help="Debug logging on stderr.")
+@click.pass_context
+def cli(ctx: click.Context, verbose: bool) -> None:
+    create_logger(verbose, name="harness")
+    if ctx.invoked_subcommand is None:
+        sys.stderr.write("error: a verb is required; see --help for the list\n")
+        raise SystemExit(ExitCode.USAGE)
+
+
+@cli.command("wait", short_help="Wait for one turn's done.json; the watcher payload.")
+@click.option("--turn-dir", metavar="PATH", help="sessionInfo.files.turnDir, verbatim; done.json is appended to it.")
+@click.option("--done-file", metavar="PATH", help="sessionInfo.files.done, verbatim; must end in /done.json.")
+@click.option("--session-dir", metavar="PATH", help="sessionInfo.files.dir; defaults to three levels above the marker.")
+@click.option("--interval", type=float, default=30.0, metavar="SEC", help="Seconds between polls (default 30).")
+@click.option("--max-polls", type=int, default=120, metavar="N", help="Poll ceiling (default 120).")
+@click.option("--label", metavar="NAME", help="Name printed in the RESULT line.")
+@click.option("--stall-after", type=int, metavar="SECONDS", help="Exit 11 when turns.jsonl stops growing.")
+@click.option("--quiet", is_flag=True, help="Print only the RESULT lines.")
+def wait_verb(**kwargs: Any) -> None:
+    """Wait for exactly one hyprpilot turn to end.
+
+    Takes the turn path verbatim from the spawn or session_send response - never
+    a computed turn number. Bounded polling, one literal path, no globbing.
+    """
+    kwargs["interval"] = _non_negative_number(kwargs["interval"], "--interval")
+    kwargs["max_polls"] = _positive_int(kwargs["max_polls"], "--max-polls")
+    if kwargs["stall_after"] is not None:
+        kwargs["stall_after"] = _positive_int(kwargs["stall_after"], "--stall-after")
+    _run("wait", lambda: TurnWaiter(_args(**kwargs)).run())
+
+
+@cli.command("resolve", short_help="Resolve a profile and validate the spawn arguments.")
+@click.option("--profiles", required=True, metavar="FILE", help="list_profiles JSON saved to a file; - reads stdin.")
+@click.option("--want", required=True, metavar="FRAGMENT", help="An exact profile id, or words that must all appear.")
+@click.option("--prompt", metavar="TEXT", help="The brief; mutually exclusive with --prompt-file.")
+@click.option("--prompt-file", metavar="PATH", help="Absolute path whose contents become the prompt.")
+@click.option("--cwd", metavar="PATH", help="Absolute working directory.")
+@click.option(
+    "--mode",
+    metavar="MODE",
+    help="claude auto|default|acceptEdits|dontAsk; opencode build|plan; "
+    "codex read-only|workspace-write|danger-full-access.",
+)
+@click.option("--arg", "arg", multiple=True, metavar="TOKEN", help="Raw vendor argv token, repeatable.")
+@click.option("--with-config", metavar="JSON", help="Array of overlay objects; keys model, effort, mode only.")
+@click.option("--read-only", is_flag=True, help="Assert the per-vendor read-only shape.")
+@click.option("--wait", "wait", is_flag=True, help="Note that the caller intends a blocking turn.")
+@click.option("--json", "json_out", is_flag=True, help="Print only the spawn call; no summary on stderr.")
+def resolve_verb(**kwargs: Any) -> None:
+    """Resolve a profile from a saved list_profiles listing and validate the spawn call."""
+    kwargs["arg"] = list(kwargs["arg"])
+    kwargs["json"] = kwargs.pop("json_out")
+    args = _args(**kwargs)
+    _run("resolve", lambda: SpawnResolver.from_listing(args.profiles).run(args))
+
+
+@cli.command("verdict", short_help="Turn a session_status reading into a verdict and the next action.")
+@click.option("--status", type=click.Choice(("running", "exited")))
+@click.option("--exit-code", metavar="N", help="Integer; omitted while running.")
+@click.option("--has-result", metavar="BOOL", help="true or false.")
+@click.option("--transcript-bytes", metavar="N")
+@click.option("--turn", metavar="N")
+@click.option("--json", "json_in", metavar="FILE", help="The session_status object; - reads stdin.")
+@click.option("--ledger", metavar="PATH", help="Append this reading to a JSONL file.")
+@click.option("--flat-after", type=float, default=300.0, metavar="SECONDS", help="Flat this long is wedged.")
+@click.option("--turn-dir", metavar="PATH", help="sessionInfo.files.turnDir; read to tell max-turns apart.")
+@click.option("--output", type=click.Choice(("text", "json")), default="text")
+def verdict_verb(**kwargs: Any) -> None:
+    """Turn one session_status reading into a verdict, keeping a ledger across readings."""
+    kwargs["json"] = kwargs.pop("json_in")
+    _run("verdict", lambda: SessionVerdict(_args(**kwargs)).run())
+
+
+@cli.command("result", short_help="Extract the final agent text from one turn transcript.")
+@click.argument("transcript")
+@click.option("--provider", type=click.Choice(("auto",) + ht.PROVIDERS), default="auto", help="Override detection.")
+@click.option("--json", "json_out", is_flag=True, help="Emit a JSON report instead of plain text.")
+@click.option("--max-chars", type=int, default=None, metavar="N", help="Truncate the printed result.")
+@click.option("--quiet", is_flag=True, help="Print the result only, no diagnostics.")
+def result_verb(**kwargs: Any) -> None:
+    """Extract the final agent result from one turn transcript, or say why there is none."""
+    # 0 means "no truncation" as the default, but an explicit 0 is a caller
+    # asking for zero characters, which is a mistake worth refusing.
+    given = kwargs["max_chars"]
+    kwargs["max_chars"] = 0 if given is None else _positive_int(given, "--max-chars")
+    kwargs["json"] = kwargs.pop("json_out")
+    _run("result", lambda: TurnResult(_args(**kwargs)).run())
+
+
+@cli.command("inspect", short_help="Report every turn of a session directory, read-only.")
+@click.argument("session_dir")
+@click.option("--turn", type=int, metavar="N", help="Report only turn N.")
+@click.option("--json", "json_out", is_flag=True, help="Emit a JSON report instead of the text table.")
+@click.option("--max-errors", type=int, default=5, metavar="N", help="Cap the error strings printed per turn.")
+def inspect_verb(**kwargs: Any) -> None:
+    """Inspect a session directory read-only.
+
+    stderr.log content, environment values and raw payloads are never printed.
+    """
+    if kwargs["turn"] is not None:
+        kwargs["turn"] = _positive_int(kwargs["turn"], "--turn")
+    kwargs["max_errors"] = _non_negative_int(kwargs["max_errors"], "--max-errors")
+    kwargs["json"] = kwargs.pop("json_out")
+    _run("inspect", lambda: SessionInspector(_args(**kwargs)).run())
+
+
+@cli.command("teardown", short_help="List uncollected turns and watcher processes before a reap.")
+@click.argument("session_dir")
+@click.option("--handle", metavar="HANDLE", help="The session handle, echoed into the checklist.")
+@click.option("--json", "json_out", is_flag=True, help="Machine-readable report.")
+@click.option("--proc", default="/proc", hidden=True)
+def teardown_verb(**kwargs: Any) -> None:
+    """List what a session leaves behind before it is reaped. Kills nothing."""
+    kwargs["json"] = kwargs.pop("json_out")
+    _run("teardown", lambda: TeardownChecklist(_args(**kwargs)).run())
+
+
+def main() -> None:
+    try:
+        cli.main(standalone_mode=False)
+    except click.ClickException as err:
+        err.show()
+        raise SystemExit(err.exit_code) from err
+    except click.Abort:
+        raise SystemExit(130) from None
+    except ht.TranscriptError as err:
+        sys.stderr.write(f"error: {err}\n")
+        raise SystemExit(ExitCode.USAGE) from err
+    except ScriptError as err:
+        # Validation raised before the verb body runs lands here rather than in
+        # `_run`; without this it escapes as a traceback and exits 1, which the
+        # caller reads as a ceiling.
+        sys.stderr.write(f"error: {err}\n" if err.exit_code == ExitCode.USAGE else f"{err}\n")
+        raise SystemExit(err.exit_code) from err
 
 
 if __name__ == "__main__":
-    sys.exit(cmd_main())
+    main()

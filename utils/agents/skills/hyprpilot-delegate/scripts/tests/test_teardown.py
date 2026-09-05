@@ -142,4 +142,4 @@ def test_teardown_refusals(run, tmp_path, path, expect):
 def test_no_argument_is_a_usage_error(run):
     result = run("teardown")
     assert result.code == 2
-    assert "required" in result
+    assert "Missing argument" in result

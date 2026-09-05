@@ -3,6 +3,29 @@ revision = 3
 requires-python = ">=3.11"
 
 [[package]]
+name = "agent-background-scripts"
+version = "1.0.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "agentlib" },
+    { name = "click" },
+]
+
+[package.dev-dependencies]
+dev = [
+    { name = "pytest" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "agentlib", editable = "../../lib" },
+    { name = "click", specifier = ">=8.1" },
+]
+
+[package.metadata.requires-dev]
+dev = [{ name = "pytest", specifier = ">=8.0" }]
+
+[[package]]
 name = "agentlib"
 version = "1.0.0"
 source = { editable = "../../lib" }
@@ -108,29 +131,6 @@ sdist = { url = "https://files.pythonhosted.org/packages/b1/df/48c586a5fe32a0f01
 wheels = [
     { url = "https://files.pythonhosted.org/packages/2a/39/e50c7c3a983047577ee07d2a9e53faf5a69493943ec3f6a384bdc792deb2/httpx-0.28.1-py3-none-any.whl", hash = "sha256:d909fcccc110f8c7faf814ca82a9a4d816bc5a6dbfea25d6591d6985b8ba59ad", size = 73517, upload-time = "2024-12-06T15:37:21.509Z" },
 ]
-
-[[package]]
-name = "hyprpilot-harness-scripts"
-version = "1.0.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "agentlib" },
-    { name = "click" },
-]
-
-[package.dev-dependencies]
-dev = [
-    { name = "pytest" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "agentlib", editable = "../../lib" },
-    { name = "click", specifier = ">=8.1" },
-]
-
-[package.metadata.requires-dev]
-dev = [{ name = "pytest", specifier = ">=8.0" }]
 
 [[package]]
 name = "idna"

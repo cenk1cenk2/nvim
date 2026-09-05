@@ -3,10 +3,10 @@ name = "hyprpilot-harness-scripts"
 version = "1.0.0"
 description = "Shell-side plumbing for hyprpilot sessions: wait, resolve, judge, collect, tear down."
 requires-python = ">=3.11"
-# Intentionally empty. These run as a watcher payload in a background shell and
-# on hosts that are not this workstation, so the runtime has to be whatever
-# python3 is already there. Test-only tooling lives in dependency-groups below.
-dependencies = []
+dependencies = [
+  "agentlib",
+  "click>=8.1",
+]
 
 [dependency-groups]
 dev = [
@@ -16,10 +16,11 @@ dev = [
 [tool.uv]
 python-preference = "only-system"
 
+[tool.uv.sources]
+agentlib = { path = "../../lib", editable = true }
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-# The CLI contract is exit codes and one-line messages, so most cases shell out
-# to the real entry point rather than importing it. `-q` keeps that readable.
 addopts = "-q"
 
 [tool.ruff]

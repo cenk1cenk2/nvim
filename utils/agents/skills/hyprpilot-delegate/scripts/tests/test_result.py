@@ -95,9 +95,9 @@ def test_verbose_traces_the_forced_provider(run):
     [
         pytest.param(("{tmp}/nope.jsonl",), "does not exist", id="missing file"),
         pytest.param(("{tmp}/turns/*/turns.jsonl",), "glob character", id="glob path"),
-        pytest.param((), "required", id="no argument"),
-        pytest.param((fixture("claude-success"), "--bogus"), "unrecognized", id="unknown option"),
-        pytest.param((fixture("claude-success"), "--provider", "gpt"), "invalid choice", id="bad provider value"),
+        pytest.param((), "Missing argument", id="no argument"),
+        pytest.param((fixture("claude-success"), "--bogus"), "No such option", id="unknown option"),
+        pytest.param((fixture("claude-success"), "--provider", "gpt"), "not one of", id="bad provider value"),
         pytest.param((fixture("claude-success"), "--max-chars", "0"), "positive integer", id="zero max-chars"),
     ],
 )

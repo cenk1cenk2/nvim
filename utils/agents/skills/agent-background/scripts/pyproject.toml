@@ -1,0 +1,34 @@
+[project]
+name = "agent-background-scripts"
+version = "1.0.0"
+description = "Poll one shell-reachable condition in the background and exit the moment it holds."
+requires-python = ">=3.11"
+dependencies = [
+  "agentlib",
+  "click>=8.1",
+]
+
+[tool.uv.sources]
+# Relative to this pyproject's directory. The shared scaffolding lives beside
+# the skills rather than inside one, so a second scripts project reuses it.
+agentlib = { path = "../../lib", editable = true }
+
+[dependency-groups]
+dev = [
+  "pytest>=8.0",
+]
+
+[tool.uv]
+python-preference = "only-system"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The contract is exit codes and one-line stdout messages, so the cases shell
+# out to the real entry point rather than importing it.
+addopts = "-q"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
