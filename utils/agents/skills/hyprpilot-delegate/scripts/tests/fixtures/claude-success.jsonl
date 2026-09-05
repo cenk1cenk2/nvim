@@ -1,0 +1,5 @@
+{"type": "system", "subtype": "init", "session_id": "s-1", "cwd": "/tmp/wt"}
+{"type": "assistant", "session_id": "s-1", "message": {"role": "assistant", "content": [{"type": "thinking", "thinking": "..."}]}}
+{"type": "assistant", "session_id": "s-1", "message": {"role": "assistant", "content": [{"type": "text", "text": "Interim note."}]}}
+{"type": "user", "session_id": "s-1", "message": {"role": "user", "content": [{"type": "tool_result", "content": "ok"}]}}
+{"type": "result", "subtype": "success", "is_error": false, "result": "MR !315 created.", "num_turns": 12, "terminal_reason": "end_turn", "session_id": "s-1"}

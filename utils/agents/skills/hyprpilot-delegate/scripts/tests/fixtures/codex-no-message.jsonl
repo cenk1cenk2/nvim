@@ -1,0 +1,2 @@
+{"type": "item.started", "item": {"type": "command_execution", "id": "i1"}}
+{"type": "item.completed", "item": {"type": "command_execution", "id": "i1", "exit_code": 1}}

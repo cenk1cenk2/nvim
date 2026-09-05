@@ -3,7 +3,10 @@
 
 version: "3"
 
-vars: {}
+vars:
+  # Every agent-skill scripts project, each its own uv project with a pyproject.
+  # Adding a second skill's scripts is one entry here.
+  PYTHON_PROJECTS: utils/agents/skills/hyprpilot-delegate/scripts
 
 env: {}
 
@@ -13,6 +16,7 @@ tasks:
     deps:
       - format:lua
       - format:sh
+      - format:python
 
   format:lua:
     cmds:
@@ -26,10 +30,18 @@ tasks:
     sources:
       - "utils/**/*.sh"
 
+  format:python:
+    cmds:
+      - for: { var: PYTHON_PROJECTS }
+        cmd: ruff format {{.ITEM}}
+    sources:
+      - "utils/agents/skills/*/scripts/**/*.py"
+
   lint:
     desc: Lints the repository.
     deps:
       - lint:lua
+      - lint:python
 
   lint:lua:
     cmds:
@@ -41,3 +53,25 @@ tasks:
   lint:sh:
     cmds:
       - shfmt -f . | xargs shellcheck
+
+  lint:python:
+    cmds:
+      - for: { var: PYTHON_PROJECTS }
+        cmd: ruff check {{.ITEM}}
+      - for: { var: PYTHON_PROJECTS }
+        cmd: ruff format --check {{.ITEM}}
+    sources:
+      - "utils/agents/skills/*/scripts/**/*.py"
+
+  test:
+    desc: Run the repository's test suites.
+    deps:
+      - test:python
+
+  test:python:
+    desc: Agent skill scripts. Each project pulls its own dev group; the scripts themselves are stdlib-only.
+    cmds:
+      - for: { var: PYTHON_PROJECTS }
+        cmd: uv run --project {{.ITEM}} --group dev pytest {{.ITEM}}
+    sources:
+      - "utils/agents/skills/*/scripts/**/*.py"

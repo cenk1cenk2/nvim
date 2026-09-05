@@ -3,6 +3,11 @@ name: hyprpilot-delegate
 description: 'hyprpilot-delegate Hand a task to a SEPARATE hyprpilot agent session and steer it across turns - profile discovery, spawning blocking or detached, following output live, cleanup. Only on an explicit request: it is never inferred from a task''s shape. Use on "delegate this to hyprpilot", "spawn a hyprpilot agent", "steer that session". Not for subagents inside this harness, or for reloading the skill catalog.'
 disableModelInvocation: true
 argumentHint: '[task] [optional: profile name or fragment]'
+scripts:
+  # Relative to this skill's own directory: resolve against the `bundleDir` the
+  # skill metadata carries, never a hardcoded absolute path, because the tree
+  # sits at a different root on every runtime that serves this catalog.
+  - ./scripts/hyprpilot-harness.py
 references:
   - ./references/hyprpilot-sessions.md
   - ../references/agent/agent-conventions.md
@@ -38,6 +43,35 @@ The sequence, in order, no step skippable:
 
 ### The check
 
+**The watcher payload is this skill's own script, not a loop written fresh per watch.** `hyprpilot-harness.py wait` is the turn waiter; resolve it against the `bundleDir` in this skill's metadata (the `scripts` frontmatter key lists the relative path):
+
+```sh
+"<bundleDir>/scripts/hyprpilot-harness.py" wait \
+  --turn-dir "<sessionInfo.files.turnDir>" \
+  --label "<task or issue id>" \
+  --stall-after 600
+```
+
+Launch that through the runtime's background facility. Pass `--turn-dir` **verbatim from the response that just returned** — the verb appends `done.json` itself and refuses a turn index you worked out, at arm time, before anything is armed.
+
+**Its exit code is the wake, and each one has one next action:**
+
+| Exit | Means | Next |
+|---|---|---|
+| 0 | the turn ended, which is not the same as succeeded | `session_status` to audit, then collect |
+| 10 | the session directory vanished — reap, eviction, or a sidecar restart | `session_status`, then `session_list` |
+| 11 | with `--stall-after`: the transcript stopped growing while the marker is still absent | `session_status`, then **report the wedge**. A diagnosis, never a kill trigger. |
+| 1 | the ceiling was reached | `session_status` **first** — most of these are a stale path, not a stalled agent |
+| 2 | bad input; nothing was armed | fix the argument |
+
+**Both halves of the test are required, and the script does both.** Reap, eviction and sidecar shutdown delete the whole session directory, so testing only for the file waits forever on a session that was cleaned up — a missing **directory** means finished-and-gone.
+
+**`--stall-after` belongs on every turn watcher.** Without it a wedged turn never writes its marker and never wakes you at all; with it, exit 11 is the wedge report.
+
+**Why a script rather than an inlined loop.** A loop authored at the moment it is needed arms unverified, and the failure is silent in the worst direction: a payload carrying nested quotes or a JSON body dies at the shell's parser and arrives as an *unarmed* watcher, which reads exactly like a quiet one. The script takes its condition as argv, refuses a relative or globbed path, and has an exit-code contract the suite covers. Discipline, cadence and the announce tables per `agent-watchers`.
+
+**Where the script is unavailable** — a runtime that serves this catalog over MCP without the tree on disk — fall back to the equivalent inline loop, keeping both halves of the test:
+
 ```python
 python3 -c '
 import os, sys, time
@@ -50,10 +84,6 @@ for i in range(1, 61):
 print("RESULT: still running after 60 cycles")
 '
 ```
-
-**Both halves of the test are required.** Reap, eviction and sidecar shutdown delete the whole session directory, so testing only for the file waits forever on a session that was cleaned up — a missing **directory** means finished-and-gone.
-
-**Python, not shell, because the check is two conditions over a path.** `os.path.join` composes the marker path without producing a `//` that silently misses the file, and holding several handles means holding a list — which a shell array cannot do safely inside a background launcher, where `${array[@]}` can arrive empty and fire the watcher on the first cycle. Discipline, cadence and the announce tables per `agent-watchers`.
 
 ### No wake available — poll or block, never proceed
 
@@ -117,6 +147,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - `with_config` is an **array of overlay objects** — `with_config: [{ "model": "…" }]`, not a flat object. It accepts **only** `model`, `effort`, `mode`; every other key is refused by design, because an overlay reaching the command, its arguments, its environment, or the MCP servers it launches would turn `spawn` into arbitrary command execution. To run something else, add a profile for it.
    - **An overridden model is not visible as the profile.** Results and `session_list` keep reporting the profile id; only `sessionInfo.model` carries what actually ran. Check it before reporting which model did the work. **`sessionInfo.mode` has the same blind spot in reverse:** it echoes the profile's mode, so a mode you imposed through `args` (opencode `--agent plan`) still reads `build` there. `sessionInfo.argv` is the only honest record of what launched.
    - **Address files by absolute path in the prompt.** Do not make the agent's output depend on resolving anything relative to the working directory.
+   - **codex refuses to launch outside a Git repository**, so its `cwd` must be a real checkout or worktree. The failure is not a hang: the spawn exits 1 on turn 1 with a zero-byte transcript and `Not inside a trusted directory and --skip-git-repo-check was not specified` in `files.stderr`. `args: ["--skip-git-repo-check"]` permits a non-Git working directory, for the case where no Git directory applies — it is not a substitute for a worktree when the agent writes code. As of codex-cli 0.153.4.
    - Record the returned `session` handle and report it to the user. It is how every later turn addresses this agent.
 
 4. **Detached is the normal mode, and the default.** It suits anything long, fanning out several agents at once, and every "check on it later".
@@ -177,6 +208,8 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 **opencode is the worked counter-example.** `opencode run --help` offers `--pure`, `--agent`, `--variant`, `--model`, `--dir`, `--session` and little else: **no tool allow/deny list, no spend cap, no sandbox mode.** A job that must be narrowed further than `mode` narrows it cannot be narrowed there through `args` at all — restrict it through a profile that already carries the policy, or send it to a vendor whose CLI has the knob, and say which. Never delegate unrestricted and call it restricted.
 
+**codex read-only is `mode: "read-only"`, never `mode: "plan"`.** Its sandbox vocabulary is `read-only`, `workspace-write` and `danger-full-access` (`codex --sandbox`); `plan` is not one of them, so passing it selects nothing and the agent runs at whatever the profile already had. The `codex` agent in `~/.config/hyprpilot/config.yaml` also passes `--approve-for-me`, documented as routing approvals *"through automatic review using the workspace-write sandbox"* — so an explicit `mode` conflicts with it, and a job that must be read-only wants a profile that sets the sandbox rather than a `mode` override on top. Whether a codex sandbox mode drops tools from the registry or gates them at call time is still unmeasured, so the rule above — ask what the agent *can call*, not what it can see — still applies here. As of codex-cli 0.153.4.
+
 Rules that hold whichever vendor you target:
 
 - **A flag you pass REPLACES the one hyprpilot would have generated — it does not add to it.** The launcher suppresses its own flag when yours is present, so a narrow-looking restriction can silently discard the profile's whole policy and end up *widening* the agent's authority. State the complete value you want, not the delta.
@@ -185,6 +218,30 @@ Rules that hold whichever vendor you target:
 - **`args` is unvalidated and cuts both ways.** Every vendor has flags that bypass its guardrails entirely. Use `args` to narrow what the captain granted, never to reach past it.
 - **How a restriction lands is per-vendor — do not assume it removes the tool.** An `args`-level restriction usually drops the tool from the registry, so the agent reports it missing rather than refused; do not read that as a broken MCP server. But `mode` is the counter-example: **opencode plan-mode leaves `edit`/`write`/`task` and every MCP server in the registry** and refuses at call time instead. Both shapes are real, so ask the agent what it *can call*, never what it can *see*, when you need to confirm a restriction applied.
 - **But "ask it to call" does not confirm enforcement either, under a mode.** A restricted agent refuses on its own judgement first — measured on opencode plan-mode, which declined a `spawn` call it was explicitly asked to attempt and report the error from, without the permission layer being consulted. So a refusal under `mode` tells you the agent is well-behaved and nothing about the guardrail behind it. To test the guardrail, drop the mode and rely on the layer you are actually testing.
+
+## Scripts
+
+`scripts/hyprpilot-harness.py` turns the checks this skill describes in prose into argument-validated verbs with exit-code contracts a caller can branch on. Resolve it against this skill's `bundleDir`; `--help` lists the verbs and `VERB --help` documents one.
+
+| Verb | Stage | Answers |
+|---|---|---|
+| `wait` | while running, **the watcher** | Has this one turn ended, has its session vanished, or has its transcript stopped growing, within a bounded number of polls. |
+| `resolve` | before spawn | Which profile the user meant, and whether the spawn arguments pass the contract. |
+| `verdict` | on wake | Collect, poll again, wedged, inspect, or steer — from one `session_status` reading plus a ledger of earlier ones. |
+| `result` | fallback | What did the agent finally say, and if nothing, why. |
+| `inspect` | fallback | Which turn is current, did it finish, what did the terminal event say, is a result recoverable. |
+| `teardown` | before reap | What is still uncollected, still running, or still polling this session. |
+
+**One script, one subject: the whole life of a session.** It calls no MCP, spawns nothing, kills nothing, writes outside no path you name, and refuses a globbed or relative path rather than false-firing on a sibling turn. Standard library only, so it runs wherever `python3` does — including as a background watcher payload, which is the one context that has no MCP client at all.
+
+**The resource read stays the collection path.** `result` and `inspect` are the exception rather than a parallel route, and two situations put them on it:
+
+- **A claude `error_max_turns` exit.** That event carries no `result` field, so a query keyed on one prints an empty line and reads as "the agent produced nothing". `result` falls back to the last assistant text and labels its source, which is what tells you whether the agent committed or pushed before it ran out of turns.
+- **A context with no MCP surface at all**, such as a shell step in a job carrying no MCP toolset. There the transcript on disk is the only route, and these read it without paging the whole stream into context.
+
+`inspect` withholds by design: it reports `stderr.log` by size with the content suppressed, and every `session.json` key outside `handle` and `startedAt` by name only. Read stderr yourself when you need it, and quote the failing line rather than the file.
+
+Run the suite with `task test:python` from the repository root; `task lint:python` covers ruff and formatting. Add a fixture under `scripts/tests/fixtures/` when a vendor changes shape.
 
 ## Semantics that bite
 

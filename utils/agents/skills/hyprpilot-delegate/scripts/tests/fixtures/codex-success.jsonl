@@ -1,0 +1,4 @@
+{"type": "item.started", "item": {"type": "command_execution", "id": "i1"}}
+{"type": "item.completed", "item": {"type": "command_execution", "id": "i1", "exit_code": 0}}
+{"type": "item.completed", "item": {"type": "agent_message", "id": "i2", "text": "Bump landed on the ruler chart."}}
+{"type": "turn.completed", "usage": {"input_tokens": 100}}

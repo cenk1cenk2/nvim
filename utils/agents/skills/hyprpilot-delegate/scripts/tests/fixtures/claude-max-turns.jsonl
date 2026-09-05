@@ -1,0 +1,4 @@
+{"type": "system", "subtype": "init", "session_id": "s-2"}
+{"type": "assistant", "session_id": "s-2", "message": {"role": "assistant", "content": [{"type": "text", "text": "Committed 3 files, push still pending."}]}}
+{"type": "user", "session_id": "s-2", "message": {"role": "user", "content": [{"type": "tool_result", "content": "ok"}]}}
+{"type": "result", "subtype": "error_max_turns", "is_error": true, "num_turns": 31, "terminal_reason": "max_turns", "stop_reason": "tool_use", "errors": ["Reached maximum number of turns (30)"], "session_id": "s-2"}

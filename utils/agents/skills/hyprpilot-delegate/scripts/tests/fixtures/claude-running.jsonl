@@ -1,0 +1,2 @@
+{"type": "system", "subtype": "init", "session_id": "s-3"}
+{"type": "assistant", "session_id": "s-3", "message": {"role": "assistant", "content": [{"type": "text", "text": "Reading the chart."}]}}

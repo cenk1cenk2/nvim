@@ -1,0 +1,4 @@
+{"type": "step_start", "part": {"id": "p0"}}
+{"type": "text", "part": {"id": "p1", "text": "Checked the manifests."}}
+{"type": "text", "part": {"id": "p2", "text": "No drift found."}}
+{"type": "step_finish", "part": {"id": "p3", "reason": "stop"}}
