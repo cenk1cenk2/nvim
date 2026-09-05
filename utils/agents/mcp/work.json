@@ -71,7 +71,7 @@
       }
     },
     "kubernetes-laravel": {
-      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only", "--toolsets", "core,config,helm"],
+      "args": ["-y", "kubernetes-mcp-server@latest", "--read-only", "--toolsets", "core,config,helm", "--kubeconfig", "~/.kube/laravel-readonly"],
       "command": "bunx",
       "hyprpilot": {
         "autoAcceptTools": ["*"],
