@@ -108,7 +108,7 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 6. Identify which skills should declare this reference in their frontmatter.
 7. Present the draft and the list of skills to update.
 8. After approval, write the file and update skill frontmatter as needed.
-9. **`reload` the skills server, then confirm the new path appears** in `list_skill_references { slug }` for a consumer. The server caches frontmatter, so a correct declaration is absent from the manifest until it reloads — indistinguishable from a typo'd path, which is also silently absent.
+9. **Confirm the new path appears** in `list_skill_references { slug }` for a consumer. The server watches the roots, so a written declaration is rescanned on its own; a path still absent is a typo or an unresolvable file, since both look identical here.
 
 ### Update
 
@@ -118,7 +118,7 @@ A file that fails to read yields the same block with `status: not-found`, **in i
 4. Present proposed changes using diff format.
 5. After approval, apply changes — replacing the old wording rather than annotating it, per `current-state-only`.
 6. If the update changes the reference's scope or contract, notify about affected skills.
-7. When any consumer's frontmatter changed, `reload` the skills server before verifying the manifest — see Create step 9.
+7. When any consumer's frontmatter changed, verify the manifest picked it up — see Create step 9.
 
 ### Review
 
