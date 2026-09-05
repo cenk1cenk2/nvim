@@ -6,7 +6,10 @@ version: "3"
 vars:
   # Every agent-skill scripts project, each its own uv project with a pyproject.
   # Adding a second skill's scripts is one entry here.
-  PYTHON_PROJECTS: utils/agents/skills/hyprpilot-delegate/scripts
+  PYTHON_PROJECTS: >-
+    utils/agents/skills/hyprpilot-delegate/scripts
+    utils/agents/skills/agent-background/scripts
+    utils/agents/skills/config-skills/scripts
 
 env: {}
 

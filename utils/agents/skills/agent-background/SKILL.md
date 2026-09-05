@@ -1,6 +1,11 @@
 ---
 name: agent-background
 description: agent-background Arm a background wait-loop that polls an external condition - a PR/MR merging, a CI or deploy run, a human approval - and re-invokes the session once when it is met, instead of sleeping or asking to be pinged. Use when work must wait on something outside this session. Not for polling subagent work you started, which the harness reports on its own, or for self-paced repetition.
+scripts:
+  # Relative to this skill's own directory: resolve against the `bundleDir` the
+  # skill metadata carries, never a hardcoded absolute path, because the tree
+  # sits at a different root on every runtime that serves this catalog.
+  - ./scripts/watch.py
 references:
   - ../references/long-running-work.md
   - ../references/agent/agent-watchers.md
@@ -21,7 +26,18 @@ Some work blocks on state that changes **outside the session** and that the harn
 
 Launch a loop through the runtime's own background-exec facility (per `agent-background-harness-<provider>`). The loop polls a **shell-reachable** signal and exits the moment it's satisfied; where the runtime supports it, that exit delivers a notification which re-invokes the main loop.
 
-**Write it in python.** That is the default for a watcher script — the data stays values in a program instead of words the shell re-splits, which is what keeps the loop from firing on a condition that never held:
+**Reach for this skill's own `scripts/watch.py` first.** It is the tested version of the loop below, resolved against the `bundleDir` in this skill's metadata (the `scripts` frontmatter key lists the relative path). One condition per invocation, taken as a subcommand:
+
+```sh
+"<bundleDir>/scripts/watch.py" --label <name> --interval 60 --max-polls 180 \
+  command --json-path state --expect merged -- glab mr view 4821 --output json
+```
+
+Conditions: `file-exists`, `file-gone`, `file-flat`, `exit-zero`, `command`, `http`, plus named ones for the things actually waited on — `gitlab-mr`, `gitlab-ci`, `github-pr`, `github-action`, `spacelift-run` and friends, each taking repeatable `--wait-result` and defaulting to every terminal state so a failure wakes you as early as a success. `watch.py --help` lists them.
+
+Its exit code is the wake: `0` met, `1` ceiling, `2` usage, `3` the check cannot run. A path is refused unless absolute and glob-free, so a watcher that would have polled the wrong thing never arms.
+
+**Where the script is unavailable** — a runtime serving this catalog over MCP with no tree on disk — write the loop inline instead, and **write it in python**: the data stays values in a program instead of words the shell re-splits, which is what keeps the loop from firing on a condition that never held:
 
 ```python
 python3 -c '

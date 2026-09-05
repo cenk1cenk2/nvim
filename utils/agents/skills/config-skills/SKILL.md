@@ -2,6 +2,11 @@
 name: config-skills
 description: config-skills Create, update, or review skills in the skills directory. Use on "create a skill", "update this skill", "add a slash command", "improve this skill". Not for the shared reference files, and not for resolving which skill to load.
 disableModelInvocation: true
+scripts:
+  # Relative to this skill's own directory: resolve against the `bundleDir` the
+  # skill metadata carries, never a hardcoded absolute path, because the tree
+  # sits at a different root on every runtime that serves this catalog.
+  - ./scripts/check_catalog.py
 references:
   - ../references/current-state-only.md
   - ../references/present-first.md
@@ -379,6 +384,71 @@ Two carry a hard rule worth knowing without opening the file:
 
 - `agent-delegate` points at the per-provider reference for dispatch mechanics — a skill that spawns subagents must send the reader there **before** the first dispatch.
 - `agent-worktrees` covers the trap that isolation follows the **session's** repo, not the task's, which breaks cross-repo dispatch.
+
+## Scripts
+
+A skill may ship executable code beside its body. Reach for one when a step is **mechanical and its failure is silent** — a check whose result an agent cannot see it got wrong. Prose is right for judgement; a script is right for a contract.
+
+The two that exist today are the shape to copy: `agent-background/scripts/watch.py` (poll one condition, exit when it holds) and `hyprpilot-delegate/scripts/hyprpilot-harness.py` (the whole life of a delegated session).
+
+### A script needs a skill
+
+**A reference cannot host one.** References are files a skill declares; nothing makes them addressable on their own. A convention that earns a script either moves into a skill, or the script lands in the skill that already owns the subject and the reference points at it. Prefer the second — promoting a reference means editing every skill that declares it, and the popular ones have dozens.
+
+### Declare it, never hardcode its path
+
+```yaml
+scripts:
+  - ./scripts/check_catalog.py
+```
+
+The path is **relative to the skill's own directory**, and a caller resolves it against the `bundleDir` in the skill's metadata. Never write an absolute path into a body: this catalog sits at a different root on every runtime that serves it, and a hardcoded path is a pointer that resolves to nothing on the others. Unknown frontmatter keys ride through to metadata verbatim, so `scripts` reaches a reader without the loader knowing about it.
+
+### Layout
+
+Each skill's `scripts/` is its own uv project:
+
+```
+<skill>/scripts/
+  pyproject.toml        deps, pytest and ruff config
+  <entry>.py            the entry point, uv shebang
+  tests/                pytest, not a shell harness
+```
+
+The shebang makes the script runnable by path with no wrapper, which is what a background launcher needs:
+
+```sh
+#!/usr/bin/env -S sh -c 'exec uv run --project "$(dirname "$0")" "$0" "$@"'
+```
+
+Shared scaffolding lives in `skills/lib/` as the `agentlib` package, consumed as an editable path dependency (`agentlib = { path = "../../lib", editable = true }`). It carries `ScriptError`, `ExitCode`, the rich logger and the pydantic validators, so two scripts do not each grow their own.
+
+Use real libraries rather than hand-rolling: `click` for the CLI, `pydantic` for validation, `rich` for logging, `httpx` for HTTP — bare `urllib` gets bounced by edge proxies — and `jsonpath-ng` where a caller needs to narrow JSON.
+
+### Exit codes are the contract
+
+A script launched detached has no reader; **its exit code is its message**. Fix the meanings and never reuse a number:
+
+| Code | Means |
+|---|---|
+| 0 | the thing held |
+| 1 | a bounded ceiling was reached — not a failure |
+| 2 | usage error, nothing was attempted |
+| 3 | the check cannot run; polling would never fix it |
+
+Turning a usage error into exit 1 is the worst available bug: the caller reads it as a ceiling and waits.
+
+### stdout is the wake
+
+An agent greps stdout for a result line, so **stdout stays plain and stable**. Rich, colour and progress belong on stderr. Verify it: run the script piped, not on a terminal, and confirm no escape sequences reach stdout.
+
+### Refuse what would fire on the wrong thing
+
+Validate before doing anything. A relative path resolves against whatever directory the launcher had; a glob matches a finished sibling and fires immediately. Both are refused at argument time, before anything is armed, so the refusal is visible rather than a watcher that quietly polls nothing.
+
+### Test it, and wire it into the Taskfile
+
+Tests are pytest, and they mostly shell out to the real entry point, because the contract being tested is exit codes and one-line messages. Add the project to `PYTHON_PROJECTS` in the repository `Taskfile.yml`; `task test:python` and `task lint:python` then cover it.
 
 ## Description Checklist
 
