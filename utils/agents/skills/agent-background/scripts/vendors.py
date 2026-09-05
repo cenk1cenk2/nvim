@@ -63,14 +63,15 @@ GITLAB_CI = Vendor(
     params=("project", "pipeline"),
 )
 
-# `glab release view <tag> --output json`; the release existing IS the
-# condition, so the expected value is the tag itself.
-# UNVERIFIED: the `tag_name` field name. `glab release view` takes `--output
-# json` (confirmed against glab 1.116.0), but naming the key needs a real
-# release to read. Confirm before relying on this one.
+# `glab release view <tag> --output json` prints the go-gitlab Release struct,
+# whose tag field is `tag_name` (glab 1.116.0, `PrintJSON(release)`).
+#
+# This watches a RELEASE, not a bare tag: a tag pushed without a release never
+# satisfies it. `--wait-result <tag>` is required, since the condition is that
+# the named release exists rather than that it reached some state.
 GITLAB_TAG = Vendor(
     name="gitlab-tag",
-    help="A GitLab release/tag existing.",
+    help="A GitLab release existing. Pass the tag as --wait-result.",
     argv=("glab", "release", "view", "{tag}", "--repo", "{project}", "--output", "json"),
     json_path="tag_name",
     terminal=(),
@@ -100,28 +101,31 @@ GITHUB_ACTION = Vendor(
 
 GITHUB_TAG = Vendor(
     name="github-tag",
-    help="A GitHub release/tag existing.",
+    help="A GitHub release existing. Pass the tag as --wait-result.",
     argv=("gh", "release", "view", "{tag}", "--repo", "{repo}", "--json", "tagName"),
     json_path="tagName",
     terminal=(),
     params=("repo", "tag"),
 )
 
-# spacectl has `stack run list` but NO `stack run get` (confirmed against
-# spacectl 1.25.0), so the latest run is read as index 0 of the list.
-# UNVERIFIED: the `state` field name and the terminal value spellings; the
-# flags are confirmed, the payload keys need a real stack to read.
+# spacectl has `stack run list` but NO `stack run get` (spacectl 1.25.0), so a
+# run is read out of the list. `runsJSONQuery` in internal/cmd/stack/run_list.go
+# carries `state` and `isMostRecent`.
+#
+# Filtering on `isMostRecent` rather than taking index 0: if the stack's newest
+# run is already terminal when the watcher arms - the new run not yet created -
+# index 0 fires at poll 1 on the PREVIOUS run. That is the "key each watcher on
+# one stable id" rule this skill states, broken by the watcher itself.
 SPACELIFT_RUN = Vendor(
     name="spacelift-run",
     help="The latest Spacelift run on a stack reaching a terminal state.",
-    argv=("spacectl", "stack", "run", "list", "--id", "{stack}", "--max-results", "1", "--output", "json"),
-    json_path="0.state",
-    terminal=("FINISHED", "FAILED", "CANCELED", "DISCARDED", "STOPPED"),
+    argv=("spacectl", "stack", "run", "list", "--id", "{stack}", "--max-results", "20", "--output", "json"),
+    json_path="$[?(@.isMostRecent==true)].state",
+    terminal=("FINISHED", "FAILED", "CANCELED", "DISCARDED", "STOPPED", "SKIPPED"),
     params=("stack",),
 )
 
 # `spacectl module list-versions --id <module> --output json`, newest first.
-# UNVERIFIED: the `state` field name and its values, as above.
 SPACELIFT_MODULE = Vendor(
     name="spacelift-module",
     help="A Spacelift module version reaching a terminal state.",

@@ -232,7 +232,7 @@ Rules that hold whichever vendor you target:
 | `inspect` | fallback | Which turn is current, did it finish, what did the terminal event say, is a result recoverable. |
 | `teardown` | before reap | What is still uncollected, still running, or still polling this session. |
 
-**One script, one subject: the whole life of a session.** It calls no MCP, spawns nothing, kills nothing, writes outside no path you name, and refuses a globbed or relative path rather than false-firing on a sibling turn. Standard library only, so it runs wherever `python3` does — including as a background watcher payload, which is the one context that has no MCP client at all.
+**One script, one subject: the whole life of a session.** It calls no MCP, spawns nothing, kills nothing, writes outside no path you name, and refuses a globbed or relative path rather than false-firing on a sibling turn. Its shebang runs it through `uv`, which resolves its own dependencies, so it asks nothing of the caller beyond `uv` and a system python — including as a background watcher payload, which is the one context that has no MCP client at all.
 
 **The resource read stays the collection path.** `result` and `inspect` are the exception rather than a parallel route, and two situations put them on it:
 

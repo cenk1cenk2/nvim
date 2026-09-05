@@ -141,6 +141,21 @@ class TestJsonPathExpressions:
         assert result.code == 1
         assert "unresolved" in result
 
+    def test_a_dollar_prefixed_key_is_a_dotted_path_not_an_expression(self, run, cat, tmp_path):
+        """`$schema`, `$ref` and `$id` are ordinary JSON keys, not JSONPath."""
+        payload = tmp_path / "schema.json"
+        payload.write_text('{"$schema": "ok"}')
+        result = run(*FAST, "command", "--json-path", "$schema", "--expect", "ok", "--", str(cat), str(payload))
+        assert result.code == 0
+        assert "met after 1 poll" in result
+
+    def test_a_malformed_expression_is_a_usage_error_at_arm_time(self, run, cat, merged):
+        """Parsed only per poll it raised inside the loop and exited 1, reading as a ceiling."""
+        result = run(*FAST, "command", "--json-path", "$[", "--expect", "x", "--", str(cat), str(merged))
+        assert result.code == 2
+        assert "not a valid JSONPath" in result
+        assert "watching" not in result, "it must refuse before arming"
+
 
 class TestNegate:
     def test_it_waits_for_a_value_to_leave_the_set(self, run, cat, mr_json):

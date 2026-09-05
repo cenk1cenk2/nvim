@@ -13,8 +13,10 @@ One condition per invocation; arm another watcher for another item.
 
 from __future__ import annotations
 
+import sys
+
 import click
-from agentlib.cli import ScriptError, create_logger, emit
+from agentlib.cli import ScriptError, create_logger
 from agentlib.models import Cadence, Expectations, FlatFor, WatchedPath, http_url
 from pydantic import ValidationError
 
@@ -26,6 +28,8 @@ CONTEXT_SETTINGS = {"help_option_names": ["-h", "--help"], "max_content_width": 
 
 
 CADENCE_DEFAULTS = {"interval": 30.0, "max_polls": 120, "label": None, "quiet": False}
+# `verbose` rides with the cadence flags but is not part of the Cadence model.
+LOGGING_KEYS = ("verbose",)
 
 
 def cadence_options(func):
@@ -39,12 +43,36 @@ def cadence_options(func):
     func = click.option("--max-polls", type=int, default=None, help="Ceiling; a backstop. [default: 120]")(func)
     func = click.option("--label", default=None, help="Name this watch in its RESULT line.")(func)
     func = click.option("--quiet", is_flag=True, default=None, help="Drop the header; keep RESULT.")(func)
+    func = click.option("-v", "--verbose", is_flag=True, default=None, help="Debug logging on stderr.")(func)
     return func
 
 
+# `exit-zero` and `command` take a command to run, so argv after the condition
+# belongs to that command and not to the watcher. Without
+# `allow_interspersed_args: False` click keeps parsing to the end of argv, which
+# swallowed `--quiet` out of `echo --quiet hi`.
+#
+# `--help` still works BEFORE the command word, because parsing stops at the
+# first positional. `-h` is dropped: it is far more likely meant for the watched
+# command, and swallowing it printed watcher help and exited 0, which a caller
+# reads as MET.
+COMMAND_SETTINGS = {
+    "ignore_unknown_options": True,
+    "allow_interspersed_args": False,
+    "help_option_names": ["--help"],
+}
+
+
 def build_cadence(**kwargs) -> Cadence:
-    """Merge the condition's flags over the group's, then over the defaults."""
+    """Merge the condition's flags over the group's, then over the defaults.
+
+    `verbose` is handled here too: it rides with the cadence flags so it works
+    on either side of the condition, but it configures logging rather than the
+    poll loop, so it never reaches the Cadence model.
+    """
     outer = click.get_current_context().obj or {}
+    if kwargs.get("verbose"):
+        create_logger(True, "watch")
     merged = {}
     for key, fallback in CADENCE_DEFAULTS.items():
         value = kwargs.get(key)
@@ -72,18 +100,17 @@ def validated(model, **kwargs):
 
 
 @click.group(context_settings=CONTEXT_SETTINGS, help=__doc__, invoke_without_command=True)
-@click.option("-v", "--verbose", is_flag=True, help="Debug logging on stderr.")
 @cadence_options
 @click.pass_context
-def cli(ctx: click.Context, verbose: bool, **cadence) -> None:
-    create_logger(verbose, "watch")
+def cli(ctx: click.Context, **cadence) -> None:
+    create_logger(bool(cadence.get("verbose")), "watch")
     # A bare invocation is a usage error, not a help screen: an agent that armed
     # nothing must see exit 2 rather than a silent success.
     if ctx.invoked_subcommand is None:
         raise ScriptError("a condition is required; see --help for the list")
     # Stashed for build_cadence: a flag given here is the fallback for whatever
     # the condition does not set itself.
-    ctx.obj = cadence
+    ctx.obj = {key: value for key, value in cadence.items() if key not in LOGGING_KEYS}
 
 
 @cli.command("file-exists")
@@ -116,7 +143,7 @@ def file_flat(path: str, for_seconds: float, **cadence) -> None:
     raise SystemExit(runner.run(probe, build_cadence(**cadence)))
 
 
-@cli.command("exit-zero", context_settings={"ignore_unknown_options": True})
+@cli.command("exit-zero", context_settings=COMMAND_SETTINGS)
 @click.argument("command", nargs=-1, required=True)
 @cadence_options
 def exit_zero(command: tuple[str, ...], **cadence) -> None:
@@ -124,7 +151,7 @@ def exit_zero(command: tuple[str, ...], **cadence) -> None:
     raise SystemExit(runner.run(probes.ExitZero(list(command)), build_cadence(**cadence)))
 
 
-@cli.command("command", context_settings={"ignore_unknown_options": True})
+@cli.command("command", context_settings=COMMAND_SETTINGS)
 @click.argument("command", nargs=-1, required=True)
 @click.option("--expect", "expect", multiple=True, help="A value that means met. Repeatable.")
 @click.option("--expect-file", default=None, help="Read the expected value from a file; for values carrying quotes.")
@@ -143,6 +170,8 @@ def command_condition(
 ) -> None:
     """COMMAND's stdout matches --expect; the general condition."""
     values = _load_expectations(expect, expect_file)
+    if json_path is not None:
+        probes.check_json_path(json_path)
     spec = Expectations(values=values, json_path=json_path, contains=contains, negate=negate)
     probe = probes.Command(list(command), spec)
     raise SystemExit(runner.run(probe, build_cadence(**cadence)))
@@ -155,6 +184,8 @@ def command_condition(
 @cadence_options
 def http(url: str, status: int, body_contains: str | None, **cadence) -> None:
     """GET URL returns --status, body containing --contains."""
+    if status <= 0:
+        raise ScriptError(f"--status must be a positive integer, got: {status}")
     probe = probes.Http(_checked_url(url), status=status, contains=body_contains)
     raise SystemExit(runner.run(probe, build_cadence(**cadence)))
 
@@ -172,6 +203,7 @@ def _load_expectations(expect: tuple[str, ...], expect_file: str | None) -> tupl
     if expect_file is not None:
         if expect:
             raise ScriptError("pass --expect or --expect-file, not both")
+        expect_file = validated(WatchedPath, path=expect_file).path
         try:
             with open(expect_file, encoding="utf-8") as handle:
                 return (handle.read().strip(),)
@@ -212,7 +244,7 @@ def main() -> None:
     try:
         cli.main(standalone_mode=False)
     except ScriptError as err:
-        emit(f"error: {err}")
+        sys.stderr.write(f"error: {err}\n")
         raise SystemExit(err.exit_code) from err
     except click.ClickException as err:
         err.show()

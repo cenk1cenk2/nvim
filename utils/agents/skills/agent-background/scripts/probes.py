@@ -15,7 +15,9 @@ import time
 from typing import Protocol
 
 import httpx
+from agentlib.cli import ScriptError
 from agentlib.models import Expectations
+from jsonpath_ng.exceptions import JSONPathError
 from jsonpath_ng.ext import parse as jsonpath_parse
 
 VALUE_PRINT_LIMIT = 200
@@ -38,10 +40,27 @@ def truncate(value: str) -> str:
 def _is_jsonpath(path: str) -> bool:
     """A JSONPath expression, as opposed to the plain dotted form.
 
-    `$` or a bracket is unambiguous: neither can appear in the dotted form,
-    where a list index is a bare integer segment.
+    The prefix must be `$.` or `$[`, not a bare `$`: `$schema`, `$ref` and `$id`
+    are ordinary JSON keys, and treating them as expressions turned a working
+    dotted path into a parse error. A bracket anywhere else is unambiguous,
+    since the dotted form indexes a list with a bare integer segment.
     """
-    return path.startswith("$") or "[" in path
+    return path.startswith(("$.", "$[")) or "[" in path
+
+
+def check_json_path(path: str) -> None:
+    """Parse a JSONPath once, at arm time, so a bad one is a usage error.
+
+    Parsed only per poll it raises inside the loop, after the watcher has
+    reported itself armed, and the traceback exits 1 - which a caller reads as
+    a ceiling rather than as the usage error it is.
+    """
+    if not _is_jsonpath(path):
+        return
+    try:
+        jsonpath_parse(path)
+    except Exception as err:  # jsonpath_ng raises several unrelated types
+        raise ScriptError(f"--json-path is not a valid JSONPath expression: {err}") from err
 
 
 def json_walk(text: str, path: str) -> str:
@@ -169,17 +188,26 @@ class Command:
     # most useful line in a wake, unlike a file condition's opening "absent".
     reports_first_value = True
 
-    def __init__(self, command: list[str], expect: Expectations, describe_as: str | None = None):
+    def __init__(
+        self,
+        command: list[str],
+        expect: Expectations,
+        describe_as: str | None = None,
+        expect_source: str | None = None,
+    ):
         self.command = command
         self.expect = expect
         self._describe_as = describe_as
+        # Where the expected value came from, when it was a file. The header
+        # names the file rather than its contents, which may be a quoted payload.
+        self._expect_source = expect_source
 
     def describe(self) -> str:
         if self._describe_as:
             return self._describe_as
         via = f" via json path {self.expect.json_path}" if self.expect.json_path else ""
         test = "contains" if self.expect.contains else "equals"
-        values = " | ".join(repr(value) for value in self.expect.values)
+        values = self._expect_source or " | ".join(repr(value) for value in self.expect.values)
         negation = "does not " if self.expect.negate else ""
         return f"`{' '.join(self.command)}`{via} {negation}{test} {values}"
 
@@ -193,7 +221,7 @@ class Command:
         if self.expect.json_path:
             try:
                 observed = json_walk(out, self.expect.json_path)
-            except (ValueError, KeyError, IndexError, TypeError) as err:
+            except (ValueError, KeyError, IndexError, TypeError, JSONPathError) as err:
                 return False, f"json path {self.expect.json_path} unresolved ({err.__class__.__name__})"
         return self.expect.matches(observed), observed
 
@@ -217,19 +245,28 @@ class Http:
         # normal response here, not an exception, so there is no error branch
         # duplicating the status check below.
         try:
-            response = httpx.get(
+            # `stream` rather than `get`: a probe polls on a cadence, and a
+            # large endpoint would otherwise be downloaded in full every poll.
+            with httpx.stream(
+                "GET",
                 self.url,
                 timeout=HTTP_TIMEOUT,
                 follow_redirects=True,
                 headers={"User-Agent": USER_AGENT},
-            )
+            ) as response:
+                body = ""
+                if self.contains is not None:
+                    for chunk in response.iter_text():
+                        body += chunk
+                        if len(body) >= HTTP_READ_BYTES or self.contains in body:
+                            break
+                status = response.status_code
         except httpx.HTTPError as err:
             # Refused, DNS failure, TLS failure, timeout. The service is still
             # coming up: not met, never an error.
             return False, f"connection error: {err}"
-        status = response.status_code
         if status != self.status:
             return False, f"status {status}"
-        if self.contains is not None and self.contains not in response.text[:HTTP_READ_BYTES]:
+        if self.contains is not None and self.contains not in body:
             return False, f"status {status}, body without {self.contains!r}"
         return True, f"status {status}"

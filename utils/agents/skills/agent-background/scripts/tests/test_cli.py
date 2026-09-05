@@ -120,6 +120,46 @@ class TestFlagPlacement:
         assert "last observed: exit 3" in result
 
 
+class TestArgvBelongsToTheCommand:
+    """Everything after the command word is the command's, options included.
+
+    These are regressions: the argparse version used REMAINDER, and the click
+    port silently began consuming the watched command's own flags.
+    """
+
+    def test_a_known_option_after_the_command_word_is_not_the_watchers(self, run, tmp_path):
+        """`--quiet` here is an argument to echo; consuming it also hid the header."""
+        result = run("exit-zero", "--max-polls", "1", "--interval", "0", "echo", "--quiet", "hi")
+        assert result.code == 0
+        assert "`echo --quiet hi`" in result, "the watcher ate a flag meant for the command"
+        assert "watching" in result, "--quiet was applied to the watcher"
+
+    def test_a_dash_h_after_the_command_word_does_not_print_watcher_help(self, run):
+        """Swallowing it printed help and exited 0, which a caller reads as MET."""
+        result = run("exit-zero", "--max-polls", "1", "--interval", "0", "echo", "-h")
+        assert "Usage: watch.py" not in result
+        assert "`echo -h`" in result
+
+    def test_help_before_the_command_word_still_works(self, run):
+        result = run("command", "--help")
+        assert result.code == 0
+        assert "--json-path" in result
+
+
+class TestVerboseOnEitherSide:
+    """The either-side contract covers `-v` too, which the port had dropped."""
+
+    def test_before_the_condition(self, run, present):
+        result = run("-v", "--interval", "0", "--max-polls", "1", "file-exists", str(present))
+        assert result.code == 0
+        assert "poll 1 met=True" in result
+
+    def test_after_the_condition(self, run, present):
+        result = run("file-exists", str(present), "-v", "--interval", "0", "--max-polls", "1")
+        assert result.code == 0
+        assert "poll 1 met=True" in result
+
+
 class TestHelp:
     def test_top_level_help_documents_the_exit_codes(self, run):
         result = run("--help")
