@@ -8,6 +8,7 @@ scripts:
   - ./scripts/watch.py
 references:
   - ../references/long-running-work.md
+  - ../references/identifier-legibility.md
   - ../references/agent/agent-watchers.md
   - ../references/harness/agent-background-harness-claude.md
   - ../references/harness/agent-background-harness-codex.md

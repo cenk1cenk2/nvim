@@ -440,7 +440,7 @@ A script launched detached has no reader; **its exit code is its message**. Fix 
 
 Turning a usage error into exit 1 is the worst available bug: the caller reads it as a ceiling and waits.
 
-**A code the table does not claim belongs to the launch shell, not the script**: 127 is a path that does not exist, 126 one that is not executable, and 1 with a traceback is an interpreter bypass. Write the consuming steps so an unclaimed code is classified as a failed launch — the condition was never observed even once — and never as a result. The check that catches all three before they detach into silence is one foreground run of the resolved path (`--help` exits 0) ahead of any launch that backgrounds it; a skill that ships a script states that pre-flight beside the launch step.
+**A code the table does not claim belongs to the launch shell, not the script.** Write the consuming steps so an unclaimed code is classified as a failed launch — the condition was never observed even once — and never as a result; the codes themselves are enumerated once, in `agent-background`. The check that catches a bad launch before it detaches into silence is one foreground run of the resolved path (`--help` exits 0) ahead of any launch that backgrounds it; a skill that ships a script states that pre-flight beside the launch step.
 
 ### stdout is the wake
 

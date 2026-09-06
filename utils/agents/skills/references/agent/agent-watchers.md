@@ -60,7 +60,7 @@ the mechanism is wrong, not slow.
 Spacelift where no CLI exists), poll a bash-visible **proxy** and do the authoritative MCP check
 yourself on wake.
 
-**The tested `watch.py` in `agent-background` is the default watcher; a hand-written loop is the fallback** for a runtime with no tree on disk, and it is written in python (`python3 -c` — an inline program, not a script file, so the launch-by-path rule does not apply to it). Python is preferred because a hand-written bash loop reliably dies on escaping — quoting an agent composes is exactly where it goes wrong. Bash is acceptable
+**The tested `watch.py` in `agent-background` is the default watcher; a hand-written loop is the fallback** for a runtime with no tree on disk, and it is written in python (`python3 -c` — an inline program, not a script file, so the launch-by-path rule does not apply to it). Python is preferred because agents reliably mis-escape hand-written bash — nested quotes die at the shell's parser. Bash is acceptable
 only for a single-condition one-liner — **no arrays, no JSON parsing, no multi-line payload**; anything past
 that keeps its data as values in a program instead of words the shell re-splits. **Shell arrays are the
 specific trap**: a `${array[@]}` that expands fine interactively can arrive empty inside a background-exec
