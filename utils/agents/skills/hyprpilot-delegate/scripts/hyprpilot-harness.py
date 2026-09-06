@@ -536,7 +536,10 @@ class SessionVerdict:
                     f"transcriptBytes {r['transcriptBytes']} unchanged for {int(span)}s with status running. "
                     "That is a wedged agent, which status alone cannot show. Report it; kill only on a decision."
                 )
-            return "running", "the turn is in flight; poll session_status again, and do not spawn again"
+            return "running", (
+                "the turn is in flight; poll session_status again, and do not spawn again. "
+                "To redirect it instead of waiting, session_send the SAME handle with steer set"
+            )
         if r["exitCode"] == 0:
             note = "read the result resource, then check the answer against the brief"
             if r["hasResult"] is False:

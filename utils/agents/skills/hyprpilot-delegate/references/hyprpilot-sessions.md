@@ -72,13 +72,13 @@ That `turns` array is the routing view — outcome plus the URI that fetches it,
 | --- | --- |
 | `list_profiles` | Discovery. Always first — ids are captain-defined and the harness is opt-in per profile, so a configured profile may be absent. |
 | `spawn` | Start a NEW session. Returns a `session` handle. |
-| `session_send` | Next turn on the SAME conversation. Never `spawn` again for a follow-up. |
+| `session_send` | Next turn on the SAME conversation. Never `spawn` again for a follow-up. `steer: true` interrupts a turn in flight. |
 | `session_status` | **The cheap poll.** State without reading the transcript. |
 | `session_read` | The transcript itself, paginated. |
 | `session_list` | Recover a handle you lost. |
-| `session_kill` | Stop a running session, or reap a finished one. |
+| `session_kill` | Stop a session you want no more turns from, or reap a finished one. |
 
-**No tool takes a filter, query or `jq` expression.** The full parameter set is `spawn { profile, prompt, file, cwd, mode, args, with_config, wait, timeout_seconds }`, `session_send { session, prompt, file, mode, wait, timeout_seconds }`, `session_read { session, cursor, tail, wait, timeout_seconds }`, and `{ session }` alone for status/kill. Projection happens either by picking a resource view or by `jq` on disk — never as an argument.
+**No tool takes a filter, query or `jq` expression.** The full parameter set is `spawn { profile, prompt, file, cwd, mode, args, with_config, wait, timeout_seconds }`, `session_send { session, prompt, file, mode, wait, timeout_seconds, steer }`, `session_read { session, cursor, tail, wait, timeout_seconds }`, and `{ session }` alone for status/kill. Projection happens either by picking a resource view or by `jq` on disk — never as an argument.
 
 ## Tasks — the same session, addressed by protocol
 
@@ -180,7 +180,7 @@ t+18s running 9568 B   ← moving again
 t+21s exited  13725 B  exit 0  hasResult: true
 ```
 
-"running, and `transcriptBytes` unchanged for N minutes" is a hung agent. PID liveness can never see that — a wedged process is perfectly alive. Tune N in minutes, and treat it as a report rather than a kill trigger.
+"running, and `transcriptBytes` unchanged for N minutes" is a hung agent. PID liveness can never see that — a wedged process is perfectly alive. Tune N in minutes, and treat it as a report rather than a kill trigger. `session_send { steer: true }` reaches it where a plain send is refused, so a wedge can be redirected onto something narrower and the conversation survives; a kill ends it.
 
 **`hasResult`** is `false` for any running session, then scans the turn's tail (200 lines) per vendor.
 
@@ -287,10 +287,13 @@ jq -r 'select(.type=="error") | .error.data.message // .error.name' "$T"
 
 - **A session is `exited` after every TURN**, not only when the conversation ends. "Is it done" always means "is this turn done".
 - **`exitCode: 0` and `hasResult: true` mean the TURN ended cleanly, never that the TASK was completed.** They are process and transcript facts; neither inspects whether the agent did what it was asked. A measured run gave a 4-step prompt to a small model, which answered steps 1 and 2, stopped, and exited 0 with `hasResult: true` and no error event anywhere — the harness reported that success faithfully. Read the answer against what you asked before relaying it, and `session_send` the remainder rather than treating exit status as an acceptance test.
-- **One turn at a time.** `session_send` to a running session is refused; no vendor supports two concurrent turns on one conversation. `session_kill` still works on it.
+- **One turn at a time unless you interrupt.** A plain `session_send` to a running session is refused; no vendor supports two concurrent turns on one conversation. `session_send { steer: true }` interrupts instead: the harness harvests the vendor's session id from the partial transcript, terminates the in-flight turn's process group, seals that turn with the outcome `steered` rather than `killed`, and starts the next turn resumed with your prompt. Same handle, `delivery: "steered"`, and the result names the interrupted turn. On an already-exited session the flag is inert.
+- **A steer is refused when the vendor has not emitted its session id yet** — a turn 1 interrupted ahead of its init event, with no conversation to resume against. Nothing is killed and the turn runs on: poll `session_status`, or `session_kill` when stopping it is the intent.
+- **A steer ends the interrupted turn**, so its `done.json` lands and its watcher fires on an interruption rather than an answer. That turn's directory survives and stays readable, but what the agent had done is only what the vendor persisted before the kill.
+- **`session_kill` keeps two jobs.** Stop a session you want no further turns from, and reap a finished one. Redirecting a working agent is a steer, not a kill.
 - **A timeout is not a failure.** The turn returning `running` means the agent is still working — poll, never re-`spawn`.
 - **Sessions die with the sidecar.** No persistence. If it restarts, running agents are killed and transcripts are lost — capture anything that must outlive the connection.
-- **`session_send` replays the launch.** `cwd` / `args` / `with_config` are inherited and **rejected** if passed; only the prompt, `mode`, `wait` and `timeout_seconds` are per-turn.
+- **`session_send` replays the launch.** `cwd` / `args` / `with_config` are inherited and **rejected** if passed; only the prompt, `mode`, `wait`, `timeout_seconds` and `steer` are per-turn.
 - **Paging is MCP-style, and the cursor carries its turn.** `cursor` in, `nextCursor` out, opaque (`<turn>.<offset>`). **No `nextCursor` means finished AND fully read.** Pass one back verbatim; never parse or construct one. An unrecognised cursor is an error, not a silent reset.
 - **Launches are detached — `wait` defaults to false.** `spawn` / `session_send` return as soon as the turn starts. Opting into `wait: true` is rarely right: it returns the whole raw event stream with no `tail` and no `cursor` to trim it (measured on one trivial three-item task: 14 kB on opencode, 121 kB on claude), and it still comes back `running` if the turn outlives `timeout_seconds`. Poll, then read `/result`.
 - **A runtime that auto-backgrounds slow MCP calls does NOT make `wait: true` cheap.** Some runtimes move an MCP call that outlives a threshold into a background task — the turn stops stalling, and the payload arrives later in a notification. **Later is not smaller.** Measured: a `wait: true` follow backgrounded on schedule and then delivered a 60 kB slice of raw events to answer what one `/result` read answers in a line.

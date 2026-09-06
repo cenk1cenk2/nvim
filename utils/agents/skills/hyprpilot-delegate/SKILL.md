@@ -27,7 +27,7 @@ references:
 
 ## ABSOLUTE — arm the turn's watcher before reporting the session as running
 
-**Every detached turn is followed, in the same turn, by arming exactly one runtime-managed watcher on that turn's own `done.json`.** This binds to `spawn` and to every `session_send` alike — each starts a turn, each returns that turn's own path, and each finishes into silence otherwise.
+**Every detached turn is followed, in the same turn, by arming exactly one runtime-managed watcher on that turn's own `done.json`.** This binds to `spawn` and to every `session_send` alike, steering or not — each starts a turn, each returns that turn's own path, and each finishes into silence otherwise.
 
 The call hands you the exact path in `sessionInfo.files.turnDir`. There is nothing left to discover and nothing to wait for, so there is no state in which arming is premature and no reason to defer it to a later turn.
 
@@ -118,11 +118,11 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 |------|---------|
 | `hyprpilot-harness__list_profiles` | Discover launchable profiles. Always first. |
 | `hyprpilot-harness__spawn` | Start a NEW session from a profile. Returns a `session` handle. |
-| `hyprpilot-harness__session_send` | Send another turn to an existing session. The steering tool. |
+| `hyprpilot-harness__session_send` | Send another turn to an existing session. The steering tool — `steer: true` interrupts a turn in flight. |
 | `hyprpilot-harness__session_read` | Read or follow a session's transcript. |
 | `hyprpilot-harness__session_status` | **The cheap poll.** State without reading the transcript. |
 | `hyprpilot-harness__session_list` | List sessions — recover a handle you lost. |
-| `hyprpilot-harness__session_kill` | Stop a running session, or reap a finished one. |
+| `hyprpilot-harness__session_kill` | Stop a session you want no more turns from, or reap a finished one. |
 
 **Reading a session is a RESOURCE read, not a tool call.** `hyprpilot://sessions/<handle>/result` is the answer, already extracted per vendor; `hyprpilot://sessions/<handle>` lists every turn with its outcome and URI. The tools above start, steer and poll — the resource tree is how you collect. Full tree, the three tiers, and when to drop to `session_read` or `jq`: `hyprpilot-sessions`.
 
@@ -163,7 +163,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - **Poll with the handle. NEVER call `spawn` again** — that starts a second, unrelated agent and abandons the first. This is the single most common way to get this wrong.
    - **`session_status { session }` is the poll.** It reads no transcript, so it costs almost nothing to repeat: `status`, `exitCode`, `transcriptBytes`, `hasResult`. Reach for `session_read` when you want the *output*, not to answer "is it done".
    - On the Tasks path this is `tasks/get` instead, honouring its `pollIntervalMs`. Same discipline, different method.
-   - **`transcriptBytes` tells you working from wedged.** It climbs while the agent produces output and plateaus while it thinks or runs a long tool. Flat for minutes with `status: running` is a hung agent — something `status` alone can never show you. Report it; do not kill on it reflexively.
+   - **`transcriptBytes` tells you working from wedged.** It climbs while the agent produces output and plateaus while it thinks or runs a long tool. Flat for minutes with `status: running` is a hung agent — something `status` alone can never show you. Report it; do not kill on it reflexively. `session_send { steer: true }` reaches a wedged agent where a plain send is refused, so redirecting it onto something narrower keeps the conversation a kill would end.
    - Follow live instead with `session_read { session, wait: true, cursor: <nextCursor>, timeout_seconds? }` when you actually want the stream. A follow ends when the agent finishes, when the request is cancelled, or at `timeout_seconds`. **It blocks your own turn while it runs**, and you cannot ask for it to run detached — no MCP call takes a background parameter. Some runtimes auto-background an MCP call past a threshold (the harness file named in step 4 says whether yours does), **but that only stops the stall — the same untrimmed payload still arrives, just later.** A follow is the right tool only when you genuinely want the entire raw stream; for progress, stream the turn's `turns.jsonl` per step 4, and for the answer, read `/result` per step 6.
 
 6. **Collect the result deliberately — this is where the work gets lost.**
@@ -181,9 +181,13 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 7. **Steer across turns with `session_send`, not `spawn`.**
    - **A conversation is ONE session.** `session_send { session, prompt }` reuses the handle and appends to the same transcript, so the agent retains everything from earlier turns.
    - **A detached `session_send` starts a turn, so it arms a watcher exactly like a spawn does.** Its result carries that turn's own `sessionInfo.files.turnDir` — a fresh directory with no marker in it — so run the ABSOLUTE sequence again against the new path and the new watcher handle. Reap the previous turn's watcher before arming the replacement; two loops on one session wake you twice and can report different turns.
-   - Each turn runs as a **fresh process resumed against the vendor's own session store** — the pid changes, `startedAt` stays put, `lastTurnAt` moves. That is why a session that already exited can still be steered rather than lost; the result's `delivery` field reports what happened (`resumed`).
-   - **It replays the original launch and will not let you change it.** `cwd`, `args` and `with_config` are inherited from the `spawn` and are **rejected** if you pass them — how a conversation was launched is part of its identity. Only `prompt`/`file`, `mode`, `wait` and `timeout_seconds` are per-turn. To launch differently, start a new session.
-   - **One turn at a time, and detaching makes this the easy mistake.** A `session_send` against a session that is still working comes back as a tool **error** — "already has a turn in flight" — not a queued message. `spawn` returns while the agent is still thinking, so "spawn, then immediately send the next instruction" is a refusal every time. Poll `session_status` until `exited`, or `session_kill` it first.
+   - Each turn runs as a **fresh process resumed against the vendor's own session store** — the pid changes, `startedAt` stays put, `lastTurnAt` moves. That is why a session that already exited can still be steered rather than lost; the result's `delivery` field reports what happened — `resumed` for a session that had finished, `steered` when a turn in flight was interrupted.
+   - **It replays the original launch and will not let you change it.** `cwd`, `args` and `with_config` are inherited from the `spawn` and are **rejected** if you pass them — how a conversation was launched is part of its identity. Only `prompt`/`file`, `mode`, `wait`, `timeout_seconds` and `steer` are per-turn. To launch differently, start a new session.
+   - **One turn at a time unless you ask to interrupt, and detaching makes this the easy mistake.** A plain `session_send` against a session that is still working comes back as a tool **error** — "already has a turn in flight" — not a queued message. `spawn` returns while the agent is still thinking, so "spawn, then immediately send the next instruction" is a refusal every time. Wait the turn out when you want the answer it is producing; pass `steer: true` when you want the agent doing something else instead.
+   - **`steer: true` redirects a working agent, and it is the way to change its course.** The harness harvests the vendor's own session id from the partial transcript, terminates the in-flight turn's process group, seals that turn with the outcome `steered` rather than `killed` — so a reader can tell a redirect from a cancellation — and starts the next turn resumed against the vendor's session store with your prompt. The handle does not change, `delivery` reports `steered`, and the result names the interrupted turn. Against an already-exited session the flag is inert and the send behaves exactly as it would without it, so set it whenever redirecting is the intent rather than checking the state first.
+   - **The interrupted turn keeps only what the vendor already persisted.** Its directory and everything written into it survive and stay readable, but a steer is not a clean handoff of work in progress — read that turn's `/result` before assuming the new turn inherits anything beyond the conversation.
+   - **The one refusal is a turn interrupted before the vendor announced its session id** — a turn 1 stopped ahead of its init event. There would be no conversation to resume against, so the steer is refused and **nothing is killed**; the turn runs on. Poll `session_status` and steer once it is under way, or `session_kill` when stopping it is what you actually want.
+   - **A steer ENDS the interrupted turn, so its `done.json` lands and its armed watcher fires.** That wake is an interruption, not an answer. Run the same sequence as for any new turn: reap the interrupted turn's watcher, then arm a fresh one on the new turn's own `sessionInfo.files.turnDir` from the `session_send` response.
 
 8. **Recover a lost handle with `session_list`.** It returns every session this server owns — handle, profile, status, exit code, cwd, timestamps. Use it when the user refers to "that agent" and the handle is not in context, and present the list so they can pick.
 
@@ -191,7 +195,7 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
    - **Running** → `action: "terminated"`. The agent and everything it started is stopped, and **the transcript is kept** so you can still read why.
    - **Already finished** → `action: "reaped"`. The transcript and the handle both go, and any later read fails with `unknown session`.
    - Calling it twice is the natural stop-then-clean-up. Read anything you care about before the reap.
-   - Kill runaway sessions, and reap a finished one to free a slot when `spawn` reports the concurrency ceiling.
+   - **Two jobs, and redirecting is neither.** Kill a runaway session you want no further turns from; reap a finished one to free a slot when `spawn` reports the concurrency ceiling. To change a working agent's course, `session_send { steer: true }` — a kill throws away the conversation along with the turn.
    - **Reaping the session deletes the directory the watcher tests, so reap the watcher too.** A loop left on a reaped session's `turnDir` fires on the missing-directory half and reports a finish that is really a cleanup. Stop the watcher through the runtime facility and record its ending row before or with the `session_kill`.
 
 10. **Report back.** Give the user the outcome, the handle (so they can continue), and the exit status. If the session is still running, say so plainly and tell them it can be followed or steered — do not present a timed-out turn as a finished result. **A non-zero `exitCode` is not automatically the agent's fault**: the transcript may carry an upstream `error` event (auth, quota, model availability). Read it and say which before re-dispatching. If the user wants to commit/push/PR from the result, hand off per `agent-completion`.
@@ -247,7 +251,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 
 - **Sessions die with the MCP server and do not survive a restart.** There is no persistence. If the sidecar restarts, running agents are killed and transcripts are lost. Treat a chain as living only as long as this MCP connection — capture anything that must outlive it before the turn ends.
 - **Bounded retention.** The oldest **finished** sessions are evicted along with their transcripts (default ceiling 64). A running session is never evicted. Read a transcript you care about before it ages out.
-- **Bounded breadth and depth.** A ceiling of **8 concurrently running** sessions bounds breadth; `[mcp.harness].maxDepth` bounds nesting at **1** by default (stamped as `HYPRPILOT_SPAWN_DEPTH`), so an agent you spawn cannot spawn its own — you delegate, it works. Hitting either returns an error — free a slot with `session_kill` rather than retrying blindly.
+- **Bounded breadth and depth.** A ceiling of **8 concurrently running** sessions bounds breadth; `[mcp.harness].maxDepth` bounds nesting at **1** by default (stamped as `HYPRPILOT_SPAWN_DEPTH`), so an agent you spawn cannot spawn its own — you delegate, it works. Hitting either returns an error — free a slot by reaping a finished session with `session_kill`, rather than retrying blindly. That is the reaping job, not a general-purpose route: a reap frees a slot, a steer redirects an agent already holding one.
 - **Detaching removes the natural brake on breadth.** A blocking `spawn` could not overrun the concurrency ceiling because it finished before you called the next one. Detached calls return instantly, so a fan-out of nine is nine calls in one turn and the ninth is refused. Count what is already running — `session_list` — before firing a batch, and reap finished ones to free slots.
 - **So the fan-out is yours to run.** A delegate cannot sub-delegate, and asking it to would just earn a refusal it has to report back. Split the work here and spawn the pieces yourself, where `session_list` sees them and `session_kill` can stop them.
 - **`spawn` executes as this user.** A profile's `command` is an arbitrary binary and its `provider` picks a flag projection, not a sandbox. This is why the skill is manual, requested by the user, and presented before it spawns.
@@ -291,7 +295,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 ## Key Principles
 
 - **`list_profiles` first, always.** Never hardcode an id; never guess an ambiguous fragment.
-- **`spawn` once per conversation; `session_send` for every follow-up.**
+- **`spawn` once per conversation; `session_send` for every follow-up.** `steer: true` when the agent is still working and you want it doing something else.
 - **Dedicated parameters before `with_config`.** Reach for `with_config` only for `model` and `effort`.
 - **`with_config` before `args`.** hyprpilot converts an overlay onto the target vendor; `args` is raw vendor argv you have to get right yourself. Drop to `args` only for knobs hyprpilot does not model, and check the vendor's `--help` first.
 - **`mode: "plan"` for anything read-only.** Free, and it removes write authority instead of asking for it.
@@ -299,7 +303,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 - **`/result` for the answer, `jq` for a projection, `session_read` for the raw stream.** Three tools, three jobs — the ranking is about cost, not permission. `jq` earns its place by filtering before the bytes reach your context; nothing else can do that.
 - **A runtime that auto-backgrounds slow MCP calls changes nothing here.** It stops the turn stalling; the untrimmed payload still arrives. Deferred cost is still cost.
 - **The handle is the only id.** It arrives with the first result and never changes. Nothing else addresses a session — and on the Tasks path it still rides `_meta`, so you never parse a task id to recover it.
-- **A timeout means still working.** Follow it; never re-spawn.
+- **A timeout means still working.** Follow it, or steer it onto something else; never re-spawn.
 - **Detached work finishes into silence.** There is no completion push you can arm — every detached `spawn` and every detached `session_send` gets its own `done.json` watcher, armed before the session is reported as running.
 - **A watcher exists when a launch returned a handle and did not exit non-zero on the spot.** Anything less means you detached instead of arming: diagnose the launch, then re-arm, or drop to a bounded `session_status` poll or a blocking `wait: true` — and say which, reporting the session as unwatched until one is in place.
 - **Record the session handle, the watched `turnDir`, and the watcher handle together.** Any of the three missing makes the other two unverifiable. The user-facing announcement is one plain sentence — task and next action — plus the session handle; the rest stays in the armed row.
