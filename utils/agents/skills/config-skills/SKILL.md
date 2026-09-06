@@ -421,6 +421,8 @@ The shebang makes the script runnable by path with no wrapper, which is what a b
 #!/usr/bin/env -S sh -c 'exec uv run --project "$(dirname "$0")" "$0" "$@"'
 ```
 
+**And the shebang only fires when the script is launched by its own path.** A consuming body therefore instructs executing the path, resolved from the owning skill's `bundleDir` — never `python3 <path>`, which bypasses the uv project beside the script and dies on the first third-party import (`ModuleNotFoundError`) at exit 1, colliding with the ceiling code below.
+
 Shared scaffolding lives in `skills/lib/` as the `agentlib` package, consumed as an editable path dependency (`agentlib = { path = "../../lib", editable = true }`). It carries `ScriptError`, `ExitCode`, the rich logger and the pydantic validators, so two scripts do not each grow their own.
 
 Use real libraries rather than hand-rolling: `click` for the CLI, `pydantic` for validation, `rich` for logging, `httpx` for HTTP — bare `urllib` gets bounced by edge proxies — and `jsonpath-ng` where a caller needs to narrow JSON.
@@ -437,6 +439,8 @@ A script launched detached has no reader; **its exit code is its message**. Fix 
 | 3 | the check cannot run; polling would never fix it |
 
 Turning a usage error into exit 1 is the worst available bug: the caller reads it as a ceiling and waits.
+
+**A code the table does not claim belongs to the launch shell, not the script**: 127 is a path that does not exist, 126 one that is not executable, and 1 with a traceback is an interpreter bypass. Write the consuming steps so an unclaimed code is classified as a failed launch — the condition was never observed even once — and never as a result. The check that catches all three before they detach into silence is one foreground run of the resolved path (`--help` exits 0) ahead of any launch that backgrounds it; a skill that ships a script states that pre-flight beside the launch step.
 
 ### stdout is the wake
 
