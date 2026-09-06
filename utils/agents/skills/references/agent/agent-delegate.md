@@ -120,6 +120,16 @@ Genuinely safe to reap:
 
 **Consequences of blocking:** no mid-execution message exchange (the lead is paused), and user guidance only arrives on the next turn.
 
+## Announce the dispatch in plain language
+
+When a dispatch goes out, the user-facing line summarizes what the delegate was asked to do, in one
+human sentence: "sent an agent to port the retry logic in the API client and run the tests." Name the
+task and, when relevant, what happens once it reports back — never dump the full prompt, the dispatch
+parameters, or the runtime's plumbing into the report. Where the flow presents the prompt for review
+before launch, that review already showed the full text; the announcement is not a second copy. The
+same rule covers every later mention of the agent: say what it is doing in plain words, not a
+restatement of its brief.
+
 ## Model Selection
 
 Delegation picks a **tier** from task complexity, then resolves it to a **concrete model** for the active runtime. The tier system, user-wording mapping, and per-harness model lists live in the **`agent-harness`** skill and its references (`agent-delegate-harness-claude`, `agent-delegate-harness-opencode`, `agent-delegate-harness-codex`).
