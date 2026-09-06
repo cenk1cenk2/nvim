@@ -192,6 +192,26 @@ class TestParser:
         assert "unparseable frontmatter line" in result
 
 
+class TestParserIndents:
+    """A list item the collector drops means its existence check stops running."""
+
+    @pytest.mark.parametrize(
+        "indent",
+        [pytest.param("", id="column zero"), pytest.param("    ", id="four spaces"), pytest.param("\t", id="tab")],
+    )
+    def test_a_declared_reference_is_checked_at_any_indent(self, catalog, lint, indent):
+        catalog.add("odd", extra=f"references:\n{indent}- ./references/absent.md\n")
+        result = lint(catalog)
+        assert result.code == 1
+        assert "declared but missing" in result
+
+    def test_a_flow_sequence_is_reported_rather_than_silently_dropped(self, catalog, lint):
+        catalog.add("flowing", extra="references: [./references/absent.md]\n")
+        result = lint(catalog)
+        assert result.code == 1
+        assert "flow sequence" in result
+
+
 class TestInvocationErrors:
     def test_an_unknown_option_is_exit_two_not_a_traceback(self, lint, catalog):
         catalog.add("good-skill")
@@ -273,6 +293,12 @@ class TestBodyRules:
     def test_a_family_glob_naming_a_connector_passes(self, catalog, lint):
         """`mcp__claude_ai_Slack__*` IS the connector's identity, not a call."""
         catalog.add("namer", body="The claude.ai connector `mcp__claude_ai_Slack__*` reaches the other workspace.\n")
+        result = lint(catalog)
+        assert result.code == 0, result.out
+
+    def test_a_family_glob_with_a_placeholder_passes(self, catalog, lint):
+        """`mcp__claude_ai_<Connector>__*` is how config-skills itself names a family."""
+        catalog.add("placeheld", body="A first-party connector is `mcp__claude_ai_<Connector>__*`.\n")
         result = lint(catalog)
         assert result.code == 0, result.out
 

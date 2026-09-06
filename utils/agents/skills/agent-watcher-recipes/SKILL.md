@@ -30,8 +30,12 @@ say. Watch the state field, and match **closed-without-merge** too — a watcher
 
 ```python
 import json, subprocess
-out = subprocess.run(["gh", "pr", "view", N, "--repo", REPO, "--json", "state"],
-                     capture_output=True, text=True).stdout
+
+out = subprocess.run(
+    ["gh", "pr", "view", N, "--repo", REPO, "--json", "state"],
+    capture_output=True,
+    text=True,
+).stdout
 state = json.loads(out)["state"]
 met = state in ("MERGED", "CLOSED")
 # GitLab: glab mr view <N> --repo <project> -F json, then .state in ("merged", "closed")
@@ -50,9 +54,13 @@ Handle that one, then re-arm for the remainder.
 ```python
 # GitHub Actions: exclude every in-flight state explicitly, then read the conclusions
 import json, subprocess
+
 IN_FLIGHT = {"PENDING", "IN_PROGRESS", "QUEUED"}
-out = subprocess.run(["gh", "pr", "checks", N, "--repo", REPO, "--json", "name,state"],
-                     capture_output=True, text=True).stdout
+out = subprocess.run(
+    ["gh", "pr", "checks", N, "--repo", REPO, "--json", "name,state"],
+    capture_output=True,
+    text=True,
+).stdout
 checks = json.loads(out)
 met = not any(c["state"] in IN_FLIGHT for c in checks)
 # GitLab: glab ci status / the pipelines API, keyed on the pipeline id
@@ -82,12 +90,26 @@ complement.
 ```python
 # Spacelift, via its CLI (tracked runs only — proposed/PR runs come from the MCP or the PR checks)
 import json, subprocess
+
 NOT_SETTLED = {"INITIALIZING", "QUEUED", "PLANNING", "APPLYING", "CONFIRMING"}
-out = subprocess.run(["spacectl", "stack", "run", "list", "--id", STACK,
-                      "--max-results", "5", "--output", "json"],
-                     capture_output=True, text=True).stdout
+out = subprocess.run(
+    [
+        "spacectl",
+        "stack",
+        "run",
+        "list",
+        "--id",
+        STACK,
+        "--max-results",
+        "5",
+        "--output",
+        "json",
+    ],
+    capture_output=True,
+    text=True,
+).stdout
 state = next(r["state"] for r in json.loads(out) if r["id"] == RUN)
-met = state not in NOT_SETTLED          # add the awaiting-approval state per the table above
+met = state not in NOT_SETTLED  # add the awaiting-approval state per the table above
 ```
 
 On wake, **read the delta, not just the state.** A settled plan with the wrong resource counts is the
@@ -105,8 +127,10 @@ authoritative tool on wake.
 
 ```python
 import json, subprocess
-out = subprocess.run(["some-cli", "app", "get", APP, "-o", "json"],
-                     capture_output=True, text=True).stdout
+
+out = subprocess.run(
+    ["some-cli", "app", "get", APP, "-o", "json"], capture_output=True, text=True
+).stdout
 met = json.loads(out)["status"]["sync"]["status"] == "Synced"
 ```
 
@@ -131,6 +155,7 @@ per-turn path the call returned:
 
 ```python
 import os
+
 met = not os.path.isdir(TURN_DIR) or os.path.exists(os.path.join(TURN_DIR, "done.json"))
 ```
 
@@ -185,23 +210,30 @@ the end of this section. Four shapes cover almost everything above.
 **State query** — a CLI or API reporting a status field:
 ```python
 import json, subprocess
-out = subprocess.run(["some-cli", "show", ID, "--output", "json"],
-                     capture_output=True, text=True).stdout
+
+out = subprocess.run(
+    ["some-cli", "show", ID, "--output", "json"], capture_output=True, text=True
+).stdout
 met = json.loads(out)["state"] in TERMINAL_STATES
 ```
 
 **Appearance** — an artifact produced, or a line showing up in a log:
 ```python
 import os, re
-met = (os.path.getsize(ARTIFACT) > 0 if os.path.exists(ARTIFACT) else False) \
-      or bool(re.search(r"DONE|FAILED|Traceback", open(LOGFILE, errors="replace").read()))
+
+met = (os.path.getsize(ARTIFACT) > 0 if os.path.exists(ARTIFACT) else False) or bool(
+    re.search(r"DONE|FAILED|Traceback", open(LOGFILE, errors="replace").read())
+)
 ```
 
 **Change** — a value moving off a known baseline (a ref, a count, a version). Capture the baseline
 *before* triggering the work:
 ```python
 import subprocess
-current = subprocess.run(["probe-current-value"], capture_output=True, text=True).stdout.strip()
+
+current = subprocess.run(
+    ["probe-current-value"], capture_output=True, text=True
+).stdout.strip()
 met = current != KNOWN_BASELINE
 ```
 
@@ -209,8 +241,10 @@ met = current != KNOWN_BASELINE
 a collection holds it in python, never a shell array:
 ```python
 import json, subprocess
-out = subprocess.run(["some-cli", "list", "--output", "json"],
-                     capture_output=True, text=True).stdout
+
+out = subprocess.run(
+    ["some-cli", "list", "--output", "json"], capture_output=True, text=True
+).stdout
 met = any(r["id"] == RUN and r["state"] in TERMINAL_STATES for r in json.loads(out))
 ```
 

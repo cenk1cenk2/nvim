@@ -52,7 +52,7 @@ MCP_WIRE = re.compile(r"mcp__[A-Za-z]")
 # A wire name may legitimately appear as a FAMILY glob naming a connector, or
 # inside a ToolSearch `select:` string, which is literal data. Everything else
 # is an instruction to call it, which the short `server__tool` form owns.
-MCP_WIRE_ALLOWED = re.compile(r"mcp__[A-Za-z0-9_]*__\*|select:[^`\s]*mcp__")
+MCP_WIRE_ALLOWED = re.compile(r"mcp__(?:[A-Za-z0-9_]|<[A-Za-z]+>)*__\*|select:[^`\s]*mcp__")
 
 # The catalog writes loads three ways; all three must resolve.
 LOAD_SLUG = re.compile(r"\b[Ll]oad(?: the)? `([a-z0-9][a-z0-9-]*)`")
@@ -128,8 +128,9 @@ def parse_skill(path: Path) -> tuple[Skill | None, list[Finding]]:
             )
         if line.startswith("#") or not line.strip():
             continue
-        if line.startswith("  - "):
-            value = line[4:].strip()
+        stripped = line.lstrip()
+        if stripped.startswith("- "):
+            value = stripped[2:].strip()
             if current == "references":
                 references.append(value)
             elif current == "scripts":
@@ -138,7 +139,18 @@ def parse_skill(path: Path) -> tuple[Skill | None, list[Finding]]:
         if ":" in line and not line.startswith(" "):
             key, _, value = line.partition(":")
             current = key.strip()
-            fields[current] = value.strip()
+            value = value.strip()
+            if current in ("references", "scripts") and value.startswith("["):
+                unreadable.append(
+                    Finding(
+                        Level.FAIL,
+                        "frontmatter",
+                        slug,
+                        f"{current} is a flow sequence; write it as a block list so each entry is checked",
+                        offset,
+                    )
+                )
+            fields[current] = value
     return (
         Skill(
             path=path,

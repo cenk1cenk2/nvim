@@ -1,6 +1,10 @@
 ---
 name: project-facts
 description: project-facts Report what a repository builds with, which of those commands its CI actually enforces, and how it releases. Use when you need a project's real commands before running or delegating them. Not for running the gates, and not for a repository whose tooling you would have to invent.
+references:
+  - ../references/project-tooling.md
+  - ../references/scm/release-convention.md
+  - ../references/agent/agent-conventions.md
 scripts:
   # Relative to this skill's own directory: resolve against the `bundleDir` the
   # skill metadata carries, never a hardcoded absolute path, because the tree
@@ -15,7 +19,7 @@ Three questions asked before running or delegating anything in an unfamiliar rep
 | Question | Answer |
 |---|---|
 | What does it build with? | the task runner and the commands it defines |
-| What actually gates a merge? | the commands CI runs, in the order it runs them |
+| What actually gates a merge? | the commands CI runs |
 | How does it release? | whether a commit type sets a version bump |
 
 `project-tooling` owns the discovery table and `release-convention` owns the release detection; both remain the prose. This skill is the mechanical version of the same questions, so an agent stops re-deriving them by hand and stops guessing when the answer is absent.
@@ -30,6 +34,8 @@ Run the script against the repository root; `--json` for a machine-readable repo
 "<bundleDir>/scripts/project_facts.py" /absolute/path/to/repo
 ```
 
+The listing is the set of gates, not their execution order - it does not read GitLab `stages:` or job dependencies.
+
 ```
 runner:   task  (Taskfile.yml)
 commands: format, lint, test, build
@@ -42,7 +48,7 @@ note:     semantic-release releases from commits: the commit type sets the versi
 
 Then:
 
-1. **Run what CI runs, in CI's order.** A task the runner defines but the pipeline never invokes is optional; a step CI runs with no local task still has to pass. `implement-push-quality-gate` owns that loop.
+1. **Run what CI runs, in the order the pipeline uses.** A task the runner defines but the pipeline never invokes is optional; a step CI runs with no local task still has to pass.
 2. **Carry the commands into a dispatch prompt** rather than letting a delegate rediscover them, per `agent-conventions`.
 3. **Heed a `note:` line.** Each one is a case where the repository does not answer the question, and the correct response is to ask rather than to substitute a plausible command.
 

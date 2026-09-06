@@ -196,6 +196,7 @@ This is the one MCP-only truth a plain shell can reach, which matters because a 
 
 ```python
 import os
+
 met = not os.path.isdir(TURN_DIR) or os.path.exists(os.path.join(TURN_DIR, "done.json"))
 ```
 

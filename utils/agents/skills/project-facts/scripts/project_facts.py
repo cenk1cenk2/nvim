@@ -64,10 +64,23 @@ RUNNER_MARKERS: tuple[tuple[Runner, tuple[str, ...]], ...] = (
 )
 
 RELEASE_MARKERS: tuple[tuple[Release, tuple[str, ...]], ...] = (
-    (Release.RELEASE_PLEASE, ("release-please-config.json", ".release-please-manifest.json")),
+    (
+        Release.RELEASE_PLEASE,
+        ("release-please-config.json", ".release-please-manifest.json", ".github/release-please-config.json"),
+    ),
     (
         Release.SEMANTIC_RELEASE,
-        (".releaserc", ".releaserc.json", ".releaserc.yml", ".releaserc.yaml", "release.config.js"),
+        (
+            ".releaserc",
+            ".releaserc.json",
+            ".releaserc.yml",
+            ".releaserc.yaml",
+            ".releaserc.js",
+            "release.config.js",
+            "release.config.mjs",
+            "release.config.cjs",
+            "release.config.ts",
+        ),
     ),
     (Release.CHANGESETS, (".changeset/config.json",)),
     (Release.COMMITLINT, ("commitlint.config.js", ".commitlintrc", ".commitlintrc.json")),
@@ -75,8 +88,18 @@ RELEASE_MARKERS: tuple[tuple[Release, tuple[str, ...]], ...] = (
 
 CI_FILES = (".gitlab-ci.yml", ".github/workflows", "Jenkinsfile", ".circleci/config.yml")
 
-# A shell line that looks like it runs a quality gate rather than deploying.
-GATE_WORDS = re.compile(r"\b(lint|test|build|fmt|format|check|typecheck|vet|clippy|audit)\b", re.IGNORECASE)
+# A shell line that runs a quality gate. Bare words alone missed every real test
+# runner - `pytest`, `eslint`, `vitest`, `ginkgo` contain none of them - so the
+# tool names are listed too, drawn from `project-tooling`.
+GATE_WORDS = re.compile(
+    r"\b(?:lint|test|fmt|format|typecheck|type-check|vet|audit"
+    r"|pytest|eslint|jest|vitest|nextest|ginkgo|phpunit|rspec|shellcheck|hadolint"
+    r"|clippy|golangci-lint|ruff|mypy|tsc|stylua|selene|prettier|biome"
+    r"|check|build)\b",
+    re.IGNORECASE,
+)
+# A build step that is really a packaging or deploy action, not a gate.
+NOT_A_GATE = re.compile(r"\b(?:docker|podman|buildah|kaniko)\b|--push|\bpush\b|\bdeploy\b|\bpublish\b", re.IGNORECASE)
 
 
 @dataclass
@@ -156,7 +179,7 @@ def ci_commands(path: Path) -> list[str]:
         data = None
     for line in _shell_lines(data) if data is not None else text.splitlines():
         line = line.strip()
-        if line and GATE_WORDS.search(line):
+        if line and GATE_WORDS.search(line) and not NOT_A_GATE.search(line):
             found.append(line)
     return found
 
@@ -251,5 +274,15 @@ def cli(root: str, as_json: bool, verbose: bool) -> None:
     raise SystemExit(ExitCode.MET)
 
 
+def main() -> None:
+    try:
+        cli.main(standalone_mode=False)
+    except click.ClickException as err:
+        err.show()
+        raise SystemExit(ExitCode.USAGE) from err
+    except click.Abort:
+        raise SystemExit(130) from None
+
+
 if __name__ == "__main__":
-    cli.main(standalone_mode=False)
+    main()
