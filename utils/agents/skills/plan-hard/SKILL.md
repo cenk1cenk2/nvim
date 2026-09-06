@@ -6,7 +6,7 @@ references:
   - ../references/reconcile-state.md
   - ../references/plan-mode.md
   - ../references/mode-toggle.md
-  - ../references/status-report.md
+  - ../references/report-status.md
   - ../references/harness/provider-paths.md
 ---
 
@@ -41,7 +41,7 @@ When work deviates from what an artifact claims, reconcile it per `reconcile-sta
 3. **Review the draft at the same tier or smarter.** Dispatch `agent-review` `type=plan` (devil's-advocate + gap analysis) and, when the draft rests on factual claims, also `type=facts`; lenses may run in parallel, and `agent-harness` resolves the tier. Fold the findings back into the plan and re-open every branch the reviewer faults.
 4. **When the plan targets implementation, plan the execution too.** Load `code-style` so the approach matches the conventions the implementation will be held to, and name separately any cleanup `code-improve` would own rather than folding it into the plan silently.
 5. **Name the skill chain the plan runs through** — the skills whoever executes it should load, in order. A plan carrying its own route is one the executor does not re-derive, and it is what makes the plan usable by an aware target per `agent-aware`.
-6. **Report progress as the pass converges, not every turn.** A finished design tree, a returned review, an assembled residual are milestones and get a report per `status-report`; anything mid-flight gets a terse line. When a branch blocks on external state, arm a watcher via `agent-background` instead of idling on it.
+6. **Report progress as the pass converges, not every turn.** A finished design tree, a returned review, an assembled residual are milestones and get a report per `report-status`; anything mid-flight gets a terse line. When a branch blocks on external state, arm a watcher via `agent-background` instead of idling on it.
 7. **Bring only the residual to the user**: the genuine open questions the reviewer could not resolve (pure intent/preference), plus the assumptions you made, in one batch. Do not replay the full interview. This is the only place the mode spends the user's attention.
 8. **Summarize and stand down.** Present the plan and what was decided and why. On the user's ok the posture ends per `mode-toggle`. **Implementation is a separate blessing** — auto mode stops at the plan unless the run was invoked as `autopilot`, which authorizes carrying straight on into it.
 

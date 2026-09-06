@@ -14,7 +14,7 @@ references:
   - ../references/agent/agent-worktrees.md
   - ../references/agent/agent-target-capability.md
   - ../references/harness/provider-paths.md
-  - ../references/status-report.md
+  - ../references/report-status.md
   - ../references/identifier-legibility.md
   - ../references/harness/agent-delegate-harness-claude.md
   - ../references/harness/agent-delegate-harness-codex.md
@@ -126,7 +126,7 @@ Yours are **routing** wakes: the wake is a dispatch decision, not a starting gun
 5. **Verify cheaply, never blindly.** An agent's summary describes intent. Confirm with a bounded check — `git diff --stat`, the specific file's diff, the test exit code. If honest verification would be expensive, dispatch `agent-review` instead of reading it yourself.
 5b. **Reap what you spawned — but only when completely done with it.** A router accumulates agents and watchers faster than a worker does, so stale entries corrupt the map you are holding until you cannot tell what is genuinely in flight. **Reaping is terminal, though: it destroys the agent's report.** An idle agent is a candidate for **collection**, not reaping — collect, confirm you have what you need, *then* reap. Never kill one because it went quiet or because you are unsure it finished; that converts a recoverable report into a permanent loss, and in coordinator mode the report *is* the product. Safe to reap: delivered and closed, answer obtained and verified elsewhere, superseded, demonstrably stale, or about to be replaced (**reap before re-dispatching**, since two writers on one target clobber each other). Completion does not self-clean — finished agents and exited background tasks linger in the runtime's task list. Before reporting a phase done, enumerate what you spawned and confirm each is stopped or *deliberately* still running with a stated reason.
 6. **Record state, then let it go.** Write the outcome to the state file in one or two lines and stop carrying the detail. The file is the memory; your context is the workbench.
-7. **Report terse each turn, in the `status-report` shape.** Lede with what changed, then current state as tables, then what happened, then what you need from the user. Done / in flight (with ids) / queued. Synthesis, not relay.
+7. **Report terse each turn, in the `report-status` shape.** Lede with what changed, then current state as tables, then what happened, then what you need from the user. Done / in flight (with ids) / queued. Synthesis, not relay.
 8. **Take over only on the exception list.** Otherwise re-dispatch with a sharper prompt.
 
 ## When You Do the Work Yourself

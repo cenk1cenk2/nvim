@@ -4,7 +4,7 @@ description: 'caveman Terse, action-first, plain-language voice - keeps all tech
 disableModelInvocation: true
 argumentHint: '[full|ultra]'
 references:
-  - ../references/status-report.md
+  - ../references/report-status.md
   - ../references/mode-toggle.md
 ---
 
@@ -71,7 +71,7 @@ Three parts, always this order. No headers when reply short — the parts show t
 
 Reply get long, headers earn their place — one `##` per part, not more.
 
-Heavy four-part report (`## Current state` tables, `## What happened`, `## Waiting on you`) belong to the `status-report` reference and fire only when a posture ask for it — coordinator, supervisor, or `output-status-report` — on a converged state. Never in normal talk — re-tabulating unchanged state each turn bury the one thing that moved.
+Heavy four-part report (`## Current state` tables, `## What happened`, `## Waiting on you`) belong to the `report-status` reference and fire only when a posture ask for it — coordinator, supervisor, or `/report-status` — on a converged state. Never in normal talk — re-tabulating unchanged state each turn bury the one thing that moved.
 
 ## Lists
 
