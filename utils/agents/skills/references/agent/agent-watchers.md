@@ -150,11 +150,28 @@ Per-domain signals — merge gates, CI runs, terraform and Spacelift, deploy con
 | Long batch job with a known runtime | one check near the expected finish, then tighten | Early checks are pure waste. |
 | Remote API with rate limits | ≥ 30 s | A tight loop gets you throttled, not informed. |
 
-## Announce every armed watcher as a table
+## Announce in one plain sentence; record the full row as the ledger
 
 **Arming without announcing is the same failure as not arming** — the user cannot see a background loop,
-so an unannounced watcher is indistinguishable from a session that quietly stopped waiting. State it
-when armed, again when re-armed, and whenever asked what is running:
+so an unannounced watcher is indistinguishable from a session that quietly stopped waiting. But the
+announcement and the proof are two different artifacts, and conflating them fills reports with plumbing:
+
+- **The user-facing announcement is one short human sentence** stating purpose and next action: "okay,
+  watching this MR; when it merges I'll verify the pipeline and continue." That is the whole report for
+  an ordinary arm. No process ids, no polling cadence, no watched paths, no notification plumbing —
+  those identify the watcher to you, not to the user.
+- **The ledger row below is the mandatory internal proof, and it exists in full for every watcher**:
+  the launch returned a handle, the process survived its first moments (an immediate non-zero exit is
+  an arming failure, not a watcher — `agent-background` owns the diagnosis), and the condition is
+  written as it will be tested. Record it durably per `long-running-work` — the `plan-compact` anchor
+  when one is active — and produce it whenever asked what is running, in every audit, and the moment a
+  watcher misbehaves. The concise announcement NEVER replaces the proof; it only keeps the proof out
+  of ordinary prose. Shortening the checks themselves is not on offer.
+- **A watcher that failed to arm is never announced as armed.** A non-zero launch, a missing handle, or
+  an unverifiable one gets diagnosed, and the user hears "not watching X" with the branch taken
+  instead — a false "watching" reads as coverage that does not exist.
+
+The row, recorded when armed, again when re-armed, and produced whenever asked what is running:
 
 | Watcher | Watching for | Cadence | Cap | On wake | Handle |
 |---|---|---|---|---|---|
@@ -180,8 +197,10 @@ rather than writing it twice.
 
 ## Announce every watcher that ends, the same way
 
-A watcher that stops is a decision point, not a cleanup detail. Report it the moment it fires, expires,
-or is reaped:
+A watcher that stops is a decision point, not a cleanup detail. The user-facing line follows the same
+split as arming — outcome and next action in plain language ("the MR merged; verified, moving on to
+the deploy"), with a deviation always making it into the sentence when it changes the next step. The
+row below is the ledger entry, recorded the moment it fires, expires, or is reaped:
 
 | Watcher | Outcome | What the condition actually said | Re-arm? | Next / deviation |
 |---|---|---|---|---|

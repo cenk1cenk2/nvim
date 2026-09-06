@@ -36,10 +36,10 @@ The sequence, in order, no step skippable:
 1. **Take `sessionInfo.files.turnDir` from the call that just returned.** It names this turn and nothing else. Never carry a previous turn's path forward and never reconstruct one by hand.
 2. **Read `agent-background-harness-<provider>` for the runtime's background-exec facility.** `<provider>` is the runtime this session runs on (`claude`, `opencode`, `codex`); the rest of the path is literal. It is undeclared, so a missed read is silent — the watcher simply never fires.
 3. **Launch one watcher through that facility**, on the two-condition check below. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
-4. **Confirm the launch returned a watcher handle.** No handle means you detached instead of arming: take a branch from *No wake available* below before going further.
-5. **Record and announce three identifiers together** — the session handle, the exact `turnDir` path being watched, and the watcher handle — as the armed row `agent-watchers` defines. A session handle reported without a watcher handle is an unwatched session, and the user cannot see a background loop to notice.
+4. **Confirm the launch returned a watcher handle and did not die on the spot.** An immediate non-zero exit — a refused `--turn-dir` (exit 2), a shell parse error, a missing `uv` — is an arming failure that looks armed until checked. No handle, or a launch already dead, means you detached instead of arming: diagnose which — path, command, auth, permission, usage, a stale turn path, or the runtime's own background facility — then re-arm, or take a branch from *No wake available* below and report the session as **unwatched**. Never announce a session as watched on a failed or unverified launch.
+5. **Record three identifiers together, then announce in one plain sentence.** The session handle, the exact `turnDir` path being watched, and the watcher handle go into the armed row `agent-watchers` defines — that row is the internal proof, and a session recorded without a watcher handle is an unwatched session. What the user hears is a short human sentence naming the delegated task in plain words and the next action — "spawned the profile to refactor the retry logic; watching it — when it finishes I'll verify the result and continue" — plus the session handle, which is what they steer with. The `turnDir`, the watcher handle, pids, and polling cadence stay in the row, quotable on request, never in ordinary prose.
 
-**Only after step 5 is "the session is running" a true statement.** Report it with all three identifiers, never with the session handle alone.
+**Only after step 5 is "the session is running" a true statement.** The announcement stays short; the recorded proof never does — all three identifiers, or the session is unwatched.
 
 ### The check
 
@@ -87,7 +87,7 @@ print("RESULT: still running after 60 cycles")
 
 ### No wake available — poll or block, never proceed
 
-Where the runtime offers no facility that wakes you, or the launch returned no handle, silence is not an option and neither is carrying on. Take one of these in the same turn and say which:
+Where the runtime offers no facility that wakes you, or the launch returned no handle or could not be verified, silence is not an option and neither is carrying on. Take one of these in the same turn and say which:
 
 1. **Bounded explicit poll on the main loop.** Repeat `session_status { session }` yourself at the cadence `agent-watchers` gives, under a stated cap, until `exited` — then audit and collect. It reads no transcript, so it is cheap to repeat.
 2. **Blocking wait.** Re-issue the turn with `wait: true` and a `timeout_seconds` sized to the job, accepting the raw-transcript cost knowingly. A turn outliving the timeout still returns `running`, which still means working.
@@ -260,7 +260,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 2. Build a self-contained prompt naming the file, the neighbouring patterns from `agent-conventions`, and the test command from `project-tooling`.
 3. Present the profile, cwd, and prompt → user approves.
 4. `spawn { profile: "personal/kilic/glm-5.2:cloud", prompt: "…", cwd: "…" }` → returns at once with handle `3b5ce010-…`, `status: running`, and `sessionInfo.files.turnDir` for turn 1.
-5. Arm the `done.json` watcher on that exact `turnDir` through the runtime's background exec; the launch returns watcher handle `task_01H…`. Announce the session handle, the watched path, and the watcher handle, and only then say the session is running.
+5. Arm the `done.json` watcher on that exact `turnDir` through the runtime's background exec; the launch returns watcher handle `task_01H…`. Record the armed row — session handle, watched path, watcher handle — then tell the user in one sentence that the refactor is delegated and watched, with the session handle.
 6. On wake, `session_status` reports `exited` / `hasResult: true`; read `hyprpilot://sessions/3b5ce010-…/result`, reap the watcher, then report the answer and the handle.
 
 **Result:** Work done in a separate opencode session; handle available for follow-ups.
@@ -271,7 +271,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 
 1. Reuse the handle from the previous exchange — `session_send { session: "3b5ce010-…", prompt: "Keep the existing backoff curve; only change the retry ceiling." }`.
 2. The session had exited, so it is resumed; the agent still has turn 1's context.
-3. The result carries turn 2's own `turnDir`. Arm a fresh watcher on it, quote the new watcher handle, and reap turn 1's.
+3. The result carries turn 2's own `turnDir`. Arm a fresh watcher on it, record the new watcher handle in the armed row, and reap turn 1's.
 
 **Result:** Correction applied in the same conversation — no re-briefing, no second agent, and turn 2 is watched from the moment it starts.
 
@@ -282,7 +282,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 1. Resolve the profile, present, then `spawn { …, mode: "plan" }` — detached by default, and read-only because the job only needs to look.
 2. Returns instantly: handle `9c4de0a8-…`, `status: running`, plus turn 1's `turnDir`.
 3. Arm the `done.json` watcher on that exact path through the runtime's background exec, and confirm it returned watcher handle `task_01H…`. Nothing wakes you here, so without a handle the session finishes into silence.
-4. Report it running, naming the session handle, the watched path, and the watcher handle.
+4. Report it running in one plain sentence — what it is looking at and that you will pick it up on completion — with the session handle; the watched path and watcher handle sit in the armed row.
 5. On wake: `session_status` → `exited`, `hasResult: true`. **Not** a second `spawn`, and not a read of the watcher's own log.
 6. Read `hyprpilot://sessions/9c4de0a8-…/result` — one read covers the answer and any upstream error — relay it, reap the watcher, and only then send any further turn.
 
@@ -301,8 +301,8 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 - **The handle is the only id.** It arrives with the first result and never changes. Nothing else addresses a session — and on the Tasks path it still rides `_meta`, so you never parse a task id to recover it.
 - **A timeout means still working.** Follow it; never re-spawn.
 - **Detached work finishes into silence.** There is no completion push you can arm — every detached `spawn` and every detached `session_send` gets its own `done.json` watcher, armed before the session is reported as running.
-- **A watcher exists when a launch returned a handle.** No handle means you detached instead of arming: drop to a bounded `session_status` poll or a blocking `wait: true`, and say which.
-- **Announce the session handle, the watched `turnDir`, and the watcher handle together.** Any of the three missing makes the other two unverifiable.
+- **A watcher exists when a launch returned a handle and did not exit non-zero on the spot.** Anything less means you detached instead of arming: diagnose the launch, then re-arm, or drop to a bounded `session_status` poll or a blocking `wait: true` — and say which, reporting the session as unwatched until one is in place.
+- **Record the session handle, the watched `turnDir`, and the watcher handle together.** Any of the three missing makes the other two unverifiable. The user-facing announcement is one plain sentence — task and next action — plus the session handle; the rest stays in the armed row.
 - **A wake is the runtime's notification, never a log.** Reading a watcher's output file to find out whether the turn finished means nothing is waking you.
 - **Watch the TURN's directory.** `sessionInfo.files.turnDir` names the turn the call just started, and each turn owns its own marker — so there is no stale state to race and no rule about when to arm.
 - **Audit before collecting.** `session_status` first for `status` / `exitCode` / `hasResult`, then `/result`. A marker file is an end, not an outcome.
