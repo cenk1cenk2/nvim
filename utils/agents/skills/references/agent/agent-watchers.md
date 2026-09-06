@@ -161,8 +161,11 @@ announcement and the proof are two different artifacts, and conflating them fill
   a human, and "watching this MR" or a bare `!315` gives them nothing to open: "watching
   [rustfs!315 — Revert the renovate kustomize bump](https://gitlab.example.com/cluster/workloads/rustfs/-/merge_requests/315);
   when it merges I'll verify the pipeline and continue." That is the whole report for
-  an ordinary arm. No process ids, no polling cadence, no watched paths, no notification plumbing —
-  those identify the watcher to you, not to the user.
+  an ordinary arm. The sentence-vs-table split follows count: one watcher or dispatch is a sentence,
+  never inflated into a one-row table, while a batch armed together is announced as one short table —
+  one linked row per item — never a paragraph of near-identical sentences. The same split governs the
+  end announcements below. No process ids, no polling cadence, no watched paths, no notification
+  plumbing — those identify the watcher to you, not to the user.
 - **The ledger row below is the mandatory internal proof, and it exists in full for every watcher**:
   the launch returned a handle, the process survived its first moments (an immediate non-zero exit is
   an arming failure, not a watcher — `agent-background` owns the diagnosis), and the condition is
