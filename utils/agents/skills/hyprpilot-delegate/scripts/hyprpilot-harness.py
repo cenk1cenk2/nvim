@@ -987,12 +987,27 @@ class TeardownChecklist:
                 continue
             if "hyprpilot-harness.py" in script and "wait" not in argv:
                 continue
-            watched = [a for a in argv if a == self.session_dir or a.startswith(prefix)]
+            # `--turn-dir=PATH` is accepted by `wait` (click takes either form),
+            # and matching only bare argv missed it entirely - teardown then
+            # reported "none found" while a watcher was still polling, which is
+            # the orphan wake this verb exists to prevent.
+            values = [a.split("=", 1)[1] if a.startswith("--") and "=" in a else a for a in argv]
+            watched = [a for a in values if a == self.session_dir or a.startswith(prefix)]
             if not watched:
                 continue
-            found.append({"pid": int(entry), "script": script, "watched": watched[0]})
-        self.log.debug("scanned %d process entries, %d watcher(s) on this session", len(entries), len(found))
-        return sorted(found, key=lambda w: w["pid"])
+            found.append({"pid": int(entry), "script": script, "watched": watched[0], "argv": tuple(argv)})
+        # `uv run` does not exec: the uv parent lives on holding the same argv,
+        # so one real watcher appears twice and teardown asks for two reaps of
+        # one thing. Same argv means same watcher; keep the lowest pid, which is
+        # the parent that owns the child.
+        deduped: dict[tuple[str, ...], dict[str, Any]] = {}
+        for watcher in sorted(found, key=lambda w: w["pid"]):
+            deduped.setdefault(watcher["argv"], watcher)
+        unique = [{k: v for k, v in w.items() if k != "argv"} for w in deduped.values()]
+        self.log.debug(
+            "scanned %d process entries, %d watcher(s) on this session (%d before dedupe)",
+            len(entries), len(unique), len(found))
+        return sorted(unique, key=lambda w: w["pid"])
 
     @staticmethod
     def classify(

@@ -159,13 +159,41 @@ class FileFlat:
         return (now - (self._since or now)) >= self.for_seconds, f"{size} bytes"
 
 
+# A watched command that blocks forever never lets the ceiling count down, so
+# no wake ever arrives - the one outcome worse than a wrong answer, because
+# nothing is ever reported at all. Every poll is bounded, and stdin is closed so
+# a command that reads it fails fast instead of waiting on a terminal that a
+# detached watcher does not have.
+COMMAND_TIMEOUT = 120.0
+
+
 def _run(command: list[str]) -> tuple[int, str]:
     try:
-        proc = subprocess.run(command, capture_output=True, text=True, check=False)
+        proc = subprocess.run(
+            command,
+            capture_output=True,
+            text=True,
+            # A vendor CLI may emit a stray non-UTF-8 byte. Decoding strictly
+            # raised UnicodeDecodeError out of the poll, and an exception here
+            # exits 1 - which the contract defines as CEILING, telling the agent
+            # the watch merely timed out.
+            errors="replace",
+            check=False,
+            stdin=subprocess.DEVNULL,
+            timeout=COMMAND_TIMEOUT,
+        )
     except FileNotFoundError:
         raise CannotRun(f"command not found: {command[0]}") from None
     except PermissionError:
         raise CannotRun(f"command not executable: {command[0]}") from None
+    except subprocess.TimeoutExpired:
+        # Not-met rather than fatal: one slow poll is not a broken watch, and
+        # the ceiling is what decides when to give up.
+        return 124, ""
+    except OSError as err:
+        # NotADirectoryError (a path routed through a file), ENOEXEC, and the
+        # rest of the exec-time family. All of them mean this check cannot run.
+        raise CannotRun(f"cannot run {command[0]}: {err}") from None
     return proc.returncode, proc.stdout
 
 

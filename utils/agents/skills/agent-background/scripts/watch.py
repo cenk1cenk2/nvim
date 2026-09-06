@@ -224,12 +224,20 @@ def _register_vendor(vendor: Vendor) -> None:
     @click.option("--wait-result", multiple=True, help="A state that ends the watch. Repeatable; defaults to terminal.")
     @cadence_options
     def run_vendor(wait_result: tuple[str, ...], _vendor: Vendor = vendor, **kwargs) -> None:
-        cadence = {key: kwargs.pop(key) for key in ("interval", "max_polls", "label", "quiet")}
+        # LOGGING_KEYS included: without them `-v` placed AFTER the condition
+        # was popped off nowhere and silently dropped, breaking the either-side
+        # contract the group's own docstring promises.
+        cadence = {key: kwargs.pop(key) for key in (*CADENCE_DEFAULTS, *LOGGING_KEYS)}
         if not wait_result and not _vendor.terminal:
             raise ScriptError(f"{_vendor.name} has no terminal default; pass --wait-result")
         probe = _vendor.build(kwargs, wait_result)
         raise SystemExit(runner.run(probe, build_cadence(**cadence)))
 
+    for param in reversed(vendor.optional_params):
+        run_vendor = click.option(
+            f"--{param}", default=None,
+            help=f"The {param} id. Given, the watch keys on that exact record instead of the newest.",
+        )(run_vendor)
     for param in reversed(vendor.params):
         run_vendor = click.option(f"--{param}", required=True, help=f"The {param}.")(run_vendor)
 
@@ -251,6 +259,13 @@ def main() -> None:
         raise SystemExit(err.exit_code) from err
     except click.Abort:
         raise SystemExit(130) from None
+    except Exception as err:  # noqa: BLE001 - the wake depends on never leaking one
+        # Last resort. An unhandled exception exits 1, and 1 is CEILING: the
+        # agent is told the watch ran to its limit and nothing happened, which
+        # is the single most misleading thing this script can say. Anything
+        # unanticipated is "the check cannot run" instead.
+        sys.stderr.write(f"error: {err.__class__.__name__}: {err}\n")
+        raise SystemExit(3) from err
 
 
 if __name__ == "__main__":

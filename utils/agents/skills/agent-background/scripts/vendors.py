@@ -32,15 +32,25 @@ class Vendor:
     # Options the command needs, in the order they appear in `argv`.
     params: tuple[str, ...] = ()
     settled: tuple[str, ...] = field(default=())
+    # Options that may be given but are not required. When one is supplied,
+    # `id_path` replaces `json_path` so the watch keys on that exact record.
+    optional_params: tuple[str, ...] = ()
+    id_path: str = ""
 
     def build(self, values: dict[str, str], wait_result: tuple[str, ...]) -> Command:
         argv = [part.format(**values) for part in self.argv]
-        expect = Expectations(values=tuple(wait_result or self.terminal), json_path=self.json_path)
+        path = self.json_path
+        if self.id_path:
+            given = next((values[name] for name in self.optional_params if values.get(name)), None)
+            if given:
+                path = self.id_path.format(id=given)
+        expect = Expectations(values=tuple(wait_result or self.terminal), json_path=path)
         wanted = " | ".join(expect.values)
         return Command(argv, expect, describe_as=f"{self.name} {self._subject(values)} reaches {wanted}")
 
     def _subject(self, values: dict[str, str]) -> str:
-        return " ".join(str(values[name]) for name in self.params if values.get(name))
+        names = (*self.params, *self.optional_params)
+        return " ".join(str(values[name]) for name in names if values.get(name))
 
 
 # `glab mr view <iid> --output json` -> `.state`: opened | merged | closed | locked.
@@ -112,27 +122,37 @@ GITHUB_TAG = Vendor(
 # run is read out of the list. `runsJSONQuery` in internal/cmd/stack/run_list.go
 # carries `state` and `isMostRecent`.
 #
-# Filtering on `isMostRecent` rather than taking index 0: if the stack's newest
-# run is already terminal when the watcher arms - the new run not yet created -
-# index 0 fires at poll 1 on the PREVIOUS run. That is the "key each watcher on
-# one stable id" rule this skill states, broken by the watcher itself.
+# `isMostRecent` only removes a dependency on list ordering. It does NOT fix the
+# race, and the earlier comment here claimed it did: when the new run has not
+# been created yet, the PREVIOUS run still is the most recent, so a stack whose
+# last run is already terminal fires MET at poll 1 on the wrong run - exactly the
+# "key each watcher on one stable id" rule this skill states, broken by the
+# watcher itself. Pass `--run <id>` to key on the run and close it; without one,
+# arm only when the run you mean is already the newest.
 SPACELIFT_RUN = Vendor(
     name="spacelift-run",
     help="The latest Spacelift run on a stack reaching a terminal state.",
     argv=("spacectl", "stack", "run", "list", "--id", "{stack}", "--max-results", "20", "--output", "json"),
     json_path="$[?(@.isMostRecent==true)].state",
+    id_path="$[?(@.id=='{id}')].state",
     terminal=("FINISHED", "FAILED", "CANCELED", "DISCARDED", "STOPPED", "SKIPPED"),
     params=("stack",),
+    optional_params=("run",),
 )
 
 # `spacectl module list-versions --id <module> --output json`, newest first.
+# Same race as spacelift-run and with no ordering guard at all: arm after pushing
+# a tag but before Spacelift creates the version, and the previous ACTIVE version
+# satisfies index 0 immediately. `--version` keys on the one you mean.
 SPACELIFT_MODULE = Vendor(
     name="spacelift-module",
     help="A Spacelift module version reaching a terminal state.",
     argv=("spacectl", "module", "list-versions", "--id", "{module}", "--output", "json"),
     json_path="0.state",
+    id_path="$[?(@.id=='{id}')].state",
     terminal=("ACTIVE", "FAILED"),
     params=("module",),
+    optional_params=("version",),
 )
 
 VENDORS: tuple[Vendor, ...] = (

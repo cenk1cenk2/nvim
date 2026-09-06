@@ -23,7 +23,8 @@ agentlib = { path = "../../lib", editable = true }
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-q"
+# Verbosity comes from the Taskfile, which passes -v.
+addopts = ""
 
 [tool.ruff]
 line-length = 120

@@ -33,7 +33,9 @@ Launch a loop through the runtime's own background-exec facility (per `agent-bac
   command --json-path state --expect merged -- glab mr view 4821 --output json
 ```
 
-Conditions: `file-exists`, `file-gone`, `file-flat`, `exit-zero`, `command`, `http`, plus named ones for the things actually waited on — `gitlab-mr`, `gitlab-ci`, `github-pr`, `github-action`, `spacelift-run` and friends, each taking repeatable `--wait-result` and defaulting to every terminal state so a failure wakes you as early as a success. `watch.py --help` lists them.
+Conditions: `file-exists`, `file-gone`, `file-flat`, `exit-zero`, `command`, `http`, plus named ones for the things actually waited on — `gitlab-mr`, `gitlab-ci`, `github-pr`, `github-action`, `spacelift-run` and friends, each taking repeatable `--wait-result`. Most default to every terminal state, so a failure wakes you as early as a success; `gitlab-tag` and `github-tag` are the exceptions — a tag has no terminal set, so they require a `--wait-result` equal to the tag. `watch.py --help` lists them.
+
+**Key a watcher on the id when you have one.** `spacelift-run --stack S` reads the stack's newest run, and if the run you mean has not been created yet the previous one is still the newest — so a stack whose last run already finished fires MET at the first poll on the wrong run. `--run <id>` keys on that exact record and closes the race; `spacelift-module --version <v>` does the same. The GitLab and GitHub conditions take their ids as required arguments and have no such gap.
 
 Its exit code is the wake: `0` met, `1` ceiling, `2` usage, `3` the check cannot run. A path is refused unless absolute and glob-free, so a watcher that would have polled the wrong thing never arms.
 

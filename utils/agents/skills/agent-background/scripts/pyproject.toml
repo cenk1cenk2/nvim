@@ -25,7 +25,8 @@ python-preference = "only-system"
 testpaths = ["tests"]
 # The contract is exit codes and one-line stdout messages, so the cases shell
 # out to the real entry point rather than importing it.
-addopts = "-q"
+# Verbosity comes from the Taskfile, which passes -v.
+addopts = ""
 
 [tool.ruff]
 line-length = 120
