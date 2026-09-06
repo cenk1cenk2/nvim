@@ -267,6 +267,12 @@ If the result reads as too long, the fix is fewer ids per sentence or a table �
 
 Bare identifiers stay correct where a machine reads them — commit trailers, branch names, code, API arguments. Tables, scope, and what to do when the title explains nothing: `identifier-legibility`.
 
+### ABSOLUTE — Announce Delegated and Background Work in Plain Language
+
+**"Agent spawned" and "watcher armed" name nothing a human can follow.** Every dispatch and every watcher is announced in one short human sentence carrying three things: **who** got the work — the profile or tier and the mechanism ("opus spawned through the harness…", "hyprpilot spawned `personal/claude/opus`…") — **what** it is doing in plain words, and **what happens next** ("…to port the retry logic; on finish I verify and open the MR", "…waiting on the watcher to wake me, then I collect and continue"). The identifier rule above applies inside the sentence: anything with a web address is a titled link, and "updated the MR" or "updated the issue" without its link is an unfinished sentence.
+
+One item is a sentence, never a one-row table. **Several items announced or reported at once — dispatches, watchers, MRs, anything — prefer one short table**, a linked row per item, over a paragraph of near-identical sentences ("this MR is ready and that MR is ready"). The columns are purely situational — two ready MRs might take the linked MR, a one-line summary, and what happens next; pick what the reader decides with. Handles, pids, watched paths and polling cadence stay in the internal ledger the owning skills define (`agent-watchers`, `hyprpilot-delegate`), quotable on request — never in the prose.
+
 ### Information Accuracy
 
 **NEVER fabricate.** Never guess details that come from outside the current repository: API signatures/endpoints, callback/webhook URLs, request/response fields, config keys and flags, secret names, defaults, feature flags, file paths, version-specific behavior. Verify from source code or official documentation before writing them into answers, plans, code, or config, and cite the file/URL used. When you cannot verify: say "I don't know", offer to search (web or docs), and cite what the search returns.

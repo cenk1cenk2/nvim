@@ -60,7 +60,7 @@ the mechanism is wrong, not slow.
 Spacelift where no CLI exists), poll a bash-visible **proxy** and do the authoritative MCP check
 yourself on wake.
 
-**Python is the default language for a watcher script.** Write the loop as `python3 -c`. Bash is acceptable
+**The tested `watch.py` in `agent-background` is the default watcher; a hand-written loop is the fallback** for a runtime with no tree on disk, and it is written in python (`python3 -c` — an inline program, not a script file, so the launch-by-path rule does not apply to it). Python is preferred because agents reliably mis-escape hand-written bash — nested quotes die at the shell's parser. Bash is acceptable
 only for a single-condition one-liner — **no arrays, no JSON parsing, no multi-line payload**; anything past
 that keeps its data as values in a program instead of words the shell re-splits. **Shell arrays are the
 specific trap**: a `${array[@]}` that expands fine interactively can arrive empty inside a background-exec
@@ -156,10 +156,16 @@ Per-domain signals — merge gates, CI runs, terraform and Spacelift, deploy con
 so an unannounced watcher is indistinguishable from a session that quietly stopped waiting. But the
 announcement and the proof are two different artifacts, and conflating them fills reports with plumbing:
 
-- **The user-facing announcement is one short human sentence** stating purpose and next action: "okay,
-  watching this MR; when it merges I'll verify the pipeline and continue." That is the whole report for
-  an ordinary arm. No process ids, no polling cadence, no watched paths, no notification plumbing —
-  those identify the watcher to you, not to the user.
+- **The user-facing announcement is one short human sentence** stating purpose and next action, with
+  the thing being watched named as a titled, clickable link per `identifier-legibility` — the reader is
+  a human, and "watching this MR" or a bare `!315` gives them nothing to open: "watching
+  [rustfs!315 — Revert the renovate kustomize bump](https://gitlab.example.com/cluster/workloads/rustfs/-/merge_requests/315);
+  when it merges I'll verify the pipeline and continue." That is the whole report for
+  an ordinary arm. The sentence-vs-table split follows count: one watcher or dispatch is a sentence,
+  never inflated into a one-row table, while a batch armed together is announced as one short table —
+  one linked row per item — never a paragraph of near-identical sentences. The same split governs the
+  end announcements below. No process ids, no polling cadence, no watched paths, no notification
+  plumbing — those identify the watcher to you, not to the user.
 - **The ledger row below is the mandatory internal proof, and it exists in full for every watcher**:
   the launch returned a handle, the process survived its first moments (an immediate non-zero exit is
   an arming failure, not a watcher — `agent-background` owns the diagnosis), and the condition is
@@ -198,8 +204,10 @@ rather than writing it twice.
 ## Announce every watcher that ends, the same way
 
 A watcher that stops is a decision point, not a cleanup detail. The user-facing line follows the same
-split as arming — outcome and next action in plain language ("the MR merged; verified, moving on to
-the deploy"), with a deviation always making it into the sentence when it changes the next step. The
+split as arming — outcome and next action in plain language, the subject linked per
+`identifier-legibility` ("[rustfs!315 — Revert the renovate kustomize bump](https://gitlab.example.com/cluster/workloads/rustfs/-/merge_requests/315)
+merged; verified, moving on to the deploy"), with a deviation always making it into the sentence when
+it changes the next step. The
 row below is the ledger entry, recorded the moment it fires, expires, or is reaped:
 
 | Watcher | Outcome | What the condition actually said | Re-arm? | Next / deviation |
