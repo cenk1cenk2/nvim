@@ -65,7 +65,10 @@ RUNNER_MARKERS: tuple[tuple[Runner, tuple[str, ...]], ...] = (
 
 RELEASE_MARKERS: tuple[tuple[Release, tuple[str, ...]], ...] = (
     (Release.RELEASE_PLEASE, ("release-please-config.json", ".release-please-manifest.json")),
-    (Release.SEMANTIC_RELEASE, (".releaserc", ".releaserc.json", ".releaserc.yml", ".releaserc.yaml", "release.config.js")),
+    (
+        Release.SEMANTIC_RELEASE,
+        (".releaserc", ".releaserc.json", ".releaserc.yml", ".releaserc.yaml", "release.config.js"),
+    ),
     (Release.CHANGESETS, (".changeset/config.json",)),
     (Release.COMMITLINT, ("commitlint.config.js", ".commitlintrc", ".commitlintrc.json")),
 )

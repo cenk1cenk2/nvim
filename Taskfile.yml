@@ -10,12 +10,14 @@ vars:
     utils/agents/skills/hyprpilot-delegate/scripts
     utils/agents/skills/agent-background/scripts
     utils/agents/skills/config-skills/scripts
+    utils/agents/skills/project-facts/scripts
   # Everything ruff should see. The shared `lib` is a library rather than a
   # project with its own suite, so it is linted but not tested.
   PYTHON_PATHS: >-
     utils/agents/skills/hyprpilot-delegate/scripts
     utils/agents/skills/agent-background/scripts
     utils/agents/skills/config-skills/scripts
+    utils/agents/skills/project-facts/scripts
     utils/agents/skills/lib
 
 env: {}
