@@ -8,6 +8,7 @@ scripts:
   - ./scripts/watch.py
 references:
   - ../references/long-running-work.md
+  - ../references/identifier-legibility.md
   - ../references/agent/agent-watchers.md
   - ../references/harness/agent-background-harness-claude.md
   - ../references/harness/agent-background-harness-codex.md
@@ -38,6 +39,8 @@ Conditions: `file-exists`, `file-gone`, `file-flat`, `exit-zero`, `command`, `ht
 **Key a watcher on the id when you have one.** `spacelift-run --stack S` reads the stack's newest run, and if the run you mean has not been created yet the previous one is still the newest — so a stack whose last run already finished fires MET at the first poll on the wrong run. `--run <id>` keys on that exact record and closes the race; `spacelift-module --version <v>` does the same. The GitLab and GitHub conditions take their ids as required arguments and have no such gap.
 
 Its exit code is the wake: `0` met, `1` ceiling, `2` usage, `3` the check cannot run. A path is refused unless absolute and glob-free, so a watcher that would have polled the wrong thing never arms.
+
+**Launch it by its own path, and prove the path before you detach it.** Executing the path is what fires the shebang and builds or reuses the project beside the script; `python3 <path>` skips that and dies on the first import at exit 1, which collides with the ceiling code. Any exit the contract does not claim is the launch shell, not the watch — 127 a script path that does not exist, 126 one that is not executable — so classify it as a failed launch, fix the path, and re-arm; the condition was never observed even once. One foreground run of the resolved path (`--help` exits 0) before the detached launch catches a wrong path that would otherwise arm nothing and report nothing until its ceiling.
 
 **Where the script is unavailable** — a runtime serving this catalog over MCP with no tree on disk — write the loop inline instead, and **write it in python**: the data stays values in a program instead of words the shell re-splits, which is what keeps the loop from firing on a condition that never held:
 

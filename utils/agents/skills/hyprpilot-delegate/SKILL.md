@@ -14,6 +14,7 @@ references:
   - ../references/project-tooling.md
   - ../references/agent/agent-completion.md
   - ../references/agent/agent-watchers.md
+  - ../references/identifier-legibility.md
   - ../references/harness/agent-background-harness-claude.md
   - ../references/harness/agent-background-harness-codex.md
   - ../references/harness/agent-background-harness-opencode.md
@@ -37,7 +38,7 @@ The sequence, in order, no step skippable:
 2. **Read `agent-background-harness-<provider>` for the runtime's background-exec facility.** `<provider>` is the runtime this session runs on (`claude`, `opencode`, `codex`); the rest of the path is literal. It is undeclared, so a missed read is silent — the watcher simply never fires.
 3. **Launch one watcher through that facility**, on the two-condition check below. Backgrounding inside the command (`&`, `nohup`, `disown`, `setsid`) hands the process to the OS and wakes nobody.
 4. **Confirm the launch returned a watcher handle and did not die on the spot.** An immediate non-zero exit — a refused `--turn-dir` (exit 2), a shell parse error, a missing `uv` — is an arming failure that looks armed until checked. No handle, or a launch already dead, means you detached instead of arming: diagnose which — path, command, auth, permission, usage, a stale turn path, or the runtime's own background facility — then re-arm, or take a branch from *No wake available* below and report the session as **unwatched**. Never announce a session as watched on a failed or unverified launch.
-5. **Record three identifiers together, then announce in one plain sentence.** The session handle, the exact `turnDir` path being watched, and the watcher handle go into the armed row `agent-watchers` defines — that row is the internal proof, and a session recorded without a watcher handle is an unwatched session. What the user hears is a short human sentence naming the delegated task in plain words and the next action — "spawned the profile to refactor the retry logic; watching it — when it finishes I'll verify the result and continue" — plus the session handle, which is what they steer with. The `turnDir`, the watcher handle, pids, and polling cadence stay in the row, quotable on request, never in ordinary prose.
+5. **Record three identifiers together, then announce in one plain sentence.** The session handle, the exact `turnDir` path being watched, and the watcher handle go into the armed row `agent-watchers` defines — that row is the internal proof, and a session recorded without a watcher handle is an unwatched session. What the user hears is a short human sentence naming the profile it went to, the delegated task in plain words, and the next action — "delegated to the hyprpilot opus profile to refactor the retry logic; watching it — when it finishes I'll verify the result and continue" — plus the session handle, which is what they steer with; anything in that sentence with a web address is a titled link per `identifier-legibility`, never a bare id. The `turnDir`, the watcher handle, pids, and polling cadence stay in the row, quotable on request, never in ordinary prose.
 
 **Only after step 5 is "the session is running" a true statement.** The announcement stays short; the recorded proof never does — all three identifiers, or the session is unwatched.
 
