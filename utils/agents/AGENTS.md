@@ -122,6 +122,7 @@ Short prompts with specific meaning. When the user sends one of these as a stand
 | `bulldozer`            | Load the `agent-bulldozer` skill and act like a bulldozer — push the work through relentlessly until told to stop.                      |
 | `try`                  | Retry the action that just failed, unchanged. The blocker is fixed, so run it again rather than re-diagnosing it or routing around it. Report the new outcome; a second identical failure is reported, not retried again. |
 | `blessed`              | Approval for the named action — act, do not re-ask. **`blessed for the session`** widens it to a standing grant covering the same or similar actions for the rest of the session (a read-only `kubectl`, a class of write), unless the user scoped it narrower. Destructive actions still gate (§V). |
+| `park`                 | Ramp down and go quiet. Land the work already in flight — the commit, the push, the report — or bring it to a recorded stopping point; start nothing new. Then **disarm everything, unasked**: collect undelivered agent reports, kill every watcher and background task, verify with a process check, reap every agent, and report that nothing remains armed. The park signal IS that instruction — never wait to be told a second time. In a posture (coordinator, bulldozer, supervisor) park ends the posture rather than the session; the teardown is identical either way, and nothing re-arms until the user says so by name. Full procedure in `mode-toggle`. |
 
 ## IV. TOOLS AND DISCOVERY
 

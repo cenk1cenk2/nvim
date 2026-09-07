@@ -42,19 +42,24 @@ Before standing down: account for everything the mode spawned — watchers, back
 
 **"We are parking" means the session goes quiet. Nothing may keep running.** Do not wait for a follow-up instruction to tear things down — **the park signal IS that instruction.** Being told a second time ("you should also disarm the watchers") means this step was missed.
 
+**Park arrives with or without a mode engaged.** With a posture on, parking ends the posture; with none, it ends the session's activity and preps for a shutdown. Only the last step differs — the teardown below is identical either way.
+
+**Park is a ramp-down, not an abort.** What is already in hand and serving the user's goal gets finished, so step 1 is not a courtesy.
+
 On any park signal, in order:
 
-1. **Collect first.** Any agent that may still hold an undelivered report gets asked for it **before** being stopped — reaping destroys the report permanently.
-2. **Kill every watcher and background task**, then **verify with a process check** rather than trusting the stop calls. Report the survivor list, empty or not. Watchers that already exited on their cap still get accounted for.
-3. **Reap every spawned agent.**
-4. **Inline anything disposable into durable storage** — see below.
-5. **Report the teardown**: what was stopped, what was collected, and explicitly that **nothing remains armed**.
+1. **Land what is in flight.** Finish the work already running — the commit, the push, the report the user is waiting on — or bring it to a stopping point recorded durably. **Start nothing new**: no fresh dispatch, no fresh watcher, no next item off the queue.
+2. **Collect first.** Any agent that may still hold an undelivered report gets asked for it **before** being stopped — reaping destroys the report permanently.
+3. **Kill every watcher and background task**, then **verify with a process check** rather than trusting the stop calls. Report the survivor list, empty or not. Watchers that already exited on their cap still get accounted for.
+4. **Reap every spawned agent.**
+5. **Inline anything disposable into durable storage** — see below.
+6. **Report the teardown**: what was stopped, what was collected, and explicitly that **nothing remains armed** — then say what state the session is now in, posture off or parked and idle.
 
 A parked session with a live watcher is the failure this section exists to prevent: it wakes into a context that has moved on, and its output reads as current when it is not.
 
 **Parking is usually followed by a compaction, a reboot, or both.** Treat every scratchpad and `/tmp` artefact as **already gone**: watcher bodies, poll loops, helper scripts, and any state referenced only by a temp path get **copied verbatim into durable storage** (the anchor, per `plan-compact`) before standing down. A path the next session cannot read is the same as no record at all.
 
-**On resume after a park, nothing is re-armed automatically.** The parked state is the default until the user re-engages the mode by name.
+**On resume after a park, nothing is re-armed automatically.** The parked state is the default until the user releases it — re-engaging the mode by name, or simply handing over the next piece of work when no mode was on. **Ending the turn idle is correct when parked.**
 
 ## ABSOLUTE — Announcing the Next Action Is Not Doing It
 
