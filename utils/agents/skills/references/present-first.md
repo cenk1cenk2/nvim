@@ -7,7 +7,7 @@ The posture for a skill that writes — files, code, or an external resource. On
 - **Once cleared, act.** No re-confirming.
 - **Reads never gate.** A step that only inspects just reports.
 
-**Already approval** — skip the gate, act, report: an explicit go ("do it", "go ahead"), the lingo `g` / `go` / `y` / `yolo`, a prior yes covering this same change, or `autopilot`. A blessing is **scoped to the run it was given in** — not the next separate change.
+**Already approval** — skip the gate, act, report: an explicit go ("do it", "go ahead"), the lingo `g` / `go` / `y` / `yolo` / `blessed`, a prior yes covering this same change, or `autopilot`. A blessing is **scoped to the run it was given in** — not the next separate change — unless the captain widened it to the session ("blessed for the session"), which then stands for the same or similar actions until they say otherwise.
 
 ## Destructive actions are outside all of that
 

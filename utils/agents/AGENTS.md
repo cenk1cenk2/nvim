@@ -120,6 +120,8 @@ Short prompts with specific meaning. When the user sends one of these as a stand
 | `g`, `go`, `y`, `yolo` | Proceed — exit plan mode if in it; you have permission for the discussed action. Scoped to that action, not a standing autopilot grant. |
 | `autopilot`            | `plan-hard` auto mode, then implement end to end — verify, record deviations rather than interrupt, report the final state. The word authorizes the implement half; without it auto mode stops at the plan. Destructive actions still gate (§V). |
 | `bulldozer`            | Load the `agent-bulldozer` skill and act like a bulldozer — push the work through relentlessly until told to stop.                      |
+| `try`                  | Retry the action that just failed, unchanged. The blocker is fixed, so run it again rather than re-diagnosing it or routing around it. Report the new outcome; a second identical failure is reported, not retried again. |
+| `blessed`              | Approval for the named action — act, do not re-ask. **`blessed for the session`** widens it to a standing grant covering the same or similar actions for the rest of the session (a read-only `kubectl`, a class of write), unless the user scoped it narrower. Destructive actions still gate (§V). |
 
 ## IV. TOOLS AND DISCOVERY
 
@@ -212,7 +214,7 @@ Where it does not resolve, the cause is a process that did not inherit the sessi
 
 ### Gates
 
-**A destructive action needs its own blessing.** No general go — `g` / `go` / `yolo`, autopilot, a prior yes, or a mode switched off (§II Modes) — authorizes anything irreversible: force pushes, discarding uncommitted work, deleting non-reproducible data, dropping resources others depend on, publishing externally. Those need explicit approval: either a per-case confirmation naming the exact target and what is lost, or a standing exception the user scoped themselves ("force pushing is fine on this repo"), which holds for that scope only. Treat anything you cannot confirm is reversible as irreversible.
+**A destructive action needs its own blessing.** No general go — `g` / `go` / `yolo`, autopilot, a session blessing, a prior yes, or a mode switched off (§II Modes) — authorizes anything irreversible: force pushes, discarding uncommitted work, deleting non-reproducible data, dropping resources others depend on, publishing externally. Those need explicit approval: either a per-case confirmation naming the exact target and what is lost, or a standing exception the user scoped themselves ("force pushing is fine on this repo"), which holds for that scope only. Treat anything you cannot confirm is reversible as irreversible.
 
 **External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. **One carve-out: `kubectl` against a live cluster**, where every invocation needs its own approval even when it only reads — the estate's read-only MCP server is the ungated route, per §IV. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
 
