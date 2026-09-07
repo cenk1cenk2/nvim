@@ -12,7 +12,7 @@ references:
 Read-only inspection of the kilic clusters: `moon`, `nailbed`, `neutrino`, `overseer`, `rancher`, `rubik`, `sun`. **Load this before the first call to it.**
 
 - **Transport:** hosted, `https://kubernetes.mcp.kilic.dev/mcp`, bearer auth.
-- **Estate:** the kilic clusters only. A context belonging to the AWS EKS estate is not reachable from this server — that is the point of the split, not a fault to work around.
+- **Estate:** its kubeconfig carries the kilic contexts and nothing else, so every context it lists is a valid target. Default context is `nailbed` — pass `context` anyway, on every call.
 
 The gate, the `context` rule, and the read-here-write-with-`kubectl` split: `kubernetes`.
 
@@ -30,14 +30,13 @@ Anything else is absent, and a step written against an absent tool cannot execut
 
 ## Naming the Cluster
 
-Resolve a name to a context in this order, stopping at the first that answers:
+The seven cluster names above **are** the context names, verbatim — `rubik` the cluster is `rubik` the context. Resolving is only a question when the captain named a workload rather than a cluster:
 
-1. **The captain named it.** kilic clusters are their own context name verbatim — `rubik` the cluster is `rubik` the context.
-2. **The repository says it.** Inside a cluster ArgoCD repo (`argocd-<cluster>`), the cluster is in the path.
-3. **ArgoCD says it.** An Application's `spec.destination` names the cluster it deploys to, per `kilic-workload-resolution`.
-4. **Ask the kubeconfig.** `kubectl config get-contexts` via `Bash`, or `configuration_contexts_list`. Both return every context, far more than any task needs — the last route, never the opening move.
+1. **The repository says it.** Inside a cluster ArgoCD repo (`argocd-<cluster>`), the cluster is in the path.
+2. **ArgoCD says it.** An Application's `spec.destination` names the cluster it deploys to, per `kilic-workload-resolution`.
+3. **`configuration_contexts_list`.** A blessed read returning all seven with their server URLs — cheap, and the way to settle a spelling.
 
-**Only route 1 arrives already named.** Routes 2 to 4 produce a candidate — query it through the server and name it in the answer, so a wrong resolution shows. A candidate never goes into a `kubectl` command without the captain confirming it.
+Query the resolved context through the server and name it in the answer, so a wrong resolution shows. A `kubectl` command against a context you resolved rather than were given waits for the captain to confirm it.
 
 Load `argocd-kilic` when the question is about ArgoCD's view of a workload rather than the cluster's own state.
 

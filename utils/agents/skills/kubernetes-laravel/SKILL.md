@@ -11,7 +11,7 @@ references:
 Read-only inspection of the AWS EKS clusters. **Load this before the first call to it.**
 
 - **Transport:** local stdio.
-- **Estate:** the AWS EKS clusters only. A kilic context is not reachable from this server — that is the point of the split, not a fault to work around.
+- **Estate:** its kubeconfig carries the AWS EKS contexts and nothing else, so every context it lists is a valid target. It still has a default context — pass `context` on every call.
 
 The gate, the `context` rule, and the read-here-write-with-`kubectl` split: `kubernetes`.
 
@@ -25,12 +25,9 @@ The server runs `--read-only`, so its surface is the `readOnlyHint=true` tools a
 
 ## Naming the Cluster
 
-Resolve a name to a context in this order, stopping at the first that answers:
+Cloud clusters carry a descriptive context name over an ARN; the context is that name, never the ARN. When the captain named a workload rather than a cluster, or a spelling needs settling, read the server's context-listing tool — a blessed read over an estate-scoped kubeconfig, so the set comes back small and every entry is reachable.
 
-1. **The captain named it.** Cloud clusters carry a descriptive context name over an ARN; the context is that name, never the ARN.
-2. **Ask the kubeconfig.** `kubectl config get-contexts` via `Bash`, or the server's context-listing tool. Both return every context, far more than any task needs — the last route, never the opening move.
-
-**Only route 1 arrives already named.** Route 2 produces a candidate — query it through the server and name it in the answer, so a wrong resolution shows. A candidate never goes into a `kubectl` command without the captain confirming it.
+Query the resolved context through the server and name it in the answer, so a wrong resolution shows. A `kubectl` command against a context you resolved rather than were given waits for the captain to confirm it.
 
 ## Process
 
