@@ -13,7 +13,7 @@ function M.config()
         dependencies = {
           "MunifTanjim/nui.nvim",
           "nvim-lua/plenary.nvim",
-          "dlyongemallo/diffview.nvim",
+          "dlyongemallo/diffview-plus.nvim",
         },
         build = function()
           require("gitlab.server").build(true)

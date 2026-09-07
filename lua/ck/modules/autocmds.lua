@@ -222,7 +222,9 @@ function M.setup()
           callback = function()
             for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
               if vim.api.nvim_buf_is_loaded(bufnr) and vim.api.nvim_buf_get_name(bufnr) == "" and vim.api.nvim_get_option_value("buftype", { buf = bufnr }) == "" then
-                if not vim.api.nvim_get_option_value("modified", { buf = bufnr }) then
+                -- deleting a displayed buffer takes its window with it, which strands plugins that emit a synthetic
+                -- `BufReadPost` while they are mid-layout and still holding window ids, e.g. diffview
+                if not vim.api.nvim_get_option_value("modified", { buf = bufnr }) and vim.fn.win_findbuf(bufnr)[1] == nil then
                   vim.api.nvim_buf_delete(bufnr, {
                     force = true,
                   })
