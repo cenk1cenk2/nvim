@@ -147,7 +147,7 @@ Finding out what exists. Route by what you are asking, and prefer the narrowest 
 |---|---|
 | Where does this exist across the org — repos, file patterns, config keys, prior art | Load `sourcebot-discovery` |
 | Symbols, definitions, callers in the repo at hand | LSP through the `hyprpilot-nvim` skill, not grep |
-| Live cluster state — workloads, events, logs, resource YAML | the estate's `kubernetes-*` server, gated per §V |
+| Live cluster state — workloads, events, logs, resource YAML | the estate's `kubernetes-*` server, ungated; `kubectl` gates per §V |
 | Authoritative SCM state — MRs/PRs, issues, pipelines, permissions, live branches | GitHub/GitLab MCP per `scm-detect` |
 | Library, framework, API, CLI, or cloud docs | the `research` server before anything else, since training data lags |
 | Open web | the `research` server, or the runtime's search/fetch |
@@ -169,7 +169,7 @@ Use tmux MCP tools only for **read-only** inspection of existing user panes when
 
 ### kubernetes-kilic, kubernetes-laravel
 
-Read-only inspection of live clusters, one server per estate — `kubernetes-kilic` for the kilic clusters, `kubernetes-laravel` for the AWS EKS ones. Only one of the two is present in any profile. Per §I step 5, load the matching skill — `kubernetes-kilic` or `kubernetes-laravel` — before the first call; it owns that estate, its read-only surface, and how a cluster name resolves to a context, with the shared `kubectl` split, the `context` argument, and the offer-first gate (§V Gates) in `kubernetes`.
+Read-only inspection of live clusters, one server per estate — `kubernetes-kilic` for the kilic clusters, `kubernetes-laravel` for the AWS EKS ones. Only one of the two is present in any profile. Per §I step 5, load the matching skill — `kubernetes-kilic` or `kubernetes-laravel` — before the first call; it owns that estate, its read-only surface, and how a cluster name resolves to a context, with the shared `kubectl` split, the `context` argument, and the `kubectl` approval gate (§V Gates) in `kubernetes`.
 
 ### CLI
 
@@ -214,7 +214,7 @@ Where it does not resolve, the cause is a process that did not inherit the sessi
 
 **A destructive action needs its own blessing.** No general go — `g` / `go` / `yolo`, autopilot, a prior yes, or a mode switched off (§II Modes) — authorizes anything irreversible: force pushes, discarding uncommitted work, deleting non-reproducible data, dropping resources others depend on, publishing externally. Those need explicit approval: either a per-case confirmation naming the exact target and what is lost, or a standing exception the user scoped themselves ("force pushing is fine on this repo"), which holds for that scope only. Treat anything you cannot confirm is reversible as irreversible.
 
-**External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. **One carve-out: a live Kubernetes cluster**, where read-only does not exempt the read — offer it and wait, per §IV. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
+**External writes.** Before creating or modifying resources outside the local workspace (GitHub/GitLab, Linear, Slack, Obsidian, Notion, etc.), summarize the intended change and wait for explicit approval unless the user has already given autopilot/proceed authorization for that class of write. **Reads never gate** — fetching, listing, searching, and lightweight reactions need no approval, and a step that only inspects and reports just presents its findings. **One carve-out: `kubectl` against a live cluster**, where every invocation needs its own approval even when it only reads — the estate's read-only MCP server is the ungated route, per §IV. If a catalog skill covers the write, route through it per §II "skill-first" — it carries the required fields and the approval gate. Guidance-file and repo-note updates follow §VII Knowledge Base Updates.
 
 ## VI. COMMUNICATING
 

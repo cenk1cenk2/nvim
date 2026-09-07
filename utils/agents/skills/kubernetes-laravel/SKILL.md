@@ -30,12 +30,11 @@ Resolve a name to a context in this order, stopping at the first that answers:
 1. **The captain named it.** Cloud clusters carry a descriptive context name over an ARN; the context is that name, never the ARN.
 2. **Ask the kubeconfig.** `kubectl config get-contexts` via `Bash`, or the server's context-listing tool. Both return every context, far more than any task needs — the last route, never the opening move.
 
-**Only route 1 arrives already named.** Route 2 produces a candidate, and a candidate goes into the offer for the captain to confirm — never straight into a call.
+**Only route 1 arrives already named.** Route 2 produces a candidate — query it through the server and name it in the answer, so a wrong resolution shows. A candidate never goes into a `kubectl` command without the captain confirming it.
 
 ## Process
 
 1. Resolve the cluster to a context.
-2. **Offer.** Name that cluster and what you would look at. Wait for a word that names the cluster back.
-3. Pass `context` on every call — the one the captain blessed, with no exceptions.
-4. Route by direction per `kubernetes`.
-5. Report the finding, not the transcript.
+2. Pass `context` on every call, with no exceptions.
+3. Route by direction per `kubernetes` — server reads run unasked; a `kubectl` command waits for an approval naming that command.
+4. Report the finding, not the transcript, and name the context it came from.
