@@ -27,7 +27,7 @@ On engaging, acknowledge in one line: which mode is now on and its scope. If ano
 Disengage on the user's own signal:
 
 - An explicit stop: "stop", "hold", "pause", "that's enough".
-- **A park signal: "we will park it", "park things here", "let's park this", "parking for now", "we park here".** Parking is a full disengage, not a pause in place — see *Parking* below.
+- **A park signal: "we will park it", "park things here", "let's park this", "parking for now", "we park here".** Parking is a full disengage, not a pause in place — a ramp-down that ends with nothing armed, see *Parking* below.
 - The skill's own disengage phrases ("normal mode", "drop coordinator", "stop caveman").
 - Natural language that plainly means it: "just do it yourself now", "forget the PM stuff", "back to normal".
 - The stated scope completing, where the skill defines completion as an end. Report and stand down.
@@ -38,22 +38,25 @@ Naming the mode is not required. "Stop supervising, just fix it" and "just fix i
 
 Before standing down: account for everything the mode spawned — watchers, background tasks, agents — each reported as stopped or deliberately still running with a reason. Collect a pending report before reaping it; reaping destroys it.
 
-## Parking — DISARM EVERYTHING, without being asked
+## Parking — RAMP DOWN TO ZERO, without being asked
 
-**"We are parking" means the session goes quiet. Nothing may keep running.** Do not wait for a follow-up instruction to tear things down — **the park signal IS that instruction.** Being told a second time ("you should also disarm the watchers") means this step was missed.
+**"We are parking" means the session ends up quiet, with nothing left running.** Do not wait for a follow-up instruction to start bringing things down — **the park signal IS that instruction.** Being told a second time ("you should also disarm the watchers") means this was missed.
 
 **Park arrives with or without a mode engaged.** With a posture on, parking ends the posture; with none, it ends the session's activity and preps for a shutdown. Only the last step differs — the teardown below is identical either way.
 
-**Park is a ramp-down, not an abort.** What is already in hand and serving the user's goal gets finished, so step 1 is not a courtesy.
+**Park is a ramp-down to zero, not a guillotine.** The end state is nothing armed; the route there is gradual. **NEVER kill something the park target still needs** — a watcher polling the merge the user is waiting on, an agent still writing the report that IS the deliverable. Tearing those down does not park the work, it throws it away, and the user gets a quiet session with a hole in it.
 
 On any park signal, in order:
 
-1. **Land what is in flight.** Finish the work already running — the commit, the push, the report the user is waiting on — or bring it to a stopping point recorded durably. **Start nothing new**: no fresh dispatch, no fresh watcher, no next item off the queue.
-2. **Collect first.** Any agent that may still hold an undelivered report gets asked for it **before** being stopped — reaping destroys the report permanently.
-3. **Kill every watcher and background task**, then **verify with a process check** rather than trusting the stop calls. Report the survivor list, empty or not. Watchers that already exited on their cap still get accounted for.
-4. **Reap every spawned agent.**
-5. **Inline anything disposable into durable storage** — see below.
-6. **Report the teardown**: what was stopped, what was collected, and explicitly that **nothing remains armed** — then say what state the session is now in, posture off or parked and idle.
+1. **Stop feeding it, immediately.** From the park signal onward nothing new is armed or dispatched — no fresh watcher, no fresh agent, no next item off the queue. The count only goes down from here.
+2. **Let what serves the park target run to its end.** Landing the goal work is the point of a park: the commit, the push, the pipeline being watched, the report still being written. Those stay up until they deliver or reach a stopping point recorded durably.
+3. **Retire each one the moment it is done**, one by one rather than in a batch at the end. **Collect before reaping** — an agent asked for its report first, because reaping destroys it permanently — and stop each watcher once its signal has landed.
+4. **Kill outright anything no longer serving the target.** A watcher on work that got superseded or abandoned, an agent whose output is no longer wanted: those come down now, with nothing to wait for.
+5. **Verify zero with a process check** rather than trusting the stop calls. Report the survivor list, empty or not; watchers that already exited on their cap still get accounted for.
+6. **Inline anything disposable into durable storage** — see below.
+7. **Report the teardown**: what landed, what was collected, what was stopped, and explicitly that **nothing remains armed** — then say what state the session is now in, posture off or parked and idle.
+
+**A slow park is a correct park.** Reaching zero may take several turns while the last watcher does its job; say what is still up and why, and keep going down. What is never correct is arming something new, or reporting a park while anything is still running.
 
 A parked session with a live watcher is the failure this section exists to prevent: it wakes into a context that has moved on, and its output reads as current when it is not.
 
