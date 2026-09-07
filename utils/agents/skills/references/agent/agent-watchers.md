@@ -13,7 +13,9 @@ tracked separately, per `agent-roster`.
    genuinely cannot move until all of them clear together — otherwise one stalling blinds you to the
    rest.
 2. **Arm it the moment the condition opens**, not when you next remember it. The gap between "the MR is
-   open" and "did it merge?" is where both momentum and tracker accuracy are lost.
+   open" and "did it merge?" is where both momentum and tracker accuracy are lost. **Inside a turn that
+   will arm one, arming is the first action** — ahead of the analysis, the work, and the report;
+   `agent-background` owns why deferring it loses the watcher entirely.
    **Arming is never gated on a decision.** A prep is held at a gate because firing early corrupts
    state; a watcher only reads, so there is no such thing as arming one too early. Holding one back
    pending an ordering call, an approval, or a preference leaves the event it guarded unobserved — and
@@ -24,8 +26,11 @@ tracked separately, per `agent-roster`.
    overnight needs hours of cap; a 60-cycle 60-second watch on it expires long before the merge and the
    silence then reads as "nothing happened". Estimate how long the thing genuinely takes, then add
    margin.
-5. **Cadence follows how fast the signal can actually change** (table below). Never poll faster than the
-   state can move; never leave a fast signal unchecked for minutes.
+5. **Cadence follows how fast the signal can actually change** (table below), and **takes the tight end
+   by default.** Wake latency is the cost that matters — a poll is a sleeping loop and costs nothing,
+   while a wake landing minutes after the event spends those minutes doing nothing. Exactly two things
+   bound how tight you go: how fast the state can actually move, and a remote API's documented rate
+   limit. Nothing else widens a cadence, and saving polls never does.
 6. **On wake, re-verify authoritatively.** The signal may be a proxy, and proxies lag — a merge can read
    done before the downstream apply has converged. Do the real check on the main loop before acting.
 7. **A dead watcher is not an answer.** If it exits without the condition met — cap exhausted, signal
@@ -144,11 +149,19 @@ Per-domain signals — merge gates, CI runs, terraform and Spacelift, deploy con
 
 | Signal | Cadence | Why |
 |--------|---------|-----|
-| CI run, pipeline job, merge, apply finishing | 15–30 s | Fast, and the whole point is catching it immediately. |
-| Deploy or operator convergence (ArgoCD, rollout) | 30–60 s | Reconcile loops run on their own interval. |
-| Human action — review, approval, manual gate | 60–300 s | Bounded by a person, not a machine — and cap for hours, not minutes. |
-| Long batch job with a known runtime | one check near the expected finish, then tighten | Early checks are pure waste. |
-| Remote API with rate limits | ≥ 30 s | A tight loop gets you throttled, not informed. |
+| CI run, pipeline job, merge, apply finishing | 10 s | Fast, and the whole point is catching it immediately. |
+| Deploy or operator convergence (ArgoCD, rollout) | 15 s | Reconcile loops run on their own interval; polling under it still catches the flip the moment it lands. |
+| Human action — review, approval, manual gate | 30 s | The person is slow, your wake need not be — and cap for hours, not minutes. |
+| Long batch job with a known runtime | 15 s throughout | The finish estimate is a guess, and a job that dies early should wake you early. |
+| Remote API with rate limits | the fastest the documented limit allows | The limit is the only real floor; past it you get throttled, not informed. |
+
+**These are ceilings, not targets — poll at or under them, never slower.** A slower cadence needs a
+reason you can name out loud, and "fewer polls" is not one: a watcher is a sleeping loop, and the only
+budget it spends is your wake latency.
+
+**Tight cadence means bigger caps.** Cap is wall time divided by cadence, so a 45-minute wait that was
+45 × 60 s is now 180 × 15 s. Size the cap to the real wait (item 4) and recompute it whenever you
+tighten.
 
 ## Announce in one plain sentence; record the full row as the ledger
 

@@ -41,7 +41,7 @@ met = state in ("MERGED", "CLOSED")
 # GitLab: glab mr view <N> --repo <project> -F json, then .state in ("merged", "closed")
 ```
 
-Cadence 60s; cap sized to how long the human plausibly takes — hours, not minutes, when they may merge
+Cadence 30 s; cap sized to how long the human plausibly takes — hours, not minutes, when they may merge
 after a meeting or overnight. On wake, **the merge is a proxy**: the thing you actually care about is
 usually what the merge triggers, so re-verify and arm the follow-on rather than declaring done.
 
@@ -70,7 +70,7 @@ met = not any(c["state"] in IN_FLIGHT for c in checks)
 not `IN_PROGRESS` fires on a running job and reports a verdict that does not exist yet. Enumerate the
 in-flight set for that system and match the complement.
 
-Cadence 15–30s. On wake, read the **conclusion** rather than the presence of a result: a settled check
+Cadence 10 s. On wake, read the **conclusion** rather than the presence of a result: a settled check
 can be a failure, and "settled" alone is not "green".
 
 ### Terraform and Pulumi — plans and applies
@@ -121,7 +121,7 @@ be asked for.
 
 ### Deploy convergence — ArgoCD, operators, rollouts
 
-Reconcile loops run on their own interval, so cadence 30–60s. The signal is usually MCP-only or
+Reconcile loops run on their own interval; cadence 15 s, so the flip reaches you as soon as it lands. The signal is usually MCP-only or
 cluster-only, so poll a shell-visible proxy (a CLI status, an HTTP probe) and confirm through the
 authoritative tool on wake.
 
@@ -163,7 +163,7 @@ met = not os.path.isdir(TURN_DIR) or os.path.exists(os.path.join(TURN_DIR, "done
 whole directory with it, so a file-only test waits forever on work that is already gone. A missing
 **directory** means finished-and-gone.
 
-Cadence 30 s, cap sized to how long the delegated job plausibly takes. `TURN_DIR` comes from the result of
+Cadence 15 s, cap sized to how long the delegated job plausibly takes. `TURN_DIR` comes from the result of
 the call that started this turn and is never reconstructed by hand.
 
 On wake the marker tells you the turn **ended**, never that it succeeded and never what it produced. Do the

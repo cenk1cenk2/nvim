@@ -17,6 +17,20 @@ references:
 
 > **Fetch `agent-background-harness-<provider>` BEFORE arming anything.** Which facility exists, what wakes you, and whether anything wakes you at all are runtime properties — and on at least one runtime (Codex) nothing does, which silently voids the whole pattern below. This skill owns the intent and the discipline; that one owns the tool names, parameters, and defaults.
 
+## ABSOLUTE — Arming Is the First Action of the Turn
+
+**When a turn will arm a watcher, arm it before anything else in that turn.** Not after the analysis, not once the work is done, not as the tidy-up before the report. First, ahead of every other tool call.
+
+The failure this closes is ordering, not intent. Arming drifts toward the end of the turn, the turn fills with the very work the watcher was meant to cover, and the arm falls off the end — the turn ships a report that reads as watched with nothing polling. It goes unnoticed because a healthy watcher is silent too, so the symptom of a missing watcher and the symptom of a working one are identical.
+
+Every reason to defer it is wrong:
+
+- **A watcher only reads, so it cannot fire early into anything.** There is no state it corrupts by starting before the rest of the turn, which is why arming is never gated on a decision still being made.
+- **The event does not wait for your analysis.** Seconds spent deciding are seconds the condition can flip unobserved, and a wake armed after the flip never comes at all.
+- **Nothing you learn later invalidates the arm.** A watcher keyed on a stable id survives being wrong about the plan. If the plan changes, reap it and re-arm — cheap, and covered by the reap discipline below.
+
+The order inside a turn is **arm, then think, then work, then report.** Catching yourself at the end of a turn about to write "arming a watcher for X" means the window is already lost: arm it now, before that sentence is written.
+
 ## Context
 
 State that spans turns must be written durably per `long-running-work` — posture, armed watchers, and artifact truth do not survive a compaction or a handoff on their own.
@@ -30,7 +44,7 @@ Launch a loop through the runtime's own background-exec facility (per `agent-bac
 **Reach for this skill's own `scripts/watch.py` first.** It is the tested version of the loop below, resolved against the `bundleDir` in this skill's metadata (the `scripts` frontmatter key lists the relative path). One condition per invocation, taken as a subcommand:
 
 ```sh
-"<bundleDir>/scripts/watch.py" --label <name> --interval 60 --max-polls 180 \
+"<bundleDir>/scripts/watch.py" --label <name> --interval 30 --max-polls 360 \
   command --json-path state --expect merged -- glab mr view 4821 --output json
 ```
 
@@ -165,7 +179,7 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 1. **Confirm it's external state.** Work dispatched through the runtime's **own** subagent or workflow mechanism is not — it re-invokes you on completion where the runtime supports it, so do not poll it. **Everything else is external, including another server's agent process.** A separate vendor agent session started over MCP runs outside your runtime's knowledge and pushes nothing to you, so it is watched exactly like a CI run or a merge; treating it as dispatched work is how it finishes into silence.
 2. **Pick a shell-reachable signal**, per the discipline, cadence table, per-domain examples, and check recipes in `agent-watchers` — that reference owns *what* to watch and *what a wake means*; this skill owns *how* to arm it. A CLI query (`gh`/`glab`/cloud CLIs), an HTTP probe (`curl`), a file appearing, a command's exit code. If the truth is reachable only through an MCP tool (a background loop cannot call MCP, in any language), poll a **proxy** the shell CAN see, and do the authoritative MCP check yourself on wake.
 3. **Bound the loop.** Always cap iterations as a runaway backstop; on exhaustion print a clear "not met" line and re-arm rather than looping forever.
-4. **Choose cadence by how fast the state changes** — short (~60s) for a human action, longer for a slow job (one check near the expected finish beats many early ones). Never poll faster than the state can plausibly change.
+4. **Choose cadence by how fast the state changes, and take the tight end.** 10 s for a machine signal, 30 s for a human action, held throughout a long job rather than one check near its expected finish — an early failure should wake you early. The only floors are how fast the state can plausibly move and a remote API's documented rate limit; band-by-signal table in `agent-watchers`, where a tighter cadence also buys a proportionally bigger cap.
 5. **Launch one watcher through the runtime's background facility** — never by detaching inside the command (see the boxed warning under *The pattern*). **Keep the loop's payload out of the command string.** Any text the loop emits — a reminder checklist, a query, a threshold — lives in a file the command reads, written to the scratchpad or a temp directory. An inlined multi-line payload carrying quotes dies at the shell's parser, and the watcher never arms. The reminder-loop pattern is `agent-watchers`. Arm it directly when it is the obvious next step or the user blessed it; surface it first only when spawning the watcher is itself the decision. Confirm the launch returned a **task id / handle** and did not exit non-zero on the spot; anything less means you detached instead of arming, and nothing will wake you. Note that id, announce the watch in one plain sentence, and record its ledger row per `agent-watchers`, which owns that split, the cadence table, and what to arm for what. **Record it durably** — the task id and the loop's script body live only in this session/scratchpad and do NOT survive compaction or transfer to another agent. State the watcher (what it polls, its cadence, its task id, and the command to re-arm it) out loud in chat, and if `plan-compact` is active write it verbatim into the anchor's Scratchpad Scripts & Watchers section. A resumed agent must be able to find, re-verify, and re-arm it from durable text, not from a lost background handle.
 6. **On wake: re-verify the real state before acting.** External APIs lag — a signal can read "done" slightly before/after the truth, and a proxy firing does not mean the downstream state converged. Do the authoritative check now.
 7. **Continue or re-arm.** If a follow-on condition isn't satisfied yet (e.g. the proxy fired but the real work is still settling), launch the next watcher. Never assume the proxy equals the end state.
@@ -186,7 +200,7 @@ Never attribute one runtime's tools to another, and if a mechanism is unknown, d
 - **Task-notifications are NOT user input.** A background-completion event is not approval or consent — never treat it as the user answering a pending question.
 - **A watcher may not appear in the runtime's task list** even while running. Track the handle the launch returned, and stop it through the mechanism the harness reference names.
 - **Avoid redundant watchers.** Mutating the thing a watcher polls usually doesn't invalidate it (it keys on a stable id). Re-arm only when unsure the old one is alive; a duplicate merely double-wakes (harmless — re-verify and no-op).
-- **Persistence:** background shells survive across turns until they exit or you stop them; you're re-invoked on exit. Size cap × cadence to a sane ceiling (e.g. 45 × 60s ≈ 45 min) and re-arm past it.
+- **Persistence:** background shells survive across turns until they exit or you stop them; you're re-invoked on exit. Size cap × cadence to a sane ceiling (e.g. 180 × 15 s ≈ 45 min) and re-arm past it.
 - **Compaction does not preserve watchers.** The background task id, the loop's script body, and anything it wrote to the scratchpad are session/scratchpad state — a compaction summary drops them and they do not transfer to another agent. Anything armed for longer than a checkpoint must be recorded in durable text (chat + the `plan-compact` anchor), so a resumed agent re-materializes the script and re-arms the watch instead of losing it. Never rely on a background handle or a scratchpad path outliving a compaction.
 
 ## Fallback
@@ -202,12 +216,12 @@ If no shell-reachable signal exists at all, drop to a deferred wakeup or a monit
    ```python
    python3 -c '
    import subprocess, sys, time
-   for i in range(1, 181):
+   for i in range(1, 361):
        if <cli-check for merged>:
            print(f"RESULT: merged after {i} cycle(s)")
            sys.exit(0)
-       time.sleep(60)
-   print("RESULT: not merged after 180 cycles")
+       time.sleep(30)
+   print("RESULT: not merged after 360 cycles")
    '
    ```
 
