@@ -71,7 +71,7 @@ Agent prompts must be self-contained. Use an extended handoff shape:
 ## Linear State and Documentation
 
 - Move each picked-up issue to `In Progress` before implementation starts, respecting `linear-state-transitions`.
-- Reconcile the issue's relations on pickup and again at wrap-up: resolve its parent and sub-issues (plus `blocks`/`blockedBy`) so ordering and completion aren't missed — parent/sub-issue links are the most-missed part. Flag or fix gaps per `linear-document-handling`.
+- Reconcile the issue's relations on pickup and again at wrap-up: resolve its parent and sub-issues (plus `blocks`/`blockedBy`) so ordering and completion aren't missed — issueset links are the most-missed part. Flag or fix gaps per `linear-document-handling`.
 - Use `linear-issue-status` for explicit or situational status changes outside the automatic pickup/PR/MR triggers.
 - When an issue reaches `In Review` or `Done`, always try checklist reconciliation with `linear-issue-checklist`.
 - In autonomous agent workflows, comment on the issue by default when there are deviations, decisions, blockers, findings, reviewer-driven scope changes, or non-obvious implementation notes. Keep comments short and factual.

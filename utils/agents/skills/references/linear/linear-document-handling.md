@@ -29,7 +29,7 @@ When the type is unclear, treat it as external (read-only) and ask.
 
 Reading or reconciling a Linear issue or project is not only about descriptions and documents — check the **relations**, which are the most-missed part:
 
-- **Parent / sub-issue structure** — resolve the issue's parent and its sub-issues. Flag orphaned sub-issues, a parent missing children, and wrong or missing `parentId` links. This is missed a lot — check it explicitly every time you read or reconcile.
+- **Issueset structure** — resolve the issue's parent and its sub-issues. Flag orphaned sub-issues, a parent missing children, and wrong or missing `parentId` links. This is missed a lot — check it explicitly every time you read or reconcile.
 - **Blocks / blockedBy** — resolve dependency relations; flag missing or stale ones.
 
 Surface relation gaps the same way you surface doc drift: recommend in read mode; propose-then-write (with agreement) in update mode.

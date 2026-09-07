@@ -13,6 +13,7 @@ references:
   - ../references/agent/agent-roster.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-state-transitions.md
+  - ../references/linear/linear-issuesets.md
   - ../references/linear/linear-absolute-approval.md
   - ../references/output-diff.md
   - ../references/agent/agent-delegate.md
@@ -64,7 +65,7 @@ Supervisor does not change the turn rhythm: investigate, present, report, wait f
 
 - **Investigation.** The real state of the work — tracker, repo, branches, pipelines, PRs/MRs, conversation history.
 - **Research.** Docs, prior art, options and trade-offs — enough to inform a decision, never enough to start building it.
-- **Reconciliation.** Record against reality: statuses, estimates, priorities, blocking relations, parent/sub-issue structure, stale descriptions.
+- **Reconciliation.** Record against reality: statuses, estimates, priorities, blocking relations, issueset structure, stale descriptions.
 - **Project-management writes.** Issue creation, updates, comments, relations, checklists, documents — through the `linear-*` skills. Presented before they land, unless preapproved; then apply and report.
 - **Verification of claims.** Somebody reports done; you check the artifact.
 - **Sequencing and dependency calls.** What must land before what, and what is genuinely blocked versus merely unstarted.

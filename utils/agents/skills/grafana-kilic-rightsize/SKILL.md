@@ -53,7 +53,7 @@ Short-lived workloads and brief throttle spikes carry little weight. A Job pegge
 3. **Choose the layer** per `kilic-resource-placement`: the common layer when the change points the same way on every cluster running it, an override when one or two genuinely differ. A single-cluster override on a system component is a **Vault** write, not a commit — say so instead of pushing it down a layer.
 4. **Present the change** per `output-diff`: the current values, the proposed values, and the evidence line behind each one.
 5. **Land it.** Branch with `git-branch`, commit with `git-commit`, open the merge request with `gitlab-mr-create`. One repository per merge request.
-6. **When the change spans repositories**, load the `linear-structure-agent` skill and shape it as a parent issue with one sub-issue per repository, rather than one sprawling change.
+6. **When the change spans repositories**, load the `linear-structure-agent` skill and shape it as an issueset — a parent issue with one sub-issue per repository — rather than one sprawling change.
 
 ## Output Shape
 
@@ -79,7 +79,7 @@ State the skips. A list that silently drops two thirds of what it found reads as
 4. **ArgoCD resolves ownership.** Never infer the repository from a pod, namespace, or workload name.
 5. **Common case in the common layer, outliers as overrides.** An override duplicating the common value is drift waiting to happen.
 6. **Skips get reported.** Materiality and corroboration remove rows; silence about that overstates the answer.
-7. **One repository per merge request**, and a multi-repository change gets the parent and sub-issue shape.
+7. **One repository per merge request**, and a multi-repository change gets the issueset shape.
 
 ## Examples
 

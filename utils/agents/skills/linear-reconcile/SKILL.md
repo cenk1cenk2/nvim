@@ -1,13 +1,14 @@
 ---
 name: linear-reconcile
-description: linear-reconcile Audit and fix Linear structure in one pass - a project, a parent issue with its sub-issues, or a single issue - covering statuses, priorities, estimates, labels, parent links and blocking relations. Use on "reconcile the project", "reconcile K-123", "review the priorities". Not for prose or document edits, syncing state from merged work, posting an update, or creating issues.
-argumentHint: '[project, parent issue, issue id, or URL]'
+description: linear-reconcile Audit and fix Linear structure in one pass - a project, an issueset (a parent issue with its sub-issues), or a single issue - covering statuses, priorities, estimates, labels, parent links and blocking relations. Use on "reconcile the project", "reconcile K-123", "review the priorities". Not for prose or document edits, syncing state from merged work, posting an update, or creating issues.
+argumentHint: '[project, issueset parent, issue id, or URL]'
 references:
   - ../references/reconcile-state.md
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/output-diff.md
   - ../references/linear/linear-absolute-approval.md
+  - ../references/linear/linear-issuesets.md
   - ../references/identifier-legibility.md
 ---
 
@@ -15,7 +16,7 @@ Never hand back a bare identifier: issues, MRs and PRs carry their title and a m
 
 ## Linear Reconcile
 
-Audit a scope of Linear work and fix what drifted. The scope is a **project**, a **parent issue with its sub-issues**, or a **single issue** — the checks are the same, only the membership differs.
+Audit a scope of Linear work and fix what drifted. The scope is a **project**, an **issueset** — a parent issue and its sub-issues, per `linear-issuesets` — or a **single issue**. The checks are the same; only the membership differs.
 
 When work deviates from what an artifact claims, reconcile it per `reconcile-state` — only what this session created or the user handed you, never someone else's; ask when in doubt.
 
@@ -33,10 +34,10 @@ Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). Whe
 | Scope | Resolve it with | Container record | Members |
 |---|---|---|---|
 | Project | `list_issues` with the `project` parameter | the project | every issue in it |
-| Issue group | `get_issue` on the parent, then `list_issues` filtered by that parent | the parent issue | its sub-issues, recursively |
+| Issueset | `get_issue` on the parent, then `list_issues` filtered by that parent | the parent issue | its sub-issues, recursively |
 | Single issue | `get_issue` | the issue | none |
 
-- **Resolve the scope first and name which one you resolved.** An id handed to you as one issue but carrying sub-issues is an issue group — say so and audit the children too.
+- **Resolve the scope first and name which one you resolved.** An id handed to you as one issue but carrying sub-issues is an issueset — say so and audit the children too.
 - **Never use `get_project` or `list_projects`** — they hit complexity limits. Project name, description, status, labels, initiative, and milestone come from the issues' own `project` field.
 - **Never write outside the resolved scope.** A blocker in another project, a sibling under a different parent, a parent one level above the scope — read them for context and **flag them in the report**, never edit them.
 - A single issue still gets the cross-issue checks against its relations; every proposed change just lands on that one issue.
@@ -54,7 +55,7 @@ Issue descriptions and comments carry timestamps (`createdAt`, `updatedAt`). Whe
    - **Label consistency** — do all issues have appropriate labels? Are labels consistent across the scope?
    - **Priority correctness** — apply the blocking-priority rule: issues that block others should generally have equal or higher priority than the issues they block. Flag violations.
    - **Blocking relations** — are dependency chains correct? Are there missing `blocks`/`blockedBy` relations? Are there stale relations to issues that are already done?
-   - **Parent / sub-issue structure** — resolve each issue's parent and its sub-issues. Are issues that should be sub-issues of a parent (or a parent that should own them) actually linked? Flag orphaned sub-issues, a parent missing children, a flat set that wants a parent, and wrong or missing `parentId` links. This is the most-missed relation — check it explicitly every time.
+   - **Issueset structure** — resolve each issue's parent and its sub-issues. Are issues that should be sub-issues of a parent (or a parent that should own them) actually linked? Flag orphaned sub-issues, a parent missing children, a flat set that wants a parent, and wrong or missing `parentId` links. This is the most-missed relation — check it explicitly every time.
    - **Description freshness** — flag issues whose descriptions are clearly outdated or no longer match the current approach. Use the `updatedAt` timestamp as evidence.
 4. **Build a change report** organized by category:
    - **Container changes** — the project (description, status, labels, initiative, milestone) or the parent issue (description, status, estimate, labels).

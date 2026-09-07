@@ -5,6 +5,7 @@ argumentHint: '[project, parent issue, issue id, or URL]'
 references:
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-document-handling.md
+  - ../references/linear/linear-issuesets.md
   - ../references/linear/linear-issue-philosophy.md
   - ../references/identifier-legibility.md
 ---

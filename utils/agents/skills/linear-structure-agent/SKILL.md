@@ -1,12 +1,13 @@
 ---
 name: linear-structure-agent
-description: linear-structure-agent Shape Linear work for agent execution and keep it honest while implementing it - one repo, one PR, one concern per issue, a parent hosting per-repo sub-issues, ownership blessed once, verification recorded as you go. Structuring and picking work up are one mentality. Use on "structure this for agents". Not for plain issue or project CRUD.
+description: linear-structure-agent Shape Linear work for agent execution and keep it honest while implementing it - one repo, one PR, one concern per issue, issuesets hosting per-repo sub-issues, ownership blessed once, verification recorded as you go. Structuring and picking work up are one mentality. Use on "structure this for agents", "shape this as an issueset". Not for plain issue or project CRUD.
 argumentHint: '[project or issue] [what it does]'
 references:
   - ../references/long-running-work.md
   - ../references/reconcile-state.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-description-structure.md
+  - ../references/linear/linear-issuesets.md
   - ../references/linear/linear-project-documents.md
   - ../references/linear/linear-scm-discovery.md
   - ../references/output-diff.md
@@ -51,7 +52,7 @@ An **executable unit** is one issue an agent picks up and finishes alone. Every 
 2. **Single PR** — one logical, self-contained change.
 3. **Single concern** — one section or layer.
 
-Everything above it is a **container**: it holds shared context and is never implemented directly. Two containers exist — a project, and a parent issue.
+Everything above it is a **container**: it holds shared context and is never implemented directly. Two containers exist — a project, and the parent of an **issueset** (a parent issue plus its sub-issues, per `linear-issuesets`).
 
 Agents work best this way: scope and boundaries are clear, the repository is evident from the issue itself, no cross-repository orchestration is needed, and a PR review stays inside one area of concern.
 
@@ -67,14 +68,14 @@ Then pick:
 |---------|-------|
 | One repository, one concern | A single issue. It is the executable unit. |
 | One repository, several concerns or layers | One issue per concern; a project when there are enough to need shared context. |
-| Several repositories, same change repeated | **Parent issue + one sub-issue per repository.** |
-| Several repositories, several concerns each | Project, with a parent issue per concern and sub-issues under each. |
+| Several repositories, same change repeated | **An issueset — one sub-issue per repository.** |
+| Several repositories, several concerns each | Project, with one issueset per concern. |
 
 **For a lone issue whose change is mechanical or convention-driven — a lint rule, a CI job, a dependency bump, a config key, a renamed field — assume several repositories.** Confirm the repo list before concluding it really is just one.
 
-## Parent Issue and Sub-Issues
+## Issuesets
 
-The pattern for one change landing in several repositories. It exists because keeping N near-identical descriptions in sync is a losing job — one drifts, and the agent working that repo implements the stale version.
+An **issueset** is a parent issue plus the sub-issues nested under it — the pattern for one change landing in several repositories. It exists because keeping N near-identical descriptions in sync is a losing job — one drifts, and the agent working that repo implements the stale version.
 
 Nest with `parentId`. Never describe the hierarchy in prose; Linear shows it natively.
 
@@ -166,7 +167,7 @@ This matters most under the agent postures — `agent-coordinator`, `agent-super
 2. **Record the answer durably** per `long-running-work`. Ownership held only in the transcript is gone at the next compaction, and the session that resumes cannot tell whether it may write.
 3. **Ours** — reconcile on by default, no re-asking per write. Corrections to your own artifacts are corrections, not new decisions.
 4. **Not ours** — never write. Surface drift in one line and let the user decide: `K-402 contradicts what we just implemented — not ours to edit, want me to?`
-5. **The blessing is scoped to that tree.** A parent plus its sub-issues, or a project plus its issues. A different project needs its own blessing; a general `g` / `yolo` / autopilot does not supply one.
+5. **The blessing is scoped to that set.** One issueset, or a project plus its issues. A different project needs its own blessing; a general `g` / `yolo` / autopilot does not supply one.
 6. **An opt-out suppresses the write, never the question.** "Don't touch the tracker" gets honored and reported.
 
 ## The Record Is a Notebook, Not Just a Blueprint
@@ -223,7 +224,7 @@ Ask the user when uncertain whether a manual step is separate or included.
 | **Single concern** | Kubernetes manifests only | Manifests + DNS + routing |
 | **Named repo** | "**Repo:** `cluster/sun/argocd-sun`" | No repo named |
 | **Clear boundary** | "Infrastructure layer" | Ambiguous scope |
-| **Multi-repo nested** | Parent issue, one sub-issue per repo | One issue listing six repos |
+| **Multi-repo nested** | An issueset, one sub-issue per repo | One issue listing six repos |
 | **Sub-issue is a delta** | "Deviations: none; follow the parent" | Parent's description copied in |
 | **Shared context placed once** | "Read first: `Migration guide`" | Same guidance pasted into every issue |
 | **Ownership settled** | Blessing recorded before the first agent | Writing into a tree nobody blessed |
@@ -236,7 +237,7 @@ Ask the user when uncertain whether a manual step is separate or included.
 | **Infrastructure** | One repo per infrastructure change |
 | **DNS changes** | One repo for the DNS provider |
 | **Secrets** | Vault via code means a separate repo issue; manual means a task in the workload issue |
-| **Fleet-wide mechanical change** | Parent issue with the exact change, one sub-issue per repo |
+| **Fleet-wide mechanical change** | An issueset — exact change on the parent, one sub-issue per repo |
 
 ## Anti-Patterns
 
@@ -246,7 +247,7 @@ Ask the user when uncertain whether a manual step is separate or included.
 - "Create workload and routing" — two concerns, two repos.
 - One issue listing six repositories in its description.
 - Sub-issues each carrying a full copy of the parent's description.
-- Deciding single-issue versus parent/sub-issue without investigating repo span.
+- Deciding single issue versus issueset without investigating repo span.
 - Starting agents without settling ownership, then writing into the tree anyway.
 - Reconstructing verification evidence at wrap-up instead of capturing it at the task.
 - Dependency chains or sub-issue tables written into descriptions.
@@ -255,7 +256,7 @@ Ask the user when uncertain whether a manual step is separate or included.
 
 - "Create teamspeak3 workload manifests" — one repo, one PR.
 - "Configure load balancer routes for teamspeak3" — one repo, one PR.
-- Parent "Adopt shared CI template" with one sub-issue per repository.
+- An issueset "Adopt shared CI template" with one sub-issue per repository.
 
 ## Key Principles
 
@@ -263,7 +264,7 @@ Ask the user when uncertain whether a manual step is separate or included.
 2. **Investigate repo span before choosing the shape.** A mechanical change is multi-repo until proven otherwise.
 3. **Repository named explicitly in every executable issue.**
 4. **The parent holds the description; sub-issues hold deviations.** Never both.
-5. **Containers are never implemented.** A project and a parent issue produce no PR.
+5. **Containers are never implemented.** A project and an issueset's parent produce no PR.
 6. **Shared context at the tightest scope that covers it** — sub-issue, parent, or project.
 7. **Ownership is blessed once, up front, and recorded durably.** No blessing means surface drift, do not write.
 8. **The record is a notebook during execution.** Baseline before, result after, deviations as they surface, reconciled in batches.
@@ -277,7 +278,7 @@ Ask the user when uncertain whether a manual step is separate or included.
 **User says:** "Structure adding the shared renovate config to our repos for agents"
 
 1. Investigate repo span per `linear-scm-discovery` — 7 repositories carry a `renovate.json`, 2 vendor it under `.github/`.
-2. Multi-repo, same change: parent issue plus 7 sub-issues.
+2. Multi-repo, same change: an issueset with 7 sub-issues.
 3. Parent carries the exact config file, the merge conventions, and the repo table with the 2 deviations.
 4. Each sub-issue carries repo, "read first: parent", and its deviation or "none".
 5. Ask once whether the tree is ours to keep current; record the answer.
@@ -291,7 +292,7 @@ Ask the user when uncertain whether a manual step is separate or included.
 
 1. Ask what is new versus existing; investigate repositories.
 2. Layers: workload manifests, ArgoCD Application, storage, secrets, networking.
-3. One repository each — no repeated change, so no parent issues needed.
+3. One repository each — no repeated change, so no issueset needed.
 4. Shared architecture and verification go into a project document.
 5. Ask whether Vault is code-managed or manual; place it accordingly.
 6. Present the structure; hand to `linear-project-create`.
@@ -300,7 +301,7 @@ Ask the user when uncertain whether a manual step is separate or included.
 
 ---
 
-**Agents are running the renovate parent, and a sub-issue's pipeline fails**
+**Agents are running the renovate issueset, and a sub-issue's pipeline fails**
 
 1. Capture the failing pipeline output and the pre-change baseline for that repo.
 2. Comment on that sub-issue with the evidence and the cause.

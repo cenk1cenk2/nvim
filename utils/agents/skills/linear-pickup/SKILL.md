@@ -8,6 +8,7 @@ references:
   - ../references/present-first.md
   - ../references/linear/linear-prerequisite.md
   - ../references/linear/linear-pickup-execution.md
+  - ../references/linear/linear-issuesets.md
   - ../references/linear/linear-project-documents.md
   - ../references/linear/linear-scm-discovery.md
   - ../references/linear/linear-chunk-issues.md
