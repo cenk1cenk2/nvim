@@ -47,7 +47,7 @@ For each task, define:
 
 **Two kinds of collisions to watch for:**
 
-- **Hard file collision:** two tasks write the same file. Sequentialise one after the other (add a `depends_on`), or hand both to the SAME named agent in dependency order — one turn per task, each keeping its own brief and report. Merge into a single task only when they were never separate deliverables; two PRs never become one task to dodge a collision.
+- **Hard file collision:** two tasks write the same file. **Prefer handing both to the SAME named agent** in dependency order — it already holds the context and the worktree — one turn per task, each keeping its own brief and report. Sequentialise instead (add a `depends_on`) when no such agent is reachable. Merge into a single task only when they were never separate deliverables; two PRs never become one task to dodge a collision.
 - **Semantic dependency:** task B reads a schema/type/output defined by task A, even in a different file. The plan author must declare this via `depends_on` — it's not detectable from file lists alone.
 
 ### 6. Build the layer schedule

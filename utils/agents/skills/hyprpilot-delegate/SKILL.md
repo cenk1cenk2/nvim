@@ -297,7 +297,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 
 - **`list_profiles` first, always.** Never hardcode an id; never guess an ambiguous fragment.
 - **`spawn` once per conversation; `session_send` for every follow-up.** `steer: true` when the agent is still working and you want it doing something else.
-- **One session per logical unit.** Two PRs, repos or issues are two sessions, not one session handed both. A session's turns advance ONE unit — steer it through that unit's steps, and open a second session for the second unit.
+- **One LIVE unit per session.** A session's turns advance one unit at a time — steer it through that unit's steps, never hand it two at once. When the next unit builds on what this session already did, prefer `session_send` over a fresh spawn: the conversation holds the context a new session would rebuild. Genuinely independent units get their own sessions and run concurrently.
 - **Discover, then propose the profile.** `list_profiles` is what makes a proposal possible here — models and profiles are runtime state, unlike in-harness tiers, which resolve from the harness reference with no discovery. Name the profile and why it fits the unit before spawning.
 - **Dedicated parameters before `with_config`.** Reach for `with_config` only for `model` and `effort`.
 - **`with_config` before `args`.** hyprpilot converts an overlay onto the target vendor; `args` is raw vendor argv you have to get right yourself. Drop to `args` only for knobs hyprpilot does not model, and check the vendor's `--help` first.

@@ -119,7 +119,7 @@ Follow the `agent-plan-split` reference's "Task dependencies" section:
 ### Step 7 — Decide agent count per layer
 
 - Number of agents in a layer = number of tasks in that layer.
-- One agent per task, always. A later layer's task may go to the same named agent that did its dependency — one turn per task — but never two tasks in one prompt.
+- One agent per task, always. A later layer's task SHOULD go to the same named agent that did its dependency while that agent is still reachable — one turn per task, context and worktree already in place — but never two tasks in one prompt.
 - Tier is per task, shown in the schedule, resolved by loading `agent-harness`.
 - 2–4 tasks per layer is the sweet spot. If a layer has >4 tasks, consider whether any should be merged; if a layer has 1 task, that's fine (sequential point in the DAG).
 

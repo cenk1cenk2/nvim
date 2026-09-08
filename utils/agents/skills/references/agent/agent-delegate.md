@@ -38,13 +38,17 @@ Batching units into one agent is the easy thing to write, and it costs:
 - **One failure takes the batch.** A blocker in unit two strands three and four, and the re-dispatch cannot scope to the remainder without unpicking what already landed.
 - **A report nobody can verify per unit.** One summary over three PRs hides which one is actually finished.
 
-**Sharing one agent across units is right only when they write the same code** — and that is a reason to reshape, not to accept the batch:
+**Prefer re-steering an agent that already holds the context.** A reachable agent that just did related work — the same files, the same subsystem, the unit this one depends on — starts the next unit knowing what a fresh agent would have to rediscover. Where the runtime resumes an agent by message, hand it the next unit on the same conversation: cheaper than a new dispatch, and each unit still gets its own brief, its own report, its own verification. **Steering is one unit per turn, not batching** — the prompt covers the next unit alone.
 
-1. **Sequence them.** Declare the dependency and run the units in order, one agent each, per `agent-plan-split`. The later agent starts from the earlier one's merged result.
-2. **Steer one agent through them.** Where the runtime resumes a finished agent by message, give it unit one, collect, then hand it unit two on the same conversation. It keeps the shared context, and every unit still gets its own brief, its own report, its own verification.
+That preference holds where an agent with the relevant context exists. Where none does, the units are independent, and independent units fan out to their own agents in parallel — which is the whole point of counting them.
+
+**When units write the same code**, in order of preference:
+
+1. **Steer the agent that did the first one.** It holds the context and the worktree.
+2. **Sequence them.** Declare the dependency and run the units in order, one agent each, per `agent-plan-split`. The later agent starts from the earlier one's merged result.
 3. **Collapse them** only when they were never separate units — then say so, and dispatch one.
 
-**Isolation follows the unit.** One agent, one worktree, one branch, per `agent-worktrees`.
+**Isolation follows the LIVE unit.** One worktree carries one agent at a time, per `agent-worktrees` — and a tree whose agent has delivered and been collected is free for the next unit, which is what makes steering in place cheap.
 
 ## An agent that is quiet, thin, or finished — COLLECT, never redo
 

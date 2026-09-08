@@ -24,9 +24,13 @@ Concretely: a session running in `<repo-a>` delegates an edit that lives in `<re
 - **Say which repo the work belongs to in the prompt**, explicitly. An agent that knows the target repo can recover from a wrong worktree; one that assumes will edit the wrong tree or create files that do not belong.
 - **Verify after dispatch** where the branch and commit actually landed — check the target repo's `git worktree list` and `git branch`, not the agent's own account of it.
 
-## One worktree, one agent
+## One worktree, one LIVE agent
 
-A worktree belongs to exactly one agent, and an agent to exactly one worktree. A second unit of work gets a second agent with its own worktree and branch — never a second task handed to the agent already holding one, and never two agents pointed at one tree. Two writers in one tree clobber each other and neither reports it.
+**Exclusivity is about concurrency, not ownership for life.** While an agent is working in a worktree that tree is its alone: no second agent pointed at it, no second unit started in it. Two writers in one tree clobber each other and neither reports it.
+
+**Once its agent has delivered and been collected, the tree is free** — reuse it for the next unit, hand it to another agent, or remove it. A finished worktree held out of use is just a stale branch. The check before reuse is the roster per `agent-roster`, not the filesystem: reuse a tree whose agent's report is collected, never one whose row still reads running or uncollected.
+
+**Reuse and re-steering pair naturally.** Where the agent that built the tree is still reachable, giving it the next unit in that same tree keeps both the worktree and the context that produced it.
 
 ## Why a managed location
 
