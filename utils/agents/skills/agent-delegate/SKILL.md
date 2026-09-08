@@ -33,6 +33,8 @@ Use it when:
 - The user wants to pick the tier or model explicitly (cheap, default, smart, or a specific model name).
 - You want to offload a focused job from your own context.
 
+**If the request carries several units** — several PRs, repos, worktrees, or issues — this skill covers one of them. Run it once per unit, or route the set through `agent-plan` / `agent-coordinator`; do not widen one dispatch to swallow the rest.
+
 ## Process
 
 1. **Understand the task.**
@@ -45,7 +47,7 @@ Use it when:
      - **Explicit model name** (e.g., `haiku`, `opus`, `gpt-4o`, `gemini-2.5-pro`) → use verbatim, no remapping.
      - **Tier shorthand** (`cheap`, `smart`, `lesser`, `higher`, etc.) → resolve to a concrete model via the ecosystem's mapping.
    - Load the **`agent-harness`** skill and resolve the tier to a concrete model there (fetch `agent-delegate-harness-<provider>`) — the mapping depends on the active provider (Claude, OpenCode, Codex, …), not just Anthropic. If the provider's mapping is unknown, ask; persist to memory if stable across sessions.
-   - If no preference is stated, infer the tier from task complexity and propose with reasoning.
+   - If no preference is stated, infer the tier from task complexity and propose with reasoning — always, and per task. A tier the user named for an earlier task, or stated generically, does not settle this one.
    - **If the user's pick seems mismatched to the task** (e.g., cheap for architectural design, smart for a trivial rename), **ask before dispatching** — state the mismatch and propose an alternative. Do not silently comply.
 
 3. **Establish conventions — mandatory whenever the task writes code.**
@@ -106,7 +108,8 @@ See the `agent-harness` skill for tier definitions, per-provider model lists, an
 
 ## Key Principles
 
-- **One task, one agent.** Don't split or sequence — use `/agent-plan` for multi-task DAG-scheduled work.
+- **One task, one agent — one agent per logical unit.** Two PRs, worktrees, repos or issues are two dispatches, not one prompt with a list. Don't split or sequence here — use `/agent-plan` for multi-task DAG-scheduled work.
+- **Always propose the tier.** State it with the signal that picked it before dispatching, even when the user said nothing.
 - **User picks the tier/model.** This skill exists because the user wants control over cost/capability. Honor explicit choices.
 - **User owns the mapping outside Anthropic.** For non-Anthropic ecosystems, ask the user what cheap/default/smart resolve to.
 - **Ask on mismatch.** If the chosen tier/model looks wrong for the task, ask — don't silently comply.

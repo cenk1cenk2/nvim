@@ -56,6 +56,7 @@ This skill carries Linear work from pickup to review. It can implement directly,
 3. **Plan the execution schedule.**
    - Run an `agent-plan` style split per `agent-plan-split` with file collision checks, prerequisites, and dependency layers; align task boundaries with Linear issues per `linear-chunk-issues`.
    - Decide per task: lead implementation, delegated single agent, parallel layer, or sequential layer. Tier choice and self-contained agent prompts per `agent-delegate`.
+   - **One agent per issue and per PR/MR.** Issues that land separately get separate agents even when they queue behind each other; only issues writing the same code share, and then by sequencing or by steering one agent through them in turn. Every task carries its own proposed tier.
    - Use `agent-review` for a cheap collision/prerequisite review when the task set is complicated or the user asks for deeper research.
 
 4. **Report before starting tasks.**

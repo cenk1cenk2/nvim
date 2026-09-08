@@ -34,6 +34,8 @@ Shared planning phase for agent orchestration skills. Walks through understandin
 
 Break the plan into logically independent units. Think of it as developers branching off — each task is a unit of work that could plausibly run in parallel with unrelated work.
 
+**Split on the boundaries the work already has** — one PR or MR, one worktree, one repository, one tracker issue. Each task gets its own agent, so a task spanning two of those boundaries is two tasks.
+
 For each task, define:
 
 - **Id:** Short stable identifier (e.g., `task-a`, `auth-core`) — used for dependency references.
@@ -45,7 +47,7 @@ For each task, define:
 
 **Two kinds of collisions to watch for:**
 
-- **Hard file collision:** two tasks write the same file. Sequentialise one after the other (add a `depends_on`), or merge them into a single task.
+- **Hard file collision:** two tasks write the same file. Sequentialise one after the other (add a `depends_on`), or hand both to the SAME named agent in dependency order — one turn per task, each keeping its own brief and report. Merge into a single task only when they were never separate deliverables; two PRs never become one task to dodge a collision.
 - **Semantic dependency:** task B reads a schema/type/output defined by task A, even in a different file. The plan author must declare this via `depends_on` — it's not detectable from file lists alone.
 
 ### 6. Build the layer schedule
@@ -58,17 +60,19 @@ Partition tasks into layers using the DAG:
 
 Present the resulting schedule to the user as a layer-by-layer table:
 
-| Layer | Task id | What | Depends on | Files (write) |
-|-------|---------|------|-----------|---------------|
-| 0 | task-a | Add auth core | — | src/auth/core.ts |
-| 0 | task-b | Add logging | — | src/log.ts |
-| 1 | task-c | Auth integration tests | task-a | tests/auth.test.ts |
+| Layer | Task id | What | Tier | Depends on | Files (write) |
+|-------|---------|------|------|-----------|---------------|
+| 0 | task-a | Add auth core | default | — | src/auth/core.ts |
+| 0 | task-b | Add logging | cheap | — | src/log.ts |
+| 1 | task-c | Auth integration tests | default | task-a | tests/auth.test.ts |
 
 The calling skill may substitute "Agent" with "Teammate" in the header when it dispatches named agents.
 
 ### 7. Decide agent count per layer
 
 - Number of agents in a layer = number of tasks in that layer.
+- **One task never shares an agent with another in the same layer, and no agent takes two.** Across layers, a dependent task MAY go to the named agent that did the task it depends on — that is steering, one turn per task, not batching.
+- **Each task carries its own tier**, chosen from that task's signals per `agent-harness` and shown in the schedule. A layer's tasks routinely differ.
 - 2–4 tasks per layer is the sweet spot for parallel work. Single-task layers are fine (sequential points in the DAG).
 - If a layer has >4 tasks, consider merging some — agent overhead scales linearly.
 

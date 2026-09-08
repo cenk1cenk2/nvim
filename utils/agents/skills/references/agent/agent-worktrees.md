@@ -24,6 +24,10 @@ Concretely: a session running in `<repo-a>` delegates an edit that lives in `<re
 - **Say which repo the work belongs to in the prompt**, explicitly. An agent that knows the target repo can recover from a wrong worktree; one that assumes will edit the wrong tree or create files that do not belong.
 - **Verify after dispatch** where the branch and commit actually landed — check the target repo's `git worktree list` and `git branch`, not the agent's own account of it.
 
+## One worktree, one agent
+
+A worktree belongs to exactly one agent, and an agent to exactly one worktree. A second unit of work gets a second agent with its own worktree and branch — never a second task handed to the agent already holding one, and never two agents pointed at one tree. Two writers in one tree clobber each other and neither reports it.
+
 ## Why a managed location
 
 - **One tool owns the path.** `wt` computes it from a single configured template, so every worktree lands in the same shape without any skill hardcoding a directory.

@@ -27,6 +27,25 @@ Rules that hold either way:
 - **Diagnose by inspecting the artifact, never the notification.** Work present but no report means the work happened and only the delivery failed — verify it and move on, do **not** re-run. **Silence is neither success nor failure.**
 - **An ABSENT artifact proves nothing.** It does not mean the agent never ran, never worked, or is broken. Most agents write once near the end, so one that has read twenty files and formed its entire answer looks **identical on disk** to one that never started. Treating an empty disk as "it never ran" and reaping on that basis **destroys real work**, and reaping is terminal. When there is nothing to inspect you have learned nothing — steer it (below) rather than concluding.
 
+## Scope — one agent per logical unit
+
+**Count the logical units first, then dispatch one agent per unit.** A unit is one thing that lands on its own: one PR or MR, one worktree, one repository, one tracker issue, one independent question. Three PRs is three agents, not one agent handed a list of three.
+
+Batching units into one agent is the easy thing to write, and it costs:
+
+- **No parallelism.** N units run end to end in one context instead of concurrently.
+- **A degrading context.** By unit three the agent reasons with units one and two still in its window, and quality drops where it is hardest to see.
+- **One failure takes the batch.** A blocker in unit two strands three and four, and the re-dispatch cannot scope to the remainder without unpicking what already landed.
+- **A report nobody can verify per unit.** One summary over three PRs hides which one is actually finished.
+
+**Sharing one agent across units is right only when they write the same code** — and that is a reason to reshape, not to accept the batch:
+
+1. **Sequence them.** Declare the dependency and run the units in order, one agent each, per `agent-plan-split`. The later agent starts from the earlier one's merged result.
+2. **Steer one agent through them.** Where the runtime resumes a finished agent by message, give it unit one, collect, then hand it unit two on the same conversation. It keeps the shared context, and every unit still gets its own brief, its own report, its own verification.
+3. **Collapse them** only when they were never separate units — then say so, and dispatch one.
+
+**Isolation follows the unit.** One agent, one worktree, one branch, per `agent-worktrees`.
+
 ## An agent that is quiet, thin, or finished — COLLECT, never redo
 
 **You have control over your agents.** One that has gone quiet, looks stuck, or handed back a vague summary is a thing you can **talk to**, and that is nearly always the cheapest fix.
@@ -138,6 +157,10 @@ Delegation picks a **tier** from task complexity, then resolves it to a **concre
 - **Tiers:** `cheap` (mechanical), `default` (integration), `smart` (architecture/review), `max` (absolute ceiling — use sparingly).
 - **Explicit model names override tiers** — use verbatim.
 - **Ask on mismatch** — if the chosen tier/model looks wrong for the task, state it and propose an alternative before dispatching.
+- **Every dispatch carries a tier you chose and STATED — one per unit.** The routing plan names the tier beside each unit with the signal that picked it ("cheap: two files, spec is exact"). A dispatch that never names a tier took a default nobody weighed.
+- **Pick per unit, never per run.** Units in one fan-out routinely differ — a mechanical port and the review of it are not the same tier. One tier stamped across a batch is the batching mistake wearing another hat.
+- **A user's tier word binds where they aimed it.** Named for one task, it holds for that task. Said generically ("use cheap agents"), it is a standing preference you still weigh per unit — and raise when a unit plainly needs more.
+- **In-harness dispatch needs no discovery.** The tier-to-model mapping for the active runtime is in `agent-delegate-harness-<provider>` — read it and choose. Discovery is for a SEPARATE agent session, whose profiles and models are runtime state to be listed before a proposal.
 
 ## Self-Contained Prompt Structure
 
@@ -156,20 +179,23 @@ Point at skills and tools by name rather than inlining them when the target shar
 
 ## Dispatch Checklist
 
-1. Is the prompt self-contained? Could someone execute it with no other context?
-2. Is the tier right for the task, and resolved to a concrete model for the active runtime?
-3. Are file boundaries explicit? No "and related files."
-4. Are verification commands included when the task modifies code?
-4b. Does the prompt carry the `agent-conventions` block — prior-art study, naming, comment discipline, scope limits, and the pre-report self-check?
-5. Is isolation right? Worktree for parallel writers; omit for read-only work.
-6. Does the dispatch mode match the runtime's delivery behavior (per `agent-delegate-harness-<provider>`), and does the agent have the tools it needs in that mode?
-6b. Does the prompt tell the agent how to deliver its report, and to whom, when the dispatch shape does not deliver it automatically?
-7. Does the session's own permission posture actually allow the work you are asking for?
+1. Is this ONE logical unit? Several units mean several dispatches, not one prompt with a list.
+2. Is the prompt self-contained? Could someone execute it with no other context?
+3. Is the tier chosen from THIS unit's signals, stated, and resolved to a concrete model for the active runtime?
+4. Are file boundaries explicit? No "and related files."
+5. Are verification commands included when the task modifies code?
+5b. Does the prompt carry the `agent-conventions` block — prior-art study, naming, comment discipline, scope limits, and the pre-report self-check?
+6. Is isolation right? One worktree for this one unit; omit for read-only work.
+7. Does the dispatch mode match the runtime's delivery behavior (per `agent-delegate-harness-<provider>`), and does the agent have the tools it needs in that mode?
+7b. Does the prompt tell the agent how to deliver its report, and to whom, when the dispatch shape does not deliver it automatically?
+8. Does the session's own permission posture actually allow the work you are asking for?
 
 ## Key Principles
 
 - **Self-contained prompts.** Agents share no context — everything must be in the prompt.
 - **Tiers, not model names.** Think cheap/default/smart/max; resolve at dispatch time via `agent-harness`.
+- **One agent per logical unit.** One PR, one worktree, one repo, one issue each. Units that write the same code get sequenced, or steered through one agent turn by turn — never batched into one prompt.
+- **A tier per unit, stated before dispatch.** Chosen from that unit's own signals, not inherited from the last dispatch or from a generic preference.
 - **`max` is the ceiling — use sparingly.** `smart` covers most heavy work.
 - **The harness reference owns the mechanics.** Permission handling, background defaults, delivery, and limits are runtime properties — never carry one runtime's behavior to another.
 - **Match tier to task**, and **ask on mismatch** rather than silently complying.
