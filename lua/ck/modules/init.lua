@@ -8,6 +8,7 @@ local modules = {
   "executables",
   "quit",
   -- rest
+  "autowidth",
   "unimpaired",
   "uuid",
 }

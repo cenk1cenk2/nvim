@@ -54,7 +54,6 @@ local plugins = {
   -- "rainbow-delimiters-nvim", -- replaced by blink-pairs
   "nvim-recorder",
   -- "focus-nvim",
-  "windows-nvim",
   "quicker-nvim",
   "nvim-bqf",
   "lsp-trouble",
