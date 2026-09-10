@@ -150,6 +150,7 @@ That fourth line is the one that gets dropped and the one that decides everythin
 - **`plan-hard`** — writes the plan this companion then holds. Always first.
 - **`plan-revise`** — when the direction itself broke, not just a task. The architect names that moment; the user makes the call.
 - **`plan-compact`** — the compaction anchor. It records the companion's name, plan path and open questions alongside its other state.
+- **`agent-companion`** — the generic entry point, for a domain with no dedicated skill. It owns the fit test; this skill is the plan instance.
 - **`linear-companion`**, **`git-companion`** — the same shape over the tracker and over merge requests. Run them together; each holds one record and reports drift to the others through you.
 - **`agent-coordinator`** — routes the implementation while the architect holds the design.
 - **`agent-plan`** — DAG-scheduled execution of the plan's tasks. The architect judges what a deviation broke; that skill runs the tasks.

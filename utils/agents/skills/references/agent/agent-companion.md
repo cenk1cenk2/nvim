@@ -5,6 +5,10 @@ steered by message. You do the work; you report to it; it tells you what the dom
 should happen next. Read this from any `*-companion` skill — `linear-companion`, `git-companion`,
 `plan-companion` — which supply the domain and inherit everything here.
 
+**A domain with no dedicated skill goes through the `agent-companion` skill**, which owns the fit test
+that decides whether a request is a companion at all, and the domain definition the dedicated skills
+hardcode. Load it rather than improvising a domain against this reference.
+
 **This is the opposite lifecycle to `agent-delegate`.** A delegate is a task you throw away when it
 returns. A companion is a relationship: it accumulates the reasoning around a domain — what was
 considered and rejected, which decisions are load-bearing, why the record says what it says — and every

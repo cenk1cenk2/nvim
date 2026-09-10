@@ -160,6 +160,7 @@ Ask for its state in this shape, so a report is scannable rather than a paragrap
 
 ## Related Skills
 
+- **`agent-companion`** — the generic entry point, for a domain with no dedicated skill. It owns the fit test; this skill is the platform instance.
 - **`linear-companion`** — the same shape over the tracker. Run both; the PM holds the issues, the shepherd holds the MRs, and drift between them reaches each through you.
 - **`plan-companion`** — the same shape over a plan's design.
 - **`agent-background`** — arms every watcher this skill depends on. The mechanics live there; the duty to arm lives here.
