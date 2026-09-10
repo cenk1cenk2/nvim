@@ -43,6 +43,7 @@ ci:       .gitlab-ci.yml
   ci runs: task lint
   ci runs: task test
 release:  semantic-release  (release.config.js)
+preset:   conventionalcommits
 note:     semantic-release releases from commits: the commit type sets the version bump
 ```
 
@@ -56,6 +57,6 @@ Then:
 
 - **Treating the runner's command list as the gate list.** They overlap; they are not the same set, and only the pipeline decides a merge.
 - **Inventing a command when `runner: none`.** A language-generic guess passes or fails on rules the pipeline does not apply, so it proves nothing. Ask instead.
-- **Ignoring the release line before writing a commit subject.** Where release automation is commit-driven, the type chooses the version bump, and a wrong type ships a wrong version silently.
+- **Ignoring the release line before writing a commit subject.** Where release automation is commit-driven, the type chooses the version bump, and a wrong type ships a wrong version silently. The `preset:` line matters just as much for a breaking change: under `angular` a `!` subject does not bump major at all, so the `BREAKING CHANGE:` footer is the only marker that works there.
 - **Reading `ci: none` as "no gates".** It means nothing in the repository establishes them, which is a question for the user, not a licence to skip checks.
 - **Running it somewhere other than the repository root.** It reads marker files at the path it is given and finds nothing one directory down.

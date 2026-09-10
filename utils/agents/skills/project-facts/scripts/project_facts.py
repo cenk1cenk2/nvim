@@ -63,11 +63,9 @@ RUNNER_MARKERS: tuple[tuple[Runner, tuple[str, ...]], ...] = (
     (Runner.MAVEN, ("pom.xml",)),
 )
 
+# semantic-release leads: it is the estate default, so it wins a repository that
+# carries markers for both.
 RELEASE_MARKERS: tuple[tuple[Release, tuple[str, ...]], ...] = (
-    (
-        Release.RELEASE_PLEASE,
-        ("release-please-config.json", ".release-please-manifest.json", ".github/release-please-config.json"),
-    ),
     (
         Release.SEMANTIC_RELEASE,
         (
@@ -76,15 +74,25 @@ RELEASE_MARKERS: tuple[tuple[Release, tuple[str, ...]], ...] = (
             ".releaserc.yml",
             ".releaserc.yaml",
             ".releaserc.js",
+            ".releaserc.cjs",
+            ".releaserc.mjs",
             "release.config.js",
             "release.config.mjs",
             "release.config.cjs",
             "release.config.ts",
         ),
     ),
+    (
+        Release.RELEASE_PLEASE,
+        ("release-please-config.json", ".release-please-manifest.json", ".github/release-please-config.json"),
+    ),
     (Release.CHANGESETS, (".changeset/config.json",)),
     (Release.COMMITLINT, ("commitlint.config.js", ".commitlintrc", ".commitlintrc.json")),
 )
+
+# The estate's shared semantic-release config. It pins the commit-analysis preset,
+# which is what decides whether a `!` subject reaches a major bump.
+SHARED_PRESET = "@cenk1cenk2/semantic-release-config"
 
 CI_FILES = (".gitlab-ci.yml", ".github/workflows", "Jenkinsfile", ".circleci/config.yml")
 
@@ -112,6 +120,7 @@ class Facts:
     ci_commands: list[str] = field(default_factory=list)
     release: str = Release.NONE
     release_file: str | None = None
+    release_preset: str | None = None
     notes: list[str] = field(default_factory=list)
 
 
@@ -207,6 +216,8 @@ def detect_release(root: Path, facts: Facts) -> None:
             if (root / marker).exists():
                 facts.release = release
                 facts.release_file = marker
+                if release is Release.SEMANTIC_RELEASE:
+                    facts.release_preset = read_preset(root / marker)
                 return
     # semantic-release is often configured inside package.json rather than a file.
     package = root / "package.json"
@@ -218,9 +229,27 @@ def detect_release(root: Path, facts: Facts) -> None:
         if "release" in data:
             facts.release = Release.SEMANTIC_RELEASE
             facts.release_file = "package.json"
+            facts.release_preset = read_preset(package)
         elif "semantic-release" in json.dumps(data.get("devDependencies", {})):
             facts.release = Release.SEMANTIC_RELEASE
             facts.release_file = "package.json (devDependencies)"
+
+
+def read_preset(path: Path) -> str | None:
+    """Name the commit-analysis preset a semantic-release config settles on.
+
+    Read as text rather than parsed: the config is as often JavaScript as JSON, and
+    the preset is a literal string in either. `shared` means the config extends the
+    estate preset without naming one itself, so the pin lives in that package.
+    """
+    try:
+        content = path.read_text()
+    except OSError:
+        return None
+    for preset in ("conventionalcommits", "angular"):
+        if f"'{preset}'" in content or f'"{preset}"' in content:
+            return preset
+    return "shared" if SHARED_PRESET in content else None
 
 
 def gather(root: Path) -> Facts:
@@ -236,6 +265,10 @@ def gather(root: Path) -> Facts:
         facts.notes.append("CI config found but no gate-shaped commands parsed; read it by hand")
     if facts.release in (Release.RELEASE_PLEASE, Release.SEMANTIC_RELEASE, Release.COMMITLINT):
         facts.notes.append(f"{facts.release} releases from commits: the commit type sets the version bump")
+    if facts.release_preset == "angular":
+        facts.notes.append("angular preset: a `!` subject does NOT bump major, only a BREAKING CHANGE footer does")
+    elif facts.release_preset == "shared":
+        facts.notes.append(f"preset comes from {SHARED_PRESET}; read that package for the pinned value")
     if facts.release is Release.CHANGESETS:
         facts.notes.append("changesets: a user-facing change needs a .changeset/*.md before merge")
     return facts
@@ -250,6 +283,8 @@ def render(facts: Facts) -> None:
     for command in facts.ci_commands:
         emit(f"  ci runs: {command}")
     emit(f"release:  {facts.release}" + (f"  ({facts.release_file})" if facts.release_file else ""))
+    if facts.release_preset:
+        emit(f"preset:   {facts.release_preset}")
     for note in facts.notes:
         emit(f"note:     {note}")
 
