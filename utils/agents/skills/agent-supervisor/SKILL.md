@@ -160,6 +160,7 @@ Supervisor-specific rules on top of the reference's discipline:
 
 ## Composing
 
+- **`linear-companion`** — the delegated variant of this posture: a standing subagent holds the tracker layer and you report to it, instead of holding it in your own context. Reach for it when supervision is competing with the work for your context; stay here when the tracker judgment is the thing you want in front of you.
 - **`agent-coordinator`** — every implementation, always. It routes the work; you keep the record.
 - **`linear-reconcile`** — the deep audit of a project, an issue tree, or one issue; call it, do not restate it.
 - **`linear-issue-status`, `linear-issue-comment`, `linear-issue-update`, `linear-issue-checklist`, `linear-document`, `linear-post`** — the actual PM writes.
