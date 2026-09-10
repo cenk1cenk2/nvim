@@ -117,7 +117,7 @@ An MR the companion is holding with no watcher on it is a gap: you will be repor
    - **The never list** above, verbatim — above all that it never merges, never pushes, and never edits a linking surface.
    - **The re-read rule** from `agent-companion`: it re-reads the MRs before asserting their state, and labels every claim observed or reported. An MR's state changes without anyone telling it.
 
-4. **Report to it as work lands**, one message per event: you pushed, a pipeline went green or red, a reviewer commented, an MR merged, you made a fix it suggested and it did or did not work.
+4. **Report to it as work lands**, per `agent-companion`'s steering rules: you pushed, a pipeline went green or red, a reviewer commented, an MR merged, you made a fix it suggested and it did or did not work. A wake burst that resolves one chain — a merge and the rebase it unblocked — is the causal group that shares a message.
 
 5. **Collect, present, release.** Its answers come back as a per-MR ledger — the shape below. Present anything that writes to the platform chunked per `output-diff`.
 
