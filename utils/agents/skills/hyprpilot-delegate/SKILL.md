@@ -62,8 +62,11 @@ Launch that through the runtime's background facility. Pass `--turn-dir` **verba
 | 0 | the turn ended, which is not the same as succeeded | `session_status` to audit, then collect |
 | 10 | the session directory vanished — reap, eviction, or a sidecar restart | `session_status`, then `session_list` |
 | 11 | with `--stall-after`: the transcript stopped growing while the marker is still absent | `session_status`, then **report the wedge**. A diagnosis, never a kill trigger. |
+| 12 | the turn ended while a higher-numbered turn directory already exists — a steer superseded it | **discard the wake.** Arm on the newer turn's own `turnDir`; read this turn only for what the agent had persisted |
 | 1 | the ceiling was reached | `session_status` **first** — most of these are a stale path, not a stalled agent |
 | 2 | bad input; nothing was armed | fix the argument |
+
+**Exit 12 is the steer's own wake, and it is why a missed reap is no longer a wrong answer.** The waiter reads the session's `turns/` directory when the marker lands: a numbered turn above the one it watches means the session already moved on, so the ending it just saw cannot be the answer to the prompt that started the newer turn. The RESULT line names the newer turn and this turn's own `exitCode` — `143` is the SIGTERM the steer sends, and `0` means the turn beat the steer and its result is genuinely real. `--allow-superseded` restores the old exit 0 for the rare case of deliberately waiting out an already-superseded turn.
 
 **Both halves of the test are required, and the script does both.** Reap, eviction and sidecar shutdown delete the whole session directory, so testing only for the file waits forever on a session that was cleaned up — a missing **directory** means finished-and-gone.
 
@@ -181,14 +184,17 @@ This skill delegates to a **separate hyprpilot agent process** — a different C
 
 7. **Steer across turns with `session_send`, not `spawn`.**
    - **A conversation is ONE session.** `session_send { session, prompt }` reuses the handle and appends to the same transcript, so the agent retains everything from earlier turns.
-   - **A detached `session_send` starts a turn, so it arms a watcher exactly like a spawn does.** Its result carries that turn's own `sessionInfo.files.turnDir` — a fresh directory with no marker in it — so run the ABSOLUTE sequence again against the new path and the new watcher handle. Reap the previous turn's watcher before arming the replacement; two loops on one session wake you twice and can report different turns.
+   - **A detached `session_send` starts a turn, so it arms a watcher exactly like a spawn does.** Its result carries that turn's own `sessionInfo.files.turnDir` — a fresh directory with no marker in it — so run the ABSOLUTE sequence again against the new path and the new watcher handle. **Arm the replacement first, then reap the previous turn's watcher** — the new turn is unwatched until you do, while the old one can only produce an exit 12 you discard.
    - Each turn runs as a **fresh process resumed against the vendor's own session store** — the pid changes, `startedAt` stays put, `lastTurnAt` moves. That is why a session that already exited can still be steered rather than lost; the result's `delivery` field reports what happened — `resumed` for a session that had finished, `steered` when a turn in flight was interrupted.
    - **It replays the original launch and will not let you change it.** `cwd`, `args` and `with_config` are inherited from the `spawn` and are **rejected** if you pass them — how a conversation was launched is part of its identity. Only `prompt`/`file`, `mode`, `wait`, `timeout_seconds` and `steer` are per-turn. To launch differently, start a new session.
    - **One turn at a time unless you ask to interrupt, and detaching makes this the easy mistake.** A plain `session_send` against a session that is still working comes back as a tool **error** — "already has a turn in flight" — not a queued message. `spawn` returns while the agent is still thinking, so "spawn, then immediately send the next instruction" is a refusal every time. Wait the turn out when you want the answer it is producing; pass `steer: true` when you want the agent doing something else instead.
    - **`steer: true` redirects a working agent, and it is the way to change its course.** The harness harvests the vendor's own session id from the partial transcript, terminates the in-flight turn's process group, seals that turn with the outcome `steered` rather than `killed` — so a reader can tell a redirect from a cancellation — and starts the next turn resumed against the vendor's session store with your prompt. The handle does not change, `delivery` reports `steered`, and the result names the interrupted turn. Against an already-exited session the flag is inert and the send behaves exactly as it would without it, so set it whenever redirecting is the intent rather than checking the state first.
    - **The interrupted turn keeps only what the vendor already persisted.** Its directory and everything written into it survive and stay readable, but a steer is not a clean handoff of work in progress — read that turn's `/result` before assuming the new turn inherits anything beyond the conversation.
    - **The one refusal is a turn interrupted before the vendor announced its session id** — a turn 1 stopped ahead of its init event. There would be no conversation to resume against, so the steer is refused and **nothing is killed**; the turn runs on. Poll `session_status` and steer once it is under way, or `session_kill` when stopping it is what you actually want.
-   - **A steer ENDS the interrupted turn, so its `done.json` lands and its armed watcher fires.** That wake is an interruption, not an answer. Run the same sequence as for any new turn: reap the interrupted turn's watcher, then arm a fresh one on the new turn's own `sessionInfo.files.turnDir` from the `session_send` response.
+   - **A steer ENDS the interrupted turn, so its `done.json` lands and its armed watcher fires.** That wake is an interruption, not an answer — and racing the marker with a kill is no longer how you keep it from misleading you. The steer sequence, in this order:
+     1. **Arm a fresh watcher on the new turn's own `sessionInfo.files.turnDir`** from the `session_send` response. Until this runs, the turn you just started is the unwatched one.
+     2. **Reap the interrupted turn's watcher** when convenient, in the same turn if you can. It is cleanup now, not correctness: whichever side of the marker the kill lands on, that watcher can only exit 12.
+     3. **On an exit 12, discard the wake** and carry on with the turn you armed in step 1. It is not a turn ending you have to audit, and it is never the answer to the prompt that started the newer turn.
 
 8. **Recover a lost handle with `session_list`.** It returns every session this server owns — handle, profile, status, exit code, cwd, timestamps. Use it when the user refers to "that agent" and the handle is not in context, and present the list so they can pick.
 
@@ -230,11 +236,11 @@ Rules that hold whichever vendor you target:
 
 | Verb | Stage | Answers |
 |---|---|---|
-| `wait` | while running, **the watcher** | Has this one turn ended, has its session vanished, or has its transcript stopped growing, within a bounded number of polls. |
+| `wait` | while running, **the watcher** | Has this one turn ended, has its session vanished, has its transcript stopped growing, or has a steer already moved the session past it, within a bounded number of polls. |
 | `resolve` | before spawn | Which profile the user meant, and whether the spawn arguments pass the contract. |
 | `verdict` | on wake | Collect, poll again, wedged, inspect, or steer — from one `session_status` reading plus a ledger of earlier ones. |
 | `result` | fallback | What did the agent finally say, and if nothing, why. |
-| `inspect` | fallback | Which turn is current, did it finish, what did the terminal event say, is a result recoverable. |
+| `inspect` | fallback | Which turn is current, which are superseded, did it finish, what did the terminal event say, is a result recoverable. |
 | `teardown` | before reap | What is still uncollected, still running, or still polling this session. |
 
 **One script, one subject: the whole life of a session.** It calls no MCP, spawns nothing, kills nothing, writes outside no path you name, and refuses a globbed or relative path rather than false-firing on a sibling turn. Its shebang runs it through `uv`, which resolves its own dependencies, so it asks nothing of the caller beyond `uv` and a system python — including as a background watcher payload, which is the one context that has no MCP client at all.
@@ -312,6 +318,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 - **Record the session handle, the watched `turnDir`, and the watcher handle together.** Any of the three missing makes the other two unverifiable. The user-facing announcement is one plain sentence — task and next action — plus the session handle; the rest stays in the armed row.
 - **A wake is the runtime's notification, never a log.** Reading a watcher's output file to find out whether the turn finished means nothing is waking you.
 - **Watch the TURN's directory.** `sessionInfo.files.turnDir` names the turn the call just started, and each turn owns its own marker — so there is no stale state to race and no rule about when to arm.
+- **After a steer, arm before you reap.** The new turn is unwatched until its watcher exists; the interrupted turn's watcher can only wake with exit 12, which is discarded rather than audited.
 - **Audit before collecting.** `session_status` first for `status` / `exitCode` / `hasResult`, then `/result`. A marker file is an end, not an outcome.
 - **A clean exit is not a finished task.** `exitCode: 0` and `hasResult: true` describe the turn, not the brief. Check the answer against what you asked.
 - **`/result` already checks both failure locations** — launch failures land in `stderr.log`, runtime ones as an `error` event in the transcript, and it names which happened. A bare exit code is never the report.

@@ -68,11 +68,32 @@ def run(harness: Path) -> Callable[..., Run]:
 
 @pytest.fixture
 def session_dir(tmp_path: Path) -> Path:
-    """A session with turn 1 done, turns 2 and 3 pending - the `wait` layout."""
+    """A session of three turns with the newest one done - the `wait` layout.
+
+    The marker sits on turn 3 because a watcher is armed on the turn a call just
+    started, and a marker behind a newer turn is the superseded case instead.
+    Turns 1 and 2 carry none: they serve the endings where one never arrives.
+    """
     root = tmp_path / "hyprpilot-session-TEST"
     for turn in (1, 2, 3):
         (root / "turns" / str(turn)).mkdir(parents=True)
-    (root / "turns" / "1" / "done.json").write_text("")
+    (root / "turns" / "3" / "done.json").write_text("")
+    return root
+
+
+@pytest.fixture
+def steered_dir(tmp_path: Path) -> Path:
+    """A session steered mid-turn: turn 1 sealed by the interruption, turn 2 live.
+
+    143 is the shell's rendering of the SIGTERM the harness sends the interrupted
+    turn's process group, so it is the exit code a steered turn's marker carries.
+    """
+    root = tmp_path / "hyprpilot-session-STEERED"
+    for turn in (1, 2):
+        (root / "turns" / str(turn)).mkdir(parents=True)
+    (root / "turns" / "1" / "done.json").write_text(
+        json.dumps({"handle": "abc-123", "exitCode": 143, "finishedAt": 1785584247}) + "\n"
+    )
     return root
 
 
