@@ -88,6 +88,7 @@ The dedicated skills hardcode this. Here you establish it with the user, and it 
 4. **The boundary** — what it must never touch. Every domain has at least one: the irreversible act, and any record another companion owns. **Name the irreversible acts explicitly**; a companion with no stated boundary will eventually take one.
 5. **The working skills and servers** it should load, by name — including that a manual-only skill named here is authorised by being named.
 6. **What "the ledger" looks like** for this domain — the table shape you want its state reported in, so its answers are scannable rather than prose.
+7. **Its peers, if any companion is already running** — each address with the one line on what that peer owns, so the two can correlate directly where the runtime supports it. A companion cannot discover a peer, so an address omitted here is a peer that does not exist as far as it is concerned. Peer traffic rules per the `agent-companion` reference.
 
 ## Process
 

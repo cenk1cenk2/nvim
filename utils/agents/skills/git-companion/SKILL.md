@@ -161,7 +161,7 @@ Ask for its state in this shape, so a report is scannable rather than a paragrap
 ## Related Skills
 
 - **`agent-companion`** — the generic entry point, for a domain with no dedicated skill. It owns the fit test; this skill is the platform instance.
-- **`linear-companion`** — the same shape over the tracker. Run both; the PM holds the issues, the shepherd holds the MRs, and drift between them reaches each through you.
+- **`linear-companion`** — the same shape over the tracker. Run both; the PM holds the issues, the shepherd holds the MRs. Drift reaches each through you, or peer-to-peer where the runtime has a channel and both briefs carry the other's address, per `agent-companion`. Note the asymmetry: the shepherd may **tell** the PM an MR merged, but it still never edits a linking surface — informing is peer traffic, editing is a domain boundary.
 - **`plan-companion`** — the same shape over a plan's design.
 - **`agent-background`** — arms every watcher this skill depends on. The mechanics live there; the duty to arm lives here.
 - **`gitlab-mr-review`** / **`github-pr-review`** — a real review pass on one diff. Fresh eyes beat accumulated context for reviewing, so run these rather than asking the companion to review.

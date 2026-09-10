@@ -150,7 +150,7 @@ The PM only knows what you tell it.
 
 - **`agent-supervisor`** — you hold the PM layer yourself instead of delegating it. Pick that when the tracker judgment is the thing you want in your own context; pick this when you want it out of it.
 - **`agent-companion`** — the generic entry point, for a domain with no dedicated skill. It owns the fit test; this skill is the Linear instance.
-- **`git-companion`**, **`plan-companion`** — the same companion shape over merge requests and over a plan. They compose: the PM holds the tracker, the git companion holds the MRs, and each reports drift the other should know about through you.
+- **`git-companion`**, **`plan-companion`** — the same companion shape over merge requests and over a plan. They compose: the PM holds the tracker, the git companion holds the MRs. Drift reaches the other through you, or peer-to-peer where the runtime has a channel and both briefs carry the other's address — the rules for that traffic are in `agent-companion`. The MR merging is the correlation worth wiring, since it is the event the tracker must not miss.
 - **`agent-coordinator`** — routes implementation while this skill routes the tracker. Both run at once; say which is driving what.
 - **`linear-reconcile`**, **`linear-next-task`**, **`linear-triage`**, **`linear-project-match`** — the PM's own working skills; name them in the brief rather than restating what they do.
 - **`linear-structure-agent`**, **`linear-project-create`** — build the section before the PM inherits it.
