@@ -65,7 +65,7 @@ Posture: `present-first`.
      - `style` — formatting, whitespace, missing semicolons (no logic change).
      - `revert` — reverting a previous commit.
    - If the user provided a hint (e.g., "fix" or "feat: add retry"), use it as a starting point.
-   - **Release automation (when detected).** Per `release-convention`, if the repo releases from commits (release-please / semantic-release), the **type drives the bump** — `feat` (minor) vs `fix`/`perf` (patch) vs other (no release) — so choose it deliberately. If the repo uses changesets, the commit does not set the version — remind the user a `.changeset/*.md` is needed and offer to add one.
+   - **Release automation (when detected).** Per `release-convention`, if the repo releases from commits (semantic-release by default, or release-please), the **type drives the bump** — `feat` (minor) vs `fix`/`perf` (patch) vs other (no release) — so choose it deliberately. If the repo uses changesets, the commit does not set the version — remind the user a `.changeset/*.md` is needed and offer to add one.
    - Determine the **scope** (optional) — the area of the codebase affected (e.g., `auth`, `api`, `config`).
    - Write the **subject line** — imperative mood, ≤50 chars preferred, 72 hard cap, no trailing period.
    - **Body** — by default, draft a subject-only commit. Add a body only when:

@@ -65,7 +65,7 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 - **Keep it concise** — one line, well within the platform's title limit (aim ≤ ~100 chars, hard ~120); tighter than the description, no fluff.
 - **Pure ASCII, no special chars** — no em/en dashes (`—`, `–`), smart quotes, or ellipsis (`…`); use a plain hyphen `-`. Same subject rules as the `commit-style` reference.
 - **Put the linked issue IDs in the title**, trailing and parenthesised: `fix(scope): subject (K-879)`, or `(K-879, K-881)` for several. For Linear this is a real linking surface in its own right, independent of the description trailer — keep both. Follow the repo's existing convention where it already has one.
-- If the repo has release automation (release-please, semantic-release, …), the title must satisfy it — see the `release-convention` reference. Mark breaking changes with `type(scope)!:` and a `BREAKING CHANGE:` footer.
+- If the repo has release automation, the title must satisfy it — see the `release-convention` reference. **semantic-release is the default**; release-please and changesets are the alternates. Mark breaking changes with the `type(scope)!:` marker in the title AND a `BREAKING CHANGE:` footer in the body — the `!` is first-class under the `conventionalcommits` preset, and the footer is what still bumps a repo pinned to `angular`.
 
 ## Description Format (When No Template Exists)
 
