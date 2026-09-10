@@ -148,6 +148,37 @@ class TestRelease:
         result = facts(tmp_path, "--json")
         assert result.facts["release"] == "semantic-release"
 
+    def test_semantic_release_wins_over_release_please(self, facts, tmp_path):
+        """semantic-release is the estate default, so it takes a repo carrying both."""
+        (tmp_path / "release.config.js").write_text("export default {}")
+        (tmp_path / "release-please-config.json").write_text("{}")
+        result = facts(tmp_path, "--json")
+        assert result.facts["release"] == "semantic-release"
+
+    @pytest.mark.parametrize(
+        ("content", "expected"),
+        [
+            pytest.param(
+                "export default { preset: 'conventionalcommits' }", "conventionalcommits", id="conventionalcommits"
+            ),
+            pytest.param('export default { preset: "angular" }', "angular", id="angular"),
+            pytest.param(
+                "export default { extends: '@cenk1cenk2/semantic-release-config/base' }", "shared", id="shared"
+            ),
+            pytest.param("export default {}", None, id="unset"),
+        ],
+    )
+    def test_the_analysis_preset_is_read_off_the_config(self, facts, tmp_path, content, expected):
+        """The preset decides whether a `!` subject reaches major; it is not inferable."""
+        (tmp_path / "release.config.js").write_text(content)
+        result = facts(tmp_path, "--json")
+        assert result.facts["release_preset"] == expected
+
+    def test_the_angular_preset_warns_that_the_bang_does_not_bump(self, facts, tmp_path):
+        (tmp_path / "release.config.js").write_text('export default { preset: "angular" }')
+        result = facts(tmp_path, "--json")
+        assert any("does NOT bump major" in note for note in result.facts["notes"])
+
     def test_commit_driven_automation_warns_that_the_type_sets_the_bump(self, facts, tmp_path):
         (tmp_path / ".releaserc").write_text("{}")
         result = facts(tmp_path, "--json")

@@ -1,37 +1,55 @@
 # Release Convention Detection
 
-Detect the repository's automated release method and follow the convention it consumes, so a merge publishes the intended version and bump. Used by `git-push`, `github-pr-create`, `gitlab-mr-create`.
+Detect the repository's automated release method and follow the convention it consumes, so a merge publishes the intended version and bump. Used by `git-push`, `github-pr-create`, `gitlab-mr-create`, `project-facts`.
 
-Do not assume — detect from repo files (via `github__get_file_contents` / `gitlab__get_file_contents`, or local `Read` / `git` on a checked-out branch). Different repos configure differently, and CI-driven tools often have no standalone config file.
+**semantic-release is the default.** The estate releases with it, so a repository that has release automation at all is semantic-release until the files say otherwise. That is a starting assumption, not a conclusion — confirm it from the repo (via `github__get_file_contents` / `gitlab__get_file_contents`, or local `Read` / `git` on a checked-out branch) before acting on it. Different repos configure differently, and CI-driven tools often have no standalone config file.
 
 ## Detect the method
 
-A repo may combine several (e.g. commitlint + release-please).
+A repo may combine several (e.g. commitlint + semantic-release).
 
-**release-please** — commit-driven; opens a release PR that bumps the version and CHANGELOG.
+### semantic-release (default)
+
+Commit-driven; computes the next version from the commits on the release branch and publishes from CI. Any one of these signals is enough:
+
+- **Config file** — `release.config.js` / `.cjs` / `.mjs` / `.ts`, `.releaserc`, `.releaserc.json`, `.releaserc.yaml` / `.yml`, `.releaserc.js` / `.cjs` / `.mjs`, or a `"release"` key in `package.json`.
+- **Shared preset** — an `extends` naming `@cenk1cenk2/semantic-release-config`, bare or with an entrypoint (`/base`, `/npm`). This is the estate's shared config: it owns the release **branch list** and pins the **commit-analysis preset**, and deliberately nothing else.
+- **CI signal, GitLab (the common case here)** — the `devops/pipelines` component `semantic-release/publish.gitlab-ci.yml`, or the `cenk1cenk2/pipe-semantic-release` image on a job. That component releases only when the pipeline runs on the default branch.
+- **CI signal, elsewhere** — `semantic-release` / `npx semantic-release`, or `cycjimmy/semantic-release-action`, in a GitHub Actions workflow; or `semantic-release` in `package.json` devDependencies.
+
+**Reading a config that extends the shared preset.** semantic-release merges an extended config **shallowly, per top-level option**. A repository that declares its own `plugins` replaces the inherited array outright — there is no append and no deep merge — while `branches` still carries over. So a repo config that repeats `@semantic-release/commit-analyzer` and `@semantic-release/release-notes-generator` in its own `plugins` is correct and expected, not a duplication to clean up. The plugin list written in the repo is the plugin list that runs.
+
+### release-please
+
+Commit-driven; opens a release PR that bumps the version and CHANGELOG. Common on GitHub-hosted repos, not the default here.
+
 - `release-please-config.json`, `.release-please-manifest.json`, or a workflow (`.github/workflows/*.yml`) using `googleapis/release-please-action`.
 - Consumes Conventional Commits on the default branch.
 
-**semantic-release** — commit-driven; publishes from CI. Often has NO config file — it runs from the pipeline with defaults.
-- Config (optional): `.releaserc`, `.releaserc.json`, `.releaserc.yaml` / `.yml`, `.releaserc.js` / `.cjs` / `.mjs`, `release.config.js` / `.cjs` / `.mjs`, or a `"release"` key in `package.json`.
-- CI signal: `semantic-release` / `npx semantic-release` (or `cycjimmy/semantic-release-action`) in a GitHub Actions workflow or `.gitlab-ci.yml`; or `semantic-release` in `package.json` devDependencies.
-- Default preset is **Angular** (`@semantic-release/commit-analyzer`): `feat` → minor, `fix` / `perf` → patch.
+### changesets
 
-**changesets** — file-driven, NOT commit-driven.
+File-driven, NOT commit-driven.
+
 - `.changeset/config.json` plus `.changeset/*.md` files.
 - Each user-facing change needs a changeset file; the bump comes from those files, not commit messages.
 
-**commitlint** — enforces the format (no release on its own; usually paired with the above or a CI title check).
+### commitlint
+
+Enforces the format (no release on its own; usually paired with one of the above or a CI title check).
+
 - `commitlint.config.(js|cjs|mjs|ts|cts|mts)`, `.commitlintrc` (`.json` / `.yaml` / `.yml` / `.js` / …), or `"commitlint"` in `package.json`. `@commitlint/config-conventional` = Conventional Commits.
 
-**conventional-changelog / commit-and-tag-version** — commit-driven changelog + tag. A repo may still carry `standard-version` config; treat it as the same detection.
+### conventional-changelog / commit-and-tag-version
+
+Commit-driven changelog + tag. A repo may still carry `standard-version` config; treat it as the same detection.
+
 - `.versionrc`, `.versionrc.json`, `.versionrc.js`, or the tool in `package.json`.
 
 If none match, there is no release automation to satisfy — use the normal conventional-commit title/commit and skip the rest.
 
 ## Apply the convention
 
-### Commit-driven (release-please, semantic-release, commitlint, conventional-changelog)
+### Commit-driven (semantic-release, release-please, commitlint, conventional-changelog)
 
 Commits — and, on a squash-merge repo, the **PR/MR title** — MUST be valid Conventional Commits: `type(scope): subject`.
 
@@ -40,15 +58,19 @@ Commits — and, on a squash-merge repo, the **PR/MR title** — MUST be valid C
 
 ### Breaking changes — get the MAJOR bump right
 
-A breaking change must be marked, or the tool ships it as a minor/patch. Mark it **both** ways for cross-tool safety:
+A breaking change must be marked, or the tool ships it as a minor/patch. Mark it **both** ways:
 
 - `!` after the type/scope: `feat(api)!: drop v1 auth`.
 - a footer: `BREAKING CHANGE: v1 auth is removed; migrate to v2.`
 
-Why both:
-- The Conventional Commits spec accepts either the `!` or the footer.
+Both, because **the analysis preset decides whether the `!` is even parsed**, and it is pinned per repository:
+
+- **`conventionalcommits`** — the estate default, and what the shared preset is standardizing on. Its header pattern accepts the `!` (`/^(\w*)(?:\((.*)\))?!?: (.*)$/`) and it carries a `breakingHeaderPattern`, so `feat(api)!: …` alone is a major. The `BREAKING CHANGE:` footer also works.
+- **`angular`** — the plugins' own built-in default, and what unmigrated configs pin. Its header pattern has **no `!`** (`/^(\w*)(?:\((.*)\))?: (.*)$/`) and it has no `breakingHeaderPattern`, so a `!` subject does not parse as a header at all and never reaches major. Only the `BREAKING CHANGE:` footer bumps there.
 - release-please honors the `!` (`feat!:`) and a `BREAKING-CHANGE:` footer.
-- semantic-release's default **Angular** preset keys on the `BREAKING CHANGE:` **footer** — always include the footer for semantic-release, not just the `!`.
+
+So: **read the pinned preset** when the bump matters (`preset:` on `@semantic-release/commit-analyzer`, or the shared preset's `constants.js`), and write both markers regardless — that subject is correct under either preset, and the footer is what makes it safe when the repo is still on `angular`.
+
 - On squash-merge, put the breaking marker in the **title (`!`)** AND the `BREAKING CHANGE:` footer in the PR/MR description so both survive into the squash commit.
 
 ### Changesets
@@ -73,7 +95,10 @@ If the method is ambiguous or the required convention is unclear, state what you
 
 - Conventional Commits v1.0.0 — https://www.conventionalcommits.org/en/v1.0.0/
 - semantic-release configuration — https://semantic-release.gitbook.io/semantic-release/usage/configuration
-- semantic-release commit-analyzer (Angular default, `BREAKING CHANGE` footer) — https://github.com/semantic-release/commit-analyzer
+- semantic-release commit-analyzer — https://github.com/semantic-release/commit-analyzer
+- shared preset — https://gitlab.kilic.dev/renovate/semantic-release-config
+- GitLab publish component — https://gitlab.kilic.dev/devops/pipelines/-/blob/main/semantic-release/publish.gitlab-ci.yml ; image — https://gitlab.kilic.dev/devops/pipes/-/blob/main/semantic-release/README.md
+- preset header patterns — `conventional-changelog-conventionalcommits` and `conventional-changelog-angular`, `src/parser.js` in each package
 - release-please — https://github.com/googleapis/release-please ; action — https://github.com/googleapis/release-please-action
 - changesets config + adding — https://github.com/changesets/changesets/blob/main/docs/config-file-options.md , https://github.com/changesets/changesets/blob/main/docs/adding-a-changeset.md
 - commitlint configuration — https://commitlint.js.org/reference/configuration.html
