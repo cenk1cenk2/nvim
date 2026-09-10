@@ -72,6 +72,7 @@ function M.setup()
             nvim.fn.equalize_windows()
           end,
           desc = "balance open windows",
+          mode = { "n", "v", "x", "t" },
         },
         {
           "<C-w><CR>",
@@ -79,6 +80,7 @@ function M.setup()
             nvim.fn.maximize_window()
           end,
           desc = "maximize current window",
+          mode = { "n", "v", "x", "t" },
         },
       }
     end,
