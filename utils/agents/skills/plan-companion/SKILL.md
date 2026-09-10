@@ -26,29 +26,26 @@ Never hand back a bare identifier: issues, MRs and plan tasks carry their title 
 
 ## Context
 
-One plan gets one standing architect: a subagent that lives for the whole implementation, holds the design and its reasoning, and answers to you. You build; you report each deviation to it; it tells you what that deviation broke downstream and what the plan now says.
+One plan gets one standing companion: a subagent that lives for the whole implementation, holds the design and its reasoning, and answers to you. You build; you report each deviation to it; it tells you what that deviation broke downstream and what the plan now says.
 
 The whole lifecycle — the split test, tier selection, the spawn shape, the brief, steering, collection, the roster row, and the user-gated retirement — is `agent-companion`. This skill supplies the planning domain on top of it.
 
 **What the companion holds is the reasoning the plan file cannot carry.** A plan records decisions; it does not record which decisions were load-bearing, what was considered and rejected, or which task's assumptions quietly depend on another task's shape. That is exactly what makes a deviation expensive: the plan still reads fine after reality diverges from it, and nothing in the file knows that task 7 was only correct because task 3 chose one of two options. A companion that sat through the design holds that; a fresh reader of the file does not.
 
-Posture: `present-first`.
-Invoking this skill IS a standing blessing to spawn the architect and to talk to it. **Talking costs nothing and gates nothing.** What gates is the plan file: revisions are presented before they land, unless the user has given a standing preapproval, in which case the companion applies and reports.
+Posture: `present-first`. Invoking this skill is the standing blessing to spawn the companion and to talk to it; the gate is the plan file, per `agent-companion`.
 
-State that spans turns must be written durably per `long-running-work` — the companion's name and spawn id, its plan path, its tier, and the open design questions do not survive a compaction on their own.
+State that spans turns must be written durably per `long-running-work` — the companion's name and spawn id, its plan path, its tier, and the open design questions. Reconcile drift per `reconcile-state`.
 
-Reconcile drift per `reconcile-state`.
-
-> **PREREQUISITE:** A plan must exist before the architect is spawned. Load `plan-hard` and write it first; the plan file's absolute path goes in the brief, resolved per `provider-paths`. The companion inherits a design; it does not invent one.
+> **PREREQUISITE:** A plan must exist before the companion is spawned. Load `plan-hard` and write it first; the plan file's absolute path goes in the brief, resolved per `provider-paths`. The companion inherits a design; it does not invent one.
 
 ## Toggle
 
 On/off mechanics per `mode-toggle`.
 
 - **On:** `/plan-companion`, "spawn an architect", "have an agent hold the design", "keep the plan honest while I build".
-- **Off:** the user says the architect is no longer needed, or the plan is fully implemented **and the user confirms**. Never off on your own judgment.
+- **Off:** the user says the companion is no longer needed, or the plan is fully implemented **and the user confirms**. Never off on your own judgment.
 - **Survives disengage:** every plan-file revision already applied, and every open design question the companion raised that you have not resolved. Both must be written into the plan file before standing down.
-- Layers under any other posture, and **does not enter plan mode** — you are implementing, not planning. The architect is the design layer beside the build, not a return to planning.
+- Layers under any other posture, and **does not enter plan mode** — you are implementing, not planning. It is the design layer beside the build, not a return to planning.
 
 ## The Split, in planning terms
 
@@ -69,25 +66,25 @@ The test is `agent-companion`'s: do you already hold the finished text and the e
 - **Coverage** — is everything the plan promised still covered after three deviations, or has a requirement quietly fallen out.
 - **What is next** — the next task to pick up given what actually landed, not the file's original order.
 
-## The Architect Never
+## The Companion Never
 
 - **Writes code, runs builds, or touches anything but the plan file.** It is the design layer. Implementation is yours, `agent-coordinator`'s, or a delegate's.
 - **Restarts the design.** A deviation revises the affected tasks; it does not reopen settled decisions. When a deviation genuinely invalidates the plan's direction, it says so and **stops** — that is the user's call, and the route is `plan-revise`, not a companion quietly redesigning.
-- **Writes outside the plan file.** Tracker updates are `linear-companion`'s, MR descriptions are `git-companion`'s, and two companions writing one record is the silent-clobber case in `agent-companion`.
+- **Writes outside the plan file.** The tracker is `linear-companion`'s, MR descriptions are `git-companion`'s.
 - **Accepts a task as done on your word alone.** A task is done when its stated verification ran — see below.
 
 ## The Deviation Report
 
-The one message shape that matters here. Every deviation goes to the architect as:
+The one message shape that matters here. Every deviation goes to the companion as:
 
 1. **The task** it belongs to, by id.
 2. **What the plan said**, in one line.
 3. **What you actually did**, in one line.
 4. **Why** — the constraint the plan did not know about.
 
-That fourth line is the one that gets dropped and the one that decides everything downstream. "Used a different table name" is noise; "used a different table name because the migration framework reserves that prefix" tells the architect that every other task naming a table is now suspect.
+That fourth line is the one that gets dropped and the one that decides everything downstream. "Used a different table name" is noise; "used a different table name because the migration framework reserves that prefix" tells the companion that every other task naming a table is now suspect.
 
-**Report the deviation when it happens, not at the end of the task.** An architect reconciling three deviations at once cannot tell which one caused the fourth.
+**Report the deviation when it happens, not at the end of the task.** A companion reconciling three deviations at once cannot tell which one caused the fourth.
 
 ## Process
 
@@ -97,7 +94,7 @@ That fourth line is the one that gets dropped and the one that decides everythin
 
    | Signal | Tier |
    |---|---|
-   | A short linear plan, few tasks, no branching decisions | `cheap`, and say why |
+   | A short linear plan, few tasks, no branching decisions | `cheap` |
    | An ordinary multi-task plan in one repo | `default` |
    | Cross-repo, a DAG with real dependencies, or a design with rejected alternatives that could come back | `smart` |
 
@@ -130,27 +127,18 @@ That fourth line is the one that gets dropped and the one that decides everythin
 1. Plan resolved at its internal path, 9 tasks, 2 already done.
 2. No tier named, so stated: smart — a DAG with cross-repo dependencies and two rejected alternatives in the design. Spawned as `arch-auth-migration`, briefed with the plan path, the done set, `agent-write-plans`, the never list, and the delivery line.
 3. Task 4 deviates: the plan said to add a middleware, but the framework resolves middleware after the session loads, so the check had to move into the session factory. Reported with all four lines.
-4. Architect answers: tasks 6 and 8 both assumed the middleware position, task 6 is now wrong and task 8 is unaffected. It drafts the revision to task 6 and flags that the plan's original rejected alternative was rejected for the same reason that just bit us — worth recording.
+4. It answers: tasks 6 and 8 both assumed the middleware position, task 6 is now wrong and task 8 is unaffected. It drafts the revision to task 6 and flags that the plan's original rejected alternative was rejected for the same reason that just bit us — worth recording.
 5. Presented the revision, applied on approval, implemented task 6 against the new shape, sent the verification command and its exit code.
 6. Plan finishes. Asked whether to retire `arch-auth-migration`; the user says yes. Collected its final read — one open question about the session factory's lifetime — wrote that into the plan file, reaped it, and reported that it is gone.
 
 **Result:** a deviation in task 4 was caught reaching task 6 before task 6 was written, and the reasoning behind it lives in the plan file rather than in a transcript.
 
-## Key Principles
-
-- The companion holds the reasoning the plan file cannot carry; that reasoning is the product, and the file itself is always re-read.
-- Every deviation gets four lines, and the fourth — the **why** — is the one that decides everything downstream.
-- Report deviations as they happen. Batched deviations cannot be untangled.
-- A task is done when its own verification ran, not when you say it is.
-- The architect revises; it never redesigns. Broken direction stops and goes to `plan-revise` and the user.
-- It touches the plan file and nothing else.
-
 ## Related Skills
 
 - **`plan-hard`** — writes the plan this companion then holds. Always first.
-- **`plan-revise`** — when the direction itself broke, not just a task. The architect names that moment; the user makes the call.
+- **`plan-revise`** — when the direction itself broke, not just a task. The companion names that moment; the user makes the call.
 - **`plan-compact`** — the compaction anchor. It records the companion's name, plan path and open questions alongside its other state.
 - **`agent-companion`** — the generic entry point, for a domain with no dedicated skill. It owns the fit test; this skill is the plan instance.
-- **`linear-companion`**, **`git-companion`** — the same shape over the tracker and over merge requests. Run them together; each holds one record. Drift reaches the others through you, or peer-to-peer where the runtime has a channel and the briefs carry the addresses, per `agent-companion`. The architect's outbound correlation is a deviation that changes what a later branch must contain — the shepherd needs that before it judges the stack.
-- **`agent-coordinator`** — routes the implementation while the architect holds the design.
-- **`agent-plan`** — DAG-scheduled execution of the plan's tasks. The architect judges what a deviation broke; that skill runs the tasks.
+- **`linear-companion`**, **`git-companion`** — the same shape over the tracker and over MRs; one record each. Drift reaches the others through you. The judgment worth passing on: a deviation that changes what a stacked branch must contain.
+- **`agent-coordinator`** — routes the implementation while the companion holds the design.
+- **`agent-plan`** — DAG-scheduled execution of the plan's tasks. The companion judges what a deviation broke; that skill runs the tasks.

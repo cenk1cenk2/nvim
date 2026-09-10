@@ -27,18 +27,15 @@ Never hand back a bare identifier: MRs, PRs, pipelines and branches carry their 
 
 ## Context
 
-A set of open merge requests gets one standing shepherd: a subagent that lives for the whole section, holds the state of every MR in scope, and answers to you. You push, you fix, you merge; you report each of those to it; it tells you which MR now needs what, and in what order.
+A set of open merge requests gets one standing companion: a subagent that lives for the whole section, holds the state of every MR in scope, and answers to you. You push, you fix, you merge; you report each of those to it; it tells you which MR now needs what, and in what order.
 
 The whole lifecycle — the split test, tier selection, the spawn shape, the brief, steering, collection, the roster row, and the user-gated retirement — is `agent-companion`. This skill supplies the SCM domain on top of it.
 
 **What the companion is actually holding is the merge-order graph.** Which MR must land before which, which are stacked, which will conflict, which are blocked on a human and which on a machine. That graph is expensive to rebuild and cheap to keep current, which is the whole case for a standing agent over a fresh review each time.
 
-Posture: `present-first`.
-Invoking this skill IS a standing blessing to spawn the shepherd and to talk to it. **Talking costs nothing and gates nothing.** What gates is the platform: MR writes are presented before they land, unless the user has given a standing preapproval, in which case the companion applies and reports. Merging never falls under that — see below.
+Posture: `present-first`. Invoking this skill is the standing blessing to spawn the companion and to talk to it; the gate is the platform, per `agent-companion`. Merging never falls under a preapproval — see below.
 
-State that spans turns must be written durably per `long-running-work` — the companion's name and spawn id, its scope, its tier, and the live watcher set do not survive a compaction on their own.
-
-Reconcile drift per `reconcile-state`.
+State that spans turns must be written durably per `long-running-work` — the companion's name and spawn id, its scope, its tier, and the live watcher set. Reconcile drift per `reconcile-state`.
 
 > **PREREQUISITE:** Resolve the platform per `scm-detect` **before** the spawn, and name it in the brief. GitHub and GitLab have different tools and different skills, and a companion that has to guess wastes its first turns discovering what you already knew.
 
@@ -47,9 +44,9 @@ Reconcile drift per `reconcile-state`.
 On/off mechanics per `mode-toggle`.
 
 - **On:** `/git-companion`, "spawn an MR shepherd", "have an agent hold my open PRs", "who's blocking what across these MRs".
-- **Off:** the user says the shepherd is no longer needed, or every MR in scope is merged or closed **and the user confirms**. Never off on your own judgment.
+- **Off:** the user says the companion is no longer needed, or every MR in scope is merged or closed **and the user confirms**. Never off on your own judgment.
 - **Survives disengage:** every platform write already applied, every armed watcher, and anything the companion reported that you have not yet acted on. Account for all three before standing down.
-- Layers under any other posture. A coordinator run keeps its own dispatch discipline; the shepherd is the MR layer beside it.
+- Layers under any other posture. A coordinator run keeps its own dispatch discipline; this is the MR layer beside it.
 
 ## The Split, in SCM terms
 
@@ -79,21 +76,13 @@ The test is `agent-companion`'s: do you already hold the finished text and the e
 - **Writes no code and pushes nothing.** It reads diffs, it diagnoses, it drafts prose. Implementation goes to you, to `agent-coordinator`, or to a normal delegate.
 - **Approves nothing.** An approval is a claim about review that the companion is not entitled to make on your account.
 - **Writes outside its scope.** An MR in a repository the scope did not name is reported, never edited.
-- **Edits the tracker.** That is `linear-companion`'s domain, and two companions writing the same record is exactly the silent-clobber case in `agent-companion`.
+- **Edits the tracker.** That record is `linear-companion`'s.
 
 > **ABSOLUTE — the linking surfaces are not part of its description authority.** Body prose is its to draft. The **magic-word trailers in the description, the issue id in the title, and the branch name** are not, per `commit-trailers-linear`: those are what link and close a tracker issue on merge, so redrafting one moves tracker state from inside the wrong domain. A proposed change to any of them comes to you and routes through `linear-companion`. This is the one place the domains genuinely overlap, and it is invisible when it goes wrong — the description reads better and an issue silently stops closing.
 
-## Watchers: the lead arms, the companion is told
+## Watchers
 
-**The companion is message-driven and cannot observe the platform changing.** A pipeline going green, an MR merging, a reviewer approving — none of that reaches a detached subagent, and it must not be the one arming loops either, because a wake fired inside a background agent never reaches you.
-
-So the split is fixed:
-
-1. **You arm every watcher**, through the `agent-background` skill, with the discipline in `agent-watchers` — one watcher per independent condition, armed the moment the condition opens.
-2. **A wake is a report to the companion.** Re-verify authoritatively on the main loop first, then send one message saying what actually changed.
-3. **The companion tells you what to arm next.** "That merged, so the stacked MR is now rebaseable — watch its pipeline" is exactly the answer this shape exists to produce.
-
-An MR the companion is holding with no watcher on it is a gap: you will be reporting from memory instead of from events.
+Watchers per `agent-companion` — you arm them, never the companion. Its half is naming the next one: *"that merged, so the stacked MR is now rebaseable — watch its pipeline"* is exactly the answer this shape exists to produce. An MR it holds with no watcher is a gap, and you will be reporting from memory instead of from events.
 
 ## Process
 
@@ -105,7 +94,7 @@ An MR the companion is holding with no watcher on it is a gap: you will be repor
 
    | Signal | Tier |
    |---|---|
-   | One or two independent MRs in one repo | `cheap`, and say why |
+   | One or two independent MRs in one repo | `cheap` |
    | A handful of MRs in one repo with ordinary review churn | `default` |
    | A stack, cross-repo ordering, or MRs that will conflict with each other | `smart` |
 
@@ -115,7 +104,7 @@ An MR the companion is holding with no watcher on it is a gap: you will be repor
    - **The platform**, the project path, the target branch, and the MR or PR ids in scope.
    - **The skills it works through** — the platform's read, review, and description skills (`gitlab-mr-read` / `gitlab-mr-review` / `gitlab-mr-create` / `gitlab-mr-comment` / `gitlab-ci-fix`, or the `github-pr-*` equivalents). Name only the platform's own set; the other platform's skills are noise in its context. Several are manual-only, and being named here is what authorises them — say so, or the companion declines to load them and fails silently.
    - **The never list** above, verbatim — above all that it never merges, never pushes, and never edits a linking surface.
-   - **The re-read rule** from `agent-companion`: it re-reads the MRs before asserting their state, and labels every claim observed or reported. An MR's state changes without anyone telling it.
+   - **The re-read rule** from `agent-companion`: it re-reads the MRs before asserting their state, and labels every claim observed or reported, quoting what it read. An MR's state changes without anyone telling it.
 
 4. **Report to it as work lands**, per `agent-companion`'s steering rules: you pushed, a pipeline went green or red, a reviewer commented, an MR merged, you made a fix it suggested and it did or did not work. A wake burst that resolves one chain — a merge and the rebase it unblocked — is the causal group that shares a message.
 
@@ -125,15 +114,13 @@ An MR the companion is holding with no watcher on it is a gap: you will be repor
 
 ## The MR Ledger
 
-Ask for its state in this shape, so a report is scannable rather than a paragraph per MR:
+The ledger in `agent-companion`, with CI and threads added:
 
-| MR | Blocked on | Next action | Whose |
-|---|---|---|---|
-| [rustfs!315 — Revert the renovate kustomize bump](https://gitlab.example.com/cluster/workloads/rustfs/-/merge_requests/315) | nothing | ready to merge, pipeline green | user's call |
-| [rustfs!319 — Point alerts at the new ruler](https://gitlab.example.com/cluster/workloads/ruler/-/merge_requests/319) | !315 | rebase after !315 lands | you |
-| [ruler!320 — Drop the legacy ruler CRDs](https://gitlab.example.com/cluster/workloads/ruler/-/merge_requests/320) | 2 open threads | one real change, one answerable | you |
-
-**Whose** is the column that makes it actionable — yours, the user's, or a reviewer's. An MR whose next action belongs to nobody is a stale MR, and that is a finding.
+| MR | State | Blocked on | Next action | Whose |
+|---|---|---|---|---|
+| [rustfs!315 — Revert the renovate kustomize bump](https://gitlab.example.com/cluster/workloads/rustfs/-/merge_requests/315) | open, pipeline green as of 14:02 | nothing | ready to merge | the user |
+| [rustfs!319 — Point alerts at the new ruler](https://gitlab.example.com/cluster/workloads/ruler/-/merge_requests/319) | open, behind by 4 | !315 | rebase after !315 lands | you |
+| [ruler!320 — Drop the legacy ruler CRDs](https://gitlab.example.com/cluster/workloads/ruler/-/merge_requests/320) | open, 2 threads | review | one real change, one answerable | you |
 
 ## Example
 
@@ -148,20 +135,10 @@ Ask for its state in this shape, so a report is scannable rather than a paragrap
 
 **Result:** three MRs landed in the right order, the CI diagnosis happened outside the lead's context, and no merge happened without the user saying so.
 
-## Key Principles
-
-- The companion holds the merge-order graph; that graph is the product, and every MR state it quotes is re-read rather than remembered.
-- It diagnoses, drafts and orders. You write, push, and merge.
-- **It never merges, force-pushes, closes, or touches a branch** — no preapproval clears that.
-- **It never edits a linking surface** — trailers, the title's issue id, the branch name. Those move tracker state on merge.
-- It is blind to events: every watcher is yours to arm, and every wake is a message to it.
-- One scope, one companion. It does not cross into the tracker — that is `linear-companion`.
-- Ask for the ledger, not a narrative. The **whose** column is what makes it actionable.
-
 ## Related Skills
 
 - **`agent-companion`** — the generic entry point, for a domain with no dedicated skill. It owns the fit test; this skill is the platform instance.
-- **`linear-companion`** — the same shape over the tracker. Run both; the PM holds the issues, the shepherd holds the MRs. Drift reaches each through you, or peer-to-peer where the runtime has a channel and both briefs carry the other's address, per `agent-companion`. Note the asymmetry: the shepherd may **tell** the PM an MR merged, but it still never edits a linking surface — informing is peer traffic, editing is a domain boundary.
+- **`linear-companion`** — the same shape over the tracker; one record each. Drift reaches each through you.
 - **`plan-companion`** — the same shape over a plan's design.
 - **`agent-background`** — arms every watcher this skill depends on. The mechanics live there; the duty to arm lives here.
 - **`gitlab-mr-review`** / **`github-pr-review`** — a real review pass on one diff. Fresh eyes beat accumulated context for reviewing, so run these rather than asking the companion to review.
