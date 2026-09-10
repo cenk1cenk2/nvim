@@ -67,7 +67,14 @@ function M.setup()
       ---@type KeymapMappings
       return {
         {
-          "<C-w>m",
+          "<C-w><Space>",
+          function()
+            nvim.fn.equalize_windows()
+          end,
+          desc = "balance open windows",
+        },
+        {
+          "<C-w><CR>",
           function()
             nvim.fn.maximize_window()
           end,
