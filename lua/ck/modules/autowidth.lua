@@ -63,6 +63,18 @@ function M.setup()
         },
       }
     end,
+    keymaps = function(_, _)
+      ---@type KeymapMappings
+      return {
+        {
+          "<C-w>m",
+          function()
+            nvim.fn.maximize_window()
+          end,
+          desc = "maximize current window",
+        },
+      }
+    end,
     autocmds = function()
       ---@type Autocmds
       return {
