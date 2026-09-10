@@ -117,9 +117,65 @@ class TurnWaiter:
                 "not a turn. Take sessionInfo.files.turnDir verbatim from the spawn or session_send "
                 "response that just returned; never compute the turn number."
             )
+        # Only the standard SESSION/turns/N layout can be numbered, so any other
+        # shape leaves the supersede check off rather than guessing at a successor.
+        self.turns_root: str | None = None
+        self.turn_number: int | None = None
+        name = os.path.basename(self.turn_dir)
+        parent = os.path.dirname(self.turn_dir)
+        if name.isdigit() and parent == os.path.join(os.path.normpath(self.session_dir), "turns"):
+            self.turns_root = parent
+            self.turn_number = int(name)
+        # Whether the session had already moved on at arm time separates a path
+        # taken from a stale response from a steer landing mid-watch.
+        self.armed_with_successor = bool(self.newer_turns())
+
+    def newer_turns(self) -> list[int]:
+        """Turn directories of this session numbered above the one being watched."""
+        if self.args.allow_superseded or self.turns_root is None or self.turn_number is None:
+            return []
+        try:
+            entries = os.listdir(self.turns_root)
+        except OSError:
+            return []
+        numbers = [int(e) for e in entries if e.isdigit() and int(e) > self.turn_number]
+        return sorted(n for n in numbers if os.path.isdir(os.path.join(self.turns_root, str(n))))
+
+    def done_exit_code(self) -> Any:
+        """The marker's `exitCode`, or None when it is absent, empty or unparsable."""
+        try:
+            with open(self.done_file, encoding="utf-8", errors="replace") as handle:
+                done = json.load(handle)
+        except (OSError, ValueError):
+            return None
+        return done.get("exitCode") if isinstance(done, dict) else None
+
+    def superseded(self, newer: list[int]) -> EarlyExit:
+        current = newer[-1]
+        code = self.done_exit_code()
+        when = "already existed when this watcher was armed" if self.armed_with_successor else "started mid-watch"
+        result = (
+            f"superseded: this turn ended with exitCode {'unrecorded' if code is None else code} "
+            f"while turn {current}, which {when}, is the session's newest turn"
+        )
+        if code == 0:
+            advice = (
+                f"this turn exited 0 before turn {current} started, so its own result is real: collect it. "
+                f"Then arm a fresh watcher on turn {current}'s own turnDir - it is running unwatched."
+            )
+        else:
+            advice = (
+                "an interruption, not an answer - a steer seals the turn it interrupts, and 143 is that SIGTERM. "
+                f"Discard this wake, arm a fresh watcher on turn {current}'s own turnDir from the session_send "
+                "response, and read this turn only for what the agent had already persisted."
+            )
+        return EarlyExit(12, result, advice)
 
     def probe(self) -> tuple[bool, str]:
         if os.path.isfile(self.done_file):
+            newer = self.newer_turns()
+            if newer:
+                raise self.superseded(newer)
             return True, "done.json present"
         if not os.path.isdir(self.session_dir):
             raise EarlyExit(
@@ -163,6 +219,8 @@ class TurnWaiter:
             print(f"session dir: {self.session_dir}")
             if a.stall_after is not None:
                 print(f"stall:       {a.stall_after}s without transcript growth")
+            if a.allow_superseded:
+                print("supersede:   not checked (--allow-superseded)")
             print(f"ceiling:     {a.max_polls} polls at {a.interval:g}s")
             sys.stdout.flush()
         # An already-evicted session ends the watch now rather than at the ceiling.
@@ -736,7 +794,7 @@ class SessionInspector:
             int(e) for e in os.listdir(turns_root) if e.isdigit() and os.path.isdir(os.path.join(turns_root, e))
         )
 
-    def inspect_turn(self, number: int) -> dict[str, Any]:
+    def inspect_turn(self, number: int, newest: int) -> dict[str, Any]:
         turn_dir = os.path.join(self.session_dir, "turns", str(number))
         report: dict[str, Any] = {
             "turn": number,
@@ -747,6 +805,8 @@ class SessionInspector:
             "stderrBytes": None,
             "transcriptBytes": None,
             "transcriptPresent": False,
+            "superseded": number < newest,
+            "supersededBy": newest if number < newest else None,
         }
         done_path = os.path.join(turn_dir, "done.json")
         if os.path.isfile(done_path):
@@ -800,6 +860,11 @@ class SessionInspector:
                 "read stderr.log for the vendor's message"
             )
         if not report["donePresent"]:
+            if report["superseded"]:
+                return (
+                    f"no done.json while turn {report['supersededBy']} exists - this turn was killed without being "
+                    "sealed, so it is not running. Its transcript holds only what the vendor persisted"
+                )
             return (
                 "no done.json - this turn is still running, or was killed mid-turn. "
                 "Each turn owns its own directory, so absence never means error"
@@ -813,6 +878,12 @@ class SessionInspector:
             return (
                 f"max_turns (num_turns={report.get('numTurns')}). The agent kept its full context: steer THIS "
                 f"session with session_send and a short remaining-work prompt. Do not re-spawn. {tail}"
+            )
+        if report["superseded"] and report.get("doneExitCode") not in (0, None):
+            return (
+                f"exitCode {report.get('doneExitCode')} with turn {report['supersededBy']} newer: this turn never "
+                "reached the newer one's prompt, and 143 is the SIGTERM a steer sends. Read it for what the agent "
+                "persisted, never as the answer to the newer turn"
             )
         if report.get("doneExitCode") not in (0, None) and not report.get("hasResult"):
             return (
@@ -839,7 +910,8 @@ class SessionInspector:
             stream.write("session.json: absent\n")
         stream.write("turns found: " + (", ".join(str(t["turn"]) for t in turns) or "none") + "\n\n")
         for report in turns:
-            stream.write(f"turn {report['turn']}  {report['dir']}\n")
+            newer = f"  (superseded by turn {report['supersededBy']})" if report["superseded"] else ""
+            stream.write(f"turn {report['turn']}  {report['dir']}{newer}\n")
             stream.write(
                 f"  transcript: {report.get('transcriptBytes', 'n/a')} bytes, {report.get('events', 'n/a')} events, "
                 f"provider={report.get('provider', 'n/a')}, unparsable={report.get('unparsableLines', 'n/a')}\n"
@@ -885,6 +957,7 @@ class SessionInspector:
 
     def run(self) -> int:
         numbers = self.turn_numbers(self.session_dir)
+        newest = numbers[-1] if numbers else 0
         if self.args.turn is not None:
             if self.args.turn not in numbers:
                 raise ScriptError(
@@ -892,7 +965,7 @@ class SessionInspector:
                 )
             numbers = [self.args.turn]
         session = self.read_session_json()
-        turns = [self.inspect_turn(n) for n in numbers]
+        turns = [self.inspect_turn(n, newest) for n in numbers]
         if self.args.json:
             json.dump(
                 {"sessionDir": self.session_dir, "session": session, "turns": turns},
@@ -1125,6 +1198,7 @@ EPILOG = """\
 \b
 exit codes:
   wait      0 turn done | 10 session dir gone | 11 transcript flat | 1 ceiling | 2 bad input
+            12 the turn ended but a newer one exists: a steer superseded it
   resolve   0 spawn call on stdout | 3 no launchable match | 2 refused argument
   verdict   0 collect | 4 running | 5 wedged | 6 inspect | 7 steer | 2 bad input
   result    0 complete | 4 partial, no terminal event | 3 nothing to recover | 2 bad input
@@ -1134,7 +1208,8 @@ exit codes:
 `wait` is the watcher payload: launch it through the runtime's background
 facility so its exit is the wake. On 1 or 10, call session_status before
 concluding anything - most ceiling hits are a stale done path, not a failed
-agent.
+agent. On 12 the session has already moved past the turn that woke you: arm
+on the newer turn rather than collecting this one as the answer.
 
 Reads only. Never spawns, kills, calls MCP, or globs; the verdict ledger is
 the one file it writes, and only when asked to.
@@ -1183,12 +1258,22 @@ def cli(ctx: click.Context, verbose: bool) -> None:
 @click.option("--max-polls", type=int, default=120, metavar="N", help="Poll ceiling (default 120).")
 @click.option("--label", metavar="NAME", help="Name printed in the RESULT line.")
 @click.option("--stall-after", type=int, metavar="SECONDS", help="Exit 11 when turns.jsonl stops growing.")
+@click.option(
+    "--allow-superseded",
+    is_flag=True,
+    help="Report a superseded turn's ending as exit 0; off by default, when it is exit 12.",
+)
 @click.option("--quiet", is_flag=True, help="Print only the RESULT lines.")
 def wait_verb(**kwargs: Any) -> None:
     """Wait for exactly one hyprpilot turn to end.
 
     Takes the turn path verbatim from the spawn or session_send response - never
     a computed turn number. Bounded polling, one literal path, no globbing.
+
+    A steer ends the turn it interrupts, so an armed watcher fires on an ending
+    that is not an answer. That wake self-identifies: a marker landing while a
+    higher-numbered turn directory exists exits 12 rather than 0, so a watcher
+    left running after a steer is discarded on its own evidence.
     """
     kwargs["interval"] = _non_negative_number(kwargs["interval"], "--interval")
     kwargs["max_polls"] = _positive_int(kwargs["max_polls"], "--max-polls")
@@ -1262,6 +1347,9 @@ def result_verb(**kwargs: Any) -> None:
 @click.option("--max-errors", type=int, default=5, metavar="N", help="Cap the error strings printed per turn.")
 def inspect_verb(**kwargs: Any) -> None:
     """Inspect a session directory read-only.
+
+    Every turn but the newest is reported as superseded, and one sealed non-zero
+    behind a newer turn is named as the interruption a steer leaves behind.
 
     stderr.log content, environment values and raw payloads are never printed.
     """

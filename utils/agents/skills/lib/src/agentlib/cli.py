@@ -26,6 +26,7 @@ class ExitCode(IntEnum):
     # Session-shaped endings, used by the hyprpilot harness verbs.
     SESSION_GONE = 10
     STALLED = 11
+    SUPERSEDED = 12
 
 
 # Bound to stderr, and `force_terminal` left unset so a detached background
