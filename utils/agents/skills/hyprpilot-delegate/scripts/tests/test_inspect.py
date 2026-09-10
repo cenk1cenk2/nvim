@@ -20,15 +20,38 @@ import pytest
         pytest.param(("--turn", "2"), "max_turns (num_turns=31)", id="turn 2 verdict names max_turns"),
         pytest.param(("--turn", "2"), "Do not re-spawn", id="max_turns verdict says do not re-spawn"),
         pytest.param(("--turn", "2"), "exitCode=1", id="done.json exit code is reported"),
-        pytest.param(("--turn", "3"), "still running, or was killed", id="pending turn is not called failed"),
+        pytest.param(("--turn", "3"), "killed without being sealed", id="unsealed turn behind a newer one ended"),
         pytest.param(("--turn", "3"), "stderr.log: absent", id="absent stderr.log reads cleanly"),
         pytest.param(("--turn", "4"), "launch failure shape", id="empty transcript reads as launch failure"),
         pytest.param(("--turn", "4"), "29 bytes (content not printed)", id="stderr message stays unprinted"),
         pytest.param(("--json",), '"verdict"', id="json report carries the verdict"),
+        pytest.param(("--turn", "1"), "(superseded by turn 4)", id="an earlier turn is marked superseded"),
+        pytest.param(("--json",), '"supersededBy": 4', id="json report carries the newer turn"),
     ],
 )
 def test_inspect(run, inspect_dir, args, expect):
     result = run("inspect", str(inspect_dir), *args)
+    assert result.code == 0
+    assert expect in result
+
+
+def test_the_newest_turn_is_never_superseded(run, inspect_dir):
+    result = run("inspect", str(inspect_dir), "--turn", "4")
+    assert result.code == 0
+    assert "superseded" not in result
+
+
+@pytest.mark.parametrize(
+    "expect",
+    ["exitCode 143", "turn 2 newer", "never as the answer to the newer turn"],
+)
+def test_a_sealed_turn_behind_a_newer_one_reads_as_an_interruption(run, steered_dir, expect):
+    """The steer shape: sealed non-zero, with a newer turn already carrying the conversation."""
+    (steered_dir / "turns/1/turns.jsonl").write_text(
+        '{"type": "assistant", "message": {"role": "assistant", "content": '
+        '[{"type": "text", "text": "Read the chart, got as far as the values block."}]}}\n'
+    )
+    result = run("inspect", str(steered_dir), "--turn", "1")
     assert result.code == 0
     assert expect in result
 
