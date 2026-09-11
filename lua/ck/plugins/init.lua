@@ -99,6 +99,7 @@ local plugins = {
   "obsidian-nvim",
   "urlview-nvim",
   "img-clip-nvim",
+  "image-nvim",
   "crates-nvim",
   "jq-nvim",
   "scratch-nvim",
