@@ -140,6 +140,8 @@ Three consequences worth holding, because each retires a trap that used to need 
 
 Earlier turns are not listed: they are `<turnsDir>/<n>/` for every `n` up to `turn`, which is inferable. Everything under `files` can vanish — treat a missing file as "cleaned up", never as an error.
 
+**The session directory's name is not the handle.** On this host's layout the directories are `<tmp>/hyprpilot-session-<suffix>/`, and the suffix is a random six-character token with no relationship to the session handle — the handle lives only *inside* `session.json` and `done.json` (`grep -l '<handle>' /tmp/hyprpilot-session-*/session.json` finds the directory; the glob proposes candidates and the handle inside the file identifies the session). A path constructed as `hyprpilot-session-<handle>` can never exist, and a filesystem search keyed on the handle matches nothing — both read as "the session is gone" when it is alive and working. Take the path from `sessionInfo.files` always; the handle-in-`session.json` search is the recovery when the response did not carry it.
+
 ## Completion signals — which one applies to you
 
 ### 1. Channels — a push wake-up that does NOT work here. Assume silence.
@@ -265,6 +267,8 @@ jq -r 'select(.type=="error") | .error.data.message // .error.name' "$T"
 **`session_read` is situational, not forbidden.** Reach for it when you want the event stream itself, when the run was small enough that the difference does not matter, when you need the vendor's raw shape to diagnose something, or when no shell is available. The rule is *know which one you are paying for*.
 
 **On opencode the raw-stream cost is extreme and not proportional to the work.** Its `read` tool embeds each file's entire contents in the event *and* re-attaches every loaded instruction file (`AGENTS.md`, `CLAUDE.md`) as a system-reminder per call. Measured: a ten-file read survey produced a **389 kB** transcript whose answer was twelve lines. Transcript size tracks tool calls and instruction-file size — never treat it as a proxy for how much the agent produced.
+
+**`tail` counts lines, and claude's events are wide.** A claude transcript interleaves `{"type":"system","subtype":"thinking_tokens",…}` heartbeat events and single `assistant` events whose `thinking` payload alone runs to six figures of bytes — measured on one 525 kB transcript: the default tail of 200 lines returned ~59 kB, 185 of 295 events were `thinking_tokens` noise, and the largest single line was ~179 kB. For claude the answer is exactly one event — `type: "result"` — and its `result` field is the whole answer as a JSON string, a fraction of the size of any tail. `jq -r 'select(.type=="result") | .result' "$T"` is the cheap read; `session_read { tail: N }` on a claude session is the expensive one.
 
 ### Where a failure hides
 
