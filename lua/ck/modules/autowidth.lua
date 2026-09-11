@@ -39,7 +39,10 @@ end
 
 function M.setup()
   vim.opt.equalalways = false
-  vim.opt.winminwidth = 5
+  -- `:mksession` always writes a bare `set winheight=1 winwidth=1` epilogue but only
+  -- guards it with `set winminwidth=0` for tabpages that hold splits, so anything
+  -- above 1 makes split-less sessions fail to load with E592.
+  vim.opt.winminwidth = 1
 
   set_winwidth()
 
