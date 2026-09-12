@@ -140,6 +140,8 @@ Three consequences worth holding, because each retires a trap that used to need 
 
 Earlier turns are not listed: they are `<turnsDir>/<n>/` for every `n` up to `turn`, which is inferable. Everything under `files` can vanish — treat a missing file as "cleaned up", never as an error.
 
+**Take every path from `sessionInfo.files` — the table above is where they live — and never construct one from the handle.** On this host's layout the directories are `<tmp>/hyprpilot-session-<suffix>/` and the suffix is a random six-character token with no relationship to the handle, so `hyprpilot-session-<handle>` can never exist and a filesystem search keyed on the handle matches nothing — both read as "the session is gone" while it is alive and working. Recovery for a response that carried no path is the handle itself, written inside the `breadcrumb` file that same table names: `grep -l '<handle>' <tmp>/hyprpilot-session-*/session.json` finds the directory, the glob only proposing candidates and the handle inside the file identifying the session.
+
 ## Completion signals — which one applies to you
 
 ### 1. Channels — a push wake-up that does NOT work here. Assume silence.
@@ -265,6 +267,8 @@ jq -r 'select(.type=="error") | .error.data.message // .error.name' "$T"
 **`session_read` is situational, not forbidden.** Reach for it when you want the event stream itself, when the run was small enough that the difference does not matter, when you need the vendor's raw shape to diagnose something, or when no shell is available. The rule is *know which one you are paying for*.
 
 **On opencode the raw-stream cost is extreme and not proportional to the work.** Its `read` tool embeds each file's entire contents in the event *and* re-attaches every loaded instruction file (`AGENTS.md`, `CLAUDE.md`) as a system-reminder per call. Measured: a ten-file read survey produced a **389 kB** transcript whose answer was twelve lines. Transcript size tracks tool calls and instruction-file size — never treat it as a proxy for how much the agent produced.
+
+**Read claude's answer from the one event that is the answer, never from a tail.** `/result` is that read wherever a resource facility exists; on the files side it is exactly one event — `type: "result"` — whose `result` field carries the whole answer as a JSON string, so `jq -r 'select(.type=="result") | .result' "$T"` over `files.transcript` is the cheap read. `session_read { tail: N }` only approximates the same answer, and at a far worse price, because `tail` counts lines and claude's lines are wide — measured on one 525 kB transcript, the default 200-line tail returned ~59 kB, with 185 of 295 events `thinking_tokens` heartbeats and the largest single line ~179 kB.
 
 ### Where a failure hides
 
