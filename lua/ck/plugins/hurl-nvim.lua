@@ -79,6 +79,7 @@ function M.config()
             vim.ui.input({
               prompt = "Select hurl environment: ",
               default = stored_value,
+              completion = "file",
             }, function(env)
               if env == nil then
                 log:warn("Nothing to select.")

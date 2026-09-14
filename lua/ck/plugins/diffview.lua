@@ -357,52 +357,57 @@ function M.config()
 end
 
 function M.compare_with_branch()
-  local store_key = "DIFFVIEW_COMPARE_BRANCH"
-  local shada = require("ck.modules.shada")
-  local stored_value = shada.get(store_key)
-
-  vim.ui.input({
-    prompt = "Compare with branch:",
-    default = stored_value,
-  }, function(branch)
-    if branch == nil then
-      log:warn("Nothing to compare.")
-
-      return
-    end
-
+  M.pick_branch("Compare with branch", function(branch)
     log:info("Comparing with branch: %s", branch)
-    shada.set(store_key, branch)
 
     vim.cmd(":DiffviewOpen " .. branch)
   end)
 end
 
 function M.compare_buffer_with_branch()
-  local store_key = "DIFFVIEW_COMPARE_BRANCH"
-  local shada = require("ck.modules.shada")
-  local stored_value = shada.get(store_key)
+  local filepath = require("ck.utils.fs").get_project_buffer_filepath()
 
-  vim.ui.input({
-    prompt = "Compare buffer with branch:",
-    default = stored_value,
-  }, function(branch)
-    if branch == nil then
-      log:warn("Nothing to compare.")
-
-      return
-    end
-
-    log:info("Comparing buffer with branch: %s -> %s", require("ck.utils.fs").get_project_buffer_filepath(), branch)
-    shada.set(store_key, branch)
+  M.pick_branch("Compare buffer with branch", function(branch)
+    log:info("Comparing buffer with branch: %s -> %s", filepath, branch)
 
     vim.cmd(":DiffviewOpen " .. branch .. " -- %")
   end)
 end
 
+---Picks a branch with telescope, falling back to the typed prompt for arbitrary revisions like `HEAD~3`.
+---@param prompt_title string
+---@param on_select fun(branch: string)
+function M.pick_branch(prompt_title, on_select)
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+
+  require("telescope.builtin").git_branches({
+    prompt_title = prompt_title,
+    attach_mappings = function(prompt_bufnr)
+      actions.select_default:replace(function()
+        local entry = action_state.get_selected_entry()
+        local branch = entry and entry.value or action_state.get_current_line()
+
+        actions.close(prompt_bufnr)
+
+        if branch == "" then
+          log:warn("Nothing to compare.")
+
+          return
+        end
+
+        on_select(branch)
+      end)
+
+      return true
+    end,
+  })
+end
+
 function M.compare_files()
   vim.ui.input({
     prompt = "First file path:",
+    completion = "file",
   }, function(file_a)
     if file_a == nil or file_a == "" then
       log:warn("No file selected.")
@@ -419,6 +424,7 @@ function M.compare_files()
 
     vim.ui.input({
       prompt = "Second file path:",
+      completion = "file",
     }, function(file_b)
       if file_b == nil or file_b == "" then
         log:warn("No file selected.")
@@ -442,6 +448,7 @@ end
 function M.compare_directories()
   vim.ui.input({
     prompt = "First directory path:",
+    completion = "dir",
   }, function(dir_a)
     if dir_a == nil or dir_a == "" then
       log:warn("No directory selected.")
@@ -458,6 +465,7 @@ function M.compare_directories()
 
     vim.ui.input({
       prompt = "Second directory path:",
+      completion = "dir",
     }, function(dir_b)
       if dir_b == nil or dir_b == "" then
         log:warn("No directory selected.")

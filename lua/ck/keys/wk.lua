@@ -261,6 +261,7 @@ function M.setup()
               vim.ui.input({
                 prompt = "rename buffer",
                 default = vim.api.nvim_buf_get_name(0),
+                completion = "file",
               }, function(value)
                 if not value then
                   return

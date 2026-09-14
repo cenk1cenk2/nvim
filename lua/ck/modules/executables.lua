@@ -176,6 +176,7 @@ function M.run_genpass()
     prompt = "Genpass arguments:",
     highlight = utils.treesitter_highlight("bash"),
     default = stored_value,
+    completion = require("ck.modules.completion").flags_for("genpass"),
   }, function(arguments)
     shada.set(store_key, arguments)
 

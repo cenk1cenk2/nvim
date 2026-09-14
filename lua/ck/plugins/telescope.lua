@@ -621,6 +621,7 @@ function M.set_arguments(command, env)
   vim.ui.input({
     prompt = ("%s arguments:"):format(command),
     default = vim.env[env],
+    completion = require("ck.modules.completion").flags_for(command),
   }, function(val)
     if val == nil then
       return
