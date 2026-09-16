@@ -66,27 +66,27 @@ function M.setup()
         },
       }
     end,
-    keymaps = function(_, _)
-      ---@type KeymapMappings
-      return {
-        {
-          "<C-w><Space>",
-          function()
-            nvim.fn.equalize_windows()
-          end,
-          desc = "balance open windows",
-          mode = { "n", "v", "x", "t" },
-        },
-        {
-          "<C-w><CR>",
-          function()
-            nvim.fn.maximize_window()
-          end,
-          desc = "maximize current window",
-          mode = { "n", "v", "x", "t" },
-        },
-      }
-    end,
+    -- keymaps = function(_, _)
+    --   ---@type KeymapMappings
+    --   return {
+    --     {
+    --       "<C-w><Space>",
+    --       function()
+    --         nvim.fn.equalize_windows()
+    --       end,
+    --       desc = "balance open windows",
+    --       mode = { "n", "v", "x", "t" },
+    --     },
+    --     {
+    --       "<C-w><CR>",
+    --       function()
+    --         nvim.fn.maximize_window()
+    --       end,
+    --       desc = "maximize current window",
+    --       mode = { "n", "v", "x", "t" },
+    --     },
+    --   }
+    -- end,
     autocmds = function()
       ---@type Autocmds
       return {
