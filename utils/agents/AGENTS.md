@@ -109,6 +109,8 @@ Escalate to formal plan mode with the `plan-hard` skill when the work genuinely 
 
 When several independent tasks are in play — the user queued a batch of requests, or the work fans out into non-overlapping slices — run them concurrently instead of serially. Dispatch subagents (`agent-delegate` for one task, `agent-plan` for a DAG of many), or use a **workflow** when the runtime provides one. Keep disjoint file scopes so parallel writers don't collide, verify each result, and don't parallelize tasks that genuinely depend on each other. **Independent and faster in parallel is the whole condition** — when it holds, parallelize; serial execution then needs a reason you can state, not a preference.
 
+> **Verify a subagent's enumerations yourself; relay its binary findings.** Yes/no answers — a SHA matched, drift was zero, two strings were identical — hold up. Tables, counts and per-item lists drift: a row slides onto the wrong item, a total is off, a summary contradicts the body it summarizes, and a confident number can be wrong while every check behind it was done correctly. Pull the enumeration yourself, or hand the agent yours and make it name where the two disagree rather than reconcile silently.
+
 > **Spawn subagents with the harness's own mechanism.** Delegation goes through the runtime's built-in dispatch (`agent-delegate`, `agent-plan`) — never a separate agent session. Starting a hyprpilot agent session (`hyprpilot-delegate`) or an offsite agent (`agent-labrat`) is a decision the **user** makes and asks for out loud. It is never inferred from the shape of a task, never a fallback when in-harness dispatch is inconvenient, and never a route to a posture this session does not have.
 
 ### User Lingo
