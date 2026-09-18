@@ -38,6 +38,8 @@ The server holds no credentials of its own. It reads `~/.aws/config-readonly`, w
 
 **There is no auto-login.** An expired SSO token makes every `call_aws` fail with a credential error rather than opening a browser, which is deliberate. When calls start failing that way, say so and let the captain run `assume`; do not work around it.
 
+**A wedged server is the other failure mode, and it looks nothing like the first.** `call_aws` stops responding entirely - no error, no credential message, just silence past the foreground window and then an idle-timeout abort. It is the server, not the query: a command that hung for the full timeout returned in under a second once the server was reconnected. So when a call goes quiet, say so and ask the captain to reconnect the server; do not narrow the query, split it, or wait out the timeout.
+
 Both files are written by scripts in the `cloud-infrastructure` repository, and both fetch the account set live from AWS IAM Identity Center rather than reading each other:
 
 | Script                           | Writes                                          |
