@@ -193,6 +193,9 @@
         ],
         "autoRejectTools": []
       }
+    },
+    "cloudflare-laravel": {
+      "url": "https://mcp.cloudflare.com/mcp"
     }
   }
 }
