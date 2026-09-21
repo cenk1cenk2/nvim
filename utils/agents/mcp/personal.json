@@ -250,17 +250,7 @@
       },
       "url": "https://sourcebot.mcp.kilic.dev/mcp",
       "hyprpilot": {
-        "autoAcceptTools": [
-          "find_symbol_definitions",
-          "find_symbol_references",
-          "get_diff",
-          "glob",
-          "grep",
-          "list_commits",
-          "list_repos",
-          "list_tree",
-          "read_file"
-        ],
+        "autoAcceptTools": ["find_symbol_definitions", "find_symbol_references", "get_diff", "glob", "grep", "list_commits", "list_repos", "list_tree", "read_file"],
         "autoRejectTools": []
       }
     },
@@ -274,6 +264,9 @@
         "autoAcceptTools": ["list_mounts", "list_secrets", "list_pki_issuers"],
         "autoRejectTools": []
       }
+    },
+    "cloudflare-kilic": {
+      "url": "https://mcp.cloudflare.com/mcp"
     }
   }
 }
