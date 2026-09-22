@@ -76,11 +76,7 @@ nvim.lsp.servers = {
   "hyprls",
   "jsonls",
   "jsonnet_ls",
-  -- TODO: swap for the official `laravel/lsp` (`laravel_lsp`) once mason-registry packages it and
-  -- nvim-lspconfig ships its definition — this entry is the unrelated community `laravel-ls`.
-  -- It is a rename here and nothing else: servers come from the official channels, never from a
-  -- hand-written definition. Checked 2026-07-30, neither exists yet.
-  "laravel_ls",
+  "laravel_lsp",
   "lua_ls",
   "marksman",
   "phpactor",
