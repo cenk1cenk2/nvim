@@ -48,6 +48,7 @@ Posture: `present-first`.
    - **Cascading work — base off the branch you depend on, not trunk.** When the change builds on a branch that is still open in review, branch from *that* branch. Basing on the default instead drags the prerequisite's commits into your diff, so the review re-covers work already reviewed next door and the two changes cannot be read apart.
      - The PR/MR then targets that same branch (`github-pr-create` / `gitlab-mr-create`), and both platforms retarget it to trunk once the prerequisite merges — the stack unwinds itself, so nothing has to be rebased by hand.
      - Fast-forward does not apply to a non-default base. Fetch and pull the prerequisite branch instead, so you stack on its current tip rather than a stale local copy.
+     - **A squash-merged prerequisite strands the stack.** Squash rewrites the commits the dependent branch is built on, so its PR/MR would propose them again. Replay only its own commits onto trunk as a new branch (`git rebase --onto <trunk> <old prerequisite tip>` in a fresh worktree), open the PR/MR from that branch, and delete the old one. Never force-push a pushed branch to repair a stack.
      - Say in the plan which branch is the prerequisite and that the PR/MR will target it — the base is the whole point of the branch here, not a detail.
 
 5. **Present the plan.**
@@ -91,6 +92,7 @@ This skill is composable — other skills can delegate branch creation to it as 
 - **Kebab-case always** for the descriptive partial. When the user asks for kebab-case-only names, flatten `prefix/descriptive` to `prefix-descriptive` (drop the `/`).
 - **Default branch unless told otherwise** — never branch from a random HEAD silently.
 - **Stack on what you depend on.** Work that builds on an unmerged branch bases off that branch and targets it, so each review sees only its own diff. Both platforms retarget the dependent PR/MR to trunk when the prerequisite merges.
+- **Stack only on a real dependency.** Changes that merely touch the same area but do not need each other's code branch in parallel from the same base; the one that merges second merges trunk in rather than rebasing.
 - **Fast-forward default unless told otherwise.** On any blocker, ask the user — never auto-resolve.
 - **Never push automatically.** Branch creation is local-only until the user explicitly asks to push.
 

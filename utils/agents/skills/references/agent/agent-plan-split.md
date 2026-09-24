@@ -49,6 +49,7 @@ For each task, define:
 
 - **Hard file collision:** two tasks write the same file. **Prefer handing both to the SAME named agent** in dependency order — it already holds the context and the worktree — one turn per task, each keeping its own brief and report. Sequentialise instead (add a `depends_on`) when no such agent is reachable. Merge into a single task only when they were never separate deliverables; two PRs never become one task to dodge a collision.
 - **Semantic dependency:** task B reads a schema/type/output defined by task A, even in a different file. The plan author must declare this via `depends_on` — it's not detectable from file lists alone.
+- **Stacked branches follow `depends_on`, nothing else.** A task that depends on another bases its branch on that task's branch and targets it; independent tasks in one layer branch from the same base in parallel, even when they will touch a shared file like CI config. When a prerequisite merges, dependents merge trunk in; they never rebase or force-push a pushed branch.
 
 ### 6. Build the layer schedule
 
