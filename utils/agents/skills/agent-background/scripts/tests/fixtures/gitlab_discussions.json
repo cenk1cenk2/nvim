@@ -1,0 +1,74 @@
+[
+  {
+    "id": "9a6942d46017001a8e074372d20904b2477c1007",
+    "individual_note": true,
+    "notes": [
+      {
+        "id": 1001,
+        "type": null,
+        "body": "Linked to the tracker issue.",
+        "author": {"id": 7, "username": "tracker-bot"},
+        "system": false,
+        "resolvable": false,
+        "resolved": false,
+        "resolved_by": null
+      }
+    ]
+  },
+  {
+    "id": "92fe83b9aa1b2c3d4e5f60718293a4b5c6d7e8f9",
+    "individual_note": true,
+    "notes": [
+      {
+        "id": 1002,
+        "type": null,
+        "body": "added 3 commits",
+        "author": {"id": 2, "username": "author"},
+        "system": true,
+        "resolvable": false,
+        "resolved": false,
+        "resolved_by": null
+      }
+    ]
+  },
+  {
+    "id": "dd2cba7201b2c3d4e5f60718293a4b5c6d7e8f90",
+    "individual_note": false,
+    "notes": [
+      {
+        "id": 1003,
+        "type": "DiffNote",
+        "body": "Start url paths with a slash.",
+        "author": {"id": 3, "username": "reviewer"},
+        "system": false,
+        "position": {
+          "old_path": "src/webhook.controller.ts",
+          "new_path": "src/webhook.controller.ts",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 9
+        },
+        "resolvable": true,
+        "resolved": false,
+        "resolved_by": null
+      },
+      {
+        "id": 1004,
+        "type": "DiffNote",
+        "body": "changed this line in version 2 of the diff",
+        "author": {"id": 2, "username": "author"},
+        "system": true,
+        "position": {
+          "old_path": "src/webhook.controller.ts",
+          "new_path": "src/webhook.controller.ts",
+          "position_type": "text",
+          "old_line": null,
+          "new_line": 9
+        },
+        "resolvable": false,
+        "resolved": null,
+        "resolved_by": null
+      }
+    ]
+  }
+]

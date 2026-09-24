@@ -6,7 +6,7 @@ exit codes are the contract, because this runs detached and its exit IS the wake
   0  the condition held        RESULT: <label> met after N poll(s)
   1  ceiling reached           not proof of failure; the last observed value is printed
   2  usage error               nothing was polled
-  3  the check cannot run      command not found, unreadable --expect-file
+  3  the check cannot run      command not found, unreadable --expect-file, no review baseline
 
 One condition per invocation; arm another watcher for another item.
 """
@@ -21,6 +21,7 @@ from agentlib.models import Cadence, Expectations, FlatFor, WatchedPath, http_ur
 from pydantic import ValidationError
 
 import probes
+import reviews
 import runner
 from vendors import VENDORS, Vendor
 
@@ -235,7 +236,8 @@ def _register_vendor(vendor: Vendor) -> None:
 
     for param in reversed(vendor.optional_params):
         run_vendor = click.option(
-            f"--{param}", default=None,
+            f"--{param}",
+            default=None,
             help=f"The {param} id. Given, the watch keys on that exact record instead of the newest.",
         )(run_vendor)
     for param in reversed(vendor.params):
@@ -246,6 +248,58 @@ def _register_vendor(vendor: Vendor) -> None:
 
 for _vendor in VENDORS:
     _register_vendor(_vendor)
+
+
+def review_options(kinds: tuple[str, ...]):
+    def decorate(func):
+        func = click.option("--ignore-author", multiple=True, help="A user whose activity never fires. Repeatable.")(
+            func
+        )
+        func = click.option(
+            "--wait-result",
+            multiple=True,
+            type=click.Choice(kinds),
+            help="The activity that ends the watch. Repeatable; defaults to all, and closed is always included.",
+        )(func)
+        return cadence_options(func)
+
+    return decorate
+
+
+@cli.command("gitlab-mr-review")
+@click.option("--project", required=True, help="The project path, group/name.")
+@click.option("--iid", required=True, help="The merge request iid.")
+@review_options(reviews.GITLAB_KINDS)
+def gitlab_mr_review(
+    project: str, iid: str, wait_result: tuple[str, ...], ignore_author: tuple[str, ...], **cadence
+) -> None:
+    """New review activity on a GitLab merge request since the watch started."""
+    probe = reviews.ReviewActivity(
+        f"{project}!{iid}",
+        lambda: reviews.gitlab_snapshot(project, iid),
+        closed_states=("merged", "closed"),
+        kinds=wait_result or reviews.GITLAB_KINDS,
+        ignore=ignore_author,
+    )
+    raise SystemExit(runner.run(probe, build_cadence(**cadence)))
+
+
+@cli.command("github-pr-review")
+@click.option("--repo", required=True, help="The repository, owner/name.")
+@click.option("--number", required=True, help="The pull request number.")
+@review_options(reviews.KINDS)
+def github_pr_review(
+    repo: str, number: str, wait_result: tuple[str, ...], ignore_author: tuple[str, ...], **cadence
+) -> None:
+    """New review activity on a GitHub pull request since the watch started."""
+    probe = reviews.ReviewActivity(
+        f"{repo}#{number}",
+        lambda: reviews.github_snapshot(repo, number),
+        closed_states=("MERGED", "CLOSED"),
+        kinds=wait_result or reviews.KINDS,
+        ignore=ignore_author,
+    )
+    raise SystemExit(runner.run(probe, build_cadence(**cadence)))
 
 
 def main() -> None:

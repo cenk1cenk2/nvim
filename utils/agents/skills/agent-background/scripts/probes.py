@@ -167,7 +167,7 @@ class FileFlat:
 COMMAND_TIMEOUT = 120.0
 
 
-def _run(command: list[str]) -> tuple[int, str]:
+def run_command(command: list[str]) -> tuple[int, str]:
     try:
         proc = subprocess.run(
             command,
@@ -205,7 +205,7 @@ class ExitZero:
         return f"`{' '.join(self.command)}` exits 0"
 
     def __call__(self) -> tuple[bool, str | None]:
-        code, _ = _run(self.command)
+        code, _ = run_command(self.command)
         return code == 0, f"exit {code}"
 
 
@@ -240,7 +240,7 @@ class Command:
         return f"`{' '.join(self.command)}`{via} {negation}{test} {values}"
 
     def __call__(self) -> tuple[bool, str | None]:
-        code, out = _run(self.command)
+        code, out = run_command(self.command)
         if code != 0:
             # glab and friends exit 1 with empty output when the API reply does
             # not parse. That is "not met", never "met".

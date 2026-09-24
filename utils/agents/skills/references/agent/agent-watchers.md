@@ -145,6 +145,8 @@ another, and *move the issue to Done* to the third.
 
 Per-domain signals — merge gates, CI runs, terraform and Spacelift, deploy convergence, chaining, tracker reconciliation — and the shell recipes that poll them, live in `agent-watcher-recipes`. **Read the entry for the domain you are about to watch before arming**, since a signal chosen from memory is how a watcher ends up polling something that never changes.
 
+**Waiting on a reviewer arms `gitlab-mr-review` or `github-pr-review`.** `gitlab-mr` and `github-pr` fire only when the MR or PR reaches a terminal state, so they stay silent through every comment, resolution and approval. On the review wake, re-read the threads and route them through the covering fix skill — `gitlab-mr-fix` or `github-pr-fix`.
+
 ## Cadence by signal
 
 | Signal | Cadence | Why |
@@ -196,6 +198,7 @@ The row, recorded when armed, again when re-armed, and produced whenever asked w
 |---|---|---|---|---|---|
 | `pr-4821` | `gh pr view 4821 --json state` returns `MERGED` | 60s | 180 (~3h), then report and re-arm | verify the merge, arm the apply watcher | `task_01H…` |
 | `deploy-prod` | all 8 prod pipeline jobs settled | 5m | 24 (2h), then surface as stalled | verify, then open the follow-up MR | `task_01H…` |
+| `mr-315-review` | `watch.py gitlab-mr-review --project g/p --iid 315` reports new review activity | 30s | 480 (4h), then report and re-arm | re-read the threads, route them through `gitlab-mr-fix` (`github-pr-fix` for a PR) | `task_01H…` |
 
 - **Watching for** is the done-condition *as it will be tested*, not the topic. "PR merged" is a topic;
   the command and its expected value is a condition. If you cannot write it as a testable line, the

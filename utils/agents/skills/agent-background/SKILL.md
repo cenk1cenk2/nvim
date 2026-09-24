@@ -48,7 +48,9 @@ Launch a loop through the runtime's own background-exec facility (per `agent-bac
   command --json-path state --expect merged -- glab mr view 4821 --output json
 ```
 
-Conditions: `file-exists`, `file-gone`, `file-flat`, `exit-zero`, `command`, `http`, plus named ones for the things actually waited on — `gitlab-mr`, `gitlab-ci`, `github-pr`, `github-action`, `spacelift-run` and friends, each taking repeatable `--wait-result`. Most default to every terminal state, so a failure wakes you as early as a success; `gitlab-tag` and `github-tag` are the exceptions — a tag has no terminal set, so they require a `--wait-result` equal to the tag. `watch.py --help` lists them.
+Conditions: `file-exists`, `file-gone`, `file-flat`, `exit-zero`, `command`, `http`, plus named ones for the things actually waited on — `gitlab-mr`, `gitlab-ci`, `github-pr`, `github-action`, `spacelift-run`, `gitlab-mr-review`, `github-pr-review` and friends, each taking repeatable `--wait-result`. Most default to every terminal state, so a failure wakes you as early as a success; `gitlab-tag` and `github-tag` are the exceptions — a tag has no terminal set, so they require a `--wait-result` equal to the tag. `watch.py --help` lists them.
+
+The two review conditions snapshot and diff instead of waiting for a value: the first poll records the MR or PR's notes, threads, approvals and reviews by id, and the watch fires on the first new human note, resolved or reopened thread, approval change, or requested change (`note`, `resolved`, `approval`, `changes` — GitHub only), naming it in the RESULT line. The MR or PR closing or merging always fires too, and `--ignore-author` drops a bot's activity.
 
 **Key a watcher on the id when you have one.** `spacelift-run --stack S` reads the stack's newest run, and if the run you mean has not been created yet the previous one is still the newest — so a stack whose last run already finished fires MET at the first poll on the wrong run. `--run <id>` keys on that exact record and closes the race; `spacelift-module --version <v>` does the same. The GitLab and GitHub conditions take their ids as required arguments and have no such gap.
 

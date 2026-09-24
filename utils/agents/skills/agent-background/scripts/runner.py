@@ -51,7 +51,10 @@ def run(probe: Probe, cadence: Cadence) -> int:
             last_value = value
 
         if met:
-            emit(f"RESULT: {label} met after {poll} poll(s)")
+            # A diffing probe names what changed; that line is the wake, where
+            # "met" would leave the agent to rediscover the event.
+            outcome = getattr(probe, "outcome", None)
+            emit(f"RESULT: {outcome}" if outcome else f"RESULT: {label} met after {poll} poll(s)")
             emit("next: verify the real state on the main loop before acting; a proxy can lag.")
             return 0
 

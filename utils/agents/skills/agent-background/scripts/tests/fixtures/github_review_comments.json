@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1583153997,
+    "pull_request_review_id": 2028628010,
+    "path": "pkg/verify/verify.go",
+    "line": 130,
+    "original_line": 130,
+    "body": "Could this return early?",
+    "user": {"login": "reviewer", "type": "User"}
+  }
+]
