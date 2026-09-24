@@ -5,6 +5,7 @@ disableModelInvocation: true
 argumentHint: '[artifact being authored]'
 references:
   - ../references/agent/agent-target-capability.md
+  - ../references/agent/agent-parsed-answer.md
 ---
 
 ## Writing for a Capable Target
@@ -27,7 +28,7 @@ Pasting a skill body into a prompt forks it: the skill gets fixed next week, you
    - Tools in `<server>__<tool>` short form.
    - Repo conventions by path: "follow `CLAUDE.md` in the repo root".
 5. **Inline only what the target cannot derive** — the goal, scope, file ownership, boundaries, decisions already made, gotchas found this session, anything that lives solely in this conversation.
-6. **State intent and acceptance, not keystrokes.** Give what done looks like and how to prove it; leave method selection to the target.
+6. **State intent and acceptance, not keystrokes.** Give what done looks like and how to prove it; leave method selection to the target. When a program parses the final answer, the brief follows `agent-parsed-answer`.
 7. **Name prerequisites and ordering.** Workspace skills that must be active first, skills that must load before an action, holds and sequencing gates.
 8. **Add a degradation line.** One sentence on what to do if a named skill or server is missing — do it manually, or stop and report. The artifact must fail loudly, not silently improvise.
 9. **Present the draft**, iterate, then write.

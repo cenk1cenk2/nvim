@@ -11,6 +11,7 @@ scripts:
 references:
   - ./references/hyprpilot-sessions.md
   - ../references/agent/agent-conventions.md
+  - ../references/agent/agent-fan-out.md
   - ../references/project-tooling.md
   - ../references/agent/agent-completion.md
   - ../references/agent/agent-watchers.md
@@ -260,7 +261,7 @@ Run the suite with `task test:python` from the repository root; `task lint:pytho
 - **Bounded retention.** The oldest **finished** sessions are evicted along with their transcripts (default ceiling 64). A running session is never evicted. Read a transcript you care about before it ages out.
 - **Bounded breadth and depth.** A ceiling of **8 concurrently running** sessions bounds breadth; `[mcp.harness].maxDepth` bounds nesting at **1** by default (stamped as `HYPRPILOT_SPAWN_DEPTH`), so an agent you spawn cannot spawn its own — you delegate, it works. Hitting either returns an error — free a slot by reaping a finished session with `session_kill`, rather than retrying blindly. That is the reaping job, not a general-purpose route: a reap frees a slot, a steer redirects an agent already holding one.
 - **Detaching removes the natural brake on breadth.** A blocking `spawn` could not overrun the concurrency ceiling because it finished before you called the next one. Detached calls return instantly, so a fan-out of nine is nine calls in one turn and the ninth is refused. Count what is already running — `session_list` — before firing a batch, and reap finished ones to free slots.
-- **So the fan-out is yours to run.** A delegate cannot sub-delegate, and asking it to would just earn a refusal it has to report back. Split the work here and spawn the pieces yourself, where `session_list` sees them and `session_kill` can stop them.
+- **So the fan-out is yours to run.** A delegate cannot sub-delegate, and asking it to would just earn a refusal it has to report back. Split the work here and spawn the pieces yourself, per `agent-fan-out`, where `session_list` sees them and `session_kill` can stop them.
 - **`spawn` executes as this user.** A profile's `command` is an arbitrary binary and its `provider` picks a flag projection, not a sandbox. This is why the skill is manual, requested by the user, and presented before it spawns.
 
 ## Examples

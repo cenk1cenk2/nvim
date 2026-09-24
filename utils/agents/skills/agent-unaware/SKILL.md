@@ -6,6 +6,7 @@ argumentHint: '[artifact being authored]'
 references:
   - ../references/agent/agent-target-capability.md
   - ../references/redact-private-data.md
+  - ../references/agent/agent-parsed-answer.md
 ---
 
 ## Writing for a Bare Target
@@ -26,7 +27,7 @@ So the artifact carries the **content itself** and the **exact method**. Where a
 4. **Replace intent with exact method.** Concrete commands, exact file paths, expected output. Where you would say "handle the errors appropriately", name the errors.
 5. **Restate every decision made in conversation.** No "as discussed", no "the approach we picked".
 6. **Give runnable verification** — the exact command and what passing output looks like. If the target cannot run anything, say so and give a review checklist instead.
-7. **Define the blocked path.** It cannot consult anything, so state plainly: report what is missing and stop, do not invent. Say where the output goes and in what format.
+7. **Define the blocked path.** It cannot consult anything, so state plainly: report what is missing and stop, do not invent. Say where the output goes and in what format; when a program parses it, per `agent-parsed-answer`.
 8. **Redact.** Sweep for private specifics per the reference before presenting.
 9. **Present the draft**, iterate, then write.
 
