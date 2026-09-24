@@ -4,7 +4,7 @@ The shared trailer policy: where trailers go, and when to close an issue versus 
 
 | Platform | Reference | The trap it carries |
 |---|---|---|
-| Linear | `commit-trailers-linear` | Linear ignores commit messages entirely — only branch name, MR/PR title, and MR/PR description link. |
+| Linear | `commit-trailers-linear` | Every link moves the issue, a Done one included — decide per `scm-linear-follow-up` first. On GitLab, Linear ignores commit messages entirely. |
 | GitHub | `commit-trailers-github` | Native issues DO close from commit messages; there is no `refs` keyword. |
 | GitLab | `commit-trailers-gitlab` | Native issues DO close from commit messages; multiple issues are comma-separated after one keyword. |
 
@@ -33,6 +33,8 @@ Trailers go in the commit footer — separated from the body by a blank line. On
 **Default to `closes` (autoclose) — same rule for Linear, GitHub, and GitLab issue links.** If this commit/PR/MR completes the issue's work and nothing else is waiting on the issue, use a closing keyword (`closes`) so the issue auto-closes on merge — do NOT fall back to `refs`/reference-only just because closing intent wasn't spelled out.
 
 **Defer `closes` to the final deliverable.** If additional work, PRs/MRs, or steps are still needed before the issue can actually close, use `refs` (or reference-only) on this one and put the closing keyword ONLY on the last piece that completes it. Never put `closes` on a commit/PR/MR that isn't the final thing — that closes the issue early. Reach for `refs` whenever there is genuinely more to do: another PR/MR pending, a follow-up step, or an explicit hold/wait.
+
+Both assume the issue's work is still open. A follow-up to a Linear issue that is already Done or Canceled takes neither, per `scm-linear-follow-up`.
 
 Applied to delivery shape, on any platform:
 

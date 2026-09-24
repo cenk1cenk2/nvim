@@ -52,9 +52,10 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 - If no template exists, write a fresh description following the format below.
 - Analyze the diff for **logical changes only** — what behavior was added, removed, or changed.
 - Do NOT list changed files, line counts, or mechanical details.
+- **Check each Linear issue's state before linking it, per `scm-linear-follow-up`.** A follow-up to a Done or Canceled issue mentions it as a plain markdown link with no magic word, and carries no ID in the title or the branch.
 - If the PR/MR links Linear issues, add or preserve body trailers using `commit-trailers`: default to `closes <ID>` when this PR/MR resolves the issue and nothing else is pending (so it auto-closes on merge); use `refs <ID>` only for genuinely partial or related work.
 - **When one PR/MR closes several issues, give each issue its own section** and list every closed ID on one trailer line — see "Multiple linked issues" below. A reviewer must be able to tell which change belongs to which issue without reading the diff.
-- **Linear links only from the title, the description, and the branch name.** A Linear ID in a commit message does nothing — see `commit-trailers-linear`. Never rely on commits to carry the link.
+- **Linear links from the title, the description, and the branch name.** On GitLab a Linear ID in a commit message does nothing, and on GitHub it links only behind a magic word — see `commit-trailers-linear`. Never rely on commits to carry the link.
 
 ## Draft the title
 
@@ -64,7 +65,7 @@ Branches may have previously merged or closed PRs/MRs — this is normal. Only o
 - Types: feat, fix, docs, style, refactor, test, chore, perf, build, ci, revert.
 - **Keep it concise** — one line, well within the platform's title limit (aim ≤ ~100 chars, hard ~120); tighter than the description, no fluff.
 - **Pure ASCII, no special chars** — no em/en dashes (`—`, `–`), smart quotes, or ellipsis (`…`); use a plain hyphen `-`. Same subject rules as the `commit-style` reference.
-- **Put the linked issue IDs in the title**, trailing and parenthesised: `fix(scope): subject (K-879)`, or `(K-879, K-881)` for several. For Linear this is a real linking surface in its own right, independent of the description trailer — keep both. Follow the repo's existing convention where it already has one.
+- **Put the linked issue IDs in the title** — only issues this PR/MR delivers, never a closed one per `scm-linear-follow-up` — trailing and parenthesised: `fix(scope): subject (K-879)`, or `(K-879, K-881)` for several. For Linear this is a real linking surface in its own right, independent of the description trailer — keep both. Follow the repo's existing convention where it already has one.
 - If the repo has release automation, the title must satisfy it — see the `release-convention` reference. **semantic-release is the default**; release-please and changesets are the alternates. Mark breaking changes with the `type(scope)!:` marker in the title AND a `BREAKING CHANGE:` footer in the body — the `!` is first-class under the `conventionalcommits` preset, and the footer is what still bumps a repo pinned to `angular`.
 
 ## Description Format (When No Template Exists)

@@ -10,6 +10,7 @@ references:
   - ../references/scm/commit-trailers-github.md
   - ../references/scm/commit-trailers-gitlab.md
   - ../references/scm/commit-trailers-linear.md
+  - ../references/scm/scm-linear-follow-up.md
   - ../references/output-diff.md
   - ../references/scm/release-convention.md
 ---
@@ -78,8 +79,8 @@ Posture: `present-first`.
      - Always include a body explaining the breaking change even if the user didn't request a verbose commit.
    - **Issue/PR references** — when the user provides an issue URL, issue ID, or the branch name matches an issue pattern:
      - Shared `closes` versus `refs` policy: `commit-trailers`. Then fetch only the platform in play — `commit-trailers-github`, `commit-trailers-gitlab`, or `commit-trailers-linear` — for that platform's keywords, syntax, and detection.
-     - Fetch the issue via the appropriate MCP tool to understand context.
-     - **Linear ignores commit messages entirely** — a `closes K-123` in a commit links nothing, moves nothing, closes nothing. Put the id in the commit only as a human-readable note if the repo does that, and never rely on it. The link and the close come from the **PR/MR title and description** (`github-pr-create` / `gitlab-mr-create`).
+     - Fetch the issue via the appropriate MCP tool to understand context. A Linear issue already Done or Canceled gets no magic word in front of its id, per `scm-linear-follow-up`.
+     - **Linear on GitLab ignores commit messages entirely** — a `closes K-123` in a commit links nothing, moves nothing, closes nothing. On GitHub with commit linking enabled, a magic word in a commit does link and move the issue. Put the id in the commit only as a human-readable note if the repo does that, and never rely on it. The link and the close come from the **PR/MR title and description** (`github-pr-create` / `gitlab-mr-create`).
      - GitHub and GitLab **native** issues DO close from commit messages — `closes #42` there works. Do not generalise either way.
      - If the user also requested an extended description, weave relevant issue context into the body.
    - **NEVER add `Co-authored-by:` trailers.** This is forbidden — no exceptions.

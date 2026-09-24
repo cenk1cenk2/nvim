@@ -10,6 +10,7 @@ references:
   - ../references/scm/commit-trailers.md
   - ../references/scm/commit-trailers-gitlab.md
   - ../references/scm/commit-trailers-linear.md
+  - ../references/scm/scm-linear-follow-up.md
   - ../references/output-diff.md
   - ../references/linear/linear-state-transitions.md
   - ../references/scm/release-convention.md
@@ -29,7 +30,7 @@ Posture: `present-first`.
 
 Description/title workflow, format templates, and writing style per `scm-create-description`. GitLab tooling, local git, CLI fallback, and platform detection per `scm-detect` and `scm-gitlab`. Present reasoning and content in logical chunks for user approval per `output-diff` before writing to external systems.
 
-Issue trailer selection per `commit-trailers`: use `closes <Linear-id>` for the single/final MR that should close a Linear issue; use `refs <Linear-id>` **only** when the work is genuinely partial - another MR is still pending on the same issue. Unclear is not a reason to hedge to `refs`: if this MR closes it, write `closes`. **Several issues in one MR:** one keyword, comma-separated — `Closes K-879, K-881` — never one trailer per issue, and carry the ids in the title too: `fix(scope): subject (K-879, K-881)`. Give each issue its own description section per `scm-create-description`. **Linear ignores commit messages entirely**, so the title and description are the only things carrying the link.
+Check every linked issue's `statusType` first, per `scm-linear-follow-up`: a follow-up to a Done or Canceled issue gets no ID in the title or the branch and no magic word, only a plain markdown link. For open work, issue trailer selection per `commit-trailers`: use `closes <Linear-id>` for the single/final MR that should close a Linear issue; use `refs <Linear-id>` **only** when the work is genuinely partial - another MR is still pending on the same issue. Unclear is not a reason to hedge to `refs`: if this MR closes it, write `closes`. **Several issues in one MR:** one keyword, comma-separated — `Closes K-879, K-881` — never one trailer per issue, and carry the ids in the title too: `fix(scope): subject (K-879, K-881)`. Give each issue its own description section per `scm-create-description`. **Linear on GitLab ignores commit messages entirely**, so the title, description, and branch are the only things carrying the link.
 
 ## Platform specifics
 
