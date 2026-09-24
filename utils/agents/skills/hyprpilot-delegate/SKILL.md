@@ -56,6 +56,8 @@ The sequence, in order, no step skippable:
 
 Launch that through the runtime's background facility. Pass `--turn-dir` **verbatim from the response that just returned** — the verb appends `done.json` itself and refuses a turn index you worked out, at arm time, before anything is armed.
 
+**`wait` takes no positional argument — never the session handle.** It keys on the turn, through `--turn-dir` or `--done-file` (`sessionInfo.files.done`), while every other harness tool addresses the session by handle; `wait <handle>` is a usage error at exit 2, and so is a `--timeout` that does not exist — the ceiling is `--interval` × `--max-polls`.
+
 **Its exit code is the wake, and each one has one next action:**
 
 | Exit | Means | Next |
