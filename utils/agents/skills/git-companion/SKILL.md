@@ -14,6 +14,7 @@ references:
   - ../references/identifier-legibility.md
   - ../references/scm/scm-detect.md
   - ../references/scm/commit-trailers-linear.md
+  - ../references/scm/scm-linear-follow-up.md
   - ../references/agent/agent-watchers.md
   - ../references/agent/agent-delegate.md
   - ../references/agent/agent-roster.md

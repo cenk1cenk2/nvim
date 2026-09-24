@@ -1,12 +1,12 @@
 # Commit Trailers — Linear
 
-How a Linear issue links to work and closes on merge. Shared `closes` versus `refs` policy is in `commit-trailers`; this file covers only Linear's own surfaces and keywords.
+How a Linear issue links to work and closes on merge. Shared `closes` versus `refs` policy is in `commit-trailers`; this file covers only Linear's own surfaces and keywords. **Whether to link at all is decided first, per `scm-linear-follow-up`** — every surface below moves the issue, including one that is already Done.
 
-Linear links issues to work via exactly three surfaces: the **branch name**, the **MR/PR title**, and **magic words in the MR/PR description**.
+Linear links issues to MRs/PRs via three surfaces: the **branch name**, the **MR/PR title**, and **magic words in the MR/PR description**.
 
-**Linear cannot link via commit messages or comments.** Linear's integration docs state this outright. A `(K-123)` in a commit subject is repo convention for human readers — it creates no Linear link, moves no state, and closes nothing.
+**On GitLab, Linear cannot link via commit messages or comments.** Linear's GitLab docs state this outright. A `(K-123)` in a commit subject is repo convention for human readers — it creates no Linear link, moves no state, and closes nothing. On GitHub, a magic word before the ID in a commit message does link and move the issue when the workspace has commit linking enabled; a bare ID still does not.
 
-Do not generalise across platforms here: GitHub and GitLab *native* issues DO close from commit messages; Linear does not. Getting this backwards produces a branch whose every commit names the issue and which still leaves it open on merge.
+Do not generalise across platforms here: GitHub and GitLab *native* issues DO close from commit messages; Linear on GitLab does not. Getting this backwards produces a branch whose every commit names the issue and which still leaves it open on merge.
 
 ## Issue ID Formats
 
@@ -23,7 +23,11 @@ Do not generalise across platforms here: GitHub and GitLab *native* issues DO cl
 
 `ref`, `refs`, `references`, `part of`, `related to`, `contributes to`, `towards`.
 
-A contributing keyword still lets the MR/PR drive the issue through the team's configured workflow statuses; it only suppresses the status automation **on merge**.
+A contributing keyword still lets the MR/PR drive the issue through the team's configured workflow statuses; it only suppresses the status automation **on merge**. It therefore reopens a Done issue when the MR/PR opens — a follow-up to a closed issue uses none of these, per `scm-linear-follow-up`.
+
+## Relation Keywords (GitHub only)
+
+`relates to`, `related to` — link with no status change. Linear documents these only for GitHub; on GitLab `related to` is a contributing keyword above. `skip <ID>` or `ignore <ID>` prevents the link, also documented only for GitHub.
 
 ## Multiple issues on one MR/PR
 
@@ -41,7 +45,7 @@ An issue linked to several MRs/PRs does not close until **all** of them are merg
 
 ## Put the IDs in the title too
 
-Linear treats a bare issue ID in the MR/PR title as a link — no magic word needed there:
+For an issue this MR/PR delivers, Linear treats a bare issue ID in the MR/PR title as a link — no magic word needed there:
 
 ```
 fix(scope): subject (K-879, K-881)
@@ -51,10 +55,10 @@ Title and description linking are independent. Use **both**: the description tra
 
 ## Behavior
 
-- Issue moves to **In Progress** when the branch matching its ID is pushed.
+- Issue moves to **In Progress** when the branch matching its ID is pushed, or when a linked MR/PR opens per the team's workflow settings — Done included.
 - Issue moves to **Done** when the **MR/PR** carrying a closing keyword merges to the default branch — not when a commit merges.
 - Contributing keywords such as `refs` link the work but do NOT close the issue on merge.
-- The issue ID must appear with a magic word **in the MR/PR description**, or bare in the MR/PR title, or in the branch name. Nowhere else counts.
+- On GitLab, the issue ID must appear with a magic word **in the MR/PR description**, or bare in the MR/PR title, or in the branch name. Nowhere else counts.
 
 ## Trailer Format
 

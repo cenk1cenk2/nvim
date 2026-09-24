@@ -6,6 +6,7 @@ references:
   - ../references/present-first.md
   - ../references/scm/scm-detect.md
   - ../references/output-diff.md
+  - ../references/scm/scm-linear-follow-up.md
 ---
 
 ## Git Branch
@@ -38,6 +39,7 @@ Posture: `present-first`.
    - Descriptive partial is **always kebab-case** (lowercase words joined by `-`, no spaces, no underscores).
    - If the user gave a descriptive hint (e.g., "token refresh logic"), convert it to kebab-case (`token-refresh-logic`).
    - Combine prefix + descriptive partial: `feature/token-refresh-logic`.
+   - **A Linear issue id in the name links the branch to that issue.** Include it only when the branch delivers the issue's open work; for a follow-up to a Done or Canceled issue, check its `statusType` and leave the id out, per `scm-linear-follow-up`.
    - **Flat kebab-case override** — when the user explicitly asks for a kebab-case-only name (e.g., "kebab-case only", "no slashes", "flat name", "single segment"), drop the `/` separator and flatten with `-`: `feature-token-refresh-logic`. Apply the same flattening to the repo-detected convention when the repo itself uses flat kebab-case names (no `/` seen in existing branches).
 
 4. **Determine the base branch.**
