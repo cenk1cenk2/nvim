@@ -213,7 +213,7 @@ this.gateway.newDNSEndpoint(
     },
     endpoints: [
       {
-        dnsName: 'keel.rubik.int.kilic.dev',
+        dnsName: 'grafana.rubik.int.kilic.dev',
         recordTTL: 300,
         recordType: 'A',
         targets: ['192.168.195.3'],  // INTERNAL gateway IP via readTargets()
@@ -247,7 +247,7 @@ this.gateway.newDNSEndpoint(
 | Pattern | Format | Example | Used For |
 |---------|--------|---------|----------|
 | L2 announcement | `cluster-<cluster>-gateway-<domain-slug>.lb.int.loki.arpa` | `cluster-rubik-gateway-kilic-dev.lb.int.loki.arpa` | Registering target cluster gateway IPs in OPNSense DNS |
-| Internal service | `<service>.<cluster>.int.kilic.dev` or `*.<cluster>.int.kilic.dev` | `keel.rubik.int.kilic.dev` | Internal service discovery via OPNSense |
+| Internal service | `<service>.<cluster>.int.kilic.dev` or `*.<cluster>.int.kilic.dev` | `grafana.rubik.int.kilic.dev` | Internal service discovery via OPNSense |
 | VM backend | `<hostname>.loki.arpa` | `gitlab.loki.arpa` | Backend FQDN for VM targets (pre-existing DNS, not managed here) |
 | External domain | Direct domain name | `gitlab.kilic.dev`, `s3.kilic.dev` | Public-facing hostnames via Cloudflare |
 | WAN endpoint | `loki.kilic.dev` | `loki.kilic.dev` | Gateway target for all Cloudflare DNS — resolves to public IP |
