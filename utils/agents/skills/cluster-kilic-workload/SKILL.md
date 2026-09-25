@@ -564,14 +564,21 @@ spec:
 
 ## Deployment Conventions
 
-- **Keel auto-update:** For container images that should auto-update, add annotations:
+- **Renovate image auto-update:** For container images that should auto-update, pin the image as `image: <registry>/<repo>:<tag>@sha256:<digest>`, starting from the digest of the currently-published tag, and add the automerge preset for the image repo to the `extends` of the repo's `renovate.json`:
 
   ```yaml
-  annotations:
-    keel.sh/policy: force
-    keel.sh/trigger: poll
-    keel.sh/match-tag: "true"
+  image: <registry>/<repo>:<tag>@sha256:<digest>
   ```
+
+  ```json
+  {
+    "extends": [
+      "local>renovate/renovate-config:default/datasource-docker-automerge-minor(<image-repo>)"
+    ]
+  }
+  ```
+
+  Renovate keeps the digest fresh with one MR per moved tag, and automerges it on green CI (same as ollama, rustfs, agents).
 
 - **Revision history:** `revisionHistoryLimit: 0` on Deployments unless specified
 
