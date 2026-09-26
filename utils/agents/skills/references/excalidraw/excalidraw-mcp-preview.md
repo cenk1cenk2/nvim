@@ -10,20 +10,19 @@
 
 - **`excalidraw__read_me`** — call once per conversation to load the MCP element format (color palettes, element types, camera controls, examples). Do NOT call again after the first time.
 - **`excalidraw__create_view`** — call to render diagrams. Returns an interactive preview and a `checkpointId` for iterating.
-- **`excalidraw__export_to_excalidraw`** — uploads diagram JSON to excalidraw.com, returns a shareable URL. Use for URL output mode. Pass the complete scene JSON (elements + appState). Strip pseudo-elements first but no MCP→Obsidian conversion needed.
+- **`excalidraw__export_to_excalidraw`** — uploads diagram JSON to excalidraw.com, returns a shareable URL. Use for URL output mode. Pass the complete scene JSON (elements + appState) with pseudo-elements stripped.
 
-## MCP Element Format
+## One Element Format
 
-The MCP server uses a simplified element format with conveniences that do NOT exist in the Excalidraw file format:
+`excalidraw__create_view` renders file-format elements directly. Author every element per `excalidraw-elements` — 8-char IDs, text bound to its shape or arrow through `containerId` / `boundElements` — and the same array is what gets written to the vault. Never use the `label` shorthand the MCP `read_me` offers: it exists only in the preview and has no place in the file.
 
-| MCP Convenience | What It Does |
-|-----------------|-------------|
-| `label: { text, fontSize }` on shapes | Auto-centered text inside the shape. No separate text element needed. |
-| `cameraUpdate` pseudo-element | Controls viewport — animates smoothly between positions. Use generously. |
-| `delete` pseudo-element | Removes elements by id. For iterating within a single `create_view` call. |
+The preview adds three pseudo-elements that are stripped before writing:
+
+| Pseudo-element | What It Does |
+|----------------|-------------|
+| `cameraUpdate` | Controls viewport — animates smoothly between positions. Use generously. |
+| `delete` | Removes elements by id. For iterating within a single `create_view` call. |
 | `restoreCheckpoint` | Restores a previous diagram state by checkpoint id. Append new elements on top. |
-
-These are stripped during conversion to Obsidian format.
 
 ## Camera Usage (CRITICAL for quality)
 
@@ -37,7 +36,7 @@ These are stripped during conversion to Obsidian format.
 ## Preview Workflow
 
 1. **Call `excalidraw__read_me`** once to load the format reference.
-2. **Call `excalidraw__create_view`** with elements in MCP format. Use `label`, `cameraUpdate`, arrow bindings.
+2. **Call `excalidraw__create_view`** with file-format elements plus `cameraUpdate`.
 3. **Show the user** the rendered preview. Discuss what to change.
 4. **Iterate** using checkpoints:
    - Start with `{"type":"restoreCheckpoint","id":"<checkpointId>"}`.
@@ -45,32 +44,30 @@ These are stripped during conversion to Obsidian format.
    - Append new/replacement elements.
    - Call `excalidraw__create_view` again.
 5. **Repeat** until the user is satisfied.
-6. **Only then** export — either convert to Obsidian format and write to vault, OR upload to excalidraw.com for a shareable URL. See the skill's Output Modes section for decision rules.
+6. **Only then** export — either write to the vault, OR upload to excalidraw.com for a shareable URL. See the skill's Output Modes section for decision rules.
 
 ## Export Paths
 
-### MCP → Obsidian (`.excalidraw.md`)
+### To Obsidian (`.excalidraw.md`)
 
-Read the `excalidraw-conversion` reference for the full step-by-step algorithm with before/after examples. Key operations: strip pseudo-elements, expand `label` to bound text, normalize to 8-char IDs, add `seed` values, tab-indent JSON.
+Strip the pseudo-elements and wrap the array per `excalidraw-template`. The elements themselves do not change.
 
-### MCP → excalidraw.com URL
-
-Lightweight export — no full conversion needed:
+### To excalidraw.com URL
 
 1. Strip pseudo-elements (`cameraUpdate`, `delete`, `restoreCheckpoint`) from the elements array.
 2. Build the scene JSON: `{type: "excalidraw", version: 2, source: "...", elements: [...], appState: {...}, files: {}}`.
 3. Call `excalidraw__export_to_excalidraw` with the serialized JSON string.
 4. Returns a shareable URL. From the URL, users can export SVG/PNG via the excalidraw.com UI.
 
-### Obsidian → MCP
+### From Obsidian
 
-Collapse bound text to `label`, strip file-only fields, add `cameraUpdate`, render with `create_view`.
+Read the elements per `excalidraw-template`, prepend a `cameraUpdate` framing their bounds (nearest 4:3 size, 50-80px padding), and render with `create_view`. The elements go in unchanged.
 
 ## Progressive Drawing Order
 
-When building diagrams in MCP format, emit elements progressively for the best streaming experience:
+Emit elements progressively for the best streaming experience:
 
-- **Good**: zone → shape1 → its label → its arrows → shape2 → its label → its arrows
-- **Bad**: all shapes → all labels → all arrows
+- **Good**: zone → shape1 → its bound text → its arrows → shape2 → its bound text → its arrows
+- **Bad**: all shapes → all text → all arrows
 
 This matters because elements stream in one by one with draw-on animations.

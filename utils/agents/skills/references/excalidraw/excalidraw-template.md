@@ -198,6 +198,20 @@ Top-level keys in order:
 
 ---
 
+## Reading a Drawing
+
+Parse the JSON in the `## Drawing` code block; its `elements` array is used as-is for preview and edits.
+
+A `compressed-json` block (legacy drawings — the vault's `compress` setting is off, so saves are plain `json`) is LZ-string encoded and cannot be decoded in-context. Decompress it natively:
+
+1. `obsidian__open_file` the drawing — the command acts on the **active** file, not a path.
+2. `obsidian__command_execute` with `obsidian-excalidraw-plugin:excalidraw-unzip-file`. It rewrites the block to plain `json` in place and prompts for permission, since it mutates the vault.
+3. `obsidian__vault_read` again and parse.
+
+If the command is unavailable or declined, read the `## Text Elements` section — always plain text — for content, or ask the user to run the command.
+
+---
+
 ## ID Convention
 
 All element IDs throughout the file (elements, text entries, links) must be **exactly 8 characters**, alphanumeric (`[0-9a-zA-Z]`). Use the same ID in:

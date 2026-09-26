@@ -6,7 +6,6 @@ argumentHint: '[what to draw]'
 references:
   - ../references/present-first.md
   - ../references/excalidraw/excalidraw-mcp-preview.md
-  - ../references/excalidraw/excalidraw-conversion.md
   - ../references/excalidraw/excalidraw-elements.md
   - ../references/excalidraw/excalidraw-template.md
   - ../references/obsidian.md
@@ -31,7 +30,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 
 | Mode | Tool | When to Use |
 |------|------|-------------|
-| **Obsidian** | Convert MCP→Obsidian, write `.excalidraw.md` to vault. | Combined with obsidian skills, user says "save", "vault", "obsidian", "note". Default when obsidian skills are co-invoked. |
+| **Obsidian** | Strip pseudo-elements, wrap per `excalidraw-template`, write `.excalidraw.md` to vault. | Combined with obsidian skills, user says "save", "vault", "obsidian", "note". Default when obsidian skills are co-invoked. |
 | **URL** | `excalidraw__export_to_excalidraw` — uploads to excalidraw.com. | User asks for "URL", "link", "share", "excalidraw.com", "SVG", "PNG". NOT combined with obsidian skills. |
 
 **Decision rules:**
@@ -45,7 +44,7 @@ You draft Excalidraw diagrams using a two-phase workflow:
 - Returns a shareable excalidraw.com URL with the full diagram.
 - From the URL, users can manually export to SVG/PNG via excalidraw.com UI (menu → Export image).
 - No local file is created — the diagram lives on excalidraw.com.
-- No MCP→Obsidian conversion needed — pass the scene JSON directly (strip pseudo-elements only).
+- Pass the scene JSON directly after stripping pseudo-elements.
 - The tool is `excalidraw__export_to_excalidraw` — takes a `json` parameter with the serialized scene.
 
 ## Process
@@ -54,12 +53,11 @@ You draft Excalidraw diagrams using a two-phase workflow:
 2. **Load the MCP element format.** Call `excalidraw__read_me` once.
 3. **Plan the layout.** List nodes and connections, estimate diagram size, choose onedarker colors per `excalidraw-elements`.
 4. **Draft with MCP preview — mandatory, never skipped.** Follow the `excalidraw-mcp-preview` workflow:
-   - Call `excalidraw__create_view` with MCP format elements.
-   - Use `label` on shapes, `cameraUpdate` for viewport, arrow bindings.
-   - Draw progressively: zones → shapes with labels → arrows.
+   - Call `excalidraw__create_view` with file-format elements per `excalidraw-elements` — 8-char IDs, bound text via `containerId` / `boundElements` — plus `cameraUpdate` for viewport.
+   - Draw progressively: zones → shapes with their bound text → arrows.
 5. **Iterate.** Based on user feedback, refine using checkpoints. Call `excalidraw__create_view` again. Repeat until satisfied.
 6. **Export.** Present the diagram summary per `output-diff`, then once approved choose output mode per the decision rules above:
-   - **Obsidian**: per `excalidraw-conversion` — expand `label` to bound text, strip pseudo-elements, add `seed` values, build the `.excalidraw.md` per `excalidraw-template`, write to vault.
+   - **Obsidian**: strip pseudo-elements, wrap the same elements per `excalidraw-template`, write to vault.
    - **URL**: strip pseudo-elements (`cameraUpdate`, `delete`, `restoreCheckpoint`) from the elements array, build the scene JSON (`{type, version, source, elements, appState, files}`), call `excalidraw__export_to_excalidraw` with the serialized JSON. Return the URL to the user.
    - **If ambiguous**: ask the user before exporting.
 

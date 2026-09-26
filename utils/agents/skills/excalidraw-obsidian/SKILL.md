@@ -6,7 +6,6 @@ argumentHint: '[filename or description of the drawing]'
 references:
   - ../references/present-first.md
   - ../references/excalidraw/excalidraw-mcp-preview.md
-  - ../references/excalidraw/excalidraw-conversion.md
   - ../references/excalidraw/excalidraw-elements.md
   - ../references/excalidraw/excalidraw-template.md
   - ../references/obsidian.md
@@ -37,8 +36,7 @@ In both modes, the Excalidraw MCP server is your visual feedback tool. Render th
    - Present matches and let the user choose.
 
 2. **Read the drawing.** Load the `.excalidraw.md` file from the vault:
-   - Parse the `## Drawing` section — extract the JSON from the code block.
-   - If that block is `compressed-json` (legacy files — the vault's `compress` setting is off, so new saves are plain `json`), decompress it natively first: `open_file` the drawing, then `command_execute` `obsidian-excalidraw-plugin:excalidraw-unzip-file`, then re-read. Conversion algorithm in both directions: `excalidraw-conversion`.
+   - Parse the `## Drawing` section per `excalidraw-template`, including decompressing a `compressed-json` block.
    - Parse the `## Text Elements` section — note existing text content and IDs.
    - Identify the appState (dark/light mode, background color).
 
@@ -46,11 +44,7 @@ In both modes, the Excalidraw MCP server is your visual feedback tool. Render th
 
 3. **Load MCP format.** Call `excalidraw__read_me` once if not already loaded this conversation.
 
-4. **Convert to MCP format and render.** Transform the standard Excalidraw elements into the MCP preview format per `excalidraw-elements`:
-   - Bound text elements (`containerId`) → `label` on their parent shape.
-   - Add a `cameraUpdate` as the first element, sized to fit the diagram.
-   - Strip `seed`, `version`, `versionNonce` and other file-only fields.
-   - Call `excalidraw__create_view` to render the preview.
+4. **Render.** Prepend a `cameraUpdate` sized to the diagram and pass the elements to `excalidraw__create_view` unchanged.
 
 5. **Show the user.** The preview lets the user see the current state of their drawing in chat.
 
@@ -83,16 +77,15 @@ If the user wants to revise the drawing:
 7. **Draft changes with MCP preview.** Use the checkpoint from step 4:
    - `restoreCheckpoint` to start from the current state.
    - `delete` elements being replaced.
-   - Add new/modified elements.
+   - Add new/modified elements in file format per `excalidraw-elements`.
    - Call `excalidraw__create_view` to render the updated preview.
 
 8. **Iterate.** Based on user feedback, continue refining with checkpoints. Repeat until satisfied.
 
-9. **Export to Obsidian.** Once approved, follow the `excalidraw-mcp-preview` conversion table:
-   - Convert MCP elements back to standard Excalidraw JSON.
-   - Expand `label` to bound text elements, strip pseudo-elements, add `seed` values.
+9. **Export to Obsidian.** Once approved:
+   - Strip pseudo-elements.
    - Preserve the original appState (dark/light mode) unless the user changed it.
-   - Rebuild the `.excalidraw.md` file per `excalidraw-template`: frontmatter, text elements section, drawing section.
+   - Wrap per `excalidraw-template`: frontmatter, text elements section, drawing section.
    - Present changes per `output-diff`.
    - Overwrite the original file (or write to a new file if the user prefers).
 
@@ -106,6 +99,6 @@ If the user wants to revise the drawing:
 
 ## Composing with Obsidian Skills
 
-- **With `obsidian-note`**: when understanding a drawing, the explanation can be added to a note that embeds the drawing. Embedding is native — write `![[<drawing>.excalidraw]]` transclusion into any note and the plugin renders it (this vault: `embedType`/`previewImageType` = SVG, `renderImageInMarkdownReadingMode` on, plus an auto-exported `.svg` sidecar from `autoexportSVG`). No format conversion needed for display; conversion is only for editing the scene JSON.
+- **With `obsidian-note`**: when understanding a drawing, the explanation can be added to a note that embeds the drawing. Embedding is native — write `![[<drawing>.excalidraw]]` transclusion into any note and the plugin renders it (this vault: `embedType`/`previewImageType` = SVG, `renderImageInMarkdownReadingMode` on, plus an auto-exported `.svg` sidecar from `autoexportSVG`). No format conversion is involved anywhere: the scene JSON is edited and previewed as stored.
 - **With `obsidian-repository`**: revising architecture diagrams that are linked from repository notes.
 - **With `excalidraw-draft`**: if the user wants a completely new drawing instead of revising, delegate to `excalidraw-draft`.
