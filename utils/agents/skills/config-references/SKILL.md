@@ -42,9 +42,9 @@ references/
 └── *.md          # cross-cutting conventions that belong to no family
 ```
 
-**The rule: a folder once a family reaches three files. Everything else stays at the root.** Do not force a file into a folder to tidy the listing — `output-diff`, `present-first`, `plan-mode`, `mode-toggle`, `current-state-only` and their kin are cited from every family, so a folder would misfile them. A one-off service reference with no siblings (`obsidian`, `tmux`) also stays at the root until a family grows around it.
+**Group into a folder when the flat list gets hard to navigate, not at a file count.** A family of related references earns a folder once finding or telling them apart at the root becomes a problem. A single reference never gets a folder of its own. Cross-cutting references such as `output-diff`, `present-first`, `plan-mode`, `mode-toggle` and `current-state-only` are cited from every family, so they stay at the root; a folder would misfile them. A one-off service reference with no siblings, such as `obsidian` or `tmux`, stays at the root too.
 
-When a root-level family reaches its third file, create the folder, move all three, and update every declaring skill's path in the same change.
+When a family moves into a folder, move all of its files and update every declaring skill's path in the same change.
 
 **The folder is part of the declared path**, which is relative to the declaring skill's directory: `../references/scm/commit-style.md` for a family file, `../references/<file>.md` at the root, `./references/<file>.md` for a single-consumer file (absolute base `~/.config/nvim/utils/agents/skills/`). Bodies are unaffected — they cite by name, never by path.
 
